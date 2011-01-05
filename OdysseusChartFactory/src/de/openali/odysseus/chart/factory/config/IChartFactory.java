@@ -49,7 +49,5 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
  */
 public interface IChartFactory<T_config>
 {
-
-  public void configureChartModel( final IChartModel model, final T_config chartConfig, final IExtensionLoader extLoader, final URL context );
-
+  void configureChartModel( final IChartModel model, final T_config chartConfig, final IExtensionLoader extLoader, final URL context );
 }

@@ -17,7 +17,7 @@ import de.openali.odysseus.chart.framework.logging.impl.Logger;
 /**
  * @author burtscher
  */
-public class ChartExtensionLoader implements IExtensionLoader
+public final class ChartExtensionLoader implements IExtensionLoader
 {
   /**
    * Map for LayerProviders
@@ -39,22 +39,22 @@ public class ChartExtensionLoader implements IExtensionLoader
    */
   private static Map<String, IConfigurationElement> MP_MAP = null;
 
-  public final static String PLUGIN_ID = "de.openali.odysseus.chart.factory";
+  public static final String PLUGIN_ID = "de.openali.odysseus.chart.factory";
 
-  private static ChartExtensionLoader m_instance = null;
+  private static ChartExtensionLoader INSTANCE = null;
 
   private ChartExtensionLoader( )
   {
-
   }
 
   public static synchronized ChartExtensionLoader getInstance( )
   {
-    if( m_instance == null )
+    if( INSTANCE == null )
     {
-      m_instance = new ChartExtensionLoader();
+      INSTANCE = new ChartExtensionLoader();
     }
-    return m_instance;
+
+    return INSTANCE;
   }
 
   public static ILayerProvider createLayerProvider( final String id ) throws CoreException
@@ -218,7 +218,7 @@ public class ChartExtensionLoader implements IExtensionLoader
    */
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T getExtension( Class<T> extensionClass, String id )
+  public <T> T getExtension( final Class<T> extensionClass, final String id )
   {
     try
     {
@@ -239,7 +239,7 @@ public class ChartExtensionLoader implements IExtensionLoader
         return (T) createMapperProvider( id );
       }
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();

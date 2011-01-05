@@ -15,16 +15,16 @@ public class AxisPositionParser implements IStringParser<POSITION>
    * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
   @Override
-  public POSITION stringToLogical( String value )
+  public POSITION stringToLogical( final String value )
   {
     POSITION pos = POSITION.BOTTOM;
-    if( value.equals( "TOP" ) )
+    if( value.equals( "TOP" ) ) //$NON-NLS-1$
       pos = POSITION.TOP;
-    else if( value.equals( "RIGHT" ) )
+    else if( value.equals( "RIGHT" ) ) //$NON-NLS-1$
       pos = POSITION.RIGHT;
-    else if( value.equals( "LEFT" ) )
+    else if( value.equals( "LEFT" ) ) //$NON-NLS-1$
       pos = POSITION.LEFT;
-    else if( value.equals( "BOTTOM" ) )
+    else if( value.equals( "BOTTOM" ) ) //$NON-NLS-1$
       pos = POSITION.BOTTOM;
     return pos;
   }

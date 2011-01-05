@@ -82,9 +82,13 @@ import de.openali.odysseus.chartconfig.x020.TextStyleType;
 /**
  * @author alibu
  */
-public class StyleFactory
+public final class StyleFactory
 {
-  public static String STYLE_KEY = "de.openali.odysseus.chart.factory.style";
+  private StyleFactory( )
+  {
+  }
+
+  public static final String STYLE_KEY = "de.openali.odysseus.chart.factory.style";
 
   public static Map<String, IStyle> createStyleMap( final Styles styles, final URL context )
   {

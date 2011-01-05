@@ -76,7 +76,7 @@ public class RGBParser implements IStringParser<RGB>
     }
     final String lValue = value.toLowerCase();
 
-    if( !lValue.matches( "[0-9a-f]{6}" ) )
+    if( !lValue.matches( "[0-9a-f]{6}" ) ) //$NON-NLS-1$
     {
       throw new MalformedValueException( "each digit must be 0 - F" );
     }
@@ -94,7 +94,7 @@ public class RGBParser implements IStringParser<RGB>
     final RGBParser p = new RGBParser();
     try
     {
-      p.stringToLogical( "aabbc" );
+      p.stringToLogical( "aabbc" ); //$NON-NLS-1$
       Assert.fail();
     }
     catch( final MalformedValueException e )
@@ -102,7 +102,7 @@ public class RGBParser implements IStringParser<RGB>
     }
     try
     {
-      p.stringToLogical( "AaBbCG" );
+      p.stringToLogical( "AaBbCG" ); //$NON-NLS-1$
       Assert.fail();
     }
     catch( final MalformedValueException e )
@@ -110,7 +110,7 @@ public class RGBParser implements IStringParser<RGB>
     }
     try
     {
-      final RGB rgb = p.stringToLogical( "00ccff" );
+      final RGB rgb = p.stringToLogical( "00ccff" ); //$NON-NLS-1$
       System.out.println( rgb.toString() );
 
     }

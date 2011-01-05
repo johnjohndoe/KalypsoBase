@@ -11,26 +11,29 @@ import org.eclipse.swt.graphics.RGB;
 
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 
-public class ChartFactoryUtilities
+public final class ChartFactoryUtilities
 {
+  private ChartFactoryUtilities( )
+  {
+  }
 
   /**
    * tries to create an reaturn an url; if the url can't be created, an error message is logged
    * 
    * @return created url or null if url cant be created
    */
-  public static URL createURLQuietly( URL context, String path )
+  public static URL createURLQuietly( final URL context, final String path )
   {
     try
     {
-      URL url = new URL( context, path );
+      final URL url = new URL( context, path );
       return url;
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       String contextString = "";
-      if (context!=null)
-         contextString=contextString.toString();
+      if( context != null )
+        contextString = contextString.toString();
       Logger.logError( Logger.TOPIC_LOG_STYLE, "Could not create url: '" + contextString + "', '" + path + "'" );
     }
     return null;
@@ -41,17 +44,17 @@ public class ChartFactoryUtilities
    * than 0. If the image cannot be recieved, an error is logged and a black image is returned.
    * 
    * @param path
-   *            path
+   *          path
    * @param context
-   *            if path is relative
+   *          if path is relative
    * @param width
-   *            preferred width of image data; will be ignored if < 1
+   *          preferred width of image data; will be ignored if < 1
    * @param height
-   *            preferred height of image data; will be ignored if < 1
+   *          preferred height of image data; will be ignored if < 1
    */
-  public static ImageData loadImageData( URL context, String path, int width, int height )
+  public static ImageData loadImageData( final URL context, final String path, final int width, final int height )
   {
-    URL url = createURLQuietly( context, path );
+    final URL url = createURLQuietly( context, path );
     ImageData id = null;
     InputStream is = null;
     try
@@ -60,7 +63,7 @@ public class ChartFactoryUtilities
       id = new ImageData( is );
       is.close();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       Logger.logError( Logger.TOPIC_LOG_STYLE, "Could not load image from: " + url.toString() + "; will use default image." );
     }
@@ -71,7 +74,7 @@ public class ChartFactoryUtilities
         {
           is.close();
         }
-        catch( IOException e )
+        catch( final IOException e )
         {
           // nix machen
         }

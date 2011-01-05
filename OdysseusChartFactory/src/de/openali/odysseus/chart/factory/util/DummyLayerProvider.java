@@ -59,7 +59,7 @@ public class DummyLayerProvider extends AbstractLayerProvider
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
-  public IChartLayer getLayer( URL context )
+  public IChartLayer getLayer( final URL context )
   {
     return new DummyLayer();
   }
@@ -70,7 +70,7 @@ public class DummyLayerProvider extends AbstractLayerProvider
    *      de.openali.odysseus.chart.factory.config.parameters.IParameterContainer, java.net.URL)
    */
   @SuppressWarnings("unused")
-  public void init( IChartModel model, String domainAxisId, String targetAxisId, Map<String, String> mapperMap, IStyleSet styleSet, IParameterContainer parameters,  URL context )
+  public void init( final IChartModel model, final String domainAxisId, final String targetAxisId, final Map<String, String> mapperMap, final IStyleSet styleSet, final IParameterContainer parameters, final URL context )
   {
     // nothing to do
   }

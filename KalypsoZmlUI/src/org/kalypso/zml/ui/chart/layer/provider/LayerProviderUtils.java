@@ -51,7 +51,7 @@ import jregex.RETokenizer;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvider;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
 
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 
@@ -64,7 +64,7 @@ public final class LayerProviderUtils
   {
   }
 
-  public static IAxis getValueAxis( final SynchronousObservationProvider provider, final String type )
+  public static IAxis getValueAxis( final IObsProvider provider, final String type )
   {
     final IAxis[] axes = provider.getObservation().getAxisList();
     for( final IAxis axis : axes )

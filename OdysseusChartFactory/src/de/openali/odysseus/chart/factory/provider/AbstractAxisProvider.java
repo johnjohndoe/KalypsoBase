@@ -21,7 +21,7 @@ public abstract class AbstractAxisProvider extends AbstractChartComponentProvide
    *      java.lang.Class, de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION, java.lang.String[])
    */
   @Override
-  public void init( IChartModel model, String id, IParameterContainer parameters, URL context, Class< ? > dataClass, POSITION pos, String[] valueArray )
+  public void init( final IChartModel model, final String id, final IParameterContainer parameters, final URL context, final Class< ? > dataClass, final POSITION pos, final String[] valueArray )
   {
     super.init( model, id, parameters, context );
     m_pos = pos;

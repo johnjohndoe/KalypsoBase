@@ -57,6 +57,7 @@ import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.chart.layer.provider.LayerProviderUtils;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
@@ -81,9 +82,9 @@ public class ZmlLineLayer extends AbstractLineLayer
 
   private final IDataOperator<Number> m_numberDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
 
-  private final IAxis m_valueAxis;
+  private IAxis m_valueAxis;
 
-  private final IObsProvider m_provider;
+  private IObsProvider m_provider;
 
   private final IObsProviderListener m_observationProviderListener = new IObsProviderListener()
   {
@@ -103,11 +104,24 @@ public class ZmlLineLayer extends AbstractLineLayer
     }
   };
 
-  public ZmlLineLayer( final IObsProvider provider, final IAxis valueAxis, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  private final String m_targetAxisId;
+
+  public ZmlLineLayer( final ILineStyle lineStyle, final IPointStyle pointStyle, final String targetAxisId )
   {
     super( lineStyle, pointStyle );
+    m_targetAxisId = targetAxisId;
+  }
+
+  public void setObsProvider( final IObsProvider provider )
+  {
+    if( m_provider != null )
+    {
+      m_provider.removeListener( m_observationProviderListener );
+      m_provider.dispose(); // TODO check - really dispose old provider?
+    }
+
     m_provider = provider;
-    m_valueAxis = valueAxis;
+    m_valueAxis = LayerProviderUtils.getValueAxis( provider, m_targetAxisId );
 
     provider.addListener( m_observationProviderListener );
   }
@@ -288,6 +302,9 @@ public class ZmlLineLayer extends AbstractLineLayer
   @Override
   public void paint( final GC gc )
   {
+    if( m_provider == null )
+      return;
+
     try
     {
       final ITupleModel model = getModel();

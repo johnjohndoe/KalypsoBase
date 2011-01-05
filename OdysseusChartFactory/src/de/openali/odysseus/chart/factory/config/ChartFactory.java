@@ -185,7 +185,7 @@ public final class ChartFactory
       final String mpId = mapperType.getProvider().getEpid();
       if( (mpId != null) && (mpId.length() > 0) )
         try
-      {
+        {
           final IMapperRegistry mr = model.getMapperRegistry();
           final IMapperProvider mp = extLoader.getExtension( IMapperProvider.class, mpId );
           final String mid = mapperType.getId();
@@ -197,11 +197,11 @@ public final class ChartFactory
           // save configuration type so it can be used for saving to chartfile
           mapper.setData( CONFIGURATION_TYPE_KEY, mapperType );
           mr.addMapper( mapper );
-      }
-      catch( final ConfigurationException e )
-      {
-        e.printStackTrace();
-      }
+        }
+        catch( final ConfigurationException e )
+        {
+          e.printStackTrace();
+        }
       else
         Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider " + mpId + " not known" );
     }
@@ -237,7 +237,7 @@ public final class ChartFactory
       final String apId = axisType.getProvider().getEpid();
       if( apId != null && !apId.trim().isEmpty() )
         try
-      {
+        {
           final IAxisProvider ap = extLoader.getExtension( IAxisProvider.class, apId );
           if( ap != null )
           {
@@ -316,11 +316,11 @@ public final class ChartFactory
           else
             Logger.logError( Logger.TOPIC_LOG_CONFIG, "Axis could not be created. EPID was: " + apId );
 
-      }
-      catch( final ConfigurationException e )
-      {
-        e.printStackTrace();
-      }
+        }
+        catch( final ConfigurationException e )
+        {
+          e.printStackTrace();
+        }
       else
         Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider " + apId + " not known" );
     }
