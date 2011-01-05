@@ -121,7 +121,7 @@ public class ZmlLineLayer extends AbstractLineLayer
     }
 
     m_provider = provider;
-    m_valueAxis = LayerProviderUtils.getValueAxis( provider, m_targetAxisId );
+    m_model = null;
 
     provider.addListener( m_observationProviderListener );
   }
@@ -206,6 +206,8 @@ public class ZmlLineLayer extends AbstractLineLayer
     m_model = null;
     final IObservation observation = m_provider.getObservation();
     setVisible( observation != null );
+
+    m_valueAxis = LayerProviderUtils.getValueAxis( m_provider, m_targetAxisId );
 
     getEventHandler().fireLayerVisibilityChanged( this );
     getEventHandler().fireLayerContentChanged( this );
