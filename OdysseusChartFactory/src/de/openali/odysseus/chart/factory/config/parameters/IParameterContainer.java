@@ -6,7 +6,7 @@ import java.util.Map;
 import de.openali.odysseus.chart.framework.model.data.IStringParser;
 
 /**
- * The interface provides access to a collection of parameters, grouped by namespaces
+ * The interface provides access to a collection of parameters, grouped by name spaces
  * 
  * @author alibu
  */
@@ -28,7 +28,7 @@ public interface IParameterContainer
   Map<String, String> getParameterMap( String paramName );
 
   /**
-   * returns a value without checking for the namespace; should only be used if there's only one namespace or if all
+   * returns a value without checking for the name space; should only be used if there's only one name space or if all
    * parameters have unique names
    * <p>
    * TODO: should it be 'T defaultValue' ?
