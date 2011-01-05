@@ -137,7 +137,7 @@ public class MultipleTsLink
     return m_links.toArray( new TSLinkWithName[] {} );
   }
 
-  public boolean isIgnoreType( final String currentIgnoreTypes )
+  public boolean isIgnoreType( final String[] currentIgnoreTypes )
   {
     if( currentIgnoreTypes == null )
       return false;
@@ -150,9 +150,7 @@ public class MultipleTsLink
     final RETokenizer tokenizer = new RETokenizer( new Pattern( "_.*" ), identifier );
     final String type = tokenizer.nextToken();
 
-    final String[] ignoreTypes = currentIgnoreTypes.split( ";" );
-
-    return ArrayUtils.contains( ignoreTypes, type );
+    return ArrayUtils.contains( currentIgnoreTypes, type );
   }
 
 }

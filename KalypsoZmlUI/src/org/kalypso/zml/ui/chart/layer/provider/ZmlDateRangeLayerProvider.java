@@ -77,7 +77,7 @@ public class ZmlDateRangeLayerProvider extends AbstractLayerProvider implements 
       final Date start = LayerProviderUtils.getMetadataDate( parameters, "start", provider.getObservation().getMetadataList() );
       final Date end = LayerProviderUtils.getMetadataDate( parameters, "end", provider.getObservation().getMetadataList() );
 
-      return new ZmlDateRangeLayer( new DateRange( start, end ) );
+      return new ZmlDateRangeLayer( this, new DateRange( start, end ) );
     }
     catch( final Throwable t )
     {

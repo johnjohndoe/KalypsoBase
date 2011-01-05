@@ -48,7 +48,7 @@ public class GridLayerProvider extends AbstractLayerProvider
         go = GridOrientation.BOTH;
       }
 
-      icl = new GridLayer( go, gridStyle );
+      icl = new GridLayer( this, go, gridStyle );
     }
 
     catch( final Exception e )

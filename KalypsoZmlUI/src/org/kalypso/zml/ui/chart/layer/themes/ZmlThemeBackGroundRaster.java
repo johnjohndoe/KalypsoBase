@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.chart.layer.themes;
 import org.eclipse.swt.graphics.GC;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractExpandableLayer;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -59,9 +60,9 @@ public class ZmlThemeBackGroundRaster extends AbstractExpandableLayer
 
   private final IChartModel m_model;
 
-  public ZmlThemeBackGroundRaster( final IChartModel model )
+  public ZmlThemeBackGroundRaster( final ILayerProvider provider, final IChartModel model )
   {
-    super();
+    super( provider );
 
     m_model = model;
 

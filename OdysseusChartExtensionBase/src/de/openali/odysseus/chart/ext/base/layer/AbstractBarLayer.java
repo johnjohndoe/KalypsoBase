@@ -8,6 +8,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
@@ -19,13 +20,14 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
  */
 public abstract class AbstractBarLayer extends AbstractChartLayer
 {
-
   private final IAreaStyle m_areaStyle;
 
   private PolygonFigure m_polygonFigure;
 
-  public AbstractBarLayer( final IAreaStyle areaStyle )
+  public AbstractBarLayer( final ILayerProvider provider, final IAreaStyle areaStyle )
   {
+    super( provider );
+
     m_areaStyle = areaStyle;
   }
 
@@ -34,7 +36,6 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
    */
   public void drawIcon( final Image img )
   {
-
     final PolygonFigure pf = getPolygonFigure();
 
     final Rectangle bounds = img.getBounds();
@@ -59,7 +60,6 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
     pf.paint( gc );
 
     gc.dispose();
-
   }
 
   protected PolygonFigure getPolygonFigure( )
@@ -111,7 +111,6 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
           pf.setPoints( path.toArray( new Point[] {} ) );
           pf.paint( gc );
         }
-
       };
 
       entries.add( entry );
@@ -122,6 +121,5 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
   @Override
   public void dispose( )
   {
-
   }
 }

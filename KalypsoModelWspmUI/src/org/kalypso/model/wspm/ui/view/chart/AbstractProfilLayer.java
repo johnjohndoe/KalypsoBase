@@ -96,6 +96,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   public AbstractProfilLayer( final String id, final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
+    super( null );
+
     m_profil = profil;
     m_targetRangeProperty = targetRangeProperty;
     m_domainComponent = IWspmConstants.POINT_PROPERTY_BREITE;
@@ -373,7 +375,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     final int targetPropertyIndex = getTargetPropertyIndex();
     if( getCoordinateMapper() == null || targetPropertyIndex == -1 )

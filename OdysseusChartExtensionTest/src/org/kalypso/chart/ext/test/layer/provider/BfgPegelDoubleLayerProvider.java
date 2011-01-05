@@ -64,7 +64,7 @@ public class BfgPegelDoubleLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
-    return new DefaultDoubleUnfilteredLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+    return new DefaultDoubleUnfilteredLineLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
   }
 
   /**

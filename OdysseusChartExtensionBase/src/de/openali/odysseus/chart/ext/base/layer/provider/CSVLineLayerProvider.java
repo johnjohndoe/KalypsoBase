@@ -32,7 +32,7 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    return new DefaultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+    return new DefaultLineLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
   }
 
   /**

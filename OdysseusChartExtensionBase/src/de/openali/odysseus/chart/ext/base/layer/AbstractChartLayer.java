@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.ImageData;
 
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.LayerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -43,6 +44,18 @@ public abstract class AbstractChartLayer implements IChartLayer
   private final Map<String, IRetinalMapper> m_mapperMap = new HashMap<String, IRetinalMapper>();
 
   private boolean m_legendIsVisible = true;
+
+  private final ILayerProvider m_provider;
+
+  public AbstractChartLayer( final ILayerProvider provider )
+  {
+    m_provider = provider;
+  }
+
+  public ILayerProvider getProvider( )
+  {
+    return m_provider;
+  }
 
   @Override
   public void addListener( final ILayerEventListener l )

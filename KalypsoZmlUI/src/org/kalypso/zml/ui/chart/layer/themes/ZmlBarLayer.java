@@ -59,6 +59,7 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
 import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
@@ -103,9 +104,9 @@ public class ZmlBarLayer extends AbstractBarLayer
 
   private final IDataOperator m_targetDataOperator;
 
-  public ZmlBarLayer( final ICoordinateMapper coordinateMapper, final IDataOperator targetDataOperator, final IObsProvider provider, final IAxis valueAxis, final IAreaStyle style )
+  public ZmlBarLayer( final ILayerProvider layerProvider, final ICoordinateMapper coordinateMapper, final IDataOperator targetDataOperator, final IObsProvider provider, final IAxis valueAxis, final IAreaStyle style )
   {
-    super( style );
+    super( layerProvider, style );
 
     m_targetDataOperator = targetDataOperator;
 

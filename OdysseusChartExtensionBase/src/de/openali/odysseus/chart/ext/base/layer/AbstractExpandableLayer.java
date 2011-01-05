@@ -45,6 +45,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -59,6 +60,11 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public abstract class AbstractExpandableLayer extends AbstractChartLayer implements IExpandableChartLayer
 {
+  public AbstractExpandableLayer( final ILayerProvider provider )
+  {
+    super( provider );
+  }
+
   private final ILayerManager m_layerManager = new LayerManager();
 
   /**
@@ -86,7 +92,6 @@ public abstract class AbstractExpandableLayer extends AbstractChartLayer impleme
   {
     return m_layerManager;
   }
-
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,39 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ext.test.layer.provider;
+package org.kalypso.zml.core.diagram.base;
 
-import java.net.URL;
-
-import org.kalypso.chart.ext.test.layer.TortenLayer;
-
-import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.data.IDataContainer;
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
- * @author alibu
+ * "external" visitor
+ * 
+ * @author Dirk Kuch
  */
-public class TortenLayerProvider extends AbstractLayerProvider
+public abstract class AbstractExternalChartModelVisitor
 {
-
-  /**
-   * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
-   */
-  @Override
-  public IChartLayer getLayer( final URL context )
+  public void visit( final IChartModel model )
   {
-    final String pices = getParameterContainer().getParameterValue( "pieces", "12" );
-    final int pieces = Integer.parseInt( pices );
-    return new TortenLayer( this, pieces );
+    final ILayerManager layerManager = model.getLayerManager();
+
+    visit( layerManager );
   }
 
-  /**
-   * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
-   */
-  public IDataContainer getDataContainer( )
+  public void visit( final ILayerManager layerManager )
   {
-    return null;
+    final IChartLayer[] layers = layerManager.getLayers();
+    for( final IChartLayer layer : layers )
+    {
+      accept( layer );
+    }
   }
 
+  protected abstract void accept( final IChartLayer layer );
 }

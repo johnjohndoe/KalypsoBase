@@ -43,6 +43,7 @@ package de.openali.odysseus.chart.ext.base.layer;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -60,17 +61,19 @@ public class DefaultTextLayer extends AbstractChartLayer
 
   private final TitleTypeBean[] m_titleTypeBeans;
 
-  public DefaultTextLayer( final String id, final ICoordinateMapper coordinateMapper, final IChartLabelRenderer labelRenderer, final TitleTypeBean... titleTypeBeans )
+  public DefaultTextLayer( final ILayerProvider provider, final String id, final ICoordinateMapper coordinateMapper, final IChartLabelRenderer labelRenderer, final TitleTypeBean... titleTypeBeans )
   {
+    super( provider );
+
     m_titleTypeBeans = titleTypeBeans;
     m_labelRenderer = labelRenderer;
     setCoordinateMapper( coordinateMapper );
     setId( id );
   }
 
-  public DefaultTextLayer( final String id, final ICoordinateMapper coordinateMapper, final TitleTypeBean... titleTypeBeans )
+  public DefaultTextLayer( final ILayerProvider provider, final String id, final ICoordinateMapper coordinateMapper, final TitleTypeBean... titleTypeBeans )
   {
-    this( id, coordinateMapper, new GenericChartLabelRenderer(), titleTypeBeans );
+    this( provider, id, coordinateMapper, new GenericChartLabelRenderer(), titleTypeBeans );
   }
 
   /**

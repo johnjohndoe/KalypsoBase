@@ -55,6 +55,7 @@ import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
@@ -72,8 +73,10 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
 {
   private final IObsProvider m_provider;
 
-  public ZmlForecastLayer( final IObsProvider provider )
+  public ZmlForecastLayer( final ILayerProvider layerProvider, final IObsProvider provider )
   {
+    super( layerProvider );
+
     m_provider = provider;
 
     synchronized( provider )

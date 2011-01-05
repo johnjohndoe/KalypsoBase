@@ -6,6 +6,7 @@ import java.util.List;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.ITabularDataContainer;
 import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
@@ -18,13 +19,13 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 public class DefaultDoubleUnfilteredLineLayer extends DefaultDoubleLineLayer
 {
 
-  public DefaultDoubleUnfilteredLineLayer( ITabularDataContainer<Double, Double> data, ILineStyle lineStyle, IPointStyle pointStyle )
+  public DefaultDoubleUnfilteredLineLayer( final ILayerProvider provider, final ITabularDataContainer<Double, Double> data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( data, lineStyle, pointStyle );
+    super( provider, data, lineStyle, pointStyle );
   }
 
   @Override
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
     final ITabularDataContainer<Double, Double> dataContainer = getDataContainer();
     if( dataContainer != null )
@@ -36,7 +37,7 @@ public class DefaultDoubleUnfilteredLineLayer extends DefaultDoubleLineLayer
 
       final List<Point> path = new ArrayList<Point>();
 
-      CoordinateMapper km = new CoordinateMapper( getDomainAxis(), getTargetAxis() );
+      final CoordinateMapper km = new CoordinateMapper( getDomainAxis(), getTargetAxis() );
 
       for( int i = 0; i < domainData.length; i++ )
       {

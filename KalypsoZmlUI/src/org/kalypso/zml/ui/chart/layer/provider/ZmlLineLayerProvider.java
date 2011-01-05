@@ -81,7 +81,7 @@ public class ZmlLineLayerProvider extends AbstractLayerProvider implements ILaye
 
       final String targetAxisId = getTargetAxisId();
 
-      final ZmlLineLayer layer = new ZmlLineLayer( lineStyle, pointStyle, targetAxisId );
+      final ZmlLineLayer layer = new ZmlLineLayer( this, lineStyle, pointStyle, targetAxisId );
 
       final IParameterContainer parameters = getParameterContainer();
       final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$

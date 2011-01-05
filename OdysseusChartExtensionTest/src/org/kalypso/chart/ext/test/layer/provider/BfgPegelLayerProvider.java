@@ -54,7 +54,6 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author alibu
- * 
  */
 public class BfgPegelLayerProvider extends AbstractLayerProvider
 {
@@ -67,9 +66,9 @@ public class BfgPegelLayerProvider extends AbstractLayerProvider
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
-public IChartLayer getLayer( URL context ) throws ConfigurationException
+  public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
-    return new DefaultLineLayer( getDataContainer(), getStyleSet().getStyle( ROLE_LINE_STYLE, ILineStyle.class ), getStyleSet().getStyle( ROLE_POINT_STYLE, IPointStyle.class ) );
+    return new DefaultLineLayer( this, getDataContainer(), getStyleSet().getStyle( ROLE_LINE_STYLE, ILineStyle.class ), getStyleSet().getStyle( ROLE_POINT_STYLE, IPointStyle.class ) );
   }
 
   /**
@@ -77,8 +76,8 @@ public IChartLayer getLayer( URL context ) throws ConfigurationException
    */
   protected BfgPegelData getDataContainer( ) throws ConfigurationException
   {
-    String urlString = getParameterContainer().getParameterValue( "url", null );
-    URL url = ChartFactoryUtilities.createURLQuietly( getContext(), urlString );
+    final String urlString = getParameterContainer().getParameterValue( "url", null );
+    final URL url = ChartFactoryUtilities.createURLQuietly( getContext(), urlString );
 
     if( url != null )
     {
@@ -86,7 +85,7 @@ public IChartLayer getLayer( URL context ) throws ConfigurationException
     }
     else
     {
-      throw new ConfigurationException( "URL is null");
+      throw new ConfigurationException( "URL is null" );
     }
   }
 }
