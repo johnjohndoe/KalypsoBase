@@ -14,6 +14,7 @@ import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
@@ -59,11 +60,11 @@ public class TupleResultLineLayer extends AbstractLineLayer
 
   final public static String TOOLTIP_FORMAT = "%-12s %s %n%-12s %s"; //$NON-NLS-1$
 
-  public TupleResultLineLayer( final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public TupleResultLineLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( lineStyle, pointStyle );
-    m_data = data;
+    super( provider, lineStyle, pointStyle );
 
+    m_data = data;
   }
 
   public IObservation<TupleResult> getObservation( )
@@ -192,7 +193,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     if( m_data == null )
       return null;
@@ -220,8 +221,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
     final IDataOperator targetDataOp = m_dataOpertatorHelper.getDataOperator( getTargetAxis().getDataClass() );
     final IDataOperator domainDataOp = m_dataOpertatorHelper.getDataOperator( getDomainAxis().getDataClass() );
 
-    return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, domainDataOp.getFormat( getDomainRange() ).format( x ), targetComponentLabel,
-        targetDataOp.logicalToString( y )  } );
+    return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, domainDataOp.getFormat( getDomainRange() ).format( x ), targetComponentLabel, targetDataOp.logicalToString( y ) } );
   }
 
   protected Rectangle getHoverRect( final Point screen, final int index )

@@ -17,9 +17,9 @@ public class ColoredTestBarLayerProvider extends CSVBarLayerProvider
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
-  public IChartLayer getLayer(final URL context)
+  public IChartLayer getLayer( final URL context )
   {
-    return new ColoredTestBarLayer( getDataContainer(), getStyleSet().getStyle( "bar", IAreaStyle.class ) );
+    return new ColoredTestBarLayer( this, getDataContainer(), getStyleSet().getStyle( "bar", IAreaStyle.class ) );
   }
 
 }

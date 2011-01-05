@@ -48,6 +48,7 @@ import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.gml.binding.math.PolynomialUtilities;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
@@ -72,13 +73,13 @@ public class PolynomeChartLayer extends AbstractLineLayer
   private final PolynomDataContainer m_data;
 
   /**
-   * @param pixelsPerTick:
-   *            Determines the resolution how the polynomes are rendered. 1 means: for every pixel in x-diretion, a
-   *            polynome value is calculated and rendered.
+   * @param pixelsPerTick
+   *          : Determines the resolution how the polynomes are rendered. 1 means: for every pixel in x-diretion, a
+   *          polynome value is calculated and rendered.
    */
-  public PolynomeChartLayer( final PolynomDataContainer dataContainer, final int pixelsPerTick, final ILineStyle lineStyle, final IPointStyle pointStyle, final boolean showPoints )
+  public PolynomeChartLayer( final ILayerProvider provider, final PolynomDataContainer dataContainer, final int pixelsPerTick, final ILineStyle lineStyle, final IPointStyle pointStyle, final boolean showPoints )
   {
-    super( lineStyle, pointStyle );
+    super( provider, lineStyle, pointStyle );
     m_pixelsPerTick = pixelsPerTick;
     m_showPoints = showPoints;
     m_data = dataContainer;
@@ -146,7 +147,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return m_data.getTargetRange();
   }

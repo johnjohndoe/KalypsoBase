@@ -66,7 +66,7 @@ public class ZmlForecastLayerProvider extends AbstractLayerProvider implements I
 
     try
     {
-      final ZmlForecastLayer layer = new ZmlForecastLayer( null );
+      final ZmlForecastLayer layer = new ZmlForecastLayer( this, null );
 
       return layer;
     }

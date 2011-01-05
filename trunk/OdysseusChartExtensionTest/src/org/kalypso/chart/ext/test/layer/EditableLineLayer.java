@@ -10,6 +10,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.kalypso.chart.ext.test.data.EditableTestDataContainer;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -38,9 +39,9 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
 
   private final EditableTestDataContainer m_data;
 
-  public EditableLineLayer( final EditableTestDataContainer dataContainer, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public EditableLineLayer( final ILayerProvider provider, final EditableTestDataContainer dataContainer, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( lineStyle, pointStyle );
+    super( provider, lineStyle, pointStyle );
     m_data = dataContainer;
   }
 
@@ -470,7 +471,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
    */
   @Override
   @SuppressWarnings("unchecked")
-  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     final IDataRange logRange = getDataContainer().getTargetRange();
     final Object min = logRange.getMin();

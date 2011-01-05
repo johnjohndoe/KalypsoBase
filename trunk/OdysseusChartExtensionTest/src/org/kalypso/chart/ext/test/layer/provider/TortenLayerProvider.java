@@ -62,7 +62,7 @@ public class TortenLayerProvider extends AbstractLayerProvider
   {
     final String pices = getParameterContainer().getParameterValue( "pieces", "12" );
     final int pieces = Integer.parseInt( pices );
-    return new TortenLayer( pieces );
+    return new TortenLayer( this, pieces );
   }
 
   /**

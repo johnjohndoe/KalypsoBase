@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -22,9 +23,9 @@ public class DefaultLineLayer extends AbstractLineLayer
 
   private final ITabularDataContainer m_dataContainer;
 
-  public DefaultLineLayer( ITabularDataContainer data, ILineStyle lineStyle, IPointStyle pointStyle )
+  public DefaultLineLayer( final ILayerProvider provider, final ITabularDataContainer data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( lineStyle, pointStyle );
+    super( provider, lineStyle, pointStyle );
     m_dataContainer = data;
   }
 
@@ -33,7 +34,7 @@ public class DefaultLineLayer extends AbstractLineLayer
    *      org.eclipse.swt.graphics.Device)
    */
   @Override
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
     final ITabularDataContainer dataContainer = getDataContainer();
     if( dataContainer != null )
@@ -46,16 +47,16 @@ public class DefaultLineLayer extends AbstractLineLayer
       if( domainData.length > 0 )
       {
 
-        IDataOperator dopDomain = getDomainAxis().getDataOperator( domainData[0].getClass() );
-        IDataRange<Number> dr = getDomainAxis().getNumericRange();
-        IDataOperator dopTarget = getTargetAxis().getDataOperator( targetData[0].getClass() );
+        final IDataOperator dopDomain = getDomainAxis().getDataOperator( domainData[0].getClass() );
+        final IDataRange<Number> dr = getDomainAxis().getNumericRange();
+        final IDataOperator dopTarget = getTargetAxis().getDataOperator( targetData[0].getClass() );
 
-        Number max = dr.getMax();
-        Number min = dr.getMin();
+        final Number max = dr.getMax();
+        final Number min = dr.getMin();
 
         final ArrayList<Point> path = new ArrayList<Point>();
 
-        ORIENTATION ori = getDomainAxis().getPosition().getOrientation();
+        final ORIENTATION ori = getDomainAxis().getPosition().getOrientation();
         for( int i = 0; i < domainData.length; i++ )
         {
           // nur zeichnen, wenn linie innerhalb des Sichtbarkeitsintervalls liegt
@@ -68,7 +69,7 @@ public class DefaultLineLayer extends AbstractLineLayer
           }
           else if( dopDomain.logicalToNumeric( domVal ).doubleValue() < min.doubleValue() && i < domainData.length - 1 )
           {
-            Object next = domainData[i + 1];
+            final Object next = domainData[i + 1];
             if( dopDomain.logicalToNumeric( next ).doubleValue() > min.doubleValue() )
             {
               setPoint = true;
@@ -76,7 +77,7 @@ public class DefaultLineLayer extends AbstractLineLayer
           }
           else if( dopDomain.logicalToNumeric( domVal ).doubleValue() > max.doubleValue() && i > 0 )
           {
-            Object prev = domainData[i - 1];
+            final Object prev = domainData[i - 1];
             if( dopDomain.logicalToNumeric( prev ).doubleValue() < max.doubleValue() )
             {
               setPoint = true;
@@ -90,7 +91,7 @@ public class DefaultLineLayer extends AbstractLineLayer
             final int domScreen = getDomainAxis().numericToScreen( dopDomain.logicalToNumeric( domVal ) );
             final int valScreen = getTargetAxis().numericToScreen( dopTarget.logicalToNumeric( targetVal ) );
             // Koordinaten switchen
-            Point unswitched = new Point( domScreen, valScreen );
+            final Point unswitched = new Point( domScreen, valScreen );
             path.add( new Point( ori.getX( unswitched ), ori.getY( unswitched ) ) );
           }
         }
@@ -120,9 +121,9 @@ public class DefaultLineLayer extends AbstractLineLayer
   @SuppressWarnings("unchecked")
   public IDataRange<Number> getDomainRange( )
   {
-    IDataRange domainRange = m_dataContainer.getDomainRange();
-    Object max = domainRange.getMax();
-    IDataOperator dop = getDomainAxis().getDataOperator( max.getClass() );
+    final IDataRange domainRange = m_dataContainer.getDomainRange();
+    final Object max = domainRange.getMax();
+    final IDataOperator dop = getDomainAxis().getDataOperator( max.getClass() );
     return new DataRange<Number>( dop.logicalToNumeric( domainRange.getMin() ), dop.logicalToNumeric( domainRange.getMax() ) );
   }
 
@@ -131,11 +132,11 @@ public class DefaultLineLayer extends AbstractLineLayer
    */
   @Override
   @SuppressWarnings("unchecked")
-  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
-    IDataRange targetRange = m_dataContainer.getTargetRange();
-    Object max = targetRange.getMax();
-    IDataOperator top = getTargetAxis().getDataOperator( max.getClass() );
+    final IDataRange targetRange = m_dataContainer.getTargetRange();
+    final Object max = targetRange.getMax();
+    final IDataOperator top = getTargetAxis().getDataOperator( max.getClass() );
     return new DataRange<Number>( top.logicalToNumeric( targetRange.getMin() ), top.logicalToNumeric( targetRange.getMax() ) );
   }
 

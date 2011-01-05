@@ -8,6 +8,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.TextFigure;
@@ -33,14 +34,18 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
 
   private TextFigure m_textFigure;
 
-  public AbstractLineLayer( final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public AbstractLineLayer( final ILayerProvider provider, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
+    super( provider );
+
     getPolylineFigure().setStyle( lineStyle );
     getPointFigure().setStyle( pointStyle );
   }
 
-  public AbstractLineLayer( final StyleSet styleSet )
+  public AbstractLineLayer( final ILayerProvider provider, final StyleSet styleSet )
   {
+    super( provider );
+
     final StyleSetVisitor visitor = new StyleSetVisitor();
     final ILineStyle ls = visitor.visit( styleSet, ILineStyle.class, 0 );
     final IPointStyle ps = visitor.visit( styleSet, IPointStyle.class, 0 );

@@ -44,6 +44,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -62,9 +63,9 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
    */
   private static final String ID = "de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer";
 
-  public DefaultTickRasterLayer( final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public DefaultTickRasterLayer( final ILayerProvider provider, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( lineStyle, pointStyle );
+    super( provider, lineStyle, pointStyle );
     setId( ID );
   }
 

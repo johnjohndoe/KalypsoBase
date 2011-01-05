@@ -1,4 +1,4 @@
-package org.kalypso.chart.ext.test.layer.provider;
+package org.kalypso.chart.ext.test.layer;
 
 import java.util.ArrayList;
 
@@ -6,6 +6,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.ext.base.layer.DefaultLineLayer;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.ITabularDataContainer;
@@ -19,9 +20,9 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 public class DefaultUnfilteredLineLayer extends DefaultLineLayer
 {
 
-  public DefaultUnfilteredLineLayer( ITabularDataContainer data, ILineStyle lineStyle, IPointStyle pointStyle )
+  public DefaultUnfilteredLineLayer( final ILayerProvider provider, final ITabularDataContainer data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( data, lineStyle, pointStyle );
+    super( provider, data, lineStyle, pointStyle );
   }
 
   /**
@@ -30,7 +31,7 @@ public class DefaultUnfilteredLineLayer extends DefaultLineLayer
    */
   @SuppressWarnings("unchecked")
   @Override
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
     final ITabularDataContainer dataContainer = getDataContainer();
     if( dataContainer != null )
@@ -40,11 +41,11 @@ public class DefaultUnfilteredLineLayer extends DefaultLineLayer
       final Object[] domainData = dataContainer.getDomainValues();
       final Object[] targetData = dataContainer.getTargetValues();
 
-      IDataOperator dopDomain = getDomainAxis().getDataOperator( domainData[0].getClass() );
-      IDataOperator dopTarget = getTargetAxis().getDataOperator( targetData[0].getClass() );
+      final IDataOperator dopDomain = getDomainAxis().getDataOperator( domainData[0].getClass() );
+      final IDataOperator dopTarget = getTargetAxis().getDataOperator( targetData[0].getClass() );
 
       final ArrayList<Point> path = new ArrayList<Point>();
-      ORIENTATION ori = getDomainAxis().getPosition().getOrientation();
+      final ORIENTATION ori = getDomainAxis().getPosition().getOrientation();
       for( int i = 0; i < domainData.length; i++ )
       {
         final Object domVal = domainData[i];
@@ -52,7 +53,7 @@ public class DefaultUnfilteredLineLayer extends DefaultLineLayer
         final int domScreen = getDomainAxis().numericToScreen( dopDomain.logicalToNumeric( domVal ) );
         final int valScreen = getTargetAxis().numericToScreen( dopTarget.logicalToNumeric( targetVal ) );
         // Koordinaten switchen
-        Point unswitched = new Point( domScreen, valScreen );
+        final Point unswitched = new Point( domScreen, valScreen );
         path.add( new Point( ori.getX( unswitched ), ori.getY( unswitched ) ) );
       }
 

@@ -50,6 +50,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -87,9 +88,10 @@ public class RealTupleResultLineLayer extends AbstractLineLayer
 
   private IDataRange<Number> m_domainRange;
 
-  public RealTupleResultLineLayer( final TupleResult data, final String domainComponentId, final String targetComponentId, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public RealTupleResultLineLayer( final ILayerProvider provider, final TupleResult data, final String domainComponentId, final String targetComponentId, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( lineStyle, pointStyle );
+    super( provider, lineStyle, pointStyle );
+
     m_data = data;
     m_domainComponentId = domainComponentId;
     m_targetComponentId = targetComponentId;
@@ -125,7 +127,7 @@ public class RealTupleResultLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     if( m_isInited )
     {

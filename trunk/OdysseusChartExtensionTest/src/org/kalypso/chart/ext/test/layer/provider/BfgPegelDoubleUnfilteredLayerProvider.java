@@ -51,7 +51,6 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author alibu
- * 
  */
 public class BfgPegelDoubleUnfilteredLayerProvider extends BfgPegelDoubleLayerProvider
 {
@@ -60,8 +59,8 @@ public class BfgPegelDoubleUnfilteredLayerProvider extends BfgPegelDoubleLayerPr
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
-  public IChartLayer getLayer( URL context ) throws ConfigurationException
+  public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
-    return new DefaultDoubleUnfilteredLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+    return new DefaultDoubleUnfilteredLineLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
   }
 }

@@ -25,9 +25,9 @@ public class EditableLineLayerProvider<T_domain, T_target> extends AbstractLayer
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
-public IChartLayer getLayer( final URL context )
+  public IChartLayer getLayer( final URL context )
   {
-    return new EditableLineLayer( getDataContainer(), getStyleSet().getStyle( ROLE_LINE_STYLE, ILineStyle.class ), getStyleSet().getStyle( ROLE_POINT_STYLE, IPointStyle.class ) );
+    return new EditableLineLayer( this, getDataContainer(), getStyleSet().getStyle( ROLE_LINE_STYLE, ILineStyle.class ), getStyleSet().getStyle( ROLE_POINT_STYLE, IPointStyle.class ) );
   }
 
   /**

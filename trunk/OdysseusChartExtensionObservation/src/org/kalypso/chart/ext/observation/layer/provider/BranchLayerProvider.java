@@ -37,22 +37,22 @@ public class BranchLayerProvider extends AbstractLayerProvider
     {
       workspace = GmlSerializer.createGMLWorkspace( new URL( getContext(), href ), null );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       throw new ConfigurationException( "invalid URL", e );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       throw new ConfigurationException( "an exception occurred", e );
     }
     final Feature feature = workspace.getFeature( observationId );
     if( feature != null )
       Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Found feature: " + feature.getId() );
-    IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( feature );
+    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( feature );
 
-    BranchLayer layer = new BranchLayer( observation.getResult(), domainComponentName, targetComponentName, iconComponentName, getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
-    Set<Entry<String, String>> entrySet = getMapperMap().entrySet();
-    for( Entry<String, String> e : entrySet )
+    final BranchLayer layer = new BranchLayer( this, observation.getResult(), domainComponentName, targetComponentName, iconComponentName, getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+    final Set<Entry<String, String>> entrySet = getMapperMap().entrySet();
+    for( final Entry<String, String> e : entrySet )
       layer.addMapper( e.getKey(), (IRetinalMapper) getChartModel().getMapperRegistry().getMapper( e.getValue() ) );
     layer.init();
     return layer;

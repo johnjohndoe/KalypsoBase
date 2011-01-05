@@ -56,6 +56,7 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -109,23 +110,23 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
    * @param iconComponent
    *          the component which shall be mapped to an icon
    */
-  public BranchLayer( TupleResult data, String domainComponentId, String targetComponentId, String iconComponentenId, ILineStyle lineStyle, IPointStyle pointStyle )
+  public BranchLayer( final ILayerProvider provider, final TupleResult data, final String domainComponentId, final String targetComponentId, final String iconComponentenId, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( lineStyle, pointStyle );
+    super( provider, lineStyle, pointStyle );
+
     m_data = data;
     m_domainComponentId = domainComponentId;
     m_targetComponentId = targetComponentId;
     m_iconComponentId = iconComponentenId;
-
   }
 
   @Override
-  @SuppressWarnings( { "unchecked", "deprecation" })
+  @SuppressWarnings({ "unchecked", "deprecation" })
   public void init( )
   {
     // find components
-    IComponent[] components = m_data.getComponents();
-    for( IComponent component : components )
+    final IComponent[] components = m_data.getComponents();
+    for( final IComponent component : components )
       if( component.getId().equals( m_domainComponentId ) )
         m_domainComponent = component;
       else if( component.getId().equals( m_targetComponentId ) )
@@ -139,19 +140,19 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
     // Icon-Mapping vorbereiten
 
     m_mapping = new HashMap<Object, IPointStyle>();
-    IRetinalMapper mapper = getMapper( "icon" );
-    IDataOperator dop = mapper.getDataOperator( String.class );
+    final IRetinalMapper mapper = getMapper( "icon" );
+    final IDataOperator dop = mapper.getDataOperator( String.class );
 
-    String[] smallStyles = new String[] { "ConnectionNode", "LinkageNode", "CrossSectionNode" };
+    final String[] smallStyles = new String[] { "ConnectionNode", "LinkageNode", "CrossSectionNode" };
 
     for( int i = 0; i < m_data.size(); i++ )
     {
-      IRecord record = m_data.get( i );
-      Object value = record.getValue( m_iconComponent );
+      final IRecord record = m_data.get( i );
+      final Object value = record.getValue( m_iconComponent );
       if( !m_mapping.containsKey( value ) )
       {
 
-        IPointStyle iconStyle = mapper.numericToScreen( dop.logicalToNumeric( value ), (IPointStyle)getPointStyle() );
+        final IPointStyle iconStyle = mapper.numericToScreen( dop.logicalToNumeric( value ), (IPointStyle) getPointStyle() );
         if( !ArrayUtils.contains( smallStyles, value ) )
         {
           iconStyle.setHeight( 16 );
@@ -184,7 +185,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     if( m_isInited )
     {
@@ -200,35 +201,35 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
    */
   @Override
   @SuppressWarnings("deprecation")
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
 
-    List<Point> path = new ArrayList<Point>();
+    final List<Point> path = new ArrayList<Point>();
 
-    for( Object o : m_mapping.keySet() )
+    for( final Object o : m_mapping.keySet() )
       m_pointMarks.put( o, new ArrayList<Point>() );
 
     if( m_isInited )
       for( int i = 0; i < m_data.size(); i++ )
       {
-        IRecord record = m_data.get( i );
-        Point point = getCoordinateMapper().logicalToScreen( record.getValue( m_domainComponent ), record.getValue( m_targetComponent ) );
+        final IRecord record = m_data.get( i );
+        final Point point = getCoordinateMapper().logicalToScreen( record.getValue( m_domainComponent ), record.getValue( m_targetComponent ) );
         path.add( point );
         // Punkte merken
         m_pointMarks.get( record.getValue( m_iconComponent ) ).add( point );
       }
 
-    PolylineFigure polylineFigure = getPolylineFigure();
+    final PolylineFigure polylineFigure = getPolylineFigure();
     polylineFigure.setPoints( path.toArray( new Point[] {} ) );
     polylineFigure.paint( gc );
 
     // Punkte zeichnen
-    for( Entry<Object, ArrayList<Point>> e : m_pointMarks.entrySet() )
+    for( final Entry<Object, ArrayList<Point>> e : m_pointMarks.entrySet() )
     {
-      ArrayList<Point> points = e.getValue();
-      PointFigure pointFigure = getPointFigure();
-      Object nodeType = e.getKey();
-      IPointStyle iconStyle = m_mapping.get( nodeType );
+      final ArrayList<Point> points = e.getValue();
+      final PointFigure pointFigure = getPointFigure();
+      final Object nodeType = e.getKey();
+      final IPointStyle iconStyle = m_mapping.get( nodeType );
 
       pointFigure.setStyle( iconStyle );
       pointFigure.setPoints( points.toArray( new Point[points.size()] ) );
@@ -238,17 +239,17 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
 
   }
 
-  @SuppressWarnings( { "unchecked", "deprecation" })
-  private static IDataRange<Number> getRange( TupleResult data, IComponent comp, IAxis axis )
+  @SuppressWarnings({ "unchecked", "deprecation" })
+  private static IDataRange<Number> getRange( final TupleResult data, final IComponent comp, final IAxis axis )
   {
-    int size = data.size();
+    final int size = data.size();
     Object value = null;
     IDataOperator op = null;
     double min = Double.MAX_VALUE;
     double max = -Double.MAX_VALUE;
     for( int i = 0; i < size; i++ )
     {
-      IRecord record = data.get( i );
+      final IRecord record = data.get( i );
       value = record.getValue( comp );
 
       // Beim ersten Mal: abfragen
@@ -278,19 +279,19 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
   public ILegendEntry[] createLegendEntries( )
   {
 
-    ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
-    ILineStyle ls = getPolylineFigure().getStyle();
+    final ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
+    final ILineStyle ls = getPolylineFigure().getStyle();
     if( ls.isVisible() )
     {
 
-      LegendEntry le = new LegendEntry( this, "Length section" )
+      final LegendEntry le = new LegendEntry( this, "Length section" )
       {
 
         @Override
-        public void paintSymbol( GC gc, Point size )
+        public void paintSymbol( final GC gc, final Point size )
         {
-          int sizeX = size.x;
-          int sizeY = size.y;
+          final int sizeX = size.x;
+          final int sizeY = size.y;
 
           final ArrayList<Point> path = new ArrayList<Point>();
           path.add( new Point( 0, sizeX / 2 ) );
@@ -308,16 +309,16 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
     }
 
     final PointFigure pf = new PointFigure();
-    for( Entry<Object, IPointStyle> e : m_mapping.entrySet() )
+    for( final Entry<Object, IPointStyle> e : m_mapping.entrySet() )
     {
       final IPointStyle ps = e.getValue();
       if( ps.isVisible() )
       {
 
-        LegendEntry le = new LegendEntry( this, e.getKey().toString() )
+        final LegendEntry le = new LegendEntry( this, e.getKey().toString() )
         {
           @Override
-          public void paintSymbol( GC gc, Point size )
+          public void paintSymbol( final GC gc, final Point size )
           {
             pf.setPoints( new Point[] { new Point( size.x / 2, size.y / 2 ) } );
             pf.setStyle( ps );
@@ -336,13 +337,13 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
    * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
    */
   @Override
-  @SuppressWarnings( { "unchecked", "deprecation" })
-  public EditInfo getHover( Point pos )
+  @SuppressWarnings({ "unchecked", "deprecation" })
+  public EditInfo getHover( final Point pos )
   {
     // Umrechnen von screen nach logisch
-    int tolerance = 4;
-    IAxis domainAxis = getDomainAxis();
-    IAxis targetAxis = getTargetAxis();
+    final int tolerance = 4;
+    final IAxis domainAxis = getDomainAxis();
+    final IAxis targetAxis = getTargetAxis();
 
     int domPos;
     int tarPos;
@@ -357,13 +358,13 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
       tarPos = pos.x;
     }
 
-    Number domainVal1 = domainAxis.screenToNumeric( domPos - tolerance );
-    Number domainVal2 = domainAxis.screenToNumeric( domPos + tolerance );
-    Number targetVal1 = targetAxis.screenToNumeric( tarPos + tolerance );
-    Number targetVal2 = targetAxis.screenToNumeric( tarPos - tolerance );
+    final Number domainVal1 = domainAxis.screenToNumeric( domPos - tolerance );
+    final Number domainVal2 = domainAxis.screenToNumeric( domPos + tolerance );
+    final Number targetVal1 = targetAxis.screenToNumeric( tarPos + tolerance );
+    final Number targetVal2 = targetAxis.screenToNumeric( tarPos - tolerance );
 
-    Comparator ct = getTargetAxis().getDataOperator( domainVal1.getClass() ).getComparator();
-    Comparator cd = getDomainAxis().getDataOperator( targetVal1.getClass() ).getComparator();
+    final Comparator ct = getTargetAxis().getDataOperator( domainVal1.getClass() ).getComparator();
+    final Comparator cd = getDomainAxis().getDataOperator( targetVal1.getClass() ).getComparator();
 
     // Jetzt rausfinden, welches der größere und welcher der kleinere Wert ist und entsprechend zuweisen
     Object domainValMin;
@@ -395,15 +396,15 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
     // herausfinden, ob der Punkt IN DER NAEHE eines Datenpunktes liegt
     for( int i = 0; i < m_data.size(); i++ )
     {
-      IRecord record = m_data.get( i );
-      Object domainVal = record.getValue( m_domainComponent );
+      final IRecord record = m_data.get( i );
+      final Object domainVal = record.getValue( m_domainComponent );
       // Abbrechen, wenn wir über die Domain-Range raus sind
       if( cd.compare( domainVal, domainValMax ) > 0 )
         break;
 
       if( cd.compare( domainVal, domainValMin ) >= 0 )
       {
-        Object targetVal = record.getValue( m_targetComponent );
+        final Object targetVal = record.getValue( m_targetComponent );
         if( (ct.compare( targetVal, targetValMin ) >= 0) && (ct.compare( targetVal, targetValMax ) <= 0) )
           return createTooltipInfo( pos, i );
       }
@@ -417,8 +418,8 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
    * @param pos
    *          position of edited / hovered data in data set
    */
-  @SuppressWarnings( { "unchecked", "deprecation" })
-  private <T_domain, T_target> EditInfo createTooltipInfo( Point mousePos, int pos )
+  @SuppressWarnings({ "unchecked", "deprecation" })
+  private <T_domain, T_target> EditInfo createTooltipInfo( final Point mousePos, final int pos )
   {
     final IRecord record = m_data.get( pos );
     final T_domain domainVal = (T_domain) record.getValue( m_domainComponent );
@@ -426,41 +427,41 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
 
     if( (domainVal != null) && (targetVal != null) )
     {
-      IAxis domainAxis = getDomainAxis();
-      IAxis targetAxis = getTargetAxis();
-      IDataOperator<T_domain> dopDomain = domainAxis.getDataOperator( (Class<T_domain>) domainVal.getClass() );
-      IDataOperator<T_target> dopTarget = targetAxis.getDataOperator( (Class<T_target>) targetVal.getClass() );
+      final IAxis domainAxis = getDomainAxis();
+      final IAxis targetAxis = getTargetAxis();
+      final IDataOperator<T_domain> dopDomain = domainAxis.getDataOperator( (Class<T_domain>) domainVal.getClass() );
+      final IDataOperator<T_target> dopTarget = targetAxis.getDataOperator( (Class<T_target>) targetVal.getClass() );
 
-      Number dataDomainValNum = dopDomain.logicalToNumeric( domainVal );
-      Number dataTargetValNum = dopTarget.logicalToNumeric( targetVal );
+      final Number dataDomainValNum = dopDomain.logicalToNumeric( domainVal );
+      final Number dataTargetValNum = dopTarget.logicalToNumeric( targetVal );
 
       Point dataPos = null;
       if( (dataDomainValNum != null) && (dataTargetValNum != null) )
         dataPos = getCoordinateMapper().numericToScreen( dataDomainValNum, dataTargetValNum );
 
-      IRetinalMapper mapper = getMapper( "icon" );
-      Object iconVal = record.getValue( m_iconComponent );
-      IDataOperator iop = mapper.getDataOperator( iconVal.getClass() );
+      final IRetinalMapper mapper = getMapper( "icon" );
+      final Object iconVal = record.getValue( m_iconComponent );
+      final IDataOperator iop = mapper.getDataOperator( iconVal.getClass() );
 
-      m_hoverStyle = mapper.numericToScreen( iop.logicalToNumeric( iconVal ), (IPointStyle)getPointStyle() );
+      m_hoverStyle = mapper.numericToScreen( iop.logicalToNumeric( iconVal ), (IPointStyle) getPointStyle() );
       m_hoverStyle.getStroke().setVisible( true );
       m_hoverStyle.setWidth( 20 );
       m_hoverStyle.setHeight( 20 );
 
-      PointFigure hoverFigure = new PointFigure();
+      final PointFigure hoverFigure = new PointFigure();
       hoverFigure.setStyle( m_hoverStyle );
       hoverFigure.setPoints( new Point[] { dataPos } );
-      IPaintable hoverPaintable = hoverFigure;
+      final IPaintable hoverPaintable = hoverFigure;
 
       // text für ToolTip
-      String domainValStr = domainAxis.getDataOperator( (Class<T_domain>) domainVal.getClass() ).getFormat( domainAxis.getNumericRange() ).format( domainVal );
-      String targetValStr = targetAxis.getDataOperator( (Class<T_target>) targetVal.getClass() ).getFormat( targetAxis.getNumericRange() ).format( targetVal );
-      Format format = mapper.getDataOperator( iconVal.getClass() ).getFormat( null );
-      String iconValStr = format.format( iconVal );
+      final String domainValStr = domainAxis.getDataOperator( (Class<T_domain>) domainVal.getClass() ).getFormat( domainAxis.getNumericRange() ).format( domainVal );
+      final String targetValStr = targetAxis.getDataOperator( (Class<T_target>) targetVal.getClass() ).getFormat( targetAxis.getNumericRange() ).format( targetVal );
+      final Format format = mapper.getDataOperator( iconVal.getClass() ).getFormat( null );
+      final String iconValStr = format.format( iconVal );
 
-      String editText = getTitle() + "\n" + domainAxis.getLabel() + ": " + domainValStr + "\n" + targetAxis.getLabel() + ": " + targetValStr + "\n" + iconValStr;
+      final String editText = getTitle() + "\n" + domainAxis.getLabel() + ": " + domainValStr + "\n" + targetAxis.getLabel() + ": " + targetValStr + "\n" + iconValStr;
 
-      EditInfo info = new EditInfo( this, hoverPaintable, null, null, editText, mousePos );
+      final EditInfo info = new EditInfo( this, hoverPaintable, null, null, editText, mousePos );
 
       // falls der Punkt in den Daten vorhanden ist, dann eine Info zurückgeben
       return info;

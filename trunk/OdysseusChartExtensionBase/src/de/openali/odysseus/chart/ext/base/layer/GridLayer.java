@@ -7,6 +7,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
@@ -38,8 +39,10 @@ public class GridLayer extends AbstractChartLayer
 
   private final ILineStyle m_gridStyle;
 
-  public GridLayer( GridOrientation orientation, ILineStyle gridStyle )
+  public GridLayer( final ILayerProvider provider, final GridOrientation orientation, final ILineStyle gridStyle )
   {
+    super( provider );
+
     m_orientation = orientation;
     m_gridStyle = gridStyle;
   }
@@ -59,7 +62,7 @@ public class GridLayer extends AbstractChartLayer
     IAxis hAxis = null;
     IAxis vAxis = null;
 
-    PolylineFigure figure = getPolylineFigure();
+    final PolylineFigure figure = getPolylineFigure();
 
     // Welche ist die horizontale, welche die horizontale Achse?
     if( getDomainAxis().getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
@@ -122,19 +125,19 @@ public class GridLayer extends AbstractChartLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return null;
   }
 
-  public void drawIcon( Image img )
+  public void drawIcon( final Image img )
   {
     final Rectangle bounds = img.getBounds();
     final int height = bounds.height;
     final int width = bounds.width;
     final GC gc = new GC( img );
 
-    PolylineFigure figure = getPolylineFigure();
+    final PolylineFigure figure = getPolylineFigure();
 
     final ArrayList<Point> points = new ArrayList<Point>();
     // Linie von links nach rechts
@@ -170,8 +173,8 @@ public class GridLayer extends AbstractChartLayer
 
   private PolylineFigure getPolylineFigure( )
   {
-    ILineStyle style = getGridStyle();
-    PolylineFigure figure = new PolylineFigure();
+    final ILineStyle style = getGridStyle();
+    final PolylineFigure figure = new PolylineFigure();
     figure.setStyle( style );
     return figure;
 
@@ -191,18 +194,18 @@ public class GridLayer extends AbstractChartLayer
   public ILegendEntry[] createLegendEntries( )
   {
 
-    ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
+    final ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
     final PolylineFigure pf = getPolylineFigure();
-    ILineStyle ls = pf.getStyle();
-    String title = ls.getTitle();
+    final ILineStyle ls = pf.getStyle();
+    final String title = ls.getTitle();
     if( ls.isVisible() )
     {
 
-      LegendEntry le = new LegendEntry( this, title )
+      final LegendEntry le = new LegendEntry( this, title )
       {
 
         @Override
-        public void paintSymbol( GC gc, Point size )
+        public void paintSymbol( final GC gc, final Point size )
         {
           final int height = size.x;
           final int width = size.y;

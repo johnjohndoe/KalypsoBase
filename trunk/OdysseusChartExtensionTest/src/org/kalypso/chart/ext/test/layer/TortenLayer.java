@@ -54,6 +54,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
@@ -69,39 +70,41 @@ public class TortenLayer extends AbstractChartLayer
 
   private final int m_pieces;
 
-  public TortenLayer( int pieces )
+  public TortenLayer( final ILayerProvider provider, final int pieces )
   {
+    super( provider );
+
     m_pieces = pieces;
   }
 
   /**
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image)
    */
-  public void drawIcon( Image img )
+  public void drawIcon( final Image img )
   {
     // TODO Auto-generated method stub
-    Rectangle size = img.getBounds();
-    int width = size.x;
-    int height = size.y;
+    final Rectangle size = img.getBounds();
+    final int width = size.x;
+    final int height = size.y;
 
-    GC gc = new GC( img );
+    final GC gc = new GC( img );
 
     gc.setAntialias( SWT.ON );
 
-    int centerX = 0;
-    int centerY = 0;
+    final int centerX = 0;
+    final int centerY = 0;
 
     for( int i = 0; i < m_pieces; i++ )
     {
-      int angleStart = i * (int) (360.0f / m_pieces);
+      final int angleStart = i * (int) (360.0f / m_pieces);
 
-      int angle = (int) ((360.0f / m_pieces));
+      final int angle = (int) ((360.0f / m_pieces));
 
-      java.awt.Color color = new java.awt.Color( java.awt.Color.HSBtoRGB( ((1.0f / m_pieces) * (i)), 1.0f, 1.0f ) );
+      final java.awt.Color color = new java.awt.Color( java.awt.Color.HSBtoRGB( ((1.0f / m_pieces) * (i)), 1.0f, 1.0f ) );
 
-      RGB fillRGB = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
+      final RGB fillRGB = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
 
-      Color fillColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), fillRGB );
+      final Color fillColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), fillRGB );
       gc.setBackground( fillColor );
       gc.fillArc( centerX, centerY, width - 1, height - 1, angleStart, angle );
       fillColor.dispose();
@@ -118,22 +121,22 @@ public class TortenLayer extends AbstractChartLayer
    * @see org.kalypso.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
-public void paint( GC gc )
+  public void paint( final GC gc )
   {
-    IAxis da = getDomainAxis();
-    IAxis ta = getTargetAxis();
+    final IAxis da = getDomainAxis();
+    final IAxis ta = getTargetAxis();
 
-    int startX = da.numericToScreen( -100 );
-    int startY = ta.numericToScreen( -100 );
-    int endX = da.numericToScreen( 100 );
-    int endY = ta.numericToScreen( 100 );
-    int centerX = da.numericToScreen( 0 );
-    int centerY = ta.numericToScreen( 0 );
+    final int startX = da.numericToScreen( -100 );
+    final int startY = ta.numericToScreen( -100 );
+    final int endX = da.numericToScreen( 100 );
+    final int endY = ta.numericToScreen( 100 );
+    final int centerX = da.numericToScreen( 0 );
+    final int centerY = ta.numericToScreen( 0 );
 
-    int width = Math.abs( endX - startX );
-    int height = Math.abs( endY - startY );
+    final int width = Math.abs( endX - startX );
+    final int height = Math.abs( endY - startY );
 
-    Device dev = gc.getDevice();
+    final Device dev = gc.getDevice();
     gc.setForeground( dev.getSystemColor( SWT.COLOR_BLACK ) );
 
     gc.setBackground( dev.getSystemColor( SWT.COLOR_BLACK ) );
@@ -145,15 +148,15 @@ public void paint( GC gc )
 
     for( int i = 0; i < m_pieces; i++ )
     {
-      int angleStart = i * (int) (360.0f / m_pieces);
+      final int angleStart = i * (int) (360.0f / m_pieces);
 
-      int angle = (int) ((360.0f / m_pieces));
+      final int angle = (int) ((360.0f / m_pieces));
 
-      java.awt.Color color = new java.awt.Color( java.awt.Color.HSBtoRGB( ((1.0f / m_pieces) * (i)), 1.0f, 1.0f ) );
+      final java.awt.Color color = new java.awt.Color( java.awt.Color.HSBtoRGB( ((1.0f / m_pieces) * (i)), 1.0f, 1.0f ) );
 
-      RGB fillRGB = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
+      final RGB fillRGB = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
 
-      Color fillColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( dev, fillRGB );
+      final Color fillColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( dev, fillRGB );
       gc.setBackground( fillColor );
       gc.setForeground( dev.getSystemColor( SWT.COLOR_BLACK ) );
       gc.setLineWidth( 5 );
@@ -167,15 +170,15 @@ public void paint( GC gc )
     gc.setLineWidth( 5 );
     for( int i = 0; i < m_pieces; i++ )
     {
-      int angleStart = (int) (i * (360.0f / m_pieces));
+      final int angleStart = (int) (i * (360.0f / m_pieces));
 
-      double angleRad = Math.toRadians( angleStart );
+      final double angleRad = Math.toRadians( angleStart );
 
-      double h = 100.0f;
-      double g = (Math.sin( angleRad ) * h);
-      double a = (Math.cos( angleRad ) * h);
-      double gStrich = ta.numericToScreen( g ) - centerY;
-      double aStrich = da.numericToScreen( a ) - centerX;
+      final double h = 100.0f;
+      final double g = (Math.sin( angleRad ) * h);
+      final double a = (Math.cos( angleRad ) * h);
+      final double gStrich = ta.numericToScreen( g ) - centerY;
+      final double aStrich = da.numericToScreen( a ) - centerX;
 
       gc.drawLine( centerX, centerY, (int) (centerX + aStrich), (int) (centerY + gStrich) );
 
@@ -186,19 +189,19 @@ public void paint( GC gc )
     gc.setForeground( dev.getSystemColor( SWT.COLOR_WHITE ) );
     for( int i = 0; i < m_pieces; i++ )
     {
-      int angleStart = (int) (i * (360.0f / m_pieces));
+      final int angleStart = (int) (i * (360.0f / m_pieces));
 
-      double angleRad = Math.toRadians( angleStart );
+      final double angleRad = Math.toRadians( angleStart );
 
-      double h = 100.0f;
-      double g = (int) (Math.sin( angleRad ) * h);
-      double a = (int) (Math.cos( angleRad ) * h);
-      double gStrich = ta.numericToScreen( g ) - centerY;
-      double aStrich = da.numericToScreen( a ) - centerX;
+      final double h = 100.0f;
+      final double g = (int) (Math.sin( angleRad ) * h);
+      final double a = (int) (Math.cos( angleRad ) * h);
+      final double gStrich = ta.numericToScreen( g ) - centerY;
+      final double aStrich = da.numericToScreen( a ) - centerX;
 
-      double hStrich = (Math.sqrt( Math.pow( aStrich, 2 ) + Math.pow( gStrich, 2 ) ));
+      final double hStrich = (Math.sqrt( Math.pow( aStrich, 2 ) + Math.pow( gStrich, 2 ) ));
 
-      Transform t = new Transform( dev );
+      final Transform t = new Transform( dev );
       t.translate( centerX, centerY );
       t.rotate( angleStart );
 
@@ -212,13 +215,13 @@ public void paint( GC gc )
   }
 
   @Override
-public IDataRange<Number> getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     return new ComparableDataRange<Number>( new Number[] { -100, 100 } );
   }
 
   @Override
-public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return new ComparableDataRange<Number>( new Number[] { -100, 100 } );
   }
@@ -230,22 +233,22 @@ public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
   public ILegendEntry[] createLegendEntries( )
   {
 
-    List<ILegendEntry> entries = new ArrayList<ILegendEntry>();
+    final List<ILegendEntry> entries = new ArrayList<ILegendEntry>();
     for( int i = 0; i < m_pieces; i++ )
     {
 
       final int count = i;
-      ILegendEntry entry = new LegendEntry( this, "Tortenstück " + i )
+      final ILegendEntry entry = new LegendEntry( this, "Tortenstück " + i )
       {
         @Override
-        public void paintSymbol( GC gc, Point size )
+        public void paintSymbol( final GC gc, final Point size )
         {
           // TortenLayer.this.createLegendEntries();
-          int width = size.x;
-          int height = size.y;
-          java.awt.Color color = new java.awt.Color( java.awt.Color.HSBtoRGB( ((1.0f / m_pieces) * (count)), 1.0f, 1.0f ) );
-          RGB fillRGB = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
-          Color fillColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), fillRGB );
+          final int width = size.x;
+          final int height = size.y;
+          final java.awt.Color color = new java.awt.Color( java.awt.Color.HSBtoRGB( ((1.0f / m_pieces) * (count)), 1.0f, 1.0f ) );
+          final RGB fillRGB = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
+          final Color fillColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), fillRGB );
           gc.setBackground( fillColor );
           gc.fillRectangle( 0, 0, width, height );
         }
@@ -267,7 +270,7 @@ public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
    */
   @Override
-public void dispose( )
+  public void dispose( )
   {
     // nothing to do
   }

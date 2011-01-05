@@ -42,6 +42,7 @@ package org.kalypso.chart.ext.test.layer;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.chart.ext.test.layer.provider.TooltipTestLayerProvider;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -57,24 +58,29 @@ import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 public class TooltipTestLayer extends AbstractChartLayer implements ITooltipChartLayer
 {
 
+  public TooltipTestLayer( final TooltipTestLayerProvider provider )
+  {
+    super( provider );
+  }
+
   /**
    * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
    */
   @Override
   protected ILegendEntry[] createLegendEntries( )
   {
-    LegendEntry le = new LegendEntry(this, getDescription())
+    final LegendEntry le = new LegendEntry( this, getDescription() )
     {
 
       @Override
-      public void paintSymbol( GC gc, Point size )
+      public void paintSymbol( final GC gc, final Point size )
       {
         // TODO Auto-generated method stub
-        
+
       }
-      
+
     };
-    return new ILegendEntry[]{le};
+    return new ILegendEntry[] { le };
   }
 
   /**
@@ -100,7 +106,7 @@ public class TooltipTestLayer extends AbstractChartLayer implements ITooltipChar
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return new DataRange<Number>( 0, 1 );
   }
@@ -109,7 +115,7 @@ public class TooltipTestLayer extends AbstractChartLayer implements ITooltipChar
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
     // TODO Auto-generated method stub
 
@@ -119,7 +125,7 @@ public class TooltipTestLayer extends AbstractChartLayer implements ITooltipChar
    * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
    */
   @Override
-  public EditInfo getHover( Point pos )
+  public EditInfo getHover( final Point pos )
   {
     String text = "Halli Hallo.\n ";
     text += "Ich bin ein richtig langer Text, der als Tooltip meist im Wege steht.\n";

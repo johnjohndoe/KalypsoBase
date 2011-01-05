@@ -6,6 +6,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.ext.base.data.AbstractDomainIntervalValueData;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
@@ -20,9 +21,9 @@ public class DefaultBarLayer extends AbstractBarLayer
 {
   private final AbstractDomainIntervalValueData m_data;
 
-  public DefaultBarLayer( final AbstractDomainIntervalValueData data, final IAreaStyle areaStyle )
+  public DefaultBarLayer( final ILayerProvider provider, final AbstractDomainIntervalValueData data, final IAreaStyle areaStyle )
   {
-    super( areaStyle );
+    super( provider, areaStyle );
     m_data = data;
   }
 
@@ -85,7 +86,7 @@ public class DefaultBarLayer extends AbstractBarLayer
   }
 
   @Override
-  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     // muss als minimalen Wert 0 zurückgeben, weil die Bars bis dahin laufen
     final IDataRange targetRange = getDataContainer().getTargetRange();

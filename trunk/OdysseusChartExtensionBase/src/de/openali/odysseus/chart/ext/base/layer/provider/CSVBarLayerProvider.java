@@ -34,7 +34,7 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    return new DefaultBarLayer( getDataContainer(), getStyleSet().getStyle( ROLE_BAR_STYLE, IAreaStyle.class ) );
+    return new DefaultBarLayer( this, getDataContainer(), getStyleSet().getStyle( ROLE_BAR_STYLE, IAreaStyle.class ) );
   }
 
   private Calendar createDate( final String s )
@@ -73,7 +73,7 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
     final AbstractDomainIntervalValueFileData data = new AbstractDomainIntervalValueFileData()
     {
 
-      @SuppressWarnings( { "cast", "unchecked" })
+      @SuppressWarnings({ "cast", "unchecked" })
       @Override
       public boolean openData( )
       {

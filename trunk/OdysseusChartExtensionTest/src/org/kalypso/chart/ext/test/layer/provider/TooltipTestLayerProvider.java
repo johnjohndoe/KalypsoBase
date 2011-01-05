@@ -59,7 +59,7 @@ public class TooltipTestLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    return new TooltipTestLayer();
+    return new TooltipTestLayer( this );
   }
 
 }

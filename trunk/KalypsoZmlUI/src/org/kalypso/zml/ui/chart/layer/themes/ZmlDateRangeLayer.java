@@ -46,6 +46,7 @@ import org.eclipse.swt.graphics.GC;
 import org.kalypso.ogc.sensor.DateRange;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
@@ -63,8 +64,10 @@ public class ZmlDateRangeLayer extends AbstractChartLayer
 
   private final DateRange m_daterange;
 
-  public ZmlDateRangeLayer( final DateRange daterange )
+  public ZmlDateRangeLayer( final ILayerProvider provider, final DateRange daterange )
   {
+    super( provider );
+
     m_daterange = daterange;
   }
 
@@ -96,7 +99,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange(final IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return null;
   }

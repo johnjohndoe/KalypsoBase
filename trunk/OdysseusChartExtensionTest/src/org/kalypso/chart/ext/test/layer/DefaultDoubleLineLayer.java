@@ -9,6 +9,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.ITabularDataContainer;
@@ -28,9 +29,9 @@ public class DefaultDoubleLineLayer extends AbstractLineLayer
 
   private final ITabularDataContainer<Double, Double> m_data;
 
-  public DefaultDoubleLineLayer( ITabularDataContainer<Double, Double> data, ILineStyle lineStyle, IPointStyle pointStyle )
+  public DefaultDoubleLineLayer( final ILayerProvider provider, final ITabularDataContainer<Double, Double> data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( lineStyle, pointStyle );
+    super( provider, lineStyle, pointStyle );
     m_data = data;
   }
 
@@ -38,7 +39,7 @@ public class DefaultDoubleLineLayer extends AbstractLineLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
    */
   @Override
-  public void drawIcon( Image img )
+  public void drawIcon( final Image img )
   {
     final Rectangle bounds = img.getBounds();
     final int height = bounds.height;
@@ -66,7 +67,7 @@ public class DefaultDoubleLineLayer extends AbstractLineLayer
    *      org.eclipse.swt.graphics.Device)
    */
   @Override
-public void paint( GC gc )
+  public void paint( final GC gc )
   {
     final ITabularDataContainer<Double, Double> dataContainer = getDataContainer();
     if( dataContainer != null )
@@ -76,17 +77,17 @@ public void paint( GC gc )
       final Double[] domainData = dataContainer.getDomainValues();
       final Double[] targetData = dataContainer.getTargetValues();
 
-      IDataRange<Number> dr = getDomainAxis().getNumericRange();
+      final IDataRange<Number> dr = getDomainAxis().getNumericRange();
 
-      double max = dr.getMax().doubleValue();
-      double min = dr.getMin().doubleValue();
+      final double max = dr.getMax().doubleValue();
+      final double min = dr.getMin().doubleValue();
 
       final LinkedList<Point> path = new LinkedList<Point>();
 
       int first = -1;
       int last = -1;
 
-      ICoordinateMapper cm = new CoordinateMapper( getDomainAxis(), getTargetAxis() );
+      final ICoordinateMapper cm = new CoordinateMapper( getDomainAxis(), getTargetAxis() );
 
       for( int i = 0; i < domainData.length; i++ )
       {
@@ -128,10 +129,10 @@ public void paint( GC gc )
       }
 
       // Zeichnen
-      PolylineFigure lf = getPolylineFigure();
-      PointFigure pf = getPointFigure();
+      final PolylineFigure lf = getPolylineFigure();
+      final PointFigure pf = getPointFigure();
 
-      Point[] points = path.toArray( new Point[] {} );
+      final Point[] points = path.toArray( new Point[] {} );
 
       lf.setPoints( points );
       lf.paint( gc );
@@ -152,13 +153,13 @@ public void paint( GC gc )
   }
 
   @Override
-public IDataRange<Number> getDomainRange( )
+  public IDataRange<Number> getDomainRange( )
   {
     return new ComparableDataRange<Number>( getDataContainer().getDomainValues() );
   }
 
   @Override
-public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return new ComparableDataRange<Number>( getDataContainer().getTargetValues() );
   }

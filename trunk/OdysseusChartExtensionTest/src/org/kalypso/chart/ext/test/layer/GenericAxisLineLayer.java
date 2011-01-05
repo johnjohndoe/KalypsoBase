@@ -49,6 +49,7 @@ import org.kalypso.chart.ext.test.data.IListDataContainer;
 
 import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
@@ -63,9 +64,9 @@ public class GenericAxisLineLayer extends AbstractLineLayer
 
   private final IListDataContainer m_data;
 
-  public GenericAxisLineLayer( final IListDataContainer data, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public GenericAxisLineLayer( final ILayerProvider provider, final IListDataContainer data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    super( lineStyle, pointStyle );
+    super( provider, lineStyle, pointStyle );
     m_data = data;
   }
 
@@ -183,7 +184,7 @@ public class GenericAxisLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     // TODO Auto-generated method stub
     return null;

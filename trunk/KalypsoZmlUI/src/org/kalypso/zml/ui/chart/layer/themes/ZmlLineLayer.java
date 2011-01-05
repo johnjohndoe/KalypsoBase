@@ -61,6 +61,7 @@ import org.kalypso.zml.ui.chart.layer.provider.LayerProviderUtils;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
@@ -106,9 +107,9 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private final String m_targetAxisId;
 
-  public ZmlLineLayer( final ILineStyle lineStyle, final IPointStyle pointStyle, final String targetAxisId )
+  public ZmlLineLayer( final ILayerProvider provider, final ILineStyle lineStyle, final IPointStyle pointStyle, final String targetAxisId )
   {
-    super( lineStyle, pointStyle );
+    super( provider, lineStyle, pointStyle );
     m_targetAxisId = targetAxisId;
   }
 

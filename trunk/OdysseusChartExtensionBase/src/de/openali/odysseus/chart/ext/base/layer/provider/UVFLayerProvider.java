@@ -34,10 +34,10 @@ public class UVFLayerProvider extends AbstractLayerProvider
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
-  @SuppressWarnings( { "unused" })
+  @SuppressWarnings({ "unused" })
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
-    return new DefaultLineLayer( getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+    return new DefaultLineLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
   }
 
   /**
@@ -120,11 +120,8 @@ public class UVFLayerProvider extends AbstractLayerProvider
       public IDataRange<Calendar> getDomainRange( )
       {
         /**
-         * Geht nicht wg. ClassCastException (Generics - Bug):
-         *
-         * return new ComparableDataRange<GregorianCalendar>( getDomainValues() );
-         *
-         * SuppressWarnings-Annotation ist wichtig, sonst löscht Eclipse Code-CleanUp den cast
+         * Geht nicht wg. ClassCastException (Generics - Bug): return new ComparableDataRange<GregorianCalendar>(
+         * getDomainValues() ); SuppressWarnings-Annotation ist wichtig, sonst löscht Eclipse Code-CleanUp den cast
          */
         return (IDataRange<Calendar>) new ComparableDataRange( getDomainValues() );
       }
