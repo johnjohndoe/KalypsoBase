@@ -44,6 +44,11 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import jregex.Pattern;
+import jregex.RETokenizer;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -131,4 +136,23 @@ public class MultipleTsLink
   {
     return m_links.toArray( new TSLinkWithName[] {} );
   }
+
+  public boolean isIgnoreType( final String currentIgnoreTypes )
+  {
+    if( currentIgnoreTypes == null )
+      return false;
+
+    final String identifier = getIdentifier();
+    if( StringUtils.isEmpty( identifier ) )
+      return false;
+
+    /** convention: type is encode in identifier of the time series link - like W, W_MODELL or Q, Q_MODELL */
+    final RETokenizer tokenizer = new RETokenizer( new Pattern( "_.*" ), identifier );
+    final String type = tokenizer.nextToken();
+
+    final String[] ignoreTypes = currentIgnoreTypes.split( ";" );
+
+    return ArrayUtils.contains( ignoreTypes, type );
+  }
+
 }
