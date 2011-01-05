@@ -74,7 +74,7 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
  * @author Dirk Kuch
  * @author kimwerner
  */
-public class ZmlLineLayer extends AbstractLineLayer
+public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 {
   private ITupleModel m_model;
 
@@ -112,6 +112,7 @@ public class ZmlLineLayer extends AbstractLineLayer
     m_targetAxisId = targetAxisId;
   }
 
+  @Override
   public void setObsProvider( final IObsProvider provider )
   {
     if( m_provider != null )
@@ -123,7 +124,8 @@ public class ZmlLineLayer extends AbstractLineLayer
     m_provider = provider;
     m_model = null;
 
-    provider.addListener( m_observationProviderListener );
+    if( provider != null )
+      provider.addListener( m_observationProviderListener );
   }
 
   /**
@@ -149,6 +151,7 @@ public class ZmlLineLayer extends AbstractLineLayer
   {
     if( !super.isVisible() )
       return false;
+
     // FIXME: what IS that???? Does this makes any sense??? Please AT LEAST comment such strange stuff!
 // else if( getTargetRange( null ) == null )
 // return false;
@@ -207,10 +210,16 @@ public class ZmlLineLayer extends AbstractLineLayer
     final IObservation observation = m_provider.getObservation();
     setVisible( observation != null );
 
-    m_valueAxis = LayerProviderUtils.getValueAxis( m_provider, m_targetAxisId );
-
     getEventHandler().fireLayerVisibilityChanged( this );
     getEventHandler().fireLayerContentChanged( this );
+  }
+
+  private IAxis getValueAxis( )
+  {
+    if( m_valueAxis == null )
+      m_valueAxis = LayerProviderUtils.getValueAxis( m_provider, m_targetAxisId );
+
+    return m_valueAxis;
   }
 
   /**
@@ -219,6 +228,9 @@ public class ZmlLineLayer extends AbstractLineLayer
   @Override
   public IDataRange<Number> getDomainRange( )
   {
+    if( m_provider == null )
+      return null;
+
     try
     {
       final ITupleModel model = getModel();
@@ -249,6 +261,9 @@ public class ZmlLineLayer extends AbstractLineLayer
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
+    if( m_provider == null )
+      return null;
+
     try
     {
       final ITupleModel model = getModel();
@@ -257,7 +272,7 @@ public class ZmlLineLayer extends AbstractLineLayer
 
       if( domainIntervall == null )
       {
-        final IAxisRange range = model.getRange( m_valueAxis );
+        final IAxisRange range = model.getRange( getValueAxis() );
         if( range == null )
           return null;
 
@@ -280,11 +295,11 @@ public class ZmlLineLayer extends AbstractLineLayer
             continue;
           if( minValue == null && ((Date) domainValue).getTime() > domainIntervall.getMin().longValue() )
           {
-            minValue = (Number) model.get( i - 1, m_valueAxis );
+            minValue = (Number) model.get( i - 1, getValueAxis() );
           }
           if( maxValue == null && ((Date) domainValue).getTime() > domainIntervall.getMax().longValue() )
           {
-            maxValue = (Number) model.get( i, m_valueAxis );
+            maxValue = (Number) model.get( i, getValueAxis() );
           }
         }
         return new DataRange<Number>( m_numberDataOperator.logicalToNumeric( minValue ), m_numberDataOperator.logicalToNumeric( maxValue ) );
@@ -321,7 +336,7 @@ public class ZmlLineLayer extends AbstractLineLayer
         try
         {
           final Object domainValue = model.get( i, dateAxis );
-          final Object targetValue = model.get( i, m_valueAxis );
+          final Object targetValue = model.get( i, getValueAxis() );
           if( domainValue == null || targetValue == null )
             continue;
 
