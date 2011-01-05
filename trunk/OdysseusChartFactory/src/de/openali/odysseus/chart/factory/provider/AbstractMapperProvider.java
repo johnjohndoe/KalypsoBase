@@ -9,7 +9,7 @@ public abstract class AbstractMapperProvider extends AbstractChartComponentProvi
 {
 
   @Override
-  public void init( IChartModel model, String id, IParameterContainer parameters, URL context )
+  public void init( final IChartModel model, final String id, final IParameterContainer parameters, final URL context )
   {
     super.init( model, id, parameters, context );
   }

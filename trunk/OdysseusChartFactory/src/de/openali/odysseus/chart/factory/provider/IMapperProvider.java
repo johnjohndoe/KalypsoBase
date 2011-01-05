@@ -15,9 +15,9 @@ public interface IMapperProvider
   /**
    * @return axis created by the MapperProvider
    */
-  public IRetinalMapper getMapper( ) throws ConfigurationException;
+  IRetinalMapper getMapper( ) throws ConfigurationException;
 
-  public void init( final IChartModel model, final String id, final IParameterContainer parameters, final URL context );
+  void init( final IChartModel model, final String id, final IParameterContainer parameters, final URL context );
 
 // /**
 // * returns XML configuration element for the given chart element

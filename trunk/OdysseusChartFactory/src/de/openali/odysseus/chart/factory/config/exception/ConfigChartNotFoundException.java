@@ -7,7 +7,7 @@ package de.openali.odysseus.chart.factory.config.exception;
 public class ConfigChartNotFoundException extends ConfigurationException
 {
 
-  public ConfigChartNotFoundException( String chartname )
+  public ConfigChartNotFoundException( final String chartname )
   {
     super( "Chart \"" + chartname + "\" was not found in configuration" );
   }

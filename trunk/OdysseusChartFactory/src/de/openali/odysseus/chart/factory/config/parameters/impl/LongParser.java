@@ -13,20 +13,21 @@ public class LongParser implements IStringParser<Long>
    * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
   @Override
-  public Long stringToLogical( String value ) throws MalformedValueException
+  public Long stringToLogical( final String value ) throws MalformedValueException
   {
     Long n = null;
     try
     {
       n = Long.parseLong( value );
     }
-    /**
-     * TODO: Überprüfen, welche Exceptions noch autreten können
-     */
-    catch( Exception e )
+    catch( final Exception e )
     {
+      /**
+       * TODO: Überprüfen, welche Exceptions noch autreten können
+       */
       throw new MalformedValueException();
     }
+
     return n;
 
   }

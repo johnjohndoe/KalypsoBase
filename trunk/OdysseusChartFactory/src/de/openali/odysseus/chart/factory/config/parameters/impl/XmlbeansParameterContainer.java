@@ -24,7 +24,6 @@ import de.openali.odysseus.chartconfig.x020.ParametersType;
  */
 public class XmlbeansParameterContainer implements IParameterContainer
 {
-
   private final Map<String, String> m_parameters = new HashMap<String, String>();
 
   private final Map<String, List<String>> m_parameterLists = new HashMap<String, List<String>>();

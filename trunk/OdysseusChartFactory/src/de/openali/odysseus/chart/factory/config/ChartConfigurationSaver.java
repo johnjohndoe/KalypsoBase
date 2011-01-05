@@ -74,8 +74,12 @@ import de.openali.odysseus.chartconfig.x020.TitleType;
  * 
  * @author burtscher1
  */
-public class ChartConfigurationSaver
+public final class ChartConfigurationSaver
 {
+  private ChartConfigurationSaver( )
+  {
+  }
+
   public static ChartConfigurationDocument createChartConfiguration( final IChartModel model )
   {
     final ChartConfigurationDocument ccd = ChartConfigurationDocument.Factory.newInstance();

@@ -27,6 +27,7 @@ public abstract class AbstractLayerProvider extends AbstractChartComponentProvid
   public void init( final IChartModel model, final String id, final IParameterContainer parameters, final URL context, final String domainAxisId, final String targetAxisId, final Map<String, String> mapperMap, final IStyleSet styleSet )
   {
     super.init( model, id, parameters, context );
+
     m_domainAxisId = domainAxisId;
     m_targetAxisId = targetAxisId;
     m_mapperMap = mapperMap;

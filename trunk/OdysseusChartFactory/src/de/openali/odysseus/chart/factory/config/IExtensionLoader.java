@@ -45,5 +45,5 @@ package de.openali.odysseus.chart.factory.config;
  */
 public interface IExtensionLoader
 {
-  public <T> T getExtension( Class<T> extensionClass, String id );
+  <T> T getExtension( Class<T> extensionClass, String id );
 }

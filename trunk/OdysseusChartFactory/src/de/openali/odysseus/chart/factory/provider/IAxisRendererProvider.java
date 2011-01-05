@@ -19,9 +19,9 @@ public interface IAxisRendererProvider
   /**
    * @return axis created by the AxisProvider
    */
-  public IAxisRenderer getAxisRenderer( ) throws ConfigurationException;
+  IAxisRenderer getAxisRenderer( ) throws ConfigurationException;
 
-  public void init( final IChartModel model, final String id, final IParameterContainer parameters, final URL context, final IStyleSet styleSet );
+  void init( final IChartModel model, final String id, final IParameterContainer parameters, final URL context, final IStyleSet styleSet );
 
 // /**
 // * returns XML configuration element for the given chart element

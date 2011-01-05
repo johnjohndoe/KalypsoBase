@@ -59,7 +59,7 @@ public abstract class AbstractChartComponentProvider
 
   private URL m_context;
 
-  public void init( IChartModel model, String id, IParameterContainer parameters, URL context )
+  public void init( final IChartModel model, final String id, final IParameterContainer parameters, final URL context )
   {
     m_model = model;
     m_id = id;

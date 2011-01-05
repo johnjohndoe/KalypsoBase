@@ -13,20 +13,21 @@ public class DoubleParser implements IStringParser<Double>
    * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
   @Override
-  public Double stringToLogical( String value ) throws MalformedValueException
+  public Double stringToLogical( final String value ) throws MalformedValueException
   {
     Double n = null;
     try
     {
       n = Double.parseDouble( value );
     }
-    /**
-     * TODO: Überprüfen, welche Exceptions noch autreten können
-     */
-    catch( Exception e )
+    catch( final Exception e )
     {
+      /**
+       * TODO: Überprüfen, welche Exceptions noch autreten können
+       */
       throw new MalformedValueException();
     }
+
     return n;
 
   }
