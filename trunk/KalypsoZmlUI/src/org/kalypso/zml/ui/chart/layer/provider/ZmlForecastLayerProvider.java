@@ -55,7 +55,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
  */
 public class ZmlForecastLayerProvider extends AbstractLayerProvider implements ILayerProvider
 {
-  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider";
+  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlForecastLayerProvider";
 
   /**
    * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
@@ -66,7 +66,7 @@ public class ZmlForecastLayerProvider extends AbstractLayerProvider implements I
 
     try
     {
-      final ZmlForecastLayer layer = new ZmlForecastLayer( this, null );
+      final ZmlForecastLayer layer = new ZmlForecastLayer( this );
 
       return layer;
     }
