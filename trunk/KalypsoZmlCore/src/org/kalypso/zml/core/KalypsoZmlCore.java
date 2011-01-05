@@ -33,7 +33,7 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
   @Override
   public void start( final BundleContext bundleContext ) throws Exception
   {
-    KalypsoZmlCore.CONTEXT = bundleContext;
+    CONTEXT = bundleContext;
     PLUGIN = this;
   }
 
@@ -44,7 +44,7 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
   @Override
   public void stop( final BundleContext bundleContext ) throws Exception
   {
-    KalypsoZmlCore.CONTEXT = null;
+    CONTEXT = null;
     PLUGIN = null;
   }
 

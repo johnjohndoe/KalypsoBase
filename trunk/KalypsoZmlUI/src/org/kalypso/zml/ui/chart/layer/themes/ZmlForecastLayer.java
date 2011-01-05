@@ -104,6 +104,9 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
   @Override
   public void paint( final GC gc )
   {
+    if( m_provider == null )
+      return;
+
     final ICoordinateMapper mapper = getCoordinateMapper();
 
     final IAxis domainAxis = mapper.getDomainAxis();

@@ -126,7 +126,13 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     m_model = null;
 
     if( provider != null )
+    {
       provider.addListener( m_observationProviderListener );
+
+      if( !provider.isLoaded() )
+        setVisible( false );
+    }
+
   }
 
   /**

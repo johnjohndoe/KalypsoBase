@@ -56,6 +56,7 @@ import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.chart.layer.provider.LayerProviderUtils;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
 import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
@@ -66,7 +67,6 @@ import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 
@@ -74,7 +74,7 @@ import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
  * @author Dirk Kuch
  * @author kimwerner
  */
-public class ZmlBarLayer extends AbstractBarLayer
+public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 {
   private final IObsProviderListener m_observationProviderListener = new IObsProviderListener()
   {
@@ -98,30 +98,46 @@ public class ZmlBarLayer extends AbstractBarLayer
 
   private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
 
-  private final IAxis m_valueAxis;
+  private final IDataOperator<Number> m_targetDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
 
-  private final IObsProvider m_provider;
+  private IObsProvider m_provider;
 
-  private final IDataOperator m_targetDataOperator;
+  private final String m_targetAxisId;
 
-  public ZmlBarLayer( final ILayerProvider layerProvider, final ICoordinateMapper coordinateMapper, final IDataOperator targetDataOperator, final IObsProvider provider, final IAxis valueAxis, final IAreaStyle style )
+  private IAxis m_valueAxis;
+
+  public ZmlBarLayer( final ILayerProvider layerProvider, final IAreaStyle style, final String targetAxisId )
   {
     super( layerProvider, style );
 
-    m_targetDataOperator = targetDataOperator;
+    m_targetAxisId = targetAxisId;
+  }
+
+  private IAxis getValueAxis( )
+  {
+    if( m_valueAxis == null )
+      m_valueAxis = LayerProviderUtils.getValueAxis( m_provider, m_targetAxisId );
+
+    return m_valueAxis;
+  }
+
+  @Override
+  public void setObsProvider( final IObsProvider provider )
+  {
+    if( m_provider != null )
+    {
+      m_provider.removeListener( m_observationProviderListener );
+      m_provider.dispose(); // TODO check - really dispose old provider?
+    }
 
     m_provider = provider;
-    m_valueAxis = valueAxis;
-    setCoordinateMapper( coordinateMapper );
+    m_model = null;
 
-    synchronized( provider )
+    if( provider != null )
     {
       provider.addListener( m_observationProviderListener );
-
       if( !provider.isLoaded() )
-      {
         setVisible( false );
-      }
     }
   }
 
@@ -206,6 +222,9 @@ public class ZmlBarLayer extends AbstractBarLayer
   @Override
   public IDataRange<Number> getDomainRange( )
   {
+    if( m_provider == null )
+      return null;
+
     try
     {
       final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( getModel().getAxisList() );
@@ -230,16 +249,19 @@ public class ZmlBarLayer extends AbstractBarLayer
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
+    if( m_provider == null )
+      return null;
+
     try
     {
       /** hack for polder control which consists of boolean values */
-      final Class< ? > dataClass = m_valueAxis.getDataClass();
+      final Class< ? > dataClass = getValueAxis().getDataClass();
       if( Boolean.class.equals( dataClass ) )
         return new DataRange<Number>( 0, 1 );
 
-      final IAxisRange range = getModel().getRange( m_valueAxis );
+      final IAxisRange range = getModel().getRange( getValueAxis() );
 
-      final Number max = m_targetDataOperator.logicalToNumeric( range.getUpper() );
+      final Number max = m_targetDataOperator.logicalToNumeric( (Number) range.getUpper() );
 
       final IDataRange<Number> numRange = new DataRange<Number>( 0, Math.max( 1.0, max.doubleValue() ) );
       return numRange;
@@ -258,6 +280,9 @@ public class ZmlBarLayer extends AbstractBarLayer
   @Override
   public void paint( final GC gc )
   {
+    if( m_provider == null )
+      return;
+
     try
     {
       final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( getModel().getAxisList() );
@@ -270,12 +295,12 @@ public class ZmlBarLayer extends AbstractBarLayer
         try
         {
           final Object domainValue = getModel().get( i, dateAxis );
-          final Object targetValue = getModel().get( i, m_valueAxis );
+          final Object targetValue = getModel().get( i, getValueAxis() );
           if( domainValue == null || targetValue == null )
             continue;
 
           final Number logicalDomain = m_dateDataOperator.logicalToNumeric( ChartLayerUtils.addTimezoneOffset( (Date) domainValue ) );
-          final Number logicalTarget = m_targetDataOperator.logicalToNumeric( targetValue );
+          final Number logicalTarget = m_targetDataOperator.logicalToNumeric( (Number) targetValue );
           final Point screen = getCoordinateMapper().numericToScreen( logicalDomain, logicalTarget );
 
           // don't draw empty lines only rectangles
