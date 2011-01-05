@@ -48,7 +48,7 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 /**
  * @author burtscher1
  */
-public abstract class AbstractChartComponentProvider
+public abstract class AbstractChartComponentProvider implements IChartComponentProvider
 {
 
   private IChartModel m_model;
@@ -67,21 +67,25 @@ public abstract class AbstractChartComponentProvider
     m_context = context;
   }
 
+  @Override
   public final URL getContext( )
   {
     return m_context;
   }
 
+  @Override
   public final IParameterContainer getParameterContainer( )
   {
     return m_parameters;
   }
 
+  @Override
   public final IChartModel getChartModel( )
   {
     return m_model;
   }
 
+  @Override
   public final String getId( )
   {
     return m_id;

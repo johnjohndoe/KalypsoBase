@@ -14,7 +14,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
  *         source can be used to create several layers. The LayerProvider is used to fetch, filter and analyze data and
  *         to provide layers according to the datas needs.
  */
-public interface IAxisProvider
+public interface IAxisProvider extends IChartComponentProvider
 {
   /**
    * @return axis created by the AxisProvider

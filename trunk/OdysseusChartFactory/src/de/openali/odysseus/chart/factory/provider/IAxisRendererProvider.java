@@ -14,7 +14,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
  *         can be used to create several layers. The LayerProvider is used to fetch, filter and analyze data and to
  *         provide layers according to the datas needs.
  */
-public interface IAxisRendererProvider
+public interface IAxisRendererProvider extends IChartComponentProvider
 {
   /**
    * @return axis created by the AxisProvider

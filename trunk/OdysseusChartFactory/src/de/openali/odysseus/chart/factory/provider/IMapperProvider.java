@@ -10,7 +10,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
 /**
  * @author alibu
  */
-public interface IMapperProvider
+public interface IMapperProvider extends IChartComponentProvider
 {
   /**
    * @return axis created by the MapperProvider
