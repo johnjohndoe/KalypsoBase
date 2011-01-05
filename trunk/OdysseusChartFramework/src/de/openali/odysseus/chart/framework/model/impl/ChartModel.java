@@ -230,7 +230,6 @@ public class ChartModel implements IChartModel
   public void dispose( )
   {
     // nothing to dispose
-
   }
 
   /**
@@ -295,7 +294,6 @@ public class ChartModel implements IChartModel
       return layer.getTargetRange( null );
 
     return null;
-
   }
 
   /**
@@ -312,6 +310,7 @@ public class ChartModel implements IChartModel
   {
     if( m_textStyle == null )
       m_textStyle = StyleUtils.getDefaultTextStyle();
+
     return m_textStyle;
   }
 
@@ -326,7 +325,6 @@ public class ChartModel implements IChartModel
 
   protected void hideUnusedAxis( final IAxis axis )
   {
-
     // if axis has no layers, hide axis
     final List<IChartLayer> list = m_axis2Layers.get( axis );
     if( list == null || list.isEmpty() )
@@ -346,7 +344,6 @@ public class ChartModel implements IChartModel
     }
 
     axis.setVisible( false );
-
   }
 
   @Override
@@ -431,11 +428,8 @@ public class ChartModel implements IChartModel
   public void setAutoscale( final boolean b )
   {
     // m_autoscale = b;
-
     if( b )
-    {
       autoscale( null );
-    }
   }
 
   /**
