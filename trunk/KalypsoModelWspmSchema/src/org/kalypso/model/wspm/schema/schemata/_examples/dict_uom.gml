@@ -8,8 +8,8 @@
 
      <gml:dictionaryEntry>
           <gml:BaseUnit gml:id="mNN">
-               <gml:name>Meter über Normalnull</gml:name>
-               <gml:quantityType>Höhe</gml:quantityType>
+               <gml:name>Meter Ã¼ber Normalnull</gml:name>
+               <gml:quantityType>HÃ¶he</gml:quantityType>
                <gml:unitsSystem/>
           </gml:BaseUnit>
      </gml:dictionaryEntry>
@@ -17,15 +17,15 @@
      <gml:dictionaryEntry>
           <gml:BaseUnit gml:id="m">
                <gml:name>Meter</gml:name>
-               <gml:quantityType>Länge</gml:quantityType>
+               <gml:quantityType>LÃ¤nge</gml:quantityType>
                <gml:unitsSystem/>
           </gml:BaseUnit>
      </gml:dictionaryEntry>
      
      <gml:dictionaryEntry>
           <gml:BaseUnit gml:id="cmaP">
-               <gml:name>Centimeter am Pegel</gml:name>
-               <gml:quantityType>Länge</gml:quantityType>
+               <gml:name>Zentimeter am Pegel</gml:name>
+               <gml:quantityType>LÃ¤nge</gml:quantityType>
                <gml:unitsSystem/>
           </gml:BaseUnit>
      </gml:dictionaryEntry>
@@ -33,7 +33,7 @@
      <gml:dictionaryEntry>
           <gml:ConventionalUnit gml:id="mm">
                <gml:name>Millimeter</gml:name>
-               <gml:quantityType>Länge</gml:quantityType>
+               <gml:quantityType>LÃ¤nge</gml:quantityType>
                <gml:conversionToPreferredUnit uom="#m">
                     <gml:factor>1000</gml:factor>
                </gml:conversionToPreferredUnit>
@@ -42,8 +42,8 @@
      
      <gml:dictionaryEntry>
           <gml:DerivedUnit gml:id="m3s">
-               <gml:name/>
-               <gml:quantityType/>
+               <gml:name>Kubikmeter</gml:name>
+               <gml:quantityType>Volumne</gml:quantityType>
                <gml:derivationUnitTerm uom="#m" exponent="3"/>
                <gml:derivationUnitTerm uom="#s" exponent="-1"/>
           </gml:DerivedUnit>
