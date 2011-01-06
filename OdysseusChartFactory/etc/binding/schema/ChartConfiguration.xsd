@@ -230,7 +230,10 @@
           <element name="Layers">
             <complexType>
               <sequence>
-                <element ref="ods:Layer" maxOccurs="unbounded" />
+                <choice minOccurs="1" maxOccurs="unbounded">
+                  <element ref="ods:Layer" />
+                  <element name="LayerReference" type="ods:LayerRefernceType" />
+                </choice>
               </sequence>
             </complexType>
           </element>
@@ -255,6 +258,10 @@
         </sequence>
       </extension>
     </complexContent>
+  </complexType>
+
+  <complexType name="LayerRefernceType">
+    <attribute name="url" type="anyURI" use="required" />
   </complexType>
 
 

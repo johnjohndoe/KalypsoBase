@@ -12,12 +12,11 @@
           <TargetAxisRef ref="W" />
         </MapperRefs>
         <Styles>
-          <LineStyle role="line_1">
+          <LineStyle role="wLineStyle">
             <Width>2</Width>
             <LineColor>8FADDF</LineColor>
           </LineStyle>
-          <PointStyle role="point" isVisible="false">
-          </PointStyle>
+          <PointStyle role="wPointStyle" isVisible="false" />
         </Styles>
       </Layer>
       <Layer id="Q" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -30,11 +29,11 @@
           <TargetAxisRef ref="Q" />
         </MapperRefs>
         <Styles>
-          <LineStyle role="line_1">
+          <LineStyle role="qLineStyle">
             <Width>2</Width>
             <LineColor>ABB985</LineColor>
           </LineStyle>
-          <PointStyle role="point" isVisible="false">
+          <PointStyle role="qPointStyle" isVisible="false">
           </PointStyle>
         </Styles>
       </Layer>
@@ -51,7 +50,7 @@
         </MapperRefs>
 
         <Styles>
-          <LineStyle role="line">
+          <LineStyle role="wGridStyle">
             <Width>1</Width>
             <LineColor>000000</LineColor>
             <DashOffset>0</DashOffset>
@@ -60,14 +59,7 @@
             <LineJoin>ROUND</LineJoin>
             <MiterLimit>1</MiterLimit>
           </LineStyle>
-          <PointStyle role="point">
-            <Stroke>
-              <Width>2</Width>
-              <LineColor>000000</LineColor>
-            </Stroke>
-            <FillColor isVisible="false" />
-          </PointStyle>
-
+          <PointStyle role="wGridPointStyle" isVisible="false" />
         </Styles>
       </Layer>
       <Layer id="qGrid" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -83,7 +75,7 @@
         </MapperRefs>
 
         <Styles>
-          <LineStyle role="line">
+          <LineStyle role="qGridStyle">
             <Width>1</Width>
             <LineColor>000000</LineColor>
             <DashOffset>0</DashOffset>
@@ -92,14 +84,9 @@
             <LineJoin>ROUND</LineJoin>
             <MiterLimit>1</MiterLimit>
           </LineStyle>
-          <PointStyle role="point">
-            <Stroke>
-              <Width>2</Width>
-              <LineColor>000000</LineColor>
-            </Stroke>
-            <FillColor isVisible="false" />
-          </PointStyle>
+          <PointStyle role="qGridPointStyle" isVisible="false" />
         </Styles>
+        
       </Layer>
       
       <Layer id="forecastLayer" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -111,7 +98,7 @@
         <Description />
         <MapperRefs>
           <DomainAxisRef ref="date" />
-          <TargetAxisRef ref="screenY" />
+          <TargetAxisRef ref="screenAxisY" />
         </MapperRefs>
       </Layer>
     </Layers>
@@ -139,11 +126,11 @@
         <PreferredAdjustment before="0" range="1" after="0" />
         <RendererRef ref="DateAxisRenderer" />
       </Axis>
-      <ScreenAxis id="screenX">
+      <ScreenAxis id="screenAxisX">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Position>BOTTOM</Position>
       </ScreenAxis>
-      <ScreenAxis id="screenY">
+      <ScreenAxis id="screenAxisY">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Position>LEFT</Position>
       </ScreenAxis>
