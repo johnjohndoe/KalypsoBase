@@ -18,6 +18,12 @@ public class StyleSet implements IStyleSet
     m_styleMap.put( id, style );
   }
 
+  @Override
+  public IStyle getStyle( final String identifier )
+  {
+    return m_styleMap.get( identifier );
+  }
+
   /**
    * if no style is found, a default style is created, saved for later use and returned
    */

@@ -7,8 +7,8 @@ import de.openali.odysseus.chart.factory.config.exception.ConfigChartNotFoundExc
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chartconfig.x020.ChartType;
@@ -59,7 +59,7 @@ public final class ChartFactory
 
     model.setId( chartType.getId() );
 
-    final StyleSet styleSet = StyleFactory.createStyleSet( chartType.getStyles() );
+    final IStyleSet styleSet = StyleFactory.createStyleSet( chartType.getStyles() );
 
     for( final TitleType type : chartType.getTitleArray() )
     {
@@ -69,10 +69,10 @@ public final class ChartFactory
       final ITextStyle textStyle = visitor.visit( styleSet, ITextStyle.class, type.getStyleref() );
       title.setTextStyle( textStyle );
 
-      title.setAlignmentHorizontal( StyleFactory.getAlignment( type.getHorizontalAlignment() ) );
-      title.setAlignmentVertical( StyleFactory.getAlignment( type.getVerticalAlignment() ) );
-      title.setTextAnchorX( StyleFactory.getAlignment( type.getHorizontalTextAnchor() ) );
-      title.setTextAnchorY( StyleFactory.getAlignment( type.getVerticalTextAnchor() ) );
+      title.setAlignmentHorizontal( StyleHelper.getAlignment( type.getHorizontalAlignment() ) );
+      title.setAlignmentVertical( StyleHelper.getAlignment( type.getVerticalAlignment() ) );
+      title.setTextAnchorX( StyleHelper.getAlignment( type.getHorizontalTextAnchor() ) );
+      title.setTextAnchorY( StyleHelper.getAlignment( type.getVerticalTextAnchor() ) );
 
       final Insets inset = new Insets( type.getInsetTop(), type.getInsetLeft(), type.getInsetBottom(), type.getInsetBottom() );
       title.setInsets( inset );
