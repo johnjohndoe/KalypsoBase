@@ -211,7 +211,13 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   private ITupleModel getModel( ) throws SensorException
   {
     if( m_model == null )
-      m_model = m_provider.getObservation().getValues( m_provider.getArguments() );
+    {
+      final IObservation observation = m_provider.getObservation();
+      if( observation == null )
+        return null;
+
+      m_model = observation.getValues( m_provider.getArguments() );
+    }
 
     return m_model;
   }
@@ -227,8 +233,12 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
     try
     {
+      final ITupleModel model = getModel();
+      if( model == null )
+        return null;
+
       final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( getModel().getAxisList() );
-      final IAxisRange range = getModel().getRange( dateAxis );
+      final IAxisRange range = model.getRange( dateAxis );
       final Date min = (Date) range.getLower();
       final Date max = (Date) range.getUpper();
 
@@ -254,12 +264,16 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
     try
     {
+      final ITupleModel model = getModel();
+      if( model == null )
+        return null;
+
       /** hack for polder control which consists of boolean values */
       final Class< ? > dataClass = getValueAxis().getDataClass();
       if( Boolean.class.equals( dataClass ) )
         return new DataRange<Number>( 0, 1 );
 
-      final IAxisRange range = getModel().getRange( getValueAxis() );
+      final IAxisRange range = model.getRange( getValueAxis() );
 
       final Number max = m_targetDataOperator.logicalToNumeric( (Number) range.getUpper() );
 
@@ -285,17 +299,21 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
     try
     {
-      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( getModel().getAxisList() );
+      final ITupleModel model = getModel();
+      if( model == null )
+        return;
+
+      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxisList() );
       final PolygonFigure pf = getPolygonFigure();
       final Point base = getCoordinateMapper().numericToScreen( 0.0, 0.0 );
 
       Point lastScreen = null;
-      for( int i = 0; i < getModel().size(); i++ )
+      for( int i = 0; i < model.size(); i++ )
       {
         try
         {
-          final Object domainValue = getModel().get( i, dateAxis );
-          final Object targetValue = getModel().get( i, getValueAxis() );
+          final Object domainValue = model.get( i, dateAxis );
+          final Object targetValue = model.get( i, getValueAxis() );
           if( domainValue == null || targetValue == null )
             continue;
 

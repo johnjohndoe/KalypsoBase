@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+
+  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:global" uri="global.kod" />
+
+
+</catalog:catalog>
+
