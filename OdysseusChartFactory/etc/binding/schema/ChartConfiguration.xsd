@@ -209,7 +209,8 @@
   </complexType>
 
   <complexType name="ReferencingType">
-    <attribute name="ref" type="IDREF" use="required" />
+    <attribute name="ref" type="IDREF" use="optional" />
+    <attribute name="url" type="anyURI" use="optional" />
   </complexType>
 
   <complexType name="RoleReferencingType">

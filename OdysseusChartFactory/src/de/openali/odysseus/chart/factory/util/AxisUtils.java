@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,28 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.core.zml;
+package de.openali.odysseus.chart.factory.util;
 
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import jregex.Pattern;
+import jregex.RETokenizer;
+
+import org.apache.commons.lang.StringUtils;
+import org.kalypso.commons.java.util.StringUtilities;
+
+import de.openali.odysseus.chartconfig.x020.ReferencingType;
 
 /**
  * @author Dirk Kuch
  */
-public final class AxisUtils
+public class AxisUtils
 {
-  private AxisUtils( )
+
+  /**
+   * @return axis id from referencing type
+   */
+  public static String getIdentifier( final ReferencingType type )
   {
+    final String ref = type.getRef();
+    if( StringUtils.isNotEmpty( ref ) )
+      return ref;
+
+    final String url = type.getUrl();
+    final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), url ); //$NON-NLS-1$
+
+    return StringUtilities.chop( tokenizer.nextToken() );
   }
-
-  public static IAxis findDomainAxis( final IAxis[] axes )
-  {
-    for( final IAxis axis : axes )
-    {
-      if( "date".equals( axis.getId() ) )
-        return axis;
-    }
-
-    return null;
-  }
-
 }

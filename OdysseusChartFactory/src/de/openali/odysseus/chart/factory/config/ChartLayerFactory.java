@@ -54,6 +54,7 @@ import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.config.resolver.ChartTypeResolver;
 import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.factory.provider.IMapperProvider;
+import de.openali.odysseus.chart.factory.util.AxisUtils;
 import de.openali.odysseus.chart.factory.util.DummyLayer;
 import de.openali.odysseus.chart.factory.util.DummyLayerProvider;
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
@@ -73,6 +74,7 @@ import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.LayerType.MapperRefs;
 import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.ProviderType;
+import de.openali.odysseus.chartconfig.x020.ReferencingType;
 import de.openali.odysseus.chartconfig.x020.RoleReferencingType;
 
 /**
@@ -135,7 +137,6 @@ public class ChartLayerFactory extends AbstractChartFactory
       else
         Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "a reference to a layer type could not be resolved " );
     }
-
   }
 
   public void addLayer( final LayerType layerType )
@@ -143,10 +144,10 @@ public class ChartLayerFactory extends AbstractChartFactory
     // Achsen hinzufügen
     final MapperRefs mapper = layerType.getMapperRefs();
 
-    final MapperType domainAxisType = (MapperType) getResolver().resolveReference( mapper.getDomainAxisRef().getRef() );
+    final MapperType domainAxisType = findMapperType( mapper.getDomainAxisRef() );
     m_mapperFactory.addAxis( domainAxisType );
 
-    final MapperType targetAxisType = (MapperType) getResolver().resolveReference( mapper.getTargetAxisRef().getRef() );
+    final MapperType targetAxisType = findMapperType( mapper.getTargetAxisRef() );
     m_mapperFactory.addAxis( targetAxisType );
 
     // Restliche Mapper hinzufügen
@@ -182,15 +183,16 @@ public class ChartLayerFactory extends AbstractChartFactory
       // create parameter container
       final IParameterContainer parameters = createParameterContainer( layerType.getId(), layerType.getProvider() );
 
-      final String domainAxisId = layerType.getMapperRefs().getDomainAxisRef().getRef();
-      final String targetAxisId = layerType.getMapperRefs().getTargetAxisRef().getRef();
+      final ReferencingType domainAxisId = layerType.getMapperRefs().getDomainAxisRef();
+      final ReferencingType targetAxisId = layerType.getMapperRefs().getTargetAxisRef();
 
-      provider.init( getModel(), layerType.getId(), parameters, getContext(), domainAxisId, targetAxisId, mapperMap, styleSet );
+      provider.init( getModel(), layerType.getId(), parameters, getContext(), AxisUtils.getIdentifier( domainAxisId ), AxisUtils.getIdentifier( targetAxisId ), mapperMap, styleSet );
       final IChartLayer icl = provider.getLayer( getContext() );
       if( icl != null )
       {
-        final IAxis domainAxis = getModel().getMapperRegistry().getAxis( layerType.getMapperRefs().getDomainAxisRef().getRef() );
-        final IAxis targetAxis = getModel().getMapperRegistry().getAxis( layerType.getMapperRefs().getTargetAxisRef().getRef() );
+
+        final IAxis domainAxis = getModel().getMapperRegistry().getAxis( AxisUtils.getIdentifier( layerType.getMapperRefs().getDomainAxisRef() ) );
+        final IAxis targetAxis = getModel().getMapperRegistry().getAxis( AxisUtils.getIdentifier( layerType.getMapperRefs().getTargetAxisRef() ) );
         final ICoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
         icl.setCoordinateMapper( cm );
         icl.setId( layerType.getId() );

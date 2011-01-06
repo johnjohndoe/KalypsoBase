@@ -65,6 +65,7 @@ public class CoordinateMapper implements ICoordinateMapper
   {
     m_domainAxis = domain;
     m_targetAxis = target;
+
     m_ori = m_domainAxis.getPosition().getOrientation();
   }
 
