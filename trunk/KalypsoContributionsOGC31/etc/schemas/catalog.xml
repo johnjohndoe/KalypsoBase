@@ -6,4 +6,6 @@
   <!-- gml is already defined in KalypsoDeegree -->
   <!-- uri name="http://www.opengis.net/gml" uri="generated/gml/3.1.1/base/gml.xsd" /-->
 
+    <uri name="http://www.opengis.net/swe" uri="generated/ogc31.www.opengis.net.swe.xsd"/>
+
 </catalog>
