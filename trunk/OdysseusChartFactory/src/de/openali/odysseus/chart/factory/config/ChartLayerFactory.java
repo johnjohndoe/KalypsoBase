@@ -44,8 +44,14 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+
+import de.openali.odysseus.chart.factory.OdysseusChartFactory;
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
+import de.openali.odysseus.chart.factory.config.resolver.ChartTypeResolver;
 import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.factory.provider.IMapperProvider;
 import de.openali.odysseus.chart.factory.util.DummyLayer;
@@ -62,6 +68,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.ChartType.Layers;
+import de.openali.odysseus.chartconfig.x020.LayerRefernceType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.LayerType.MapperRefs;
 import de.openali.odysseus.chartconfig.x020.MapperType;
@@ -84,12 +91,41 @@ public class ChartLayerFactory extends AbstractChartFactory
 
   public void build( final ChartType chartType )
   {
+
     final Layers layers = chartType.getLayers();
     if( layers == null )
       return;
 
+    buildLayers( layers );
+    buildLayerReferences( layers );
+  }
+
+  private void buildLayerReferences( final Layers layers )
+  {
+    final LayerRefernceType[] references = layers.getLayerReferenceArray();
+    if( ArrayUtils.isEmpty( references ) )
+      return;
+
+    for( final LayerRefernceType reference : references )
+    {
+      try
+      {
+        final ChartTypeResolver resovler = ChartTypeResolver.getInstance();
+        final LayerType type = resovler.findLayerType( getContext(), reference );
+
+        addLayer( type );
+      }
+      catch( final CoreException e )
+      {
+        OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
+  }
+
+  private void buildLayers( final Layers layers )
+  {
     final LayerType[] layerRefArray = layers.getLayerArray();
-    if( layerRefArray == null )
+    if( ArrayUtils.isEmpty( layerRefArray ) )
       return;
 
     for( final LayerType layerType : layerRefArray )
@@ -99,6 +135,7 @@ public class ChartLayerFactory extends AbstractChartFactory
       else
         Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "a reference to a layer type could not be resolved " );
     }
+
   }
 
   public void addLayer( final LayerType layerType )
