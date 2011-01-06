@@ -62,10 +62,14 @@ import org.kalypso.core.catalog.ICatalog;
 import com.google.common.collect.MapMaker;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
+import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.ChartType.Layers;
+import de.openali.odysseus.chartconfig.x020.ChartType.Mappers;
 import de.openali.odysseus.chartconfig.x020.LayerRefernceType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
+import de.openali.odysseus.chartconfig.x020.MapperType;
+import de.openali.odysseus.chartconfig.x020.ScreenAxisType;
 
 /**
  * @author Dirk Kuch
@@ -76,13 +80,17 @@ public final class ChartTypeResolver
 
   private final Map<String, LayerType> m_layerCache;
 
+  private final Map<String, MapperType> m_mapperTypeCache;
+
   private static ChartTypeResolver INSTANCE;
 
   private ChartTypeResolver( )
   {
     final MapMaker marker = new MapMaker().expiration( 30, TimeUnit.MINUTES );
+
     m_chartTypeCache = marker.makeMap();
     m_layerCache = marker.makeMap();
+    m_mapperTypeCache = marker.makeMap();
   }
 
   public static ChartTypeResolver getInstance( )
@@ -91,6 +99,35 @@ public final class ChartTypeResolver
       INSTANCE = new ChartTypeResolver();
 
     return INSTANCE;
+  }
+
+  public MapperType findMapperType( final URL context, final String reference ) throws CoreException
+  {
+    try
+    {
+      final MapperType cached = getCachedMapperType( reference );
+      if( cached != null )
+        return cached;
+
+      final String plainUrl = getUrl( reference );
+      final String identifier = getAnchor( reference );
+
+      MapperType type;
+      if( plainUrl.startsWith( "urn:" ) )
+        type = findUrnMapperType( context, plainUrl, identifier );
+      else
+        type = findUrlMapperType( context, plainUrl, identifier );
+
+      // FIXME: what to do if rule null?
+      if( type != null )
+        m_mapperTypeCache.put( reference, type );
+
+      return type;
+    }
+    catch( final Throwable t )
+    {
+      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "Resolving mapper type failed", t ) );
+    }
   }
 
   public LayerType findLayerType( final URL context, final LayerRefernceType reference ) throws CoreException
@@ -122,8 +159,9 @@ public final class ChartTypeResolver
     }
     catch( final Throwable t )
     {
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "Resolving style failed", t ) );
+      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "Resolving layer failed", t ) );
     }
+
     throw new IllegalStateException();
   }
 
@@ -132,6 +170,21 @@ public final class ChartTypeResolver
     // FIXME: we should consider a timeout based on the modification timestamp of the underlying resource here
     // Else, the referenced resource will never be loaded again, even if it has changed meanwhile
     return m_layerCache.get( url );
+  }
+
+  private MapperType getCachedMapperType( final String url )
+  {
+    // FIXME: we should consider a timeout based on the modification timestamp of the underlying resource here
+    // Else, the referenced resource will never be loaded again, even if it has changed meanwhile
+    return m_mapperTypeCache.get( url );
+  }
+
+  private LayerType findUrnLayerType( final URL context, final String urn, final String identifier ) throws XmlException, IOException
+  {
+    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+    final String uri = baseCatalog.resolve( urn, urn );
+
+    return findUrlLayerType( context, uri, identifier );
   }
 
   private LayerType findUrlLayerType( final URL context, final String uri, final String identifier ) throws XmlException, IOException
@@ -174,14 +227,6 @@ public final class ChartTypeResolver
     return null;
   }
 
-  private LayerType findUrnLayerType( final URL context, final String urn, final String identifier ) throws XmlException, IOException
-  {
-    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-    final String uri = baseCatalog.resolve( urn, urn );
-
-    return findUrlLayerType( context, uri, identifier );
-  }
-
   private String getUrl( final String url )
   {
     final RETokenizer tokenizer = new RETokenizer( new Pattern( "#.*" ), url ); //$NON-NLS-1$
@@ -194,6 +239,51 @@ public final class ChartTypeResolver
     final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), url ); //$NON-NLS-1$
 
     return StringUtilities.chop( tokenizer.nextToken() );
+  }
+
+  private MapperType findUrnMapperType( final URL context, final String urn, final String identifier ) throws XmlException, IOException
+  {
+    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+    final String uri = baseCatalog.resolve( urn, urn );
+
+    return findUrlMapperType( context, uri, identifier );
+  }
+
+  private MapperType findUrlMapperType( final URL context, final String uri, final String identifier ) throws XmlException, IOException
+  {
+    final URL absoluteUri = new URL( context, uri );
+
+    List<ChartType> chartTypes = m_chartTypeCache.get( uri );
+    if( chartTypes == null )
+    {
+      final ChartConfigurationLoader loader = new ChartConfigurationLoader( absoluteUri );
+      final ChartType[] charts = loader.getCharts();
+
+      chartTypes = new ArrayList<ChartType>();
+      Collections.addAll( chartTypes, charts );
+
+      m_chartTypeCache.put( uri, chartTypes );
+    }
+
+    for( final ChartType chart : chartTypes )
+    {
+      final Mappers mappers = chart.getMappers();
+      final AxisType[] axes = mappers.getAxisArray();
+      for( final AxisType axis : axes )
+      {
+        if( axis.getId().equals( identifier ) )
+          return axis;
+      }
+
+      final ScreenAxisType[] screenAxes = mappers.getScreenAxisArray();
+      for( final ScreenAxisType screenAxis : screenAxes )
+      {
+        if( screenAxis.getId().equals( identifier ) )
+          return screenAxis;
+      }
+    }
+
+    return null;
   }
 
 }

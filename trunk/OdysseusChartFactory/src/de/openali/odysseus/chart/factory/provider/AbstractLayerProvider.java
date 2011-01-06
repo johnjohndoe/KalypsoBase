@@ -9,7 +9,6 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 public abstract class AbstractLayerProvider extends AbstractChartComponentProvider implements ILayerProvider
 {
-
   private Map<String, String> m_mapperMap;
 
   private String m_domainAxisId;

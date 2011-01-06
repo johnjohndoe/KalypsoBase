@@ -42,12 +42,20 @@ package de.openali.odysseus.chart.factory.config;
 
 import java.net.URL;
 
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+
+import de.openali.odysseus.chart.factory.OdysseusChartFactory;
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.config.parameters.impl.XmlbeansParameterContainer;
+import de.openali.odysseus.chart.factory.config.resolver.ChartTypeResolver;
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.ParametersType;
 import de.openali.odysseus.chartconfig.x020.ProviderType;
+import de.openali.odysseus.chartconfig.x020.ReferencingType;
 
 /**
  * @author Dirk Kuch
@@ -106,6 +114,31 @@ public abstract class AbstractChartFactory
     final IParameterContainer pc = new XmlbeansParameterContainer( ownerId, pt.getEpid(), parameters );
 
     return pc;
+  }
+
+  public MapperType findMapperType( final ReferencingType reference )
+  {
+    final String ref = reference.getRef();
+    if( StringUtils.isNotEmpty( ref ) )
+      return (MapperType) getResolver().resolveReference( ref );
+
+    final String url = reference.getUrl();
+    if( StringUtils.isNotEmpty( url ) )
+    {
+      try
+      {
+        final ChartTypeResolver resolver = ChartTypeResolver.getInstance();
+        return resolver.findMapperType( getContext(), url );
+      }
+      catch( final CoreException e )
+      {
+        OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+
+        e.printStackTrace();
+      }
+    }
+
+    throw new IllegalStateException();
   }
 
 }
