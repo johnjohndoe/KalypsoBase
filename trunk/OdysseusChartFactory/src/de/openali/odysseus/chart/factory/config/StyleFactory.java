@@ -46,12 +46,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jregex.Pattern;
+import jregex.RETokenizer;
+
+import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
+import de.openali.odysseus.chart.factory.OdysseusChartFactory;
+import de.openali.odysseus.chart.factory.config.resolver.ChartTypeResolver;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -67,6 +74,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.OvalMarker;
 import de.openali.odysseus.chart.framework.model.style.impl.PolygonMarker;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
+import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.AreaStyleType;
 import de.openali.odysseus.chartconfig.x020.ColorFillType;
 import de.openali.odysseus.chartconfig.x020.FillType;
@@ -77,6 +85,7 @@ import de.openali.odysseus.chartconfig.x020.PointStyleType;
 import de.openali.odysseus.chartconfig.x020.PointType;
 import de.openali.odysseus.chartconfig.x020.PolygonMarkerType;
 import de.openali.odysseus.chartconfig.x020.StrokeType;
+import de.openali.odysseus.chartconfig.x020.StyleRefernceType;
 import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 import de.openali.odysseus.chartconfig.x020.TextStyleType;
 
@@ -126,41 +135,14 @@ public final class StyleFactory
     return styleMap;
   }
 
-  public static StyleSet createStyleSet( final Styles styles )
+  public static IStyleSet createStyleSet( final Styles styles )
   {
-    final StyleSet styleSet = new StyleSet();
-    if( styles == null )
-      return styleSet;
-
-    for( final AreaStyleType ast : styles.getAreaStyleArray() )
-    {
-      final IAreaStyle style = StyleFactory.createAreaStyle( ast, null );
-      styleSet.addStyle( ast.getRole(), style );
-    }
-
-    for( final LineStyleType lst : styles.getLineStyleArray() )
-    {
-      final ILineStyle style = StyleFactory.createLineStyle( lst );
-      styleSet.addStyle( lst.getRole(), style );
-    }
-
-    for( final PointStyleType pst : styles.getPointStyleArray() )
-    {
-      final IPointStyle style = StyleFactory.createPointStyle( pst, null );
-      styleSet.addStyle( pst.getRole(), style );
-    }
-
-    for( final TextStyleType tst : styles.getTextStyleArray() )
-    {
-      final ITextStyle style = StyleFactory.createTextStyle( tst );
-      styleSet.addStyle( tst.getRole(), style );
-    }
-
-    return styleSet;
+    return createStyleSet( styles, null, null );
   }
 
-  public static IStyleSet createStyleSet( final Styles styles, final URL context )
+  public static IStyleSet createStyleSet( final Styles styles, final Styles globalStyles, final URL context )
   {
+
     final IStyleSet styleSet = new StyleSet();
     if( styles != null )
     {
@@ -196,8 +178,70 @@ public final class StyleFactory
         ts.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, tst );
         styleSet.addStyle( tst.getRole(), ts );
       }
+
+      final StyleRefernceType[] references = styles.getStyleReferenceArray();
+      final ChartTypeResolver resolver = ChartTypeResolver.getInstance();
+
+      for( final StyleRefernceType reference : references )
+      {
+        try
+        {
+          final String url = reference.getUrl();
+          if( url.startsWith( "#" ) ) // local style reference
+          {
+            final RETokenizer tokenizer = new RETokenizer( new Pattern( "#" ), url );
+            final String identifier = tokenizer.nextToken();
+
+            final AbstractStyleType styleType = StyleHelper.findStyle( globalStyles, identifier );
+            final IStyle style = StyleFactory.createStyle( styleType, context );
+
+            // save configuration type so it can be used for saving to chart file
+            style.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, style );
+            styleSet.addStyle( styleType.getRole(), style );
+          }
+          else
+          {
+            final AbstractStyleType styleType = resolver.findStyleType( reference, context );
+            final IStyle style = StyleFactory.createStyle( styleType, context );
+
+            // save configuration type so it can be used for saving to chart file
+            style.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, style );
+            styleSet.addStyle( styleType.getRole(), style );
+          }
+
+        }
+        catch( final CoreException e )
+        {
+          OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+
+          e.printStackTrace();
+        }
+      }
+
     }
     return styleSet;
+  }
+
+  private static IStyle createStyle( final AbstractStyleType styleType, final URL context )
+  {
+    if( styleType instanceof AreaStyleType )
+    {
+      return createAreaStyle( (AreaStyleType) styleType, context );
+    }
+    else if( styleType instanceof PointStyleType )
+    {
+      return createPointStyle( (PointStyleType) styleType, context );
+    }
+    else if( styleType instanceof LineStyleType )
+    {
+      return createLineStyle( (LineStyleType) styleType );
+    }
+    else if( styleType instanceof TextStyleType )
+    {
+      return createTextStyle( (TextStyleType) styleType );
+    }
+
+    throw new NotImplementedException();
   }
 
   public static IPointStyle createPointStyle( final PointStyleType pst, final URL context )
@@ -212,7 +256,7 @@ public final class StyleFactory
 
     // alpha
     if( pst.isSetAlpha() )
-      style.setAlpha( byteToInt( pst.getAlpha()[0] ) );
+      style.setAlpha( StyleHelper.byteToInt( pst.getAlpha()[0] ) );
 
     // width
     if( pst.isSetWidth() )
@@ -230,7 +274,7 @@ public final class StyleFactory
         style.setFillVisible( fillColor.getIsVisible() );
       final byte[] color = fillColor.getColor();
       if( color != null )
-        style.setInlineColor( colorByteToRGB( color ) );
+        style.setInlineColor( StyleHelper.colorByteToRGB( color ) );
     }
 
     // marker
@@ -296,7 +340,7 @@ public final class StyleFactory
 
     // alpha
     if( lst.isSetAlpha() )
-      style.setAlpha( byteToInt( lst.getAlpha()[0] ) );
+      style.setAlpha( StyleHelper.byteToInt( lst.getAlpha()[0] ) );
 
     // width
     if( lst.isSetWidth() )
@@ -323,7 +367,7 @@ public final class StyleFactory
 
     // color
     if( lst.isSetLineColor() )
-      style.setColor( colorByteToRGB( lst.getLineColor() ) );
+      style.setColor( StyleHelper.colorByteToRGB( lst.getLineColor() ) );
 
     return style;
   }
@@ -344,7 +388,7 @@ public final class StyleFactory
 
     // alpha
     if( st.isSetAlpha() )
-      style.setAlpha( byteToInt( st.getAlpha()[0] ) );
+      style.setAlpha( StyleHelper.byteToInt( st.getAlpha()[0] ) );
 
     // width
     if( st.isSetWidth() )
@@ -371,7 +415,7 @@ public final class StyleFactory
 
     // color
     if( st.isSetLineColor() )
-      style.setColor( colorByteToRGB( st.getLineColor() ) );
+      style.setColor( StyleHelper.colorByteToRGB( st.getLineColor() ) );
   }
 
   public static IAreaStyle createAreaStyle( final AreaStyleType ast, final URL context )
@@ -389,7 +433,7 @@ public final class StyleFactory
     // alpha
     if( ast.isSetAlpha() )
     {
-      final int alpha = byteToInt( ast.getAlpha()[0] );
+      final int alpha = StyleHelper.byteToInt( ast.getAlpha()[0] );
       style.setAlpha( alpha );
     }
 
@@ -399,7 +443,7 @@ public final class StyleFactory
       if( fill.getColorFill() != null )
       {
         final ColorFillType cft = fill.getColorFill();
-        final ColorFill colorFill = new ColorFill( colorByteToRGB( cft.getColor() ) );
+        final ColorFill colorFill = new ColorFill( StyleHelper.colorByteToRGB( cft.getColor() ) );
         style.setFill( colorFill );
       }
       else if( fill.getImageFill() != null )
@@ -450,7 +494,7 @@ public final class StyleFactory
     // alpha
     if( tst.isSetAlpha() )
     {
-      final int alpha = byteToInt( tst.getAlpha()[0] );
+      final int alpha = StyleHelper.byteToInt( tst.getAlpha()[0] );
       style.setAlpha( alpha );
     }
 
@@ -461,11 +505,11 @@ public final class StyleFactory
 
     // background color
     if( tst.isSetFillColor() )
-      style.setFillColor( colorByteToRGB( tst.getFillColor() ) );
+      style.setFillColor( StyleHelper.colorByteToRGB( tst.getFillColor() ) );
 
     // text color
     if( tst.isSetTextColor() )
-      style.setTextColor( colorByteToRGB( tst.getTextColor() ) );
+      style.setTextColor( StyleHelper.colorByteToRGB( tst.getTextColor() ) );
 
     // text size
     if( tst.isSetSize() )
@@ -502,44 +546,4 @@ public final class StyleFactory
     return style;
   }
 
-  /**
-   * @param b
-   *          a byte value
-   */
-  private static int byteToInt( final byte b )
-  {
-    return b & 0xff;
-  }
-
-  /**
-   * @param color
-   *          3 byte array
-   */
-  private static RGB colorByteToRGB( final byte[] color )
-  {
-    final int red = byteToInt( color[0] );
-    final int green = byteToInt( color[1] );
-    final int blue = byteToInt( color[2] );
-    return new RGB( red, green, blue );
-  }
-
-  public static ALIGNMENT getAlignment( final de.openali.odysseus.chartconfig.x020.AlignmentType.Enum alignment )
-  {
-    if( alignment == null )
-      return ALIGNMENT.LEFT;
-    if( "LEFT".equals( alignment.toString() ) )
-    {
-      return ALIGNMENT.LEFT;
-    }
-    else if( "CENTER".equals( alignment.toString() ) )
-    {
-      return ALIGNMENT.CENTER;
-    }
-    else if( "RIGHT".equals( alignment.toString() ) )
-    {
-      return ALIGNMENT.RIGHT;
-    }
-
-    return ALIGNMENT.LEFT;
-  }
 }

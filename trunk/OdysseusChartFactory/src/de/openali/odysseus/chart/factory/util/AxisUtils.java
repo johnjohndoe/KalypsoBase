@@ -51,8 +51,11 @@ import de.openali.odysseus.chartconfig.x020.ReferencingType;
 /**
  * @author Dirk Kuch
  */
-public class AxisUtils
+public final class AxisUtils
 {
+  private AxisUtils( )
+  {
+  }
 
   /**
    * @return axis id from referencing type

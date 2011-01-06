@@ -62,14 +62,20 @@ import org.kalypso.core.catalog.ICatalog;
 import com.google.common.collect.MapMaker;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
+import de.openali.odysseus.chart.factory.config.StyleHelper;
+import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
+import de.openali.odysseus.chartconfig.x020.AxisRendererType;
 import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.ChartType.Layers;
 import de.openali.odysseus.chartconfig.x020.ChartType.Mappers;
+import de.openali.odysseus.chartconfig.x020.ChartType.Renderers;
 import de.openali.odysseus.chartconfig.x020.LayerRefernceType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.ScreenAxisType;
+import de.openali.odysseus.chartconfig.x020.StyleRefernceType;
+import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 
 /**
  * @author Dirk Kuch
@@ -82,6 +88,8 @@ public final class ChartTypeResolver
 
   private final Map<String, MapperType> m_mapperTypeCache;
 
+  private final Map<String, AbstractStyleType> m_styleTypeCache;
+
   private static ChartTypeResolver INSTANCE;
 
   private ChartTypeResolver( )
@@ -91,6 +99,7 @@ public final class ChartTypeResolver
     m_chartTypeCache = marker.makeMap();
     m_layerCache = marker.makeMap();
     m_mapperTypeCache = marker.makeMap();
+    m_styleTypeCache = marker.makeMap();
   }
 
   public static ChartTypeResolver getInstance( )
@@ -101,7 +110,35 @@ public final class ChartTypeResolver
     return INSTANCE;
   }
 
-  public MapperType findMapperType( final URL context, final String reference ) throws CoreException
+  public AbstractStyleType findStyleType( final StyleRefernceType reference, final URL context ) throws CoreException
+  {
+    try
+    {
+      final String url = reference.getUrl();
+
+      final AbstractStyleType cached = getCachedStyleType( url );
+      if( cached != null )
+        return cached;
+
+      final String plainUrl = getUrl( url );
+      final String identifier = getAnchor( url );
+
+      AbstractStyleType type;
+      if( plainUrl.startsWith( "urn:" ) )
+        type = findUrnStyleType( context, plainUrl, identifier );
+      else
+        type = findUrlStyleType( context, plainUrl, identifier );
+
+      return null;
+    }
+    catch( final Throwable t )
+    {
+      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "Resolving style type failed", t ) );
+    }
+
+  }
+
+  public MapperType findMapperType( final String reference, final URL context ) throws CoreException
   {
     try
     {
@@ -130,7 +167,7 @@ public final class ChartTypeResolver
     }
   }
 
-  public LayerType findLayerType( final URL context, final LayerRefernceType reference ) throws CoreException
+  public LayerType findLayerType( final LayerRefernceType reference, final URL context ) throws CoreException
   {
     try
     {
@@ -167,16 +204,23 @@ public final class ChartTypeResolver
 
   private LayerType getCachedLayerType( final String url )
   {
-    // FIXME: we should consider a timeout based on the modification timestamp of the underlying resource here
+    // FIXME: we should consider a timeout based on the modification time stamp of the underlying resource here
     // Else, the referenced resource will never be loaded again, even if it has changed meanwhile
     return m_layerCache.get( url );
   }
 
   private MapperType getCachedMapperType( final String url )
   {
-    // FIXME: we should consider a timeout based on the modification timestamp of the underlying resource here
+    // FIXME: we should consider a timeout based on the modification time stamp of the underlying resource here
     // Else, the referenced resource will never be loaded again, even if it has changed meanwhile
     return m_mapperTypeCache.get( url );
+  }
+
+  private AbstractStyleType getCachedStyleType( final String url )
+  {
+    // FIXME: we should consider a timeout based on the modification time stamp of the underlying resource here
+    // Else, the referenced resource will never be loaded again, even if it has changed meanwhile
+    return m_styleTypeCache.get( url );
   }
 
   private LayerType findUrnLayerType( final URL context, final String urn, final String identifier ) throws XmlException, IOException
@@ -286,4 +330,58 @@ public final class ChartTypeResolver
     return null;
   }
 
+  private AbstractStyleType findUrnStyleType( final URL context, final String urn, final String identifier ) throws XmlException, IOException
+  {
+    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+    final String uri = baseCatalog.resolve( urn, urn );
+
+    return findUrlStyleType( context, uri, identifier );
+  }
+
+  private AbstractStyleType findUrlStyleType( final URL context, final String uri, final String identifier ) throws XmlException, IOException
+  {
+    final URL absoluteUri = new URL( context, uri );
+
+    List<ChartType> chartTypes = m_chartTypeCache.get( uri );
+    if( chartTypes == null )
+    {
+      final ChartConfigurationLoader loader = new ChartConfigurationLoader( absoluteUri );
+      final ChartType[] charts = loader.getCharts();
+
+      chartTypes = new ArrayList<ChartType>();
+      Collections.addAll( chartTypes, charts );
+
+      m_chartTypeCache.put( uri, chartTypes );
+    }
+
+    for( final ChartType chart : chartTypes )
+    {
+      final Styles styles = chart.getStyles();
+      final AbstractStyleType style = StyleHelper.findStyle( styles, identifier );
+      if( style != null )
+        return style;
+
+      final Layers layers = chart.getLayers();
+      final LayerType[] layerArray = layers.getLayerArray();
+      for( final LayerType layer : layerArray )
+      {
+        final Styles layerStyles = layer.getStyles();
+        final AbstractStyleType layerStyle = StyleHelper.findStyle( layerStyles, identifier );
+        if( layerStyle != null )
+          return layerStyle;
+      }
+
+      final Renderers renderers = chart.getRenderers();
+      final AxisRendererType[] rendererArray = renderers.getAxisRendererArray();
+      for( final AxisRendererType renderer : rendererArray )
+      {
+        final Styles rendererStyles = renderer.getStyles();
+        final AbstractStyleType rendererStyle = StyleHelper.findStyle( rendererStyles, identifier );
+        if( rendererStyle != null )
+          return rendererStyle;
+      }
+    }
+
+    return null;
+  }
 }

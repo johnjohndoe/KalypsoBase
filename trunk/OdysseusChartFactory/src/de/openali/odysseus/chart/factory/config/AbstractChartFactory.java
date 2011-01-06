@@ -128,7 +128,7 @@ public abstract class AbstractChartFactory
       try
       {
         final ChartTypeResolver resolver = ChartTypeResolver.getInstance();
-        return resolver.findMapperType( getContext(), url );
+        return resolver.findMapperType( url, getContext() );
       }
       catch( final CoreException e )
       {

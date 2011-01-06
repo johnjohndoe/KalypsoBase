@@ -18,6 +18,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import de.openali.odysseus.chart.factory.util.AxisUtils;
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.util.IOUtils;
@@ -138,12 +139,12 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
   public AxisType getDomainAxis( final LayerType layer )
   {
-    return (AxisType) resolveReference( layer.getMapperRefs().getDomainAxisRef().getRef() );
+    return (AxisType) resolveReference( AxisUtils.getIdentifier( layer.getMapperRefs().getDomainAxisRef() ) );
   }
 
   public AxisType getTargetAxis( final LayerType layer )
   {
-    return (AxisType) resolveReference( layer.getMapperRefs().getTargetAxisRef().getRef() );
+    return (AxisType) resolveReference( AxisUtils.getIdentifier( layer.getMapperRefs().getTargetAxisRef() ) );
   }
 
   public Map<String, AbstractStyleType> getStyles( final LayerType layer )
@@ -172,13 +173,13 @@ public class ChartConfigurationLoader implements IReferenceResolver
     final TreeMap<String, MapperType> map = new TreeMap<String, MapperType>();
     final RoleReferencingType[] mra = layer.getMapperRefs().getMapperRefArray();
     for( final RoleReferencingType refType : mra )
-      map.put( refType.getRole(), (MapperType) resolveReference( refType.getRef() ) );
+      map.put( refType.getRole(), (MapperType) resolveReference( AxisUtils.getIdentifier( refType ) ) );
     return map;
   }
 
   public AxisRendererType getAxisRenderer( final AxisType axis )
   {
-    return (AxisRendererType) resolveReference( axis.getRendererRef().getRef() );
+    return (AxisRendererType) resolveReference( AxisUtils.getIdentifier( axis.getRendererRef() ) );
   }
 
   public ChartType getChartById( final String id )

@@ -51,6 +51,7 @@ import de.openali.odysseus.chart.factory.config.parameters.impl.AxisDirectionPar
 import de.openali.odysseus.chart.factory.config.parameters.impl.AxisPositionParser;
 import de.openali.odysseus.chart.factory.provider.IAxisProvider;
 import de.openali.odysseus.chart.factory.provider.IAxisRendererProvider;
+import de.openali.odysseus.chart.factory.util.AxisUtils;
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -78,6 +79,7 @@ import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.PositionType;
 import de.openali.odysseus.chartconfig.x020.ReferencingType;
 import de.openali.odysseus.chartconfig.x020.ScreenAxisType;
+import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 
 /**
  * @author Dirk Kuch
@@ -92,12 +94,14 @@ public class ChartMapperFactory extends AbstractChartFactory
   public void build( final ChartType chartType )
   {
     final Mappers mappers = chartType.getMappers();
+    final Styles globalStyles = chartType.getStyles();
+
     if( mappers != null )
     {
       final AxisType[] axisTypes = mappers.getAxisArray();
       for( final AxisType axisType : axisTypes )
       {
-        addAxis( axisType );
+        addAxis( axisType, globalStyles );
       }
 
       final ScreenAxisType[] screenAxesTypes = mappers.getScreenAxisArray();
@@ -112,81 +116,87 @@ public class ChartMapperFactory extends AbstractChartFactory
    * creates a concrete IAxis-Implementation from an AbstractAxisType derived from a ChartConfiguration, sets the
    * corresponding renderer and adds both to a given Chart
    */
-  public IAxis addAxis( final AxisType axisType )
+  public IAxis addAxis( final AxisType axisType, final Styles globalStyles )
   {
-    final IMapperRegistry mr = getModel().getMapperRegistry();
+    final IMapperRegistry mapperRegistry = getModel().getMapperRegistry();
     if( axisType != null )
     {
       // wenn die Achse schon da ist, dann muss man sie nicht mehr
       // erzeugen
-      if( mr.getAxis( axisType.getId() ) != null )
+      if( mapperRegistry.getAxis( axisType.getId() ) != null )
         return null;
 
-      final String apId = axisType.getProvider().getEpid();
-      if( apId != null && !apId.trim().isEmpty() )
+      final String axisProviderId = axisType.getProvider().getEpid();
+      if( axisProviderId != null && !axisProviderId.trim().isEmpty() )
         try
         {
-          final IAxisProvider ap = getLoader().getExtension( IAxisProvider.class, apId );
-          if( ap != null )
+          final IAxisProvider axisProvider = getLoader().getExtension( IAxisProvider.class, axisProviderId );
+          if( axisProvider != null )
           {
-            final String id = axisType.getId();
+            final String axisId = axisType.getId();
             final POSITION axisPosition = getAxisPosition( axisType.getPosition() );
-            final IParameterContainer pc = createParameterContainer( id, axisType.getProvider() );
+            final IParameterContainer container = createParameterContainer( axisId, axisType.getProvider() );
             final Class< ? > dataClass = getAxisDataClass( axisType );
+
             String[] valueList = null;
             if( axisType.isSetStringRange() )
               valueList = axisType.getStringRange().getValueSet().getValueArray();
-            ap.init( getModel(), id, pc, getContext(), dataClass, axisPosition, valueList );
-            final IAxis axis = ap.getAxis();
 
-            // Provider in Element setzen - fürs speichern benötigt
-            axis.setData( ChartFactory.AXIS_PROVIDER_KEY, ap );
-            // save configuration type so it can be used for saving to chartfile
-            axis.setData( CONFIGURATION_TYPE_KEY, axisType );
+            axisProvider.init( getModel(), axisId, container, getContext(), dataClass, axisPosition, valueList );
+
+            final IAxis axis = axisProvider.getAxis();
+            axis.setData( ChartFactory.AXIS_PROVIDER_KEY, axisProvider ); // Provider in Element setzen - fürs speichern
+// benötigt
+            axis.setData( CONFIGURATION_TYPE_KEY, axisType ); // save configuration type so it can be used for saving to
+// chartfile
             axis.setDirection( getAxisDirection( axisType ) );
             axis.setLabel( axisType.getLabel() );
             axis.setPreferredAdjustment( getAxisAdjustment( axisType ) );
             axis.setNumericRange( getAxisRange( axis, axisType ) );
 
-            mr.addMapper( axis );
+            mapperRegistry.addMapper( axis );
 
-            // Renderer nur erzeugen, wenn es noch keinen für die
-            // Achse gibt
-
+            /**
+             * Renderer nur erzeugen, wenn es noch keinen für die Achse gibt
+             */
             final ReferencingType rendererRef = axisType.getRendererRef();
-            IAxisRenderer axisRenderer = findRenderer( mr.getAxes(), rendererRef.getRef() );
+            IAxisRenderer axisRenderer = findRenderer( mapperRegistry.getAxes(), AxisUtils.getIdentifier( rendererRef ) );
 
             if( axisRenderer != null )
             {
-              // schon vorhanden => einfach zuweisen
+              /** exists? so assign axis renderer */
               axis.setRenderer( axisRenderer );
             }
             else
             {
-              final AxisRendererType rendererType = (AxisRendererType) getResolver().resolveReference( rendererRef.getRef() );
+              final AxisRendererType rendererType = (AxisRendererType) getResolver().resolveReference( AxisUtils.getIdentifier( rendererRef ) );
               if( rendererType != null )
               {
-                final String arpId = rendererType.getProvider().getEpid();
-                final IAxisRendererProvider arp;
+                final String providerId = rendererType.getProvider().getEpid();
+                final IAxisRendererProvider axisRendererProvider;
                 // Hack due older kod-files with this malformed renderer-id still exists
-                if( "de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider".equals( arpId ) ) //$NON-NLS-1$
-                  arp = getLoader().getExtension( IAxisRendererProvider.class, "de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider" ); //$NON-NLS-1$
+                if( "de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider".equals( providerId ) ) //$NON-NLS-1$
+                  axisRendererProvider = getLoader().getExtension( IAxisRendererProvider.class, "de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider" ); //$NON-NLS-1$
                 else
-                  arp = getLoader().getExtension( IAxisRendererProvider.class, arpId );
-                final String rid = rendererType.getId();
-                final IStyleSet styleSet = StyleFactory.createStyleSet( rendererType.getStyles(), getContext() );
-                final IParameterContainer rpc = createParameterContainer( rid, rendererType.getProvider() );
-// // Hack to get rid of older kod-files with this malformed renderer-id
-// if( "de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider".equals( arpId ) )
-// arp.init( model, "de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider", rpc,
-// context, styleSet );
-// else
-                arp.init( getModel(), rid, rpc, getContext(), styleSet );
+                  axisRendererProvider = getLoader().getExtension( IAxisRendererProvider.class, providerId );
+                final String rendererTypeId = rendererType.getId();
+                final IStyleSet styleSet = StyleFactory.createStyleSet( rendererType.getStyles(), globalStyles, getContext() );
+                final IParameterContainer parameterContainer = createParameterContainer( rendererTypeId, rendererType.getProvider() );
+
+                // // Hack to get rid of older kod-files with this malformed renderer-id
+                // if(
+// "de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider".equals( arpId ) )
+                // arp.init( model,
+// "de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider", rpc,
+                // context, styleSet );
+                // else
+
+                axisRendererProvider.init( getModel(), rendererTypeId, parameterContainer, getContext(), styleSet );
 
                 try
                 {
-                  axisRenderer = arp.getAxisRenderer();
-                  axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, arp );
+                  axisRenderer = axisRendererProvider.getAxisRenderer();
+                  axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, axisRendererProvider );
                   // save configuration type so it can be used for saving to chart file
                   axisRenderer.setData( CONFIGURATION_TYPE_KEY, rendererType );
 
@@ -202,7 +212,7 @@ public class ChartMapperFactory extends AbstractChartFactory
             return axis;
           }
           else
-            Logger.logError( Logger.TOPIC_LOG_CONFIG, "Axis could not be created. EPID was: " + apId );
+            Logger.logError( Logger.TOPIC_LOG_CONFIG, "Axis could not be created. EPID was: " + axisProviderId );
 
         }
         catch( final ConfigurationException e )
@@ -210,7 +220,7 @@ public class ChartMapperFactory extends AbstractChartFactory
           e.printStackTrace();
         }
       else
-        Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider " + apId + " not known" );
+        Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider " + axisProviderId + " not known" );
     }
     else
       Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." );
@@ -220,11 +230,11 @@ public class ChartMapperFactory extends AbstractChartFactory
 
   public IAxis addScreenAxis( final ScreenAxisType screenAxisType )
   {
-    final IMapperRegistry mr = getModel().getMapperRegistry();
+    final IMapperRegistry mapperRegistry = getModel().getMapperRegistry();
     if( screenAxisType != null )
     {
       /* screen axis already exists? */
-      if( mr.getAxis( screenAxisType.getId() ) != null )
+      if( mapperRegistry.getAxis( screenAxisType.getId() ) != null )
         return null;
 
       final String providerId = screenAxisType.getProvider().getEpid();
@@ -233,7 +243,7 @@ public class ChartMapperFactory extends AbstractChartFactory
         final IAxisProvider provider = getLoader().getExtension( IAxisProvider.class, providerId );
 
         final IAxis screenAxis = provider.getScreenAxis( screenAxisType.getId(), getAxisPosition( screenAxisType.getPosition() ) );
-        mr.addMapper( screenAxis );
+        mapperRegistry.addMapper( screenAxis );
 
         return screenAxis;
       }
@@ -358,10 +368,10 @@ public class ChartMapperFactory extends AbstractChartFactory
     return null;
   }
 
-  public void addAxis( final MapperType type )
+  public void addMapper( final MapperType type, final Styles globalStyles )
   {
     if( type instanceof AxisType )
-      addAxis( (AxisType) type );
+      addAxis( (AxisType) type, globalStyles );
     else if( type instanceof ScreenAxisType )
       addScreenAxis( (ScreenAxisType) type );
   }

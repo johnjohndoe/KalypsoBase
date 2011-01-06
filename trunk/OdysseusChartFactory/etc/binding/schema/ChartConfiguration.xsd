@@ -182,6 +182,7 @@
 
   <complexType name="ChartConfigurationType">
     <sequence>
+      <element ref="ods:Styles" minOccurs="0" maxOccurs="1" />
       <element ref="ods:Chart" maxOccurs="unbounded" />
     </sequence>
   </complexType>
@@ -463,9 +464,6 @@
   </complexType>
 
 
-
-
-
   <complexType name="ParametersType">
     <sequence>
       <choice minOccurs="0" maxOccurs="unbounded">
@@ -476,12 +474,10 @@
     </sequence>
   </complexType>
 
-
   <complexType name="ParameterType">
     <attribute name="name" type="string" use="required" />
     <attribute name="value" type="string" use="required" />
   </complexType>
-
 
   <complexType name="ParameterListType">
     <sequence>
@@ -505,14 +501,18 @@
   <element name="Styles">
     <complexType>
       <choice minOccurs="1" maxOccurs="unbounded">
-        <element ref="ods:LineStyle"></element>
-        <element ref="ods:PointStyle"></element>
-        <element ref="ods:AreaStyle"></element>
-        <element ref="ods:TextStyle"></element>
+        <element ref="ods:LineStyle" />
+        <element ref="ods:PointStyle" />
+        <element ref="ods:AreaStyle" />
+        <element ref="ods:TextStyle" />
+        <element name="StyleReference" type="ods:StyleRefernceType" />
       </choice>
     </complexType>
   </element>
 
+  <complexType name="StyleRefernceType">
+    <attribute name="url" type="anyURI" use="required" />
+  </complexType>
 
   <complexType name="TitleType">
     <simpleContent>

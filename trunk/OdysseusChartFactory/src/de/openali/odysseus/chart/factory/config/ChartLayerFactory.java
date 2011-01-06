@@ -76,6 +76,7 @@ import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.ProviderType;
 import de.openali.odysseus.chartconfig.x020.ReferencingType;
 import de.openali.odysseus.chartconfig.x020.RoleReferencingType;
+import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 
 /**
  * @author Dirk Kuch
@@ -98,11 +99,13 @@ public class ChartLayerFactory extends AbstractChartFactory
     if( layers == null )
       return;
 
-    buildLayers( layers );
-    buildLayerReferences( layers );
+    final Styles globalStyles = chartType.getStyles();
+
+    buildLayers( layers, globalStyles );
+    buildLayerReferences( layers, globalStyles );
   }
 
-  private void buildLayerReferences( final Layers layers )
+  private void buildLayerReferences( final Layers layers, final Styles globalStyles )
   {
     final LayerRefernceType[] references = layers.getLayerReferenceArray();
     if( ArrayUtils.isEmpty( references ) )
@@ -113,9 +116,9 @@ public class ChartLayerFactory extends AbstractChartFactory
       try
       {
         final ChartTypeResolver resovler = ChartTypeResolver.getInstance();
-        final LayerType type = resovler.findLayerType( getContext(), reference );
+        final LayerType type = resovler.findLayerType( reference, getContext() );
 
-        addLayer( type );
+        addLayer( type, globalStyles );
       }
       catch( final CoreException e )
       {
@@ -124,7 +127,7 @@ public class ChartLayerFactory extends AbstractChartFactory
     }
   }
 
-  private void buildLayers( final Layers layers )
+  private void buildLayers( final Layers layers, final Styles globalStyles )
   {
     final LayerType[] layerRefArray = layers.getLayerArray();
     if( ArrayUtils.isEmpty( layerRefArray ) )
@@ -133,28 +136,28 @@ public class ChartLayerFactory extends AbstractChartFactory
     for( final LayerType layerType : layerRefArray )
     {
       if( layerType != null )
-        addLayer( layerType );
+        addLayer( layerType, globalStyles );
       else
         Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "a reference to a layer type could not be resolved " );
     }
   }
 
-  public void addLayer( final LayerType layerType )
+  public void addLayer( final LayerType layerType, final Styles globalStyles )
   {
     // Achsen hinzufügen
     final MapperRefs mapper = layerType.getMapperRefs();
 
     final MapperType domainAxisType = findMapperType( mapper.getDomainAxisRef() );
-    m_mapperFactory.addAxis( domainAxisType );
+    m_mapperFactory.addMapper( domainAxisType, globalStyles );
 
     final MapperType targetAxisType = findMapperType( mapper.getTargetAxisRef() );
-    m_mapperFactory.addAxis( targetAxisType );
+    m_mapperFactory.addMapper( targetAxisType, globalStyles );
 
     // Restliche Mapper hinzufügen
     final RoleReferencingType[] mapperRefArray = mapper.getMapperRefArray();
     for( final RoleReferencingType mapperRef : mapperRefArray )
     {
-      final MapperType mapperType = (MapperType) getResolver().resolveReference( mapperRef.getRef() );
+      final MapperType mapperType = findMapperType( mapperRef );
       if( mapperType != null )
         // nur dann hinzufügen, wenn nicht schon vorhanden
         if( getModel().getMapperRegistry().getMapper( mapperType.getId() ) == null )
@@ -177,7 +180,7 @@ public class ChartLayerFactory extends AbstractChartFactory
       }
 
       // create styles
-      final IStyleSet styleSet = StyleFactory.createStyleSet( layerType.getStyles(), getContext() );
+      final IStyleSet styleSet = StyleFactory.createStyleSet( layerType.getStyles(), globalStyles, getContext() );
       // create map if mapper roles to ids
       final Map<String, String> mapperMap = createMapperMap( layerType );
       // create parameter container
@@ -218,8 +221,8 @@ public class ChartLayerFactory extends AbstractChartFactory
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IAxis domainAxis = getModel().getMapperRegistry().getAxis( layerType.getMapperRefs().getDomainAxisRef().getRef() );
-      final IAxis targetAxis = getModel().getMapperRegistry().getAxis( layerType.getMapperRefs().getTargetAxisRef().getRef() );
+      final IAxis domainAxis = getModel().getMapperRegistry().getAxis( AxisUtils.getIdentifier( layerType.getMapperRefs().getDomainAxisRef() ) );
+      final IAxis targetAxis = getModel().getMapperRegistry().getAxis( AxisUtils.getIdentifier( layerType.getMapperRefs().getTargetAxisRef() ) );
       final ICoordinateMapper cm = new CoordinateMapper( domainAxis, targetAxis );
       final IChartLayer icl = new DummyLayer();
       icl.setTitle( layerType.getTitle() );
@@ -268,7 +271,7 @@ public class ChartLayerFactory extends AbstractChartFactory
     final Map<String, String> mapperMap = new HashMap<String, String>();
     final RoleReferencingType[] mapperRefArray = lt.getMapperRefs().getMapperRefArray();
     for( final RoleReferencingType rrt : mapperRefArray )
-      mapperMap.put( rrt.getRole(), rrt.getRef() );
+      mapperMap.put( rrt.getRole(), AxisUtils.getIdentifier( rrt ) );
 
     return mapperMap;
   }
