@@ -90,7 +90,7 @@ public class DefaultComponentUiHandlerProvider implements IComponentUiHandlerPro
     final boolean editable = true;
     final boolean resizeable = true;
     final boolean moveable = true;
-    final String columnLabel = component.getName();
+    final String columnLabel = ComponentUtilities.getComponentLabel( component );
     final int columnWidth = 100;
 
     final IRestriction[] restrictions = component.getRestrictions();

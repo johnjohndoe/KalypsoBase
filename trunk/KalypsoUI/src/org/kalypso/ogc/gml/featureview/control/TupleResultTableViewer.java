@@ -48,14 +48,10 @@ import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
  */
 public class TupleResultTableViewer extends DefaultTableViewer
 {
-
   public TupleResultTableViewer( final Composite parent, final int style )
   {
     super( parent, style );
     getTable().setHeaderVisible( true );
     getTable().setLinesVisible( true );
   }
-
-  
-  
 }
