@@ -58,6 +58,7 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGHT;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 import de.openali.odysseus.chart.framework.model.style.impl.ImageFill;
@@ -155,6 +156,47 @@ public final class StyleFactory
       styleSet.addStyle( tst.getRole(), style );
     }
 
+    return styleSet;
+  }
+
+  public static IStyleSet createStyleSet( final Styles styles, final URL context )
+  {
+    final IStyleSet styleSet = new StyleSet();
+    if( styles != null )
+    {
+      final AreaStyleType[] asArray = styles.getAreaStyleArray();
+      for( final AreaStyleType ast : asArray )
+      {
+        final IAreaStyle as = StyleFactory.createAreaStyle( ast, context );
+        // save configuration type so it can be used for saving to chart file
+        as.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, ast );
+        styleSet.addStyle( ast.getRole(), as );
+      }
+      final PointStyleType[] psArray = styles.getPointStyleArray();
+      for( final PointStyleType pst : psArray )
+      {
+        final IPointStyle ps = StyleFactory.createPointStyle( pst, context );
+        // save configuration type so it can be used for saving to chart file
+        ps.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, pst );
+        styleSet.addStyle( pst.getRole(), ps );
+      }
+      final LineStyleType[] lsArray = styles.getLineStyleArray();
+      for( final LineStyleType lst : lsArray )
+      {
+        final ILineStyle ls = StyleFactory.createLineStyle( lst );
+        // save configuration type so it can be used for saving to chart file
+        ls.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, lst );
+        styleSet.addStyle( lst.getRole(), ls );
+      }
+      final TextStyleType[] tsArray = styles.getTextStyleArray();
+      for( final TextStyleType tst : tsArray )
+      {
+        final ITextStyle ts = StyleFactory.createTextStyle( tst );
+        // save configuration type so it can be used for saving to chart file
+        ts.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, tst );
+        styleSet.addStyle( tst.getRole(), ts );
+      }
+    }
     return styleSet;
   }
 

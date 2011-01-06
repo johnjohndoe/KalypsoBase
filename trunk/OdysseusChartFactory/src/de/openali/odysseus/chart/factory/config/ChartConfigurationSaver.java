@@ -121,7 +121,7 @@ public final class ChartConfigurationSaver
     final IAxis[] axes = registry.getAxes();
     for( final IAxis axis : axes )
     {
-      final AxisType at = (AxisType) axis.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
+      final AxisType at = (AxisType) axis.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );
       if( at != null )
       {
 
@@ -172,7 +172,7 @@ public final class ChartConfigurationSaver
       final IAxisRenderer renderer = axis.getRenderer();
       if( renderer != null )
       {
-        final AxisRendererType art = (AxisRendererType) renderer.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
+        final AxisRendererType art = (AxisRendererType) renderer.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );
         if( art != null )
         {
           // everything stays as it was
@@ -192,7 +192,7 @@ public final class ChartConfigurationSaver
     final IMapper[] mappers = registry.getMappers();
     for( final IMapper mapper : mappers )
     {
-      final MapperType mt = (MapperType) mapper.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
+      final MapperType mt = (MapperType) mapper.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );
       if( mt != null )
       {
         // everything stays as it was
@@ -210,7 +210,7 @@ public final class ChartConfigurationSaver
     final Map<String, LayerType> layerTypes = new HashMap<String, LayerType>();
     for( final IChartLayer layer : manager.getLayers() )
     {
-      final LayerType lt = (LayerType) layer.getData( ChartFactory.CONFIGURATION_TYPE_KEY );
+      final LayerType lt = (LayerType) layer.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );
       if( lt != null )
       {
         // set layer visibility
