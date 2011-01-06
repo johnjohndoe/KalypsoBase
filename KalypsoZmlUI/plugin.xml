@@ -29,7 +29,11 @@
  
  <extension point="org.kalypso.core.catalogContribution">
     <catalogContribution class="org.kalypso.zml.ui.table.catalog.ZmlTableCatalogContribution"
-      name="org.kalypso.zml.ui.core.rules.ZmlTableRulesCatalogContributionbution" />
+      name="urn:org:kalypso:zml:ui:table" />
+    <catalogContribution
+          class="org.kalypso.zml.ui.chart.cataloge.ZmlDiagramCatalogContribution"
+          name="urn:org:kalypso:zml:ui:diagramm:global">
+    </catalogContribution>
   </extension>
     
  <extension point="org.eclipse.ui.contexts">
