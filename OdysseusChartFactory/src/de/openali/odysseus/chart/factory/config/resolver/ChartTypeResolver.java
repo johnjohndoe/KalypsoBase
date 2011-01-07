@@ -76,7 +76,6 @@ import de.openali.odysseus.chartconfig.x020.LayerRefernceType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.ScreenAxisType;
-import de.openali.odysseus.chartconfig.x020.StyleRefernceType;
 import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 
 /**
@@ -130,18 +129,16 @@ public final class ChartTypeResolver implements IReferenceResolver
     return loader;
   }
 
-  public AbstractStyleType findStyleType( final StyleRefernceType reference, final URL context ) throws CoreException
+  public AbstractStyleType findStyleType( final String reference, final URL context ) throws CoreException
   {
     try
     {
-      final String url = reference.getUrl();
-
-      final AbstractStyleType cached = getCachedStyleType( url );
+      final AbstractStyleType cached = getCachedStyleType( reference );
       if( cached != null )
         return cached;
 
-      final String plainUrl = getUrl( url );
-      final String identifier = getAnchor( url );
+      final String plainUrl = getUrl( reference );
+      final String identifier = getAnchor( reference );
 
       AbstractStyleType type;
       if( plainUrl.startsWith( "urn:" ) )

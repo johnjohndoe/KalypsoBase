@@ -85,7 +85,6 @@ import de.openali.odysseus.chartconfig.x020.PointStyleType;
 import de.openali.odysseus.chartconfig.x020.PointType;
 import de.openali.odysseus.chartconfig.x020.PolygonMarkerType;
 import de.openali.odysseus.chartconfig.x020.StrokeType;
-import de.openali.odysseus.chartconfig.x020.StyleRefernceType;
 import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 import de.openali.odysseus.chartconfig.x020.TextStyleType;
 
@@ -179,17 +178,16 @@ public final class StyleFactory
         styleSet.addStyle( tst.getRole(), ts );
       }
 
-      final StyleRefernceType[] references = styles.getStyleReferenceArray();
+      final String[] references = styles.getStyleReferenceArray();
       final ChartTypeResolver resolver = ChartTypeResolver.getInstance();
 
-      for( final StyleRefernceType reference : references )
+      for( final String reference : references )
       {
         try
         {
-          final String url = reference.getUrl();
-          if( url.startsWith( "#" ) ) // local style reference
+          if( reference.startsWith( "#" ) ) // local style reference
           {
-            final RETokenizer tokenizer = new RETokenizer( new Pattern( "#" ), url );
+            final RETokenizer tokenizer = new RETokenizer( new Pattern( "#" ), reference );
             final String identifier = tokenizer.nextToken();
 
             final AbstractStyleType styleType = StyleHelper.findStyle( globalStyles, identifier );

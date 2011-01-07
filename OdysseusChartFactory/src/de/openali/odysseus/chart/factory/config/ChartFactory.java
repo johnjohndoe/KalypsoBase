@@ -5,14 +5,15 @@ import java.net.URL;
 
 import de.openali.odysseus.chart.factory.config.exception.ConfigChartNotFoundException;
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
+import de.openali.odysseus.chart.factory.config.resolver.ChartTypeResolver;
 import de.openali.odysseus.chart.factory.config.resolver.ExtendedReferenceResolver;
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
+import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.ChartType;
+import de.openali.odysseus.chartconfig.x020.TextStyleType;
 import de.openali.odysseus.chartconfig.x020.TitleType;
 
 /**
@@ -60,15 +61,23 @@ public final class ChartFactory
 
     model.setId( chartType.getId() );
 
-    final IStyleSet styleSet = StyleFactory.createStyleSet( chartType.getStyles() );
+    final ChartTypeResolver chartTypeResolver = ChartTypeResolver.getInstance();
 
     for( final TitleType type : chartType.getTitleArray() )
     {
       final TitleTypeBean title = new TitleTypeBean( type.getStringValue() );
 
-      final StyleSetVisitor visitor = new StyleSetVisitor();
-      final ITextStyle textStyle = visitor.visit( styleSet, ITextStyle.class, type.getStyleref() );
-      title.setTextStyle( textStyle );
+      try
+      {
+        final AbstractStyleType styleType = chartTypeResolver.findStyleType( type.getStyleref(), context );
+        final ITextStyle style = StyleFactory.createTextStyle( (TextStyleType) styleType );
+
+        title.setTextStyle( style );
+      }
+      catch( final Throwable t )
+      {
+        t.printStackTrace();
+      }
 
       title.setAlignmentHorizontal( StyleHelper.getAlignment( type.getHorizontalAlignment() ) );
       title.setAlignmentVertical( StyleHelper.getAlignment( type.getVerticalAlignment() ) );
@@ -90,5 +99,4 @@ public final class ChartFactory
     final ChartLayerFactory layerFactory = new ChartLayerFactory( model, extendedResolver, extLoader, context, mapperFactory );
     layerFactory.build( chartType );
   }
-
 }
