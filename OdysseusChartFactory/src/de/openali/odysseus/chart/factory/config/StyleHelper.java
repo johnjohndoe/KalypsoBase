@@ -103,6 +103,9 @@ public final class StyleHelper
 
   public static AbstractStyleType findStyle( final Styles styles, final String identifier )
   {
+    if( styles == null )
+      return null;
+
     final AreaStyleType[] areaStyleArray = styles.getAreaStyleArray();
     for( final AreaStyleType areaStyleType : areaStyleArray )
     {
@@ -130,8 +133,6 @@ public final class StyleHelper
       if( textStyleType.getRole().equals( identifier ) )
         return textStyleType;
     }
-
-    // TODO resolve style references
 
     return null;
   }

@@ -192,6 +192,8 @@ public final class StyleFactory
 
             final AbstractStyleType styleType = StyleHelper.findStyle( globalStyles, identifier );
             final IStyle style = StyleFactory.createStyle( styleType, context );
+            if( style == null )
+              return null;
 
             // save configuration type so it can be used for saving to chart file
             style.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, style );
@@ -222,7 +224,9 @@ public final class StyleFactory
 
   private static IStyle createStyle( final AbstractStyleType styleType, final URL context )
   {
-    if( styleType instanceof AreaStyleType )
+    if( styleType == null )
+      return null;
+    else if( styleType instanceof AreaStyleType )
     {
       return createAreaStyle( (AreaStyleType) styleType, context );
     }
