@@ -45,37 +45,36 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author burtscher1
- * 
  */
 public abstract class AbstractLayerEventListener implements ILayerEventListener
 {
 
-	/**
+  /**
    * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onActiveLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void onActiveLayerChanged( IChartLayer layer )
+  public void onActiveLayerChanged( final IChartLayer layer )
   {
     // TODO Auto-generated method stub
-    
+
   }
 
   /**
-	 * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-	 */
-	@Override
-  public void onLayerContentChanged(IChartLayer layer)
-	{
-		// not implemented - override in subclass if needed
-	}
+   * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public void onLayerContentChanged( final IChartLayer layer )
+  {
+    // not implemented - override in subclass if needed
+  }
 
-	/**
-	 * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-	 */
-	@Override
-  public void onLayerVisibilityChanged(IChartLayer layer)
-	{
-		// not implemented - override in subclass if needed
-	}
+  /**
+   * @see de.openali.odysseus.chart.framework.model.event.ILayerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public void onLayerVisibilityChanged( final IChartLayer layer )
+  {
+    // not implemented - override in subclass if needed
+  }
 
 }

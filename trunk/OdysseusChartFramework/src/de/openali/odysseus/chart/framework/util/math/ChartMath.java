@@ -17,7 +17,7 @@ public class ChartMath
    * 
    * @return angle alpha
    */
-  public static double alphaFromTriangle( Point pointA, Point pointB, Point pointC )
+  public static double alphaFromTriangle( final Point pointA, final Point pointB, final Point pointC )
   {
     final double sideA = Math.sqrt( Math.pow( (pointC.x - pointB.x), 2 ) + Math.pow( (pointC.y - pointB.y), 2 ) );
     final double sideB = Math.sqrt( Math.pow( (pointC.x - pointA.x), 2 ) + Math.pow( (pointC.y - pointA.y), 2 ) );
@@ -31,7 +31,7 @@ public class ChartMath
    * returns the length of the perpendicular through pointA in an acute-angled triangle defined by pointA, pointB and
    * pointC
    */
-  public static double perpendicularThrougB( Point pointA, Point pointB, Point pointC )
+  public static double perpendicularThrougB( final Point pointA, final Point pointB, final Point pointC )
   {
     final double sideC = Math.sqrt( Math.pow( (pointA.x - pointB.x), 2 ) + Math.pow( (pointA.y - pointB.y), 2 ) );
     final double alpha = alphaFromTriangle( pointA, pointB, pointC );
@@ -43,7 +43,7 @@ public class ChartMath
   /**
    * Implementation of Douglas-Peuker-Algorithm
    */
-  public static List<Point> douglasPeucker( List<Point> path, double epsilon )
+  public static List<Point> douglasPeucker( final List<Point> path, final double epsilon )
   {
     final int pathSize = path.size();
     if( pathSize > 2 && epsilon > 0 )

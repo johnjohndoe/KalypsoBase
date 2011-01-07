@@ -30,8 +30,6 @@ public class DateDataOperator extends AbstractDataOperator<Date>
     m_dateFormat = new CalendarFormat( formatString );
   }
 
- 
-
   @Override
   public Long logicalToNumeric( final Date logVal )
   {

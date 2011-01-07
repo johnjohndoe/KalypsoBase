@@ -44,9 +44,8 @@ import org.eclipse.swt.graphics.GC;
 
 /**
  * @author burtscher1
- * 
  */
 public interface IPaintable
 {
-  public void paint( GC gc );
+  void paint( GC gc );
 }

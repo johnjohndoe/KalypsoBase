@@ -55,7 +55,7 @@ public class ColorRegistry extends AbstractResourceRegistryFactory<RGB, Color>
    *      java.lang.Object)
    */
   @Override
-  protected Color createResource( Device dev, RGB descriptor )
+  protected Color createResource( final Device dev, final RGB descriptor )
   {
     return new Color( dev, descriptor );
   }
@@ -64,7 +64,7 @@ public class ColorRegistry extends AbstractResourceRegistryFactory<RGB, Color>
    * @see de.openali.odysseus.chart.framework.util.resource.AbstractResourceRegistryFactory#disposeResource(java.lang.Object)
    */
   @Override
-  protected void disposeResource( Color resource )
+  protected void disposeResource( final Color resource )
   {
     resource.dispose();
   }

@@ -45,7 +45,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 
 /**
  * @author burtscher1
- * 
  */
 public class AbstractMapperEventListener implements IMapperEventListener
 {
@@ -54,7 +53,7 @@ public class AbstractMapperEventListener implements IMapperEventListener
    * @see de.openali.odysseus.chart.framework.model.event.IMapperEventListener#onMapperRangeChanged(de.openali.odysseus.chart.framework.model.mapper.IMapper)
    */
   @Override
-  public void onMapperChanged( IMapper mapper )
+  public void onMapperChanged( final IMapper mapper )
   {
     // not implemented - override in subclass if needed
   }

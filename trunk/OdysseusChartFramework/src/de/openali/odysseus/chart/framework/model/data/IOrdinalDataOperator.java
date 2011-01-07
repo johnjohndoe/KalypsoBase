@@ -42,9 +42,8 @@ package de.openali.odysseus.chart.framework.model.data;
 
 /**
  * @author alibu
- * 
  */
 public interface IOrdinalDataOperator<T_logical> extends IDataOperator<T_logical>
 {
-  public T_logical[] getValues( );
+  T_logical[] getValues( );
 }

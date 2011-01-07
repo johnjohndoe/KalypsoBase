@@ -63,7 +63,7 @@ public class DummyDataOperator<T> implements IDataOperator<T>
     return new Comparator<T>()
     {
       @Override
-      public int compare( T o1, T o2 )
+      public int compare( final T o1, final T o2 )
       {
         return 0;
       }
@@ -75,19 +75,19 @@ public class DummyDataOperator<T> implements IDataOperator<T>
    * @see de.openali.odysseus.chart.framework.model.data.IDataOperator#getFormat(de.openali.odysseus.chart.framework.model.data.IDataRange)
    */
   @Override
-  public Format getFormat( IDataRange<Number> range )
+  public Format getFormat( final IDataRange<Number> range )
   {
     return new Format()
     {
 
       @Override
-      public StringBuffer format( Object obj, StringBuffer toAppendTo, FieldPosition pos )
+      public StringBuffer format( final Object obj, final StringBuffer toAppendTo, final FieldPosition pos )
       {
         return null;
       }
 
       @Override
-      public Object parseObject( String source, ParsePosition pos )
+      public Object parseObject( final String source, final ParsePosition pos )
       {
         return null;
       }
@@ -98,7 +98,7 @@ public class DummyDataOperator<T> implements IDataOperator<T>
    * @see de.openali.odysseus.chart.framework.model.data.IDataOperator#logicalToNumeric(java.lang.Object)
    */
   @Override
-  public Number logicalToNumeric( T logVal )
+  public Number logicalToNumeric( final T logVal )
   {
     return Double.NaN;
   }
@@ -107,7 +107,7 @@ public class DummyDataOperator<T> implements IDataOperator<T>
    * @see de.openali.odysseus.chart.framework.model.data.IDataOperator#numericToLogical(java.lang.Number)
    */
   @Override
-  public T numericToLogical( Number numVal )
+  public T numericToLogical( final Number numVal )
   {
     return null;
   }
@@ -116,7 +116,7 @@ public class DummyDataOperator<T> implements IDataOperator<T>
    * @see de.openali.odysseus.chart.framework.model.data.IStringDataConverter#logicalToString(java.lang.Object)
    */
   @Override
-  public String logicalToString( T value )
+  public String logicalToString( final T value )
   {
     return "";
   }
@@ -134,7 +134,7 @@ public class DummyDataOperator<T> implements IDataOperator<T>
    * @see de.openali.odysseus.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
    */
   @Override
-  public T stringToLogical( String value )
+  public T stringToLogical( final String value )
   {
     return null;
   }

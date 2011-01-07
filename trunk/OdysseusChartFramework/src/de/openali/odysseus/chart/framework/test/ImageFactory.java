@@ -48,32 +48,31 @@ import org.eclipse.swt.widgets.Control;
 
 /**
  * @author alibu
- * 
  */
 public class ImageFactory
 {
 
-  public static void createChartImage( Composite c, Image img )
+  public static void createChartImage( final Composite c, final Image img )
   {
     paint( img, c, img.getBounds() );
 
   }
 
-  public static void paint( Image img, Control c, Rectangle bounds )
+  public static void paint( final Image img, final Control c, final Rectangle bounds )
   {
 
-    GC gc = new GC( c );
+    final GC gc = new GC( c );
     gc.copyArea( img, bounds.x, bounds.y );
     gc.drawRectangle( bounds );
     gc.dispose();
 
     if( c instanceof Composite )
     {
-      Composite comp = (Composite) c;
-      Control[] children = comp.getChildren();
-      for( Control control : children )
+      final Composite comp = (Composite) c;
+      final Control[] children = comp.getChildren();
+      for( final Control control : children )
       {
-        Rectangle bounds2 = control.getBounds();
+        final Rectangle bounds2 = control.getBounds();
         paint( img, control, bounds2 );
       }
     }

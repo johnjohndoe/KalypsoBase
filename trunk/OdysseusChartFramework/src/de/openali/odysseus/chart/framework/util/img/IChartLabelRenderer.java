@@ -78,7 +78,7 @@ public interface IChartLabelRenderer
   ITextStyle getTextStyle( );
 
   void paint( final GC gc, final Point textAnchor );
-  
+
   void paint( final GC gc, final Rectangle fixedWidth );
 
   void setDrawBorder( final boolean drawBorder );

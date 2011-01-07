@@ -55,7 +55,7 @@ public class FontRegistry extends AbstractResourceRegistryFactory<FontData, Font
    *      java.lang.Object)
    */
   @Override
-  protected Font createResource( Device dev, FontData descriptor )
+  protected Font createResource( final Device dev, final FontData descriptor )
   {
     return new Font( dev, descriptor );
   }
@@ -64,7 +64,7 @@ public class FontRegistry extends AbstractResourceRegistryFactory<FontData, Font
    * @see de.openali.odysseus.chart.framework.util.resource.AbstractResourceRegistry#disposeValue(java.lang.Object)
    */
   @Override
-  protected void disposeResource( Font value )
+  protected void disposeResource( final Font value )
   {
     value.dispose();
   }

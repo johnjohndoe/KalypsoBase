@@ -8,7 +8,7 @@ public class MalformedValueException extends Exception
    */
   private static final long serialVersionUID = 256836919640695196L;
 
-  public MalformedValueException( Exception e )
+  public MalformedValueException( final Exception e )
   {
     super( e.getMessage(), e );
   }
@@ -18,7 +18,7 @@ public class MalformedValueException extends Exception
     super();
   }
 
-  public MalformedValueException( String msg )
+  public MalformedValueException( final String msg )
   {
     super( msg );
   }

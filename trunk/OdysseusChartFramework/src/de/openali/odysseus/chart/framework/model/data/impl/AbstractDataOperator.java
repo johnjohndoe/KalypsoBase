@@ -46,14 +46,13 @@ import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 
 /**
  * @author burtscher1
- * 
  */
 public abstract class AbstractDataOperator<T> implements IDataOperator<T>
 {
 
   private final Comparator<T> m_comparator;
 
-  public AbstractDataOperator( Comparator<T> comparator )
+  public AbstractDataOperator( final Comparator<T> comparator )
   {
     m_comparator = comparator;
   }

@@ -47,7 +47,7 @@ import org.eclipse.swt.graphics.Pattern;
 
 /**
  * Registry to store SWT Patterns created from images. The caller does not need to dispose the patterns.
- *
+ * 
  * @author burtscher1
  */
 public class PatternRegistry extends AbstractResourceRegistryFactory<ImageDescriptor, Pair<Image, Pattern>>

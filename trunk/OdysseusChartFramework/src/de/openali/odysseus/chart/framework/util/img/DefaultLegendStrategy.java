@@ -239,10 +239,10 @@ public class DefaultLegendStrategy implements ILegendPaintStrategy
         {
           maxRowWidth = Math.max( maxRowWidth, size.x );
           maxRowHeight = size.y;
-          
+
           heigth += size.y;
           row = size.x;
-          
+
           m_numRows += 1;
         }
         else
@@ -251,10 +251,10 @@ public class DefaultLegendStrategy implements ILegendPaintStrategy
 
           if( size.y > maxRowHeight )
             heigth += size.y - maxRowHeight;
-          
+
           maxRowWidth = Math.max( maxRowWidth, row );
           maxRowHeight = Math.max( maxRowHeight, size.y );
-          
+
           if( m_numRows == 0 )
             m_numRows = 1;
         }

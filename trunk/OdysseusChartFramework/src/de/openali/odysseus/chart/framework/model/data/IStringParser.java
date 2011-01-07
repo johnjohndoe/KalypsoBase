@@ -9,8 +9,8 @@ import de.openali.odysseus.chart.framework.exception.MalformedValueException;
  */
 public interface IStringParser<T_logical>
 {
-  public T_logical stringToLogical( String value ) throws MalformedValueException;
+  T_logical stringToLogical( String value ) throws MalformedValueException;
 
   /** Human readable format hint */
-  public String getFormatHint( );
+  String getFormatHint( );
 }

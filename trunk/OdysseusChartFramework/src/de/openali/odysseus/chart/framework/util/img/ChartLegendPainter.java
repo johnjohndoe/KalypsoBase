@@ -76,7 +76,6 @@ public class ChartLegendPainter
     this( model, size.width, new DefaultLegendStrategy() );
   }
 
-
   public ChartLegendPainter( final IChartModel model, final int maximalImageWidth, final ILegendPaintStrategy strategy )
 
   {

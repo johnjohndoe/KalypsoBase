@@ -68,12 +68,12 @@ public abstract class AbstractResourceRegistryFactory<T_descriptor, T_resource>
   /**
    * This constructor can be used to provide a comparator for descriptors. Instead of a HashMap, a TreeMap is used
    */
-  public AbstractResourceRegistryFactory( Comparator<T_descriptor> comparator )
+  public AbstractResourceRegistryFactory( final Comparator<T_descriptor> comparator )
   {
     m_map = new TreeMap<T_descriptor, T_resource>( comparator );
   }
 
-  public final synchronized T_resource getResource( Device dev, T_descriptor descriptor )
+  public final synchronized T_resource getResource( final Device dev, final T_descriptor descriptor )
   {
     T_resource resource = m_map.get( descriptor );
     if( resource == null )
@@ -90,7 +90,7 @@ public abstract class AbstractResourceRegistryFactory<T_descriptor, T_resource>
 
   public final synchronized void dispose( )
   {
-    for( T_resource resource : m_map.values() )
+    for( final T_resource resource : m_map.values() )
       disposeResource( resource );
     m_map.clear();
   }

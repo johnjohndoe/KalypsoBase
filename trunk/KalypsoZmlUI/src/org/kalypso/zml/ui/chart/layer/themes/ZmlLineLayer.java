@@ -133,6 +133,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
         setVisible( false );
     }
 
+    getEventHandler().fireLayerContentChanged( this );
   }
 
   /**

@@ -44,6 +44,6 @@ public class EditInfo
     m_data = copyInfo.m_data;
     m_text = copyInfo.m_text;
     m_pos = copyInfo.m_pos;
-    m_mouseButton= copyInfo.m_mouseButton;
+    m_mouseButton = copyInfo.m_mouseButton;
   }
 }

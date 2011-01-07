@@ -43,13 +43,13 @@ public class StyleTest implements PaintListener
 
   public StyleTest( )
   {
-    DeviceData data = new DeviceData();
+    final DeviceData data = new DeviceData();
 
     data.tracking = true;
 
-    Display d = new Display( data );
+    final Display d = new Display( data );
 
-    Sleak sleak = new Sleak();
+    final Sleak sleak = new Sleak();
 
     sleak.open();
 
@@ -57,7 +57,7 @@ public class StyleTest implements PaintListener
     m_shell.setSize( 500, 400 );
     m_shell.setLayout( new FillLayout() );
 
-    Canvas c = new Canvas( m_shell, SWT.FILL );
+    final Canvas c = new Canvas( m_shell, SWT.FILL );
     c.addPaintListener( this );
 
     m_shell.open();
@@ -66,74 +66,74 @@ public class StyleTest implements PaintListener
       d.readAndDispatch();
   }
 
-  public static void main( String... args )
+  public static void main( final String... args )
   {
     new StyleTest();
 
   }
 
   @Override
-  public void paintControl( PaintEvent e )
+  public void paintControl( final PaintEvent e )
   {
-    GC gc = e.gc;
+    final GC gc = e.gc;
     gc.setAntialias( SWT.ON );
 
-    int pointSize = 20;
+    final int pointSize = 20;
 
     // Polygon
-    Point[] points0 = createPolygonPoints( pointSize );
-    PolygonFigure pf = new PolygonFigure();
-    IAreaStyle as = StyleUtils.getDefaultAreaStyle();
+    final Point[] points0 = createPolygonPoints( pointSize );
+    final PolygonFigure pf = new PolygonFigure();
+    final IAreaStyle as = StyleUtils.getDefaultAreaStyle();
     as.setFill( new ColorFill( new RGB( 255, 0, 0 ) ) );
     pf.setStyle( as );
     pf.setPoints( points0 );
     pf.paint( gc );
 
     // bars
-    Point[][] bars = createBars( 20 );
-    PolygonFigure bf = new PolygonFigure();
-    IAreaStyle asBar = StyleUtils.getDefaultAreaStyle();
+    final Point[][] bars = createBars( 20 );
+    final PolygonFigure bf = new PolygonFigure();
+    final IAreaStyle asBar = StyleUtils.getDefaultAreaStyle();
     asBar.setFill( new ColorFill( new RGB( 255, 0, 0 ) ) );
     asBar.setAlpha( 100 );
     bf.setStyle( asBar );
-    for( Point[] bar : bars )
+    for( final Point[] bar : bars )
     {
       bf.setPoints( bar );
       bf.paint( gc );
     }
 
-    Point[] points1 = createPoints( pointSize );
+    final Point[] points1 = createPoints( pointSize );
 
     // Polyline
-    PolylineFigure lf = new PolylineFigure();
+    final PolylineFigure lf = new PolylineFigure();
     ILineStyle ls = new LineStyle( 3, new RGB( 0, 255, 0 ), 100, 0, null, LINEJOIN.MITER, LINECAP.ROUND, 5, true );
     lf.setStyle( ls );
     lf.setPoints( points1 );
 
-    IMarker m1 = new OvalMarker();
+    final IMarker m1 = new OvalMarker();
     // TODO: hier sollte natürlich eine URL reingefüllt werden
-    IMarker m2 = new ImageMarker( null );
-    Point[] markerPoints = getCrossMarker();
+    final IMarker m2 = new ImageMarker( null );
+    final Point[] markerPoints = getCrossMarker();
 
-    IMarker m3 = new PolygonMarker( markerPoints );
+    final IMarker m3 = new PolygonMarker( markerPoints );
 
     // Point
-    IPointStyle ps = StyleUtils.getDefaultPointStyle();
-    PointFigure pf2 = new PointFigure();
+    final IPointStyle ps = StyleUtils.getDefaultPointStyle();
+    final PointFigure pf2 = new PointFigure();
 
     // Text
-    ITextStyle ts = StyleUtils.getDefaultTextStyle();
+    final ITextStyle ts = StyleUtils.getDefaultTextStyle();
     ts.setFamily( "Ani" );
-    TextFigure tf = new TextFigure();
+    final TextFigure tf = new TextFigure();
 
     for( int i = 0; i < points1.length; i++ )
     {
-      Point p = points1[i];
+      final Point p = points1[i];
       ps.setWidth( i * 2 );
       ps.setHeight( i * 3 );
-      int alpha = (255 / points1.length) * (i + 1);
+      final int alpha = (255 / points1.length) * (i + 1);
       ps.setAlpha( alpha );
-      int mod = i % 3;
+      final int mod = i % 3;
       if( mod == 0 )
         ps.setMarker( m1 );
       else if( mod == 1 )
@@ -154,7 +154,7 @@ public class StyleTest implements PaintListener
     }
     lf.paint( gc );
 
-    Point[] points2 = createPoints( pointSize );
+    final Point[] points2 = createPoints( pointSize );
     lf.setPoints( points2 );
     ls = new LineStyle( 1, new RGB( 0, 0, 255 ), 100, 5, new float[] { 10, 2, 3, 4, 2 }, LINEJOIN.BEVEL, LINECAP.FLAT, 5, true );
     lf.setStyle( ls );
@@ -164,7 +164,7 @@ public class StyleTest implements PaintListener
 
   private Point[] getCrossMarker( )
   {
-    Point[] cross = new Point[12];
+    final Point[] cross = new Point[12];
     cross[0] = new Point( 1, 3 );
     cross[1] = new Point( 2, 3 );
     cross[2] = new Point( 2, 2 );
@@ -180,28 +180,28 @@ public class StyleTest implements PaintListener
     return cross;
   }
 
-  private Point[] createPoints( int size )
+  private Point[] createPoints( final int size )
   {
-    int width = m_shell.getBounds().width;
-    int height = m_shell.getBounds().height;
+    final int width = m_shell.getBounds().width;
+    final int height = m_shell.getBounds().height;
 
-    Point[] points = new Point[size];
+    final Point[] points = new Point[size];
     for( int i = 0; i < points.length; i++ )
       points[i] = new Point( (i * (int) ((float) width / (float) size)), (int) (Math.random() * height * 0.9) );
     return points;
   }
 
-  private Point[][] createBars( int count )
+  private Point[][] createBars( final int count )
   {
-    int barWidth = m_shell.getBounds().width / count;
-    Point[][] bars = new Point[count][];
+    final int barWidth = m_shell.getBounds().width / count;
+    final Point[][] bars = new Point[count][];
     for( int i = 0; i < count; i++ )
     {
-      Point[] bar = new Point[4];
-      int startX = i * barWidth;
-      int startY = (int) (0.95 * m_shell.getBounds().height);
-      int endY = startY - (int) (Math.random() * 0.95 * m_shell.getBounds().height);
-      int endX = startX + barWidth;
+      final Point[] bar = new Point[4];
+      final int startX = i * barWidth;
+      final int startY = (int) (0.95 * m_shell.getBounds().height);
+      final int endY = startY - (int) (Math.random() * 0.95 * m_shell.getBounds().height);
+      final int endX = startX + barWidth;
       bar[0] = new Point( startX, startY );
       bar[1] = new Point( startX, endY );
       bar[2] = new Point( endX, endY );
@@ -212,15 +212,15 @@ public class StyleTest implements PaintListener
     return bars;
   }
 
-  private Point[] createPolygonPoints( int size )
+  private Point[] createPolygonPoints( final int size )
   {
-    int width = m_shell.getBounds().width;
-    int height = m_shell.getBounds().height;
+    final int width = m_shell.getBounds().width;
+    final int height = m_shell.getBounds().height;
 
-    Point[] points = new Point[size];
+    final Point[] points = new Point[size];
     for( int i = 0; i < points.length; i++ )
     {
-      int x = (i * (width / size));
+      final int x = (i * (width / size));
       int y = 10;
 
       if( !((i == 0) || (i == size - 1)) )

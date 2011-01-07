@@ -62,7 +62,7 @@ public class ChartAxisPainter
 
   public final Image createImage( )
   {
-    if(!m_axis.isVisible())
+    if( !m_axis.isVisible() )
       return null;
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final int width = m_axis.getRenderer().getAxisWidth( m_axis );
