@@ -8,7 +8,7 @@ import de.openali.odysseus.chart.framework.model.data.IStringParser;
  */
 public class BooleanParser implements IStringParser<Boolean>
 {
-  final String m_formatHint = "one of 'true' or 'false'";
+  private static final String FORMAT_HINT = "one of 'true' or 'false'";
 
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)
@@ -30,7 +30,7 @@ public class BooleanParser implements IStringParser<Boolean>
   @Override
   public String getFormatHint( )
   {
-    return m_formatHint;
+    return FORMAT_HINT;
   }
 
 }

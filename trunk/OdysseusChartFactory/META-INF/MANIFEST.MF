@@ -27,6 +27,7 @@ Export-Package: de.openali.odysseus.chart.factory.config;
    de.openali.odysseus.chartconfig.x020,
    de.openali.odysseus.chart.framework.model.data,
    org.eclipse.swt.graphics",
+ de.openali.odysseus.chart.factory.config.resolver,
  de.openali.odysseus.chart.factory.provider;
   uses:="de.openali.odysseus.chart.framework.model,
    de.openali.odysseus.chart.framework.model.mapper,

@@ -53,6 +53,7 @@ import jregex.Pattern;
 import jregex.RETokenizer;
 
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -63,6 +64,7 @@ import com.google.common.collect.MapMaker;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chart.factory.config.StyleHelper;
+import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.AxisRendererType;
 import de.openali.odysseus.chartconfig.x020.AxisType;
@@ -80,8 +82,11 @@ import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 /**
  * @author Dirk Kuch
  */
-public final class ChartTypeResolver
+public final class ChartTypeResolver implements IReferenceResolver
 {
+
+  private final Map<String, ChartConfigurationLoader> m_loaderCache;
+
   private final Map<String, List<ChartType>> m_chartTypeCache;
 
   private final Map<String, LayerType> m_layerCache;
@@ -96,6 +101,7 @@ public final class ChartTypeResolver
   {
     final MapMaker marker = new MapMaker().expiration( 30, TimeUnit.MINUTES );
 
+    m_loaderCache = marker.makeMap();
     m_chartTypeCache = marker.makeMap();
     m_layerCache = marker.makeMap();
     m_mapperTypeCache = marker.makeMap();
@@ -108,6 +114,20 @@ public final class ChartTypeResolver
       INSTANCE = new ChartTypeResolver();
 
     return INSTANCE;
+  }
+
+  private ChartConfigurationLoader getLoader( final URL context, final String uri ) throws XmlException, IOException
+  {
+    ChartConfigurationLoader loader = m_loaderCache.get( uri );
+    if( loader != null )
+      return loader;
+
+    final URL absoluteUri = new URL( context, uri );
+    loader = new ChartConfigurationLoader( absoluteUri );
+
+    m_loaderCache.put( uri, loader );
+
+    return loader;
   }
 
   public AbstractStyleType findStyleType( final StyleRefernceType reference, final URL context ) throws CoreException
@@ -129,7 +149,7 @@ public final class ChartTypeResolver
       else
         type = findUrlStyleType( context, plainUrl, identifier );
 
-      return null;
+      return type;
     }
     catch( final Throwable t )
     {
@@ -233,12 +253,10 @@ public final class ChartTypeResolver
 
   private LayerType findUrlLayerType( final URL context, final String uri, final String identifier ) throws XmlException, IOException
   {
-    final URL absoluteUri = new URL( context, uri );
-
     List<ChartType> chartTypes = m_chartTypeCache.get( uri );
     if( chartTypes == null )
     {
-      final ChartConfigurationLoader loader = new ChartConfigurationLoader( absoluteUri );
+      final ChartConfigurationLoader loader = getLoader( context, uri );
       final ChartType[] charts = loader.getCharts();
 
       chartTypes = new ArrayList<ChartType>();
@@ -295,12 +313,10 @@ public final class ChartTypeResolver
 
   private MapperType findUrlMapperType( final URL context, final String uri, final String identifier ) throws XmlException, IOException
   {
-    final URL absoluteUri = new URL( context, uri );
-
     List<ChartType> chartTypes = m_chartTypeCache.get( uri );
     if( chartTypes == null )
     {
-      final ChartConfigurationLoader loader = new ChartConfigurationLoader( absoluteUri );
+      final ChartConfigurationLoader loader = getLoader( context, uri );
       final ChartType[] charts = loader.getCharts();
 
       chartTypes = new ArrayList<ChartType>();
@@ -340,12 +356,10 @@ public final class ChartTypeResolver
 
   private AbstractStyleType findUrlStyleType( final URL context, final String uri, final String identifier ) throws XmlException, IOException
   {
-    final URL absoluteUri = new URL( context, uri );
-
     List<ChartType> chartTypes = m_chartTypeCache.get( uri );
     if( chartTypes == null )
     {
-      final ChartConfigurationLoader loader = new ChartConfigurationLoader( absoluteUri );
+      final ChartConfigurationLoader loader = getLoader( context, uri );
       final ChartType[] charts = loader.getCharts();
 
       chartTypes = new ArrayList<ChartType>();
@@ -380,6 +394,23 @@ public final class ChartTypeResolver
         if( rendererStyle != null )
           return rendererStyle;
       }
+    }
+
+    return null;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.factory.util.IReferenceResolver#resolveReference(java.lang.String)
+   */
+  @Override
+  public Object resolveReference( final String id )
+  {
+    final ChartConfigurationLoader[] loaders = m_loaderCache.values().toArray( new ChartConfigurationLoader[] {} );
+    for( final ChartConfigurationLoader loader : loaders )
+    {
+      final XmlObject reference = loader.resolveReference( id );
+      if( reference != null )
+        return reference;
     }
 
     return null;

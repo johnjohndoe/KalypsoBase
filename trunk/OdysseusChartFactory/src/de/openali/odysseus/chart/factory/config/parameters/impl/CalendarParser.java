@@ -26,9 +26,9 @@ public class CalendarParser implements IStringParser<Calendar>
    * Format: NOW + Duration as in ISO 8601 (P[n]Y[n]M[n]DT[n]H[n]M[n]S); Groups: 1: VAR 2:DURATIONPART 3:DIRECTION 4:Y
    * 5:M 6:D 7:TIMEPART 8:H 9:M 10:S
    */
-  private final String m_regexDuration = "(NOW|TODAY)(([+-])P([1-9]+[0-9]*Y)?([1-9]+[0-9]*M)?([1-9]+[0-9]*D)?(T([1-9]+[0-9]*H)?([1-9]+[0-9]*M)?([1-9]+[0-9]*S)?)?)?";
+  private static final String REGEX_DURATION = "(NOW|TODAY)(([+-])P([1-9]+[0-9]*Y)?([1-9]+[0-9]*M)?([1-9]+[0-9]*D)?(T([1-9]+[0-9]*H)?([1-9]+[0-9]*M)?([1-9]+[0-9]*S)?)?)?";
 
-  private final String m_formatHint = "yyyy-MM-ddTHH:mm or " + m_regexDuration;
+  private static final String FORMAT_HINT = "yyyy-MM-ddTHH:mm or " + REGEX_DURATION;
 
   public CalendarParser( )
   {
@@ -75,7 +75,7 @@ public class CalendarParser implements IStringParser<Calendar>
         // wir probieren mal, das über die anderer Syntax an das Datum zu kommen
 
         // Suche nach reulärem Ausdruck für Duration
-        if( value.matches( m_regexDuration ) )
+        if( value.matches( REGEX_DURATION ) )
         {
           // Calendar-Objekt mit "jetzt" initialisieren
           // cal=Calendar.getInstance();
@@ -92,7 +92,7 @@ public class CalendarParser implements IStringParser<Calendar>
           if( (value.startsWith( "NOW" ) && value.length() > 3) || (value.startsWith( "TODAY" ) && value.length() > 5) )
           {
 
-            final Pattern pattern = Pattern.compile( m_regexDuration );
+            final Pattern pattern = Pattern.compile( REGEX_DURATION );
             final Matcher matcher = pattern.matcher( value );
 
             /*
@@ -156,7 +156,7 @@ public class CalendarParser implements IStringParser<Calendar>
   @Override
   public String getFormatHint( )
   {
-    return m_formatHint;
+    return FORMAT_HINT;
   }
 
 }
