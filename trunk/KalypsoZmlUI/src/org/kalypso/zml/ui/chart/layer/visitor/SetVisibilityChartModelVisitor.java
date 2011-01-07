@@ -44,6 +44,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.ext.base.layer.DefaultTextLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -53,11 +54,16 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public class SetVisibilityChartModelVisitor extends AbstractExternalChartModelVisitor
 {
+  public static final String NO_DATA_LAYER = "noData";
+
   private final String[] m_ignoreTypes;
 
-  public SetVisibilityChartModelVisitor( final String[] ignoreTypes )
+  private final boolean m_empty;
+
+  public SetVisibilityChartModelVisitor( final String[] ignoreTypes, final boolean empty )
   {
     m_ignoreTypes = ignoreTypes;
+    m_empty = empty;
   }
 
   /**
@@ -66,19 +72,28 @@ public class SetVisibilityChartModelVisitor extends AbstractExternalChartModelVi
   @Override
   protected void accept( final IChartLayer layer )
   {
-    if( !(layer instanceof AbstractChartLayer) )
-      return;
+    if( layer instanceof DefaultTextLayer )
+    {
+      if( NO_DATA_LAYER.equals( layer.getId() ) )
+        layer.setVisible( m_empty );
 
+    }
+    else if( !(layer instanceof AbstractChartLayer) )
+    {
+      return;
+    }
+    else
+    {
 // final AbstractChartLayer abstractLayer = (AbstractChartLayer) layer;
 // final ILayerProvider provider = abstractLayer.getProvider();
 // if( provider == null )
 // return;
-
-    final String axisType = getTargetAxis( layer );
-    if( ArrayUtils.contains( m_ignoreTypes, axisType ) )
-      layer.setVisible( false );
-    else
-      layer.setVisible( true );
+      final String axisType = getTargetAxis( layer );
+      if( ArrayUtils.contains( m_ignoreTypes, axisType ) )
+        layer.setVisible( false );
+      else
+        layer.setVisible( true );
+    }
   }
 
   private String getTargetAxis( final IChartLayer layer )
