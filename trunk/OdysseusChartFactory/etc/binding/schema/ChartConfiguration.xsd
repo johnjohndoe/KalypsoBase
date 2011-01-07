@@ -263,6 +263,9 @@
   </complexType>
 
   <complexType name="LayerRefernceType">
+    <sequence>
+      <element name="Parameters" type="ods:ParametersType" minOccurs="0" />
+    </sequence>
     <attribute name="url" type="anyURI" use="required" />
   </complexType>
 

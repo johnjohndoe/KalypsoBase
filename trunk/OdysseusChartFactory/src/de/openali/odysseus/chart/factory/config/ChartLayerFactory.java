@@ -58,6 +58,7 @@ import de.openali.odysseus.chart.factory.util.AxisUtils;
 import de.openali.odysseus.chart.factory.util.DummyLayer;
 import de.openali.odysseus.chart.factory.util.DummyLayerProvider;
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
+import de.openali.odysseus.chart.factory.util.LayerTypeHelper;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -117,6 +118,8 @@ public class ChartLayerFactory extends AbstractChartFactory
       {
         final ChartTypeResolver resovler = ChartTypeResolver.getInstance();
         final LayerType type = resovler.findLayerType( reference, getContext() );
+
+        LayerTypeHelper.appendParameters( type, reference.getParameters() );
 
         addLayer( type, globalStyles );
       }
