@@ -2,13 +2,13 @@ package de.openali.odysseus.chart.framework.model.data;
 
 public interface IDataContainer<T_domain, T_target>
 {
-  public void open( );
+  void open( );
 
-  public void close( );
+  void close( );
 
-  public boolean isOpen( );
+  boolean isOpen( );
 
-  public IDataRange<T_domain> getDomainRange( );
+  IDataRange<T_domain> getDomainRange( );
 
-  public IDataRange<T_target> getTargetRange( );
+  IDataRange<T_target> getTargetRange( );
 }

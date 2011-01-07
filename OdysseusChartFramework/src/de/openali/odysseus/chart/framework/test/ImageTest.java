@@ -61,14 +61,14 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class ImageTest implements PaintListener
 {
-  public static void main( String[] args )
+  public static void main( final String[] args )
   {
-    Display d = Display.getDefault();
+    final Display d = Display.getDefault();
 
-    Shell s = new Shell( d );
+    final Shell s = new Shell( d );
     s.setLayout( new FillLayout() );
 
-    Canvas c = new Canvas( s, SWT.FILL );
+    final Canvas c = new Canvas( s, SWT.FILL );
 
     c.addPaintListener( new ImageTest() );
 
@@ -88,21 +88,21 @@ public class ImageTest implements PaintListener
    * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
    */
   @Override
-  public void paintControl( PaintEvent e )
+  public void paintControl( final PaintEvent e )
   {
-    GC gc = e.gc;
-    Color blue = Display.getDefault().getSystemColor( SWT.COLOR_BLUE );
+    final GC gc = e.gc;
+    final Color blue = Display.getDefault().getSystemColor( SWT.COLOR_BLUE );
 
-    ImageData id1 = new ImageData( 200, 200, 32, new PaletteData( 0, 0, 0 ) );
+    final ImageData id1 = new ImageData( 200, 200, 32, new PaletteData( 0, 0, 0 ) );
     id1.transparentPixel = 0;
 
-    Image img1 = new Image( Display.getDefault(), id1 );
-    GC gc1 = new GC( img1 );
+    final Image img1 = new Image( Display.getDefault(), id1 );
+    final GC gc1 = new GC( img1 );
     gc1.setForeground( blue );
     gc1.drawLine( 0, 0, 200, 200 );
 
-    Image img2 = new Image( Display.getDefault(), 200, 200 );
-    GC gc2 = new GC( img2 );
+    final Image img2 = new Image( Display.getDefault(), 200, 200 );
+    final GC gc2 = new GC( img2 );
     gc2.setForeground( blue );
     gc2.drawLine( 0, 200, 200, 0 );
 

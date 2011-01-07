@@ -14,34 +14,34 @@ public class PolylineFigure extends AbstractFigure<ILineStyle>
   private Point[] m_points = new Point[] { new Point( 10, 10 ), new Point( 100, 100 ) };
 
   @Override
-  protected void paintFigure( GC gc )
+  protected void paintFigure( final GC gc )
   {
     if( m_points != null )
     {
       // if too many points are set, swt crashes on GTK; for GTK, 500
       // seems ok
-      int limit = 500;
+      final int limit = 500;
 
       if( m_points.length > limit )
       {
         for( int j = 0; j < m_points.length; j += limit - 1 )
         {
-          int newLength = Math.min( limit, m_points.length - j );
-          Point[] limitedPoints = new Point[newLength];
+          final int newLength = Math.min( limit, m_points.length - j );
+          final Point[] limitedPoints = new Point[newLength];
           System.arraycopy( m_points, j, limitedPoints, 0, newLength );
-          int[] path = FigureUtilities.pointArrayToIntArray( limitedPoints );
+          final int[] path = FigureUtilities.pointArrayToIntArray( limitedPoints );
           gc.drawPolyline( path );
         }
       }
       else
       {
-        int[] path = FigureUtilities.pointArrayToIntArray( m_points );
+        final int[] path = FigureUtilities.pointArrayToIntArray( m_points );
         gc.drawPolyline( path );
       }
     }
   }
 
-  public void setPoints( Point[] points )
+  public void setPoints( final Point[] points )
   {
     m_points = points;
   }
@@ -52,7 +52,7 @@ public class PolylineFigure extends AbstractFigure<ILineStyle>
   @Override
   public ILineStyle getStyle( )
   {
-    ILineStyle style = super.getStyle();
+    final ILineStyle style = super.getStyle();
     if( style != null )
     {
       return style;

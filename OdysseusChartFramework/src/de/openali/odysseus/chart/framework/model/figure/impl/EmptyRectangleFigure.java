@@ -49,7 +49,6 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
  * Draws a rectangle without fill
  * 
  * @author burtscher1
- * 
  */
 public class EmptyRectangleFigure extends AbstractFigure<ILineStyle>
 {

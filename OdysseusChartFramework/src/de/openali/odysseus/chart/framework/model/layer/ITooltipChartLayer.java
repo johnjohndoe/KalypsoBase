@@ -44,9 +44,8 @@ import org.eclipse.swt.graphics.Point;
 
 /**
  * @author burtscher1
- *
  */
 public interface ITooltipChartLayer extends IChartLayer
 {
-  public EditInfo getHover( Point pos );
+  EditInfo getHover( Point pos );
 }

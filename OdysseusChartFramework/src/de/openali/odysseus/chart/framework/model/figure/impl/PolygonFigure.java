@@ -14,17 +14,17 @@ public class PolygonFigure extends AbstractFigure<IAreaStyle>
   private Point[] m_points = new Point[] { new Point( 10, 10 ), new Point( 100, 100 ) };
 
   @Override
-  protected void paintFigure( GC gc )
+  protected void paintFigure( final GC gc )
   {
     if( m_points != null )
     {
-      int[] intArray = FigureUtilities.pointArrayToIntArray( m_points );
+      final int[] intArray = FigureUtilities.pointArrayToIntArray( m_points );
       gc.fillPolygon( intArray );
       gc.drawPolygon( intArray );
     }
   }
 
-  public void setPoints( Point[] points )
+  public void setPoints( final Point[] points )
   {
     m_points = points;
   }
@@ -35,7 +35,7 @@ public class PolygonFigure extends AbstractFigure<IAreaStyle>
   @Override
   public IAreaStyle getStyle( )
   {
-    IAreaStyle style = super.getStyle();
+    final IAreaStyle style = super.getStyle();
     if( style != null )
       return style;
     else

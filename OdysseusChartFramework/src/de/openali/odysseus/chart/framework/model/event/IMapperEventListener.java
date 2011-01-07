@@ -44,9 +44,8 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 
 /**
  * @author burtscher1
- * 
  */
 public interface IMapperEventListener
 {
-  public void onMapperChanged( IMapper mapper );
+  void onMapperChanged( IMapper mapper );
 }

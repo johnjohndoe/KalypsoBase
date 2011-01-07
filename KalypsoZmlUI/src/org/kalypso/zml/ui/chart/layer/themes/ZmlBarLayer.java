@@ -100,7 +100,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
   private final IDataOperator<Number> m_targetDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
 
-  private IObsProvider m_provider;
+  private IObsProvider m_obsProvider;
 
   private final String m_targetAxisId;
 
@@ -116,7 +116,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   private IAxis getValueAxis( )
   {
     if( m_valueAxis == null )
-      m_valueAxis = LayerProviderUtils.getValueAxis( m_provider, m_targetAxisId );
+      m_valueAxis = LayerProviderUtils.getValueAxis( m_obsProvider, m_targetAxisId );
 
     return m_valueAxis;
   }
@@ -124,13 +124,13 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   @Override
   public void setObsProvider( final IObsProvider provider )
   {
-    if( m_provider != null )
+    if( m_obsProvider != null )
     {
-      m_provider.removeListener( m_observationProviderListener );
-      m_provider.dispose(); // TODO check - really dispose old provider?
+      m_obsProvider.removeListener( m_observationProviderListener );
+      m_obsProvider.dispose(); // TODO check - really dispose old provider?
     }
 
-    m_provider = provider;
+    m_obsProvider = provider;
     m_model = null;
 
     if( provider != null )
@@ -139,6 +139,8 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
       if( !provider.isLoaded() )
         setVisible( false );
     }
+
+    getEventHandler().fireLayerContentChanged( this );
   }
 
   /**
@@ -147,10 +149,10 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   @Override
   public void dispose( )
   {
-    if( m_provider != null )
+    if( m_obsProvider != null )
     {
-      m_provider.removeListener( m_observationProviderListener );
-      m_provider.dispose();
+      m_obsProvider.removeListener( m_observationProviderListener );
+      m_obsProvider.dispose();
     }
 
     super.dispose();
@@ -198,7 +200,8 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   protected void onObservationLoaded( )
   {
     m_model = null;
-    final IObservation observation = m_provider.getObservation();
+
+    final IObservation observation = m_obsProvider.getObservation();
     setVisible( observation != null );
   }
 
@@ -212,11 +215,11 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   {
     if( m_model == null )
     {
-      final IObservation observation = m_provider.getObservation();
+      final IObservation observation = m_obsProvider.getObservation();
       if( observation == null )
         return null;
 
-      m_model = observation.getValues( m_provider.getArguments() );
+      m_model = observation.getValues( m_obsProvider.getArguments() );
     }
 
     return m_model;
@@ -228,7 +231,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   @Override
   public IDataRange<Number> getDomainRange( )
   {
-    if( m_provider == null )
+    if( m_obsProvider == null )
       return null;
 
     try
@@ -259,7 +262,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
-    if( m_provider == null )
+    if( m_obsProvider == null )
       return null;
 
     try
@@ -294,7 +297,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   @Override
   public void paint( final GC gc )
   {
-    if( m_provider == null )
+    if( m_obsProvider == null )
       return;
 
     try

@@ -44,13 +44,12 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author burtscher1
- * 
  */
 public interface ILayerEventListener
 {
-  public void onLayerVisibilityChanged( IChartLayer layer );
+  void onLayerVisibilityChanged( IChartLayer layer );
 
-  public void onLayerContentChanged( IChartLayer layer );
-  
-  public void onActiveLayerChanged( IChartLayer layer );
+  void onLayerContentChanged( IChartLayer layer );
+
+  void onActiveLayerChanged( IChartLayer layer );
 }

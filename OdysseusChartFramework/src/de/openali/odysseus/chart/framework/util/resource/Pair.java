@@ -50,7 +50,7 @@ public class Pair<T1, T2> implements IPair<T1, T2>
 
   private final T2 m_target;
 
-  public Pair( T1 domain, T2 target )
+  public Pair( final T1 domain, final T2 target )
   {
     m_domain = domain;
     m_target = target;

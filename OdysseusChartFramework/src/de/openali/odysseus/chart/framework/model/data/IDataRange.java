@@ -5,8 +5,8 @@ package de.openali.odysseus.chart.framework.model.data;
  */
 public interface IDataRange<T>
 {
-  public T getMin( );
+  T getMin( );
 
-  public T getMax( );
+  T getMax( );
 
 }

@@ -45,23 +45,15 @@ import java.util.Map;
 
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
-import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
@@ -69,6 +61,8 @@ import de.openali.odysseus.chart.framework.util.ChartUtilities;
  */
 public class GenericLayerRenderer
 {
+  private static final int TOOLINSET = 3;
+
   private EditInfo m_editInfo;
 
   private final Map<IChartLayer, Point> m_layerPanOffsets = new HashMap<IChartLayer, Point>();
@@ -78,8 +72,6 @@ public class GenericLayerRenderer
   /**
    * the plot will be rendered to its AxesScreenHeight, so set the Axis.screenHeight first
    */
-
- 
 
   /**
    * @param bufferLayers
@@ -113,7 +105,6 @@ public class GenericLayerRenderer
     }
   }
 
-  
   public void paintEditInfo( final GC gcw )
   {
     ChartUtilities.resetGC( gcw );
@@ -137,8 +128,6 @@ public class GenericLayerRenderer
     if( (tooltiptext != null) && (mousePos != null) )
     {
       tooltiptext = tooltiptext.replace( '\r', ' ' );
-
-      final int TOOLINSET = 3;
 
       final Font oldFont = gcw.getFont();
       final Font bannerFont = JFaceResources.getTextFont();

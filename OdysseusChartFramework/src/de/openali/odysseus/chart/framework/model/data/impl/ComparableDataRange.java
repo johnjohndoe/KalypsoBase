@@ -53,7 +53,7 @@ public class ComparableDataRange<T> implements IDataRange<T>
               m_max = item;
             }
           }
-          catch( ClassCastException e )
+          catch( final ClassCastException e )
           {
             e.printStackTrace();
           }

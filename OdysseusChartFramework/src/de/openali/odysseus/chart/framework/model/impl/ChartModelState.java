@@ -56,11 +56,11 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public class ChartModelState implements IChartModelState
 {
-  final private String m_activeLayer;
+  private final String m_activeLayer;
 
-  final private Map<String, Boolean> m_visibleLayer = new HashMap<String, Boolean>();
+  private final Map<String, Boolean> m_visibleLayer = new HashMap<String, Boolean>();
 
-  final private List< ? > m_positionList;
+  private final List< ? > m_positionList;
 
   public ChartModelState( final ILayerManager mngr )
   {
@@ -72,7 +72,7 @@ public class ChartModelState implements IChartModelState
 
   }
 
-  private final void saveStateVisible( final ILayerManager mngr, final Map<String, Boolean> map )
+  private void saveStateVisible( final ILayerManager mngr, final Map<String, Boolean> map )
   {
     for( final IChartLayer layer : mngr.getLayers() )
     {
@@ -94,7 +94,7 @@ public class ChartModelState implements IChartModelState
     return ""; //$NON-NLS-1$
   }
 
-  private final List<Object> saveStatePosition( final ILayerManager mngr )
+  private List<Object> saveStatePosition( final ILayerManager mngr )
   {
     final List<Object> list = new ArrayList<Object>();
 
@@ -111,7 +111,7 @@ public class ChartModelState implements IChartModelState
     return list;
   }
 
-  private final void restoreStatePosition( final ILayerManager mngr, final List<?> list )
+  private void restoreStatePosition( final ILayerManager mngr, final List< ? > list )
   {
     if( mngr == null || list == null )
       return;
@@ -148,7 +148,7 @@ public class ChartModelState implements IChartModelState
     }
   }
 
-  private final void restoreStateVisible( final ILayerManager mngr, final Map<String, Boolean> map )
+  private void restoreStateVisible( final ILayerManager mngr, final Map<String, Boolean> map )
   {
     for( final IChartLayer layer : mngr.getLayers() )
     {
@@ -163,7 +163,7 @@ public class ChartModelState implements IChartModelState
   }
 
   @Override
-  public void restoreState( IChartModel model )
+  public void restoreState( final IChartModel model )
   {
     if( model == null )
       return;

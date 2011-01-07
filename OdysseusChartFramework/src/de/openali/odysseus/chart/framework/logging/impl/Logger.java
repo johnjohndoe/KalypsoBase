@@ -50,7 +50,7 @@ public class Logger
 
     private final int m_levelInt;
 
-    private LEVEL( int levelInt )
+    private LEVEL( final int levelInt )
     {
       m_levelInt = levelInt;
     }
@@ -66,22 +66,22 @@ public class Logger
     // do not instantiate
   }
 
-  public static final void logInfo( String topic, String msg )
+  public static final void logInfo( final String topic, final String msg )
   {
     log( IStatus.INFO, topic, LEVEL.INFO, msg );
   }
 
-  public static final void logWarning( String topic, String msg )
+  public static final void logWarning( final String topic, final String msg )
   {
     log( IStatus.WARNING, topic, LEVEL.WARNING, msg );
   }
 
-  public static final void logError( String topic, String msg )
+  public static final void logError( final String topic, final String msg )
   {
     log( IStatus.ERROR, topic, LEVEL.ERROR, msg );
   }
 
-  public static final void logFatal( String topic, String msg )
+  public static final void logFatal( final String topic, final String msg )
   {
     log( IStatus.WARNING, topic, LEVEL.FATAL, msg );
   }
@@ -90,9 +90,9 @@ public class Logger
    * Schreibt eine Nachricht ins Log des Chartframework.impl-Plugins, falls das Tracing-Flag des topics auf true gesetzt
    * ist
    */
-  private static void log( int statusCode, String topic, LEVEL level, String msg )
+  private static void log( final int statusCode, final String topic, final LEVEL level, final String msg )
   {
-    String logMsg = level.toString() + ": " + msg;
+    final String logMsg = level.toString() + ": " + msg;
     if( loggingAllowed( level, topic ) )
     {
       final ILog log = Platform.getLog( getBundle() );
@@ -107,7 +107,7 @@ public class Logger
    * @param topic
    * @return
    */
-  private static boolean loggingAllowed( LEVEL msgLevel, String topic )
+  private static boolean loggingAllowed( final LEVEL msgLevel, final String topic )
   {
     return logLevelAllowed( msgLevel ) && topicAllowed( topic );
   }
@@ -115,7 +115,7 @@ public class Logger
   /**
    * is topic allowed? if not, logging is not allowed
    */
-  private static boolean topicAllowed( String topic )
+  private static boolean topicAllowed( final String topic )
   {
     if( "true".equals( Platform.getDebugOption( topic ) ) )
       return true;
@@ -128,13 +128,13 @@ public class Logger
    * @param msgLevel
    * @return
    */
-  private static boolean logLevelAllowed( LEVEL msgLevel )
+  private static boolean logLevelAllowed( final LEVEL msgLevel )
   {
-    String configLevelStr = Platform.getDebugOption( CONFIG_LEVEL );
+    final String configLevelStr = Platform.getDebugOption( CONFIG_LEVEL );
     if( configLevelStr != null )
     {
       int allowed = LEVEL.values().length;
-      for( LEVEL l : LEVEL.values() )
+      for( final LEVEL l : LEVEL.values() )
         if( l.toString().toLowerCase().equals( configLevelStr.trim().toLowerCase() ) )
         {
           allowed = l.toInt();

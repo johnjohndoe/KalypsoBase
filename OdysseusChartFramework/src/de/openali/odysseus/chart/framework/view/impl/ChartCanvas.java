@@ -38,7 +38,7 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
 
   private Rectangle m_plotRect;
 
-  public ChartCanvas( Composite parent, int style, IChartModel model )
+  public ChartCanvas( final Composite parent, final int style, final IChartModel model )
   {
     super( parent, style );
     addPaintListener( this );
@@ -46,7 +46,7 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
     m_model = model;
   }
 
-  public void paint( GC gc )
+  public void paint( final GC gc )
   {
     layout();
 
@@ -55,30 +55,30 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
     gc.fillRectangle( gc.getClipping() );
 
     // Achsen zeichnen
-    IMapperRegistry mr = m_model.getMapperRegistry();
-    for( IAxis a : mr.getAxes() )
+    final IMapperRegistry mr = m_model.getMapperRegistry();
+    for( final IAxis a : mr.getAxes() )
     {
-      Rectangle rect = m_axisBoundsMap.get( a );
+      final Rectangle rect = m_axisBoundsMap.get( a );
       if( rect != null )
       {
-        IAxisRenderer ar = a.getRenderer();
+        final IAxisRenderer ar = a.getRenderer();
         if( ar != null )
           ar.paint( gc, a, rect );
       }
     }
 
     // Layer zeichnen
-    ILayerManager lm = m_model.getLayerManager();
+    final ILayerManager lm = m_model.getLayerManager();
 
     if( m_plotRect != null )
     {
       gc.setClipping( m_plotRect );
 
-      Transform t = new Transform( gc.getDevice() );
+      final Transform t = new Transform( gc.getDevice() );
       t.translate( m_plotRect.x, m_plotRect.y );
 
       gc.setTransform( t );
-      for( IChartLayer l : lm.getLayers() )
+      for( final IChartLayer l : lm.getLayers() )
         if( l.isVisible() )
           l.paint( gc );
       t.dispose();
@@ -105,15 +105,15 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
 
   private void calcBounds( )
   {
-    int width = getBounds().width;
-    int height = getBounds().height;
+    final int width = getBounds().width;
+    final int height = getBounds().height;
 
     // map der Breite der AxisSpaces
-    HashMap<POSITION, Integer> spaceWidthMap = new HashMap<POSITION, Integer>();
-    for( POSITION p : m_axisPosMap.keySet() )
+    final HashMap<POSITION, Integer> spaceWidthMap = new HashMap<POSITION, Integer>();
+    for( final POSITION p : m_axisPosMap.keySet() )
     {
       int w = 0;
-      for( IAxis a : m_axisPosMap.get( p ) )
+      for( final IAxis a : m_axisPosMap.get( p ) )
       {
         final IAxisRenderer renderer = a.getRenderer();
         if( renderer != null )
@@ -123,23 +123,23 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
     }
 
     // Position des Plots
-    int left = spaceWidthMap.get( POSITION.LEFT );
-    int top = spaceWidthMap.get( POSITION.TOP );
-    int bottom = spaceWidthMap.get( POSITION.BOTTOM );
-    int right = spaceWidthMap.get( POSITION.RIGHT );
+    final int left = spaceWidthMap.get( POSITION.LEFT );
+    final int top = spaceWidthMap.get( POSITION.TOP );
+    final int bottom = spaceWidthMap.get( POSITION.BOTTOM );
+    final int right = spaceWidthMap.get( POSITION.RIGHT );
 
     m_plotRect = new Rectangle( left, top, width - (left + right), height - (top + bottom) );
 
     int offset = 0;
-    for( IAxis a : m_axisPosMap.get( POSITION.BOTTOM ) )
+    for( final IAxis a : m_axisPosMap.get( POSITION.BOTTOM ) )
     {
       final IAxisRenderer renderer = a.getRenderer();
       if( renderer != null )
       {
-        int rHeight = renderer.getAxisWidth( a );
-        int rWidth = width - spaceWidthMap.get( POSITION.LEFT ) - spaceWidthMap.get( POSITION.RIGHT );
-        int rX = spaceWidthMap.get( POSITION.LEFT );
-        int rY = height - spaceWidthMap.get( POSITION.BOTTOM ) + offset;
+        final int rHeight = renderer.getAxisWidth( a );
+        final int rWidth = width - spaceWidthMap.get( POSITION.LEFT ) - spaceWidthMap.get( POSITION.RIGHT );
+        final int rX = spaceWidthMap.get( POSITION.LEFT );
+        final int rY = height - spaceWidthMap.get( POSITION.BOTTOM ) + offset;
         offset += rHeight;
         m_axisBoundsMap.put( a, new Rectangle( rX, rY, rWidth, rHeight ) );
         a.setScreenHeight( rWidth );
@@ -147,15 +147,15 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
     }
 
     offset = 0;
-    for( IAxis a : m_axisPosMap.get( POSITION.LEFT ) )
+    for( final IAxis a : m_axisPosMap.get( POSITION.LEFT ) )
     {
       final IAxisRenderer renderer = a.getRenderer();
       if( renderer != null )
       {
-        int rWidth = renderer.getAxisWidth( a );
-        int rHeight = height - spaceWidthMap.get( POSITION.TOP ) - spaceWidthMap.get( POSITION.BOTTOM );
-        int rY = spaceWidthMap.get( POSITION.TOP );
-        int rX = offset;
+        final int rWidth = renderer.getAxisWidth( a );
+        final int rHeight = height - spaceWidthMap.get( POSITION.TOP ) - spaceWidthMap.get( POSITION.BOTTOM );
+        final int rY = spaceWidthMap.get( POSITION.TOP );
+        final int rX = offset;
         offset += rWidth;
         m_axisBoundsMap.put( a, new Rectangle( rX, rY, rWidth, rHeight ) );
         a.setScreenHeight( rHeight );
@@ -163,15 +163,15 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
     }
 
     offset = 0;
-    for( IAxis a : m_axisPosMap.get( POSITION.TOP ) )
+    for( final IAxis a : m_axisPosMap.get( POSITION.TOP ) )
     {
       final IAxisRenderer renderer = a.getRenderer();
       if( renderer != null )
       {
-        int rHeight = renderer.getAxisWidth( a );
-        int rWidth = width - spaceWidthMap.get( POSITION.LEFT ) - spaceWidthMap.get( POSITION.RIGHT );
-        int rX = spaceWidthMap.get( POSITION.LEFT );
-        int rY = offset;
+        final int rHeight = renderer.getAxisWidth( a );
+        final int rWidth = width - spaceWidthMap.get( POSITION.LEFT ) - spaceWidthMap.get( POSITION.RIGHT );
+        final int rX = spaceWidthMap.get( POSITION.LEFT );
+        final int rY = offset;
         offset += rHeight;
         m_axisBoundsMap.put( a, new Rectangle( rX, rY, rWidth, rHeight ) );
         a.setScreenHeight( rWidth );
@@ -179,15 +179,15 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
     }
 
     offset = 0;
-    for( IAxis a : m_axisPosMap.get( POSITION.RIGHT ) )
+    for( final IAxis a : m_axisPosMap.get( POSITION.RIGHT ) )
     {
       final IAxisRenderer renderer = a.getRenderer();
       if( renderer != null )
       {
-        int rWidth = renderer.getAxisWidth( a );
-        int rHeight = height - spaceWidthMap.get( POSITION.TOP ) - spaceWidthMap.get( POSITION.BOTTOM );
-        int rY = spaceWidthMap.get( POSITION.TOP );
-        int rX = width - spaceWidthMap.get( POSITION.RIGHT ) + offset;
+        final int rWidth = renderer.getAxisWidth( a );
+        final int rHeight = height - spaceWidthMap.get( POSITION.TOP ) - spaceWidthMap.get( POSITION.BOTTOM );
+        final int rY = spaceWidthMap.get( POSITION.TOP );
+        final int rX = width - spaceWidthMap.get( POSITION.RIGHT ) + offset;
         offset += rWidth;
         m_axisBoundsMap.put( a, new Rectangle( rX, rY, rWidth, rHeight ) );
         a.setScreenHeight( rHeight );
@@ -199,8 +199,8 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
   {
     initAxisPosMap();
 
-    ILayerManager lm = m_model.getLayerManager();
-    for( IChartLayer l : lm.getLayers() )
+    final ILayerManager lm = m_model.getLayerManager();
+    for( final IChartLayer l : lm.getLayers() )
     {
       putAxisInPosMap( l.getCoordinateMapper().getDomainAxis() );
       putAxisInPosMap( l.getCoordinateMapper().getTargetAxis() );
@@ -222,15 +222,15 @@ public class ChartCanvas extends Canvas implements PaintListener, IChartViewer
 
   }
 
-  private void putAxisInPosMap( IAxis axis )
+  private void putAxisInPosMap( final IAxis axis )
   {
-    ArrayList<IAxis> list = m_axisPosMap.get( axis.getPosition() );
+    final ArrayList<IAxis> list = m_axisPosMap.get( axis.getPosition() );
     if( !list.contains( axis ) )
       list.add( axis );
   }
 
   @Override
-  public void paintControl( PaintEvent e )
+  public void paintControl( final PaintEvent e )
   {
     paint( e.gc );
 

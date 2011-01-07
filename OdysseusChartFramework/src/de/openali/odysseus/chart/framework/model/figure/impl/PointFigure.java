@@ -20,18 +20,17 @@ public class PointFigure extends AbstractFigure<IPointStyle>
    * @param points
    *          center position of the figure
    */
-  public void setPoints( Point[] points )
+  public void setPoints( final Point[] points )
   {
     m_centerPoints = points;
     m_leftTopPoints = null;
 
   }
 
-  
   @Override
-  protected void paintFigure( GC gc )
+  protected void paintFigure( final GC gc )
   {
-    IPointStyle style = getStyle();
+    final IPointStyle style = getStyle();
     if( (style != null) && (m_centerPoints != null) )
     {
       if( m_leftTopPoints == null )
@@ -39,7 +38,7 @@ public class PointFigure extends AbstractFigure<IPointStyle>
         m_leftTopPoints = new Point[m_centerPoints.length];
         for( int i = 0; i < m_centerPoints.length; i++ )
         {
-          Point centerPoint = m_centerPoints[i];
+          final Point centerPoint = m_centerPoints[i];
           m_leftTopPoints[i] = FigureUtilities.centerToLeftTop( centerPoint, style.getWidth(), style.getHeight() );
         }
       }
@@ -48,7 +47,7 @@ public class PointFigure extends AbstractFigure<IPointStyle>
       IMarker marker = style.getMarker();
       if( marker == null )
         marker = IDefaultStyles.DEFAULT_MARKER;
-      for( Point p : m_leftTopPoints )
+      for( final Point p : m_leftTopPoints )
         marker.paint( gc, p, getStyle().getWidth(), getStyle().getHeight(), getStyle().getStroke().isVisible(), getStyle().isFillVisible() );
     }
 
@@ -60,7 +59,7 @@ public class PointFigure extends AbstractFigure<IPointStyle>
   @Override
   public IPointStyle getStyle( )
   {
-    IPointStyle style = super.getStyle();
+    final IPointStyle style = super.getStyle();
     if( style != null )
       return style;
     else
@@ -68,7 +67,7 @@ public class PointFigure extends AbstractFigure<IPointStyle>
   }
 
   @Override
-  public void setStyle( IPointStyle ps )
+  public void setStyle( final IPointStyle ps )
   {
     super.setStyle( ps );
     m_leftTopPoints = null;

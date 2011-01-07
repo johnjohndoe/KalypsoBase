@@ -48,7 +48,6 @@ import de.openali.odysseus.chart.framework.model.data.IOrdinalDataOperator;
 
 /**
  * @author alibu
- * 
  */
 public class StringDataOperator implements IOrdinalDataOperator<String>
 {

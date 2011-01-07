@@ -45,30 +45,30 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author burtscher1
- * 
  */
 public class LayerEventHandler extends AbstractEventProvider<ILayerEventListener>
 {
-  public void fireLayerContentChanged(final IChartLayer layer)
+  public void fireLayerContentChanged( final IChartLayer layer )
   {
     for( final ILayerEventListener l : getListeners( ILayerEventListener.class ) )
     {
-      l.onLayerContentChanged(layer);
+      l.onLayerContentChanged( layer );
     }
   }
 
-  public void fireLayerVisibilityChanged(final IChartLayer layer)
+  public void fireLayerVisibilityChanged( final IChartLayer layer )
   {
     for( final ILayerEventListener l : getListeners( ILayerEventListener.class ) )
     {
-      l.onLayerVisibilityChanged(layer);
+      l.onLayerVisibilityChanged( layer );
     }
   }
-  public void fireActiveLayerChanged(final IChartLayer layer)
+
+  public void fireActiveLayerChanged( final IChartLayer layer )
   {
     for( final ILayerEventListener l : getListeners( ILayerEventListener.class ) )
     {
-      l.onActiveLayerChanged(layer);
+      l.onActiveLayerChanged( layer );
     }
   }
 }

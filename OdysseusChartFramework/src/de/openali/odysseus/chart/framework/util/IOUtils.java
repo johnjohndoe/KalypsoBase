@@ -6,18 +6,18 @@ import java.io.InputStream;
 public class IOUtils
 {
 
-	public static void closeQuietly(InputStream input)
-	{
-		try
-		{
-			if (input != null)
-			{
-				input.close();
-			}
-		}
-		catch (IOException ioe)
-		{
-			// do nothing
-		}
-	}
+  public static void closeQuietly( final InputStream input )
+  {
+    try
+    {
+      if( input != null )
+      {
+        input.close();
+      }
+    }
+    catch( final IOException ioe )
+    {
+      // do nothing
+    }
+  }
 }
