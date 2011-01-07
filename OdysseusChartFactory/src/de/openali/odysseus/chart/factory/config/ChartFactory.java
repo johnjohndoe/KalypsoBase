@@ -5,6 +5,7 @@ import java.net.URL;
 
 import de.openali.odysseus.chart.factory.config.exception.ConfigChartNotFoundException;
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
+import de.openali.odysseus.chart.factory.config.resolver.ExtendedReferenceResolver;
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -31,14 +32,14 @@ public final class ChartFactory
 
   public static final String MAPPER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.mapperprovider";
 
-  public static void configureChartModel( final IChartModel model, final ChartConfigurationLoader cl, final String configChartName, final IExtensionLoader extLoader, final URL context ) throws ConfigurationException
+  public static void configureChartModel( final IChartModel model, final ChartConfigurationLoader configurationLoader, final String configChartName, final IExtensionLoader extLoader, final URL context ) throws ConfigurationException
   {
     // ChartConfig auslesen
     // TODO: move the search for the chart into a separate search method
     ChartType dt = null;
-    if( cl != null )
+    if( configurationLoader != null )
     {
-      final ChartType[] charts = cl.getCharts();
+      final ChartType[] charts = configurationLoader.getCharts();
       for( final ChartType chart : charts )
       {
         if( chart.getId().equals( configChartName ) )
@@ -51,10 +52,10 @@ public final class ChartFactory
     if( dt == null )
       throw new ConfigChartNotFoundException( configChartName );
 
-    doConfiguration( model, cl, dt, extLoader, context );
+    doConfiguration( model, configurationLoader, dt, extLoader, context );
   }
 
-  public static void doConfiguration( final IChartModel model, final IReferenceResolver rr, final ChartType chartType, final IExtensionLoader extLoader, final URL context )
+  public static void doConfiguration( final IChartModel model, final IReferenceResolver resolver, final ChartType chartType, final IExtensionLoader extLoader, final URL context )
   {
 
     model.setId( chartType.getId() );
@@ -82,10 +83,11 @@ public final class ChartFactory
 
     model.setDescription( chartType.getDescription() );
 
-    final ChartMapperFactory mapperFactory = new ChartMapperFactory( model, rr, extLoader, context );
+    final ExtendedReferenceResolver extendedResolver = new ExtendedReferenceResolver( resolver );
+    final ChartMapperFactory mapperFactory = new ChartMapperFactory( model, extendedResolver, extLoader, context );
     mapperFactory.build( chartType );
 
-    final ChartLayerFactory layerFactory = new ChartLayerFactory( model, rr, extLoader, context, mapperFactory );
+    final ChartLayerFactory layerFactory = new ChartLayerFactory( model, extendedResolver, extLoader, context, mapperFactory );
     layerFactory.build( chartType );
   }
 

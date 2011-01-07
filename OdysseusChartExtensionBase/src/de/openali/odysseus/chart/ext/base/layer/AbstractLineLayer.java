@@ -46,16 +46,19 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
   {
     super( provider );
 
-    final StyleSetVisitor visitor = new StyleSetVisitor();
-    final ILineStyle ls = visitor.visit( styleSet, ILineStyle.class, 0 );
-    final IPointStyle ps = visitor.visit( styleSet, IPointStyle.class, 0 );
-    final ITextStyle ts = visitor.visit( styleSet, ITextStyle.class, 0 );
-    if( ls != null )
-      getPolylineFigure().setStyle( ls );
-    if( ps != null )
-      getPointFigure().setStyle( ps );
-    if( ts != null )
-      getTextFigure().setStyle( ts );
+    if( styleSet != null )
+    {
+      final StyleSetVisitor visitor = new StyleSetVisitor();
+      final ILineStyle ls = visitor.visit( styleSet, ILineStyle.class, 0 );
+      final IPointStyle ps = visitor.visit( styleSet, IPointStyle.class, 0 );
+      final ITextStyle ts = visitor.visit( styleSet, ITextStyle.class, 0 );
+      if( ls != null )
+        getPolylineFigure().setStyle( ls );
+      if( ps != null )
+        getPointFigure().setStyle( ps );
+      if( ts != null )
+        getTextFigure().setStyle( ts );
+    }
   }
 
   /**
