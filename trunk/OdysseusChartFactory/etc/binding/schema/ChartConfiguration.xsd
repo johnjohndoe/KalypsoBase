@@ -508,14 +508,10 @@
         <element ref="ods:PointStyle" />
         <element ref="ods:AreaStyle" />
         <element ref="ods:TextStyle" />
-        <element name="StyleReference" type="ods:StyleRefernceType" />
+        <element name="StyleReference" type="string" />
       </choice>
     </complexType>
   </element>
-
-  <complexType name="StyleRefernceType">
-    <attribute name="url" type="anyURI" use="required" />
-  </complexType>
 
   <complexType name="TitleType">
     <simpleContent>
