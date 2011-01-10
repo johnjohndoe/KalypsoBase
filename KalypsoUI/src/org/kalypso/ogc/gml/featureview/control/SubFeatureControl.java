@@ -120,6 +120,7 @@ public class SubFeatureControl extends AbstractFeatureControl
     } );
 
     m_fc.createControl( m_container, SWT.NONE );
+    // FIXME we should set the layout here, but the FeatureComposite does it itself, which it shouldn't
     return m_container;
   }
 
