@@ -85,7 +85,7 @@ public class PatternInputReplacer<T>
     m_patternStart = patternStart;
     m_patternStop = patternStop;
 
-    final String pattern = String.format( "\\%s(.*?)(:(.*?))*\\%s", m_patternStart, m_patternStop );
+    final String pattern = String.format( "\\%s(.*?)(:(.*))?\\%s", m_patternStart, m_patternStop );
 
     m_tokenPattern = Pattern.compile( pattern );
   }
@@ -121,10 +121,16 @@ public class PatternInputReplacer<T>
       final String params = matcher.group( 3 );
 
       final IPatternInput<T> tokenReplacer = getReplacer( token );
-
-      final String replacement = tokenReplacer.getReplacement( context, params );
-      matcher.appendReplacement( result, replacement );
+      if( tokenReplacer != null )
+      {
+        final String replacement = tokenReplacer.getReplacement( context, params );
+        matcher.appendReplacement( result, replacement );
+      }
+      else
+        matcher.appendReplacement( result, matcher.group() );
     }
+
+    matcher.appendTail( result );
 
     return result.toString();
   }
