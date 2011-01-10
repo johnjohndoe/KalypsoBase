@@ -58,6 +58,7 @@ import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 
 /**
  * @author doemming
@@ -319,7 +320,9 @@ public class IntervalTupleModel extends AbstractTupleModel
   {
     final DataSourceHandler handler = new DataSourceHandler( m_metadata );
 
-    final Object[] srcDataSourceObjects = ObservationUtilities.getElements( m_srcModel, index, m_axes.getDataSourcesAxes() );
+    final IAxis[] dataSourcesAxes = m_axes.getDataSourcesAxes();
+
+    final Object[] srcDataSourceObjects = ObservationUtilities.getElements( m_srcModel, index, dataSourcesAxes );
     final String[] srcDataSources = new String[srcDataSourceObjects.length];
 
     for( int i = 0; i < srcDataSourceObjects.length; i++ )
@@ -327,7 +330,10 @@ public class IntervalTupleModel extends AbstractTupleModel
       final Number srcIndex = (Number) srcDataSourceObjects[i];
       final String dataSourceIdentifier = handler.getDataSourceIdentifier( srcIndex.intValue() );
 
-      srcDataSources[i] = dataSourceIdentifier;
+      if( dataSourceIdentifier == null )
+        srcDataSources[i] = IDataSourceItem.SOURCE_UNKNOWN;
+      else
+        srcDataSources[i] = dataSourceIdentifier;
     }
 
     return srcDataSources;
