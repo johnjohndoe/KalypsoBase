@@ -63,7 +63,7 @@ public class Arguments extends LinkedHashMap<String, Object>
    */
   public Arguments getArguments( final String key )
   {
-    return (Arguments)get( key );
+    return (Arguments) get( key );
   }
 
   public boolean getBoolean( final String key, final boolean defaultValue )
@@ -100,6 +100,20 @@ public class Arguments extends LinkedHashMap<String, Object>
     allKeys.addAll( Arrays.asList( getParentKeys() ) );
 
     return allKeys.toArray( new String[allKeys.size()] );
+  }
+
+  public String[] findAllKeys( final String prefix )
+  {
+    final Set<String> myKeys = new LinkedHashSet<String>();
+
+    final String[] keys = getAllKeys();
+    for( final String key : keys )
+    {
+      if( key.startsWith( prefix ) )
+        myKeys.add( key );
+    }
+
+    return myKeys.toArray( new String[] {} );
   }
 
   private String[] getParentKeys( )
