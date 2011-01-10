@@ -167,12 +167,12 @@
     <complexContent>
       <extension base="ods:AbstractStyleType">
         <sequence>
-          <element name="Size" type="int" minOccurs="0"></element>
-          <element name="TextColor" type="ods:ColorType" minOccurs="0"></element>
-          <element name="FontFamily" type="string" minOccurs="0"></element>
-          <element name="FillColor" type="ods:ColorType" minOccurs="0"></element>
-          <element name="FontWeight" type="ods:FontWeightType" minOccurs="0"></element>
-          <element name="FontStyle" type="ods:FontStyleType" minOccurs="0"></element>
+          <element name="Size" type="int" minOccurs="0" />
+          <element name="TextColor" type="ods:ColorType" minOccurs="0" />
+          <element name="FontFamily" type="string" minOccurs="0" />
+          <element name="FillColor" type="ods:ColorType" minOccurs="0" />
+          <element name="FontWeight" type="ods:FontWeightType" minOccurs="0" />
+          <element name="FontStyle" type="ods:FontStyleType" minOccurs="0" />
         </sequence>
       </extension>
     </complexContent>

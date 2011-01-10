@@ -97,7 +97,7 @@
             </Fill>
             <Stroke>
               <Width>1</Width>
-              <Color>093689</Color>
+              <LineColor>093689</LineColor>
             </Stroke>
           </AreaStyle>
           <PointStyle role="point" isVisible="false">
@@ -187,10 +187,10 @@
 
         <Styles>
           <TextStyle role="defaultTextStyle">
-            <FontStyle>NORMAL</FontStyle>
-            <FontWeight>BOLD</FontWeight>
             <Size>16</Size>
             <TextColor>000000</TextColor>
+            <FontWeight>BOLD</FontWeight>
+            <FontStyle>NORMAL</FontStyle>
           </TextStyle>
         </Styles>
       </Layer>
