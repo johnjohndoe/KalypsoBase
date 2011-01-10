@@ -42,7 +42,6 @@ package org.kalypso.chart.ui;
 
 /**
  * @author burtscher1
- * 
  */
 public interface IChartCommand
 {

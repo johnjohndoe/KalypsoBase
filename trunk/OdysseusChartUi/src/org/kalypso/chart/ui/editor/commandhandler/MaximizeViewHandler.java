@@ -24,9 +24,7 @@ import de.openali.odysseus.chart.framework.util.ChartUtilities;
  * This handler sets all axis ranges in a way that all relations which were set up by a user - e.g. by panning or
  * zooming single layers / axes - are kept; for example, if there are two layers
  * 
- * 
  * @author burtscher1
- * 
  */
 public class MaximizeViewHandler extends AbstractHandler
 {
@@ -42,17 +40,17 @@ public class MaximizeViewHandler extends AbstractHandler
     if( chartPart == null )
       return null;
 
-    IChartModel model = chartPart.getChartComposite().getChartModel();
-    Set<IAxis> horAxes = new HashSet<IAxis>();
-    Set<IAxis> vertAxes = new HashSet<IAxis>();
-    IAxis[] axes = model.getMapperRegistry().getAxes();
-    Set<IDataRange<Number>> numericRangesHor = new HashSet<IDataRange<Number>>();
-    Set<IDataRange<Number>> numericRangesVert = new HashSet<IDataRange<Number>>();
-    Set<Number> screenMinsHor = new HashSet<Number>();
-    Set<Number> screenMaxsHor = new HashSet<Number>();
-    Set<Number> screenMinsVert = new HashSet<Number>();
-    Set<Number> screenMaxsVert = new HashSet<Number>();
-    for( IAxis axis : axes )
+    final IChartModel model = chartPart.getChartComposite().getChartModel();
+    final Set<IAxis> horAxes = new HashSet<IAxis>();
+    final Set<IAxis> vertAxes = new HashSet<IAxis>();
+    final IAxis[] axes = model.getMapperRegistry().getAxes();
+    final Set<IDataRange<Number>> numericRangesHor = new HashSet<IDataRange<Number>>();
+    final Set<IDataRange<Number>> numericRangesVert = new HashSet<IDataRange<Number>>();
+    final Set<Number> screenMinsHor = new HashSet<Number>();
+    final Set<Number> screenMaxsHor = new HashSet<Number>();
+    final Set<Number> screenMinsVert = new HashSet<Number>();
+    final Set<Number> screenMaxsVert = new HashSet<Number>();
+    for( final IAxis axis : axes )
     {
       final List<IChartLayer> layers = model.getAxis2Layers().get( axis );
       if( layers == null )
@@ -73,7 +71,7 @@ public class MaximizeViewHandler extends AbstractHandler
           }
           else if( axis == layer.getCoordinateMapper().getTargetAxis() )
           {
-            range = layer.getTargetRange(null);
+            range = layer.getTargetRange( null );
           }
           if( range != null )
           {
@@ -128,27 +126,27 @@ public class MaximizeViewHandler extends AbstractHandler
     }
 
     // Horizontales Minumum berechnen
-    IDataRange<Number> screenMinHorTmp = new ComparableDataRange<Number>( screenMinsHor.toArray( new Number[] {} ) );
-    int horMin = (int) Math.floor( screenMinHorTmp.getMin().doubleValue() );
+    final IDataRange<Number> screenMinHorTmp = new ComparableDataRange<Number>( screenMinsHor.toArray( new Number[] {} ) );
+    final int horMin = (int) Math.floor( screenMinHorTmp.getMin().doubleValue() );
     // Horizontales Maximum berechnen
-    IDataRange<Number> screenMaxHorTmp = new ComparableDataRange<Number>( screenMaxsHor.toArray( new Number[] {} ) );
-    int horMax = (int) Math.ceil( screenMaxHorTmp.getMax().doubleValue() );
+    final IDataRange<Number> screenMaxHorTmp = new ComparableDataRange<Number>( screenMaxsHor.toArray( new Number[] {} ) );
+    final int horMax = (int) Math.ceil( screenMaxHorTmp.getMax().doubleValue() );
     // Vertikales Minimum berechnen
-    IDataRange<Number> screenMinVertTmp = new ComparableDataRange<Number>( screenMinsVert.toArray( new Number[] {} ) );
-    int vertMin = (int) Math.floor( screenMinVertTmp.getMin().doubleValue() );
+    final IDataRange<Number> screenMinVertTmp = new ComparableDataRange<Number>( screenMinsVert.toArray( new Number[] {} ) );
+    final int vertMin = (int) Math.floor( screenMinVertTmp.getMin().doubleValue() );
     // Vertikales Maximum berechnen
-    IDataRange<Number> screenMaxVertTmp = new ComparableDataRange<Number>( screenMaxsVert.toArray( new Number[] {} ) );
-    int vertMax = (int) Math.ceil( screenMaxVertTmp.getMax().doubleValue() );
+    final IDataRange<Number> screenMaxVertTmp = new ComparableDataRange<Number>( screenMaxsVert.toArray( new Number[] {} ) );
+    final int vertMax = (int) Math.ceil( screenMaxVertTmp.getMax().doubleValue() );
 
     // neue Ranges setzen
-    for( IAxis axis : horAxes )
+    for( final IAxis axis : horAxes )
     {
-      IDataRange<Number> newRange = new DataRange<Number>( axis.screenToNumeric( horMin ), axis.screenToNumeric( horMax ) );
+      final IDataRange<Number> newRange = new DataRange<Number>( axis.screenToNumeric( horMin ), axis.screenToNumeric( horMax ) );
       axis.setNumericRange( newRange );
     }
-    for( IAxis axis : vertAxes )
+    for( final IAxis axis : vertAxes )
     {
-      IDataRange<Number> newRange = new DataRange<Number>( axis.screenToNumeric( vertMin ), axis.screenToNumeric( vertMax ) );
+      final IDataRange<Number> newRange = new DataRange<Number>( axis.screenToNumeric( vertMin ), axis.screenToNumeric( vertMax ) );
       axis.setNumericRange( newRange );
     }
 

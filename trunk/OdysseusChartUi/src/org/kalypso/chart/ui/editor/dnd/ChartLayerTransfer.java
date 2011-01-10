@@ -94,14 +94,14 @@ public class ChartLayerTransfer extends ByteArrayTransfer
    * Method declared on Transfer.
    */
   @Override
-  protected void javaToNative( Object object, TransferData transferData )
+  protected void javaToNative( final Object object, final TransferData transferData )
   {
     if( object != null )
     {
-      String id = (String) object;
+      final String id = (String) object;
 
-      ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-      DataOutputStream out = new DataOutputStream( byteOut );
+      final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+      final DataOutputStream out = new DataOutputStream( byteOut );
 
       byte[] bytes = null;
 
@@ -111,7 +111,7 @@ public class ChartLayerTransfer extends ByteArrayTransfer
         out.close();
         bytes = byteOut.toByteArray();
       }
-      catch( IOException e )
+      catch( final IOException e )
       {
         // when in doubt send nothing
       }
@@ -127,17 +127,17 @@ public class ChartLayerTransfer extends ByteArrayTransfer
    * Method declared on Transfer.
    */
   @Override
-  protected Object nativeToJava( TransferData transferData )
+  protected Object nativeToJava( final TransferData transferData )
   {
-    byte[] bytes = (byte[]) super.nativeToJava( transferData );
-    DataInputStream in = new DataInputStream( new ByteArrayInputStream( bytes ) );
+    final byte[] bytes = (byte[]) super.nativeToJava( transferData );
+    final DataInputStream in = new DataInputStream( new ByteArrayInputStream( bytes ) );
 
     try
     {
-      String id = in.readUTF();
+      final String id = in.readUTF();
       return id;
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       return null;
     }

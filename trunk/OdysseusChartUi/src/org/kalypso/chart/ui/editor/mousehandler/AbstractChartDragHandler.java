@@ -157,7 +157,7 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
 
     if( (m_editInfo == null) && ((Math.abs( e.x - m_startX ) > m_trashOld) || (Math.abs( e.y - m_startY ) > m_trashOld)) )
       m_editInfo = new EditInfo( m_clickInfo );
-    
+
     final Point plotPoint = getChart().screen2plotPoint( new Point( e.x - m_deltaSnapX, e.y - m_deltaSnapY ) );
     doMouseMoveAction( plotPoint, m_editInfo == null ? m_clickInfo : m_editInfo );
 

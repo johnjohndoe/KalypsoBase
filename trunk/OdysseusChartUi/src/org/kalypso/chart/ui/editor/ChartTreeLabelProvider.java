@@ -189,7 +189,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
         gc.fillPolygon( path1 );
         gc.setAlpha( 255 );
 
-        gc.setForeground(display.getSystemColor( SWT.COLOR_BLACK ) );
+        gc.setForeground( display.getSystemColor( SWT.COLOR_BLACK ) );
         gc.setLineWidth( 3 );
         gc.drawLine( width - 9, 5, width - 1, 5 );
         gc.drawLine( width - 5, 1, width - 5, 9 );
@@ -222,7 +222,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
       oldImage.dispose();
   }
 
-  private void addLayerImage( IChartLayer layer, Image img )
+  private void addLayerImage( final IChartLayer layer, final Image img )
   {
     final Image oldImage = m_layerImages.put( layer, img );
     if( oldImage != null )
@@ -247,7 +247,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
     return getText( element );
   }
 
-  public void clearLayer( IChartLayer layer )
+  public void clearLayer( final IChartLayer layer )
   {
     final Image layerImage = m_layerImages.remove( layer );
     if( layerImage != null )

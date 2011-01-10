@@ -47,7 +47,6 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author kimwerner
- *
  */
 public class ChartTreeCheckstateProvider implements ICheckStateProvider
 {
@@ -55,14 +54,14 @@ public class ChartTreeCheckstateProvider implements ICheckStateProvider
    * @see org.eclipse.jface.viewers.ICheckStateProvider#isChecked(java.lang.Object)
    */
   @Override
-  public boolean isChecked( Object element )
+  public boolean isChecked( final Object element )
   {
     if( element instanceof IChartModel )
       return true;
-    
-   if( element instanceof IChartLayer )
-     return ((IChartLayer) element).isVisible();
-    
+
+    if( element instanceof IChartLayer )
+      return ((IChartLayer) element).isVisible();
+
     return false;
   }
 
@@ -70,7 +69,7 @@ public class ChartTreeCheckstateProvider implements ICheckStateProvider
    * @see org.eclipse.jface.viewers.ICheckStateProvider#isGrayed(java.lang.Object)
    */
   @Override
-  public boolean isGrayed( Object element )
+  public boolean isGrayed( final Object element )
   {
     return false;
   }

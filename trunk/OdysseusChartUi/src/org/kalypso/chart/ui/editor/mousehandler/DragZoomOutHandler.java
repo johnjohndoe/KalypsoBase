@@ -80,7 +80,7 @@ public class DragZoomOutHandler extends AbstractChartDragHandler
 
     try
     {
-      getChart().getChartModel().zoomOut( getChart().screen2plotPoint( editInfo.m_pos), getChart().screen2plotPoint(end) );
+      getChart().getChartModel().zoomOut( getChart().screen2plotPoint( editInfo.m_pos ), getChart().screen2plotPoint( end ) );
     }
     finally
     {

@@ -18,7 +18,7 @@ public class ZoomOutActionDelegate extends ActionDelegate implements IEditorActi
   private IEditorPart m_targetEditor;
 
   @Override
-  public void setActiveEditor( IAction action, IEditorPart targetEditor )
+  public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     m_targetEditor = targetEditor;
     action.setEnabled( m_targetEditor instanceof ChartEditor );
@@ -29,7 +29,7 @@ public class ZoomOutActionDelegate extends ActionDelegate implements IEditorActi
    * @see org.eclipse.ui.IActionDelegate2#runWithEvent(org.eclipse.jface.action.IAction, org.eclipse.swt.widgets.Event)
    */
   @Override
-  public void runWithEvent( IAction action, Event event )
+  public void runWithEvent( final IAction action, final Event event )
   {
     try
     {
