@@ -50,7 +50,7 @@ public interface IRecord
   /**
    * @return the <code>TupleResult</code> that owns this record
    */
-  public TupleResult getOwner( );
+  TupleResult getOwner( );
 
   /**
    * @return the value for the given component (can be null)
@@ -59,12 +59,12 @@ public interface IRecord
    * @deprecated Use {@link #getValue(int)} instead.
    */
   @Deprecated
-  public Object getValue( IComponent comp ) throws IllegalArgumentException;
+  Object getValue( IComponent comp ) throws IllegalArgumentException;
 
   /**
    * Retrieves the value for the given index. Ask the owner (TupleResult) for the index of a certain component.
    */
-  public Object getValue( int index ) throws IndexOutOfBoundsException;
+  Object getValue( int index ) throws IndexOutOfBoundsException;
 
   /**
    * Sets the value for the given component<br>
@@ -78,16 +78,16 @@ public interface IRecord
    *             (comp). In this case the value would be only applied to the first one!
    */
   @Deprecated
-  public void setValue( IComponent comp, Object value );
+  void setValue( IComponent comp, Object value );
 
   /**
    * Sets the value for the given index. Ask the owner (TupleResult) for the index of a certain component.
    */
-  public void setValue( int index, Object value ) throws IndexOutOfBoundsException;
-  
-  public void setValue( int index, Object value, boolean fireNoEvent ) throws IndexOutOfBoundsException;
+  void setValue( int index, Object value ) throws IndexOutOfBoundsException;
 
-  public IRecord cloneRecord( );
+  void setValue( int index, Object value, boolean fireNoEvent ) throws IndexOutOfBoundsException;
 
-  public int indexOfComponent( String componentID );
+  IRecord cloneRecord( );
+
+  int indexOfComponent( String componentID );
 }

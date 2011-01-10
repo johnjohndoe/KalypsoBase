@@ -43,7 +43,10 @@ package org.kalypso.commons.patternreplace;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Formatter;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
@@ -64,19 +67,42 @@ import org.eclipse.swt.widgets.Text;
  */
 public class PatternInputReplacer<T>
 {
-  private final List<IPatternInput<T>> m_replacers = new ArrayList<IPatternInput<T>>();
+  private final Map<String, IPatternInput<T>> m_replacers = new LinkedHashMap<String, IPatternInput<T>>();
+
+  private final char m_patternStart;
+
+  private final char m_patternStop;
+
+  private Pattern m_tokenPattern;
+
+  public PatternInputReplacer( )
+  {
+    this( '<', '>' );
+  }
+
+  public PatternInputReplacer( final char patternStart, final char patternStop )
+  {
+    m_patternStart = patternStart;
+    m_patternStop = patternStop;
+
+    final String pattern = String.format( "\\%s(.*?)(:(.*?))*\\%s", m_patternStart, m_patternStop );
+
+    m_tokenPattern = Pattern.compile( pattern );
+  }
 
   public void addReplacer( final IPatternInput<T> replacer )
   {
-    m_replacers.add( replacer );
+    final String token = replacer.getToken();
+    m_replacers.put( token, replacer );
   }
 
   public String getMessage( )
   {
     final Formatter formatter = new Formatter();
 
-    for( final IPatternInput< ? extends T> token : m_replacers )
-      formatter.format( "%s: %s%n", token.getToken(), token.getLabel() ); //$NON-NLS-1$
+    // FIXME: how to show params?
+    for( final IPatternInput< ? extends T> token : m_replacers.values() )
+      formatter.format( "%s%s%s: %s%n", m_patternStart, token.getToken(), m_patternStop, token.getLabel() ); //$NON-NLS-1$
 
     return formatter.toString();
   }
@@ -86,27 +112,39 @@ public class PatternInputReplacer<T>
     if( pattern == null )
       return null;
 
-    final IPatternInput<T>[] tokens = getTokens();
+    final StringBuffer result = new StringBuffer();
 
-    String result = pattern;
-    for( final IPatternInput<T> token : tokens )
-      result = token.replace( result, context );
+    final Matcher matcher = m_tokenPattern.matcher( pattern );
+    while( matcher.find() )
+    {
+      final String token = matcher.group( 1 );
+      final String params = matcher.group( 3 );
 
-    return result;
+      final IPatternInput<T> tokenReplacer = getReplacer( token );
+
+      final String replacement = tokenReplacer.getReplacement( context, params );
+      matcher.appendReplacement( result, replacement );
+    }
+
+    return result.toString();
   }
 
-  @SuppressWarnings("unchecked")
-  private IPatternInput<T>[] getTokens( )
+  private IPatternInput<T> getReplacer( final String token )
   {
-    return m_replacers.toArray( new IPatternInput[m_replacers.size()] );
+    return m_replacers.get( token );
   }
 
   public IContributionItem[] asContributionItems( final Text text )
   {
     final Collection<IContributionItem> items = new ArrayList<IContributionItem>();
 
-    for( final IPatternInput<T> pattern : m_replacers )
-      items.add( new ActionContributionItem( new PatternAction( pattern, text ) ) );
+    for( final IPatternInput<T> pattern : m_replacers.values() )
+    {
+      final String label = pattern.getLabel();
+      final String token = pattern.getToken();
+      final String replacement = String.format( "%s%s%s", m_patternStart, token, m_patternStop ); //$NON-NLS-1$
+      items.add( new ActionContributionItem( new PatternAction( label, replacement, text ) ) );
+    }
 
     return items.toArray( new IContributionItem[items.size()] );
   }
