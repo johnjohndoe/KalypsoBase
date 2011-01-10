@@ -54,15 +54,11 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 public interface IChartComposite
 {
 
-  void addPlotHandler( final IChartDragHandler handler );
-
   IChartModel getChartModel( );
 
   Canvas getPlot( );
 
   EditInfo getTooltipInfo( );
-
-  void removePlotHandler( final IChartDragHandler handler );
 
   Point screen2plotPoint( Point screen );
 
@@ -77,4 +73,10 @@ public interface IChartComposite
   void setTooltipInfo( EditInfo tooltipInfo );
 
   void invalidate( );
+
+  void addPlotHandler( final IChartDragHandler handler );
+
+  void removePlotHandler( final IChartDragHandler handler );
+
+  void removeAllPlotHandler( );
 }

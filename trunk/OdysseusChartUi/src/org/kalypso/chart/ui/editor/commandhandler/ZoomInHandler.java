@@ -5,11 +5,14 @@ import java.util.Map;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ElementUpdateHelper;
 import org.kalypso.chart.ui.editor.mousehandler.DragZoomInHandler;
+
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 public class ZoomInHandler extends AbstractHandler implements IElementUpdater
 {
@@ -18,16 +21,20 @@ public class ZoomInHandler extends AbstractHandler implements IElementUpdater
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-    final IChartPart chartPart = ChartHandlerUtilities.findChartComposite( context );
-    if( chartPart == null )
-      return null;
+    final IChartComposite chart = ChartHandlerUtilities.getChart( context );
+    if( chart == null )
+      return Status.CANCEL_STATUS;
 
-    final DragZoomInHandler plotDragZoomInHandler = new DragZoomInHandler( chartPart.getChartComposite() );
-    chartPart.getPlotDragHandler().setActiveHandler( plotDragZoomInHandler );
+    chart.removeAllPlotHandler();
 
-    ChartHandlerUtilities.updateElements( chartPart );
+    final DragZoomInHandler handler = new DragZoomInHandler( chart );
+    chart.addPlotHandler( handler );
 
-    return null;
+    final IChartPart part = ChartHandlerUtilities.findChartComposite( context );
+    if( part != null )
+      ChartHandlerUtilities.updateElements( part );
+
+    return Status.OK_STATUS;
   }
 
   /**

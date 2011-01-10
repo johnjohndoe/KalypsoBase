@@ -42,13 +42,14 @@ package org.kalypso.chart.ui.editor.mousehandler;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
+import de.openali.odysseus.chart.framework.view.IPlotDragHandler;
 
 /**
  * delegate to manage handlers for mouse dragging; only one handler is active at a time
  * 
  * @author burtscher1
  */
-public class PlotDragHandlerDelegate
+public class PlotDragHandlerDelegate implements IPlotDragHandler
 {
   private IChartDragHandler m_handler;
 
@@ -59,6 +60,7 @@ public class PlotDragHandlerDelegate
     m_chartComposite = chartComposite;
   }
 
+  @Override
   public void setActiveHandler( final IChartDragHandler handler )
   {
     m_chartComposite.removePlotHandler( m_handler );
@@ -67,6 +69,7 @@ public class PlotDragHandlerDelegate
 
   }
 
+  @Override
   public IChartDragHandler getActiveHandler( )
   {
     return m_handler;

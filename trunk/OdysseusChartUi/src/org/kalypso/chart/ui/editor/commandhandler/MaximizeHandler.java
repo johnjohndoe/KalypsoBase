@@ -3,9 +3,10 @@ package org.kalypso.chart.ui.editor.commandhandler;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.kalypso.chart.ui.IChartPart;
+import org.eclipse.core.runtime.Status;
 
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * This handler sets the axis ranges of all axes to the union range of all visible layers' ranges
@@ -21,12 +22,13 @@ public class MaximizeHandler extends AbstractHandler
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IChartPart chartPart = ChartHandlerUtilities.findChartComposite( context );
-    if( chartPart == null )
-      return null;
-    ChartUtilities.maximize( chartPart.getChartComposite().getChartModel() );
+    final IChartComposite chart = ChartHandlerUtilities.getChart( context );
+    if( chart == null )
+      return Status.CANCEL_STATUS;
 
-    return null;
+    ChartUtilities.maximize( chart.getChartModel() );
+
+    return Status.OK_STATUS;
   }
 
 }
