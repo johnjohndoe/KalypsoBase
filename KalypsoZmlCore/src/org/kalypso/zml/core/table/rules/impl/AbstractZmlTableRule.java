@@ -78,7 +78,7 @@ public abstract class AbstractZmlTableRule implements IZmlRuleImplementation
 
       return doApply( rule, reference );
     }
-    catch( Throwable t )
+    catch( final Throwable t )
     {
       t.printStackTrace();
       return false;
