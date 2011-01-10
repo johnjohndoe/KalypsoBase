@@ -188,7 +188,9 @@ public class ZmlTableEventListener implements MouseMoveListener, Listener
   {
     final ViewerCell cell = getActiveCell();
     if( cell == null )
+    {
       return null;
+    }
 
     return m_table.findColumn( cell.getColumnIndex() );
   }

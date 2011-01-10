@@ -64,6 +64,8 @@ public class ZmlCommandOpenValueInputDialog extends AbstractHandler
   {
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
     final IZmlTableColumn column = table.getActiveColumn();
+    if( column == null )
+      throw new IllegalStateException( "Konnte aktive Spalte nicht ermitteln. Bitte Linkklick in der zu bearbeitenden Spalte ausführen und Aktion erneut versuchen." );
 
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
     final ZmlEinzelwertDialog dialog = new ZmlEinzelwertDialog( shell, column );
