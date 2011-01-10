@@ -81,7 +81,7 @@ public class ZmlCommandPasteValue extends AbstractHandler
     }
     catch( final Exception e )
     {
-      throw new ExecutionException( "EinfÃ¼gen des Wertes aus der Zwischenablage fehlgeschlagen.", e );
+      throw new ExecutionException( "Einfügen des Wertes aus der Zwischenablage fehlgeschlagen.", e );
     }
 
   }

@@ -1,8 +1,6 @@
 package de.openali.odysseus.chart.framework.view.impl;
 
 import java.awt.Insets;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -37,7 +35,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 import de.openali.odysseus.chart.framework.util.img.ChartPainter;
 import de.openali.odysseus.chart.framework.util.img.ChartTooltipPainter;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IChartDragHandler;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 /**
  * @author kimwerner
@@ -98,8 +96,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   protected EditInfo m_tooltipInfo = null;
 
   private final ChartTooltipPainter m_tooltipPainter = new ChartTooltipPainter();
-
-  private final Set<IChartDragHandler> m_dragHandlers = new LinkedHashSet<IChartDragHandler>();
 
   private final ILayerManagerEventListener m_layerEventListener = new ILayerManagerEventListener()
   {
@@ -197,6 +193,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   private final InvalidateChartJob m_invalidateChartJob = new InvalidateChartJob( "" );
 
+  private ChartImagePlotHandler m_plotHandler;
+
   public ChartImageComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
   {
     super( parent, style | SWT.DOUBLE_BUFFERED );
@@ -259,20 +257,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     } );
     setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
     setChartModel( model );
-  }
 
-  @Override
-  public final void addPlotHandler( final IChartDragHandler handler )
-  {
-    if( handler == null )
-      setCursor( getDisplay().getSystemCursor( SWT.CURSOR_ARROW ) );
-    else
-    {
-      addMouseListener( handler );
-      addMouseMoveListener( handler );
-
-      m_dragHandlers.add( handler );
-    }
+    m_plotHandler = new ChartImagePlotHandler( this );
   }
 
   /**
@@ -392,18 +378,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   }
 
   @Override
-  public final void removePlotHandler( final IChartDragHandler handler )
-  {
-    if( handler != null )
-    {
-      removeMouseListener( handler );
-      removeMouseMoveListener( handler );
-
-      m_dragHandlers.remove( handler );
-    }
-  }
-
-  @Override
   public final Point screen2plotPoint( final Point screen )
   {
     if( m_plotRect == null || m_plotRect == null )
@@ -469,18 +443,12 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.view.IChartComposite#removeAllPlotHandler()
+   * @see de.openali.odysseus.chart.framework.view.IChartComposite#getPlotHandler()
    */
   @Override
-  public void removeAllPlotHandler( )
+  public IPlotHandler getPlotHandler( )
   {
-    final IChartDragHandler[] handlers = m_dragHandlers.toArray( new IChartDragHandler[] {} );
-    for( final IChartDragHandler handler : handlers )
-    {
-      removePlotHandler( handler );
-    }
-
-    m_dragHandlers.clear(); // not necessary removePlotHandler(handler) removes handler from list!
+    return m_plotHandler;
   }
 
 }

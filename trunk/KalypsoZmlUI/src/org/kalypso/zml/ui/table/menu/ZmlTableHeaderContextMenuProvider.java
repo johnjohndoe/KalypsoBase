@@ -86,7 +86,7 @@ public class ZmlTableHeaderContextMenuProvider
       @Override
       public String getText( )
       {
-        return "Details und zus√§tzliche Informationen:";
+        return "Details und zus‰tzliche Informationen:";
       }
 
       @Override
@@ -169,7 +169,7 @@ public class ZmlTableHeaderContextMenuProvider
       @Override
       public String getText( )
       {
-        return String.format( "   enth√§lt: %s", rule.getLabel() );
+        return String.format( "   enth‰lt: %s", rule.getLabel() );
       }
 
       @Override
