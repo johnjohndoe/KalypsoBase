@@ -37,6 +37,32 @@
           </PointStyle>
         </Styles>
       </Layer>
+      <Layer id="N" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider">
+        </Provider>
+        <Title>Wasserstand</Title>
+        <Description />
+        <MapperRefs>
+          <DomainAxisRef ref="date" />
+          <TargetAxisRef ref="N" />
+        </MapperRefs>
+        <Styles>
+          <AreaStyle role="area_1">
+            <Alpha>64</Alpha>
+            <Fill>
+              <ColorFill>
+                <Color>093689</Color>
+              </ColorFill>
+            </Fill>
+            <Stroke>
+              <Width>1</Width>
+              <Color>093689</Color>
+            </Stroke>
+          </AreaStyle>
+          <PointStyle role="point" isVisible="false">
+          </PointStyle>
+        </Styles>
+      </Layer>
       <Layer id="wGrid" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
           <Parameters>
@@ -86,9 +112,38 @@
           </LineStyle>
           <PointStyle role="qGridPointStyle" isVisible="false" />
         </Styles>
-        
       </Layer>
-      
+      <Layer id="nGrid" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
+          <Parameters>
+          </Parameters>
+        </Provider>
+        <Title>Gitterlinien</Title>
+        <Description />
+        <MapperRefs>
+          <DomainAxisRef ref="date" />
+          <TargetAxisRef ref="N" />
+        </MapperRefs>
+
+        <Styles>
+          <LineStyle role="line">
+            <Width>1</Width>
+            <LineColor>000000</LineColor>
+            <DashOffset>0</DashOffset>
+            <DashArray>2 2 2</DashArray>
+            <LineCap>ROUND</LineCap>
+            <LineJoin>ROUND</LineJoin>
+            <MiterLimit>1</MiterLimit>
+          </LineStyle>
+          <PointStyle role="point">
+            <Stroke>
+              <Width>2</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <FillColor isVisible="false" />
+          </PointStyle>
+        </Styles>
+      </Layer>
       <Layer id="forecastLayer" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlForecastLayerProvider">
           <Parameters>
@@ -100,6 +155,96 @@
           <DomainAxisRef ref="date" />
           <TargetAxisRef ref="screenAxisY" />
         </MapperRefs>
+      </Layer>
+      <Layer id="noData" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="de.openali.odysseus.chart.ext.base.layer.provider.DefaultTextLayerProvider">
+          <Parameters>
+            <Parameter name="text" value="Keine Daten vorhanden" />
+            <Parameter name="alignment.horizontal" value="CENTERED_HORIZONTAL" />
+            <Parameter name="alignment.vertical" value="CENTERED_VERTICAL" />
+            <Parameter name="text.anchor.x" value="CENTERED_HORIZONTAL" />
+            <Parameter name="text.anchor.y" value="CENTERED_VERTICAL" />
+          </Parameters>
+        </Provider>
+        <Title>Keine Daten vorhanden</Title>
+        <Description />
+
+        <MapperRefs>
+          <DomainAxisRef ref="screenAxisX" />
+          <TargetAxisRef ref="screenAxisY" />
+        </MapperRefs>
+
+        <Styles>
+          <TextStyle role="defaultTextStyle">
+            <FontStyle>NORMAL</FontStyle>
+            <FontWeight>BOLD</FontWeight>
+            <Size>16</Size>
+            <TextColor>000000</TextColor>
+          </TextStyle>
+        </Styles>
+      </Layer>
+
+      <Layer id="wGrenzwerte" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
+          <Parameters>
+            <Parameter name="grenzwert" value=".*Kalypso_Grenzwert_\w+$" />
+            <Parameter name="label" value="%s" />
+            <Parameter name="labelTokenizer" value="^.+_" />
+          </Parameters>
+        </Provider>
+        <Title>Grenzwerte</Title>
+        <Description />
+        <MapperRefs>
+          <DomainAxisRef ref="screenAxisX" />
+          <TargetAxisRef ref="W" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="line">
+            <Width>2</Width>
+            <LineColor>000000</LineColor>
+          </LineStyle>
+          <PointStyle role="point" isVisible="false">
+          </PointStyle>
+          <TextStyle role="text">
+            <Size>6</Size>
+            <TextColor>000000</TextColor>
+            <FontFamily>Arial</FontFamily>
+            <!-- <FillColor>000000</FillColor> -->
+            <FontWeight>NORMAL</FontWeight>
+            <FontStyle>NORMAL</FontStyle>
+          </TextStyle>
+        </Styles>
+      </Layer>
+      <Layer id="qGrenzwerte" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
+          <Parameters>
+            <Parameter name="grenzwert" value=".*Kalypso_Grenzwert_\w+$" />
+            <Parameter name="label" value="%s" />
+            <Parameter name="labelTokenizer" value="^.+_" />
+          </Parameters>
+        </Provider>
+        <Title>Grenzwerte</Title>
+        <Description />
+        <MapperRefs>
+          <DomainAxisRef ref="screenAxisX" />
+          <TargetAxisRef ref="Q" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="line">
+            <Width>2</Width>
+            <LineColor>000000</LineColor>
+          </LineStyle>
+          <PointStyle role="point" isVisible="false">
+          </PointStyle>
+          <TextStyle role="text">
+            <Size>6</Size>
+            <TextColor>000000</TextColor>
+            <FontFamily>Arial</FontFamily>
+            <!-- <FillColor>000000</FillColor> -->
+            <FontWeight>NORMAL</FontWeight>
+            <FontStyle>NORMAL</FontStyle>
+          </TextStyle>
+        </Styles>
       </Layer>
     </Layers>
     <Mappers>
@@ -116,6 +261,14 @@
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
         <PreferredAdjustment before="15" range="75" after="10" />
+        <RendererRef ref="NumberAxisRenderer" />
+      </Axis>
+      <Axis id="N" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <!-- <Label>Wasserstand [cm]</Label> -->
+        <Direction>NEGATIVE</Direction>
+        <Position>RIGHT</Position>
+        <PreferredAdjustment before="5" range="45" after="50" />
         <RendererRef ref="NumberAxisRenderer" />
       </Axis>
       <Axis id="date" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
