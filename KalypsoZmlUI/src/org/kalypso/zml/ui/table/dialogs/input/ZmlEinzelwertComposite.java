@@ -291,7 +291,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
     final ToolItem itemAdd = new ToolItem( toolBar, SWT.PUSH );
     itemAdd.setImage( IMG_ADD );
-    itemAdd.setToolTipText( "Wert hinzufÃ¼gen (benutzerdefinierte Schrittweite)" );
+    itemAdd.setToolTipText( "Wert hinzufügen (benutzerdefinierte Schrittweite)" );
 
     itemAdd.addSelectionListener( new SelectionAdapter()
     {
@@ -301,7 +301,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final InputDialog dialog = new InputDialog( toolBar.getShell(), "Schrittweite", "Bitte geben Sie den Stunden-Offset (Schrittweite) des nÃ¤chsten Wertes an", "1", new IntegerInputValidator() );
+        final InputDialog dialog = new InputDialog( toolBar.getShell(), "Schrittweite", "Bitte geben Sie den Stunden-Offset (Schrittweite) des nächsten Wertes an", "1", new IntegerInputValidator() );
         final int status = dialog.open();
         if( Window.OK == status )
         {
@@ -320,7 +320,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
     final ToolItem itemAddOne = new ToolItem( toolBar, SWT.PUSH );
     itemAddOne.setImage( IMG_ADD_ONE );
-    itemAddOne.setToolTipText( "Wert hinzufÃ¼gen (Schrittweite +1 Stunde )" );
+    itemAddOne.setToolTipText( "Wert hinzufügen (Schrittweite +1 Stunde )" );
 
     itemAddOne.addSelectionListener( new SelectionAdapter()
     {

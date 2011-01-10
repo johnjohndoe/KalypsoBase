@@ -40,39 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.view;
 
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Canvas;
-
-import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.layer.EditInfo;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-
 /**
- * @author kimwerner
+ * @author Dirk Kuch
  */
-public interface IChartComposite
+public interface IPlotHandler
 {
-  IChartModel getChartModel( );
+  /**
+   * remove all active plot handlers and activate this drag handler only!
+   */
+  void activatePlotHandler( final IChartDragHandler handler );
 
-  Canvas getPlot( );
+  void addPlotHandler( final IChartDragHandler handler );
 
-  EditInfo getTooltipInfo( );
+  void removePlotHandler( final IChartDragHandler handler );
 
-  Point screen2plotPoint( Point screen );
-
-  Point plotPoint2screen( Point plotPoint );
-
-  void setDragArea( Rectangle dragRect );
-
-  void setEditInfo( final EditInfo editInfo );
-
-  void setPanOffset( final IAxis[] axes, final Point start, final Point end );
-
-  void setTooltipInfo( EditInfo tooltipInfo );
-
-  void invalidate( );
-
-  IPlotHandler getPlotHandler( );
-
+  void removeAllPlotHandler( );
 }

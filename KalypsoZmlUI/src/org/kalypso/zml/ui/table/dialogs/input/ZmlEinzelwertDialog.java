@@ -94,7 +94,7 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
     getShell().setText( "Eingabe von Einzelwerten" );
 
     setTitle( String.format( "Bearbeiten der Zeitreihe: \"%s\"", m_model.getLabel() ) );
-    setMessage( "Mit Hilfe dieses Dialogs kÃ¶nnen Sie gezielt Ã„nderungen an einzelnen Werten vornehmen." );
+    setMessage( "Mit Hilfe dieses Dialogs können Sie gezielt Änderungen an einzelnen Werten vornehmen." );
 
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
 
@@ -138,7 +138,7 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
   {
     if( !m_composite.isValid() )
     {
-      MessageDialog.openError( getParentShell(), "UngÃ¼ltige Werte", "Eine Verarbeitung ist nicht mÃ¶glich, da Tabelle ungÃ¼ltige Werte enthÃ¤lt." );
+      MessageDialog.openError( getParentShell(), "Ungültige Werte", "Eine Verarbeitung ist nicht möglich, da Tabelle ungültige Werte enthält." );
       return;
     }
 
