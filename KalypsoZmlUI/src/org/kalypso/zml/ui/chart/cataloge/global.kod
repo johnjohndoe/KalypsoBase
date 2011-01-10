@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="pegel">
+    <Styles>
+      <LineStyle role="gridLineStyle">
+        <Width>1</Width>
+        <LineColor>000000</LineColor>
+        <DashOffset>0</DashOffset>
+        <DashArray>2 2 2</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+        <MiterLimit>1</MiterLimit>
+      </LineStyle>
+      <PointStyle role="gridPointStyle" isVisible="false" />
+      <LineStyle role="grenzwertLineStyle">
+        <Width>2</Width>
+        <LineColor>000000</LineColor>
+      </LineStyle>
+      <PointStyle role="grenzwertPointStyle" isVisible="false">
+      </PointStyle>
+      <TextStyle role="grenzwertTextStyle">
+        <Size>6</Size>
+        <TextColor>000000</TextColor>
+        <FontFamily>Arial</FontFamily>
+            <!-- <FillColor>000000</FillColor> -->
+        <FontWeight>NORMAL</FontWeight>
+        <FontStyle>NORMAL</FontStyle>
+      </TextStyle>
+      <TextStyle role="axisLabel">
+        <Size>8</Size>
+        <TextColor>000000</TextColor>
+        <FontFamily>Arial</FontFamily>
+        <FontWeight>NORMAL</FontWeight>
+        <FontStyle>NORMAL</FontStyle>
+      </TextStyle>
+      <TextStyle role="tickLabel">
+        <Size>8</Size>
+        <TextColor>000000</TextColor>
+        <FontFamily>Arial</FontFamily>
+        <FontWeight>NORMAL</FontWeight>
+        <FontStyle>NORMAL</FontStyle>
+      </TextStyle>
+    </Styles>
+
     <Layers>
       <Layer id="W" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
@@ -76,16 +117,8 @@
         </MapperRefs>
 
         <Styles>
-          <LineStyle role="wGridStyle">
-            <Width>1</Width>
-            <LineColor>000000</LineColor>
-            <DashOffset>0</DashOffset>
-            <DashArray>2 2 2</DashArray>
-            <LineCap>ROUND</LineCap>
-            <LineJoin>ROUND</LineJoin>
-            <MiterLimit>1</MiterLimit>
-          </LineStyle>
-          <PointStyle role="wGridPointStyle" isVisible="false" />
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#gridLineStyle</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#gridPointStyle</StyleReference>
         </Styles>
       </Layer>
       <Layer id="qGrid" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -101,16 +134,8 @@
         </MapperRefs>
 
         <Styles>
-          <LineStyle role="qGridStyle">
-            <Width>1</Width>
-            <LineColor>000000</LineColor>
-            <DashOffset>0</DashOffset>
-            <DashArray>2 2 2</DashArray>
-            <LineCap>ROUND</LineCap>
-            <LineJoin>ROUND</LineJoin>
-            <MiterLimit>1</MiterLimit>
-          </LineStyle>
-          <PointStyle role="qGridPointStyle" isVisible="false" />
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#gridLineStyle</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#gridPointStyle</StyleReference>
         </Styles>
       </Layer>
       <Layer id="nGrid" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -126,22 +151,8 @@
         </MapperRefs>
 
         <Styles>
-          <LineStyle role="line">
-            <Width>1</Width>
-            <LineColor>000000</LineColor>
-            <DashOffset>0</DashOffset>
-            <DashArray>2 2 2</DashArray>
-            <LineCap>ROUND</LineCap>
-            <LineJoin>ROUND</LineJoin>
-            <MiterLimit>1</MiterLimit>
-          </LineStyle>
-          <PointStyle role="point">
-            <Stroke>
-              <Width>2</Width>
-              <LineColor>000000</LineColor>
-            </Stroke>
-            <FillColor isVisible="false" />
-          </PointStyle>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#gridLineStyle</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#gridPointStyle</StyleReference>
         </Styles>
       </Layer>
       <Layer id="forecastLayer" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -183,7 +194,6 @@
           </TextStyle>
         </Styles>
       </Layer>
-
       <Layer id="wGrenzwerte" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
           <Parameters>
@@ -199,20 +209,9 @@
           <TargetAxisRef ref="W" />
         </MapperRefs>
         <Styles>
-          <LineStyle role="line">
-            <Width>2</Width>
-            <LineColor>000000</LineColor>
-          </LineStyle>
-          <PointStyle role="point" isVisible="false">
-          </PointStyle>
-          <TextStyle role="text">
-            <Size>6</Size>
-            <TextColor>000000</TextColor>
-            <FontFamily>Arial</FontFamily>
-            <!-- <FillColor>000000</FillColor> -->
-            <FontWeight>NORMAL</FontWeight>
-            <FontStyle>NORMAL</FontStyle>
-          </TextStyle>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#grenzwertLineStyle</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#grenzwertPointStyle</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#grenzwertTextStyle</StyleReference>
         </Styles>
       </Layer>
       <Layer id="qGrenzwerte" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -230,20 +229,9 @@
           <TargetAxisRef ref="Q" />
         </MapperRefs>
         <Styles>
-          <LineStyle role="line">
-            <Width>2</Width>
-            <LineColor>000000</LineColor>
-          </LineStyle>
-          <PointStyle role="point" isVisible="false">
-          </PointStyle>
-          <TextStyle role="text">
-            <Size>6</Size>
-            <TextColor>000000</TextColor>
-            <FontFamily>Arial</FontFamily>
-            <!-- <FillColor>000000</FillColor> -->
-            <FontWeight>NORMAL</FontWeight>
-            <FontStyle>NORMAL</FontStyle>
-          </TextStyle>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#grenzwertLineStyle</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#grenzwertPointStyle</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#grenzwertTextStyle</StyleReference>
         </Styles>
       </Layer>
     </Layers>
@@ -302,20 +290,8 @@
           </Parameters>
         </Provider>
         <Styles>
-          <TextStyle role="axisLabel">
-            <Size>8</Size>
-            <TextColor>000000</TextColor>
-            <FontFamily>Arial</FontFamily>
-            <FontWeight>NORMAL</FontWeight>
-            <FontStyle>NORMAL</FontStyle>
-          </TextStyle>
-          <TextStyle role="tickLabel">
-            <Size>8</Size>
-            <TextColor>000000</TextColor>
-            <FontFamily>Arial</FontFamily>
-            <FontWeight>NORMAL</FontWeight>
-            <FontStyle>NORMAL</FontStyle>
-          </TextStyle>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#axisLabel</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#tickLabel</StyleReference>
         </Styles>
       </AxisRenderer>
       <AxisRenderer id="DateAxisRenderer">
@@ -332,20 +308,8 @@
           </Parameters>
         </Provider>
         <Styles>
-          <TextStyle role="axisLabel">
-            <Size>8</Size>
-            <TextColor>000000</TextColor>
-            <FontFamily>Arial</FontFamily>
-            <FontWeight>NORMAL</FontWeight>
-            <FontStyle>NORMAL</FontStyle>
-          </TextStyle>
-          <TextStyle role="tickLabel">
-            <Size>8</Size>
-            <TextColor>000000</TextColor>
-            <FontFamily>Arial</FontFamily>
-            <FontWeight>NORMAL</FontWeight>
-            <FontStyle>NORMAL</FontStyle>
-          </TextStyle>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#axisLabel</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#tickLabel</StyleReference>
         </Styles>
       </AxisRenderer>
     </Renderers>

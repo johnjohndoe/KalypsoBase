@@ -152,7 +152,6 @@ public final class ChartTypeResolver implements IReferenceResolver
     {
       throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "Resolving style type failed", t ) );
     }
-
   }
 
   public MapperType findMapperType( final String reference, final URL context ) throws CoreException
