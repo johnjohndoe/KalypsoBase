@@ -195,4 +195,13 @@ public final class MetadataBoundary implements IMetadataBoundary
 
     return new MetadataBoundary( key, value );
   }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "%s (%s) - Value: %.2f", m_name, m_parameterType, m_value.doubleValue() );
+  }
 }
