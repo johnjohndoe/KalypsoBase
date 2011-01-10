@@ -53,5 +53,5 @@ public interface IPatternInput<T>
 
   String getToken( );
 
-  String replace( String text, final T context );
+  String getReplacement( final T context, String param );
 }

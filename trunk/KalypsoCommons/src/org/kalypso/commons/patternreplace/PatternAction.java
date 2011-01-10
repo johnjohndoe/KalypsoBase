@@ -49,15 +49,15 @@ import org.eclipse.swt.widgets.Text;
  */
 public class PatternAction extends Action
 {
-  private final IPatternInput< ? > m_pattern;
-
   private final Text m_text;
 
-  public PatternAction( final IPatternInput< ? > pattern, final Text text )
-  {
-    super( pattern.getLabel() );
+  private final String m_replacement;
 
-    m_pattern = pattern;
+  public PatternAction( final String label, final String replacement, final Text text )
+  {
+    super( label );
+
+    m_replacement = replacement;
     m_text = text;
   }
 
@@ -69,7 +69,7 @@ public class PatternAction extends Action
   {
     super.runWithEvent( event );
 
-    m_text.insert( m_pattern.getToken() );
+    m_text.insert( m_replacement );
   }
 
 }
