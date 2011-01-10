@@ -50,7 +50,7 @@ public class SimpleChartOutline extends ContentOutline
 {
 
   @Override
-  protected boolean isImportant( IWorkbenchPart part )
+  protected boolean isImportant( final IWorkbenchPart part )
   {
     return (part instanceof IChartPart);
   }

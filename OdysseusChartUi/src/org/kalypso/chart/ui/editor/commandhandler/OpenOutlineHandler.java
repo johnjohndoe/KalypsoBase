@@ -26,24 +26,24 @@ public class OpenOutlineHandler extends AbstractHandler
     if( chartPart == null )
       return null;
 
-    IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
       throw new ExecutionException( "No active part." ); //$NON-NLS-1$
 
-    IWorkbenchPartSite site = part.getSite();
+    final IWorkbenchPartSite site = part.getSite();
     if( site == null )
       throw new ExecutionException( "No active site." ); //$NON-NLS-1$
 
-    IWorkbenchPage page = site.getPage();
+    final IWorkbenchPage page = site.getPage();
     if( page == null )
       throw new ExecutionException( "No active page." ); //$NON-NLS-1$
 
-    ChartOutlinePopupDialog d = new ChartOutlinePopupDialog( (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME ), chartPart );
+    final ChartOutlinePopupDialog d = new ChartOutlinePopupDialog( (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME ), chartPart );
 
     d.open();
-    Shell shell = d.getShell();
-    Point shellSize = shell.getSize();
-    Point mousePos = Display.getCurrent().getCursorLocation();
+    final Shell shell = d.getShell();
+    final Point shellSize = shell.getSize();
+    final Point mousePos = Display.getCurrent().getCursorLocation();
     shell.setBounds( new Rectangle( mousePos.x - shellSize.x, mousePos.y, shellSize.x, shellSize.y ) );
 
     return null;

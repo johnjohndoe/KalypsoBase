@@ -10,9 +10,7 @@ import de.openali.odysseus.chart.framework.util.ChartUtilities;
 /**
  * This handler sets the axis ranges of all axes to the union range of all visible layers' ranges
  * 
- * 
  * @author burtscher1
- * 
  */
 public class MaximizeHandler extends AbstractHandler
 {

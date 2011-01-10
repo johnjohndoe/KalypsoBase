@@ -25,9 +25,9 @@ public class SafeSaveDialog
    * SafeSaveDialog constructor
    * 
    * @param shell
-   *            the parent shell
+   *          the parent shell
    */
-  public SafeSaveDialog( Shell shell )
+  public SafeSaveDialog( final Shell shell )
   {
     dlg = new FileDialog( shell, SWT.SAVE );
   }
@@ -56,15 +56,15 @@ public class SafeSaveDialog
       else
       {
         // User has selected a file; see if it already exists
-        File file = new File( fileName );
+        final File file = new File( fileName );
         if( file.exists() )
         {
           // The file already exists; asks for confirmation
-          MessageBox mb = new MessageBox( dlg.getParent(), SWT.ICON_WARNING | SWT.YES | SWT.NO );
+          final MessageBox mb = new MessageBox( dlg.getParent(), SWT.ICON_WARNING | SWT.YES | SWT.NO );
 
           // We really should read this string from a
           // resource bundle
-          mb.setMessage( Messages.getString("org.kalypso.chart.ui.editor.ui.SafeSaveDialog.0",fileName ) ); //$NON-NLS-1$
+          mb.setMessage( Messages.getString( "org.kalypso.chart.ui.editor.ui.SafeSaveDialog.0", fileName ) ); //$NON-NLS-1$
 
           // If they click Yes, we're done and we drop out. If
           // they click No, we redisplay the File Dialog
@@ -105,22 +105,22 @@ public class SafeSaveDialog
     return dlg.getFilterPath();
   }
 
-  public void setFileName( String string )
+  public void setFileName( final String string )
   {
     dlg.setFileName( string );
   }
 
-  public void setFilterExtensions( String[] extensions )
+  public void setFilterExtensions( final String[] extensions )
   {
     dlg.setFilterExtensions( extensions );
   }
 
-  public void setFilterNames( String[] names )
+  public void setFilterNames( final String[] names )
   {
     dlg.setFilterNames( names );
   }
 
-  public void setFilterPath( String string )
+  public void setFilterPath( final String string )
   {
     dlg.setFilterPath( string );
   }
@@ -140,7 +140,7 @@ public class SafeSaveDialog
     return dlg.getText();
   }
 
-  public void setText( String string )
+  public void setText( final String string )
   {
     dlg.setText( string );
   }

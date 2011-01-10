@@ -18,7 +18,7 @@ public class EditActionDelegate extends ActionDelegate implements IEditorActionD
   private IEditorPart m_targetEditor;
 
   @Override
-  public void setActiveEditor( IAction action, IEditorPart targetEditor )
+  public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     m_targetEditor = targetEditor;
     action.setEnabled( m_targetEditor instanceof ChartEditor );
@@ -29,29 +29,29 @@ public class EditActionDelegate extends ActionDelegate implements IEditorActionD
    * @see org.eclipse.ui.IActionDelegate2#runWithEvent(org.eclipse.jface.action.IAction, org.eclipse.swt.widgets.Event)
    */
   @Override
-  public void runWithEvent( IAction action, Event event )
+  public void runWithEvent( final IAction action, final Event event )
   {
     try
     {
       final IHandlerService handlerService = (IHandlerService) m_targetEditor.getEditorSite().getService( IHandlerService.class );
       handlerService.executeCommand( "org.kalypso.chart.ui.commands.edit", event ); //$NON-NLS-1$
     }
-    catch( ExecutionException e )
+    catch( final ExecutionException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    catch( NotDefinedException e )
+    catch( final NotDefinedException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    catch( NotEnabledException e )
+    catch( final NotEnabledException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    catch( NotHandledException e )
+    catch( final NotHandledException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
