@@ -1,6 +1,8 @@
 package de.openali.odysseus.chart.framework.view.impl;
 
 import java.awt.Insets;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -96,6 +98,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   protected EditInfo m_tooltipInfo = null;
 
   private final ChartTooltipPainter m_tooltipPainter = new ChartTooltipPainter();
+
+  private final Set<IChartDragHandler> m_dragHandlers = new LinkedHashSet<IChartDragHandler>();
 
   private final ILayerManagerEventListener m_layerEventListener = new ILayerManagerEventListener()
   {
@@ -266,6 +270,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     {
       addMouseListener( handler );
       addMouseMoveListener( handler );
+
+      m_dragHandlers.add( handler );
     }
   }
 
@@ -392,6 +398,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     {
       removeMouseListener( handler );
       removeMouseMoveListener( handler );
+
+      m_dragHandlers.remove( handler );
     }
   }
 
@@ -458,6 +466,21 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       return;
     m_model.getLayerManager().removeListener( m_layerEventListener );
     m_model.getMapperRegistry().removeListener( m_mapperListener );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.view.IChartComposite#removeAllPlotHandler()
+   */
+  @Override
+  public void removeAllPlotHandler( )
+  {
+    final IChartDragHandler[] handlers = m_dragHandlers.toArray( new IChartDragHandler[] {} );
+    for( final IChartDragHandler handler : handlers )
+    {
+      removePlotHandler( handler );
+    }
+
+    m_dragHandlers.clear(); // not necessary removePlotHandler(handler) removes handler from list!
   }
 
 }
