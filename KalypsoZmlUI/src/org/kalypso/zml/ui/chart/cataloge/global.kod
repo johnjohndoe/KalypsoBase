@@ -238,7 +238,7 @@
     <Mappers>
       <Axis id="W" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <!-- <Label>Wasserstand [cm]</Label> -->
+        <Label>Wasserstand [cm]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
         <PreferredAdjustment before="15" range="75" after="10" />
@@ -246,6 +246,7 @@
       </Axis>
       <Axis id="Q" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+         <Label>Abfluss [m³]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
         <PreferredAdjustment before="15" range="75" after="10" />
@@ -253,7 +254,7 @@
       </Axis>
       <Axis id="N" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <!-- <Label>Wasserstand [cm]</Label> -->
+        <Label>Niederschlag [mm]</Label>
         <Direction>NEGATIVE</Direction>
         <Position>RIGHT</Position>
         <PreferredAdjustment before="5" range="45" after="50" />
@@ -261,7 +262,7 @@
       </Axis>
       <Axis id="date" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <!-- <Label>Datum</Label> -->
+        <Label>Datum</Label>
         <Direction>POSITIVE</Direction>
         <Position>BOTTOM</Position>
         <PreferredAdjustment before="0" range="1" after="0" />

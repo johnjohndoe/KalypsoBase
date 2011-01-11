@@ -186,6 +186,9 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   @Override
   public IObservation getObservation( )
   {
+    if( m_provider == null )
+      return null;
+
     return m_provider.getObservation();
   }
 }
