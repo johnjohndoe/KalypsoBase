@@ -258,7 +258,9 @@
             </complexType>
           </element>
         </sequence>
+        <attribute name="legend" type="boolean" use="optional" default="true" />
       </extension>
+
     </complexContent>
   </complexType>
 
