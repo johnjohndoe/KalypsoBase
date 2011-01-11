@@ -38,15 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.provider;
+
+package org.kalypso.zml.ui.chart.layer.boundaries;
 
 import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
-import org.kalypso.zml.ui.chart.layer.themes.ZmlBarLayer;
+import org.kalypso.zml.ui.chart.layer.provider.LineLayerRequestHandler;
+import org.kalypso.zml.ui.chart.layer.themes.ZmlConstantLineLayer;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlLayerFactory;
-import org.kalypso.zml.ui.core.provider.observation.IRequestHandler;
 import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvider;
 
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
@@ -54,16 +55,13 @@ import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlBarLayerProvider extends AbstractLayerProvider implements ILayerProvider
+public class ZmlConstantLineLayerProvider extends AbstractLayerProvider implements ILayerProvider
 {
-  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider";
+  public static final String ID = "org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider";
 
   /**
    * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
@@ -73,22 +71,17 @@ public class ZmlBarLayerProvider extends AbstractLayerProvider implements ILayer
   {
     try
     {
-      final IStyleSet styleSet = getStyleSet();
-      final StyleSetVisitor visitor = new StyleSetVisitor();
-
-      final IAreaStyle style = visitor.visit( styleSet, IAreaStyle.class, 0 );
-      final String targetAxisId = getTargetAxisId();
+      final IParameterContainer parameters = getParameterContainer();
 
       final ZmlLayerFactory factory = ZmlLayerFactory.getInstance();
 
-      final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( targetAxisId );
-      final ZmlBarLayer layer = factory.createBarLayer( this, handler, style );
+      final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( getTargetAxisId() );
+      final ZmlConstantLineLayer layer = factory.createConstantLineLayer( handler, parameters, getStyleSet(), false );
 
-      final IParameterContainer parameters = getParameterContainer();
       final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
-      if( !StringUtils.isEmpty( href ) )
+      if( StringUtils.isNotEmpty( href ) )
       {
-        final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, getRequestHandler() );
+        final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, new LineLayerRequestHandler( parameters ) );
         handler.setObsProvider( provider );
       }
 
@@ -99,10 +92,4 @@ public class ZmlBarLayerProvider extends AbstractLayerProvider implements ILayer
       throw new ConfigurationException( "Configuring of .kod line layer theme failed.", t );
     }
   }
-
-  protected IRequestHandler getRequestHandler( )
-  {
-    return new LineLayerRequestHandler( getParameterContainer() );
-  }
-
 }

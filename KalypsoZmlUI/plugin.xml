@@ -23,8 +23,11 @@
           class="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider"
           id="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider">
     </provider>
+    <provider
+          class="org.kalypso.zml.ui.chart.layer.boundaries.ZmlConstantLineLayerProvider"
+          id="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
+    </provider>
  </extension>
-	
  
  
  <extension point="org.kalypso.core.catalogContribution">

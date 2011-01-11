@@ -79,11 +79,10 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private final IZmlLayerDataHandler m_handler;
 
-  public ZmlLineLayer( final ILayerProvider provider, final IZmlLayerDataHandler handler, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  protected ZmlLineLayer( final ILayerProvider provider, final IZmlLayerDataHandler handler, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
     super( provider, lineStyle, pointStyle );
     m_handler = handler;
-    m_handler.setLayer( this );
   }
 
   /**
