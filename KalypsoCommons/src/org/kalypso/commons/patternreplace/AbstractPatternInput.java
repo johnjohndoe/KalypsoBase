@@ -52,6 +52,15 @@ public abstract class AbstractPatternInput<T> implements IPatternInput<T>
     m_label = label;
   }
 
+  /**
+   * Default implementation returns <code>true</code>. Intended to be overwritten.
+   */
+  @Override
+  public boolean getShowInMenu( )
+  {
+    return true;
+  }
+
   @Override
   public final String getLabel( )
   {
