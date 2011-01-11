@@ -53,5 +53,10 @@ public interface IPatternInput<T>
 
   String getToken( );
 
+  /**
+   * Determines, if this item should be shown on the pattern menu.
+   */
+  boolean getShowInMenu( );
+
   String getReplacement( final T context, String param );
 }

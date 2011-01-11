@@ -102,7 +102,10 @@ public class PatternInputReplacer<T>
 
     // FIXME: how to show params?
     for( final IPatternInput< ? extends T> token : m_replacers.values() )
-      formatter.format( "%s%s%s: %s%n", m_patternStart, token.getToken(), m_patternStop, token.getLabel() ); //$NON-NLS-1$
+    {
+      if( token.getShowInMenu() )
+        formatter.format( "%s%s%s: %s%n", m_patternStart, token.getToken(), m_patternStop, token.getLabel() ); //$NON-NLS-1$
+    }
 
     return formatter.toString();
   }
@@ -146,10 +149,13 @@ public class PatternInputReplacer<T>
 
     for( final IPatternInput<T> pattern : m_replacers.values() )
     {
-      final String label = pattern.getLabel();
-      final String token = pattern.getToken();
-      final String replacement = String.format( "%s%s%s", m_patternStart, token, m_patternStop ); //$NON-NLS-1$
-      items.add( new ActionContributionItem( new PatternAction( label, replacement, text ) ) );
+      if( pattern.getShowInMenu() )
+      {
+        final String label = pattern.getLabel();
+        final String token = pattern.getToken();
+        final String replacement = String.format( "%s%s%s", m_patternStart, token, m_patternStop ); //$NON-NLS-1$
+        items.add( new ActionContributionItem( new PatternAction( label, replacement, text ) ) );
+      }
     }
 
     return items.toArray( new IContributionItem[items.size()] );
