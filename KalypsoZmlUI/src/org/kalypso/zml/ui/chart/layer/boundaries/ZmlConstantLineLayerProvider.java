@@ -75,8 +75,8 @@ public class ZmlConstantLineLayerProvider extends AbstractLayerProvider implemen
 
       final ZmlLayerFactory factory = ZmlLayerFactory.getInstance();
 
-      final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( getTargetAxisId() );
-      final ZmlConstantLineLayer layer = factory.createConstantLineLayer( handler, parameters, getStyleSet(), false );
+      final ZmlConstantLineLayer layer = factory.createConstantLineLayer( parameters, getStyleSet(), false );
+      final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, getTargetAxisId() );
 
       final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
       if( StringUtils.isNotEmpty( href ) )

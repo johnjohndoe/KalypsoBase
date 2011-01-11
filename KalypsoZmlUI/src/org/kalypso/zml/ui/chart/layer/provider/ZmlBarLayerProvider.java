@@ -81,8 +81,8 @@ public class ZmlBarLayerProvider extends AbstractLayerProvider implements ILayer
 
       final ZmlLayerFactory factory = ZmlLayerFactory.getInstance();
 
-      final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( targetAxisId );
-      final ZmlBarLayer layer = factory.createBarLayer( this, handler, style );
+      final ZmlBarLayer layer = factory.createBarLayer( this, style );
+      final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, targetAxisId );
 
       final IParameterContainer parameters = getParameterContainer();
       final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$

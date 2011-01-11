@@ -73,7 +73,7 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
     }
   };
 
-  private IZmlLayer m_layer;
+  private final IZmlLayer m_layer;
 
   private IObsProvider m_provider;
 
@@ -83,15 +83,12 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
 
   private IAxis m_valueAxis;
 
-  public ZmlObsProviderDataHandler( final String targetAxisId )
-  {
-    m_targetAxisId = targetAxisId;
-  }
-
-  @Override
-  public void setLayer( final IZmlLayer layer )
+  public ZmlObsProviderDataHandler( final IZmlLayer layer, final String targetAxisId )
   {
     m_layer = layer;
+    m_targetAxisId = targetAxisId;
+
+    m_layer.setDataHandler( this );
   }
 
   public void setObsProvider( final IObsProvider provider )

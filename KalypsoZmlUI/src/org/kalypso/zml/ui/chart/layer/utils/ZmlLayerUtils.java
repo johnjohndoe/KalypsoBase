@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,25 +38,45 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.data;
+package org.kalypso.zml.ui.chart.layer.utils;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.ui.chart.layer.themes.ZmlLineLayer;
+
+import de.openali.odysseus.chart.framework.model.impl.ChartModel;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlLayerDataHandler
+public final class ZmlLayerUtils
 {
-  void dispose( );
+  private ZmlLayerUtils( )
+  {
+  }
 
-  ITupleModel getModel( ) throws SensorException;
+  /**
+   * convention: target axis id == parameterType
+   */
+  public static ZmlLineLayer findLineLayer( final ChartModel model, final String parameterType )
+  {
+    final ILayerManager layerManager = model.getLayerManager();
+    final IChartLayer[] layers = layerManager.getLayers();
+    for( final IChartLayer layer : layers )
+    {
+      if( !(layer instanceof ZmlLineLayer) )
+        continue;
 
-  IAxis getValueAxis( );
+      final ICoordinateMapper mapper = layer.getCoordinateMapper();
+      final IAxis targetAxis = mapper.getTargetAxis();
 
-  String getTargetAxisId( );
+      if( targetAxis.getId().equals( parameterType ) )
+        return (ZmlLineLayer) layer;
+    }
 
-  IObservation getObservation( );
+    return null;
+  }
+
 }

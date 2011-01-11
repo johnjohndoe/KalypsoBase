@@ -77,12 +77,11 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private final IDataOperator<Number> m_numberDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
 
-  private final IZmlLayerDataHandler m_handler;
+  private IZmlLayerDataHandler m_handler;
 
-  protected ZmlLineLayer( final ILayerProvider provider, final IZmlLayerDataHandler handler, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  protected ZmlLineLayer( final ILayerProvider provider, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
     super( provider, lineStyle, pointStyle );
-    m_handler = handler;
   }
 
   /**
@@ -282,4 +281,15 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     return m_handler;
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setDataHandler(org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler)
+   */
+  @Override
+  public void setDataHandler( final IZmlLayerDataHandler handler )
+  {
+    if( m_handler != null )
+      m_handler.dispose();
+
+    m_handler = handler;
+  }
 }
