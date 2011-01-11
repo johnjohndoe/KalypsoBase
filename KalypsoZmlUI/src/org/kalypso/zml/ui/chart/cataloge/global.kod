@@ -81,7 +81,7 @@
       <Layer id="N" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider">
         </Provider>
-        <Title>Wasserstand</Title>
+        <Title>Niederschlag</Title>
         <Description />
         <MapperRefs>
           <DomainAxisRef ref="date" />

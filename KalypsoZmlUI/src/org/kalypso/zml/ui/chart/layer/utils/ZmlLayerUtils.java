@@ -60,7 +60,7 @@ public final class ZmlLayerUtils
   /**
    * convention: target axis id == parameterType
    */
-  public static ZmlLineLayer findLineLayer( final ChartModel model, final String parameterType )
+  public static ZmlLineLayer findLineLayerByTargetAxis( final ChartModel model, final String parameterType )
   {
     final ILayerManager layerManager = model.getLayerManager();
     final IChartLayer[] layers = layerManager.getLayers();
@@ -73,6 +73,22 @@ public final class ZmlLayerUtils
       final IAxis targetAxis = mapper.getTargetAxis();
 
       if( targetAxis.getId().equals( parameterType ) )
+        return (ZmlLineLayer) layer;
+    }
+
+    return null;
+  }
+
+  public static ZmlLineLayer findLineLayerById( final ChartModel model, final String identifier )
+  {
+    final ILayerManager layerManager = model.getLayerManager();
+    final IChartLayer[] layers = layerManager.getLayers();
+    for( final IChartLayer layer : layers )
+    {
+      if( !(layer instanceof ZmlLineLayer) )
+        continue;
+
+      if( layer.getId().equals( identifier ) )
         return (ZmlLineLayer) layer;
     }
 
