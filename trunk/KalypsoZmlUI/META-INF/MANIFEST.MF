@@ -12,6 +12,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: kalypsobase.sourceforge.net
 Export-Package: org.kalypso.zml.ui,
+ org.kalypso.zml.ui.chart.layer.boundaries,
  org.kalypso.zml.ui.chart.layer.provider,
  org.kalypso.zml.ui.chart.layer.themes,
  org.kalypso.zml.ui.chart.layer.visitor,

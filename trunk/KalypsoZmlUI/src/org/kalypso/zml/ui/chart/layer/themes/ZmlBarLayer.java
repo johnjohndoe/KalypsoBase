@@ -79,12 +79,11 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
   private final IZmlLayerDataHandler m_handler;
 
-  public ZmlBarLayer( final ILayerProvider layerProvider, final IZmlLayerDataHandler handler, final IAreaStyle style )
+  protected ZmlBarLayer( final ILayerProvider layerProvider, final IZmlLayerDataHandler handler, final IAreaStyle style )
   {
     super( layerProvider, style );
 
     m_handler = handler;
-    m_handler.setLayer( this );
   }
 
   /**
