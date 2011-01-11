@@ -44,15 +44,12 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlLayerDataHandler
 {
-  void setLayer( IZmlLayer layer );
-
   void dispose( );
 
   ITupleModel getModel( ) throws SensorException;

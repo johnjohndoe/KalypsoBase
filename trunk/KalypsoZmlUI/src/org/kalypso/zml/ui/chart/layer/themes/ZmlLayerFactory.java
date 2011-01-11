@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
-import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
-import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider;
 import org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider;
 
@@ -70,36 +68,33 @@ public final class ZmlLayerFactory
     return INSTANCE;
   }
 
-  public ZmlLineLayer createLineLayer( final ZmlLineLayerProvider provider, final IZmlLayerDataHandler handler, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public ZmlLineLayer createLineLayer( final ZmlLineLayerProvider provider, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    final ZmlLineLayer layer = new ZmlLineLayer( provider, handler, lineStyle, pointStyle );
-    handler.setLayer( layer );
+    final ZmlLineLayer layer = new ZmlLineLayer( provider, lineStyle, pointStyle );
 
     return layer;
   }
 
-  public ZmlLineLayer createLineLayer( final IZmlLayerDataHandler handler, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public ZmlLineLayer createLineLayer( final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
-    return createLineLayer( null, handler, lineStyle, pointStyle );
+    return createLineLayer( null, lineStyle, pointStyle );
   }
 
-  public ZmlBarLayer createBarLayer( final ZmlBarLayerProvider provider, final IZmlLayerDataHandler handler, final IAreaStyle style )
+  public ZmlBarLayer createBarLayer( final ZmlBarLayerProvider provider, final IAreaStyle style )
   {
-    final ZmlBarLayer layer = new ZmlBarLayer( provider, handler, style );
-    handler.setLayer( layer );
+    final ZmlBarLayer layer = new ZmlBarLayer( provider, style );
 
     return layer;
   }
 
-  public ZmlBarLayer createBarLayer( final ZmlObsProviderDataHandler handler, final IAreaStyle style )
+  public ZmlBarLayer createBarLayer( final IAreaStyle style )
   {
-    return createBarLayer( null, handler, style );
+    return createBarLayer( null, style );
   }
 
-  public ZmlConstantLineLayer createConstantLineLayer( final IZmlLayerDataHandler handler, final IParameterContainer parameters, final IStyleSet styleSet, final boolean calculatedRange )
+  public ZmlConstantLineLayer createConstantLineLayer( final IParameterContainer parameters, final IStyleSet styleSet, final boolean calculatedRange )
   {
-    final ZmlConstantLineLayer layer = new ZmlConstantLineLayer( handler, parameters, styleSet, calculatedRange );
-    handler.setLayer( layer );
+    final ZmlConstantLineLayer layer = new ZmlConstantLineLayer( parameters, styleSet, calculatedRange );
 
     return layer;
   }

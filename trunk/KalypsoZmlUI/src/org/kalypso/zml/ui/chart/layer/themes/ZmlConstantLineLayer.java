@@ -77,16 +77,13 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private final IStyleSet m_styleSet;
 
-  private final IZmlLayerDataHandler m_handler;
+  private IZmlLayerDataHandler m_handler;
 
   private IObservation m_lastObservation;
 
-  protected ZmlConstantLineLayer( final IZmlLayerDataHandler handler, final IParameterContainer parameters, final IStyleSet styleSet, final boolean calculateRange )
+  protected ZmlConstantLineLayer( final IParameterContainer parameters, final IStyleSet styleSet, final boolean calculateRange )
   {
     super( null, null );
-
-    m_handler = handler;
-    m_handler.setLayer( this );
 
     m_parameters = parameters;
     m_styleSet = styleSet;
@@ -239,5 +236,17 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
   public IZmlLayerDataHandler getDataHandler( )
   {
     return m_handler;
+  }
+
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setDataHandler(org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler)
+   */
+  @Override
+  public void setDataHandler( final IZmlLayerDataHandler handler )
+  {
+    if( m_handler != null )
+      m_handler.dispose();
+
+    m_handler = handler;
   }
 }

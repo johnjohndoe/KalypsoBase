@@ -84,8 +84,8 @@ public class ZmlLineLayerProvider extends AbstractLayerProvider implements ILaye
 
       final ZmlLayerFactory factory = ZmlLayerFactory.getInstance();
 
-      final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( targetAxisId );
-      final ZmlLineLayer layer = factory.createLineLayer( this, handler, lineStyle, pointStyle );
+      final ZmlLineLayer layer = factory.createLineLayer( this, lineStyle, pointStyle );
+      final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, targetAxisId );
 
       final IParameterContainer parameters = getParameterContainer();
       final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$

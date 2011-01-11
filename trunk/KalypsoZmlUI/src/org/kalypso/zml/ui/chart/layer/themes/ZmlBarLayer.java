@@ -77,13 +77,11 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
   private final IDataOperator<Number> m_targetDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
 
-  private final IZmlLayerDataHandler m_handler;
+  private IZmlLayerDataHandler m_handler;
 
-  protected ZmlBarLayer( final ILayerProvider layerProvider, final IZmlLayerDataHandler handler, final IAreaStyle style )
+  protected ZmlBarLayer( final ILayerProvider layerProvider, final IAreaStyle style )
   {
     super( layerProvider, style );
-
-    m_handler = handler;
   }
 
   /**
@@ -254,5 +252,17 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   public IZmlLayerDataHandler getDataHandler( )
   {
     return m_handler;
+  }
+
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setDataHandler(org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler)
+   */
+  @Override
+  public void setDataHandler( final IZmlLayerDataHandler handler )
+  {
+    if( m_handler != null )
+      m_handler = handler;
+
+    m_handler = handler;
   }
 }
