@@ -4,11 +4,14 @@ Bundle-Name: KalypsoZmlCore
 Bundle-SymbolicName: org.kalypso.zml.core;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.kalypso.zml.core.KalypsoZmlCore
-Require-Bundle: org.kalypso.core,
- de.openali.odysseus.chart.framework
+Require-Bundle: org.kalypso.core;visibility:=reexport,
+ de.openali.odysseus.chart.framework;visibility:=reexport,
+ de.openali.odysseus.chart.factory;bundle-version="10.10.1";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.zml.core.diagram.base,
+ org.kalypso.zml.core.diagram.data,
+ org.kalypso.zml.core.diagram.layer,
  org.kalypso.zml.core.table,
  org.kalypso.zml.core.table.binding,
  org.kalypso.zml.core.table.binding.rule,

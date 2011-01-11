@@ -44,6 +44,7 @@ import java.net.URL;
 import java.util.Date;
 
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.zml.core.diagram.base.LayerProviderUtils;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlDateRangeLayer;
 import org.kalypso.zml.ui.core.provider.observation.DefaultRequestHandler;
 import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvider;

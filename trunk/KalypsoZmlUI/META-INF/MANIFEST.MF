@@ -5,11 +5,8 @@ Bundle-SymbolicName: org.kalypso.zml.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.kalypso.zml.ui.KalypsoZmlUI
 Require-Bundle: org.kalypso.zml.core;bundle-version="1.0.0";visibility:=reexport,
- org.eclipse.jface;bundle-version="3.6.1",
  org.eclipse.core.expressions;bundle-version="3.4.200";visibility:=reexport,
- org.kalypso.core;bundle-version="10.10.0",
  de.openali.odysseus.chart.ext.base;bundle-version="10.10.0",
- de.openali.odysseus.chart.framework;bundle-version="10.10.0",
  org.kalypso.ui;bundle-version="10.10.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
