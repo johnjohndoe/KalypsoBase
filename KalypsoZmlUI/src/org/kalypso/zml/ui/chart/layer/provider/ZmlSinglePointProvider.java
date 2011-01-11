@@ -48,6 +48,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.zml.core.diagram.base.LayerProviderUtils;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlSinglePointBean;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlSinglePointLayer;
 import org.kalypso.zml.ui.core.provider.observation.DefaultRequestHandler;

@@ -47,17 +47,13 @@ import java.util.List;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.ogc.sensor.provider.IObsProviderListener;
-import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.chart.layer.provider.LayerProviderUtils;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
@@ -77,63 +73,17 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
  */
 public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 {
-  private ITupleModel m_model;
-
   private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
 
   private final IDataOperator<Number> m_numberDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
 
-  private IAxis m_valueAxis;
+  private final IZmlLayerDataHandler m_handler;
 
-  private IObsProvider m_provider;
-
-  private final IObsProviderListener m_observationProviderListener = new IObsProviderListener()
-  {
-    @Override
-    public void observationReplaced( )
-    {
-      onObservationLoaded();
-    }
-
-    /**
-     * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChangedX(java.lang.Object)
-     */
-    @Override
-    public void observationChanged( final Object source )
-    {
-      onObservationChanged();
-    }
-  };
-
-  private final String m_targetAxisId;
-
-  public ZmlLineLayer( final ILayerProvider provider, final ILineStyle lineStyle, final IPointStyle pointStyle, final String targetAxisId )
+  public ZmlLineLayer( final ILayerProvider provider, final IZmlLayerDataHandler handler, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
     super( provider, lineStyle, pointStyle );
-    m_targetAxisId = targetAxisId;
-  }
-
-  @Override
-  public void setObsProvider( final IObsProvider provider )
-  {
-    if( m_provider != null )
-    {
-      m_provider.removeListener( m_observationProviderListener );
-      m_provider.dispose(); // TODO check - really dispose old provider?
-    }
-
-    m_provider = provider;
-    m_model = null;
-
-    if( provider != null )
-    {
-      provider.addListener( m_observationProviderListener );
-
-      if( !provider.isLoaded() )
-        setVisible( false );
-    }
-
-    getEventHandler().fireLayerContentChanged( this );
+    m_handler = handler;
+    m_handler.setLayer( this );
   }
 
   /**
@@ -142,11 +92,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public void dispose( )
   {
-    if( m_provider != null )
-    {
-      m_provider.removeListener( m_observationProviderListener );
-      m_provider.dispose();
-    }
+    m_handler.dispose();
 
     super.dispose();
   }
@@ -198,49 +144,15 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     return new ILegendEntry[] { le };
   }
 
-  private ITupleModel getModel( ) throws SensorException
-  {
-    if( m_model == null )
-    {
-      final IRequest request = m_provider.getArguments();
-      final IObservation observation = m_provider.getObservation();
-      if( observation != null )
-        m_model = observation.getValues( request );
-    }
-
-    return m_model;
-  }
-
-  protected void onObservationLoaded( )
-  {
-    m_model = null;
-    final IObservation observation = m_provider.getObservation();
-    setVisible( observation != null );
-
-    getEventHandler().fireLayerVisibilityChanged( this );
-    getEventHandler().fireLayerContentChanged( this );
-  }
-
-  private IAxis getValueAxis( )
-  {
-    if( m_valueAxis == null )
-      m_valueAxis = LayerProviderUtils.getValueAxis( m_provider, m_targetAxisId );
-
-    return m_valueAxis;
-  }
-
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
   public IDataRange<Number> getDomainRange( )
   {
-    if( m_provider == null )
-      return null;
-
     try
     {
-      final ITupleModel model = getModel();
+      final ITupleModel model = m_handler.getModel();
       if( model == null )
         return null;
 
@@ -268,18 +180,15 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
-    if( m_provider == null )
-      return null;
-
     try
     {
-      final ITupleModel model = getModel();
+      final ITupleModel model = m_handler.getModel();
       if( model == null )
         return null;
 
       if( domainIntervall == null )
       {
-        final IAxisRange range = model.getRange( getValueAxis() );
+        final IAxisRange range = model.getRange( m_handler.getValueAxis() );
         if( range == null )
           return null;
 
@@ -302,11 +211,11 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
             continue;
           if( minValue == null && ((Date) domainValue).getTime() > domainIntervall.getMin().longValue() )
           {
-            minValue = (Number) model.get( i - 1, getValueAxis() );
+            minValue = (Number) model.get( i - 1, m_handler.getValueAxis() );
           }
           if( maxValue == null && ((Date) domainValue).getTime() > domainIntervall.getMax().longValue() )
           {
-            maxValue = (Number) model.get( i, getValueAxis() );
+            maxValue = (Number) model.get( i, m_handler.getValueAxis() );
           }
         }
 
@@ -327,12 +236,9 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public void paint( final GC gc )
   {
-    if( m_provider == null )
-      return;
-
     try
     {
-      final ITupleModel model = getModel();
+      final ITupleModel model = m_handler.getModel();
       if( model == null )
         return;
 
@@ -344,7 +250,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
         try
         {
           final Object domainValue = model.get( i, dateAxis );
-          final Object targetValue = model.get( i, getValueAxis() );
+          final Object targetValue = model.get( i, m_handler.getValueAxis() );
           if( domainValue == null || targetValue == null )
             continue;
 
@@ -368,10 +274,13 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     }
   }
 
-  protected void onObservationChanged( )
+  /**
+   * @see org.kalypso.zml.ui.chart.layer.themes.IZmlLayer#getDataHandler()
+   */
+  @Override
+  public IZmlLayerDataHandler getDataHandler( )
   {
-    m_model = null;
-    getEventHandler().fireLayerContentChanged( this );
+    return m_handler;
   }
 
 }

@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.chart.layer.provider;
 import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
+import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlBarLayer;
 import org.kalypso.zml.ui.core.provider.observation.IRequestHandler;
 import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvider;
@@ -77,14 +78,15 @@ public class ZmlBarLayerProvider extends AbstractLayerProvider implements ILayer
       final IAreaStyle style = visitor.visit( styleSet, IAreaStyle.class, 0 );
       final String targetAxisId = getTargetAxisId();
 
-      final ZmlBarLayer layer = new ZmlBarLayer( this, style, targetAxisId );
+      final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( targetAxisId );
+      final ZmlBarLayer layer = new ZmlBarLayer( this, handler, style );
 
       final IParameterContainer parameters = getParameterContainer();
       final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
       if( !StringUtils.isEmpty( href ) )
       {
         final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, getRequestHandler() );
-        layer.setObsProvider( provider );
+        handler.setObsProvider( provider );
       }
 
       return layer;

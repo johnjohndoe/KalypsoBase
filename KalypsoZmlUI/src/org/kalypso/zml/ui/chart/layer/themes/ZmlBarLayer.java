@@ -47,16 +47,13 @@ import java.util.List;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.chart.layer.provider.LayerProviderUtils;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
 import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
@@ -76,71 +73,18 @@ import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
  */
 public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 {
-  private final IObsProviderListener m_observationProviderListener = new IObsProviderListener()
-  {
-    @Override
-    public void observationReplaced( )
-    {
-      onObservationLoaded();
-    }
-
-    /**
-     * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChangedX(java.lang.Object)
-     */
-    @Override
-    public void observationChanged( final Object source )
-    {
-      onObservationChanged();
-    }
-  };
-
-  private ITupleModel m_model;
-
   private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
 
   private final IDataOperator<Number> m_targetDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
 
-  private IObsProvider m_obsProvider;
+  private final IZmlLayerDataHandler m_handler;
 
-  private final String m_targetAxisId;
-
-  private IAxis m_valueAxis;
-
-  public ZmlBarLayer( final ILayerProvider layerProvider, final IAreaStyle style, final String targetAxisId )
+  public ZmlBarLayer( final ILayerProvider layerProvider, final IZmlLayerDataHandler handler, final IAreaStyle style )
   {
     super( layerProvider, style );
 
-    m_targetAxisId = targetAxisId;
-  }
-
-  private IAxis getValueAxis( )
-  {
-    if( m_valueAxis == null )
-      m_valueAxis = LayerProviderUtils.getValueAxis( m_obsProvider, m_targetAxisId );
-
-    return m_valueAxis;
-  }
-
-  @Override
-  public void setObsProvider( final IObsProvider provider )
-  {
-    if( m_obsProvider != null )
-    {
-      m_obsProvider.removeListener( m_observationProviderListener );
-      m_obsProvider.dispose(); // TODO check - really dispose old provider?
-    }
-
-    m_obsProvider = provider;
-    m_model = null;
-
-    if( provider != null )
-    {
-      provider.addListener( m_observationProviderListener );
-      if( !provider.isLoaded() )
-        setVisible( false );
-    }
-
-    getEventHandler().fireLayerContentChanged( this );
+    m_handler = handler;
+    m_handler.setLayer( this );
   }
 
   /**
@@ -149,11 +93,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   @Override
   public void dispose( )
   {
-    if( m_obsProvider != null )
-    {
-      m_obsProvider.removeListener( m_observationProviderListener );
-      m_obsProvider.dispose();
-    }
+    m_handler.dispose();
 
     super.dispose();
   }
@@ -197,50 +137,19 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     return entries.toArray( new ILegendEntry[] {} );
   }
 
-  protected void onObservationLoaded( )
-  {
-    m_model = null;
-
-    final IObservation observation = m_obsProvider.getObservation();
-    setVisible( observation != null );
-  }
-
-  protected void onObservationChanged( )
-  {
-    m_model = null;
-    getEventHandler().fireLayerContentChanged( this );
-  }
-
-  private ITupleModel getModel( ) throws SensorException
-  {
-    if( m_model == null )
-    {
-      final IObservation observation = m_obsProvider.getObservation();
-      if( observation == null )
-        return null;
-
-      m_model = observation.getValues( m_obsProvider.getArguments() );
-    }
-
-    return m_model;
-  }
-
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
   public IDataRange<Number> getDomainRange( )
   {
-    if( m_obsProvider == null )
-      return null;
-
     try
     {
-      final ITupleModel model = getModel();
+      final ITupleModel model = m_handler.getModel();
       if( model == null )
         return null;
 
-      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( getModel().getAxisList() );
+      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxisList() );
       final IAxisRange range = model.getRange( dateAxis );
       final Date min = (Date) range.getLower();
       final Date max = (Date) range.getUpper();
@@ -262,21 +171,18 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
-    if( m_obsProvider == null )
-      return null;
-
     try
     {
-      final ITupleModel model = getModel();
+      final ITupleModel model = m_handler.getModel();
       if( model == null )
         return null;
 
       /** hack for polder control which consists of boolean values */
-      final Class< ? > dataClass = getValueAxis().getDataClass();
+      final Class< ? > dataClass = m_handler.getValueAxis().getDataClass();
       if( Boolean.class.equals( dataClass ) )
         return new DataRange<Number>( 0, 1 );
 
-      final IAxisRange range = model.getRange( getValueAxis() );
+      final IAxisRange range = model.getRange( m_handler.getValueAxis() );
 
       final Number max = m_targetDataOperator.logicalToNumeric( (Number) range.getUpper() );
 
@@ -297,12 +203,9 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   @Override
   public void paint( final GC gc )
   {
-    if( m_obsProvider == null )
-      return;
-
     try
     {
-      final ITupleModel model = getModel();
+      final ITupleModel model = m_handler.getModel();
       if( model == null )
         return;
 
@@ -316,7 +219,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
         try
         {
           final Object domainValue = model.get( i, dateAxis );
-          final Object targetValue = model.get( i, getValueAxis() );
+          final Object targetValue = model.get( i, m_handler.getValueAxis() );
           if( domainValue == null || targetValue == null )
             continue;
 
@@ -343,5 +246,14 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.chart.layer.themes.IZmlLayer#getDataHandler()
+   */
+  @Override
+  public IZmlLayerDataHandler getDataHandler( )
+  {
+    return m_handler;
   }
 }

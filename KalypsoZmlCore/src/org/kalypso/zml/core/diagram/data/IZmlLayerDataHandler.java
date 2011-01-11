@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestra�e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,14 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.themes;
+package org.kalypso.zml.core.diagram.data;
 
-import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlLayer
+public interface IZmlLayerDataHandler
 {
-  void setObsProvider( final IObsProvider provider );
+  void setLayer( IZmlLayer layer );
+
+  void dispose( );
+
+  ITupleModel getModel( ) throws SensorException;
+
+  IAxis getValueAxis( );
+
+  String getTargetAxisId( );
+
+  IObservation getObservation( );
 }

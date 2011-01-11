@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.chart.layer.provider;
 import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
+import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlLineLayer;
 import org.kalypso.zml.ui.core.provider.observation.IRequestHandler;
 import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvider;
@@ -81,14 +82,15 @@ public class ZmlLineLayerProvider extends AbstractLayerProvider implements ILaye
 
       final String targetAxisId = getTargetAxisId();
 
-      final ZmlLineLayer layer = new ZmlLineLayer( this, lineStyle, pointStyle, targetAxisId );
+      final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( targetAxisId );
+      final ZmlLineLayer layer = new ZmlLineLayer( this, handler, lineStyle, pointStyle );
 
       final IParameterContainer parameters = getParameterContainer();
       final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
       if( !StringUtils.isEmpty( href ) )
       {
         final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, getRequestHandler() );
-        layer.setObsProvider( provider );
+        handler.setObsProvider( provider );
       }
 
       return layer;
