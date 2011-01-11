@@ -304,7 +304,7 @@
             <Parameter name="min_tick_interval" value="86400000" />
             <Parameter name="hide_cut" value="true" />
             <Parameter name="gap" value="0" />
-            <Parameter name="date-format" value="dd.MM." />
+            <Parameter name="date-format" value= "dd.MM.&#10;HH:mm"  />
             <Parameter name="label_position" value="INTERVALL_CENTERED" />
           </Parameters>
         </Provider>
