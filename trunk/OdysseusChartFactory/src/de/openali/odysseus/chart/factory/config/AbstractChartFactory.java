@@ -72,11 +72,6 @@ public abstract class AbstractChartFactory
 
   protected static final String CONFIGURATION_TYPE_KEY = "de.openali.odysseus.chart.factory.configurationType";
 
-  /**
-   * Keys for saving providers in chart elements
-   */
-  public static final String LAYER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.layerprovider";
-
   protected AbstractChartFactory( final IChartModel model, final IReferenceResolver resolver, final IExtensionLoader loader, final URL context )
   {
     m_model = model;

@@ -44,13 +44,13 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
@@ -137,9 +137,10 @@ public class ChartLegendPainter
   {
     final Set<IChartLayer> visible = new LinkedHashSet<IChartLayer>();
 
-    if( layer instanceof IExpandableChartLayer )
+    final IChartLayer[] children = (layer).getLayerManager().getLayers();
+
+    if( ArrayUtils.isNotEmpty( children ) )
     {
-      final IChartLayer[] children = ((IExpandableChartLayer) layer).getLayerManager().getLayers();
       for( final IChartLayer child : children )
       {
         Collections.addAll( visible, getLayers( child ) );

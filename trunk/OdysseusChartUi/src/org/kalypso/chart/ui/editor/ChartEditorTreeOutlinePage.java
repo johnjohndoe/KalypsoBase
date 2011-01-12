@@ -77,7 +77,6 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
@@ -325,7 +324,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
           if( draggedLayer == null )
           {
             parent = m_contentProvider.getParent( targetLayer );
-            layerManager = parent instanceof IExpandableChartLayer ? ((IExpandableChartLayer) parent).getLayerManager() : null;
+            layerManager = parent instanceof IChartLayer ? ((IChartLayer) parent).getLayerManager() : null;
             draggedLayer = layerManager == null ? null : layerManager.getLayerById( id );
           }
           if( draggedLayer == null )

@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 
@@ -90,17 +90,12 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
       return revertLayer( ((IChartModel) element).getLayerManager() );
 
     }
-    if( element instanceof IExpandableChartLayer )
-    {
-      /**
-       * so you see the topmost Layer as first item
-       */
-      return revertLayer( ((IExpandableChartLayer) element).getLayerManager() );
-    }
 
     if( element instanceof IChartLayer )
     {
       final IChartLayer layer = (IChartLayer) element;
+      revertLayer( layer.getLayerManager() );
+
       final ILegendEntry[] entries = layer.getLegendEntries();
       if( entries != null && entries.length > 1 )
       {
@@ -142,19 +137,16 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
     if( element instanceof IChartModel )
     {
       final IChartModel model = (IChartModel) element;
+
       return (model.getLayerManager().getLayers().length > 0);
     }
-    if( element instanceof IExpandableChartLayer )
-    {
-      final IExpandableChartLayer layer = (IExpandableChartLayer) element;
-      return (layer.getLayerManager().getLayers().length > 0);
-    }
-    if( element instanceof IChartLayer )
+    else if( element instanceof IChartLayer )
     {
       final IChartLayer layer = (IChartLayer) element;
-      final ILegendEntry[] entries = layer.getLegendEntries();
-      return entries == null ? false : entries.length > 1;
+
+      return ArrayUtils.isNotEmpty( layer.getLayerManager().getLayers() );
     }
+
     return false;
   }
 
@@ -178,8 +170,6 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   @Override
   public void dispose( )
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**
@@ -191,6 +181,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   {
     if( oldInput == newInput )
       return;
+
     if( newInput instanceof IChartModel )
       m_model = (IChartModel) newInput;
   }
@@ -201,13 +192,12 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
     {
       if( layer == child )
         return parent;
-      if( layer instanceof IExpandableChartLayer )
-      {
-        final Object o = findParent( layer, ((IExpandableChartLayer) layer).getLayerManager().getLayers(), child );
-        if( o != null )
-          return o;
-      }
+
+      final Object object = findParent( layer, layer.getLayerManager().getLayers(), child );
+      if( object != null )
+        return object;
     }
+
     return null;
   }
 }

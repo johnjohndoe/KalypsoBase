@@ -52,8 +52,8 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chartconfig.x020.ChartType;
-import de.openali.odysseus.chartconfig.x020.ChartType.Layers;
 import de.openali.odysseus.chartconfig.x020.LayerType;
+import de.openali.odysseus.chartconfig.x020.LayersType;
 
 /**
  * @author Dirk Kuch
@@ -91,7 +91,7 @@ public class KodBoundaryLayerProvider implements IBoundaryLayerProvider
 
     for( final ChartType chart : m_charts )
     {
-      final Layers layers = chart.getLayers();
+      final LayersType layers = chart.getLayers();
       final LayerType[] layerTypes = layers.getLayerArray();
       for( final LayerType layerType : layerTypes )
       {

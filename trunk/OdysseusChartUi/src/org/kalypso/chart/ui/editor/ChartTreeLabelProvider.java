@@ -53,7 +53,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.chart.ui.i18n.Messages;
 
-import de.openali.odysseus.chart.factory.util.DummyLayer;
+import de.openali.odysseus.chart.factory.layer.PlainLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 
@@ -105,7 +105,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
   public String getText( final Object element )
   {
     // Falls das Layer nicht erzeugt werden konnte sollte das in der Legende ersichtlich sein
-    if( element instanceof DummyLayer )
+    if( element instanceof PlainLayer )
     {
       return Messages.getString( "org.kalypso.chart.ui.editor.ChartTreeLabelProvider.0" ) + ((IChartLayer) element).getTitle() + "'"; //$NON-NLS-1$ //$NON-NLS-2$
     }

@@ -48,7 +48,6 @@ import java.util.Map;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.IChartModelState;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
@@ -77,10 +76,7 @@ public class ChartModelState implements IChartModelState
     for( final IChartLayer layer : mngr.getLayers() )
     {
       map.put( layer.getId(), layer.isVisible() );
-      if( layer instanceof IExpandableChartLayer )
-      {
-        saveStateVisible( ((IExpandableChartLayer) layer).getLayerManager(), map );
-      }
+      saveStateVisible( layer.getLayerManager(), map );
     }
   }
 
@@ -101,11 +97,8 @@ public class ChartModelState implements IChartModelState
     for( final IChartLayer layer : mngr.getLayers() )
     {
       list.add( layer.getId() );
-      if( layer instanceof IExpandableChartLayer )
-      {
-        final List<Object> subList = saveStatePosition( ((IExpandableChartLayer) layer).getLayerManager() );
-        list.add( subList );
-      }
+      final List<Object> subList = saveStatePosition( layer.getLayerManager() );
+      list.add( subList );
     }
 
     return list;
@@ -130,10 +123,7 @@ public class ChartModelState implements IChartModelState
           if( layer != null )
           {
             mngr.moveLayerToPosition( layer, pos++ );
-            if( layer instanceof IExpandableChartLayer )
-            {
-              restoreStatePosition( ((IExpandableChartLayer) layer).getLayerManager(), l );
-            }
+            restoreStatePosition( layer.getLayerManager(), l );
           }
         }
       }
@@ -148,17 +138,15 @@ public class ChartModelState implements IChartModelState
     }
   }
 
-  private void restoreStateVisible( final ILayerManager mngr, final Map<String, Boolean> map )
+  private void restoreStateVisibility( final ILayerManager mngr, final Map<String, Boolean> map )
   {
     for( final IChartLayer layer : mngr.getLayers() )
     {
-      final Boolean visible = map.get( layer.getId() );
-      if( visible != null )
-        layer.setVisible( visible );
-      if( layer instanceof IExpandableChartLayer )
-      {
-        restoreStateVisible( ((IExpandableChartLayer) layer).getLayerManager(), map );
-      }
+      final Boolean visibility = map.get( layer.getId() );
+      if( visibility != null )
+        layer.setVisible( visibility );
+
+      restoreStateVisibility( layer.getLayerManager(), map );
     }
   }
 
@@ -181,7 +169,7 @@ public class ChartModelState implements IChartModelState
       mngr.getLayers()[0].setActive( true );
     }
     restoreStatePosition( mngr, m_positionList );
-    restoreStateVisible( mngr, m_visibleLayer );
+    restoreStateVisibility( mngr, m_visibleLayer );
 
   }
 }
