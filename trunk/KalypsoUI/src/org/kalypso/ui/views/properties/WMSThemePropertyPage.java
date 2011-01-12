@@ -84,10 +84,7 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
     composite.setLayout( new GridLayout( 2, false ) );
 
     if( theme == null )
-    {
-      // TODO: show some error message
       return composite;
-    }
 
     /* Theme source. */
     final Label sourceLabel = new Label( composite, SWT.NONE );
@@ -95,7 +92,7 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
 
     /* Read only, as WMS-Theme does not support changing the source yet. */
     final Text sourceText = new Text( composite, SWT.READ_ONLY | SWT.BORDER );
-    final GridData sourceData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    final GridData sourceData = new GridData( SWT.FILL, SWT.CENTER, false, false );
     sourceData.widthHint = 200;
     sourceText.setLayoutData( sourceData );
     sourceText.setText( theme.getSource() );
