@@ -38,13 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.adapter;
+package org.kalypso.model.wspm.core.result;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -90,7 +90,7 @@ public class ProfileAndResults
     }
     catch( final Exception e )
     {
-      final KalypsoModelWspmUIPlugin wspmPlugin = KalypsoModelWspmUIPlugin.getDefault();
+      final KalypsoModelWspmCorePlugin wspmPlugin = KalypsoModelWspmCorePlugin.getDefault();
       wspmPlugin.getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
@@ -114,7 +114,7 @@ public class ProfileAndResults
     return null;
   }
 
-  private static Object findResultNode( final Feature feature )
+  public static Object findResultNode( final Feature feature )
   {
     final IProfileFeatureProvider[] profileFeatureProvider = KalypsoModelWspmCoreExtensions.getProfileFeatureProvider();
     for( final IProfileFeatureProvider provider : profileFeatureProvider )
