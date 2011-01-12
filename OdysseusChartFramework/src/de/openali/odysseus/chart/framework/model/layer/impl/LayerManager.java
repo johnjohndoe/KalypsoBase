@@ -1,7 +1,10 @@
 package de.openali.odysseus.chart.framework.model.layer.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import org.apache.commons.lang.ArrayUtils;
 
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
@@ -59,15 +62,18 @@ public class LayerManager implements ILayerManager
    * @see de.openali.odysseus.chart.framework.layer.ILayerManager#addLayer(de.openali.odysseus.chart.framework.layer.IChartLayer)
    */
   @Override
-  public void addLayer( final IChartLayer layer )
+  public void addLayer( final IChartLayer... layers )
   {
-    if( layer == null )
+    if( ArrayUtils.isEmpty( layers ) )
       return;
 
-    m_layers.add( layer );
-    layer.addListener( m_layerListener );
+    Collections.addAll( m_layers, layers );
 
-    m_handler.fireLayerAdded( layer );
+    for( final IChartLayer layer : layers )
+    {
+      layer.addListener( m_layerListener );
+      m_handler.fireLayerAdded( layer );
+    }
   }
 
   /**

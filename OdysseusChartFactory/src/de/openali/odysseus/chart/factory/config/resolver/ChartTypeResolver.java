@@ -218,6 +218,30 @@ public final class ChartTypeResolver implements IReferenceResolver
     throw new IllegalStateException();
   }
 
+// public ReferencableType findBaseType( final LayerRefernceType reference, final URL context ) throws CoreException
+// {
+// try
+// {
+// final String url = reference.getUrl();
+// if( url != null )
+// {
+// final String plainUrl = getUrl( url );
+// final String identifier = getAnchor( url );
+//
+// if( plainUrl.startsWith( "urn:" ) )
+// return findUrnBaseLayerType( context, plainUrl, identifier );
+// else
+// return findUrlBaseLayerType( context, plainUrl, identifier );
+// }
+// }
+// catch( final Throwable t )
+// {
+// throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "Resolving layer failed", t ) );
+// }
+//
+// throw new IllegalStateException();
+// }
+
   private LayerType getCachedLayerType( final String url )
   {
     // FIXME: we should consider a timeout based on the modification time stamp of the underlying resource here
@@ -411,4 +435,51 @@ public final class ChartTypeResolver implements IReferenceResolver
 
     return null;
   }
+
+// private ReferencableType findUrnBaseLayerType( final URL context, final String urn, final String identifier ) throws
+// XmlException, IOException
+// {
+// final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+// final String uri = baseCatalog.resolve( urn, urn );
+//
+// return findUrlBaseLayerType( context, uri, identifier );
+// }
+//
+// private ReferencableType findUrlBaseLayerType( final URL context, final String uri, final String identifier ) throws
+// XmlException, IOException
+// {
+// List<ChartType> chartTypes = m_chartTypeCache.get( uri );
+// if( chartTypes == null )
+// {
+// final ChartConfigurationLoader loader = getLoader( context, uri );
+// final ChartType[] charts = loader.getCharts();
+//
+// chartTypes = new ArrayList<ChartType>();
+// Collections.addAll( chartTypes, charts );
+//
+// m_chartTypeCache.put( uri, chartTypes );
+// }
+//
+// for( final ChartType chart : chartTypes )
+// {
+// final LayersType layersType = chart.getLayers();
+// final LayerType[] layers = layersType.getLayerArray();
+// for( final LayerType layer : layers )
+// {
+// if( layer.getId().equals( identifier ) )
+// return chart;
+//
+// final LayersType childLayersType = layer.getLayers();
+// final LayerType[] childLayers = childLayersType.getLayerArray();
+// for( final LayerType child : childLayers )
+// {
+// if( child.getId().equals( identifier ) )
+// return layer;
+// }
+// }
+// }
+//
+// return null;
+// }
+
 }
