@@ -40,11 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.config;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.graphics.RGB;
+import org.w3c.dom.Node;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.AreaStyleType;
+import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.LineStyleType;
 import de.openali.odysseus.chartconfig.x020.PointStyleType;
 import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
@@ -99,6 +105,32 @@ public final class StyleHelper
     }
 
     return ALIGNMENT.LEFT;
+  }
+
+  public static AbstractStyleType findStyle( final Object baseReference, final String identifier )
+  {
+    if( baseReference instanceof LayerType )
+    {
+      final Styles[] styles = findStyles( (LayerType) baseReference );
+      for( final Styles style : styles )
+      {
+        final AbstractStyleType found = findStyle( style, identifier );
+        if( found != null )
+          return found;
+      }
+    }
+
+    throw new NotImplementedException();
+
+  }
+
+  private static Styles[] findStyles( final LayerType layerType )
+  {
+    final Set<Styles> styles = new LinkedHashSet<Styles>();
+    styles.add( layerType.getStyles() );
+
+    final Node parentNode = layerType.getDomNode().getParentNode();
+    return null;
   }
 
   public static AbstractStyleType findStyle( final Styles styles, final String identifier )

@@ -45,7 +45,7 @@ import java.util.Date;
 import org.eclipse.swt.graphics.GC;
 import org.kalypso.ogc.sensor.DateRange;
 
-import de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;

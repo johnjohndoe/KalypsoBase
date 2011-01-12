@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
-import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlLayerTheme extends IExpandableChartLayer
+public interface IZmlLayerTheme extends IChartLayer
 {
 
 }

@@ -62,10 +62,10 @@ import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationType;
 import de.openali.odysseus.chartconfig.x020.ChartType;
-import de.openali.odysseus.chartconfig.x020.ChartType.Layers;
 import de.openali.odysseus.chartconfig.x020.ChartType.Mappers;
 import de.openali.odysseus.chartconfig.x020.ChartType.Renderers;
 import de.openali.odysseus.chartconfig.x020.LayerType;
+import de.openali.odysseus.chartconfig.x020.LayersType;
 import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.TitleType;
 
@@ -99,7 +99,7 @@ public final class ChartConfigurationSaver
 
     }
     chartType.setTitleArray( titleArray );
-    final Layers layers = chartType.addNewLayers();
+    final LayersType layers = chartType.addNewLayers();
     layers.setLayerArray( extractLayers( model.getLayerManager() ).values().toArray( new LayerType[] {} ) );
 
     final Mappers mappers = chartType.addNewMappers();

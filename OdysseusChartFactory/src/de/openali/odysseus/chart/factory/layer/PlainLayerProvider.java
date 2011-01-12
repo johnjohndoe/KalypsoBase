@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.factory.util;
+package de.openali.odysseus.chart.factory.layer;
 
 import java.net.URL;
 import java.util.Map;
@@ -52,7 +52,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 /**
  * @author burtscher1
  */
-public class DummyLayerProvider extends AbstractLayerProvider
+public class PlainLayerProvider extends AbstractLayerProvider
 {
 
   /**
@@ -61,7 +61,7 @@ public class DummyLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    return new DummyLayer();
+    return new PlainLayer( this );
   }
 
   /**

@@ -2,6 +2,7 @@
 <catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
 
+  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:base" uri="base.kod" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:global" uri="global.kod" />
 
 

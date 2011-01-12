@@ -1,16 +1,24 @@
-package de.openali.odysseus.chart.ext.base.layer;
+package de.openali.odysseus.chart.factory.layer;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.factory.provider.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.LayerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.impl.LayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
@@ -47,6 +55,8 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private final ILayerProvider m_provider;
 
+  private final ILayerManager m_layerManager = new LayerManager();
+
   public AbstractChartLayer( final ILayerProvider provider )
   {
     m_provider = provider;
@@ -55,6 +65,32 @@ public abstract class AbstractChartLayer implements IChartLayer
   public ILayerProvider getProvider( )
   {
     return m_provider;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer#addLayer(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  protected final void drawClippingRect( final GC gc )
+  {
+    final Color col = new Color( gc.getDevice(), new RGB( 0, 0, 0 ) );
+    try
+    {
+      gc.setForeground( col );
+      final Rectangle clipping = gc.getClipping();
+      gc.setLineWidth( 1 );
+      gc.drawRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height - 1 );
+      gc.setClipping( clipping.x + 1, clipping.y + 1, clipping.width - 2, clipping.height - 2 );
+    }
+    finally
+    {
+      col.dispose();
+    }
+  }
+
+  @Override
+  public ILayerManager getLayerManager( )
+  {
+    return m_layerManager;
   }
 
   @Override
@@ -67,8 +103,6 @@ public abstract class AbstractChartLayer implements IChartLayer
   {
     m_mapperMap.put( role, mapper );
   }
-
-  protected abstract ILegendEntry[] createLegendEntries( );
 
   @Override
   public final ICoordinateMapper getCoordinateMapper( )
@@ -114,6 +148,72 @@ public abstract class AbstractChartLayer implements IChartLayer
   public String getId( )
   {
     return m_id;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    m_layerManager.clear();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
+   */
+  @Override
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  {
+    Double min = null;
+    Double max = null;
+    for( final IChartLayer layer : getLayerManager().getLayers() )
+    {
+      final IDataRange<Number> dr = layer.getTargetRange( null );
+      if( dr != null )
+      {
+        if( max == null )
+          max = dr.getMax().doubleValue();
+        else
+          max = Math.max( max, dr.getMax().doubleValue() );
+        if( min == null )
+          min = dr.getMin().doubleValue();
+        else
+          min = Math.min( min, dr.getMin().doubleValue() );
+      }
+    }
+    if( (min == null) || (max == null) )
+      return null;
+    return new DataRange<Number>( min, max );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
+   */
+  @Override
+  public IDataRange<Number> getDomainRange( )
+  {
+    Double min = null;
+    Double max = null;
+    for( final IChartLayer layer : getLayerManager().getLayers() )
+    {
+
+      final IDataRange<Number> dr = layer.getDomainRange();
+      if( dr != null )
+      {
+        if( max == null )
+          max = dr.getMax().doubleValue();
+        else
+          max = Math.max( max, dr.getMax().doubleValue() );
+        if( min == null )
+          min = dr.getMin().doubleValue();
+        else
+          min = Math.min( min, dr.getMin().doubleValue() );
+      }
+    }
+    if( (min == null) || (max == null) )
+      return null;
+    return new DataRange<Number>( min, max );
   }
 
   @Override
@@ -168,11 +268,19 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getVisibility()
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#isVisible()
    */
   @Override
   public boolean isVisible( )
   {
+    final ILayerManager layerManager = getLayerManager();
+    final IChartLayer[] layers = layerManager.getLayers();
+    for( final IChartLayer layer : layers )
+    {
+      if( layer.isVisible() )
+        return true;
+    }
+
     return m_isVisible;
   }
 
@@ -199,6 +307,22 @@ public abstract class AbstractChartLayer implements IChartLayer
   public void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
   {
     m_coordinateMapper = coordinateMapper;
+
+    for( final IChartLayer layer : getLayerManager().getLayers() )
+      layer.setCoordinateMapper( coordinateMapper );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
+  @Override
+  public void paint( final GC gc )
+  {
+    for( final IChartLayer layer : getLayerManager().getLayers() )
+    {
+      if( layer.isVisible() )
+        layer.paint( gc );
+    }
   }
 
   /**
@@ -275,6 +399,14 @@ public abstract class AbstractChartLayer implements IChartLayer
   public void setLegend( final boolean isVisible )
   {
     m_legendIsVisible = isVisible;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
+   */
+  protected ILegendEntry[] createLegendEntries( )
+  {
+    return new ILegendEntry[] {};
   }
 
 }

@@ -56,7 +56,6 @@ import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManager
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IExpandableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LayerManager;
@@ -66,7 +65,7 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 /**
  * @author kimwerner
  */
-public abstract class AbstractProfilTheme extends AbstractProfilLayer implements IExpandableChartLayer
+public abstract class AbstractProfilTheme extends AbstractProfilLayer implements IChartLayer
 {
   private final ILayerManagerEventListener m_eventListener = new AbstractLayerManagerEventListener()
   {
@@ -168,7 +167,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
         for( final IChartLayer layer : getLayerManager().getLayers() )
         {
           final ILegendEntry[] les = layer.getLegendEntries();
-          if( les == null || les.length==0)
+          if( les == null || les.length == 0 )
             continue;
           for( final ILegendEntry l : les )
           {
@@ -325,13 +324,13 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange(IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     Double min = null;
     Double max = null;
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
-      final IDataRange<Number> dr = layer.getTargetRange(null);
+      final IDataRange<Number> dr = layer.getTargetRange( null );
       if( dr != null )
       {
         if( max == null )

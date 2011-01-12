@@ -42,7 +42,7 @@ package org.kalypso.zml.ui.chart.layer.themes;
 
 import org.eclipse.swt.graphics.GC;
 
-import de.openali.odysseus.chart.ext.base.layer.AbstractExpandableLayer;
+import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -54,7 +54,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 /**
  * @author kimwerner
  */
-public class ZmlThemeBackGroundRaster extends AbstractExpandableLayer
+public class ZmlThemeBackGroundRaster extends AbstractChartLayer
 {
   public static final String ID = "org.kalypso.hwv.core.chart.ZmlThemeBackGroundRaster";
 
@@ -132,4 +132,5 @@ public class ZmlThemeBackGroundRaster extends AbstractExpandableLayer
 
     return lastTargetAxis;
   }
+
 }

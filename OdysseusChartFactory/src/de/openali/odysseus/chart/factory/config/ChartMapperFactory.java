@@ -77,9 +77,9 @@ import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.ChartType.Mappers;
 import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.PositionType;
+import de.openali.odysseus.chartconfig.x020.ReferencableType;
 import de.openali.odysseus.chartconfig.x020.ReferencingType;
 import de.openali.odysseus.chartconfig.x020.ScreenAxisType;
-import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 
 /**
  * @author Dirk Kuch
@@ -94,14 +94,13 @@ public class ChartMapperFactory extends AbstractChartFactory
   public void build( final ChartType chartType )
   {
     final Mappers mappers = chartType.getMappers();
-    final Styles globalStyles = chartType.getStyles();
 
     if( mappers != null )
     {
       final AxisType[] axisTypes = mappers.getAxisArray();
       for( final AxisType axisType : axisTypes )
       {
-        addAxis( axisType, globalStyles );
+        addAxis( axisType, chartType );
       }
 
       final ScreenAxisType[] screenAxesTypes = mappers.getScreenAxisArray();
@@ -116,7 +115,7 @@ public class ChartMapperFactory extends AbstractChartFactory
    * creates a concrete IAxis-Implementation from an AbstractAxisType derived from a ChartConfiguration, sets the
    * corresponding renderer and adds both to a given Chart
    */
-  public IAxis addAxis( final AxisType axisType, final Styles globalStyles )
+  public IAxis addAxis( final AxisType axisType, final ReferencableType baseType )
   {
     final IMapperRegistry mapperRegistry = getModel().getMapperRegistry();
     if( axisType != null )
@@ -180,7 +179,8 @@ public class ChartMapperFactory extends AbstractChartFactory
                 else
                   axisRendererProvider = getLoader().getExtension( IAxisRendererProvider.class, providerId );
                 final String rendererTypeId = rendererType.getId();
-                final IStyleSet styleSet = StyleFactory.createStyleSet( rendererType.getStyles(), globalStyles, getContext() );
+                // TODO global style set
+                final IStyleSet styleSet = StyleFactory.createStyleSet( rendererType.getStyles(), null, getContext() );
                 final IParameterContainer parameterContainer = createParameterContainer( rendererTypeId, rendererType.getProvider() );
 
                 // // Hack to get rid of older kod-files with this malformed renderer-id
@@ -368,10 +368,10 @@ public class ChartMapperFactory extends AbstractChartFactory
     return null;
   }
 
-  public void addMapper( final MapperType type, final Styles globalStyles )
+  public void addMapper( final MapperType type, final ReferencableType baseType )
   {
     if( type instanceof AxisType )
-      addAxis( (AxisType) type, globalStyles );
+      addAxis( (AxisType) type, baseType );
     else if( type instanceof ScreenAxisType )
       addScreenAxis( (ScreenAxisType) type );
   }

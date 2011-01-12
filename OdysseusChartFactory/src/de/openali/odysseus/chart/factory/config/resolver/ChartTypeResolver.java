@@ -69,11 +69,11 @@ import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.AxisRendererType;
 import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.ChartType;
-import de.openali.odysseus.chartconfig.x020.ChartType.Layers;
 import de.openali.odysseus.chartconfig.x020.ChartType.Mappers;
 import de.openali.odysseus.chartconfig.x020.ChartType.Renderers;
 import de.openali.odysseus.chartconfig.x020.LayerRefernceType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
+import de.openali.odysseus.chartconfig.x020.LayersType;
 import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.ScreenAxisType;
 import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
@@ -263,7 +263,7 @@ public final class ChartTypeResolver implements IReferenceResolver
 
     for( final ChartType chart : chartTypes )
     {
-      final Layers layers = chart.getLayers();
+      final LayersType layers = chart.getLayers();
       final LayerType layer = findLayer( layers, identifier );
       if( layer != null )
         return layer;
@@ -272,7 +272,7 @@ public final class ChartTypeResolver implements IReferenceResolver
     return null;
   }
 
-  private LayerType findLayer( final Layers layers, final String identifier )
+  private LayerType findLayer( final LayersType layers, final String identifier )
   {
     // TODO resolve references
     final LayerType[] layerTypes = layers.getLayerArray();
@@ -371,7 +371,7 @@ public final class ChartTypeResolver implements IReferenceResolver
       if( style != null )
         return style;
 
-      final Layers layers = chart.getLayers();
+      final LayersType layers = chart.getLayers();
       final LayerType[] layerArray = layers.getLayerArray();
       for( final LayerType layer : layerArray )
       {

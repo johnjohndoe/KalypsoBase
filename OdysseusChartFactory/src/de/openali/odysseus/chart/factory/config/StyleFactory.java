@@ -139,7 +139,7 @@ public final class StyleFactory
     return createStyleSet( styles, null, null );
   }
 
-  public static IStyleSet createStyleSet( final Styles styles, final Styles globalStyles, final URL context )
+  public static IStyleSet createStyleSet( final Styles styles, final Object baseType, final URL context )
   {
 
     final IStyleSet styleSet = new StyleSet();
@@ -190,7 +190,7 @@ public final class StyleFactory
             final RETokenizer tokenizer = new RETokenizer( new Pattern( "#" ), reference );
             final String identifier = tokenizer.nextToken();
 
-            final AbstractStyleType styleType = StyleHelper.findStyle( globalStyles, identifier );
+            final AbstractStyleType styleType = StyleHelper.findStyle( baseType, identifier );
             final IStyle style = StyleFactory.createStyle( styleType, context );
             if( style == null )
               return null;

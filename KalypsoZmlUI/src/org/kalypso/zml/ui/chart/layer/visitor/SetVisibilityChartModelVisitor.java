@@ -43,7 +43,6 @@ package org.kalypso.zml.ui.chart.layer.visitor;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor;
 
-import de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.ext.base.layer.DefaultTextLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -78,12 +77,9 @@ public class SetVisibilityChartModelVisitor extends AbstractExternalChartModelVi
         layer.setVisible( m_empty );
 
     }
-    else if( !(layer instanceof AbstractChartLayer) )
-    {
-      return;
-    }
     else
     {
+
 // final AbstractChartLayer abstractLayer = (AbstractChartLayer) layer;
 // final ILayerProvider provider = abstractLayer.getProvider();
 // if( provider == null )

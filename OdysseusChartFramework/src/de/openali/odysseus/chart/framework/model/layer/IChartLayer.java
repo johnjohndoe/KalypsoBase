@@ -13,10 +13,21 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public interface IChartLayer extends IEventProvider<ILayerEventListener>
 {
+  void dispose( );
+
+  ICoordinateMapper getCoordinateMapper( );
+
   /**
-   * Setzt die ID des Layers; die ID wird verwendet, um das Layer im Chart zu referenzieren
+   * get stored data objects
    */
-  void setId( final String id );
+  Object getData( String identifier );
+
+  /**
+   * @return the layers description
+   */
+  String getDescription( );
+
+  IDataRange<Number> getDomainRange( );
 
   /**
    * Gibt die ID des Layers zurück; die ID wird verwendet, um das Layer im Chart zu referenzieren
@@ -24,52 +35,11 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
   String getId( );
 
   /**
-   * sets the layers title (which will be shown in the legend)
+   * @return the layermanager for all childLayers
    */
-  void setTitle( final String title );
+  ILayerManager getLayerManager( );
 
-  /**
-   * @return the layers title
-   */
-  String getTitle( );
-
-  /**
-   * sets a description for the layer
-   */
-  void setDescription( String description );
-
-  /**
-   * @return the layers description
-   */
-  String getDescription( );
-
-  /**
-   * @return true if the layer is set active, false otherwise
-   */
-  boolean isActive( );
-
-  void setActive( boolean isActive );
-
-  /**
-   * draws the layer using the given GC and Device
-   */
-  void paint( final GC gc );
-
-  void setVisible( final boolean isVisible );
-
-  boolean isVisible( );
-
-  /**
-   * method to store arbitrary data objects;
-   */
-  void setData( String identifier, Object data );
-
-  /**
-   * get stored data objects
-   */
-  Object getData( String identifier );
-
-  IDataRange<Number> getDomainRange( );
+  ILegendEntry[] getLegendEntries( );
 
   /**
    * @param domainIntervall
@@ -77,27 +47,62 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
    */
   IDataRange<Number> getTargetRange( IDataRange<Number> domainIntervall );
 
-  ICoordinateMapper getCoordinateMapper( );
-
-  void setCoordinateMapper( ICoordinateMapper coordinateMapper );
+  /**
+   * @return the layers title
+   */
+  String getTitle( );
 
   /**
    * Initialization method; will be called after setCoordinateMapper
    */
   void init( );
 
-  void dispose( );
-
-  ILegendEntry[] getLegendEntries( );
+  /**
+   * @return true if the layer is set active, false otherwise
+   */
+  boolean isActive( );
 
   /**
    * @return layer is visible in chart legend
    */
   boolean isLegend( );
 
+  boolean isVisible( );
+
+  /**
+   * draws the layer using the given GC and Device
+   */
+  void paint( final GC gc );
+
+  void setActive( boolean isActive );
+
+  void setCoordinateMapper( ICoordinateMapper coordinateMapper );
+
+  /**
+   * method to store arbitrary data objects;
+   */
+  void setData( String identifier, Object data );
+
+  /**
+   * sets a description for the layer
+   */
+  void setDescription( String description );
+
+  /**
+   * Setzt die ID des Layers; die ID wird verwendet, um das Layer im Chart zu referenzieren
+   */
+  void setId( final String id );
+
   /**
    * @param isVisible
    *          layer is visible in chart legend
    */
   void setLegend( final boolean isVisible );
+
+  /**
+   * sets the layers title (which will be shown in the legend)
+   */
+  void setTitle( final String title );
+
+  void setVisible( final boolean isVisible );
 }
