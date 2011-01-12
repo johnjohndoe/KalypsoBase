@@ -2,20 +2,7 @@
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="global">
     <Styles>
-      <LineStyle role="grenzwertLineStyle">
-        <Width>2</Width>
-        <LineColor>000000</LineColor>
-      </LineStyle>
-      <PointStyle role="grenzwertPointStyle" isVisible="false">
-      </PointStyle>
-      <TextStyle role="grenzwertTextStyle">
-        <Size>6</Size>
-        <TextColor>000000</TextColor>
-        <FontFamily>Arial</FontFamily>
-            <!-- <FillColor>000000</FillColor> -->
-        <FontWeight>NORMAL</FontWeight>
-        <FontStyle>NORMAL</FontStyle>
-      </TextStyle>
+
       <TextStyle role="axisLabel">
         <Size>8</Size>
         <TextColor>000000</TextColor>
@@ -49,7 +36,12 @@
               <PointStyle role="wPointStyle" isVisible="false" />
             </Styles>
           </Layer>
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:base#grid"></LayerReference>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:base#grid" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:base#grenzwerte" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_1" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_2" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_3" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
         </Layers>
         <MapperRefs>
           <DomainAxisRef ref="date" />
@@ -74,7 +66,12 @@
               </PointStyle>
             </Styles>
           </Layer>
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:base#grid"></LayerReference>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:base#grid" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:base#grenzwerte" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_1" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_2" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_3" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
         </Layers>
         <MapperRefs>
           <DomainAxisRef ref="date" />
@@ -107,7 +104,7 @@
               </PointStyle>
             </Styles>
           </Layer>
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:base#grid"></LayerReference>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:base#grid" />
         </Layers>
         <MapperRefs>
           <DomainAxisRef ref="date" />
@@ -153,46 +150,6 @@
             <FontWeight>BOLD</FontWeight>
             <FontStyle>NORMAL</FontStyle>
           </TextStyle>
-        </Styles>
-      </Layer>
-      <Layer id="wGrenzwerte" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
-          <Parameters>
-            <Parameter name="grenzwert" value=".*Kalypso_Grenzwert_\w+$" />
-            <Parameter name="label" value="%s" />
-            <Parameter name="labelTokenizer" value="^.+_" />
-          </Parameters>
-        </Provider>
-        <Title>Grenzwerte</Title>
-        <Description />
-        <MapperRefs>
-          <DomainAxisRef ref="screenAxisX" />
-          <TargetAxisRef ref="W" />
-        </MapperRefs>
-        <Styles>
-          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#grenzwertLineStyle</StyleReference>
-          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#grenzwertPointStyle</StyleReference>
-          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#grenzwertTextStyle</StyleReference>
-        </Styles>
-      </Layer>
-      <Layer id="qGrenzwerte" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
-          <Parameters>
-            <Parameter name="grenzwert" value=".*Kalypso_Grenzwert_\w+$" />
-            <Parameter name="label" value="%s" />
-            <Parameter name="labelTokenizer" value="^.+_" />
-          </Parameters>
-        </Provider>
-        <Title>Grenzwerte</Title>
-        <Description />
-        <MapperRefs>
-          <DomainAxisRef ref="screenAxisX" />
-          <TargetAxisRef ref="Q" />
-        </MapperRefs>
-        <Styles>
-          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#grenzwertLineStyle</StyleReference>
-          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#grenzwertPointStyle</StyleReference>
-          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#grenzwertTextStyle</StyleReference>
         </Styles>
       </Layer>
     </Layers>

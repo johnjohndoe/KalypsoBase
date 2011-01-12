@@ -114,12 +114,7 @@ public class MetadataLayerBoundaryBuilder implements ICoreRunnableWithProgress
       {
         try
         {
-          // TODO fix special color handling for alarmstufen
-          // FIXME: should not lead to a special layer -> make ther layer itself more flexibel
-          if( key.contains( "Alarmstufe" ) ) // $NON-NLS-1$
-            m_boundaries.add( new KodAlarmstufenBoundaryLayer( boundary, label, labelTokenizer, m_styleSet ) );
-          else
-            m_boundaries.add( new KodBoundaryLayer( boundary, label, labelTokenizer, m_styleSet ) );
+          m_boundaries.add( new KodBoundaryLayer( boundary, label, labelTokenizer, m_styleSet ) );
         }
         catch( final Throwable t )
         {
