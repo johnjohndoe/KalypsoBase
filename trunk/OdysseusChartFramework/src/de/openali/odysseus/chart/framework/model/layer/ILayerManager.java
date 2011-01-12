@@ -8,7 +8,7 @@ import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListene
  */
 public interface ILayerManager extends IEventProvider<ILayerManagerEventListener>
 {
-  void addLayer( IChartLayer layer );
+  void addLayer( IChartLayer... layer );
 
   void addLayer( IChartLayer layer, int position );
 

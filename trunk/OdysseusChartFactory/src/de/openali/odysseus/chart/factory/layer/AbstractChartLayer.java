@@ -28,43 +28,66 @@ import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
  */
 public abstract class AbstractChartLayer implements IChartLayer
 {
-  private boolean m_isVisible = true;
-
-  private String m_title = null;
-
-  private String m_id = "";
-
-  private String m_description = "";
-
-  private boolean m_isActive = false;
-
-  private final LayerEventHandler m_handler = new LayerEventHandler();
+  private ICoordinateMapper m_coordinateMapper;
 
   /**
    * hash map to store arbitrary key value pairs
    */
   private final HashMap<String, Object> m_data = new HashMap<String, Object>();
 
-  private ICoordinateMapper m_coordinateMapper;
+  private String m_description = "";
+
+  private final LayerEventHandler m_handler = new LayerEventHandler();
+
+  private String m_id = "";
+
+  private boolean m_isActive = false;
+
+  private boolean m_isVisible = true;
+
+  private final ILayerManager m_layerManager = new LayerManager();
 
   private ILegendEntry[] m_legendEntries = new ILegendEntry[] {};
 
-  private final Map<String, IRetinalMapper> m_mapperMap = new HashMap<String, IRetinalMapper>();
-
   private boolean m_legendIsVisible = true;
+
+  private final Map<String, IRetinalMapper> m_mapperMap = new HashMap<String, IRetinalMapper>();
 
   private final ILayerProvider m_provider;
 
-  private final ILayerManager m_layerManager = new LayerManager();
+  private String m_title = null;
 
   public AbstractChartLayer( final ILayerProvider provider )
   {
     m_provider = provider;
   }
 
-  public ILayerProvider getProvider( )
+  @Override
+  public void addListener( final ILayerEventListener l )
   {
-    return m_provider;
+    m_handler.addListener( l );
+  }
+
+  public void addMapper( final String role, final IRetinalMapper mapper )
+  {
+    m_mapperMap.put( role, mapper );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
+   */
+  protected ILegendEntry[] createLegendEntries( )
+  {
+    return new ILegendEntry[] {};
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    m_layerManager.clear();
   }
 
   /**
@@ -85,23 +108,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     {
       col.dispose();
     }
-  }
-
-  @Override
-  public ILayerManager getLayerManager( )
-  {
-    return m_layerManager;
-  }
-
-  @Override
-  public void addListener( final ILayerEventListener l )
-  {
-    m_handler.addListener( l );
-  }
-
-  public void addMapper( final String role, final IRetinalMapper mapper )
-  {
-    m_mapperMap.put( role, mapper );
   }
 
   @Override
@@ -136,6 +142,35 @@ public abstract class AbstractChartLayer implements IChartLayer
     return getCoordinateMapper().getDomainAxis();
   }
 
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
+   */
+  @Override
+  public IDataRange<Number> getDomainRange( )
+  {
+    Double min = null;
+    Double max = null;
+    for( final IChartLayer layer : getLayerManager().getLayers() )
+    {
+
+      final IDataRange<Number> dr = layer.getDomainRange();
+      if( dr != null )
+      {
+        if( max == null )
+          max = dr.getMax().doubleValue();
+        else
+          max = Math.max( max, dr.getMax().doubleValue() );
+        if( min == null )
+          min = dr.getMin().doubleValue();
+        else
+          min = Math.min( min, dr.getMin().doubleValue() );
+      }
+    }
+    if( (min == null) || (max == null) )
+      return null;
+    return new DataRange<Number>( min, max );
+  }
+
   public LayerEventHandler getEventHandler( )
   {
     return m_handler;
@@ -150,13 +185,42 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_id;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
-   */
   @Override
-  public void dispose( )
+  public ILayerManager getLayerManager( )
   {
-    m_layerManager.clear();
+    return m_layerManager;
+  }
+
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    if( ArrayUtils.isEmpty( m_legendEntries ) )
+      m_legendEntries = createLegendEntries();
+
+    return m_legendEntries;
+  }
+
+  protected IRetinalMapper getMapper( final String role )
+  {
+    return m_mapperMap.get( role );
+  }
+
+  public ILayerProvider getProvider( )
+  {
+    return m_provider;
+  }
+
+  public Map<String, ImageData> getSymbolMap( )
+  {
+    return null;
+  }
+
+  /**
+   * convenience method; same as getCoordinateMapper().getTargetAxis()
+   */
+  protected IAxis getTargetAxis( )
+  {
+    return getCoordinateMapper().getTargetAxis();
   }
 
   /**
@@ -188,62 +252,6 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
-   */
-  @Override
-  public IDataRange<Number> getDomainRange( )
-  {
-    Double min = null;
-    Double max = null;
-    for( final IChartLayer layer : getLayerManager().getLayers() )
-    {
-
-      final IDataRange<Number> dr = layer.getDomainRange();
-      if( dr != null )
-      {
-        if( max == null )
-          max = dr.getMax().doubleValue();
-        else
-          max = Math.max( max, dr.getMax().doubleValue() );
-        if( min == null )
-          min = dr.getMin().doubleValue();
-        else
-          min = Math.min( min, dr.getMin().doubleValue() );
-      }
-    }
-    if( (min == null) || (max == null) )
-      return null;
-    return new DataRange<Number>( min, max );
-  }
-
-  @Override
-  public synchronized ILegendEntry[] getLegendEntries( )
-  {
-    if( ArrayUtils.isEmpty( m_legendEntries ) )
-      m_legendEntries = createLegendEntries();
-
-    return m_legendEntries;
-  }
-
-  protected IRetinalMapper getMapper( final String role )
-  {
-    return m_mapperMap.get( role );
-  }
-
-  public Map<String, ImageData> getSymbolMap( )
-  {
-    return null;
-  }
-
-  /**
-   * convenience method; same as getCoordinateMapper().getTargetAxis()
-   */
-  protected IAxis getTargetAxis( )
-  {
-    return getCoordinateMapper().getTargetAxis();
-  }
-
-  /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getTitle()
    */
   @Override
@@ -268,6 +276,15 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#isLegend()
+   */
+  @Override
+  public boolean isLegend( )
+  {
+    return m_legendIsVisible;
+  }
+
+  /**
    * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#isVisible()
    */
   @Override
@@ -282,6 +299,19 @@ public abstract class AbstractChartLayer implements IChartLayer
     }
 
     return m_isVisible;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   */
+  @Override
+  public void paint( final GC gc )
+  {
+    for( final IChartLayer layer : getLayerManager().getLayers() )
+    {
+      if( layer.isVisible() )
+        layer.paint( gc );
+    }
   }
 
   @Override
@@ -308,20 +338,10 @@ public abstract class AbstractChartLayer implements IChartLayer
   {
     m_coordinateMapper = coordinateMapper;
 
-    for( final IChartLayer layer : getLayerManager().getLayers() )
-      layer.setCoordinateMapper( coordinateMapper );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
-   */
-  @Override
-  public void paint( final GC gc )
-  {
+    // FIXME sure? update coordinate mapper of child layers, too?
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
-      if( layer.isVisible() )
-        layer.paint( gc );
+      layer.setCoordinateMapper( coordinateMapper );
     }
   }
 
@@ -353,6 +373,15 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#setLegend(boolean)
+   */
+  @Override
+  public void setLegend( final boolean isVisible )
+  {
+    m_legendIsVisible = isVisible;
+  }
+
+  /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setTitle(java.lang.String)
    */
   @Override
@@ -381,32 +410,6 @@ public abstract class AbstractChartLayer implements IChartLayer
   public String toString( )
   {
     return String.format( "IChartLayer - id: %s", getId() );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#isLegend()
-   */
-  @Override
-  public boolean isLegend( )
-  {
-    return m_legendIsVisible;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#setLegend(boolean)
-   */
-  @Override
-  public void setLegend( final boolean isVisible )
-  {
-    m_legendIsVisible = isVisible;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
-   */
-  protected ILegendEntry[] createLegendEntries( )
-  {
-    return new ILegendEntry[] {};
   }
 
 }
