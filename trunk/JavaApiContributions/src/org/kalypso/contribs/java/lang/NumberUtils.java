@@ -122,7 +122,11 @@ public final class NumberUtils
     }
   }
 
-  /** TODO: What is the difference to: <code>Integer.parseInt()</code>? */
+  /**
+   * TODO: What is the difference to: <code>Integer.parseInt()</code>?<br/>
+   * Makes no sense: Simply use {@link Integer#valueOf(String)} instead.
+   */
+  @Deprecated
   public static int toInteger( final String value ) throws ParseException
   {
     final NumberFormat instance = NumberFormat.getInstance();
