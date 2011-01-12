@@ -45,7 +45,6 @@ import java.util.Set;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.graphics.RGB;
-import org.w3c.dom.Node;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
@@ -129,8 +128,7 @@ public final class StyleHelper
     final Set<Styles> styles = new LinkedHashSet<Styles>();
     styles.add( layerType.getStyles() );
 
-    final Node parentNode = layerType.getDomNode().getParentNode();
-    return null;
+    return styles.toArray( new Styles[] {} );
   }
 
   public static AbstractStyleType findStyle( final Styles styles, final String identifier )
