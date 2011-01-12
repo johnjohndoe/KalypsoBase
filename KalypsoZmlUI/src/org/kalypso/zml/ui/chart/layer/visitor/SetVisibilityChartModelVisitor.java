@@ -45,6 +45,7 @@ import org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor;
 
 import de.openali.odysseus.chart.ext.base.layer.DefaultTextLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
@@ -75,20 +76,31 @@ public class SetVisibilityChartModelVisitor extends AbstractExternalChartModelVi
     {
       if( NO_DATA_LAYER.equals( layer.getId() ) )
         layer.setVisible( m_empty );
-
     }
     else
     {
+      final ILayerManager layerManager = layer.getLayerManager();
+      final IChartLayer[] children = layerManager.getLayers();
 
-// final AbstractChartLayer abstractLayer = (AbstractChartLayer) layer;
-// final ILayerProvider provider = abstractLayer.getProvider();
-// if( provider == null )
-// return;
       final String axisType = getTargetAxis( layer );
       if( ArrayUtils.contains( m_ignoreTypes, axisType ) )
+      {
         layer.setVisible( false );
+        setVisibility( children, false );
+      }
       else
+      {
         layer.setVisible( true );
+        setVisibility( children, true );
+      }
+    }
+  }
+
+  private void setVisibility( final IChartLayer[] layers, final boolean visibility )
+  {
+    for( final IChartLayer layer : layers )
+    {
+      layer.setVisible( visibility );
     }
   }
 
