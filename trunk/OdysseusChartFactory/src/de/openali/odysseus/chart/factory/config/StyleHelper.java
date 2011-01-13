@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.config;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -49,9 +50,12 @@ import org.eclipse.swt.graphics.RGB;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.AreaStyleType;
+import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
+import de.openali.odysseus.chartconfig.x020.LayersType;
 import de.openali.odysseus.chartconfig.x020.LineStyleType;
 import de.openali.odysseus.chartconfig.x020.PointStyleType;
+import de.openali.odysseus.chartconfig.x020.ReferencableType;
 import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 import de.openali.odysseus.chartconfig.x020.TextStyleType;
 
@@ -106,21 +110,49 @@ public final class StyleHelper
     return ALIGNMENT.LEFT;
   }
 
-  public static AbstractStyleType findStyle( final Object baseReference, final String identifier )
+  public static AbstractStyleType findStyle( final ReferencableType[] baseReferences, final String identifier )
   {
-    if( baseReference instanceof LayerType )
+    final Set<Styles> styles = new LinkedHashSet<Styles>();
+
+    for( final ReferencableType reference : baseReferences )
     {
-      final Styles[] styles = findStyles( (LayerType) baseReference );
-      for( final Styles style : styles )
+      if( reference instanceof LayerType )
       {
-        final AbstractStyleType found = findStyle( style, identifier );
-        if( found != null )
-          return found;
+        Collections.addAll( styles, findStyles( (LayerType) reference ) );
       }
+      else if( reference instanceof ChartType )
+      {
+        Collections.addAll( styles, findStyles( (ChartType) reference ) );
+      }
+      else
+        throw new NotImplementedException();
     }
 
-    throw new NotImplementedException();
+    for( final Styles style : styles )
+    {
+      final AbstractStyleType found = findStyle( style, identifier );
+      if( found != null )
+        return found;
+    }
 
+    return null;
+  }
+
+  private static Styles[] findStyles( final ChartType chartType )
+  {
+    final Set<Styles> styles = new LinkedHashSet<Styles>();
+    styles.add( chartType.getStyles() );
+
+    final LayersType layersType = chartType.getLayers();
+    final LayerType[] layers = layersType.getLayerArray();
+    for( final LayerType layerType : layers )
+    {
+      final Styles layerStyles = layerType.getStyles();
+      if( layerStyles != null )
+        styles.add( layerStyles );
+    }
+
+    return styles.toArray( new Styles[] {} );
   }
 
   private static Styles[] findStyles( final LayerType layerType )

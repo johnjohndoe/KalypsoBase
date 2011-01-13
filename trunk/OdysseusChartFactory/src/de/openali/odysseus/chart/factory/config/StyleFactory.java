@@ -84,6 +84,7 @@ import de.openali.odysseus.chartconfig.x020.LineStyleType;
 import de.openali.odysseus.chartconfig.x020.PointStyleType;
 import de.openali.odysseus.chartconfig.x020.PointType;
 import de.openali.odysseus.chartconfig.x020.PolygonMarkerType;
+import de.openali.odysseus.chartconfig.x020.ReferencableType;
 import de.openali.odysseus.chartconfig.x020.StrokeType;
 import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 import de.openali.odysseus.chartconfig.x020.TextStyleType;
@@ -139,7 +140,7 @@ public final class StyleFactory
     return createStyleSet( styles, null, null );
   }
 
-  public static IStyleSet createStyleSet( final Styles styles, final Object baseType, final URL context )
+  public static IStyleSet createStyleSet( final Styles styles, final ReferencableType[] baseTypes, final URL context )
   {
 
     final IStyleSet styleSet = new StyleSet();
@@ -190,7 +191,7 @@ public final class StyleFactory
             final RETokenizer tokenizer = new RETokenizer( new Pattern( "#" ), reference );
             final String identifier = tokenizer.nextToken();
 
-            final AbstractStyleType styleType = StyleHelper.findStyle( baseType, identifier );
+            final AbstractStyleType styleType = StyleHelper.findStyle( baseTypes, identifier );
             final IStyle style = StyleFactory.createStyle( styleType, context );
             if( style == null )
               return null;
