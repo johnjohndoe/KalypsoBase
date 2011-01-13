@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,36 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.visitor;
+package de.openali.odysseus.chart.framework.model.layer.manager.visitors;
 
-import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.zml.ui.chart.layer.themes.ZmlForecastLayer;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
+public class TooltipChartLayerVisitor implements IChartLayerVisitor
 {
-  private final IObsProvider m_provider;
 
-  public ForecastLayerChartModelVisitor( final IObsProvider provider )
-  {
-    m_provider = provider;
-  }
+  private final Set<ITooltipChartLayer> m_layers = new LinkedHashSet<ITooltipChartLayer>();
 
   /**
-   * @see org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor#accept(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
   public void visit( final IChartLayer layer )
   {
-    if( !(layer instanceof ZmlForecastLayer) )
-      return;
+    if( layer instanceof ITooltipChartLayer )
+      m_layers.add( (ITooltipChartLayer) layer );
 
-    final ZmlForecastLayer forecastLayer = (ZmlForecastLayer) layer;
-    forecastLayer.setObsProvider( m_provider );
+    final ILayerManager layerManager = layer.getLayerManager();
+    final IChartLayer[] layers = layerManager.getLayers();
+    for( final IChartLayer child : layers )
+    {
+      visit( child );
+    }
   }
+
+  public ITooltipChartLayer[] getLayers( )
+  {
+    return m_layers.toArray( new ITooltipChartLayer[] {} );
+  }
+
 }

@@ -2,25 +2,28 @@ package de.openali.odysseus.chart.framework.model.layer;
 
 import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
+import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
 /**
  * @author burtscher used to manage chart layers - right now this means adding and removing them
  */
 public interface ILayerManager extends IEventProvider<ILayerManagerEventListener>
 {
+  void accept( IChartLayerVisitor visitor );
+
   void addLayer( IChartLayer... layer );
 
   void addLayer( IChartLayer layer, int position );
-
-  int getLayerPosition( IChartLayer layer );
-
-  void removeLayer( IChartLayer layer );
 
   /**
    * Hiermit wird der Befehl zum Schliessen des LayerManagers erteilt; in der Implementation sollen alle selbst
    * erzeugten Resourcen geschlossen werden
    */
   void clear( );
+
+  IChartLayer findLayer( String identifier );
+
+  int getLayerPosition( IChartLayer layer );
 
   /**
    * Gibt eine Liste aller vorhandenen Layer zurück. Die List ist geordnet in der Reihenfolge, in der die Layer
@@ -30,16 +33,9 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
    */
   IChartLayer[] getLayers( );
 
+  int size( );
+
   void moveLayerToPosition( IChartLayer layer, int position );
 
-  IChartLayer getLayerById( String id );
-
-  int getSize( );
-
-  /**
-   * returns only layers which are editable (
-   */
-  IEditableChartLayer[] getEditableLayers( );
-
-  ITooltipChartLayer[] getTooltipLayers( );
+  void removeLayer( IChartLayer layer );
 }

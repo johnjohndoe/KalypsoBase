@@ -41,18 +41,18 @@
 package org.kalypso.zml.ui.chart.layer.visitor;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor;
 
 import de.openali.odysseus.chart.ext.base.layer.DefaultTextLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * @author Dirk Kuch
  */
-public class SetVisibilityChartModelVisitor extends AbstractExternalChartModelVisitor
+public class SetVisibilityChartModelVisitor implements IChartLayerVisitor
 {
   public static final String NO_DATA_LAYER = "noData";
 
@@ -70,7 +70,7 @@ public class SetVisibilityChartModelVisitor extends AbstractExternalChartModelVi
    * @see org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor#accept(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  protected void accept( final IChartLayer layer )
+  public void visit( final IChartLayer layer )
   {
     if( layer instanceof DefaultTextLayer )
     {

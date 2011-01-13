@@ -42,13 +42,13 @@ public class ODSChartManipulation
     final List<String> realReqLayers = new ArrayList<String>();
     if( reqLayers != null )
       for( final String layerId : reqLayers )
-        if( manager.getLayerById( layerId ) != null )
+        if( manager.findLayer( layerId ) != null )
           realReqLayers.add( layerId );
     if( (realReqLayers != null) && (realReqLayers.size() > 0) )
     {
       for( int i = 0; i < realReqLayers.size(); i++ )
       {
-        final IChartLayer layer = manager.getLayerById( realReqLayers.get( i ) );
+        final IChartLayer layer = manager.findLayer( realReqLayers.get( i ) );
         if( layer != null )
         {
           manager.moveLayerToPosition( layer, i );

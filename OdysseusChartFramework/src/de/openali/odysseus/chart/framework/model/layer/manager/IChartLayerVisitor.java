@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,34 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.base;
+package de.openali.odysseus.chart.framework.model.layer.manager;
 
-import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
- * "external" visitor
- * 
  * @author Dirk Kuch
  */
-public abstract class AbstractExternalChartModelVisitor
+public interface IChartLayerVisitor
 {
-  public void visit( final IChartModel model )
-  {
-    final ILayerManager layerManager = model.getLayerManager();
-
-    visit( layerManager );
-  }
-
-  public void visit( final ILayerManager layerManager )
-  {
-    final IChartLayer[] layers = layerManager.getLayers();
-    for( final IChartLayer layer : layers )
-    {
-      accept( layer );
-    }
-  }
-
-  protected abstract void accept( final IChartLayer layer );
+  void visit( IChartLayer layer );
 }

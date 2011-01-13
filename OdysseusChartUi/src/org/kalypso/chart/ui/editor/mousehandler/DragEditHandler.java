@@ -7,6 +7,8 @@ import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.layer.manager.visitors.EditableChartLayerVisitor;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
@@ -29,8 +31,13 @@ public class DragEditHandler extends AbstractChartDragHandler
 
   private final boolean canSnap( final Point point )
   {
-    final IEditableChartLayer[] eLayers = getChart().getChartModel().getLayerManager().getEditableLayers();
-    for( final IEditableChartLayer layer : eLayers )
+    final ILayerManager layerManager = getChart().getChartModel().getLayerManager();
+    final EditableChartLayerVisitor visitor = new EditableChartLayerVisitor();
+    layerManager.accept( visitor );
+
+    final IEditableChartLayer[] layers = visitor.getLayers();
+
+    for( final IEditableChartLayer layer : layers )
     {
       if( !layer.isLocked() && layer.isVisible() && layer.getHover( point ) != null )
       {

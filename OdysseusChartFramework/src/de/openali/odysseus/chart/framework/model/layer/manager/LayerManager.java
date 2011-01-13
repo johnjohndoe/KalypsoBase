@@ -1,4 +1,4 @@
-package de.openali.odysseus.chart.framework.model.layer.impl;
+package de.openali.odysseus.chart.framework.model.layer.manager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,9 +11,7 @@ import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListene
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.LayerManagerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 
 public class LayerManager implements ILayerManager
 {
@@ -57,6 +55,15 @@ public class LayerManager implements ILayerManager
   private final List<IChartLayer> m_layers = new ArrayList<IChartLayer>();
 
   final LayerManagerEventHandler m_handler = new LayerManagerEventHandler();
+
+  @Override
+  public void accept( final IChartLayerVisitor visitor )
+  {
+    for( final IChartLayer layer : m_layers )
+    {
+      visitor.visit( layer );
+    }
+  }
 
   /**
    * @see de.openali.odysseus.chart.framework.layer.ILayerManager#addLayer(de.openali.odysseus.chart.framework.layer.IChartLayer)
@@ -135,7 +142,7 @@ public class LayerManager implements ILayerManager
   }
 
   @Override
-  public IChartLayer getLayerById( final String id )
+  public IChartLayer findLayer( final String id )
   {
     for( final IChartLayer layer : getLayers() )
     {
@@ -171,39 +178,8 @@ public class LayerManager implements ILayerManager
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getSize()
    */
   @Override
-  public int getSize( )
+  public int size( )
   {
     return m_layers.size();
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getEditableLayers()
-   */
-  @Override
-  public IEditableChartLayer[] getEditableLayers( )
-  {
-    final List<IEditableChartLayer> editLayers = new ArrayList<IEditableChartLayer>();
-    for( final IChartLayer layer : getLayers() )
-    {
-      if( layer instanceof IEditableChartLayer )
-        editLayers.add( (IEditableChartLayer) layer );
-    }
-
-    return editLayers.toArray( new IEditableChartLayer[] {} );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getTooltipLayers()
-   */
-  @Override
-  public ITooltipChartLayer[] getTooltipLayers( )
-  {
-    final List<ITooltipChartLayer> tooltipLayers = new ArrayList<ITooltipChartLayer>();
-    for( final IChartLayer layer : getLayers() )
-    {
-      if( layer instanceof ITooltipChartLayer )
-        tooltipLayers.add( (ITooltipChartLayer) layer );
-    }
-    return tooltipLayers.toArray( new ITooltipChartLayer[] {} );
   }
 }

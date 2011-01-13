@@ -320,12 +320,12 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
           final Object targetLayer = getCurrentTarget();
           Object parent = null;
           // find dragged
-          IChartLayer draggedLayer = layerManager.getLayerById( id );
+          IChartLayer draggedLayer = layerManager.findLayer( id );
           if( draggedLayer == null )
           {
             parent = m_contentProvider.getParent( targetLayer );
             layerManager = parent instanceof IChartLayer ? ((IChartLayer) parent).getLayerManager() : null;
-            draggedLayer = layerManager == null ? null : layerManager.getLayerById( id );
+            draggedLayer = layerManager == null ? null : layerManager.findLayer( id );
           }
           if( draggedLayer == null )
             return false;
