@@ -6,10 +6,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringUtils;
 
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
@@ -126,17 +129,19 @@ public class CalendarParser implements IStringParser<Calendar>
             final String sec = matcher.group( 10 );
             durationMap.put( Calendar.SECOND, sec );
 
-            final Set<Integer> durationKeys = durationMap.keySet();
-            for( final Integer key : durationKeys )
+            final Set<Entry<Integer, String>> entries = durationMap.entrySet();
+            for( final Entry<Integer, String> entry : entries )
             {
-              final String durationForUnitStr = durationMap.get( key );
-              if( durationForUnitStr != null )
+              final String durationForUnitStr = entry.getValue();
+              if( StringUtils.isNotEmpty( durationForUnitStr ) )
               {
                 int durationForUnit = Integer.parseInt( durationForUnitStr.substring( 0, (durationForUnitStr.length() - 1) ) );
+
                 // Falls die Duration negativ ist, muss der Wert negiert werden
-                if( dir.equals( "-" ) )
+                if( dir.equals( "-" ) ) //$NON-NLS-1$
                   durationForUnit *= -1;
-                cal.add( key, durationForUnit );
+
+                cal.add( entry.getKey(), durationForUnit );
               }
             }
           }
