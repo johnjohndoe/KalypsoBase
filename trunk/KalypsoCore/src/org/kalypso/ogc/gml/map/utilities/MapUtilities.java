@@ -41,9 +41,12 @@
 package org.kalypso.ogc.gml.map.utilities;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.kalypso.jts.SnapUtilities;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -294,4 +297,42 @@ public final class MapUtilities
     mapPanel.setBoundingBox( newExtent );
   }
 
+  /**
+   * This functions returns all used ids.
+   * 
+   * @param mapModell
+   *          The map model.
+   * @return All used ids.
+   */
+  public static List<String> getUsedIds( IMapModell mapModell )
+  {
+    /* Memory for the used ids. */
+    List<String> usedIds = new ArrayList<String>();
+
+    /* Loop all themes and collect their ids. */
+    IKalypsoTheme[] themes = mapModell.getAllThemes();
+    for( IKalypsoTheme theme : themes )
+      usedIds.add( theme.getId() );
+
+    return usedIds;
+  }
+
+  /**
+   * This function calculates an id in the form of 'ID_n' which is not in the list of used ids.
+   * 
+   * @param usedIds
+   *          The list of used ids.
+   * @param usedIds
+   *          The list of used ids.
+   * @return The new id. It is made certain, that it was not contained in the list of used ids, thus that it is unique.
+   */
+  public static String getNewId( List<String> usedIds )
+  {
+    int count = 0;
+    String newId = "ID_" + count++;
+    while( usedIds.contains( newId ) )
+      newId = "ID_" + count++;
+
+    return newId;
+  }
 }
