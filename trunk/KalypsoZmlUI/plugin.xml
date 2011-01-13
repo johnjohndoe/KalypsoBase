@@ -16,6 +16,10 @@
           id="org.kalypso.zml.ui.chart.layer.provider.ZmlSinglePointProvider">
     </provider>
     <provider
+          class="org.kalypso.zml.ui.chart.layer.provider.ZmlDateRangeLayerProvider"
+          id="org.kalypso.zml.ui.chart.layer.provider.ZmlDateRangeLayerProvider">
+    </provider>
+    <provider
           class="org.kalypso.zml.ui.chart.layer.provider.ZmlForecastLayerProvider"
           id="org.kalypso.zml.ui.chart.layer.provider.ZmlForecastLayerProvider">
     </provider>
