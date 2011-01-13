@@ -46,6 +46,7 @@
             <Parameter name="grenzwert" value=".*Kalypso_Grenzwert_\w+$" />
             <Parameter name="label" value="%s" />
             <Parameter name="labelTokenizer" value="^.+_" />
+            <Parameter name="content.hauptzahl" value="true" />
           </Parameters>
         </Provider>
         <Title>Grenzwerte</Title>

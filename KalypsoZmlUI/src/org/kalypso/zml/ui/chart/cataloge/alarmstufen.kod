@@ -56,6 +56,7 @@
             <Parameter name="grenzwert" value=".*Alarmstufe_1\w?" />
             <Parameter name="label" value="AS%s" />
             <Parameter name="labelTokenizer" value="^.+_" />
+            <Parameter name="content.alarmstufe" value="true" />
           </Parameters>
         </Provider>
         <Title>Alarmstufe</Title>
@@ -72,6 +73,7 @@
             <Parameter name="grenzwert" value=".*Alarmstufe_2\w?" />
             <Parameter name="label" value="AS%s" />
             <Parameter name="labelTokenizer" value="^.+_" />
+            <Parameter name="content.alarmstufe" value="true" />
           </Parameters>
         </Provider>
         <Title>Alarmstufe</Title>
@@ -88,6 +90,7 @@
             <Parameter name="grenzwert" value=".*Alarmstufe_3\w?" />
             <Parameter name="label" value="AS%s" />
             <Parameter name="labelTokenizer" value="^.+_" />
+            <Parameter name="content.alarmstufe" value="true" />
           </Parameters>
         </Provider>
         <Title>Alarmstufe</Title>
@@ -104,6 +107,7 @@
             <Parameter name="grenzwert" value=".*Alarmstufe_4\w?" />
             <Parameter name="label" value="AS%s" />
             <Parameter name="labelTokenizer" value="^.+_" />
+            <Parameter name="content.alarmstufe" value="true" />
           </Parameters>
         </Provider>
         <Title>Alarmstufe</Title>
