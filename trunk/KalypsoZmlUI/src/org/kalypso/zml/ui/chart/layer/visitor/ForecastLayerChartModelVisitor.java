@@ -41,15 +41,15 @@
 package org.kalypso.zml.ui.chart.layer.visitor;
 
 import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlForecastLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class ForecastLayerChartModelVisitor extends AbstractExternalChartModelVisitor
+public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
 {
   private final IObsProvider m_provider;
 
@@ -62,7 +62,7 @@ public class ForecastLayerChartModelVisitor extends AbstractExternalChartModelVi
    * @see org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor#accept(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  protected void accept( final IChartLayer layer )
+  public void visit( final IChartLayer layer )
   {
     if( !(layer instanceof ZmlForecastLayer) )
       return;

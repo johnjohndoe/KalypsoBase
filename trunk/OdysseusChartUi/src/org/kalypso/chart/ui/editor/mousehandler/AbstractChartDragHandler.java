@@ -1,5 +1,6 @@
 package org.kalypso.chart.ui.editor.mousehandler;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
@@ -8,6 +9,8 @@ import org.eclipse.swt.widgets.Control;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.layer.manager.visitors.EditableChartLayerVisitor;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 
@@ -84,17 +87,24 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
       return null;
 
     final Point plotPoint = getChart().screen2plotPoint( screen );
-    final IEditableChartLayer[] layers = model.getLayerManager().getEditableLayers();
-    for( int i = layers.length - 1; i >= 0; i-- )
 
-      if( layers[i].isVisible() )
+    final ILayerManager layerManager = model.getLayerManager();
+    final EditableChartLayerVisitor visitor = new EditableChartLayerVisitor();
+    layerManager.accept( visitor );
+
+    final IEditableChartLayer[] layers = visitor.getLayers();
+    ArrayUtils.reverse( layers );
+
+    for( final IEditableChartLayer layer : layers )
+    {
+      if( layer.isVisible() )
       {
-        final EditInfo info = layers[i].getHover( plotPoint );
+        final EditInfo info = layer.getHover( plotPoint );
         if( info != null )
-        {
           return info;
-        }
       }
+    }
+
     return null;
   }
 

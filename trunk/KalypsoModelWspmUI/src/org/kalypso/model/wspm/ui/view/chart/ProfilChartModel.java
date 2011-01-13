@@ -129,7 +129,7 @@ public class ProfilChartModel extends ChartModel
 
   public final IProfilChartLayer getLayer( final String layerID )
   {
-    final IChartLayer layer = getLayerManager().getLayerById( layerID );
+    final IChartLayer layer = getLayerManager().findLayer( layerID );
     if( layer instanceof IProfilChartLayer )
       return (IProfilChartLayer) layer;
 

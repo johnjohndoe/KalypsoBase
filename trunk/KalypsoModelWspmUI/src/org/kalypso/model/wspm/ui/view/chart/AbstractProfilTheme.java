@@ -58,8 +58,9 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
-import de.openali.odysseus.chart.framework.model.layer.impl.LayerManager;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.manager.LayerManager;
+import de.openali.odysseus.chart.framework.model.layer.manager.visitors.EditableChartLayerVisitor;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -366,10 +367,16 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   public void lockLayer( final boolean isLocked )
   {
     if( isLocked != isLocked() )
-      for( final IEditableChartLayer layer : getLayerManager().getEditableLayers() )
+    {
+      final EditableChartLayerVisitor visitor = new EditableChartLayerVisitor();
+      m_layerManager.accept( visitor );
+
+      for( final IEditableChartLayer layer : visitor.getLayers() )
       {
         layer.lockLayer( isLocked );
       }
+    }
+
     super.lockLayer( isLocked );
 
   }

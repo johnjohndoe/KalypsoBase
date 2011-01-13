@@ -119,7 +119,7 @@ public class ChartModelState implements IChartModelState
         if( !l.isEmpty() )
         {
           final Object id = l.get( 0 );
-          final IChartLayer layer = id == null ? null : mngr.getLayerById( id.toString() );
+          final IChartLayer layer = id == null ? null : mngr.findLayer( id.toString() );
           if( layer != null )
           {
             mngr.moveLayerToPosition( layer, pos++ );
@@ -129,7 +129,7 @@ public class ChartModelState implements IChartModelState
       }
       else
       {
-        final IChartLayer layer = mngr.getLayerById( o.toString() );
+        final IChartLayer layer = mngr.findLayer( o.toString() );
         if( layer != null )
         {
           mngr.moveLayerToPosition( layer, pos++ );
@@ -158,7 +158,7 @@ public class ChartModelState implements IChartModelState
     final ILayerManager mngr = model.getLayerManager();
     if( mngr == null )
       return;
-    final IChartLayer activelayer = mngr.getLayerById( m_activeLayer );
+    final IChartLayer activelayer = mngr.findLayer( m_activeLayer );
     if( activelayer != null )
     {
       activelayer.setActive( true );
