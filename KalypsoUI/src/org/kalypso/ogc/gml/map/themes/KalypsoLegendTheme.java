@@ -50,10 +50,12 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -119,7 +121,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
    * @see org.kalypso.ogc.gml.map.themes.AbstractImageTheme#updateImage(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected Image updateImage( IProgressMonitor monitor ) throws CoreException
+  protected Image updateImage( IProgressMonitor monitor )
   {
     /* If no monitor was given, take a null progress monitor. */
     if( monitor == null )
@@ -136,22 +138,50 @@ public class KalypsoLegendTheme extends AbstractImageTheme
 
       /* Create the nodes. */
       IThemeNode rootNode = NodeFactory.createRootNode( getMapModell(), null );
-      IThemeNode[] nodes = rootNode.getChildren();
+      final IThemeNode[] nodes = rootNode.getChildren();
 
       /* Monitor. */
       monitor.worked( 250 );
       monitor.subTask( "Erzeuge Legende..." );
 
       /* Create the legend. */
-      LegendExporter legendExporter = new LegendExporter();
-      org.eclipse.swt.graphics.Image image = legendExporter.exportLegends( m_themeIds, nodes, Display.getCurrent(), new Insets( m_insets, m_insets, m_insets, m_insets ), m_backgroundColor.getRGB(), -1, -1, new SubProgressMonitor( monitor, 250 ) );
+      final SubProgressMonitor subMonitor = new SubProgressMonitor( monitor, 250 );
+      final org.eclipse.swt.graphics.Image[] image = new org.eclipse.swt.graphics.Image[1];
+      final Display display = PlatformUI.getWorkbench().getDisplay();
+      display.syncExec( new Runnable()
+      {
+        /**
+         * @see java.lang.Runnable#run()
+         */
+        @Override
+        public void run( )
+        {
+          try
+          {
+            /* Create the legend. */
+            LegendExporter legendExporter = new LegendExporter();
+            image[0] = legendExporter.exportLegends( m_themeIds, nodes, display, new Insets( m_insets, m_insets, m_insets, m_insets ), m_backgroundColor.getRGB(), -1, -1, subMonitor );
+          }
+          catch( CoreException ex )
+          {
+            image[0] = null;
+
+            if( ex.getStatus().getSeverity() != IStatus.CANCEL )
+              ex.printStackTrace();
+          }
+        }
+      } );
+
+      /* If something happend during the export of the legend. */
+      if( image[0] == null )
+        return null;
 
       /* Monitor. */
       monitor.subTask( "Konvertiere Legende..." );
 
       /* Convert to an AWT image. */
-      BufferedImage awtImage = ImageConverter.convertToAWT( image.getImageData() );
-      image.dispose();
+      BufferedImage awtImage = ImageConverter.convertToAWT( image[0].getImageData() );
+      image[0].dispose();
 
       /* Monitor. */
       if( monitor.isCanceled() )
@@ -161,7 +191,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
       monitor.worked( 250 );
       monitor.subTask( "Zeichne Rahmen..." );
 
-      /* Draw the AWT image. */
+      /* Draw a border in the AWT image. */
       Graphics2D graphics = (Graphics2D) awtImage.getGraphics();
       graphics.setColor( Color.BLACK );
       graphics.setStroke( new BasicStroke( 2.0f ) );

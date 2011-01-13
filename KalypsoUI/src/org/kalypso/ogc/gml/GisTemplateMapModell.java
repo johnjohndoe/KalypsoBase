@@ -64,6 +64,7 @@ import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
@@ -310,7 +311,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       {
         String id = theme.getId();
         if( id == null || id.length() == 0 )
-          id = getNewId( usedIds );
+          id = MapUtilities.getNewId( usedIds );
 
         final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateHelper.configureLayer( theme, id, bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
         if( layerElement != null )
@@ -339,16 +340,6 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       /* Monitor. */
       monitor.done();
     }
-  }
-
-  private String getNewId( List<String> usedIds )
-  {
-    int count = 0;
-    String newId = "ID_" + count++;
-    while( usedIds.contains( newId ) )
-      newId = "ID_" + count++;
-
-    return newId;
   }
 
   public synchronized void saveGismapTemplate( final GM_Envelope bbox, final String srsName, IProgressMonitor monitor, final IFile file ) throws CoreException

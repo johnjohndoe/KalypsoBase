@@ -55,6 +55,8 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
 import org.kalypso.contribs.eclipse.swt.graphics.FontUtilities;
@@ -126,17 +128,28 @@ public class KalypsoTextTheme extends AbstractImageTheme
       monitor.subTask( "Erzeuge Text..." );
 
       /* Create the text. */
-      org.eclipse.swt.graphics.Image image = createSwtImage();
-      if( image == null )
-        return null;
+      final org.eclipse.swt.graphics.Image[] image = new org.eclipse.swt.graphics.Image[1];
+      final Display display = PlatformUI.getWorkbench().getDisplay();
+      display.syncExec( new Runnable()
+      {
+        /**
+         * @see java.lang.Runnable#run()
+         */
+        @Override
+        public void run( )
+        {
+          /* Create the text. */
+          image[0] = createSwtImage();
+        }
+      } );
 
       /* Monitor. */
       monitor.worked( 500 );
       monitor.subTask( "Konvertiere Text..." );
 
       /* Convert to an AWT image. */
-      BufferedImage awtImage = ImageConverter.convertToAWT( image.getImageData() );
-      image.dispose();
+      BufferedImage awtImage = ImageConverter.convertToAWT( image[0].getImageData() );
+      image[0].dispose();
 
       /* Monitor. */
       monitor.worked( 250 );
@@ -191,7 +204,7 @@ public class KalypsoTextTheme extends AbstractImageTheme
    * 
    * @return The SWT image.
    */
-  private org.eclipse.swt.graphics.Image createSwtImage( )
+  protected org.eclipse.swt.graphics.Image createSwtImage( )
   {
     /* Is a text available? */
     if( m_text == null || m_text.length() == 0 )
