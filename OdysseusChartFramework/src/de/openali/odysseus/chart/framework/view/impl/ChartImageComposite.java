@@ -380,8 +380,9 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   @Override
   public final Point screen2plotPoint( final Point screen )
   {
-    if( m_plotRect == null || m_plotRect == null )
+    if( m_plotRect == null )
       return screen;
+
     return new Point( screen.x - m_plotRect.x, screen.y - m_plotRect.y );
   }
 

@@ -674,7 +674,7 @@ public class ChartModel implements IChartModel
           break;
       }
 
-      if( from != Double.NaN && to != Double.NaN )
+      if( !Double.isNaN( from ) && !Double.isNaN( to ) )
       {
         final double mouserange = Math.abs( from - to );
 

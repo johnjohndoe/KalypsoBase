@@ -86,8 +86,9 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
   private Point calcSize( final String text )
   {
-    if( text == null || getTextStyle() == null || text.trim() == "" )
+    if( StringUtils.isEmpty( text ) || getTextStyle() == null )
       return new Point( 0, 0 );
+
     final Device device = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( device, 1, 1 );
     final Transform transform = new Transform( device );
@@ -293,7 +294,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   @Override
   public void paint( final GC gc, final Rectangle fixedWidth )
   {
-    if( getLabel() == null || getTextStyle() == null || getLabel().trim() == "" || fixedWidth == null )
+    if( StringUtils.isEmpty( getLabel() ) || getTextStyle() == null || fixedWidth == null )
       return;
 
     // save GC

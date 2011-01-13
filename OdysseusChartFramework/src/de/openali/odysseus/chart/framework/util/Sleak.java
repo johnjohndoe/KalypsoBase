@@ -288,8 +288,10 @@ public class Sleak
       }
       gc.setFont( (Font) object );
       final FontData[] array = gc.getFont().getFontData();
-      String string = "";
+
       final String lf = text.getLineDelimiter();
+      final StringBuffer buffer = new StringBuffer();
+
       for( int i = 0; i < array.length; i++ )
       {
         final FontData data = array[i];
@@ -306,9 +308,10 @@ public class Sleak
             style += "ITALIC";
           }
         }
-        string += data.getName() + " " + data.getHeight() + " " + style + lf;
+        buffer.append( data.getName() + " " + data.getHeight() + " " + style + lf );
       }
-      gc.drawString( string, 0, 0 );
+
+      gc.drawString( buffer.toString(), 0, 0 );
       return;
     }
     // NOTHING TO DRAW FOR GC

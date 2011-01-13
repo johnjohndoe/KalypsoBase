@@ -121,7 +121,7 @@ public class GenericLayerRenderer
     {
       ChartUtilities.resetGC( gcw );
       // draw tooltip
-      final Rectangle screen = gcw.getClipping();
+// final Rectangle screen = gcw.getClipping();
 
       // String tooltiptext = m_editInfo.m_text;
       final Point mousePos = m_tooltipInfo.m_pos;
