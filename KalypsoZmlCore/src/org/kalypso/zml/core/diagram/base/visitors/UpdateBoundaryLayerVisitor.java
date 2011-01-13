@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,23 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.model.layer.manager.visitors;
+package org.kalypso.zml.core.diagram.base.visitors;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class TooltipChartLayerVisitor implements IChartLayerVisitor
+public class UpdateBoundaryLayerVisitor implements IChartLayerVisitor
 {
+  private final IObsProvider m_provider;
 
-  private final Set<ITooltipChartLayer> m_layers = new LinkedHashSet<ITooltipChartLayer>();
+  public UpdateBoundaryLayerVisitor( final IObsProvider provider )
+  {
+    m_provider = provider;
+  }
 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
@@ -62,16 +66,22 @@ public class TooltipChartLayerVisitor implements IChartLayerVisitor
   @Override
   public void visit( final IChartLayer layer )
   {
-    if( layer instanceof ITooltipChartLayer )
-      m_layers.add( (ITooltipChartLayer) layer );
+    if( layer instanceof IZmlLayer )
+    {
+      if( layer.getId().contains( "grenzwert" ) )
+      {
+        final IZmlLayer zml = (IZmlLayer) layer;
+        update( zml );
+      }
+    }
 
-    final ILayerManager layerManager = layer.getLayerManager();
-    layerManager.accept( this );
+    layer.getLayerManager().accept( this );
   }
 
-  public ITooltipChartLayer[] getLayers( )
+  private void update( final IZmlLayer layer )
   {
-    return m_layers.toArray( new ITooltipChartLayer[] {} );
+    final IZmlLayerDataHandler boundaryHandler = layer.getDataHandler();
+    if( boundaryHandler instanceof ZmlObsProviderDataHandler )
+      ((ZmlObsProviderDataHandler) boundaryHandler).setObsProvider( m_provider );
   }
-
 }

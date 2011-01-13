@@ -65,11 +65,7 @@ public class EditableChartLayerVisitor implements IChartLayerVisitor
       m_layers.add( (IEditableChartLayer) layer );
 
     final ILayerManager layerManager = layer.getLayerManager();
-    final IChartLayer[] layers = layerManager.getLayers();
-    for( final IChartLayer child : layers )
-    {
-      visit( child );
-    }
+    layerManager.accept( this );
   }
 
   public IEditableChartLayer[] getLayers( )

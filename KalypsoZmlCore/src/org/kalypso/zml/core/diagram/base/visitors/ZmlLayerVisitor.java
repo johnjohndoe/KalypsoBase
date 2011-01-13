@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,23 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.model.layer.manager.visitors;
+package org.kalypso.zml.core.diagram.base.visitors;
 
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.Set;
+
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class TooltipChartLayerVisitor implements IChartLayerVisitor
+public class ZmlLayerVisitor implements IChartLayerVisitor
 {
-
-  private final Set<ITooltipChartLayer> m_layers = new LinkedHashSet<ITooltipChartLayer>();
+  Set<IZmlLayer> m_layers = new HashSet<IZmlLayer>();
 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
@@ -62,16 +62,16 @@ public class TooltipChartLayerVisitor implements IChartLayerVisitor
   @Override
   public void visit( final IChartLayer layer )
   {
-    if( layer instanceof ITooltipChartLayer )
-      m_layers.add( (ITooltipChartLayer) layer );
+    if( layer instanceof IZmlLayer )
+      m_layers.add( (IZmlLayer) layer );
 
     final ILayerManager layerManager = layer.getLayerManager();
     layerManager.accept( this );
   }
 
-  public ITooltipChartLayer[] getLayers( )
+  public IZmlLayer[] getLayers( )
   {
-    return m_layers.toArray( new ITooltipChartLayer[] {} );
+    return m_layers.toArray( new IZmlLayer[] {} );
   }
 
 }

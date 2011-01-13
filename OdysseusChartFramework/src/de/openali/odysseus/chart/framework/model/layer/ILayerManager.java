@@ -11,6 +11,8 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
 {
   void accept( IChartLayerVisitor visitor );
 
+  void accept( IChartLayerVisitor... visitors );
+
   void addLayer( IChartLayer... layer );
 
   void addLayer( IChartLayer layer, int position );
