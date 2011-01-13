@@ -77,7 +77,6 @@ import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.ChartType.Mappers;
 import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.PositionType;
-import de.openali.odysseus.chartconfig.x020.ReferencableType;
 import de.openali.odysseus.chartconfig.x020.ReferencingType;
 import de.openali.odysseus.chartconfig.x020.ScreenAxisType;
 
@@ -100,7 +99,7 @@ public class ChartMapperFactory extends AbstractChartFactory
       final AxisType[] axisTypes = mappers.getAxisArray();
       for( final AxisType axisType : axisTypes )
       {
-        addAxis( axisType, chartType );
+        addAxis( axisType );
       }
 
       final ScreenAxisType[] screenAxesTypes = mappers.getScreenAxisArray();
@@ -115,7 +114,7 @@ public class ChartMapperFactory extends AbstractChartFactory
    * creates a concrete IAxis-Implementation from an AbstractAxisType derived from a ChartConfiguration, sets the
    * corresponding renderer and adds both to a given Chart
    */
-  public IAxis addAxis( final AxisType axisType, final ReferencableType baseType )
+  public IAxis addAxis( final AxisType axisType )
   {
     final IMapperRegistry mapperRegistry = getModel().getMapperRegistry();
     if( axisType != null )
@@ -368,10 +367,10 @@ public class ChartMapperFactory extends AbstractChartFactory
     return null;
   }
 
-  public void addMapper( final MapperType type, final ReferencableType baseType )
+  public void addMapper( final MapperType type )
   {
     if( type instanceof AxisType )
-      addAxis( (AxisType) type, baseType );
+      addAxis( (AxisType) type );
     else if( type instanceof ScreenAxisType )
       addScreenAxis( (ScreenAxisType) type );
   }

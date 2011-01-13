@@ -100,15 +100,18 @@ public abstract class AbstractChartFactory
     return m_context;
   }
 
-  protected IParameterContainer createParameterContainer( final String ownerId, final ProviderType pt )
+  protected IParameterContainer createParameterContainer( final String ownerIdentifier, final ProviderType providerType )
+  {
+    return createParameterContainer( ownerIdentifier, providerType.getEpid(), providerType );
+  }
+
+  protected IParameterContainer createParameterContainer( final String ownerIdentifier, final String providerIdentifier, final ProviderType providerType )
   {
     ParametersType parameters = null;
-    if( pt != null )
-      parameters = pt.getParameters();
+    if( providerType != null )
+      parameters = providerType.getParameters();
 
-    final IParameterContainer pc = new XmlbeansParameterContainer( ownerId, pt.getEpid(), parameters );
-
-    return pc;
+    return new XmlbeansParameterContainer( ownerIdentifier, providerIdentifier, parameters );
   }
 
   public MapperType findMapperType( final ReferencingType reference )

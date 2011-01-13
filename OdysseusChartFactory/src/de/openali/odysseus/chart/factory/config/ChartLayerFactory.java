@@ -56,7 +56,7 @@ import de.openali.odysseus.chart.factory.OdysseusChartFactory;
 import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.config.resolver.ChartTypeResolver;
-import de.openali.odysseus.chart.factory.layer.PlainLayer;
+import de.openali.odysseus.chart.factory.layer.PlainLayerProvider;
 import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.factory.provider.IMapperProvider;
 import de.openali.odysseus.chart.factory.util.AxisUtils;
@@ -129,7 +129,7 @@ public class ChartLayerFactory extends AbstractChartFactory
 
         LayerTypeHelper.appendParameters( type, reference.getParameters() );
 
-        final IChartLayer layer = buildLayer( type, baseType );
+        final IChartLayer layer = buildLayer( type, type, baseType );
         stack.add( layer );
       }
       catch( final Throwable t )
@@ -141,7 +141,7 @@ public class ChartLayerFactory extends AbstractChartFactory
     return stack.toArray( new IChartLayer[] {} );
   }
 
-  private IChartLayer[] buildLayers( final LayersType layersType, final ReferencableType baseType )
+  private IChartLayer[] buildLayers( final LayersType layersType, final ReferencableType... baseTypes )
   {
     final LayerType[] layers = layersType.getLayerArray();
 
@@ -152,7 +152,7 @@ public class ChartLayerFactory extends AbstractChartFactory
       try
       {
         if( layerType != null )
-          stack.add( buildLayer( layerType, baseType ) );
+          stack.add( buildLayer( layerType, baseTypes ) );
         else
           Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "a reference to a layer type could not be resolved " );
       }
@@ -167,64 +167,55 @@ public class ChartLayerFactory extends AbstractChartFactory
     return stack.toArray( new IChartLayer[] {} );
   }
 
-  public IChartLayer buildLayer( final LayerType layerType, final ReferencableType baseType ) throws ConfigurationException
+  public IChartLayer buildLayer( final LayerType layerType, final ReferencableType... baseTypes ) throws ConfigurationException
   {
     final ProviderType providerType = layerType.getProvider();
     if( providerType == null )
     {
-      final IChartLayer plainLayer = buildPlainLayer( layerType, baseType );
-
-      final LayersType layers = layerType.getLayers();
-      if( layers != null )
-      {
-        final Set<IChartLayer> stack = new LinkedHashSet<IChartLayer>();
-        Collections.addAll( stack, buildLayerReferences( layers, layerType ) );
-        Collections.addAll( stack, buildLayers( layers, layerType ) );
-
-        final ILayerManager layerManager = plainLayer.getLayerManager();
-        layerManager.addLayer( stack.toArray( new IChartLayer[] {} ) );
-      }
-
-      return plainLayer;
+      return buildLayer( layerType, new PlainLayerProvider(), baseTypes );
     }
     else
     {
-      final ReferencingType domainAxisRef = getDomainAxisReference( layerType, baseType );
-      final ReferencingType targetAxisRef = getTargetAxisReference( layerType, baseType );
-
-      final IAxis domainAxis = buildMapper( domainAxisRef, baseType );
-      final IAxis targetAxis = buildMapper( targetAxisRef, baseType );
-
-      final CoordinateMapper mapper = new CoordinateMapper( domainAxis, targetAxis );
-      buildRoleReferences( layerType );
-
-      final IParameterContainer parameters = createParameterContainer( layerType.getId(), layerType.getProvider() );
-
-      final IStyleSet styleSet = StyleFactory.createStyleSet( layerType.getStyles(), baseType, getContext() );
-
       final ILayerProvider provider = getLoader().getExtension( ILayerProvider.class, providerType.getEpid() );
-      provider.init( getModel(), layerType.getId(), parameters, getContext(), AxisUtils.getIdentifier( domainAxisRef ), AxisUtils.getIdentifier( targetAxisRef ), createMapperMap( layerType ), styleSet );
 
-      final IChartLayer layer = provider.getLayer( getContext() );
-      setBasicParameters( layerType, layer );
-      layer.setCoordinateMapper( mapper );
-
-      layer.setData( CONFIGURATION_TYPE_KEY, layerType );
-      layer.init();
-
-      final LayersType layers = layerType.getLayers();
-      if( layers != null )
-      {
-        final Set<IChartLayer> stack = new LinkedHashSet<IChartLayer>();
-        Collections.addAll( stack, buildLayerReferences( layers, layerType ) );
-        Collections.addAll( stack, buildLayers( layers, baseType ) );
-
-        final ILayerManager layerManager = layer.getLayerManager();
-        layerManager.addLayer( stack.toArray( new IChartLayer[] {} ) );
-      }
-
-      return layer;
+      return buildLayer( layerType, provider, baseTypes );
     }
+  }
+
+  public IChartLayer buildLayer( final LayerType layerType, final ILayerProvider provider, final ReferencableType... baseTypes ) throws ConfigurationException
+  {
+    final ReferencingType domainAxisRef = getDomainAxisReference( layerType, baseTypes );
+    final ReferencingType targetAxisRef = getTargetAxisReference( layerType, baseTypes );
+
+    final IAxis domainAxis = buildMapper( domainAxisRef );
+    final IAxis targetAxis = buildMapper( targetAxisRef );
+
+    final CoordinateMapper mapper = new CoordinateMapper( domainAxis, targetAxis );
+    buildRoleReferences( layerType );
+
+    final IParameterContainer parameters = createParameterContainer( layerType.getId(), provider.getId(), layerType.getProvider() );
+    final IStyleSet styleSet = StyleFactory.createStyleSet( layerType.getStyles(), baseTypes, getContext() );
+    provider.init( getModel(), layerType.getId(), parameters, getContext(), AxisUtils.getIdentifier( domainAxisRef ), AxisUtils.getIdentifier( targetAxisRef ), createMapperMap( layerType ), styleSet );
+
+    final IChartLayer layer = provider.getLayer( getContext() );
+    setBasicParameters( layerType, layer );
+    layer.setCoordinateMapper( mapper );
+
+    layer.setData( CONFIGURATION_TYPE_KEY, layerType );
+    layer.init();
+
+    final LayersType layers = layerType.getLayers();
+    if( layers != null )
+    {
+      final Set<IChartLayer> stack = new LinkedHashSet<IChartLayer>();
+      Collections.addAll( stack, buildLayerReferences( layers, layerType ) );
+      Collections.addAll( stack, buildLayers( layers, baseTypes ) );
+
+      final ILayerManager layerManager = layer.getLayerManager();
+      layerManager.addLayer( stack.toArray( new IChartLayer[] {} ) );
+    }
+
+    return layer;
   }
 
   private void buildRoleReferences( final LayerType layerType )
@@ -248,39 +239,39 @@ public class ChartLayerFactory extends AbstractChartFactory
 
   }
 
-  private ReferencingType getTargetAxisReference( final LayerType layerType, final ReferencableType baseType )
+  private ReferencingType getTargetAxisReference( final LayerType layerType, final ReferencableType... baseTypes )
   {
-    final MapperRefs reference = layerType.getMapperRefs();
-    if( reference == null )
-    {
-      if( baseType instanceof LayerType )
-      {
-        final LayerType base = (LayerType) baseType;
-        return base.getMapperRefs().getTargetAxisRef();
-      }
-      else
-        throw new NotImplementedException();
-    }
+    final MapperRefs reference = findMapperReference( layerType, baseTypes );
 
     return reference.getTargetAxisRef();
   }
 
-  private ReferencingType getDomainAxisReference( final LayerType layerType, final ReferencableType baseType )
+  private ReferencingType getDomainAxisReference( final LayerType layerType, final ReferencableType... baseTypes )
+  {
+    final MapperRefs reference = findMapperReference( layerType, baseTypes );
+
+    return reference.getDomainAxisRef();
+
+  }
+
+  private MapperRefs findMapperReference( final LayerType layerType, final ReferencableType[] baseTypes )
   {
     final MapperRefs reference = layerType.getMapperRefs();
-    if( reference == null )
+    if( reference != null )
+      return reference;
+
+    for( final ReferencableType baseType : baseTypes )
     {
       if( baseType instanceof LayerType )
       {
         final LayerType base = (LayerType) baseType;
-
-        return base.getMapperRefs().getDomainAxisRef();
+        final MapperRefs layerTypeReference = base.getMapperRefs();
+        if( layerTypeReference != null )
+          return layerTypeReference;
       }
-      else
-        throw new NotImplementedException();
     }
 
-    return reference.getDomainAxisRef();
+    throw new NotImplementedException();
   }
 
   private void setBasicParameters( final LayerType layerType, final IChartLayer layer )
@@ -301,40 +292,13 @@ public class ChartLayerFactory extends AbstractChartFactory
     layer.setVisible( layerType.isSetVisible() );
   }
 
-  private IChartLayer buildPlainLayer( final LayerType layerType, final ReferencableType baseType )
-  {
-    final PlainLayer plainLayer = new PlainLayer();
-    setBasicParameters( layerType, plainLayer );
-
-    final MapperRefs mapperReferences = layerType.getMapperRefs();
-    if( mapperReferences != null )
-    {
-      final IAxis domainAxis = buildMapper( mapperReferences.getDomainAxisRef(), baseType );
-      final IAxis targetAxis = buildMapper( mapperReferences.getTargetAxisRef(), baseType );
-
-      final CoordinateMapper mapper = new CoordinateMapper( domainAxis, targetAxis );
-      plainLayer.setCoordinateMapper( mapper );
-
-      final RoleReferencingType[] mapperRefArray = mapperReferences.getMapperRefArray();
-      if( ArrayUtils.isNotEmpty( mapperRefArray ) )
-        throw new NotImplementedException();
-
-      buildRoleReferences( layerType );
-    }
-
-    // handle style set
-    plainLayer.init();
-
-    return plainLayer;
-  }
-
-  private IAxis buildMapper( final ReferencingType reference, final ReferencableType baseType )
+  private IAxis buildMapper( final ReferencingType reference )
   {
     if( reference == null )
       return null;
 
     final MapperType axisType = findMapperType( reference );
-    m_mapperFactory.addMapper( axisType, baseType );
+    m_mapperFactory.addMapper( axisType );
 
     return getModel().getMapperRegistry().getAxis( AxisUtils.getIdentifier( reference ) );
   }
