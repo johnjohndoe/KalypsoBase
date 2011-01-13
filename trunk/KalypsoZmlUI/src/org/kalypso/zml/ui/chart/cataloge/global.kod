@@ -125,6 +125,7 @@
           <TargetAxisRef ref="screenAxisY" />
         </MapperRefs>
       </Layer>
+      
       <Layer id="noData" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.base.layer.provider.DefaultTextLayerProvider">
           <Parameters>

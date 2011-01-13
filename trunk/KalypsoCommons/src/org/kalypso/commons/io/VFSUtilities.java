@@ -593,7 +593,7 @@ public class VFSUtilities
    * @param toClose
    *          The file object which should be closed. May be null or already closed.
    */
-  public static void closeQuietly( FileObject toClose )
+  public static void closeQuietly( final FileObject toClose )
   {
     try
     {
@@ -601,11 +601,11 @@ public class VFSUtilities
       if( toClose != null )
         toClose.close();
     }
-    catch( FileSystemException ex )
+    catch( final FileSystemException ex )
     {
       /* If a file system exception is thrown, it was probably already closed. */
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       /* On other exceptions, do tell the developer on the console. */
       ex.printStackTrace();

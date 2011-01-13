@@ -38,7 +38,7 @@ public class ChartModel implements IChartModel
   // /** axis --> List of layers */
   private final Map<IAxis, List<IChartLayer>> m_axis2Layers = new HashMap<IAxis, List<IChartLayer>>();
 
-  private ILayerManager m_manager = null;
+  private final ILayerManager m_manager = new LayerManager();
 
   /**
    * if set to true, all axes are sized automatically to fit all data into a layer
@@ -266,9 +266,6 @@ public class ChartModel implements IChartModel
   @Override
   public ILayerManager getLayerManager( )
   {
-    if( m_manager == null )
-      m_manager = new LayerManager();
-
     return m_manager;
   }
 
