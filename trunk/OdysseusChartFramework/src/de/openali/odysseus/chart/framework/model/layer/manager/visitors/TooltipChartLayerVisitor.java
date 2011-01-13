@@ -66,11 +66,7 @@ public class TooltipChartLayerVisitor implements IChartLayerVisitor
       m_layers.add( (ITooltipChartLayer) layer );
 
     final ILayerManager layerManager = layer.getLayerManager();
-    final IChartLayer[] layers = layerManager.getLayers();
-    for( final IChartLayer child : layers )
-    {
-      visit( child );
-    }
+    layerManager.accept( this );
   }
 
   public ITooltipChartLayer[] getLayers( )

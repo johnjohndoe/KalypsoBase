@@ -12,9 +12,12 @@ import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerEventLi
 import de.openali.odysseus.chart.framework.model.event.impl.LayerManagerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.layer.manager.visitors.FindLayerVisitor;
 
 public class LayerManager implements ILayerManager
 {
+  final LayerManagerEventHandler m_handler = new LayerManagerEventHandler();
+
   private final ILayerEventListener m_layerListener = new AbstractLayerEventListener()
   {
     /**
@@ -54,7 +57,14 @@ public class LayerManager implements ILayerManager
    */
   private final List<IChartLayer> m_layers = new ArrayList<IChartLayer>();
 
-  final LayerManagerEventHandler m_handler = new LayerManagerEventHandler();
+  @Override
+  public void accept( final IChartLayerVisitor... visitors )
+  {
+    for( final IChartLayerVisitor visitor : visitors )
+    {
+      accept( visitor );
+    }
+  }
 
   @Override
   public void accept( final IChartLayerVisitor visitor )
@@ -84,19 +94,16 @@ public class LayerManager implements ILayerManager
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.layer.ILayerManager#removeLayer(de.openali.odysseus.chart.framework.layer.IChartLayer)
-   *      removes layer from chart
+   * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#addLayer(de.openali.odysseus.chart.framework.model.layer.IChartLayer,
+   *      int)
    */
   @Override
-  public void removeLayer( final IChartLayer layer )
+  public void addLayer( final IChartLayer layer, final int position )
   {
-    layer.setActive( false );
+    m_layers.add( position, layer );
+    layer.addListener( m_layerListener );
 
-    m_layers.remove( layer );
-    layer.removeListener( m_layerListener );
-    layer.dispose();
-
-    m_handler.fireLayerRemoved( layer );
+    m_handler.fireLayerAdded( layer );
   }
 
   @Override
@@ -106,18 +113,30 @@ public class LayerManager implements ILayerManager
   }
 
   @Override
-  public void removeListener( final ILayerManagerEventListener l )
-  {
-    m_handler.removeListener( l );
-  }
-
-  @Override
   public void clear( )
   {
     for( final IChartLayer next : getLayers() )
     {
       removeLayer( next );
     }
+  }
+
+  @Override
+  public IChartLayer findLayer( final String identifier )
+  {
+    final FindLayerVisitor visitor = new FindLayerVisitor( identifier );
+    accept( visitor );
+
+    return visitor.getLayer();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getLayerPosition(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public int getLayerPosition( final IChartLayer layer )
+  {
+    return m_layers.indexOf( layer );
   }
 
   /**
@@ -141,37 +160,26 @@ public class LayerManager implements ILayerManager
     m_handler.fireLayerMoved( layer );
   }
 
-  @Override
-  public IChartLayer findLayer( final String id )
-  {
-    for( final IChartLayer layer : getLayers() )
-    {
-      if( layer != null && layer.getId().equals( id ) )
-        return layer;
-    }
-    return null;
-  }
-
   /**
-   * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#addLayer(de.openali.odysseus.chart.framework.model.layer.IChartLayer,
-   *      int)
+   * @see de.openali.odysseus.chart.framework.layer.ILayerManager#removeLayer(de.openali.odysseus.chart.framework.layer.IChartLayer)
+   *      removes layer from chart
    */
   @Override
-  public void addLayer( final IChartLayer layer, final int position )
+  public void removeLayer( final IChartLayer layer )
   {
-    m_layers.add( position, layer );
-    layer.addListener( m_layerListener );
+    layer.setActive( false );
 
-    m_handler.fireLayerAdded( layer );
+    m_layers.remove( layer );
+    layer.removeListener( m_layerListener );
+    layer.dispose();
+
+    m_handler.fireLayerRemoved( layer );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getLayerPosition(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
   @Override
-  public int getLayerPosition( final IChartLayer layer )
+  public void removeListener( final ILayerManagerEventListener l )
   {
-    return m_layers.indexOf( layer );
+    m_handler.removeListener( l );
   }
 
   /**
