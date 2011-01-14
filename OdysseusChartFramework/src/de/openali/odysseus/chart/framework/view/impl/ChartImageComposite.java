@@ -35,6 +35,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 import de.openali.odysseus.chart.framework.util.img.ChartPainter;
 import de.openali.odysseus.chart.framework.util.img.ChartTooltipPainter;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 /**
@@ -257,8 +258,18 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     } );
     setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
     setChartModel( model );
-
-    m_plotHandler = new ChartImagePlotHandler( this );
+  }
+  //@Override
+  public final void addPlotHandler( final IChartDragHandler handler )
+  {
+    if( handler == null )
+      setCursor( getDisplay().getSystemCursor( SWT.CURSOR_ARROW ) );
+    else
+    {
+      addMouseListener( handler );
+      addMouseMoveListener( handler );
+      addKeyListener( handler );
+    }
   }
 
   /**
@@ -317,8 +328,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   {
     if( isDisposed() )
       return;
-    m_invalidateChartJob.cancel();
-    m_invalidateChartJob.schedule( 50 );
+    
+    m_invalidateChartJob.schedule( 100 );
   }
 
   protected void paintDragArea( final GC gcw )
