@@ -43,13 +43,13 @@ Export-Package: org.kalypso.contribs.eclipse,
  org.kalypso.contribs.eclipse.ui.plugin,
  org.kalypso.contribs.eclipse.ui.progress,
  org.kalypso.contribs.eclipse.utils
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.junit;resolution:=optional,
- org.kalypso.contribs.java;visibility:=reexport,
+Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.core.net;visibility:=reexport,
- org.eclipse.core.expressions,
+ org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
  org.eclipse.ui.forms,
- org.eclipse.core.resources
+ org.junit;resolution:=optional,
+ org.kalypso.contribs.java;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

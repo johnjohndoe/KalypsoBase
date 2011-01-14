@@ -59,15 +59,23 @@ public class NewFilenameValidator implements IInputValidator
   private File m_file;
 
   /**
+   * If true, the file extension will be preserved. The entered input will be handled as basename of the new file. This
+   * means, the file extension will always be added to the new text for validation purposes.
+   */
+  private boolean m_preserveExtension;
+
+  /**
    * The constructor.
    * 
    * @param file
    *          The original file.
    * @param preserveExtension
-   *          If true, the file extension will not be
+   *          If true, the file extension will be preserved. The entered input will be handled as basename of the new
+   *          file. This means, the file extension will always be added to the new text for validation purposes.
    */
   public NewFilenameValidator( IFile file, boolean preserveExtension )
   {
+    m_preserveExtension = preserveExtension;
     m_file = file.getLocation().toFile();
   }
 
@@ -76,10 +84,14 @@ public class NewFilenameValidator implements IInputValidator
    * 
    * @param file
    *          The original file.
+   * @param preserveExtension
+   *          If true, the file extension will be preserved. The entered input will be handled as basename of the new
+   *          file. This means, the file extension will always be added to the new text for validation purposes.
    */
   public NewFilenameValidator( File file, boolean preserveExtension )
   {
     m_file = file;
+    m_preserveExtension = preserveExtension;
   }
 
   /**
@@ -91,9 +103,33 @@ public class NewFilenameValidator implements IInputValidator
     if( newText == null || newText.length() == 0 )
       return "Geben Sie einen neuen Dateinamen an.";
 
-    File newFile = new File( m_file.getParentFile(), newText );
+    File newFile = null;
+    String extension = getFileExtension( m_file.getName() );
+    if( !m_preserveExtension || (extension == null || extension.length() == 0) )
+      newFile = new File( m_file.getParentFile(), newText );
+    else
+      newFile = new File( m_file.getParentFile(), String.format( "%s%s", newText, extension ) );
+
     if( newFile.exists() )
-      return String.format( "Die Datei '%s' existiert bereits.", newText );
+      return String.format( "Die Datei '%s' existiert bereits.", newFile.getName() );
+
+    return null;
+  }
+
+  /**
+   * This function returns the file extension. The sequence after the last point will be considered as the extension. It
+   * does not matter, how long this extension is.
+   * 
+   * @param completeFilename
+   *          The filename, which file extension will be returned.
+   * @return The file extension or null.
+   */
+  private String getFileExtension( String complete )
+  {
+    /* Search the position of the extensions dot. */
+    int lastIndexOf = complete.lastIndexOf( "." );
+    if( lastIndexOf != -1 )
+      return complete.substring( lastIndexOf, complete.length() );
 
     return null;
   }
