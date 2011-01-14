@@ -2,6 +2,10 @@
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="alarmstufen">
     <Styles>
+      <LineStyle role="meldegrenze_line">
+        <Width>2</Width>
+        <LineColor>BD6DFF</LineColor>
+      </LineStyle>
       <LineStyle role="alarmstufe_line_1">
         <Width>2</Width>
         <LineColor>E8E800</LineColor>
@@ -20,6 +24,13 @@
       </LineStyle>
       <PointStyle role="alarmstufe_point" isVisible="false">
       </PointStyle>
+      <TextStyle role="meldegrenze_text">
+        <Size>8</Size>
+        <TextColor>BD6DFF</TextColor>
+        <FontFamily>Arial</FontFamily>
+        <FontWeight>NORMAL</FontWeight>
+        <FontStyle>NORMAL</FontStyle>
+      </TextStyle>
       <TextStyle role="alarmstufe_text_1">
         <Size>8</Size>
         <TextColor>E8E800</TextColor>
@@ -50,6 +61,22 @@
       </TextStyle>
     </Styles>
     <Layers>
+      <Layer id="meldegrenze" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
+          <Parameters>
+            <Parameter name="grenzwert" value="^Grenzwert_.:\sMeldegrenze$" />
+            <Parameter name="label" value="MG" />
+            <Parameter name="content.alarmstufe" value="true" />
+          </Parameters>
+        </Provider>
+        <Title>Meldegrenze</Title>
+        <Description />
+        <Styles>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:alarmstufen#meldegrenze_line</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:alarmstufen#meldegrenze_text</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_point</StyleReference>
+        </Styles>
+      </Layer>
       <Layer id="alarmstufe_1" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
           <Parameters>
