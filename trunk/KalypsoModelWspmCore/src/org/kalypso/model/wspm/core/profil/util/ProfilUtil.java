@@ -54,9 +54,6 @@ import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypso.contribs.java.util.Arrays;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.deegree.binding.gml.Definition;
-import org.kalypso.deegree.binding.gml.Dictionary;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.i18n.Messages;
@@ -64,10 +61,10 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.FeatureComponent;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -94,22 +91,7 @@ public final class ProfilUtil
 
   public static IComponent getFeatureComponent( final String propertyId )
   {
-    final String[] split = propertyId.split( "#" ); //$NON-NLS-1$
-    final String dictionaryUrn = split[0];
-    final String itemId = split[1];
-
-    final Dictionary dict = KalypsoCorePlugin.getDefault().getDictionary( dictionaryUrn );
-    if( dict == null )
-      throw new IllegalArgumentException( "Unknown dictionary: " + dictionaryUrn ); //$NON-NLS-1$
-
-    final Definition itemDefinition = dict.getDefinition( itemId );
-    if( itemDefinition == null )
-    {
-      final String msg = String.format( "Unknown item '%s' in dictionary %s", itemId, dictionaryUrn ); //$NON-NLS-1$
-      throw new IllegalArgumentException( msg );
-    }
-
-    return new FeatureComponent( itemDefinition, dictionaryUrn );
+    return ComponentUtilities.getFeatureComponent( propertyId );
   }
 
   /**

@@ -228,4 +228,17 @@ public final class NumberUtils
     bigDecimal = bigDecimalFloat.setScale( sigFigs, RoundingMode.HALF_UP ).add( bigDecimalLong );
     return bigDecimal.doubleValue();
   }
+
+  /**
+   * Similar to {@link #parseQuietInteger(String)} but returns an int.<br/>
+   * If the value cannot be parse, the default value is returned.
+   */
+  public static int parseQuietInt( final String value, final int errorValue )
+  {
+    final Integer integer = parseQuietInteger( value );
+    if( integer == null )
+      return errorValue;
+
+    return integer.intValue();
+  }
 }

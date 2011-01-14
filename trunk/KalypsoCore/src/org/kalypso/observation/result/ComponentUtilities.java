@@ -42,9 +42,13 @@ package org.kalypso.observation.result;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.deegree.binding.gml.Definition;
+import org.kalypso.deegree.binding.gml.Dictionary;
 import org.kalypso.gmlschema.property.restriction.EnumerationRestriction;
 import org.kalypso.gmlschema.property.restriction.FractionDigitRestriction;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
+import org.kalypso.ogc.gml.om.FeatureComponent;
 
 /**
  * Utility methods for components
@@ -205,6 +209,26 @@ public final class ComponentUtilities
     }
 
     return -1;
+  }
+
+  public static IComponent getFeatureComponent( final String propertyId )
+  {
+    final String[] split = propertyId.split( "#" ); //$NON-NLS-1$
+    final String dictionaryUrn = split[0];
+    final String itemId = split[1];
+
+    final Dictionary dict = KalypsoCorePlugin.getDefault().getDictionary( dictionaryUrn );
+    if( dict == null )
+      throw new IllegalArgumentException( "Unknown dictionary: " + dictionaryUrn ); //$NON-NLS-1$
+
+    final Definition itemDefinition = dict.getDefinition( itemId );
+    if( itemDefinition == null )
+    {
+      final String msg = String.format( "Unknown item '%s' in dictionary %s", itemId, dictionaryUrn ); //$NON-NLS-1$
+      throw new IllegalArgumentException( msg );
+    }
+
+    return new FeatureComponent( itemDefinition, dictionaryUrn );
   }
 
 }

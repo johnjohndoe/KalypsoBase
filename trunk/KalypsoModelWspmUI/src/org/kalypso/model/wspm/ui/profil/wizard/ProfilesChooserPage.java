@@ -40,9 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.wizard.results.IResultInterpolationSettings;
+import org.kalypso.model.wspm.ui.profil.wizard.results.ResultInterpolationSettingsComposite;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 
 /**
@@ -50,6 +56,10 @@ import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
  */
 public class ProfilesChooserPage extends ArrayChooserPage
 {
+  private boolean m_showResultInterpolationSettings = false;
+
+  private ResultInterpolationSettingsComposite m_resultInterpolationSettingsComposite;
+
   public ProfilesChooserPage( final String message, final ProfileSelection selection, final boolean useDialogSettings )
   {
     this( message, selection.getProfiles(), new Object[0], selection.getSelectedProfiles(), 1, useDialogSettings );//$NON-NLS-1$//$NON-NLS-2$
@@ -60,6 +70,39 @@ public class ProfilesChooserPage extends ArrayChooserPage
     super( chooseables, selected, checked, numToSelect, "profilesChooserPage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage.1" ), null, useDialogSettings );//$NON-NLS-1$//$NON-NLS-2$
     setLabelProvider( new GMLLabelProvider() );
     setDescription( message );
+  }
+
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage#createControl(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  public void createControl( final Composite parent )
+  {
+    super.createControl( parent );
+
+    final Composite panel = (Composite) getControl();
+    final Control interpolationGroup = createInterpolationGroup( panel );
+    if( interpolationGroup != null )
+      interpolationGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+  }
+
+  private Control createInterpolationGroup( final Composite parent )
+  {
+    if( !m_showResultInterpolationSettings )
+      return null;
+
+    m_resultInterpolationSettingsComposite = new ResultInterpolationSettingsComposite( getDialogSettings() );
+    return m_resultInterpolationSettingsComposite.createControl( parent );
+  }
+
+  public void setShowResultInterpolationSettings( final boolean showResultInterpolationSettings )
+  {
+    m_showResultInterpolationSettings = showResultInterpolationSettings;
+  }
+
+  public IResultInterpolationSettings getResultInterpolationSettings( )
+  {
+    return m_resultInterpolationSettingsComposite;
   }
 
 }

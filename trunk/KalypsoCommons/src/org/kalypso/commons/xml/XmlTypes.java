@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.xml;
 
@@ -100,7 +100,7 @@ public final class XmlTypes
   public static boolean isNumber( final QName valueTypeName )
   {
     return valueTypeName.equals( XmlTypes.XS_BYTE ) || valueTypeName.equals( XmlTypes.XS_DECIMAL ) || valueTypeName.equals( XmlTypes.XS_DOUBLE ) || valueTypeName.equals( XmlTypes.XS_FLOAT )
-        || valueTypeName.equals( XmlTypes.XS_INT ) || valueTypeName.equals( XmlTypes.XS_INTEGER ) || valueTypeName.equals( XmlTypes.XS_LONG ) || valueTypeName.equals( XmlTypes.XS_SHORT );
+    || valueTypeName.equals( XmlTypes.XS_INT ) || valueTypeName.equals( XmlTypes.XS_INTEGER ) || valueTypeName.equals( XmlTypes.XS_LONG ) || valueTypeName.equals( XmlTypes.XS_SHORT );
   }
 
   /**
