@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,36 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.model.layer.manager.visitors;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+package org.kalypso.zml.core.table.model;
 
 /**
  * @author Dirk Kuch
  */
-public class TooltipChartLayerVisitor implements IChartLayerVisitor
+public interface IZmlModelRowVisitor
 {
-
-  private final Set<ITooltipChartLayer> m_layers = new LinkedHashSet<ITooltipChartLayer>();
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  @Override
-  public void visit( final IChartLayer layer )
-  {
-    if( layer instanceof ITooltipChartLayer )
-      m_layers.add( (ITooltipChartLayer) layer );
-  }
-
-  public ITooltipChartLayer[] getLayers( )
-  {
-    return m_layers.toArray( new ITooltipChartLayer[] {} );
-  }
-
+  void visit( IZmlModelRow value );
 }

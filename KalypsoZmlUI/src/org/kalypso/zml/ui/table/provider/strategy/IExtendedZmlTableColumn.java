@@ -38,36 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.model.layer.manager.visitors;
+package org.kalypso.zml.ui.table.provider.strategy;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class TooltipChartLayerVisitor implements IChartLayerVisitor
+public interface IExtendedZmlTableColumn extends IZmlTableColumn
 {
-
-  private final Set<ITooltipChartLayer> m_layers = new LinkedHashSet<ITooltipChartLayer>();
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  @Override
-  public void visit( final IChartLayer layer )
-  {
-    if( layer instanceof ITooltipChartLayer )
-      m_layers.add( (ITooltipChartLayer) layer );
-  }
-
-  public ITooltipChartLayer[] getLayers( )
-  {
-    return m_layers.toArray( new ITooltipChartLayer[] {} );
-  }
 
 }

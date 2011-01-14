@@ -73,7 +73,7 @@ import org.kalypso.zml.core.table.binding.TableTypeHelper;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.ZmlDataModel;
+import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
@@ -148,9 +148,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       @Override
       public Object[] getElements( final Object inputElement )
       {
-        if( inputElement instanceof ZmlDataModel )
+        if( inputElement instanceof ZmlModel )
         {
-          final ZmlDataModel model = (ZmlDataModel) inputElement;
+          final ZmlModel model = (ZmlModel) inputElement;
           return model.getRows();
         }
 
@@ -347,6 +347,14 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public ExtendedZmlTableColumn[] getColumns( )
   {
     return m_columns.toArray( new ExtendedZmlTableColumn[] {} );
+  }
+
+  public void accept( final IZmlTableColumnVisitor visitor )
+  {
+    for( final ExtendedZmlTableColumn column : getColumns() )
+    {
+      visitor.accept( column );
+    }
   }
 
   @Override

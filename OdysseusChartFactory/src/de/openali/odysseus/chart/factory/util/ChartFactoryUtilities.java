@@ -18,9 +18,9 @@ public final class ChartFactoryUtilities
   }
 
   /**
-   * tries to create an reaturn an url; if the url can't be created, an error message is logged
+   * tries to create an return an URL; if the URL can't be created, an error message is logged
    * 
-   * @return created url or null if url cant be created
+   * @return created URL or null if URL can't be created
    */
   public static URL createURLQuietly( final URL context, final String path )
   {

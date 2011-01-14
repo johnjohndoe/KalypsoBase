@@ -258,7 +258,7 @@
     </complexContent>
   </complexType>
 
-  
+
 
   <complexType name="LayersType">
     <sequence>
@@ -270,7 +270,7 @@
     </sequence>
   </complexType>
 
-  
+
 
 
   <complexType name="LayerType">
@@ -304,19 +304,19 @@
       </extension>
     </complexContent>
   </complexType>
-  
+
   <complexType name="LayerRefernceType">
-    <sequence>
-      <element name="Parameters" type="ods:ParametersType" minOccurs="0" />
-    </sequence>
     <attribute name="url" type="anyURI" use="required" />
   </complexType>
-  
+
   <complexType name="DerivedLayerType">
     <complexContent>
       <extension base="ods:ReferencableType">
         <sequence>
-          <element ref="ods:LayerReference" minOccurs="1"/>
+          <element name="Title" type="string" minOccurs="0" />
+          <element name="Description" type="string" minOccurs="0" />
+          <element name="Parameters" type="ods:ParametersType" minOccurs="0" />
+          <element ref="ods:LayerReference" minOccurs="1" />
           <element ref="ods:Styles" minOccurs="0" />
         </sequence>
       </extension>

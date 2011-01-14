@@ -60,7 +60,7 @@ public final class ZmlModelFactory
     return INSTANCE;
   }
 
-  public IZmlModelRow createRow( final ZmlDataModel model, final Object index )
+  public IZmlModelRow createRow( final ZmlModel model, final Object index )
   {
     final ZmlModelRow row = new ZmlModelRow( model, index );
     model.add( row );

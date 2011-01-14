@@ -45,7 +45,6 @@ import java.util.Set;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
 /**
@@ -63,9 +62,6 @@ public class EditableChartLayerVisitor implements IChartLayerVisitor
   {
     if( layer instanceof IEditableChartLayer )
       m_layers.add( (IEditableChartLayer) layer );
-
-    final ILayerManager layerManager = layer.getLayerManager();
-    layerManager.accept( this );
   }
 
   public IEditableChartLayer[] getLayers( )
