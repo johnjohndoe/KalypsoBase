@@ -43,8 +43,6 @@ package de.openali.odysseus.chart.ext.base.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.viewers.ILabelProvider;
-
 /**
  * @author kimwerner
  */
@@ -53,27 +51,27 @@ public class ArrayContentProvider implements IAxisContentProvider
 
   private final List<Object> m_content = new ArrayList<Object>();
 
-  private ILabelProvider m_labelProvider;
+  private final List<String> m_labels = new ArrayList<String>();
 
   public ArrayContentProvider( )
   {
 // default
   }
 
-  public ArrayContentProvider( final ILabelProvider labelProvider, final Object... contents )
+  public ArrayContentProvider( final Object... contents )
   {
     for( final Object content : contents )
       m_content.add( content );
-    m_labelProvider = labelProvider;
   }
 
   /**
    * @see de.openali.odysseus.chart.ext.base.data.IAxisContentProvider#add(java.lang.Object)
    */
   @Override
-  public void addContent( final Object content )
+  public void addContent( final Object content, final String label )
   {
     m_content.add( content );
+    m_labels.add( label );
   }
 
   /**
@@ -83,6 +81,7 @@ public class ArrayContentProvider implements IAxisContentProvider
   public void clear( )
   {
     m_content.clear();
+    m_labels.clear();
   }
 
   /**
@@ -97,29 +96,16 @@ public class ArrayContentProvider implements IAxisContentProvider
   }
 
   /**
-   * @see de.openali.odysseus.chart.ext.base.data.IAxisContentProvider#getLabel(int)
-   */
-  @Override
-  public String getLabel( final int index )
-  {
-    final Object obj = getContent( index );
-    if( m_labelProvider == null )
-      return obj == null ? "" : obj.toString();
-    return m_labelProvider.getText( obj );
-  }
-
-  /**
    * @see de.openali.odysseus.chart.ext.base.data.IAxisContentProvider#remove(java.lang.Object)
    */
   @Override
   public void removeContent( final Object content )
   {
+    final int index = m_content.indexOf( content );
+    if( index < 0 )
+      return;
     m_content.remove( content );
-  }
-
-  public void setLabelProvider( final ILabelProvider labelProvider )
-  {
-    m_labelProvider = labelProvider;
+    m_labels.remove( m_labels.get( index ) );
   }
 
   /**
@@ -129,6 +115,15 @@ public class ArrayContentProvider implements IAxisContentProvider
   public int size( )
   {
     return m_content.size();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.data.IAxisContentProvider#getLabel(int)
+   */
+  @Override
+  public String getLabel( final int index )
+  {
+    return m_labels.get( index );
   }
 
 }

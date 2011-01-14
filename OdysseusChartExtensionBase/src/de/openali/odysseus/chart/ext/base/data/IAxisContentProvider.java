@@ -51,9 +51,9 @@ public interface IAxisContentProvider
 
   String getLabel( final int index );
 
-  void addContent( final Object content );
+  void addContent( final Object content ,final String label);
 
   void removeContent( final Object content );
-  
-  void clear();
+
+  void clear( );
 }
