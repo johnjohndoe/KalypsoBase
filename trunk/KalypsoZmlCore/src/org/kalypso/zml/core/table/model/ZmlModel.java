@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -57,11 +58,11 @@ import org.kalypso.zml.core.table.schema.ZmlTableType;
 /**
  * @author Dirk Kuch
  */
-public class ZmlDataModel implements IZmlModel
+public class ZmlModel implements IZmlModel
 {
-  private final Set<ZmlColumnLoadCommand> m_commands = new HashSet<ZmlColumnLoadCommand>();
-
   private final List<ZmlModelColumn> m_columns = new ArrayList<ZmlModelColumn>();
+
+  private final Set<ZmlColumnLoadCommand> m_commands = new HashSet<ZmlColumnLoadCommand>();
 
   private final Set<IZmlColumnModelListener> m_listeners = new HashSet<IZmlColumnModelListener>();
 
@@ -71,26 +72,34 @@ public class ZmlDataModel implements IZmlModel
 
   private final ZmlTableType m_type;
 
-  public ZmlDataModel( final ZmlTableType type )
+  public ZmlModel( final ZmlTableType type )
   {
     m_type = type;
   }
 
-  @Override
-  public ZmlTableType getTableType( )
+  public void accept( final IZmlModelColumnVisitor visitor )
   {
-    return m_type;
+    for( final ZmlModelColumn column : m_columns )
+    {
+      visitor.visit( column );
+    }
   }
 
-  @Override
-  public void addListener( final IZmlColumnModelListener listener )
+  public void accept( final IZmlModelRowVisitor visitor )
   {
-    m_listeners.add( listener );
+    final Set<Entry<Object, IZmlModelRow>> entries = m_rows.entrySet();
+    for( final Entry<Object, IZmlModelRow> entry : entries )
+    {
+      visitor.visit( entry.getValue() );
+    }
   }
 
-  public void loadColumn( final IZmlTableElement column )
+  public void add( final IZmlModelRow row )
   {
-    m_commands.add( new ZmlColumnLoadCommand( this, column ) );
+    synchronized( m_rows )
+    {
+      m_rows.put( row.getIndexValue(), row );
+    }
   }
 
   public void addColumn( final ZmlModelColumn column )
@@ -101,21 +110,9 @@ public class ZmlDataModel implements IZmlModel
   }
 
   @Override
-  public void fireModelChanged( )
+  public void addListener( final IZmlColumnModelListener listener )
   {
-    m_rowsDirty = true;
-
-    final IZmlColumnModelListener[] listeners = m_listeners.toArray( new IZmlColumnModelListener[] {} );
-    for( final IZmlColumnModelListener listener : listeners )
-    {
-      listener.modelChanged();
-    }
-  }
-
-  @Override
-  public ZmlModelColumn[] getColumns( )
-  {
-    return m_columns.toArray( new ZmlModelColumn[] {} );
+    m_listeners.add( listener );
   }
 
   public void clean( )
@@ -148,6 +145,18 @@ public class ZmlDataModel implements IZmlModel
   }
 
   @Override
+  public void fireModelChanged( )
+  {
+    m_rowsDirty = true;
+
+    final IZmlColumnModelListener[] listeners = m_listeners.toArray( new IZmlColumnModelListener[] {} );
+    for( final IZmlColumnModelListener listener : listeners )
+    {
+      listener.modelChanged();
+    }
+  }
+
+  @Override
   public ZmlModelColumn getColumn( final String id )
   {
     for( final ZmlModelColumn column : m_columns )
@@ -159,12 +168,10 @@ public class ZmlDataModel implements IZmlModel
     return null;
   }
 
-  public void add( final IZmlModelRow row )
+  @Override
+  public ZmlModelColumn[] getColumns( )
   {
-    synchronized( m_rows )
-    {
-      m_rows.put( row.getIndexValue(), row );
-    }
+    return m_columns.toArray( new ZmlModelColumn[] {} );
   }
 
   @Override
@@ -182,6 +189,19 @@ public class ZmlDataModel implements IZmlModel
     }
 
     return m_rows.get( index );
+  }
+
+  /**
+   * @see org.kalypso.zml.core.table.model.IZmlModel#getRowAt(int)
+   */
+  @Override
+  public IZmlModelRow getRowAt( final int index )
+  {
+    final IZmlModelRow[] rows = getRows();
+    if( index >= rows.length )
+      return null;
+
+    return rows[index];
   }
 
   /**
@@ -204,16 +224,14 @@ public class ZmlDataModel implements IZmlModel
     }
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.IZmlModel#getRowAt(int)
-   */
   @Override
-  public IZmlModelRow getRowAt( final int index )
+  public ZmlTableType getTableType( )
   {
-    final IZmlModelRow[] rows = getRows();
-    if( index >= rows.length )
-      return null;
+    return m_type;
+  }
 
-    return rows[index];
+  public void loadColumn( final IZmlTableElement column )
+  {
+    m_commands.add( new ZmlColumnLoadCommand( this, column ) );
   }
 }

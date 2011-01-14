@@ -44,7 +44,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
@@ -64,9 +63,6 @@ public class TooltipChartLayerVisitor implements IChartLayerVisitor
   {
     if( layer instanceof ITooltipChartLayer )
       m_layers.add( (ITooltipChartLayer) layer );
-
-    final ILayerManager layerManager = layer.getLayerManager();
-    layerManager.accept( this );
   }
 
   public ITooltipChartLayer[] getLayers( )

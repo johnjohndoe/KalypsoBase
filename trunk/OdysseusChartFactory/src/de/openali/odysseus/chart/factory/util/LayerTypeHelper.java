@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.util;
 
+import org.apache.commons.lang.StringUtils;
+
+import de.openali.odysseus.chartconfig.x020.DerivedLayerType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.ParameterType;
 import de.openali.odysseus.chartconfig.x020.ParametersType;
@@ -54,6 +57,9 @@ public final class LayerTypeHelper
   {
   }
 
+  /**
+   * layer type will be extended by given parameters
+   */
   public static void appendParameters( final LayerType type, final ParametersType parameters )
   {
     if( parameters == null )
@@ -73,6 +79,9 @@ public final class LayerTypeHelper
     }
   }
 
+  /**
+   * @return parameter with name
+   */
   private static ParameterType getParamter( final ParametersType baseType, final String name )
   {
     final ParameterType[] parameters = baseType.getParameterArray();
@@ -86,6 +95,29 @@ public final class LayerTypeHelper
     parameter.setName( name );
 
     return parameter;
+  }
+
+  /**
+   * clone basic layer type and append / extend by derived layer type definition / redifiniton
+   */
+  public static LayerType cloneLayerType( final DerivedLayerType derivedLayerType, final LayerType baseLayerType )
+  {
+    final LayerType clonedLayerType = (LayerType) baseLayerType.copy();
+
+    clonedLayerType.setId( derivedLayerType.getId() );
+    LayerTypeHelper.appendParameters( clonedLayerType, derivedLayerType.getParameters() );
+
+    final String title = derivedLayerType.getTitle();
+    if( StringUtils.isNotEmpty( title ) )
+      clonedLayerType.setTitle( title );
+
+    final String description = derivedLayerType.getDescription();
+    if( StringUtils.isNotEmpty( description ) )
+      clonedLayerType.setDescription( description );
+
+    clonedLayerType.setStyles( derivedLayerType.getStyles() );
+
+    return clonedLayerType;
   }
 
 }

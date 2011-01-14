@@ -155,7 +155,6 @@ public class ChartLayerFactory extends AbstractChartFactory
       try
       {
         final LayerType type = resovler.findLayerType( reference, getContext() );
-        LayerTypeHelper.appendParameters( type, reference.getParameters() );
 
         final IChartLayer layer = buildLayer( type, type, baseType );
         stack.add( layer );
@@ -182,13 +181,8 @@ public class ChartLayerFactory extends AbstractChartFactory
       {
         final LayerRefernceType reference = derivedLayerType.getLayerReference();
 
-        final LayerType layerType = resovler.findLayerType( reference, getContext() );
-
-        final LayerType clonedLayerType = (LayerType) layerType.copy();
-        LayerTypeHelper.appendParameters( clonedLayerType, reference.getParameters() );
-
-        clonedLayerType.setId( derivedLayerType.getId() );
-        clonedLayerType.setStyles( derivedLayerType.getStyles() );
+        final LayerType baseLayerType = resovler.findLayerType( reference, getContext() );
+        final LayerType clonedLayerType = LayerTypeHelper.cloneLayerType( derivedLayerType, baseLayerType );
 
         final IChartLayer layer = buildLayer( clonedLayerType, clonedLayerType, baseType );
         stack.add( layer );
@@ -197,7 +191,6 @@ public class ChartLayerFactory extends AbstractChartFactory
       {
         OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
       }
-
     }
 
     return stack.toArray( new IChartLayer[] {} );

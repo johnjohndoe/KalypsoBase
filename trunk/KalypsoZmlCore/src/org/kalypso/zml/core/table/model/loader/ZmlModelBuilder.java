@@ -55,7 +55,7 @@ import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.ZmlDataModel;
+import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.model.ZmlModelFactory;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.model.references.ZmlValueReferenceFactory;
@@ -65,9 +65,9 @@ import org.kalypso.zml.core.table.model.references.ZmlValueReferenceFactory;
  */
 public class ZmlModelBuilder implements ICoreRunnableWithProgress
 {
-  private final ZmlDataModel m_model;
+  private final ZmlModel m_model;
 
-  public ZmlModelBuilder( final ZmlDataModel model )
+  public ZmlModelBuilder( final ZmlModel model )
   {
     m_model = model;
   }

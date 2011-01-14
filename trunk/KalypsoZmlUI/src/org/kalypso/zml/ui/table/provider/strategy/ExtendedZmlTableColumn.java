@@ -66,7 +66,7 @@ import org.kalypso.zml.ui.table.provider.strategy.labeling.SumValueLabelingStrat
 /**
  * @author Dirk Kuch
  */
-public class ExtendedZmlTableColumn extends ZmlTableColumn
+public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZmlTableColumn
 {
   private final RuleMapper m_mapper;
 
