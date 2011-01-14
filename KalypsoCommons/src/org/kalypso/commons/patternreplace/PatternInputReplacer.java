@@ -117,13 +117,12 @@ public class PatternInputReplacer<T>
 
     final StringBuffer result = new StringBuffer();
 
-    final Matcher matcher = m_tokenPattern.matcher( pattern );
+    final Matcher matcher = createPatternMatcher( pattern );
     while( matcher.find() )
     {
-      final String token = matcher.group( 1 );
-      final String params = matcher.group( 3 );
+      final IPatternInput<T> tokenReplacer = getMatchedTokenReplacer( matcher );
+      final String params = getMatchedParameters( matcher );
 
-      final IPatternInput<T> tokenReplacer = getReplacer( token );
       if( tokenReplacer != null )
       {
         final String replacement = tokenReplacer.getReplacement( context, params );
@@ -136,6 +135,22 @@ public class PatternInputReplacer<T>
     matcher.appendTail( result );
 
     return result.toString();
+  }
+
+  protected String getMatchedParameters( final Matcher matcher )
+  {
+    return matcher.group( 3 );
+  }
+
+  protected IPatternInput<T> getMatchedTokenReplacer( final Matcher matcher )
+  {
+    final String token = matcher.group( 1 );
+    return getReplacer( token );
+  }
+
+  protected Matcher createPatternMatcher( final String pattern )
+  {
+    return m_tokenPattern.matcher( pattern );
   }
 
   private IPatternInput<T> getReplacer( final String token )

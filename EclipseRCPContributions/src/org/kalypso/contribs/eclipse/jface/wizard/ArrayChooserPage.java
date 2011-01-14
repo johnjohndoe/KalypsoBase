@@ -443,7 +443,7 @@ public class ArrayChooserPage extends WizardPage
         name = labelProvider.getColumnText( element, 0 );
       }
 
-      if( name.equals( "" ) )
+      if( "".equals( name ) )
         continue;
 
       /* If they do exist in the dialog settings, the element is added. */

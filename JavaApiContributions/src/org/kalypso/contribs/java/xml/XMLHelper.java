@@ -42,27 +42,7 @@ public class XMLHelper
   /** Performance: instantiate this factory only once, this is expensive. */
   private static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
 
-  /**
-   * @deprecated Use {@link NS.XSD_SCHEMA} instead.
-   */
-  @Deprecated
-  public static final String XMLSCHEMA_NS = "http://www.w3.org/2001/XMLSchema";
-
-  /**
-   * @deprecated Use {@link NS.GML3} instead.
-   */
-  @Deprecated
-  public static final String GMLSCHEMA_NS = "http://www.opengis.net/gml";
-
-  public static final String DEFAULT_ENCODING = "UTF-8";
-
-  public static boolean isGlobalElementDefinition( final Node node )
-  {
-    final Node parentNode = node.getParentNode();
-    final String ns = parentNode.getNamespaceURI();
-    final String name = parentNode.getLocalName();
-    return (XMLSCHEMA_NS.equals( ns ) && "schema".equals( name ));
-  }
+  private static final String DEFAULT_ENCODING = "UTF-8";
 
   public static Document getAsDOM( final File file, final boolean namespaceaware ) throws Exception
   {
