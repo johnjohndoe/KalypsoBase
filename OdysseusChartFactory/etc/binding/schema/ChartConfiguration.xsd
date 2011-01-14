@@ -191,6 +191,7 @@
   <element name="Layers" type="ods:LayersType" />
   <element name="Layer" type="ods:LayerType" />
   <element name="LayerReference" type="ods:LayerRefernceType" />
+  <element name="DerivedLayer" type="ods:DerivedLayerType" />
   <element name="Axis" type="ods:AxisType" />
   <element name="ScreenAxis" type="ods:ScreenAxisType" />
   <element name="Mapper" type="ods:MapperType" />
@@ -257,22 +258,20 @@
     </complexContent>
   </complexType>
 
-  <complexType name="LayerRefernceType">
-    <sequence>
-      <element name="Parameters" type="ods:ParametersType" minOccurs="0" />
-    </sequence>
-    <attribute name="url" type="anyURI" use="required" />
-  </complexType>
-
+  
 
   <complexType name="LayersType">
     <sequence>
       <choice maxOccurs="unbounded">
         <element ref="ods:Layer" />
         <element ref="ods:LayerReference" />
+        <element ref="ods:DerivedLayer" />
       </choice>
     </sequence>
   </complexType>
+
+  
+
 
   <complexType name="LayerType">
     <complexContent>
@@ -302,6 +301,24 @@
             <documentation>display layer in chart legend</documentation>
           </annotation>
         </attribute>
+      </extension>
+    </complexContent>
+  </complexType>
+  
+  <complexType name="LayerRefernceType">
+    <sequence>
+      <element name="Parameters" type="ods:ParametersType" minOccurs="0" />
+    </sequence>
+    <attribute name="url" type="anyURI" use="required" />
+  </complexType>
+  
+  <complexType name="DerivedLayerType">
+    <complexContent>
+      <extension base="ods:ReferencableType">
+        <sequence>
+          <element ref="ods:LayerReference" minOccurs="1"/>
+          <element ref="ods:Styles" minOccurs="0" />
+        </sequence>
       </extension>
     </complexContent>
   </complexType>

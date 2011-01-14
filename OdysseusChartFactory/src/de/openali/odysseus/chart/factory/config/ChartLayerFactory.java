@@ -72,6 +72,7 @@ import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chartconfig.x020.ChartType;
+import de.openali.odysseus.chartconfig.x020.DerivedLayerType;
 import de.openali.odysseus.chartconfig.x020.LayerRefernceType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.LayerType.MapperRefs;
@@ -106,39 +107,11 @@ public class ChartLayerFactory extends AbstractChartFactory
     final ILayerManager layerManager = model.getLayerManager();
 
     final Set<IChartLayer> layers = new LinkedHashSet<IChartLayer>();
-    Collections.addAll( layers, buildLayerReferences( layersType, chartType ) );
     Collections.addAll( layers, buildLayers( layersType, chartType ) );
+    Collections.addAll( layers, buildLayerReferences( layersType, chartType ) );
+    Collections.addAll( layers, buildDerivedLayers( layersType, chartType ) );
 
     layerManager.addLayer( layers.toArray( new IChartLayer[] {} ) );
-  }
-
-  private IChartLayer[] buildLayerReferences( final LayersType layers, final ReferencableType baseType )
-  {
-    final LayerRefernceType[] references = layers.getLayerReferenceArray();
-    if( ArrayUtils.isEmpty( references ) )
-      return new IChartLayer[] {};
-
-    final Set<IChartLayer> stack = new LinkedHashSet<IChartLayer>();
-
-    for( final LayerRefernceType reference : references )
-    {
-      try
-      {
-        final ChartTypeResolver resovler = ChartTypeResolver.getInstance();
-        final LayerType type = resovler.findLayerType( reference, getContext() );
-
-        LayerTypeHelper.appendParameters( type, reference.getParameters() );
-
-        final IChartLayer layer = buildLayer( type, type, baseType );
-        stack.add( layer );
-      }
-      catch( final Throwable t )
-      {
-        OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
-      }
-    }
-
-    return stack.toArray( new IChartLayer[] {} );
   }
 
   private IChartLayer[] buildLayers( final LayersType layersType, final ReferencableType... baseTypes )
@@ -162,6 +135,69 @@ public class ChartLayerFactory extends AbstractChartFactory
 
         Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "a reference to a layer type could not be resolved " );
       }
+    }
+
+    return stack.toArray( new IChartLayer[] {} );
+  }
+
+  private IChartLayer[] buildLayerReferences( final LayersType layers, final ReferencableType baseType )
+  {
+    final LayerRefernceType[] references = layers.getLayerReferenceArray();
+    if( ArrayUtils.isEmpty( references ) )
+      return new IChartLayer[] {};
+
+    final ChartTypeResolver resovler = ChartTypeResolver.getInstance();
+
+    final Set<IChartLayer> stack = new LinkedHashSet<IChartLayer>();
+
+    for( final LayerRefernceType reference : references )
+    {
+      try
+      {
+        final LayerType type = resovler.findLayerType( reference, getContext() );
+        LayerTypeHelper.appendParameters( type, reference.getParameters() );
+
+        final IChartLayer layer = buildLayer( type, type, baseType );
+        stack.add( layer );
+      }
+      catch( final Throwable t )
+      {
+        OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+      }
+    }
+
+    return stack.toArray( new IChartLayer[] {} );
+  }
+
+  private IChartLayer[] buildDerivedLayers( final LayersType layersType, final ReferencableType baseType )
+  {
+    final DerivedLayerType[] derivedLayers = layersType.getDerivedLayerArray();
+    final Set<IChartLayer> stack = new LinkedHashSet<IChartLayer>();
+
+    final ChartTypeResolver resovler = ChartTypeResolver.getInstance();
+
+    for( final DerivedLayerType derivedLayerType : derivedLayers )
+    {
+      try
+      {
+        final LayerRefernceType reference = derivedLayerType.getLayerReference();
+
+        final LayerType layerType = resovler.findLayerType( reference, getContext() );
+
+        final LayerType clonedLayerType = (LayerType) layerType.copy();
+        LayerTypeHelper.appendParameters( clonedLayerType, reference.getParameters() );
+
+        clonedLayerType.setId( derivedLayerType.getId() );
+        clonedLayerType.setStyles( derivedLayerType.getStyles() );
+
+        final IChartLayer layer = buildLayer( clonedLayerType, clonedLayerType, baseType );
+        stack.add( layer );
+      }
+      catch( final Throwable t )
+      {
+        OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+      }
+
     }
 
     return stack.toArray( new IChartLayer[] {} );
@@ -208,8 +244,9 @@ public class ChartLayerFactory extends AbstractChartFactory
     if( layers != null )
     {
       final Set<IChartLayer> stack = new LinkedHashSet<IChartLayer>();
-      Collections.addAll( stack, buildLayerReferences( layers, layerType ) );
       Collections.addAll( stack, buildLayers( layers, baseTypes ) );
+      Collections.addAll( stack, buildLayerReferences( layers, layerType ) );
+      Collections.addAll( stack, buildDerivedLayers( layers, layerType ) );
 
       final ILayerManager layerManager = layer.getLayerManager();
       layerManager.addLayer( stack.toArray( new IChartLayer[] {} ) );
