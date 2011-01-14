@@ -41,8 +41,7 @@
 package org.kalypso.chart.ui.editor.mousehandler;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -53,18 +52,56 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class DragPanHandler extends AbstractChartDragHandler
 {
-  public DragPanHandler( final IChartComposite chartComposite )
+
+  private Point m_keyUp = null;
+
+  /**
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#keyReleased(org.eclipse.swt.events.KeyEvent)
+   */
+  @Override
+  public void keyReleased( final KeyEvent e )
   {
-    super( chartComposite, 5 );
+    try
+    {
+      mouseUp( m_keyUp );
+    }
+    finally
+    {
+      m_keyUp = null;
+    }
   }
 
   /**
-   * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#keyPressed(org.eclipse.swt.events.KeyEvent)
    */
   @Override
-  public Cursor getCursor( final MouseEvent e )
+  public void keyPressed( final KeyEvent e )
   {
-    return e.display.getSystemCursor( SWT.CURSOR_HAND );
+    if( e.keyCode == SWT.ARROW_LEFT || e.keyCode == SWT.ARROW_RIGHT )
+    {
+      if( m_keyUp == null )
+      {
+        m_keyUp = new Point( 0, 0 );
+        mouseDown( m_keyUp );
+      }
+      if( e.keyCode == SWT.ARROW_LEFT )
+        m_keyUp.x -= 10;
+      else if( e.keyCode == SWT.ARROW_RIGHT )
+        m_keyUp.x += 10;
+      mouseMove( m_keyUp );
+      getChart().invalidate();
+      getChart().getPlot().update();
+    }
+  }
+
+  public DragPanHandler( final IChartComposite chartComposite, final int trashold, final int observedButtonMask )
+  {
+    super( chartComposite, trashold, observedButtonMask, SWT.CURSOR_HAND );
+  }
+
+  public DragPanHandler( final IChartComposite chartComposite )
+  {
+    this( chartComposite, SWT.BUTTON_MASK, SWT.CURSOR_HAND );
   }
 
   /**
