@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
+  <Chart id="hauptzahlen">
+    <Title>Kalypso Hauptzahlen</Title>
+    <Description />
+    <Styles>
+      <LineStyle role="hauptzahlLineStyle">
+        <Width>2</Width>
+        <LineColor>000000</LineColor>
+      </LineStyle>
+      <PointStyle role="hauptzahlPointStyle" isVisible="false">
+      </PointStyle>
+      <TextStyle role="hauptzahlTextStyle">
+        <Size>6</Size>
+        <TextColor>000000</TextColor>
+        <FontFamily>Arial</FontFamily>
+        <!-- <FillColor>000000</FillColor> -->
+        <FontWeight>NORMAL</FontWeight>
+        <FontStyle>NORMAL</FontStyle>
+      </TextStyle>
+    </Styles>
+    <Layers>
+      <Layer id="hauptzahlen" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
+          <Parameters>
+            <Parameter name="grenzwert" value=".*Kalypso_Grenzwert_\w+$" />
+            <Parameter name="label" value="%s" />
+            <Parameter name="labelTokenizer" value="^.+_" />
+            <Parameter name="content.hauptzahl" value="true" />
+          </Parameters>
+        </Provider>
+        <Title>Hauptzahlen</Title>
+        <Description />
+        <Styles>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:hauptzahlen#hauptzahlLineStyle</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:hauptzahlen#hauptzahlPointStyle</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:hauptzahlen#hauptzahlTextStyle</StyleReference>
+        </Styles>
+      </Layer>
+    </Layers>
+  </Chart>
+</ChartConfiguration>

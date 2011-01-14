@@ -41,8 +41,9 @@
               <PointStyle role="wPointStyle" isVisible="false" />
             </Styles>
           </Layer>
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:base#grid" />
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:base#grenzwerte" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:hauptzahlen#hauptzahlen" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#meldegrenze" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_1" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_2" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_3" />
@@ -70,8 +71,9 @@
               </PointStyle>
             </Styles>
           </Layer>
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:base#grid" />
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:base#grenzwerte" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:hauptzahlen#hauptzahlen" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#meldegrenze" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_1" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_2" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_3" />
@@ -107,11 +109,71 @@
               </PointStyle>
             </Styles>
           </Layer>
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:base#grid" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
           <DomainAxisRef ref="date" />
           <TargetAxisRef ref="N" />
+        </MapperRefs>
+      </Layer>
+      <Layer id="W_NN">
+        <Title>(Wasserstands)Höhe</Title>
+        <Layers>
+          <Layer id="Wasserstand_mNN" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Provider epid="org.kalypso.hwv.core.chart.themes.ZmlLineLayer" />
+            <Title>(Wasserstands)Höhe</Title>
+            <Description />
+            <Styles>
+              <LineStyle role="line_1">
+                <Width>2</Width>
+                <LineColor>000080</LineColor>
+              </LineStyle>
+              <PointStyle role="point" isVisible="false">
+              </PointStyle>
+            </Styles>
+          </Layer>
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef ref="date" />
+          <TargetAxisRef ref="W_NN" />
+        </MapperRefs>
+      </Layer>
+      <Layer id="V">
+        <Title>Volumen</Title>
+        <Layers>
+          <Layer id="Volumen" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Provider epid="org.kalypso.hwv.core.chart.themes.ZmlLineLayer" />
+            <Title>Volumen</Title>
+            <Description />
+            <Styles>
+              <LineStyle role="line_1">
+                <Width>2</Width>
+                <LineColor>BDAB7A</LineColor>
+              </LineStyle>
+              <LineStyle role="line_2">
+                <Width>2</Width>
+                <LineColor>769844</LineColor>
+              </LineStyle>
+              <LineStyle role="line_3">
+                <Width>2</Width>
+                <LineColor>DFD0A7</LineColor>
+              </LineStyle>
+              <LineStyle role="line_4">
+                <Width>2</Width>
+                <LineColor>4D3907</LineColor>
+              </LineStyle>
+              <LineStyle role="line_5">
+                <Width>2</Width>
+                <LineColor>998652</LineColor>
+              </LineStyle>
+              <PointStyle role="point" isVisible="false">
+              </PointStyle>
+            </Styles>
+          </Layer>
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef ref="date" />
+          <TargetAxisRef ref="V" />
         </MapperRefs>
       </Layer>
       <Layer id="forecastLayer" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -159,7 +221,7 @@
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
         <PreferredAdjustment before="15" range="75" after="10" />
-        <RendererRef ref="NumberAxisRenderer" />
+        <RendererRef ref="AutoNumberAxisRenderer" />
       </Axis>
       <Axis id="Q" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
@@ -167,15 +229,31 @@
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
         <PreferredAdjustment before="15" range="75" after="10" />
-        <RendererRef ref="NumberAxisRenderer" />
+        <RendererRef ref="AutoNumberAxisRenderer" />
       </Axis>
       <Axis id="N" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Niederschlag [mm]</Label>
         <Direction>NEGATIVE</Direction>
         <Position>RIGHT</Position>
-        <PreferredAdjustment before="5" range="45" after="50" />
-        <RendererRef ref="NumberAxisRenderer" />
+        <PreferredAdjustment before="2" range="48" after="50" />
+        <RendererRef ref="AutoNumberAxisRenderer" />
+      </Axis>
+      <Axis id="W_NN" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Wasserstand [mNN]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <PreferredAdjustment before="15" range="75" after="10" />
+        <RendererRef ref="AutoNumberAxisRenderer" />
+      </Axis>
+      <Axis id="V" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Volumen [hm³]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <PreferredAdjustment before="15" range="75" after="10" />
+        <RendererRef ref="AutoNumberAxisRenderer" />
       </Axis>
       <Axis id="date" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
@@ -204,6 +282,21 @@
             <Parameter name="hide_cut" value="true" />
             <Parameter name="gap" value="0" />
             <Parameter name="tick_label_formater" value="%.0f" />
+          </Parameters>
+        </Provider>
+        <Styles>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#axisLabel</StyleReference>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#tickLabel</StyleReference>
+        </Styles>
+      </AxisRenderer>
+            <AxisRenderer id="AutoNumberAxisRenderer">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+          <Parameters>
+            <Parameter name="inset_tick" value="2" />
+            <Parameter name="inset_label" value="2" />
+            <Parameter name="tick_length" value="2" />
+            <Parameter name="hide_cut" value="true" />
+            <Parameter name="gap" value="0" />
           </Parameters>
         </Provider>
         <Styles>
