@@ -40,13 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.util;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
+import org.apache.xmlbeans.XmlException;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.w3c.dom.Node;
 
+import de.openali.odysseus.chart.factory.OdysseusChartFactory;
 import de.openali.odysseus.chartconfig.x020.DerivedLayerType;
+import de.openali.odysseus.chartconfig.x020.LayerDocument;
 import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.ParameterType;
 import de.openali.odysseus.chartconfig.x020.ParametersType;
 import de.openali.odysseus.chartconfig.x020.ProviderType;
+import de.openali.odysseus.chartconfig.x020.ReferencableType;
 
 /**
  * @author Dirk Kuch
@@ -120,4 +127,27 @@ public final class LayerTypeHelper
     return clonedLayerType;
   }
 
+  public static ReferencableType getParentNode( final LayerType baseLayerType )
+  {
+    final Node node = baseLayerType.getDomNode();
+    final Node parentNode = node.getParentNode().getParentNode();
+
+    if( "Layer".equals( parentNode.getLocalName() ) )
+    {
+      try
+      {
+        final LayerDocument layerDocument = LayerDocument.Factory.parse( parentNode );
+        final LayerType parent = layerDocument.getLayer();
+
+        return parent;
+
+      }
+      catch( final XmlException e )
+      {
+        OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
+
+    throw new NotImplementedException();
+  }
 }

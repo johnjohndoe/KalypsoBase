@@ -64,10 +64,12 @@ public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
   @Override
   public void visit( final IChartLayer layer )
   {
-    if( !(layer instanceof ZmlForecastLayer) )
-      return;
+    if( layer instanceof ZmlForecastLayer )
+    {
+      final ZmlForecastLayer forecastLayer = (ZmlForecastLayer) layer;
+      forecastLayer.setObsProvider( m_provider );
+    }
 
-    final ZmlForecastLayer forecastLayer = (ZmlForecastLayer) layer;
-    forecastLayer.setObsProvider( m_provider );
+    layer.getLayerManager().accept( this );
   }
 }
