@@ -176,7 +176,7 @@
       <styleReference>
         <reference>userModifiedStyle</reference>
       </styleReference>
-      <label>Benutereingabe(n)</label>
+      <label>Benutzereingabe(n)</label>
     </Rule>
     <Rule id="ruleInterpolatedValue" ruleReference="org.kalypso.zml.ui.core.rule.value.interpolated" setHeaderIcon="true">
       <styleReference>
