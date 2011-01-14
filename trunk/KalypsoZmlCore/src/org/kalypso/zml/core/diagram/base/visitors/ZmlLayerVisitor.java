@@ -46,8 +46,9 @@ import java.util.Set;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * @author Dirk Kuch
@@ -56,22 +57,46 @@ public class ZmlLayerVisitor implements IChartLayerVisitor
 {
   Set<IZmlLayer> m_layers = new HashSet<IZmlLayer>();
 
+  private final String m_parameterType;
+
+  public ZmlLayerVisitor( final String parameterType )
+  {
+    m_parameterType = parameterType;
+  }
+
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
   public void visit( final IChartLayer layer )
   {
+    if( !isTypeOf( layer ) )
+      return;
+
     if( layer instanceof IZmlLayer )
       m_layers.add( (IZmlLayer) layer );
 
-    final ILayerManager layerManager = layer.getLayerManager();
-    layerManager.accept( this );
+    final IChartLayer[] children = layer.getLayerManager().getLayers();
+    for( final IChartLayer child : children )
+    {
+      if( child instanceof IZmlLayer )
+      {
+        m_layers.add( (IZmlLayer) child );
+      }
+    }
   }
 
   public IZmlLayer[] getLayers( )
   {
     return m_layers.toArray( new IZmlLayer[] {} );
+  }
+
+  private boolean isTypeOf( final IChartLayer layer )
+  {
+    final ICoordinateMapper mapper = layer.getCoordinateMapper();
+    final IAxis targetAxis = mapper.getTargetAxis();
+
+    return targetAxis.getId().equals( m_parameterType );
   }
 
 }

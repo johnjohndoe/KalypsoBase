@@ -107,14 +107,17 @@ public class ChartLayerFactory extends AbstractChartFactory
     final ILayerManager layerManager = model.getLayerManager();
 
     final Set<IChartLayer> layers = new LinkedHashSet<IChartLayer>();
-    Collections.addAll( layers, buildLayers( layersType, chartType ) );
-    Collections.addAll( layers, buildLayerReferences( layersType, chartType ) );
-    Collections.addAll( layers, buildDerivedLayers( layersType, chartType ) );
+    Collections.addAll( layers, buildLayerTypes( layersType, chartType ) );
+    Collections.addAll( layers, buildLayerTypeReferences( layersType, chartType ) );
+    Collections.addAll( layers, buildDerivedLayerTypes( layersType, chartType ) );
 
     layerManager.addLayer( layers.toArray( new IChartLayer[] {} ) );
   }
 
-  private IChartLayer[] buildLayers( final LayersType layersType, final ReferencableType... baseTypes )
+  /**
+   * @return IChartLayer from {@link LayersType}.getLayerArray()
+   */
+  private IChartLayer[] buildLayerTypes( final LayersType layersType, final ReferencableType... baseTypes )
   {
     final LayerType[] layers = layersType.getLayerArray();
 
@@ -140,7 +143,10 @@ public class ChartLayerFactory extends AbstractChartFactory
     return stack.toArray( new IChartLayer[] {} );
   }
 
-  private IChartLayer[] buildLayerReferences( final LayersType layers, final ReferencableType baseType )
+  /**
+   * @return IChartLayer from {@link LayersType}.getLayerReferenceArray()
+   */
+  private IChartLayer[] buildLayerTypeReferences( final LayersType layers, final ReferencableType baseType )
   {
     final LayerRefernceType[] references = layers.getLayerReferenceArray();
     if( ArrayUtils.isEmpty( references ) )
@@ -168,7 +174,10 @@ public class ChartLayerFactory extends AbstractChartFactory
     return stack.toArray( new IChartLayer[] {} );
   }
 
-  private IChartLayer[] buildDerivedLayers( final LayersType layersType, final ReferencableType baseType )
+  /**
+   * @return IChartLayer from {@link LayersType}.getDerivedLayerArray()
+   */
+  private IChartLayer[] buildDerivedLayerTypes( final LayersType layersType, final ReferencableType baseType )
   {
     final DerivedLayerType[] derivedLayers = layersType.getDerivedLayerArray();
     final Set<IChartLayer> stack = new LinkedHashSet<IChartLayer>();
@@ -182,9 +191,11 @@ public class ChartLayerFactory extends AbstractChartFactory
         final LayerRefernceType reference = derivedLayerType.getLayerReference();
 
         final LayerType baseLayerType = resovler.findLayerType( reference, getContext() );
-        final LayerType clonedLayerType = LayerTypeHelper.cloneLayerType( derivedLayerType, baseLayerType );
 
-        final IChartLayer layer = buildLayer( clonedLayerType, clonedLayerType, baseType );
+        final LayerType clonedLayerType = LayerTypeHelper.cloneLayerType( derivedLayerType, baseLayerType );
+        final ReferencableType parentBasePlayerType = LayerTypeHelper.getParentNode( baseLayerType );
+
+        final IChartLayer layer = buildLayer( clonedLayerType, clonedLayerType, baseLayerType, parentBasePlayerType, baseType );
         stack.add( layer );
       }
       catch( final Throwable t )
@@ -237,9 +248,9 @@ public class ChartLayerFactory extends AbstractChartFactory
     if( layers != null )
     {
       final Set<IChartLayer> stack = new LinkedHashSet<IChartLayer>();
-      Collections.addAll( stack, buildLayers( layers, baseTypes ) );
-      Collections.addAll( stack, buildLayerReferences( layers, layerType ) );
-      Collections.addAll( stack, buildDerivedLayers( layers, layerType ) );
+      Collections.addAll( stack, buildLayerTypes( layers, baseTypes ) );
+      Collections.addAll( stack, buildLayerTypeReferences( layers, layerType ) );
+      Collections.addAll( stack, buildDerivedLayerTypes( layers, layerType ) );
 
       final ILayerManager layerManager = layer.getLayerManager();
       layerManager.addLayer( stack.toArray( new IChartLayer[] {} ) );

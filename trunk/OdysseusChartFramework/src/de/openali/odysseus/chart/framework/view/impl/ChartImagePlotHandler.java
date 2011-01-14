@@ -85,6 +85,7 @@ public class ChartImagePlotHandler implements IPlotHandler
     {
       m_chart.addMouseListener( handler );
       m_chart.addMouseMoveListener( handler );
+      m_chart.addKeyListener( handler );
 
       m_dragHandlers.add( handler );
     }
@@ -100,6 +101,7 @@ public class ChartImagePlotHandler implements IPlotHandler
     {
       m_chart.removeMouseListener( handler );
       m_chart.removeMouseMoveListener( handler );
+      m_chart.removeKeyListener( handler );
 
       m_dragHandlers.remove( handler );
     }
@@ -118,7 +120,6 @@ public class ChartImagePlotHandler implements IPlotHandler
     }
 
     m_dragHandlers.clear(); // "normally" not necessary removePlotHandler(handler) removes handler from list!
-
   }
 
 }

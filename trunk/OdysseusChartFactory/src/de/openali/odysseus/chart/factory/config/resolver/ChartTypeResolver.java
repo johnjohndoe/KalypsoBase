@@ -298,12 +298,20 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private LayerType findLayer( final LayersType layers, final String identifier )
   {
+    if( layers == null )
+      return null;
+
     // TODO resolve references
     final LayerType[] layerTypes = layers.getLayerArray();
     for( final LayerType layer : layerTypes )
     {
       if( layer.getId().equals( identifier ) )
         return layer;
+
+      final LayersType children = layer.getLayers();
+      final LayerType child = findLayer( children, identifier );
+      if( child != null )
+        return child;
     }
 
     return null;
