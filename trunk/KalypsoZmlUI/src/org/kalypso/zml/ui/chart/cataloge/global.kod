@@ -2,7 +2,6 @@
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="global">
     <Styles>
-
       <TextStyle role="axisLabel">
         <Size>8</Size>
         <TextColor>000000</TextColor>
@@ -17,8 +16,14 @@
         <FontWeight>NORMAL</FontWeight>
         <FontStyle>NORMAL</FontStyle>
       </TextStyle>
+      <TextStyle role="header">
+        <Size>10</Size>
+        <TextColor>000000</TextColor>
+        <FontFamily>Arial</FontFamily>
+        <FontWeight>NORMAL</FontWeight>
+        <FontStyle>NORMAL</FontStyle>
+      </TextStyle>
     </Styles>
-
     <Layers>
       <Layer id="W" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Title>Wasserstand</Title>
@@ -56,7 +61,6 @@
             </Provider>
             <Title>Abfluss</Title>
             <Description />
-
             <Styles>
               <LineStyle role="qLineStyle">
                 <Width>2</Width>
@@ -78,7 +82,6 @@
           <TargetAxisRef ref="Q" />
         </MapperRefs>
       </Layer>
-
       <Layer id="N">
         <Title>Niederschlag</Title>
         <Layers>
@@ -111,8 +114,6 @@
           <TargetAxisRef ref="N" />
         </MapperRefs>
       </Layer>
-
-
       <Layer id="forecastLayer" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlForecastLayerProvider">
           <Parameters>
@@ -125,7 +126,6 @@
           <TargetAxisRef ref="screenAxisY" />
         </MapperRefs>
       </Layer>
-      
       <Layer id="noData" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.base.layer.provider.DefaultTextLayerProvider">
           <Parameters>
@@ -138,12 +138,10 @@
         </Provider>
         <Title>Keine Daten vorhanden</Title>
         <Description />
-
         <MapperRefs>
           <DomainAxisRef ref="screenAxisX" />
           <TargetAxisRef ref="screenAxisY" />
         </MapperRefs>
-
         <Styles>
           <TextStyle role="defaultTextStyle">
             <Size>16</Size>
@@ -203,7 +201,6 @@
             <Parameter name="inset_tick" value="2" />
             <Parameter name="inset_label" value="2" />
             <Parameter name="tick_length" value="2" />
-
             <Parameter name="hide_cut" value="true" />
             <Parameter name="gap" value="0" />
             <Parameter name="tick_label_formater" value="%.0f" />
