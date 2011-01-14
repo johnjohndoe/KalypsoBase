@@ -41,8 +41,6 @@
 package org.kalypso.chart.ui.editor.mousehandler;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -58,16 +56,7 @@ public class DragZoomOutHandler extends AbstractChartDragHandler
 
   public DragZoomOutHandler( final IChartComposite chartComposite )
   {
-    super( chartComposite, 5 );
-  }
-
-  /**
-   * @see org.kalypso.chart.framework.view.IChartDragHandler#getCursor()
-   */
-  @Override
-  public Cursor getCursor( final MouseEvent e )
-  {
-    return e.display.getSystemCursor( SWT.CURSOR_CROSS );
+    super( chartComposite, 5, SWT.BUTTON_MASK, SWT.CURSOR_CROSS );
   }
 
   /**
