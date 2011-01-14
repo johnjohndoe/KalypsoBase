@@ -199,17 +199,11 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     final IDataRange<Number> range = axis.getNumericRange();
     if( range.getMin() == null || range.getMax() == null )
       return;
-// final double numericMin = range.getMin().doubleValue();
-// final double numericMax = range.getMax().doubleValue();
-// final int axisMin = axis.numericToScreen( numericMin );
-// final int axisMax = axis.numericToScreen( numericMax );
-// final int screenMin = Math.min( axisMin, axisMax );
-// final int screenMax = Math.max( axisMin, axisMax );
+
 
     final ITextStyle tickLabelStyle = m_config.labelStyle;
     final ILineStyle tickLineStyle = m_config.tickLineStyle;
-    // final int tickScreenDistance = (screenMax - screenMin) / (ticks.length == 1 ? 1 : (ticks.length - 1));
-
+ 
     for( int i = 0; i < m_contentProvider.size(); i++ )
     {
       final int y1, y2, x1, x2;
@@ -222,17 +216,12 @@ public class OrdinalAxisRenderer implements IAxisRenderer
 
       final int tickPos = ticks[i].intValue();
       final int tickScreenDistance = i < m_contentProvider.size() - 1 ? ticks[i + 1].intValue() - tickPos : -1;
-
-// if( i < ticks.length - 1 )
-// tickScreenDistance = axis.numericToScreen( ticks[i + 1] ) - tickPos;
-      // final Point labelSize = getTickLabelRenderer( axis ).getSize();//getTextExtent( gc, label, tickLabelStyle );
       // HORIZONTAL
       if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
       {
         x1 = tickPos + offset;
         x2 = x1;
         y1 = startY;
-        // textX = tickPos- labelSize.x / 2 + offset;
         textX = tickPos + offset;
         // BOTTOM
         if( axis.getPosition() == POSITION.BOTTOM )
@@ -254,7 +243,6 @@ public class OrdinalAxisRenderer implements IAxisRenderer
         x1 = startX;
         y1 = tickPos + offset;
         y2 = y1;
-        // textY = tickPos - labelSize.y / 2 + offset;
         textY = y1;
 
         // LEFT
@@ -301,6 +289,11 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     }
 
     return m_config.tickLength + m_config.axisLineStyle.getWidth() + maxWidth + m_labelRenderer.getSize().y;
+  }
+
+  public final Object getContent( final int index )
+  {
+    return m_contentProvider.getContent( index );
   }
 
   /**
