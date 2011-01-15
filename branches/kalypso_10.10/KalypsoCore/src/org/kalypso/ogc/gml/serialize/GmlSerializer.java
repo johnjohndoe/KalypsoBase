@@ -81,6 +81,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.commons.resources.SetContentHelper;
@@ -160,8 +161,9 @@ public final class GmlSerializer
   /**
    * REMARK: This method closes the given writer, which is VERY bad. Every caller should close the write on its own
    * 
-   * @deprecated Because this method closes it writer. Change to {@link #serializeWorkspace(Writer, GMLWorkspace,
-   *             String, false)}, rewrite your code, then we can get rid of this method and the flag.
+   * @deprecated Because this method closes it writer. Change to
+   *             {@link #serializeWorkspace(Writer, GMLWorkspace, String, false)}, rewrite your code, then we can get
+   *             rid of this method and the flag.
    */
   @Deprecated
   public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding ) throws GmlSerializeException
@@ -227,6 +229,7 @@ public final class GmlSerializer
 
   /**
    * Same as {@link #createGMLWorkspace(URL, IFeatureProviderFactory, null )
+
    */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IFeatureProviderFactory factory ) throws Exception
   {
@@ -240,9 +243,10 @@ public final class GmlSerializer
   {
     return createGMLWorkspace( gmlURL, null, factory, monitor );
   }
-  
+
   /**
-   * @param context If set, this context is used instead of the gmlUrl where the workspace is loaded from.
+   * @param context
+   *          If set, this context is used instead of the gmlUrl where the workspace is loaded from.
    */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final URL context, final IFeatureProviderFactory factory, final IProgressMonitor monitor ) throws Exception
   {
@@ -275,7 +279,7 @@ public final class GmlSerializer
       }
 
       final URL usedContext = context == null ? gmlURL : context;
-      
+
       final GMLWorkspace workspace = createGMLWorkspace( new InputSource( is ), null, usedContext, factory );
       is.close();
       return workspace;
@@ -553,6 +557,38 @@ public final class GmlSerializer
     finally
     {
       IOUtils.closeQuietly( zos );
+    }
+  }
+
+  public static void serializeWorkspace( final IFile targetFile, final GMLWorkspace workspace, final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( "Writing gml", 100 );
+
+    String charset;
+    if( targetFile.exists() )
+      charset = targetFile.getCharset();
+    else
+    {
+      // check: is there a better way to set this default encoding?
+      charset = "UTF-8"; //$NON-NLS-1$
+    }
+    monitor.worked( 5 );
+
+    try
+    {
+      final File file = targetFile.getLocation().toFile();
+      serializeWorkspace( file, workspace, charset );
+      monitor.worked( 90 );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      final IStatus error = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to write gml workspace", e );
+      throw new CoreException( error );
+    }
+    finally
+    {
+      targetFile.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 5 ) );
     }
   }
 }
