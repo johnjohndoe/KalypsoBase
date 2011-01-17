@@ -47,8 +47,6 @@ import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * @author Dirk Kuch
@@ -93,10 +91,11 @@ public class ZmlLayerVisitor implements IChartLayerVisitor
 
   private boolean isTypeOf( final IChartLayer layer )
   {
-    final ICoordinateMapper mapper = layer.getCoordinateMapper();
-    final IAxis targetAxis = mapper.getTargetAxis();
+    final String identifier = layer.getId();
+// final ICoordinateMapper mapper = layer.getCoordinateMapper();
+// final IAxis targetAxis = mapper.getTargetAxis();
 
-    return targetAxis.getId().equals( m_parameterType );
+    return identifier.equals( m_parameterType );
   }
 
 }
