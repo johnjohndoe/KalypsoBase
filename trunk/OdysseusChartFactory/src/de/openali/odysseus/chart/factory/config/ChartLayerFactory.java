@@ -119,10 +119,9 @@ public class ChartLayerFactory extends AbstractChartFactory
    */
   private IChartLayer[] buildLayerTypes( final LayersType layersType, final ReferencableType... baseTypes )
   {
-    final LayerType[] layers = layersType.getLayerArray();
-
     final Set<IChartLayer> stack = new LinkedHashSet<IChartLayer>();
 
+    final LayerType[] layers = layersType.getLayerArray();
     for( final LayerType layerType : layers )
     {
       try

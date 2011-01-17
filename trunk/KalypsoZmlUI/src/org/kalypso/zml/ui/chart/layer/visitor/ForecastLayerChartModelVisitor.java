@@ -51,11 +51,12 @@ import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisito
  */
 public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
 {
-  private final IObsProvider m_provider;
 
-  public ForecastLayerChartModelVisitor( final IObsProvider provider )
+  private final IObsProvider[] m_providers;
+
+  public ForecastLayerChartModelVisitor( final IObsProvider[] providers )
   {
-    m_provider = provider;
+    m_providers = providers;
   }
 
   /**
@@ -67,9 +68,20 @@ public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
     if( layer instanceof ZmlForecastLayer )
     {
       final ZmlForecastLayer forecastLayer = (ZmlForecastLayer) layer;
-      forecastLayer.setObsProvider( m_provider );
+      forecastLayer.setObsProvider( getProvider() );
     }
 
     layer.getLayerManager().accept( this );
+  }
+
+  private IObsProvider getProvider( )
+  {
+    for( final IObsProvider provider : m_providers )
+    {
+      if( provider.isLoaded() )
+        return provider;
+    }
+
+    return null;
   }
 }
