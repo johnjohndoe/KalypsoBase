@@ -47,6 +47,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.w3c.dom.Node;
 
 import de.openali.odysseus.chart.factory.OdysseusChartFactory;
+import de.openali.odysseus.chartconfig.x020.ChartDocument;
 import de.openali.odysseus.chartconfig.x020.DerivedLayerType;
 import de.openali.odysseus.chartconfig.x020.LayerDocument;
 import de.openali.odysseus.chartconfig.x020.LayerType;
@@ -132,20 +133,25 @@ public final class LayerTypeHelper
     final Node node = baseLayerType.getDomNode();
     final Node parentNode = node.getParentNode().getParentNode();
 
-    if( "Layer".equals( parentNode.getLocalName() ) )
+    final String localName = parentNode.getLocalName();
+    try
     {
-      try
+      if( "Layer".equals( localName ) )
       {
         final LayerDocument layerDocument = LayerDocument.Factory.parse( parentNode );
-        final LayerType parent = layerDocument.getLayer();
 
-        return parent;
-
+        return layerDocument.getLayer();
       }
-      catch( final XmlException e )
+      else if( "Chart".equals( localName ) )
       {
-        OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        final ChartDocument document = ChartDocument.Factory.parse( parentNode );
+
+        return document.getChart();
       }
+    }
+    catch( final XmlException e )
+    {
+      OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
     throw new NotImplementedException();
