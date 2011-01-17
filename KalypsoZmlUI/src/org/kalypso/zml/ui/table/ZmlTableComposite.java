@@ -128,7 +128,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   {
     final ZmlTableType tableType = m_model.getTableType();
 
-    final Composite toolbar = toolkit.createComposite( this );
+    Composite toolbar = null;
+    if( hasToolbar( tableType ) )
+      toolbar = toolkit.createComposite( this );
 
     m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_tableViewer.getTable().setLinesVisible( true );
@@ -194,9 +196,19 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 // TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_VERTICAL |
 // ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL );
 
-    initToolbar( tableType, toolbar, toolkit );
+    if( hasToolbar( tableType ) )
+      initToolbar( tableType, toolbar, toolkit );
 
     refresh();
+  }
+
+  private boolean hasToolbar( final ZmlTableType tableType )
+  {
+    final List<String> toolbar = tableType.getToolbar();
+    if( toolbar == null )
+      return false;
+
+    return !toolbar.isEmpty();
   }
 
   private void addBasicFilters( )

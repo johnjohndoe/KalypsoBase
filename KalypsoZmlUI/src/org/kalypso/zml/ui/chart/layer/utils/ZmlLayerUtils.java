@@ -45,8 +45,6 @@ import org.kalypso.zml.ui.chart.layer.themes.ZmlLineLayer;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * @author Dirk Kuch
@@ -55,28 +53,6 @@ public final class ZmlLayerUtils
 {
   private ZmlLayerUtils( )
   {
-  }
-
-  /**
-   * convention: target axis id == parameterType
-   */
-  public static ZmlLineLayer findLineLayerByTargetAxis( final ChartModel model, final String parameterType )
-  {
-    final ILayerManager layerManager = model.getLayerManager();
-    final IChartLayer[] layers = layerManager.getLayers();
-    for( final IChartLayer layer : layers )
-    {
-      if( !(layer instanceof ZmlLineLayer) )
-        continue;
-
-      final ICoordinateMapper mapper = layer.getCoordinateMapper();
-      final IAxis targetAxis = mapper.getTargetAxis();
-
-      if( targetAxis.getId().equals( parameterType ) )
-        return (ZmlLineLayer) layer;
-    }
-
-    return null;
   }
 
   public static ZmlLineLayer findLineLayerById( final ChartModel model, final String identifier )
