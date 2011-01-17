@@ -41,7 +41,6 @@
 package de.openali.odysseus.chart.factory.util;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.XmlException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.w3c.dom.Node;
@@ -115,13 +114,11 @@ public final class LayerTypeHelper
     clonedLayerType.setId( derivedLayerType.getId() );
     LayerTypeHelper.appendParameters( clonedLayerType, derivedLayerType.getParameters() );
 
-    final String title = derivedLayerType.getTitle();
-    if( StringUtils.isNotEmpty( title ) )
-      clonedLayerType.setTitle( title );
+    if( derivedLayerType.isSetTitle() )
+      clonedLayerType.setTitle( derivedLayerType.getTitle() );
 
-    final String description = derivedLayerType.getDescription();
-    if( StringUtils.isNotEmpty( description ) )
-      clonedLayerType.setDescription( description );
+    if( derivedLayerType.isSetDescription() )
+      clonedLayerType.setDescription( derivedLayerType.getDescription() );
 
     clonedLayerType.setStyles( derivedLayerType.getStyles() );
 
@@ -156,4 +153,5 @@ public final class LayerTypeHelper
 
     throw new NotImplementedException();
   }
+
 }
