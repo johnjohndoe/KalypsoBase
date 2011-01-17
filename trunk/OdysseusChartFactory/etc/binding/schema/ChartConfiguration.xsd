@@ -192,6 +192,7 @@
   <element name="Layer" type="ods:LayerType" />
   <element name="LayerReference" type="ods:LayerRefernceType" />
   <element name="DerivedLayer" type="ods:DerivedLayerType" />
+  <element name="ChildLayer" type="ods:ChildLayerType" />
   <element name="Axis" type="ods:AxisType" />
   <element name="ScreenAxis" type="ods:ScreenAxisType" />
   <element name="Mapper" type="ods:MapperType" />
@@ -318,11 +319,23 @@
           <element name="Parameters" type="ods:ParametersType" minOccurs="0" />
           <element ref="ods:LayerReference" minOccurs="1" />
           <element ref="ods:Styles" minOccurs="0" />
+          <element ref="ods:ChildLayer" minOccurs="0" maxOccurs="unbounded" />
         </sequence>
+        <attribute name="legend" type="boolean" use="optional" default="true" />
       </extension>
     </complexContent>
   </complexType>
 
+  <complexType name="ChildLayerType">
+    <sequence>
+      <element name="Title" type="string" minOccurs="0" />
+      <element name="Description" type="string" minOccurs="0" />
+      <element name="Parameters" type="ods:ParametersType" minOccurs="0" />
+      <element ref="ods:Styles" minOccurs="0" />
+    </sequence>
+    <attribute name="ref" type="anyURI" use="required" />
+    <attribute name="legend" type="boolean" use="optional" default="true" />
+  </complexType>
 
   <complexType name="ProviderType">
     <sequence>
@@ -407,8 +420,6 @@
     </complexContent>
   </complexType>
 
-
-
   <complexType name="ScreenAxisType">
     <complexContent>
       <extension base="ods:MapperType">
@@ -419,8 +430,6 @@
     </complexContent>
   </complexType>
 
-
-
   <simpleType name="PositionType">
     <restriction base="string">
       <enumeration value="LEFT" />
@@ -429,7 +438,6 @@
       <enumeration value="TOP" />
     </restriction>
   </simpleType>
-
 
   <complexType name="AxisNumberRangeType">
     <sequence>
@@ -458,8 +466,6 @@
 
   <element name="DurationRange" type="ods:AxisDurationRangeType"></element>
 
-
-
   <complexType name="AxisStringRangeType">
     <sequence>
       <element name="MinValue" type="double"></element>
@@ -485,7 +491,6 @@
       </extension>
     </complexContent>
   </complexType>
-
 
   <complexType name="ParametersType">
     <sequence>
@@ -559,11 +564,6 @@
     </simpleContent>
   </complexType>
 
-
-
-
- 
-
 <!-- 
 	<complexType name="StylesType">
 		<choice maxOccurs="unbounded">
@@ -574,8 +574,6 @@
 		</choice>
 	</complexType>
 -->
-
-
 
 </schema>
 	
