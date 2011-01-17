@@ -307,7 +307,10 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public void paint( final GC gc )
   {
-    for( final IChartLayer layer : getLayerManager().getLayers() )
+    final IChartLayer[] layers = getLayerManager().getLayers();
+    ArrayUtils.reverse( layers );
+
+    for( final IChartLayer layer : layers )
     {
       if( layer.isVisible() )
         layer.paint( gc );

@@ -73,6 +73,11 @@
             id="org.kalypso.chart.ui.commands.openOutline"
             name="%org.kalypso.chart.ui.commands.openOutline.name">
       </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            id="org.kalypso.chart.ui.commands.zoom_pan_maximize"
+            name="Zoom / Pan / Maximize">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.commandImages">
@@ -89,12 +94,16 @@
             icon="icons/elcl16/chart_zoom_out.gif">
       </image>
       <image
-            commandId="org.kalypso.chart.ui.commands.edit"
-            icon="icons/elcl16/chart_edit.gif">
-      </image>
-      <image
             commandId="org.kalypso.chart.ui.commands.maximize"
             icon="icons/elcl16/chart_maximize.gif">
+      </image>
+      <image
+            commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize"
+            icon="icons/elcl16/chart_zoom_pan_maximize.gif">
+      </image>
+      <image
+            commandId="org.kalypso.chart.ui.commands.edit"
+            icon="icons/elcl16/chart_edit.gif">
       </image>
       <image
             commandId="org.kalypso.chart.ui.commands.export"
@@ -138,6 +147,10 @@
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.OpenOutlineHandler"
             commandId="org.kalypso.chart.ui.commands.openOutline">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.ZoomPanMaximizeCommandHandler"
+            commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize">
       </handler>
    </extension>
    <extension
