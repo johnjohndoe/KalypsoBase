@@ -120,7 +120,7 @@
         <Title>(Wasserstands)Höhe</Title>
         <Layers>
           <Layer id="Wasserstand_mNN" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <Provider epid="org.kalypso.hwv.core.chart.themes.ZmlLineLayer" />
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
             <Title>(Wasserstands)Höhe</Title>
             <Description />
             <Styles>
@@ -132,6 +132,7 @@
               </PointStyle>
             </Styles>
           </Layer>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
           <DomainAxisRef ref="date" />
@@ -142,7 +143,7 @@
         <Title>Volumen</Title>
         <Layers>
           <Layer id="Volumen" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <Provider epid="org.kalypso.hwv.core.chart.themes.ZmlLineLayer" />
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
             <Title>Volumen</Title>
             <Description />
             <Styles>
@@ -170,6 +171,7 @@
               </PointStyle>
             </Styles>
           </Layer>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
           <DomainAxisRef ref="date" />
@@ -289,7 +291,7 @@
           <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#tickLabel</StyleReference>
         </Styles>
       </AxisRenderer>
-            <AxisRenderer id="AutoNumberAxisRenderer">
+      <AxisRenderer id="AutoNumberAxisRenderer">
         <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
           <Parameters>
             <Parameter name="inset_tick" value="2" />
