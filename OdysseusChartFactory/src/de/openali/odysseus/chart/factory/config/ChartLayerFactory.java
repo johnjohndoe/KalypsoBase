@@ -238,6 +238,8 @@ public class ChartLayerFactory extends AbstractChartFactory
     else
     {
       final ILayerProvider provider = getLoader().getExtension( ILayerProvider.class, providerType.getEpid() );
+      if( provider == null )
+        throw new IllegalStateException( String.format( "LayerProvider not found: %s", providerType.getEpid() ) );
 
       return buildLayer( layerType, provider, baseTypes );
     }
