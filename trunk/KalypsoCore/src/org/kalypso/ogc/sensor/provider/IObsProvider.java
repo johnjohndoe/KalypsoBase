@@ -25,4 +25,6 @@ public interface IObsProvider
    * @return observation is loaded?
    */
   boolean isLoaded( );
+
+  boolean isValid( );
 }

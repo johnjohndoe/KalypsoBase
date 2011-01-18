@@ -123,4 +123,13 @@ public class SynchronousObservationProvider extends AbstractObsProvider
   {
     return m_handler.getArguments( getObservation().getMetadataList() );
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.provider.IObsProvider#isValid()
+   */
+  @Override
+  public boolean isValid( )
+  {
+    return getObservation() != null;
+  }
 }

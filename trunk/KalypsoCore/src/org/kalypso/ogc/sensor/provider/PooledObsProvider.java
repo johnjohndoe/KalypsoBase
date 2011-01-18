@@ -40,7 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.provider;
 
+import java.net.URL;
+
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
@@ -170,5 +173,29 @@ public class PooledObsProvider extends AbstractObsProvider implements IPoolListe
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
     // nothing to do
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.provider.IObsProvider#isValid()
+   */
+  @Override
+  public boolean isValid( )
+  {
+    if( getObservation() != null )
+      return true;
+
+    final URL context = m_key.getContext();
+    final String location = m_key.getLocation();
+
+    try
+    {
+      UrlResolverSingleton.resolveUrl( context, location );
+      return true;
+    }
+    catch( final Throwable t )
+    {
+      return false;
+    }
+
   }
 }

@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.chart.layer.visitor;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
 
 import de.openali.odysseus.chart.ext.base.layer.DefaultTextLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -58,12 +59,12 @@ public class SetVisibilityChartModelVisitor implements IChartLayerVisitor
 
   private final String[] m_ignoreTypes;
 
-  private final boolean m_empty;
+  private final IObsProvider[] m_providers;
 
-  public SetVisibilityChartModelVisitor( final String[] ignoreTypes, final boolean empty )
+  public SetVisibilityChartModelVisitor( final IObsProvider[] providers, final String[] currentIgnoreTypes )
   {
-    m_ignoreTypes = ignoreTypes;
-    m_empty = empty;
+    m_providers = providers;
+    m_ignoreTypes = currentIgnoreTypes;
   }
 
   /**
@@ -75,7 +76,7 @@ public class SetVisibilityChartModelVisitor implements IChartLayerVisitor
     if( layer instanceof DefaultTextLayer )
     {
       if( NO_DATA_LAYER.equals( layer.getId() ) )
-        layer.setVisible( m_empty );
+        layer.setVisible( !isValid() );
     }
     else
     {
@@ -94,6 +95,21 @@ public class SetVisibilityChartModelVisitor implements IChartLayerVisitor
         setVisibility( children, true );
       }
     }
+  }
+
+  private boolean isValid( )
+  {
+    if( ArrayUtils.isEmpty( m_providers ) )
+      return false;
+
+    // TODO instead provider.isLoaded() -> provider.isValid()
+    for( final IObsProvider provider : m_providers )
+    {
+      if( provider.isValid() )
+        return true;
+    }
+
+    return false;
   }
 
   private void setVisibility( final IChartLayer[] layers, final boolean visibility )
