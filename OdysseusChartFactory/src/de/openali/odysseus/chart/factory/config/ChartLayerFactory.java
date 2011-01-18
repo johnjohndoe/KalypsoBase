@@ -72,7 +72,6 @@ import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chartconfig.x020.ChartType;
-import de.openali.odysseus.chartconfig.x020.ChildLayerType;
 import de.openali.odysseus.chartconfig.x020.DerivedLayerType;
 import de.openali.odysseus.chartconfig.x020.LayerRefernceType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
@@ -185,28 +184,18 @@ public class ChartLayerFactory extends AbstractChartFactory
       try
       {
         final LayerRefernceType reference = derivedLayerType.getLayerReference();
-
         final LayerType baseLayerType = resovler.findLayerType( reference, getContext() );
-        final LayerType clonedLayerType = LayerTypeHelper.cloneLayerType( derivedLayerType, baseLayerType );
 
-        DerivedLayerTypeHelper.updateLayerTypeSetttings( clonedLayerType, derivedLayerType );
-
-        // replace "overwritten" / modified child layer instances
-        final ChildLayerType[] childLayerTypes = derivedLayerType.getChildLayerArray();
-        for( final ChildLayerType childLayer : childLayerTypes )
-        {
-          updateDerivedChildLayer( clonedLayerType, childLayer );
-        }
-
-        final ReferencableType parentBasePlayerType = LayerTypeHelper.getParentNode( baseLayerType );
+        final LayerType derived = DerivedLayerTypeHelper.buildDerivedLayerType( derivedLayerType, baseLayerType );
+        final ReferencableType parentBasePlayerType = LayerTypeHelper.getParentNode( derived );
 
         final Set<ReferencableType> types = new LinkedHashSet<ReferencableType>();
-        types.add( clonedLayerType );
+        types.add( derived );
         types.add( baseLayerType );
         types.add( parentBasePlayerType );
         Collections.addAll( types, baseTypes );
 
-        final IChartLayer layer = buildLayer( clonedLayerType, LayerTypeHelper.getLayerTypeProvider( getLoader(), clonedLayerType ), types.toArray( new ReferencableType[] {} ) );
+        final IChartLayer layer = buildLayer( derived, LayerTypeHelper.getLayerTypeProvider( getLoader(), derived ), types.toArray( new ReferencableType[] {} ) );
         stack.add( layer );
       }
       catch( final Throwable t )
@@ -216,17 +205,6 @@ public class ChartLayerFactory extends AbstractChartFactory
     }
 
     return stack.toArray( new IChartLayer[] {} );
-  }
-
-  /**
-   * restriction: we can only update child layer types. update of child layer references and child derived layers are
-   * not possible <br>
-   */
-  private void updateDerivedChildLayer( final LayerType layer, final ChildLayerType childLayerType )
-  {
-    final LayerType child = DerivedLayerTypeHelper.findChildLayerType( layer, childLayerType.getRef() );
-
-    DerivedLayerTypeHelper.updateLayerTypeSettings( child, childLayerType );
   }
 
   public IChartLayer buildLayer( final LayerType layerType, final ILayerProvider provider, final ReferencableType... baseTypes ) throws ConfigurationException
