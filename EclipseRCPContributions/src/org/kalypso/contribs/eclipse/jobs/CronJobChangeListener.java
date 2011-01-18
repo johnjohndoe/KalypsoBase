@@ -40,11 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jobs;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.utils.Debug;
 
 /**
@@ -85,7 +86,7 @@ public class CronJobChangeListener extends JobChangeAdapter
     /* Log. */
     if( Debug.CRON_JOB.isEnabled() )
     {
-      EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') has finished execution...", name ) ) );
+      EclipseRCPContributionsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, EclipseRCPContributionsPlugin.ID, String.format( "The cron job ('%s') has finished execution...", name ) ) );
       EclipseRCPContributionsPlugin.getDefault().getLog().log( cronJob.getResult() );
     }
 
@@ -94,7 +95,7 @@ public class CronJobChangeListener extends JobChangeAdapter
     {
       /* Log. */
       if( Debug.CRON_JOB.isEnabled() )
-        EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') will be deactivated...", name ) ) );
+        EclipseRCPContributionsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, EclipseRCPContributionsPlugin.ID, String.format( "The cron job ('%s') will be deactivated...", name ) ) );
 
       /* Remove myself as listener. */
       job.removeJobChangeListener( this );
@@ -104,7 +105,7 @@ public class CronJobChangeListener extends JobChangeAdapter
 
     /* Log. */
     if( Debug.CRON_JOB.isEnabled() )
-      EclipseRCPContributionsPlugin.getDefault().getLog().log( StatusUtilities.createInfoStatus( String.format( "The cron job ('%s') will stay activated with a reschedule delay of %d ms (mutex used: %s)...", name, rescheduleDelay, mutexString ) ) );
+      EclipseRCPContributionsPlugin.getDefault().getLog().log( new Status( IStatus.INFO, EclipseRCPContributionsPlugin.ID, String.format( "The cron job ('%s') will stay activated with a reschedule delay of %d ms (mutex used: %s)...", name, rescheduleDelay, mutexString ) ) );
 
     /* Schedule (leave myself as listener). */
     job.schedule( rescheduleDelay );

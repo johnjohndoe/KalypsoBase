@@ -71,9 +71,9 @@ public abstract class CronJob extends Job
    * <br>
    * The identifier of this job by default will be "CronJob". <br>
    * <br>
-   * If you are using a cron job and you want to start it manually via CronJobUtilities.startCronJob(job), then you must
-   * make sure to set the identifier to a unique one. Only one cron job of more with the same identifier will be
-   * executed.<br>
+   * If you are using a cron job and you want to start it manually via {@link CronJobUtilities#startCronJob(Job)}, then
+   * you must make sure to set the identifier to a unique one. Only one cron job of more with the same identifier will
+   * be executed.<br>
    * <br>
    * If you are using the extension point <strong>org.kalypso.contribs.eclipsercp.cronJobs</strong>, also be sure to use
    * an identifier only once.
