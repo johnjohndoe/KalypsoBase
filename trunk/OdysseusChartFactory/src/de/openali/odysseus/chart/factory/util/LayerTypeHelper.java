@@ -46,6 +46,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.w3c.dom.Node;
 
 import de.openali.odysseus.chart.factory.OdysseusChartFactory;
+import de.openali.odysseus.chart.factory.config.IExtensionLoader;
+import de.openali.odysseus.chart.factory.layer.PlainLayerProvider;
+import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chartconfig.x020.ChartDocument;
 import de.openali.odysseus.chartconfig.x020.DerivedLayerType;
 import de.openali.odysseus.chartconfig.x020.LayerDocument;
@@ -152,6 +155,21 @@ public final class LayerTypeHelper
     }
 
     throw new NotImplementedException();
+  }
+
+  public static ILayerProvider getLayerTypeProvider( final IExtensionLoader loader, final LayerType layerType )
+  {
+    final ProviderType providerType = layerType.getProvider();
+    if( providerType == null )
+    {
+      return new PlainLayerProvider();
+    }
+
+    final ILayerProvider provider = loader.getExtension( ILayerProvider.class, providerType.getEpid() );
+    if( provider == null )
+      throw new IllegalStateException( String.format( "LayerProvider not found: %s", providerType.getEpid() ) );
+
+    return provider;
   }
 
 }
