@@ -126,6 +126,7 @@ public final class DerivedLayerTypeHelper
 
   private static void updateLayerTypeSetttings( final LayerType layer, final DerivedLayerType update )
   {
+    layer.setId( update.getId() );
     layer.setLegend( update.isSetLegend() );
 
     if( update.isSetTitle() )

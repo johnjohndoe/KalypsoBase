@@ -87,7 +87,6 @@ import de.openali.odysseus.chartconfig.x020.RoleReferencingType;
  */
 public class ChartLayerFactory extends AbstractChartFactory
 {
-
   private final ChartMapperFactory m_mapperFactory;
 
   public ChartLayerFactory( final IChartModel model, final IReferenceResolver resolver, final IExtensionLoader loader, final URL context, final ChartMapperFactory mapperFactory )
