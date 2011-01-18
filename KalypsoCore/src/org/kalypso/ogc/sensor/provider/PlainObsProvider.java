@@ -57,18 +57,26 @@ public final class PlainObsProvider extends AbstractObsProvider
   }
 
   @Override
-  public void dispose()
+  public void dispose( )
   {
     // nix zu tun
   }
-
 
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#copy()
    */
   @Override
-  public IObsProvider copy()
+  public IObsProvider copy( )
   {
     return new PlainObsProvider( getObservation(), getArguments() );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.provider.IObsProvider#isValid()
+   */
+  @Override
+  public boolean isValid( )
+  {
+    return getObservation() != null;
   }
 }
