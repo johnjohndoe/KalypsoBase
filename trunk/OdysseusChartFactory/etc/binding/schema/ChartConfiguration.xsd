@@ -316,8 +316,8 @@
         <sequence>
           <element name="Title" type="string" minOccurs="0" />
           <element name="Description" type="string" minOccurs="0" />
-          <element name="Parameters" type="ods:ParametersType" minOccurs="0" />
           <element ref="ods:LayerReference" minOccurs="1" />
+          <element name="Parameters" type="ods:ParametersType" minOccurs="0" />
           <element ref="ods:Styles" minOccurs="0" />
           <element ref="ods:ChildLayer" minOccurs="0" maxOccurs="unbounded" />
         </sequence>
