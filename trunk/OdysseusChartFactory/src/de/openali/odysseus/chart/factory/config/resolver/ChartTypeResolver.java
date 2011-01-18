@@ -62,8 +62,10 @@ import org.kalypso.core.catalog.ICatalog;
 
 import com.google.common.collect.MapMaker;
 
+import de.openali.odysseus.chart.factory.OdysseusChartFactory;
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chart.factory.config.StyleHelper;
+import de.openali.odysseus.chart.factory.util.DerivedLayerTypeHelper;
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.AxisRendererType;
@@ -71,6 +73,7 @@ import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.ChartType.Mappers;
 import de.openali.odysseus.chartconfig.x020.ChartType.Renderers;
+import de.openali.odysseus.chartconfig.x020.DerivedLayerType;
 import de.openali.odysseus.chartconfig.x020.LayerRefernceType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.LayersType;
@@ -287,21 +290,28 @@ public final class ChartTypeResolver implements IReferenceResolver
 
     for( final ChartType chart : chartTypes )
     {
-      final LayersType layers = chart.getLayers();
-      final LayerType layer = findLayer( layers, identifier );
-      if( layer != null )
-        return layer;
+      try
+      {
+        final LayersType layers = chart.getLayers();
+
+        final LayerType layer = findLayer( layers, identifier, context );
+        if( layer != null )
+          return layer;
+      }
+      catch( final CoreException e )
+      {
+        OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
     }
 
     return null;
   }
 
-  private LayerType findLayer( final LayersType layers, final String identifier )
+  private LayerType findLayer( final LayersType layers, final String identifier, final URL context ) throws CoreException
   {
     if( layers == null )
       return null;
 
-    // TODO resolve references
     final LayerType[] layerTypes = layers.getLayerArray();
     for( final LayerType layer : layerTypes )
     {
@@ -309,9 +319,28 @@ public final class ChartTypeResolver implements IReferenceResolver
         return layer;
 
       final LayersType children = layer.getLayers();
-      final LayerType child = findLayer( children, identifier );
+      final LayerType child = findLayer( children, identifier, context );
       if( child != null )
         return child;
+    }
+
+    final LayerRefernceType[] layerReferences = layers.getLayerReferenceArray();
+    for( final LayerRefernceType reference : layerReferences )
+    {
+      final String id = getAnchor( reference.getUrl() );
+      if( identifier.equals( id ) )
+        return findLayerType( reference, context );
+    }
+
+    final DerivedLayerType[] derivedLayerTypes = layers.getDerivedLayerArray();
+    for( final DerivedLayerType derivedLayerType : derivedLayerTypes )
+    {
+      if( identifier.equals( derivedLayerType.getId() ) )
+      {
+        final LayerType baseLayerType = findLayerType( derivedLayerType.getLayerReference(), context );
+
+        return DerivedLayerTypeHelper.buildDerivedLayerType( derivedLayerType, baseLayerType );
+      }
     }
 
     return null;

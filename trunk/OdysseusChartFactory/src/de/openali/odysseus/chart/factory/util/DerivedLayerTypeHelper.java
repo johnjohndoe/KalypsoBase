@@ -57,7 +57,23 @@ public final class DerivedLayerTypeHelper
   {
   }
 
-  public static LayerType findChildLayerType( final LayerType parent, final String identifier )
+  public static LayerType buildDerivedLayerType( final DerivedLayerType derivedLayerType, final LayerType baseLayerType )
+  {
+    final LayerType clonedLayerType = (LayerType) baseLayerType.copy();
+    DerivedLayerTypeHelper.updateLayerTypeSetttings( clonedLayerType, derivedLayerType );
+
+    // replace "overwritten" / modified child layer instances
+    final ChildLayerType[] childLayerTypes = derivedLayerType.getChildLayerArray();
+    for( final ChildLayerType childLayerType : childLayerTypes )
+    {
+      final LayerType child = findChildLayerType( clonedLayerType, childLayerType.getRef() );
+      DerivedLayerTypeHelper.updateLayerTypeSettings( child, childLayerType );
+    }
+
+    return clonedLayerType;
+  }
+
+  private static LayerType findChildLayerType( final LayerType parent, final String identifier )
   {
     final LayersType layersType = parent.getLayers();
     final LayerType[] layers = layersType.getLayerArray();
@@ -91,7 +107,7 @@ public final class DerivedLayerTypeHelper
     return null;
   }
 
-  public static void updateLayerTypeSettings( final LayerType layer, final ChildLayerType update )
+  private static void updateLayerTypeSettings( final LayerType layer, final ChildLayerType update )
   {
     layer.setLegend( update.isSetLegend() );
 
@@ -108,7 +124,7 @@ public final class DerivedLayerTypeHelper
       LayerTypeHelper.appendParameters( layer, update.getParameters() );
   }
 
-  public static void updateLayerTypeSetttings( final LayerType layer, final DerivedLayerType update )
+  private static void updateLayerTypeSetttings( final LayerType layer, final DerivedLayerType update )
   {
     layer.setLegend( update.isSetLegend() );
 
@@ -124,4 +140,5 @@ public final class DerivedLayerTypeHelper
     if( update.isSetParameters() )
       LayerTypeHelper.appendParameters( layer, update.getParameters() );
   }
+
 }
