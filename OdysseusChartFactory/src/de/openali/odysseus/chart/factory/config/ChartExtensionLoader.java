@@ -109,7 +109,7 @@ public final class ChartExtensionLoader implements IExtensionLoader
     return (IAxisRendererProvider) element.createExecutableExtension( "class" );
   }
 
-  private synchronized static Map<String, IConfigurationElement> getLayerProviders( )
+  private static synchronized Map<String, IConfigurationElement> getLayerProviders( )
   {
     if( LP_MAP != null && LP_MAP.size() > 0 )
     {
@@ -135,7 +135,7 @@ public final class ChartExtensionLoader implements IExtensionLoader
     return LP_MAP;
   }
 
-  private synchronized static Map<String, IConfigurationElement> getAxisProviders( )
+  private static synchronized Map<String, IConfigurationElement> getAxisProviders( )
   {
     if( AP_MAP != null && AP_MAP.size() > 0 )
     {
@@ -161,7 +161,7 @@ public final class ChartExtensionLoader implements IExtensionLoader
     return AP_MAP;
   }
 
-  private synchronized static Map<String, IConfigurationElement> getMapperProviders( )
+  private static synchronized Map<String, IConfigurationElement> getMapperProviders( )
   {
     if( MP_MAP != null && MP_MAP.size() > 0 )
     {
@@ -187,7 +187,7 @@ public final class ChartExtensionLoader implements IExtensionLoader
     return MP_MAP;
   }
 
-  private synchronized static Map<String, IConfigurationElement> getAxisRendererProviders( )
+  private static synchronized Map<String, IConfigurationElement> getAxisRendererProviders( )
   {
     if( ARP_MAP != null && ARP_MAP.size() > 0 )
     {

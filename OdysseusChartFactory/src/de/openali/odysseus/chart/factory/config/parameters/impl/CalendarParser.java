@@ -138,7 +138,7 @@ public class CalendarParser implements IStringParser<Calendar>
                 int durationForUnit = Integer.parseInt( durationForUnitStr.substring( 0, (durationForUnitStr.length() - 1) ) );
 
                 // Falls die Duration negativ ist, muss der Wert negiert werden
-                if( dir.equals( "-" ) ) //$NON-NLS-1$
+                if( "-".equals( dir ) ) //$NON-NLS-1$
                   durationForUnit *= -1;
 
                 cal.add( entry.getKey(), durationForUnit );
