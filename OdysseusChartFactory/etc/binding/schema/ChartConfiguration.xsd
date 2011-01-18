@@ -415,9 +415,17 @@
             </complexType>
           </element>
           <element name="RendererRef" type="ods:ReferencingType" />
+          <element name="AxisViewFrame" type="ods:AxisViewFrameType" />
         </sequence>
       </extension>
     </complexContent>
+  </complexType>
+
+  <complexType name="AxisViewFrameType">
+    <sequence>
+      <element name="minExtent" type="double" />
+      <element name="maxExtent" type="double" />
+    </sequence>
   </complexType>
 
   <complexType name="ScreenAxisType">
