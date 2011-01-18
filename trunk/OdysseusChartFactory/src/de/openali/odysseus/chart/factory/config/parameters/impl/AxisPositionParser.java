@@ -18,14 +18,22 @@ public class AxisPositionParser implements IStringParser<POSITION>
   public POSITION stringToLogical( final String value )
   {
     POSITION pos = POSITION.BOTTOM;
-    if( value.equals( "TOP" ) ) //$NON-NLS-1$
+    if( "TOP".equals( value ) ) //$NON-NLS-1$
+    {
       pos = POSITION.TOP;
-    else if( value.equals( "RIGHT" ) ) //$NON-NLS-1$
+    }
+    else if( "RIGHT".equals( value ) ) //$NON-NLS-1$
+    {
       pos = POSITION.RIGHT;
-    else if( value.equals( "LEFT" ) ) //$NON-NLS-1$
+    }
+    else if( "LEFT".equals( value ) ) //$NON-NLS-1$
+    {
       pos = POSITION.LEFT;
-    else if( value.equals( "BOTTOM" ) ) //$NON-NLS-1$
+    }
+    else if( "BOTTOM".equals( value ) ) //$NON-NLS-1$
+    {
       pos = POSITION.BOTTOM;
+    }
     return pos;
   }
 

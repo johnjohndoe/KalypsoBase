@@ -145,7 +145,6 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public void paint( final GC gc )
   {
-
     updateDescriptors();
 
     if( ArrayUtils.isEmpty( m_descriptors ) )
@@ -157,10 +156,10 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     for( final ZmlConstantLineBean descriptor : m_descriptors )
     {
       final int screenValue = getTargetAxis().numericToScreen( descriptor.getValue() );
-      final ILineStyle als = descriptor.getLineStyle();
+      final ILineStyle lineStyle = descriptor.getLineStyle();
 
       final PolylineFigure polylineFigure = new PolylineFigure();
-      polylineFigure.setStyle( als );
+      polylineFigure.setStyle( lineStyle );
       polylineFigure.setPoints( new Point[] { new Point( 0, screenValue ), new Point( screenSize, screenValue ) } );
       polylineFigure.paint( gc );
 
@@ -168,10 +167,10 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
       {
         getTextFigure().setStyle( descriptor.getTextStyle() );
         final String text = descriptor.getLabel();
-        final Point ext = gc.textExtent( text );
-        if( canDrawLabel( screens, screenValue, ext.y ) )
+        final Point extent = gc.textExtent( text );
+        if( canDrawLabel( screens, screenValue, extent.y ) )
         {
-          final Point leftTopPoint = new Point( screenSize - ext.x - 1, screenValue - ext.y / 2 - als.getWidth() );
+          final Point leftTopPoint = new Point( screenSize - extent.x - 1, screenValue - extent.y / 2 - lineStyle.getWidth() );
           drawText( gc, text, leftTopPoint );
         }
       }

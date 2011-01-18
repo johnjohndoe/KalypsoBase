@@ -113,8 +113,8 @@ public final class LayerTypeHelper
   public static LayerType cloneLayerType( final DerivedLayerType derivedLayerType, final LayerType baseLayerType )
   {
     final LayerType clonedLayerType = (LayerType) baseLayerType.copy();
-
     clonedLayerType.setId( derivedLayerType.getId() );
+
     LayerTypeHelper.appendParameters( clonedLayerType, derivedLayerType.getParameters() );
 
     if( derivedLayerType.isSetTitle() )
@@ -123,7 +123,8 @@ public final class LayerTypeHelper
     if( derivedLayerType.isSetDescription() )
       clonedLayerType.setDescription( derivedLayerType.getDescription() );
 
-    clonedLayerType.setStyles( derivedLayerType.getStyles() );
+    if( derivedLayerType.isSetStyles() )
+      clonedLayerType.setStyles( derivedLayerType.getStyles() );
 
     return clonedLayerType;
   }
@@ -136,13 +137,13 @@ public final class LayerTypeHelper
     final String localName = parentNode.getLocalName();
     try
     {
-      if( "Layer".equals( localName ) )
+      if( "Layer".equals( localName ) ) //$NON-NLS-1$
       {
         final LayerDocument layerDocument = LayerDocument.Factory.parse( parentNode );
 
         return layerDocument.getLayer();
       }
-      else if( "Chart".equals( localName ) )
+      else if( "Chart".equals( localName ) ) //$NON-NLS-1$
       {
         final ChartDocument document = ChartDocument.Factory.parse( parentNode );
 
@@ -167,7 +168,7 @@ public final class LayerTypeHelper
 
     final ILayerProvider provider = loader.getExtension( ILayerProvider.class, providerType.getEpid() );
     if( provider == null )
-      throw new IllegalStateException( String.format( "LayerProvider not found: %s", providerType.getEpid() ) );
+      throw new IllegalStateException( String.format( "LayerProvider not found: %s", providerType.getEpid() ) ); //$NON-NLS-1$
 
     return provider;
   }
