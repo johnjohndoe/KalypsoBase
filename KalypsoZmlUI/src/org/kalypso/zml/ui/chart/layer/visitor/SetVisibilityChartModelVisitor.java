@@ -41,6 +41,8 @@
 package org.kalypso.zml.ui.chart.layer.visitor;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 
 import de.openali.odysseus.chart.ext.base.layer.DefaultTextLayer;
@@ -76,7 +78,10 @@ public class SetVisibilityChartModelVisitor implements IChartLayerVisitor
     if( layer instanceof DefaultTextLayer )
     {
       if( NO_DATA_LAYER.equals( layer.getId() ) )
-        layer.setVisible( !isValid() );
+      {
+        layer.setVisible( isVisible() );
+      }
+
     }
     else
     {
@@ -97,19 +102,35 @@ public class SetVisibilityChartModelVisitor implements IChartLayerVisitor
     }
   }
 
-  private boolean isValid( )
+  /**
+   * @return no_data_layer is visible
+   */
+  private boolean isVisible( )
   {
     if( ArrayUtils.isEmpty( m_providers ) )
-      return false;
+      return true;
 
     // TODO instead provider.isLoaded() -> provider.isValid()
     for( final IObsProvider provider : m_providers )
     {
       if( provider.isValid() )
-        return true;
+      {
+        try
+        {
+          final IObservation observation = provider.getObservation();
+          final ITupleModel model = observation.getValues( null );
+          if( model.size() > 0 )
+            return false;
+        }
+        catch( final Throwable t )
+        {
+          t.printStackTrace();
+        }
+      }
+
     }
 
-    return false;
+    return true;
   }
 
   private void setVisibility( final IChartLayer[] layers, final boolean visibility )
