@@ -115,6 +115,8 @@ public class DragPanHandler extends AbstractChartDragHandler
     if( start != null )
       getChart().getChartModel().panTo( start, editInfo.m_pos );
 
+    /** update active point */
+    updateSelection( editInfo );
   }
 
   /**
