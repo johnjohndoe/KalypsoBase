@@ -41,19 +41,21 @@
 package org.kalypso.zml.core.table.model.data;
 
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 
 /**
  * @author Dirk Kuch
  */
-public class ObservationZmlColumnDataHandler implements IZmlModelColumnDataHandler
+public class ObservationZmlColumnDataHandler extends AbstractZmlColumnDataHandler implements IObservationListener
 {
-  private final IObservation m_observation;
+  private IObservation m_observation;
 
   public ObservationZmlColumnDataHandler( final IObservation observation )
   {
     m_observation = observation;
+    m_observation.addListener( this );
   }
 
   /**
@@ -62,6 +64,8 @@ public class ObservationZmlColumnDataHandler implements IZmlModelColumnDataHandl
   @Override
   public void dispose( )
   {
+    m_observation.removeListener( this );
+    m_observation = null;
   }
 
   /**
@@ -74,6 +78,16 @@ public class ObservationZmlColumnDataHandler implements IZmlModelColumnDataHandl
     return observation.getValues( null );
   }
 
+  public void setObservation( final IObservation observation )
+  {
+    if( m_observation != null )
+      m_observation.removeListener( this );
+
+    m_observation = observation;
+
+    fireObservationChanged();
+  }
+
   /**
    * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler#getObservation()
    */
@@ -84,10 +98,13 @@ public class ObservationZmlColumnDataHandler implements IZmlModelColumnDataHandl
   }
 
   /**
-   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler#addListener(org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener)
+   * @see org.kalypso.ogc.sensor.IObservationListener#observationChanged(org.kalypso.ogc.sensor.IObservation,
+   *      java.lang.Object)
    */
   @Override
-  public void addListener( final IZmlModelColumnDataListener listener )
+  public void observationChanged( final IObservation obs, final Object source )
   {
+    fireObservationChanged();
   }
+
 }
