@@ -40,47 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.data;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlObsProviderColumnDataHandler implements IZmlModelColumnDataHandler
+public class ObservationZmlColumnDataHandler implements IZmlModelColumnDataHandler
 {
+  private final IObservation m_observation;
 
-  private final IObsProviderListener m_observationProviderListener = new IObsProviderListener()
+  public ObservationZmlColumnDataHandler( final IObservation observation )
   {
-    @Override
-    public void observationReplaced( )
-    {
-      onObservationLoaded();
-    }
-
-    /**
-     * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChangedX(java.lang.Object)
-     */
-    @Override
-    public void observationChanged( final Object source )
-    {
-      onObservationChanged();
-    }
-  };
-
-  private final Set<IZmlModelColumnDataListener> m_listeners = new LinkedHashSet<IZmlModelColumnDataListener>();
-
-  private final IObsProvider m_provider;
-
-  public ZmlObsProviderColumnDataHandler( final IObsProvider provider )
-  {
-    m_provider = provider;
-    m_provider.addListener( m_observationProviderListener );
+    m_observation = observation;
   }
 
   /**
@@ -89,26 +62,6 @@ public class ZmlObsProviderColumnDataHandler implements IZmlModelColumnDataHandl
   @Override
   public void dispose( )
   {
-    m_provider.removeListener( m_observationProviderListener );
-    m_provider.dispose();
-  }
-
-  protected void onObservationChanged( )
-  {
-    final IZmlModelColumnDataListener[] listeners = m_listeners.toArray( new IZmlModelColumnDataListener[] {} );
-    for( final IZmlModelColumnDataListener listener : listeners )
-    {
-      listener.eventObservationChanged();
-    }
-  }
-
-  protected void onObservationLoaded( )
-  {
-    final IZmlModelColumnDataListener[] listeners = m_listeners.toArray( new IZmlModelColumnDataListener[] {} );
-    for( final IZmlModelColumnDataListener listener : listeners )
-    {
-      listener.eventObservationLoaded();
-    }
   }
 
   /**
@@ -127,7 +80,7 @@ public class ZmlObsProviderColumnDataHandler implements IZmlModelColumnDataHandl
   @Override
   public IObservation getObservation( )
   {
-    return m_provider.getObservation();
+    return m_observation;
   }
 
   /**
@@ -136,7 +89,5 @@ public class ZmlObsProviderColumnDataHandler implements IZmlModelColumnDataHandl
   @Override
   public void addListener( final IZmlModelColumnDataListener listener )
   {
-    m_listeners.add( listener );
   }
-
 }
