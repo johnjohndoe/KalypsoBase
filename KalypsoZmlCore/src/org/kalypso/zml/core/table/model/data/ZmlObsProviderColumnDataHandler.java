@@ -80,7 +80,6 @@ public class ZmlObsProviderColumnDataHandler implements IZmlModelColumnDataHandl
   public ZmlObsProviderColumnDataHandler( final IObsProvider provider )
   {
     m_provider = provider;
-
     m_provider.addListener( m_observationProviderListener );
   }
 

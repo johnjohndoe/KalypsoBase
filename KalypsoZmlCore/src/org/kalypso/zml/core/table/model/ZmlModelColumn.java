@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -59,22 +62,30 @@ import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
  */
 public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListener
 {
-  private final IZmlModel m_zmlModel;
+  private final Set<IZmlModelColumnListener> m_listeners = new LinkedHashSet<IZmlModelColumnListener>();
 
   private final DataColumn m_type;
 
   private final String m_label;
 
-  private IZmlModelColumnDataHandler m_handler;
+  private final IZmlModelColumnDataHandler m_handler;
 
   private final String m_identifier;
 
-  public ZmlModelColumn( final String identifier, final String label, final IZmlModel tabelModel, final DataColumn type )
+  public ZmlModelColumn( final String identifier, final String label, final DataColumn type, final IZmlModelColumnDataHandler dataHandler )
   {
     m_identifier = identifier;
     m_label = label;
-    m_zmlModel = tabelModel;
     m_type = type;
+
+    m_handler = dataHandler;
+    m_handler.addListener( this );
+  }
+
+  @Override
+  public void addListener( final IZmlModelColumnListener listener )
+  {
+    m_listeners.add( listener );
   }
 
   /**
@@ -84,19 +95,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public IZmlModelColumnDataHandler getDataHandler( )
   {
     return m_handler;
-  }
-
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setDataHandler(org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler)
-   */
-  @Override
-  public void setDataHandler( final IZmlModelColumnDataHandler handler )
-  {
-    if( m_handler != null )
-      m_handler.dispose();
-
-    m_handler = handler;
-    m_handler.addListener( this );
   }
 
   public void dispose( )
@@ -167,12 +165,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     observation.fireChangedEvent( this );
   }
 
-  @SuppressWarnings("unused")
-  public void observationChanged( final IObservation obs, final Object source )
-  {
-    m_zmlModel.fireModelChanged();
-  }
-
   @Override
   public MetadataList getMetadata( )
   {
@@ -238,21 +230,12 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   }
 
   /**
-   * @see org.kalypso.zml.ui.table.model.IZmlModelColumn#getZmlModel()
-   */
-  @Override
-  public IZmlModel getZmlModel( )
-  {
-    return m_zmlModel;
-  }
-
-  /**
    * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener#eventObservationChanged()
    */
   @Override
   public void eventObservationChanged( )
   {
-    getZmlModel().fireModelChanged();
+    fireColumnChanged();
   }
 
   /**
@@ -261,6 +244,17 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public void eventObservationLoaded( )
   {
-    getZmlModel().fireModelChanged();
+    fireColumnChanged();
   }
+
+  private void fireColumnChanged( )
+  {
+    final IZmlModelColumnListener[] listeners = m_listeners.toArray( new IZmlModelColumnListener[] {} );
+    for( final IZmlModelColumnListener listener : listeners )
+    {
+      listener.modelColumnChangedEvent();
+    }
+
+  }
+
 }

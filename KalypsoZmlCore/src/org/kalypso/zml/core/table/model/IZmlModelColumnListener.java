@@ -38,37 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.utils;
-
-import org.kalypso.zml.ui.chart.layer.themes.ZmlLineLayer;
-
-import de.openali.odysseus.chart.framework.model.impl.ChartModel;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+package org.kalypso.zml.core.table.model;
 
 /**
  * @author Dirk Kuch
  */
-public final class ZmlLayerUtils
+public interface IZmlModelColumnListener
 {
-  private ZmlLayerUtils( )
-  {
-  }
-
-  public static ZmlLineLayer findLineLayerById( final ChartModel model, final String identifier )
-  {
-    final ILayerManager layerManager = model.getLayerManager();
-    final IChartLayer[] layers = layerManager.getLayers();
-    for( final IChartLayer layer : layers )
-    {
-      if( !(layer instanceof ZmlLineLayer) )
-        continue;
-
-      if( layer.getId().equals( identifier ) )
-        return (ZmlLineLayer) layer;
-    }
-
-    return null;
-  }
-
+  void modelColumnChangedEvent( );
 }

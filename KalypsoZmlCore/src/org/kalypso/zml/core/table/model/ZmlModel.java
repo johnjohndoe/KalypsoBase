@@ -58,9 +58,9 @@ import org.kalypso.zml.core.table.schema.ZmlTableType;
 /**
  * @author Dirk Kuch
  */
-public class ZmlModel implements IZmlModel
+public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 {
-  private final List<ZmlModelColumn> m_columns = new ArrayList<ZmlModelColumn>();
+  private final List<IZmlModelColumn> m_columns = new ArrayList<IZmlModelColumn>();
 
   private final Set<ZmlColumnLoadCommand> m_commands = new HashSet<ZmlColumnLoadCommand>();
 
@@ -79,7 +79,7 @@ public class ZmlModel implements IZmlModel
 
   public void accept( final IZmlModelColumnVisitor visitor )
   {
-    for( final ZmlModelColumn column : m_columns )
+    for( final IZmlModelColumn column : m_columns )
     {
       visitor.visit( column );
     }
@@ -102,8 +102,9 @@ public class ZmlModel implements IZmlModel
     }
   }
 
-  public void addColumn( final ZmlModelColumn column )
+  public void add( final IZmlModelColumn column )
   {
+    column.addListener( this );
     m_columns.add( column );
 
     fireModelChanged();
@@ -157,9 +158,9 @@ public class ZmlModel implements IZmlModel
   }
 
   @Override
-  public ZmlModelColumn getColumn( final String id )
+  public IZmlModelColumn getColumn( final String id )
   {
-    for( final ZmlModelColumn column : m_columns )
+    for( final IZmlModelColumn column : m_columns )
     {
       if( column.getIdentifier().equals( id ) )
         return column;
@@ -233,5 +234,14 @@ public class ZmlModel implements IZmlModel
   public void loadColumn( final IZmlTableElement column )
   {
     m_commands.add( new ZmlColumnLoadCommand( this, column ) );
+  }
+
+  /**
+   * @see org.kalypso.zml.core.table.model.IZmlModelColumnListener#modelColumnChangedEvent()
+   */
+  @Override
+  public void modelColumnChangedEvent( )
+  {
+    fireModelChanged();
   }
 }

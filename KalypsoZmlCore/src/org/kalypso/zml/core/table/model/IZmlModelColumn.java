@@ -77,13 +77,11 @@ public interface IZmlModelColumn
 
   IAxis getStatusAxis( );
 
-  IZmlModel getZmlModel( );
-
   ITupleModel getTupleModel( ) throws SensorException;
 
   IAxis getIndexAxis( );
 
-  void setDataHandler( IZmlModelColumnDataHandler handler );
-
   IZmlModelColumnDataHandler getDataHandler( );
+
+  void addListener( IZmlModelColumnListener listener );
 }

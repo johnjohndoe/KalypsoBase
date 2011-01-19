@@ -100,11 +100,6 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     m_calculateRange = calculateRange;
   }
 
-  protected void onObservationChanged( )
-  {
-    getEventHandler().fireLayerContentChanged( this );
-  }
-
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
