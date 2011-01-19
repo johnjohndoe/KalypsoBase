@@ -122,4 +122,13 @@ public class ChartImagePlotHandler implements IPlotHandler
     m_dragHandlers.clear(); // "normally" not necessary removePlotHandler(handler) removes handler from list!
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.view.IPlotHandler#getActiveHandlers()
+   */
+  @Override
+  public IChartDragHandler[] getActiveHandlers( )
+  {
+    return m_dragHandlers.toArray( new IChartDragHandler[] {} );
+  }
+
 }

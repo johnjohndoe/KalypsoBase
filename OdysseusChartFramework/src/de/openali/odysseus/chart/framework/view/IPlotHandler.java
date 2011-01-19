@@ -55,4 +55,6 @@ public interface IPlotHandler
   void removePlotHandler( final IChartDragHandler handler );
 
   void removeAllPlotHandler( );
+
+  IChartDragHandler[] getActiveHandlers( );
 }

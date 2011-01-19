@@ -361,15 +361,15 @@
                locationURI="toolbar:org.kalypso.model.wspm.ui.view.chart.ChartView">
             <command
                   commandId="org.kalypso.chart.ui.commands.zoomIn"
-                  style="radio">
+                  style="toggle">
             </command>
             <command
                   commandId="org.kalypso.chart.ui.commands.zoomOut"
-                  style="radio">
+                  style="toggle">
             </command>
             <command
                   commandId="org.kalypso.chart.ui.commands.pan"
-                  style="radio">
+                  style="toggle">
             </command>
             <command
                   commandId="org.kalypso.chart.ui.commands.maximize"
@@ -377,7 +377,7 @@
             </command>
             <command
                   commandId="org.kalypso.chart.ui.commands.edit"
-                  style="radio">
+                  style="toggle">
             </command>
             <command
                   commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
