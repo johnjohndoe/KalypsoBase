@@ -33,7 +33,6 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
-import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -55,6 +54,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
@@ -85,8 +85,6 @@ public class ChartEditor extends EditorPart implements IChartPart
   private boolean m_dirty = false;
 
   private IChartComposite m_chartComposite = null;
-
-  private PlotDragHandlerDelegate m_plotDragHandler;
 
   private ChartPartListener m_chartPartListener;
 
@@ -431,7 +429,6 @@ public class ChartEditor extends EditorPart implements IChartPart
               setPartName( null );
 
             // drag delegates
-            m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
             m_composite.layout();
             m_chartModel.autoscale( autoscaledAxes.toArray( new IAxis[] {} ) );
           }
@@ -518,9 +515,9 @@ public class ChartEditor extends EditorPart implements IChartPart
   }
 
   @Override
-  public PlotDragHandlerDelegate getPlotDragHandler( )
+  public IPlotHandler getPlotDragHandler( )
   {
-    return m_plotDragHandler;
+    return m_chartComposite.getPlotHandler();
   }
 
   protected void setDirty( final boolean dirty )

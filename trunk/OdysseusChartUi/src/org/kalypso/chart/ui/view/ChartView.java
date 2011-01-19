@@ -67,7 +67,6 @@ import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.chart.ui.editor.ChartPartListener;
-import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.chart.ui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -81,6 +80,7 @@ import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 import de.openali.odysseus.chart.framework.view.impl.TooltipHandler;
 import de.openali.odysseus.chartconfig.x020.ChartType;
@@ -105,8 +105,6 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   private IChartComposite m_chartComposite = null;
 
   private IFile m_input;
-
-  private PlotDragHandlerDelegate m_plotDragHandler;
 
   private TooltipHandler m_tooltipHandler;
 
@@ -206,8 +204,6 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
         {
           m_chartComposite = new ChartImageComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
 
-          // DragHandler erzeugen
-          m_plotDragHandler = new PlotDragHandlerDelegate( m_chartComposite );
           // TODO: m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
 
           // Titel der View setzen
@@ -254,9 +250,9 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
    * @see org.kalypso.chart.ui.IChartPart#getChartDragHandler()
    */
   @Override
-  public PlotDragHandlerDelegate getPlotDragHandler( )
+  public IPlotHandler getPlotDragHandler( )
   {
-    return m_plotDragHandler;
+    return m_chartComposite.getPlotHandler();
   }
 
   @Override

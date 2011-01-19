@@ -42,13 +42,14 @@ package org.kalypso.chart.ui.editor;
 
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.menus.UIElement;
 import org.kalypso.chart.ui.IChartPart;
-import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 /**
  * @author burtscher1
@@ -66,33 +67,38 @@ public class ElementUpdateHelper
     // chart finden,
     // FIXME: get chart from context
     final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().getActivePart();
-
     if( activePart == null )
-    {
       return;
-    }
+
     final IChartPart chartPart = (IChartPart) activePart.getAdapter( IChartPart.class );
-    if( chartPart != null )
+    if( chartPart == null )
+      return;
+
+    final IPlotHandler plotDragHandler = chartPart.getPlotDragHandler();
+    if( plotDragHandler != null )
     {
-      final PlotDragHandlerDelegate plotDragHandler = chartPart.getPlotDragHandler();
-      if( plotDragHandler != null )
-      {
-        final IChartDragHandler activeHandler = plotDragHandler.getActiveHandler();
-        if( activeHandler != null && activeHandler.getClass().equals( handlerClass ) )
-        {
-          element.setChecked( true );
-        }
-        else
-        {
-          element.setChecked( false );
-        }
-      }
-      else
-      {
-        element.setChecked( false );
-      }
+      final IChartDragHandler[] handlers = plotDragHandler.getActiveHandlers();
+      element.setChecked( isChecked( handlers, handlerClass ) );
+    }
+    else
+    {
+      element.setChecked( false );
     }
 
+  }
+
+  private static boolean isChecked( final IChartDragHandler[] handlers, final Class< ? > clazz )
+  {
+    if( ArrayUtils.isEmpty( handlers ) )
+      return false;
+
+    for( final IChartDragHandler handler : handlers )
+    {
+      if( handler.getClass().equals( clazz ) )
+        return true;
+    }
+
+    return false;
   }
 
 }

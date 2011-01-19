@@ -57,7 +57,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartPartListener;
-import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -73,6 +72,7 @@ import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.ChartModelEventHandler;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartView;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 /**
  * @author kimwerner
@@ -90,8 +90,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   private IProfilProvider m_provider;
 
   private final ChartModelEventHandler m_chartModelEventHandler = new ChartModelEventHandler();
-
-  private PlotDragHandlerDelegate m_plotDragHandler = null;
 
   private FormToolkit m_toolkit;
 
@@ -132,8 +130,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
       final IProfil profile = m_provider == null ? null : m_provider.getProfil();
       m_profilChartComposite = new ProfileChartComposite( m_form.getBody(), parent.getStyle(), getProfilLayerProvider(), profile );
       m_profilChartComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-      m_plotDragHandler = new PlotDragHandlerDelegate( m_profilChartComposite.getChart() );
-
     }
     return m_profilChartComposite;
   }
@@ -201,7 +197,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     return super.getAdapter( adapter );
   }
 
- 
   /**
    * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
    */
@@ -231,9 +226,9 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
    * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
    */
   @Override
-  public PlotDragHandlerDelegate getPlotDragHandler( )
+  public IPlotHandler getPlotDragHandler( )
   {
-    return m_plotDragHandler;
+    return m_profilChartComposite.getPlotHandler();
   }
 
   protected IProfilLayerProvider getProfilLayerProvider( )

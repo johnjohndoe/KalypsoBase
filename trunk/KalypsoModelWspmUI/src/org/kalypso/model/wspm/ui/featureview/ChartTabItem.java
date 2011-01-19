@@ -67,12 +67,12 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
-import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
@@ -83,8 +83,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
  */
 public class ChartTabItem extends Composite implements IChartPart
 {
-  private final PlotDragHandlerDelegate m_plotDragHandlerDelegate;
-
   private final IChartComposite m_chartComposite;
 
   private final IExecutionListener m_executionListener;
@@ -127,7 +125,6 @@ public class ChartTabItem extends Composite implements IChartPart
 
     m_chartComposite.getPlot().setLayoutData( gridData );
 
-    m_plotDragHandlerDelegate = new PlotDragHandlerDelegate( m_chartComposite );
     // m_axisDragHandlerDelegate = new AxisDragHandlerDelegate( m_chartComposite );
 
     final ICommandService cmdService = (ICommandService) serviceLocator.getService( ICommandService.class );
@@ -201,9 +198,9 @@ public class ChartTabItem extends Composite implements IChartPart
    * @see org.kalypso.chart.ui.IChartPart#getChartDragHandler()
    */
   @Override
-  public PlotDragHandlerDelegate getPlotDragHandler( )
+  public IPlotHandler getPlotDragHandler( )
   {
-    return m_plotDragHandlerDelegate;
+    return m_chartComposite.getPlotHandler();
   }
 
   @Override
@@ -216,7 +213,6 @@ public class ChartTabItem extends Composite implements IChartPart
       m_chartComposite.getPlot().dispose();
   }
 
-  
   /**
    * @see org.kalypso.chart.ui.IChartPart#getOutlinePage()
    */
@@ -225,7 +221,7 @@ public class ChartTabItem extends Composite implements IChartPart
   {
     if( m_outlinePage == null && m_chartComposite != null )
     {
-      final IChartModel model = this.getChartComposite().getChartModel();
+      final IChartModel model = getChartComposite().getChartModel();
       m_outlinePage = new ChartEditorTreeOutlinePage();
       m_outlinePage.setModel( model );
     }

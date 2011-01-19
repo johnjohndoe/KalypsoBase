@@ -5,11 +5,15 @@ import java.util.Map;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ElementUpdateHelper;
 import org.kalypso.chart.ui.editor.mousehandler.DragEditHandler;
+
+import de.openali.odysseus.chart.framework.view.IChartComposite;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 public class EditHandler extends AbstractHandler implements IElementUpdater
 {
@@ -18,16 +22,18 @@ public class EditHandler extends AbstractHandler implements IElementUpdater
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-    final IChartPart chartPart = ChartHandlerUtilities.findChartComposite( context );
+    final IChartComposite chart = ChartHandlerUtilities.getChart( context );
+    if( chart == null )
+      return Status.CANCEL_STATUS;
 
-    if( chartPart == null )
-      return null;
+    final IPlotHandler handler = chart.getPlotHandler();
+    handler.activatePlotHandler( new DragEditHandler( chart ) );
 
-    final DragEditHandler dragEditHandler = new DragEditHandler( chartPart.getChartComposite() );
-    chartPart.getPlotDragHandler().setActiveHandler( dragEditHandler );
-    ChartHandlerUtilities.updateElements( chartPart );
+    final IChartPart part = ChartHandlerUtilities.findChartComposite( context );
+    if( part != null )
+      ChartHandlerUtilities.updateElements( part );
 
-    return null;
+    return Status.OK_STATUS;
   }
 
   /**
