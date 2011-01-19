@@ -49,13 +49,11 @@ import org.kalypso.ogc.sensor.SensorException;
  */
 public interface IZmlModelColumnDataHandler
 {
+  void addListener( IZmlModelColumnDataListener listener );
 
   void dispose( );
 
   ITupleModel getModel( ) throws SensorException;
 
   IObservation getObservation( );
-
-  void addListener( IZmlModelColumnDataListener listener );
-
 }

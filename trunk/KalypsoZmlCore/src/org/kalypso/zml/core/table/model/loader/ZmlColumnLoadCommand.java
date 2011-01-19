@@ -91,7 +91,7 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
   {
     // FIXME: this happens, if the zml does not exist.
     // It would be nice, to keep this listener,maybe it appears later....
-    // but: who will dipose me?
+    // but: who will dispose me?
 
     // final IObservation observation = m_element.getObsProvider().getObservation();
     // if( observation == null )
@@ -134,10 +134,8 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     final DataColumn data = new DataColumn( type );
     final String label = m_column.getTitle( AxisUtils.findAxis( axes, data.getValueAxis() ) );
 
-    final ZmlModelColumn column = new ZmlModelColumn( m_column.getIdentifier(), label, m_model, data );
-    column.setDataHandler( new ZmlObsProviderColumnDataHandler( clone ) );
-
-    m_model.addColumn( column );
+    final ZmlModelColumn column = new ZmlModelColumn( m_column.getIdentifier(), label, data, new ZmlObsProviderColumnDataHandler( clone ) );
+    m_model.add( column );
 
 // base.dispose();
   }

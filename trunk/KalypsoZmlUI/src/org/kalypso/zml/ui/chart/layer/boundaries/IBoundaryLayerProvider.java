@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.boundaries;
 
-
 /**
  * @author Dirk Kuch
  */
