@@ -81,7 +81,6 @@ public class SetVisibilityChartModelVisitor implements IChartLayerVisitor
       {
         layer.setVisible( isVisible() );
       }
-
     }
     else
     {
@@ -127,7 +126,6 @@ public class SetVisibilityChartModelVisitor implements IChartLayerVisitor
           t.printStackTrace();
         }
       }
-
     }
 
     return true;

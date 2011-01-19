@@ -38,52 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
-
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.zml.core.table.binding.DataColumn;
-import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
+package org.kalypso.zml.core.table.model.data;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelColumn
+public interface IZmlModelColumnDataListener
 {
-  DataColumn getDataColumn( );
 
-  IAxis[] getAxes( );
+  void eventObservationChanged( );
 
-  IAxis getValueAxis( );
+  void eventObservationLoaded( );
 
-  int modelSize( ) throws SensorException;
-
-  Object get( int i, IAxis axis ) throws SensorException;
-
-  void update( int index, Object value ) throws SensorException;
-
-  String getIdentifier( );
-
-  MetadataList getMetadata( );
-
-  boolean isMetadataSource( );
-
-  String getLabel( );
-
-  IObservation getObservation( );
-
-  IAxis getStatusAxis( );
-
-  IZmlModel getZmlModel( );
-
-  ITupleModel getTupleModel( ) throws SensorException;
-
-  IAxis getIndexAxis( );
-
-  void setDataHandler( IZmlModelColumnDataHandler handler );
-
-  IZmlModelColumnDataHandler getDataHandler( );
 }

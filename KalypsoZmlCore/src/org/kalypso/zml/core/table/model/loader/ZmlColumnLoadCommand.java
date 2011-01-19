@@ -50,6 +50,7 @@ import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.binding.TableTypeHelper;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.model.ZmlModelColumn;
+import org.kalypso.zml.core.table.model.data.ZmlObsProviderColumnDataHandler;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 
 /**
@@ -133,7 +134,10 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     final DataColumn data = new DataColumn( type );
     final String label = m_column.getTitle( AxisUtils.findAxis( axes, data.getValueAxis() ) );
 
-    m_model.addColumn( new ZmlModelColumn( m_column.getIdentifier(), label, clone, m_model, data ) );
+    final ZmlModelColumn column = new ZmlModelColumn( m_column.getIdentifier(), label, m_model, data );
+    column.setDataHandler( new ZmlObsProviderColumnDataHandler( clone ) );
+
+    m_model.addColumn( column );
 
 // base.dispose();
   }
