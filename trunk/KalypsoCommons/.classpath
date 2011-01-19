@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/itext-5.0.5/iText-5.0.5.jar" sourcepath="lib/itext-5.0.5/iText-src-5.0.5.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j_1_6_1/slf4j-api-1.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j_1_6_1/slf4j-ext-1.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j_1_6_1/slf4j-jdk14-1.6.1.jar"/>
