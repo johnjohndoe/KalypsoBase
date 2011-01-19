@@ -45,80 +45,69 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.DataColumn;
+import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
+import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlModelColumn implements IZmlModelColumn
+public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListener
 {
-  private final IObsProvider m_provider;
-
   private final IZmlModel m_zmlModel;
 
   private final DataColumn m_type;
 
   private final String m_label;
 
-  private final IObsProviderListener m_observationProviderListener = new IObsProviderListener()
-  {
-    @Override
-    public void observationReplaced( )
-    {
-      onObservationLoaded();
-    }
-
-    /**
-     * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChangedX(java.lang.Object)
-     */
-    @Override
-    public void observationChanged( final Object source )
-    {
-      onObservationChanged();
-    }
-  };
+  private IZmlModelColumnDataHandler m_handler;
 
   private final String m_identifier;
 
-  public ZmlModelColumn( final String identifier, final String label, final IObsProvider provider, final IZmlModel tabelModel, final DataColumn type )
+  public ZmlModelColumn( final String identifier, final String label, final IZmlModel tabelModel, final DataColumn type )
   {
     m_identifier = identifier;
     m_label = label;
     m_zmlModel = tabelModel;
-    m_provider = provider;
     m_type = type;
-
-    provider.addListener( m_observationProviderListener );
   }
 
-  protected void onObservationChanged( )
+  /**
+   * @see org.kalypso.zml.ui.chart.layer.themes.IZmlLayer#getDataHandler()
+   */
+  @Override
+  public IZmlModelColumnDataHandler getDataHandler( )
   {
-    m_zmlModel.fireModelChanged();
+    return m_handler;
   }
 
-  protected void onObservationLoaded( )
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setDataHandler(org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler)
+   */
+  @Override
+  public void setDataHandler( final IZmlModelColumnDataHandler handler )
   {
-    m_zmlModel.fireModelChanged();
+    if( m_handler != null )
+      m_handler.dispose();
+
+    m_handler = handler;
+    m_handler.addListener( this );
   }
 
   public void dispose( )
   {
-    m_provider.removeListener( m_observationProviderListener );
-    m_provider.dispose();
+    m_handler.dispose();
   }
 
   @Override
   public ITupleModel getTupleModel( ) throws SensorException
   {
-    final IObservation observation = m_provider.getObservation();
-    return observation.getValues( null );
+    return m_handler.getModel();
   }
 
   @Override
@@ -173,7 +162,7 @@ public class ZmlModelColumn implements IZmlModelColumn
     }
 
     // FIXME improve update value handling
-    final IObservation observation = m_provider.getObservation();
+    final IObservation observation = m_handler.getObservation();
     observation.setValues( model );
     observation.fireChangedEvent( this );
   }
@@ -187,7 +176,7 @@ public class ZmlModelColumn implements IZmlModelColumn
   @Override
   public MetadataList getMetadata( )
   {
-    return m_provider.getObservation().getMetadataList();
+    return m_handler.getObservation().getMetadataList();
   }
 
   @Override
@@ -211,7 +200,7 @@ public class ZmlModelColumn implements IZmlModelColumn
   @Override
   public IAxis[] getAxes( )
   {
-    return m_provider.getObservation().getAxisList();
+    return m_handler.getObservation().getAxisList();
   }
 
   /**
@@ -220,7 +209,7 @@ public class ZmlModelColumn implements IZmlModelColumn
   @Override
   public IObservation getObservation( )
   {
-    return m_provider.getObservation();
+    return m_handler.getObservation();
   }
 
   @Override
@@ -255,5 +244,23 @@ public class ZmlModelColumn implements IZmlModelColumn
   public IZmlModel getZmlModel( )
   {
     return m_zmlModel;
+  }
+
+  /**
+   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener#eventObservationChanged()
+   */
+  @Override
+  public void eventObservationChanged( )
+  {
+    getZmlModel().fireModelChanged();
+  }
+
+  /**
+   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener#eventObservationLoaded()
+   */
+  @Override
+  public void eventObservationLoaded( )
+  {
+    getZmlModel().fireModelChanged();
   }
 }

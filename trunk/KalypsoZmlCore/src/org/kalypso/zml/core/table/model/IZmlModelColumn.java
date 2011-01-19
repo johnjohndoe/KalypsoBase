@@ -46,6 +46,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.table.binding.DataColumn;
+import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 
 /**
  * @author Dirk Kuch
@@ -81,4 +82,8 @@ public interface IZmlModelColumn
   ITupleModel getTupleModel( ) throws SensorException;
 
   IAxis getIndexAxis( );
+
+  void setDataHandler( IZmlModelColumnDataHandler handler );
+
+  IZmlModelColumnDataHandler getDataHandler( );
 }
