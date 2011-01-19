@@ -1,8 +1,8 @@
 package org.kalypso.chart.ui.editor.mousehandler;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
@@ -229,6 +229,12 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
       m_cursor = cursor;
       ((Control) e.getSource()).setCursor( cursor );
     }
+  }
+
+  protected void updateSelection( final EditInfo editInfo )
+  {
+    if( editInfo != null && editInfo.m_layer != null )
+      ((IEditableChartLayer) editInfo.m_layer).commitDrag( editInfo.m_pos, editInfo );
   }
 
 }
