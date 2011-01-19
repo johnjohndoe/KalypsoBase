@@ -114,7 +114,7 @@ public class ScreenshotHandler extends AbstractHandler
     }
     catch( Exception ex )
     {
-      throw new ExecutionException( ex.getMessage() );
+      throw new ExecutionException( ex.getMessage(), ex );
     }
     finally
     {

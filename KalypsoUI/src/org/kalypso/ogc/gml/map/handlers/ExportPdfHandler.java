@@ -40,8 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.handlers;
 
+import java.io.File;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.program.Program;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.ISources;
+import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.handlers.utils.PDFExporter;
 
 /**
  * This handler starts the PDF export.
@@ -61,9 +74,51 @@ public class ExportPdfHandler extends AbstractHandler
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( ExecutionEvent event )
+  public Object execute( ExecutionEvent event ) throws ExecutionException
   {
-    // TODO Implement the task...
-    return null;
+    try
+    {
+      /* Get the evaluation context. */
+      IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+
+      /* Get the shell. */
+      Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+
+      /* Ask for a file name. */
+      // TODO Determine a good filename automatically...
+      String fileName = "pdfExport.pdf";
+      File targetFile = MapHandlerUtils.showSaveFileDialog( shell, "PDF-Export", fileName, PDFExporter.class.getCanonicalName(), new String[] { "*.pdf", "*.*" }, new String[] { "Adobe Acrobat Datei",
+          "Alle Dateien" } );
+      if( targetFile == null )
+        return null;
+
+      /* Get the map panel. */
+      IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
+
+      /* Export the PDF. */
+      PDFExporter exporter = new PDFExporter( mapPanel );
+      IStatus status = exporter.doExport( targetFile, new NullProgressMonitor() );
+
+      /* If the export was ok, open the PDF. */
+      /* If the export has failed, show an error to the user. */
+      if( status.isOK() )
+      {
+        /* Open the PDF file. */
+        boolean launch = Program.launch( targetFile.getAbsolutePath() );
+        if( !launch )
+        {
+          MessageDialog.openError( shell, "PDF-Export", "Die PDF-Datei konnte nicht geöffnet werden." );
+          return null;
+        }
+      }
+      else
+        ErrorDialog.openError( shell, "PDF-Export", "Der PDF-Export ist fehlgeschlagen...", status );
+
+      return null;
+    }
+    catch( Exception ex )
+    {
+      throw new ExecutionException( ex.getMessage(), ex );
+    }
   }
 }
