@@ -56,6 +56,7 @@ import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
+import org.kalypso.zml.core.table.model.data.ObservationZmlColumnDataHandler;
 
 /**
  * @author Dirk Kuch
@@ -80,6 +81,11 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
     m_handler = dataHandler;
     m_handler.addListener( this );
+  }
+
+  public ZmlModelColumn( final DataColumn column, final ObservationZmlColumnDataHandler handler )
+  {
+    this( column.getIdentifier(), column.getLabel(), column, handler );
   }
 
   @Override
