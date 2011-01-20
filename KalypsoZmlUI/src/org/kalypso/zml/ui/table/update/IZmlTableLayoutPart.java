@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,51 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.update;
 
-import org.eclipse.jface.viewers.TableViewer;
-import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.model.IZmlModel;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.core.table.model.ZmlModel;
+import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.memento.IZmlTableMemento;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTable
+public interface IZmlTableLayoutPart
 {
-  IZmlTableCell getActiveCell( );
+  String[] getIgnoreTypes( );
 
-  IZmlTableColumn getActiveColumn( );
+  ZmlModel getModel( );
 
-  IZmlTableRow getActiveRow( );
+  IZmlTableMemento getMemento( );
 
-  IZmlTableRow[] getSelectedRows( );
-
-  IZmlTableColumn findColumn( BaseColumn column );
-
-  TableViewer getTableViewer( );
-
-  IZmlModel getDataModel( );
-
-  IZmlTableColumn[] getColumns( );
-
-  IZmlTableRow[] getRows( );
-
-  IZmlTableRow getRow( int index );
-
-  /**
-   * @return time resolution of displayed time series (one hour spacing or six hour spaceing, aso)
-   */
-  int getResolution( );
-
-  void refresh( );
-
-  void addListener( IZmlTableListener listener );
-
-  void removeListener( IZmlTableListener mListener );
-
-  void add( ExtendedZmlTableColumn column );
+  IZmlTable getTable( );
 }

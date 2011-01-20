@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,51 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.core.element;
 
-import org.eclipse.jface.viewers.TableViewer;
-import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.model.IZmlModel;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
+
+import de.openali.odysseus.chart.framework.model.style.IStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTable
+public interface IZmlDiagramElement
 {
-  IZmlTableCell getActiveCell( );
+  IObsProvider getObsProvider( );
 
-  IZmlTableColumn getActiveColumn( );
+  IAxis[] getValueAxes( );
 
-  IZmlTableRow getActiveRow( );
+  <T extends IStyle> T getStyle( Class<T> clazz, String type, int index );
 
-  IZmlTableRow[] getSelectedRows( );
+  String getTitle( IAxis axis );
 
-  IZmlTableColumn findColumn( BaseColumn column );
-
-  TableViewer getTableViewer( );
-
-  IZmlModel getDataModel( );
-
-  IZmlTableColumn[] getColumns( );
-
-  IZmlTableRow[] getRows( );
-
-  IZmlTableRow getRow( int index );
-
-  /**
-   * @return time resolution of displayed time series (one hour spacing or six hour spaceing, aso)
-   */
-  int getResolution( );
-
-  void refresh( );
-
-  void addListener( IZmlTableListener listener );
-
-  void removeListener( IZmlTableListener mListener );
-
-  void add( ExtendedZmlTableColumn column );
+  IStyleSet getStyleSet( String type );
 }
