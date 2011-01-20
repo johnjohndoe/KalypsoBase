@@ -49,6 +49,7 @@ import javax.xml.bind.JAXBElement;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -69,23 +70,18 @@ import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.binding.TableTypeHelper;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.layout.ZmlTableLayoutHandler;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
-import org.kalypso.zml.ui.table.provider.ZmlEditingSupport;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.ZmlTableEventListener;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
@@ -166,7 +162,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     for( final JAXBElement< ? extends AbstractColumnType> columnType : columnTypes )
     {
       final AbstractColumnType column = columnType.getValue();
-      buildColumnViewer( new BaseColumn( column ) );
+
+      final ZmlTableColumnBuilder builder = new ZmlTableColumnBuilder( this, new BaseColumn( column ) );
+      builder.execute( new NullProgressMonitor() );
     }
 
     m_tableViewer.setInput( m_model );
@@ -262,27 +260,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     column.getColumn().setMoveable( false );
   }
 
-  private TableViewerColumn buildColumnViewer( final BaseColumn type )
-  {
-    final int index = m_tableViewer.getTable().getColumnCount();
-    final TableViewerColumn viewerColumn = new TableViewerColumn( m_tableViewer, TableTypeHelper.toSWT( type.getAlignment() ) );
-
-    final ExtendedZmlTableColumn column = new ExtendedZmlTableColumn( this, viewerColumn, type, index );
-    m_columns.add( column );
-
-    final ZmlLabelProvider labelProvider = new ZmlLabelProvider( column );
-    viewerColumn.setLabelProvider( labelProvider );
-    viewerColumn.getColumn().setText( type.getLabel() );
-
-    /** edit support */
-    if( type.getType() instanceof DataColumnType && type.isEditable() )
-    {
-      viewerColumn.setEditingSupport( new ZmlEditingSupport( column, labelProvider ) );
-    }
-
-    return viewerColumn;
-  }
-
   @Override
   public void refresh( )
   {
@@ -322,37 +299,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     m_updateJob = new ZmlTableUiUpdateJob( this );
     m_updateJob.schedule( 250 );
 
-  }
-
-  public void duplicateColumn( final String identifier, final String newIdentifier )
-  {
-    // column already exists?
-    for( final ZmlTableColumn column : m_columns )
-    {
-      final BaseColumn columnType = column.getColumnType();
-      if( columnType.getIdentifier().equals( newIdentifier ) )
-        return;
-    }
-
-    final AbstractColumnType base = TableTypeHelper.finColumn( m_model.getTableType(), identifier );
-    final AbstractColumnType clone = TableTypeHelper.cloneColumn( base );
-    clone.setId( newIdentifier );
-
-    /** only one rule / style set! */
-    buildColumnViewer( new BaseColumn( base )
-    {
-      @Override
-      public String getIdentifier( )
-      {
-        return newIdentifier;
-      }
-
-      @Override
-      public AbstractColumnType getType( )
-      {
-        return clone;
-      }
-    } );
   }
 
   @Override
@@ -504,5 +450,14 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     }
 
     return null;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTable#add(org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn)
+   */
+  @Override
+  public void add( final ExtendedZmlTableColumn column )
+  {
+    m_columns.add( column );
   }
 }

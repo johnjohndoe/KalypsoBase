@@ -46,6 +46,7 @@ import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -83,4 +84,5 @@ public interface IZmlTable
 
   void removeListener( IZmlTableListener mListener );
 
+  void add( ExtendedZmlTableColumn column );
 }
