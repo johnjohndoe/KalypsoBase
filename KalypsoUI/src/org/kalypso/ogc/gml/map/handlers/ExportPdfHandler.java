@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.map.handlers;
 
 import java.io.File;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -53,6 +54,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.utils.PDFExporter;
 
@@ -84,9 +87,13 @@ public class ExportPdfHandler extends AbstractHandler
       /* Get the shell. */
       Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
+      /* Get the active part. */
+      IWorkbenchPart activePart = HandlerUtil.getActivePart( event );
+      if( activePart == null )
+        return null;
+
       /* Ask for a file name. */
-      // TODO Determine a good filename automatically...
-      String fileName = "pdfExport.pdf";
+      String fileName = String.format( "%s.pdf", FilenameUtils.removeExtension( activePart.getTitle() ) );
       File targetFile = MapHandlerUtils.showSaveFileDialog( shell, "PDF-Export", fileName, PDFExporter.class.getCanonicalName(), new String[] { "*.pdf", "*.*" }, new String[] { "Adobe Acrobat Datei",
           "Alle Dateien" } );
       if( targetFile == null )
