@@ -205,6 +205,8 @@
           <LineColor>000040</LineColor>
         </Stroke>
       </AreaStyle>
+      <!-- -->
+      <PointStyle role="invisible_point" isVisible="false" />
     </Styles>
     <Layers>
       <Layer id="W" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -236,8 +238,8 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef ref="date_axis" />
-          <TargetAxisRef ref="W_axis" />
+          <DomainAxisRef ref="date" />
+          <TargetAxisRef ref="W" />
         </MapperRefs>
       </Layer>
       <Layer id="Q">
@@ -266,8 +268,8 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef ref="date_axis" />
-          <TargetAxisRef ref="Q_axis" />
+          <DomainAxisRef ref="date" />
+          <TargetAxisRef ref="Q" />
         </MapperRefs>
       </Layer>
       <Layer id="N">
@@ -290,8 +292,8 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef ref="date_axis" />
-          <TargetAxisRef ref="N_axis" />
+          <DomainAxisRef ref="date" />
+          <TargetAxisRef ref="N" />
         </MapperRefs>
       </Layer>
       <Layer id="W_NN">
@@ -309,8 +311,8 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef ref="date_axis" />
-          <TargetAxisRef ref="W_NN_axis" />
+          <DomainAxisRef ref="date" />
+          <TargetAxisRef ref="W_NN" />
         </MapperRefs>
       </Layer>
       <Layer id="V">
@@ -332,8 +334,8 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef ref="date_axis" />
-          <TargetAxisRef ref="V_axis" />
+          <DomainAxisRef ref="date" />
+          <TargetAxisRef ref="V" />
         </MapperRefs>
       </Layer>
       <Layer id="forecastLayer" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -345,7 +347,7 @@
         <Title>Vorhersagezeitraum</Title>
         <Description />
         <MapperRefs>
-          <DomainAxisRef ref="date_axis" />
+          <DomainAxisRef ref="date" />
           <TargetAxisRef ref="screenAxisY" />
         </MapperRefs>
       </Layer>
@@ -376,7 +378,7 @@
       </Layer>
     </Layers>
     <Mappers>
-      <Axis id="W_axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="W" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Wasserstand [cm]</Label>
         <Direction>POSITIVE</Direction>
@@ -384,7 +386,7 @@
         <PreferredAdjustment before="15" range="75" after="10" />
         <RendererRef ref="AutoNumberAxisRenderer" />
       </Axis>
-      <Axis id="Q_axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="Q" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Abfluss [m³]</Label>
         <Direction>POSITIVE</Direction>
@@ -392,7 +394,7 @@
         <PreferredAdjustment before="15" range="75" after="10" />
         <RendererRef ref="AutoNumberAxisRenderer" />
       </Axis>
-      <Axis id="N_axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="N" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Niederschlag [mm]</Label>
         <Direction>NEGATIVE</Direction>
@@ -400,7 +402,7 @@
         <PreferredAdjustment before="0" range="50" after="50" />
         <RendererRef ref="AutoNumberAxisRenderer" />
       </Axis>
-      <Axis id="W_NN_axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="W_NN" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Wasserstand [mNN]</Label>
         <Direction>POSITIVE</Direction>
@@ -408,7 +410,7 @@
         <PreferredAdjustment before="15" range="75" after="10" />
         <RendererRef ref="AutoNumberAxisRenderer" />
       </Axis>
-      <Axis id="V_axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="V" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Volumen [hm³]</Label>
         <Direction>POSITIVE</Direction>
@@ -416,7 +418,7 @@
         <PreferredAdjustment before="15" range="75" after="10" />
         <RendererRef ref="AutoNumberAxisRenderer" />
       </Axis>
-      <Axis id="date_axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="date" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Datum</Label>
         <Direction>POSITIVE</Direction>
