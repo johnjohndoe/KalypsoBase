@@ -38,46 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ext.test.mapper.provider;
+package org.kalypso.zml.ui.chart.layer.themes;
 
-import java.util.HashMap;
-import java.util.Map;
+import jregex.Pattern;
+import jregex.RETokenizer;
 
-import org.eclipse.swt.graphics.RGB;
-import org.kalypso.chart.ext.test.mapper.RGBMapper;
-
-import de.openali.odysseus.chart.factory.config.parameters.impl.RGBParser;
-import de.openali.odysseus.chart.factory.provider.AbstractMapperProvider;
-import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
+import org.kalypso.zml.ui.chart.update.IClonedLayer;
 
 /**
- * @author alibu
- * 
+ * @author Dirk Kuch
  */
-public class RGBMapperProvider extends AbstractMapperProvider
+public final class ZmlLayerHelper implements IClonedLayer
 {
-
-  /**
-   * @see de.openali.odysseus.chart.factory.provider.IMapperProvider#getMapper()
-   */
-  @Override
-public RGBMapper getMapper( )
+  private ZmlLayerHelper( )
   {
+  }
 
-    IParameterContainer pc = getParameterContainer();
-    HashMap<String, String> defaultColorsString = new HashMap<String, String>();
-    int size = 10;
-    int offset = 255 / size;
-    for( int i = 0; i < size; i++ )
-      defaultColorsString.put( "" + i, "" + (offset * i) );
+  public static int getLayerIndex( final String identifier )
+  {
+    if( !identifier.contains( CLONED_LAYER_POSTFIX ) )
+      return 0;
 
-    Map<String, RGB> parsedRGBMap = pc.getParsedParameterMap( "colorMap", defaultColorsString, new RGBParser() );
+    final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*" + CLONED_LAYER_POSTFIX ), identifier );
+    final String token = tokenizer.nextToken();
 
-    Map<Number, RGB> defaultColors = new HashMap<Number, RGB>();
-    String[] keys = parsedRGBMap.keySet().toArray( new String[] {} );
-
-    for( int i = 0; i < parsedRGBMap.size(); i++ )
-      defaultColors.put( Integer.parseInt( keys[i] ), parsedRGBMap.get( keys[i] ) );
-    return new RGBMapper( getId(), defaultColors );
+    return Integer.valueOf( token );
   }
 }

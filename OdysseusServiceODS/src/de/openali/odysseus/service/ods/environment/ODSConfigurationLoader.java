@@ -10,7 +10,7 @@ import net.opengis.ows.ServiceProviderDocument.ServiceProvider;
 
 import org.apache.xmlbeans.XmlException;
 
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
+import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
 import de.openali.odysseus.service.odsimpl.x020.ODSConfigurationDocument;
 import de.openali.odysseus.service.odsimpl.x020.ODSConfigurationType;

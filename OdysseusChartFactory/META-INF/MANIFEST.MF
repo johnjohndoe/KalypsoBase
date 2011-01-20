@@ -20,7 +20,6 @@ Export-Package: de.openali.odysseus.chart.factory.config;
    de.openali.odysseus.chart.factory.util,
    de.openali.odysseus.chart.framework.model.style",
  de.openali.odysseus.chart.factory.config.exception,
- de.openali.odysseus.chart.factory.config.parameters;uses:="de.openali.odysseus.chart.framework.model.data",
  de.openali.odysseus.chart.factory.config.parameters.impl;
   uses:="de.openali.odysseus.chart.framework.model.mapper,
    de.openali.odysseus.chart.factory.config.parameters,

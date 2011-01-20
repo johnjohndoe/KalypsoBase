@@ -2,8 +2,8 @@ package de.openali.odysseus.chart.factory.provider;
 
 import java.net.URL;
 
-import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 public abstract class AbstractAxisRendererProvider extends AbstractChartComponentProvider implements IAxisRendererProvider

@@ -45,10 +45,10 @@ import java.net.URL;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlForecastLayer;
 import org.kalypso.zml.ui.core.provider.observation.IRequestHandler;
 
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.factory.provider.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 
 /**
  * @author Dirk Kuch

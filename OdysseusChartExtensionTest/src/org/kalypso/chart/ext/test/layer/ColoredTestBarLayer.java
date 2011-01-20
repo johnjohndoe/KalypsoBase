@@ -8,11 +8,11 @@ import org.kalypso.chart.ext.test.mapper.RGBMapper;
 
 import de.openali.odysseus.chart.ext.base.data.AbstractDomainIntervalValueData;
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
-import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;

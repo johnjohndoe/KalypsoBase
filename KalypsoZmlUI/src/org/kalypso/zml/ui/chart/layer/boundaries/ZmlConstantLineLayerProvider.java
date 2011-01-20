@@ -50,11 +50,11 @@ import org.kalypso.zml.ui.chart.layer.themes.ZmlConstantLineLayer;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlLayerFactory;
 import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvider;
 
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
-import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.factory.provider.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch

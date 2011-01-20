@@ -43,7 +43,7 @@ package org.kalypso.zml.ui.chart.layer.themes;
 import org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider;
 import org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider;
 
-import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 

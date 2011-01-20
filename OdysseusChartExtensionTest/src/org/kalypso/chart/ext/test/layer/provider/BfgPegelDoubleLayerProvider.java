@@ -46,8 +46,8 @@ import java.net.URL;
 import org.kalypso.chart.ext.test.data.BfgPegelDoubleData;
 import org.kalypso.chart.ext.test.layer.DefaultDoubleUnfilteredLineLayer;
 
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
+import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;

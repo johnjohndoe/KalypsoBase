@@ -2,9 +2,10 @@ package de.openali.odysseus.chart.factory.provider;
 
 import java.net.URL;
 
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
-import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
+import de.openali.odysseus.chart.framework.model.layer.IChartComponentProvider;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
 
 /**

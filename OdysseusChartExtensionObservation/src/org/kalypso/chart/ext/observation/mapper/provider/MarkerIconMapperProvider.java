@@ -49,8 +49,8 @@ import java.util.Map.Entry;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.chart.ext.observation.mapper.MarkerIconMapper;
 
-import de.openali.odysseus.chart.factory.config.exception.ConfigurationException;
 import de.openali.odysseus.chart.factory.provider.AbstractMapperProvider;
+import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
 
 /**

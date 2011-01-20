@@ -30,6 +30,9 @@
         <Layers>
           <Layer id="Wasserstand" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
             </Provider>
             <Title>Wasserstand</Title>
             <Description />

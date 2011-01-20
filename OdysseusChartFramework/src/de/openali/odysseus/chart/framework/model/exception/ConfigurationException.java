@@ -1,4 +1,4 @@
-package de.openali.odysseus.chart.factory.config.exception;
+package de.openali.odysseus.chart.framework.model.exception;
 
 public class ConfigurationException extends Exception
 {

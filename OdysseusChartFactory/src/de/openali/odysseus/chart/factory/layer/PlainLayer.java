@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.layer;
 
-import de.openali.odysseus.chart.factory.provider.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 
 /**
  * @author Dirk Kuch
