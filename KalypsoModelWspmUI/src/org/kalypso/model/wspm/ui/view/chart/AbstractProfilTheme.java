@@ -100,7 +100,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 
   private final String m_id;
 
-  private final ILayerManager m_layerManager = new LayerManager();
+  private final ILayerManager m_layerManager = new LayerManager( this );
 
   private final String m_title;
 

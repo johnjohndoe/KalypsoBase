@@ -38,30 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.service.wps.refactoring;
-
-import net.opengeospatial.wps.ExecuteResponseType;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.service.wps.client.exceptions.WPSException;
+package org.kalypso.zml.ui.chart.update;
 
 /**
  * @author Dirk Kuch
  */
-public interface IWPSObserver
+public interface IClonedLayer
 {
-  IStatus handleTimeout( );
+  String CLONED_LAYER_POSTFIX = "_clone_";
 
-  IStatus handleCancel( );
-
-  IStatus handleUnknownState( final ExecuteResponseType exState );
-
-  void handleAccepted( final ExecuteResponseType exState );
-
-  void handleStarted( final IProgressMonitor monitor, final ExecuteResponseType exState ) throws WPSException;
-
-  IStatus handleSucceeded( final ExecuteResponseType exState );
-
-  IStatus handleFailed( final ExecuteResponseType exState );
+  /** example: baseLayerId _clone_ cloneNumber */
+  String CLONED_LAYER_POSTFIX_FORMAT = "%s" + CLONED_LAYER_POSTFIX + "%d";
 }

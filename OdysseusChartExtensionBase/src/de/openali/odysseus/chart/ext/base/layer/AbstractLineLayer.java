@@ -19,7 +19,6 @@ import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
@@ -203,7 +202,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     return m_pointFigure;
   }
 
-  protected IStyle getPointStyle( )
+  protected IPointStyle getPointStyle( )
   {
     return getPointFigure().getStyle();
 

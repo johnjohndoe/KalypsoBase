@@ -45,14 +45,12 @@ import java.net.URL;
 import org.kalypso.simulation.core.refactoring.local.LocalSimulationRunner;
 import org.kalypso.simulation.core.simspec.Modeldata;
 
-
 /**
- * @author kuch
- *
+ * @author Dirk Kuch
  */
 public class SimulationRunnerFactory
 {
-  
+
   /**
    * FIXME refactoring
    * 
@@ -82,5 +80,4 @@ public class SimulationRunnerFactory
     return new LocalSimulationRunner( calculationTypeId, modeldata, inputDir );
   }
 
- 
 }

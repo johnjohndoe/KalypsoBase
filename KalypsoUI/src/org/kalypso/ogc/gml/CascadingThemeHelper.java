@@ -44,7 +44,7 @@ import org.jfree.util.ObjectUtils;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class CascadingThemeHelper
 {
@@ -63,6 +63,7 @@ public class CascadingThemeHelper
       if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().getKey().equals( themeName ) )
         return (CascadingKalypsoTheme) kalypsoTheme;
     }
+
     return null;
   }
 
@@ -88,6 +89,7 @@ public class CascadingThemeHelper
       else if( kalypsoTheme instanceof CascadingKalypsoTheme && themeProp.equals( themeProperty ) )
         return (CascadingKalypsoTheme) kalypsoTheme;
     }
+
     return null;
   }
 
@@ -109,6 +111,7 @@ public class CascadingThemeHelper
       if( kalypsoTheme instanceof CascadingKalypsoTheme && themeProp.equals( themeID ) )
         return (CascadingKalypsoTheme) kalypsoTheme;
     }
+
     return null;
   }
 
@@ -130,6 +133,7 @@ public class CascadingThemeHelper
           return featureTheme;
       }
     }
+
     return null;
   }
 }

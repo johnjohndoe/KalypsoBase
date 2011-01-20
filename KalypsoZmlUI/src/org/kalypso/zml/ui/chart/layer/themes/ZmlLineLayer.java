@@ -85,6 +85,15 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   /**
+   * @see java.lang.Object#clone()
+   */
+  @Override
+  public ZmlLineLayer clone( )
+  {
+    return new ZmlLineLayer( getProvider(), getLineStyle(), getPointStyle() );
+  }
+
+  /**
    * @see de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer#dispose()
    */
   @Override

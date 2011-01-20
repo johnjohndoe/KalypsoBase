@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,10 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.base.visitors;
-
-import java.util.HashSet;
-import java.util.Set;
+package org.kalypso.zml.ui.chart.update;
 
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
@@ -51,51 +48,20 @@ import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisito
 /**
  * @author Dirk Kuch
  */
-public class ZmlLayerVisitor implements IChartLayerVisitor
+public class RemoveClonedLayerVisitor implements IChartLayerVisitor, IClonedLayer
 {
-  Set<IZmlLayer> m_layers = new HashSet<IZmlLayer>();
-
-  private final String m_parameterType;
-
-  public ZmlLayerVisitor( final String parameterType )
-  {
-    m_parameterType = parameterType;
-  }
-
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
   public void visit( final IChartLayer layer )
   {
-    if( !isTypeOf( layer ) )
-      return;
+    layer.getLayerManager().accept( this );
 
     if( layer instanceof IZmlLayer )
-      m_layers.add( (IZmlLayer) layer );
-
-    final IChartLayer[] children = layer.getLayerManager().getLayers();
-    for( final IChartLayer child : children )
     {
-      if( child instanceof IZmlLayer )
-      {
-        m_layers.add( (IZmlLayer) child );
-      }
+      if( layer.getId().contains( CLONED_LAYER_POSTFIX ) )
+        layer.getParent().getLayerManager().removeLayer( layer );
     }
   }
-
-  public IZmlLayer[] getLayers( )
-  {
-    return m_layers.toArray( new IZmlLayer[] {} );
-  }
-
-  private boolean isTypeOf( final IChartLayer layer )
-  {
-    final String identifier = layer.getId();
-// final ICoordinateMapper mapper = layer.getCoordinateMapper();
-// final IAxis targetAxis = mapper.getTargetAxis();
-
-    return identifier.equals( m_parameterType );
-  }
-
 }

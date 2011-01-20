@@ -2,6 +2,7 @@ package de.openali.odysseus.chart.framework.model.layer;
 
 import org.eclipse.swt.graphics.GC;
 
+import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
@@ -11,7 +12,7 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  * @author burtscher an IChartLayer represents a (visual) layer of the chart; it can be assigned to up to 2 axes to
  *         translate logical data into screen values
  */
-public interface IChartLayer extends IEventProvider<ILayerEventListener>
+public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEventListener>
 {
   void dispose( );
 
@@ -33,11 +34,6 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
    * Gibt die ID des Layers zurück; die ID wird verwendet, um das Layer im Chart zu referenzieren
    */
   String getId( );
-
-  /**
-   * @return the layermanager for all childLayers
-   */
-  ILayerManager getLayerManager( );
 
   ILegendEntry[] getLegendEntries( );
 
@@ -105,4 +101,8 @@ public interface IChartLayer extends IEventProvider<ILayerEventListener>
   void setTitle( final String title );
 
   void setVisible( final boolean isVisible );
+
+  void setParent( ILayerContainer parent );
+
+  ILayerContainer getParent( );
 }

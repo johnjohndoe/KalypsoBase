@@ -97,7 +97,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.resource.DisabledImageDescriptor;
 
 /**
- * @author kuch, kurzbach
+ * @author Dirk Kuch, kurzbach
  */
 public class DropDownToolbarItem extends CompoundContributionItem implements IExecutableExtension
 {

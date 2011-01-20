@@ -50,7 +50,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IWPSProcess
 {

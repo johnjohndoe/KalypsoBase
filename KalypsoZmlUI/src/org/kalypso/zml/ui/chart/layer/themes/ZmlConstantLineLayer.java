@@ -90,6 +90,15 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     m_calculateRange = calculateRange;
   }
 
+  /**
+   * @see java.lang.Object#clone()
+   */
+  @Override
+  public ZmlConstantLineLayer clone( )
+  {
+    return new ZmlConstantLineLayer( m_parameters, m_styleSet, m_calculateRange );
+  }
+
   public boolean isCalculateRange( )
   {
     return m_calculateRange;

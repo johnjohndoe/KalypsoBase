@@ -38,23 +38,64 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.layer;
+package org.kalypso.zml.ui.chart.update;
 
-import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import java.util.HashSet;
+import java.util.Set;
 
-import de.openali.odysseus.chart.framework.model.event.impl.LayerEventHandler;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
+
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlLayer extends IChartLayer
+public class ParameterTypeLayerVisitor implements IChartLayerVisitor
 {
-  IZmlLayerDataHandler getDataHandler( );
+  Set<IZmlLayer> m_layers = new HashSet<IZmlLayer>();
 
-  void setDataHandler( IZmlLayerDataHandler handler );
+  private final String m_parameterType;
 
-  LayerEventHandler getEventHandler( );
+  public ParameterTypeLayerVisitor( final String parameterType )
+  {
+    m_parameterType = parameterType;
+  }
 
-  IZmlLayer clone( );
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public void visit( final IChartLayer layer )
+  {
+    if( !isTypeOf( layer ) )
+      return;
+
+    if( layer instanceof IZmlLayer )
+      m_layers.add( (IZmlLayer) layer );
+
+    final IChartLayer[] children = layer.getLayerManager().getLayers();
+    for( final IChartLayer child : children )
+    {
+      if( child instanceof IZmlLayer )
+      {
+        m_layers.add( (IZmlLayer) child );
+      }
+    }
+  }
+
+  public IZmlLayer[] getLayers( )
+  {
+    return m_layers.toArray( new IZmlLayer[] {} );
+  }
+
+  private boolean isTypeOf( final IChartLayer layer )
+  {
+    final String identifier = layer.getId();
+// final ICoordinateMapper mapper = layer.getCoordinateMapper();
+// final IAxis targetAxis = mapper.getTargetAxis();
+
+    return identifier.equals( m_parameterType );
+  }
+
 }

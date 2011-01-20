@@ -74,7 +74,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
     return m_polygonFigure;
   }
 
-  private IAreaStyle getAreaStyle( )
+  protected IAreaStyle getAreaStyle( )
   {
     if( m_areaStyle == null )
       return StyleUtils.getDefaultAreaStyle();

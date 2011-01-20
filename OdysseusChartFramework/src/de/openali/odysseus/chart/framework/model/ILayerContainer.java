@@ -38,30 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.service.wps.refactoring;
+package de.openali.odysseus.chart.framework.model;
 
-import net.opengeospatial.wps.ExecuteResponseType;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.service.wps.client.exceptions.WPSException;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
  * @author Dirk Kuch
  */
-public interface IWPSObserver
+public interface ILayerContainer
 {
-  IStatus handleTimeout( );
-
-  IStatus handleCancel( );
-
-  IStatus handleUnknownState( final ExecuteResponseType exState );
-
-  void handleAccepted( final ExecuteResponseType exState );
-
-  void handleStarted( final IProgressMonitor monitor, final ExecuteResponseType exState ) throws WPSException;
-
-  IStatus handleSucceeded( final ExecuteResponseType exState );
-
-  IStatus handleFailed( final ExecuteResponseType exState );
+  ILayerManager getLayerManager( );
 }

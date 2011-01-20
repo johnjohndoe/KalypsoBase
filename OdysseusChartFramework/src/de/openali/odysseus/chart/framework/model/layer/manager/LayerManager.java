@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 
+import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerEventListener;
@@ -57,6 +58,18 @@ public class LayerManager implements ILayerManager
    */
   private final List<IChartLayer> m_layers = new ArrayList<IChartLayer>();
 
+  private final ILayerContainer m_parent;
+
+  public LayerManager( final ILayerContainer parent )
+  {
+    m_parent = parent;
+  }
+
+  public ILayerContainer getParent( )
+  {
+    return m_parent;
+  }
+
   @Override
   public void accept( final IChartLayerVisitor... visitors )
   {
@@ -88,7 +101,9 @@ public class LayerManager implements ILayerManager
 
     for( final IChartLayer layer : layers )
     {
+      layer.setParent( m_parent );
       layer.addListener( m_layerListener );
+
       m_handler.fireLayerAdded( layer );
     }
   }
@@ -101,6 +116,7 @@ public class LayerManager implements ILayerManager
   public void addLayer( final IChartLayer layer, final int position )
   {
     m_layers.add( position, layer );
+    layer.setParent( m_parent );
     layer.addListener( m_layerListener );
 
     m_handler.fireLayerAdded( layer );

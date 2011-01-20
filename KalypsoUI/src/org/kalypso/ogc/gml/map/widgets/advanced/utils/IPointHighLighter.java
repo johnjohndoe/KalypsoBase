@@ -44,7 +44,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IPointHighLighter
 {

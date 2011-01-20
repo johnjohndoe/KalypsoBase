@@ -11,6 +11,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.factory.provider.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
@@ -45,7 +46,7 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private boolean m_isVisible = true;
 
-  private final ILayerManager m_layerManager = new LayerManager();
+  private final ILayerManager m_layerManager = new LayerManager( this );
 
   private ILegendEntry[] m_legendEntries = new ILegendEntry[] {};
 
@@ -56,6 +57,8 @@ public abstract class AbstractChartLayer implements IChartLayer
   private final ILayerProvider m_provider;
 
   private String m_title = null;
+
+  private ILayerContainer m_parent;
 
   public AbstractChartLayer( final ILayerProvider provider )
   {
@@ -183,12 +186,6 @@ public abstract class AbstractChartLayer implements IChartLayer
   public String getId( )
   {
     return m_id;
-  }
-
-  @Override
-  public ILayerManager getLayerManager( )
-  {
-    return m_layerManager;
   }
 
   @Override
@@ -415,4 +412,27 @@ public abstract class AbstractChartLayer implements IChartLayer
     return String.format( "IChartLayer - id: %s", getId() );
   }
 
+  @Override
+  public ILayerManager getLayerManager( )
+  {
+    return m_layerManager;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#setParent(java.lang.Object)
+   */
+  @Override
+  public void setParent( final ILayerContainer parent )
+  {
+    m_parent = parent;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getParent()
+   */
+  @Override
+  public ILayerContainer getParent( )
+  {
+    return m_parent;
+  }
 }
