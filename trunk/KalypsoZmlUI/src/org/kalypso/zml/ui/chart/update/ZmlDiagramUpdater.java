@@ -43,9 +43,7 @@ package org.kalypso.zml.ui.chart.update;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.zml.core.diagram.base.visitors.ZmlLayerVisitor;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
@@ -58,7 +56,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 /**
  * @author Dirk Kuch
  */
-public class ZmlDiagramUpdater implements Runnable
+public class ZmlDiagramUpdater implements Runnable, IClonedLayer
 {
   private final Set<IObsProvider> m_providers = new LinkedHashSet<IObsProvider>();
 
@@ -86,23 +84,47 @@ public class ZmlDiagramUpdater implements Runnable
       if( link.isIgnoreType( m_ignoreTypes ) )
         continue;
 
-      final ZmlLayerVisitor visitor = new ZmlLayerVisitor( link.getIdentifier() );
+      m_manager.accept( new RemoveClonedLayerVisitor() );
+
+      final ParameterTypeLayerVisitor visitor = new ParameterTypeLayerVisitor( link.getIdentifier() );
       m_manager.accept( visitor );
 
-      final TSLinkWithName[] tsLinks = link.getLinks();
-      if( tsLinks.length != 1 )
-        throw new NotImplementedException(); // TODO handling of multiple links
+      final IZmlLayer[] layers = visitor.getLayers();
 
-      final AsynchronousObservationProvider provider = new AsynchronousObservationProvider( tsLinks[0] );
-      m_providers.add( provider );
-
-      for( final IZmlLayer zmlLayer : visitor.getLayers() )
+      final TSLinkWithName[] links = link.getLinks();
+      for( int index = 0; index < links.length; index++ )
       {
-        final IZmlLayerDataHandler handler = zmlLayer.getDataHandler();
-        if( handler instanceof ZmlObsProviderDataHandler )
-          ((ZmlObsProviderDataHandler) handler).setObsProvider( provider );
+        final AsynchronousObservationProvider provider = new AsynchronousObservationProvider( links[index] );
+        m_providers.add( provider );
+
+        update( layers, provider, index );
       }
     }
+  }
+
+  private void update( final IZmlLayer[] layers, final AsynchronousObservationProvider provider, final int index )
+  {
+    for( final IZmlLayer baseLayer : layers )
+    {
+      final IZmlLayer layer = buildLayer( baseLayer, index );
+
+      final IZmlLayerDataHandler handler = layer.getDataHandler();
+      if( handler instanceof ZmlObsProviderDataHandler )
+        ((ZmlObsProviderDataHandler) handler).setObsProvider( provider );
+    }
+  }
+
+  private IZmlLayer buildLayer( final IZmlLayer baseLayer, final int index )
+  {
+    if( index == 0 )
+      return baseLayer;
+
+    final IZmlLayer layer = baseLayer.clone();
+    layer.setId( String.format( CLONED_LAYER_POSTFIX_FORMAT, baseLayer.getId(), index ) );
+
+    baseLayer.getLayerManager().addLayer( layer );
+
+    return layer;
   }
 
   public IObsProvider[] getProviders( )

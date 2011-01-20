@@ -47,7 +47,7 @@ import org.eclipse.core.resources.IProject;
 import de.renew.workflow.connector.cases.CaseHandler;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ScenarioHandler extends CaseHandler implements IScenario
 {
@@ -126,7 +126,7 @@ public class ScenarioHandler extends CaseHandler implements IScenario
       final IScenario other = (IScenario) obj;
 
       final EqualsBuilder builder = new EqualsBuilder();
-      builder.append( this.getURI(), other.getURI() );
+      builder.append( getURI(), other.getURI() );
 
       return builder.isEquals();
     }

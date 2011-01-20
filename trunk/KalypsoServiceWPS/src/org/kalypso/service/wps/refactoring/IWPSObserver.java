@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.service.wps.client.exceptions.WPSException;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IWPSObserver
 {

@@ -51,7 +51,7 @@ import org.kalypso.ogc.gml.om.table.command.ToolbarCommandUtils;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public abstract class AbstractTableFeatureControlHandler extends AbstractHandler
 {

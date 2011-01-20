@@ -7,19 +7,16 @@ import java.util.Map;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
-public interface IChartModel
+public interface IChartModel extends ILayerContainer
 {
 
   IMapperRegistry getMapperRegistry( );
-
-  ILayerManager getLayerManager( );
 
   void clear( );
 

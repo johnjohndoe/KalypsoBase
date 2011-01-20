@@ -55,4 +55,6 @@ public interface IZmlLayer extends IChartLayer
   void setDataHandler( IZmlLayerDataHandler handler );
 
   LayerEventHandler getEventHandler( );
+
+  IZmlLayer clone( );
 }

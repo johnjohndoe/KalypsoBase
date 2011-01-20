@@ -55,7 +55,7 @@ import org.kalypso.service.wps.internal.KalypsoServiceWPSDebug;
 import org.kalypso.service.wps.utils.WPSUtilities;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class DefaultWpsObserver implements IWPSObserver
 {

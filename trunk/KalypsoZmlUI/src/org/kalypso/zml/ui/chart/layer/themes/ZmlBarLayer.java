@@ -85,6 +85,15 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   }
 
   /**
+   * @see java.lang.Object#clone()
+   */
+  @Override
+  public ZmlBarLayer clone( )
+  {
+    return new ZmlBarLayer( getProvider(), getAreaStyle() );
+  }
+
+  /**
    * @see de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer#dispose()
    */
   @Override
