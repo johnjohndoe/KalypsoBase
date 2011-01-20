@@ -24,6 +24,11 @@ public class StyleSet implements IStyleSet
     return m_styleMap.get( identifier );
   }
 
+  public boolean isEmpty( )
+  {
+    return m_styleMap.isEmpty();
+  }
+
   /**
    * if no style is found, a default style is created, saved for later use and returned
    */

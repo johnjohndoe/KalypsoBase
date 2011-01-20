@@ -19,6 +19,7 @@ import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
@@ -34,24 +35,33 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
 
   private TextFigure m_textFigure;
 
+  private final IStyleSet m_styleSet;
+
   public AbstractLineLayer( final ILayerProvider provider, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
     super( provider );
 
     getPolylineFigure().setStyle( lineStyle );
     getPointFigure().setStyle( pointStyle );
+
+    m_styleSet = new StyleSet();
+    m_styleSet.addStyle( "line_style", lineStyle );
+    m_styleSet.addStyle( "point_style", pointStyle );
   }
 
-  public AbstractLineLayer( final ILayerProvider provider, final StyleSet styleSet )
+  public AbstractLineLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
     super( provider );
+    m_styleSet = styleSet;
 
     if( styleSet != null )
     {
       final StyleSetVisitor visitor = new StyleSetVisitor();
+
       final ILineStyle ls = visitor.visit( styleSet, ILineStyle.class, 0 );
       final IPointStyle ps = visitor.visit( styleSet, IPointStyle.class, 0 );
       final ITextStyle ts = visitor.visit( styleSet, ITextStyle.class, 0 );
+
       if( ls != null )
         getPolylineFigure().setStyle( ls );
       if( ps != null )
@@ -59,6 +69,11 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
       if( ts != null )
         getTextFigure().setStyle( ts );
     }
+  }
+
+  protected IStyleSet getStyleSet( )
+  {
+    return m_styleSet;
   }
 
   /**
