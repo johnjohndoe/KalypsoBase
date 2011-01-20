@@ -92,15 +92,15 @@ public class ExportPdfHandler extends AbstractHandler
       if( activePart == null )
         return null;
 
+      /* Get the map panel. */
+      IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
+
       /* Ask for a file name. */
       String fileName = String.format( "%s.pdf", FilenameUtils.removeExtension( activePart.getTitle() ) );
       File targetFile = MapHandlerUtils.showSaveFileDialog( shell, "PDF-Export", fileName, PDFExporter.class.getCanonicalName(), new String[] { "*.pdf", "*.*" }, new String[] { "Adobe Acrobat Datei",
           "Alle Dateien" } );
       if( targetFile == null )
         return null;
-
-      /* Get the map panel. */
-      IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
       /* Export the PDF. */
       PDFExporter exporter = new PDFExporter( mapPanel );
