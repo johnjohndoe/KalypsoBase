@@ -27,6 +27,7 @@
             <Parameter name="label" value="%s" />
             <Parameter name="labelTokenizer" value="^.+_" />
             <Parameter name="content.hauptzahl" value="true" />
+            <Parameter name="hideOnMultiSelect" value="true" />
           </Parameters>
         </Provider>
         <Title>Hauptzahlen</Title>

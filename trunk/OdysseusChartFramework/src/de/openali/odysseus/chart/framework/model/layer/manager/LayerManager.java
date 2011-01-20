@@ -65,6 +65,7 @@ public class LayerManager implements ILayerManager
     m_parent = parent;
   }
 
+  @Override
   public ILayerContainer getParent( )
   {
     return m_parent;
@@ -82,7 +83,7 @@ public class LayerManager implements ILayerManager
   @Override
   public void accept( final IChartLayerVisitor visitor )
   {
-    for( final IChartLayer layer : m_layers )
+    for( final IChartLayer layer : getLayers() )
     {
       visitor.visit( layer );
     }

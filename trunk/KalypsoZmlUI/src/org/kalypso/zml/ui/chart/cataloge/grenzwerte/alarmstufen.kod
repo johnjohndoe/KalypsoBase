@@ -67,6 +67,7 @@
             <Parameter name="grenzwert" value="^Grenzwert_.:\sMeldegrenze$" />
             <Parameter name="label" value="MG" />
             <Parameter name="content.alarmstufe" value="true" />
+            <Parameter name="hideOnMultiSelect" value="true" />
           </Parameters>
         </Provider>
         <Title>Meldegrenze</Title>
@@ -84,6 +85,7 @@
             <Parameter name="label" value="AS%s" />
             <Parameter name="labelTokenizer" value="^.+_" />
             <Parameter name="content.alarmstufe" value="true" />
+            <Parameter name="hideOnMultiSelect" value="true" />
           </Parameters>
         </Provider>
         <Title>Alarmstufe</Title>
@@ -101,6 +103,7 @@
             <Parameter name="label" value="AS%s" />
             <Parameter name="labelTokenizer" value="^.+_" />
             <Parameter name="content.alarmstufe" value="true" />
+            <Parameter name="hideOnMultiSelect" value="true" />
           </Parameters>
         </Provider>
         <Title>Alarmstufe</Title>
@@ -118,6 +121,7 @@
             <Parameter name="label" value="AS%s" />
             <Parameter name="labelTokenizer" value="^.+_" />
             <Parameter name="content.alarmstufe" value="true" />
+            <Parameter name="hideOnMultiSelect" value="true" />
           </Parameters>
         </Provider>
         <Title>Alarmstufe</Title>
@@ -135,6 +139,7 @@
             <Parameter name="label" value="AS%s" />
             <Parameter name="labelTokenizer" value="^.+_" />
             <Parameter name="content.alarmstufe" value="true" />
+            <Parameter name="hideOnMultiSelect" value="true" />
           </Parameters>
         </Provider>
         <Title>Alarmstufe</Title>
