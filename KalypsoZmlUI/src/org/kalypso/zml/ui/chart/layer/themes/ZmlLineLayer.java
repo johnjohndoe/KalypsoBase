@@ -99,7 +99,8 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public void dispose( )
   {
-    m_handler.dispose();
+    if( m_handler != null )
+      m_handler.dispose();
 
     super.dispose();
   }

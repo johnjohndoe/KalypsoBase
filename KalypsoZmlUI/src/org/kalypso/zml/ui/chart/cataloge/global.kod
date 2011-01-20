@@ -34,9 +34,25 @@
             <Title>Wasserstand</Title>
             <Description />
             <Styles>
-              <LineStyle role="wLineStyle">
+              <LineStyle role="wLineStyle_0">
                 <Width>2</Width>
                 <LineColor>8FADDF</LineColor>
+              </LineStyle>
+              <LineStyle role="wLineStyle_1">
+                <Width>2</Width>
+                <LineColor>3460A9</LineColor>
+              </LineStyle>
+              <LineStyle role="wLineStyle_2">
+                <Width>2</Width>
+                <LineColor>BDD3F6</LineColor>
+              </LineStyle>
+              <LineStyle role="wLineStyle_3">
+                <Width>2</Width>
+                <LineColor>093689</LineColor>
+              </LineStyle>
+              <LineStyle role="wLineStyle_4">
+                <Width>2</Width>
+                <LineColor>6186C3</LineColor>
               </LineStyle>
               <PointStyle role="wPointStyle" isVisible="false" />
             </Styles>
@@ -63,9 +79,25 @@
             <Title>Abfluss</Title>
             <Description />
             <Styles>
-              <LineStyle role="qLineStyle">
+              <LineStyle role="qLineStyle_0">
                 <Width>2</Width>
                 <LineColor>ABB985</LineColor>
+              </LineStyle>
+              <LineStyle role="qLineStyle_1">
+                <Width>2</Width>
+                <LineColor>65782F</LineColor>
+              </LineStyle>
+              <LineStyle role="qLineStyle_2">
+                <Width>2</Width>
+                <LineColor>CFDAB2</LineColor>
+              </LineStyle>
+              <LineStyle role="qLineStyle_3">
+                <Width>2</Width>
+                <LineColor>3D5208</LineColor>
+              </LineStyle>
+              <LineStyle role="qLineStyle_4">
+                <Width>2</Width>
+                <LineColor>879859</LineColor>
               </LineStyle>
               <PointStyle role="qPointStyle" isVisible="false">
               </PointStyle>
@@ -93,7 +125,7 @@
             <Title>Niederschlag</Title>
             <Description />
             <Styles>
-              <AreaStyle role="area_1">
+              <AreaStyle role="n_area_0">
                 <Alpha>64</Alpha>
                 <Fill>
                   <ColorFill>
@@ -103,6 +135,66 @@
                 <Stroke>
                   <Width>1</Width>
                   <LineColor>093689</LineColor>
+                </Stroke>
+              </AreaStyle>
+              <AreaStyle role="n_area_1">
+                <Alpha>64</Alpha>
+                <Fill>
+                  <ColorFill>
+                    <Color>6186C3</Color>
+                  </ColorFill>
+                </Fill>
+                <Stroke>
+                  <Width>1</Width>
+                  <LineColor>6186C3</LineColor>
+                </Stroke>
+              </AreaStyle>
+              <AreaStyle role="n_area_2">
+                <Alpha>64</Alpha>
+                <Fill>
+                  <ColorFill>
+                    <Color>008000</Color>
+                  </ColorFill>
+                </Fill>
+                <Stroke>
+                  <Width>1</Width>
+                  <LineColor>008000</LineColor>
+                </Stroke>
+              </AreaStyle>
+              <AreaStyle role="n_area_3">
+                <Alpha>64</Alpha>
+                <Fill>
+                  <ColorFill>
+                    <Color>FF8000</Color>
+                  </ColorFill>
+                </Fill>
+                <Stroke>
+                  <Width>1</Width>
+                  <LineColor>FF8000</LineColor>
+                </Stroke>
+              </AreaStyle>
+              <AreaStyle role="n_area_4">
+                <Alpha>64</Alpha>
+                <Fill>
+                  <ColorFill>
+                    <Color>FF00FF</Color>
+                  </ColorFill>
+                </Fill>
+                <Stroke>
+                  <Width>1</Width>
+                  <LineColor>FF00FF</LineColor>
+                </Stroke>
+              </AreaStyle>
+              <AreaStyle role="n_area_5">
+                <Alpha>64</Alpha>
+                <Fill>
+                  <ColorFill>
+                    <Color>000040</Color>
+                  </ColorFill>
+                </Fill>
+                <Stroke>
+                  <Width>1</Width>
+                  <LineColor>000040</LineColor>
                 </Stroke>
               </AreaStyle>
               <PointStyle role="point" isVisible="false">
@@ -147,27 +239,27 @@
             <Title>Volumen</Title>
             <Description />
             <Styles>
-              <LineStyle role="line_1">
+              <LineStyle role="v_line_0">
                 <Width>2</Width>
                 <LineColor>BDAB7A</LineColor>
               </LineStyle>
-              <LineStyle role="line_2">
+              <LineStyle role="v_line_1">
                 <Width>2</Width>
                 <LineColor>769844</LineColor>
               </LineStyle>
-              <LineStyle role="line_3">
+              <LineStyle role="v_line_2">
                 <Width>2</Width>
                 <LineColor>DFD0A7</LineColor>
               </LineStyle>
-              <LineStyle role="line_4">
+              <LineStyle role="v_line_3">
                 <Width>2</Width>
                 <LineColor>4D3907</LineColor>
               </LineStyle>
-              <LineStyle role="line_5">
+              <LineStyle role="v_line_4">
                 <Width>2</Width>
                 <LineColor>998652</LineColor>
               </LineStyle>
-              <PointStyle role="point" isVisible="false">
+              <PointStyle role="v_point" isVisible="false">
               </PointStyle>
             </Styles>
           </Layer>
@@ -181,6 +273,7 @@
       <Layer id="forecastLayer" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlForecastLayerProvider">
           <Parameters>
+            <Parameter name="hideOnMultiSelect" value="true" />
           </Parameters>
         </Provider>
         <Title>Vorhersagezeitraum</Title>

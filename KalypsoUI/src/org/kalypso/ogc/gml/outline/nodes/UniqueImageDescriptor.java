@@ -50,7 +50,7 @@ import org.eclipse.swt.graphics.ImageData;
  * This fixes a out-of-handles error, when used in combination with WorkbenchLabelProvider, which caches the image
  * descriptors.
  * 
- * @author kuch
+ * @author Dirk Kuch
  */
 class UniqueImageDescriptor extends ImageDescriptor
 {
