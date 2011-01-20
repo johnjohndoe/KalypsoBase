@@ -2,6 +2,7 @@
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="global">
     <Styles>
+      <!-- TextStyles -->
       <TextStyle role="axisLabel">
         <Size>8</Size>
         <TextColor>000000</TextColor>
@@ -23,6 +24,187 @@
         <FontWeight>NORMAL</FontWeight>
         <FontStyle>NORMAL</FontStyle>
       </TextStyle>
+      <!-- LineStyles W (blue) -->
+      <LineStyle role="w_line_0">
+        <Width>2</Width>
+        <LineColor>8FADDF</LineColor>
+      </LineStyle>
+      <LineStyle role="w_active_line_0">
+        <Width>3</Width>
+        <LineColor>8FADDF</LineColor>
+      </LineStyle>
+      <LineStyle role="w_line_1">
+        <Width>2</Width>
+        <LineColor>3460A9</LineColor>
+      </LineStyle>
+      <LineStyle role="w_active_line_1">
+        <Width>3</Width>
+        <LineColor>3460A9</LineColor>
+      </LineStyle>
+      <LineStyle role="w_line_2">
+        <Width>2</Width>
+        <LineColor>BDD3F6</LineColor>
+      </LineStyle>
+      <LineStyle role="w_active_line_2">
+        <Width>3</Width>
+        <LineColor>BDD3F6</LineColor>
+      </LineStyle>
+      <LineStyle role="w_line_3">
+        <Width>2</Width>
+        <LineColor>093689</LineColor>
+      </LineStyle>
+      <LineStyle role="w_active_line_3">
+        <Width>3</Width>
+        <LineColor>093689</LineColor>
+      </LineStyle>
+      <LineStyle role="w_line_4">
+        <Width>2</Width>
+        <LineColor>6186C3</LineColor>
+      </LineStyle>
+      <LineStyle role="w_active_line_4">
+        <Width>3</Width>
+        <LineColor>6186C3</LineColor>
+      </LineStyle>
+      <!-- LineStyles W_NN -->
+      <LineStyle role="w_nn_line_0">
+        <Width>2</Width>
+        <LineColor>000080</LineColor>
+      </LineStyle>
+      <!-- LineStyles Q (greenish) -->
+      <LineStyle role="q_line_0">
+        <Width>2</Width>
+        <LineColor>ABB985</LineColor>
+      </LineStyle>
+      <LineStyle role="q_active_line_0">
+        <Width>3</Width>
+        <LineColor>ABB985</LineColor>
+      </LineStyle>
+      <LineStyle role="q_line_1">
+        <Width>2</Width>
+        <LineColor>65782F</LineColor>
+      </LineStyle>
+      <LineStyle role="q_active_line_1">
+        <Width>3</Width>
+        <LineColor>65782F</LineColor>
+      </LineStyle>
+      <LineStyle role="q_line_2">
+        <Width>2</Width>
+        <LineColor>CFDAB2</LineColor>
+      </LineStyle>
+      <LineStyle role="q_active_line_2">
+        <Width>3</Width>
+        <LineColor>CFDAB2</LineColor>
+      </LineStyle>
+      <LineStyle role="q_line_3">
+        <Width>2</Width>
+        <LineColor>3D5208</LineColor>
+      </LineStyle>
+      <LineStyle role="q_active_line_3">
+        <Width>3</Width>
+        <LineColor>3D5208</LineColor>
+      </LineStyle>
+      <LineStyle role="q_line_4">
+        <Width>2</Width>
+        <LineColor>879859</LineColor>
+      </LineStyle>
+      <LineStyle role="q_active_line_4">
+        <Width>3</Width>
+        <LineColor>879859</LineColor>
+      </LineStyle>
+      <!-- LinesStyles V -->
+      <LineStyle role="v_line_0">
+        <Width>2</Width>
+        <LineColor>BDAB7A</LineColor>
+      </LineStyle>
+      <LineStyle role="v_line_1">
+        <Width>2</Width>
+        <LineColor>769844</LineColor>
+      </LineStyle>
+      <LineStyle role="v_line_2">
+        <Width>2</Width>
+        <LineColor>DFD0A7</LineColor>
+      </LineStyle>
+      <LineStyle role="v_line_3">
+        <Width>2</Width>
+        <LineColor>4D3907</LineColor>
+      </LineStyle>
+      <LineStyle role="v_line_4">
+        <Width>2</Width>
+        <LineColor>998652</LineColor>
+      </LineStyle>
+      <!-- AreaStyles N (bluish) -->
+      <AreaStyle role="n_area_0">
+        <Alpha>64</Alpha>
+        <Fill>
+          <ColorFill>
+            <Color>093689</Color>
+          </ColorFill>
+        </Fill>
+        <Stroke>
+          <Width>1</Width>
+          <LineColor>093689</LineColor>
+        </Stroke>
+      </AreaStyle>
+      <AreaStyle role="n_area_1">
+        <Alpha>64</Alpha>
+        <Fill>
+          <ColorFill>
+            <Color>6186C3</Color>
+          </ColorFill>
+        </Fill>
+        <Stroke>
+          <Width>1</Width>
+          <LineColor>6186C3</LineColor>
+        </Stroke>
+      </AreaStyle>
+      <AreaStyle role="n_area_2">
+        <Alpha>64</Alpha>
+        <Fill>
+          <ColorFill>
+            <Color>008000</Color>
+          </ColorFill>
+        </Fill>
+        <Stroke>
+          <Width>1</Width>
+          <LineColor>008000</LineColor>
+        </Stroke>
+      </AreaStyle>
+      <AreaStyle role="n_area_3">
+        <Alpha>64</Alpha>
+        <Fill>
+          <ColorFill>
+            <Color>FF8000</Color>
+          </ColorFill>
+        </Fill>
+        <Stroke>
+          <Width>1</Width>
+          <LineColor>FF8000</LineColor>
+        </Stroke>
+      </AreaStyle>
+      <AreaStyle role="n_area_4">
+        <Alpha>64</Alpha>
+        <Fill>
+          <ColorFill>
+            <Color>FF00FF</Color>
+          </ColorFill>
+        </Fill>
+        <Stroke>
+          <Width>1</Width>
+          <LineColor>FF00FF</LineColor>
+        </Stroke>
+      </AreaStyle>
+      <AreaStyle role="n_area_5">
+        <Alpha>64</Alpha>
+        <Fill>
+          <ColorFill>
+            <Color>000040</Color>
+          </ColorFill>
+        </Fill>
+        <Stroke>
+          <Width>1</Width>
+          <LineColor>000040</LineColor>
+        </Stroke>
+      </AreaStyle>
     </Styles>
     <Layers>
       <Layer id="W" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -37,27 +219,12 @@
             <Title>Wasserstand</Title>
             <Description />
             <Styles>
-              <LineStyle role="wLineStyle_0">
-                <Width>2</Width>
-                <LineColor>8FADDF</LineColor>
-              </LineStyle>
-              <LineStyle role="wLineStyle_1">
-                <Width>2</Width>
-                <LineColor>3460A9</LineColor>
-              </LineStyle>
-              <LineStyle role="wLineStyle_2">
-                <Width>2</Width>
-                <LineColor>BDD3F6</LineColor>
-              </LineStyle>
-              <LineStyle role="wLineStyle_3">
-                <Width>2</Width>
-                <LineColor>093689</LineColor>
-              </LineStyle>
-              <LineStyle role="wLineStyle_4">
-                <Width>2</Width>
-                <LineColor>6186C3</LineColor>
-              </LineStyle>
-              <PointStyle role="wPointStyle" isVisible="false" />
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_line_0</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_line_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_line_2</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_line_3</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_line_4</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#invisible_point</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
@@ -69,8 +236,8 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef ref="date" />
-          <TargetAxisRef ref="W" />
+          <DomainAxisRef ref="date_axis" />
+          <TargetAxisRef ref="W_axis" />
         </MapperRefs>
       </Layer>
       <Layer id="Q">
@@ -82,28 +249,12 @@
             <Title>Abfluss</Title>
             <Description />
             <Styles>
-              <LineStyle role="qLineStyle_0">
-                <Width>2</Width>
-                <LineColor>ABB985</LineColor>
-              </LineStyle>
-              <LineStyle role="qLineStyle_1">
-                <Width>2</Width>
-                <LineColor>65782F</LineColor>
-              </LineStyle>
-              <LineStyle role="qLineStyle_2">
-                <Width>2</Width>
-                <LineColor>CFDAB2</LineColor>
-              </LineStyle>
-              <LineStyle role="qLineStyle_3">
-                <Width>2</Width>
-                <LineColor>3D5208</LineColor>
-              </LineStyle>
-              <LineStyle role="qLineStyle_4">
-                <Width>2</Width>
-                <LineColor>879859</LineColor>
-              </LineStyle>
-              <PointStyle role="qPointStyle" isVisible="false">
-              </PointStyle>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_line_0</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_line_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_line_2</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_line_3</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_line_4</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#invisible_point</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
@@ -115,8 +266,8 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef ref="date" />
-          <TargetAxisRef ref="Q" />
+          <DomainAxisRef ref="date_axis" />
+          <TargetAxisRef ref="Q_axis" />
         </MapperRefs>
       </Layer>
       <Layer id="N">
@@ -128,87 +279,19 @@
             <Title>Niederschlag</Title>
             <Description />
             <Styles>
-              <AreaStyle role="n_area_0">
-                <Alpha>64</Alpha>
-                <Fill>
-                  <ColorFill>
-                    <Color>093689</Color>
-                  </ColorFill>
-                </Fill>
-                <Stroke>
-                  <Width>1</Width>
-                  <LineColor>093689</LineColor>
-                </Stroke>
-              </AreaStyle>
-              <AreaStyle role="n_area_1">
-                <Alpha>64</Alpha>
-                <Fill>
-                  <ColorFill>
-                    <Color>6186C3</Color>
-                  </ColorFill>
-                </Fill>
-                <Stroke>
-                  <Width>1</Width>
-                  <LineColor>6186C3</LineColor>
-                </Stroke>
-              </AreaStyle>
-              <AreaStyle role="n_area_2">
-                <Alpha>64</Alpha>
-                <Fill>
-                  <ColorFill>
-                    <Color>008000</Color>
-                  </ColorFill>
-                </Fill>
-                <Stroke>
-                  <Width>1</Width>
-                  <LineColor>008000</LineColor>
-                </Stroke>
-              </AreaStyle>
-              <AreaStyle role="n_area_3">
-                <Alpha>64</Alpha>
-                <Fill>
-                  <ColorFill>
-                    <Color>FF8000</Color>
-                  </ColorFill>
-                </Fill>
-                <Stroke>
-                  <Width>1</Width>
-                  <LineColor>FF8000</LineColor>
-                </Stroke>
-              </AreaStyle>
-              <AreaStyle role="n_area_4">
-                <Alpha>64</Alpha>
-                <Fill>
-                  <ColorFill>
-                    <Color>FF00FF</Color>
-                  </ColorFill>
-                </Fill>
-                <Stroke>
-                  <Width>1</Width>
-                  <LineColor>FF00FF</LineColor>
-                </Stroke>
-              </AreaStyle>
-              <AreaStyle role="n_area_5">
-                <Alpha>64</Alpha>
-                <Fill>
-                  <ColorFill>
-                    <Color>000040</Color>
-                  </ColorFill>
-                </Fill>
-                <Stroke>
-                  <Width>1</Width>
-                  <LineColor>000040</LineColor>
-                </Stroke>
-              </AreaStyle>
-              <PointStyle role="point" isVisible="false">
-              </PointStyle>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#n_area_0</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#n_area_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#n_area_2</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#n_area_3</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#n_area_4</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#invisible_point</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef ref="date" />
-          <TargetAxisRef ref="N" />
+          <DomainAxisRef ref="date_axis" />
+          <TargetAxisRef ref="N_axis" />
         </MapperRefs>
       </Layer>
       <Layer id="W_NN">
@@ -219,19 +302,15 @@
             <Title>(Wasserstands)Höhe</Title>
             <Description />
             <Styles>
-              <LineStyle role="line_1">
-                <Width>2</Width>
-                <LineColor>000080</LineColor>
-              </LineStyle>
-              <PointStyle role="point" isVisible="false">
-              </PointStyle>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_nn_line_0</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#invisible_point</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef ref="date" />
-          <TargetAxisRef ref="W_NN" />
+          <DomainAxisRef ref="date_axis" />
+          <TargetAxisRef ref="W_NN_axis" />
         </MapperRefs>
       </Layer>
       <Layer id="V">
@@ -242,35 +321,19 @@
             <Title>Volumen</Title>
             <Description />
             <Styles>
-              <LineStyle role="v_line_0">
-                <Width>2</Width>
-                <LineColor>BDAB7A</LineColor>
-              </LineStyle>
-              <LineStyle role="v_line_1">
-                <Width>2</Width>
-                <LineColor>769844</LineColor>
-              </LineStyle>
-              <LineStyle role="v_line_2">
-                <Width>2</Width>
-                <LineColor>DFD0A7</LineColor>
-              </LineStyle>
-              <LineStyle role="v_line_3">
-                <Width>2</Width>
-                <LineColor>4D3907</LineColor>
-              </LineStyle>
-              <LineStyle role="v_line_4">
-                <Width>2</Width>
-                <LineColor>998652</LineColor>
-              </LineStyle>
-              <PointStyle role="v_point" isVisible="false">
-              </PointStyle>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_line_0</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_line_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_line_2</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_line_3</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_line_4</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#invisible_point</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef ref="date" />
-          <TargetAxisRef ref="V" />
+          <DomainAxisRef ref="date_axis" />
+          <TargetAxisRef ref="V_axis" />
         </MapperRefs>
       </Layer>
       <Layer id="forecastLayer" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -282,7 +345,7 @@
         <Title>Vorhersagezeitraum</Title>
         <Description />
         <MapperRefs>
-          <DomainAxisRef ref="date" />
+          <DomainAxisRef ref="date_axis" />
           <TargetAxisRef ref="screenAxisY" />
         </MapperRefs>
       </Layer>
@@ -313,7 +376,7 @@
       </Layer>
     </Layers>
     <Mappers>
-      <Axis id="W" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="W_axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Wasserstand [cm]</Label>
         <Direction>POSITIVE</Direction>
@@ -321,7 +384,7 @@
         <PreferredAdjustment before="15" range="75" after="10" />
         <RendererRef ref="AutoNumberAxisRenderer" />
       </Axis>
-      <Axis id="Q" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="Q_axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Abfluss [m³]</Label>
         <Direction>POSITIVE</Direction>
@@ -329,15 +392,15 @@
         <PreferredAdjustment before="15" range="75" after="10" />
         <RendererRef ref="AutoNumberAxisRenderer" />
       </Axis>
-      <Axis id="N" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="N_axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Niederschlag [mm]</Label>
         <Direction>NEGATIVE</Direction>
         <Position>RIGHT</Position>
-        <PreferredAdjustment before="2" range="48" after="50" />
+        <PreferredAdjustment before="0" range="50" after="50" />
         <RendererRef ref="AutoNumberAxisRenderer" />
       </Axis>
-      <Axis id="W_NN" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="W_NN_axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Wasserstand [mNN]</Label>
         <Direction>POSITIVE</Direction>
@@ -345,7 +408,7 @@
         <PreferredAdjustment before="15" range="75" after="10" />
         <RendererRef ref="AutoNumberAxisRenderer" />
       </Axis>
-      <Axis id="V" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="V_axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Volumen [hm³]</Label>
         <Direction>POSITIVE</Direction>
@@ -353,7 +416,7 @@
         <PreferredAdjustment before="15" range="75" after="10" />
         <RendererRef ref="AutoNumberAxisRenderer" />
       </Axis>
-      <Axis id="date" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="date_axis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Datum</Label>
         <Direction>POSITIVE</Direction>
