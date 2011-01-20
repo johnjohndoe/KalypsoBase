@@ -60,22 +60,21 @@ public class ZmlTableMemento implements IZmlTableMemento
   private final Set<IZmlDiagramElement> m_elements = new HashSet<IZmlDiagramElement>();
 
   /**
-   * @see org.kalypso.zml.ui.table.memento.IZmlTableMemento#register(org.kalypso.zml.ui.core.element.IZmlDiagramElement)
-   */
-  @Override
-  public void register( final IZmlDiagramElement element )
-  {
-    m_elements.add( element );
-
-  }
-
-  /**
    * @see org.kalypso.zml.ui.table.memento.IZmlTableMemento#dispose()
    */
   @Override
   public void dispose( )
   {
     m_elements.clear();
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.memento.IZmlTableMemento#register(org.kalypso.zml.ui.core.element.IZmlDiagramElement)
+   */
+  @Override
+  public void register( final IZmlDiagramElement element )
+  {
+    m_elements.add( element );
   }
 
   /**
@@ -96,7 +95,6 @@ public class ZmlTableMemento implements IZmlTableMemento
           final KeyInfo info = pool.getInfo( observation );
           if( info.isDirty() )
           {
-
 // System.out.println( String.format( "Saving observation: %s", observation.getHref() ) );
             pool.saveObject( observation, new NullProgressMonitor() );
           }

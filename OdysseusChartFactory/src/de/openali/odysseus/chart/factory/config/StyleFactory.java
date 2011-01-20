@@ -142,7 +142,6 @@ public final class StyleFactory
 
   public static IStyleSet createStyleSet( final Styles styles, final ReferencableType[] baseTypes, final URL context )
   {
-
     final IStyleSet styleSet = new StyleSet();
     if( styles != null )
     {
@@ -203,6 +202,12 @@ public final class StyleFactory
           else
           {
             final AbstractStyleType styleType = resolver.findStyleType( reference, context );
+            if( styleType == null )
+            {
+              System.out.println( String.format( "StyleFactory - Missing style refernce: %s", reference ) );
+              continue;
+            }
+
             final IStyle style = StyleFactory.createStyle( styleType, context );
 
             // save configuration type so it can be used for saving to chart file
