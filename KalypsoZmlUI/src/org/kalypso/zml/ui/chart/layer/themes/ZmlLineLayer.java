@@ -64,8 +64,7 @@ import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author Dirk Kuch
@@ -79,9 +78,9 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private IZmlLayerDataHandler m_handler;
 
-  protected ZmlLineLayer( final ILayerProvider provider, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  protected ZmlLineLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
-    super( provider, lineStyle, pointStyle );
+    super( provider, styleSet );
   }
 
   /**
@@ -90,7 +89,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public ZmlLineLayer clone( )
   {
-    return new ZmlLineLayer( getProvider(), getLineStyle(), getPointStyle() );
+    return new ZmlLineLayer( getProvider(), getStyleSet() );
   }
 
   /**

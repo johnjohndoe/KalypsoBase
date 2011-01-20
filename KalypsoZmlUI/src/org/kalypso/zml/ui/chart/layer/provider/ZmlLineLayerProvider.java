@@ -54,10 +54,7 @@ import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
@@ -75,16 +72,11 @@ public class ZmlLineLayerProvider extends AbstractLayerProvider implements ILaye
     try
     {
       final IStyleSet styleSet = getStyleSet();
-      final StyleSetVisitor visitor = new StyleSetVisitor();
-
-      final ILineStyle lineStyle = visitor.visit( styleSet, ILineStyle.class, 0 );
-      final IPointStyle pointStyle = visitor.visit( styleSet, IPointStyle.class, 0 );
-
       final String targetAxisId = getTargetAxisId();
 
       final ZmlLayerFactory factory = ZmlLayerFactory.getInstance();
 
-      final ZmlLineLayer layer = factory.createLineLayer( this, lineStyle, pointStyle );
+      final ZmlLineLayer layer = factory.createLineLayer( this, styleSet );
       final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, targetAxisId );
 
       final IParameterContainer parameters = getParameterContainer();

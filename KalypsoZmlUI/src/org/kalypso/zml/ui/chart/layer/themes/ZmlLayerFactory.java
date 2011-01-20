@@ -45,8 +45,6 @@ import org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider;
 
 import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
@@ -68,16 +66,16 @@ public final class ZmlLayerFactory
     return INSTANCE;
   }
 
-  public ZmlLineLayer createLineLayer( final ZmlLineLayerProvider provider, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public ZmlLineLayer createLineLayer( final ZmlLineLayerProvider provider, final IStyleSet styleSet )
   {
-    final ZmlLineLayer layer = new ZmlLineLayer( provider, lineStyle, pointStyle );
+    final ZmlLineLayer layer = new ZmlLineLayer( provider, styleSet );
 
     return layer;
   }
 
-  public ZmlLineLayer createLineLayer( final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public ZmlLineLayer createLineLayer( final IStyleSet styleSet )
   {
-    return createLineLayer( null, lineStyle, pointStyle );
+    return createLineLayer( null, styleSet );
   }
 
   public ZmlBarLayer createBarLayer( final ZmlBarLayerProvider provider, final IAreaStyle style )
