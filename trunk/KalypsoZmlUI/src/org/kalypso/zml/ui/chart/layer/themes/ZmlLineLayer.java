@@ -57,14 +57,18 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
-import de.openali.odysseus.chart.factory.provider.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
@@ -77,6 +81,8 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   private final IDataOperator<Number> m_numberDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
 
   private IZmlLayerDataHandler m_handler;
+
+  private boolean m_stylesUpdated = false;
 
   protected ZmlLineLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
@@ -245,6 +251,8 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   {
     try
     {
+      udpateStyles();
+
       final ITupleModel model = m_handler.getModel();
       if( model == null )
         return;
@@ -279,6 +287,27 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
+  }
+
+  private void udpateStyles( )
+  {
+    if( m_stylesUpdated )
+      return;
+
+    final IStyleSet styleSet = getStyleSet();
+    final int index = ZmlLayerHelper.getLayerIndex( getId() );
+
+    final StyleSetVisitor visitor = new StyleSetVisitor();
+
+    final IPointStyle pointStyle = visitor.visit( styleSet, IPointStyle.class, index );
+    final ILineStyle lineStyle = visitor.visit( styleSet, ILineStyle.class, index );
+    final ITextStyle textStyle = visitor.visit( styleSet, ITextStyle.class, index );
+
+    getPointFigure().setStyle( pointStyle );
+    getPolylineFigure().setStyle( lineStyle );
+    getTextFigure().setStyle( textStyle );
+
+    m_stylesUpdated = true;
   }
 
   /**

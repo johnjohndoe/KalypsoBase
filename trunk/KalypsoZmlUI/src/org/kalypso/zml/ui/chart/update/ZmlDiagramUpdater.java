@@ -106,12 +106,21 @@ public class ZmlDiagramUpdater implements Runnable, IClonedLayer
   {
     for( final IZmlLayer baseLayer : layers )
     {
+      if( !supportsMultiSelect( baseLayer ) && index > 1 )
+        return;
+
       final IZmlLayer layer = buildLayer( baseLayer, index );
 
       final IZmlLayerDataHandler handler = layer.getDataHandler();
       if( handler instanceof ZmlObsProviderDataHandler )
         ((ZmlObsProviderDataHandler) handler).setObsProvider( provider );
     }
+  }
+
+  private boolean supportsMultiSelect( final IZmlLayer layer )
+  {
+
+    return false;
   }
 
   private IZmlLayer buildLayer( final IZmlLayer baseLayer, final int index )
@@ -122,7 +131,7 @@ public class ZmlDiagramUpdater implements Runnable, IClonedLayer
     final IZmlLayer layer = baseLayer.clone();
     layer.setId( String.format( CLONED_LAYER_POSTFIX_FORMAT, baseLayer.getId(), index ) );
 
-    baseLayer.getLayerManager().addLayer( layer );
+    baseLayer.getParent().getLayerManager().addLayer( layer );
 
     return layer;
   }

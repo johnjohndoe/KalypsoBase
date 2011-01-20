@@ -46,9 +46,9 @@ import java.util.Map;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.chart.ext.test.mapper.RGBMapper;
 
-import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.factory.config.parameters.impl.RGBParser;
 import de.openali.odysseus.chart.factory.provider.AbstractMapperProvider;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author alibu

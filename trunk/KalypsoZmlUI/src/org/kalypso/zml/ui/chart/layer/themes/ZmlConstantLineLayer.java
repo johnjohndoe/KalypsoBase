@@ -56,10 +56,10 @@ import org.kalypso.zml.ui.chart.layer.boundaries.IMetadataLayerBoundary;
 import org.kalypso.zml.ui.chart.layer.boundaries.MetadataLayerBoundaryBuilder;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
-import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 

@@ -1,4 +1,4 @@
-package de.openali.odysseus.chart.factory.config.parameters;
+package de.openali.odysseus.chart.framework.model.layer;
 
 import java.util.List;
 import java.util.Map;

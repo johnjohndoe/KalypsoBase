@@ -58,7 +58,7 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.ui.core.kod.KodUtils;
 
 import de.openali.odysseus.chart.factory.config.StyleFactory;
-import de.openali.odysseus.chart.factory.config.parameters.IParameterContainer;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chartconfig.x020.LayerType;
 
