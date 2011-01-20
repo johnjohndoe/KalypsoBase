@@ -119,6 +119,9 @@ public class SetVisibilityChartModelVisitor implements IChartLayerVisitor
         try
         {
           final IObservation observation = provider.getObservation();
+          if( observation == null )
+            return false;
+
           final ITupleModel model = observation.getValues( null );
           if( model.size() > 0 )
             return false;

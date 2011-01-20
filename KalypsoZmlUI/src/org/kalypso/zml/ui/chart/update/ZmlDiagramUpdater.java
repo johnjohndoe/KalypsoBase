@@ -52,6 +52,8 @@ import org.kalypso.zml.ui.core.zml.MultipleTsLink;
 import org.kalypso.zml.ui.core.zml.TSLinkWithName;
 
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch
@@ -106,8 +108,8 @@ public class ZmlDiagramUpdater implements Runnable, IClonedLayer
   {
     for( final IZmlLayer baseLayer : layers )
     {
-      if( !supportsMultiSelect( baseLayer ) && index > 1 )
-        return;
+      if( !supportsMultiSelect( baseLayer ) && index > 0 )
+        continue;
 
       final IZmlLayer layer = buildLayer( baseLayer, index );
 
@@ -119,8 +121,17 @@ public class ZmlDiagramUpdater implements Runnable, IClonedLayer
 
   private boolean supportsMultiSelect( final IZmlLayer layer )
   {
+    final ILayerProvider provider = layer.getProvider();
+    if( provider == null )
+      return false;
 
-    return false;
+    final IParameterContainer container = provider.getParameterContainer();
+    if( container == null )
+      return false;
+
+    final String property = container.getParameterValue( "supportsMultiSelect", "false" );
+
+    return Boolean.valueOf( property );
   }
 
   private IZmlLayer buildLayer( final IZmlLayer baseLayer, final int index )
@@ -130,6 +141,7 @@ public class ZmlDiagramUpdater implements Runnable, IClonedLayer
 
     final IZmlLayer layer = baseLayer.clone();
     layer.setId( String.format( CLONED_LAYER_POSTFIX_FORMAT, baseLayer.getId(), index ) );
+    layer.setDataHandler( new ZmlObsProviderDataHandler( layer, baseLayer.getDataHandler().getTargetAxisId() ) );
 
     baseLayer.getParent().getLayerManager().addLayer( layer );
 
