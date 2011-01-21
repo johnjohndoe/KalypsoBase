@@ -48,7 +48,7 @@ import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisito
 /**
  * @author Dirk Kuch
  */
-public class RemoveClonedLayerVisitor implements IChartLayerVisitor, IClonedLayer
+public class RemoveClonedLayerVisitor implements IChartLayerVisitor
 {
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
@@ -60,7 +60,7 @@ public class RemoveClonedLayerVisitor implements IChartLayerVisitor, IClonedLaye
 
     if( layer instanceof IZmlLayer )
     {
-      if( layer.getId().contains( CLONED_LAYER_POSTFIX ) )
+      if( layer.getId().contains( IClonedLayer.CLONED_LAYER_POSTFIX ) )
         layer.getParent().getLayerManager().removeLayer( layer );
     }
   }

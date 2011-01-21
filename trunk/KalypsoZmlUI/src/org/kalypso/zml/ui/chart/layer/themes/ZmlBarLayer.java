@@ -71,7 +71,7 @@ import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
  * @author Dirk Kuch
  * @author kimwerner
  */
-public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
+public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer, Cloneable
 {
   private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
 

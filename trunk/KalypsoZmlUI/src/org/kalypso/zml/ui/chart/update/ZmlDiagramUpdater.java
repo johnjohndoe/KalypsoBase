@@ -58,7 +58,7 @@ import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 /**
  * @author Dirk Kuch
  */
-public class ZmlDiagramUpdater implements Runnable, IClonedLayer
+public class ZmlDiagramUpdater implements Runnable
 {
   private final Set<IObsProvider> m_providers = new LinkedHashSet<IObsProvider>();
 
@@ -140,7 +140,7 @@ public class ZmlDiagramUpdater implements Runnable, IClonedLayer
       return baseLayer;
 
     final IZmlLayer layer = baseLayer.clone();
-    layer.setId( String.format( CLONED_LAYER_POSTFIX_FORMAT, baseLayer.getId(), index ) );
+    layer.setId( String.format( IClonedLayer.CLONED_LAYER_POSTFIX_FORMAT, baseLayer.getId(), index ) );
     layer.setDataHandler( new ZmlObsProviderDataHandler( layer, baseLayer.getDataHandler().getTargetAxisId() ) );
 
     baseLayer.getParent().getLayerManager().addLayer( layer );

@@ -48,7 +48,7 @@ import org.kalypso.zml.ui.chart.update.IClonedLayer;
 /**
  * @author Dirk Kuch
  */
-public final class ZmlLayerHelper implements IClonedLayer
+public final class ZmlLayerHelper
 {
   private ZmlLayerHelper( )
   {
@@ -56,10 +56,10 @@ public final class ZmlLayerHelper implements IClonedLayer
 
   public static int getLayerIndex( final String identifier )
   {
-    if( !identifier.contains( CLONED_LAYER_POSTFIX ) )
+    if( !identifier.contains( IClonedLayer.CLONED_LAYER_POSTFIX ) )
       return 0;
 
-    final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*" + CLONED_LAYER_POSTFIX ), identifier );
+    final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*" + IClonedLayer.CLONED_LAYER_POSTFIX ), identifier );
     final String token = tokenizer.nextToken();
 
     return Integer.valueOf( token );
