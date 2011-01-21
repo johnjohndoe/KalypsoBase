@@ -67,7 +67,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
  * @author Dirk Kuch
  * @author kimwerner
  */
-public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
+public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer, Cloneable
 {
   private ZmlConstantLineBean[] m_descriptors = new ZmlConstantLineBean[] {};
 

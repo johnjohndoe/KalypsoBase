@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,30 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.update;
+package org.kalypso.zml.core.table.binding;
 
-import org.kalypso.zml.core.diagram.layer.IZmlLayer;
-
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import jregex.Pattern;
 
 /**
  * @author Dirk Kuch
  */
-public class RemoveClonedLayerVisitor implements IChartLayerVisitor
+public interface IClonedColumn
 {
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  @Override
-  public void visit( final IChartLayer layer )
-  {
-    layer.getLayerManager().accept( this );
+  String CLONED_COLUMN_POSTFIX = "_clone_"; // $NON-NLS-1$
 
-    if( layer instanceof IZmlLayer )
-    {
-      if( layer.getId().contains( IClonedLayer.CLONED_LAYER_POSTFIX ) )
-        layer.getParent().getLayerManager().removeLayer( layer );
-    }
-  }
+  /** example: baseLayerId _clone_ cloneNumber */
+  String CLONED_COLUMN_POSTFIX_FORMAT = "%s" + CLONED_COLUMN_POSTFIX + "%d"; // $NON-NLS-1$
+
+  Pattern PATTERN_CLONED_COLUMN_IDENTIFIER = new Pattern( ".*_clone_\\d+$" ); // $NON-NLS-1$
+
+  Pattern PATTERN_CLONED_COLUMN_TOKENIZER = new Pattern( "_clone_\\d+$" ); // $NON-NLS-1$
 }

@@ -47,7 +47,6 @@ import java.util.Map;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
-import jregex.Pattern;
 import jregex.RETokenizer;
 
 import org.apache.commons.lang.NotImplementedException;
@@ -73,10 +72,6 @@ import org.kalypso.zml.core.table.schema.ZmlTableType;
 public final class TableTypeHelper
 {
   private static final QName PROPERTY_NAME = new QName( "name" ); //$NON-NLS-1$
-
-  public static final Pattern PATTERN_CLONED_COLUMN_IDENTIFIER = new Pattern( ".*\\(\\d+\\)$" ); //$NON-NLS-1$
-
-  public static final Pattern PATTERN_CLONED_COLUMN_TOKENIZER = new Pattern( "\\(\\d+\\)$" ); //$NON-NLS-1$
 
   private TableTypeHelper( )
   {
@@ -180,10 +175,10 @@ public final class TableTypeHelper
 
     String id = identifier;
 
-    /** cloned, multiple column entry?!? like W(1) or W(3) */
-    if( PATTERN_CLONED_COLUMN_IDENTIFIER.matches( identifier ) )
+    /** cloned, multiple column entry?!? like W_clone_1 or W_clone_3 */
+    if( IClonedColumn.PATTERN_CLONED_COLUMN_IDENTIFIER.matches( identifier ) )
     {
-      final RETokenizer tokenizer = new RETokenizer( PATTERN_CLONED_COLUMN_TOKENIZER, identifier );
+      final RETokenizer tokenizer = new RETokenizer( IClonedColumn.PATTERN_CLONED_COLUMN_TOKENIZER, identifier );
       id = tokenizer.nextToken();
     }
 

@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table.update;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.zml.core.table.binding.BaseColumn;
+import org.kalypso.zml.core.table.binding.IClonedColumn;
 import org.kalypso.zml.core.table.binding.TableTypeHelper;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.core.element.ZmlLinkDiagramElement;
@@ -83,61 +84,61 @@ public class ZmlTableUpdater implements Runnable
       final TSLinkWithName[] links = multipleLink.getLinks();
       if( ArrayUtils.isEmpty( links ) )
         continue;
-      else if( links.length == 1 )
+
+      final String identifier = multipleLink.getIdentifier();
+
+      for( int index = 0; index < links.length; index++ )
       {
-        final ZmlLinkDiagramElement element = new ZmlLinkDiagramElement( links[0] );
-        m_part.getModel().loadColumn( element );
-        m_part.getMemento().register( element );
-      }
-      else
-      {
-        final String identifier = multipleLink.getIdentifier();
+        final TSLinkWithName link = links[index];
 
-        for( int index = 0; index < links.length; index++ )
-        {
-          if( index == 0 )
-          {
-            final ZmlLinkDiagramElement element = new ZmlLinkDiagramElement( links[index] );
-            m_part.getModel().loadColumn( element );
-            m_part.getMemento().register( element );
-          }
-          else
-          {
-            final String multipleIdentifier = String.format( "%s(%d)", identifier, index );
-            duplicateColumn( identifier, multipleIdentifier );
+        update( link, identifier, index );
 
-            final ZmlLinkDiagramElement element = new ZmlLinkDiagramElement( links[index] )
-            {
-              @Override
-              public String getIdentifier( )
-              {
-                return multipleIdentifier;
-              }
-            };
-
-            m_part.getModel().loadColumn( element );
-            m_part.getMemento().register( element );
-          }
-        }
       }
     }
   }
 
-  public void duplicateColumn( final String identifier, final String newIdentifier )
+  private void update( final TSLinkWithName link, final String identifier, final int index )
   {
+    final ZmlLinkDiagramElement element;
+
+    if( index == 0 )
+    {
+      element = new ZmlLinkDiagramElement( link );
+    }
+    else
+    {
+      final String multipleIdentifier = duplicateColumn( identifier, index );
+
+      element = new ZmlLinkDiagramElement( link )
+      {
+        @Override
+        public String getIdentifier( )
+        {
+          return multipleIdentifier;
+        }
+      };
+    }
+
+    m_part.getModel().loadColumn( element );
+    m_part.getMemento().register( element );
+  }
+
+  public String duplicateColumn( final String identifier, final int index )
+  {
+    final String multipleIdentifier = String.format( IClonedColumn.CLONED_COLUMN_POSTFIX_FORMAT, identifier, index );
     final IZmlTable table = m_part.getTable();
 
     // column already exists?
     for( final IZmlTableColumn column : table.getColumns() )
     {
       final BaseColumn columnType = column.getColumnType();
-      if( columnType.getIdentifier().equals( newIdentifier ) )
-        return;
+      if( columnType.getIdentifier().equals( index ) )
+        return multipleIdentifier;
     }
 
     final AbstractColumnType base = TableTypeHelper.finColumn( m_part.getModel().getTableType(), identifier );
     final AbstractColumnType clone = TableTypeHelper.cloneColumn( base );
-    clone.setId( newIdentifier );
+    clone.setId( multipleIdentifier );
 
     /** only one rule / style set! */
     final ZmlTableColumnBuilder builder = new ZmlTableColumnBuilder( m_part.getTable(), new BaseColumn( base )
@@ -145,7 +146,7 @@ public class ZmlTableUpdater implements Runnable
       @Override
       public String getIdentifier( )
       {
-        return newIdentifier;
+        return multipleIdentifier;
       }
 
       @Override
@@ -157,6 +158,6 @@ public class ZmlTableUpdater implements Runnable
 
     builder.execute( new NullProgressMonitor() );
 
+    return multipleIdentifier;
   }
-
 }

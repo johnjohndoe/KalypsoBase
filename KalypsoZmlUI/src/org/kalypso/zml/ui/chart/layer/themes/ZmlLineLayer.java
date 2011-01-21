@@ -74,7 +74,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
  * @author Dirk Kuch
  * @author kimwerner
  */
-public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
+public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Cloneable
 {
   private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
 
