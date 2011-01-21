@@ -108,7 +108,6 @@ public class ZmlTableUpdater implements Runnable
     else
     {
       final String multipleIdentifier = duplicateColumn( identifier, index );
-
       element = new ZmlLinkDiagramElement( link )
       {
         @Override
