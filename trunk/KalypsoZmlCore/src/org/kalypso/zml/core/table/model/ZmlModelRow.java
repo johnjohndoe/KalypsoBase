@@ -92,7 +92,7 @@ public class ZmlModelRow implements IZmlModelRow
     if( column == null )
       return null;
 
-    return get( column.getDataColumn().getType() );
+    return m_references.get( column.getIdentifier() );
   }
 
   @Override
