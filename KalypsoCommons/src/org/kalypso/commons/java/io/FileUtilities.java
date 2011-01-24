@@ -297,6 +297,33 @@ public class FileUtilities
   }
 
   /**
+   * This function creates a file handle in the temporary directory. It ensures, that the file does not exist already.
+   * 
+   * @param prefix
+   *          The prefix will be used in front of the generated name. If empty or null it will be <xode>tmp</code>.
+   * @param extension
+   *          The extension of the temporary file. If empty or null it will be <xode>dat</code>.
+   * @return A file handle in the temporary directory, whose file does not exist.
+   */
+  public static File getNewTempFile( String prefix, String extension )
+  {
+    /* A prefix is needed. */
+    if( prefix == null || prefix.length() == 0 )
+      prefix = "tmp";
+
+    /* An extension is needed. */
+    if( extension == null || extension.length() == 0 )
+      extension = "dat";
+
+    /* Create a new file handle, as long as the file exists. */
+    File tmpFile = new File( FileUtilities.TMP_DIR, String.format( "%s_%s.%s", prefix, String.valueOf( System.currentTimeMillis() ), extension ) );
+    while( tmpFile.exists() )
+      tmpFile = new File( FileUtilities.TMP_DIR, String.format( "%s_%s.%s", prefix, String.valueOf( System.currentTimeMillis() ), extension ) );
+
+    return tmpFile;
+  }
+
+  /**
    * Creates a temp directory in java.io.tmpdir.
    * 
    * @param prefix
@@ -870,8 +897,8 @@ public class FileUtilities
 
   /**
    * Compress the given by sourceFileURL {@link URL} file into given by outputDirURL directory with compression
-   * specified by compressKind. Supported compression is "gz", with null or empty string provided as
-   * compressKind the file will be just copied.
+   * specified by compressKind. Supported compression is "gz", with null or empty string provided as compressKind the
+   * file will be just copied.
    */
   public static FileObject compressFileContent( final URL sourceFileURL, final URL outputDirURL, final String compressKind )
   {
@@ -936,8 +963,8 @@ public class FileUtilities
 
   /**
    * uncompress the given by sourceFileURL {@link URL} file into given by outputDirURL {@link URL} directory supported
-   * compression are: "gz". If the compressKind parametr is set, the content will be recompress according to
-   * this parameter after uncompressing.
+   * compression are: "gz". If the compressKind parametr is set, the content will be recompress according to this
+   * parameter after uncompressing.
    */
   public static FileObject uncompressFileContent( final URL sourceFileURL, final URL outputDirURL, final String compressKind )
   {
