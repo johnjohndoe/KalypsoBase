@@ -98,7 +98,9 @@ public class PDFExporter
       monitor.subTask( "Erzeuge Inhalt..." );
 
       /* Create the image. */
-      BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapPanel, (int) PageSize.A4.getWidth(), (int) PageSize.A4.getHeight() );
+      BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapPanel, (int) PageSize.A4.getHeight(), (int) PageSize.A4.getWidth() );
+
+      /* Convert to an itext image. */
       Image img = Image.getInstance( image, null );
 
       /* Monitor. */
@@ -108,7 +110,7 @@ public class PDFExporter
       os = new BufferedOutputStream( new FileOutputStream( targetFile ) );
 
       /* Create a new document. */
-      Document document = new Document( PageSize.A4, 50, 50, 50, 50 );
+      Document document = new Document( new com.itextpdf.text.Rectangle( PageSize.A4.getHeight(), PageSize.A4.getWidth() ), 30, 30, 30, 30 );
 
       /* Create the pdf writter. */
       PdfWriter writer = PdfWriter.getInstance( document, os );
@@ -118,7 +120,7 @@ public class PDFExporter
       document.open();
 
       /* Set the position. */
-      img.setAbsolutePosition( (PageSize.A4.getWidth() - img.getScaledWidth()) / 2, (PageSize.A4.getHeight() - img.getScaledHeight()) / 2 );
+      img.setAbsolutePosition( 0, 0 );
 
       /* Set to the pdf. */
       writer.getDirectContent().addImage( img, true );
