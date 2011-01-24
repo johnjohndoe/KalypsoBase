@@ -80,6 +80,8 @@ public final class LayerTypeHelper
       return;
 
     final ParametersType baseType = provider.getParameters();
+    if( baseType == null )
+      return;
 
     final ParameterType[] array = parameters.getParameterArray();
     for( final ParameterType parameter : array )

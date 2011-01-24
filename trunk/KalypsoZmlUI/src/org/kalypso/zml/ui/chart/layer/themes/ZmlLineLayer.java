@@ -47,6 +47,7 @@ import java.util.List;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -199,9 +200,13 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
       if( model == null )
         return null;
 
+      final IAxis axis = m_handler.getValueAxis();
+      if( axis == null )
+        return null;
+
       if( domainIntervall == null )
       {
-        final IAxisRange range = model.getRange( m_handler.getValueAxis() );
+        final IAxisRange range = model.getRange( axis );
         if( range == null )
           return null;
 
@@ -224,11 +229,11 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
             continue;
           if( minValue == null && ((Date) domainValue).getTime() > domainIntervall.getMin().longValue() )
           {
-            minValue = (Number) model.get( i - 1, m_handler.getValueAxis() );
+            minValue = (Number) model.get( i - 1, axis );
           }
           if( maxValue == null && ((Date) domainValue).getTime() > domainIntervall.getMax().longValue() )
           {
-            maxValue = (Number) model.get( i, m_handler.getValueAxis() );
+            maxValue = (Number) model.get( i, axis );
           }
         }
 

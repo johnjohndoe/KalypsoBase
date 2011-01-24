@@ -155,6 +155,9 @@ public class ChartLayerFactory extends AbstractChartFactory
       try
       {
         final LayerType type = resovler.findLayerType( reference, getContext() );
+        if( type == null )
+          throw new IllegalStateException( String.format( "Chart LayerTypeReference not found: %s", reference.getUrl() ) );
+
         final ILayerProvider provider = LayerTypeHelper.getLayerTypeProvider( getLoader(), type );
         final IChartLayer layer = buildLayer( type, provider, (ReferencableType[]) ArrayUtils.add( baseTypes, type ) );
         stack.add( layer );
