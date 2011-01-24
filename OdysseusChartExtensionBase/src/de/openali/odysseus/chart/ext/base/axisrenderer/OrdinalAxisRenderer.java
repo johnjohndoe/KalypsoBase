@@ -102,23 +102,17 @@ public class OrdinalAxisRenderer implements IAxisRenderer
 
   public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IChartLabelRenderer tickLabelRenderer, final IAxisContentProvider contentProvider )
   {
-
     this( id, config, tickLabelRenderer, null, contentProvider );
-
   }
 
   public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IAxisContentProvider contentProvider )
   {
-
     this( id, config, null, null, contentProvider );
-
   }
 
   public OrdinalAxisRenderer( final String id, final AxisRendererConfig config )
   {
-
     this( id, config, null, null, new ArrayContentProvider() );
-
   }
 
   /**
@@ -180,8 +174,6 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   @Override
   public void dispose( )
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**
@@ -200,10 +192,9 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     if( range.getMin() == null || range.getMax() == null )
       return;
 
-
     final ITextStyle tickLabelStyle = m_config.labelStyle;
     final ILineStyle tickLineStyle = m_config.tickLineStyle;
- 
+
     for( int i = 0; i < m_contentProvider.size(); i++ )
     {
       final int y1, y2, x1, x2;
@@ -352,6 +343,7 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     final Number[] tickPos = new Number[m_contentProvider.size()];
     if( m_fixedWidth > 0 )
     {
+      // FIXME
       final int tickDist = Math.max( m_fixedWidth, axis.getScreenHeight() / intervallCount ) - 1/* Pixel */;
       int pos = -tickDist * start;
       if( getTickLabelRenderer( axis ).getAlignmentX() == ALIGNMENT.TICK_CENTERED )
@@ -364,7 +356,7 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     }
     else
     {
-// FIXME : not tested anywhere
+      // FIXME : not tested anywhere
       Number sumWidth = 0;
       for( int i = start; i <= end; i++ )
       {

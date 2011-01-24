@@ -66,17 +66,12 @@ public class MaximizeViewHandler extends AbstractHandler
         {
           IDataRange<Number> range = null;
           if( axis == layer.getCoordinateMapper().getDomainAxis() )
-          {
             range = layer.getDomainRange();
-          }
           else if( axis == layer.getCoordinateMapper().getTargetAxis() )
-          {
             range = layer.getTargetRange( null );
-          }
+
           if( range != null )
-          {
             ranges.add( range );
-          }
         }
       }
       IDataRange<Number> mergedDataRange = ChartUtilities.mergeDataRanges( ranges.toArray( new IDataRange[ranges.size()] ) );
@@ -122,7 +117,6 @@ public class MaximizeViewHandler extends AbstractHandler
         screenMinsVert.add( smin );
         screenMaxsVert.add( smax );
       }
-
     }
 
     // Horizontales Minumum berechnen
@@ -152,5 +146,4 @@ public class MaximizeViewHandler extends AbstractHandler
 
     return null;
   }
-
 }

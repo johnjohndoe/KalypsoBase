@@ -170,12 +170,11 @@ public class ChartModel implements IChartModel
           }
         }
       }
-      IDataRange<Number> mergedDataRange = ChartUtilities.mergeDataRanges( ranges.toArray( new IDataRange[ranges.size()] ) );
 
+      IDataRange<Number> mergedDataRange = ChartUtilities.mergeDataRanges( ranges.toArray( new IDataRange[ranges.size()] ) );
       if( mergedDataRange == null )
       {
-        // if mergedDataRange is null, we keep the old range - if there
-        // is any
+        // if mergedDataRange is null, we keep the old range - if there is any
         if( axis.getNumericRange() != null )
         {
           continue;

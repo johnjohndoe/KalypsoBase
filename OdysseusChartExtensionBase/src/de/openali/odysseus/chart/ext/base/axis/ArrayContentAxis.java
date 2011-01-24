@@ -16,12 +16,11 @@ public class ArrayContentAxis extends AbstractAxis
 
   public ArrayContentAxis( final String id, final POSITION pos, final AxisRendererConfig config )
   {
-    
-    this( id, pos,config,  null );
+    this( id, pos, config, null );
   }
 
   public ArrayContentAxis( final String id, final POSITION pos, final AxisRendererConfig config, final IAxisContentProvider contentProvider )
-  {//TODO more positions
+  {// TODO more positions
     super( id, POSITION.BOTTOM, Integer.class, new OrdinalAxisRenderer( id, config, null, contentProvider ) );
   }
 
@@ -45,15 +44,17 @@ public class ArrayContentAxis extends AbstractAxis
       return Integer.MIN_VALUE;
     return ticks[value.intValue()].intValue();
   }
-public Object numericToContent(final int index)
-{
-  final IAxisRenderer renderer= getRenderer();
-  if(renderer instanceof OrdinalAxisRenderer)
+
+  public Object numericToContent( final int index )
   {
-    return ((OrdinalAxisRenderer) renderer).getContent( index );
+    final IAxisRenderer renderer = getRenderer();
+    if( renderer instanceof OrdinalAxisRenderer )
+    {
+      return ((OrdinalAxisRenderer) renderer).getContent( index );
+    }
+    return null;
   }
-  return null;
-}
+
   /**
    * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#screenToNormalized(int)
    */
