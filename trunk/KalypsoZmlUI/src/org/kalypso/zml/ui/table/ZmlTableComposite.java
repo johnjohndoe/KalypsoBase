@@ -84,6 +84,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.provider.ZmlTableEventListener;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -459,5 +460,11 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public void add( final ExtendedZmlTableColumn column )
   {
     m_columns.add( column );
+  }
+
+  public void remove( final IExtendedZmlTableColumn column )
+  {
+    m_columns.remove( column );
+
   }
 }
