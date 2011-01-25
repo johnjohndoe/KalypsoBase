@@ -57,7 +57,7 @@ public final class KeyValueFactory
   }
 
   /**
-   * Creates a {@link IKeyValue} pair, that equals another pair iff both key AND value are equal.<br/>
+   * Creates a {@link IKeyValue} pair, that equals another pair if both key AND value are equal.<br/>
    * Works only, if pair created by this same method are compared.
    */
   public static <K, V> IKeyValue<K, V> createPairEqualsBoth( final K key, final V value )
@@ -66,7 +66,7 @@ public final class KeyValueFactory
   }
 
   /**
-   * Creates a {@link IKeyValue} pair, that equals another pair iff their keys are equal.<br/>
+   * Creates a {@link IKeyValue} pair, that equals another pair if their keys are equal.<br/>
    * Works only, if pair created by this same method are compared.
    */
   public static <K, V> IKeyValue<K, V> createPairEqualsKey( final K key, final V value )
@@ -75,12 +75,11 @@ public final class KeyValueFactory
   }
 
   /**
-   * Creates a {@link IKeyValue} pair, that equals another pair iff their values are equal.<br/>
+   * Creates a {@link IKeyValue} pair, that equals another pair if their values are equal.<br/>
    * Works only, if pair created by this same method are compared.
    */
   public static <K, V> IKeyValue<K, V> createPairEqualsValue( final K key, final V value )
   {
     return new KeyValueEqualsValue<K, V>( key, value );
   }
-
 }
