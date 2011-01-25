@@ -153,17 +153,7 @@ public class ScreenshotDialog extends Dialog
    */
   public ScreenshotDialog( Shell shell )
   {
-    super( shell );
-
-    m_dialogSettings = null;
-    m_targetPathText = null;
-    m_targetPath = null;
-    m_imageWidthText = null;
-    m_imageWidth = -1;
-    m_imageHeightText = null;
-    m_imageHeight = -1;
-    m_imageFormatViewer = null;
-    m_imageFormat = null;
+    this( shell, -1, -1 );
   }
 
   /**
@@ -174,15 +164,55 @@ public class ScreenshotDialog extends Dialog
    */
   public ScreenshotDialog( IShellProvider parentShell )
   {
+    this( parentShell, -1, -1 );
+  }
+
+  /**
+   * The constructor.
+   * 
+   * @param shell
+   *          The parent shell, or null to create a top-level shell.
+   * @param defaultWidth
+   *          The default width.
+   * @param defaultHeight
+   *          The default height.
+   */
+  public ScreenshotDialog( Shell shell, int defaultWidth, int defaultHeight )
+  {
+    super( shell );
+
+    m_dialogSettings = null;
+    m_targetPathText = null;
+    m_targetPath = null;
+    m_imageWidthText = null;
+    m_imageWidth = defaultWidth;
+    m_imageHeightText = null;
+    m_imageHeight = defaultHeight;
+    m_imageFormatViewer = null;
+    m_imageFormat = null;
+  }
+
+  /**
+   * The constructor.
+   * 
+   * @param parentShell
+   *          The object that returns the current parent shell.
+   * @param defaultWidth
+   *          The default width.
+   * @param defaultHeight
+   *          The default height.
+   */
+  public ScreenshotDialog( IShellProvider parentShell, int defaultWidth, int defaultHeight )
+  {
     super( parentShell );
 
     m_dialogSettings = null;
     m_targetPathText = null;
     m_targetPath = null;
     m_imageWidthText = null;
-    m_imageWidth = -1;
+    m_imageWidth = defaultWidth;
     m_imageHeightText = null;
-    m_imageHeight = -1;
+    m_imageHeight = defaultHeight;
     m_imageFormatViewer = null;
     m_imageFormat = null;
   }
@@ -283,6 +313,8 @@ public class ScreenshotDialog extends Dialog
     /* Create a text field. */
     m_imageWidthText = new Text( imageGroup, SWT.BORDER | SWT.RIGHT );
     m_imageWidthText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    if( m_imageWidth >= 0 )
+      m_imageWidthText.setText( String.format( "%d", m_imageWidth ) );
     m_imageWidthText.addModifyListener( new ModifyListener()
     {
       /**
@@ -312,6 +344,8 @@ public class ScreenshotDialog extends Dialog
     /* Create a text field. */
     m_imageHeightText = new Text( imageGroup, SWT.BORDER | SWT.RIGHT );
     m_imageHeightText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    if( m_imageHeight >= 0 )
+      m_imageHeightText.setText( String.format( "%d", m_imageHeight ) );
     m_imageHeightText.addModifyListener( new ModifyListener()
     {
       /**
@@ -485,18 +519,24 @@ public class ScreenshotDialog extends Dialog
       m_targetPathText.setText( targetPath );
 
     /* The width of the image. */
-    String imageWidth = m_dialogSettings.get( SETTINGS_IMAGE_WIDTH );
-    if( imageWidth != null && imageWidth.length() > 0 )
-      m_imageWidthText.setText( imageWidth );
-    else
-      m_imageWidthText.setText( "640" );
+    if( m_imageWidth < 0 )
+    {
+      String imageWidth = m_dialogSettings.get( SETTINGS_IMAGE_WIDTH );
+      if( imageWidth != null && imageWidth.length() > 0 )
+        m_imageWidthText.setText( imageWidth );
+      else
+        m_imageWidthText.setText( "640" );
+    }
 
     /* The height of the image. */
-    String imageHeight = m_dialogSettings.get( SETTINGS_IMAGE_HEIGHT );
-    if( imageHeight != null && imageHeight.length() > 0 )
-      m_imageHeightText.setText( imageHeight );
-    else
-      m_imageHeightText.setText( "480" );
+    if( m_imageHeight < 0 )
+    {
+      String imageHeight = m_dialogSettings.get( SETTINGS_IMAGE_HEIGHT );
+      if( imageHeight != null && imageHeight.length() > 0 )
+        m_imageHeightText.setText( imageHeight );
+      else
+        m_imageHeightText.setText( "480" );
+    }
 
     /* The format of the image. */
     String imageFormat = m_dialogSettings.get( SETTINGS_IMAGE_FORMAT );
