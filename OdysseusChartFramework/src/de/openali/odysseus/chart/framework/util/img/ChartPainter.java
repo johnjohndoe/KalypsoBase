@@ -55,6 +55,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.util.img.legend.ChartLegendCanvas;
 
 /**
  * @author kimwerner
@@ -70,7 +71,7 @@ public class ChartPainter
 
   final ChartTitlePainter m_titlePainter;
 
-  final ChartLegendPainter m_legendPainter;
+  final ChartLegendCanvas m_legendPainter;
 
   final ChartPlotPainter m_plotPainter;
 
@@ -83,7 +84,7 @@ public class ChartPainter
     final int left = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ) );
     final int right = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ) );
 
-    m_legendPainter = new ChartLegendPainter( model, new Rectangle( left, 0, size.width - left - right, size.height ) );
+    m_legendPainter = new ChartLegendCanvas( model, new Rectangle( left, 0, size.width - left - right, size.height ) );
 
     final int top = m_titlePainter.getSize().y + getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ) );
     final int bottom = m_legendPainter.getSize().y + getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ) );
