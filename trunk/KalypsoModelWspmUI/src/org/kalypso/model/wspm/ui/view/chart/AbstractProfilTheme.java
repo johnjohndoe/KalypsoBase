@@ -51,15 +51,11 @@ import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
-import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
-import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
-import de.openali.odysseus.chart.framework.model.layer.manager.LayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.visitors.EditableChartLayerVisitor;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
@@ -68,39 +64,39 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public abstract class AbstractProfilTheme extends AbstractProfilLayer implements IChartLayer
 {
-  private final ILayerManagerEventListener m_eventListener = new AbstractLayerManagerEventListener()
-  {
-    /**
-     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-     */
-    @Override
-    public void onLayerContentChanged( final IChartLayer layer )
-    {
-      fireLayerContentChanged();
-    }
-
-    /**
-     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-     */
-    @Override
-    public void onLayerMoved( final IChartLayer layer )
-    {
-      fireLayerContentChanged();
-    }
-
-    /**
-     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-     */
-    @Override
-    public void onLayerVisibilityChanged( final IChartLayer layer )
-    {
-      fireLayerContentChanged();
-    }
-  };
+//  private final ILayerManagerEventListener m_eventListener = new AbstractLayerManagerEventListener()
+//  {
+//    /**
+//     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+//     */
+//    @Override
+//    public void onLayerContentChanged( final IChartLayer layer )
+//    {
+//      fireLayerContentChanged();
+//    }
+//
+//    /**
+//     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+//     */
+//    @Override
+//    public void onLayerMoved( final IChartLayer layer )
+//    {
+//      fireLayerContentChanged();
+//    }
+//
+//    /**
+//     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+//     */
+//    @Override
+//    public void onLayerVisibilityChanged( final IChartLayer layer )
+//    {
+//      fireLayerContentChanged();
+//    }
+//  };
 
   private final String m_id;
 
-  private final ILayerManager m_layerManager = new LayerManager( this );
+//  private final ILayerManager m_layerManager = new LayerManager();
 
   private final String m_title;
 
@@ -115,18 +111,19 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 
     m_title = title;
     m_id = id;
+    getLayerManager().addLayer(chartLayers);
     setCoordinateMapper( cm );
-    m_layerManager.addListener( m_eventListener );
+//    m_layerManager.addListener( m_eventListener );
     if( chartLayers != null )
     {
       for( final IChartLayer layer : chartLayers )
       {
-        m_layerManager.addLayer( layer );
         layer.setCoordinateMapper( cm );
       }
+      getLayerManager().addLayer(chartLayers);
     }
   }
-
+  
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#commitDrag(org.eclipse.swt.graphics.Point,
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
@@ -304,11 +301,11 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     return m_id;
   }
 
-  @Override
-  public final ILayerManager getLayerManager( )
-  {
-    return m_layerManager;
-  }
+//  @Override
+//  public final ILayerManager getLayerManager( )
+//  {
+//    return m_layerManager;
+//  }
 
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetComponent()
@@ -369,7 +366,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     if( isLocked != isLocked() )
     {
       final EditableChartLayerVisitor visitor = new EditableChartLayerVisitor();
-      m_layerManager.accept( visitor );
+      getLayerManager().accept( visitor );
 
       for( final IEditableChartLayer layer : visitor.getLayers() )
       {

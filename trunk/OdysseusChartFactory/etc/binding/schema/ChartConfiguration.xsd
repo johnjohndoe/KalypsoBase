@@ -371,7 +371,7 @@
 								<simpleType>
 									<restriction base="int">
 										<minInclusive value="0" />
-										<maxInclusive value="100" />
+										<maxInclusive value="99" />
 									</restriction>
 								</simpleType>
 							</attribute>
@@ -387,10 +387,12 @@
 								<simpleType>
 									<restriction base="int">
 										<minInclusive value="0" />
-										<maxInclusive value="100" />
+										<maxInclusive value="99" />
 									</restriction>
 								</simpleType>
 							</attribute>
+							<attribute name="fixMinValue" type="decimal"  use="optional" />
+							<attribute name="fixMaxValue" type="decimal" use="optional" />
 						</complexType>
 					</element>
 					<element name="RendererRef" type="ods:ReferencingType" />
@@ -432,18 +434,28 @@
 	<element name="NumberRange" type="ods:AxisNumberRangeType"></element>
 
 	<complexType name="AxisNumberRangeRestrictionType">
-			<attribute name="absoluteMinValue" type="decimal" use="optional" />
-			<attribute name="absoluteMaxValue" type="decimal" use="optional" />
-			<attribute name="minRange" type="decimal" use="optional" />
-			<attribute name="maxRange" type="decimal" use="optional" />
+		<attribute name="absoluteMinValue" type="decimal" use="optional" /><!-- 
+			Grenze beim verschieben -->
+		<attribute name="absoluteMaxValue" type="decimal" use="optional" /><!-- 
+			Grenze beim verschieben -->
+		<attribute name="minRange" type="decimal" use="optional" /><!-- 
+			Grenze beim verkleinern -->
+		<attribute name="maxRange" type="decimal" use="optional" /><!-- 
+			Grenze beim vergrößern -->
+		<attribute name="fixMinValue" type="boolean" use="optional" /><!-- 
+			fixiere absoluteMinValue -->
+		<attribute name="fixMaxValue" type="boolean" use="optional" /><!-- 
+			fixiere absoluteMaxValue -->
 	</complexType>
 
 	<element name="AxisNumberRangeRestriction" type="ods:AxisNumberRangeRestrictionType"></element>
 	<complexType name="AxisDateRangeRestrictionType">
-			<attribute name="absoluteMinValue" type="dateTime" use="optional" />
-			<attribute name="absoluteMaxValue" type="dateTime" use="optional"/>
-			<attribute name="minRange" type="dateTime" use="optional"/>
-			<attribute name="maxRange" type="dateTime" use="optional"/>
+		<attribute name="absoluteMinValue" type="dateTime" use="optional" />
+		<attribute name="absoluteMaxValue" type="dateTime" use="optional" />
+		<attribute name="minRange" type="dateTime" use="optional" />
+		<attribute name="maxRange" type="dateTime" use="optional" />
+		<attribute name="fixMinValue" type="boolean" use="optional" />
+		<attribute name="fixMaxValue" type="boolean" use="optional" />
 	</complexType>
 
 	<element name="AxisDateRangeRestriction" type="ods:AxisDateRangeRestrictionType"></element>

@@ -56,6 +56,7 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -68,6 +69,7 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
+import de.openali.odysseus.chartconfig.x020.AxisNumberRangeRestrictionType;
 import de.openali.odysseus.chartconfig.x020.AxisNumberRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisRendererType;
 import de.openali.odysseus.chartconfig.x020.AxisStringRangeType;
@@ -152,6 +154,7 @@ public class ChartMapperFactory extends AbstractChartFactory
             axis.setLabel( axisType.getLabel() );
             axis.setPreferredAdjustment( getAxisAdjustment( axisType ) );
             axis.setNumericRange( getAxisRange( axis, axisType ) );
+            axis.setRangeRestriction( getRangeRestriction( axisType ) );
 
             mapperRegistry.addMapper( axis );
 
@@ -280,6 +283,27 @@ public class ChartMapperFactory extends AbstractChartFactory
     else
       aa = new AxisAdjustment( 0, 1, 0 );
     return aa;
+  }
+
+  private DataRangeRestriction<Number> getRangeRestriction( final AxisType at )
+  {
+    if( at.isSetAxisNumberRangeRestriction() )
+    {
+      final AxisNumberRangeRestrictionType rangeType = at.getAxisNumberRangeRestriction();
+      final Number min = rangeType.getAbsoluteMinValue();
+      final Number max = rangeType.getAbsoluteMaxValue();
+      final Number rangeMin = rangeType.getMinRange();
+      final Number rangeMax = rangeType.getMaxRange();
+      return new DataRangeRestriction<Number>( min == null ? -Double.MAX_VALUE : min, max == null ? Double.MAX_VALUE : max, rangeMin == null ? 0.0 : rangeMin, rangeMax == null ? Double.MAX_VALUE
+          : rangeMax );
+    }
+    else if( at.isSetAxisDateRangeRestriction() )
+    {
+      // TODO:return new DataRangeRestriction<Number>( ?,?,?,?);
+      return new DataRangeRestriction<Number>( null, null, null, null );
+    }
+    else
+      return null;
   }
 
   /**

@@ -194,8 +194,8 @@ public class ChartModel implements IChartModel
         final double adjRange = adj.getRange();
         final double adjAfter = adj.getAfter();
 
-        final double rangeMax = mergedDataRange.getMax().doubleValue();
-        final double rangeMin = mergedDataRange.getMin().doubleValue();
+        final double rangeMin = Math.min( adj.getMinValue().doubleValue(), mergedDataRange.getMin().doubleValue() );
+        final double rangeMax = Math.max( adj.getMaxValue().doubleValue(), mergedDataRange.getMax().doubleValue() );
 
         // computing preferred adjustment failed if rangesize==0.0, so we set a range minimum depends on adjustment
         final double rangeSize = rangeMax == rangeMin ? 1.0 : rangeMax - rangeMin;

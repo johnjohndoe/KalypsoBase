@@ -1,6 +1,7 @@
 package de.openali.odysseus.chart.framework.model.mapper;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
@@ -49,10 +50,18 @@ public interface IAxis extends IMapper
   IDataRange<Number> getNumericRange( );
 
   /**
+   * sets the internally used absolute Min-Max-Value
+   */
+  void setRangeRestriction( DataRangeRestriction<Number> range );
+  /**
+   * returns the internally absolute Min-Max-Value and min-max-intervall
+   */
+  IDataRange<Number> getRangeRestriction( );
+
+  /**
    * sets the internally used number range
    */
   void setNumericRange( IDataRange<Number> range );
-
   /**
    * transforms a screen position into a numeric value
    */
