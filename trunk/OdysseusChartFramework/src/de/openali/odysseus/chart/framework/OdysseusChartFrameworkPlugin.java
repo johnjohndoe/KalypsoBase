@@ -18,7 +18,7 @@ public class OdysseusChartFrameworkPlugin extends Plugin
   public static final String PLUGIN_ID = "de.openali.odysseus.chart.framework";
 
   // The shared instance
-  private static OdysseusChartFrameworkPlugin plugin;
+  private static OdysseusChartFrameworkPlugin PLUGIN;
 
   private ColorRegistry m_colorRegistry;
 
@@ -33,7 +33,7 @@ public class OdysseusChartFrameworkPlugin extends Plugin
    */
   public OdysseusChartFrameworkPlugin( )
   {
-    plugin = this;
+    PLUGIN = this;
   }
 
   /*
@@ -57,7 +57,7 @@ public class OdysseusChartFrameworkPlugin extends Plugin
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
-    plugin = null; // NOPMD by alibu on 17.02.08 17:43
+    PLUGIN = null; // NOPMD by alibu on 17.02.08 17:43
     super.stop( context );
     getColorRegistry().dispose();
     getImageRegistry().dispose();
@@ -72,7 +72,7 @@ public class OdysseusChartFrameworkPlugin extends Plugin
    */
   public static OdysseusChartFrameworkPlugin getDefault( )
   {
-    return plugin;
+    return PLUGIN;
   }
 
   public ColorRegistry getColorRegistry( )

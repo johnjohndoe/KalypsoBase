@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.util.img;
+package de.openali.odysseus.chart.framework.util.img.legend;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -51,52 +51,32 @@ import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
+import de.openali.odysseus.chart.framework.util.img.legend.config.DefaultChartLegendConfig;
+import de.openali.odysseus.chart.framework.util.img.legend.config.IChartLegendConfig;
+import de.openali.odysseus.chart.framework.util.img.legend.renderer.DefaultChartLegendRenderer;
+import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer;
 
 /**
  * @author Dirk Kuch
  */
-public class ChartLegendPainter
+public class ChartLegendCanvas implements IChartLegendCanvas
 {
   private final IChartModel m_model;
 
-  private ITextStyle m_style = StyleUtils.getDefaultTextStyle();
+  private final IChartLegendRenderer m_strategy;
 
-  private final int m_maxImageWidth;
+  private final IChartLegendConfig m_config;
 
-  private Point m_iconSize = new Point( 9, 9 );
-
-  private final Point m_itemSpacer = new Point( 5, 8 );
-
-  private final ILegendPaintStrategy m_strategy;
-
-  public ChartLegendPainter( final IChartModel model, final Rectangle size )
+  public ChartLegendCanvas( final IChartModel model, final Rectangle size )
   {
-    this( model, size.width, new DefaultLegendStrategy() );
+    this( model, new DefaultChartLegendConfig( size.width ), new DefaultChartLegendRenderer() );
   }
 
-  public ChartLegendPainter( final IChartModel model, final int maximalImageWidth, final ILegendPaintStrategy strategy )
-
+  public ChartLegendCanvas( final IChartModel model, final IChartLegendConfig config, final IChartLegendRenderer strategy )
   {
     m_model = model;
-    m_maxImageWidth = maximalImageWidth;
+    m_config = config;
     m_strategy = strategy;
-  }
-
-  public void setTextStyle( final ITextStyle style )
-  {
-    m_style = style;
-  }
-
-  public void setIconSize( final Point size )
-  {
-    m_iconSize = size;
-  }
-
-  public void setItemSpacer( final Point size )
-  {
-    m_iconSize = size;
   }
 
   public Point getSize( )
@@ -104,7 +84,7 @@ public class ChartLegendPainter
     if( m_model.isHideLegend() )
       return new Point( 0, 0 );
 
-    return m_strategy.getSize( this );
+    return m_strategy.getSize( this, m_config );
   }
 
   public Image createImage( )
@@ -112,15 +92,10 @@ public class ChartLegendPainter
     if( m_model.isHideLegend() )
       return null;
 
-    return m_strategy.createImage( this );
+    return m_strategy.createImage( this, m_config );
   }
 
-  Point getSpacer( )
-  {
-    return new Point( 2, 0 );
-  }
-
-  IChartLayer[] getLayers( )
+  public IChartLayer[] getLayers( )
   {
     final Set<IChartLayer> visible = new LinkedHashSet<IChartLayer>();
 
@@ -152,24 +127,12 @@ public class ChartLegendPainter
     return visible.toArray( new IChartLayer[] {} );
   }
 
-  public int getMaximumWidth( )
+  /**
+   * @see de.openali.odysseus.chart.framework.util.img.legend.IChartLegendCanvas#getModel()
+   */
+  @Override
+  public IChartModel getModel( )
   {
-    return m_maxImageWidth;
+    return m_model;
   }
-
-  public Point getIconSize( )
-  {
-    return m_iconSize;
-  }
-
-  public Point getItemSpacer( )
-  {
-    return m_itemSpacer;
-  }
-
-  public ITextStyle getTextStyle( )
-  {
-    return m_style;
-  }
-
 }

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OdysseusChartFramework Plug-in
-Bundle-SymbolicName: de.openali.odysseus.chart.framework
+Bundle-SymbolicName: de.openali.odysseus.chart.framework;singleton:=true
 Bundle-Version: 10.10.1.qualifier
 Require-Bundle: org.eclipse.swt;visibility:=reexport,
  org.eclipse.core.runtime,
@@ -34,6 +34,7 @@ Export-Package: de.openali.odysseus.chart.framework,
  de.openali.odysseus.chart.framework.test,
  de.openali.odysseus.chart.framework.util,
  de.openali.odysseus.chart.framework.util.img,
+ de.openali.odysseus.chart.framework.util.img.legend.renderer,
  de.openali.odysseus.chart.framework.util.math,
  de.openali.odysseus.chart.framework.util.resource,
  de.openali.odysseus.chart.framework.view,

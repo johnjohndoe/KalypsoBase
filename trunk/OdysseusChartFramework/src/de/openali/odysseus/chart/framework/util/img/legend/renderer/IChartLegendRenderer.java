@@ -38,18 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.util.img;
+package de.openali.odysseus.chart.framework.util.img.legend.renderer;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 
+import de.openali.odysseus.chart.framework.util.img.legend.IChartLegendCanvas;
+import de.openali.odysseus.chart.framework.util.img.legend.config.IChartLegendConfig;
+
 /**
  * @author Dirk Kuch
  */
-public interface ILegendPaintStrategy
+public interface IChartLegendRenderer
 {
-  Point getSize( ChartLegendPainter legendImageCreator );
+  Image createImage( final IChartLegendCanvas canvas, final IChartLegendConfig config );
 
-  Image createImage( ChartLegendPainter legendImageCreator );
+  Point getSize( final IChartLegendCanvas canvas, final IChartLegendConfig config );
 
 }
