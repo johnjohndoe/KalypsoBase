@@ -101,8 +101,7 @@ public class DragPanHandler extends AbstractChartDragHandler
 
   public DragPanHandler( final IChartComposite chartComposite )
   {
-    //this( chartComposite, 5,SWT.BUTTON_MASK );
-    this( chartComposite, SWT.BUTTON_MASK, SWT.BUTTON1 );
+    this( chartComposite, 5,SWT.BUTTON_MASK );
   }
 
   /**
