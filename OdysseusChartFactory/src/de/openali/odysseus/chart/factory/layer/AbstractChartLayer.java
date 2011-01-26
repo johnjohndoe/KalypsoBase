@@ -218,6 +218,8 @@ public abstract class AbstractChartLayer implements IChartLayer
    */
   protected IAxis getTargetAxis( )
   {
+    if( getCoordinateMapper() == null )
+      return null;
     return getCoordinateMapper().getTargetAxis();
   }
 
@@ -340,10 +342,11 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_coordinateMapper = coordinateMapper;
 
     // FIXME sure? update coordinate mapper of child layers, too?
-    for( final IChartLayer layer : getLayerManager().getLayers() )
-    {
-      layer.setCoordinateMapper( coordinateMapper );
-    }
+    //Test:kim
+//    for( final IChartLayer layer : getLayerManager().getLayers() )
+//    {
+//      layer.setCoordinateMapper( coordinateMapper );
+//    }
   }
 
   /**

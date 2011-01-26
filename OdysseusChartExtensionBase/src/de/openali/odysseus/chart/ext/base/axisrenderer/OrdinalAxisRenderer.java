@@ -48,7 +48,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
-import de.openali.odysseus.chart.ext.base.data.ArrayContentProvider;
 import de.openali.odysseus.chart.ext.base.data.IAxisContentProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -110,9 +109,10 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     this( id, config, null, null, contentProvider );
   }
 
+
   public OrdinalAxisRenderer( final String id, final AxisRendererConfig config )
   {
-    this( id, config, null, null, new ArrayContentProvider() );
+    this( id, config, null, null );
   }
 
   /**

@@ -57,11 +57,22 @@ public class AxisAdjustment implements IAxisAdjustment
 
   private final double m_after;
 
+  private final Number m_minValue;
+
+  private final Number m_maxValue;
+
   public AxisAdjustment( final int before, final int range, final int after )
+  {
+    this( before, range, after, Double.MAX_VALUE, -Double.MAX_VALUE );
+  }
+
+  public AxisAdjustment( final int before, final int range, final int after, final Number minValue, final Number maxValue )
   {
     m_before = before;
     m_range = range;
     m_after = after;
+    m_minValue = minValue;
+    m_maxValue = maxValue;
   }
 
   @Override
@@ -81,5 +92,25 @@ public class AxisAdjustment implements IAxisAdjustment
   {
     return m_after;
   }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment#getMinValue()
+   */
+  @Override
+  public Number getMinValue( )
+  {
+    return m_minValue;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment#getMaxValue()
+   */
+  @Override
+  public Number getMaxValue( )
+  {
+    return m_maxValue;
+  }
+
+ 
 
 }

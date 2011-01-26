@@ -46,19 +46,19 @@ import java.util.List;
 /**
  * @author kimwerner
  */
-public class ArrayContentProvider implements IAxisContentProvider
+public abstract class AbstractAxisContentProvider implements IAxisContentProvider
 {
 
   private final List<Object> m_content = new ArrayList<Object>();
 
   private final List<String> m_labels = new ArrayList<String>();
 
-  public ArrayContentProvider( )
+  public AbstractAxisContentProvider( )
   {
 // default
   }
 
-  public ArrayContentProvider( final Object... contents )
+  public AbstractAxisContentProvider( final Object... contents )
   {
     for( final Object content : contents )
       m_content.add( content );

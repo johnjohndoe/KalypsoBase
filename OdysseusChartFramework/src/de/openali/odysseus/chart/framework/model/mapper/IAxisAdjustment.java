@@ -53,4 +53,8 @@ public interface IAxisAdjustment
   double getRange( );
 
   double getAfter( );
+
+  Number getMinValue( );
+
+  Number getMaxValue( );
 }

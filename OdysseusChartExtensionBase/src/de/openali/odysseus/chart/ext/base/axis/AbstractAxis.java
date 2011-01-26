@@ -2,6 +2,7 @@ package de.openali.odysseus.chart.ext.base.axis;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
@@ -33,6 +34,8 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   private IAxisRenderer m_renderer;
 
   private IDataRange<Number> m_numericRange = new DataRange<Number>( null, null );
+
+  private DataRangeRestriction<Number> m_rangeRestriction = null;
 
   public AbstractAxis( final String id, final POSITION pos, final Class< ? > dataClass )
   {
@@ -97,6 +100,15 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   }
 
   /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getRangeRestriction()
+   */
+  @Override
+  public DataRangeRestriction<Number> getRangeRestriction( )
+  {
+    return m_rangeRestriction;
+  }
+
+  /**
    * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getRenderer()
    */
   @Override
@@ -142,12 +154,87 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     }
   }
 
+  final private boolean hasNullValues( final IDataRange<Number> range, final DataRangeRestriction<Number> restriction )
+  {
+    if( restriction == null || range == null || range.getMin() == null || range.getMax() == null || restriction.getMin() == null || restriction.getMax() == null || restriction.getMinRange() == null
+        || restriction.getMaxRange() == null )
+      return true;
+    return false;
+  }
+
+  protected IDataRange<Number> validateDataRange( final IDataRange<Number> range, final DataRangeRestriction<Number> restriction )
+  {
+    if( hasNullValues( range,restriction ))
+      return range;
+
+    final double restrictionMin = restriction.getMin().doubleValue();
+    final double restrictionMax = restriction.getMax().doubleValue();
+    final double restrictionMinRange = restriction.getMinRange().doubleValue();
+    final double restrictionMaxRange = restriction.getMaxRange().doubleValue();
+    final double rangeMin = range.getMin().doubleValue();
+    final double rangeMax = range.getMax().doubleValue();
+    final Double rangeSize = rangeMax - rangeMin;
+   
+    final IAxisAdjustment adj = getPreferredAdjustment();
+    final double adjAfter = adj == null ? 0.0 : adj.getAfter();
+    final double adjBefore = adj == null ? 0.0 : adj.getBefore();
+    final double adjRange = adj == null ? 100.0 : adj.getRange();
+    final double adjSum = adjAfter + adjBefore + adjRange;
+    final double adjAfterPercent = adjAfter / adjSum;
+    final double adjBeforePercent = adjBefore / adjSum;
+    final double adjRangePercent = adjRange / adjSum;
+
+    final double newRestrictionMin = Double.isInfinite( restrictionMin ) ? restrictionMin : restrictionMin - rangeSize * adjBeforePercent;
+    final double newRestrictionMax = Double.isInfinite( restrictionMax ) ? restrictionMax : restrictionMax + rangeSize * adjAfterPercent;
+    final double newRestrictionMinRange = restrictionMinRange / adjRangePercent;
+    final double newRestrictionMaxRange = restrictionMaxRange / adjRangePercent;
+
+    double newRangeMin = rangeMin;
+    double newRangeMax = rangeMax;
+    if( newRestrictionMin > rangeMin || restriction.isFixMinValue() )
+    {
+      newRangeMin = newRestrictionMin;
+      newRangeMax = restriction.isFixMaxValue() ? newRestrictionMax : Math.min( newRestrictionMin + rangeSize, newRestrictionMax );
+    }
+    if( newRestrictionMax < rangeMax || restriction.isFixMaxValue() )
+    {
+      newRangeMax = newRestrictionMax;
+      newRangeMin = restriction.isFixMinValue() ? newRestrictionMin : Math.max( newRestrictionMax - rangeSize, newRestrictionMin );
+    }
+
+    final double newRangeSize = newRangeMax - newRangeMin;
+
+    if( newRangeSize > newRestrictionMaxRange )
+    {
+      final double delta = newRangeSize - newRestrictionMaxRange;
+      final double min = Math.max( newRangeMin + delta / 2.0, newRestrictionMin );
+      final double max = Math.min( min + newRestrictionMaxRange, newRestrictionMax );
+      return new DataRange<Number>( min, max );
+    }
+    if( newRangeSize < newRestrictionMinRange )
+    {
+      final double delta = newRestrictionMinRange - newRangeSize;
+      final double min = Math.max( newRangeMin - delta / 2.0, newRestrictionMin );
+      final double max = Math.min( min + newRestrictionMinRange, newRestrictionMax );
+      return new DataRange<Number>( min, max );
+    }
+
+    return new DataRange<Number>( newRangeMin, newRangeMax );
+
+  }
+
   @Override
   public void setNumericRange( final IDataRange<Number> range )
   {
-    if( range.getMax() == m_numericRange.getMax() && range.getMin() == m_numericRange.getMin() )
+    final Number rangeMin = range.getMin();
+    final Number rangeMax = range.getMax();
+
+    if( rangeMax == m_numericRange.getMax() && rangeMin == m_numericRange.getMin() )
       return;
-    m_numericRange = range;
+    if( rangeMin == null || rangeMax == null )
+      m_numericRange = new DataRange<Number>( rangeMin, rangeMax );
+    else
+      m_numericRange = validateDataRange( range, getRangeRestriction() );
     fireMapperChanged( this );
   }
 
@@ -156,6 +243,17 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   {
     m_preferredAdjustment = adj;
     fireMapperChanged( this );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setRangeRestriction(de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
+  @Override
+  public void setRangeRestriction( final DataRangeRestriction<Number> range )
+  {
+
+    m_rangeRestriction = range;
+
   }
 
   /**
