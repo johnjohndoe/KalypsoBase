@@ -267,4 +267,11 @@
           file-extensions="kot">
     </file-association>
  </extension>
+ <extension
+       point="de.openali.odysseus.chart.framework.ChartLegendRenderer">
+    <renderer
+          id="org.kalypso.zml.ui.chart.legend.renderer"
+          renderer="org.kalypso.zml.ui.chart.legend.ZmlChartLegendRenderer">
+    </renderer>
+ </extension>
 </plugin>

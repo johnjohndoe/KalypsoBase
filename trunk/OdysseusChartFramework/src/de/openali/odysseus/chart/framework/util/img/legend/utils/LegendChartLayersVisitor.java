@@ -60,11 +60,22 @@ public class LegendChartLayersVisitor implements IChartLayerVisitor
   @Override
   public void visit( final IChartLayer layer )
   {
-    if( layer.isVisible() && layer.isLegend() )
+    if( isValid( layer ) )
       m_layers.add( layer );
 
     final ILayerManager layerManager = layer.getLayerManager();
     layerManager.accept( this );
+  }
+
+  private boolean isValid( final IChartLayer layer )
+  {
+    if( !layer.isVisible() )
+      return false;
+
+    if( !layer.isLegend() )
+      return false;
+
+    return true;
   }
 
   public IChartLayer[] getLayers( )

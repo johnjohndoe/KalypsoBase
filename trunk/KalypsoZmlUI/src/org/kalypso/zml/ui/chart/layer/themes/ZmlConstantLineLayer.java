@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.metadata.IMetadataBoundary;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
@@ -80,6 +81,8 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
   private IZmlLayerDataHandler m_handler;
 
   private IObservation m_lastObservation;
+
+  private String m_labelDescriptor;
 
   protected ZmlConstantLineLayer( final IParameterContainer parameters, final IStyleSet styleSet, final boolean calculateRange )
   {
@@ -252,4 +255,27 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 
     m_handler = handler;
   }
+
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setLabelDescriptor(java.lang.String)
+   */
+  @Override
+  public void setLabelDescriptor( final String labelDescriptor )
+  {
+    m_labelDescriptor = labelDescriptor;
+  }
+
+  @Override
+  public String getTitle( )
+  {
+    if( m_labelDescriptor == null )
+      return super.getTitle();
+
+    final IObservation observation = getDataHandler().getObservation();
+    if( observation == null )
+      return m_labelDescriptor;
+
+    return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
+  }
+
 }
