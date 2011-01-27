@@ -43,13 +43,17 @@ package org.kalypso.commons.pdf;
 import java.awt.print.Book;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
-import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
-import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+
+import javax.swing.SwingUtilities;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.KalypsoCommonsPlugin;
 
 import com.sun.pdfview.PDFFile;
 import com.sun.pdfview.PDFPrintPage;
@@ -86,39 +90,57 @@ public class PDFUtilities
    * @param pageFormat
    *          The page format. See {@link PageFormat#LANDSCAPE} or {@link PageFormat#PORTRAIT};
    */
-  public static void print( File file, int pageFormat ) throws IOException, PrinterException
+  public static void print( final File file, final int pageFormat )
   {
-    /* Create a random access file. */
-    RandomAccessFile raf = new RandomAccessFile( file, "r" );
-    FileChannel channel = raf.getChannel();
-    ByteBuffer buf = channel.map( FileChannel.MapMode.READ_ONLY, 0, channel.size() );
+    SwingUtilities.invokeLater( new Runnable()
+    {
+      /**
+       * @see java.lang.Runnable#run()
+       */
+      @Override
+      public void run( )
+      {
+        try
+        {
+          /* Create a random access file. */
+          RandomAccessFile raf = new RandomAccessFile( file, "r" );
+          FileChannel channel = raf.getChannel();
+          ByteBuffer buf = channel.map( FileChannel.MapMode.READ_ONLY, 0, channel.size() );
 
-    /* Create the pdf file. */
-    PDFFile pdfFile = new PDFFile( buf );
+          /* Create the pdf file. */
+          PDFFile pdfFile = new PDFFile( buf );
 
-    /* This is used for printing the pdf file. */
-    PDFPrintPage pages = new PDFPrintPage( pdfFile );
+          /* This is used for printing the pdf file. */
+          PDFPrintPage pages = new PDFPrintPage( pdfFile );
 
-    /* Create print job. */
-    PrinterJob pjob = PrinterJob.getPrinterJob();
-    pjob.setJobName( file.getName() );
+          /* Create print job. */
+          PrinterJob pjob = PrinterJob.getPrinterJob();
+          pjob.setJobName( file.getName() );
 
-    /* Get the page format. */
-    PageFormat pf = pjob.defaultPage();
-    pf.setPaper( createPaper( PAGE_SIZE_A4_WIDTH, PAGE_SIZE_A4_HEIGHT ) );
-    pf.setOrientation( pageFormat );
+          /* Get the page format. */
+          PageFormat pf = pjob.defaultPage();
+          pf.setPaper( createPaper( PAGE_SIZE_A4_WIDTH, PAGE_SIZE_A4_HEIGHT ) );
+          pf.setOrientation( pageFormat );
 
-    /* Create a new book. */
-    Book book = new Book();
-    book.append( pages, pf, pdfFile.getNumPages() );
-    pjob.setPageable( book );
+          /* Create a new book. */
+          Book book = new Book();
+          book.append( pages, pf, pdfFile.getNumPages() );
+          pjob.setPageable( book );
 
-    /* Send print job to default printer. */
-    if( pjob.printDialog() )
-      pjob.print();
+          /* Send print job to default printer. */
+          if( pjob.printDialog() )
+            pjob.print();
 
-    /* Close the random access file. */
-    raf.close();
+          /* Close the random access file. */
+          raf.close();
+        }
+        catch( Exception ex )
+        {
+          /* Log the error message. */
+          KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), ex.getLocalizedMessage(), ex ) );
+        }
+      }
+    } );
   }
 
   /**
@@ -130,7 +152,7 @@ public class PDFUtilities
    *          The height of the paper. See {@link PDFUtilities#PAGE_SIZE_A4_HEIGHT}
    * @return The paper.
    */
-  private static Paper createPaper( float width, float height )
+  protected static Paper createPaper( float width, float height )
   {
     Paper paper = new Paper();
     paper.setSize( width, height );
