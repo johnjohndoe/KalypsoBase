@@ -64,6 +64,7 @@ import org.kalypso.ogc.gml.outline.nodes.LegendExporter;
 import org.kalypso.ogc.gml.outline.nodes.NodeFactory;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 
@@ -240,18 +241,18 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     /* Get the properties. */
     String horizontalProperty = getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, null );
     String verticalProperty = getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, null );
-    String backgroundColorProperty = getProperty( LegendUtilities.THEME_PROPERTY_BACKGROUND_COLOR, null );
+    String backgroundColorProperty = getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, null );
     String insetsProperty = getProperty( LegendUtilities.THEME_PROPERTY_INSETS, null );
     String themeIdsProperty = getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS, null );
 
     /* Check the horizontal and vertical position. */
-    int horizontal = LegendUtilities.checkHorizontalPosition( horizontalProperty );
-    int vertical = LegendUtilities.checkVerticalPosition( verticalProperty );
+    int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
+    int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
     if( horizontal != -1 && vertical != -1 )
       updatePosition( horizontal, vertical );
 
     /* Check the background color. */
-    org.eclipse.swt.graphics.Color backgroundColor = LegendUtilities.checkBackgroundColor( Display.getCurrent(), backgroundColorProperty );
+    org.eclipse.swt.graphics.Color backgroundColor = ThemeUtilities.checkBackgroundColor( Display.getCurrent(), backgroundColorProperty );
     if( backgroundColor != null )
     {
       m_backgroundColor.dispose();

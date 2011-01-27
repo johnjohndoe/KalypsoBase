@@ -53,6 +53,7 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoImageTheme;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
+import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.image.ImageUtilities;
 import org.kalypso.util.themes.image.controls.ImageComposite;
 import org.kalypso.util.themes.image.listener.IImageChangedListener;
@@ -159,6 +160,7 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
     /* Get the properties. */
     String horizontalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
     String verticalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+    String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
     String imageUrlProperty = m_properties.getProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL );
 
     /* Set the properties. */
@@ -166,6 +168,8 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
       m_theme.setProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
     if( verticalProperty != null && verticalProperty.length() > 0 )
       m_theme.setProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+    if( backgroundColorProperty != null && backgroundColorProperty.length() > 0 )
+      m_theme.setProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
     if( imageUrlProperty != null && imageUrlProperty.length() > 0 )
       m_theme.setProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL, imageUrlProperty );
 
@@ -195,10 +199,10 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
     {
       /**
        * @see org.kalypso.util.themes.image.listener.IImageChangedListener#imagePropertyChanged(java.util.Properties,
-       *      int, int, java.lang.String)
+       *      int, int, org.eclipse.swt.graphics.Color, java.lang.String)
        */
       @Override
-      public void imagePropertyChanged( Properties properties, int horizontal, int vertical, String imageUrl )
+      public void imagePropertyChanged( Properties properties, int horizontal, int vertical, org.eclipse.swt.graphics.Color backgroundColor, String imageUrl )
       {
         /* Update the properties object. */
         m_properties = properties;

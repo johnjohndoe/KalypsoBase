@@ -72,6 +72,7 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.legend.listener.ILegendChangedListener;
 import org.kalypso.util.themes.legend.provider.ThemeCheckStateProvider;
@@ -229,22 +230,22 @@ public class LegendComposite extends Composite
     /* Get the properties. */
     String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
     String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
-    String backgroundColorProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
+    String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
     String insetsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
     String themeIdsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
 
     /* Check the horizontal position. */
-    int horizontal = LegendUtilities.checkHorizontalPosition( horizontalProperty );
+    int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
     if( horizontal != -1 )
       m_horizontal = horizontal;
 
     /* Check the vertical position. */
-    int vertical = LegendUtilities.checkVerticalPosition( verticalProperty );
+    int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
     if( vertical != -1 )
       m_vertical = vertical;
 
     /* Check the background color. */
-    Color backgroundColor = LegendUtilities.checkBackgroundColor( getDisplay(), backgroundColorProperty );
+    Color backgroundColor = ThemeUtilities.checkBackgroundColor( getDisplay(), backgroundColorProperty );
     if( backgroundColor != null )
       m_backgroundColor = backgroundColor;
 
@@ -621,7 +622,7 @@ public class LegendComposite extends Composite
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
     properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
-    properties.put( LegendUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
+    properties.put( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
     properties.put( LegendUtilities.THEME_PROPERTY_INSETS, insetsProperty );
     properties.put( LegendUtilities.THEME_PROPERTY_THEME_IDS, themeIdsProperty );
 

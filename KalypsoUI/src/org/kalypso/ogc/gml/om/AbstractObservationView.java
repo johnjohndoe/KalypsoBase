@@ -65,8 +65,8 @@ public abstract class AbstractObservationView extends ViewPart
    * Adds support for dropping items into this viewer via a user drag-and-drop operation.
    * 
    * @param operations
-   *          a bitwise OR of the supported drag and drop operation types ( <code>DROP_COPY</code>,<code>DROP_LINK</code>,
-   *          and <code>DROP_MOVE</code>)
+   *          a bitwise OR of the supported drag and drop operation types ( <code>DROP_COPY</code>,
+   *          <code>DROP_LINK</code>, and <code>DROP_MOVE</code>)
    * @param transferTypes
    *          the transfer types that are supported by the drop operation
    * @see org.eclipse.swt.dnd.DND
@@ -83,7 +83,7 @@ public abstract class AbstractObservationView extends ViewPart
 
   protected abstract boolean handleDrop( IObservation<TupleResult> obs );
 
-  private class DropAdapter extends DropTargetAdapter
+  protected class DropAdapter extends DropTargetAdapter
   {
     @Override
     public void drop( final DropTargetEvent event )

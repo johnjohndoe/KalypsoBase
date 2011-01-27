@@ -46,14 +46,13 @@ import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MatchingIdKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
+import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
@@ -64,59 +63,21 @@ import org.kalypso.util.themes.position.PositionUtilities;
 public class LegendUtilities
 {
   /**
+   * This constant defines the theme property, used to configure the insets of the legend.
+   */
+  public static final String THEME_PROPERTY_INSETS = "insets";
+
+  /**
    * This constant defines the theme property, used to configure the ids of the themes, which should be included in the
    * legend.
    */
   public static final String THEME_PROPERTY_THEME_IDS = "theme_ids";
 
   /**
-   * This constant defines the theme property, used to configure the background color of the legend.
-   */
-  public static final String THEME_PROPERTY_BACKGROUND_COLOR = "background_color";
-
-  /**
-   * This constant defines the theme property, used to configure the insets of the legend.
-   */
-  public static final String THEME_PROPERTY_INSETS = "insets";
-
-  /**
    * The constructor.
    */
   private LegendUtilities( )
   {
-  }
-
-  public static int checkHorizontalPosition( String horizontalProperty )
-  {
-    Integer horizontal = NumberUtils.parseQuietInteger( horizontalProperty );
-    if( horizontal != null )
-      return PositionUtilities.checkHorizontalPosition( horizontal.intValue() );
-
-    return -1;
-  }
-
-  public static int checkVerticalPosition( String verticalProperty )
-  {
-    Integer vertical = NumberUtils.parseQuietInteger( verticalProperty );
-    if( vertical != null )
-      return PositionUtilities.checkVerticalPosition( vertical.intValue() );
-
-    return -1;
-  }
-
-  public static Color checkBackgroundColor( Display display, String backgroundColorProperty )
-  {
-    String[] backgroundColor = StringUtils.split( backgroundColorProperty, ";" );
-    if( backgroundColor != null && backgroundColor.length == 3 )
-    {
-      Integer r = NumberUtils.parseQuietInteger( backgroundColor[0] );
-      Integer g = NumberUtils.parseQuietInteger( backgroundColor[1] );
-      Integer b = NumberUtils.parseQuietInteger( backgroundColor[2] );
-      if( r != null && g != null && b != null )
-        return new Color( display, r.intValue(), g.intValue(), b.intValue() );
-    }
-
-    return null;
   }
 
   public static int checkInsets( String insetsProperty )
@@ -177,9 +138,9 @@ public class LegendUtilities
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
     properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
-    properties.put( LegendUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
-    properties.put( LegendUtilities.THEME_PROPERTY_INSETS, insetsProperty );
-    properties.put( LegendUtilities.THEME_PROPERTY_THEME_IDS, themeIdsProperty );
+    properties.put( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
+    properties.put( THEME_PROPERTY_INSETS, insetsProperty );
+    properties.put( THEME_PROPERTY_THEME_IDS, themeIdsProperty );
 
     return properties;
   }

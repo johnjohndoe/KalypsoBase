@@ -43,6 +43,7 @@ package org.kalypso.util.themes.text;
 import java.util.Locale;
 import java.util.Properties;
 
+import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
@@ -82,12 +83,14 @@ public class TextUtilities
     /* Serialize the properties. */
     String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT );
     String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM );
+    String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", 255, 255, 255 );
     String textProperty = "";
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
     properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
-    properties.put( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
+    properties.put( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
+    properties.put( THEME_PROPERTY_TEXT, textProperty );
 
     return properties;
   }

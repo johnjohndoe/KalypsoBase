@@ -42,6 +42,8 @@ package org.kalypso.util.themes.text.listener;
 
 import java.util.Properties;
 
+import org.eclipse.swt.graphics.Color;
+
 /**
  * This interface provides functions for listener, which would like to be notified if a text property has changed.
  * 
@@ -58,8 +60,10 @@ public interface ITextChangedListener
    *          The horizontal position.
    * @param vertical
    *          The vertical position.
+   * @param backgroundColor
+   *          The background color.
    * @param text
    *          The text, which should be shown.
    */
-  public void textPropertyChanged( Properties properties, int horizontal, int vertical, String text );
+  public void textPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, String text );
 }

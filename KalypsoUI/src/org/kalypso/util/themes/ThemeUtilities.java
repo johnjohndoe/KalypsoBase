@@ -38,32 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.util.themes.image.listener;
+package org.kalypso.util.themes;
 
-import java.util.Properties;
-
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
+import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
- * This interface provides functions for listener, which would like to be notified if a image property has changed.
+ * This class provides functions for {@link org.kalypso.ogc.gml.IKalypsoTheme}s.
  * 
  * @author Holger Albert
  */
-public interface IImageChangedListener
+public class ThemeUtilities
 {
   /**
-   * This function is notified, if a image property has changed.
-   * 
-   * @param properties
-   *          A up to date properties object, containing all serialized image properties.
-   * @param horizontal
-   *          The horizontal position.
-   * @param vertical
-   *          The vertical position.
-   * @param backgroundColor
-   *          The background color.
-   * @param imageUrl
-   *          The URL of the image, which should be shown.
+   * This constant defines the theme property, used to configure the background color.
    */
-  public void imagePropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, String imageUrl );
+  public static final String THEME_PROPERTY_BACKGROUND_COLOR = "background_color";
+
+  /**
+   * The constructor.
+   */
+  private ThemeUtilities( )
+  {
+  }
+
+  public static Color checkBackgroundColor( Display display, String backgroundColorProperty )
+  {
+    String[] backgroundColor = StringUtils.split( backgroundColorProperty, ";" );
+    if( backgroundColor != null && backgroundColor.length == 3 )
+    {
+      Integer r = NumberUtils.parseQuietInteger( backgroundColor[0] );
+      Integer g = NumberUtils.parseQuietInteger( backgroundColor[1] );
+      Integer b = NumberUtils.parseQuietInteger( backgroundColor[2] );
+      if( r != null && g != null && b != null )
+        return new Color( display, r.intValue(), g.intValue(), b.intValue() );
+    }
+
+    return null;
+  }
 }

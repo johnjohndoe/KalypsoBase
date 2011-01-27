@@ -50,6 +50,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 import org.kalypso.util.themes.text.TextUtilities;
 import org.kalypso.util.themes.text.controls.TextComposite;
@@ -119,10 +120,10 @@ public class TextThemeWizardPage extends WizardPage
     {
       /**
        * @see org.kalypso.util.themes.text.listener.ITextChangedListener#textPropertyChanged(java.util.Properties, int,
-       *      int, java.lang.String)
+       *      int, org.eclipse.swt.graphics.Color, java.lang.String)
        */
       @Override
-      public void textPropertyChanged( Properties properties, int horizontal, int vertical, String text )
+      public void textPropertyChanged( Properties properties, int horizontal, int vertical, org.eclipse.swt.graphics.Color backgroundColor, String text )
       {
         /* Store the properties. */
         m_properties.clear();
@@ -130,11 +131,13 @@ public class TextThemeWizardPage extends WizardPage
         /* Get the properties. */
         String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
         String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+        String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
         String textProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT );
 
         /* Set the properties. */
         m_properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
         m_properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+        m_properties.put( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
         m_properties.put( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
 
         /* Check if the page can be completed. */

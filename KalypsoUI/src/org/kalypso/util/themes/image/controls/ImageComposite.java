@@ -56,20 +56,24 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
+import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.image.ImageUtilities;
 import org.kalypso.util.themes.image.listener.IImageChangedListener;
-import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 import org.kalypso.util.themes.position.controls.PositionComposite;
 import org.kalypso.util.themes.position.listener.IPositionChangedListener;
@@ -105,6 +109,11 @@ public class ImageComposite extends Composite
    * The vertical position.
    */
   protected int m_vertical;
+
+  /**
+   * The background color.
+   */
+  protected Color m_backgroundColor;
 
   /**
    * The URL of the image, which should be shown.
@@ -213,6 +222,7 @@ public class ImageComposite extends Composite
     /* Default values. */
     m_horizontal = PositionUtilities.RIGHT;
     m_vertical = PositionUtilities.BOTTOM;
+    m_backgroundColor = new Color( getDisplay(), 255, 255, 255 );
     m_imageUrl = null;
 
     /* Do not change the default values, if no new properties are set. */
@@ -236,17 +246,23 @@ public class ImageComposite extends Composite
     /* Get the properties. */
     String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
     String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+    String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
     String imageUrlProperty = properties.getProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL, null );
 
     /* Check the horizontal position. */
-    int horizontal = LegendUtilities.checkHorizontalPosition( horizontalProperty );
+    int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
     if( horizontal != -1 )
       m_horizontal = horizontal;
 
     /* Check the vertical position. */
-    int vertical = LegendUtilities.checkVerticalPosition( verticalProperty );
+    int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
     if( vertical != -1 )
       m_vertical = vertical;
+
+    /* Check the background color. */
+    Color backgroundColor = ThemeUtilities.checkBackgroundColor( getDisplay(), backgroundColorProperty );
+    if( backgroundColor != null )
+      m_backgroundColor = backgroundColor;
 
     /* Check the URL of the image. */
     if( imageUrlProperty != null && imageUrlProperty.length() > 0 )
@@ -322,7 +338,7 @@ public class ImageComposite extends Composite
         m_horizontal = horizontal;
         m_vertical = vertical;
 
-        fireImagePropertyChanged( getProperties(), m_horizontal, m_vertical, m_imageUrl );
+        fireImagePropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_imageUrl );
       }
     } );
 
@@ -343,6 +359,46 @@ public class ImageComposite extends Composite
     Group imageGroup = new Group( parent, SWT.NONE );
     imageGroup.setLayout( new GridLayout( 3, false ) );
     imageGroup.setText( "Optionen" );
+
+    /* Create a label. */
+    Label backgroundColorLabel = new Label( imageGroup, SWT.NONE );
+    backgroundColorLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    backgroundColorLabel.setText( "Hintergrundfarbe" );
+    backgroundColorLabel.setAlignment( SWT.LEFT );
+
+    /* Create a label. */
+    final Label backgroundLabel = new Label( imageGroup, SWT.BORDER );
+    backgroundLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    backgroundLabel.setText( "Hintergrundfarbe" );
+    backgroundLabel.setBackground( m_backgroundColor );
+
+    /* Create a button. */
+    Button backgroundColorButton = new Button( imageGroup, SWT.PUSH );
+    backgroundColorButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    backgroundColorButton.setText( "..." );
+    backgroundColorButton.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        Shell shell = ImageComposite.this.getShell();
+
+        ColorDialog dialog = new ColorDialog( shell );
+        dialog.setRGB( m_backgroundColor.getRGB() );
+        RGB rgb = dialog.open();
+        if( rgb == null )
+          return;
+
+        m_backgroundColor.dispose();
+        m_backgroundColor = new Color( shell.getDisplay(), rgb );
+        backgroundLabel.setBackground( m_backgroundColor );
+
+        fireImagePropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_imageUrl );
+      }
+    } );
 
     /* Create a label. */
     Label imageUrlLabel = new Label( imageGroup, SWT.NONE );
@@ -379,14 +435,14 @@ public class ImageComposite extends Composite
           m_imageUrl = text;
 
         /* Fire the image property changed event. */
-        fireImagePropertyChanged( getProperties(), m_horizontal, m_vertical, m_imageUrl );
+        fireImagePropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_imageUrl );
       }
     } );
 
     /* Create a button. */
     Button imageUrlButton = new Button( imageGroup, SWT.PUSH );
     imageUrlButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageUrlButton.setText( "Dateisystem durchsuchen" );
+    imageUrlButton.setText( "Dateisystem" );
 
     /* Add a listener. */
     imageUrlButton.addSelectionListener( new SelectionAdapter()
@@ -401,7 +457,7 @@ public class ImageComposite extends Composite
         {
           /* Create a file dialog. */
           FileDialog dialog = new FileDialog( ImageComposite.this.getShell(), SWT.OPEN );
-          dialog.setText( "Dateisystem durchsuchen" );
+          dialog.setText( "Dateisystem" );
           dialog.setFilterExtensions( new String[] { "*.bmp", "*.png", "*.gif", "*.jpg", "*.tif" } );
           dialog.setFilterNames( new String[] { "BMP Datei (*.bmp)", "PNG Datei (*.png)", "GIF Datei (*.gif)", "JPG Datei (*jpg)", "TIF Datei (*.tif)" } );
 
@@ -468,10 +524,10 @@ public class ImageComposite extends Composite
    * @param imageUrl
    *          The URL of the image, which should be shown.
    */
-  protected void fireImagePropertyChanged( Properties properties, int horizontal, int vertical, String imageUrl )
+  protected void fireImagePropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, String imageUrl )
   {
     for( IImageChangedListener listener : m_listener )
-      listener.imagePropertyChanged( properties, horizontal, vertical, imageUrl );
+      listener.imagePropertyChanged( properties, horizontal, vertical, backgroundColor, imageUrl );
   }
 
   /**
@@ -511,6 +567,7 @@ public class ImageComposite extends Composite
     /* Serialize the properties. */
     String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
     String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
+    String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.getRed(), m_backgroundColor.getGreen(), m_backgroundColor.getBlue() );
     String imageUrlProperty = null;
     if( m_imageUrl != null )
       imageUrlProperty = String.format( Locale.PRC, "%s", m_imageUrl );
@@ -518,6 +575,7 @@ public class ImageComposite extends Composite
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
     properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+    properties.put( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
     properties.put( ImageUtilities.THEME_PROPERTY_IMAGE_URL, "" );
     if( imageUrlProperty != null )
       properties.put( ImageUtilities.THEME_PROPERTY_IMAGE_URL, imageUrlProperty );

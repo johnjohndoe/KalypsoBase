@@ -43,6 +43,7 @@ package org.kalypso.util.themes.position;
 import java.awt.Graphics;
 import java.awt.Image;
 
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.util.themes.legend.LegendCoordinate;
 
 /**
@@ -97,6 +98,42 @@ public class PositionUtilities
    */
   private PositionUtilities( )
   {
+  }
+
+  /**
+   * This function checks if the horizontal position provided has a correct value. If not
+   * {@link PositionUtilities#RIGHT} will be returned. -1 if horizontalProperty could not be parsed to an integer.
+   * 
+   * @param horizontalProperty
+   *          The horizontal position as string to be checked.
+   * @return The horizontal position, if it is correct. Otherwise {@link PositionUtilities#RIGHT}. -1 if
+   *         horizontalProperty could not be parsed to an integer.
+   */
+  public static int checkHorizontalPosition( String horizontalProperty )
+  {
+    Integer horizontal = NumberUtils.parseQuietInteger( horizontalProperty );
+    if( horizontal != null )
+      return PositionUtilities.checkHorizontalPosition( horizontal.intValue() );
+
+    return -1;
+  }
+
+  /**
+   * This function checks if the vertical position provided has a correct value. If not {@link PositionUtilities#BOTTOM}
+   * will be returned. -1 if horizontalProperty could not be parsed to an integer.
+   * 
+   * @param verticalProperty
+   *          The vertical position as string to be checked.
+   * @return The vertical position, if it is correct. Otherwise {@link PositionUtilities#BOTTOM}. -1 if
+   *         horizontalProperty could not be parsed to an integer.
+   */
+  public static int checkVerticalPosition( String verticalProperty )
+  {
+    Integer vertical = NumberUtils.parseQuietInteger( verticalProperty );
+    if( vertical != null )
+      return PositionUtilities.checkVerticalPosition( vertical.intValue() );
+
+    return -1;
   }
 
   /**

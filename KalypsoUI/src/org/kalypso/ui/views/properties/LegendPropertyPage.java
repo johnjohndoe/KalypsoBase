@@ -71,6 +71,7 @@ import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ogc.gml.outline.nodes.LegendExporter;
 import org.kalypso.ogc.gml.outline.nodes.NodeFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.legend.controls.LegendComposite;
 import org.kalypso.util.themes.legend.listener.ILegendChangedListener;
@@ -206,7 +207,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     /* Get the properties. */
     String horizontalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
     String verticalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
-    String backgroundColorProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
+    String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
     String insetsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
     String themeIdsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
 
@@ -216,7 +217,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     if( verticalProperty != null && verticalProperty.length() > 0 )
       m_theme.setProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
     if( backgroundColorProperty != null && backgroundColorProperty.length() > 0 )
-      m_theme.setProperty( LegendUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
+      m_theme.setProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
     if( insetsProperty != null && insetsProperty.length() > 0 )
       m_theme.setProperty( LegendUtilities.THEME_PROPERTY_INSETS, insetsProperty );
     if( themeIdsProperty != null )
@@ -439,12 +440,12 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     try
     {
       /* Get the properties. */
-      String backgroundColorProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
+      String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
       String insetsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
       String themeIdsProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
 
       /* Check the properties. */
-      Color backgroundColor = LegendUtilities.checkBackgroundColor( display, backgroundColorProperty );
+      Color backgroundColor = ThemeUtilities.checkBackgroundColor( display, backgroundColorProperty );
       if( backgroundColor == null )
         backgroundColor = display.getSystemColor( SWT.COLOR_WHITE );
       int insets = LegendUtilities.checkInsets( insetsProperty );
