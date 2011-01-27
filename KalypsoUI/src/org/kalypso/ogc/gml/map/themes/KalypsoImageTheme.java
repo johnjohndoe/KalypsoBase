@@ -54,10 +54,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.image.ImageUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 
@@ -68,6 +70,11 @@ import org.kalypso.util.themes.position.PositionUtilities;
  */
 public class KalypsoImageTheme extends AbstractImageTheme
 {
+  /**
+   * The background color.
+   */
+  protected org.eclipse.swt.graphics.Color m_backgroundColor;
+
   /**
    * The URL of the image, which should be shown.
    */
@@ -86,6 +93,7 @@ public class KalypsoImageTheme extends AbstractImageTheme
     super( name, "image", mapModell );
 
     /* Initialize. */
+    m_backgroundColor = null;
     m_imageUrl = null;
   }
 
@@ -135,6 +143,8 @@ public class KalypsoImageTheme extends AbstractImageTheme
       /* Create the image. */
       BufferedImage awtImage = ImageIO.read( inputStream );
 
+      // TODO Use the background color...
+
       /* Monitor. */
       monitor.worked( 500 );
 
@@ -174,11 +184,13 @@ public class KalypsoImageTheme extends AbstractImageTheme
   {
     /* Default values. */
     updatePosition( PositionUtilities.RIGHT, PositionUtilities.BOTTOM );
+    m_backgroundColor = new org.eclipse.swt.graphics.Color( Display.getCurrent(), 255, 255, 255 );
     m_imageUrl = null;
 
     /* Get the properties. */
     String horizontalProperty = getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, null );
     String verticalProperty = getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, null );
+    String backgroundColorProperty = getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, null );
     String imageUrlProperty = getProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL, null );
 
     /* Check the horizontal and vertical position. */
@@ -186,6 +198,14 @@ public class KalypsoImageTheme extends AbstractImageTheme
     int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
     if( horizontal != -1 && vertical != -1 )
       updatePosition( horizontal, vertical );
+
+    /* Check the background color. */
+    org.eclipse.swt.graphics.Color backgroundColor = ThemeUtilities.checkBackgroundColor( Display.getCurrent(), backgroundColorProperty );
+    if( backgroundColor != null )
+    {
+      m_backgroundColor.dispose();
+      m_backgroundColor = backgroundColor;
+    }
 
     /* Check the URL of the image. */
     if( imageUrlProperty != null && imageUrlProperty.length() > 0 )

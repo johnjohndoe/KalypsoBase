@@ -47,13 +47,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -67,11 +60,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.controls.ImagePropertiesComposite;
+import org.kalypso.ui.controls.listener.IImagePropertyChangedListener;
 
 /**
  * This dialog enables the selection of the format and a target for the image file.
@@ -101,6 +94,11 @@ public class ScreenshotDialog extends Dialog
   private static final String SETTINGS_IMAGE_FORMAT = "imageFormat"; //$NON-NLS-1$
 
   /**
+   * Key for the dialog settings: aspect ratio.
+   */
+  private static final String SETTINGS_KEEP_ASPECT_RATIO = "aspectRatio"; //$NON-NLS-1$
+
+  /**
    * The dialog settings.
    */
   private IDialogSettings m_dialogSettings;
@@ -116,9 +114,9 @@ public class ScreenshotDialog extends Dialog
   protected String m_targetPath;
 
   /**
-   * The text field, which contains the width of the image.
+   * The image properties composite.
    */
-  protected Text m_imageWidthText;
+  private ImagePropertiesComposite m_imageComposite;
 
   /**
    * The width of the image.
@@ -126,19 +124,14 @@ public class ScreenshotDialog extends Dialog
   protected int m_imageWidth;
 
   /**
-   * The text field, which contains the height of the image.
-   */
-  protected Text m_imageHeightText;
-
-  /**
    * The height of the image.
    */
   protected int m_imageHeight;
 
   /**
-   * The combo viewer, which contains the format of the image.
+   * True, if the aspect ratio should be maintained on change of the width or height.
    */
-  private ComboViewer m_imageFormatViewer;
+  protected boolean m_aspectRatio;
 
   /**
    * The format of the image.
@@ -184,11 +177,10 @@ public class ScreenshotDialog extends Dialog
     m_dialogSettings = null;
     m_targetPathText = null;
     m_targetPath = null;
-    m_imageWidthText = null;
+    m_imageComposite = null;
     m_imageWidth = defaultWidth;
-    m_imageHeightText = null;
     m_imageHeight = defaultHeight;
-    m_imageFormatViewer = null;
+    m_aspectRatio = false;
     m_imageFormat = null;
   }
 
@@ -209,11 +201,10 @@ public class ScreenshotDialog extends Dialog
     m_dialogSettings = null;
     m_targetPathText = null;
     m_targetPath = null;
-    m_imageWidthText = null;
+    m_imageComposite = null;
     m_imageWidth = defaultWidth;
-    m_imageHeightText = null;
     m_imageHeight = defaultHeight;
-    m_imageFormatViewer = null;
+    m_aspectRatio = false;
     m_imageFormat = null;
   }
 
@@ -299,119 +290,23 @@ public class ScreenshotDialog extends Dialog
       }
     } );
 
-    /* Create a group. */
-    Group imageGroup = new Group( main, SWT.NONE );
-    imageGroup.setLayout( new GridLayout( 2, false ) );
-    imageGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    imageGroup.setText( "Maße, Format" );
-
-    /* Create a label. */
-    Label imageWidthLabel = new Label( imageGroup, SWT.NONE );
-    imageWidthLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageWidthLabel.setText( "Breite [Pixel]" );
-
-    /* Create a text field. */
-    m_imageWidthText = new Text( imageGroup, SWT.BORDER | SWT.RIGHT );
-    m_imageWidthText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    if( m_imageWidth >= 0 )
-      m_imageWidthText.setText( String.format( "%d", m_imageWidth ) );
-    m_imageWidthText.addModifyListener( new ModifyListener()
+    /* Create the image properties composite. */
+    m_imageComposite = new ImagePropertiesComposite( main, SWT.NONE, m_imageWidth, m_imageHeight, m_aspectRatio, m_imageFormat );
+    m_imageComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_imageComposite.addImagePropertyChangedListener( new IImagePropertyChangedListener()
     {
       /**
-       * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+       * @see org.kalypso.ui.controls.listener.IImagePropertyChangedListener#imagePropertyChanged(int, int, boolean,
+       *      java.lang.String)
        */
       @Override
-      public void modifyText( ModifyEvent e )
+      public void imagePropertyChanged( int width, int height, boolean aspectRatio, String format )
       {
-        /* Get the source. */
-        Text source = (Text) e.getSource();
-
-        /* Store the text. */
-        Integer imageWidth = NumberUtils.parseQuietInteger( source.getText() );
-        if( imageWidth != null )
-          m_imageWidth = imageWidth.intValue();
-
-        /* Check, if all data entered is correct. */
-        checkDialogComplete();
-      }
-    } );
-
-    /* Create a label. */
-    Label imageHeightLabel = new Label( imageGroup, SWT.NONE );
-    imageHeightLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageHeightLabel.setText( "Höhe [Pixel]" );
-
-    /* Create a text field. */
-    m_imageHeightText = new Text( imageGroup, SWT.BORDER | SWT.RIGHT );
-    m_imageHeightText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    if( m_imageHeight >= 0 )
-      m_imageHeightText.setText( String.format( "%d", m_imageHeight ) );
-    m_imageHeightText.addModifyListener( new ModifyListener()
-    {
-      /**
-       * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-       */
-      @Override
-      public void modifyText( ModifyEvent e )
-      {
-        /* Get the source. */
-        Text source = (Text) e.getSource();
-
-        /* Store the text. */
-        Integer imageHeight = NumberUtils.parseQuietInteger( source.getText() );
-        if( imageHeight != null )
-          m_imageHeight = imageHeight.intValue();
-
-        /* Check, if all data entered is correct. */
-        checkDialogComplete();
-      }
-    } );
-
-    /* Create a label. */
-    Label imageFormatLabel = new Label( imageGroup, SWT.NONE );
-    imageFormatLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageFormatLabel.setText( "Format" );
-
-    /* Create a combo viewer. */
-    m_imageFormatViewer = new ComboViewer( imageGroup, SWT.READ_ONLY );
-    m_imageFormatViewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    m_imageFormatViewer.setContentProvider( new ArrayContentProvider() );
-    m_imageFormatViewer.setLabelProvider( new LabelProvider() );
-    m_imageFormatViewer.setInput( new String[] { "GIF", "PNG" } );
-    m_imageFormatViewer.addSelectionChangedListener( new ISelectionChangedListener()
-    {
-      /**
-       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-       */
-      @Override
-      public void selectionChanged( SelectionChangedEvent event )
-      {
-        /* Get the source. */
-        ComboViewer source = (ComboViewer) event.getSource();
-
-        /* Get the selection index. */
-        int imageFormatIndex = source.getCombo().getSelectionIndex();
-        if( imageFormatIndex == -1 )
-          return;
-
-        /* Get the selection. */
-        ISelection selection = source.getSelection();
-        if( selection == null || selection.isEmpty() || !(selection instanceof StructuredSelection) )
-          return;
-
-        /* Cast. */
-        StructuredSelection structuredSelection = (StructuredSelection) selection;
-
-        /* Get the first element. */
-        Object firstElement = structuredSelection.getFirstElement();
-        if( firstElement == null || !(firstElement instanceof String) )
-          return;
-
-        /* Cast. */
-        String imageFormat = (String) firstElement;
-
         /* Store the values. */
-        m_imageFormat = imageFormat;
+        m_imageWidth = width;
+        m_imageHeight = height;
+        m_aspectRatio = aspectRatio;
+        m_imageFormat = format;
 
         /* Check, if all data entered is correct. */
         checkDialogComplete();
@@ -476,6 +371,7 @@ public class ScreenshotDialog extends Dialog
     m_targetPath = null;
     m_imageWidth = -1;
     m_imageHeight = -1;
+    m_aspectRatio = false;
     m_imageFormat = null;
 
     super.cancelPressed();
@@ -521,29 +417,24 @@ public class ScreenshotDialog extends Dialog
     /* The width of the image. */
     if( m_imageWidth < 0 )
     {
-      String imageWidth = m_dialogSettings.get( SETTINGS_IMAGE_WIDTH );
-      if( imageWidth != null && imageWidth.length() > 0 )
-        m_imageWidthText.setText( imageWidth );
-      else
-        m_imageWidthText.setText( "640" );
+      int imageWidth = m_dialogSettings.getInt( SETTINGS_IMAGE_WIDTH );
+      m_imageComposite.setImageWidth( imageWidth );
     }
 
     /* The height of the image. */
     if( m_imageHeight < 0 )
     {
-      String imageHeight = m_dialogSettings.get( SETTINGS_IMAGE_HEIGHT );
-      if( imageHeight != null && imageHeight.length() > 0 )
-        m_imageHeightText.setText( imageHeight );
-      else
-        m_imageHeightText.setText( "480" );
+      int imageHeight = m_dialogSettings.getInt( SETTINGS_IMAGE_HEIGHT );
+      m_imageComposite.setImageHeight( imageHeight );
     }
+
+    /* The aspect ratio. */
+    boolean aspectRatio = m_dialogSettings.getBoolean( SETTINGS_KEEP_ASPECT_RATIO );
+    m_imageComposite.setAspectRatio( aspectRatio );
 
     /* The format of the image. */
     String imageFormat = m_dialogSettings.get( SETTINGS_IMAGE_FORMAT );
-    if( imageFormat != null && imageFormat.length() > 0 )
-      m_imageFormatViewer.setSelection( new StructuredSelection( imageFormat ) );
-    else
-      m_imageFormatViewer.setSelection( new StructuredSelection( m_imageFormatViewer.getElementAt( 0 ) ) );
+    m_imageComposite.setImageFormat( imageFormat );
   }
 
   /**
@@ -559,6 +450,7 @@ public class ScreenshotDialog extends Dialog
     m_dialogSettings.put( SETTINGS_TARGET_PATH, m_targetPath );
     m_dialogSettings.put( SETTINGS_IMAGE_WIDTH, m_imageWidth );
     m_dialogSettings.put( SETTINGS_IMAGE_HEIGHT, m_imageHeight );
+    m_dialogSettings.put( SETTINGS_KEEP_ASPECT_RATIO, m_aspectRatio );
     m_dialogSettings.put( SETTINGS_IMAGE_FORMAT, m_imageFormat );
   }
 
@@ -633,6 +525,16 @@ public class ScreenshotDialog extends Dialog
   public int getImageHeight( )
   {
     return m_imageHeight;
+  }
+
+  /**
+   * This function returns true, if the aspect ratio should be maintained on change of the width or height.
+   * 
+   * @return True, if the aspect ratio should be maintained on change of the width or height.
+   */
+  public boolean keepAspectRation( )
+  {
+    return m_aspectRatio;
   }
 
   /**

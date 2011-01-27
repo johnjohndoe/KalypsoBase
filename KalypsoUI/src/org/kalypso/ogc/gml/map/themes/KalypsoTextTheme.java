@@ -63,6 +63,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.FontUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 import org.kalypso.util.themes.text.TextUtilities;
 
@@ -73,6 +74,11 @@ import org.kalypso.util.themes.text.TextUtilities;
  */
 public class KalypsoTextTheme extends AbstractImageTheme
 {
+  /**
+   * The background color.
+   */
+  protected org.eclipse.swt.graphics.Color m_backgroundColor;
+
   /**
    * The text, which should be shown.
    */
@@ -91,6 +97,7 @@ public class KalypsoTextTheme extends AbstractImageTheme
     super( name, "text", mapModell );
 
     /* Initialize. */
+    m_backgroundColor = null;
     m_text = null;
   }
 
@@ -180,11 +187,13 @@ public class KalypsoTextTheme extends AbstractImageTheme
   {
     /* Default values. */
     updatePosition( PositionUtilities.RIGHT, PositionUtilities.BOTTOM );
+    m_backgroundColor = new org.eclipse.swt.graphics.Color( Display.getCurrent(), 255, 255, 255 );
     m_text = null;
 
     /* Get the properties. */
     String horizontalProperty = getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, null );
     String verticalProperty = getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, null );
+    String backgroundColorProperty = getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, null );
     String textProperty = getProperty( TextUtilities.THEME_PROPERTY_TEXT, null );
 
     /* Check the horizontal and vertical position. */
@@ -192,6 +201,14 @@ public class KalypsoTextTheme extends AbstractImageTheme
     int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
     if( horizontal != -1 && vertical != -1 )
       updatePosition( horizontal, vertical );
+
+    /* Check the background color. */
+    org.eclipse.swt.graphics.Color backgroundColor = ThemeUtilities.checkBackgroundColor( Display.getCurrent(), backgroundColorProperty );
+    if( backgroundColor != null )
+    {
+      m_backgroundColor.dispose();
+      m_backgroundColor = backgroundColor;
+    }
 
     /* Check the text. */
     if( textProperty != null && textProperty.length() > 0 )
@@ -229,17 +246,18 @@ public class KalypsoTextTheme extends AbstractImageTheme
 
     Color white = bigFont.getDevice().getSystemColor( SWT.COLOR_WHITE );
     Color black = bigFont.getDevice().getSystemColor( SWT.COLOR_BLACK );
-    PaletteData palette = new PaletteData( new RGB[] { white.getRGB(), black.getRGB() } );
+    PaletteData palette = new PaletteData( new RGB[] { white.getRGB(), m_backgroundColor.getRGB(), black.getRGB() } );
 
     /* Create a new image. */
-    ImageData newImageData = new ImageData( width, height, 1, palette );
+    ImageData newImageData = new ImageData( width, height, 32, palette );
     newImageData.transparentPixel = 0;
     org.eclipse.swt.graphics.Image newImage = new org.eclipse.swt.graphics.Image( bigFont.getDevice(), newImageData );
     GC newGC = new GC( newImage );
     newGC.setFont( bigFont );
 
     /* Draw the text. */
-    newGC.setForeground( bigFont.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
+    newGC.setBackground( m_backgroundColor );
+    newGC.setForeground( black );
     newGC.drawText( m_text, 0, 0 );
 
     /* Dispose the new image. */
