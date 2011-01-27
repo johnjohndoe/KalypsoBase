@@ -46,6 +46,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.table.binding.CellStyle;
@@ -254,4 +255,12 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     return super.getToolTipText( element );
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipShift(java.lang.Object)
+   */
+  @Override
+  public Point getToolTipShift( final Object object )
+  {
+    return new Point( 10, 20 );
+  }
 }
