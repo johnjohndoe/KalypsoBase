@@ -403,7 +403,9 @@ public class TextComposite extends Composite
 
     /* Create a text field. */
     Text textText = new Text( textGroup, SWT.BORDER );
-    textText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+    GridData textData = new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 );
+    textData.widthHint = 250;
+    textText.setLayoutData( textData );
     if( m_text != null )
       textText.setText( m_text );
     textText.setMessage( "<Anzeigetext>" );
