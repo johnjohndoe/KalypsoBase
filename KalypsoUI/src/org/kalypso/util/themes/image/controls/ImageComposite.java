@@ -408,7 +408,9 @@ public class ImageComposite extends Composite
 
     /* Create a text field. */
     final Text imageUrlText = new Text( imageGroup, SWT.BORDER );
-    imageUrlText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    GridData imageUrlData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    imageUrlData.widthHint = 250;
+    imageUrlText.setLayoutData( imageUrlData );
     if( m_imageUrl != null )
       imageUrlText.setText( m_imageUrl );
 
