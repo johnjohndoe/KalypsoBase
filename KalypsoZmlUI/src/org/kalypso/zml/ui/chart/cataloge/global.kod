@@ -88,6 +88,16 @@
           <Color>3460A9</Color>
         </FillColor>
       </PointStyle>
+      <LineStyle role="w_active_dash_line_1">
+        <Width>3</Width>
+        <LineColor>3460A9</LineColor>
+        <DashArray>16 8</DashArray>
+      </LineStyle>
+      <LineStyle role="w_active_dot_line_1">
+        <Width>3</Width>
+        <LineColor>3460A9</LineColor>
+        <DashArray>3 6</DashArray>
+      </LineStyle>
       <LineStyle role="w_line_2">
         <Width>2</Width>
         <LineColor>BDD3F6</LineColor>
@@ -564,6 +574,9 @@
         <Layers>
           <Layer id="Niederschlag" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider">
+              <Parameters>
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
             </Provider>
             <Title>Niederschlag</Title>
             <Description />
