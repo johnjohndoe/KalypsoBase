@@ -308,7 +308,7 @@ public class ScreenshotDialog extends Dialog
     /* Create a label. */
     Label imageWidthLabel = new Label( imageGroup, SWT.NONE );
     imageWidthLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageWidthLabel.setText( "Breite" );
+    imageWidthLabel.setText( "Breite [Pixel]" );
 
     /* Create a text field. */
     m_imageWidthText = new Text( imageGroup, SWT.BORDER | SWT.RIGHT );
@@ -339,7 +339,7 @@ public class ScreenshotDialog extends Dialog
     /* Create a label. */
     Label imageHeightLabel = new Label( imageGroup, SWT.NONE );
     imageHeightLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageHeightLabel.setText( "Höhe" );
+    imageHeightLabel.setText( "Höhe [Pixel]" );
 
     /* Create a text field. */
     m_imageHeightText = new Text( imageGroup, SWT.BORDER | SWT.RIGHT );
