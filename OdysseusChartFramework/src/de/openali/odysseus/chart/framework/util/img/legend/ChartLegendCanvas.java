@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img.legend;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -47,6 +48,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.util.img.legend.config.DefaultChartLegendConfig;
 import de.openali.odysseus.chart.framework.util.img.legend.config.IChartLegendConfig;
+import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer;
 
 /**
  * @author Dirk Kuch
@@ -64,24 +66,39 @@ public class ChartLegendCanvas implements IChartLegendCanvas
 
   public ChartLegendCanvas( final IChartModel model, final IChartLegendConfig config )
   {
+    Assert.isNotNull( model );
     m_model = model;
     m_config = config;
   }
 
   public Point getSize( )
   {
+    if( m_model == null )
+      return new Point( 0, 0 );
+
     if( m_model.isHideLegend() )
       return new Point( 0, 0 );
 
-    return m_model.getLegendRenderer().calculateSize( this, m_config );
+    IChartLegendRenderer legendRenderer = m_model.getLegendRenderer();
+    if( legendRenderer == null )
+      return new Point( 0, 0 );
+
+    return legendRenderer.calculateSize( this, m_config );
   }
 
   public Image createImage( )
   {
+    if( m_model == null )
+      return null;
+
     if( m_model.isHideLegend() )
       return null;
 
-    return m_model.getLegendRenderer().createImage( this, m_config );
+    IChartLegendRenderer legendRenderer = m_model.getLegendRenderer();
+    if( legendRenderer == null )
+      return null;
+
+    return legendRenderer.createImage( this, m_config );
   }
 
   /**
