@@ -51,8 +51,11 @@ import de.openali.odysseus.chart.framework.util.img.legend.config.IChartLegendCo
  */
 public interface IChartLegendRenderer
 {
+  String EXTENSION_POINT_ID = "de.openali.odysseus.chart.framework.ChartRenderer";
+
   Image createImage( final IChartLegendCanvas canvas, final IChartLegendConfig config );
 
-  Point getSize( final IChartLegendCanvas canvas, final IChartLegendConfig config );
+  Point calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config );
 
+  String getIdentifier( );
 }

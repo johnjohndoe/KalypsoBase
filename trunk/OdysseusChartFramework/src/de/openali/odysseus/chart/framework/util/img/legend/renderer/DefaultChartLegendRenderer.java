@@ -66,6 +66,15 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
 
   private int m_numRows;
 
+  /**
+   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#getIdentifier()
+   */
+  @Override
+  public String getIdentifier( )
+  {
+    return "de.openali.odysseus.chart.framework.DefaultChartRenderer";
+  }
+
   private Point calculateSize( final Point... points )
   {
     int x = 0;
@@ -216,7 +225,7 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
    * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#getSize(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
    */
   @Override
-  public Point getSize( final IChartLegendCanvas canvas, final IChartLegendConfig config )
+  public Point calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
     final IChartModel model = canvas.getModel();
     final ILayerManager layerManager = model.getLayerManager();
@@ -292,4 +301,5 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
 
     return new Point( x, y );
   }
+
 }

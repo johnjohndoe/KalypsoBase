@@ -12,6 +12,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
+import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer;
 
 public interface IChartModel extends ILayerContainer
 {
@@ -74,4 +75,7 @@ public interface IChartModel extends ILayerContainer
 
   ITextStyle getTextStyle( );
 
+  void setLegendRenderer( String renderer );
+
+  IChartLegendRenderer getLegendRenderer( );
 }

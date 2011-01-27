@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.eclipse.swt.graphics.Point;
 
+import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.IChartModelState;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -28,6 +29,7 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
+import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer;
 
 public class ChartModel implements IChartModel
 {
@@ -56,6 +58,8 @@ public class ChartModel implements IChartModel
   private String m_description = "";
 
   private ITextStyle m_textStyle = null;
+
+  private String m_renderer;
 
   public ChartModel( )
   {
@@ -708,6 +712,24 @@ public class ChartModel implements IChartModel
   {
     m_title.clear();
     m_title.add( new TitleTypeBean( title, position, textStyle, insets ) );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#setLegendRenderer(java.lang.String)
+   */
+  @Override
+  public void setLegendRenderer( final String renderer )
+  {
+    m_renderer = renderer;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#getLegendRenderer()
+   */
+  @Override
+  public IChartLegendRenderer getLegendRenderer( )
+  {
+    return OdysseusChartFrameworkPlugin.getDefault().getRenderers( m_renderer );
   }
 
 }

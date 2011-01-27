@@ -40,21 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img.legend;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.util.img.legend.config.DefaultChartLegendConfig;
 import de.openali.odysseus.chart.framework.util.img.legend.config.IChartLegendConfig;
-import de.openali.odysseus.chart.framework.util.img.legend.renderer.DefaultChartLegendRenderer;
-import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer;
 
 /**
  * @author Dirk Kuch
@@ -63,20 +55,17 @@ public class ChartLegendCanvas implements IChartLegendCanvas
 {
   private final IChartModel m_model;
 
-  private final IChartLegendRenderer m_strategy;
-
   private final IChartLegendConfig m_config;
 
   public ChartLegendCanvas( final IChartModel model, final Rectangle size )
   {
-    this( model, new DefaultChartLegendConfig( size.width ), new DefaultChartLegendRenderer() );
+    this( model, new DefaultChartLegendConfig( size.width ) );
   }
 
-  public ChartLegendCanvas( final IChartModel model, final IChartLegendConfig config, final IChartLegendRenderer strategy )
+  public ChartLegendCanvas( final IChartModel model, final IChartLegendConfig config )
   {
     m_model = model;
     m_config = config;
-    m_strategy = strategy;
   }
 
   public Point getSize( )
@@ -84,7 +73,7 @@ public class ChartLegendCanvas implements IChartLegendCanvas
     if( m_model.isHideLegend() )
       return new Point( 0, 0 );
 
-    return m_strategy.getSize( this, m_config );
+    return m_model.getLegendRenderer().calculateSize( this, m_config );
   }
 
   public Image createImage( )
@@ -92,39 +81,7 @@ public class ChartLegendCanvas implements IChartLegendCanvas
     if( m_model.isHideLegend() )
       return null;
 
-    return m_strategy.createImage( this, m_config );
-  }
-
-  public IChartLayer[] getLayers( )
-  {
-    final Set<IChartLayer> visible = new LinkedHashSet<IChartLayer>();
-
-    final IChartLayer[] layers = m_model.getLayerManager().getLayers();
-    for( final IChartLayer layer : layers )
-    {
-      Collections.addAll( visible, getLayers( layer ) );
-    }
-
-    return visible.toArray( new IChartLayer[] {} );
-  }
-
-  private IChartLayer[] getLayers( final IChartLayer layer )
-  {
-    final Set<IChartLayer> visible = new LinkedHashSet<IChartLayer>();
-
-    final IChartLayer[] children = (layer).getLayerManager().getLayers();
-
-    if( ArrayUtils.isNotEmpty( children ) )
-    {
-      for( final IChartLayer child : children )
-      {
-        Collections.addAll( visible, getLayers( child ) );
-      }
-    }
-    else if( layer.isLegend() )
-      visible.add( layer );
-
-    return visible.toArray( new IChartLayer[] {} );
+    return m_model.getLegendRenderer().createImage( this, m_config );
   }
 
   /**
