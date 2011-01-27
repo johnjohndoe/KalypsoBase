@@ -53,6 +53,7 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoTextTheme;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
+import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 import org.kalypso.util.themes.text.TextUtilities;
 import org.kalypso.util.themes.text.controls.TextComposite;
@@ -159,6 +160,7 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
     /* Get the properties. */
     String horizontalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
     String verticalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+    String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
     String textProperty = m_properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT );
 
     /* Set the properties. */
@@ -166,6 +168,8 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
       m_theme.setProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
     if( verticalProperty != null && verticalProperty.length() > 0 )
       m_theme.setProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+    if( backgroundColorProperty != null && backgroundColorProperty.length() > 0 )
+      m_theme.setProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
     if( textProperty != null && textProperty.length() > 0 )
       m_theme.setProperty( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
 
@@ -195,10 +199,10 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
     {
       /**
        * @see org.kalypso.util.themes.text.listener.ITextChangedListener#textPropertyChanged(java.util.Properties, int,
-       *      int, java.lang.String)
+       *      int, org.eclipse.swt.graphics.Color, java.lang.String)
        */
       @Override
-      public void textPropertyChanged( Properties properties, int horizontal, int vertical, String text )
+      public void textPropertyChanged( Properties properties, int horizontal, int vertical, org.eclipse.swt.graphics.Color backgroundColor, String text )
       {
         /* Update the properties object. */
         m_properties = properties;

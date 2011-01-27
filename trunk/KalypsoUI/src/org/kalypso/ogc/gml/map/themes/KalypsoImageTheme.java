@@ -59,7 +59,6 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.util.themes.image.ImageUtilities;
-import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
@@ -183,8 +182,8 @@ public class KalypsoImageTheme extends AbstractImageTheme
     String imageUrlProperty = getProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL, null );
 
     /* Check the horizontal and vertical position. */
-    int horizontal = LegendUtilities.checkHorizontalPosition( horizontalProperty );
-    int vertical = LegendUtilities.checkVerticalPosition( verticalProperty );
+    int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
+    int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
     if( horizontal != -1 && vertical != -1 )
       updatePosition( horizontal, vertical );
 

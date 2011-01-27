@@ -50,6 +50,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.image.ImageUtilities;
 import org.kalypso.util.themes.image.controls.ImageComposite;
 import org.kalypso.util.themes.image.listener.IImageChangedListener;
@@ -119,10 +120,10 @@ public class ImageThemeWizardPage extends WizardPage
     {
       /**
        * @see org.kalypso.util.themes.image.listener.IImageChangedListener#imagePropertyChanged(java.util.Properties,
-       *      int, int, java.lang.String)
+       *      int, int, org.eclipse.swt.graphics.Color, java.lang.String)
        */
       @Override
-      public void imagePropertyChanged( Properties properties, int horizontal, int vertical, String imageUrl )
+      public void imagePropertyChanged( Properties properties, int horizontal, int vertical, org.eclipse.swt.graphics.Color backgroundColor, String imageUrl )
       {
         /* Store the properties. */
         m_properties.clear();
@@ -130,11 +131,13 @@ public class ImageThemeWizardPage extends WizardPage
         /* Get the properties. */
         String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
         String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+        String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
         String imageUrlProperty = properties.getProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL );
 
         /* Set the properties. */
         m_properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
         m_properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+        m_properties.put( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
         m_properties.put( ImageUtilities.THEME_PROPERTY_IMAGE_URL, imageUrlProperty );
 
         /* Check if the page can be completed. */

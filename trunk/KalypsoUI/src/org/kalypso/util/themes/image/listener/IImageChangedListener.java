@@ -42,6 +42,8 @@ package org.kalypso.util.themes.image.listener;
 
 import java.util.Properties;
 
+import org.eclipse.swt.graphics.Color;
+
 /**
  * This interface provides functions for listener, which would like to be notified if a image property has changed.
  * 
@@ -58,8 +60,10 @@ public interface IImageChangedListener
    *          The horizontal position.
    * @param vertical
    *          The vertical position.
+   * @param backgroundColor
+   *          The background color.
    * @param imageUrl
    *          The URL of the image, which should be shown.
    */
-  public void imagePropertyChanged( Properties properties, int horizontal, int vertical, String imageUrl );
+  public void imagePropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, String imageUrl );
 }

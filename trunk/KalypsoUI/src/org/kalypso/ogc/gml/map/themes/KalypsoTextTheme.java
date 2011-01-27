@@ -63,7 +63,6 @@ import org.kalypso.contribs.eclipse.swt.graphics.FontUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 import org.kalypso.util.themes.text.TextUtilities;
 
@@ -189,8 +188,8 @@ public class KalypsoTextTheme extends AbstractImageTheme
     String textProperty = getProperty( TextUtilities.THEME_PROPERTY_TEXT, null );
 
     /* Check the horizontal and vertical position. */
-    int horizontal = LegendUtilities.checkHorizontalPosition( horizontalProperty );
-    int vertical = LegendUtilities.checkVerticalPosition( verticalProperty );
+    int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
+    int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
     if( horizontal != -1 && vertical != -1 )
       updatePosition( horizontal, vertical );
 

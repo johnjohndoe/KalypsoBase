@@ -50,16 +50,23 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.util.themes.legend.LegendUtilities;
+import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 import org.kalypso.util.themes.position.controls.PositionComposite;
 import org.kalypso.util.themes.position.listener.IPositionChangedListener;
@@ -97,6 +104,11 @@ public class TextComposite extends Composite
    * The vertical position.
    */
   protected int m_vertical;
+
+  /**
+   * The background color.
+   */
+  protected Color m_backgroundColor;
 
   /**
    * The text, which should be shown.
@@ -165,6 +177,7 @@ public class TextComposite extends Composite
     /* Default values. */
     m_horizontal = PositionUtilities.RIGHT;
     m_vertical = PositionUtilities.BOTTOM;
+    m_backgroundColor = new Color( getDisplay(), 255, 255, 255 );
     m_text = null;
 
     /* Do not change the default values, if no new properties are set. */
@@ -188,17 +201,23 @@ public class TextComposite extends Composite
     /* Get the properties. */
     String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
     String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+    String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
     String textProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT, null );
 
     /* Check the horizontal position. */
-    int horizontal = LegendUtilities.checkHorizontalPosition( horizontalProperty );
+    int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
     if( horizontal != -1 )
       m_horizontal = horizontal;
 
     /* Check the vertical position. */
-    int vertical = LegendUtilities.checkVerticalPosition( verticalProperty );
+    int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
     if( vertical != -1 )
       m_vertical = vertical;
+
+    /* Check the background color. */
+    Color backgroundColor = ThemeUtilities.checkBackgroundColor( getDisplay(), backgroundColorProperty );
+    if( backgroundColor != null )
+      m_backgroundColor = backgroundColor;
 
     /* Check the text. */
     if( textProperty != null && textProperty.length() > 0 )
@@ -314,7 +333,7 @@ public class TextComposite extends Composite
         m_horizontal = horizontal;
         m_vertical = vertical;
 
-        fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_text );
+        fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_text );
       }
     } );
 
@@ -333,8 +352,48 @@ public class TextComposite extends Composite
   {
     /* Create a group. */
     Group textGroup = new Group( parent, SWT.NONE );
-    textGroup.setLayout( new GridLayout( 2, false ) );
+    textGroup.setLayout( new GridLayout( 3, false ) );
     textGroup.setText( "Optionen" );
+
+    /* Create a label. */
+    Label backgroundColorLabel = new Label( textGroup, SWT.NONE );
+    backgroundColorLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    backgroundColorLabel.setText( "Hintergrundfarbe" );
+    backgroundColorLabel.setAlignment( SWT.LEFT );
+
+    /* Create a label. */
+    final Label backgroundLabel = new Label( textGroup, SWT.BORDER );
+    backgroundLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    backgroundLabel.setText( "Hintergrundfarbe" );
+    backgroundLabel.setBackground( m_backgroundColor );
+
+    /* Create a button. */
+    Button backgroundColorButton = new Button( textGroup, SWT.PUSH );
+    backgroundColorButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    backgroundColorButton.setText( "..." );
+    backgroundColorButton.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        Shell shell = TextComposite.this.getShell();
+
+        ColorDialog dialog = new ColorDialog( shell );
+        dialog.setRGB( m_backgroundColor.getRGB() );
+        RGB rgb = dialog.open();
+        if( rgb == null )
+          return;
+
+        m_backgroundColor.dispose();
+        m_backgroundColor = new Color( shell.getDisplay(), rgb );
+        backgroundLabel.setBackground( m_backgroundColor );
+
+        fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_text );
+      }
+    } );
 
     /* Create a label. */
     Label textLabel = new Label( textGroup, SWT.NONE );
@@ -344,7 +403,7 @@ public class TextComposite extends Composite
 
     /* Create a text field. */
     Text textText = new Text( textGroup, SWT.BORDER );
-    textText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    textText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     if( m_text != null )
       textText.setText( m_text );
     textText.setMessage( "<Anzeigetext>" );
@@ -361,7 +420,7 @@ public class TextComposite extends Composite
         Text source = (Text) e.getSource();
         m_text = source.getText();
 
-        fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_text );
+        fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_text );
       }
     } );
 
@@ -411,10 +470,10 @@ public class TextComposite extends Composite
    * @param text
    *          The text, which should be shown.
    */
-  protected void fireTextPropertyChanged( Properties properties, int horizontal, int vertical, String text )
+  protected void fireTextPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, String text )
   {
     for( ITextChangedListener listener : m_listener )
-      listener.textPropertyChanged( properties, horizontal, vertical, text );
+      listener.textPropertyChanged( properties, horizontal, vertical, backgroundColor, text );
   }
 
   /**
@@ -454,6 +513,7 @@ public class TextComposite extends Composite
     /* Serialize the properties. */
     String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
     String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
+    String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.getRed(), m_backgroundColor.getGreen(), m_backgroundColor.getBlue() );
     String textProperty = null;
     if( m_text != null )
       textProperty = String.format( Locale.PRC, "%s", m_text );
@@ -461,6 +521,7 @@ public class TextComposite extends Composite
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
     properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
+    properties.put( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
     properties.put( TextUtilities.THEME_PROPERTY_TEXT, "" );
     if( textProperty != null )
       properties.put( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
