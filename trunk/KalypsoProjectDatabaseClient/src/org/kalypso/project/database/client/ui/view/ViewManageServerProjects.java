@@ -102,7 +102,7 @@ public class ViewManageServerProjects extends ViewPart
       }
     }
 
-    final FormToolkit toolkit = ToolkitUtils.createToolkit( m_body );
+    final FormToolkit toolkit = ToolkitUtils.createToolkit( m_parent );
 
     m_body = toolkit.createComposite( m_parent );
     m_body.setLayout( new GridLayout() );
