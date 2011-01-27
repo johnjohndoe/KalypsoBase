@@ -62,8 +62,6 @@ import de.openali.odysseus.chart.framework.util.img.legend.utils.LegendChartLaye
  */
 public class DefaultChartLegendRenderer implements IChartLegendRenderer
 {
-  private Point m_size;
-
   private int m_numRows;
 
   /**
@@ -72,7 +70,7 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
   @Override
   public String getIdentifier( )
   {
-    return "de.openali.odysseus.chart.framework.DefaultChartRenderer";
+    return "de.openali.odysseus.chart.framework.DefaultChartRenderer"; //$NON-NLS-1$
   }
 
   private Point calculateSize( final Point... points )
@@ -95,12 +93,7 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
   @Override
   public Image createImage( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
-    final IChartModel model = canvas.getModel();
-    final ILayerManager layerManager = model.getLayerManager();
-    final LegendChartLayersVisitor visitor = new LegendChartLayersVisitor();
-    layerManager.accept( visitor );
-
-    final IChartLayer[] layers = visitor.getLayers();
+    final IChartLayer[] layers = getLayers( canvas.getModel() );
     final Point size = getSize( layers, config );
     final int rowHeight = m_numRows < 2 ? size.y : size.y / m_numRows;
     if( size.x <= 0 || size.y <= 0 )
@@ -150,6 +143,15 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
       gc.dispose();
     }
 
+  }
+
+  protected IChartLayer[] getLayers( final IChartModel model )
+  {
+    final ILayerManager layerManager = model.getLayerManager();
+    final LegendChartLayersVisitor visitor = new LegendChartLayersVisitor();
+    layerManager.accept( visitor );
+
+    return visitor.getLayers();
   }
 
   private ImageData createLegendItem( final IChartLegendConfig config, final ILegendEntry entry, final int rowHeight )
@@ -227,21 +229,11 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
   @Override
   public Point calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
-    final IChartModel model = canvas.getModel();
-    final ILayerManager layerManager = model.getLayerManager();
-    final LegendChartLayersVisitor visitor = new LegendChartLayersVisitor();
-    layerManager.accept( visitor );
-
-    final IChartLayer[] layers = visitor.getLayers();
-
-    return getSize( layers, config );
+    return getSize( getLayers( canvas.getModel() ), config );
   }
 
   private Point getSize( final IChartLayer[] layers, final IChartLegendConfig config )
   {
-    if( m_size != null )
-      return m_size;
-
     int heigth = 0;
     int row = 0;
 
@@ -287,9 +279,8 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
         }
       }
     }
-    m_size = new Point( maxRowWidth, heigth );
 
-    return m_size;
+    return new Point( maxRowWidth, heigth );
   }
 
   private Point getTextAnchor( final IChartLegendConfig config, final int iconWidth, final int rowHeight, final Point textSize )

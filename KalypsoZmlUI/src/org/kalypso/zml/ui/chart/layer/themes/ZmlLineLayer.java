@@ -49,7 +49,9 @@ import org.eclipse.swt.graphics.Point;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
@@ -84,6 +86,8 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
   private IZmlLayerDataHandler m_handler;
 
   private boolean m_stylesUpdated = false;
+
+  private String m_labelDescriptor;
 
   protected ZmlLineLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
@@ -127,6 +131,12 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
 // return false;
 
     return true;
+  }
+
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    return createLegendEntries();
   }
 
   /**
@@ -335,4 +345,27 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
 
     m_handler = handler;
   }
+
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setLabelDescriptor(java.lang.String)
+   */
+  @Override
+  public void setLabelDescriptor( final String labelDescriptor )
+  {
+    m_labelDescriptor = labelDescriptor;
+  }
+
+  @Override
+  public String getTitle( )
+  {
+    if( m_labelDescriptor == null )
+      return super.getTitle();
+
+    final IObservation observation = getDataHandler().getObservation();
+    if( observation == null )
+      return m_labelDescriptor;
+
+    return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
+  }
+
 }

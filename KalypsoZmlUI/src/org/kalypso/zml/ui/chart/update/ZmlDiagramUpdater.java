@@ -81,30 +81,31 @@ public class ZmlDiagramUpdater implements Runnable
   @Override
   public void run( )
   {
-    for( final MultipleTsLink link : m_links )
+    for( final MultipleTsLink multiple : m_links )
     {
-      if( link.isIgnoreType( m_ignoreTypes ) )
+      if( multiple.isIgnoreType( m_ignoreTypes ) )
         continue;
 
       m_manager.accept( new RemoveClonedLayerVisitor() );
 
-      final ParameterTypeLayerVisitor visitor = new ParameterTypeLayerVisitor( link.getIdentifier() );
+      final ParameterTypeLayerVisitor visitor = new ParameterTypeLayerVisitor( multiple.getIdentifier() );
       m_manager.accept( visitor );
 
       final IZmlLayer[] layers = visitor.getLayers();
 
-      final TSLinkWithName[] links = link.getLinks();
+      final TSLinkWithName[] links = multiple.getLinks();
       for( int index = 0; index < links.length; index++ )
       {
-        final AsynchronousObservationProvider provider = new AsynchronousObservationProvider( links[index] );
+        final TSLinkWithName link = links[index];
+        final AsynchronousObservationProvider provider = new AsynchronousObservationProvider( link );
         m_providers.add( provider );
 
-        update( layers, provider, index );
+        update( layers, provider, index, link.getName() );
       }
     }
   }
 
-  private void update( final IZmlLayer[] layers, final AsynchronousObservationProvider provider, final int index )
+  private void update( final IZmlLayer[] layers, final AsynchronousObservationProvider provider, final int index, final String labelDescriptor )
   {
     for( final IZmlLayer baseLayer : layers )
     {
@@ -116,6 +117,8 @@ public class ZmlDiagramUpdater implements Runnable
       final IZmlLayerDataHandler handler = layer.getDataHandler();
       if( handler instanceof ZmlObsProviderDataHandler )
         ((ZmlObsProviderDataHandler) handler).setObsProvider( provider );
+
+      layer.setLabelDescriptor( labelDescriptor );
     }
   }
 
@@ -152,5 +155,4 @@ public class ZmlDiagramUpdater implements Runnable
   {
     return m_providers.toArray( new IObsProvider[] {} );
   }
-
 }

@@ -38,10 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.util.img.legend.utils;
+package org.kalypso.zml.ui.chart.legend;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -50,7 +53,7 @@ import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisito
 /**
  * @author Dirk Kuch
  */
-public class LegendChartLayersVisitor implements IChartLayerVisitor
+public class ZmlChartLegendLayersVisitor implements IChartLayerVisitor
 {
   private final Set<IChartLayer> m_layers = new LinkedHashSet<IChartLayer>();
 
@@ -73,6 +76,17 @@ public class LegendChartLayersVisitor implements IChartLayerVisitor
       return false;
 
     if( !layer.isLegend() )
+      return false;
+
+    if( !(layer instanceof IZmlLayer) )
+      return true;
+
+    final IZmlLayer zml = (IZmlLayer) layer;
+    final IZmlLayerDataHandler dataHandler = zml.getDataHandler();
+    if( dataHandler == null )
+      return false;
+
+    if( dataHandler.getObservation() == null )
       return false;
 
     return true;

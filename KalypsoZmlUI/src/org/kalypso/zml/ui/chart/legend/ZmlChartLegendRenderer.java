@@ -38,49 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.util.img.legend.utils;
+package org.kalypso.zml.ui.chart.legend;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.util.img.legend.renderer.DefaultChartLegendRenderer;
 
 /**
  * @author Dirk Kuch
  */
-public class LegendChartLayersVisitor implements IChartLayerVisitor
+public class ZmlChartLegendRenderer extends DefaultChartLegendRenderer
 {
-  private final Set<IChartLayer> m_layers = new LinkedHashSet<IChartLayer>();
-
   /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#getIdentifier()
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public String getIdentifier( )
   {
-    if( isValid( layer ) )
-      m_layers.add( layer );
-
-    final ILayerManager layerManager = layer.getLayerManager();
-    layerManager.accept( this );
+    return "org.kalypso.zml.ui.chart.legend.renderer"; //$NON-NLS-1$
   }
 
-  private boolean isValid( final IChartLayer layer )
+  /**
+   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.DefaultChartLegendRenderer#getLayers(de.openali.odysseus.chart.framework.model.IChartModel)
+   */
+  @Override
+  protected IChartLayer[] getLayers( final IChartModel model )
   {
-    if( !layer.isVisible() )
-      return false;
+    final ILayerManager layerManager = model.getLayerManager();
+    final ZmlChartLegendLayersVisitor visitor = new ZmlChartLegendLayersVisitor();
+    layerManager.accept( visitor );
 
-    if( !layer.isLegend() )
-      return false;
-
-    return true;
+    return visitor.getLayers();
   }
-
-  public IChartLayer[] getLayers( )
-  {
-    return m_layers.toArray( new IChartLayer[] {} );
-  }
-
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="ChartRenderer" name="ChartRenderer" schema="schema/ChartRenderer.exsd"/>
+   <extension-point id="ChartLegendRenderer" name="ChartLegendRenderer" schema="schema/ChartLegendRenderer.exsd"/>
    <extension
-         point="de.openali.odysseus.chart.framework.ChartRenderer">
+         point="de.openali.odysseus.chart.framework.ChartLegendRenderer">
       <renderer
             id="de.openali.odysseus.chart.framework.DefaultChartRenderer"
             renderer="de.openali.odysseus.chart.framework.util.img.legend.renderer.DefaultChartLegendRenderer">
