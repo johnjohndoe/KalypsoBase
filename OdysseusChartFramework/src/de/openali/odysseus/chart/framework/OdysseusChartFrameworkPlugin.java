@@ -1,8 +1,18 @@
 package de.openali.odysseus.chart.framework;
 
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
+import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer;
 import de.openali.odysseus.chart.framework.util.resource.ColorRegistry;
 import de.openali.odysseus.chart.framework.util.resource.FontRegistry;
 import de.openali.odysseus.chart.framework.util.resource.ImageRegistry;
@@ -13,11 +23,10 @@ import de.openali.odysseus.chart.framework.util.resource.PatternRegistry;
  */
 public class OdysseusChartFrameworkPlugin extends Plugin
 {
+  private static List<IChartLegendRenderer> CHART_LEGEND_RENDERERS = null;
 
-  // The plug-in ID
   public static final String PLUGIN_ID = "de.openali.odysseus.chart.framework";
 
-  // The shared instance
   private static OdysseusChartFrameworkPlugin PLUGIN;
 
   private ColorRegistry m_colorRegistry;
@@ -95,4 +104,51 @@ public class OdysseusChartFrameworkPlugin extends Plugin
     return m_fontRegistry;
   }
 
+  /**
+   * @return list of feature binding handlers, handling a special featureType qname
+   */
+  public synchronized IChartLegendRenderer[] getRenderers( )
+  {
+    // fill binding map
+    if( CHART_LEGEND_RENDERERS == null )
+    {
+      CHART_LEGEND_RENDERERS = new ArrayList<IChartLegendRenderer>();
+
+      /* get extension points */
+      final IExtensionRegistry registry = Platform.getExtensionRegistry();
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IChartLegendRenderer.EXTENSION_POINT_ID );
+
+      for( final IConfigurationElement element : elements )
+      {
+        try
+        {
+          final String pluginid = element.getContributor().getName();
+          final Bundle bundle = Platform.getBundle( pluginid );
+          final Class< ? > featureClass = bundle.loadClass( element.getAttribute( "renderer" ) ); //$NON-NLS-1$
+          final Constructor< ? > constructor = featureClass.getConstructor();
+
+          final IChartLegendRenderer instance = (IChartLegendRenderer) constructor.newInstance();
+          CHART_LEGEND_RENDERERS.add( instance );
+        }
+        catch( final Throwable e )
+        {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    return CHART_LEGEND_RENDERERS.toArray( new IChartLegendRenderer[] {} );
+  }
+
+  public synchronized IChartLegendRenderer getRenderers( final String identifier )
+  {
+    final IChartLegendRenderer[] renderers = getRenderers();
+    for( final IChartLegendRenderer renderer : renderers )
+    {
+      if( StringUtils.equals( renderer.getIdentifier(), identifier ) )
+        return renderer;
+    }
+
+    return null;
+  }
 }

@@ -90,7 +90,9 @@ public final class ChartFactory
     }
 
     model.setDescription( chartType.getDescription() );
+
     model.setHideLegend( !chartType.getLegend() );
+    model.setLegendRenderer( chartType.getLegendRenderer() );
 
     final ExtendedReferenceResolver extendedResolver = new ExtendedReferenceResolver( resolver );
     final ChartMapperFactory mapperFactory = new ChartMapperFactory( model, extendedResolver, extLoader, context );
