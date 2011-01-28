@@ -64,10 +64,12 @@ public class ZmlChartLegendLayersVisitor implements IChartLayerVisitor
   public void visit( final IChartLayer layer )
   {
     if( isValid( layer ) )
+    {
       m_layers.add( layer );
 
-    final ILayerManager layerManager = layer.getLayerManager();
-    layerManager.accept( this );
+      final ILayerManager layerManager = layer.getLayerManager();
+      layerManager.accept( this );
+    }
   }
 
   private boolean isValid( final IChartLayer layer )

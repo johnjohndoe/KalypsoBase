@@ -109,7 +109,7 @@ public final class DerivedLayerTypeHelper
 
   private static void updateLayerTypeSettings( final LayerType layer, final ChildLayerType update )
   {
-    layer.setLegend( update.isSetLegend() );
+    layer.setLegend( update.getLegend() );
 
     if( update.isSetTitle() )
       layer.setTitle( update.getTitle() );
@@ -127,7 +127,7 @@ public final class DerivedLayerTypeHelper
   private static void updateLayerTypeSetttings( final LayerType layer, final DerivedLayerType update )
   {
     layer.setId( update.getId() );
-    layer.setLegend( update.isSetLegend() );
+    layer.setLegend( update.getLegend() );
 
     if( update.isSetTitle() )
       layer.setTitle( update.getTitle() );
