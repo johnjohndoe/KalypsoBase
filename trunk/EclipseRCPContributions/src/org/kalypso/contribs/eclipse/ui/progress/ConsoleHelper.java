@@ -49,20 +49,15 @@ import org.kalypso.contribs.java.io.MyPrintStream;
  */
 public class ConsoleHelper
 {
-
   public static void writeLine( MyPrintStream stream, String message )
   {
     if( stream == null || message == null )
       return;
 
     if( message.endsWith( "\n" ) )
-    {
       stream.print( message );
-    }
     else
-    {
       stream.println( message );
-    }
   }
 
   public static void writeLine( PrintStream stream, String message )
@@ -71,13 +66,8 @@ public class ConsoleHelper
       return;
 
     if( message.endsWith( "\n" ) )
-    {
       stream.print( message );
-    }
     else
-    {
       stream.println( message );
-    }
   }
-
 }
