@@ -44,7 +44,6 @@ Bundle-ClassPath: .,
  lib/j3d-1_5_2/j3d-1_5_2/lib/ext/j3dcore.jar,
  lib/j3d-1_5_2/j3d-1_5_2/lib/ext/j3dutils.jar,
  lib/j3d-1_5_2/j3d-1_5_2/lib/ext/vecmath.jar,
- lib/guava/guava-r07.jar,
  lib/xstream/xstream-1.3.1.jar,
  lib/xalan-j/xalan_2_7_1.jar,
  lib/xalan-j/serializer.jar,
@@ -57,7 +56,8 @@ Bundle-ClassPath: .,
  lib/slf4j_1_6_1/slf4j-log4j12-1.6.1.jar,
  lib/slf4j_1_6_1/slf4j-simple-1.6.1.jar,
  lib/itext-5.0.5/iText-5.0.5.jar,
- lib/pdf-renderer/PDFRenderer.jar
+ lib/pdf-renderer/PDFRenderer.jar,
+ lib/guava/guava-r08.jar
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin

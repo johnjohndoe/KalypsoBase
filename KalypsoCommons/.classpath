@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/guava/guava-r08.jar" sourcepath="lib/guava/guava-src-r08.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/pdf-renderer/PDFRenderer.jar" sourcepath="lib/pdf-renderer/PDFRenderer-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/itext-5.0.5/iText-5.0.5.jar" sourcepath="lib/itext-5.0.5/iText-src-5.0.5.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j_1_6_1/slf4j-api-1.6.1.jar"/>
@@ -14,7 +15,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/xalan-j/xalan_2_7_1.jar" sourcepath="lib/xalan-j/xalan-j_2_7_1-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/xstream/xstream-1.3.1.jar" sourcepath="lib/xstream/xstream-distribution-1.3.1-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/apache/commons-io-2_0/commons-io-2.0.jar" sourcepath="lib/apache/commons-io-2_0/commons-io-2.0-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/guava/guava-r07.jar" sourcepath="lib/guava/guava-src-r07.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/j3d-1_5_2/j3d-1_5_2/lib/ext/j3dcore.jar" sourcepath="lib/j3d-1_5_2/j3d-1_5_2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/j3d-1_5_2/j3d-1_5_2/lib/ext/j3dutils.jar" sourcepath="lib/j3d-1_5_2/j3d-1_5_2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/j3d-1_5_2/j3d-1_5_2/lib/ext/vecmath.jar" sourcepath="lib/j3d-1_5_2/vecmath-1_5_2-src.zip"/>
