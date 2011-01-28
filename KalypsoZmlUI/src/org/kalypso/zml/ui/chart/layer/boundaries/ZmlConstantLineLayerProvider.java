@@ -44,8 +44,8 @@ package org.kalypso.zml.ui.chart.layer.boundaries;
 import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
+import org.kalypso.zml.core.diagram.data.ZmlLayerRequestHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
-import org.kalypso.zml.ui.chart.layer.provider.LineLayerRequestHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlConstantLineLayer;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlLayerFactory;
 import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvider;
@@ -81,7 +81,7 @@ public class ZmlConstantLineLayerProvider extends AbstractLayerProvider implemen
       final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
       if( StringUtils.isNotEmpty( href ) )
       {
-        final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, new LineLayerRequestHandler( parameters ) );
+        final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, new ZmlLayerRequestHandler( parameters ) );
         handler.setObsProvider( provider );
       }
 

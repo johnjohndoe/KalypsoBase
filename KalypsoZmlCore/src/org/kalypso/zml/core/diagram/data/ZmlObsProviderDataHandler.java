@@ -50,6 +50,8 @@ import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.core.diagram.base.LayerProviderUtils;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+
 /**
  * @author Dirk Kuch
  */
@@ -159,13 +161,28 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
 
     if( m_model == null )
     {
-      final IRequest request = m_provider.getArguments();
+
+      final IRequest request = getRequest();
       final IObservation observation = m_provider.getObservation();
       if( observation != null )
         m_model = observation.getValues( request );
     }
 
     return m_model;
+  }
+
+  private IRequest getRequest( )
+  {
+    final ILayerProvider layerProvider = m_layer.getProvider();
+    if( layerProvider == null )
+      return m_provider.getArguments();
+
+    final ZmlLayerRequestHandler handler = new ZmlLayerRequestHandler( layerProvider.getParameterContainer() );
+    final IObservation observation = getObservation();
+    if( observation == null )
+      return m_provider.getArguments();
+
+    return handler.getArguments( observation.getMetadataList() );
   }
 
   /**
