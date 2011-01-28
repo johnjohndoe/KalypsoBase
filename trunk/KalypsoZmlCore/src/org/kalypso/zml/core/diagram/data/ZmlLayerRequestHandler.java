@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.provider;
+package org.kalypso.zml.core.diagram.data;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -51,18 +51,17 @@ import jregex.RETokenizer;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
-import org.kalypso.zml.ui.core.provider.observation.IRequestHandler;
 
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch
  */
-public class LineLayerRequestHandler implements IRequestHandler
+public class ZmlLayerRequestHandler implements IRequestHandler
 {
   private final IParameterContainer m_parameters;
 
-  public LineLayerRequestHandler( final IParameterContainer parameters )
+  public ZmlLayerRequestHandler( final IParameterContainer parameters )
   {
     m_parameters = parameters;
   }

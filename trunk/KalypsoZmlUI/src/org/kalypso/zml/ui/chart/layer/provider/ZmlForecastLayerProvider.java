@@ -42,8 +42,9 @@ package org.kalypso.zml.ui.chart.layer.provider;
 
 import java.net.URL;
 
+import org.kalypso.zml.core.diagram.data.IRequestHandler;
+import org.kalypso.zml.core.diagram.data.ZmlLayerRequestHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlForecastLayer;
-import org.kalypso.zml.ui.core.provider.observation.IRequestHandler;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
@@ -78,7 +79,7 @@ public class ZmlForecastLayerProvider extends AbstractLayerProvider implements I
 
   protected IRequestHandler getRequestHandler( )
   {
-    return new LineLayerRequestHandler( getParameterContainer() );
+    return new ZmlLayerRequestHandler( getParameterContainer() );
   }
 
 }

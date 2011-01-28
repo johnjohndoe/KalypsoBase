@@ -55,6 +55,7 @@ import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PlainObsProvider;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.zml.core.diagram.data.IRequestHandler;
 
 /**
  * @author Dirk Kuch

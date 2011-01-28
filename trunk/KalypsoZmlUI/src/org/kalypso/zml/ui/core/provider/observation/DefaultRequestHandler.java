@@ -42,6 +42,7 @@ package org.kalypso.zml.ui.core.provider.observation;
 
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.zml.core.diagram.data.IRequestHandler;
 
 /**
  * @author Dirk Kuch

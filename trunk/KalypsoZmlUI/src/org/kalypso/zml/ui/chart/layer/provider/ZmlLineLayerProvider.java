@@ -43,10 +43,11 @@ package org.kalypso.zml.ui.chart.layer.provider;
 import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
+import org.kalypso.zml.core.diagram.data.IRequestHandler;
+import org.kalypso.zml.core.diagram.data.ZmlLayerRequestHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlLayerFactory;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlLineLayer;
-import org.kalypso.zml.ui.core.provider.observation.IRequestHandler;
 import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvider;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
@@ -97,7 +98,7 @@ public class ZmlLineLayerProvider extends AbstractLayerProvider implements ILaye
 
   protected IRequestHandler getRequestHandler( )
   {
-    return new LineLayerRequestHandler( getParameterContainer() );
+    return new ZmlLayerRequestHandler( getParameterContainer() );
   }
 
 }
