@@ -80,7 +80,7 @@ public final class ZmlRuleResolver
 
   private ZmlRuleResolver( )
   {
-    final MapMaker marker = new MapMaker().expiration( 30, TimeUnit.MINUTES );
+    final MapMaker marker = new MapMaker().expireAfterAccess( 30, TimeUnit.MINUTES );
     m_ruleSetCache = marker.makeMap();
     m_ruleCache = marker.makeMap();
   }
