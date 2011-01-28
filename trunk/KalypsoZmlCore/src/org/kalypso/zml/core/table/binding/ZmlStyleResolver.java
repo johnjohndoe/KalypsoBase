@@ -77,7 +77,7 @@ public final class ZmlStyleResolver
 
   private ZmlStyleResolver( )
   {
-    final MapMaker marker = new MapMaker().expiration( 30, TimeUnit.MINUTES );
+    final MapMaker marker = new MapMaker().expireAfterAccess( 30, TimeUnit.MINUTES );
     m_styleSetCache = marker.makeMap();
     m_styleCache = marker.makeMap();
   }

@@ -89,25 +89,13 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private final Map<String, ChartConfigurationLoader> m_loaderCache;
 
-  private final Map<String, List<ChartType>> m_chartTypeCache;
-
-  private final Map<String, LayerType> m_layerCache;
-
-  private final Map<String, MapperType> m_mapperTypeCache;
-
-  private final Map<String, AbstractStyleType> m_styleTypeCache;
-
   private static ChartTypeResolver INSTANCE;
 
   private ChartTypeResolver( )
   {
-    final MapMaker marker = new MapMaker().expiration( 30, TimeUnit.MINUTES );
+    final MapMaker marker = new MapMaker().expireAfterAccess( 10, TimeUnit.MINUTES );
 
     m_loaderCache = marker.makeMap();
-    m_chartTypeCache = marker.makeMap();
-    m_layerCache = marker.makeMap();
-    m_mapperTypeCache = marker.makeMap();
-    m_styleTypeCache = marker.makeMap();
   }
 
   public static ChartTypeResolver getInstance( )
@@ -136,10 +124,6 @@ public final class ChartTypeResolver implements IReferenceResolver
   {
     try
     {
-      final AbstractStyleType cached = getCachedStyleType( reference );
-      if( cached != null )
-        return cached;
-
       final String plainUrl = getUrl( reference );
       final String identifier = getAnchor( reference );
 
@@ -161,10 +145,6 @@ public final class ChartTypeResolver implements IReferenceResolver
   {
     try
     {
-      final MapperType cached = getCachedMapperType( reference );
-      if( cached != null )
-        return cached;
-
       final String plainUrl = getUrl( reference );
       final String identifier = getAnchor( reference );
 
@@ -173,10 +153,6 @@ public final class ChartTypeResolver implements IReferenceResolver
         type = findUrnMapperType( context, plainUrl, identifier );
       else
         type = findUrlMapperType( context, plainUrl, identifier );
-
-      // FIXME: what to do if rule null?
-      if( type != null )
-        m_mapperTypeCache.put( reference, type );
 
       return type;
     }
@@ -193,10 +169,6 @@ public final class ChartTypeResolver implements IReferenceResolver
       final String url = reference.getUrl();
       if( url != null )
       {
-        final LayerType cached = getCachedLayerType( url );
-        if( cached != null )
-          return cached;
-
         final String plainUrl = getUrl( url );
         final String identifier = getAnchor( url );
 
@@ -205,10 +177,6 @@ public final class ChartTypeResolver implements IReferenceResolver
           type = findUrnLayerType( context, plainUrl, identifier );
         else
           type = findUrlLayerType( context, plainUrl, identifier );
-
-        // FIXME: what to do if rule null?
-        if( type != null )
-          m_layerCache.put( url, type );
 
         return type;
       }
@@ -221,51 +189,6 @@ public final class ChartTypeResolver implements IReferenceResolver
     throw new IllegalStateException();
   }
 
-// public ReferencableType findBaseType( final LayerRefernceType reference, final URL context ) throws CoreException
-// {
-// try
-// {
-// final String url = reference.getUrl();
-// if( url != null )
-// {
-// final String plainUrl = getUrl( url );
-// final String identifier = getAnchor( url );
-//
-// if( plainUrl.startsWith( "urn:" ) )
-// return findUrnBaseLayerType( context, plainUrl, identifier );
-// else
-// return findUrlBaseLayerType( context, plainUrl, identifier );
-// }
-// }
-// catch( final Throwable t )
-// {
-// throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "Resolving layer failed", t ) );
-// }
-//
-// throw new IllegalStateException();
-// }
-
-  private LayerType getCachedLayerType( final String url )
-  {
-    // FIXME: we should consider a timeout based on the modification time stamp of the underlying resource here
-    // Else, the referenced resource will never be loaded again, even if it has changed meanwhile
-    return m_layerCache.get( url );
-  }
-
-  private MapperType getCachedMapperType( final String url )
-  {
-    // FIXME: we should consider a timeout based on the modification time stamp of the underlying resource here
-    // Else, the referenced resource will never be loaded again, even if it has changed meanwhile
-    return m_mapperTypeCache.get( url );
-  }
-
-  private AbstractStyleType getCachedStyleType( final String url )
-  {
-    // FIXME: we should consider a timeout based on the modification time stamp of the underlying resource here
-    // Else, the referenced resource will never be loaded again, even if it has changed meanwhile
-    return m_styleTypeCache.get( url );
-  }
-
   private LayerType findUrnLayerType( final URL context, final String urn, final String identifier ) throws XmlException, IOException
   {
     final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
@@ -276,17 +199,11 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private LayerType findUrlLayerType( final URL context, final String uri, final String identifier ) throws XmlException, IOException
   {
-    List<ChartType> chartTypes = m_chartTypeCache.get( uri );
-    if( chartTypes == null )
-    {
-      final ChartConfigurationLoader loader = getLoader( context, uri );
-      final ChartType[] charts = loader.getCharts();
+    final ChartConfigurationLoader loader = getLoader( context, uri );
+    final ChartType[] charts = loader.getCharts();
 
-      chartTypes = new ArrayList<ChartType>();
-      Collections.addAll( chartTypes, charts );
-
-      m_chartTypeCache.put( uri, chartTypes );
-    }
+    final List<ChartType> chartTypes = new ArrayList<ChartType>();
+    Collections.addAll( chartTypes, charts );
 
     for( final ChartType chart : chartTypes )
     {
@@ -370,17 +287,11 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private MapperType findUrlMapperType( final URL context, final String uri, final String identifier ) throws XmlException, IOException
   {
-    List<ChartType> chartTypes = m_chartTypeCache.get( uri );
-    if( chartTypes == null )
-    {
-      final ChartConfigurationLoader loader = getLoader( context, uri );
-      final ChartType[] charts = loader.getCharts();
+    final ChartConfigurationLoader loader = getLoader( context, uri );
+    final ChartType[] charts = loader.getCharts();
 
-      chartTypes = new ArrayList<ChartType>();
-      Collections.addAll( chartTypes, charts );
-
-      m_chartTypeCache.put( uri, chartTypes );
-    }
+    final List<ChartType> chartTypes = new ArrayList<ChartType>();
+    Collections.addAll( chartTypes, charts );
 
     for( final ChartType chart : chartTypes )
     {
@@ -413,17 +324,11 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private AbstractStyleType findUrlStyleType( final URL context, final String uri, final String identifier ) throws XmlException, IOException
   {
-    List<ChartType> chartTypes = m_chartTypeCache.get( uri );
-    if( chartTypes == null )
-    {
-      final ChartConfigurationLoader loader = getLoader( context, uri );
-      final ChartType[] charts = loader.getCharts();
+    final ChartConfigurationLoader loader = getLoader( context, uri );
+    final ChartType[] charts = loader.getCharts();
 
-      chartTypes = new ArrayList<ChartType>();
-      Collections.addAll( chartTypes, charts );
-
-      m_chartTypeCache.put( uri, chartTypes );
-    }
+    final List<ChartType> chartTypes = new ArrayList<ChartType>();
+    Collections.addAll( chartTypes, charts );
 
     for( final ChartType chart : chartTypes )
     {
@@ -472,51 +377,4 @@ public final class ChartTypeResolver implements IReferenceResolver
 
     return null;
   }
-
-// private ReferencableType findUrnBaseLayerType( final URL context, final String urn, final String identifier ) throws
-// XmlException, IOException
-// {
-// final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-// final String uri = baseCatalog.resolve( urn, urn );
-//
-// return findUrlBaseLayerType( context, uri, identifier );
-// }
-//
-// private ReferencableType findUrlBaseLayerType( final URL context, final String uri, final String identifier ) throws
-// XmlException, IOException
-// {
-// List<ChartType> chartTypes = m_chartTypeCache.get( uri );
-// if( chartTypes == null )
-// {
-// final ChartConfigurationLoader loader = getLoader( context, uri );
-// final ChartType[] charts = loader.getCharts();
-//
-// chartTypes = new ArrayList<ChartType>();
-// Collections.addAll( chartTypes, charts );
-//
-// m_chartTypeCache.put( uri, chartTypes );
-// }
-//
-// for( final ChartType chart : chartTypes )
-// {
-// final LayersType layersType = chart.getLayers();
-// final LayerType[] layers = layersType.getLayerArray();
-// for( final LayerType layer : layers )
-// {
-// if( layer.getId().equals( identifier ) )
-// return chart;
-//
-// final LayersType childLayersType = layer.getLayers();
-// final LayerType[] childLayers = childLayersType.getLayerArray();
-// for( final LayerType child : childLayers )
-// {
-// if( child.getId().equals( identifier ) )
-// return layer;
-// }
-// }
-// }
-//
-// return null;
-// }
-
 }
