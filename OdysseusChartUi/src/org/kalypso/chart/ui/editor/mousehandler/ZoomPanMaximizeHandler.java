@@ -65,6 +65,12 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
   @Override
   public void doMouseUpAction( final Point end, final EditInfo editInfo )
   {
+    if( editInfo == null )
+    {
+      getChart().setDragArea( null );
+      return;
+    }
+
     getChart().setDragArea( new Rectangle( editInfo.m_pos.x, editInfo.m_pos.y, end.x - editInfo.m_pos.x, end.y - editInfo.m_pos.y ) );
   }
 
