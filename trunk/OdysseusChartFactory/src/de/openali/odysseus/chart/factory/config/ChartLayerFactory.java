@@ -314,12 +314,11 @@ public class ChartLayerFactory extends AbstractChartFactory
     if( StringUtils.isNotEmpty( title ) )
       layer.setTitle( title );
 
-    final String description = layerType.getDescription();
-    if( StringUtils.isNotEmpty( description ) )
-      layer.setDescription( description );
+    if( layerType.isSetDescription() )
+      layer.setDescription( layerType.getDescription() );
 
-    layer.setLegend( layerType.isSetLegend() );
-    layer.setVisible( layerType.isSetVisible() );
+    layer.setLegend( layerType.getLegend() );
+    layer.setVisible( layerType.getVisible() );
   }
 
   private IAxis buildMapper( final ReferencingType reference )
