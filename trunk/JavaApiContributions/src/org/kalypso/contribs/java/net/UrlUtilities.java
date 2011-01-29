@@ -269,8 +269,14 @@ public class UrlUtilities implements IUrlResolver
 
       final StringBuilder stringBuilder = new StringBuilder();
       final char[] buffer = new char[4096];
-      final int readBytes = isr.read( buffer );
-      stringBuilder.append( new String( buffer, 0, readBytes ) );
+      while( isr.ready() )
+      {
+        final int readBytes = isr.read( buffer );
+        if( readBytes == -1 )
+          break;
+
+        stringBuilder.append( new String( buffer, 0, readBytes ) );
+      }
       in.close();
       return stringBuilder.toString();
     }
