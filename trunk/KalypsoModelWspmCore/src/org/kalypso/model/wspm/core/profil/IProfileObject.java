@@ -49,10 +49,9 @@ import org.kalypso.observation.result.TupleResult;
  */
 public interface IProfileObject
 {
-  /**
-   * @return the ProfilePointProperties used by this Object
-   */
-  IComponent[] getPointProperties( );
+  String getId( );
+
+  void cloneValuesFrom( IProfileObject other );
 
   /**
    * @return the keys this Object held as a key,value
@@ -62,7 +61,13 @@ public interface IProfileObject
 
   IObservation<TupleResult> getObservation( );
 
-  String getId( );
-
   IComponent getObjectProperty( final String componentId );
+
+  Object getValue( IComponent component );
+
+  Object getValueFor( String componentID );
+
+  void setValue( IComponent component, Object value );
+
+  void setValueFor( String componentID, Object value );
 }
