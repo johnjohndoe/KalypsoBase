@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.core.profil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 /**
@@ -51,21 +52,11 @@ import org.kalypso.observation.result.TupleResult;
  */
 public abstract class AbstractProfileObject implements IProfileObject
 {
-  // private final IProfil m_profile;
-
   private final IObservation<TupleResult> m_observation;
 
   protected AbstractProfileObject( final IObservation<TupleResult> observation )
   {
-    // m_profile = profile;
     m_observation = observation;
-  }
-
-  @Deprecated
-  protected IProfil getProfile( )
-  {
-    return null;
-    // return m_profile;
   }
 
   @Override
@@ -91,17 +82,6 @@ public abstract class AbstractProfileObject implements IProfileObject
     return null;
   }
 
-  @Deprecated
-  protected void init( )
-  {
-// for( final String id : getProfileProperties() )
-// {
-// final IComponent property = m_profile.getPointPropertyFor( id );
-// if( !m_profile.hasPointProperty( property ) )
-// m_profile.addPointProperty( property );
-// }
-  }
-
   protected abstract String[] getProfileProperties( );
 
   /**
@@ -113,28 +93,103 @@ public abstract class AbstractProfileObject implements IProfileObject
     return getObservation().getResult().getComponents();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getPointProperties()
-   */
-  @Override
-  @Deprecated
-  public IComponent[] getPointProperties( )
-  {
-    return null;
-// final List<IComponent> myProperties = new ArrayList<IComponent>();
-// for( final String id : getProfileProperties() )
-// {
-// final IComponent component = m_profile.hasPointProperty( id );
-// if( component != null )
-// myProperties.add( component );
-// }
-// return myProperties.toArray( new IComponent[] {} );
-
-  }
-
   protected static IComponent getObjectComponent( final String id )
   {
     return ProfilUtil.getFeatureComponent( id );
+  }
+
+  /**
+   * Retrieves the value of a given property as a double, if possible.
+   * 
+   * @return {@link Double#NaN} if the property is not a number or does not exist.
+   */
+  public double getDoubleValueFor( final String componentId )
+  {
+    final Object value = getValueFor( componentId );
+    if( value instanceof Number )
+      return ((Number) value).doubleValue();
+
+    return Double.NaN;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getValue(org.kalypso.observation.result.IComponent)
+   */
+  @Override
+  public Object getValue( final IComponent component )
+  {
+    final TupleResult result = getObservation().getResult();
+    final int index = result.indexOfComponent( component );
+
+    if( index < 0 )
+      throw new IllegalArgumentException( component == null ? getObservation().getDescription() : component.getDescription() );
+
+    // quite dubious! we shouldn't enforce the size of the observation here, but in the constructor of the object!
+
+    if( result.size() > 1 )
+      throw new IllegalStateException( "Profile object always consists of one IRecord-Set row" ); //$NON-NLS-1$
+    else if( result.size() == 0 )
+      result.add( result.createRecord() );
+
+    return result.get( 0 ).getValue( index );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfileObject#getValueFor(String)
+   */
+  @Override
+  public Object getValueFor( final String componentID )
+  {
+    return getValue( getObjectProperty( componentID ) );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfileObject#setValue(org.kalypso.observation.result.IComponent,
+   *      java.lang.Object)
+   */
+  @Override
+  public void setValue( final IComponent component, final Object value )
+  {
+    final TupleResult result = getObservation().getResult();
+    if( result.size() > 1 )
+      throw new IllegalStateException( "Building always consists of one IRecord-Set row" ); //$NON-NLS-1$
+    final int index = result.indexOfComponent( component );
+    if( index < 0 )
+      throw new IllegalArgumentException( component.getName() );
+
+    final IRecord record;
+    if( result.size() == 0 )
+    {
+      record = result.createRecord();
+      result.add( record );
+    }
+    else
+      record = result.get( 0 );
+    record.setValue( index, value );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.profil.IProfileObject#setValueFor(String, java.lang.Object)
+   */
+  @Override
+  public void setValueFor( final String componentID, final Object value )
+  {
+    setValue( getObjectProperty( componentID ), value );
+  }
+
+  public void cloneValuesFrom( final IProfileObject other )
+  {
+    for( final IComponent cmp : this.getObjectProperties() )
+    {
+      try
+      {
+        setValue( cmp, other.getValue( cmp ) );
+      }
+      catch( final IllegalArgumentException e )
+      {
+        continue;
+      }
+    }
   }
 
 }
