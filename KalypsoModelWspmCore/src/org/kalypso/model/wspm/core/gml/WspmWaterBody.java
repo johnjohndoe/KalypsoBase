@@ -51,6 +51,8 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
@@ -69,9 +71,18 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
   private static final QName QNAME_REFNR = new QName( NS_WSPM, "refNr" );//$NON-NLS-1$
 
+  private final IFeatureBindingCollection<IProfileFeature> m_profileMembers;
+
   public WspmWaterBody( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+
+    m_profileMembers = new FeatureBindingCollection<IProfileFeature>( this, IProfileFeature.class, QNAME_PROP_PROFILEMEMBER );
+  }
+
+  public IFeatureBindingCollection<IProfileFeature> getProfiles( )
+  {
+    return m_profileMembers;
   }
 
   public IProfileFeature createNewProfile( )
