@@ -56,7 +56,7 @@
       </swe:property>
       <swe:representation>
         <swe:Number>
-          <gml:unitOfMeasure uom="dict_uom.xml#ks" />
+          <gml:unitOfMeasure uom="" />
         </swe:Number>
       </swe:representation>
     </swe:ItemDefinition>
@@ -72,7 +72,7 @@
       </swe:property>
       <swe:representation>
         <swe:Number>
-          <gml:unitOfMeasure uom="dict_uom.xml#kst" />
+          <gml:unitOfMeasure uom="" />
         </swe:Number>
       </swe:representation>
     </swe:ItemDefinition>
