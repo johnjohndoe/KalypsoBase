@@ -53,6 +53,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.ui.internal.util.BundleUtility;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.utils.ConfigUtils;
 import org.osgi.framework.Bundle;
 
@@ -61,8 +62,7 @@ import org.osgi.framework.Bundle;
  * 
  * @author Belger
  */
-@SuppressWarnings("restriction")
-public class PluginUtilities
+public final class PluginUtilities
 {
   private PluginUtilities( )
   {
@@ -76,7 +76,7 @@ public class PluginUtilities
    *          the severity; one of <code>OK</code>, <code>ERROR</code>, <code>INFO</code>, <code>WARNING</code>, or
    *          <code>CANCEL</code>
    */
-  public final static void logToPlugin( final Plugin plugin, final int severity, final String messsage, final Throwable t )
+  public static void logToPlugin( final Plugin plugin, final int severity, final String messsage, final Throwable t )
   {
     final IStatus status = new Status( severity, plugin.getBundle().getSymbolicName(), 0, messsage, t );
     plugin.getLog().log( status );
@@ -97,11 +97,13 @@ public class PluginUtilities
   /**
    * Returns the settings with the given name for a plugin. If no settings with this name already exists, one is
    * created.
+   * 
+   * @deprecated Use {@link DialogSettingsUtils#getDialogSettings(AbstractUIPlugin, String)} instead.
    */
+  @Deprecated
   public static IDialogSettings getDialogSettings( final AbstractUIPlugin plugin, final String sectionName )
   {
-    final IDialogSettings workbenchSettings = plugin.getDialogSettings();
-    return getSection( workbenchSettings, sectionName );
+    return DialogSettingsUtils.getDialogSettings( plugin, sectionName );
   }
 
   /**
@@ -109,16 +111,12 @@ public class PluginUtilities
    * If the section does not yet exist, it is created.
    * 
    * @return <code>null</code>, if the given <code>settings</code> are <code>null</code>.
+   * @deprecated Use {@link DialogSettingsUtils#getSection(IDialogSettings, String)} instead.
    */
+  @Deprecated
   public static IDialogSettings getSection( final IDialogSettings settings, final String sectionName )
   {
-    if( settings == null )
-      return null;
-
-    final IDialogSettings section = settings.getSection( sectionName );
-    if( section == null )
-      return settings.addNewSection( sectionName );
-    return section;
+    return DialogSettingsUtils.getSection( settings, sectionName );
   }
 
   /**
