@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.controls.ImagePropertiesComposite;
 import org.kalypso.ui.controls.listener.IImagePropertyChangedListener;
@@ -144,7 +145,7 @@ public class ScreenshotDialog extends Dialog
    * @param shell
    *          The parent shell, or null to create a top-level shell.
    */
-  public ScreenshotDialog( Shell shell )
+  public ScreenshotDialog( final Shell shell )
   {
     this( shell, -1, -1 );
   }
@@ -155,7 +156,7 @@ public class ScreenshotDialog extends Dialog
    * @param parentShell
    *          The object that returns the current parent shell.
    */
-  public ScreenshotDialog( IShellProvider parentShell )
+  public ScreenshotDialog( final IShellProvider parentShell )
   {
     this( parentShell, -1, -1 );
   }
@@ -170,7 +171,7 @@ public class ScreenshotDialog extends Dialog
    * @param defaultHeight
    *          The default height.
    */
-  public ScreenshotDialog( Shell shell, int defaultWidth, int defaultHeight )
+  public ScreenshotDialog( final Shell shell, final int defaultWidth, final int defaultHeight )
   {
     super( shell );
 
@@ -194,7 +195,7 @@ public class ScreenshotDialog extends Dialog
    * @param defaultHeight
    *          The default height.
    */
-  public ScreenshotDialog( IShellProvider parentShell, int defaultWidth, int defaultHeight )
+  public ScreenshotDialog( final IShellProvider parentShell, final int defaultWidth, final int defaultHeight )
   {
     super( parentShell );
 
@@ -212,7 +213,7 @@ public class ScreenshotDialog extends Dialog
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
     /* Initialize the dialog settings. */
     initializeDialogSettings();
@@ -221,19 +222,19 @@ public class ScreenshotDialog extends Dialog
     getShell().setText( "Bildexport" );
 
     /* Create the main composite. */
-    Composite main = (Composite) super.createDialogArea( parent );
+    final Composite main = (Composite) super.createDialogArea( parent );
     main.setLayout( new GridLayout( 1, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create a group. */
-    Group targetGroup = new Group( main, SWT.NONE );
+    final Group targetGroup = new Group( main, SWT.NONE );
     targetGroup.setLayout( new GridLayout( 2, false ) );
     targetGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     targetGroup.setText( "Ziel (ohne Endung)" );
 
     /* Create a text field. */
     m_targetPathText = new Text( targetGroup, SWT.BORDER );
-    GridData targetData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    final GridData targetData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     targetData.widthHint = 350;
     m_targetPathText.setLayoutData( targetData );
     m_targetPathText.addModifyListener( new ModifyListener()
@@ -242,10 +243,10 @@ public class ScreenshotDialog extends Dialog
        * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
        */
       @Override
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         /* Get the source. */
-        Text source = (Text) e.getSource();
+        final Text source = (Text) e.getSource();
 
         /* Store the text. */
         m_targetPath = source.getText();
@@ -256,7 +257,7 @@ public class ScreenshotDialog extends Dialog
     } );
 
     /* Create a button. */
-    Button targetButton = new Button( targetGroup, SWT.NONE );
+    final Button targetButton = new Button( targetGroup, SWT.NONE );
     targetButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
     targetButton.setText( "..." ); //$NON-NLS-1$
     targetButton.addSelectionListener( new SelectionAdapter()
@@ -265,15 +266,15 @@ public class ScreenshotDialog extends Dialog
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         /* Get the source. */
-        Button source = (Button) e.getSource();
+        final Button source = (Button) e.getSource();
 
         /* Create the dialog. */
-        FileDialog dialog = new FileDialog( source.getParent().getShell(), SWT.OPEN );
+        final FileDialog dialog = new FileDialog( source.getParent().getShell(), SWT.OPEN );
         dialog.setText( "Bildexport" );
-        File f = new File( m_targetPathText.getText() );
+        final File f = new File( m_targetPathText.getText() );
         dialog.setFilterPath( f.getPath() );
         dialog.setFileName( "" ); //$NON-NLS-1$
 
@@ -300,7 +301,7 @@ public class ScreenshotDialog extends Dialog
        *      java.lang.String)
        */
       @Override
-      public void imagePropertyChanged( int width, int height, boolean aspectRatio, String format )
+      public void imagePropertyChanged( final int width, final int height, final boolean aspectRatio, final String format )
       {
         /* Store the values. */
         m_imageWidth = width;
@@ -323,7 +324,7 @@ public class ScreenshotDialog extends Dialog
    * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected void createButtonsForButtonBar( Composite parent )
+  protected void createButtonsForButtonBar( final Composite parent )
   {
     super.createButtonsForButtonBar( parent );
 
@@ -346,11 +347,11 @@ public class ScreenshotDialog extends Dialog
       pathname = m_targetPath + "." + m_imageFormat.toLowerCase();
 
     /* If the target exists already, give a warning and do only continue, if the user has confirmed it. */
-    File targetFile = new File( pathname );
+    final File targetFile = new File( pathname );
     if( targetFile.exists() )
     {
       /* Ask the user. */
-      boolean confirmed = MessageDialog.openConfirm( getShell(), "Bildexport", String.format( "Die Datei '%s' existiert bereits, möchten Sie sie überschreiben?", targetFile.getAbsolutePath() ) );
+      final boolean confirmed = MessageDialog.openConfirm( getShell(), "Bildexport", String.format( "Die Datei '%s' existiert bereits, möchten Sie sie überschreiben?", targetFile.getAbsolutePath() ) );
       if( !confirmed )
         return;
     }
@@ -383,10 +384,10 @@ public class ScreenshotDialog extends Dialog
   private void initializeDialogSettings( )
   {
     /* The dialog settings for Kalypso UI. */
-    IDialogSettings dialogSettings = KalypsoGisPlugin.getDefault().getDialogSettings();
+    final IDialogSettings dialogSettings = KalypsoGisPlugin.getDefault().getDialogSettings();
 
     /* This name will be used for the section of this dialog. */
-    String sectionName = getClass().getCanonicalName();
+    final String sectionName = getClass().getCanonicalName();
 
     /* Check if a section for this dialog does exist. */
     /* If not, create one. */
@@ -410,30 +411,32 @@ public class ScreenshotDialog extends Dialog
     /* Read from the dialog settings and apply to the controls. */
 
     /* The path of the target. */
-    String targetPath = m_dialogSettings.get( SETTINGS_TARGET_PATH );
+    final String targetPath = m_dialogSettings.get( SETTINGS_TARGET_PATH );
     if( targetPath != null && targetPath.length() > 0 )
       m_targetPathText.setText( targetPath );
 
     /* The width of the image. */
     if( m_imageWidth < 0 )
     {
-      int imageWidth = m_dialogSettings.getInt( SETTINGS_IMAGE_WIDTH );
+      // FIXME: use better default value, the value here is < 0, so it is probably no good
+      final int imageWidth = DialogSettingsUtils.getInt( m_dialogSettings, SETTINGS_IMAGE_WIDTH, m_imageWidth );
       m_imageComposite.setImageWidth( imageWidth );
     }
 
     /* The height of the image. */
     if( m_imageHeight < 0 )
     {
-      int imageHeight = m_dialogSettings.getInt( SETTINGS_IMAGE_HEIGHT );
+      // FIXME: use better default value, the value here is < 0, so it is probably no good
+      final int imageHeight = DialogSettingsUtils.getInt( m_dialogSettings, SETTINGS_IMAGE_HEIGHT, m_imageHeight );
       m_imageComposite.setImageHeight( imageHeight );
     }
 
     /* The aspect ratio. */
-    boolean aspectRatio = m_dialogSettings.getBoolean( SETTINGS_KEEP_ASPECT_RATIO );
+    final boolean aspectRatio = m_dialogSettings.getBoolean( SETTINGS_KEEP_ASPECT_RATIO );
     m_imageComposite.setAspectRatio( aspectRatio );
 
     /* The format of the image. */
-    String imageFormat = m_dialogSettings.get( SETTINGS_IMAGE_FORMAT );
+    final String imageFormat = m_dialogSettings.get( SETTINGS_IMAGE_FORMAT );
     m_imageComposite.setImageFormat( imageFormat );
   }
 
@@ -460,7 +463,7 @@ public class ScreenshotDialog extends Dialog
   protected void checkDialogComplete( )
   {
     /* Get the OK button. */
-    Button okButton = getButton( IDialogConstants.OK_ID );
+    final Button okButton = getButton( IDialogConstants.OK_ID );
     if( okButton == null )
       return;
 
