@@ -134,6 +134,9 @@ public final class MapModellHelper
   public static BufferedImage createImageFromModell( final GM_Envelope bbox, final Rectangle bounds, final int width, final int height, final IMapModell model )
   {
     final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+    if( bbox == null )
+      return image;
+
     final Graphics2D gr = (Graphics2D) image.getGraphics();
     try
     {
