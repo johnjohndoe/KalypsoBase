@@ -75,12 +75,13 @@ import org.kalypso.metadoc.configuration.PublishingConfiguration;
 public final class ExportWizard extends Wizard
 {
   private final Shell m_shell;
+
   private final WorkspaceModifyOperation m_operation;
+
   private final IExportTarget m_target;
 
-  public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell,
-      final ImageDescriptor defaultImage, final String windowTitle ) throws CoreException
-      {
+  public ExportWizard( final IExportTarget target, final IExportableObjectFactory factory, final Shell shell, final ImageDescriptor defaultImage, final String windowTitle ) throws CoreException
+  {
     m_target = target;
     m_shell = shell;
 
@@ -155,21 +156,20 @@ public final class ExportWizard extends Wizard
 
         final IStatus status;
         if( stati.size() == 0 )
-          status = new Status( IStatus.INFO, KalypsoMetaDocPlugin.getId(), 0, "Es wurden keine Dokumente erzeugt.",
-              null );
+          status = new Status( IStatus.INFO, KalypsoMetaDocPlugin.getId(), 0, "Es wurden keine Dokumente erzeugt.", null );
         else
           status = StatusUtilities.createStatus( stati, "Siehe Details" );
         if( !status.isOK() )
           throw new CoreException( status );
       }
     };
-      }
+  }
 
   /**
    * @see org.eclipse.jface.wizard.Wizard#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
     new DisposeHelper( getPages() ).dispose();
 

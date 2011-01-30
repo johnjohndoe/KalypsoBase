@@ -60,7 +60,7 @@ import org.kalypso.metadoc.configuration.IPublishingConfiguration;
  */
 public class ExportDocumentsObjectFactory implements IExportableObjectFactory
 {
-  private IExporter[] m_exporter;
+  private final IExporter[] m_exporter;
 
   private ExportableTreePage m_page;
 
@@ -73,7 +73,7 @@ public class ExportDocumentsObjectFactory implements IExportableObjectFactory
    * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
   @Override
-  public IExportableObject[] createExportableObjects( Configuration configuration ) 
+  public IExportableObject[] createExportableObjects( final Configuration configuration ) 
   {
     final Object[] checkedElements = m_page.getCheckedElements();
     final List<IExportableObject> result = new ArrayList<IExportableObject>( checkedElements.length );
@@ -103,8 +103,6 @@ public class ExportDocumentsObjectFactory implements IExportableObjectFactory
       exportItems[i] = exporter.createTreeItem( null );
     }
 
-// final ImageDescriptor imgDesc = null; //AbstractUIPlugin.imageDescriptorFromPlugin(
-    // KalypsoSimulationUIPlugin.getID(), "icons/wizban/bericht_wiz.gif" );
     final ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(), "icons/metadoc_wiz.gif" );
 
     m_page = new ExportableTreePage( "templatePage", "Wählen Sie die zu exportierenden Dokumente", imageDescriptor );
