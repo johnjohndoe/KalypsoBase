@@ -66,18 +66,7 @@ public class AbstractRecordWrapper implements IRecord
 
   protected int findComponent( final String id )
   {
-    final TupleResult owner = getRecord().getOwner();
-    final IComponent[] components = owner.getComponents();
-
-    for( int i = 0; i < components.length; i++ )
-    {
-      final IComponent comp = components[i];
-
-      if( id.equals( comp.getId() ) )
-        return i;
-    }
-
-    return -1;
+    return getRecord().indexOfComponent( id );
   }
 
   /**
