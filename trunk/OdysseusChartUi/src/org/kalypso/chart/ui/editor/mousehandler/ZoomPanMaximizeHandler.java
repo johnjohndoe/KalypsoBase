@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
@@ -49,15 +49,17 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
- * @author kimwerner
+ * @author Dirk Kuch
  */
 public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
 {
   private int m_button = -1;
 
+  private final Point m_keyUp = null;
+
   public ZoomPanMaximizeHandler( final IChartComposite chartComposite )
   {
-    super( chartComposite, 5, SWT.BUTTON1 | SWT.BUTTON2, SWT.CURSOR_ARROW );
+    super( chartComposite, 5, SWT.BUTTON1 | SWT.BUTTON2 | SWT.BUTTON3, SWT.CURSOR_ARROW );
   }
 
   /**
@@ -75,6 +77,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
     {
       doMouseMovePan( end, editInfo );
     }
+
   }
 
   private void doMouseMovePan( final Point start, final EditInfo editInfo )
@@ -85,6 +88,11 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
   private void doMouseMoveZoom( final Point end, final EditInfo editInfo )
   {
     getChart().setDragArea( new Rectangle( editInfo.m_pos.x, editInfo.m_pos.y, end.x - editInfo.m_pos.x, end.y - editInfo.m_pos.y ) );
+  }
+
+  private void doMouseMaximize( )
+  {
+    getChart().getChartModel().autoscale( null );
   }
 
   /**
@@ -101,6 +109,10 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
     else if( m_button == SWT.BUTTON2 )
     {
       doMouseUpPan( end, editInfo );
+    }
+    else if( m_button == SWT.BUTTON3 )
+    {
+      doMouseMaximize();
     }
   }
 
@@ -141,5 +153,4 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
     m_button = button2Mask( e.button );
     super.mouseDown( e );
   }
-
 }
