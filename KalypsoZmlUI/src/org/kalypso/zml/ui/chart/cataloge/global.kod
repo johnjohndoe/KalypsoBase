@@ -535,8 +535,8 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef ref="date" />
-          <TargetAxisRef ref="W" />
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#W" />
         </MapperRefs>
       </Layer>
       <Layer id="Q">
@@ -565,8 +565,8 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef ref="date" />
-          <TargetAxisRef ref="Q" />
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#Q" />
         </MapperRefs>
       </Layer>
       <Layer id="N">
@@ -592,8 +592,8 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef ref="date" />
-          <TargetAxisRef ref="N" />
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#N" />
         </MapperRefs>
       </Layer>
       <Layer id="W_NN">
@@ -611,8 +611,8 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef ref="date" />
-          <TargetAxisRef ref="W_NN" />
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#W_NN" />
         </MapperRefs>
       </Layer>
       <Layer id="V">
@@ -634,8 +634,8 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
-          <DomainAxisRef ref="date" />
-          <TargetAxisRef ref="V" />
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#V" />
         </MapperRefs>
       </Layer>
       <Layer id="forecastLayer" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -647,8 +647,8 @@
         <Title>Vorhersagezeitraum</Title>
         <Description />
         <MapperRefs>
-          <DomainAxisRef ref="date" />
-          <TargetAxisRef ref="screenAxisY" />
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#screenAxisY" />
         </MapperRefs>
       </Layer>
       <Layer id="noData" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -664,8 +664,8 @@
         <Title>Keine Daten vorhanden</Title>
         <Description />
         <MapperRefs>
-          <DomainAxisRef ref="screenAxisX" />
-          <TargetAxisRef ref="screenAxisY" />
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#screenAxisX" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#screenAxisY" />
         </MapperRefs>
         <Styles>
           <TextStyle role="defaultTextStyle">
