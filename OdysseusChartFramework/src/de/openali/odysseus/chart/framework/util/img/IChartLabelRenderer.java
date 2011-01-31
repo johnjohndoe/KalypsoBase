@@ -40,14 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img;
 
-import java.awt.Insets;
-
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
-import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
  * @author kimwerner
@@ -55,44 +52,20 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 public interface IChartLabelRenderer
 {
 
-  void eatBean( final TitleTypeBean titleTypeBean );
+  ILineStyle getBorderLine( );
+
+  TitleTypeBean getTitleTypeBean( );
 
   boolean isDrawBorder( );
-
-  Insets getInsets( );
-
-  String getLabel( );
-
-  ALIGNMENT getAlignmentX( );
-
-  ALIGNMENT getAlignmentY( );
-
-  int getRotation( );
-
-  Point getSize( );
-
-  ALIGNMENT getTextAnchorX( );
-
-  ALIGNMENT getTextAnchorY( );
-
-  ITextStyle getTextStyle( );
 
   void paint( final GC gc, final Point textAnchor );
 
   void paint( final GC gc, final Rectangle fixedWidth );
 
-  void setDrawBorder( final boolean drawBorder );
+  void setBorderLine( final ILineStyle borderLine );
 
-  void setInsets( final Insets insets );
-
-  void setLabel( final String label );
-
-  void setAlignment( final ALIGNMENT alignmentX, final ALIGNMENT alignmentY );
-
-  void setRotation( final int degree );
-
-  void setTextAnchor( final ALIGNMENT positionX, final ALIGNMENT positionY );
-
-  void setTextStyle( final ITextStyle textStyle );
+  void setTitleTypeBean( final TitleTypeBean titleTypeBean );
+  
+  Point getSize();
 
 }

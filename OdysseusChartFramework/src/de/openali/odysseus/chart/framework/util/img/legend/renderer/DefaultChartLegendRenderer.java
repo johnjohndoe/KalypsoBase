@@ -64,13 +64,15 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
 {
   private int m_numRows;
 
+  public static final String ID =  "de.openali.odysseus.chart.framework.DefaultChartLegendRenderer";
+  
   /**
    * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#getIdentifier()
    */
   @Override
   public String getIdentifier( )
   {
-    return "de.openali.odysseus.chart.framework.DefaultChartRenderer"; //$NON-NLS-1$
+    return ID; //$NON-NLS-1$
   }
 
   private Point calculateSize( final Point... points )

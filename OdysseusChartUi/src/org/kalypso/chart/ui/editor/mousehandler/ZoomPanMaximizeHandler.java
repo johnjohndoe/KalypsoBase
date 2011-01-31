@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -47,31 +49,15 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
- * @author Gernot Belger
- * @author burtscher1
+ * @author kimwerner
  */
 public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
 {
+  private int m_button = -1;
 
   public ZoomPanMaximizeHandler( final IChartComposite chartComposite )
   {
-    super( chartComposite, 5 );
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#doMouseUpAction(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
-  @Override
-  public void doMouseUpAction( final Point end, final EditInfo editInfo )
-  {
-    if( editInfo == null )
-    {
-      getChart().setDragArea( null );
-      return;
-    }
-
-    getChart().setDragArea( new Rectangle( editInfo.m_pos.x, editInfo.m_pos.y, end.x - editInfo.m_pos.x, end.y - editInfo.m_pos.y ) );
+    super( chartComposite, 5, SWT.BUTTON1 | SWT.BUTTON2, SWT.CURSOR_ARROW );
   }
 
   /**
@@ -81,6 +67,56 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
   @Override
   public void doMouseMoveAction( final Point end, final EditInfo editInfo )
   {
+    if( m_button == SWT.BUTTON1 )
+    {
+      doMouseMoveZoom( end, editInfo );
+    }
+    else if( m_button == SWT.BUTTON2 )
+    {
+      doMouseMovePan( end, editInfo );
+    }
+  }
+
+  private void doMouseMovePan( final Point start, final EditInfo editInfo )
+  {
+    getChart().setPanOffset( null, start, editInfo.m_pos );
+  }
+
+  private void doMouseMoveZoom( final Point end, final EditInfo editInfo )
+  {
+    getChart().setDragArea( new Rectangle( editInfo.m_pos.x, editInfo.m_pos.y, end.x - editInfo.m_pos.x, end.y - editInfo.m_pos.y ) );
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#doMouseUpAction(org.eclipse.swt.graphics.Point,
+   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
+  @Override
+  public void doMouseUpAction( final Point end, final EditInfo editInfo )
+  {
+    if( m_button == SWT.BUTTON1 )
+    {
+      doMouseUpZoom( end, editInfo );
+    }
+    else if( m_button == SWT.BUTTON2 )
+    {
+      doMouseUpPan( end, editInfo );
+    }
+  }
+
+  private void doMouseUpPan( final Point start, final EditInfo editInfo )
+  {
+    getChart().setPanOffset( null, null, null );
+    if( start != null )
+      getChart().getChartModel().panTo( start, editInfo.m_pos );
+
+    /** update active point */
+    updateSelection( editInfo );
+  }
+
+  private void doMouseUpZoom( final Point end, final EditInfo editInfo )
+  {
+
     if( end == null )
       return;
     try
@@ -94,6 +130,16 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
     {
       getChart().setDragArea( null );
     }
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#mouseDown(org.eclipse.swt.events.MouseEvent)
+   */
+  @Override
+  public void mouseDown( final MouseEvent e )
+  {
+    m_button = button2Mask( e.button );
+    super.mouseDown( e );
   }
 
 }

@@ -56,6 +56,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATI
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.util.img.legend.ChartLegendCanvas;
+import de.openali.odysseus.chart.framework.util.img.legend.config.DefaultChartLegendConfig;
 
 /**
  * @author kimwerner
@@ -69,7 +70,9 @@ public class ChartPainter
 
   final Insets m_plotInsets;
 
-  final ChartTitlePainter m_titlePainter;
+  final Point m_legendSize;
+
+  final ChartTitlePainter2 m_titlePainter;
 
   final ChartLegendCanvas m_legendPainter;
 
@@ -80,16 +83,23 @@ public class ChartPainter
     m_model = model;
     m_size = size;
 
-    m_titlePainter = new ChartTitlePainter( model, size );
-    final int left = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ) );
-    final int right = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ) );
+    final int axisLeftWidth = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ) );
+    final int axisRightWidth = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ) );
+    final int axisTopWidth = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ) );
+    final int axisBottomWidth = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ) );
 
-    m_legendPainter = new ChartLegendCanvas( model, new Rectangle( left, 0, size.width - left - right, size.height ) );
+    m_legendPainter = new ChartLegendCanvas( model, new DefaultChartLegendConfig( size.width - axisLeftWidth - axisRightWidth ) );
+    m_legendSize = m_legendPainter.getSize();
 
-    final int top = m_titlePainter.getSize().y + getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ) );
-    final int bottom = m_legendPainter.getSize().y + getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ) );
+    m_titlePainter = new ChartTitlePainter2();// new ChartTitlePainter( model, size );
+    m_titlePainter.addTitle( model.getTitles() );
+ 
+    final int top = m_titlePainter.getSize().y + axisTopWidth;
+    final int bottom = m_legendSize.y + axisBottomWidth;
 
-    m_plotInsets = new Insets( top, left, bottom, right );
+    m_plotInsets = new Insets( top, axisLeftWidth, bottom, axisRightWidth );
+    
+    // need it here ??? -> move to createImage()
     setAxesHeight();
     m_plotPainter = new ChartPlotPainter( model, new Point( size.width - m_plotInsets.left - m_plotInsets.right, size.height - m_plotInsets.bottom - m_plotInsets.top ) );
   }
@@ -179,13 +189,13 @@ public class ChartPainter
     final Device dev = PlatformUI.getWorkbench().getDisplay();
 
     final Image image = new Image( dev, m_size.width, m_size.height );
-    final Image titleImage = m_titlePainter.paint();
+    final Image titleImage = m_titlePainter.createImage(new Rectangle(0,0,m_size.width,m_titlePainter.getSize().y) );
     final Image legendImage = m_legendPainter.createImage();
     final Image plotImage = m_plotPainter.createImage();
     final Image leftImage = createAxesImage( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ), m_plotInsets.left, m_plotPainter.getSize().y, false );
     final Image topImage = createAxesImage( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ), m_plotPainter.getSize().x, m_plotInsets.top - m_titlePainter.getSize().y, true );
     final Image rightImage = createAxesImage( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ), m_plotInsets.right, m_plotPainter.getSize().y, false );
-    final Image bottomImage = createAxesImage( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ), m_plotPainter.getSize().x, m_plotInsets.bottom - m_legendPainter.getSize().y, true );
+    final Image bottomImage = createAxesImage( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ), m_plotPainter.getSize().x, m_plotInsets.bottom - m_legendSize.y, true );
     final GC gc = new GC( image );
     try
     {

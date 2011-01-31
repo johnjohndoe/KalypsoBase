@@ -172,7 +172,7 @@ public class ChartTitlePainter
   {
     final Insets inset = title.getInsets();
 
-    final ALIGNMENT alignment = title.getAlignmentHorizontal();
+    final ALIGNMENT alignment = title.getTextStyle().getAlignment();
     if( ALIGNMENT.CENTER.equals( alignment ) )
     {
       final int x = Double.valueOf( m_width / 2.0 - textExtent.x / 2.0 ).intValue();

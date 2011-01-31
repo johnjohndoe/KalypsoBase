@@ -65,11 +65,6 @@ public class ChartPlotPainter
     m_size = size;
   }
 
-  public final Point getSize( )
-  {
-    return m_size;
-  }
-
   public final Image createImage( )
   {
     if( m_size == null || m_size.x < 1 || m_size.y < 1 )
@@ -88,6 +83,18 @@ public class ChartPlotPainter
     return image;
   }
 
+  private IChartLayer[] getChartLayers( )
+  {
+    final ILayerManager manager = m_chartModel.getLayerManager();
+
+    return manager.getLayers();
+  }
+
+  public final Point getSize( )
+  {
+    return m_size;
+  }
+
   private void paint( final GC gc )
   {
     for( final IChartLayer layer : getChartLayers() )
@@ -95,13 +102,6 @@ public class ChartPlotPainter
       if( layer.isVisible() )
         layer.paint( gc );
     }
-  }
-
-  private IChartLayer[] getChartLayers( )
-  {
-    final ILayerManager manager = m_chartModel.getLayerManager();
-
-    return manager.getLayers();
   }
 
 }

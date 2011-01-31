@@ -29,6 +29,7 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
+import de.openali.odysseus.chart.framework.util.img.legend.renderer.DefaultChartLegendRenderer;
 import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer;
 
 public class ChartModel implements IChartModel
@@ -711,7 +712,7 @@ public class ChartModel implements IChartModel
   public void setTitle( final String title, final ALIGNMENT position, final ITextStyle textStyle, final Insets insets )
   {
     m_title.clear();
-    m_title.add( new TitleTypeBean( title, position, textStyle, insets ) );
+    m_title.add( new TitleTypeBean( title, position, ALIGNMENT.CENTER, textStyle, insets ) );
   }
 
   /**
@@ -729,6 +730,9 @@ public class ChartModel implements IChartModel
   @Override
   public IChartLegendRenderer getLegendRenderer( )
   {
+    if (m_renderer == null)
+      m_renderer = DefaultChartLegendRenderer.ID;
+    
     return OdysseusChartFrameworkPlugin.getDefault().getRenderers( m_renderer );
   }
 

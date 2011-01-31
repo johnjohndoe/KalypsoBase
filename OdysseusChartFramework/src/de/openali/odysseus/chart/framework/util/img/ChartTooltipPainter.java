@@ -55,6 +55,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGHT;
 import de.openali.odysseus.chart.framework.model.style.impl.TextStyle;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author kimwerner
@@ -70,14 +71,16 @@ public class ChartTooltipPainter
 
   public ChartTooltipPainter( )
   {
-    m_labelRenderer = new GenericChartLabelRenderer();
-    m_labelRenderer.setInsets( new Insets( 2, 2, 2, 2 ) );
-    m_labelRenderer.setDrawBorder( true );
-    m_labelRenderer.setRotation( 0 );
+    final TitleTypeBean titleType = new TitleTypeBean( null );
+    titleType.setInsets( new Insets( 2, 2, 2, 2 ) );
+    titleType.setRotation( 0 );
     final FontData fontData = JFaceResources.getTextFont().getFontData()[0];
     final RGB rgbFill = PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_INFO_BACKGROUND ).getRGB();
     final RGB rgbText = PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_INFO_FOREGROUND ).getRGB();
-    m_labelRenderer.setTextStyle( new TextStyle( fontData.getHeight(), fontData.getName(), rgbText, rgbFill, FONTSTYLE.NORMAL, FONTWEIGHT.NORMAL, ALIGNMENT.LEFT, 255, true ) );
+    titleType.setTextStyle( new TextStyle( fontData.getHeight(), fontData.getName(), rgbText, rgbFill, FONTSTYLE.NORMAL, FONTWEIGHT.NORMAL, ALIGNMENT.LEFT, 255, true ) );
+
+    m_labelRenderer = new GenericChartLabelRenderer( titleType );
+    m_labelRenderer.setBorderLine( StyleUtils.getDefaultLineStyle() );
   }
 
   public IChartLabelRenderer getLabelRenderer( )
@@ -118,14 +121,15 @@ public class ChartTooltipPainter
       offsetY = 3;
     }
 
-    getLabelRenderer().setTextAnchor( posX, posY );
+    getLabelRenderer().getTitleTypeBean().setTextAnchorX( posX );
+    getLabelRenderer().getTitleTypeBean().setTextAnchorY( posY );
     getLabelRenderer().paint( gcw, new Point( mousePos.x + offsetX, mousePos.y + offsetY ) );
 
   }
 
   public void setTooltip( final String tooltip )
   {
-    getLabelRenderer().setLabel( tooltip );
+    getLabelRenderer().getTitleTypeBean().setLabel( tooltip );
   }
 
 }

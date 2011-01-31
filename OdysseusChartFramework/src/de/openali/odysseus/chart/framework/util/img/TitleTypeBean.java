@@ -53,13 +53,13 @@ public class TitleTypeBean
 {
   private String m_text = "";
 
-  private ALIGNMENT m_alignmentHorizontal = ALIGNMENT.CENTER;
+  private ALIGNMENT m_positionHorizontal = ALIGNMENT.CENTER;
 
-  private ALIGNMENT m_alignmentVertical = ALIGNMENT.CENTER;
+  private ALIGNMENT m_positionVertical = ALIGNMENT.CENTER;
 
-  private ALIGNMENT m_textAnchorX = ALIGNMENT.CENTER;
+  private ALIGNMENT m_textAnchorX = ALIGNMENT.LEFT;
 
-  private ALIGNMENT m_textAnchorY = ALIGNMENT.CENTER;
+  private ALIGNMENT m_textAnchorY = ALIGNMENT.TOP;
 
   private ITextStyle m_textStyle;
 
@@ -72,23 +72,14 @@ public class TitleTypeBean
     m_text = text;
   }
 
-  public TitleTypeBean( final String text, final ALIGNMENT alignmentHorizontal, final ITextStyle textStyle, final Insets insets )
+  public TitleTypeBean( final String text, final ALIGNMENT positionHorizontal, final ALIGNMENT positionVertical, final ITextStyle textStyle, final Insets insets )
   {
     super();
     m_text = text;
-    m_alignmentHorizontal = alignmentHorizontal;
+    m_positionHorizontal = positionHorizontal;
+    m_positionVertical = positionVertical;
     m_textStyle = textStyle;
     m_insets = insets == null ? new Insets( 0, 0, 0, 0 ) : insets;
-  }
-
-  public ALIGNMENT getAlignmentHorizontal( )
-  {
-    return m_alignmentHorizontal;
-  }
-
-  public ALIGNMENT getAlignmentVertical( )
-  {
-    return m_alignmentVertical;
   }
 
   public Insets getInsets( )
@@ -96,14 +87,14 @@ public class TitleTypeBean
     return m_insets;
   }
 
-  public ALIGNMENT getTextAnchorX( )
+  public ALIGNMENT getPositionHorizontal( )
   {
-    return m_textAnchorX;
+    return m_positionHorizontal;
   }
 
-  public ALIGNMENT getTextAnchorY( )
+  public ALIGNMENT getPositionVertical( )
   {
-    return m_textAnchorY;
+    return m_positionVertical;
   }
 
   public int getRotation( )
@@ -116,22 +107,22 @@ public class TitleTypeBean
     return m_text;
   }
 
+  public ALIGNMENT getTextAnchorX( )
+  {
+    return m_textAnchorX;
+  }
+
+  public ALIGNMENT getTextAnchorY( )
+  {
+    return m_textAnchorY;
+  }
+
   public ITextStyle getTextStyle( )
   {
     if( m_textStyle == null )
       m_textStyle = StyleUtils.getDefaultTextStyle();
 
     return m_textStyle;
-  }
-
-  public void setAlignmentHorizontal( final ALIGNMENT alignmentHorizontal )
-  {
-    m_alignmentHorizontal = alignmentHorizontal;
-  }
-
-  public void setAlignmentVertical( final ALIGNMENT alignmentVertical )
-  {
-    m_alignmentVertical = alignmentVertical;
   }
 
   public void setInsets( final Insets insets )
@@ -144,14 +135,14 @@ public class TitleTypeBean
     m_text = text;
   }
 
-  public void setTextAnchorX( final ALIGNMENT normalizedPositionX )
+  public void setPositionHorizontal( final ALIGNMENT positionHorizontal )
   {
-    m_textAnchorX = normalizedPositionX;
+    m_positionHorizontal = positionHorizontal;
   }
 
-  public void setTextAnchorY( final ALIGNMENT normalizedPositionY )
+  public void setPositionVertical( final ALIGNMENT positionVertical )
   {
-    m_textAnchorY = normalizedPositionY;
+    m_positionVertical = positionVertical;
   }
 
   public void setRotation( final int rotation )
@@ -162,6 +153,16 @@ public class TitleTypeBean
   public void setText( final String text )
   {
     m_text = text;
+  }
+
+  public void setTextAnchorX( final ALIGNMENT normalizedPositionX )
+  {
+    m_textAnchorX = normalizedPositionX;
+  }
+
+  public void setTextAnchorY( final ALIGNMENT normalizedPositionY )
+  {
+    m_textAnchorY = normalizedPositionY;
   }
 
   public void setTextStyle( final ITextStyle textStyle )

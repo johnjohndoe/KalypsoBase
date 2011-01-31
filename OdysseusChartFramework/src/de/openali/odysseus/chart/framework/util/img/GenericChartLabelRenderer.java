@@ -55,48 +55,70 @@ import org.eclipse.swt.graphics.Transform;
 import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
-import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
  * @author kimwerner
  */
 public class GenericChartLabelRenderer implements IChartLabelRenderer
 {
-  private static final Insets DEFAULT_INSETS = new Insets( 2, 2, 2, 2 );
+  private TitleTypeBean m_titleBean;
 
-  private ALIGNMENT m_anchorX = ALIGNMENT.LEFT;
+  private ILineStyle m_borderLine = null;
 
-  private ALIGNMENT m_anchorY = ALIGNMENT.TOP;
+  public GenericChartLabelRenderer( final String label )
+  {
+    m_titleBean = new TitleTypeBean( label );
+  }
 
-  private ALIGNMENT m_alignmentX = ALIGNMENT.LEFT;
+  public GenericChartLabelRenderer( )
+  {
+    m_titleBean = new TitleTypeBean( null );
+  }
 
-  private ALIGNMENT m_alignmentY = ALIGNMENT.CENTERED_VERTICAL;
+  public GenericChartLabelRenderer( final TitleTypeBean titleTypeBean )
+  {
+    m_titleBean = titleTypeBean;
+  }
 
-  private boolean m_drawBorder = false;
+  public GenericChartLabelRenderer( final TitleTypeBean titleTypeBean, final ILineStyle borderLine )
+  {
+    m_titleBean = titleTypeBean;
+    m_borderLine = borderLine;
+  }
 
-  private ITextStyle m_style;
+  private Point calcSize( )
+  {
+    final Point size = calcSize( m_titleBean == null ? null : m_titleBean.getText() );
+    final int border = isDrawBorder() ? m_borderLine.getWidth() : 0;
+    return new Point( size.x + border * 2 + m_titleBean.getInsets().left + m_titleBean.getInsets().right, size.y + border * 2 + m_titleBean.getInsets().top + m_titleBean.getInsets().bottom );
+  }
 
-  private String m_label;
+  private final Point getImageSize( final String url )
+  {
+    return null;
+  }
 
-  private Insets m_insets = DEFAULT_INSETS;
-
-  private Point m_size = null;
-
-  private int m_angle = 0;
+  private final boolean isImageURL( final String text )
+  {
+    return false;
+  }
 
   private Point calcSize( final String text )
   {
-    if( StringUtils.isEmpty( text ) || getTextStyle() == null )
+    if( StringUtils.isEmpty( text ) )
       return new Point( 0, 0 );
+    if( isImageURL( text ) )
+      return getImageSize( text );
 
     final Device device = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( device, 1, 1 );
     final Transform transform = new Transform( device );
-    transform.rotate( getRotation() );
+    transform.rotate( m_titleBean.getRotation() );
     final GC gc = new GC( image );
     try
     {
-      getTextStyle().apply( gc );
+      m_titleBean.getTextStyle().apply( gc );
       return gc.textExtent( text, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
     }
     finally
@@ -107,174 +129,122 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     }
   }
 
-  private Point calcSize( )
+  private final String fitToFixedWidth( final String line, final int width )
   {
-    final Point size = calcSize( getLabel() );
-    final int border = isDrawBorder() ? 1 : 0;// TODO getBorderLine().getWidth()
-    return new Point( size.x + border * 2 + getInsets().left + getInsets().right, size.y + border * 2 + getInsets().top + getInsets().bottom );
+    if( width < 1 )
+      return line;
+    final Point letterSize = calcSize( StringUtils.substring( line, 0, 5 ) + StringUtils.substring( line, line.length() - 5 ) );
+    final int charAnz = width * 10 / letterSize.x;
+    if( charAnz < line.length() )
+      return StringUtils.abbreviateMiddle( line, "...", charAnz );
+    return line;
+
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#eatBean(de.openali.odysseus.chart.framework.util.img.TitleTypeBean)
+   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getBorderLine()
    */
   @Override
-  public void eatBean( final TitleTypeBean titleTypeBean )
+  public ILineStyle getBorderLine( )
   {
-
-    if( titleTypeBean == null )
-      return;
-    setAlignment( titleTypeBean.getAlignmentHorizontal(), titleTypeBean.getAlignmentVertical() );
-    setTextAnchor( titleTypeBean.getTextAnchorX(), titleTypeBean.getTextAnchorY() );
-    setLabel( titleTypeBean.getText() );
-    setTextStyle( titleTypeBean.getTextStyle() );
-    setRotation( titleTypeBean.getRotation() );
-    setInsets( titleTypeBean.getInsets() );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getLinePosition()
-   */
-  @Override
-  public ALIGNMENT getAlignmentX( )
-  {
-
-    return m_alignmentX;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getLinePosition()
-   */
-  @Override
-  public ALIGNMENT getAlignmentY( )
-  {
-
-    return m_alignmentY;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getInsets()
-   */
-  @Override
-  public Insets getInsets( )
-  {
-    return m_insets;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getLabel()
-   */
-  @Override
-  public String getLabel( )
-  {
-    return m_label;
+    return m_borderLine;
   }
 
   private int getLineInset( final GC gc, final int offset, final String line, final ALIGNMENT pos, final int width )
   {
     if( pos == ALIGNMENT.RIGHT )
-      return width - gc.textExtent( line, SWT.DRAW_TAB ).x - getInsets().right - offset;
+      return width - gc.textExtent( line, SWT.DRAW_TAB ).x - m_titleBean.getInsets().right - offset;
     else if( pos == ALIGNMENT.LEFT )
-      return m_insets.left + offset;
-    else if( pos == ALIGNMENT.CENTERED_HORIZONTAL )
-      return offset + (width - gc.textExtent( line, SWT.DRAW_TAB ).x) / 2;
+      return m_titleBean.getInsets().left + offset;
     else if( pos == ALIGNMENT.CENTER )
       return offset + (width - gc.textExtent( line, SWT.DRAW_TAB ).x) / 2;
-    else if( pos == ALIGNMENT.TICK_CENTERED )
+    else
+      // all other cases are centered ? or throw an exception ?
       return offset + (width - gc.textExtent( line, SWT.DRAW_TAB ).x) / 2;
-    else if( pos == ALIGNMENT.INTERVALL_CENTERED )
-      return offset + (width - gc.textExtent( line, SWT.DRAW_TAB ).x);
-
-    throw new IllegalArgumentException();
+    // throw new IllegalArgumentException();
 
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getRotation()
-   */
-  @Override
-  public int getRotation( )
-  {
-    return m_angle;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getSize(java.lang.String)
+   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getSize()
    */
   @Override
   public Point getSize( )
   {
-    if( m_size == null )
-    {
-      m_size = calcSize();
 
-    }
-    return m_size;
+    return calcSize();
+
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getTextAnchor()
+   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getTitleTypeBean()
    */
   @Override
-  public ALIGNMENT getTextAnchorX( )
+  public TitleTypeBean getTitleTypeBean( )
   {
-    return m_anchorX;
+
+    return m_titleBean;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getTextAnchor()
-   */
-  @Override
-  public ALIGNMENT getTextAnchorY( )
+  private Point getTopLeft( final ALIGNMENT posX, final ALIGNMENT posY, final int width, final int height )
   {
-    return m_anchorY;
-  }
+    int left;
+    int top;
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getTextStyle()
-   */
-  @Override
-  public ITextStyle getTextStyle( )
-  {
-
-    return m_style;
-  }
-
-  private int getTopLeft( final ALIGNMENT pos, final Rectangle rect )
-  {
-    final int width = rect.width > 1 ? Math.min( rect.width, getSize().x ) : getSize().x;
-
-    switch( pos )
+    switch( posX )
     {
       case RIGHT:
-        return -width;
+      {
+        left = -width;
+        break;
+      }
       case LEFT:
-        return 0;
-      case CENTERED_HORIZONTAL:
-        return -width / 2;
-      case BOTTOM:
-        return -getSize().y;
-      case TOP:
-        return 0;
-      case CENTERED_VERTICAL:
-        return -getSize().y / 2;
-      case TICK_CENTERED:
-        return -width / 2;
-      case INTERVALL_CENTERED:
-        return rect.width < 0 ? 0 : (rect.width - width) / 2;
+      {
+        left = 0;
+        break;
+      }
+      case CENTER:
+      {
+        left = -width / 2;
+        break;
+      }
 
+      default:
+        left = -width / 2;
     }
-    throw new IllegalArgumentException();
+    switch( posY )
+    {
+      case TOP:
+      {
+        top = 0;
+        break;
+      }
+
+      case CENTER:
+      {
+        top = -height / 2;
+        break;
+      }
+      case BOTTOM:
+      {
+        top = -height;
+        break;
+      }
+      default:
+        top = -height / 2;
+    }
+    return new Point( left, top );
 
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getDrawBorder()
+   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#isDrawBorder()
    */
   @Override
   public boolean isDrawBorder( )
   {
 
-    return m_drawBorder;
+    return m_borderLine != null && m_borderLine.isVisible();
   }
 
   /**
@@ -294,7 +264,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   @Override
   public void paint( final GC gc, final Rectangle fixedWidth )
   {
-    if( StringUtils.isEmpty( getLabel() ) || getTextStyle() == null || fixedWidth == null )
+    if( m_titleBean == null || StringUtils.isEmpty( m_titleBean.getText() ) || fixedWidth == null )
       return;
 
     // save GC
@@ -306,13 +276,16 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     final int oldAlpha = gc.getAlpha();
 
     // get Font and Colors
-    final Font newFont = new Font( device, getTextStyle().toFontData() );
-    final Color newFillCol = new Color( device, getTextStyle().getFillColor() );
-    final Color newTextCol = new Color( device, getTextStyle().getTextColor() );
+    final Font newFont = new Font( device, m_titleBean.getTextStyle().toFontData() );
+    final Color newFillCol = new Color( device, m_titleBean.getTextStyle().getFillColor() );
+    final Color newTextCol = new Color( device, m_titleBean.getTextStyle().getTextColor() );
 
-    // calculate top,left
-    final int top = getTopLeft( getTextAnchorY(), fixedWidth );
-    final int left = getTopLeft( getTextAnchorX(), fixedWidth );
+    // calculate top,left correction
+    final int width = getSize().x;
+    final int height = getSize().y;
+    final Point fixedSize = new Point( fixedWidth.width > 1 ? fixedWidth.width : width, fixedWidth.height > 1 ? fixedWidth.height : height );
+    final Point topLeftCorrection = getTopLeft( m_titleBean.getTextAnchorX(), m_titleBean.getTextAnchorY(), width, height );
+
 // final int midX = left + getSize().x / 2;
 // final int midY = top + getSize().y / 2;
 
@@ -324,34 +297,35 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       gc.setFont( newFont );
       gc.setBackground( newFillCol );
       gc.setForeground( newTextCol );
-      gc.setAlpha( getTextStyle().getAlpha() );
+      gc.setAlpha( m_titleBean.getTextStyle().getAlpha() );
       gc.setLineWidth( 1 );// TODO getBorderLine().getWidth()
 
       // apply top,left and rotation
       gc.getTransform( newTransform );
       newTransform.translate( fixedWidth.x, fixedWidth.y );
-      newTransform.rotate( getRotation() );
+      newTransform.rotate( m_titleBean.getRotation() );
       gc.setTransform( newTransform );
 
       // draw BorderRect
-      final Rectangle textRect = new Rectangle( left, top, getSize().x, getSize().y );
+      final Rectangle textRect = new Rectangle( topLeftCorrection.x, topLeftCorrection.y, fixedSize.x, fixedSize.y );
       gc.fillRectangle( textRect );
       if( isDrawBorder() )
       {
+        // TODO: BorderStyle auswerten
         gc.drawRectangle( textRect );
       }
       // draw Text
-      final String[] lines = StringUtils.split( getLabel(), "\n" );// TODO: maybe other split strategy
+      final String[] lines = StringUtils.split( m_titleBean.getText(), "\n" );// TODO: maybe other split strategy
       final int lineHeight = gc.textExtent( "Pq" ).y;
 
-      final Insets insets = getInsets();
+      final Insets insets = m_titleBean.getInsets();
       final int border = (isDrawBorder() ? gc.getLineWidth() : 0) + insets.top;
 
       for( int i = 0; i < lines.length; i++ )
       {
         final String line = fitToFixedWidth( lines[i], fixedWidth.width );
-        final int lineInset = getLineInset( gc, border, line, getAlignmentX(), fixedWidth.width < 0 ? getSize().x : Math.min( fixedWidth.width, getSize().x ) );
-        gc.drawText( line, left + lineInset, top + border + i * lineHeight, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+        final int lineInset = getLineInset( gc, border, line, m_titleBean.getTextStyle().getAlignment(), fixedSize.x );
+        gc.drawText( line, topLeftCorrection.x + lineInset, topLeftCorrection.y + border + i * lineHeight, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
       }
     }
     finally
@@ -363,7 +337,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       gc.setForeground( oldTextCol );
       gc.setAlpha( oldAlpha );
       newTransform.translate( -fixedWidth.x, -fixedWidth.y );
-      newTransform.rotate( -getRotation() );
+      newTransform.rotate( -m_titleBean.getRotation() );
       gc.setTransform( newTransform );
 
       // dispose Font,Transform and Colors
@@ -376,96 +350,23 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
   }
 
-  private final String fitToFixedWidth( final String line, final int width )
+  /**
+   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#setBorderLine(de.openali.odysseus.chart.framework.model.style.ILineStyle)
+   */
+  @Override
+  public void setBorderLine( final ILineStyle borderLine )
   {
-    if( width < 1 )
-      return line;
-    final Point letterSize = calcSize( StringUtils.substring( line, 0, 5 ) + StringUtils.substring( line, line.length() - 5 ) );
-    final int charAnz = width * 10 / letterSize.x;
-    if( charAnz < line.length() )
-      return StringUtils.abbreviateMiddle( line, "...", charAnz );
-    return line;
+    m_borderLine = borderLine;
 
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#setLinePosition(de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT)
+   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#setTitleTypeBean(de.openali.odysseus.chart.framework.util.img.TitleTypeBean)
    */
   @Override
-  public void setAlignment( final ALIGNMENT alignmentX, final ALIGNMENT alignmentY )
+  public void setTitleTypeBean( final TitleTypeBean titleTypeBean )
   {
-    m_size = null;
-    m_alignmentX = alignmentX;
-    m_alignmentY = alignmentY;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#setDrawBorder(boolean)
-   */
-  @Override
-  public void setDrawBorder( final boolean drawBorder )
-  {
-    m_size = null;
-    m_drawBorder = drawBorder;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.LabelRenderer.IChartLabelRenderer#setInsets(java.awt.Insets)
-   */
-  @Override
-  public void setInsets( final Insets insets )
-  {
-    m_size = null;
-    if( insets == null )
-      m_insets = DEFAULT_INSETS;
-    else
-      m_insets = insets;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#setLabel(java.lang.String)
-   */
-  @Override
-  public void setLabel( final String label )
-  {
-    if( label != null && label.equals( m_label ) )
-      return;
-    m_size = null;
-    m_label = label;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#setRotation(int,
-   *      de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT,
-   *      de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT)
-   */
-  @Override
-  public void setRotation( final int degree )
-  {
-    m_size = null;
-    m_angle = degree;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#setTextAnchor(de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT,
-   *      de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT)
-   */
-  @Override
-  public void setTextAnchor( final ALIGNMENT positionX, final ALIGNMENT positionY )
-  {
-    m_size = null;
-    m_anchorX = positionX;
-    m_anchorY = positionY;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.LabelRenderer.IChartLabelRenderer#setTextStyle(de.openali.odysseus.chart.framework.model.style.ITextStyle)
-   */
-  @Override
-  public void setTextStyle( final ITextStyle textStyle )
-  {
-    m_size = null;
-    m_style = textStyle;
+    m_titleBean = titleTypeBean;
 
   }
 
