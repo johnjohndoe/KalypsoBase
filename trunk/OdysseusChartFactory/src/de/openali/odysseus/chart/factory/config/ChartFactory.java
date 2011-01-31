@@ -100,5 +100,7 @@ public final class ChartFactory
 
     final ChartLayerFactory layerFactory = new ChartLayerFactory( model, extendedResolver, extLoader, context, mapperFactory );
     layerFactory.build( chartType );
+
+    chartTypeResolver.clear();
   }
 }
