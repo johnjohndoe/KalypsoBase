@@ -377,4 +377,9 @@ public final class ChartTypeResolver implements IReferenceResolver
 
     return null;
   }
+
+  public void clear( )
+  {
+    m_loaderCache.clear();
+  }
 }

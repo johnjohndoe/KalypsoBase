@@ -297,12 +297,12 @@ public class ChartMapperFactory extends AbstractChartFactory
       final boolean fixMinValue = rangeType.getFixMinValue();
       final boolean fixMaxValue = rangeType.getFixMaxValue();
       return new DataRangeRestriction<Number>( min == null ? -Double.MAX_VALUE : min, max == null ? Double.MAX_VALUE : max, rangeMin == null ? 0.0 : rangeMin, rangeMax == null ? Double.MAX_VALUE
-          : rangeMax,fixMinValue,fixMaxValue );
+          : rangeMax, fixMinValue, fixMaxValue );
     }
     else if( at.isSetAxisDateRangeRestriction() )
     {
       // TODO:return new DataRangeRestriction<Number>( ?,?,?,?);
-      return new DataRangeRestriction<Number>( null, null, null, null,false,false );
+      return new DataRangeRestriction<Number>( null, null, null, null, false, false );
     }
     else
       return null;
