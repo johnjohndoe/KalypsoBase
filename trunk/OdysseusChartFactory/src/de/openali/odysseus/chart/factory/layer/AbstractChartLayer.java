@@ -142,7 +142,7 @@ public abstract class AbstractChartLayer implements IChartLayer
    */
   protected IAxis getDomainAxis( )
   {
-    return getCoordinateMapper().getDomainAxis();
+    return getCoordinateMapper() == null ? null : getCoordinateMapper().getDomainAxis();
   }
 
   /**

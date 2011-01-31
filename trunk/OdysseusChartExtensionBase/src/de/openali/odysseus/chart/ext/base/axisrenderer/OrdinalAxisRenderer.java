@@ -51,7 +51,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import de.openali.odysseus.chart.ext.base.data.IAxisContentProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
@@ -73,7 +72,16 @@ public class OrdinalAxisRenderer implements IAxisRenderer
 
   private final String m_id;
 
-  private int m_fixedWidth = -1;
+  private int m_fixedMinWidth;
+
+  private int m_fixedMaxWidth;
+
+  public void setFixedWidth( final int minWidth, final int maxWidth )
+  {
+    m_fixedMinWidth = minWidth;
+
+    m_fixedMaxWidth = maxWidth;
+  }
 
   private ITextStyle m_tickStyle = null;
 
@@ -90,7 +98,7 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     if( axisTitleRenderer == null )
     {
       m_labelRenderer = new GenericChartLabelRenderer();
-      m_labelRenderer.setInsets( config.labelInsets );
+      m_labelRenderer.getTitleTypeBean().setInsets( config.labelInsets );
     }
     else
       m_labelRenderer = axisTitleRenderer;
@@ -108,7 +116,6 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   {
     this( id, config, null, null, contentProvider );
   }
-
 
   public OrdinalAxisRenderer( final String id, final AxisRendererConfig config )
   {
@@ -202,7 +209,7 @@ public class OrdinalAxisRenderer implements IAxisRenderer
       final int textX;
       final int textY;
 
-      getTickLabelRenderer( axis ).setLabel( m_contentProvider.getLabel( i ) );
+      getTickLabelRenderer( axis ).getTitleTypeBean().setLabel( m_contentProvider.getLabel( i ) );
       final boolean drawTick = true;
 
       final int tickPos = ticks[i].intValue();
@@ -275,7 +282,7 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     {
       if( i < 0 || i > m_contentProvider.size() - 1 )
         continue;
-      tickRenderer.setLabel( m_contentProvider.getLabel( i ) );
+      tickRenderer.getTitleTypeBean().setLabel( m_contentProvider.getLabel( i ) );
       maxWidth = Math.max( getTickLabelRenderer( axis ).getSize().y, maxWidth );
     }
 
@@ -312,14 +319,14 @@ public class OrdinalAxisRenderer implements IAxisRenderer
       m_tickLabelRenderer = new GenericChartLabelRenderer();
       if( m_config != null )
       {
-        m_tickLabelRenderer.setInsets( m_config.tickLabelInsets );
-        m_tickLabelRenderer.setAlignment( ALIGNMENT.CENTERED_HORIZONTAL, ALIGNMENT.CENTERED_VERTICAL );
-        m_tickLabelRenderer.setTextAnchor( ALIGNMENT.LEFT, ALIGNMENT.TOP );
-        m_tickLabelRenderer.setTextStyle( m_config.labelStyle );
+        m_tickLabelRenderer.getTitleTypeBean().setInsets( m_config.tickLabelInsets );
+// m_tickLabelRenderer.getTitleTypeBean().setAlignment( ALIGNMENT.CENTERED_HORIZONTAL, ALIGNMENT.CENTERED_VERTICAL );
+// m_tickLabelRenderer.getTitleTypeBean().setTextAnchor( ALIGNMENT.LEFT, ALIGNMENT.TOP );
+        m_tickLabelRenderer.getTitleTypeBean().setTextStyle( m_config.labelStyle );
       }
       if( axis != null )
       {
-        m_tickLabelRenderer.setRotation( axis.getPosition().getOrientation() == ORIENTATION.VERTICAL ? 90 : 0 );
+        m_tickLabelRenderer.getTitleTypeBean().setRotation( axis.getPosition().getOrientation() == ORIENTATION.VERTICAL ? 90 : 0 );
       }
     }
     return m_tickLabelRenderer;
@@ -339,33 +346,18 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     final int end = axis.getNumericRange().getMax().intValue();
 
     final int intervallCount = end - start + 1;
+    final int tickDist = m_fixedMinWidth < 1 ? Math.min( m_fixedMaxWidth, axis.getScreenHeight() / intervallCount - 1/* Pixel */) : m_fixedMaxWidth;
 
     final Number[] tickPos = new Number[m_contentProvider.size()];
-    if( m_fixedWidth > 0 )
+    int pos = -tickDist * start;
+// if( getTickLabelRenderer( axis ).getAlignmentX() == ALIGNMENT.TICK_CENTERED )
+// pos -= tickDist / 2;
+    for( int i = 0; i < m_contentProvider.size(); i++ )
     {
-      // FIXME
-      final int tickDist = Math.max( m_fixedWidth, axis.getScreenHeight() / intervallCount ) - 1/* Pixel */;
-      int pos = -tickDist * start;
-      if( getTickLabelRenderer( axis ).getAlignmentX() == ALIGNMENT.TICK_CENTERED )
-        pos -= tickDist / 2;
-      for( int i = 0; i < m_contentProvider.size(); i++ )
-      {
-        tickPos[i] = pos;
-        pos += tickDist;
-      }
+      tickPos[i] = pos;
+      pos += tickDist;
     }
-    else
-    {
-      // FIXME : not tested anywhere
-      Number sumWidth = 0;
-      for( int i = start; i <= end; i++ )
-      {
-        getTickLabelRenderer( axis ).setLabel( m_contentProvider.getLabel( i ) );
-        final int width = getTickLabelRenderer( axis ).getSize().x;
-        tickPos[i] = sumWidth.intValue() + width / 2;
-        sumWidth = sumWidth.intValue() + width;
-      }
-    }
+
     return tickPos;
 
   }
@@ -426,18 +418,13 @@ public class OrdinalAxisRenderer implements IAxisRenderer
 
   }
 
-  public void setFixedWidth( final int fixedWidth )
-  {
-    m_fixedWidth = fixedWidth;
-  }
-
   /**
    * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#setLabelStyle(de.openali.odysseus.chart.framework.model.style.ITextStyle)
    */
   @Override
   public void setLabelStyle( final ITextStyle style )
   {
-    m_labelRenderer.setTextStyle( style );
+    m_labelRenderer.getTitleTypeBean().setTextStyle( style );
   }
 
   /**
@@ -448,7 +435,7 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   {
     m_tickStyle = style;
     if( m_tickLabelRenderer != null )
-      m_tickLabelRenderer.setTextStyle( style );
+      m_tickLabelRenderer.getTitleTypeBean().setTextStyle( style );
   }
 
   public void setTickStyle( final ITextStyle tickStyle )

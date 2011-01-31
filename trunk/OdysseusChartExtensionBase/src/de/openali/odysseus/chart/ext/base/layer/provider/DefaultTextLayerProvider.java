@@ -111,8 +111,8 @@ public class DefaultTextLayerProvider extends AbstractLayerProvider implements I
     final TitleTypeBean bean = new TitleTypeBean( text );
 
     bean.setTextStyle( visitor.visit( getStyleSet(), ITextStyle.class, 0 ) );
-    bean.setAlignmentHorizontal( alignmentHorizontal );
-    bean.setAlignmentVertical( alignmentVertical );
+    bean.setPositionHorizontal( alignmentHorizontal );
+    bean.setPositionVertical( alignmentVertical );
     bean.setTextAnchorX( textAnchorX );
     bean.setTextAnchorY( textAnchorY );
 

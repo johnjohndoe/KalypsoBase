@@ -176,7 +176,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
   @Override
   public IDataRange<Number> getDomainRange( )
   {
-    if( m_data == null )
+    if( m_data == null || getDomainAxis() == null )
       return null;
     final IDataOperator domainDataOp = m_dataOpertatorHelper.getDataOperator( getDomainAxis().getDataClass() );
     final IDataRange< ? > dataRange = m_data.getDomainRange();
@@ -195,7 +195,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
-    if( m_data == null )
+    if( m_data == null || getTargetAxis() == null )
       return null;
     final IDataOperator targetDataOp = m_dataOpertatorHelper.getDataOperator( getTargetAxis().getDataClass() );
     final IDataRange dataRange = m_data.getTargetRange();

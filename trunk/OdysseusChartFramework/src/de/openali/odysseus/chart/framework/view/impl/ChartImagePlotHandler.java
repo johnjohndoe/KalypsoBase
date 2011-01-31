@@ -74,7 +74,7 @@ public class ChartImagePlotHandler implements IPlotHandler
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.view.IPlotHandler#addPlotHandler(de.openali.odysseus.chart.framework.view.IChartDragHandler)
+   * @see de.openali.odysseus.chart.framework.view.IPlotHandler#addPlotHandler(de.openali.odysseus.ch0art.framework.view.IChartDragHandler)
    */
   @Override
   public void addPlotHandler( final IChartDragHandler handler )

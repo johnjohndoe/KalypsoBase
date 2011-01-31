@@ -78,11 +78,9 @@ public final class ChartFactory
         t.printStackTrace();
       }
 
-      title.setAlignmentHorizontal( StyleHelper.getAlignment( type.getHorizontalAlignment() ) );
-      title.setAlignmentVertical( StyleHelper.getAlignment( type.getVerticalAlignment() ) );
-      title.setTextAnchorX( StyleHelper.getAlignment( type.getHorizontalTextAnchor() ) );
-      title.setTextAnchorY( StyleHelper.getAlignment( type.getVerticalTextAnchor() ) );
-
+      title.setPositionHorizontal(  StyleHelper.getAlignment( type.getHorizontalAlignment() ) );
+      title.setPositionVertical( StyleHelper.getAlignment( type.getVerticalAlignment() ) );
+ 
       final Insets inset = new Insets( type.getInsetTop(), type.getInsetLeft(), type.getInsetBottom(), type.getInsetBottom() );
       title.setInsets( inset );
 

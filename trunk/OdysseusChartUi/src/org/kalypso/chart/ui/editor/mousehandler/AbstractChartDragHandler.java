@@ -61,7 +61,7 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
     m_SWTCursor = cursor;
   }
 
-  private final int button2Mask( final int button )
+  protected final int button2Mask( final int button )
   {
     return 1 << (18 + button);
   }
@@ -204,6 +204,7 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
       m_clickInfo = null;
       m_editInfo = null;
       m_chart.setEditInfo( null );
+      m_chart.setDragArea( null );
     }
   }
 

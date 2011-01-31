@@ -39,10 +39,12 @@ public interface IAxisConstants
     TOP(1),
     BOTTOM(0),
     CENTER(0.5),
+    // obsolete get rid of these special cases
     CENTERED_HORIZONTAL(0.5),
     CENTERED_VERTICAL(0.5),
     TICK_CENTERED(0.5),
     INTERVALL_CENTERED(0.5);
+    // obsolete get rid of these special cases
 
     private final double m_doubleValue;
 

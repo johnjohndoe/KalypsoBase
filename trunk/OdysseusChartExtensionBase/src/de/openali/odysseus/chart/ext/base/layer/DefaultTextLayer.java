@@ -88,7 +88,7 @@ public class DefaultTextLayer extends AbstractChartLayer
 
     for( final TitleTypeBean bean : m_titleTypeBeans )
     {
-      m_labelRenderer.eatBean( bean );
+      m_labelRenderer.setTitleTypeBean( bean );
       final Point position = cm.numericToScreen( bean.getTextAnchorX().doubleValue(), bean.getTextAnchorY().doubleValue() );
 
       m_labelRenderer.paint( gc, new Point( position.x, position.y ) );
