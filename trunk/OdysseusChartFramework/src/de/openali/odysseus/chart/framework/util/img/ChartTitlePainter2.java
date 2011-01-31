@@ -147,21 +147,23 @@ public class ChartTitlePainter2
   private Point calcSize( )
   {
     final List<IChartLabelRenderer> leftTopRenderer = m_titleTypes.get( ALIGNMENT.LEFT.name() + ALIGNMENT.TOP.name() );
+    final List<IChartLabelRenderer> leftCenterRenderer = m_titleTypes.get( ALIGNMENT.LEFT.name() + ALIGNMENT.CENTER.name() );
     final List<IChartLabelRenderer> leftBottomRenderer = m_titleTypes.get( ALIGNMENT.LEFT.name() + ALIGNMENT.BOTTOM.name() );
     final List<IChartLabelRenderer> centerTopRenderer = m_titleTypes.get( ALIGNMENT.CENTER.name() + ALIGNMENT.TOP.name() );
     final List<IChartLabelRenderer> centerBottomRenderer = m_titleTypes.get( ALIGNMENT.CENTER.name() + ALIGNMENT.BOTTOM.name() );
     final List<IChartLabelRenderer> centerCenterRenderer = m_titleTypes.get( ALIGNMENT.CENTER.name() + ALIGNMENT.CENTER.name() );
     final List<IChartLabelRenderer> rightTopRenderer = m_titleTypes.get( ALIGNMENT.RIGHT.name() + ALIGNMENT.TOP.name() );
     final List<IChartLabelRenderer> rightBottomRenderer = m_titleTypes.get( ALIGNMENT.RIGHT.name() + ALIGNMENT.BOTTOM.name() );
+    final List<IChartLabelRenderer> rightCenterRenderer = m_titleTypes.get( ALIGNMENT.RIGHT.name() + ALIGNMENT.CENTER.name() );
 
     m_leftTop = calcSize( leftTopRenderer );
     m_leftBottom = calcSize( leftBottomRenderer );
-    m_leftCenter = calcSize( leftBottomRenderer );
+    m_leftCenter = calcSize( leftCenterRenderer );
     m_centerTop = calcSize( centerTopRenderer );
     m_centerBottom = calcSize( centerBottomRenderer );
     m_rightTop = calcSize( rightTopRenderer );
     m_rightBottom = calcSize( rightBottomRenderer );
-    m_rightCenter = calcSize( leftBottomRenderer );
+    m_rightCenter = calcSize( rightCenterRenderer );
     m_centerCenter = calcSize( centerCenterRenderer );
 
     m_leftWidth = Math.max( Math.max( m_leftTop.x, m_leftCenter.x ), m_leftBottom.x );

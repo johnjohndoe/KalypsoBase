@@ -41,7 +41,12 @@
 package de.openali.odysseus.chart.framework.util.img;
 
 import java.awt.Insets;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -49,6 +54,7 @@ import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
@@ -66,14 +72,14 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
   private ILineStyle m_borderLine = null;
 
-  public GenericChartLabelRenderer( final String label )
-  {
-    m_titleBean = new TitleTypeBean( label );
-  }
-
   public GenericChartLabelRenderer( )
   {
     m_titleBean = new TitleTypeBean( null );
+  }
+
+  public GenericChartLabelRenderer( final String label )
+  {
+    m_titleBean = new TitleTypeBean( label );
   }
 
   public GenericChartLabelRenderer( final TitleTypeBean titleTypeBean )
@@ -92,16 +98,6 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     final Point size = calcSize( m_titleBean == null ? null : m_titleBean.getText() );
     final int border = isDrawBorder() ? m_borderLine.getWidth() : 0;
     return new Point( size.x + border * 2 + m_titleBean.getInsets().left + m_titleBean.getInsets().right, size.y + border * 2 + m_titleBean.getInsets().top + m_titleBean.getInsets().bottom );
-  }
-
-  private final Point getImageSize( final String url )
-  {
-    return null;
-  }
-
-  private final boolean isImageURL( final String text )
-  {
-    return false;
   }
 
   private Point calcSize( final String text )
@@ -150,6 +146,15 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     return m_borderLine;
   }
 
+  private final Point getImageSize( final String text )
+  {
+    final Device device = PlatformUI.getWorkbench().getDisplay();
+    final ImageData imageData = loadImage( device, text.substring( 4 ) );
+    if( imageData == null )
+      return new Point( 0, 0 );
+    return new Point( imageData.width, imageData.height );
+  }
+
   private int getLineInset( final GC gc, final int offset, final String line, final ALIGNMENT pos, final int width )
   {
     if( pos == ALIGNMENT.RIGHT )
@@ -182,7 +187,6 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   @Override
   public TitleTypeBean getTitleTypeBean( )
   {
-
     return m_titleBean;
   }
 
@@ -247,6 +251,50 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     return m_borderLine != null && m_borderLine.isVisible();
   }
 
+  private final boolean isImageURL( final String text )
+  {
+    return text.startsWith( "URL:" );
+  }
+
+  private final ImageData loadImage( final Device dev, final String text )
+  {
+
+    InputStream inputStream = null;
+    Image image = null;
+    try
+    {
+      final URL imageURL = new URL( text );
+      inputStream = imageURL.openStream();
+      image = new Image( dev, inputStream );
+      final ImageData imageData = image.getImageData();
+      final int maxHeight = getTitleTypeBean().getTextStyle().getHeight();
+      if( maxHeight < imageData.height )
+      {
+        final double scale = imageData.height / maxHeight;
+        return imageData.scaledTo( new Double( imageData.width / scale ).intValue(), maxHeight );
+      }
+
+      return imageData;
+    }
+    catch( final MalformedURLException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    catch( final IOException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    finally
+    {
+      if( image != null )
+        image.dispose();
+      IOUtils.closeQuietly( inputStream );
+    }
+    return null;
+  }
+
   /**
    * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#paint(org.eclipse.swt.graphics.GC,
    *      java.lang.String, org.eclipse.swt.graphics.Point)
@@ -281,13 +329,11 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     final Color newTextCol = new Color( device, m_titleBean.getTextStyle().getTextColor() );
 
     // calculate top,left correction
-    final int width = getSize().x;
-    final int height = getSize().y;
+    final Point size = getSize();
+    final int width = size.x;
+    final int height = size.y;
     final Point fixedSize = new Point( fixedWidth.width > 1 ? fixedWidth.width : width, fixedWidth.height > 1 ? fixedWidth.height : height );
     final Point topLeftCorrection = getTopLeft( m_titleBean.getTextAnchorX(), m_titleBean.getTextAnchorY(), width, height );
-
-// final int midX = left + getSize().x / 2;
-// final int midY = top + getSize().y / 2;
 
     final Transform newTransform = new Transform( device );
 
@@ -314,18 +360,38 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
         // TODO: BorderStyle auswerten
         gc.drawRectangle( textRect );
       }
-      // draw Text
-      final String[] lines = StringUtils.split( m_titleBean.getText(), "\n" );// TODO: maybe other split strategy
-      final int lineHeight = gc.textExtent( "Pq" ).y;
-
-      final Insets insets = m_titleBean.getInsets();
-      final int border = (isDrawBorder() ? gc.getLineWidth() : 0) + insets.top;
-
-      for( int i = 0; i < lines.length; i++ )
+      if( isImageURL( m_titleBean.getText() ) )
       {
-        final String line = fitToFixedWidth( lines[i], fixedWidth.width );
-        final int lineInset = getLineInset( gc, border, line, m_titleBean.getTextStyle().getAlignment(), fixedSize.x );
-        gc.drawText( line, topLeftCorrection.x + lineInset, topLeftCorrection.y + border + i * lineHeight, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+        // draw image
+        final ImageData imageData = loadImage( device, m_titleBean.getText().substring( 4 ) );
+        if( imageData != null )
+        {
+          final Image image = new Image( device, imageData );
+          try
+          {
+            gc.drawImage( image, 0, 0 );
+          }
+          finally
+          {
+            image.dispose();
+          }
+        }
+      }
+      else
+      // draw Text
+      {
+        final String[] lines = StringUtils.split( m_titleBean.getText(), "\n" );// TODO: maybe other split strategy
+        final int lineHeight = gc.textExtent( "Pq" ).y;
+
+        final Insets insets = m_titleBean.getInsets();
+        final int border = (isDrawBorder() ? gc.getLineWidth() : 0) + insets.top;
+
+        for( int i = 0; i < lines.length; i++ )
+        {
+          final String line = fitToFixedWidth( lines[i], fixedWidth.width );
+          final int lineInset = getLineInset( gc, border, line, m_titleBean.getTextStyle().getAlignment(), fixedSize.x );
+          gc.drawText( line, topLeftCorrection.x + lineInset, topLeftCorrection.y + border + i * lineHeight, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+        }
       }
     }
     finally
