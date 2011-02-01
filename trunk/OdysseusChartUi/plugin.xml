@@ -78,6 +78,16 @@
             id="org.kalypso.chart.ui.commands.zoom_pan_maximize"
             name="Zoom / Pan / Maximize">
       </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            id="org.kalypso.chart.ui.commands.change.visibility"
+            name="Change Visibility">
+         <commandParameter
+               id="layer.parameter"
+               name="Layer defines parameter &apos;x&apos;"
+               optional="false">
+         </commandParameter>
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.commandImages">
@@ -151,6 +161,10 @@
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.ZoomPanMaximizeCommandHandler"
             commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.ChangeVisibilityCommandHandler"
+            commandId="org.kalypso.chart.ui.commands.change.visibility">
       </handler>
    </extension>
    <extension
