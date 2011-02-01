@@ -25,27 +25,57 @@ public class LayerManager implements ILayerManager
      * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerEventListener#onActiveLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
      */
     @Override
-    public void onActiveLayerChanged( final IChartLayer layer1 )
+    public void onActiveLayerChanged( final IChartLayer layer )
     {
-      m_handler.fireActiveLayerChanged( layer1 );
+      m_handler.fireActiveLayerChanged( layer );
+
+      final LayerManagerEventHandler parentHandler = findParentHandler();
+      if( parentHandler != null )
+        parentHandler.fireActiveLayerChanged( (IChartLayer) getContainer() );
+    }
+
+    private LayerManagerEventHandler findParentHandler( )
+    {
+      final ILayerContainer container = getContainer();
+      if( container != null )
+      {
+        final ILayerContainer parent = container.getParent();
+        if( parent != null )
+        {
+          final ILayerManager parentLayerManager = parent.getLayerManager();
+          final LayerManagerEventHandler handler = parentLayerManager.getEventHandler();
+
+          return handler;
+        }
+      }
+
+      return null;
     }
 
     /**
      * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
      */
     @Override
-    public void onLayerContentChanged( final IChartLayer layer1 )
+    public void onLayerContentChanged( final IChartLayer layer )
     {
-      m_handler.fireLayerContentChanged( layer1 );
+      m_handler.fireLayerContentChanged( layer );
+
+      final LayerManagerEventHandler parentHandler = findParentHandler();
+      if( parentHandler != null )
+        parentHandler.fireLayerContentChanged( (IChartLayer) getContainer() );
     }
 
     /**
      * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
      */
     @Override
-    public void onLayerVisibilityChanged( final IChartLayer layer1 )
+    public void onLayerVisibilityChanged( final IChartLayer layer )
     {
-      m_handler.fireLayerVisibilityChanged( layer1 );
+      m_handler.fireLayerVisibilityChanged( layer );
+
+      final LayerManagerEventHandler parentHandler = findParentHandler();
+      if( parentHandler != null )
+        parentHandler.fireLayerVisibilityChanged( (IChartLayer) getContainer() );
     }
   };
 
@@ -58,17 +88,17 @@ public class LayerManager implements ILayerManager
    */
   private final List<IChartLayer> m_layers = new ArrayList<IChartLayer>();
 
-  private final ILayerContainer m_parent;
+  private final ILayerContainer m_container;
 
-  public LayerManager( final ILayerContainer parent )
+  public LayerManager( final ILayerContainer container )
   {
-    m_parent = parent;
+    m_container = container;
   }
 
   @Override
-  public ILayerContainer getParent( )
+  public ILayerContainer getContainer( )
   {
-    return m_parent;
+    return m_container;
   }
 
   @Override
@@ -89,6 +119,12 @@ public class LayerManager implements ILayerManager
     }
   }
 
+  @Override
+  public LayerManagerEventHandler getEventHandler( )
+  {
+    return m_handler;
+  }
+
   /**
    * @see de.openali.odysseus.chart.framework.layer.ILayerManager#addLayer(de.openali.odysseus.chart.framework.layer.IChartLayer)
    */
@@ -102,7 +138,7 @@ public class LayerManager implements ILayerManager
 
     for( final IChartLayer layer : layers )
     {
-      layer.setParent( m_parent );
+      layer.setParent( m_container );
       layer.addListener( m_layerListener );
 
       m_handler.fireLayerAdded( layer );
@@ -117,7 +153,7 @@ public class LayerManager implements ILayerManager
   public void addLayer( final IChartLayer layer, final int position )
   {
     m_layers.add( position, layer );
-    layer.setParent( m_parent );
+    layer.setParent( m_container );
     layer.addListener( m_layerListener );
 
     m_handler.fireLayerAdded( layer );

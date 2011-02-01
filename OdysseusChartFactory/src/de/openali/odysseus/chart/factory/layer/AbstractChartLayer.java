@@ -403,6 +403,7 @@ public abstract class AbstractChartLayer implements IChartLayer
     if( m_isVisible != isVisible )
     {
       m_isVisible = isVisible;
+
       m_handler.fireLayerVisibilityChanged( this );
     }
   }
