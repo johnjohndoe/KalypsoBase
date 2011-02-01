@@ -532,15 +532,15 @@ public class LegendComposite extends Composite
     if( m_main == null || m_content == null )
       return;
 
-    /* Dispose the content of the composite. */
-    if( !m_content.isDisposed() )
-      m_content.dispose();
-
     /* Update the message. */
     if( status != null && !status.isOK() )
       m_main.setMessage( status.getMessage(), MessageUtilitites.convertStatusSeverity( status.getSeverity() ) );
     else
       m_main.setMessage( null, IMessageProvider.NONE );
+
+    /* Dispose the content of the composite. */
+    if( !m_content.isDisposed() )
+      m_content.dispose();
 
     /* Redraw the content of the composite. */
     m_content = createContentComposite( m_main.getBody() );
