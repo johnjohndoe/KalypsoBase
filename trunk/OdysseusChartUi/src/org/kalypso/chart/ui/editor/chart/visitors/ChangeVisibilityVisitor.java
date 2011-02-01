@@ -41,22 +41,18 @@
 package org.kalypso.chart.ui.editor.chart.visitors;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
-import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class ChangeVisibilityVisitor implements IChartLayerVisitor
+public class ChangeVisibilityVisitor extends AbstractParameterVisitor
 {
-  private final String m_parameter;
-
   private final boolean m_enabled;
 
   public ChangeVisibilityVisitor( final String parameter, final boolean enabled )
   {
-    m_parameter = parameter;
+    super( parameter );
+
     m_enabled = enabled;
   }
 
@@ -72,15 +68,4 @@ public class ChangeVisibilityVisitor implements IChartLayerVisitor
     layer.getLayerManager().accept( this );
   }
 
-  private boolean definesParameter( final IChartLayer layer )
-  {
-    final ILayerProvider provider = layer.getProvider();
-    if( provider == null )
-      return false;
-
-    final IParameterContainer container = provider.getParameterContainer();
-    final String property = container.getParameterValue( m_parameter, "false" );
-
-    return Boolean.valueOf( property );
-  }
 }

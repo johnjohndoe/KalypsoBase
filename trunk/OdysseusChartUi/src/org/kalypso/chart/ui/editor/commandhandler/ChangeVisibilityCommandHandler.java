@@ -5,13 +5,18 @@ import java.util.Map;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
-import org.kalypso.chart.ui.editor.ElementUpdateHelper;
+import org.eclipse.ui.progress.UIJob;
+import org.eclipse.ui.services.IEvaluationService;
+import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.chart.ui.editor.chart.visitors.ChangeVisibilityVisitor;
+import org.kalypso.chart.ui.editor.chart.visitors.VisibilityInitialStatusVisitor;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -56,7 +61,41 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-    ElementUpdateHelper.updateElement( element, parameters, ChangeVisibilityCommandHandler.class );
+    new UIJob( "" )
+    {
+
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        final IChartModel model = getModel();
+        if( model == null )
+          element.setChecked( false );
+        else
+        {
+          final VisibilityInitialStatusVisitor visitor = new VisibilityInitialStatusVisitor( (String) parameters.get( LAYER_PARAMETER ) );
+
+          final ILayerManager layerManager = model.getLayerManager();
+          layerManager.accept( visitor );
+
+          element.setChecked( visitor.isEnabled() );
+        }
+
+        return Status.OK_STATUS;
+      }
+
+      private IChartModel getModel( )
+      {
+        final IServiceLocator locator = element.getServiceLocator();
+        final IEvaluationService service = (IEvaluationService) locator.getService( IEvaluationService.class );
+        final IEvaluationContext context = service.getCurrentState();
+        final IChartComposite chart = ChartHandlerUtilities.getChart( context );
+        if( chart == null )
+          return null;
+
+        return chart.getChartModel();
+      }
+    }.schedule( 500 );
+
   }
 
 }
