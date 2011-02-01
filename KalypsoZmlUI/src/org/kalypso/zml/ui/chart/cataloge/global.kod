@@ -98,6 +98,11 @@
         <LineColor>3460A9</LineColor>
         <DashArray>3 6</DashArray>
       </LineStyle>
+      <LineStyle role="w_active_dash_dot_line_1">
+        <Width>3</Width>
+        <LineColor>3460A9</LineColor>
+        <DashArray>12 8 3 8</DashArray>
+      </LineStyle>
       <LineStyle role="w_line_2">
         <Width>2</Width>
         <LineColor>BDD3F6</LineColor>
@@ -265,6 +270,21 @@
           <Color>65782F</Color>
         </FillColor>
       </PointStyle>
+      <LineStyle role="q_active_dash_line_1">
+        <Width>3</Width>
+        <LineColor>65782F</LineColor>
+        <DashArray>16 8</DashArray>
+      </LineStyle>
+      <LineStyle role="q_active_dot_line_1">
+        <Width>3</Width>
+        <LineColor>65782F</LineColor>
+        <DashArray>3 6</DashArray>
+      </LineStyle>
+      <LineStyle role="q_active_dash_dot_line_1">
+        <Width>3</Width>
+        <LineColor>65782F</LineColor>
+        <DashArray>12 8 3 8</DashArray>
+      </LineStyle>
       <LineStyle role="q_line_2">
         <Width>2</Width>
         <LineColor>CFDAB2</LineColor>
