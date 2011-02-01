@@ -340,7 +340,7 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
   {
     super.init( site );
 
-    site.setSelectionProvider( m_outlineViewer );
+    // site.setSelectionProvider( m_outlineViewer );
   }
 
   /**
@@ -349,7 +349,15 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
   @Override
   public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
-    getSite().getSelectionProvider().addSelectionChangedListener( listener );
+    // FIXME: The implementation of the ISelectionProvider interface seems wrong.
+    // FIXME: Normally the outline page is set as selection provider. Probably by the outline view.
+    // FIXME: This however would lead here to a infinite recursion.
+    // FIXME: Commenting the required functions out, seems not to change the eclipse outline behavior.
+    // FIXME: The infinite recursion did not occure here, because our GisMapOutlineView
+    // FIXME: sets a different selection provider. And this page obviously too.
+    // FIXME: Perhaps we should change the implementation.
+    // getSite().getSelectionProvider().addSelectionChangedListener( listener );
+    m_outlineViewer.addSelectionChangedListener( listener );
   }
 
   /**
@@ -358,7 +366,8 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
   @Override
   public ISelection getSelection( )
   {
-    return getSite().getSelectionProvider().getSelection();
+    // return getSite().getSelectionProvider().getSelection();
+    return m_outlineViewer.getSelection();
   }
 
   /**
@@ -367,7 +376,8 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
   @Override
   public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
-    getSite().getSelectionProvider().removeSelectionChangedListener( listener );
+    // getSite().getSelectionProvider().removeSelectionChangedListener( listener );
+    m_outlineViewer.removeSelectionChangedListener( listener );
   }
 
   /**
@@ -376,7 +386,7 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
   @Override
   public void setSelection( final ISelection selection )
   {
-    getSite().getSelectionProvider().getSelection();
+    m_outlineViewer.setSelection( selection );
   }
 
   /**
