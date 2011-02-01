@@ -45,15 +45,13 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 /**
  * @author Dirk Kuch
  */
-public class ChangeVisibilityVisitor extends AbstractParameterVisitor
+public class VisibilityInitialStatusVisitor extends AbstractParameterVisitor
 {
-  private final boolean m_enabled;
+  boolean m_enabled = false;
 
-  public ChangeVisibilityVisitor( final String parameter, final boolean enabled )
+  public VisibilityInitialStatusVisitor( final String parameter )
   {
     super( parameter );
-
-    m_enabled = enabled;
   }
 
   /**
@@ -62,10 +60,19 @@ public class ChangeVisibilityVisitor extends AbstractParameterVisitor
   @Override
   public void visit( final IChartLayer layer )
   {
-    if( definesParameter( layer ) )
-      layer.setVisible( m_enabled );
+    if( layer.isVisible() )
+      if( definesParameter( layer ) )
+      {
+        m_enabled = true;
+
+        return;
+      }
 
     layer.getLayerManager().accept( this );
   }
 
+  public boolean isEnabled( )
+  {
+    return m_enabled;
+  }
 }
