@@ -12,6 +12,7 @@ import org.eclipse.swt.graphics.Point;
 import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.IChartModelState;
+import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
@@ -730,10 +731,19 @@ public class ChartModel implements IChartModel
   @Override
   public IChartLegendRenderer getLegendRenderer( )
   {
-    if (m_renderer == null)
+    if( m_renderer == null )
       m_renderer = DefaultChartLegendRenderer.ID;
-    
+
     return OdysseusChartFrameworkPlugin.getDefault().getRenderers( m_renderer );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.ILayerContainer#getParent()
+   */
+  @Override
+  public ILayerContainer getParent( )
+  {
+    return null;
   }
 
 }

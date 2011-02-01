@@ -3,6 +3,7 @@ package de.openali.odysseus.chart.framework.model.layer;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
+import de.openali.odysseus.chart.framework.model.event.impl.LayerManagerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
 /**
@@ -42,5 +43,7 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
 
   void removeLayer( IChartLayer layer );
 
-  ILayerContainer getParent( );
+  ILayerContainer getContainer( );
+
+  LayerManagerEventHandler getEventHandler( );
 }
