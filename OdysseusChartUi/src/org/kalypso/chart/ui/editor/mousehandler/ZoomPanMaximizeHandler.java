@@ -55,8 +55,6 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
 {
   private int m_button = -1;
 
-  private final Point m_keyUp = null;
-
   public ZoomPanMaximizeHandler( final IChartComposite chartComposite )
   {
     super( chartComposite, 5, SWT.BUTTON1 | SWT.BUTTON2 | SWT.BUTTON3, SWT.CURSOR_ARROW );

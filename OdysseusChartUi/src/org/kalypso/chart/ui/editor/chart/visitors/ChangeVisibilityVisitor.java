@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -38,39 +38,49 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.toolbar.view;
+package org.kalypso.chart.ui.editor.chart.visitors;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
+import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommandViewStuetzstellen extends AbstractHourViewCommand
+public class ChangeVisibilityVisitor implements IChartLayerVisitor
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  public Object execute( final ExecutionEvent event )
-  {
-    if( HandlerUtils.isSelected( event ) )
-      return updateResulution( event, 0, true );
+  private final String m_parameter;
 
-    return Status.OK_STATUS;
+  private final boolean m_enabled;
+
+  public ChangeVisibilityVisitor( final String parameter, final boolean enabled )
+  {
+    m_parameter = parameter;
+    m_enabled = enabled;
   }
 
   /**
-   * @see org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand#isActive(org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter)
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  protected boolean isActive( final ZmlViewResolutionFilter filter )
+  public void visit( final IChartLayer layer )
   {
-    if( filter == null )
+    if( definesParameter( layer ) )
+      layer.setVisible( m_enabled );
+
+    layer.getLayerManager().accept( this );
+  }
+
+  private boolean definesParameter( final IChartLayer layer )
+  {
+    final ILayerProvider provider = layer.getProvider();
+    if( provider == null )
       return false;
 
-    return filter.isStuetzstellenMode();
-  }
+    final IParameterContainer container = provider.getParameterContainer();
+    final String property = container.getParameterValue( m_parameter, "false" );
 
+    return Boolean.valueOf( property );
+  }
 }

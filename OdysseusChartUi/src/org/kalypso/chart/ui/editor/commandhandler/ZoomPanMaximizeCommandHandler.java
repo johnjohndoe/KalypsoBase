@@ -10,7 +10,6 @@ import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ElementUpdateHelper;
-import org.kalypso.chart.ui.editor.mousehandler.DragZoomOutHandler;
 import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
@@ -43,7 +42,7 @@ public class ZoomPanMaximizeCommandHandler extends AbstractHandler implements IE
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-    ElementUpdateHelper.updateElement( element, parameters, DragZoomOutHandler.class );
+    ElementUpdateHelper.updateElement( element, parameters, ZoomPanMaximizeCommandHandler.class );
   }
 
 }
