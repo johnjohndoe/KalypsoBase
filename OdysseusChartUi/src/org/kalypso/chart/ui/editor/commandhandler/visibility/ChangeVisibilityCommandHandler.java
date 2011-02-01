@@ -1,22 +1,17 @@
-package org.kalypso.chart.ui.editor.commandhandler;
+package org.kalypso.chart.ui.editor.commandhandler.visibility;
 
 import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
-import org.eclipse.ui.progress.UIJob;
-import org.eclipse.ui.services.IEvaluationService;
-import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.chart.ui.editor.chart.visitors.ChangeVisibilityVisitor;
-import org.kalypso.chart.ui.editor.chart.visitors.VisibilityInitialStatusVisitor;
+import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -24,7 +19,11 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 public class ChangeVisibilityCommandHandler extends AbstractHandler implements IElementUpdater
 {
-  private static final String LAYER_PARAMETER = "layer.parameter"; //$NON-NLS-1$
+  public static final String ID = "org.kalypso.chart.ui.commands.change.visibility"; // $NON-NLS-1$
+
+  public static final String LAYER_PARAMETER = "layer.parameter"; // $NON-NLS-1$
+
+  private static final String BUTTON_UPDATE_PARAMETER = "automatic.button.update"; // $NON-NLS-1$
 
   @Override
   public Object execute( final ExecutionEvent event )
@@ -49,10 +48,17 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
 
   private boolean isSelected( final ExecutionEvent event )
   {
-    final Event trigger = (Event) event.getTrigger();
-    final ToolItem item = (ToolItem) trigger.widget;
+    final Object trigger = event.getTrigger();
+    if( trigger instanceof Event )
+    {
+      final Event triggerEvent = (Event) trigger;
+      final ToolItem item = (ToolItem) triggerEvent.widget;
 
-    return item.getSelection();
+      return item.getSelection();
+    }
+
+    // otherwise it will be enabled by default!
+    return true;
   }
 
   /**
@@ -61,41 +67,20 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-    new UIJob( "" )
-    {
-
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        final IChartModel model = getModel();
-        if( model == null )
-          element.setChecked( false );
-        else
-        {
-          final VisibilityInitialStatusVisitor visitor = new VisibilityInitialStatusVisitor( (String) parameters.get( LAYER_PARAMETER ) );
-
-          final ILayerManager layerManager = model.getLayerManager();
-          layerManager.accept( visitor );
-
-          element.setChecked( visitor.isEnabled() );
-        }
-
-        return Status.OK_STATUS;
-      }
-
-      private IChartModel getModel( )
-      {
-        final IServiceLocator locator = element.getServiceLocator();
-        final IEvaluationService service = (IEvaluationService) locator.getService( IEvaluationService.class );
-        final IEvaluationContext context = service.getCurrentState();
-        final IChartComposite chart = ChartHandlerUtilities.getChart( context );
-        if( chart == null )
-          return null;
-
-        return chart.getChartModel();
-      }
-    }.schedule( 500 );
-
+    final IUpdateElementStrategy strategy = getStrategy( parameters );
+    strategy.update( element );
   }
 
+  private IUpdateElementStrategy getStrategy( @SuppressWarnings("rawtypes") final Map parameters )
+  {
+    final Object paramater = parameters.get( BUTTON_UPDATE_PARAMETER );
+    if( paramater == null )
+      return new ManualButtonUpdateStrategy( parameters );
+
+    final Boolean automaticUpdate = Boolean.valueOf( (String) paramater );
+    if( automaticUpdate )
+      return new AutomaticButtonUpdateStrategy( parameters );
+
+    return new ManualButtonUpdateStrategy( parameters );
+  }
 }
