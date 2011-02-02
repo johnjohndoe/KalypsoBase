@@ -146,7 +146,9 @@ public class ActionButton
       @Override
       public void handleEvent( final Event event )
       {
-        handleButtonSelected( event );
+        final boolean selection = button.getSelection();
+
+        handleButtonSelected( event, selection );
       }
     } );
   }
@@ -157,8 +159,10 @@ public class ActionButton
       image.dispose();
   }
 
-  protected void handleButtonSelected( final Event event )
+  protected void handleButtonSelected( final Event event, final boolean selection )
   {
+    m_action.setChecked( selection );
+
     m_action.runWithEvent( event );
   }
 
