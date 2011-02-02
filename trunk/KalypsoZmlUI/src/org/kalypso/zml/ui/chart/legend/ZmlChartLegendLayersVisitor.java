@@ -91,6 +91,10 @@ public class ZmlChartLegendLayersVisitor implements IChartLayerVisitor
     if( dataHandler.getObservation() == null )
       return false;
 
+    // w/q relation defined?
+    if( dataHandler.getValueAxis() == null )
+      return false;
+
     return true;
   }
 

@@ -47,7 +47,5 @@ import org.eclipse.ui.menus.UIElement;
  */
 public interface IUpdateElementStrategy
 {
-
   void update( UIElement element );
-
 }
