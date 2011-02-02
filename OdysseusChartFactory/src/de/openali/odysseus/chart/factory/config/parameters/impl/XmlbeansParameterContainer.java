@@ -2,9 +2,11 @@ package de.openali.odysseus.chart.factory.config.parameters.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
@@ -243,4 +245,22 @@ public class XmlbeansParameterContainer implements IParameterContainer
     return valueMap;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IParameterContainer#findAllKeys(java.lang.String)
+   */
+  @Override
+  public String[] findAllKeys( final String prefix )
+  {
+    final Set<String> keys = new LinkedHashSet<String>();
+
+    final Set<Entry<String, String>> entries = m_parameters.entrySet();
+    for( final Entry<String, String> entry : entries )
+    {
+      final String key = entry.getKey();
+      if( key.startsWith( prefix ) )
+        keys.add( key );
+    }
+
+    return keys.toArray( new String[] {} );
+  }
 }

@@ -12,6 +12,8 @@ import de.openali.odysseus.chart.framework.model.data.IStringParser;
  */
 public interface IParameterContainer
 {
+  String[] findAllKeys( String string );
+
   /**
    * returns a value a parameter as String or null of no parameter by the given name is present
    */

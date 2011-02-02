@@ -8,7 +8,8 @@ Require-Bundle: org.kalypso.zml.core;bundle-version="1.0.0";visibility:=reexport
  org.eclipse.core.expressions;bundle-version="3.4.200";visibility:=reexport,
  de.openali.odysseus.chart.ext.base;bundle-version="10.10.0",
  org.kalypso.ui;bundle-version="10.10.0",
- de.openali.odysseus.chart.framework
+ de.openali.odysseus.chart.framework,
+ de.openali.odysseus.chart.ui;bundle-version="10.10.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: kalypsobase.sourceforge.net

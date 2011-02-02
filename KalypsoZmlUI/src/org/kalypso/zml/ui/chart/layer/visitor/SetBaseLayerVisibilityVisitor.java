@@ -55,7 +55,7 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 /**
  * @author Dirk Kuch
  */
-public class SetVisibilityChartModelVisitor implements IChartLayerVisitor
+public class SetBaseLayerVisibilityVisitor implements IChartLayerVisitor
 {
   public static final String NO_DATA_LAYER = "noData";
 
@@ -63,7 +63,7 @@ public class SetVisibilityChartModelVisitor implements IChartLayerVisitor
 
   private final IObsProvider[] m_providers;
 
-  public SetVisibilityChartModelVisitor( final IObsProvider[] providers, final String[] currentIgnoreTypes )
+  public SetBaseLayerVisibilityVisitor( final IObsProvider[] providers, final String[] currentIgnoreTypes )
   {
     m_providers = providers;
     m_ignoreTypes = currentIgnoreTypes;
