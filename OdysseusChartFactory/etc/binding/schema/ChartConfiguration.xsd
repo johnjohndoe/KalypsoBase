@@ -542,9 +542,10 @@
         <attribute name="styleref" type="IDREF" />
 
         <attribute name="horizontalAlignment" type="ods:AlignmentType" use="optional" default="CENTER" />
-        <attribute name="verticalAlignment" type="ods:AlignmentType" use="optional" default="CENTER" />
-        <attribute name="horizontalTextAnchor" type="ods:AlignmentType" use="optional" default="CENTER" />
-        <attribute name="verticalTextAnchor" type="ods:AlignmentType" use="optional" default="CENTER" />
+        <attribute name="horizontalPosition" type="ods:AlignmentType" use="optional" default="CENTER" />
+        <attribute name="verticalPosition" type="ods:AlignmentType" use="optional" default="CENTER" />
+        <attribute name="horizontalTextAnchor" type="ods:AlignmentType" use="optional" default="LEFT" />
+        <attribute name="verticalTextAnchor" type="ods:AlignmentType" use="optional" default="TOP" />
 
         <attribute name="insetTop" type="int" use="optional" default="0" />
         <attribute name="insetLeft" type="int" use="optional" default="0" />

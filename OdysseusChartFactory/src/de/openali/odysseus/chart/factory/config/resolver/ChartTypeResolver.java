@@ -124,7 +124,8 @@ public final class ChartTypeResolver implements IReferenceResolver
   {
     try
     {
-      final String plainUrl = getUrl( reference );
+
+      final String plainUrl = getUrl( reference, context );
       final String identifier = getAnchor( reference );
 
       AbstractStyleType type;
@@ -145,7 +146,7 @@ public final class ChartTypeResolver implements IReferenceResolver
   {
     try
     {
-      final String plainUrl = getUrl( reference );
+      final String plainUrl = getUrl( reference, context );
       final String identifier = getAnchor( reference );
 
       MapperType type;
@@ -169,7 +170,7 @@ public final class ChartTypeResolver implements IReferenceResolver
       final String url = reference.getUrl();
       if( url != null )
       {
-        final String plainUrl = getUrl( url );
+        final String plainUrl = getUrl( url, context );
         final String identifier = getAnchor( url );
 
         LayerType type;
@@ -263,11 +264,16 @@ public final class ChartTypeResolver implements IReferenceResolver
     return null;
   }
 
-  private String getUrl( final String url )
+  private String getUrl( final String url, final URL context )
   {
-    final RETokenizer tokenizer = new RETokenizer( new Pattern( "#.*" ), url ); //$NON-NLS-1$
+    if( url.contains( "#" ) )
+    {
+      final RETokenizer tokenizer = new RETokenizer( new Pattern( "#.*" ), url ); //$NON-NLS-1$
 
-    return StringUtilities.chop( tokenizer.nextToken() );
+      return StringUtilities.chop( tokenizer.nextToken() );
+    }
+
+    return context.toString();
   }
 
   private String getAnchor( final String url )

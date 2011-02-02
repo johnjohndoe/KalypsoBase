@@ -76,7 +76,11 @@ public class ChartUtilities
       try
       {
         final double eltMin = element.getMin().doubleValue();
+        if(Double.isNaN( eltMin ))
+          continue;
         final double eltMax = element.getMax().doubleValue();
+        if(Double.isNaN( eltMax ))
+          continue;
 
         min = Math.min( min, eltMin );
         max = Math.max( max, eltMax );
