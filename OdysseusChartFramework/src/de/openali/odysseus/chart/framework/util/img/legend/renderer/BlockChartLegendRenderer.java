@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img.legend.renderer;
 
@@ -60,12 +60,10 @@ import de.openali.odysseus.chart.framework.util.img.legend.utils.LegendChartLaye
 /**
  * @author Dirk Kuch
  */
-public class DefaultChartLegendRenderer implements IChartLegendRenderer
+public class BlockChartLegendRenderer implements IChartLegendRenderer
 {
-  private int m_numRows;
+  public static final String ID = "de.openali.odysseus.chart.legend.render.block"; //$NON-NLS-1$
 
-  public static final String ID =  "de.openali.odysseus.chart.framework.DefaultChartLegendRenderer";
-  
   /**
    * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#getIdentifier()
    */
@@ -96,14 +94,12 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
   public Image createImage( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
     final IChartLayer[] layers = getLayers( canvas.getModel() );
-    final Point size = getSize( layers, config );
-    final int rowHeight = m_numRows < 2 ? size.y : size.y / m_numRows;
-    if( size.x <= 0 || size.y <= 0 )
-      return null;
+    final Point canvasSize = calculateSize( layers, config );
+    final Point itemSize = calculateItemSize( layers, config );
 
     final Device dev = PlatformUI.getWorkbench().getDisplay();
-    final Image img = new Image( dev, size.x, size.y );
-    final GC gc = new GC( img );
+    final Image image = new Image( dev, canvasSize.x, canvasSize.y );
+    final GC gc = new GC( image );
 
     final ITextStyle style = config.getTextStyle();
     style.apply( gc );
@@ -115,7 +111,6 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
 
       for( final IChartLayer layer : layers )
       {
-        // final ILegendEntry entry = getLegendEntry( layer );
         if( layer.getLegendEntries() == null )
           continue;
         for( final ILegendEntry entry : layer.getLegendEntries() )
@@ -123,22 +118,22 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
           if( entry == null )
             continue;
 
-          final ImageData imageData = createLegendItem( config, entry, rowHeight );
+          final ImageData imageData = createLegendItem( entry, config, itemSize );
           if( x + imageData.width > config.getMaximumWidth() )
           {
             x = 0;
             y += imageData.height;
           }
 
-          final Image image = new Image( dev, imageData );
-          gc.drawImage( image, x, y );
+          final Image can = new Image( dev, imageData );
+          gc.drawImage( can, x, y );
 
           x += imageData.width;
 
-          image.dispose();
+          can.dispose();
         }
       }
-      return img;
+      return image;
     }
     finally
     {
@@ -156,10 +151,8 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
     return visitor.getLayers();
   }
 
-  private ImageData createLegendItem( final IChartLegendConfig config, final ILegendEntry entry, final int rowHeight )
+  private ImageData createLegendItem( final ILegendEntry entry, final IChartLegendConfig config, final Point size )
   {
-    final Point size = getItemSize( config, entry );
-
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image img = new Image( dev, size.x, size.y );
     final GC gc = new GC( img );
@@ -169,7 +162,7 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
     final Image iconImage = new Image( dev, iconImageData );
     try
     {
-      gc.drawImage( iconImage, 0, (rowHeight - iconSize.y) / 2 );
+      gc.drawImage( iconImage, 0, (size.y - iconSize.y) / 2 );
 
       final ITextStyle style = config.getTextStyle();
       style.apply( gc );
@@ -182,7 +175,7 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
       else
         textSize = gc.textExtent( description );
 
-      final Point anchor = getTextAnchor( config, iconSize.x, rowHeight, textSize );
+      final Point anchor = getTextAnchor( config, iconSize.x, size.y, textSize );
 
       gc.drawText( description == null ? "" : description, anchor.x, anchor.y, SWT.TRANSPARENT );
 
@@ -231,10 +224,61 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
   @Override
   public Point calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
-    return getSize( getLayers( canvas.getModel() ), config );
+    final IChartLayer[] layers = getLayers( canvas.getModel() );
+
+    return calculateSize( layers, config );
   }
 
-  private Point getSize( final IChartLayer[] layers, final IChartLegendConfig config )
+  private Point calculateSize( final IChartLayer[] layers, final IChartLegendConfig config )
+  {
+    final Point maxItemSize = calculateItemSize( layers, config );
+    if( maxItemSize == null || maxItemSize.x == 0 || maxItemSize.y == 0 )
+      return new Point( 1, 1 );
+
+    final int legendEntries = calculateLegendEntries( layers );
+
+    final int itemsPerRow = config.getMaximumWidth() / maxItemSize.x;
+    final int rows = legendEntries / itemsPerRow + 1;
+
+    return new Point( config.getMaximumWidth(), rows * maxItemSize.y );
+  }
+
+  private int calculateLegendEntries( final IChartLayer[] layers )
+  {
+    int legendEntries = 0;
+    for( final IChartLayer layer : layers )
+    {
+      legendEntries += layer.getLegendEntries().length;
+    }
+
+    return legendEntries;
+  }
+
+  private Point calculateItemSize( final IChartLayer[] layers, final IChartLegendConfig config )
+  {
+    Point maxItemSize = null;
+    for( final IChartLayer layer : layers )
+    {
+      final Point layerSize = getSize( layer, config );
+      maxItemSize = getMax( maxItemSize, layerSize );
+    }
+
+    return maxItemSize;
+  }
+
+  private Point getMax( final Point p1, final Point p2 )
+  {
+    if( p1 == null && p2 == null )
+      return null;
+    else if( p1 != null && p2 == null )
+      return p1;
+    else if( p1 == null && p2 != null )
+      return p2;
+
+    return new Point( Math.max( p1.x, p2.x ), Math.max( p1.y, p2.y ) );
+  }
+
+  private Point getSize( final IChartLayer layer, final IChartLegendConfig config )
   {
     int heigth = 0;
     int row = 0;
@@ -242,43 +286,30 @@ public class DefaultChartLegendRenderer implements IChartLegendRenderer
     int maxRowWidth = 0;
     int maxRowHeight = 0;
 
-    m_numRows = 0;
-
-    for( final IChartLayer layer : layers )
+    for( final ILegendEntry entry : layer.getLegendEntries() )
     {
-      // final ILegendEntry entry = getLegendEntry( layer );
-      if( layer.getLegendEntries() == null )
+      if( entry == null )
         continue;
-      for( final ILegendEntry entry : layer.getLegendEntries() )
+
+      final Point size = getItemSize( config, entry );
+
+      if( row + size.x > config.getMaximumWidth() )
       {
-        if( entry == null )
-          continue;
+        maxRowWidth = Math.max( maxRowWidth, size.x );
+        maxRowHeight = size.y;
 
-        final Point size = getItemSize( config, entry );
+        heigth += size.y;
+        row = size.x;
+      }
+      else
+      {
+        row += size.x;
 
-        if( row + size.x > config.getMaximumWidth() )
-        {
-          maxRowWidth = Math.max( maxRowWidth, size.x );
-          maxRowHeight = size.y;
+        if( size.y > maxRowHeight )
+          heigth += size.y - maxRowHeight;
 
-          heigth += size.y;
-          row = size.x;
-
-          m_numRows += 1;
-        }
-        else
-        {
-          row += size.x;
-
-          if( size.y > maxRowHeight )
-            heigth += size.y - maxRowHeight;
-
-          maxRowWidth = Math.max( maxRowWidth, row );
-          maxRowHeight = Math.max( maxRowHeight, size.y );
-
-          if( m_numRows == 0 )
-            m_numRows = 1;
-        }
+        maxRowWidth = Math.max( maxRowWidth, row );
+        maxRowHeight = Math.max( maxRowHeight, size.y );
       }
     }
 

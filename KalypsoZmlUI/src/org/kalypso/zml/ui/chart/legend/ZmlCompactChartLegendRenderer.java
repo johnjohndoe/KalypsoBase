@@ -40,63 +40,37 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.legend;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
-import org.kalypso.zml.core.diagram.layer.IZmlLayer;
-
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.util.img.legend.renderer.CompactChartLegendRenderer;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlChartLegendLayersVisitor implements IChartLayerVisitor
+public class ZmlCompactChartLegendRenderer extends CompactChartLegendRenderer
 {
-  private final Set<IChartLayer> m_layers = new LinkedHashSet<IChartLayer>();
+  public static final String IDENTIFIER = "org.kalypso.zml.ui.chart.legend.renderer.compact";
 
   /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#getIdentifier()
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public String getIdentifier( )
   {
-    if( isValid( layer ) )
-    {
-      m_layers.add( layer );
-
-      final ILayerManager layerManager = layer.getLayerManager();
-      layerManager.accept( this );
-    }
+    return IDENTIFIER; //$NON-NLS-1$
   }
 
-  private boolean isValid( final IChartLayer layer )
+  /**
+   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.DefaultChartLegendRenderer#getLayers(de.openali.odysseus.chart.framework.model.IChartModel)
+   */
+  @Override
+  protected IChartLayer[] getLayers( final IChartModel model )
   {
-    if( !layer.isVisible() )
-      return false;
+    final ILayerManager layerManager = model.getLayerManager();
+    final ZmlChartLegendLayersVisitor visitor = new ZmlChartLegendLayersVisitor();
+    layerManager.accept( visitor );
 
-    if( !layer.isLegend() )
-      return false;
-
-    if( !(layer instanceof IZmlLayer) )
-      return true;
-
-    final IZmlLayer zml = (IZmlLayer) layer;
-    final IZmlLayerDataHandler dataHandler = zml.getDataHandler();
-    if( dataHandler == null )
-      return false;
-
-    if( dataHandler.getObservation() == null )
-      return false;
-
-    return true;
+    return visitor.getLayers();
   }
-
-  public IChartLayer[] getLayers( )
-  {
-    return m_layers.toArray( new IChartLayer[] {} );
-  }
-
 }
