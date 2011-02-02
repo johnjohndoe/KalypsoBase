@@ -94,6 +94,7 @@ public final class StyleHelper
   {
     if( alignment == null )
       return ALIGNMENT.LEFT;
+
     if( "LEFT".equals( alignment.toString() ) )
     {
       return ALIGNMENT.LEFT;
@@ -106,7 +107,14 @@ public final class StyleHelper
     {
       return ALIGNMENT.RIGHT;
     }
-
+    else if( "TOP".equals( alignment.toString() ) )
+    {
+      return ALIGNMENT.TOP;
+    }
+    else if( "BOTTOM".equals( alignment.toString() ) )
+    {
+      return ALIGNMENT.BOTTOM;
+    }
     return ALIGNMENT.LEFT;
   }
 

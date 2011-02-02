@@ -184,6 +184,8 @@
       <enumeration value="LEFT"></enumeration>
       <enumeration value="CENTER"></enumeration>
       <enumeration value="RIGHT"></enumeration>
+      <enumeration value="LEFT"></enumeration>
+      <enumeration value="TOP"></enumeration>
     </restriction>
   </simpleType>
 

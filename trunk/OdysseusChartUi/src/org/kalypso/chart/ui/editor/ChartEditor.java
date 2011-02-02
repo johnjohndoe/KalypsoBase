@@ -517,7 +517,7 @@ public class ChartEditor extends EditorPart implements IChartPart
   @Override
   public IPlotHandler getPlotDragHandler( )
   {
-    return m_chartComposite.getPlotHandler();
+    return m_chartComposite == null ? null : m_chartComposite.getPlotHandler();
   }
 
   protected void setDirty( final boolean dirty )
