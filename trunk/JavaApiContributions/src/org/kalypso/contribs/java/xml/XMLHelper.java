@@ -3,6 +3,7 @@ package org.kalypso.contribs.java.xml;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -44,24 +45,23 @@ public class XMLHelper
 
   private static final String DEFAULT_ENCODING = "UTF-8";
 
-  public static Document getAsDOM( final File file, final boolean namespaceaware ) throws Exception
+  public static Document getAsDOM( final File file, final boolean namespaceaware ) throws FileNotFoundException, ParserConfigurationException, SAXException, IOException
   {
     return getAsDOM( new FileInputStream( file ), namespaceaware );
   }
 
-  public static Document getAsDOM( final InputStream inStream, final boolean namespaceaware ) throws Exception
+  public static Document getAsDOM( final InputStream inStream, final boolean namespaceaware ) throws ParserConfigurationException, SAXException, IOException
   {
     return getAsDOM( new InputSource( inStream ), namespaceaware );
   }
 
-  public static Document getAsDOM( final InputSource inputSource, final boolean namespaceaware ) throws Exception
+  public static Document getAsDOM( final InputSource inputSource, final boolean namespaceaware ) throws ParserConfigurationException, SAXException, IOException
   {
     final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     factory.setNamespaceAware( namespaceaware );
 
     final DocumentBuilder docuBuilder = factory.newDocumentBuilder();
-    final Document dom = docuBuilder.parse( inputSource );
-    return dom;
+    return docuBuilder.parse( inputSource );
   }
 
   public static Document getAsDOM( final URL url, final boolean namespaceaware ) throws Exception
