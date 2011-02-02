@@ -30,7 +30,7 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
-import de.openali.odysseus.chart.framework.util.img.legend.renderer.DefaultChartLegendRenderer;
+import de.openali.odysseus.chart.framework.util.img.legend.renderer.CompactChartLegendRenderer;
 import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer;
 
 public class ChartModel implements IChartModel
@@ -732,7 +732,7 @@ public class ChartModel implements IChartModel
   public IChartLegendRenderer getLegendRenderer( )
   {
     if( m_renderer == null )
-      m_renderer = DefaultChartLegendRenderer.ID;
+      m_renderer = CompactChartLegendRenderer.ID;
 
     return OdysseusChartFrameworkPlugin.getDefault().getRenderers( m_renderer );
   }

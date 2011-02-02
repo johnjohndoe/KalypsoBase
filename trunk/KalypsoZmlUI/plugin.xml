@@ -32,8 +32,8 @@
           id="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
     </provider>
  </extension>
- 
- 
+
+
  <extension point="org.kalypso.core.catalogContribution">
     <catalogContribution class="org.kalypso.zml.ui.table.catalog.ZmlTableCatalogContribution"
       name="urn:org:kalypso:zml:ui:table" />
@@ -42,12 +42,12 @@
           name="urn:org:kalypso:zml:ui:diagramm:global">
     </catalogContribution>
   </extension>
-    
+
  <extension point="org.eclipse.ui.contexts">
 	<context id="org.kalypso.zml.ui.table.context" name="Table" parentId="org.eclipse.ui.contexts.window" />
  </extension>
-  
-  
+
+
  <extension point="org.eclipse.ui.commands">
    <category id="org.kalypso.zml.ui.table.commands.category"
       name="zml table commands - category">
@@ -153,7 +153,7 @@
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
-       
+
     <handler
     	  class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommandViewAll"
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.all">
@@ -174,8 +174,8 @@
           class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommand24HourView"
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.24.hours">
     </handler>
-       
-       
+
+
     <handler
           class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommandHourAdd"
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hour.add">
@@ -259,7 +259,7 @@
           </test>
        </with>
     </definition>
- </extension> 
+ </extension>
  <extension
        point="org.eclipse.core.contenttype.contentTypes">
     <file-association
@@ -270,8 +270,12 @@
  <extension
        point="de.openali.odysseus.chart.framework.ChartLegendRenderer">
     <renderer
-          id="org.kalypso.zml.ui.chart.legend.renderer"
-          renderer="org.kalypso.zml.ui.chart.legend.ZmlChartLegendRenderer">
+          id="org.kalypso.zml.ui.chart.legend.renderer.compact"
+          renderer="org.kalypso.zml.ui.chart.legend.ZmlCompactChartLegendRenderer">
+    </renderer>
+    <renderer
+          id="org.kalypso.zml.ui.chart.legend.renderer.block"
+          renderer="org.kalypso.zml.ui.chart.legend.ZmlBlockChartLegendRenderer">
     </renderer>
  </extension>
 </plugin>

@@ -221,7 +221,7 @@
           </element>
         </sequence>
         <attribute name="legend" type="boolean" use="optional" default="true" />
-        <attribute name="legendRenderer" type="string" use="optional" default="de.openali.odysseus.chart.framework.DefaultChartRenderer" />
+        <attribute name="legendRenderer" type="string" use="optional" default="de.openali.odysseus.chart.legend.render.compact" />
       </extension>
     </complexContent>
   </complexType>
