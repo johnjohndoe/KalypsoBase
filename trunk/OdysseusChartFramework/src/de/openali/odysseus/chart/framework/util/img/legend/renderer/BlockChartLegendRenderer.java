@@ -282,7 +282,7 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
   {
     Point maxItemSize = null;
 
-    ILegendEntry[] entries = layer.getLegendEntries();
+    final ILegendEntry[] entries = layer.getLegendEntries();
     for( final ILegendEntry entry : entries )
     {
       if( entry == null )

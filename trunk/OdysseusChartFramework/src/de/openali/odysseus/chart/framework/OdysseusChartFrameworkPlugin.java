@@ -42,7 +42,6 @@ public class OdysseusChartFrameworkPlugin extends Plugin
    */
   public OdysseusChartFrameworkPlugin( )
   {
-    PLUGIN = this;
   }
 
   /*
@@ -53,6 +52,8 @@ public class OdysseusChartFrameworkPlugin extends Plugin
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
+    PLUGIN = this;
+
     m_imageRegistry = new ImageRegistry();
     m_colorRegistry = new ColorRegistry();
     m_patternRegistry = new PatternRegistry();

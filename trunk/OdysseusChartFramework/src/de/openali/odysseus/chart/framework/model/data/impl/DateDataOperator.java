@@ -25,7 +25,7 @@ public class DateDataOperator extends AbstractDataOperator<Date>
 
   private final CalendarFormat m_dateFormat;
 
-  private final String m_regexDuration = "(NOW|TODAY)(([+-])P([1-9]+[0-9]*Y)?([1-9]+[0-9]*M)?([1-9]+[0-9]*D)?(T([1-9]+[0-9]*H)?([1-9]+[0-9]*M)?([1-9]+[0-9]*S)?)?)?";
+  private static final String REGEX_DURATION = "(NOW|TODAY)(([+-])P([1-9]+[0-9]*Y)?([1-9]+[0-9]*M)?([1-9]+[0-9]*D)?(T([1-9]+[0-9]*H)?([1-9]+[0-9]*M)?([1-9]+[0-9]*S)?)?)?";
 
   public DateDataOperator( final Comparator<Date> comparator, final String formatString )
   {
@@ -121,7 +121,7 @@ public class DateDataOperator extends AbstractDataOperator<Date>
         // wir probieren mal, das über die anderer Syntax an das Datum zu kommen
 
         // Suche nach reulärem Ausdruck für Duration
-        if( value.matches( m_regexDuration ) )
+        if( value.matches( REGEX_DURATION ) )
         {
           // Calendar-Objekt mit "jetzt" initialisieren
           // cal=Calendar.getInstance();
@@ -138,7 +138,7 @@ public class DateDataOperator extends AbstractDataOperator<Date>
           if( (value.startsWith( "NOW" ) && (value.length() > 3)) || (value.startsWith( "TODAY" ) && (value.length() > 5)) )
           {
 
-            final Pattern pattern = Pattern.compile( m_regexDuration );
+            final Pattern pattern = Pattern.compile( REGEX_DURATION );
             final Matcher matcher = pattern.matcher( value );
 
             /*
