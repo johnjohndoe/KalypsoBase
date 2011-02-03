@@ -259,7 +259,7 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     Point maxItemSize = null;
     for( final IChartLayer layer : layers )
     {
-      final Point layerSize = getSize( layer, config );
+      final Point layerSize = getMaxEntrySize( layer, config );
       maxItemSize = getMax( maxItemSize, layerSize );
     }
 
@@ -278,42 +278,21 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     return new Point( Math.max( p1.x, p2.x ), Math.max( p1.y, p2.y ) );
   }
 
-  private Point getSize( final IChartLayer layer, final IChartLegendConfig config )
+  private Point getMaxEntrySize( final IChartLayer layer, final IChartLegendConfig config )
   {
-    int heigth = 0;
-    int row = 0;
+    Point maxItemSize = null;
 
-    int maxRowWidth = 0;
-    int maxRowHeight = 0;
-
-    for( final ILegendEntry entry : layer.getLegendEntries() )
+    ILegendEntry[] entries = layer.getLegendEntries();
+    for( final ILegendEntry entry : entries )
     {
       if( entry == null )
         continue;
 
       final Point size = getItemSize( config, entry );
-
-      if( row + size.x > config.getMaximumWidth() )
-      {
-        maxRowWidth = Math.max( maxRowWidth, size.x );
-        maxRowHeight = size.y;
-
-        heigth += size.y;
-        row = size.x;
-      }
-      else
-      {
-        row += size.x;
-
-        if( size.y > maxRowHeight )
-          heigth += size.y - maxRowHeight;
-
-        maxRowWidth = Math.max( maxRowWidth, row );
-        maxRowHeight = Math.max( maxRowHeight, size.y );
-      }
+      maxItemSize = getMax( maxItemSize, size );
     }
 
-    return new Point( maxRowWidth, heigth );
+    return maxItemSize;
   }
 
   private Point getTextAnchor( final IChartLegendConfig config, final int iconWidth, final int rowHeight, final Point textSize )
