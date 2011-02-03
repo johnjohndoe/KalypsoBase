@@ -87,13 +87,13 @@ public final class ChartFactory
       final Insets inset = new Insets( type.getInsetTop(), type.getInsetLeft(), type.getInsetBottom(), type.getInsetBottom() );
       title.setInsets( inset );
 
-      model.addTitles( title );
+      model.getSettings().addTitles( title );
     }
 
-    model.setDescription( chartType.getDescription() );
+    model.getSettings().setDescription( chartType.getDescription() );
 
-    model.setHideLegend( !chartType.getLegend() );
-    model.setLegendRenderer( chartType.getLegendRenderer() );
+    model.getBehaviour().setHideLegend( !chartType.getLegend() );
+    model.getSettings().setLegendRenderer( chartType.getLegendRenderer() );
 
     final ExtendedReferenceResolver extendedResolver = new ExtendedReferenceResolver( resolver );
     final ChartMapperFactory mapperFactory = new ChartMapperFactory( model, extendedResolver, extLoader, context );

@@ -207,7 +207,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
           // TODO: m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
 
           // Titel der View setzen
-          final TitleTypeBean[] title = m_chartModel.getTitles();
+          final TitleTypeBean[] title = m_chartModel.getSettings().getTitles();
           if( !ArrayUtils.isEmpty( title ) )
             setPartName( title[0].getText() );
           else

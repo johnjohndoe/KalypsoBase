@@ -422,7 +422,7 @@ public class ChartEditor extends EditorPart implements IChartPart
             }
 
             // Name des Parts
-            final TitleTypeBean[] title = m_chartModel.getTitles();
+            final TitleTypeBean[] title = m_chartModel.getSettings().getTitles();
             if( !ArrayUtils.isEmpty( title ) )
               setPartName( title[0].getText() );
             else
