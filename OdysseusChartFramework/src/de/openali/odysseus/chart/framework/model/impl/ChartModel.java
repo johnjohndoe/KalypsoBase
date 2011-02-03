@@ -105,6 +105,7 @@ public class ChartModel implements IChartModel
   @Override
   public ILayerContainer getParent( )
   {
+    // chart model is root element! so return null
     return null;
   }
 
