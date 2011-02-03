@@ -42,4 +42,8 @@ public interface IMapperRegistry extends IEventProvider<IMapperRegistryEventList
   Map<IAxis, IDataRange<Number>> getNumericRangeAxisSnapshot( );
 
   <T> IDataOperator<T> getDataOperator( Class<T> clazz );
+
+  void accept( IAxisVisitor visitor );
+
+  void accept( IMapperVisitor visitor );
 }

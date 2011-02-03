@@ -17,7 +17,9 @@ import de.openali.odysseus.chart.framework.model.event.impl.MapperRegistryEventH
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperVisitor;
 
 /**
  * @author burtscher
@@ -164,6 +166,29 @@ public class MapperRegistry implements IMapperRegistry
       if( mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis )
         axes.add( (IAxis) mapper );
     return axes.toArray( new IAxis[axes.size()] );
+  }
+
+  @Override
+  public void accept( final IAxisVisitor visitor )
+  {
+    final Collection<IMapper> mappers = m_mappers.values();
+
+    for( final IMapper mapper : mappers )
+    {
+      if( mapper instanceof IAxis )
+        visitor.visit( (IAxis) mapper );
+    }
+  }
+
+  @Override
+  public void accept( final IMapperVisitor visitor )
+  {
+    final Collection<IMapper> mappers = m_mappers.values();
+
+    for( final IMapper mapper : mappers )
+    {
+      visitor.visit( mapper );
+    }
   }
 
   @Override

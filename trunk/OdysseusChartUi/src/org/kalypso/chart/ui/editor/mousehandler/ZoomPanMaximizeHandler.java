@@ -45,6 +45,9 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.impl.visitors.PanToVisitor;
+import de.openali.odysseus.chart.framework.model.impl.visitors.ZoomInVisitor;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
@@ -118,7 +121,12 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
   {
     getChart().setPanOffset( null, null, null );
     if( start != null )
-      getChart().getChartModel().panTo( start, editInfo.m_pos );
+    {
+      final PanToVisitor visitor = new PanToVisitor( start, editInfo.m_pos );
+
+      final IChartModel model = getChart().getChartModel();
+      model.getMapperRegistry().accept( visitor );
+    }
 
     /** update active point */
     updateSelection( editInfo );
@@ -134,7 +142,12 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
       if( end.x < editInfo.m_pos.x )
         getChart().getChartModel().autoscale( null );
       else
-        getChart().getChartModel().zoomIn( editInfo.m_pos, end );
+      {
+        final ZoomInVisitor visitor = new ZoomInVisitor( editInfo.m_pos, end );
+
+        final IChartModel model = getChart().getChartModel();
+        model.getMapperRegistry().accept( visitor );
+      }
     }
     finally
     {

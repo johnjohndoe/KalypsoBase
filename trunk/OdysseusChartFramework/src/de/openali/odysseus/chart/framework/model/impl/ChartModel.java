@@ -7,27 +7,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.swt.graphics.Point;
-
 import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.IChartModelState;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
+import de.openali.odysseus.chart.framework.model.impl.visitors.AutoScaleVisitor;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.LayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.MapperRegistry;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chart.framework.util.img.legend.renderer.CompactChartLegendRenderer;
@@ -147,75 +142,16 @@ public class ChartModel implements IChartModel
    * automatically scales all given axes; scaling means here: show all available values
    */
   @Override
-  @SuppressWarnings("unchecked")
   public void autoscale( final IAxis[] axes )
   {
+    final AutoScaleVisitor visitor = new AutoScaleVisitor( this );
+
+    // TODO ?!? auto scaled axes will be updated when?!? strange behavior
     final IAxis[] autoscaledAxes = axes == null ? getMapperRegistry().getAxes() : axes;
     for( final IAxis axis : autoscaledAxes )
     {
-      IChartLayer[] layers;
-      synchronized( this )
-      {
-        final List<IChartLayer> list = getAxis2Layers().get( axis );
-        if( list == null )
-          layers = new IChartLayer[] {};
-        else
-          layers = list.toArray( new IChartLayer[] {} );
-      }
-
-      final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>( layers.length );
-
-      for( final IChartLayer layer : layers )
-      {
-        if( layer.isVisible() )
-        {
-          final IDataRange<Number> range = getRangeFor( layer, axis );
-          if( range != null )
-          {
-            ranges.add( range );
-          }
-        }
-      }
-
-      IDataRange<Number> mergedDataRange = ChartUtilities.mergeDataRanges( ranges.toArray( new IDataRange[ranges.size()] ) );
-      if( mergedDataRange == null )
-      {
-        // if mergedDataRange is null, we keep the old range - if there is any
-        if( axis.getNumericRange() != null )
-        {
-          continue;
-        }
-        else
-        {
-          // otherwise, we use a default range
-          mergedDataRange = new ComparableDataRange<Number>( new Number[] { 0, 1 } );
-        }
-      }
-
-      // now check if axis has a preferred Adjustment
-      final IAxisAdjustment adj = axis.getPreferredAdjustment();
-      if( adj != null )
-      {
-        final double adjBefore = adj.getBefore();
-        final double adjRange = adj.getRange();
-        final double adjAfter = adj.getAfter();
-
-        final double rangeMin = Math.min( adj.getMinValue().doubleValue(), mergedDataRange.getMin().doubleValue() );
-        final double rangeMax = Math.max( adj.getMaxValue().doubleValue(), mergedDataRange.getMax().doubleValue() );
-
-        // computing preferred adjustment failed if rangesize==0.0, so we set a range minimum depends on adjustment
-        final double rangeSize = rangeMax == rangeMin ? 1.0 : rangeMax - rangeMin;
-        final double newMin = rangeMin - rangeSize * (adjBefore / adjRange);
-        final double newMax = rangeMax + rangeSize * (adjAfter / adjRange);
-
-        axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { newMin, newMax } ) );
-      }
-      else
-      {
-        axis.setNumericRange( mergedDataRange );
-      }
+      visitor.visit( axis );
     }
-
   }
 
   /**
@@ -282,20 +218,6 @@ public class ChartModel implements IChartModel
   public IMapperRegistry getMapperRegistry( )
   {
     return m_mapperRegistry;
-  }
-
-  /**
-   * @return DataRange of all domain or target data available in the given layer
-   */
-  private IDataRange<Number> getRangeFor( final IChartLayer layer, final IAxis axis )
-  {
-    if( axis == layer.getCoordinateMapper().getDomainAxis() )
-      return layer.getDomainRange();
-
-    if( axis == layer.getCoordinateMapper().getTargetAxis() )
-      return layer.getTargetRange( null );
-
-    return null;
   }
 
   /**
@@ -378,44 +300,7 @@ public class ChartModel implements IChartModel
   public void maximize( )
   {
     autoscale( null );
-    // ModelChangedEvent werfen, damit Composite das Model neu zeichnet
-  }
-
-  @Override
-  public void panTo( final Point start, final Point end )
-  {
-    if( start.equals( end ) )
-      return;
-
-    final IAxis[] axes = getMapperRegistry().getAxes();
-    for( final IAxis axis : axes )
-    {
-      double newmin = 0;
-      double newmax = 0;
-
-      Number nowNum;
-      Number startNum;
-      if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-      {
-        nowNum = axis.screenToNumeric( end.x );
-        startNum = axis.screenToNumeric( start.x );
-      }
-      else
-      {
-        nowNum = axis.screenToNumeric( end.y );
-        startNum = axis.screenToNumeric( start.y );
-      }
-      final double diff = nowNum.doubleValue() - startNum.doubleValue();
-      if( Double.isNaN( diff ) )
-        continue;
-      final IDataRange<Number> initRange = axis.getNumericRange();
-      newmin = initRange.getMin().doubleValue() + diff;
-      newmax = initRange.getMax().doubleValue() + diff;
-
-      final IDataRange<Number> newRange = new ComparableDataRange<Number>( new Number[] { new Double( newmin ), new Double( newmax ) } );
-      axis.setNumericRange( newRange );
-    }
-
+    // TODO ModelChangedEvent werfen, damit Composite das Model neu zeichnet
   }
 
   /**
@@ -472,18 +357,17 @@ public class ChartModel implements IChartModel
 
     m_hideUnusedAxes = hide;
 
-    final IAxis[] axes = m_mapperRegistry.getAxes();
-    synchronized( axes )
+    getMapperRegistry().accept( new IAxisVisitor()
     {
-      for( final IAxis axis : axes )
+      @Override
+      public void visit( final IAxis axis )
       {
-        if( m_hideUnusedAxes )
+        if( hide )
           hideUnusedAxis( axis );
         else
           axis.setVisible( true );
       }
-    }
-
+    } );
   }
 
   /**
@@ -573,134 +457,6 @@ public class ChartModel implements IChartModel
     if( m_autoscale )
     {
       autoscale( new IAxis[] { mapper.getDomainAxis(), mapper.getTargetAxis() } );
-    }
-  }
-
-  /**
-   * Maximizes the content of the plot to the values inside a dragged rectangle
-   */
-  @Override
-  public <T_logical> void zoomIn( final Point start, final Point end )
-  {
-    final IMapperRegistry ar = getMapperRegistry();
-    final IAxis[] axes = ar.getAxes();
-    for( final IAxis axis : axes )
-    {
-      Number from = null;
-      Number to = null;
-      if( start == null || end == null )
-        continue;
-      switch( axis.getPosition().getOrientation() )
-      {
-        case HORIZONTAL:
-          switch( axis.getDirection() )
-          {
-            case POSITIVE:
-              from = axis.screenToNumeric( Math.min( start.x, end.x ) );
-              to = axis.screenToNumeric( Math.max( start.x, end.x ) );
-              break;
-
-            case NEGATIVE:
-              from = axis.screenToNumeric( Math.max( start.x, end.x ) );
-              to = axis.screenToNumeric( Math.min( start.x, end.x ) );
-              break;
-          }
-          break;
-
-        case VERTICAL:
-          switch( axis.getDirection() )
-          {
-            case POSITIVE:
-              from = axis.screenToNumeric( Math.max( start.y, end.y ) );
-              to = axis.screenToNumeric( Math.min( start.y, end.y ) );
-              break;
-
-            case NEGATIVE:
-              from = axis.screenToNumeric( Math.min( start.y, end.y ) );
-              to = axis.screenToNumeric( Math.max( start.y, end.y ) );
-              break;
-          }
-          break;
-      }
-
-      if( from != null && to != null )
-      {
-        axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { from, to } ) );
-      }
-    }
-    // m_eventHandler.fireModelChanged();
-  }
-
-  /**
-   * minimizes the content of the plot to the values inside a dragged rectangle
-   */
-  @Override
-  public <T_logical> void zoomOut( final Point start, final Point end )
-  {
-    if( end == null )
-      return;
-    final IMapperRegistry ar = getMapperRegistry();
-    final IAxis[] axes = ar.getAxes();
-    for( final IAxis axis : axes )
-    {
-      double from = Double.NaN;
-      double to = Double.NaN;
-
-      switch( axis.getPosition().getOrientation() )
-      {
-        case HORIZONTAL:
-          switch( axis.getDirection() )
-          {
-            case POSITIVE:
-              from = axis.screenToNumeric( Math.min( start.x, end.x ) ).doubleValue();
-              to = axis.screenToNumeric( Math.max( start.x, end.x ) ).doubleValue();
-              break;
-
-            case NEGATIVE:
-              from = axis.screenToNumeric( Math.max( start.x, end.x ) ).doubleValue();
-              to = axis.screenToNumeric( Math.min( start.x, end.x ) ).doubleValue();
-              break;
-          }
-          break;
-
-        case VERTICAL:
-          switch( axis.getDirection() )
-          {
-            case POSITIVE:
-              from = axis.screenToNumeric( Math.max( start.y, end.y ) ).doubleValue();
-              to = axis.screenToNumeric( Math.min( start.y, end.y ) ).doubleValue();
-              break;
-
-            case NEGATIVE:
-              from = axis.screenToNumeric( Math.min( start.y, end.y ) ).doubleValue();
-              to = axis.screenToNumeric( Math.max( start.y, end.y ) ).doubleValue();
-              break;
-          }
-          break;
-      }
-
-      if( !Double.isNaN( from ) && !Double.isNaN( to ) )
-      {
-        final double mouserange = Math.abs( from - to );
-
-        final IDataRange<Number> numericRange = axis.getNumericRange();
-
-        final Number min = numericRange.getMin();
-        final Number max = numericRange.getMax();
-
-        if( min != null && max != null )
-        {
-          final double oldmin = min.doubleValue();
-          final double oldmax = max.doubleValue();
-          final double oldrange = Math.abs( oldmin - oldmax );
-          final double newrange = (oldrange / mouserange) * oldrange;
-
-          final double newFrom = oldmin - ((Math.abs( from - oldmin ) / oldrange) * newrange);
-          final double newTo = oldmax + ((Math.abs( to - oldmax ) / oldrange) * newrange);
-
-          axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
-        }
-      }
     }
   }
 
