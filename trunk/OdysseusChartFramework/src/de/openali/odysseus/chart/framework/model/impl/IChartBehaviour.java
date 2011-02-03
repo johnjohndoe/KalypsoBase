@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.impl;
 
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+
 /**
  * the behavior of the chart model (hide unused axes, ...)
  * 
@@ -62,5 +64,8 @@ public interface IChartBehaviour
   void setAutoscale( boolean autoscale );
 
   boolean isSetAutoscale( );
+
+  // FIXME remove from interface
+  void hideUnusedAxis( IAxis... axes );
 
 }

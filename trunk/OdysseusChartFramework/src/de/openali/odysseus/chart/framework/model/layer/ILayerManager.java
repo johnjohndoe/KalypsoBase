@@ -5,6 +5,7 @@ import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.LayerManagerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * @author burtscher used to manage chart layers - right now this means adding and removing them
@@ -46,4 +47,6 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
   ILayerContainer getContainer( );
 
   LayerManagerEventHandler getEventHandler( );
+
+  IChartLayer[] getLayers( IAxis axis );
 }

@@ -40,10 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.impl;
 
-import java.util.List;
+import org.apache.commons.lang.ArrayUtils;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
 
@@ -54,22 +55,64 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
  */
 public class ChartBehaviour implements IChartBehaviour
 {
-  private boolean m_hideUnusedAxes = true;
-
-  private final IChartModel m_model;
-
   /**
    * if set to true, all axes are sized automatically to fit all data into a layer
    */
   private boolean m_autoscale = false;
 
+  private boolean m_hideLegend = true;
+
   private boolean m_hideTitle = false;
 
-  private boolean m_hideLegend = true;
+  private boolean m_hideUnusedAxes = true;
+
+  private final IChartModel m_model;
 
   public ChartBehaviour( final IChartModel model )
   {
     m_model = model;
+  }
+
+  @Override
+  public void hideUnusedAxis( final IAxis... axes )
+  {
+    // if axis has no layers, hide axis
+    final ILayerManager layerManager = m_model.getLayerManager();
+
+    for( final IAxis axis : axes )
+    {
+      final IChartLayer[] layers = layerManager.getLayers( axis );
+      if( ArrayUtils.isEmpty( layers ) )
+      {
+        axis.setVisible( false );
+        break;
+      }
+
+      for( final IChartLayer layer : layers )
+      {
+        if( layer.isVisible() )
+        {
+          axis.setVisible( true );
+          break;
+        }
+      }
+    }
+
+  }
+
+  @Override
+  public boolean isHideLegend( )
+  {
+    return m_hideLegend;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#isHideTitle()
+   */
+  @Override
+  public boolean isHideTitle( )
+  {
+    return m_hideTitle;
   }
 
   /**
@@ -79,6 +122,39 @@ public class ChartBehaviour implements IChartBehaviour
   public boolean isHideUnusedAxes( )
   {
     return m_hideUnusedAxes;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.impl.IChartBehaviour#isSetAutoscale()
+   */
+  @Override
+  public boolean isSetAutoscale( )
+  {
+    return m_autoscale;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.impl.IChartBehaviour#setAutoscale(boolean)
+   */
+  @Override
+  public void setAutoscale( final boolean autoscale )
+  {
+    m_autoscale = autoscale;
+  }
+
+  @Override
+  public void setHideLegend( final boolean hide )
+  {
+    m_hideLegend = hide;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#setHideTitle(boolean)
+   */
+  @Override
+  public void setHideTitle( final boolean hide )
+  {
+    m_hideTitle = hide;
   }
 
   /*
@@ -104,76 +180,5 @@ public class ChartBehaviour implements IChartBehaviour
           axis.setVisible( true );
       }
     } );
-  }
-
-  protected void hideUnusedAxis( final IAxis axis )
-  {
-    // if axis has no layers, hide axis
-    final List<IChartLayer> list = m_model.getAxis2Layers().get( axis );
-    if( list == null || list.isEmpty() )
-    {
-      axis.setVisible( false );
-      return;
-    }
-
-    // if all layers are hidden, hide axis too
-    for( final IChartLayer layer : list )
-    {
-      if( layer.isVisible() )
-      {
-        axis.setVisible( true );
-        return;
-      }
-    }
-
-    axis.setVisible( false );
-  }
-
-  @Override
-  public boolean isHideLegend( )
-  {
-    return m_hideLegend;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#isHideTitle()
-   */
-  @Override
-  public boolean isHideTitle( )
-  {
-    return m_hideTitle;
-  }
-
-  @Override
-  public void setHideLegend( final boolean hide )
-  {
-    m_hideLegend = hide;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#setHideTitle(boolean)
-   */
-  @Override
-  public void setHideTitle( final boolean hide )
-  {
-    m_hideTitle = hide;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.impl.IChartBehaviour#isSetAutoscale()
-   */
-  @Override
-  public boolean isSetAutoscale( )
-  {
-    return m_autoscale;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.impl.IChartBehaviour#setAutoscale(boolean)
-   */
-  @Override
-  public void setAutoscale( final boolean autoscale )
-  {
-    m_autoscale = autoscale;
   }
 }

@@ -13,7 +13,9 @@ import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerEventLi
 import de.openali.odysseus.chart.framework.model.event.impl.LayerManagerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.layer.manager.visitors.FindAxisLayerVisitor;
 import de.openali.odysseus.chart.framework.model.layer.manager.visitors.FindLayerVisitor;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 public class LayerManager implements ILayerManager
 {
@@ -242,5 +244,17 @@ public class LayerManager implements ILayerManager
   public int size( )
   {
     return m_layers.size();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getLayers(de.openali.odysseus.chart.framework.model.mapper.IAxis)
+   */
+  @Override
+  public IChartLayer[] getLayers( final IAxis axis )
+  {
+    final FindAxisLayerVisitor visitor = new FindAxisLayerVisitor( axis );
+    accept( visitor );
+
+    return visitor.getLayers();
   }
 }
