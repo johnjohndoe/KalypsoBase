@@ -111,6 +111,4 @@ public class AxisAdjustment implements IAxisAdjustment
     return m_maxValue;
   }
 
- 
-
 }

@@ -47,7 +47,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * @author alibu
- * 
  */
 public interface ITickCalculator
 {

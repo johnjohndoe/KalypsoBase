@@ -37,11 +37,7 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 
   final private String m_href;
 
- 
-
   final private URL m_context;
-
- 
 
   private IObservation<TupleResult> m_observation;
 

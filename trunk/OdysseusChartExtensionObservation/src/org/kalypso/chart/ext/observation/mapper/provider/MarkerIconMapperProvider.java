@@ -65,10 +65,10 @@ public class MarkerIconMapperProvider extends AbstractMapperProvider
   @Override
   public IRetinalMapper getMapper( ) throws ConfigurationException
   {
-    LinkedHashMap<String, ImageDescriptor> string2Image = new LinkedHashMap<String, ImageDescriptor>();
+    final LinkedHashMap<String, ImageDescriptor> string2Image = new LinkedHashMap<String, ImageDescriptor>();
 
-    Map<String, String> mapping = getParameterContainer().getParameterMap( "mapping" );
-    for( Entry<String, String> e : mapping.entrySet() )
+    final Map<String, String> mapping = getParameterContainer().getParameterMap( "mapping" );
+    for( final Entry<String, String> e : mapping.entrySet() )
     {
       // ImageLoader il = new ImageLoader();
       // ImageData id = ChartFactoryUtilities.loadImageData( getContext(), e.getValue(), 0, 0 );
@@ -78,13 +78,13 @@ public class MarkerIconMapperProvider extends AbstractMapperProvider
         id = ImageDescriptor.createFromURL( new URL( getContext(), e.getValue() ) );
         string2Image.put( e.getKey(), id );
       }
-      catch( MalformedURLException e1 )
+      catch( final MalformedURLException e1 )
       {
         throw new ConfigurationException( "Invalid URL: " + getContext().toString() + e.getValue(), e1 );
       }
     }
 
-    MarkerIconMapper mim = new MarkerIconMapper( getId(), string2Image );
+    final MarkerIconMapper mim = new MarkerIconMapper( getId(), string2Image );
     return mim;
   }
 }

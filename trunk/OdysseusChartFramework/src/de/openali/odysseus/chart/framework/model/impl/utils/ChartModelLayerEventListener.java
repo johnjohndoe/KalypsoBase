@@ -89,13 +89,13 @@ public class ChartModelLayerEventListener extends AbstractLayerManagerEventListe
   public void onLayerAdded( final IChartLayer layer )
   {
     if( m_model.getBehaviour().isHideUnusedAxes() )
-      hideUnusedAxes();
+      doHideUnusedAxes();
 
     if( m_model.getBehaviour().isSetAutoscale() )
-      autoscale( layer );
+      doAutoscale( layer );
   }
 
-  private void autoscale( final IChartLayer layer )
+  private void doAutoscale( final IChartLayer layer )
   {
     final ICoordinateMapper coordinateMapper = layer.getCoordinateMapper();
     if( coordinateMapper == null )
@@ -104,7 +104,7 @@ public class ChartModelLayerEventListener extends AbstractLayerManagerEventListe
       m_model.autoscale( coordinateMapper.getDomainAxis(), coordinateMapper.getTargetAxis() );
   }
 
-  private void hideUnusedAxes( )
+  private void doHideUnusedAxes( )
   {
     final IChartBehaviour behaviour = m_model.getBehaviour();
     final IAxis[] axes = m_model.getMapperRegistry().getAxes();
@@ -138,10 +138,10 @@ public class ChartModelLayerEventListener extends AbstractLayerManagerEventListe
   public void onLayerRemoved( final IChartLayer layer )
   {
     if( m_model.getBehaviour().isHideUnusedAxes() )
-      hideUnusedAxes();
+      doHideUnusedAxes();
 
     if( m_model.getBehaviour().isSetAutoscale() )
-      autoscale( layer );
+      doAutoscale( layer );
   }
 
   /**

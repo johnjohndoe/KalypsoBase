@@ -56,7 +56,7 @@ public class DragEditHandler extends AbstractChartDragHandler
     if( canSnap( getChart().screen2plotPoint( new Point( e.x, e.y ) ) ) || m_editInfo != null )
       return e.display.getSystemCursor( SWT.CURSOR_HAND );
 
-    return super.getCursor(e);
+    return super.getCursor( e );
   }
 
   /**

@@ -19,6 +19,7 @@ public class ArrayContentAxis extends AbstractAxis
     this( id, pos, config, null );
   }
 
+  // FIXME pos unused?!?
   public ArrayContentAxis( final String id, final POSITION pos, final AxisRendererConfig config, final IAxisContentProvider contentProvider )
   {// TODO more positions
     super( id, POSITION.BOTTOM, Integer.class, new OrdinalAxisRenderer( id, config, null, contentProvider ) );

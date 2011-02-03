@@ -93,7 +93,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
 
   private void doMouseMaximize( )
   {
-    getChart().getChartModel().autoscale( null );
+    getChart().getChartModel().autoscale();
   }
 
   /**
@@ -140,7 +140,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
     try
     {
       if( end.x < editInfo.m_pos.x )
-        getChart().getChartModel().autoscale( null );
+        getChart().getChartModel().autoscale();
       else
       {
         final ZoomInVisitor visitor = new ZoomInVisitor( editInfo.m_pos, end );

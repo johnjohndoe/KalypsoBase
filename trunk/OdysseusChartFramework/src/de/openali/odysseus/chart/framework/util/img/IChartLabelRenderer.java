@@ -65,7 +65,7 @@ public interface IChartLabelRenderer
   void setBorderLine( final ILineStyle borderLine );
 
   void setTitleTypeBean( final TitleTypeBean titleTypeBean );
-  
-  Point getSize();
+
+  Point getSize( );
 
 }

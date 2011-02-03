@@ -61,15 +61,15 @@ public class MarkerIconMapper extends AbstractRetinalMapper
 
   private final Map<Number, ImageDescriptor> m_mapping = new HashMap<Number, ImageDescriptor>();
 
-  public MarkerIconMapper( String id, LinkedHashMap<String, ImageDescriptor> mapping )
+  public MarkerIconMapper( final String id, final LinkedHashMap<String, ImageDescriptor> mapping )
   {
     super( id );
 
-    StringDataOperator sdop = new StringDataOperator( mapping.keySet().toArray( new String[mapping.size()] ) );
+    final StringDataOperator sdop = new StringDataOperator( mapping.keySet().toArray( new String[mapping.size()] ) );
     addDataOperator( String.class, sdop );
 
     // Umformen des Mappings, damit direkt über Zahlen zugegriffen werden kann
-    for( Entry<String, ImageDescriptor> e : mapping.entrySet() )
+    for( final Entry<String, ImageDescriptor> e : mapping.entrySet() )
       m_mapping.put( sdop.logicalToNumeric( e.getKey() ), e.getValue() );
 
   }
@@ -80,18 +80,18 @@ public class MarkerIconMapper extends AbstractRetinalMapper
    *      de.openali.odysseus.chart.framework.model.style.IStyle)
    */
   @Override
-  public IStyle numericToScreen( Number value, IStyle bluePrintStlye )
+  public IStyle numericToScreen( final Number value, final IStyle bluePrintStlye )
   {
     if( m_mapping.get( value ) != null )
       if( bluePrintStlye instanceof IPointStyle )
       {
-        IPointStyle copy = ((IPointStyle) bluePrintStlye).copy();
+        final IPointStyle copy = ((IPointStyle) bluePrintStlye).copy();
         copy.setMarker( new ImageMarker( m_mapping.get( value ) ) );
         return copy;
       }
 
     // Falls kein Mapping vorhanden oder falscher Style-Typ, wird ein unsichtbarer Style zurückgegeben
-    IStyle copy = bluePrintStlye.copy();
+    final IStyle copy = bluePrintStlye.copy();
     copy.setVisible( false );
     return copy;
   }

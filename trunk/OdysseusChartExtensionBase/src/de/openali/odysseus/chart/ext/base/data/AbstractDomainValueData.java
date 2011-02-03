@@ -28,7 +28,7 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements ITa
     return m_isLoading;
   }
 
-  public void setLoading( boolean isLoading )
+  public void setLoading( final boolean isLoading )
   {
     m_isLoading = isLoading;
   }
@@ -70,12 +70,12 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements ITa
     return toArray;
   }
 
-  protected void setDomainValues( List<T_domain> values )
+  protected void setDomainValues( final List<T_domain> values )
   {
     m_domainValues = values;
   }
 
-  protected void setTargetValues( List<T_target> values )
+  protected void setTargetValues( final List<T_target> values )
   {
     m_targetValues = values;
   }

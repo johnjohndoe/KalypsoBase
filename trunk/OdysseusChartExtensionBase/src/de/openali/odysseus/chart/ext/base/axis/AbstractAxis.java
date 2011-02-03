@@ -154,17 +154,18 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     }
   }
 
-  final private boolean hasNullValues( final IDataRange<Number> range, final DataRangeRestriction<Number> restriction )
+  private boolean hasNullValues( final IDataRange<Number> range, final DataRangeRestriction<Number> restriction )
   {
     if( restriction == null || range == null || range.getMin() == null || range.getMax() == null || restriction.getMin() == null || restriction.getMax() == null || restriction.getMinRange() == null
         || restriction.getMaxRange() == null )
       return true;
+
     return false;
   }
 
   protected IDataRange<Number> validateDataRange( final IDataRange<Number> range, final DataRangeRestriction<Number> restriction )
   {
-    if( hasNullValues( range,restriction ))
+    if( hasNullValues( range, restriction ) )
       return range;
 
     final double restrictionMin = restriction.getMin().doubleValue();
@@ -174,7 +175,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     final double rangeMin = range.getMin().doubleValue();
     final double rangeMax = range.getMax().doubleValue();
     final Double rangeSize = rangeMax - rangeMin;
-   
+
     final IAxisAdjustment adj = getPreferredAdjustment();
     final double adjAfter = adj == null ? 0.0 : adj.getAfter();
     final double adjBefore = adj == null ? 0.0 : adj.getBefore();

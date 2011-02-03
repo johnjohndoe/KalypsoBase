@@ -98,7 +98,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
 
     // Das Intervall verwendet zun�chst nur 10er Schritte
     double interval = Math.pow( 10, rangepow * (-1) - 1 );
-    if( minDisplayInterval != null && interval <minDisplayInterval.doubleValue() )
+    if( minDisplayInterval != null && interval < minDisplayInterval.doubleValue() )
     {
       interval = minDisplayInterval.doubleValue();
     }

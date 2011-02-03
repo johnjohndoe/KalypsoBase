@@ -62,22 +62,22 @@ public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implem
     return (T_target[]) m_targetValues.toArray();
   }
 
-  protected void setDomainValues( List<T_domain> domainValues )
+  protected void setDomainValues( final List<T_domain> domainValues )
   {
     m_domainValues = domainValues;
   }
 
-  protected void setTargetValues( List<T_target> targetValues )
+  protected void setTargetValues( final List<T_target> targetValues )
   {
     m_targetValues = targetValues;
   }
 
-  protected void setDomainIntervalEndValues( List<T_domain> domainIntervalEndValues )
+  protected void setDomainIntervalEndValues( final List<T_domain> domainIntervalEndValues )
   {
     m_domainIntervalEndValues = domainIntervalEndValues;
   }
 
-  protected void setDomainIntervalStartValues( List<T_domain> domainIntervalStartValues )
+  protected void setDomainIntervalStartValues( final List<T_domain> domainIntervalStartValues )
   {
     m_domainIntervalStartValues = domainIntervalStartValues;
   }

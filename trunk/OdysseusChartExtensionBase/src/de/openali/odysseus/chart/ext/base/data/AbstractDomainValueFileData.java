@@ -6,7 +6,7 @@ public abstract class AbstractDomainValueFileData<T_domain, T_target> extends Ab
 {
   private URL m_url;
 
-  public void setInputURL( URL url )
+  public void setInputURL( final URL url )
   {
     m_url = url;
   }

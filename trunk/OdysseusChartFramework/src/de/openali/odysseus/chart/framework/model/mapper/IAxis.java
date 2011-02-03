@@ -53,6 +53,7 @@ public interface IAxis extends IMapper
    * sets the internally used absolute Min-Max-Value
    */
   void setRangeRestriction( DataRangeRestriction<Number> range );
+
   /**
    * returns the internally absolute Min-Max-Value and min-max-intervall
    */
@@ -62,6 +63,7 @@ public interface IAxis extends IMapper
    * sets the internally used number range
    */
   void setNumericRange( IDataRange<Number> range );
+
   /**
    * transforms a screen position into a numeric value
    */

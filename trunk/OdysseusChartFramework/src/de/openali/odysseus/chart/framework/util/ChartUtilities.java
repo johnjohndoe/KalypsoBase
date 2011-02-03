@@ -15,7 +15,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATI
 /**
  * @author burtscher some helper methods to ease your everyday life programming chart stuff
  */
-public class ChartUtilities
+public final class ChartUtilities
 {
   private ChartUtilities( )
   {
@@ -76,10 +76,10 @@ public class ChartUtilities
       try
       {
         final double eltMin = element.getMin().doubleValue();
-        if(Double.isNaN( eltMin ))
+        if( Double.isNaN( eltMin ) )
           continue;
         final double eltMax = element.getMax().doubleValue();
-        if(Double.isNaN( eltMax ))
+        if( Double.isNaN( eltMax ) )
           continue;
 
         min = Math.min( min, eltMin );

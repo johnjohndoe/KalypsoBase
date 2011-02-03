@@ -7,7 +7,7 @@ public abstract class AbstractDomainIntervalValueFileData<T_domain, T_target> ex
 
   private URL m_url;
 
-  public void setInputURL( URL url )
+  public void setInputURL( final URL url )
   {
     m_url = url;
   }
