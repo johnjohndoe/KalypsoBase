@@ -4,8 +4,6 @@ import java.awt.Insets;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.swt.graphics.Point;
-
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
@@ -64,12 +62,6 @@ public interface IChartModel extends ILayerContainer
   String getDescription( );
 
   void setDescription( String description );
-
-  <T_logical> void zoomIn( Point start, Point end );
-
-  <T_logical> void zoomOut( Point start, Point end );
-
-  void panTo( Point start, Point end );
 
   IChartModelState getState( );
 
