@@ -10,6 +10,6 @@
   <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:info" uri="icons/idea.png" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:table:icon:hint" uri="icons/hint.png" />
 
-  <catalog:system systemId="urn:org:kalypso:zml:ui:table:global" uri="global.xml" />
+  <catalog:system systemId="urn:org:kalypso:zml:ui:table:global" uri="global.kot" />
 </catalog:catalog>
 

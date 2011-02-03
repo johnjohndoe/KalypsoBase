@@ -14,13 +14,13 @@
       <baseStyle>
         <reference>defaultCellStyle</reference>
       </baseStyle>
-      <property name="textFormat">%.0f</property>
+      <property name="textFormat">%.1f</property>
     </Style>
     <Style id="wBaseEditingCellStyle">
       <baseStyle>
         <reference>wBaseCellStyle</reference>
       </baseStyle>
-      <property name="textFormat">%.3f</property>
+      <property name="textFormat">%.2f</property>
     </Style>
     <!-- base n cell table style -->
     <Style id="nBaseCellStyle">
@@ -29,10 +29,22 @@
       </baseStyle>
       <property name="textFormat">%.1f</property>
     </Style>
+    <Style id="nBaseEditingCellStyle">
+      <baseStyle>
+        <reference>nBaseCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.2f</property>
+    </Style>
     <!-- base q cell table style -->
     <Style id="qBaseCellStyle">
       <baseStyle>
         <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.2f</property>
+    </Style>
+    <Style id="qBaseEditingCellStyle">
+      <baseStyle>
+        <reference>qBaseCellStyle</reference>
       </baseStyle>
       <property name="textFormat">%.3f</property>
     </Style>
@@ -40,7 +52,6 @@
     <Style id="derivedValueCellStyle">
       <property name="backgroundColor">F8F3C0</property>
     </Style>
-    
     <!-- base volume style -->
     <Style id="volumeBaseCellStyle">
       <baseStyle>
@@ -48,7 +59,7 @@
       </baseStyle>
       <property name="textFormat">%.3f</property>
     </Style>
-     <!-- base w [m NN] style, Wasserstand [m NN] z.B. durch Umrechnung aus Volumen in Talsperre -->
+    <!-- base w [m NN] style, Wasserstand [m NN] z.B. durch Umrechnung aus Volumen in Talsperre -->
     <Style id="wNNBaseCellStyle">
       <baseStyle>
         <reference>defaultCellStyle</reference>
@@ -67,7 +78,7 @@
       <baseStyle>
         <reference>dateCellStyle</reference>
       </baseStyle>
-      <property name="backgroundColor">FFF7EE</property> 
+      <property name="backgroundColor">FFF7EE</property>
     </Style>
     <Style id="forecastCellStyleSafe">
       <property name="fontWeight">BOLD</property>
@@ -95,7 +106,6 @@
     <Style id="warnedValueStyle">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:warned:value</property>
     </Style>
-
     <!-- rule - w/q conversion conflict? -->
     <Style id="wqConversionConflict">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:conflict</property>
