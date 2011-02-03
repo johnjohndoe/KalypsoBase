@@ -71,15 +71,7 @@ public class AutoScaleVisitor implements IAxisVisitor
   @Override
   public void visit( final IAxis axis )
   {
-    IChartLayer[] layers;
-    synchronized( this )
-    {
-      final List<IChartLayer> list = m_model.getAxis2Layers().get( axis );
-      if( list == null )
-        layers = new IChartLayer[] {};
-      else
-        layers = list.toArray( new IChartLayer[] {} );
-    }
+    final IChartLayer[] layers = m_model.getLayerManager().getLayers( axis );
 
     final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>( layers.length );
 
@@ -132,7 +124,6 @@ public class AutoScaleVisitor implements IAxisVisitor
     {
       axis.setNumericRange( mergedDataRange );
     }
-
   }
 
   /**

@@ -214,7 +214,7 @@ public class CapabilitiesLoader
     final ChartOfferingType xmlChart = ChartOfferingType.Factory.newInstance();
 
     // Chart-Info
-    xmlChart.setId( model.getId() );
+    xmlChart.setId( model.getIdentifier() );
     final TitleTypeBean[] titleBeans = model.getSettings().getTitles();
     final String[] titleArray = new String[titleBeans.length];
     for( int i = 0; i < titleBeans.length; i++ )
@@ -256,7 +256,7 @@ public class CapabilitiesLoader
 
         // Symbol-Grafiken cachen
         final ImageData symbol = le.getSymbol( size );
-        ODSUtils.writeSymbol( m_env.getTmpDir(), symbol, scene, model.getId(), layer.getId(), symbolId );
+        ODSUtils.writeSymbol( m_env.getTmpDir(), symbol, scene, model.getIdentifier(), layer.getId(), symbolId );
       }
     }
 

@@ -58,7 +58,7 @@ public final class ChartFactory
 
   public static void doConfiguration( final IChartModel model, final IReferenceResolver resolver, final ChartType chartType, final IExtensionLoader extLoader, final URL context )
   {
-    model.setId( chartType.getId() );
+    model.setIdentifier( chartType.getId() );
 
     final ChartTypeResolver chartTypeResolver = ChartTypeResolver.getInstance();
 

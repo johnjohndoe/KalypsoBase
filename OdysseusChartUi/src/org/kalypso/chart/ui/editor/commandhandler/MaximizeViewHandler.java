@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
@@ -52,13 +53,11 @@ public class MaximizeViewHandler extends AbstractHandler
     final Set<Number> screenMaxsVert = new HashSet<Number>();
     for( final IAxis axis : axes )
     {
-      final List<IChartLayer> layers = model.getAxis2Layers().get( axis );
-      if( layers == null )
-      {
+      final IChartLayer[] layers = model.getLayerManager().getLayers( axis );
+      if( ArrayUtils.isEmpty( layers ) )
         continue;
-      }
 
-      final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>( layers.size() );
+      final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>( layers.length );
 
       for( final IChartLayer layer : layers )
       {

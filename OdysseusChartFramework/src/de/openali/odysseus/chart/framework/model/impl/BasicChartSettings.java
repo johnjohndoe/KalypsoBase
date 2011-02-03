@@ -60,13 +60,22 @@ import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegend
  */
 public class BasicChartSettings implements IBasicChartSettings
 {
-  private final List<TitleTypeBean> m_title = new ArrayList<TitleTypeBean>();
-
   private String m_description = "";
+
+  private String m_renderer;
 
   private ITextStyle m_textStyle = null;
 
-  private String m_renderer;
+  private final List<TitleTypeBean> m_title = new ArrayList<TitleTypeBean>();
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#setTitle(java.lang.String)
+   */
+  @Override
+  public void addTitles( final TitleTypeBean... titles )
+  {
+    Collections.addAll( m_title, titles );
+  }
 
   /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#getDescription()
@@ -75,6 +84,18 @@ public class BasicChartSettings implements IBasicChartSettings
   public String getDescription( )
   {
     return m_description;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#getLegendRenderer()
+   */
+  @Override
+  public IChartLegendRenderer getLegendRenderer( )
+  {
+    if( m_renderer == null )
+      m_renderer = CompactChartLegendRenderer.ID;
+
+    return OdysseusChartFrameworkPlugin.getDefault().getRenderers( m_renderer );
   }
 
   @Override
@@ -104,18 +125,18 @@ public class BasicChartSettings implements IBasicChartSettings
     m_description = description;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModel#setLegendRenderer(java.lang.String)
+   */
+  @Override
+  public void setLegendRenderer( final String renderer )
+  {
+    m_renderer = renderer;
+  }
+
   public void setTextStyle( final ITextStyle textStyle )
   {
     m_textStyle = textStyle;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#setTitle(java.lang.String)
-   */
-  @Override
-  public void addTitles( final TitleTypeBean... titles )
-  {
-    Collections.addAll( m_title, titles );
   }
 
   /**
@@ -128,26 +149,5 @@ public class BasicChartSettings implements IBasicChartSettings
   {
     m_title.clear();
     m_title.add( new TitleTypeBean( title, position, ALIGNMENT.CENTER, textStyle, insets ) );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#setLegendRenderer(java.lang.String)
-   */
-  @Override
-  public void setLegendRenderer( final String renderer )
-  {
-    m_renderer = renderer;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#getLegendRenderer()
-   */
-  @Override
-  public IChartLegendRenderer getLegendRenderer( )
-  {
-    if( m_renderer == null )
-      m_renderer = CompactChartLegendRenderer.ID;
-
-    return OdysseusChartFrameworkPlugin.getDefault().getRenderers( m_renderer );
   }
 }

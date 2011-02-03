@@ -38,34 +38,51 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.model.impl;
+package de.openali.odysseus.chart.framework.model.layer.manager.visitors;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
- * the behavior of the chart model (hide unused axes, ...)
- * 
  * @author Dirk Kuch
  */
-public interface IChartBehaviour
+public class FindAxisLayerVisitor implements IChartLayerVisitor
 {
-  boolean isHideUnusedAxes( );
+  Set<IChartLayer> m_layers = new HashSet<IChartLayer>();
 
-  void setHideUnusedAxes( boolean hide );
+  private final IAxis m_axis;
 
-  boolean isHideLegend( );
+  public FindAxisLayerVisitor( final IAxis axis )
+  {
+    m_axis = axis;
+  }
 
-  boolean isHideTitle( );
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public void visit( final IChartLayer layer )
+  {
+    final ICoordinateMapper coordinateMapper = layer.getCoordinateMapper();
+    if( coordinateMapper != null )
+    {
+      if( coordinateMapper.getDomainAxis() == m_axis )
+        m_layers.add( layer );
+      else if( coordinateMapper.getTargetAxis() == m_axis )
+        m_layers.add( layer );
+    }
 
-  void setHideLegend( boolean hide );
+    layer.getLayerManager().accept( this );
+  }
 
-  void setHideTitle( boolean hide );
-
-  void setAutoscale( boolean autoscale );
-
-  boolean isSetAutoscale( );
-
-  // FIXME remove from interface
-  void hideUnusedAxis( IAxis... axes );
+  public IChartLayer[] getLayers( )
+  {
+    return m_layers.toArray( new IChartLayer[] {} );
+  }
 
 }

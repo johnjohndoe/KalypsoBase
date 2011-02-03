@@ -87,7 +87,7 @@ public final class ChartConfigurationSaver
 
     // Chart
     final ChartType chartType = chartconf.addNewChart();
-    chartType.setId( model.getId() );
+    chartType.setId( model.getIdentifier() );
     chartType.setDescription( model.getSettings().getDescription() );
     final TitleTypeBean[] titleTypes = model.getSettings().getTitles();
     final TitleType[] titleArray = new TitleType[titleTypes.length];
