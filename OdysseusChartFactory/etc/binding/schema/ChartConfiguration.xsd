@@ -286,6 +286,7 @@
           <element ref="ods:ChildLayer" minOccurs="0" maxOccurs="unbounded" />
         </sequence>
         <attribute name="legend" type="boolean" use="optional" default="true" />
+        <attribute name="visible" type="boolean" use="optional" default="true" />
       </extension>
     </complexContent>
   </complexType>
