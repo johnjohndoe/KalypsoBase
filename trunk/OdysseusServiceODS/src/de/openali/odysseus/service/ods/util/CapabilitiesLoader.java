@@ -215,14 +215,14 @@ public class CapabilitiesLoader
 
     // Chart-Info
     xmlChart.setId( model.getId() );
-    final TitleTypeBean[] titleBeans = model.getTitles();
+    final TitleTypeBean[] titleBeans = model.getSettings().getTitles();
     final String[] titleArray = new String[titleBeans.length];
     for( int i = 0; i < titleBeans.length; i++ )
     {
       titleArray[i] = titleBeans[i].getText();
     }
     xmlChart.setTitleArray( titleArray );
-    xmlChart.setDescription( model.getDescription() );
+    xmlChart.setDescription( model.getSettings().getDescription() );
 
     // Layer
     final LayersOfferingType xmlLayers = xmlChart.addNewLayers();

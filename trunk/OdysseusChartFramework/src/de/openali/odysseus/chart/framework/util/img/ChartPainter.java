@@ -92,7 +92,7 @@ public class ChartPainter
     m_legendSize = m_legendPainter.getSize();
 
     m_titlePainter = new ChartTitlePainter2();// new ChartTitlePainter( model, size );
-    m_titlePainter.addTitle( model.getTitles() );
+    m_titlePainter.addTitle( model.getSettings().getTitles() );
 
     final int top = m_titlePainter.getSize().y + axisTopWidth;
     final int bottom = m_legendSize.y + axisBottomWidth;
