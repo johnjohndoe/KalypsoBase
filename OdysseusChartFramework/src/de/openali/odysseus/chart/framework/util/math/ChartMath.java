@@ -8,8 +8,11 @@ import org.eclipse.swt.graphics.Point;
 /**
  * @author alibu
  */
-public class ChartMath
+public final class ChartMath
 {
+  private ChartMath( )
+  {
+  }
 
   /**
    * Calculates angle alpha from an acute-angled triangle defined by the points pointA, pointB, pointC using the law of

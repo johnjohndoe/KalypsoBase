@@ -125,7 +125,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     }
   }
 
-  private final String fitToFixedWidth( final String line, final int width )
+  private String fitToFixedWidth( final String line, final int width )
   {
     if( width < 1 )
       return line;
@@ -146,7 +146,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     return m_borderLine;
   }
 
-  private final Point getImageSize( final String text )
+  private Point getImageSize( final String text )
   {
     final Device device = PlatformUI.getWorkbench().getDisplay();
     final ImageData imageData = loadImage( device, text.substring( 4 ) );
@@ -251,7 +251,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     return m_borderLine != null && m_borderLine.isVisible();
   }
 
-  private final boolean isImageURL( final String text )
+  private boolean isImageURL( final String text )
   {
     return text.startsWith( "URL:" );
   }

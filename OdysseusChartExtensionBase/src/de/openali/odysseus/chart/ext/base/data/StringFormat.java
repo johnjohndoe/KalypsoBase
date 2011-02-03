@@ -46,7 +46,6 @@ import java.text.ParsePosition;
 
 /**
  * @author alibu
- * 
  */
 public class StringFormat extends Format
 {
@@ -55,7 +54,7 @@ public class StringFormat extends Format
    * @see java.text.Format#format(java.lang.Object, java.lang.StringBuffer, java.text.FieldPosition)
    */
   @Override
-  public StringBuffer format( Object obj, StringBuffer toAppendTo, FieldPosition pos )
+  public StringBuffer format( final Object obj, final StringBuffer toAppendTo, final FieldPosition pos )
   {
     return toAppendTo.append( (String) obj );
   }
@@ -64,7 +63,7 @@ public class StringFormat extends Format
    * @see java.text.Format#parseObject(java.lang.String, java.text.ParsePosition)
    */
   @Override
-  public Object parseObject( String source, ParsePosition pos )
+  public Object parseObject( final String source, final ParsePosition pos )
   {
     return source.substring( pos.getIndex(), source.length() - 1 );
   }

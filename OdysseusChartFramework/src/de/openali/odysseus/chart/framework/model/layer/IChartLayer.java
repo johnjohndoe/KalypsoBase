@@ -104,6 +104,7 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
 
   void setParent( ILayerContainer parent );
 
+  @Override
   ILayerContainer getParent( );
 
   ILayerProvider getProvider( );
