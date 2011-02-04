@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
@@ -21,7 +22,6 @@ import org.w3c.dom.NodeList;
 import de.openali.odysseus.chart.factory.util.AxisUtils;
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
-import de.openali.odysseus.chart.framework.util.IOUtils;
 import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.AreaStyleDocument;
 import de.openali.odysseus.chartconfig.x020.AreaStyleType;
@@ -59,6 +59,11 @@ public class ChartConfigurationLoader implements IReferenceResolver
   public ChartConfigurationLoader( final URL url ) throws XmlException, IOException
   {
     m_document = ChartConfigurationDocument.Factory.parse( url );
+  }
+
+  public ChartConfigurationLoader( final Node node ) throws XmlException
+  {
+    m_document = ChartConfigurationDocument.Factory.parse( node );
   }
 
   public ChartConfigurationLoader( final InputStream is ) throws XmlException, IOException
@@ -231,19 +236,19 @@ public class ChartConfigurationLoader implements IReferenceResolver
       final Node idAtt = atts.getNamedItem( "id" );
       if( idAtt != null )
         try
-        {
+      {
           m_idMap.put( idAtt.getNodeValue(), createXmlObjectFromNode( node ) );
-        }
-        catch( final DOMException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
-        catch( final XmlException e )
-        {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
+      }
+      catch( final DOMException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      catch( final XmlException e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
     if( node.hasChildNodes() )
     {
