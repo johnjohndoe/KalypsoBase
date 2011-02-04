@@ -65,6 +65,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
@@ -292,7 +293,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( m_lineStyle_hover == null )
     {
       m_lineStyle_hover = getLineStyle().copy();
-      m_lineStyle_hover.setDash( 0F, HOVER_DASH );
+      m_lineStyle_hover.setDash( 0f, HOVER_DASH);
+      m_lineStyle_hover.setLineCap( LINECAP.FLAT );
     }
     return m_lineStyle_hover;
   }

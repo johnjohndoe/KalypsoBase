@@ -250,9 +250,9 @@ public class LayerManager implements ILayerManager
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getLayers(de.openali.odysseus.chart.framework.model.mapper.IAxis)
    */
   @Override
-  public IChartLayer[] getLayers( final IAxis axis )
+  public IChartLayer[] getLayers( final IAxis axis, final boolean recursive )
   {
-    final FindAxisLayerVisitor visitor = new FindAxisLayerVisitor( axis );
+    final FindAxisLayerVisitor visitor = new FindAxisLayerVisitor( axis, recursive );
     accept( visitor );
 
     return visitor.getLayers();

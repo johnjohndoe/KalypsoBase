@@ -48,5 +48,5 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
 
   LayerManagerEventHandler getEventHandler( );
 
-  IChartLayer[] getLayers( IAxis axis );
+  IChartLayer[] getLayers( IAxis axis, boolean recursive );
 }

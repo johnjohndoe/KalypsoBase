@@ -53,7 +53,7 @@ public class MaximizeViewHandler extends AbstractHandler
     final Set<Number> screenMaxsVert = new HashSet<Number>();
     for( final IAxis axis : axes )
     {
-      final IChartLayer[] layers = model.getLayerManager().getLayers( axis );
+      final IChartLayer[] layers = model.getLayerManager().getLayers( axis,false );
       if( ArrayUtils.isEmpty( layers ) )
         continue;
 
