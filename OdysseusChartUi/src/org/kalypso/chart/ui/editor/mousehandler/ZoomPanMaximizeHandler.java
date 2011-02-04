@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
@@ -56,11 +57,34 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
 {
+  public enum DIRECTION
+  {
+    eHorizontal,
+    eVertical,
+    eBoth;
+
+    public static DIRECTION getDirection( final String parameter )
+    {
+      if( parameter == null )
+        return eBoth;
+
+      if( "HORIZONTAL".equals( parameter ) )
+        return eHorizontal;
+      else if( "VERTICAL".equals( parameter ) )
+        return eVertical;
+
+      return eBoth;
+    }
+  }
+
   private int m_button = -1;
 
-  public ZoomPanMaximizeHandler( final IChartComposite chartComposite )
+  private final DIRECTION m_direction;
+
+  public ZoomPanMaximizeHandler( final IChartComposite chartComposite, final DIRECTION direction )
   {
     super( chartComposite, 5, SWT.BUTTON1 | SWT.BUTTON2 | SWT.BUTTON3, SWT.CURSOR_ARROW );
+    m_direction = direction;
   }
 
   /**
@@ -82,7 +106,17 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
 
   protected void doMouseMovePan( final Point start, final EditInfo editInfo )
   {
-    getChart().setPanOffset( null, start, editInfo.m_pos );
+    if( DIRECTION.eBoth.equals( m_direction ) )
+    {
+      getChart().setPanOffset( null, start, editInfo.m_pos );
+    }
+    else if( DIRECTION.eHorizontal.equals( m_direction ) )
+    {
+      final Point end = new Point( editInfo.m_pos.x, start.y );
+      getChart().setPanOffset( null, start, end );
+    }
+    else
+      throw new NotImplementedException();
   }
 
   protected void doMouseMoveZoom( final Point end, final EditInfo editInfo )
