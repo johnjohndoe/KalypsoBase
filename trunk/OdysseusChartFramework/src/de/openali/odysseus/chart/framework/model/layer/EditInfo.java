@@ -9,41 +9,90 @@ import de.openali.odysseus.chart.framework.model.figure.IPaintable;
  * @author Gernot Belger
  * @author burtscher1
  */
-public class EditInfo
+public class EditInfo implements Cloneable
 {
-  public final IPaintable m_hoverFigure;
+  private final IPaintable m_hoverFigure;
 
-  public final IPaintable m_editFigure;
+  private final IPaintable m_editFigure;
 
-  public final ITooltipChartLayer m_layer;
+  private final ITooltipChartLayer m_layer;
 
-  public final Object m_data;
+  private final Object m_data;
 
-  public Point m_pos;
+  private Point m_position;
 
-  public String m_text;
+  private String m_text;
 
-  public int m_mouseButton;
+  private int m_mouseButton;
 
-  public EditInfo( final ITooltipChartLayer editLayer, final IPaintable hoverFigure, final IPaintable editFigure, final Object editData, final String editText, final Point mousePos )
+  public EditInfo( final ITooltipChartLayer editLayer, final IPaintable hoverFigure, final IPaintable editFigure, final Object editData, final String editText, final Point mousePosition )
   {
     m_layer = editLayer;
     m_hoverFigure = hoverFigure;
     m_editFigure = editFigure;
     m_data = editData;
-    m_text = editText;
-    m_pos = mousePos;
-    m_mouseButton = SWT.NONE;
+
+    setText( editText );
+    setPosition( mousePosition );
+    setMouseButton( SWT.NONE );
   }
 
-  public EditInfo( final EditInfo copyInfo )
+  /**
+   * @see java.lang.Object#clone()
+   */
+  @Override
+  public EditInfo clone( )
   {
-    m_layer = copyInfo.m_layer;
-    m_hoverFigure = copyInfo.m_hoverFigure;
-    m_editFigure = copyInfo.m_editFigure;
-    m_data = copyInfo.m_data;
-    m_text = copyInfo.m_text;
-    m_pos = copyInfo.m_pos;
-    m_mouseButton = copyInfo.m_mouseButton;
+    return new EditInfo( getLayer(), getHoverFigure(), getEditFigure(), getData(), getText(), getPosition() );
+  }
+
+  public IPaintable getHoverFigure( )
+  {
+    return m_hoverFigure;
+  }
+
+  public IPaintable getEditFigure( )
+  {
+    return m_editFigure;
+  }
+
+  public ITooltipChartLayer getLayer( )
+  {
+    return m_layer;
+  }
+
+  public Object getData( )
+  {
+    return m_data;
+  }
+
+  public void setPosition( final Point position )
+  {
+    m_position = position;
+  }
+
+  public Point getPosition( )
+  {
+    return m_position;
+  }
+
+  public void setText( final String text )
+  {
+    m_text = text;
+  }
+
+  public String getText( )
+  {
+    return m_text;
+  }
+
+  public void setMouseButton( final int mouseButton )
+  {
+    m_mouseButton = mouseButton;
+  }
+
+  public int getMouseButton( )
+  {
+    return m_mouseButton;
   }
 }

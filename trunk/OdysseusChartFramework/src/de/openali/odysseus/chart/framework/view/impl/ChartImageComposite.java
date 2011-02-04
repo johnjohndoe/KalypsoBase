@@ -343,11 +343,11 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     if( m_editInfo == null )
       return;
     // draw hover shape
-    if( m_editInfo.m_hoverFigure != null )
-      m_editInfo.m_hoverFigure.paint( gc );
+    if( m_editInfo.getHoverFigure() != null )
+      m_editInfo.getHoverFigure().paint( gc );
     // draw edit shape
-    if( m_editInfo.m_editFigure != null )
-      m_editInfo.m_editFigure.paint( gc );
+    if( m_editInfo.getEditFigure() != null )
+      m_editInfo.getEditFigure().paint( gc );
 
   }
 
@@ -355,8 +355,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   {
     if( m_tooltipInfo == null )
       return;
-    m_tooltipPainter.setTooltip( m_tooltipInfo.m_text );
-    m_tooltipPainter.paint( gc, m_tooltipInfo.m_pos );
+    m_tooltipPainter.setTooltip( m_tooltipInfo.getText() );
+    m_tooltipPainter.paint( gc, m_tooltipInfo.getPosition() );
   }
 
   @Override

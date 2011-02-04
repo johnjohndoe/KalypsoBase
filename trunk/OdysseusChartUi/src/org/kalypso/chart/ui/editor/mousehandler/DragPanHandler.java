@@ -120,7 +120,7 @@ public class DragPanHandler extends AbstractChartDragHandler
       final IChartModel model = getChart().getChartModel();
       final IMapperRegistry registry = model.getMapperRegistry();
 
-      registry.accept( new PanToVisitor( start, editInfo.m_pos ) );
+      registry.accept( new PanToVisitor( start, editInfo.getPosition() ) );
     }
 
     /** update active point */
@@ -134,7 +134,7 @@ public class DragPanHandler extends AbstractChartDragHandler
   @Override
   public void doMouseMoveAction( final Point start, final EditInfo editInfo )
   {
-    getChart().setPanOffset( null, start, editInfo.m_pos );
+    getChart().setPanOffset( null, start, editInfo.getPosition() );
   }
 
 }

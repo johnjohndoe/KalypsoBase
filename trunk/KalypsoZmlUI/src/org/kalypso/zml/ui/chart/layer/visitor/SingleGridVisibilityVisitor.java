@@ -41,8 +41,11 @@
 package org.kalypso.zml.ui.chart.layer.visitor;
 
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer;
+import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -65,12 +68,52 @@ public class SingleGridVisibilityVisitor implements IChartLayerVisitor
     {
       if( layer instanceof DefaultTickRasterLayer )
       {
-        layer.setVisible( m_visibility );
-        m_visibility = false;
+        if( isValid( layer ) )
+        {
+          layer.setVisible( m_visibility );
+          m_visibility = false;
+        }
+        else
+          layer.setVisible( false );
+
       }
 
       layer.getLayerManager().accept( this );
     }
+  }
+
+  private boolean isValid( final IChartLayer layer )
+  {
+    final ICoordinateMapper mapper = layer.getCoordinateMapper();
+
+    final IAxis domainAxis = mapper.getDomainAxis();
+    final IAxis targetAxis = mapper.getTargetAxis();
+    if( Objects.isNull( domainAxis, targetAxis ) )
+      return false;
+
+    /** contains data? or perhaps it's an empty layer? */
+    final ILayerContainer plainLayer = layer.getParent();
+    final IZmlLayer zmlLayer = findZmlLayer( plainLayer );
+    if( zmlLayer == null )
+      return false;
+
+    final IZmlLayerDataHandler handler = zmlLayer.getDataHandler();
+    if( handler.getObservation() == null )
+      return false;
+
+    return true;
+  }
+
+  private IZmlLayer findZmlLayer( final ILayerContainer plainLayer )
+  {
+    final IChartLayer[] layers = plainLayer.getLayerManager().getLayers();
+    for( final IChartLayer layer : layers )
+    {
+      if( layer instanceof IZmlLayer )
+        return (IZmlLayer) layer;
+    }
+
+    return null;
   }
 
   private boolean isVisible( final IChartLayer layer )

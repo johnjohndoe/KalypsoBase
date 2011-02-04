@@ -71,7 +71,7 @@ public class DragZoomOutHandler extends AbstractChartDragHandler
 
     try
     {
-      final ZoomOutVisitor visitor = new ZoomOutVisitor( getChart().screen2plotPoint( editInfo.m_pos ), getChart().screen2plotPoint( end ) );
+      final ZoomOutVisitor visitor = new ZoomOutVisitor( getChart().screen2plotPoint( editInfo.getPosition() ), getChart().screen2plotPoint( end ) );
 
       final IChartModel model = getChart().getChartModel();
       model.getMapperRegistry().accept( visitor );
@@ -89,7 +89,7 @@ public class DragZoomOutHandler extends AbstractChartDragHandler
   @Override
   public void doMouseMoveAction( final Point end, final EditInfo editInfo )
   {
-    final Point start = editInfo.m_pos;
+    final Point start = editInfo.getPosition();
     final Point pos = getChart().plotPoint2screen( end );
     getChart().setDragArea( new Rectangle( start.x, start.y, pos.x - start.x, pos.y - start.y ) );
   }

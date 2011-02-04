@@ -244,16 +244,16 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
   {
     if( editInfo != null )
     {
-      final int pos = (Integer) editInfo.m_data;
+      final int pos = (Integer) editInfo.getData();
 
       // m_targetData.set( pos, newTarVal );
       // getEventHandler().fireLayerContentChanged( this );
       final boolean isHorizontal = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? true : false;
       Point editPoint;
       if( isHorizontal )
-        editPoint = new Point( editInfo.m_pos.x, point.y );
+        editPoint = new Point( editInfo.getPosition().x, point.y );
       else
-        editPoint = new Point( point.x, editInfo.m_pos.y );
+        editPoint = new Point( point.x, editInfo.getPosition().y );
 
       final EditInfo newEditInfo = createEditInfo( editPoint, pos, true );
       return newEditInfo;
@@ -365,7 +365,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
   public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
     final boolean isHorizontal = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? true : false;
-    final int pos = (Integer) dragStartData.m_data;
+    final int pos = (Integer) dragStartData.getData();
     // Der Domain-Wert soll bleiben, der Target-Wert kann verändert werden
     Number newTarVal;
     if( isHorizontal )

@@ -143,7 +143,7 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
       m_clickInfo = new EditInfo( null, null, null, null, null, getChart().screen2plotPoint( down ) );
 
     // offset from cursor relative to the given InfoObject Center
-    final Point pos = getChart().plotPoint2screen( m_clickInfo.m_pos );
+    final Point pos = getChart().plotPoint2screen( m_clickInfo.getPosition() );
     m_deltaSnapX = down.x - pos.x;
     m_deltaSnapY = down.y - pos.y;
     m_startX = down.x;
@@ -165,7 +165,7 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
   protected void mouseMove( final Point move )
   {
     if( (m_editInfo == null) && ((Math.abs( move.x - m_startX ) > m_trashOld) || (Math.abs( move.y - m_startY ) > m_trashOld)) )
-      m_editInfo = new EditInfo( m_clickInfo );
+      m_editInfo = m_clickInfo.clone();
 
     final Point plotPoint = getChart().screen2plotPoint( new Point( move.x - m_deltaSnapX, move.y - m_deltaSnapY ) );
     doMouseMoveAction( plotPoint, m_editInfo == null ? m_clickInfo : m_editInfo );
@@ -234,8 +234,8 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
 
   protected void updateSelection( final EditInfo editInfo )
   {
-    if( editInfo != null && editInfo.m_layer != null )
-      ((IEditableChartLayer) editInfo.m_layer).commitDrag( editInfo.m_pos, editInfo );
+    if( editInfo != null && editInfo.getLayer() != null )
+      ((IEditableChartLayer) editInfo.getLayer()).commitDrag( editInfo.getPosition(), editInfo );
   }
 
 }
