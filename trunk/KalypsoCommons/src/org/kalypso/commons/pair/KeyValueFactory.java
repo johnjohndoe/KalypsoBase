@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.pair;
 
-import org.kalypso.commons.internal.i18n.pair.DefaultKeyValue;
-import org.kalypso.commons.internal.i18n.pair.KeyValueEqualsKey;
-import org.kalypso.commons.internal.i18n.pair.KeyValueEqualsValue;
+import org.kalypso.commons.internal.pair.DefaultKeyValue;
+import org.kalypso.commons.internal.pair.KeyValueEqualsKey;
+import org.kalypso.commons.internal.pair.KeyValueEqualsValue;
 
 /**
  * Creates different instances of {@link IKeyValue} implementations.
