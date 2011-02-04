@@ -45,6 +45,7 @@ import java.awt.geom.Point2D;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -197,7 +198,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     final Object data = clickInfo.m_data;
     final Integer pos = data instanceof Integer ? (Integer) data : null;
     final IComponent cmp = getTargetComponent();
-    if( cmp != null && pos != null )
+    if( !Objects.isNull( cmp, pos ) )
     {
       final IProfil profil = getProfil();
       profil.setActivePoint( profil.getPoint( pos ) );
@@ -232,8 +233,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
       return null;
     final Double max = ProfilUtil.getMaxValueFor( getProfil(), getDomainComponent() );
     final Double min = ProfilUtil.getMinValueFor( getProfil(), getDomainComponent() );
-    if( (min == null) || (max == null) )
+    if( Objects.isNull( min, max ) )
       return null;
+
     return new DataRange<Number>( min, max );
   }
 
@@ -382,12 +384,15 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     final int targetPropertyIndex = getTargetPropertyIndex();
     if( getCoordinateMapper() == null || targetPropertyIndex == -1 )
       return null;
+
     final Double max = ProfilUtil.getMaxValueFor( getProfil(), targetPropertyIndex );
     final Double min = ProfilUtil.getMinValueFor( getProfil(), targetPropertyIndex );
-    if( (min == null) || (max == null) )
+    if( Objects.isNull( min, max ) )
       return null;
+
     if( Math.abs( min - max ) < 0.001 )
       return new DataRange<Number>( min - 1, min + 1 );
+
     return new DataRange<Number>( min, max );
   }
 
@@ -406,8 +411,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   public String getTooltipInfo( final IRecord point )
   {
-    if( point == null || (getTargetComponent() == null) || (getDomainComponent() == null) )
+    if( Objects.isNull( point, getTargetComponent(), getDomainComponent() ) )
       return ""; //$NON-NLS-1$
+
     try
     {
       final Point2D p = getPoint2D( point );
