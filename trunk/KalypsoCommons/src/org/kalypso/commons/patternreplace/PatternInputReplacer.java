@@ -69,23 +69,23 @@ public class PatternInputReplacer<T>
 {
   private final Map<String, IPatternInput<T>> m_replacers = new LinkedHashMap<String, IPatternInput<T>>();
 
-  private final char m_patternStart;
+  private final String m_patternStart;
 
-  private final char m_patternStop;
+  private final String m_patternStop;
 
   private Pattern m_tokenPattern;
 
   public PatternInputReplacer( )
   {
-    this( '<', '>' );
+    this( "<", ">" );
   }
 
-  public PatternInputReplacer( final char patternStart, final char patternStop )
+  public PatternInputReplacer( final String patternStart, final String patternStop )
   {
     m_patternStart = patternStart;
     m_patternStop = patternStop;
 
-    final String pattern = String.format( "\\%s(.*?)(:(.*))?\\%s", m_patternStart, m_patternStop );
+    final String pattern = String.format( "%s(.*?)(:(.*))?%s", Pattern.quote( m_patternStart ), Pattern.quote( m_patternStop ) );
 
     m_tokenPattern = Pattern.compile( pattern );
   }
@@ -123,13 +123,17 @@ public class PatternInputReplacer<T>
       final IPatternInput<T> tokenReplacer = getMatchedTokenReplacer( matcher );
       final String params = getMatchedParameters( matcher );
 
-      if( tokenReplacer != null )
+      if( tokenReplacer == null )
       {
-        final String replacement = tokenReplacer.getReplacement( context, params );
-        matcher.appendReplacement( result, replacement );
+        // Append the (non-replaced) pattern itself, so we do not change the content
+        final String group = matcher.group();
+        matcher.appendReplacement( result, Matcher.quoteReplacement( group ) );
       }
       else
-        matcher.appendReplacement( result, matcher.group() );
+      {
+        final String replacement = tokenReplacer.getReplacement( context, params );
+        matcher.appendReplacement( result, Matcher.quoteReplacement( replacement ) );
+      }
     }
 
     matcher.appendTail( result );
@@ -153,7 +157,7 @@ public class PatternInputReplacer<T>
     return m_tokenPattern.matcher( pattern );
   }
 
-  private IPatternInput<T> getReplacer( final String token )
+  protected IPatternInput<T> getReplacer( final String token )
   {
     return m_replacers.get( token );
   }
