@@ -41,11 +41,7 @@
 package org.kalypso.zml.ui.chart.layer.visitor;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
 
-import de.openali.odysseus.chart.ext.base.layer.DefaultTextLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
@@ -61,11 +57,8 @@ public class SetBaseLayerVisibilityVisitor implements IChartLayerVisitor
 
   private final String[] m_ignoreTypes;
 
-  private final IObsProvider[] m_providers;
-
-  public SetBaseLayerVisibilityVisitor( final IObsProvider[] providers, final String[] currentIgnoreTypes )
+  public SetBaseLayerVisibilityVisitor( final String[] currentIgnoreTypes )
   {
-    m_providers = providers;
     m_ignoreTypes = currentIgnoreTypes;
   }
 
@@ -77,63 +70,20 @@ public class SetBaseLayerVisibilityVisitor implements IChartLayerVisitor
   @Override
   public void visit( final IChartLayer layer )
   {
-    if( layer instanceof DefaultTextLayer )
+    final ILayerManager layerManager = layer.getLayerManager();
+    final IChartLayer[] children = layerManager.getLayers();
+
+    final String axisType = getTargetAxis( layer );
+    if( ArrayUtils.contains( m_ignoreTypes, axisType ) )
     {
-      if( NO_DATA_LAYER.equals( layer.getId() ) )
-      {
-        layer.setVisible( isVisible() );
-      }
+      layer.setVisible( false );
+      setVisibility( children, false );
     }
     else
     {
-      final ILayerManager layerManager = layer.getLayerManager();
-      final IChartLayer[] children = layerManager.getLayers();
-
-      final String axisType = getTargetAxis( layer );
-      if( ArrayUtils.contains( m_ignoreTypes, axisType ) )
-      {
-        layer.setVisible( false );
-        setVisibility( children, false );
-      }
-      else
-      {
-        layer.setVisible( true );
-        setVisibility( children, true );
-      }
+      layer.setVisible( true );
+      setVisibility( children, true );
     }
-  }
-
-  /**
-   * @return no_data_layer is visible
-   */
-  private boolean isVisible( )
-  {
-    if( ArrayUtils.isEmpty( m_providers ) )
-      return true;
-
-    // TODO instead provider.isLoaded() -> provider.isValid()
-    for( final IObsProvider provider : m_providers )
-    {
-      if( provider.isValid() )
-      {
-        try
-        {
-          final IObservation observation = provider.getObservation();
-          if( observation == null )
-            return false;
-
-          final ITupleModel model = observation.getValues( null );
-          if( model.size() > 0 )
-            return false;
-        }
-        catch( final Throwable t )
-        {
-          t.printStackTrace();
-        }
-      }
-    }
-
-    return true;
   }
 
   private void setVisibility( final IChartLayer[] layers, final boolean visibility )
