@@ -80,6 +80,7 @@ public class SynchronousObservationProvider extends AbstractObsProvider
     catch( final Throwable t )
     {
       load( new URL( context.toURI().toString() + "/" + href ) );
+      // FIXME: the observation provider should never throw an exception?!
     }
   }
 

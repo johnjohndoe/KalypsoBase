@@ -78,18 +78,22 @@ public class ZmlConstantLineLayerProvider extends AbstractLayerProvider implemen
       final ZmlConstantLineLayer layer = factory.createConstantLineLayer( parameters, getStyleSet(), false );
       final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, getTargetAxisId() );
 
+      // BAD; the layer should handle the observation, especially, thew layer should still load even if observation does
+      // not exist!
       final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
       if( StringUtils.isNotEmpty( href ) )
       {
         final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, new ZmlLayerRequestHandler( parameters ) );
         handler.setObsProvider( provider );
+        // FIXME: throwing an exception here causes the layer (and also the whole diagram not to load) -> we got a
+        // problem!
       }
 
       return layer;
     }
     catch( final Throwable t )
     {
-      throw new ConfigurationException( "Configuring of .kod line layer theme failed.", t );
+      throw new ConfigurationException( "Configuration of .kod line layer theme failed.", t );
     }
   }
 }
