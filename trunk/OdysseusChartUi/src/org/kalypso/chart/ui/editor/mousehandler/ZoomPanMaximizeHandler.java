@@ -78,20 +78,19 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
     {
       doMouseMovePan( end, editInfo );
     }
-
   }
 
-  private void doMouseMovePan( final Point start, final EditInfo editInfo )
+  protected void doMouseMovePan( final Point start, final EditInfo editInfo )
   {
     getChart().setPanOffset( null, start, editInfo.m_pos );
   }
 
-  private void doMouseMoveZoom( final Point end, final EditInfo editInfo )
+  protected void doMouseMoveZoom( final Point end, final EditInfo editInfo )
   {
     getChart().setDragArea( new Rectangle( editInfo.m_pos.x, editInfo.m_pos.y, end.x - editInfo.m_pos.x, end.y - editInfo.m_pos.y ) );
   }
 
-  private void doMouseMaximize( )
+  protected void doMouseMaximize( )
   {
     getChart().getChartModel().autoscale();
   }
