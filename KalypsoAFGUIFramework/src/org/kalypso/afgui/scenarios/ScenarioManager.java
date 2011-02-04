@@ -62,7 +62,7 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
    *              <li>The metadata folder is not accessible.</li>
    *              <li>There is a problem loading the database.</li>
    */
-  public ScenarioManager( final IProject project ) throws CoreException
+  public ScenarioManager( final IProject project )
   {
     super( project, JC_SCENARIO );
   }
@@ -181,7 +181,7 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
     {
       KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
 
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.afgui.scenarios.ScenarioManager.3"), e ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.afgui.scenarios.ScenarioManager.3" ), e ) ); //$NON-NLS-1$
     }
 
   }
@@ -203,7 +203,7 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
       // only remove if no derived scenarios
       if( derivedScenarios != null && !derivedScenarios.getScenarios().isEmpty() )
       {
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.afgui.scenarios.ScenarioManager.5" ) ) ); //$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.afgui.scenarios.ScenarioManager.5" ) ) ); //$NON-NLS-1$
       }
       final IScenario parentScenario = scenario.getParentScenario();
       if( parentScenario == null )
@@ -249,8 +249,6 @@ public class ScenarioManager extends AbstractCaseManager<IScenario> implements I
   @Override
   public List<IScenario> getCases( )
   {
-    // FIXME
-
     final List<IScenario> resultList = new ArrayList<IScenario>();
     final List<ICase> internalCases = internalGetCases();
     for( final ICase caze : internalCases )

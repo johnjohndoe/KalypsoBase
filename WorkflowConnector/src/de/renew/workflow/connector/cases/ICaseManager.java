@@ -44,12 +44,16 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 
 /**
  * @author Stefan Kurzbach
  */
 public interface ICaseManager<T extends ICase>
 {
+  /** The status of this case manager, will be set to non-ok, if the cases could not be loaded. */
+  IStatus getStatus( );
+
   /**
    * Returns the current case
    */

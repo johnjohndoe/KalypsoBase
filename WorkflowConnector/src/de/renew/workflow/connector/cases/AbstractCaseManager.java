@@ -82,6 +82,8 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
 
   private final IFile m_metaDataFile;
 
+  private IStatus m_status = Status.OK_STATUS;
+
   /**
    * Initializes the {@link ICaseManager} on the given project
    * 
@@ -93,28 +95,38 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
    *              <li>The metadata folder is not accessible.</li>
    *              <li>There is a problem loading the database.</li>
    */
-  public AbstractCaseManager( final IProject project, final JAXBContext jc ) throws CoreException
+  public AbstractCaseManager( final IProject project, final JAXBContext jc )
   {
     m_jc = jc;
     m_project = project;
 
     final IFolder folder = project.getFolder( METADATA_FOLDER );
-    if( !folder.exists() )
-    {
-      try
-      {
-        folder.create( false, true, null );
-      }
-      catch( final CoreException e )
-      {
-        // ignore
-        e.printStackTrace();
-      }
-    }
+    m_metaDataFile = folder.getFile( METADATA_FILENAME );
+    /* Prepare for exception: case-list with not cases */
+    m_cases = new CaseListHandler( new CaseList(), m_project );
 
-    final IFile metadataFile = folder.getFile( METADATA_FILENAME );
-    m_metaDataFile = metadataFile;
-    loadModel();
+    try
+    {
+      if( !folder.exists() )
+        folder.create( false, true, null );
+      loadModel();
+    }
+    catch( final CoreException e )
+    {
+      // ignore
+      // evil: if this fails, the next step wil fail too, so we could also throw the exception...
+      e.printStackTrace();
+      m_status = e.getStatus();
+    }
+  }
+
+  /**
+   * @see de.renew.workflow.connector.cases.ICaseManager#getStatus()
+   */
+  @Override
+  public IStatus getStatus( )
+  {
+    return m_status;
   }
 
   private void loadModel( ) throws CoreException

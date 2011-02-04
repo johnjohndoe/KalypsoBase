@@ -28,7 +28,7 @@ import de.renew.workflow.connector.cases.ICaseManager;
  */
 public class ActiveWorkContext<T extends ICase> implements IResourceChangeListener
 {
-  private ICaseManager<T> m_caseManager;
+  // private ICaseManager<T> m_caseManager;
 
   private CaseHandlingProjectNature<T> m_currentProjectNature;
 
@@ -52,22 +52,29 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
   /**
    * Sets the active case handling project
    */
-  protected void setCurrentProject( final CaseHandlingProjectNature<T> currentProject ) throws CoreException
+  private void setCurrentProject( final CaseHandlingProjectNature<T> nature )
   {
-    if( m_currentProjectNature == currentProject )
-    {
+    if( m_currentProjectNature == nature )
       return;
+
+    final IProject project = nature == null ? null : nature.getProject();
+
+    // FIXME: set caze of old case manager to null in order to unload data
+    if( m_currentProjectNature != null )
+    {
+      // Deactivate the current case here, if the project changes, as each project has a separate caseManager
+      final IProject currentProject = m_currentProjectNature.getProject();
+      if( !project.equals( currentProject ) )
+        m_currentProjectNature.getCaseManager().setCurrentCase( null );
     }
 
-    if( currentProject == null )
+    if( nature == null )
     {
       m_currentProjectNature = null;
-      m_caseManager = null;
       return;
     }
 
-    m_currentProjectNature = currentProject;
-    m_caseManager = currentProject.getCaseManager();
+    m_currentProjectNature = nature;
   }
 
   public CaseHandlingProjectNature<T> getCurrentProject( )
@@ -80,12 +87,19 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
    */
   public T getCurrentCase( )
   {
-    if( m_caseManager == null )
-    {
+    final ICaseManager<T> caseManager = getCaseManager();
+    if( caseManager == null )
       return null;
-    }
 
-    return m_caseManager.getCurrentCase();
+    return caseManager.getCurrentCase();
+  }
+
+  private ICaseManager<T> getCaseManager( )
+  {
+    if( m_currentProjectNature == null )
+      return null;
+
+    return m_currentProjectNature.getCaseManager();
   }
 
   public void addActiveContextChangeListener( final IActiveScenarioChangeListener<T> l )
@@ -111,22 +125,17 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
 
   public synchronized void setCurrentCase( final T caze ) throws CoreException
   {
-    final T currentCase = m_caseManager == null ? null : m_caseManager.getCurrentCase();
+    final ICaseManager<T> currentCaseManager = getCaseManager();
+    final T currentCase = currentCaseManager == null ? null : currentCaseManager.getCurrentCase();
     if( currentCase == null && caze == null )
-    {
       return;
-    }
 
     if( caze != null && currentCase != null && currentCase.getURI().equals( caze.getURI() ) && currentCase.getProject().equals( caze.getProject() ) )
-    {
       return;
-    }
 
     // Set current project to the cases project
     if( caze == null )
-    {
       setCurrentProject( null );
-    }
     else
     {
       final IProject project = caze.getProject();
@@ -143,13 +152,11 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
       }
     }
 
-    if( m_caseManager != null )
-    {
-      m_caseManager.setCurrentCase( caze );
-    }
+    final ICaseManager<T> newCaseManager = getCaseManager();
+    if( newCaseManager != null )
+      newCaseManager.setCurrentCase( caze );
 
     fireActiveContextChanged( m_currentProjectNature, caze );
-
   }
 
   /**
