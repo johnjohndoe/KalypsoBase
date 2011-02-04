@@ -77,6 +77,11 @@
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.zoom_pan_maximize"
             name="Zoom / Pan / Maximize">
+         <commandParameter
+               id="direction"
+               name="direction"
+               optional="true">
+         </commandParameter>
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
