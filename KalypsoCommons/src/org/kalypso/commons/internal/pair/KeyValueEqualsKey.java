@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.internal.i18n.pair;
+package org.kalypso.commons.internal.pair;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.commons.pair.IKeyValue;
