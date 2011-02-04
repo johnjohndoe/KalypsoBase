@@ -36,7 +36,7 @@ public class ChartModel implements IChartModel
   @Override
   public void autoscale( final IAxis... axes )
   {
-    final AutoScaleVisitor visitor = new AutoScaleVisitor( this );
+    final AutoScaleVisitor visitor = new AutoScaleVisitor( this, true );
 
     // TODO ?!? auto scaled axes will be updated when?!? strange behavior
     final IAxis[] autoscaledAxes = ArrayUtils.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes;

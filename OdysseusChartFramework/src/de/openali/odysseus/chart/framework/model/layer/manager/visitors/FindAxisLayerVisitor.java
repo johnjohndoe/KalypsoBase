@@ -57,9 +57,12 @@ public class FindAxisLayerVisitor implements IChartLayerVisitor
 
   private final IAxis m_axis;
 
-  public FindAxisLayerVisitor( final IAxis axis )
+  private final boolean m_recursive;
+
+  public FindAxisLayerVisitor( final IAxis axis, final boolean recursive )
   {
     m_axis = axis;
+    m_recursive = recursive;
   }
 
   /**
@@ -77,7 +80,8 @@ public class FindAxisLayerVisitor implements IChartLayerVisitor
         m_layers.add( layer );
     }
 
-    layer.getLayerManager().accept( this );
+    if( m_recursive )
+      layer.getLayerManager().accept( this );
   }
 
   public IChartLayer[] getLayers( )

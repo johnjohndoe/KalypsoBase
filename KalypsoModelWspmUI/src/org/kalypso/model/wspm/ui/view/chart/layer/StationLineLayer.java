@@ -118,6 +118,7 @@ public class StationLineLayer extends ComponentLayer
   protected void drawLine( final GC gc, final Rectangle clipping )
   {
     final PolylineFigure pf = new PolylineFigure();
+
     pf.setStyle( getLineStyle_hover() );
     final int lineX = clipping.x + clipping.width / 2;
     pf.setPoints( new Point[] { new Point( lineX, clipping.height ), new Point( lineX, clipping.y ) } );

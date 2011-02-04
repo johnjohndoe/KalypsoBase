@@ -59,10 +59,12 @@ public class AutoScaleVisitor implements IAxisVisitor
 {
 
   private final IChartModel m_model;
+  private final boolean m_recursive;
 
-  public AutoScaleVisitor( final IChartModel model )
+  public AutoScaleVisitor( final IChartModel model, final boolean recursive )
   {
     m_model = model;
+    m_recursive = recursive;
   }
 
   /**
@@ -71,13 +73,13 @@ public class AutoScaleVisitor implements IAxisVisitor
   @Override
   public void visit( final IAxis axis )
   {
-    final IChartLayer[] layers = m_model.getLayerManager().getLayers( axis );
+    final IChartLayer[] layers = m_model.getLayerManager().getLayers( axis, m_recursive );
 
     final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>( layers.length );
 
     for( final IChartLayer layer : layers )
     {
-      if( layer.isVisible() )
+      if( layer.isVisible()  )
       {
         final IDataRange<Number> range = getRangeFor( layer, axis );
         if( range != null )

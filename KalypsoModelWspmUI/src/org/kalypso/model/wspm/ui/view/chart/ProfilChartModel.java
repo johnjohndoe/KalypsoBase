@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
@@ -48,8 +49,10 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 
 import de.openali.odysseus.chart.framework.model.IChartModelState;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
+import de.openali.odysseus.chart.framework.model.impl.visitors.AutoScaleVisitor;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * @author kimwerner
@@ -119,7 +122,23 @@ public class ProfilChartModel extends ChartModel
       updateLayers();
     }
   }
+  
+  /**
+   * automatically scales all given axes; scaling means here: show all available values
+   */
+  @Override
+  public void autoscale( final IAxis... axes )
+  {
+    final AutoScaleVisitor visitor = new AutoScaleVisitor( this, false );
 
+    // TODO ?!? auto scaled axes will be updated when?!? strange behaviour
+    final IAxis[] autoscaledAxes = ArrayUtils.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes;
+    for( final IAxis axis : autoscaledAxes )
+    {
+      visitor.visit( axis );
+    }
+  }
+  
   @Override
   public void dispose( )
   {
