@@ -3,6 +3,7 @@ package de.renew.workflow.connector.context;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -64,7 +65,7 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
     {
       // Deactivate the current case here, if the project changes, as each project has a separate caseManager
       final IProject currentProject = m_currentProjectNature.getProject();
-      if( !project.equals( currentProject ) )
+      if( !ObjectUtils.equals( project, currentProject ) )
         m_currentProjectNature.getCaseManager().setCurrentCase( null );
     }
 
