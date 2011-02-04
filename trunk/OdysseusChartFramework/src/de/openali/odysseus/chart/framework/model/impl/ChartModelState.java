@@ -41,135 +41,51 @@
 package de.openali.odysseus.chart.framework.model.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.IChartModelState;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerState;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.layer.impl.ChartLayerState;
 
 /**
  * @author kimwerner
  */
 public class ChartModelState implements IChartModelState
 {
-  private final String m_activeLayer;
 
-  private final Map<String, Boolean> m_visibleLayer = new HashMap<String, Boolean>();
-
-  private final List< ? > m_positionList;
-
-  public ChartModelState( final ILayerManager mngr )
-  {
-    m_activeLayer = saveStateActive( mngr );
-
-    saveStateVisible( mngr, m_visibleLayer );
-
-    m_positionList = saveStatePosition( mngr );
-
-  }
-
-  private void saveStateVisible( final ILayerManager mngr, final Map<String, Boolean> map )
-  {
-    for( final IChartLayer layer : mngr.getLayers() )
-    {
-      map.put( layer.getId(), layer.isVisible() );
-      saveStateVisible( layer.getLayerManager(), map );
-    }
-  }
-
-  protected final String saveStateActive( final ILayerManager mngr )
-  {
-    for( final IChartLayer layer : mngr.getLayers() )
-    {
-      if( layer.isActive() )
-        return layer.getId();
-    }
-    return ""; //$NON-NLS-1$
-  }
-
-  private List<Object> saveStatePosition( final ILayerManager mngr )
-  {
-    final List<Object> list = new ArrayList<Object>();
-
-    for( final IChartLayer layer : mngr.getLayers() )
-    {
-      list.add( layer.getId() );
-      final List<Object> subList = saveStatePosition( layer.getLayerManager() );
-      list.add( subList );
-    }
-
-    return list;
-  }
-
-  private void restoreStatePosition( final ILayerManager mngr, final List< ? > list )
-  {
-    if( mngr == null || list == null )
-      return;
-
-    int pos = 0;
-    for( final Object o : list )
-    {
-      if( o instanceof List )
-      {
-        @SuppressWarnings("unchecked")
-        final List<Object> l = (List<Object>) o;
-        if( !l.isEmpty() )
-        {
-          final Object id = l.get( 0 );
-          final IChartLayer layer = id == null ? null : mngr.findLayer( id.toString() );
-          if( layer != null )
-          {
-            mngr.moveLayerToPosition( layer, pos++ );
-            restoreStatePosition( layer.getLayerManager(), l );
-          }
-        }
-      }
-      else
-      {
-        final IChartLayer layer = mngr.findLayer( o.toString() );
-        if( layer != null )
-        {
-          mngr.moveLayerToPosition( layer, pos++ );
-        }
-      }
-    }
-  }
-
-  private void restoreStateVisibility( final ILayerManager mngr, final Map<String, Boolean> map )
-  {
-    for( final IChartLayer layer : mngr.getLayers() )
-    {
-      final Boolean visibility = map.get( layer.getId() );
-      if( visibility != null )
-        layer.setVisible( visibility );
-
-      restoreStateVisibility( layer.getLayerManager(), map );
-    }
-  }
+  private final List<IChartLayerState> m_layerStates = new ArrayList<IChartLayerState>();
 
   @Override
   public void restoreState( final IChartModel model )
   {
-    if( model == null )
+    final ILayerManager layerManager = model.getLayerManager();
+    if( layerManager == null || m_layerStates.size() == 0 )
       return;
-    final ILayerManager mngr = model.getLayerManager();
-    if( mngr == null )
-      return;
-    final IChartLayer activelayer = mngr.findLayer( m_activeLayer );
-    if( activelayer != null )
+    for( final IChartLayerState layerState : m_layerStates )
     {
-      activelayer.setActive( true );
+      final IChartLayer chartLayer = layerManager.findLayer( layerState.getID() );
+      if( chartLayer != null )
+        layerState.restoreState( chartLayer );
     }
-    // old active Layer removed, set first layer active
-    else if( mngr.getLayers().length > 0 )
-    {
-      mngr.getLayers()[0].setActive( true );
-    }
-// restoreStatePosition( mngr, m_positionList );
-// restoreStateVisibility( mngr, m_visibleLayer );
+  }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.IChartModelState#storeState(de.openali.odysseus.chart.framework.model.IChartModel)
+   */
+  @Override
+  public void storeState( final IChartModel model )
+  {
+    final ILayerManager layerManager = model == null ? null : model.getLayerManager();
+    if( layerManager == null )
+      return;
+    for( final IChartLayer chartLayer : layerManager.getLayers() )
+    {
+      final IChartLayerState layerState = new ChartLayerState();
+      layerState.storeState( chartLayer );
+      m_layerStates.add( layerState );
+    }
   }
 }

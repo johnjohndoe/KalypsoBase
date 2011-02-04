@@ -22,7 +22,7 @@ public interface IChartModel extends ILayerContainer
 
   void setIdentifier( String identifier );
 
-  IChartModelState getState( );
+ // IChartModelState getState( );
 
   IChartBehaviour getBehaviour( );
 

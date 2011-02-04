@@ -3,7 +3,6 @@ package de.openali.odysseus.chart.framework.model.impl;
 import org.apache.commons.lang.ArrayUtils;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.IChartModelState;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.impl.utils.ChartModelLayerEventListener;
 import de.openali.odysseus.chart.framework.model.impl.visitors.AutoScaleVisitor;
@@ -118,14 +117,14 @@ public class ChartModel implements IChartModel
     return m_settings;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#getState()
-   */
-  @Override
-  public IChartModelState getState( )
-  {
-    return new ChartModelState( getLayerManager() );
-  }
+//  /**
+//   * @see de.openali.odysseus.chart.framework.model.IChartModel#getState()
+//   */
+//  @Override
+//  public IChartModelState getState( )
+//  {
+//    return new ChartModelState( getLayerManager() );
+//  }
 
   /**
    * Maximizes the chart view - that means all the available data of all layers is shown
