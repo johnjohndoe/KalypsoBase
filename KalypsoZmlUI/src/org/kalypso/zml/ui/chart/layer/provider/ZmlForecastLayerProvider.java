@@ -64,16 +64,13 @@ public class ZmlForecastLayerProvider extends AbstractLayerProvider implements I
   @Override
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
-
     try
     {
-      final ZmlForecastLayer layer = new ZmlForecastLayer( this );
-
-      return layer;
+      return new ZmlForecastLayer( this );
     }
     catch( final Throwable t )
     {
-      throw new ConfigurationException( "Configuring of .kod line layer theme failed.", t );
+      throw new ConfigurationException( "Configuration of .kod line layer theme failed.", t );
     }
   }
 
