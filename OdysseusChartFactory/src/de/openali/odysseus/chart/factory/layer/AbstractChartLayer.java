@@ -290,14 +290,6 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public boolean isVisible( )
   {
-    final ILayerManager layerManager = getLayerManager();
-    final IChartLayer[] layers = layerManager.getLayers();
-    for( final IChartLayer layer : layers )
-    {
-      if( layer.isVisible() )
-        return true;
-    }
-
     return m_isVisible;
   }
 
@@ -414,7 +406,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public String toString( )
   {
-    return String.format( "IChartLayer - id: %s", getId() );
+    return String.format( "IChartLayer - id: %s, visible: %s", getId(), Boolean.valueOf( isVisible() ).toString() );
   }
 
   @Override

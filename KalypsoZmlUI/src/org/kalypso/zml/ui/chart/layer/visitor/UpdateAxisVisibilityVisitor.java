@@ -42,22 +42,19 @@ package org.kalypso.zml.ui.chart.layer.visitor;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class SetBaseLayerVisibilityVisitor implements IChartLayerVisitor
+public class UpdateAxisVisibilityVisitor implements IAxisVisitor
 {
   public static final String NO_DATA_LAYER = "noData";
 
   private final String[] m_ignoreTypes;
 
-  public SetBaseLayerVisibilityVisitor( final String[] currentIgnoreTypes )
+  public UpdateAxisVisibilityVisitor( final String[] currentIgnoreTypes )
   {
     m_ignoreTypes = currentIgnoreTypes;
   }
@@ -68,38 +65,16 @@ public class SetBaseLayerVisibilityVisitor implements IChartLayerVisitor
    * @see org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor#accept(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public void visit( final IAxis axis )
   {
-    final ILayerManager layerManager = layer.getLayerManager();
-    final IChartLayer[] children = layerManager.getLayers();
-
-    final String axisType = getTargetAxis( layer );
+    final String axisType = axis.getId();
     if( ArrayUtils.contains( m_ignoreTypes, axisType ) )
     {
-      layer.setVisible( false );
-      setVisibility( children, false );
+      axis.setVisible( false );
     }
     else
     {
-      layer.setVisible( true );
-      setVisibility( children, true );
+      axis.setVisible( true );
     }
-  }
-
-  private void setVisibility( final IChartLayer[] layers, final boolean visibility )
-  {
-    for( final IChartLayer layer : layers )
-    {
-      layer.setVisible( visibility );
-    }
-  }
-
-  private String getTargetAxis( final IChartLayer layer )
-  {
-    final ICoordinateMapper mapper = layer.getCoordinateMapper();
-    final IAxis targetAxis = mapper.getTargetAxis();
-    final String axisId = targetAxis.getId();
-
-    return axisId;
   }
 }

@@ -172,6 +172,7 @@
         <sequence>
           <element name="Provider" type="ods:ProviderType" minOccurs="0" />
         </sequence>
+        <attribute name="visible" type="boolean" default="true" />
       </extension>
     </complexContent>
   </complexType>
@@ -255,12 +256,6 @@
           </element>
           <element ref="ods:Styles" minOccurs="0" />
         </sequence>
-        <attribute name="visible" type="boolean" default="true">
-          <annotation>
-            <documentation> legt die Sichtbarkeit des Layers fest
-						</documentation>
-          </annotation>
-        </attribute>
         <attribute name="legend" type="boolean" default="true">
           <annotation>
             <documentation>display layer in chart legend</documentation>
