@@ -38,13 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.model;
+package de.openali.odysseus.chart.framework.model.layer;
 
 /**
  * @author kimwerner
  */
-public interface IChartModelState
+public interface IChartLayerState
 {
-  void restoreState( final IChartModel model );
-  void storeState( final IChartModel model );
+  void restoreState( final IChartLayer chartLayer );
+
+  void storeState( final IChartLayer chartLayer );
+  
+  String getID();
+
 }

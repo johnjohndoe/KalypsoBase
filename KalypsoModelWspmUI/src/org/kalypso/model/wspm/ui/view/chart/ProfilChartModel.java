@@ -48,6 +48,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
+import de.openali.odysseus.chart.framework.model.impl.ChartModelState;
 import de.openali.odysseus.chart.framework.model.impl.visitors.AutoScaleVisitor;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -121,7 +122,7 @@ public class ProfilChartModel extends ChartModel
       updateLayers();
     }
   }
-  
+
   /**
    * automatically scales all given axes; scaling means here: show all available values
    */
@@ -137,7 +138,7 @@ public class ProfilChartModel extends ChartModel
       visitor.visit( axis );
     }
   }
-  
+
   @Override
   public void dispose( )
   {
@@ -171,6 +172,8 @@ public class ProfilChartModel extends ChartModel
   {
     synchronized( this )
     {
+      final ChartModelState modelState = new ChartModelState();
+      modelState.storeState( this );
       final ILayerManager layerManager = getLayerManager();
       layerManager.clear();
 
@@ -181,8 +184,7 @@ public class ProfilChartModel extends ChartModel
       final IProfilChartLayer[] layers = lp.createLayers( m_profil, m_result );
       layerManager.addLayer( layers );
 
-      // FIXME
-// getState().restoreState( this );
+      modelState.restoreState( this );
     }
 
   }
