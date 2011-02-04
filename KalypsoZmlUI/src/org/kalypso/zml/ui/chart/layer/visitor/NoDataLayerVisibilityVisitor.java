@@ -41,25 +41,26 @@
 package org.kalypso.zml.ui.chart.layer.visitor;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
 
+import de.openali.odysseus.chart.ext.base.layer.DefaultTextLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * @author Dirk Kuch
  */
-public class SetBaseLayerVisibilityVisitor implements IChartLayerVisitor
+public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
 {
   public static final String NO_DATA_LAYER = "noData";
 
-  private final String[] m_ignoreTypes;
+  private final IObsProvider[] m_providers;
 
-  public SetBaseLayerVisibilityVisitor( final String[] currentIgnoreTypes )
+  public NoDataLayerVisibilityVisitor( final IObsProvider[] providers )
   {
-    m_ignoreTypes = currentIgnoreTypes;
+    m_providers = providers;
   }
 
   // <Parameter name="hideOnMultiSelect" value="true" />
@@ -70,36 +71,45 @@ public class SetBaseLayerVisibilityVisitor implements IChartLayerVisitor
   @Override
   public void visit( final IChartLayer layer )
   {
-    final ILayerManager layerManager = layer.getLayerManager();
-    final IChartLayer[] children = layerManager.getLayers();
-
-    final String axisType = getTargetAxis( layer );
-    if( ArrayUtils.contains( m_ignoreTypes, axisType ) )
+    if( layer instanceof DefaultTextLayer )
     {
-      layer.setVisible( false );
-      setVisibility( children, false );
-    }
-    else
-    {
-      layer.setVisible( true );
-      setVisibility( children, true );
+      if( NO_DATA_LAYER.equals( layer.getId() ) )
+      {
+        layer.setVisible( isVisible() );
+      }
     }
   }
 
-  private void setVisibility( final IChartLayer[] layers, final boolean visibility )
+  /**
+   * @return no_data_layer is visible
+   */
+  private boolean isVisible( )
   {
-    for( final IChartLayer layer : layers )
+    if( ArrayUtils.isEmpty( m_providers ) )
+      return true;
+
+    // TODO instead provider.isLoaded() -> provider.isValid()
+    for( final IObsProvider provider : m_providers )
     {
-      layer.setVisible( visibility );
+      if( provider.isValid() )
+      {
+        try
+        {
+          final IObservation observation = provider.getObservation();
+          if( observation == null )
+            return false;
+
+          final ITupleModel model = observation.getValues( null );
+          if( model.size() > 0 )
+            return false;
+        }
+        catch( final Throwable t )
+        {
+          t.printStackTrace();
+        }
+      }
     }
-  }
 
-  private String getTargetAxis( final IChartLayer layer )
-  {
-    final ICoordinateMapper mapper = layer.getCoordinateMapper();
-    final IAxis targetAxis = mapper.getTargetAxis();
-    final String axisId = targetAxis.getId();
-
-    return axisId;
+    return true;
   }
 }
