@@ -37,6 +37,8 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
 
   ILegendEntry[] getLegendEntries( );
 
+  ILayerProvider getProvider( );
+
   /**
    * @param domainIntervall
    *          shrinks the TargetRange, pass null to retrieve full dataRange
@@ -95,17 +97,12 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
    */
   void setLegend( final boolean isVisible );
 
+  void setParent( ILayerContainer parent );
+
   /**
    * sets the layers title (which will be shown in the legend)
    */
   void setTitle( final String title );
 
   void setVisible( final boolean isVisible );
-
-  void setParent( ILayerContainer parent );
-
-  @Override
-  ILayerContainer getParent( );
-
-  ILayerProvider getProvider( );
 }

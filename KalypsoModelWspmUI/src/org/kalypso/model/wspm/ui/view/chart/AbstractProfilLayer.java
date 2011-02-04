@@ -137,7 +137,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( targetComponent != null )
       getProfil().setActivePointProperty( targetComponent );
 
-    if( dragStartData.m_pos == point )
+    if( dragStartData.getPosition() == point )
       executeClick( dragStartData );
     else
       executeDrop( point, dragStartData );
@@ -195,7 +195,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   @Override
   public void executeClick( final EditInfo clickInfo )
   {
-    final Object data = clickInfo.m_data;
+    final Object data = clickInfo.getData();
     final Integer pos = data instanceof Integer ? (Integer) data : null;
     final IComponent cmp = getTargetComponent();
     if( !Objects.isNull( cmp, pos ) )

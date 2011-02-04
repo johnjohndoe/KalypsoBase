@@ -108,11 +108,11 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
   {
     if( DIRECTION.eBoth.equals( m_direction ) )
     {
-      getChart().setPanOffset( null, start, editInfo.m_pos );
+      getChart().setPanOffset( null, start, editInfo.getPosition() );
     }
     else if( DIRECTION.eHorizontal.equals( m_direction ) )
     {
-      final Point end = new Point( editInfo.m_pos.x, start.y );
+      final Point end = new Point( editInfo.getPosition().x, start.y );
       getChart().setPanOffset( null, start, end );
     }
     else
@@ -121,7 +121,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
 
   protected void doMouseMoveZoom( final Point end, final EditInfo editInfo )
   {
-    getChart().setDragArea( new Rectangle( editInfo.m_pos.x, editInfo.m_pos.y, end.x - editInfo.m_pos.x, end.y - editInfo.m_pos.y ) );
+    getChart().setDragArea( new Rectangle( editInfo.getPosition().x, editInfo.getPosition().y, end.x - editInfo.getPosition().x, end.y - editInfo.getPosition().y ) );
   }
 
   protected void doMouseMaximize( )
@@ -155,7 +155,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
     getChart().setPanOffset( null, null, null );
     if( start != null )
     {
-      final PanToVisitor visitor = new PanToVisitor( start, editInfo.m_pos );
+      final PanToVisitor visitor = new PanToVisitor( start, editInfo.getPosition() );
 
       final IChartModel model = getChart().getChartModel();
       model.getMapperRegistry().accept( visitor );
@@ -172,11 +172,11 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
       return;
     try
     {
-      if( end.x < editInfo.m_pos.x )
+      if( end.x < editInfo.getPosition().x )
         getChart().getChartModel().autoscale();
       else
       {
-        final ZoomInVisitor visitor = new ZoomInVisitor( editInfo.m_pos, end );
+        final ZoomInVisitor visitor = new ZoomInVisitor( editInfo.getPosition(), end );
 
         final IChartModel model = getChart().getChartModel();
         model.getMapperRegistry().accept( visitor );

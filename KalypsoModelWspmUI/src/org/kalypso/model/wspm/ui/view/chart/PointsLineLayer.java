@@ -82,11 +82,11 @@ public class PointsLineLayer extends AbstractProfilLayer
   @Override
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
-    if( dragStartData.m_pos == null )
+    if( dragStartData.getPosition() == null )
       return null;
 
-    final Point newPoint = verifyPos( dragStartData.m_pos, newPos );
-    final Integer index = (Integer) dragStartData.m_data;
+    final Point newPoint = verifyPos( dragStartData.getPosition(), newPos );
+    final Integer index = (Integer) dragStartData.getData();
     final IRecord[] profilPoints = getProfil().getPoints();
     final Point next = index == profilPoints.length - 1 ? newPoint : toScreen( profilPoints[index + 1] );
     final Point previous = index == 0 ? newPoint : toScreen( profilPoints[index - 1] );
@@ -113,8 +113,8 @@ public class PointsLineLayer extends AbstractProfilLayer
     };
 
     final Point2D point = toNumeric( newPoint );
-    return new EditInfo( this, null, dragFigure, dragStartData.m_data, String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), point.getX(), getTargetComponent().getName(),
-        point.getY(), ComponentUtilities.getComponentUnitLabel( getTargetComponent() ) } ), dragStartData.m_pos );
+    return new EditInfo( this, null, dragFigure, dragStartData.getData(), String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), point.getX(), getTargetComponent().getName(),
+        point.getY(), ComponentUtilities.getComponentUnitLabel( getTargetComponent() ) } ), dragStartData.getPosition() );
   }
 
   /**
@@ -125,11 +125,11 @@ public class PointsLineLayer extends AbstractProfilLayer
   @Override
   public void executeDrop( final Point point, final EditInfo dragStartData )
   {
-    if( dragStartData.m_pos == null )
+    if( dragStartData.getPosition() == null )
       return;
 
-    final Point newPoint = verifyPos( dragStartData.m_pos, point );
-    final Integer pos = dragStartData.m_data instanceof Integer ? (Integer) (dragStartData.m_data) : -1;
+    final Point newPoint = verifyPos( dragStartData.getPosition(), point );
+    final Integer pos = dragStartData.getData() instanceof Integer ? (Integer) (dragStartData.getData()) : -1;
     if( pos > -1 )
     {
       final IProfil profil = getProfil();

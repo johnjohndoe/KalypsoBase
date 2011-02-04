@@ -80,7 +80,7 @@ public class DragZoomInHandler extends AbstractChartDragHandler
     {
       if( end != null )
       {
-        final ZoomInVisitor visitor = new ZoomInVisitor( editInfo.m_pos, end );
+        final ZoomInVisitor visitor = new ZoomInVisitor( editInfo.getPosition(), end );
 
         final IChartModel model = getChart().getChartModel();
         model.getMapperRegistry().accept( visitor );
@@ -100,7 +100,7 @@ public class DragZoomInHandler extends AbstractChartDragHandler
   @Override
   public void doMouseMoveAction( final Point end, final EditInfo editInfo )
   {
-    getChart().setDragArea( new Rectangle( editInfo.m_pos.x, editInfo.m_pos.y, end.x - editInfo.m_pos.x, end.y - editInfo.m_pos.y ) );
+    getChart().setDragArea( new Rectangle( editInfo.getPosition().x, editInfo.getPosition().y, end.x - editInfo.getPosition().x, end.y - editInfo.getPosition().y ) );
   }
 
 }

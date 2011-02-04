@@ -18,9 +18,9 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 public interface ILayerProvider extends IChartComponentProvider
 {
   /**
-   * @return Array of all layers created by the LayerProvider
    * @param context
    *          context path - needed to resolve relative paths from xml configuration
+   * @return Array of all layers created by the LayerProvider
    */
   IChartLayer getLayer( final URL context ) throws ConfigurationException;
 

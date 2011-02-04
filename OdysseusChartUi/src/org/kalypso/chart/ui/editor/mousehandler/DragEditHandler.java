@@ -68,8 +68,8 @@ public class DragEditHandler extends AbstractChartDragHandler
   {
     try
     {
-      if( m_editInfo != null && m_editInfo.m_layer != null )
-        ((IEditableChartLayer) m_editInfo.m_layer).commitDrag( start, editInfo );
+      if( m_editInfo != null && m_editInfo.getLayer() != null )
+        ((IEditableChartLayer) m_editInfo.getLayer()).commitDrag( start, editInfo );
     }
     finally
     {
@@ -86,12 +86,12 @@ public class DragEditHandler extends AbstractChartDragHandler
   {
     if( m_editInfo == null )
       m_editInfo = editInfo;
-    if( m_editInfo.m_layer != null )
+    if( m_editInfo.getLayer() != null )
     {
-      if( ((IEditableChartLayer) editInfo.m_layer).isLocked() )
+      if( ((IEditableChartLayer) editInfo.getLayer()).isLocked() )
         m_editInfo = null;
       else
-        getChart().setEditInfo( ((IEditableChartLayer) editInfo.m_layer).drag( start, m_editInfo ) );
+        getChart().setEditInfo( ((IEditableChartLayer) editInfo.getLayer()).drag( start, m_editInfo ) );
     }
   }
 }

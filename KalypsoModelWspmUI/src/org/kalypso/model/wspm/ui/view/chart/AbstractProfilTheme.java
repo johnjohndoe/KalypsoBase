@@ -141,7 +141,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     if( layer == null )
       return null;
 
-    if( dragStartData.m_pos == point )
+    if( dragStartData.getPosition() == point )
       layer.executeClick( dragStartData );
     else
       layer.executeDrop( point, dragStartData );

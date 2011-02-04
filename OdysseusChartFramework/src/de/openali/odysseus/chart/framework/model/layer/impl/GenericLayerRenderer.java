@@ -112,19 +112,19 @@ public class GenericLayerRenderer
       return;
 
     // draw hover shape
-    if( m_editInfo.m_hoverFigure != null )
-      m_editInfo.m_hoverFigure.paint( gcw );
+    if( m_editInfo.getHoverFigure() != null )
+      m_editInfo.getHoverFigure().paint( gcw );
     // draw edit shape
-    if( m_editInfo.m_editFigure != null )
-      m_editInfo.m_editFigure.paint( gcw );
+    if( m_editInfo.getEditFigure() != null )
+      m_editInfo.getEditFigure().paint( gcw );
 
     // draw tooltip
     ChartUtilities.resetGC( gcw );
 
     final Rectangle screen = gcw.getClipping();
 
-    String tooltiptext = m_editInfo.m_text;
-    final Point mousePos = m_editInfo.m_pos;
+    String tooltiptext = m_editInfo.getText();
+    final Point mousePos = m_editInfo.getPosition();
     if( (tooltiptext != null) && (mousePos != null) )
     {
       tooltiptext = tooltiptext.replace( '\r', ' ' );
