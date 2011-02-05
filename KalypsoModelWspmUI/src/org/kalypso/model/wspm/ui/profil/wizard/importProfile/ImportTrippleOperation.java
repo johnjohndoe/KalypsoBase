@@ -1,12 +1,12 @@
 package org.kalypso.model.wspm.ui.profil.wizard.importProfile;
 
 import java.io.File;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.imports.ImportTrippleHelper;
@@ -40,7 +40,7 @@ final class ImportTrippleOperation implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
     monitor.beginTask( Messages.getString( "org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.2" ), 2 ); //$NON-NLS-1$
 
@@ -51,7 +51,7 @@ final class ImportTrippleOperation implements ICoreRunnableWithProgress
 
       /* get file name from wizard */
 
-      final List<IProfil> profiles = ImportTrippleHelper.importTrippelData( m_trippelFile, m_separator, ImportProfileWizard.PROFIL_TYPE_PASCHE, m_crs );
+      final IProfil[] profiles = ImportTrippleHelper.importTrippelData( m_trippelFile, m_separator, ImportProfileWizard.PROFIL_TYPE_PASCHE, m_crs );
 
       monitor.worked( 1 );
 
@@ -66,9 +66,13 @@ final class ImportTrippleOperation implements ICoreRunnableWithProgress
 
       return Status.OK_STATUS;
     }
+    catch( final CoreException e )
+    {
+      throw e;
+    }
     catch( final Exception e )
     {
-      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.model.wspm.ui.wizard.ImportProfileWizard.5" ) ); //$NON-NLS-1$
+      throw new InvocationTargetException( e );
     }
 
     finally
