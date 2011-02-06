@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Plugin.Name
 Bundle-SymbolicName: org.kalypso.base;singleton:=true
 Bundle-Localization: plugin
-Bundle-Version: 10.10.1.qualifier
+Bundle-Version: 10.10.2.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.ui.ide.application;bundle-version="1.0.0"
 Bundle-Vendor: kalypsobase.sourceforge.net
