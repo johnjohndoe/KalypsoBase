@@ -2,7 +2,7 @@
 <feature
       id="org.kalypso.babel.nls_eclipse"
       label="KalypsoBaseBabelEclipseFeature"
-      version="10.10.1.qualifier"
+      version="10.10.2.qualifier"
       provider-name="kalypso.sourceforge.net"
       plugin="org.kalypso.base">
 
@@ -719,6 +719,22 @@
          id="org.eclipse.update.ui.nl_de"
          download-size="9632"
          install-size="9632"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.common.core.nl_de"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.junit4.nl_de"
+         download-size="0"
+         install-size="0"
          version="0.0.0"
          fragment="true"
          unpack="false"/>
