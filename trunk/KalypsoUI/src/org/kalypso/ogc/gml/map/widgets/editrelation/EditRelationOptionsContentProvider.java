@@ -150,10 +150,10 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
             // leight: FT,Prop,FT
             // heavy: FT,Prop,FT,PropFT
             // leight relationship ?
-            if( ft2.getDefaultGeometryProperty() != null /* &&!ft2.isAbstract() */)
-              result.add( new RelationType( ft1, linkFTP1, ft2 ) );
-            else
-            {
+//            if( ft2.getDefaultGeometryProperty() != null /* &&!ft2.isAbstract() */)
+//              result.add( new RelationType( ft1, linkFTP1, ft2 ) );
+//            else
+//            {
               // heavy relationship ?
               final IFeatureType ft2a = linkFTP1.getTargetFeatureType();
               final IFeatureType[] ft2s = GMLSchemaUtilities.getSubstituts( ft2a, null, false, true );
@@ -174,7 +174,7 @@ public class EditRelationOptionsContentProvider implements ITreeContentProvider
                   }
                 }
               }
-            }
+//            }
           }
         }
       }

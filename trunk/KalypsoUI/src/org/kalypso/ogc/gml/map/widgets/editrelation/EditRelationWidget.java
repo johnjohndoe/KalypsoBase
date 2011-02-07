@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.editrelation;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -288,6 +289,7 @@ public class EditRelationWidget extends AbstractWidget implements IWidgetWithOpt
     final int y1 = (int) transform.getDestY( fromCenter.getY() );
     final int x2 = (int) transform.getDestX( toCenter.getX() );
     final int y2 = (int) transform.getDestY( toCenter.getY() );
+    g.setColor( new Color( 1212121212 ) );
     g.drawLine( x1, y1, x2, y2 );
   }
 
