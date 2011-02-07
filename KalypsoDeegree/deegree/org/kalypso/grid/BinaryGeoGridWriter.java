@@ -53,6 +53,10 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
 /**
+ * FIXME: why is everything buffered twice? first we buffer into a local buffer, and then we use a BufferdOutputStream
+ * which buffers in the same manner -> this makes no real sense. If it DOES make sense: please COMMENT! <br/>
+ * FIXME: half the interface is not implemented and returns null -> at least throw NotImplementedException in this case!<br/>
+ * 
  * @author barbarins
  */
 public class BinaryGeoGridWriter implements IWriteableGeoGrid
@@ -111,6 +115,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     m_lineLen = getSizeX() * 4;
 
     // block_size is set to "optimal" size of the buffer from start on
+
+    // FIXME: division does not always return an even result -> must be handles correctly!
     m_linesInBlock = (BLOCK_SIZE / m_lineLen);
 
     if( m_linesInBlock >= m_linesTotal )
@@ -160,6 +166,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
 
     try
     {
+      // FIXME: wrong! last block gets eventually not written!
+      // There are examples with blockEnd > linesTotal -> what to do in this case!?
       if( m_blockEnd <= m_linesTotal )
       {
         flushBlock();
@@ -223,7 +231,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     final int index = (y - m_blockStart) * (m_lineLen / 4) + x;
 
     int intVal;
-    if( Double.isNaN( value ) != true )
+    if( !Double.isNaN( value ) )
     {
       final BigDecimal scaled = BigDecimal.valueOf( value ).setScale( m_scale, BigDecimal.ROUND_HALF_UP );
       intVal = scaled.unscaledValue().intValue();
@@ -307,7 +315,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public void saveStatistically( )
   {
-    // TODO Auto-generated method stub
 
   }
 
@@ -318,7 +325,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public void setStatistically( final BigDecimal min, final BigDecimal max )
   {
-    // TODO Auto-generated method stub
+
+    // FIXME: this is nonsense!
     close();
   }
 
@@ -329,7 +337,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -340,7 +347,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Envelope getEnvelope( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -351,7 +357,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Coordinate getOffsetX( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -362,7 +367,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Coordinate getOffsetY( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -373,7 +377,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Coordinate getOrigin( )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
@@ -394,7 +397,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public GM_Surface< ? > getSurface( final String targetCRS )
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
