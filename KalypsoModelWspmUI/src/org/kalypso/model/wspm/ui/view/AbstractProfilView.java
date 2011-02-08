@@ -40,14 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view;
 
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.result.IStationResult;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
 /**
  * @author belger
@@ -73,6 +76,14 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
 
     if( m_profile != null )
       m_profile.addProfilListener( this );
+  }
+
+  /**
+   * PRovide dialog settings that can be used by this view to store it's state.
+   */
+  protected IDialogSettings getDialogSettings( )
+  {
+    return DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() );
   }
 
   /**
