@@ -66,6 +66,7 @@ public interface IProfilPointPropertyProvider
    */
   String[] getPointProperties( );
 
+  // FIXME: does not belong in this interface
   IComponent getPointProperty( String propertyId );
 
   /**
