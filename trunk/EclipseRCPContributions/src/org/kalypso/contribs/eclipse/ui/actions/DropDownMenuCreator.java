@@ -40,19 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.actions;
 
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.actions.RetargetAction;
 
 /**
  * @author kimwerner
  */
 public class DropDownMenuCreator implements IMenuCreator
 {
-
-  private MenuManager m_menuManager = new MenuManager();
+  private final MenuManager m_menuManager = new MenuManager();
 
   /**
    * @see org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets.Control)
@@ -70,12 +69,11 @@ public class DropDownMenuCreator implements IMenuCreator
   public Menu getMenu( final Menu parent )
   {
     return null;
-
   }
 
-  public void addAction( final RetargetAction retargetAction )
+  public void addAction( final IAction action )
   {
-    m_menuManager.add( retargetAction );
+    m_menuManager.add( action );
   }
 
   /**
@@ -84,8 +82,7 @@ public class DropDownMenuCreator implements IMenuCreator
   @Override
   public void dispose( )
   {
-    // TODO Auto-generated method stub
-
+    m_menuManager.dispose();
   }
 
 }
