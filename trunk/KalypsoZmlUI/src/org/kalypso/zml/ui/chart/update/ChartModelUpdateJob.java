@@ -75,6 +75,7 @@ public class ChartModelUpdateJob extends UIJob
   @Override
   public IStatus runInUIThread( final IProgressMonitor monitor )
   {
+
     IChartLayerVisitor[] visitors;
     synchronized( this )
     {
@@ -85,9 +86,9 @@ public class ChartModelUpdateJob extends UIJob
     final ILayerManager layerManager = m_model.getLayerManager();
     layerManager.accept( visitors );
 
-    m_model.autoscale();
-
     final IChartLayer[] layers = layerManager.getLayers();
+
+    m_model.autoscale();
 
     return Status.OK_STATUS;
   }
