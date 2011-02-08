@@ -75,7 +75,6 @@ public class ChartModelUpdateJob extends UIJob
   @Override
   public IStatus runInUIThread( final IProgressMonitor monitor )
   {
-
     IChartLayerVisitor[] visitors;
     synchronized( this )
     {

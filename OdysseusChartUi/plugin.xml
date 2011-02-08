@@ -92,11 +92,6 @@
                name="Layer defines parameter &apos;x&apos;"
                optional="false">
          </commandParameter>
-         <commandParameter
-               id="automatic.button.update"
-               name="En-/Disable button toggle state automacally"
-               optional="true">
-         </commandParameter>
       </command>
    </extension>
    <extension
@@ -173,7 +168,7 @@
             commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize">
       </handler>
       <handler
-            class="org.kalypso.chart.ui.editor.commandhandler.visibility.ChangeVisibilityCommandHandler"
+            class="org.kalypso.chart.ui.editor.commandhandler.ChangeVisibilityCommandHandler"
             commandId="org.kalypso.chart.ui.commands.change.visibility">
       </handler>
    </extension>

@@ -48,7 +48,7 @@ import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.ui.menus.CommandContributionItem;
-import org.kalypso.chart.ui.editor.commandhandler.visibility.ChangeVisibilityCommandHandler;
+import org.kalypso.chart.ui.editor.commandhandler.ChangeVisibilityCommandHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
