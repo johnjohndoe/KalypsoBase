@@ -53,9 +53,6 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
 /**
- * FIXME: why is everything buffered twice? first we buffer into a local buffer, and then we use a BufferdOutputStream
- * which buffers in the same manner -> this makes no real sense. If it DOES make sense: please COMMENT! <br/>
- * FIXME: half the interface is not implemented and returns null -> at least throw NotImplementedException in this case!<br/>
  * 
  * @author barbarins
  */
@@ -84,6 +81,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   private int m_linesInBlock;
 
   private int m_amountBlocks;
+
+  private int m_blocksFlushed;
 
   private final int m_sizeX;
 
@@ -115,8 +114,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     m_lineLen = getSizeX() * 4;
 
     // block_size is set to "optimal" size of the buffer from start on
-
-    // FIXME: division does not always return an even result -> must be handles correctly!
     m_linesInBlock = (BLOCK_SIZE / m_lineLen);
 
     if( m_linesInBlock >= m_linesTotal )
@@ -139,6 +136,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
 
     writeNaN( m_blockData, m_itemsInBlock );
 
+    m_blocksFlushed = 0;
   }
 
   @Override
@@ -166,9 +164,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
 
     try
     {
-      // FIXME: wrong! last block gets eventually not written!
-      // There are examples with blockEnd > linesTotal -> what to do in this case!?
-      if( m_blockEnd <= m_linesTotal )
+      if( m_blocksFlushed < m_amountBlocks )
       {
         flushBlock();
       }
@@ -209,10 +205,14 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     {
       e.printStackTrace();
     }
+    m_blocksFlushed++;
     m_blockStart += m_linesInBlock;
     m_blockEnd += m_linesInBlock;
-    if( m_blockEnd > m_linesTotal )
-      m_itemsInBlock = (m_linesTotal - m_blockStart + 1) * m_lineLen / 4;
+
+    if( m_blocksFlushed >= m_amountBlocks )
+      return;
+    if( m_blockEnd >= m_linesTotal )
+      m_itemsInBlock = (m_linesTotal - m_blockStart) * m_lineLen / 4;
 
     writeNaN( m_blockData, m_itemsInBlock );
   }
@@ -221,6 +221,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   public void setValue( final int x, final int y, final double value )
   {
     if( y < m_blockStart )
+      // FIXME: Log it!
       return;
 
     if( y > m_blockEnd )
@@ -325,8 +326,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public void setStatistically( final BigDecimal min, final BigDecimal max )
   {
-
-    // FIXME: this is nonsense!
     close();
   }
 
@@ -337,7 +336,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS )
   {
-    return null;
+    throw new NotImplementedException();
   }
 
   /**
@@ -347,7 +346,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Envelope getEnvelope( )
   {
-    return null;
+    throw new NotImplementedException();
   }
 
   /**
@@ -357,7 +356,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Coordinate getOffsetX( )
   {
-    return null;
+    throw new NotImplementedException();
   }
 
   /**
@@ -367,7 +366,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Coordinate getOffsetY( )
   {
-    return null;
+    throw new NotImplementedException();
   }
 
   /**
@@ -377,7 +376,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Coordinate getOrigin( )
   {
-    return null;
+    throw new NotImplementedException();
   }
 
   /**
@@ -387,8 +386,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public String getSourceCRS( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new NotImplementedException();
   }
 
   /**
@@ -397,7 +395,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public GM_Surface< ? > getSurface( final String targetCRS )
   {
-    return null;
+    throw new NotImplementedException();
   }
 
   /**
