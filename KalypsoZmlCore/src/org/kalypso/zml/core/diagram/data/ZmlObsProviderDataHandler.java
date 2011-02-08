@@ -128,8 +128,10 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   {
     m_model = null;
 
-    final IObservation observation = m_provider.getObservation();
-    m_layer.setVisible( observation != null );
+    if( m_provider == null )
+      m_layer.setVisible( false );
+    else
+      m_layer.setVisible( m_provider.getObservation() != null );
 
     m_layer.getEventHandler().fireLayerVisibilityChanged( m_layer );
     m_layer.getEventHandler().fireLayerContentChanged( m_layer );

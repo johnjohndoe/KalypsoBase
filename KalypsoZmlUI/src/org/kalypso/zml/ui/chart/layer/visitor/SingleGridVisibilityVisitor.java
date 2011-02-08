@@ -45,6 +45,7 @@ import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer;
+import de.openali.odysseus.chart.factory.layer.Layers;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
@@ -64,21 +65,18 @@ public class SingleGridVisibilityVisitor implements IChartLayerVisitor
   @Override
   public void visit( final IChartLayer layer )
   {
-    if( isVisible( layer ) )
-    {
-      if( layer instanceof DefaultTickRasterLayer )
-      {
-        if( isValid( layer ) )
-        {
-          layer.setVisible( m_visibility );
-          m_visibility = false;
-        }
-        else
-          layer.setVisible( false );
-
-      }
-
+    if( Layers.isVisible( layer ) )
       layer.getLayerManager().accept( this );
+
+    if( layer instanceof DefaultTickRasterLayer )
+    {
+      if( isValid( layer ) )
+      {
+        layer.setVisible( m_visibility );
+        m_visibility = false;
+      }
+      else
+        layer.setVisible( false );
     }
   }
 
@@ -116,26 +114,4 @@ public class SingleGridVisibilityVisitor implements IChartLayerVisitor
     return null;
   }
 
-  private boolean isVisible( final IChartLayer layer )
-  {
-    if( !layer.isVisible() )
-      return false;
-
-    final ICoordinateMapper coordinateMapper = layer.getCoordinateMapper();
-    if( coordinateMapper == null )
-      return true;
-
-    final IAxis domainAxis = coordinateMapper.getDomainAxis();
-    final IAxis targetAxis = coordinateMapper.getTargetAxis();
-    if( Objects.isNull( domainAxis, targetAxis ) )
-      return true;
-
-    if( !domainAxis.isVisible() )
-      return false;
-
-    if( !targetAxis.isVisible() )
-      return false;
-
-    return true;
-  }
 }
