@@ -67,6 +67,8 @@ public class FileSystemManagerWrapper implements FileSystemManager
   {
     if( m_manager instanceof StandardFileSystemManager )
       ((StandardFileSystemManager) m_manager).close();
+    else if( m_manager instanceof FileSystemManagerWrapper )
+      ((FileSystemManagerWrapper) m_manager).close();
   }
 
   /**
