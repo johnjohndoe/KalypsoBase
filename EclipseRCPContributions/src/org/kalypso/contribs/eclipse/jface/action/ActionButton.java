@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -55,6 +56,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
@@ -99,6 +101,8 @@ public class ActionButton
         return SWT.CHECK;
       case IAction.AS_RADIO_BUTTON:
         return SWT.RADIO;
+      case IAction.AS_DROP_DOWN_MENU:
+        return SWT.PUSH;
 
       default:
         throw new UnsupportedOperationException( "Unsupported button style: " + style ); //$NON-NLS-1$
@@ -161,7 +165,15 @@ public class ActionButton
 
   protected void handleButtonSelected( final Event event, final boolean selection )
   {
-    m_action.setChecked( selection );
+    final int style = m_action.getStyle();
+    if( style == IAction.AS_DROP_DOWN_MENU )
+    {
+      final IMenuCreator menuCreator = m_action.getMenuCreator();
+      final Menu menu = menuCreator.getMenu( m_button );
+      menu.setVisible( true );
+    }
+    else if( style == IAction.AS_CHECK_BOX || style == IAction.AS_RADIO_BUTTON )
+      m_action.setChecked( selection );
 
     m_action.runWithEvent( event );
   }
@@ -171,9 +183,6 @@ public class ActionButton
    */
   private void initializeButton( )
   {
-    // IMenuCreator menuCreator = m_action.getMenuCreator();
-    // m_button.setMenu( null );
-
     // m_action.getAccelerator();
 
     // m_action.getHelpListener();
