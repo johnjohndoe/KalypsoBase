@@ -114,8 +114,9 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
 
     try
     {
-      final StrokePainter strokePainter = new StrokePainter( stroke, getFeature(), uom, projection );
-      final FillPainter fillPainter = new FillPainter( fill, getFeature(), uom, projection );
+      final Feature feature = getFeature();
+      final StrokePainter strokePainter = new StrokePainter( stroke, feature, uom, projection );
+      final FillPainter fillPainter = new FillPainter( fill, feature, uom, projection );
 
       for( final GM_Surface< ? > element : surfaces )
       {
