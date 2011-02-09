@@ -190,6 +190,8 @@ public final class StyleFactory
             final RETokenizer tokenizer = new RETokenizer( new Pattern( "#" ), reference ); //$NON-NLS-1$
             final String identifier = tokenizer.nextToken();
 
+            final AbstractStyleType test = resolver.findStyleType( reference, context );
+
             final AbstractStyleType styleType = StyleHelper.findStyle( baseTypes, identifier );
             final IStyle style = StyleFactory.createStyle( styleType, context );
             if( style == null )

@@ -88,6 +88,7 @@ import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.ReferencableType;
 import de.openali.odysseus.chartconfig.x020.ReferencingType;
 import de.openali.odysseus.chartconfig.x020.RoleReferencingType;
+import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 
 /**
  * @author Dirk Kuch
@@ -220,7 +221,9 @@ public class ChartLayerFactory extends AbstractChartFactory
     buildRoleReferences( layerType );
 
     final IParameterContainer parameters = createParameterContainer( layerType.getId(), provider.getId(), layerType.getProvider() );
-    final IStyleSet styleSet = StyleFactory.createStyleSet( layerType.getStyles(), baseTypes, getContext() );
+    final Styles styles = layerType.getStyles();
+
+    final IStyleSet styleSet = StyleFactory.createStyleSet( styles, baseTypes, getContext() );
 
     provider.init( getModel(), layerType.getId(), parameters, getContext(), AxisUtils.getIdentifier( domainAxisRef ), AxisUtils.getIdentifier( targetAxisRef ), createMapperMap( layerType ), styleSet );
 
