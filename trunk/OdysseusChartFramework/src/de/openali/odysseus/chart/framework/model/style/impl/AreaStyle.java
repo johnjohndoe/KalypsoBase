@@ -32,7 +32,7 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
   @Override
   public IAreaStyle clone( )
   {
-    return new AreaStyle( getFill().copy(), getAlpha(), getStroke().clone(), isVisible() );
+    return new AreaStyle( getFill().clone(), getAlpha(), getStroke().clone(), isVisible() );
   }
 
   /*
