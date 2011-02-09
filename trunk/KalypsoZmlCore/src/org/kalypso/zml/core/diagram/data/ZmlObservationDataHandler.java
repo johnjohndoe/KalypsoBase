@@ -128,9 +128,6 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler
   {
     m_observation = observation;
 
-    m_layer.setVisible( observation != null );
-
-    m_layer.getEventHandler().fireLayerVisibilityChanged( m_layer );
     m_layer.getEventHandler().fireLayerContentChanged( m_layer );
   }
 
