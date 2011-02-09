@@ -10,7 +10,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGH
 public interface ITextStyle extends IStyle
 {
   @Override
-  ITextStyle copy( );
+  ITextStyle clone( );
 
   String getFamily( );
 

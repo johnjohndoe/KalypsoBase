@@ -131,7 +131,7 @@ public class TextStyle extends AbstractStyle implements ITextStyle
    * @see de.openali.odysseus.chart.framework.model.style.ITextStyle#copy()
    */
   @Override
-  public ITextStyle copy( )
+  public ITextStyle clone( )
   {
     return new TextStyle( getHeight(), getFamily(), getTextColor(), getFillColor(), getFontStyle(), getWeight(), getAlignment(), getAlpha(), isVisible() );
   }

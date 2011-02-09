@@ -80,4 +80,7 @@ public abstract class AbstractStyle implements IStyle
     return m_data.get( id );
   }
 
+  @Override
+  public abstract IStyle clone( );
+
 }

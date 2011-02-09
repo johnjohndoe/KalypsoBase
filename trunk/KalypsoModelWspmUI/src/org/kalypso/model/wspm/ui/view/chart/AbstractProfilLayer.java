@@ -284,7 +284,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     if( m_lineStyle_active == null )
     {
-      m_lineStyle_active = getLineStyle().copy();
+      m_lineStyle_active = getLineStyle().clone();
       m_lineStyle_active.setColor( COLOR_ACTIVE );
     }
     return m_lineStyle_active;
@@ -294,7 +294,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     if( m_lineStyle_hover == null )
     {
-      m_lineStyle_hover = getLineStyle().copy();
+      m_lineStyle_hover = getLineStyle().clone();
       m_lineStyle_hover.setDash( 0f, HOVER_DASH);
       m_lineStyle_hover.setLineCap( LINECAP.FLAT );
     }
@@ -324,7 +324,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( m_pointStyle == null )
     {
       m_pointStyle = StyleUtils.getDefaultPointStyle();
-      m_pointStyle.setStroke( getLineStyle().copy() );
+      m_pointStyle.setStroke( getLineStyle().clone() );
       m_pointStyle.setInlineColor( getLineStyle().getColor() );
       m_pointStyle.setWidth( POINT_STYLE_WIDTH );
       m_pointStyle.setHeight( POINT_STYLE_WIDTH );
@@ -336,8 +336,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     if( m_pointStyle_active == null )
     {
-      m_pointStyle_active = getPointStyle().copy();
-      m_pointStyle_active.setStroke( getLineStyle_active().copy() );
+      m_pointStyle_active = getPointStyle().clone();
+      m_pointStyle_active.setStroke( getLineStyle_active().clone() );
       m_pointStyle_active.setInlineColor( getLineStyle_active().getColor() );
     }
     return m_pointStyle_active;
@@ -347,8 +347,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     if( m_pointStyle_hover == null )
     {
-      m_pointStyle_hover = getPointStyle().copy();
-      m_pointStyle_hover.setStroke( getLineStyle_hover().copy() );
+      m_pointStyle_hover = getPointStyle().clone();
+      m_pointStyle_hover.setStroke( getLineStyle_hover().clone() );
       m_pointStyle_hover.setFillVisible( false );
     }
     return m_pointStyle_hover;

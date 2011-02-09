@@ -3,7 +3,7 @@ package de.openali.odysseus.chart.framework.model.style;
 public interface IAreaStyle extends IStyle
 {
   @Override
-  IAreaStyle copy( );
+  IAreaStyle clone( );
 
   IFill getFill( );
 

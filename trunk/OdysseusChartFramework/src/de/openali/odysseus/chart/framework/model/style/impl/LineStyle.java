@@ -42,7 +42,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
    * returns a deep copy of the object
    */
   @Override
-  public LineStyle copy( )
+  public LineStyle clone( )
   {
     final LineStyle lineStyle = new LineStyle( getWidth(), getColor(), getAlpha(), getDashOffset(), getDashArray(), getLineJoin(), getLineCap(), getMiterLimit(), isVisible() );
     lineStyle.setTitle( getTitle() );

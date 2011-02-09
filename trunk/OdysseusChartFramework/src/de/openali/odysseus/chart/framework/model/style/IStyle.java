@@ -2,13 +2,13 @@ package de.openali.odysseus.chart.framework.model.style;
 
 import org.eclipse.swt.graphics.GC;
 
-public interface IStyle
+public interface IStyle extends Cloneable
 {
   void apply( GC gc );
 
-  IStyle copy( );
-
   int getAlpha( );
+
+  IStyle clone( );
 
   /**
    * get stored data objects

@@ -30,9 +30,9 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
    *          template style
    */
   @Override
-  public IAreaStyle copy( )
+  public IAreaStyle clone( )
   {
-    return new AreaStyle( getFill().copy(), getAlpha(), getStroke().copy(), isVisible() );
+    return new AreaStyle( getFill().copy(), getAlpha(), getStroke().clone(), isVisible() );
   }
 
   /*
