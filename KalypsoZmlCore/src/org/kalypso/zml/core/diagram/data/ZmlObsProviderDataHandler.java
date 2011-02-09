@@ -108,8 +108,6 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
     {
       provider.addListener( m_observationProviderListener );
 
-      if( !provider.isLoaded() )
-        m_layer.setVisible( false );
     }
 
     m_layer.getEventHandler().fireLayerContentChanged( m_layer );
@@ -128,12 +126,6 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   {
     m_model = null;
 
-    if( m_provider == null )
-      m_layer.setVisible( false );
-    else
-      m_layer.setVisible( m_provider.getObservation() != null );
-
-    m_layer.getEventHandler().fireLayerVisibilityChanged( m_layer );
     m_layer.getEventHandler().fireLayerContentChanged( m_layer );
   }
 
