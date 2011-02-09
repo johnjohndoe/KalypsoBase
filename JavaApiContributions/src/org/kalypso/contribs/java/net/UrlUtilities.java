@@ -51,7 +51,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownServiceException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -68,7 +67,7 @@ public class UrlUtilities implements IUrlResolver
    * <p>
    * Resolves a (potential) relative URL to a base URL.
    * </p>
-   *
+   * 
    * @param baseURL
    *          URL, to which the relative url will be resolved
    * @param relativeURL
@@ -135,7 +134,7 @@ public class UrlUtilities implements IUrlResolver
 
   /**
    * Erzeugt den Reader anhand der URL und {@link URLConnection#getContentEncoding()}.
-   *
+   * 
    * @see org.kalypso.contribs.java.net.IUrlResolver#createReader(java.net.URL)
    */
   @Override
@@ -174,32 +173,16 @@ public class UrlUtilities implements IUrlResolver
   /**
    * Parses the query part of an {@link URL} into a hash map (param name mapping to param value).<br>
    * If the query part contains a parameter twice, the second parameter wins.
-   *
+   * 
    * @return Always returns a new {@link Map} object. The empty map, if the given {@link URL} has no query part.
    * @throws IllegalArgumentException
-   *           If the query part of the url is not strictly ?param1=value&param2=value2&...
+   *           If the query part of the URL is not strictly ?param1=value&param2=value2&...
    */
   public static Map<String, String> parseQuery( final URL url )
   {
-    final Map<String, String> result = new HashMap<String, String>();
-
     final String query = url.getQuery();
-    if( query == null || query.isEmpty() )
-      return result;
 
-    final String[] split = query.split( "&" ); //$NON-NLS-1$
-    for( final String param : split )
-    {
-      final String[] paramParts = param.split( "=" ); //$NON-NLS-1$
-      if( paramParts.length != 2 )
-        throw new IllegalArgumentException( "URL contains incorect query part: " + param );
-
-      final String key = paramParts[0];
-      final String value = paramParts[1];
-      result.put( key, value );
-    }
-
-    return result;
+    return QueryUtilities.parse( query );
   }
 
   /**

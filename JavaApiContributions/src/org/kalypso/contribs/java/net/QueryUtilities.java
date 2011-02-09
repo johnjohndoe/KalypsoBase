@@ -38,50 +38,46 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.editor.chart.visitors;
+package org.kalypso.contribs.java.net;
 
-import de.openali.odysseus.chart.framework.model.ILayerContainer;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Dirk Kuch
  */
-public class ChangeVisibilityVisitor extends AbstractParameterVisitor
+public final class QueryUtilities
 {
-  private final boolean m_enabled;
-
-  public ChangeVisibilityVisitor( final String parameter, final boolean enabled )
+  private QueryUtilities( )
   {
-    super( parameter );
-
-    m_enabled = enabled;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  @Override
-  public void visit( final IChartLayer layer )
+  public static Map<String, String> parse( final String query )
   {
-    if( definesParameter( layer ) )
-    {
-      layer.setVisible( m_enabled );
+    final Map<String, String> result = new HashMap<String, String>();
+    if( query == null || query.isEmpty() )
+      return result;
 
-      setVisible( layer );
+    final String[] parts;
+    if( query.contains( "?" ) ) //$NON-NLS-1$
+    {
+      final String[] splitted = query.split( "\\?" ); //$NON-NLS-1$
+      parts = splitted[1].split( "&" ); //$NON-NLS-1$
+    }
+    else
+      parts = query.split( "&" ); //$NON-NLS-1$
+
+    for( final String param : parts )
+    {
+      final String[] paramParts = param.split( "=" ); //$NON-NLS-1$
+      if( paramParts.length != 2 )
+        throw new IllegalArgumentException( "URL contains incorect query part: " + param );
+
+      final String key = paramParts[0];
+      final String value = paramParts[1];
+      result.put( key, value );
     }
 
-    layer.getLayerManager().accept( this );
-  }
-
-  private void setVisible( final IChartLayer layer )
-  {
-    final ILayerContainer parent = layer.getParent();
-    if( parent instanceof IChartLayer )
-    {
-      final IChartLayer parentLayer = (IChartLayer) parent;
-      (parentLayer).setVisible( true );
-
-      setVisible( parentLayer );
-    }
+    return result;
   }
 }

@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.progress.UIJob;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
@@ -63,9 +62,12 @@ public class ChartModelUpdateJob extends UIJob
 
   private final IChartModel m_model;
 
-  public ChartModelUpdateJob( final IChartModel model )
+  private final ICommandExecutorTrigger m_trigger;
+
+  public ChartModelUpdateJob( final ICommandExecutorTrigger trigger, final IChartModel model )
   {
     super( "Aktualisiere Diagramm" );
+    m_trigger = trigger;
     m_model = model;
   }
 
@@ -85,7 +87,8 @@ public class ChartModelUpdateJob extends UIJob
     final ILayerManager layerManager = m_model.getLayerManager();
     layerManager.accept( visitors );
 
-    final IChartLayer[] layers = layerManager.getLayers();
+    final CommandExecutor exec = new CommandExecutor( m_trigger );
+    exec.run();
 
     m_model.autoscale();
 

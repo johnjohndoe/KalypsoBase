@@ -38,50 +38,20 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.editor.chart.visitors;
+package org.kalypso.zml.ui.chart.update;
 
-import de.openali.odysseus.chart.framework.model.ILayerContainer;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.services.IEvaluationService;
 
 /**
  * @author Dirk Kuch
  */
-public class ChangeVisibilityVisitor extends AbstractParameterVisitor
+public interface ICommandExecutorTrigger
 {
-  private final boolean m_enabled;
+  IEvaluationService getEvaluatonService( );
 
-  public ChangeVisibilityVisitor( final String parameter, final boolean enabled )
-  {
-    super( parameter );
+  ICommandService getCommandService( );
 
-    m_enabled = enabled;
-  }
+  String[] getCommands( );
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  @Override
-  public void visit( final IChartLayer layer )
-  {
-    if( definesParameter( layer ) )
-    {
-      layer.setVisible( m_enabled );
-
-      setVisible( layer );
-    }
-
-    layer.getLayerManager().accept( this );
-  }
-
-  private void setVisible( final IChartLayer layer )
-  {
-    final ILayerContainer parent = layer.getParent();
-    if( parent instanceof IChartLayer )
-    {
-      final IChartLayer parentLayer = (IChartLayer) parent;
-      (parentLayer).setVisible( true );
-
-      setVisible( parentLayer );
-    }
-  }
 }
