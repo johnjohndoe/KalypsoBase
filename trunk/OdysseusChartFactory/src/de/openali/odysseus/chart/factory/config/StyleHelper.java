@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.config;
 
@@ -47,6 +47,7 @@ import java.util.Set;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.graphics.RGB;
 
+import de.openali.odysseus.chart.factory.util.LayerTypeHelper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.AreaStyleType;
@@ -124,16 +125,7 @@ public final class StyleHelper
 
     for( final ReferencableType reference : baseReferences )
     {
-      if( reference instanceof LayerType )
-      {
-        Collections.addAll( styles, findStyles( (LayerType) reference ) );
-      }
-      else if( reference instanceof ChartType )
-      {
-        Collections.addAll( styles, findStyles( (ChartType) reference ) );
-      }
-      else
-        throw new NotImplementedException();
+      Collections.addAll( styles, findStyles( reference ) );
     }
 
     for( final Styles style : styles )
@@ -144,6 +136,31 @@ public final class StyleHelper
     }
 
     return null;
+  }
+
+  private static Styles[] findStyles( final ReferencableType reference )
+  {
+    if( reference instanceof LayerType )
+    {
+      return findStyles( (LayerType) reference );
+    }
+    else if( reference instanceof ChartType )
+    {
+      return findStyles( (ChartType) reference );
+    }
+
+    throw new NotImplementedException();
+  }
+
+  private static Styles[] findStyles( final LayerType layerType )
+  {
+    final Set<Styles> styles = new LinkedHashSet<Styles>();
+    styles.add( layerType.getStyles() );
+
+    final ReferencableType node = LayerTypeHelper.getParentNode( layerType );
+    Collections.addAll( styles, findStyles( node ) );
+
+    return styles.toArray( new Styles[] {} );
   }
 
   private static Styles[] findStyles( final ChartType chartType )
@@ -159,14 +176,6 @@ public final class StyleHelper
       if( layerStyles != null )
         styles.add( layerStyles );
     }
-
-    return styles.toArray( new Styles[] {} );
-  }
-
-  private static Styles[] findStyles( final LayerType layerType )
-  {
-    final Set<Styles> styles = new LinkedHashSet<Styles>();
-    styles.add( layerType.getStyles() );
 
     return styles.toArray( new Styles[] {} );
   }

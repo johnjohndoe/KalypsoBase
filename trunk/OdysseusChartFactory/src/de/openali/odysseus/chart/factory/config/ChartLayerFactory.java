@@ -221,6 +221,7 @@ public class ChartLayerFactory extends AbstractChartFactory
 
     final IParameterContainer parameters = createParameterContainer( layerType.getId(), provider.getId(), layerType.getProvider() );
     final IStyleSet styleSet = StyleFactory.createStyleSet( layerType.getStyles(), baseTypes, getContext() );
+
     provider.init( getModel(), layerType.getId(), parameters, getContext(), AxisUtils.getIdentifier( domainAxisRef ), AxisUtils.getIdentifier( targetAxisRef ), createMapperMap( layerType ), styleSet );
 
     final IChartLayer layer = provider.getLayer( getContext() );
