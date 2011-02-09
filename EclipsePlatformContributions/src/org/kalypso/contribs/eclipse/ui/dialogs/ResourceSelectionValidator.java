@@ -14,13 +14,13 @@ import org.kalypso.contribs.eclipse.i18n.Messages;
 
 public class ResourceSelectionValidator implements ISelectionValidator
 {
-  public static final String ERROR_MESSAGE = Messages.getString("org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator0"); //$NON-NLS-1$
+  public static final String ERROR_MESSAGE = Messages.getString( "org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator0" ); //$NON-NLS-1$
 
   /**
    * @see org.eclipse.ui.dialogs.ISelectionValidator#isValid(java.lang.Object)
    */
   @Override
-  public String isValid( Object selection )
+  public String isValid( final Object selection )
   {
     if( selection != null && selection instanceof IResource )
     {

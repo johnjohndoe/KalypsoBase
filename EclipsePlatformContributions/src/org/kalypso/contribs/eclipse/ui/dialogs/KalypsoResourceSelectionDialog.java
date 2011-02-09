@@ -122,7 +122,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
     return dialogArea;
   }
 
-  public void setViewerFilter( ViewerFilter filter )
+  public void setViewerFilter( final ViewerFilter filter )
   {
     m_filter = filter;
   }
