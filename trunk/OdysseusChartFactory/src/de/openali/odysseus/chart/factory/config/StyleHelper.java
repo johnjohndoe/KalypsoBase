@@ -140,7 +140,11 @@ public final class StyleHelper
 
   private static Styles[] findStyles( final ReferencableType reference )
   {
-    if( reference instanceof LayerType )
+    if( reference == null )
+    {
+      return new Styles[] {};
+    }
+    else if( reference instanceof LayerType )
     {
       return findStyles( (LayerType) reference );
     }
