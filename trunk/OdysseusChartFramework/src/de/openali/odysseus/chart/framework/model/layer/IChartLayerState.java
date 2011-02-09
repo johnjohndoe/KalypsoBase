@@ -48,7 +48,7 @@ public interface IChartLayerState
   void restoreState( final IChartLayer chartLayer );
 
   void storeState( final IChartLayer chartLayer );
-  
-  String getID();
+
+  String getID( );
 
 }

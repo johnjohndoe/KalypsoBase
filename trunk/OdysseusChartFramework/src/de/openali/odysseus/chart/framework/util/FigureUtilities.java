@@ -2,8 +2,11 @@ package de.openali.odysseus.chart.framework.util;
 
 import org.eclipse.swt.graphics.Point;
 
-public class FigureUtilities
+public final class FigureUtilities
 {
+  private FigureUtilities( )
+  {
+  }
 
   /**
    * creates an array of integer values containing alternately x and y position of the given points

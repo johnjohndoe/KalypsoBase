@@ -18,7 +18,7 @@ public class ChartModel implements IChartModel
 
   private String m_identifier = "";
 
-  private final ILayerManager m_manager = new LayerManager( this );
+  private final ILayerManager m_layerManager = new LayerManager( this );
 
   private final IMapperRegistry m_mapperRegistry = new MapperRegistry();
 
@@ -85,7 +85,7 @@ public class ChartModel implements IChartModel
   @Override
   public ILayerManager getLayerManager( )
   {
-    return m_manager;
+    return m_layerManager;
   }
 
   /*
@@ -108,6 +108,15 @@ public class ChartModel implements IChartModel
     return null;
   }
 
+// /**
+// * @see de.openali.odysseus.chart.framework.model.IChartModel#getState()
+// */
+// @Override
+// public IChartModelState getState( )
+// {
+// return new ChartModelState( getLayerManager() );
+// }
+
   /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#getSettings()
    */
@@ -116,15 +125,6 @@ public class ChartModel implements IChartModel
   {
     return m_settings;
   }
-
-//  /**
-//   * @see de.openali.odysseus.chart.framework.model.IChartModel#getState()
-//   */
-//  @Override
-//  public IChartModelState getState( )
-//  {
-//    return new ChartModelState( getLayerManager() );
-//  }
 
   /**
    * Maximizes the chart view - that means all the available data of all layers is shown

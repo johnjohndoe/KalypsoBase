@@ -69,6 +69,7 @@ import de.openali.odysseus.chart.framework.model.exception.ConfigurationExceptio
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProviderSource;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
@@ -224,8 +225,58 @@ public class ChartLayerFactory extends AbstractChartFactory
     final Styles styles = layerType.getStyles();
 
     final IStyleSet styleSet = StyleFactory.createStyleSet( styles, baseTypes, getContext() );
+    final Map<String, String> map = createMapperMap( layerType );
 
-    provider.init( getModel(), layerType.getId(), parameters, getContext(), AxisUtils.getIdentifier( domainAxisRef ), AxisUtils.getIdentifier( targetAxisRef ), createMapperMap( layerType ), styleSet );
+    provider.init( new ILayerProviderSource()
+    {
+      @Override
+      public String getTargetAxis( )
+      {
+        return AxisUtils.getIdentifier( targetAxisRef );
+      }
+
+      @Override
+      public IStyleSet getStyleSet( )
+      {
+        return styleSet;
+      }
+
+      @Override
+      public IChartModel getModel( )
+      {
+        return ChartLayerFactory.this.getModel();
+      }
+
+      @Override
+      public Map<String, String> getMapperMap( )
+      {
+        return map;
+      }
+
+      @Override
+      public String getIdentifier( )
+      {
+        return layerType.getId();
+      }
+
+      @Override
+      public String getDomainAxis( )
+      {
+        return AxisUtils.getIdentifier( domainAxisRef );
+      }
+
+      @Override
+      public URL getContext( )
+      {
+        return ChartLayerFactory.this.getContext();
+      }
+
+      @Override
+      public IParameterContainer getContainer( )
+      {
+        return parameters;
+      }
+    } );
 
     final IChartLayer layer = provider.getLayer( getContext() );
     setBasicParameters( layerType, layer );

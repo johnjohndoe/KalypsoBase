@@ -59,6 +59,7 @@ public class AutoScaleVisitor implements IAxisVisitor
 {
 
   private final IChartModel m_model;
+
   private final boolean m_recursive;
 
   public AutoScaleVisitor( final IChartModel model, final boolean recursive )
@@ -79,7 +80,7 @@ public class AutoScaleVisitor implements IAxisVisitor
 
     for( final IChartLayer layer : layers )
     {
-      if( layer.isVisible()  )
+      if( layer.isVisible() )
       {
         final IDataRange<Number> range = getRangeFor( layer, axis );
         if( range != null )

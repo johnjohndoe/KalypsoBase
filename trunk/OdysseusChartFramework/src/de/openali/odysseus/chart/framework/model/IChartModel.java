@@ -7,24 +7,24 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 
 public interface IChartModel extends ILayerContainer
 {
-  IMapperRegistry getMapperRegistry( );
-
-  void clear( );
-
-  void dispose( );
-
   /**
    * When called, all given axes set their DataRange so all their layers data can be shown
    */
   void autoscale( IAxis... axes );
 
-  String getIdentifier( );
+  void clear( );
 
-  void setIdentifier( String identifier );
-
- // IChartModelState getState( );
+  void dispose( );
 
   IChartBehaviour getBehaviour( );
 
+  String getIdentifier( );
+
+  IMapperRegistry getMapperRegistry( );
+
   IBasicChartSettings getSettings( );
+
+  void setIdentifier( String identifier );
+
+  // IChartModelState getState( );
 }
