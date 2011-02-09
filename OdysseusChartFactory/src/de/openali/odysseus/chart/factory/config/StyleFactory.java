@@ -98,7 +98,7 @@ public final class StyleFactory
   {
   }
 
-  public static final String STYLE_KEY = "de.openali.odysseus.chart.factory.style";
+  public static final String STYLE_KEY = "de.openali.odysseus.chart.factory.style"; //$NON-NLS-1$
 
   public static Map<String, IStyle> createStyleMap( final Styles styles, final URL context )
   {
@@ -185,9 +185,9 @@ public final class StyleFactory
       {
         try
         {
-          if( reference.startsWith( "#" ) ) // local style reference
+          if( reference.startsWith( "#" ) ) // local style reference //$NON-NLS-1$
           {
-            final RETokenizer tokenizer = new RETokenizer( new Pattern( "#" ), reference );
+            final RETokenizer tokenizer = new RETokenizer( new Pattern( "#" ), reference ); //$NON-NLS-1$
             final String identifier = tokenizer.nextToken();
 
             final AbstractStyleType styleType = StyleHelper.findStyle( baseTypes, identifier );
@@ -223,8 +223,8 @@ public final class StyleFactory
           e.printStackTrace();
         }
       }
-
     }
+
     return styleSet;
   }
 
