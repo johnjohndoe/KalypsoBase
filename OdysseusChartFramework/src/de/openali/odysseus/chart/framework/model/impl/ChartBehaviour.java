@@ -81,7 +81,7 @@ public class ChartBehaviour implements IChartBehaviour
 
     for( final IAxis axis : axes )
     {
-      final IChartLayer[] layers = layerManager.getLayers( axis,false );
+      final IChartLayer[] layers = layerManager.getLayers( axis, false );
       if( ArrayUtils.isEmpty( layers ) )
       {
         axis.setVisible( false );

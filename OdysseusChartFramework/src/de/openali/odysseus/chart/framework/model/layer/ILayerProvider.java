@@ -1,11 +1,8 @@
 package de.openali.odysseus.chart.framework.model.layer;
 
 import java.net.URL;
-import java.util.Map;
 
-import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * A LayerProvider is needed to create layers from configuration data. There's no 1:1 mapping from data sources to
@@ -24,5 +21,5 @@ public interface ILayerProvider extends IChartComponentProvider
    */
   IChartLayer getLayer( final URL context ) throws ConfigurationException;
 
-  void init( final IChartModel model, String id, IParameterContainer parameters, final URL context, String domainAxisId, String targetAxisId, Map<String, String> mapperMap, IStyleSet styleSet );
+  void init( ILayerProviderSource source );
 }

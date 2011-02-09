@@ -46,5 +46,6 @@ package de.openali.odysseus.chart.framework.model;
 public interface IChartModelState
 {
   void restoreState( final IChartModel model );
+
   void storeState( final IChartModel model );
 }
