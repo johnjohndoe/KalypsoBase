@@ -36,7 +36,7 @@ public class ColorFill implements IFill
   }
 
   @Override
-  public ColorFill copy( )
+  public ColorFill clone( )
   {
     return new ColorFill( getFillColor() );
   }
