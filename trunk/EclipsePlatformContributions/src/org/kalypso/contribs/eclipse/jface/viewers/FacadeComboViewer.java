@@ -67,7 +67,10 @@ import org.eclipse.swt.widgets.Composite;
  * IFacadeComboViewerDelegate handles the processing of your input data and default selection of your combobox
  * 
  * @author Dirk Kuch
+ * @deprecated Directly use ComboViewer, the code is not really shorter, but it breaks the usual JFace-Pattern of
+ *             Viewers
  */
+@Deprecated
 public class FacadeComboViewer
 {
   private final List<Runnable> m_listener = new LinkedList<Runnable>();
