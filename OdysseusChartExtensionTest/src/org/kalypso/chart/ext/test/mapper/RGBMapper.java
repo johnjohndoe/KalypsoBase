@@ -89,7 +89,7 @@ public IStyle numericToScreen( Number value, IStyle bluePrintStlye )
     if( rgb == null )
     {
       Logger.logWarning( Logger.TOPIC_LOG_MAPPER, "No mapping for value '" + value.toString() + "' - returning invisible Style" );
-      IStyle copy = bluePrintStlye.copy();
+      IStyle copy = bluePrintStlye.clone();
       copy.setVisible( false );
       return copy;
     }
@@ -97,22 +97,22 @@ public IStyle numericToScreen( Number value, IStyle bluePrintStlye )
     IStyle newStyle = null;
     if( bluePrintStlye instanceof IAreaStyle )
     {
-      IAreaStyle copy = ((IAreaStyle) bluePrintStlye).copy();
+      IAreaStyle copy = ((IAreaStyle) bluePrintStlye).clone();
       copy.setFill( new ColorFill( rgb ) );
     }
     else if( bluePrintStlye instanceof ILineStyle )
     {
-      ILineStyle copy = ((ILineStyle) bluePrintStlye).copy();
+      ILineStyle copy = ((ILineStyle) bluePrintStlye).clone();
       copy.setColor( rgb );
     }
     else if( bluePrintStlye instanceof IPointStyle )
     {
-      IPointStyle copy = ((IPointStyle) bluePrintStlye).copy();
+      IPointStyle copy = ((IPointStyle) bluePrintStlye).clone();
       copy.setInlineColor( rgb );
     }
     else if( bluePrintStlye instanceof ITextStyle )
     {
-      ITextStyle copy = ((ITextStyle) bluePrintStlye).copy();
+      ITextStyle copy = ((ITextStyle) bluePrintStlye).clone();
       copy.setTextColor( rgb );
     }
     return newStyle;

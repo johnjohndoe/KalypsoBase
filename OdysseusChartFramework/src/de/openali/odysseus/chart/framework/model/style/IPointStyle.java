@@ -5,7 +5,7 @@ import org.eclipse.swt.graphics.RGB;
 public interface IPointStyle extends IStyle
 {
   @Override
-  IPointStyle copy( );
+  IPointStyle clone( );
 
   int getHeight( );
 

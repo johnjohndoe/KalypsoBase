@@ -8,7 +8,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
 public interface ILineStyle extends IStyle
 {
   @Override
-  ILineStyle copy( );
+  ILineStyle clone( );
 
   RGB getColor( );
 

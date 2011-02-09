@@ -383,7 +383,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     if( m_editPointFigure == null )
     {
       m_editPointFigure = new PointFigure();
-      m_editPointStyle = getPointFigure().getStyle().copy();
+      m_editPointStyle = getPointFigure().getStyle().clone();
       m_editPointStyle.setAlpha( (int) (getPointFigure().getStyle().getAlpha() * 0.5) );
       m_editPointFigure.setStyle( m_editPointStyle );
     }
@@ -391,7 +391,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     if( m_editLineFigure == null )
     {
       m_editLineFigure = new PolylineFigure();
-      m_editLineStyle = getPolylineFigure().getStyle().copy();
+      m_editLineStyle = getPolylineFigure().getStyle().clone();
       m_editLineStyle.setAlpha( (int) (getPolylineFigure().getStyle().getAlpha() * 0.5) );
       m_editLineFigure.setStyle( m_editLineStyle );
     }
@@ -409,7 +409,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     if( m_hoverPointFigure == null )
     {
       m_hoverPointFigure = new PointFigure();
-      m_hoverPointStyle = getPointFigure().getStyle().copy();
+      m_hoverPointStyle = getPointFigure().getStyle().clone();
       m_hoverPointFigure.setStyle( m_hoverPointStyle );
     }
 
@@ -424,7 +424,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     if( m_hoverLineFigure == null )
     {
       m_hoverLineFigure = new PolylineFigure();
-      m_hoverLineStyle = getPolylineFigure().getStyle().copy();
+      m_hoverLineStyle = getPolylineFigure().getStyle().clone();
       m_hoverLineStyle.setColor( new RGB( 255, 0, 0 ) );
       m_hoverLineStyle.setWidth( getPolylineFigure().getStyle().getWidth() + 2 );
       m_hoverLineFigure.setStyle( m_hoverLineStyle );

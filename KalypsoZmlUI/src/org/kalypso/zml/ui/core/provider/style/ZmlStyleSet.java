@@ -101,7 +101,7 @@ public class ZmlStyleSet extends AbstractStyleSetProvider implements IStyleSetPr
 
     final ILineStyle lineStyle = getDefaultLineStyle();
 
-    final AreaStyle areaStyle = new AreaStyle( new ColorFill( rgb ), alpha, lineStyle.copy(), true );
+    final AreaStyle areaStyle = new AreaStyle( new ColorFill( rgb ), alpha, lineStyle.clone(), true );
     getStyleSet().addStyle( AREA_PREFIX, areaStyle );
   }
 
@@ -121,7 +121,7 @@ public class ZmlStyleSet extends AbstractStyleSetProvider implements IStyleSetPr
     final int width = Float.valueOf( stroke.getLineWidth() ).intValue();
 
     final ILineStyle lineStyle = getDefaultLineStyle();
-    final ILineStyle clone = lineStyle.copy();
+    final ILineStyle clone = lineStyle.clone();
     clone.setVisible( false );
 
     final PointStyle pointStyle = new PointStyle( clone, width, width, alpha, rgb, IDefaultStyles.DEFAULT_FILL_VISIBILITY, IDefaultStyles.DEFAULT_MARKER, IDefaultStyles.DEFAULT_VISIBILITY );

@@ -153,9 +153,9 @@ public class PointStyle extends AbstractStyle implements IPointStyle
   }
 
   @Override
-  public IPointStyle copy( )
+  public IPointStyle clone( )
   {
-    return new PointStyle( getStroke().copy(), getWidth(), getHeight(), getAlpha(), getInlineColor(), isFillVisible(), getMarker().copy(), isVisible() );
+    return new PointStyle( getStroke().clone(), getWidth(), getHeight(), getAlpha(), getInlineColor(), isFillVisible(), getMarker().copy(), isVisible() );
   }
 
   /**
