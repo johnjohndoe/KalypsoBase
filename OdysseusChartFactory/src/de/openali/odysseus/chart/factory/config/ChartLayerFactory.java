@@ -264,7 +264,6 @@ public class ChartLayerFactory extends AbstractChartFactory
         if( getModel().getMapperRegistry().getMapper( mapperType.getId() ) == null )
           addMapper( mapperType );
     }
-
   }
 
   private ReferencingType getTargetAxisReference( final LayerType layerType, final ReferencableType... baseTypes )
@@ -279,7 +278,6 @@ public class ChartLayerFactory extends AbstractChartFactory
     final MapperRefs reference = findMapperReference( layerType, baseTypes );
 
     return reference.getDomainAxisRef();
-
   }
 
   private MapperRefs findMapperReference( final LayerType layerType, final ReferencableType[] baseTypes )
