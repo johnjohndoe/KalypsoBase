@@ -44,7 +44,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.graphics.RGB;
 
 import de.openali.odysseus.chart.factory.util.LayerTypeHelper;
@@ -125,7 +124,14 @@ public final class StyleHelper
 
     for( final ReferencableType reference : baseReferences )
     {
-      Collections.addAll( styles, findStyles( reference ) );
+      if( reference instanceof LayerType )
+      {
+        Collections.addAll( styles, findStyles( (LayerType) reference ) );
+      }
+      else if( reference instanceof ChartType )
+      {
+        Collections.addAll( styles, findStyles( (ChartType) reference ) );
+      }
     }
 
     for( final Styles style : styles )
@@ -138,39 +144,30 @@ public final class StyleHelper
     return null;
   }
 
-  private static Styles[] findStyles( final ReferencableType reference )
-  {
-    if( reference == null )
-    {
-      return new Styles[] {};
-    }
-    else if( reference instanceof LayerType )
-    {
-      return findStyles( (LayerType) reference );
-    }
-    else if( reference instanceof ChartType )
-    {
-      return findStyles( (ChartType) reference );
-    }
-
-    throw new NotImplementedException();
-  }
-
   private static Styles[] findStyles( final LayerType layerType )
   {
-    final Set<Styles> styles = new LinkedHashSet<Styles>();
-    styles.add( layerType.getStyles() );
+    final Set<Styles> collected = new LinkedHashSet<Styles>();
+
+    final Styles styles = layerType.getStyles();
+    if( styles != null )
+      collected.add( styles );
 
     final ReferencableType node = LayerTypeHelper.getParentNode( layerType );
-    Collections.addAll( styles, findStyles( node ) );
+    if( node instanceof LayerType )
+    {
+      Collections.addAll( collected, findStyles( (LayerType) node ) );
+    }
 
-    return styles.toArray( new Styles[] {} );
+    return collected.toArray( new Styles[] {} );
   }
 
   private static Styles[] findStyles( final ChartType chartType )
   {
-    final Set<Styles> styles = new LinkedHashSet<Styles>();
-    styles.add( chartType.getStyles() );
+    final Set<Styles> collected = new LinkedHashSet<Styles>();
+
+    final Styles styles = chartType.getStyles();
+    if( styles != null )
+      collected.add( styles );
 
     final LayersType layersType = chartType.getLayers();
     final LayerType[] layers = layersType.getLayerArray();
@@ -178,10 +175,10 @@ public final class StyleHelper
     {
       final Styles layerStyles = layerType.getStyles();
       if( layerStyles != null )
-        styles.add( layerStyles );
+        collected.add( layerStyles );
     }
 
-    return styles.toArray( new Styles[] {} );
+    return collected.toArray( new Styles[] {} );
   }
 
   public static AbstractStyleType findStyle( final Styles styles, final String identifier )
