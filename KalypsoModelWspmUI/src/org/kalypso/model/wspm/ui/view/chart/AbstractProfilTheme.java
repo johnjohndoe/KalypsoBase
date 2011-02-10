@@ -365,21 +365,20 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#lockLayer(boolean)
    */
   @Override
-  public void lockLayer( final boolean isLocked )
+  public void lockLayer( final boolean locked )
   {
-    if( isLocked != isLocked() )
+    if( locked != isLocked() )
     {
       final EditableChartLayerVisitor visitor = new EditableChartLayerVisitor();
       getLayerManager().accept( visitor );
 
       for( final IEditableChartLayer layer : visitor.getLayers() )
       {
-        layer.lockLayer( isLocked );
+        layer.lockLayer( locked );
       }
     }
 
-    super.lockLayer( isLocked );
-
+    super.lockLayer( locked );
   }
 
   /**

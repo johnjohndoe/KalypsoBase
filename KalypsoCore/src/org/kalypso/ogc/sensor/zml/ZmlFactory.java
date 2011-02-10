@@ -69,6 +69,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -76,7 +77,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.bind.NamespacePrefixMap;
 import org.kalypso.commons.factory.FactoryException;
-import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
@@ -668,7 +668,7 @@ public final class ZmlFactory
       buffer.append( model.get( i, axis ) ).append( ";" ); //$NON-NLS-1$
     }
 
-    return Strings.chomp( buffer.toString() );
+    return StringUtils.chomp( buffer.toString() );
   }
 
   private static String buildStringDateAxis( final ITupleModel model, final IAxis axis, final TimeZone timezone ) throws SensorException
@@ -681,7 +681,7 @@ public final class ZmlFactory
       buffer.append( dateParser.toString( model.get( i, axis ) ) ).append( ";" ); //$NON-NLS-1$
     }
 
-    return Strings.chomp( buffer.toString() );
+    return StringUtils.chomp( buffer.toString() );
   }
 
   /**
@@ -700,7 +700,7 @@ public final class ZmlFactory
       buffer.append( elt ).append( ";" ); //$NON-NLS-1$
     }
 
-    return Strings.chomp( buffer.toString() );
+    return StringUtils.chomp( buffer.toString() );
   }
 
   /**

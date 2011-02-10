@@ -43,21 +43,32 @@ package org.kalypso.chart.ui.layer.selection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
+import org.kalypso.chart.ui.layer.selection.utils.FindAxisVisitor;
 import org.kalypso.commons.java.lang.Strings;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
+import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
+import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 
 /**
  * @author Dirk Kuch
  */
 public class AxisSelectionLayer extends AbstractChartLayer
 {
+  private Point m_position;
+
   public AxisSelectionLayer( final ILayerProvider provider )
   {
     super( provider );
@@ -69,15 +80,31 @@ public class AxisSelectionLayer extends AbstractChartLayer
   @Override
   public void paint( final GC gc )
   {
+    if( m_position == null )
+      return;
 
+    final IAxis targetAxis = getCoordinateMapper().getTargetAxis();
+    final IDataRange<Number> targetRange = targetAxis.getNumericRange();
+
+    final Integer y0 = targetAxis.numericToScreen( targetRange.getMin() );
+    final Integer y1 = targetAxis.numericToScreen( targetRange.getMax() );
+
+    final ILineStyle style = new LineStyle( 3, new RGB( 255, 0, 0 ), 100, 0F, new float[] { 12, 7 }, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
+
+    final PolylineFigure polylineFigure = new PolylineFigure();
+    polylineFigure.setStyle( style );
+    polylineFigure.setPoints( new Point[] { new Point( m_position.x, y0 ), new Point( m_position.x, y1 ) } );
+    polylineFigure.paint( gc );
   }
 
   public IAxis[] getAxes( )
   {
     final IChartModel model = getProvider().getModel();
-    final String[] axisIdentifiers = findAxisIdentifiers();
+    final IMapperRegistry registry = model.getMapperRegistry();
+    final FindAxisVisitor visitor = new FindAxisVisitor( findAxisIdentifiers() );
+    registry.accept( visitor );
 
-    throw new NotImplementedException();
+    return visitor.getAxes();
   }
 
   private String[] findAxisIdentifiers( )
@@ -95,5 +122,16 @@ public class AxisSelectionLayer extends AbstractChartLayer
     }
 
     return identifiers.toArray( new String[] {} );
+  }
+
+  public void setMousePosition( final Point position )
+  {
+    m_position = position;
+// final IAxis domainAxis = getDomainAxis();
+// final int screenValue = domainAxis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? point.x :
+// point.y;
+// m_selection = screenToNumeric( screenValue );
+
+    getEventHandler().fireLayerContentChanged( this );
   }
 }

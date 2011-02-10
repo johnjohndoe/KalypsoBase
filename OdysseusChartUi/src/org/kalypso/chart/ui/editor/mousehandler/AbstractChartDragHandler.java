@@ -97,12 +97,9 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
 
     for( final IEditableChartLayer layer : layers )
     {
-      if( layer.isVisible() )
-      {
-        final EditInfo info = layer.getHover( plotPoint );
-        if( info != null )
-          return info;
-      }
+      final EditInfo info = layer.getHover( plotPoint );
+      if( info != null )
+        return info;
     }
 
     return null;

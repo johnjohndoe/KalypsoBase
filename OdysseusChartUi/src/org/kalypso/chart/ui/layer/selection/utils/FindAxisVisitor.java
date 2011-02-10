@@ -38,36 +38,43 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.factory.util;
+package org.kalypso.chart.ui.layer.selection.utils;
 
-import jregex.Pattern;
-import jregex.RETokenizer;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
 
-import de.openali.odysseus.chartconfig.x020.ReferencingType;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public final class AxisUtils
+public class FindAxisVisitor implements IAxisVisitor
 {
-  private AxisUtils( )
+  private final Set<IAxis> m_axes = new LinkedHashSet<IAxis>();
+
+  private final String[] m_identifiers;
+
+  public FindAxisVisitor( final String... identifiers )
   {
+    m_identifiers = identifiers;
   }
 
   /**
-   * @return axis id from referencing type
+   * @see de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor#visit(de.openali.odysseus.chart.framework.model.mapper.IAxis)
    */
-  public static String getIdentifier( final ReferencingType type )
+  @Override
+  public void visit( final IAxis axis )
   {
-    final String ref = type.getRef();
-    if( StringUtils.isNotEmpty( ref ) )
-      return ref;
-
-    final String url = type.getUrl();
-    final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), url ); //$NON-NLS-1$
-
-    return StringUtils.chop( tokenizer.nextToken() );
+    if( ArrayUtils.contains( m_identifiers, axis.getIdentifier() ) )
+      m_axes.add( axis );
   }
+
+  public IAxis[] getAxes( )
+  {
+    return m_axes.toArray( new IAxis[] {} );
+  }
+
 }
