@@ -55,9 +55,9 @@ import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
  */
 public final class IntervalSourceHandler
 {
-  public static final String SOURCE_EXTENDED = "source://extended";
+  public static final String SOURCE_EXTENDED = "source://extended"; // $NON-NLS-1$
 
-  public static final String SOURCE_INITIAL_VALUE = "source://initialValue";
+  public static final String SOURCE_INITIAL_VALUE = "source://initialValue"; // $NON-NLS-1$
 
   private IntervalSourceHandler( )
   {
@@ -73,39 +73,38 @@ public final class IntervalSourceHandler
         final String[] srcs = DataSourceHelper.getSources( sources[i] );
 
         final StringBuffer buffer = new StringBuffer();
-        buffer.append( String.format( "%s%s?", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID ) );
+        buffer.append( String.format( "%s%s?", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID ) ); // $NON-NLS-1$
 
         if( !ArrayUtils.isEmpty( srcs ) )
         {
           for( int srcIndex = 0; srcIndex < srcs.length; srcIndex++ )
           {
             final String src = srcs[srcIndex];
-            buffer.append( String.format( "source_%d=%s&", srcIndex, src ) );
+            buffer.append( String.format( "source_%d=%s&", srcIndex, src ) ); // $NON-NLS-1$
           }
 
           /* merged sources references */
-          String mergedSources = "";
+          String mergedSources = ""; //$NON-NLS-1$
           for( int srcIndex = 0; srcIndex < srcs.length; srcIndex++ )
           {
             if( isInitialValue( srcs[srcIndex] ) )
               continue;
 
-            mergedSources += String.format( "%d,", srcIndex );
+            mergedSources += String.format( "%d,", srcIndex ); //$NON-NLS-1$
           }
 
           if( !mergedSources.isEmpty() )
           {
             // mergedSources=...,n-1,n
-            buffer.append( String.format( "%s=", DataSourceHelper.MERGED_SOURCES_ID ) );
+            buffer.append( String.format( "%s=", DataSourceHelper.MERGED_SOURCES_ID ) ); //$NON-NLS-1$
             for( int srcIndex = 0; srcIndex < srcs.length; srcIndex++ )
             {
-              buffer.append( String.format( "%d,", srcIndex ) );
+              buffer.append( String.format( "%d,", srcIndex ) ); //$NON-NLS-1$
             }
           }
         }
 
-        final String reference = StringUtils.chomp( buffer.toString() );
-        sources[i] = reference;
+        sources[i] = StringUtils.chop( buffer.toString() );
       }
     }
   }
@@ -169,21 +168,20 @@ public final class IntervalSourceHandler
 
       if( sources.isEmpty() )
       {
-        return String.format( "%s%s?source_0=%s", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID, SOURCE_EXTENDED );
+        return String.format( "%s%s?source_0=%s", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID, SOURCE_EXTENDED ); //$NON-NLS-1$
       }
       else
       {
         final StringBuffer buffer = new StringBuffer();
-        buffer.append( String.format( "%s%s?", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID ) );
+        buffer.append( String.format( "%s%s?", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID ) ); //$NON-NLS-1$
 
         final String[] sourceArray = sources.toArray( new String[] {} );
         for( int i = 0; i < sourceArray.length; i++ )
         {
-          buffer.append( String.format( "source_%d=%s&", i, sourceArray[i] ) );
+          buffer.append( String.format( "source_%d=%s&", i, sourceArray[i] ) ); //$NON-NLS-1$
         }
 
-        final String source = StringUtils.chomp( buffer.toString() );
-        return source;
+        return StringUtils.chop( buffer.toString() );
       }
     }
 
@@ -194,5 +192,4 @@ public final class IntervalSourceHandler
   {
     return SOURCE_INITIAL_VALUE.equalsIgnoreCase( base );
   }
-
 }

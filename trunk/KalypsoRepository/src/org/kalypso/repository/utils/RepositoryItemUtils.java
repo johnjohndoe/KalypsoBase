@@ -136,7 +136,7 @@ public final class RepositoryItemUtils
       parent += parts[i] + "."; //$NON-NLS-1$
     }
 
-    return StringUtils.chomp( parent );
+    return StringUtils.chop( parent );
   }
 
   public static String getParentItemId( final String identifier )
@@ -151,7 +151,7 @@ public final class RepositoryItemUtils
       parent += parts[i] + "."; //$NON-NLS-1$
     }
 
-    return StringUtils.chomp( parent );
+    return StringUtils.chop( parent );
   }
 
   /**
@@ -216,7 +216,7 @@ public final class RepositoryItemUtils
       }
     }
     if( !concat.isEmpty() )
-      partsQualified.add( StringUtils.chomp( concat ) );
+      partsQualified.add( StringUtils.chop( concat ) );
 
     return partsQualified.toArray( new String[] {} );
   }

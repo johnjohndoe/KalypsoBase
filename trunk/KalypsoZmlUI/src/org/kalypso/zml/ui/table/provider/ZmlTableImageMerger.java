@@ -156,7 +156,7 @@ public final class ZmlTableImageMerger
       buffer.append( ";" );
     }
 
-    return StringUtils.chomp( buffer.toString() );
+    return StringUtils.chop( buffer.toString() );
   }
 
   private Point getSize( )

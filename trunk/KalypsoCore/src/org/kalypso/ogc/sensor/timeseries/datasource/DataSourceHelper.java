@@ -203,7 +203,7 @@ public final class DataSourceHelper
       buffer.append( String.format( "%d,", index ) );
     }
 
-    return StringUtils.chomp( buffer.toString() );
+    return StringUtils.chop( buffer.toString() );
   }
 
   private static String removeMergedSourcesReference( final String reference )
@@ -225,7 +225,7 @@ public final class DataSourceHelper
       buffer.append( String.format( "source_%d=%s&", i, source ) );
     }
 
-    return StringUtils.chomp( buffer.toString() );
+    return StringUtils.chop( buffer.toString() );
   }
 
   /**

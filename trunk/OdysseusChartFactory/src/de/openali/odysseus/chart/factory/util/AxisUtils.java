@@ -68,6 +68,6 @@ public final class AxisUtils
     final String url = type.getUrl();
     final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), url ); //$NON-NLS-1$
 
-    return StringUtils.chop( tokenizer.nextToken() );
+    return StringUtils.chomp( tokenizer.nextToken() );
   }
 }
