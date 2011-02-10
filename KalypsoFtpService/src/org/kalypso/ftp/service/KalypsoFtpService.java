@@ -8,12 +8,9 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoFtpService extends Plugin
 {
+  public static final String PLUGIN_ID = "org.kalypso.ftp.service"; //$NON-NLS-1$
 
-  // The plug-in ID
-  public static final String PLUGIN_ID = "org.kalypso.ftp.service";
-
-  // The shared instance
-  private static KalypsoFtpService plugin;
+  private static KalypsoFtpService PLUGIN;
 
   /**
    * The constructor
@@ -34,7 +31,7 @@ public class KalypsoFtpService extends Plugin
     final KalypsoFtpFactory factory = KalypsoFtpFactory.getInstance();
     factory.start();
 
-    plugin = this;
+    PLUGIN = this;
   }
 
   /*
@@ -44,7 +41,7 @@ public class KalypsoFtpService extends Plugin
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
-    plugin = null;
+    PLUGIN = null;
 
     final KalypsoFtpFactory factory = KalypsoFtpFactory.getInstance();
     factory.stop();
@@ -59,7 +56,7 @@ public class KalypsoFtpService extends Plugin
    */
   public static KalypsoFtpService getDefault( )
   {
-    return plugin;
+    return PLUGIN;
   }
 
 }
