@@ -14,7 +14,6 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -162,13 +161,22 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
     final Map<String, AbstractStyleType> styleMap = new TreeMap<String, AbstractStyleType>();
     for( final AreaStyleType element : asa )
+    {
       styleMap.put( element.getRole(), element );
+    }
     for( final TextStyleType element : tsa )
+    {
       styleMap.put( element.getRole(), element );
+    }
     for( final LineStyleType element : lsa )
+    {
       styleMap.put( element.getRole(), element );
+    }
+
     for( final PointStyleType element : psa )
+    {
       styleMap.put( element.getRole(), element );
+    }
 
     return styleMap;
   }
@@ -178,7 +186,10 @@ public class ChartConfigurationLoader implements IReferenceResolver
     final TreeMap<String, MapperType> map = new TreeMap<String, MapperType>();
     final RoleReferencingType[] mra = layer.getMapperRefs().getMapperRefArray();
     for( final RoleReferencingType refType : mra )
+    {
       map.put( refType.getRole(), (MapperType) resolveReference( AxisUtils.getIdentifier( refType ) ) );
+    }
+
     return map;
   }
 
@@ -191,8 +202,11 @@ public class ChartConfigurationLoader implements IReferenceResolver
   {
     final ChartType[] charts = getCharts();
     for( final ChartType chart : charts )
+    {
       if( chart.getId().equals( id ) )
         return chart;
+    }
+
     return null;
   }
 
@@ -200,8 +214,11 @@ public class ChartConfigurationLoader implements IReferenceResolver
   {
     final ChartType[] charts = getCharts();
     final String[] chartIds = new String[charts.length];
-    for( int i = 0; i < chartIds.length; i++ )
-      chartIds[i] = charts[i].getId();
+    for( int index = 0; index < chartIds.length; index++ )
+    {
+      chartIds[index] = charts[index].getId();
+    }
+
     return chartIds;
   }
 
@@ -233,30 +250,26 @@ public class ChartConfigurationLoader implements IReferenceResolver
     final NamedNodeMap atts = node.getAttributes();
     if( atts != null )
     {
-      final Node idAtt = atts.getNamedItem( "id" );
+      final Node idAtt = atts.getNamedItem( "id" ); // $NON-NLS-1$
       if( idAtt != null )
+      {
         try
-      {
+        {
           m_idMap.put( idAtt.getNodeValue(), createXmlObjectFromNode( node ) );
-      }
-      catch( final DOMException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      catch( final XmlException e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        }
+        catch( final Throwable t )
+        {
+          t.printStackTrace();
+        }
       }
     }
     if( node.hasChildNodes() )
     {
       final NodeList childNodes = node.getChildNodes();
       final int length = childNodes.getLength();
-      for( int i = 0; i < length; i++ )
+      for( int index = 0; index < length; index++ )
       {
-        final Node child = childNodes.item( i );
+        final Node child = childNodes.item( index );
         fillIdMap( child );
       }
     }

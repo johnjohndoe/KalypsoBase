@@ -39,9 +39,9 @@ public class MapperRegistry implements IMapperRegistry
      * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractMapperEventListener#onMapperRangeChanged(de.openali.odysseus.chart.framework.model.mapper.IMapper)
      */
     @Override
-    public void onMapperChanged( final IMapper eventMapper )
+    public void onMapperChanged( final IMapper mapper )
     {
-      m_handler.fireMapperChanged( eventMapper );
+      m_handler.fireMapperChanged( mapper );
     }
   };
 
@@ -73,11 +73,11 @@ public class MapperRegistry implements IMapperRegistry
   @Override
   public void addMapper( final IMapper mapper )
   {
-    if( m_mappers.containsKey( mapper.getId() ) )
-      Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Mapper already present in registry: " + mapper.getId() + " - " );
+    if( m_mappers.containsKey( mapper.getIdentifier() ) )
+      Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Mapper already present in registry: " + mapper.getIdentifier() + " - " );
     else
     {
-      m_mappers.put( mapper.getId(), mapper );
+      m_mappers.put( mapper.getIdentifier(), mapper );
 
       mapper.addListener( m_mapperEventListener );
 
@@ -93,7 +93,7 @@ public class MapperRegistry implements IMapperRegistry
    */
   public void removeMapper( final IMapper mapper )
   {
-    m_mappers.remove( mapper.getId() );
+    m_mappers.remove( mapper.getIdentifier() );
     m_handler.fireMapperRemoved( mapper );
   }
 

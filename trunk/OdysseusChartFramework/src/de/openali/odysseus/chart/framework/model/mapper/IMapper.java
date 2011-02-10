@@ -9,10 +9,11 @@ import de.openali.odysseus.chart.framework.model.event.IMapperEventListener;
  */
 public interface IMapper extends IEventProvider<IMapperEventListener>
 {
+
   /**
    * @return the unique identifier
    */
-  String getId( );
+  String getIdentifier( );
 
   /**
    * method to store arbitrary data objects;

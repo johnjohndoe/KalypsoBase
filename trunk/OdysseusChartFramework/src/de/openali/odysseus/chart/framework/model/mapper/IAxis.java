@@ -114,4 +114,7 @@ public interface IAxis extends IMapper
 
   void setVisible( final boolean visible );
 
+  void setSelection( Object selection );
+
+  Object getSelection( );
 }

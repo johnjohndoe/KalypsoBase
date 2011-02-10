@@ -67,7 +67,7 @@ public class UpdateAxisVisibilityVisitor implements IAxisVisitor
   @Override
   public void visit( final IAxis axis )
   {
-    final String axisType = axis.getId();
+    final String axisType = axis.getIdentifier();
     if( ArrayUtils.contains( m_ignoreTypes, axisType ) )
     {
       axis.setVisible( false );
