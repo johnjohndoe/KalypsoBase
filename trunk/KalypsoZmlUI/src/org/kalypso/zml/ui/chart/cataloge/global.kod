@@ -91,17 +91,23 @@
       <LineStyle role="w_active_dash_line_1">
         <Width>3</Width>
         <LineColor>3460A9</LineColor>
-        <DashArray>16 8</DashArray>
+        <DashArray>16 6</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <LineStyle role="w_active_dot_line_1">
         <Width>3</Width>
         <LineColor>3460A9</LineColor>
-        <DashArray>3 6</DashArray>
+        <DashArray>3 3</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
-      <LineStyle role="w_active_dash_dot_line_1">
+      <LineStyle role="w_active_wide_dot_line_1">
         <Width>3</Width>
         <LineColor>3460A9</LineColor>
-        <DashArray>12 8 3 8</DashArray>
+        <DashArray>3 12</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <LineStyle role="w_line_2">
         <Width>2</Width>
@@ -273,17 +279,23 @@
       <LineStyle role="q_active_dash_line_1">
         <Width>3</Width>
         <LineColor>65782F</LineColor>
-        <DashArray>16 8</DashArray>
+        <DashArray>16 6</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <LineStyle role="q_active_dot_line_1">
         <Width>3</Width>
         <LineColor>65782F</LineColor>
-        <DashArray>3 6</DashArray>
+        <DashArray>3 3</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
-      <LineStyle role="q_active_dash_dot_line_1">
+      <LineStyle role="q_active_wide_dot_line_1">
         <Width>3</Width>
         <LineColor>65782F</LineColor>
-        <DashArray>12 8 3 8</DashArray>
+        <DashArray>3 12</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <LineStyle role="q_line_2">
         <Width>2</Width>
