@@ -274,7 +274,7 @@ public final class ChartTypeResolver implements IReferenceResolver
 
       final RETokenizer tokenizer = new RETokenizer( pattern, url );
 
-      return StringUtils.chop( tokenizer.nextToken() );
+      return StringUtils.chomp( tokenizer.nextToken() );
     }
 
     return context.toString();
@@ -284,7 +284,7 @@ public final class ChartTypeResolver implements IReferenceResolver
   {
     final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), url ); //$NON-NLS-1$
 
-    return StringUtils.chop( tokenizer.nextToken() );
+    return StringUtils.chomp( tokenizer.nextToken() );
   }
 
   private MapperType findUrnMapperType( final URL context, final String urn, final String identifier ) throws XmlException, IOException

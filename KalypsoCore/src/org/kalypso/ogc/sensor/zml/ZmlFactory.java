@@ -668,7 +668,7 @@ public final class ZmlFactory
       buffer.append( model.get( i, axis ) ).append( ";" ); //$NON-NLS-1$
     }
 
-    return StringUtils.chomp( buffer.toString() );
+    return StringUtils.chop( buffer.toString() );
   }
 
   private static String buildStringDateAxis( final ITupleModel model, final IAxis axis, final TimeZone timezone ) throws SensorException
@@ -681,7 +681,7 @@ public final class ZmlFactory
       buffer.append( dateParser.toString( model.get( i, axis ) ) ).append( ";" ); //$NON-NLS-1$
     }
 
-    return StringUtils.chomp( buffer.toString() );
+    return StringUtils.chop( buffer.toString() );
   }
 
   /**
@@ -700,7 +700,7 @@ public final class ZmlFactory
       buffer.append( elt ).append( ";" ); //$NON-NLS-1$
     }
 
-    return StringUtils.chomp( buffer.toString() );
+    return StringUtils.chop( buffer.toString() );
   }
 
   /**

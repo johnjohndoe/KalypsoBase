@@ -180,14 +180,14 @@ public final class ZmlRuleResolver
   {
     final RETokenizer tokenizer = new RETokenizer( new Pattern( "#.*" ), url ); //$NON-NLS-1$
 
-    return StringUtils.chop( tokenizer.nextToken() );
+    return StringUtils.chomp( tokenizer.nextToken() );
   }
 
   private String getAnchor( final String url )
   {
     final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), url ); //$NON-NLS-1$
 
-    return StringUtils.chop( tokenizer.nextToken() );
+    return StringUtils.chomp( tokenizer.nextToken() );
   }
 
 }
