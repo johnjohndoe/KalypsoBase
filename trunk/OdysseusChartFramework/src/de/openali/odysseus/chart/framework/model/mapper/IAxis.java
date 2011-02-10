@@ -1,5 +1,7 @@
 package de.openali.odysseus.chart.framework.model.mapper;
 
+import org.eclipse.swt.graphics.Point;
+
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
@@ -114,7 +116,7 @@ public interface IAxis extends IMapper
 
   void setVisible( final boolean visible );
 
-  void setSelection( Object selection );
+  void setSelection( Point screenPoint );
 
   Object getSelection( );
 }

@@ -32,6 +32,7 @@ public class DragEditHandler extends AbstractChartDragHandler
   private final boolean canSnap( final Point point )
   {
     final ILayerManager layerManager = getChart().getChartModel().getLayerManager();
+
     final EditableChartLayerVisitor visitor = new EditableChartLayerVisitor();
     layerManager.accept( visitor );
 
@@ -39,11 +40,12 @@ public class DragEditHandler extends AbstractChartDragHandler
 
     for( final IEditableChartLayer layer : layers )
     {
-      if( !layer.isLocked() && layer.isVisible() && layer.getHover( point ) != null )
+      if( layer.getHover( point ) != null )
       {
         return true;
       }
     }
+
     return false;
   }
 

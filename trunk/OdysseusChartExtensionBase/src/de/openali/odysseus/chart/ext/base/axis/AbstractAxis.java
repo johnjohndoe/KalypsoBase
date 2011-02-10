@@ -1,11 +1,14 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
+import org.eclipse.swt.graphics.Point;
+
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
@@ -311,9 +314,13 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
    * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setSelection(java.lang.Object)
    */
   @Override
-  public void setSelection( final Object selection )
+  public void setSelection( final Point screen )
   {
-    m_selection = selection;
+    if( screen == null )
+      m_selection = null;
+
+    final int screenValue = getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screen.x : screen.y;
+    m_selection = screenToNumeric( screenValue );
 
     fireMapperChanged( this );
   }

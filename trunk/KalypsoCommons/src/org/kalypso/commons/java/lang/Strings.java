@@ -65,34 +65,32 @@ public final class Strings
   }
 
   /**
-   * removes last letter of an string literal (see perl, ruby, etc.)
+   * @deprecated removes last letter of an string literal (see perl, ruby, etc.)
    */
+  @Deprecated
   public static String chomp( final String s )
   {
-    return s.substring( 0, s.length() - 1 );
+    return StringUtils.chomp( s );
   }
 
   /**
-   * removes all white spaces at beginning and end of an string (see perl, ruby, etc)
+   * @deprecated removes all white spaces at beginning and end of an string (see perl, ruby, etc)
    */
+  @Deprecated
   public static String chop( final String s )
   {
-    return s.trim();
+    return StringUtils.chop( s );
   }
 
+  @Deprecated
   public static boolean isEqual( final String s1, final String s2 )
   {
-    if( s1 == null || s2 == null )
-      return false;
-
-    return s1.equals( s2 );
+    return StringUtils.equals( s1, s2 );
   }
 
+  @Deprecated
   public static boolean isEqualIgnoreCase( final String s1, final String s2 )
   {
-    if( s1 == null || s2 == null )
-      return false;
-
-    return s1.equalsIgnoreCase( s2 );
+    return StringUtils.equalsIgnoreCase( s1, s2 );
   }
 }

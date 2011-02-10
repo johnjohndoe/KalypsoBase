@@ -53,6 +53,7 @@ import org.kalypso.chart.ui.layer.selection.utils.FindSelectionLayerVisitor;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
+import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 /**
  * @author Dirk Kuch
@@ -78,6 +79,9 @@ public class AxisSelectionCommandHandler extends AbstractHandler implements IEle
     final AxisSelectionLayer layer = findSelectionLayer( model );
     if( layer == null )
       return Status.CANCEL_STATUS;
+
+    final IPlotHandler plotHandler = chart.getPlotHandler();
+    plotHandler.activatePlotHandler( new AxisSelectionDragHandler( chart, layer ) );
 
     return null;
   }
