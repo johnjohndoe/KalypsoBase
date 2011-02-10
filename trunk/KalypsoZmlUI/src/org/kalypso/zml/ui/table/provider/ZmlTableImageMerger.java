@@ -52,7 +52,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.internal.OverlayIcon;
-import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.commons.java.lang.Strings;
 
 /**
  * @author Dirk Kuch
@@ -156,7 +156,7 @@ public final class ZmlTableImageMerger
       buffer.append( ";" );
     }
 
-    return StringUtilities.chomp( buffer.toString() );
+    return Strings.chomp( buffer.toString() );
   }
 
   private Point getSize( )

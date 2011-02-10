@@ -53,7 +53,7 @@ public class BranchLayerProvider extends AbstractLayerProvider
     final BranchLayer layer = new BranchLayer( this, observation.getResult(), domainComponentName, targetComponentName, iconComponentName, getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
     final Set<Entry<String, String>> entrySet = getMapperMap().entrySet();
     for( final Entry<String, String> e : entrySet )
-      layer.addMapper( e.getKey(), (IRetinalMapper) getChartModel().getMapperRegistry().getMapper( e.getValue() ) );
+      layer.addMapper( e.getKey(), (IRetinalMapper) getModel().getMapperRegistry().getMapper( e.getValue() ) );
     layer.init();
     return layer;
 

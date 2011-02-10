@@ -46,7 +46,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -203,7 +203,7 @@ public final class DataSourceHelper
       buffer.append( String.format( "%d,", index ) );
     }
 
-    return StringUtilities.chomp( buffer.toString() );
+    return Strings.chomp( buffer.toString() );
   }
 
   private static String removeMergedSourcesReference( final String reference )
@@ -225,7 +225,7 @@ public final class DataSourceHelper
       buffer.append( String.format( "source_%d=%s&", i, source ) );
     }
 
-    return StringUtilities.chomp( buffer.toString() );
+    return Strings.chomp( buffer.toString() );
   }
 
   /**

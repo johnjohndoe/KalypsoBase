@@ -40,10 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.layer.selection;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.graphics.GC;
+import org.kalypso.commons.java.lang.Strings;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * @author Dirk Kuch
@@ -62,5 +70,30 @@ public class AxisSelectionLayer extends AbstractChartLayer
   public void paint( final GC gc )
   {
 
+  }
+
+  public IAxis[] getAxes( )
+  {
+    final IChartModel model = getProvider().getModel();
+    final String[] axisIdentifiers = findAxisIdentifiers();
+
+    throw new NotImplementedException();
+  }
+
+  private String[] findAxisIdentifiers( )
+  {
+    final Set<String> identifiers = new HashSet<String>();
+
+    final IParameterContainer container = getProvider().getParameterContainer();
+
+    final String[] keys = container.findAllKeys( "axis" );
+    for( final String key : keys )
+    {
+      final String value = container.getParameterValue( key, "" );
+      if( Strings.isNotEmpty( value ) )
+        identifiers.add( value );
+    }
+
+    return identifiers.toArray( new String[] {} );
   }
 }

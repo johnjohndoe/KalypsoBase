@@ -119,7 +119,7 @@ public class ZmlTooltipSupport
     if( valueAxis != null )
       buffer.append( buildInfoText( "Datenachse", valueAxis ) );
 
-    return StringUtilities.chop( buffer.toString() );
+    return org.kalypso.commons.java.lang.Strings.chop( buffer.toString() );
   }
 
   private String getSourceTooltip( final IZmlValueReference reference )
@@ -151,7 +151,7 @@ public class ZmlTooltipSupport
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
-    return StringUtilities.chop( buffer.toString() );
+    return org.kalypso.commons.java.lang.Strings.chop( buffer.toString() );
   }
 
   private String getStatus( final Integer status )

@@ -54,7 +54,7 @@ public interface IChartComponentProvider
 
   IParameterContainer getParameterContainer( );
 
-  IChartModel getChartModel( );
+  IChartModel getModel( );
 
   String getId( );
 

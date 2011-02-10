@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
@@ -136,7 +136,7 @@ public final class RepositoryItemUtils
       parent += parts[i] + "."; //$NON-NLS-1$
     }
 
-    return StringUtilities.chomp( parent );
+    return Strings.chomp( parent );
   }
 
   public static String getParentItemId( final String identifier )
@@ -151,7 +151,7 @@ public final class RepositoryItemUtils
       parent += parts[i] + "."; //$NON-NLS-1$
     }
 
-    return StringUtilities.chomp( parent );
+    return Strings.chomp( parent );
   }
 
   /**
@@ -216,7 +216,7 @@ public final class RepositoryItemUtils
       }
     }
     if( !concat.isEmpty() )
-      partsQualified.add( StringUtilities.chomp( concat ) );
+      partsQualified.add( Strings.chomp( concat ) );
 
     return partsQualified.toArray( new String[] {} );
   }
@@ -256,7 +256,7 @@ public final class RepositoryItemUtils
     final String station1 = getStationKennziffer( id1 );
     final String station2 = getStationKennziffer( id2 );
 
-    return StringUtilities.isEqualIgnoreCase( station1, station2 );
+    return Strings.isEqualIgnoreCase( station1, station2 );
   }
 
   public static boolean isEqualType( final String id1, final String id2 )
@@ -264,7 +264,7 @@ public final class RepositoryItemUtils
     final String type1 = getParameterType( id1 );
     final String type2 = getParameterType( id2 );
 
-    return StringUtilities.isEqualIgnoreCase( type1, type2 );
+    return Strings.isEqualIgnoreCase( type1, type2 );
   }
 
   /**
