@@ -64,6 +64,9 @@ public abstract class AbstractParameterVisitor implements IChartLayerVisitor
       return false;
 
     final IParameterContainer container = provider.getParameterContainer();
+    if( container == null )
+      return false;
+
     final String property = container.getParameterValue( m_parameter, "false" );
 
     return Boolean.valueOf( property );
