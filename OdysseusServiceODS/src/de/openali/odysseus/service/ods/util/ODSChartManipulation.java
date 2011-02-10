@@ -127,7 +127,7 @@ public class ODSChartManipulation
     }
     catch( final MalformedValueException e )
     {
-      throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Value '" + minString + "' is not appropriate for Axis '" + iaxis.getId() + "'", null );
+      throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Value '" + minString + "' is not appropriate for Axis '" + iaxis.getIdentifier() + "'", null );
     }
     try
     {
@@ -135,7 +135,7 @@ public class ODSChartManipulation
     }
     catch( final MalformedValueException e )
     {
-      throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Value '" + maxString + "' is not appropriate for Axis '" + iaxis.getId() + "'", null );
+      throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Value '" + maxString + "' is not appropriate for Axis '" + iaxis.getIdentifier() + "'", null );
     }
     final DataRange<Number> dr = new DataRange<Number>( min, max );
     iaxis.setNumericRange( dr );

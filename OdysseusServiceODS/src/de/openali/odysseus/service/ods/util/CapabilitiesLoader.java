@@ -233,9 +233,9 @@ public class CapabilitiesLoader
       xmlLayer.setTitle( layer.getTitle() );
       xmlLayer.setDescription( layer.getDescription() );
       final DomainAxis domAxis = xmlLayer.addNewDomainAxis();
-      domAxis.setRef( layer.getCoordinateMapper().getDomainAxis().getId() );
+      domAxis.setRef( layer.getCoordinateMapper().getDomainAxis().getIdentifier() );
       final TargetAxis targetAxis = xmlLayer.addNewTargetAxis();
-      targetAxis.setRef( layer.getCoordinateMapper().getTargetAxis().getId() );
+      targetAxis.setRef( layer.getCoordinateMapper().getTargetAxis().getIdentifier() );
       // Symbols
       final SymbolsOfferingType xmlSymbols = xmlLayer.addNewSymbols();
       final ILegendEntry[] les = layer.getLegendEntries();
@@ -265,7 +265,7 @@ public class CapabilitiesLoader
     for( final IAxis axis : model.getMapperRegistry().getAxes() )
     {
       final AxisOfferingType xmlAxis = xmlAxes.addNewAxis();
-      xmlAxis.setId( axis.getId() );
+      xmlAxis.setId( axis.getIdentifier() );
       xmlAxis.setTitle( axis.getLabel() );
       // Achsen haben keine Beschreibung!!!
       xmlAxis.setDescription( "" );

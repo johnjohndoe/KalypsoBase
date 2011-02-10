@@ -135,10 +135,10 @@ public final class ChartConfigurationSaver
           configRange.setMinValue( dop.numericToLogical( numericRange.getMin() ) );
           configRange.setMaxValue( dop.numericToLogical( numericRange.getMax() ) );
         }
-        else if( at.isSetDurationRange() )
-        {
-          // TODO: what to do now? either change to date range or leave range as it was
-        }
+// else if( at.isSetDurationRange() )
+// {
+// // TODO: what to do now? either change to date range or leave range as it was
+// }
         else if( at.isSetNumberRange() )
         {
           final AxisNumberRangeType configRange = at.getNumberRange();
@@ -154,7 +154,7 @@ public final class ChartConfigurationSaver
           configRange.setMaxValue( numericRange.getMax().doubleValue() );
         }
 
-        axisTypes.put( axis.getId(), at );
+        axisTypes.put( axis.getIdentifier(), at );
       }
     }
     return axisTypes;
@@ -196,7 +196,7 @@ public final class ChartConfigurationSaver
       if( mt != null )
       {
         // everything stays as it was
-        mapperTypes.put( mapper.getId(), mt );
+        mapperTypes.put( mapper.getIdentifier(), mt );
       }
     }
     return mapperTypes;

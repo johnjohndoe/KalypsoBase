@@ -1,8 +1,8 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.event.IMapperEventListener;
@@ -14,7 +14,8 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
  */
 public abstract class AbstractMapper implements IMapper
 {
-  private final List<IMapperEventListener> m_listeners = new ArrayList<IMapperEventListener>();
+
+  private final Set<IMapperEventListener> m_listeners = new LinkedHashSet<IMapperEventListener>();
 
   /**
    * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
@@ -22,8 +23,6 @@ public abstract class AbstractMapper implements IMapper
   @Override
   public void addListener( final IMapperEventListener listener )
   {
-    if( m_listeners.contains( listener ) )
-      return;
     m_listeners.add( listener );
   }
 
@@ -37,7 +36,7 @@ public abstract class AbstractMapper implements IMapper
 
   }
 
-  private final String m_id;
+  private final String m_identifier;
 
   /**
    * Hashmap to store arbitrary key value pairs
@@ -49,22 +48,25 @@ public abstract class AbstractMapper implements IMapper
 
   public AbstractMapper( final String id )
   {
-    m_id = id;
+    m_identifier = id;
   }
 
   protected void fireMapperChanged( final IMapper mapper )
   {
-    for( final IMapperEventListener l : m_listeners )
-      l.onMapperChanged( mapper );
+    final IMapperEventListener[] listeners = m_listeners.toArray( new IMapperEventListener[] {} );
+    for( final IMapperEventListener listener : listeners )
+    {
+      listener.onMapperChanged( mapper );
+    }
   }
 
   /**
    * @see org.kalypso.chart.framework.axis.IAxis#getIdentifier()
    */
   @Override
-  public String getId( )
+  public String getIdentifier( )
   {
-    return m_id;
+    return m_identifier;
   }
 
   /**

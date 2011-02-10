@@ -15,27 +15,29 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
  */
 public abstract class AbstractAxis extends AbstractMapper implements IAxis
 {
+  private final Class< ? > m_dataClass;
+
+  private DIRECTION m_dir = DIRECTION.POSITIVE;
+
+  private int m_height = 1;
+
   private final String m_id;
 
   private String m_label = "";
 
+  private IDataRange<Number> m_numericRange = new DataRange<Number>( null, null );
+
   private final POSITION m_pos;
-
-  private boolean m_visible = true;
-
-  private int m_height = 1;
-
-  private DIRECTION m_dir = DIRECTION.POSITIVE;
 
   private IAxisAdjustment m_preferredAdjustment = null;
 
-  private final Class< ? > m_dataClass;
+  private DataRangeRestriction<Number> m_rangeRestriction = null;
 
   private IAxisRenderer m_renderer;
 
-  private IDataRange<Number> m_numericRange = new DataRange<Number>( null, null );
+  private boolean m_visible = true;
 
-  private DataRangeRestriction<Number> m_rangeRestriction = null;
+  private Object m_selection;
 
   public AbstractAxis( final String id, final POSITION pos, final Class< ? > dataClass )
   {
@@ -123,6 +125,15 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     return m_height;
   }
 
+  private boolean hasNullValues( final IDataRange<Number> range, final DataRangeRestriction<Number> restriction )
+  {
+    if( restriction == null || range == null || range.getMin() == null || range.getMax() == null || restriction.getMin() == null || restriction.getMax() == null || restriction.getMinRange() == null
+        || restriction.getMaxRange() == null )
+      return true;
+
+    return false;
+  }
+
   /**
    * @see org.kalypso.chart.framework.axis.IAxis#isInverted()
    */
@@ -154,13 +165,77 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     }
   }
 
-  private boolean hasNullValues( final IDataRange<Number> range, final DataRangeRestriction<Number> restriction )
+  @Override
+  public void setNumericRange( final IDataRange<Number> range )
   {
-    if( restriction == null || range == null || range.getMin() == null || range.getMax() == null || restriction.getMin() == null || restriction.getMax() == null || restriction.getMinRange() == null
-        || restriction.getMaxRange() == null )
-      return true;
+    final Number rangeMin = range.getMin();
+    final Number rangeMax = range.getMax();
 
-    return false;
+    if( rangeMax == m_numericRange.getMax() && rangeMin == m_numericRange.getMin() )
+      return;
+    if( rangeMin == null || rangeMax == null )
+      m_numericRange = new DataRange<Number>( rangeMin, rangeMax );
+    else
+      m_numericRange = validateDataRange( range, getRangeRestriction() );
+
+    fireMapperChanged( this );
+  }
+
+  @Override
+  public void setPreferredAdjustment( final IAxisAdjustment adj )
+  {
+    m_preferredAdjustment = adj;
+
+    fireMapperChanged( this );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setRangeRestriction(de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
+  @Override
+  public void setRangeRestriction( final DataRangeRestriction<Number> range )
+  {
+    m_rangeRestriction = range;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setRenderer(IAxisRenderer )
+   */
+  @Override
+  public void setRenderer( final IAxisRenderer renderer )
+  {
+    if( renderer != null && renderer.equals( m_renderer ) )
+      return;
+    m_renderer = renderer;
+  }
+
+  @Override
+  public void setScreenHeight( final int height )
+  {
+    if( m_height == height )
+      return;
+    m_height = height;
+
+    fireMapperChanged( this );
+  }
+
+  @Override
+  public void setVisible( final boolean visible )
+  {
+    if( visible == m_visible )
+      return;
+    m_visible = visible;
+
+    fireMapperChanged( this );
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "%s {%s, %s, %s }", m_label, m_id, m_pos, m_dir ); //$NON-NLS-1$
   }
 
   protected IDataRange<Number> validateDataRange( final IDataRange<Number> range, final DataRangeRestriction<Number> restriction )
@@ -221,78 +296,25 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     }
 
     return new DataRange<Number>( newRangeMin, newRangeMax );
-
-  }
-
-  @Override
-  public void setNumericRange( final IDataRange<Number> range )
-  {
-    final Number rangeMin = range.getMin();
-    final Number rangeMax = range.getMax();
-
-    if( rangeMax == m_numericRange.getMax() && rangeMin == m_numericRange.getMin() )
-      return;
-    if( rangeMin == null || rangeMax == null )
-      m_numericRange = new DataRange<Number>( rangeMin, rangeMax );
-    else
-      m_numericRange = validateDataRange( range, getRangeRestriction() );
-    fireMapperChanged( this );
-  }
-
-  @Override
-  public void setPreferredAdjustment( final IAxisAdjustment adj )
-  {
-    m_preferredAdjustment = adj;
-    fireMapperChanged( this );
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setRangeRestriction(de.openali.odysseus.chart.framework.model.data.IDataRange)
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getSelection()
    */
   @Override
-  public void setRangeRestriction( final DataRangeRestriction<Number> range )
+  public Object getSelection( )
   {
-
-    m_rangeRestriction = range;
-
+    return m_selection;
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setRenderer(IAxisRenderer )
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setSelection(java.lang.Object)
    */
   @Override
-  public void setRenderer( final IAxisRenderer renderer )
+  public void setSelection( final Object selection )
   {
-    if( renderer != null && renderer.equals( m_renderer ) )
-      return;
-    m_renderer = renderer;
-  }
-
-  @Override
-  public void setScreenHeight( final int height )
-  {
-    if( m_height == height )
-      return;
-    m_height = height;
-    fireMapperChanged( this );
-  }
-
-  @Override
-  public void setVisible( final boolean visible )
-  {
-    if( visible == m_visible )
-      return;
-    m_visible = visible;
+    m_selection = selection;
 
     fireMapperChanged( this );
-  }
-
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString( )
-  {
-    return m_label + " " + "{" + m_id + " " + m_pos + " " + m_dir + "}";
   }
 }
