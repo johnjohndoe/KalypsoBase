@@ -170,6 +170,62 @@ public class WspmGeometryUtilities
     return null;
   }
 
+  public static GM_Point createLocation( final IProfil profil, final IRecord point, String srsName )
+  {
+    try
+    {
+      final int compRechtswert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+      final int compHochwert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT );
+      final int compBreite = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_BREITE );
+      final int compHoehe = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
+
+      /* If there are no rw/hw create pseudo geometries from breite and station */
+      final Double rw;
+      final Double hw;
+
+      if( compRechtswert != -1 && compHochwert != -1 )
+      {
+        rw = (Double) point.getValue( compRechtswert );
+        hw = (Double) point.getValue( compHochwert );
+
+        /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
+        if( StringUtils.isBlank( srsName ) && rw != null )
+          srsName = TimeseriesUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
+      }
+      else
+      {
+        if( compBreite == -1 )
+          throw new IllegalStateException( "Cross sections without width or easting/northing attributes detected - geometric processing not possible." ); //$NON-NLS-1$
+
+        rw = (Double) point.getValue( compBreite );
+        hw = profil.getStation() * 1000;
+
+        /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
+        if( srsName == null )
+          srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+      }
+
+      if( rw == null || hw == null || rw.isNaN() || hw.isNaN() )
+        return null;
+
+      final Double h = compHoehe == -1 ? null : (Double) point.getValue( compHoehe );
+
+      final GM_Position position;
+      if( h == null )
+        position = GeometryFactory.createGM_Position( rw, hw );
+      else
+        position = GeometryFactory.createGM_Position( rw, hw, h );
+
+      return GeometryFactory.createGM_Point( position, srsName );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
+
   /**
    * Creates a {@link GM_Point} from rw/hw information.
    * <p>
