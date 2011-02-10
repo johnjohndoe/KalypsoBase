@@ -44,7 +44,7 @@ import jregex.Pattern;
 import jregex.RETokenizer;
 
 import org.apache.commons.lang.StringUtils;
-import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.commons.java.lang.Strings;
 
 import de.openali.odysseus.chartconfig.x020.ReferencingType;
 
@@ -69,6 +69,6 @@ public final class AxisUtils
     final String url = type.getUrl();
     final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), url ); //$NON-NLS-1$
 
-    return StringUtilities.chop( tokenizer.nextToken() );
+    return Strings.chop( tokenizer.nextToken() );
   }
 }

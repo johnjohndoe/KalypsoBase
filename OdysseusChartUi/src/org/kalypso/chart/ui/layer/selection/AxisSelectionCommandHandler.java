@@ -44,9 +44,15 @@ import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
+import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
+import org.kalypso.chart.ui.layer.selection.utils.FindSelectionLayerVisitor;
+
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author Dirk Kuch
@@ -59,10 +65,29 @@ public class AxisSelectionCommandHandler extends AbstractHandler implements IEle
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
-    // TODO Auto-generated method stub
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+
+    final IChartComposite chart = ChartHandlerUtilities.getChart( context );
+    if( chart == null )
+      return Status.CANCEL_STATUS;
+
+    final IChartModel model = chart.getChartModel();
+
+    final AxisSelectionLayer layer = findSelectionLayer( model );
+    if( layer == null )
+      return Status.CANCEL_STATUS;
+
     return null;
+  }
+
+  private AxisSelectionLayer findSelectionLayer( final IChartModel model )
+  {
+    final FindSelectionLayerVisitor visitor = new FindSelectionLayerVisitor();
+    model.getLayerManager().accept( visitor );
+
+    return visitor.getLayer();
   }
 
   /**
@@ -71,8 +96,7 @@ public class AxisSelectionCommandHandler extends AbstractHandler implements IEle
   @Override
   public void updateElement( final UIElement element, final Map parameters )
   {
-    // TODO Auto-generated method stub
-
+// ElementUpdateHelper.updateElement( element, parameters, DragZoomInHandler.class );
   }
 
 }

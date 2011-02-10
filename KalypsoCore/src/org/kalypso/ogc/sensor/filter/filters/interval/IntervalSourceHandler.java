@@ -46,7 +46,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 
@@ -104,7 +104,7 @@ public final class IntervalSourceHandler
           }
         }
 
-        final String reference = StringUtilities.chomp( buffer.toString() );
+        final String reference = Strings.chomp( buffer.toString() );
         sources[i] = reference;
       }
     }
@@ -182,7 +182,7 @@ public final class IntervalSourceHandler
           buffer.append( String.format( "source_%d=%s&", i, sourceArray[i] ) );
         }
 
-        final String source = StringUtilities.chomp( buffer.toString() );
+        final String source = Strings.chomp( buffer.toString() );
         return source;
       }
     }

@@ -132,8 +132,11 @@ public class MapperRegistry implements IMapperRegistry
   {
     final List<IAxis> axes = new ArrayList<IAxis>();
     for( final IAxis axis : getAxes() )
+    {
       if( axis.getPosition() == pos )
         axes.add( axis );
+    }
+
     return axes.toArray( new IAxis[0] );
   }
 
@@ -147,9 +150,12 @@ public class MapperRegistry implements IMapperRegistry
     final Collection<IMapper> allMappers = m_mappers.values();
     final ArrayList<IMapper> mappers = new ArrayList<IMapper>();
     for( final IMapper mapper : allMappers )
-      // nur hinzufï¿½gen, wenn keine Axis
+    {
+      // nur hinzufügen, wenn keine Axis
       if( !(mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis) )
         mappers.add( mapper );
+    }
+
     return mappers.toArray( new IMapper[mappers.size()] );
   }
 
@@ -163,8 +169,11 @@ public class MapperRegistry implements IMapperRegistry
     final Collection<IMapper> mappers = m_mappers.values();
     final ArrayList<IAxis> axes = new ArrayList<IAxis>();
     for( final IMapper mapper : mappers )
+    {
       if( mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis )
         axes.add( (IAxis) mapper );
+    }
+
     return axes.toArray( new IAxis[axes.size()] );
   }
 

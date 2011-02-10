@@ -80,7 +80,7 @@ public abstract class AbstractChartComponentProvider implements IChartComponentP
   }
 
   @Override
-  public final IChartModel getChartModel( )
+  public final IChartModel getModel( )
   {
     return m_model;
   }

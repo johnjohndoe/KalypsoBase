@@ -65,7 +65,7 @@ public final class StringUtilities
   public final static int ALIGNMENT_RIGHT = 2;
 
   /**
-   * Not intended to be instanciated
+   * Not intended to be instantiated
    */
   private StringUtilities( )
   {
@@ -271,38 +271,6 @@ public final class StringUtilities
     }
 
     return bf.toString();
-  }
-
-  /**
-   * removes last letter of an string literal (see perl, ruby, etc.)
-   */
-  public static String chomp( final String s )
-  {
-    return s.substring( 0, s.length() - 1 );
-  }
-
-  /**
-   * removes all whitespaces at beginning and end of an string (see perl, ruby, etc)
-   */
-  public static String chop( final String s )
-  {
-    return s.trim();
-  }
-
-  public static boolean isEqual( final String s1, final String s2 )
-  {
-    if( s1 == null || s2 == null )
-      return false;
-
-    return s1.equals( s2 );
-  }
-
-  public static boolean isEqualIgnoreCase( final String s1, final String s2 )
-  {
-    if( s1 == null || s2 == null )
-      return false;
-
-    return s1.equalsIgnoreCase( s2 );
   }
 
   /**

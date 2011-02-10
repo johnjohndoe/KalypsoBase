@@ -55,7 +55,7 @@ import jregex.RETokenizer;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
@@ -274,7 +274,7 @@ public final class ChartTypeResolver implements IReferenceResolver
 
       final RETokenizer tokenizer = new RETokenizer( pattern, url );
 
-      return StringUtilities.chop( tokenizer.nextToken() );
+      return Strings.chop( tokenizer.nextToken() );
     }
 
     return context.toString();
@@ -284,7 +284,7 @@ public final class ChartTypeResolver implements IReferenceResolver
   {
     final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), url ); //$NON-NLS-1$
 
-    return StringUtilities.chop( tokenizer.nextToken() );
+    return Strings.chop( tokenizer.nextToken() );
   }
 
   private MapperType findUrnMapperType( final URL context, final String urn, final String identifier ) throws XmlException, IOException

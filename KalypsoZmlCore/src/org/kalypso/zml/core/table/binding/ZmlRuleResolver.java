@@ -54,7 +54,7 @@ import jregex.Pattern;
 import jregex.RETokenizer;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.commons.java.util.StringUtilities;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
@@ -180,14 +180,14 @@ public final class ZmlRuleResolver
   {
     final RETokenizer tokenizer = new RETokenizer( new Pattern( "#.*" ), url ); //$NON-NLS-1$
 
-    return StringUtilities.chop( tokenizer.nextToken() );
+    return Strings.chop( tokenizer.nextToken() );
   }
 
   private String getAnchor( final String url )
   {
     final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), url ); //$NON-NLS-1$
 
-    return StringUtilities.chop( tokenizer.nextToken() );
+    return Strings.chop( tokenizer.nextToken() );
   }
 
 }
