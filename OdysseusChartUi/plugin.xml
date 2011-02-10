@@ -93,6 +93,12 @@
                optional="false">
          </commandParameter>
       </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            description="Updates IAxis Selection"
+            id="org.kalypso.chart.ui.command.axis.selection"
+            name="Set Selection">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.commandImages">
@@ -127,6 +133,10 @@
       <image
             commandId="org.kalypso.chart.ui.commands.openOutline"
             icon="icons/elcl16/show_outline.gif">
+      </image>
+      <image
+            commandId="org.kalypso.chart.ui.command.axis.selection"
+            icon="icons/commands/select.png">
       </image>
    </extension>
    <extension
@@ -170,6 +180,10 @@
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.ChangeVisibilityCommandHandler"
             commandId="org.kalypso.chart.ui.commands.change.visibility">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.layer.selection.AxisSelectionCommandHandler"
+            commandId="org.kalypso.chart.ui.command.axis.selection">
       </handler>
    </extension>
    <extension
@@ -261,10 +275,7 @@
       </menuContribution>
       <menuContribution
             locationURI="toolbar:org.kalypso.chart.ui.view.ChartView">
-         
-       
-         
-               <command
+         <command
                      commandId="org.kalypso.chart.ui.commands.pan"
                      id="panId"
                      label="%org.kalypso.chart.ui.commands.pan.name"
@@ -375,6 +386,13 @@
              content-type="org.eclipse.core.runtime.xml"
              file-extensions="kod">
        </file-association>
+    </extension>
+    <extension
+          point="de.openali.odysseus.chart.factory.LayerProvider">
+       <provider
+             class="org.kalypso.chart.ui.layer.selection.AxisSelectionLayerProvider"
+             id="org.kalypso.chart.ui.layer.provider.axis.selection">
+       </provider>
     </extension>
 
 </plugin>
