@@ -2,7 +2,7 @@
 <feature
       id="org.kalypso.base.feature"
       label="%Feature.featureName"
-      version="10.10.1.qualifier"
+      version="11.4.0.qualifier"
       provider-name="%Feature.providerName"
       plugin="org.kalypso.base"
       image="kalypso_128.jpg">
