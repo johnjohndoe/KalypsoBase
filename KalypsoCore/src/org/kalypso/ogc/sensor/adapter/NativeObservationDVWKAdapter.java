@@ -98,12 +98,6 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
   }
 
   @Override
-  public IObservation createObservationFromSource( final File source ) throws Exception
-  {
-    return createObservationFromSource( source, null, true );
-  }
-
-  @Override
   public IObservation createObservationFromSource( final File source, final TimeZone timeZone, final boolean continueWithErrors ) throws Exception
   {
     final MetadataList metaDataList = new MetadataList();
