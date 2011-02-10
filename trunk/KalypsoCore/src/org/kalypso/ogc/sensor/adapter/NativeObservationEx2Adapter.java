@@ -93,12 +93,6 @@ public class NativeObservationEx2Adapter implements INativeObservationAdapter
   }
 
   @Override
-  public IObservation createObservationFromSource( final File source ) throws Exception
-  {
-    return createObservationFromSource( source, null, true );
-  }
-
-  @Override
   public IObservation createObservationFromSource( final File source, TimeZone timeZone, final boolean continueWithErrors ) throws Exception
   {
     final MetadataList metaDataList = new MetadataList();

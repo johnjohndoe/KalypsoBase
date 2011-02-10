@@ -40,15 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.wizard.sensor;
 
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.wizard.IWizardContainer;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
@@ -57,6 +59,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -75,7 +78,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
 
   private INativeObservationAdapter m_nativeAdapter;
 
-  private File m_fileTarget;
+  private IFile m_fileTarget;
 
   public ImportObservationAxisMappingWizardPage( final String pageName )
   {
@@ -91,33 +94,31 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
   public void createControl( final Composite parent )
   {
     initializeDialogUnits( parent );
+
     m_topLevel = new Composite( parent, SWT.NONE );
 
-    final GridLayout gridLayout = new GridLayout();
-    gridLayout.numColumns = 2;
-    gridLayout.makeColumnsEqualWidth = true;
-    m_topLevel.setLayout( gridLayout );
+    m_topLevel.setLayout( new GridLayout( 2, true ) );
 
     final Label labelSource = new Label( m_topLevel, SWT.NONE );
     labelSource.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.1" ) ); //$NON-NLS-1$
-    GridData data = new GridData();
-    data.horizontalAlignment = GridData.CENTER;
-    labelSource.setLayoutData( data );
+    labelSource.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, false ) );
 
     final Label labelTarget = new Label( m_topLevel, SWT.NONE );
     labelTarget.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.2" ) ); //$NON-NLS-1$
-    data = new GridData();
-    data.horizontalAlignment = GridData.CENTER;
-    labelTarget.setLayoutData( data );
+    labelTarget.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, false ) );
 
     setControl( m_topLevel );
+
     validate();
   }
 
   public void validate( )
   {
     // page is always complete
-    getWizard().getContainer().updateButtons();
+    final IWizardContainer container = getWizard().getContainer();
+    final IWizardPage currentPage = container.getCurrentPage();
+    if( currentPage != null )
+      container.updateButtons();
     setPageComplete( true );
   }
 
@@ -148,6 +149,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     final ISelection eventSelection = event.getSelection();
     if( !(eventSelection instanceof ObservationImportSelection) )
       return;
+
     final ObservationImportSelection selection = (ObservationImportSelection) eventSelection;
     final INativeObservationAdapter nativeAdapter = selection.getNativeAdapter();
     if( nativeAdapter != m_nativeAdapter )
@@ -161,17 +163,20 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     {
       try
       {
-        axisDest = createMappedAxis( axisSrc, getTargetObservation( m_fileTarget.toURI().toURL() ).getAxisList() );
+        final URL targetLocation = ResourceUtilities.createURL( m_fileTarget );
+        final IObservation targetObservation = getTargetObservation( targetLocation );
+        axisDest = createMappedAxis( axisSrc, targetObservation.getAxisList() );
       }
       catch( final Exception e )
       {
         MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.3" ), //$NON-NLS-1$
-        Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.4" ) ); //$NON-NLS-1$
+            Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationAxisMappingWizardPage.4" ) ); //$NON-NLS-1$
       }
     }
 
     if( !selection.isEmpty() )
       updateAxisWidgets( axisSrc, axisDest );
+
     validate();
   }
 
@@ -204,13 +209,9 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     return result.toArray( new IAxis[result.size()] );
   }
 
-  /**
-   * @throws SensorException
-   */
-  public IObservation getTargetObservation( final URL url ) throws SensorException
+  public static IObservation getTargetObservation( final URL url ) throws SensorException
   {
-    final IObservation observation = ZmlFactory.parseXML( url ); //$NON-NLS-1$
-    return observation;
+    return ZmlFactory.parseXML( url );
   }
 
   private void updateAxisWidgets( final IAxis[] axisLeft, final IAxis[] axisRight )
@@ -255,34 +256,23 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
       else
         rightAxisWidget.setMode( true, false );
     }
-    m_topLevel.pack();
-    m_topLevel.layout();
+
+    m_topLevel.layout( true, true );
   }
 
-  class WidgetLine
+  static class WidgetLine
   {
     private final AxisWidget m_left;
 
     private final AxisWidget m_right;
 
-    /*
-     * @author doemming
-     */
     public WidgetLine( final Composite parent )
     {
       m_left = new AxisWidget( parent, SWT.NONE );
+      m_left.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
       m_right = new AxisWidget( parent, SWT.NONE );
-
-      GridData data = new GridData();
-      data.horizontalAlignment = GridData.FILL;
-      data.verticalAlignment = GridData.FILL;
-      m_left.setLayoutData( data );
-
-      data = new GridData();
-      data.horizontalAlignment = GridData.FILL;
-      data.verticalAlignment = GridData.FILL;
-
-      m_right.setLayoutData( data );
+      m_right.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     }
 
     public AxisWidget getLeft( )

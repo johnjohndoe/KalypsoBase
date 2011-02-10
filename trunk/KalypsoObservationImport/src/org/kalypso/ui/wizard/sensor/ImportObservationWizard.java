@@ -41,14 +41,18 @@
 package org.kalypso.ui.wizard.sensor;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
+import java.util.TimeZone;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -130,9 +134,10 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
     {
       final ObservationImportSelection selection = (ObservationImportSelection) m_importPage.getSelection();
       final File fileSource = selection.getFileSource();
-      final File fileTarget = selection.getFileTarget();
+      final IFile fileTarget = selection.getFileTarget();
       final INativeObservationAdapter nativaAdapter = selection.getNativeAdapter();
-      final IObservation srcObservation = nativaAdapter.createObservationFromSource( fileSource );
+      final TimeZone timezone = selection.getSourceTimezone();
+      final IObservation srcObservation = nativaAdapter.createObservationFromSource( fileSource, timezone, false );
 
       final IAxis[] axesSrc = m_axisMappingPage.getAxisMappingSrc();
       final IAxis[] axesNew = m_axisMappingPage.getAxisMappingTarget();
@@ -145,7 +150,8 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
       final int countTarget;
       if( fileTarget.exists() && (selection.isAppend() || selection.isRetainMetadata()) )
       {
-        targetObservation = m_axisMappingPage.getTargetObservation( fileTarget.toURI().toURL() );
+        final URL targetLocation = ResourceUtilities.createURL( fileTarget );
+        targetObservation = ImportObservationAxisMappingWizardPage.getTargetObservation( targetLocation );
         tuppelModelTarget = targetObservation.getValues( null );
         if( selection.isAppend() )
           countTarget = tuppelModelTarget.size();
@@ -207,15 +213,16 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
           for( final IAxis element : axesNew )
             newTuppelModel.set( countSrc + i, element, tuppelModelTarget.get( i, element ) );
       }
+
       final String href = ""; //$NON-NLS-1$
       final String name = srcObservation.getName();
       final MetadataList metadata = new MetadataList();
       if( targetObservation != null && selection.isRetainMetadata() )
         metadata.putAll( targetObservation.getMetadataList() );
       metadata.putAll( srcObservation.getMetadataList() );
+
       final IObservation newObservation = new SimpleObservation( href, name, metadata, newTuppelModel );
       ZmlFactory.writeToFile( newObservation, fileTarget );
-      // TODO refresh resources or use IResource
     }
     catch( final Exception e )
     {

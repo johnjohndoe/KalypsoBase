@@ -1,20 +1,3 @@
-package org.kalypso.ui.wizard.sensor;
-
-import java.util.Arrays;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.impl.SimpleAxis;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
-import org.kalypso.ui.wizard.sensor.i18n.Messages;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -55,7 +38,26 @@ import org.kalypso.ui.wizard.sensor.i18n.Messages;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ui.wizard.sensor;
 
+import java.util.Arrays;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.impl.SimpleAxis;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ui.wizard.sensor.i18n.Messages;
+
+/**
+ * @author doemming
+ */
 public class AxisWidget extends Composite
 {
   private SimpleAxis m_axis = null;
@@ -68,80 +70,45 @@ public class AxisWidget extends Composite
 
   private boolean m_changeType = false;
 
-  private Group m_group;
-
-  /*
-   * 
-   * @author doemming
-   */
   public AxisWidget( final Composite parent, final int style )
   {
     super( parent, style );
-    setControl();
+
+    createControl();
+
     updateGUIFromMember();
+
     validate();
   }
 
-  private void setControl()
+  private void createControl( )
   {
-    GridLayout gridLayout = new GridLayout();
-    setLayout( gridLayout );
-    GridData data2 = new GridData();
-    data2.horizontalAlignment = GridData.FILL;
-    data2.verticalAlignment = GridData.FILL;
-    data2.grabExcessHorizontalSpace = true;
-    data2.grabExcessVerticalSpace = true;
-    setLayoutData( data2 );
+    setLayout( new GridLayout() );
 
-    m_group = new Group( this, SWT.NONE );
-    gridLayout = new GridLayout();
-    gridLayout.numColumns = 2;
-    m_group.setLayout( gridLayout );
-    m_group.setText( Messages.getString("org.kalypso.ui.wizard.sensor.AxisWidget.0") ); //$NON-NLS-1$
+    final Group group = new Group( this, SWT.NONE );
+    group.setLayout( new GridLayout( 2, false ) );
+    group.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.AxisWidget.0" ) ); //$NON-NLS-1$
 
-    GridData data1 = new GridData();
-    data1.horizontalAlignment = GridData.FILL;
-    data1.verticalAlignment = GridData.FILL;
-    data1.grabExcessHorizontalSpace = true;
-    data1.grabExcessVerticalSpace = true;
-    m_group.setLayoutData( data1 );
+    group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
-    Label labelName = new Label( m_group, SWT.NONE );
-    labelName.setText( Messages.getString("org.kalypso.ui.wizard.sensor.AxisWidget.1") ); //$NON-NLS-1$
-    GridData data = new GridData();
-    data.horizontalAlignment = GridData.END;
-    labelName.setLayoutData( data );
+    final Label labelName = new Label( group, SWT.NONE );
+    labelName.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.AxisWidget.1" ) ); //$NON-NLS-1$
+    labelName.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
 
-    m_textName = new Text( m_group, SWT.BORDER );
-    m_textName.setText( Messages.getString("org.kalypso.ui.wizard.sensor.AxisWidget.2") ); //$NON-NLS-1$
-    data = new GridData();
-    data.horizontalAlignment = GridData.FILL;
-    m_textName.setLayoutData( data );
+    m_textName = new Text( group, SWT.BORDER );
+    m_textName.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.AxisWidget.2" ) ); //$NON-NLS-1$
+    m_textName.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    Label labelType = new Label( m_group, SWT.NONE );
-    labelType.setText( Messages.getString("org.kalypso.ui.wizard.sensor.AxisWidget.3") ); //$NON-NLS-1$
-    data = new GridData();
-    data.horizontalAlignment = GridData.END;
-    labelType.setLayoutData( data );
+    final Label labelType = new Label( group, SWT.NONE );
+    labelType.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.AxisWidget.3" ) ); //$NON-NLS-1$
+    labelType.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
 
-    m_comboTypes = new Combo( m_group, SWT.NONE );
+    m_comboTypes = new Combo( group, SWT.NONE );
     m_comboTypes.setItems( TimeseriesUtils.TYPES_ALL );
-    data = new GridData();
-    data.horizontalAlignment = GridData.FILL;
-    m_comboTypes.setLayoutData( data );
-    pack();
+    m_comboTypes.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Widget#dispose()
-   */
-  @Override
-  public void dispose()
-  {
-    super.dispose();
-  }
-
-  private void validate()
+  private void validate( )
   {
     if( m_changeName )
       m_textName.setEditable( true );
@@ -155,10 +122,9 @@ public class AxisWidget extends Composite
       setVisible( false );
     else
       setVisible( true );
-
   }
 
-  public IAxis getAxis()
+  public IAxis getAxis( )
   {
     return m_axis;
   }
@@ -173,7 +139,7 @@ public class AxisWidget extends Composite
     validate();
   }
 
-  private void updateGUIFromMember()
+  private void updateGUIFromMember( )
   {
     if( m_axis != null )
     {

@@ -95,12 +95,6 @@ public class NativeObservationCSVAdapter implements INativeObservationAdapter
     m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
   }
 
-  @Override
-  public IObservation createObservationFromSource( final File source ) throws Exception
-  {
-    return createObservationFromSource( source, null, true );
-  }
-
   // FIXME: this is the very SAME code for every importer! Refaktor it!
   @Override
   public IObservation createObservationFromSource( final File source, TimeZone timeZone, final boolean continueWithErrors ) throws Exception

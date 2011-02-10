@@ -1,10 +1,3 @@
-package org.kalypso.ui.wizard.sensor;
-
-import java.io.File;
-
-import org.eclipse.jface.viewers.ISelection;
-import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -45,6 +38,14 @@ import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.ui.wizard.sensor;
+
+import java.io.File;
+import java.util.TimeZone;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.viewers.ISelection;
+import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 
 /**
  * @author doemming
@@ -53,7 +54,7 @@ public class ObservationImportSelection implements ISelection
 {
   private final INativeObservationAdapter m_selectedAdapter;
 
-  private final File m_fileTarget;
+  private final IFile m_fileTarget;
 
   private final File m_fileSource;
 
@@ -66,14 +67,17 @@ public class ObservationImportSelection implements ISelection
 
   private final boolean m_retainMetadata;
 
-  public ObservationImportSelection( final File fileSource, final File fileTarget, final INativeObservationAdapter adapter,
-      final boolean append, final boolean retainMetadata )
+  private final TimeZone m_sourceTimezone;
+
+  public ObservationImportSelection( final File fileSource, final IFile fileTarget, final INativeObservationAdapter adapter,
+      final boolean append, final boolean retainMetadata, final TimeZone timezone )
   {
     m_fileSource = fileSource;
     m_fileTarget = fileTarget;
     m_selectedAdapter = adapter;
     m_append = append;
     m_retainMetadata = retainMetadata;
+    m_sourceTimezone = timezone;
   }
 
   /**
@@ -90,7 +94,7 @@ public class ObservationImportSelection implements ISelection
     return m_fileSource;
   }
 
-  public File getFileTarget()
+  public IFile getFileTarget( )
   {
     return m_fileTarget;
   }
@@ -103,5 +107,10 @@ public class ObservationImportSelection implements ISelection
   public boolean isRetainMetadata()
   {
     return m_retainMetadata;
+  }
+
+  public TimeZone getSourceTimezone( )
+  {
+    return m_sourceTimezone;
   }
 }

@@ -109,12 +109,6 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
   }
 
   @Override
-  public IObservation createObservationFromSource( final File source ) throws Exception
-  {
-    return createObservationFromSource( source, null, true );
-  }
-
-  @Override
   public IObservation createObservationFromSource( final File source, TimeZone timeZone, final boolean continueWithErrors ) throws Exception
   {
     final SimpleDateFormat format = new SimpleDateFormat( "yyMMdd" ); //$NON-NLS-1$

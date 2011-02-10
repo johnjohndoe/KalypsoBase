@@ -42,61 +42,68 @@ package org.kalypso.ui.wizard.sensor;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.TimeZone;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.SaveAsDialog;
+import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypso.ui.wizard.sensor.i18n.Messages;
 
 /**
  * @author doemming
  */
-public class ImportObservationSelectionWizardPage extends WizardPage implements FocusListener, ISelectionProvider, ISelectionChangedListener
+public class ImportObservationSelectionWizardPage extends WizardPage implements /* FocusListener, */ISelectionProvider, ISelectionChangedListener
 {
-  private static final String DEFAUL_FILE_LABEL = ""; //$NON-NLS-1$
+  private final List<ISelectionChangedListener> m_selectionListener = new ArrayList<ISelectionChangedListener>();
 
   private final List<INativeObservationAdapter> m_adapter;
-
-  final List<ISelectionChangedListener> m_selectionListener = new ArrayList<ISelectionChangedListener>();
-
-  private Composite m_topLevel = null;
-
-  private Text m_textFileSource;
-
-  private Text m_textFileTarget;
 
   private Button m_buttonRetainMeta;
 
@@ -104,28 +111,33 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
 
   private ComboViewer m_formatCombo;
 
-  File m_targetFile = null;
-
-  File m_sourceFile = null;
-
   private boolean m_controlFinished = false;
+
+  private TimeZone m_timezone;
+
+  private String m_sourcePath;
+
+  private IPath m_targetPath;
 
   public ImportObservationSelectionWizardPage( final String pageName )
   {
     this( pageName, null, null );
+
+    m_timezone = KalypsoCorePlugin.getDefault().getTimeZone();
   }
 
   public ImportObservationSelectionWizardPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
 
-    setDescription( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage0") ); //$NON-NLS-1$
-    setTitle( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage1") ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage0" ) ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage1" ) ); //$NON-NLS-1$
     setPageComplete( false );
 
     m_adapter = createNativeAdapters();
   }
 
+  // FIXME: move into spearate extension class
   private List<INativeObservationAdapter> createNativeAdapters( )
   {
     final List<INativeObservationAdapter> adapters = new ArrayList<INativeObservationAdapter>();
@@ -151,7 +163,6 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
         }
         catch( final CoreException e )
         {
-          // TODO Auto-generated catch block
           e.printStackTrace();
         }
       }
@@ -167,215 +178,293 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   public void createControl( final Composite parent )
   {
     initializeDialogUnits( parent );
-    m_topLevel = new Composite( parent, SWT.NONE );
 
-    final GridLayout gridLayout = new GridLayout();
-    m_topLevel.setLayout( gridLayout );
+    final Composite topLevel = new Composite( parent, SWT.NONE );
+    topLevel.setLayout( new GridLayout() );
+    setControl( topLevel );
 
-    final GridData data = new GridData();
-    data.horizontalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    m_topLevel.setLayoutData( data );
+    createControlSource( topLevel );
+    createControlTarget( topLevel );
 
-    createControlSource( m_topLevel );
-    createControlTarget( m_topLevel );
-    setControl( m_topLevel );
-    validate();
     m_controlFinished = true;
   }
 
   public void createControlSource( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
-    group.setText( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage2") ); //$NON-NLS-1$
-
-    final GridData data = new GridData();
-    data.horizontalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    group.setLayoutData( data );
-
-    final GridLayout gridLayout = new GridLayout();
-    gridLayout.numColumns = 3;
-    group.setLayout( gridLayout );
+    group.setLayout( new GridLayout( 3, false ) );
+    group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    group.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage2" ) ); //$NON-NLS-1$
 
     // line 1
     final Label label = new Label( group, SWT.NONE );
-    label.setText( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage3") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage3" ) ); //$NON-NLS-1$
 
-    m_textFileSource = new Text( group, SWT.BORDER );
-    m_textFileSource.setText( DEFAUL_FILE_LABEL );
-    m_textFileSource.addFocusListener( this );
-
-    final GridData data1 = new GridData();
-    data1.horizontalAlignment = GridData.FILL;
-    data1.grabExcessHorizontalSpace = true;
-    m_textFileSource.setLayoutData( data1 );
+    final Text textFileSource = new Text( group, SWT.BORDER );
+    textFileSource.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    textFileSource.setText( StringUtils.EMPTY );
+    textFileSource.addModifyListener( new ModifyListener()
+    {
+      @Override
+      public void modifyText( final ModifyEvent e )
+      {
+        handleSourcePathModified( textFileSource.getText() );
+      }
+    } );
 
     final Button button = new Button( group, SWT.PUSH );
-    button.setText( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage4") ); //$NON-NLS-1$
-    final GridData data2 = new GridData();
-    data2.horizontalAlignment = GridData.END;
-    button.setLayoutData( data2 );
+    button.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage4" ) ); //$NON-NLS-1$
+    button.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
 
     button.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        m_sourceFile = chooseFile( m_sourceFile );
-        validate();
+        chooseSourceFile( textFileSource );
       }
     } );
+
     // line 2
-
     final Label formatLabel = new Label( group, SWT.NONE );
-    formatLabel.setText( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage5") ); //$NON-NLS-1$
+    formatLabel.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage5" ) ); //$NON-NLS-1$
 
-    m_formatCombo = new ComboViewer( group, SWT.NONE );
-    m_formatCombo.add( m_adapter );
-    final ArrayContentProvider provider = new ArrayContentProvider();
-    m_formatCombo.setContentProvider( provider );
-    m_formatCombo.setLabelProvider( new ILabelProvider()
-    {
-      @Override
-      public Image getImage( final Object element )
-      {
-        return null;
-      }
-
-      @Override
-      public String getText( final Object element )
-      {
-        return element.toString();
-      }
-
-      @Override
-      public void addListener( final ILabelProviderListener listener )
-      {
-        // nothing as labelprovider will not change
-      }
-
-      @Override
-      public void dispose( )
-      {
-        // nothing as labelprovider will not change
-      }
-
-      @Override
-      public boolean isLabelProperty( final Object element, final String property )
-      {
-        return true;
-      }
-
-      @Override
-      public void removeListener( final ILabelProviderListener listener )
-      {
-        // nothing
-      }
-    } );
-
+    m_formatCombo = new ComboViewer( group, SWT.DROP_DOWN | SWT.READ_ONLY );
+    m_formatCombo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_formatCombo.setContentProvider( new ArrayContentProvider() );
+    m_formatCombo.setLabelProvider( new LabelProvider() );
     m_formatCombo.setInput( m_adapter );
+
     m_formatCombo.addSelectionChangedListener( this );
 
     if( m_adapter.size() > 0 )
       m_formatCombo.setSelection( new StructuredSelection( m_adapter.get( 0 ) ) );
+
+    new Label( group, SWT.NONE );
+
+    // TimeZone
+    /* time zone selection */
+    final Label timezoneLabel = new Label( group, SWT.NONE );
+    timezoneLabel.setText( Messages.getString("ImportObservationSelectionWizardPage.0") ); //$NON-NLS-1$
+
+    final String[] tz = TimeZone.getAvailableIDs();
+    Arrays.sort( tz );
+
+    final ComboViewer comboTimeZones = new ComboViewer( group, SWT.BORDER | SWT.SINGLE );
+    comboTimeZones.getControl().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+    comboTimeZones.setContentProvider( new ArrayContentProvider() );
+    comboTimeZones.setLabelProvider( new LabelProvider() );
+    comboTimeZones.setInput( tz );
+
+    comboTimeZones.addFilter( new ViewerFilter()
+    {
+      @Override
+      public boolean select( final Viewer viewer, final Object parentElement, final Object element )
+      {
+        if( element instanceof String )
+        {
+          final String name = (String) element;
+          return !name.toLowerCase().startsWith( "etc/" ); //$NON-NLS-1$
+        }
+
+        return true;
+      }
+    } );
+
+    comboTimeZones.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        final IStructuredSelection selection = (IStructuredSelection) comboTimeZones.getSelection();
+        updateTimeZone( (String) selection.getFirstElement() );
+      }
+    } );
+
+    comboTimeZones.getCombo().addModifyListener( new ModifyListener()
+    {
+      @Override
+      public void modifyText( final ModifyEvent e )
+      {
+        updateTimeZone( comboTimeZones.getCombo().getText() );
+      }
+    } );
+
+    if( m_timezone != null )
+    {
+      final String id = m_timezone.getID();
+      if( ArrayUtils.contains( tz, id ) )
+        comboTimeZones.setSelection( new StructuredSelection( id ) );
+      else
+        comboTimeZones.getCombo().setText( id );
+    }
+  }
+
+  protected void handleSourcePathModified( final String sourcePath )
+  {
+    m_sourcePath = sourcePath;
+
+    validate();
   }
 
   public void createControlTarget( final Composite parent )
   {
     final Group group = new Group( parent, SWT.NONE );
-    group.setText( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage6") ); //$NON-NLS-1$
-    final GridLayout gridLayout3 = new GridLayout();
-    group.setLayout( gridLayout3 );
-    final GridData data4 = new GridData();
-    data4.horizontalAlignment = GridData.FILL;
-    data4.grabExcessHorizontalSpace = true;
-    group.setLayoutData( data4 );
+    group.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage6" ) ); //$NON-NLS-1$
+    group.setLayout( new GridLayout() );
+
+    group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final Composite top = new Composite( group, SWT.NONE );
-    final GridData data = new GridData();
-    data.horizontalAlignment = GridData.FILL;
-    data.grabExcessHorizontalSpace = true;
-    top.setLayoutData( data );
-
-    final GridLayout gridLayout = new GridLayout();
-    gridLayout.numColumns = 3;
-    top.setLayout( gridLayout );
+    top.setLayout( new GridLayout( 3, false ) );
+    top.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final Label label = new Label( top, SWT.NONE );
-    label.setText( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage7") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage7" ) ); //$NON-NLS-1$
 
-    m_textFileTarget = new Text( top, SWT.BORDER );
-    m_textFileTarget.setText( DEFAUL_FILE_LABEL );
-    m_textFileTarget.addFocusListener( this );
-    final GridData data1 = new GridData();
-    data1.horizontalAlignment = GridData.FILL;
-    data1.grabExcessHorizontalSpace = true;
-    m_textFileTarget.setLayoutData( data1 );
+    final Text textFileTarget = new Text( top, SWT.BORDER );
+    textFileTarget.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    textFileTarget.setText( StringUtils.EMPTY );
+    textFileTarget.addModifyListener( new ModifyListener()
+    {
+      @Override
+      public void modifyText( final ModifyEvent e )
+      {
+        handleTargetModifed( textFileTarget.getText() );
+      }
+    } );
+
     final Button button = new Button( top, SWT.PUSH );
-    button.setText( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage8") ); //$NON-NLS-1$
-    final GridData data2 = new GridData();
-    data2.horizontalAlignment = GridData.END;
-    button.setLayoutData( data2 );
+    button.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
+    button.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage8" ) ); //$NON-NLS-1$
 
     button.addSelectionListener( new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        m_targetFile = chooseFileZML( m_targetFile );
-        validate();
+        chooseFileZML( textFileTarget );
       }
     } );
 
     final Composite bottom = new Composite( group, SWT.NONE );
-    final GridData data3 = new GridData();
-    data3.horizontalAlignment = GridData.FILL;
-    data3.grabExcessHorizontalSpace = true;
-    bottom.setLayoutData( data3 );
-
-    final GridLayout gridLayout2 = new GridLayout();
-
-    bottom.setLayout( gridLayout2 );
+    bottom.setLayout( new GridLayout() );
+    bottom.setLayoutData( new GridData( SWT.BEGINNING, SWT.FILL, true, false ) );
 
     m_buttonRetainMeta = new Button( bottom, SWT.CHECK );
-    m_buttonRetainMeta.setText( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage9") ); //$NON-NLS-1$
+    m_buttonRetainMeta.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage9" ) ); //$NON-NLS-1$
     m_buttonRetainMeta.setSelection( true );
+
     m_buttonAppend = new Button( bottom, SWT.CHECK );
-    m_buttonAppend.setText( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage10") ); //$NON-NLS-1$
+    m_buttonAppend.setText( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage10" ) ); //$NON-NLS-1$
     m_buttonAppend.setSelection( true );
   }
 
-  File chooseFile( final File selectedFile )
+  protected void handleTargetModifed( final String text )
   {
-    final FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
-    if( selectedFile != null )
-    {
-      dialog.setFileName( selectedFile.getName() );
-      dialog.setFilterPath( selectedFile.getParent() );
-    }
-    dialog.open();
-    final String fileName = dialog.getFileName();
-    final String filterPath = dialog.getFilterPath();
-    return new File( filterPath, fileName );
+    if( StringUtils.isBlank( text ) || !new Path( text ).isValidPath( text ) )
+      m_targetPath = null;
+    else
+      m_targetPath = new Path( text );
+
+    validate();
   }
 
-  File chooseFileZML( final File selectedFile )
+  protected void chooseSourceFile( final Text textFileSource )
   {
-    final FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE | SWT.SAVE );
-    dialog.setOverwrite( true );
-    dialog.setFilterExtensions( new String[] { "*.zml" } ); //$NON-NLS-1$
-    if( selectedFile != null )
+    final FileDialog dialog = new FileDialog( getShell(), SWT.SINGLE );
+
+    final File sourceFile = getSourceFile();
+    if( sourceFile != null )
     {
-      dialog.setFileName( selectedFile.getName() );
-      dialog.setFilterPath( selectedFile.getParent() );
+      dialog.setFileName( sourceFile.getName() );
+      dialog.setFilterPath( sourceFile.getParent() );
     }
 
-    final String selectedPath = dialog.open();
-    if( selectedPath == null )
+    if( dialog.open() == null )
+      return;
+
+    final String fileName = dialog.getFileName();
+    final String filterPath = dialog.getFilterPath();
+    final File newSourceFile = new File( filterPath, fileName );
+    textFileSource.setText( newSourceFile.getAbsolutePath() );
+  }
+
+  private File getSourceFile( )
+  {
+    if( StringUtils.isBlank( m_sourcePath ) )
       return null;
 
-    return new File( selectedPath );
+    return new File( m_sourcePath );
+  }
+
+  protected void chooseFileZML( final Text textFileTarget )
+  {
+    final IFile targetFile = getTargetFile();
+
+    final SaveAsDialog saveAsDialog = new SaveAsDialog( getShell() )
+    {
+      /**
+       * @see org.eclipse.ui.dialogs.SaveAsDialog#configureShell(org.eclipse.swt.widgets.Shell)
+       */
+      @Override
+      protected void configureShell( final Shell shell )
+      {
+        super.configureShell( shell );
+
+        // shell.setText( "XXXX" );
+        PlatformUI.getWorkbench().getHelpSystem().setHelp( shell, null );
+      }
+
+      /**
+       * @see org.eclipse.ui.dialogs.SaveAsDialog#createContents(org.eclipse.swt.widgets.Composite)
+       */
+      @Override
+      protected Control createContents( final Composite parent )
+      {
+        final Control contents = super.createContents( parent );
+        setTitle( Messages.getString("ImportObservationSelectionWizardPage.2") ); //$NON-NLS-1$
+        setMessage( Messages.getString("ImportObservationSelectionWizardPage.3") ); //$NON-NLS-1$
+        return contents;
+      }
+
+    };
+    saveAsDialog.setHelpAvailable( false );
+
+    if( targetFile != null )
+      saveAsDialog.setOriginalFile( targetFile );
+    else
+    {
+      final File sourceFile = getSourceFile();
+      if( sourceFile != null )
+        saveAsDialog.setOriginalName( sourceFile.getName() );
+    }
+
+    if( saveAsDialog.open() != Window.OK )
+      return;
+
+    final IPath resultPath = saveAsDialog.getResult();
+
+    textFileTarget.setText( resultPath.toString() );
+
+    validate();
+  }
+
+  private IFile getTargetFile( )
+  {
+    if( m_targetPath == null )
+      return null;
+
+    try
+    {
+      final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+      return root.getFile( m_targetPath );
+    }
+    catch( final java.lang.IllegalArgumentException e )
+    {
+      return null;
+    }
   }
 
   /**
@@ -383,92 +472,48 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
    */
   void validate( )
   {
-    setErrorMessage( null );
-    setMessage( null );
-    setPageComplete( true );
-    final StringBuffer error = new StringBuffer();
-    if( m_sourceFile != null )
-      m_textFileSource.setText( m_sourceFile.getAbsolutePath() );
+    // Do not validate until page was created
+    if( !m_controlFinished )
+      return;
+
+    final IMessageProvider message = doValidate();
+    if( message == null )
+      setMessage( null );
     else
-    {
-      m_textFileSource.setText( DEFAUL_FILE_LABEL );
-      error.append( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage11") ); //$NON-NLS-1$
-      setPageComplete( false );
-    }
-    m_buttonAppend.setEnabled( false );
-    m_buttonRetainMeta.setEnabled( false );
-    if( m_targetFile != null )
-    {
-      m_textFileTarget.setText( m_targetFile.getAbsolutePath() );
-      if( m_targetFile.exists() )
-      {
-        m_buttonAppend.setEnabled( true );
-        m_buttonRetainMeta.setEnabled( true );
-      }
-    }
-    else
-    {
-      m_textFileTarget.setText( DEFAUL_FILE_LABEL );
-      error.append( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage12") ); //$NON-NLS-1$
-      setPageComplete( false );
-    }
-    if( error.length() > 0 )
-      setErrorMessage( error.toString() );
-    else
-      setMessage( Messages.getString("org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage13") ); //$NON-NLS-1$
+      setMessage( message.getMessage(), message.getMessageType() );
+    setPageComplete( message == null );
+
+    // TODO: does not really belong here
+    final IFile targetFile = getTargetFile();
+    final boolean targetFileExists = targetFile != null && targetFile.exists();
+    m_buttonAppend.setEnabled( targetFileExists );
+    m_buttonRetainMeta.setEnabled( targetFileExists );
+
     fireSelectionChanged();
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.IWizardPage#canFlipToNextPage()
-   */
-  @Override
-  public boolean canFlipToNextPage( )
+  private IMessageProvider doValidate( )
   {
-    return isPageComplete();
-  }
+    final File sourceFile = getSourceFile();
+    if( sourceFile == null )
+      return new MessageProvider( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage11" ), ERROR ); //$NON-NLS-1$
+    if( !sourceFile.isFile() )
+      return new MessageProvider( Messages.getString("ImportObservationSelectionWizardPage.4"), ERROR ); //$NON-NLS-1$
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    super.dispose();
-    if( m_topLevel != null && !m_topLevel.isDisposed() )
-    {
-      m_topLevel.dispose();
-      m_topLevel = null;
-    }
-  }
+    final IFile targetFile = getTargetFile();
+    if( targetFile == null )
+      return new MessageProvider( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage12" ), ERROR ); //$NON-NLS-1$
 
-  /**
-   * @see org.eclipse.swt.events.FocusListener#focusGained(org.eclipse.swt.events.FocusEvent)
-   */
-  @Override
-  public void focusGained( final FocusEvent e )
-  {
-    // nothing
-  }
+    if( m_timezone == null )
+      return new MessageProvider( Messages.getString("ImportObservationSelectionWizardPage.5"), ERROR ); //$NON-NLS-1$
 
-  /**
-   * @see org.eclipse.swt.events.FocusListener#focusLost(org.eclipse.swt.events.FocusEvent)
-   */
-  @Override
-  public void focusLost( final FocusEvent e )
-  {
-    m_sourceFile = new File( m_textFileSource.getText() );
-    m_targetFile = new File( m_textFileTarget.getText() );
-
-    validate();
+    return null;
   }
 
   private void fireSelectionChanged( )
   {
     for( final Object element : m_selectionListener )
-    {
       ((ISelectionChangedListener) element).selectionChanged( new SelectionChangedEvent( this, getSelection() ) );
-    }
   }
 
   /**
@@ -490,7 +535,9 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     if( !m_controlFinished )
       return StructuredSelection.EMPTY;
 
-    return new ObservationImportSelection( m_sourceFile, m_targetFile, (INativeObservationAdapter) formatSelection.getFirstElement(), m_buttonAppend.getSelection(), m_buttonRetainMeta.getSelection() );
+    final File sourceFile = getSourceFile();
+    final IFile targetFile = getTargetFile();
+    return new ObservationImportSelection( sourceFile, targetFile, (INativeObservationAdapter) formatSelection.getFirstElement(), m_buttonAppend.getSelection(), m_buttonRetainMeta.getSelection(), m_timezone );
   }
 
   /**
@@ -513,8 +560,19 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
       final ObservationImportSelection s = ((ObservationImportSelection) selection);
       if( m_formatCombo != null )
         m_formatCombo.setSelection( new StructuredSelection( s.getNativeAdapter() ) );
-      m_sourceFile = s.getFileSource();
-      m_targetFile = s.getFileTarget();
+
+      final File sourceFile = s.getFileSource();
+      if( sourceFile == null )
+        m_sourcePath = null;
+      else
+        m_sourcePath = sourceFile.getAbsolutePath();
+
+      final IFile targetFile = s.getFileTarget();
+      if( targetFile == null )
+        m_targetPath = null;
+      else
+        m_targetPath = targetFile.getFullPath();
+
       if( m_buttonAppend != null )
         m_buttonAppend.setSelection( s.isAppend() );
       if( m_buttonRetainMeta != null )
@@ -524,11 +582,8 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     {
       final Object firstElement = ((StructuredSelection) selection).getFirstElement();
       if( firstElement instanceof IFile )
-      {
-        m_targetFile = ResourceUtilities.makeFileFromPath( ((IFile) firstElement).getFullPath() );
-      }
+        m_targetPath = ((IFile) firstElement).getFullPath();
     }
-    // nothing
   }
 
   /**
@@ -538,6 +593,21 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   public void selectionChanged( final SelectionChangedEvent event )
   {
     fireSelectionChanged();
+  }
+
+  protected void updateTimeZone( final String timeZoneID )
+  {
+    m_timezone = null;
+
+    if( timeZoneID != null )
+    {
+      final TimeZone timeZone = TimeZone.getTimeZone( timeZoneID.toUpperCase() );
+      // Only set, if timezone could be parsed
+      if( !timeZone.getID().equals( "GMT" ) || timeZoneID.toUpperCase().equals( "GMT" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+        m_timezone = timeZone;
+    }
+
+    validate();
   }
 
 }
