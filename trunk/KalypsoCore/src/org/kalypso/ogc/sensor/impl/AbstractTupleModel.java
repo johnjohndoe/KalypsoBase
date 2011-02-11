@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
@@ -139,13 +139,12 @@ public abstract class AbstractTupleModel implements ITupleModel
         for( int i = 0; i < size(); i++ )
         {
           final Number value = (Number) get( i, axis );
-          if (value == null)
-          { 
-            System.out.println(String.format("AbstractTupleModel.getRange() - found invalid NULL value - index: %d", i)); //$NON-NLS-1$
+          if( value == null )
+          {
+            System.out.println( String.format( "AbstractTupleModel.getRange() - found invalid NULL value - index: %d", i ) ); //$NON-NLS-1$
             continue;
           }
-            
-          
+
           if( dc.compare( value, lower ) < 0 )
             lower = value;
 

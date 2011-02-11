@@ -45,6 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
@@ -84,15 +85,8 @@ public class DateRange implements Comparable<DateRange>
    */
   public DateRange( final Date from, final Date to )
   {
-    if( from == null )
-      m_from = new Date();
-    else
-      m_from = from;
-
-    if( to == null )
-      m_to = new Date();
-    else
-      m_to = to;
+    m_from = from;
+    m_to = to;
   }
 
   public static DateRange createDateRangeOrNull( final Date from, final Date to )
@@ -141,6 +135,42 @@ public class DateRange implements Comparable<DateRange>
       return false;
 
     return m_from.compareTo( date ) <= 0 && m_to.compareTo( date ) >= 0;
+  }
+
+  /**
+   * sometimes a date range only defines a start or end date...
+   */
+  public boolean containsLazyInclusive( final Date date )
+  {
+    if( !Objects.isNull( getFrom(), getTo() ) )
+      return containsInclusive( date );
+
+    if( !Objects.isNull( getFrom() ) )
+      return getFrom().compareTo( date ) <= 0;
+
+    if( !Objects.isNull( getTo() ) )
+      return getTo().compareTo( date ) >= 0;
+
+    // from and to is null -> so return true
+    return true;
+  }
+
+  /**
+   * sometimes a date range only defines a start or end date...
+   */
+  public boolean containsLazyExclusive( final Date date )
+  {
+    if( !Objects.isNull( getFrom(), getTo() ) )
+      return containsExclusive( date );
+
+    if( !Objects.isNull( getFrom() ) )
+      return getFrom().compareTo( date ) < 0;
+
+    if( !Objects.isNull( getTo() ) )
+      return getTo().compareTo( date ) > 0;
+
+    // from and to is null -> so return true
+    return true;
   }
 
   /**
