@@ -87,8 +87,6 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
 
   private IFeatureType m_featureType;
 
-// private Object m_Geometry = null;
-
   public XLinkedFeature_Impl( final Feature parentFeature, final IRelationType parentRelation, final IFeatureType featureType, final String href )
   {
     this( parentFeature, parentRelation, featureType, href, null, null, null, null, null );
@@ -176,7 +174,6 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   public IFeatureType getFeatureType( )
   {
     /* As long as the feature was not accessed, we only know the target feature type of our defining property. */
-
     if( m_featureType != null )
       return m_featureType;
 
@@ -567,24 +564,4 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   {
     getFeature().setProperty( NamedFeatureHelper.GML_LOCATION, location );
   }
-
-// /**
-// * @see org.kalypsodeegree.model.feature.BaseFeature#setGeometry(java.lang.Object)
-// */
-// @Override
-// public void setCachedGeometry( Object value )
-// {
-// m_Geometry = value;
-//
-// }
-//
-// /**
-// * @see org.kalypsodeegree.model.feature.BaseFeature#getGeometry()
-// */
-// @Override
-// public Object getCachedGeometry( )
-// {
-// // TODO Auto-generated method stub
-// return m_Geometry;
-// }
 }
