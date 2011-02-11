@@ -727,16 +727,18 @@
         <Label>Wasserstand [cm]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
-        <PreferredAdjustment before="15" range="75" after="10" />
+        <PreferredAdjustment before="15" range="75" after="10" fixMinValue="100"/>
         <RendererRef ref="AutoNumberAxisRenderer" />
+        <AxisNumberRangeRestriction minRange="5" />
       </Axis>
       <Axis id="Q" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Label>Abfluss [m³]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
-        <PreferredAdjustment before="15" range="75" after="10" />
+        <PreferredAdjustment before="15" range="75" after="10" fixMinValue="3" />
         <RendererRef ref="AutoNumberAxisRenderer" />
+        <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" />
       </Axis>
       <Axis id="N" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
@@ -768,8 +770,9 @@
         <Label>Datum</Label>
         <Direction>POSITIVE</Direction>
         <Position>BOTTOM</Position>
-        <PreferredAdjustment before="0" range="1" after="0" />
+        <PreferredAdjustment before="0" range="100" after="0" />
         <RendererRef ref="DateAxisRenderer" />
+        <AxisNumberRangeRestriction minRange="86400000" />
       </Axis>
       <ScreenAxis id="screenAxisX">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
