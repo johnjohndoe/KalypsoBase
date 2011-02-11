@@ -47,7 +47,6 @@ import java.util.Set;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
 import org.kalypso.chart.ui.layer.selection.utils.AxisOffsetVisitor;
 import org.kalypso.chart.ui.layer.selection.utils.FindAxisVisitor;
 import org.kalypso.commons.java.lang.Strings;
@@ -61,9 +60,6 @@ import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
-import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
-import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 
 /**
  * @author Dirk Kuch
@@ -72,9 +68,12 @@ public class AxisSelectionLayer extends AbstractChartLayer
 {
   private Point m_position;
 
-  public AxisSelectionLayer( final ILayerProvider provider )
+  private final ILineStyle m_style;
+
+  public AxisSelectionLayer( final ILayerProvider provider, final ILineStyle style )
   {
     super( provider );
+    m_style = style;
   }
 
   /**
@@ -92,10 +91,11 @@ public class AxisSelectionLayer extends AbstractChartLayer
     final Integer y0 = targetAxis.numericToScreen( targetRange.getMin() );
     final Integer y1 = targetAxis.numericToScreen( targetRange.getMax() );
 
-    final ILineStyle style = new LineStyle( 3, new RGB( 0, 255, 0 ), 100, 0F, new float[] { 12, 7 }, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
+// final ILineStyle style = new LineStyle( 3, new RGB( 0, 255, 0 ), 100, 0F, new float[] { 12, 7 }, LINEJOIN.MITER,
+// LINECAP.ROUND, 1, true );
 
     final PolylineFigure polylineFigure = new PolylineFigure();
-    polylineFigure.setStyle( style );
+    polylineFigure.setStyle( m_style );
 
     polylineFigure.setPoints( new Point[] { new Point( m_position.x, y0 ), new Point( m_position.x, y1 ) } );
     polylineFigure.paint( gc );
