@@ -85,12 +85,9 @@ public class LazyFeatureProvider extends AbstractXLinkFeatureProvider implements
 
     try
     {
-      final GMLWorkspace context = getContext();
-      final URL contextURL = context == null ? null : context.getContext();
-
       final URL url = new URI( uri ).toURL();
 
-      m_workspace = GmlSerializer.createGMLWorkspace( url, contextURL, m_factory, null );
+      m_workspace = GmlSerializer.createGMLWorkspace( url, null, m_factory, null );
     }
     catch( final Exception e )
     {
