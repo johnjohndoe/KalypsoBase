@@ -72,7 +72,7 @@ public class SimpleObservationTest extends TestCase
   {
     final ITupleModel values = m_obs.getValues( null );
 
-    final SimpleObservation observation = new SimpleObservation( values.getAxisList() );
+    final SimpleObservation observation = new SimpleObservation( values.getAxes() );
     observation.setValues( values );
   }
 

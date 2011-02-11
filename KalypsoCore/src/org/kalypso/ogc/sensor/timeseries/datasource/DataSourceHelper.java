@@ -260,7 +260,7 @@ public final class DataSourceHelper
 
   public static boolean hasDataSources( final ITupleModel model )
   {
-    final IAxis[] axes = model.getAxisList();
+    final IAxis[] axes = model.getAxes();
 
     return AxisUtils.findDataSourceAxis( axes ) != null;
   }

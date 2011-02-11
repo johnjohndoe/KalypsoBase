@@ -113,7 +113,7 @@ public class ZmlSinglePointProvider extends AbstractLayerProvider implements ILa
   {
     final ITupleModel model = provider.getObservation().getValues( provider.getArguments() );
 
-    final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxisList() );
+    final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
     final IAxis valueAxis = LayerProviderUtils.getValueAxis( provider, getTargetAxisId() );
 
     double diff = Double.MAX_VALUE;

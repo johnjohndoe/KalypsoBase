@@ -89,7 +89,7 @@ public class IntervalTupleModel extends AbstractTupleModel
 
   public IntervalTupleModel( final MODE mode, final IntervalCalendar calendar, final MetadataList metadata, final ITupleModel srcModel, final Date from, final Date to, final double defaultValue, final int defaultStatus ) throws SensorException
   {
-    super( srcModel.getAxisList() );
+    super( srcModel.getAxes() );
 
     m_mode = mode;
     m_calendar = calendar;
@@ -98,14 +98,14 @@ public class IntervalTupleModel extends AbstractTupleModel
     m_defaultValue = defaultValue;
     m_defaultStatus = defaultStatus;
 
-    m_axes = new IntervalModelAxes( getAxisList() );
+    m_axes = new IntervalModelAxes( getAxes() );
 
     final IAxisRange sourceModelRange = getSourceModelRange( srcModel, m_axes.getDateAxis() );
 
     m_from = initFrom( from, sourceModelRange );
     m_to = initTo( to, sourceModelRange );
 
-    m_intervallModel = initModell( getAxisList() );
+    m_intervallModel = initModell( getAxes() );
   }
 
   private Calendar initFrom( final Date from, final IAxisRange sourceModelRange )
@@ -151,7 +151,7 @@ public class IntervalTupleModel extends AbstractTupleModel
   private ITupleModel doInitModell( ) throws SensorException
   {
     // create empty model
-    final IAxis[] axisList = getAxisList();
+    final IAxis[] axisList = getAxes();
     final CalendarIterator iterator = new CalendarIterator( m_from, m_to, m_calendar.getCalendarField(), m_calendar.getAmount() );
     final int stepCount = iterator.size();
 

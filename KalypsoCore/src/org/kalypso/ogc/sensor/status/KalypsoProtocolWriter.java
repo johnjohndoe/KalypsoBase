@@ -82,7 +82,7 @@ public final class KalypsoProtocolWriter
     for( int i = 0; i < models.length; i++ )
     {
       final ITupleModel tuppleModel = models[i];
-      final IAxis[] statusAxes = KalypsoStatusUtils.findStatusAxes( tuppleModel.getAxisList() );
+      final IAxis[] statusAxes = KalypsoStatusUtils.findStatusAxes( tuppleModel.getAxes() );
       final int[] mergedStati = new int[statusAxes.length];
       for( int iAxes = 0; iAxes < mergedStati.length; iAxes++ )
         mergedStati[iAxes] = KalypsoStati.BIT_OK;

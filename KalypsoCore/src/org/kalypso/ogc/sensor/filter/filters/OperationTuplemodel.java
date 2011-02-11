@@ -63,7 +63,7 @@ public class OperationTuplemodel extends AbstractTupleModel
 
   public OperationTuplemodel( final double operand, final int operation, final ITupleModel baseModel )
   {
-    super( baseModel.getAxisList() );
+    super( baseModel.getAxes() );
 
     m_operand = operand;
     m_operation = operation;
@@ -91,7 +91,7 @@ public class OperationTuplemodel extends AbstractTupleModel
   @Override
   public Object get( final int index, final IAxis axis ) throws SensorException
   {
-    final IAxis a = ObservationUtilities.findAxisByName( m_baseModel.getAxisList(), axis.getName() );
+    final IAxis a = ObservationUtilities.findAxisByName( m_baseModel.getAxes(), axis.getName() );
     if( index >= m_baseModel.size() )
       return null;
 

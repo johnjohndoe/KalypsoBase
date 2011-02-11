@@ -507,7 +507,7 @@ public final class KalypsoStatusUtils
   {
     int mergedStatus = KalypsoStati.BIT_OK;
 
-    final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisForNoEx( values.getAxisList(), axis );
+    final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisForNoEx( values.getAxes(), axis );
     if( statusAxis == null )
       return mergedStatus;
 
@@ -528,7 +528,7 @@ public final class KalypsoStatusUtils
    */
   public static int countStatus( final ITupleModel values, final IAxis axis, final int mask ) throws SensorException
   {
-    final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( values.getAxisList(), axis );
+    final IAxis statusAxis = KalypsoStatusUtils.findStatusAxisFor( values.getAxes(), axis );
     int count = 0;
     for( int i = 0; i < values.size(); i++ )
     {

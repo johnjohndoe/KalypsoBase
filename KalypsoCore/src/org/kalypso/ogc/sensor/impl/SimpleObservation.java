@@ -125,7 +125,7 @@ public class SimpleObservation implements IObservation
   @Override
   public IAxis[] getAxisList( )
   {
-    return m_model.getAxisList();
+    return m_model.getAxes();
   }
 
   /**
@@ -154,7 +154,7 @@ public class SimpleObservation implements IObservation
   {
     if( values == null )
     {
-      m_model = new SimpleTupleModel( m_model.getAxisList() );
+      m_model = new SimpleTupleModel( m_model.getAxes() );
       return;
     }
 
@@ -164,16 +164,15 @@ public class SimpleObservation implements IObservation
       return;
     }
 
-    final IAxis[] otherAxes = values.getAxisList();
+    final IAxis[] otherAxes = values.getAxes();
     final Map<IAxis, IAxis> map = new HashMap<IAxis, IAxis>( getAxisList().length );
 
-    for( final IAxis myA : getAxisList() )
+    for( final IAxis axis : getAxisList() )
     {
       try
       {
-        final IAxis axis = ObservationUtilities.findAxisByName( otherAxes, myA.getName() );
-
-        map.put( myA, axis );
+        final IAxis other = ObservationUtilities.findAxisByName( otherAxes, axis.getName() );
+        map.put( axis, other );
       }
       catch( final NoSuchElementException e )
       {

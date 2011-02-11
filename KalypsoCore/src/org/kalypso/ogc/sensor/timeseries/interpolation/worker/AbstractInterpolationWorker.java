@@ -84,7 +84,7 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
     m_baseModel = baseModel;
     m_dateRange = dateRange;
 
-    m_interpolated = new SimpleTupleModel( getBaseModel().getAxisList() );
+    m_interpolated = new SimpleTupleModel( getBaseModel().getAxes() );
   }
 
   protected ITupleModel getBaseModel( )
@@ -137,7 +137,7 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
 
   protected IAxis getDateAxis( )
   {
-    final IAxis[] axes = getBaseModel().getAxisList();
+    final IAxis[] axes = getBaseModel().getAxes();
 
     return ObservationUtilities.findAxisByClass( axes, Date.class );
   }
@@ -147,13 +147,13 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
    */
   protected IAxis[] getValueAxes( )
   {
-    final IAxis[] axes = getBaseModel().getAxisList();
+    final IAxis[] axes = getBaseModel().getAxes();
     return ObservationUtilities.findAxesByClasses( axes, new Class[] { Number.class, Boolean.class } );
   }
 
   protected IAxis getDataSourceAxis( )
   {
-    final IAxis[] axes = getBaseModel().getAxisList();
+    final IAxis[] axes = getBaseModel().getAxes();
 
     return AxisUtils.findDataSourceAxis( axes );
   }
