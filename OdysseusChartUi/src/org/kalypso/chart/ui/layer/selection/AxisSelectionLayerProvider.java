@@ -52,7 +52,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
  */
 public class AxisSelectionLayerProvider extends AbstractLayerProvider
 {
-  public static final String ID = "org.kalypso.chart.ui.layer.provider.axis.selection";
+  public static final String ID = "org.kalypso.chart.ui.layer.provider.axis.selection"; //$NON-NLS-1$
 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerProvider#getLayer(java.net.URL)
@@ -61,7 +61,6 @@ public class AxisSelectionLayerProvider extends AbstractLayerProvider
   public IChartLayer getLayer( final URL context )
   {
     final StyleSetVisitor visitor = new StyleSetVisitor();
-
     final ILineStyle style = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
 
     return new AxisSelectionLayer( this, style );

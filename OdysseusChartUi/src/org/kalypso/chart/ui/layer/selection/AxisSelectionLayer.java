@@ -91,9 +91,6 @@ public class AxisSelectionLayer extends AbstractChartLayer
     final Integer y0 = targetAxis.numericToScreen( targetRange.getMin() );
     final Integer y1 = targetAxis.numericToScreen( targetRange.getMax() );
 
-// final ILineStyle style = new LineStyle( 3, new RGB( 0, 255, 0 ), 100, 0F, new float[] { 12, 7 }, LINEJOIN.MITER,
-// LINECAP.ROUND, 1, true );
-
     final PolylineFigure polylineFigure = new PolylineFigure();
     polylineFigure.setStyle( m_style );
 
@@ -117,10 +114,10 @@ public class AxisSelectionLayer extends AbstractChartLayer
 
     final IParameterContainer container = getProvider().getParameterContainer();
 
-    final String[] keys = container.findAllKeys( "axis" );
+    final String[] keys = container.findAllKeys( "axis" ); //$NON-NLS-1$
     for( final String key : keys )
     {
-      final String value = container.getParameterValue( key, "" );
+      final String value = container.getParameterValue( key, "" ); //$NON-NLS-1$
       if( Strings.isNotEmpty( value ) )
         identifiers.add( value );
     }
@@ -130,7 +127,6 @@ public class AxisSelectionLayer extends AbstractChartLayer
 
   public void setMousePosition( final Point position )
   {
-
     final IChartModel model = getProvider().getModel();
     final IMapperRegistry registry = model.getMapperRegistry();
 
@@ -148,9 +144,6 @@ public class AxisSelectionLayer extends AbstractChartLayer
     final Date date = new Date( value.longValue() );
     final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
 
-    // TODO date offset
-
     System.out.println( sdf.format( date ) );
-
   }
 }
