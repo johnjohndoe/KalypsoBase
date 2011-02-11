@@ -144,7 +144,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public void update( final int index, final Object value ) throws SensorException
   {
     final ITupleModel model = getTupleModel();
-    final IAxis[] axes = model.getAxisList();
+    final IAxis[] axes = model.getAxes();
 
     for( final IAxis axis : axes )
     {

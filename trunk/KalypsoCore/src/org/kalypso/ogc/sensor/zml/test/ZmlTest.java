@@ -118,7 +118,7 @@ public class ZmlTest extends TestCase
 
     assertEquals( values.size(), 21 );
 
-    final IAxis[] axes = values.getAxisList();
+    final IAxis[] axes = values.getAxes();
 
     final IAxis dateAxis = ObservationUtilities.findAxisByName( axes, "Datum" ); //$NON-NLS-1$
     assertNotNull( dateAxis );

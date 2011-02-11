@@ -151,7 +151,7 @@ public class RoundFilter extends AbstractObservationFilter
     final ITupleModel values = proxiedObservation.getValues( bufferedRequest );
 
     // get all non-virtual Double-Axises
-    final IAxis axis = ObservationUtilities.findAxisByTypeNoEx( values.getAxisList(), m_type );
+    final IAxis axis = ObservationUtilities.findAxisByTypeNoEx( values.getAxes(), m_type );
     if( axis == null )
       throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.RoundFilter.1" ) + m_type ); //$NON-NLS-1$
 

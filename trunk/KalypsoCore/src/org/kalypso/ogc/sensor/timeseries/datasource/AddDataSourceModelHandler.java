@@ -69,7 +69,7 @@ public class AddDataSourceModelHandler extends AbstractDataSourceModelHandler
     final DefaultAxis dataSourceAxis = new DefaultAxis( ITimeseriesConstants.TYPE_DATA_SRC, ITimeseriesConstants.TYPE_DATA_SRC, "", Integer.class, false );
 
     final ITupleModel baseModel = getModel();
-    IAxis[] baseAxes = baseModel.getAxisList();
+    IAxis[] baseAxes = baseModel.getAxes();
     baseAxes = (IAxis[]) ArrayUtils.add( baseAxes, dataSourceAxis );
 
     final SimpleTupleModel model = new SimpleTupleModel( baseAxes );
@@ -79,7 +79,7 @@ public class AddDataSourceModelHandler extends AbstractDataSourceModelHandler
     {
       final Object[] data = new Object[baseAxes.length];
 
-      for( final IAxis axis : baseModel.getAxisList() )
+      for( final IAxis axis : baseModel.getAxes() )
       {
         final Object element = baseModel.get( i, axis );
         data[model.getPosition( axis )] = element;

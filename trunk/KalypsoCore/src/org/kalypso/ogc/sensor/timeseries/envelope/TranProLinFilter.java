@@ -116,7 +116,7 @@ public class TranProLinFilter extends AbstractObservationFilter
     if( outerSourceCount == 0 )
       return outerSource;
 
-    final IAxis[] axes = outerSource.getAxisList();
+    final IAxis[] axes = outerSource.getAxes();
 
     try
     {
@@ -200,8 +200,8 @@ public class TranProLinFilter extends AbstractObservationFilter
         innerSource = outerSource;
 
       // initialize inner target
-      final Object[][] vallues = createValueArray( targetDates, innerSource.getAxisList().length, innerSource.getPosition( dateAxis ) );
-      final SimpleTupleModel innerTarget = new SimpleTupleModel( innerSource.getAxisList(), vallues );
+      final Object[][] vallues = createValueArray( targetDates, innerSource.getAxes().length, innerSource.getPosition( dateAxis ) );
+      final SimpleTupleModel innerTarget = new SimpleTupleModel( innerSource.getAxes(), vallues );
 
       // initialize outer target
       final ITupleModel outerTarget;

@@ -310,7 +310,7 @@ public final class ObservationUtilities
   public static void dump( final ITupleModel model, final String sep, final Writer writer ) throws SensorException
   {
     // do not use the same array because of the sort
-    final IAxis[] axes = new ArrayList<IAxis>( Arrays.asList( model.getAxisList() ) ).toArray( new IAxis[0] );
+    final IAxis[] axes = new ArrayList<IAxis>( Arrays.asList( model.getAxes() ) ).toArray( new IAxis[0] );
 
     // sort axes in order to have a better output
     sortAxes( axes );
@@ -381,7 +381,7 @@ public final class ObservationUtilities
    */
   public static String dump( final ITupleModel model, final String sep, final int index, final boolean excludeStatusAxes ) throws SensorException
   {
-    IAxis[] axes = model.getAxisList();
+    IAxis[] axes = model.getAxes();
 
     if( excludeStatusAxes )
       axes = KalypsoStatusUtils.withoutStatusAxes( axes );

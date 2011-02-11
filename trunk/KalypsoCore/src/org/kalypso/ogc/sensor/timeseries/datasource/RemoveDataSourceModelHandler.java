@@ -70,7 +70,7 @@ public class RemoveDataSourceModelHandler extends AbstractDataSourceModelHandler
       return getModel();
 
     final ITupleModel baseModel = getModel();
-    final IAxis[] axes = getAxes( baseModel.getAxisList() );
+    final IAxis[] axes = getAxes( baseModel.getAxes() );
 
     final SimpleTupleModel model = new SimpleTupleModel( axes );
 

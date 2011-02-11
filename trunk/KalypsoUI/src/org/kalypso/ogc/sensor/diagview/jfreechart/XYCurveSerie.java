@@ -114,7 +114,7 @@ class XYCurveSerie extends Series
       {
         try
         {
-          m_statusAxis = KalypsoStatusUtils.findStatusAxisFor( m_values.getAxisList(), m_yAxis );
+          m_statusAxis = KalypsoStatusUtils.findStatusAxisFor( m_values.getAxes(), m_yAxis );
         }
         catch( final NoSuchElementException ignored )
         {

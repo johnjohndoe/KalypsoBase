@@ -447,7 +447,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
 
   private void changeDataSource( final IObservation observation, final ITupleModel model, final int index, final String source ) throws SensorException
   {
-    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( model.getAxisList() );
+    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( model.getAxes() );
     if( dataSourceAxis == null )
       return; // we didn't want to change the model
 

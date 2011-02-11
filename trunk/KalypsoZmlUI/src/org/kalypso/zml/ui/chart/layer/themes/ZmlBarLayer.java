@@ -165,7 +165,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer, Cloneabl
       if( model == null )
         return null;
 
-      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxisList() );
+      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
       final IAxisRange range = model.getRange( dateAxis );
       if( range == null )
         return null;
@@ -230,7 +230,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer, Cloneabl
       if( model == null )
         return;
 
-      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxisList() );
+      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
       final PolygonFigure pf = getPolygonFigure();
       final Point base = getCoordinateMapper().numericToScreen( 0.0, 0.0 );
 

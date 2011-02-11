@@ -59,7 +59,6 @@ import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
-import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
@@ -81,13 +80,13 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
 {
   private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
 
-  private final IDataOperator<Number> m_numberDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
-
   private IZmlLayerDataHandler m_handler;
 
-  private boolean m_stylesUpdated = false;
-
   private String m_labelDescriptor;
+
+  private final IDataOperator<Number> m_numberDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
+
+  private boolean m_stylesUpdated = false;
 
   protected ZmlLineLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
@@ -101,42 +100,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
   public ZmlLineLayer clone( )
   {
     return new ZmlLineLayer( getProvider(), getStyleSet() );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    if( m_handler != null )
-      m_handler.dispose();
-
-    super.dispose();
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#isVisible()
-   */
-  @Override
-  public boolean isVisible( )
-  {
-    if( !super.isVisible() )
-      return false;
-
-    // FIXME: what IS that???? Does this makes any sense??? Please AT LEAST comment such strange stuff!
-// else if( getTargetRange( null ) == null )
-// return false;
-// else if( getDomainRange() == null )
-// return false;
-
-    return true;
-  }
-
-  @Override
-  public synchronized ILegendEntry[] getLegendEntries( )
-  {
-    return createLegendEntries();
   }
 
   /**
@@ -169,6 +132,32 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
   }
 
   /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    if( m_handler != null )
+      m_handler.dispose();
+
+    super.dispose();
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.chart.layer.themes.IZmlLayer#getDataHandler()
+   */
+  @Override
+  public IZmlLayerDataHandler getDataHandler( )
+  {
+    return m_handler;
+  }
+
+  public IDataOperator<Date> getDateDataOperator( )
+  {
+    return m_dateDataOperator;
+  }
+
+  /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
@@ -180,7 +169,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
       if( model == null )
         return null;
 
-      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxisList() );
+      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
       final IAxisRange range = model.getRange( dateAxis );
       if( range == null )
         return null;
@@ -196,6 +185,17 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
 
       return null;
     }
+  }
+
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    return createLegendEntries();
+  }
+
+  public IDataOperator<Number> getNumberDataOperator( )
+  {
+    return m_numberDataOperator;
   }
 
   /**
@@ -226,7 +226,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
       }
       else
       {
-        final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxisList() );
+        final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
 
         Number minValue = null;
         Number maxValue = null;
@@ -258,6 +258,38 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
     }
   }
 
+  @Override
+  public String getTitle( )
+  {
+    if( m_labelDescriptor == null )
+      return super.getTitle();
+
+    final IObservation observation = getDataHandler().getObservation();
+    if( observation == null )
+      return m_labelDescriptor;
+
+    final String title = ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
+    return title;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#isVisible()
+   */
+  @Override
+  public boolean isVisible( )
+  {
+    if( !super.isVisible() )
+      return false;
+
+    // FIXME: what IS that???? Does this makes any sense??? Please AT LEAST comment such strange stuff!
+// else if( getTargetRange( null ) == null )
+// return false;
+// else if( getDomainRange() == null )
+// return false;
+
+    return true;
+  }
+
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
@@ -272,28 +304,8 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
       if( model == null )
         return;
 
-      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxisList() );
       final List<Point> path = new ArrayList<Point>();
-
-      for( int i = 0; i < model.size(); i++ )
-      {
-        try
-        {
-          final Object domainValue = model.get( i, dateAxis );
-          final Object targetValue = model.get( i, m_handler.getValueAxis() );
-          if( domainValue == null || targetValue == null )
-            continue;
-
-          final Date adjusted = ChartLayerUtils.addTimezoneOffset( (Date) domainValue );
-
-          final Point screen = getCoordinateMapper().numericToScreen( m_dateDataOperator.logicalToNumeric( adjusted ), m_numberDataOperator.logicalToNumeric( (Double) targetValue ) );
-          path.add( screen );
-        }
-        catch( final SensorException e )
-        {
-          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        }
-      }
+      model.accept( new LineLayerModelVisitor( this, path ) );
 
       drawLine( gc, path );
       drawPoints( gc, path );
@@ -302,36 +314,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
-  }
-
-  private void udpateStyles( )
-  {
-    if( m_stylesUpdated )
-      return;
-
-    final IStyleSet styleSet = getStyleSet();
-    final int index = ZmlLayerHelper.getLayerIndex( getId() );
-
-    final StyleSetVisitor visitor = new StyleSetVisitor();
-
-    final IPointStyle pointStyle = visitor.visit( styleSet, IPointStyle.class, index );
-    final ILineStyle lineStyle = visitor.visit( styleSet, ILineStyle.class, index );
-    final ITextStyle textStyle = visitor.visit( styleSet, ITextStyle.class, index );
-
-    getPointFigure().setStyle( pointStyle );
-    getPolylineFigure().setStyle( lineStyle );
-    getTextFigure().setStyle( textStyle );
-
-    m_stylesUpdated = true;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.chart.layer.themes.IZmlLayer#getDataHandler()
-   */
-  @Override
-  public IZmlLayerDataHandler getDataHandler( )
-  {
-    return m_handler;
   }
 
   /**
@@ -355,18 +337,25 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
     m_labelDescriptor = labelDescriptor;
   }
 
-  @Override
-  public String getTitle( )
+  private void udpateStyles( )
   {
-    if( m_labelDescriptor == null )
-      return super.getTitle();
+    if( m_stylesUpdated )
+      return;
 
-    final IObservation observation = getDataHandler().getObservation();
-    if( observation == null )
-      return m_labelDescriptor;
+    final IStyleSet styleSet = getStyleSet();
+    final int index = ZmlLayerHelper.getLayerIndex( getId() );
 
-    final String title = ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
-    return title;
+    final StyleSetVisitor visitor = new StyleSetVisitor();
+
+    final IPointStyle pointStyle = visitor.visit( styleSet, IPointStyle.class, index );
+    final ILineStyle lineStyle = visitor.visit( styleSet, ILineStyle.class, index );
+    final ITextStyle textStyle = visitor.visit( styleSet, ITextStyle.class, index );
+
+    getPointFigure().setStyle( pointStyle );
+    getPolylineFigure().setStyle( lineStyle );
+    getTextFigure().setStyle( textStyle );
+
+    m_stylesUpdated = true;
   }
 
 }

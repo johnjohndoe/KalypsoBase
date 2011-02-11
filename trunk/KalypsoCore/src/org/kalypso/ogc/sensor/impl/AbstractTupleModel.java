@@ -49,6 +49,8 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
+import org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue;
 
 /**
  * Provides common functionnality:
@@ -78,10 +80,37 @@ public abstract class AbstractTupleModel implements ITupleModel
   }
 
   /**
+   * @see org.kalypso.ogc.sensor.ITupleModel#accept(org.kalypso.ogc.sensor.ITupleModelVisitor)
+   */
+  @Override
+  public void accept( final ITupleModelVisitor visitor ) throws SensorException
+  {
+    for( int i = 0; i < size(); i++ )
+    {
+      final int index = i;
+
+      visitor.visit( new ITupleModelVisitorValue()
+      {
+        @Override
+        public int getIndex( )
+        {
+          return index;
+        }
+
+        @Override
+        public Object get( final IAxis axis ) throws SensorException
+        {
+          return AbstractTupleModel.this.get( index, axis );
+        }
+      } );
+    }
+  }
+
+  /**
    * @see org.kalypso.ogc.sensor.ITuppleModel#getAxisList()
    */
   @Override
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxes( )
   {
     return m_axes;
   }

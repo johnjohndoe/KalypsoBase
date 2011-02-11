@@ -122,7 +122,7 @@ public class ClipboardExportAction extends AbstractObservationAction
 
     final StringBuffer result = new StringBuffer();
     final ITupleModel values = observation.getValues( request );
-    final IAxis[] axes = values.getAxisList();
+    final IAxis[] axes = values.getAxes();
     final int count = values.size();
     // actually just the first key axis is relevant in our case
     final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( axes );

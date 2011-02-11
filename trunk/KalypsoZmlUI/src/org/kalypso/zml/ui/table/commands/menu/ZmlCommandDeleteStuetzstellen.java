@@ -83,8 +83,8 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
       final IZmlModelColumn modelColumn = column.getModelColumn();
       final ITupleModel model = modelColumn.getTupleModel();
 
-      final IAxis statusAxis = AxisUtils.findStatusAxis( model.getAxisList() );
-      final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( model.getAxisList() );
+      final IAxis statusAxis = AxisUtils.findStatusAxis( model.getAxes() );
+      final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( model.getAxes() );
       final String src = String.format( "%s%s", DataSourceHelper.FILTER_SOURCE, InterpolationFilter.FILTER_ID ); //$NON-NLS-1$
       final DataSourceHandler dataSourceHandler = new DataSourceHandler( modelColumn.getMetadata() );
 

@@ -100,7 +100,7 @@ public class SimpleTupleModel extends AbstractTupleModel
    */
   public SimpleTupleModel( final ITupleModel copyTupples ) throws SensorException
   {
-    super( copyTupples.getAxisList() );
+    super( copyTupples.getAxes() );
 
     // TODO this leads to unsaved changes when a value is set because the underlying (real) model isn't changed, just
     // the copy of it (see setFrom and the calling constructors in SimpleTuppleModel).
@@ -117,7 +117,7 @@ public class SimpleTupleModel extends AbstractTupleModel
    */
   public SimpleTupleModel( final ITupleModel copyTupples, final DateRange dateRange ) throws SensorException
   {
-    super( copyTupples.getAxisList() );
+    super( copyTupples.getAxes() );
 
     // TODO this leads to unsaved changes when a value is set because the underlying (real) model isn't changed, just
     // the copy of it (see setFrom and the calling constructors in SimpleTuppleModel).
@@ -230,7 +230,7 @@ public class SimpleTupleModel extends AbstractTupleModel
    */
   private void setFrom( final ITupleModel copyTupples ) throws SensorException
   {
-    final IAxis[] axes = getAxisList();
+    final IAxis[] axes = getAxes();
 
     m_tuples = new ArrayList<Object[]>();
 
@@ -262,7 +262,7 @@ public class SimpleTupleModel extends AbstractTupleModel
    */
   private void setFrom( final ITupleModel copyTupples, final DateRange dateRange ) throws SensorException
   {
-    final IAxis[] axes = getAxisList();
+    final IAxis[] axes = getAxes();
 
     final IAxis dateAxis = ObservationUtilities.findAxisByClassNoEx( axes, Date.class );
     if( dateRange == null || dateAxis == null )

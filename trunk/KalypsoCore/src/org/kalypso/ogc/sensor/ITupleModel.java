@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,9 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor;
+
+import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
 
 /**
  * Data Model for the value elements of observations.
@@ -47,10 +49,12 @@ package org.kalypso.ogc.sensor;
  */
 public interface ITupleModel
 {
+  void accept( ITupleModelVisitor visitor ) throws SensorException;
+
   /**
    * @return axis list for which this model delivers elements
    */
-  IAxis[] getAxisList( );
+  IAxis[] getAxes( );
 
   /**
    * Returns the position of the axis in this tuple model

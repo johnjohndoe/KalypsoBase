@@ -63,7 +63,7 @@ public final class ZMLUtilities
   {
     final IObservation observation = ZmlFactory.parseXML( url ); //$NON-NLS-1$
     final ITupleModel tuppelModel = observation.getValues( request );
-    final IAxis[] axisList = tuppelModel.getAxisList();
+    final IAxis[] axisList = tuppelModel.getAxes();
     final IAxis axis = ObservationUtilities.findAxisByType( axisList, axisType );
     final int max = tuppelModel.size();
     double maxValue = -1;

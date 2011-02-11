@@ -103,7 +103,7 @@ public class TuppleModelsLinearAdd
       if( values.size() != firstTuppleModel.size() )
         throw new SensorException( "The observations in the list must have a equal number of elements ..." );
 
-      final IAxis[] axisList = values.getAxisList();
+      final IAxis[] axisList = values.getAxes();
       valueAxes[i] = ObservationUtilities.findAxisByType( axisList, m_sourceValueType );
     }
 

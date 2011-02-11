@@ -62,7 +62,7 @@ public class NOperationTuplemodel extends AbstractTupleModel
 
   public NOperationTuplemodel( final ITupleModel[] models, final int operation )
   {
-    super( models[0].getAxisList() );
+    super( models[0].getAxes() );
 
     m_baseModels = models;
     m_operation = operation;
@@ -88,13 +88,13 @@ public class NOperationTuplemodel extends AbstractTupleModel
     final Class< ? > dataClass = axis.getDataClass();
     if( dataClass.equals( Date.class ) )
     {
-      final IAxis a = ObservationUtilities.findAxisByType( m_baseModels[0].getAxisList(), axisType );
+      final IAxis a = ObservationUtilities.findAxisByType( m_baseModels[0].getAxes(), axisType );
       return m_baseModels[0].get( index, a );
     }
 
     if( dataClass.equals( Double.class ) )
     {
-      final IAxis a = ObservationUtilities.findAxisByType( m_baseModels[0].getAxisList(), axisType );
+      final IAxis a = ObservationUtilities.findAxisByType( m_baseModels[0].getAxes(), axisType );
       if( index >= m_baseModels[0].size() )
         return null;
 
@@ -105,7 +105,7 @@ public class NOperationTuplemodel extends AbstractTupleModel
         if( index >= model.size() )
           continue;
 
-        final IAxis a2 = ObservationUtilities.findAxisByType( m_baseModels[i].getAxisList(), axisType );
+        final IAxis a2 = ObservationUtilities.findAxisByType( m_baseModels[i].getAxes(), axisType );
 
         final double nextValue = ((Number) model.get( index, a2 )).doubleValue();
         switch( m_operation )

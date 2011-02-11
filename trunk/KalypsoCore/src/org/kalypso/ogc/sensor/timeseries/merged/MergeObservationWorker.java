@@ -195,7 +195,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
   {
     final List<Object[]> data = new ArrayList<Object[]>();
 
-    final AxisMapping mapping = new AxisMapping( m_axes, srcModel.getAxisList() );
+    final AxisMapping mapping = new AxisMapping( m_axes, srcModel.getAxes() );
     final IAxis[] srcAxes = mapping.getSourceAxes();
 
     final DataSourceHandler destMetaDataHandler = new DataSourceHandler( m_metadata );

@@ -63,7 +63,7 @@ public abstract class AbstractDataSourceModelHandler
 
   public boolean hasDataSouceAxis( )
   {
-    final IAxis[] axes = getModel().getAxisList();
+    final IAxis[] axes = getModel().getAxes();
     final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( axes );
 
     return dataSourceAxis != null;
