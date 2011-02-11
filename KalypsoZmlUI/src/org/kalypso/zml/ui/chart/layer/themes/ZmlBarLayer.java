@@ -240,9 +240,18 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer, Cloneabl
         try
         {
           final Object domainValue = model.get( i, dateAxis );
-          final Object targetValue = model.get( i, m_handler.getValueAxis() );
+          Object targetValue = model.get( i, m_handler.getValueAxis() );
           if( domainValue == null || targetValue == null )
             continue;
+
+          /** @hack for polder control */
+          if( targetValue instanceof Boolean )
+          {
+            if( Boolean.valueOf( (Boolean) targetValue ) )
+              targetValue = 1;
+            else
+              targetValue = 0;
+          }
 
           final Number logicalDomain = m_dateDataOperator.logicalToNumeric( ChartLayerUtils.addTimezoneOffset( (Date) domainValue ) );
           final Number logicalTarget = m_targetDataOperator.logicalToNumeric( (Number) targetValue );
