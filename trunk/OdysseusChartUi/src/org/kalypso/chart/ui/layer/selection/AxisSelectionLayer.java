@@ -40,12 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.layer.selection;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
+import org.kalypso.chart.ui.layer.selection.utils.AxisOffsetVisitor;
 import org.kalypso.chart.ui.layer.selection.utils.FindAxisVisitor;
 import org.kalypso.commons.java.lang.Strings;
 
@@ -89,10 +92,11 @@ public class AxisSelectionLayer extends AbstractChartLayer
     final Integer y0 = targetAxis.numericToScreen( targetRange.getMin() );
     final Integer y1 = targetAxis.numericToScreen( targetRange.getMax() );
 
-    final ILineStyle style = new LineStyle( 3, new RGB( 255, 0, 0 ), 100, 0F, new float[] { 12, 7 }, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
+    final ILineStyle style = new LineStyle( 3, new RGB( 0, 255, 0 ), 100, 0F, new float[] { 12, 7 }, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
 
     final PolylineFigure polylineFigure = new PolylineFigure();
     polylineFigure.setStyle( style );
+
     polylineFigure.setPoints( new Point[] { new Point( m_position.x, y0 ), new Point( m_position.x, y1 ) } );
     polylineFigure.paint( gc );
   }
@@ -126,12 +130,27 @@ public class AxisSelectionLayer extends AbstractChartLayer
 
   public void setMousePosition( final Point position )
   {
-    m_position = position;
-// final IAxis domainAxis = getDomainAxis();
-// final int screenValue = domainAxis.getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? point.x :
-// point.y;
-// m_selection = screenToNumeric( screenValue );
+
+    final IChartModel model = getProvider().getModel();
+    final IMapperRegistry registry = model.getMapperRegistry();
+
+    final AxisOffsetVisitor visitor = new AxisOffsetVisitor( getDomainAxis().getPosition() );
+    registry.accept( visitor );
+
+    // TODO handle / update y position
+    m_position = new Point( position.x - visitor.getOffset(), position.y );
 
     getEventHandler().fireLayerContentChanged( this );
+
+    final IAxis axis = getDomainAxis();
+    final Number value = axis.screenToNumeric( m_position.x );
+
+    final Date date = new Date( value.longValue() );
+    final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
+
+    // TODO date offset
+
+    System.out.println( sdf.format( date ) );
+
   }
 }
