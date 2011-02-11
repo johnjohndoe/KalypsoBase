@@ -112,6 +112,8 @@ public class PatternInputReplacer<T>
 
   public String replaceTokens( final String pattern, final T context )
   {
+    // FIXME: use StrSubstituor (commons-lang) instead.
+
     if( pattern == null )
       return null;
 
