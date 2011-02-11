@@ -727,7 +727,7 @@
         <Label>Wasserstand [cm]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
-        <PreferredAdjustment before="15" range="75" after="10" fixMinValue="100"/>
+        <PreferredAdjustment before="15" range="75" after="10" fixMinRange="100" />
         <RendererRef ref="AutoNumberAxisRenderer" />
         <AxisNumberRangeRestriction minRange="5" />
       </Axis>
@@ -736,7 +736,7 @@
         <Label>Abfluss [m³]</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
-        <PreferredAdjustment before="15" range="75" after="10" fixMinValue="3" />
+        <PreferredAdjustment before="15" range="75" after="10" fixMinRange="3" />
         <RendererRef ref="AutoNumberAxisRenderer" />
         <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" />
       </Axis>
@@ -745,7 +745,7 @@
         <Label>Niederschlag [mm]</Label>
         <Direction>NEGATIVE</Direction>
         <Position>RIGHT</Position>
-        <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />
+        <PreferredAdjustment before="0" range="50" after="50" fixMaxRange="1.0" />
         <RendererRef ref="AutoNumberAxisRenderer" />
         <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" />
       </Axis>
