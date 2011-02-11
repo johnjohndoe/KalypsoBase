@@ -60,7 +60,7 @@ import de.openali.odysseus.chart.framework.view.IPlotHandler;
  */
 public class AxisSelectionCommandHandler extends AbstractHandler implements IElementUpdater
 {
-  public static final String ID = "org.kalypso.chart.ui.command.axis.selection"; // $NON-NLS-1$
+  public static final String ID = "org.kalypso.chart.ui.command.axis.selection"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)

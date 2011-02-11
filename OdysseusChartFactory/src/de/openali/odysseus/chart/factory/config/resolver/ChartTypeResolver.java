@@ -266,9 +266,9 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private String getUrl( final String url, final URL context )
   {
-    if( url.contains( "#" ) )//$NON-NLS-1$
+    if( url.contains( "#" ) ) // $NON-NLS-1$
     {
-      final Pattern pattern = new Pattern( "#.*" ); //$NON-NLS-1$
+      final Pattern pattern = new Pattern( "#.*" ); // $NON-NLS-1$
       if( pattern.matches( url ) )
         return context.toString();
 
