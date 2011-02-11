@@ -47,7 +47,9 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.jfree.chart.axis.DateTick;
+import org.joda.time.DateTimeFieldType;
 
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
@@ -59,6 +61,13 @@ public class GenericDateTimeTickCalculator implements ITickCalculator
 // private final TickUnitSource m_tickUnitSource = createStandardDateTickUnits(
 // KalypsoCorePlugin.getDefault().getTimeZone() );
 
+  private DateTimeFieldType m_tickRaster = null;
+
+  public GenericDateTimeTickCalculator( final DateTimeFieldType tickRaster )
+  {
+    m_tickRaster = tickRaster;
+  }
+
   /**
    * @see org.kalypso.chart.ext.test.axisrenderer.ITickCalculator#calcTicks(org.eclipse.swt.graphics.GC,
    *      org.kalypso.chart.framework.model.mapper.IAxis)
@@ -69,10 +78,9 @@ public class GenericDateTimeTickCalculator implements ITickCalculator
   @Override
   public Number[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
   {
-// final List<DateTick> ticks = new ArrayList<DateTick>();
-// if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-// ticks = refreshTicksHorizontal( gc, plotArea, dataArea, axis );
-
+    final IDataRange<Number> numRange = axis.getNumericRange();
+//FIXME: alles
+    m_tickRaster.getRangeDurationType();
     throw new NotImplementedException();
   }
 

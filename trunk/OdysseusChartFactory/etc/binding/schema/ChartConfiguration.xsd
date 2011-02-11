@@ -373,8 +373,8 @@
                   </restriction>
                 </simpleType>
               </attribute>
-              <attribute name="fixMinValue" type="decimal" use="optional" />
-              <attribute name="fixMaxValue" type="decimal" use="optional" />
+              <attribute name="fixMinRange" type="decimal" use="optional" />
+              <attribute name="fixMaxRange" type="decimal" use="optional" />
             </complexType>
           </element>
           <element name="RendererRef" type="ods:ReferencingType" />
