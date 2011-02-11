@@ -113,11 +113,30 @@ public class AutoScaleVisitor implements IAxisVisitor
       final double adjRange = adj.getRange();
       final double adjAfter = adj.getAfter();
 
-      final double rangeMin = Math.min( adj.getMinValue().doubleValue(), mergedDataRange.getMin().doubleValue() );
-      final double rangeMax = Math.max( adj.getMaxValue().doubleValue(), mergedDataRange.getMax().doubleValue() );
-
+      final double mergedRange = mergedDataRange.getMax().doubleValue() - mergedDataRange.getMin().doubleValue();
+      final double minMergedRange = adj.getMinValue().doubleValue();
+      final double maxMergedRange = adj.getMaxValue().doubleValue();
+      final double rangeMin;
+      final double rangeMax;
+      if( mergedRange < minMergedRange )
+      {
+        final double delta = (minMergedRange - mergedRange) / 2.0;
+        rangeMin = mergedDataRange.getMin().doubleValue() - delta;
+        rangeMax = mergedDataRange.getMax().doubleValue() + delta;
+      }
+      else if( mergedRange > maxMergedRange )
+      {
+        final double delta = (mergedRange - maxMergedRange) / 2.0;
+        rangeMin = mergedDataRange.getMin().doubleValue() + delta;
+        rangeMax = mergedDataRange.getMax().doubleValue() - delta;
+      }
+      else
+      {
+        rangeMin = mergedDataRange.getMin().doubleValue();
+        rangeMax = mergedDataRange.getMax().doubleValue();
+      }
       // computing preferred adjustment failed if rangesize==0.0, so we set a range minimum depends on adjustment
-      final double rangeSize = rangeMax == rangeMin ? 1.0 : rangeMax - rangeMin;
+      final double rangeSize = mergedRange == 0.0 ? 1.0 : mergedRange;
       final double newMin = rangeMin - rangeSize * (adjBefore / adjRange);
       final double newMax = rangeMax + rangeSize * (adjAfter / adjRange);
 
