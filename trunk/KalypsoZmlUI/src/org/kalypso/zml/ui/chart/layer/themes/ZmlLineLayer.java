@@ -76,7 +76,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
  * @author Dirk Kuch
  * @author kimwerner
  */
-public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Cloneable
+public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 {
   private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
 
@@ -86,20 +86,9 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
 
   private final IDataOperator<Number> m_numberDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
 
-  private boolean m_stylesUpdated = false;
-
   protected ZmlLineLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
     super( provider, styleSet );
-  }
-
-  /**
-   * @see java.lang.Object#clone()
-   */
-  @Override
-  public ZmlLineLayer clone( )
-  {
-    return new ZmlLineLayer( getProvider(), getStyleSet() );
   }
 
   /**
@@ -296,13 +285,19 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
   @Override
   public void paint( final GC gc )
   {
+    drawLineTheme( gc );
+    drawSelectionTheme( gc );
+  }
+
+  private void drawLineTheme( final GC gc )
+  {
     try
     {
-      udpateStyles();
-
       final ITupleModel model = m_handler.getModel();
       if( model == null )
         return;
+
+      setLineThemeStyles();
 
       final List<Point> path = new ArrayList<Point>();
       model.accept( new LineLayerModelVisitor( this, path ) );
@@ -314,6 +309,14 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
+  }
+
+  private void drawSelectionTheme( final GC gc )
+  {
+    final de.openali.odysseus.chart.framework.model.mapper.IAxis domainAxis = getDomainAxis();
+    if( domainAxis.getSelection() == null )
+      return;
+
   }
 
   /**
@@ -337,11 +340,8 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
     m_labelDescriptor = labelDescriptor;
   }
 
-  private void udpateStyles( )
+  private void setLineThemeStyles( )
   {
-    if( m_stylesUpdated )
-      return;
-
     final IStyleSet styleSet = getStyleSet();
     final int index = ZmlLayerHelper.getLayerIndex( getId() );
 
@@ -354,8 +354,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer, Clonea
     getPointFigure().setStyle( pointStyle );
     getPolylineFigure().setStyle( lineStyle );
     getTextFigure().setStyle( textStyle );
-
-    m_stylesUpdated = true;
   }
 
 }
