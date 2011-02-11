@@ -156,7 +156,6 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
 
     if( m_model == null )
     {
-
       final IRequest request = getRequest();
       final IObservation observation = m_provider.getObservation();
       if( observation != null )

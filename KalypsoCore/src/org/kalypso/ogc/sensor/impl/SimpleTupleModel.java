@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
@@ -115,13 +115,13 @@ public class SimpleTupleModel extends AbstractTupleModel
    * @param dra
    *          The date range is used to limit the values that are returned by the given model.
    */
-  public SimpleTupleModel( final ITupleModel copyTupples, final DateRange dra ) throws SensorException
+  public SimpleTupleModel( final ITupleModel copyTupples, final DateRange dateRange ) throws SensorException
   {
     super( copyTupples.getAxisList() );
 
     // TODO this leads to unsaved changes when a value is set because the underlying (real) model isn't changed, just
     // the copy of it (see setFrom and the calling constructors in SimpleTuppleModel).
-    setFrom( copyTupples, dra );
+    setFrom( copyTupples, dateRange );
   }
 
   /**
@@ -235,17 +235,17 @@ public class SimpleTupleModel extends AbstractTupleModel
     m_tuples = new ArrayList<Object[]>();
 
     clearAxesPositions();
-    for( int ia = 0; ia < axes.length; ia++ )
+    for( int index = 0; index < axes.length; index++ )
     {
-      mapAxisToPos( axes[ia], ia );
+      mapAxisToPos( axes[index], index );
     }
 
-    for( int ix = 0; ix < copyTupples.size(); ix++ )
+    for( int modelIndex = 0; modelIndex < copyTupples.size(); modelIndex++ )
     {
       final Object[] row = new Object[axes.length];
-      for( int ia = 0; ia < axes.length; ia++ )
+      for( int axisPosition = 0; axisPosition < axes.length; axisPosition++ )
       {
-        row[ia] = copyTupples.get( ix, axes[ia] );
+        row[axisPosition] = copyTupples.get( modelIndex, axes[axisPosition] );
       }
 
       m_tuples.add( row );
@@ -260,12 +260,12 @@ public class SimpleTupleModel extends AbstractTupleModel
    * @param dra
    *          The date range is used to limit the values that are returned by the given model.
    */
-  private void setFrom( final ITupleModel copyTupples, final DateRange dra ) throws SensorException
+  private void setFrom( final ITupleModel copyTupples, final DateRange dateRange ) throws SensorException
   {
     final IAxis[] axes = getAxisList();
 
     final IAxis dateAxis = ObservationUtilities.findAxisByClassNoEx( axes, Date.class );
-    if( dra == null || dateAxis == null )
+    if( dateRange == null || dateAxis == null )
     {
       setFrom( copyTupples );
       return;
@@ -274,25 +274,25 @@ public class SimpleTupleModel extends AbstractTupleModel
     m_tuples = new ArrayList<Object[]>();
 
     clearAxesPositions();
-    for( int ia = 0; ia < axes.length; ia++ )
+    for( int index = 0; index < axes.length; index++ )
     {
-      mapAxisToPos( axes[ia], ia );
+      mapAxisToPos( axes[index], index );
     }
 
-    for( int ix = 0; ix < copyTupples.size(); ix++ )
+    for( int modelIndex = 0; modelIndex < copyTupples.size(); modelIndex++ )
     {
-      final Date d = (Date) copyTupples.get( ix, dateAxis );
-      if( d.compareTo( dra.getFrom() ) >= 0 && d.compareTo( dra.getTo() ) <= 0 )
+      final Date date = (Date) copyTupples.get( modelIndex, dateAxis );
+
+      if( dateRange.containsLazyInclusive( date ) )
       {
         final Object[] row = new Object[axes.length];
-        for( int ia = 0; ia < axes.length; ia++ )
+        for( int axisPosition = 0; axisPosition < axes.length; axisPosition++ )
         {
-          row[ia] = copyTupples.get( ix, axes[ia] );
+          row[axisPosition] = copyTupples.get( modelIndex, axes[axisPosition] );
         }
 
         m_tuples.add( row );
       }
     }
   }
-
 }
