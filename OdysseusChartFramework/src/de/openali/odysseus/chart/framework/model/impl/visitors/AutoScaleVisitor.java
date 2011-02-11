@@ -120,13 +120,13 @@ public class AutoScaleVisitor implements IAxisVisitor
       final double rangeMax;
       if( mergedRange < minMergedRange )
       {
-        final double delta = (minMergedRange - mergedRange) / 2.0;
+        final double delta = (minMergedRange-mergedRange ) / 2.0;
         rangeMin = mergedDataRange.getMin().doubleValue() - delta;
         rangeMax = mergedDataRange.getMax().doubleValue() + delta;
       }
       else if( mergedRange > maxMergedRange )
       {
-        final double delta = (mergedRange - maxMergedRange) / 2.0;
+        final double delta = (mergedRange-maxMergedRange ) / 2.0;
         rangeMin = mergedDataRange.getMin().doubleValue() + delta;
         rangeMax = mergedDataRange.getMax().doubleValue() - delta;
       }

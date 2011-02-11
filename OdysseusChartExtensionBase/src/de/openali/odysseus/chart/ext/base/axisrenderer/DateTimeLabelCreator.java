@@ -144,7 +144,7 @@ public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabel
     return units;
   }
 
-  DateFormat m_format;
+  private SimpleDateFormat m_format = null;
 
   /**
    * @param formatString
@@ -165,7 +165,15 @@ public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabel
   @Override
   public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
   {
-    return m_format.format( new Date( ticks[i].longValue() ) );
+    return getFormat( range ).format( new Date( ticks[i].longValue() ) );
+  }
+
+  private DateFormat getFormat( final IDataRange<Number> range )
+  {
+    if(m_format!=null)
+    return m_format;
+    //FIXME: make it work
+    return new SimpleDateFormat("");
   }
 
   /**

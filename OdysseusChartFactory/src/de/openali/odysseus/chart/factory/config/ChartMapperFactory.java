@@ -280,7 +280,7 @@ public class ChartMapperFactory extends AbstractChartFactory
     {
       final PreferredAdjustment pa = at.getPreferredAdjustment();
 
-      aa = new AxisAdjustment( pa.getBefore(), pa.getRange(), pa.getAfter(),pa.getFixMinValue()==null?0.0:pa.getFixMinValue(),pa.getFixMaxValue()==null?Double.MAX_VALUE: pa.getFixMaxValue());
+      aa = new AxisAdjustment( pa.getBefore(), pa.getRange(), pa.getAfter(),pa.getFixMinRange()==null?0.0:pa.getFixMinRange(),pa.getFixMaxRange()==null?Double.MAX_VALUE: pa.getFixMaxRange());
     }
     else
       aa = new AxisAdjustment( 0, 1, 0 );

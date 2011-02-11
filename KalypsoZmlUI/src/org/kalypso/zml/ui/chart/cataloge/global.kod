@@ -745,7 +745,7 @@
         <Label>Niederschlag [mm]</Label>
         <Direction>NEGATIVE</Direction>
         <Position>RIGHT</Position>
-        <PreferredAdjustment before="0" range="50" after="50" fixMaxValue="1.0" />
+        <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />
         <RendererRef ref="AutoNumberAxisRenderer" />
         <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" />
       </Axis>
