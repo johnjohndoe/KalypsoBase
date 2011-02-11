@@ -63,7 +63,7 @@ public class AxisAdjustment implements IAxisAdjustment
 
   public AxisAdjustment( final int before, final int range, final int after )
   {
-    this( before, range, after, Double.MAX_VALUE, -Double.MAX_VALUE );
+    this( before, range, after, 0.0, Double.MAX_VALUE );
   }
 
   public AxisAdjustment( final int before, final int range, final int after, final Number minValue, final Number maxValue )
