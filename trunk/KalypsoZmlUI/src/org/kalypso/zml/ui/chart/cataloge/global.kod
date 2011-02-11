@@ -682,6 +682,18 @@
           <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
           <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#screenAxisY" />
         </MapperRefs>
+        <Styles>
+          <LineStyle role="forecastStyle">
+            <Alpha>64</Alpha>
+            <Width>3</Width>
+            <LineColor>FF0000</LineColor>
+            <DashOffset>16</DashOffset>
+            <DashArray>12 7</DashArray>
+            <LineCap>ROUND</LineCap>
+            <LineJoin>MITER</LineJoin>
+            <MiterLimit>1</MiterLimit>
+          </LineStyle>
+        </Styles>
       </Layer>
       <Layer id="noData" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.base.layer.provider.DefaultTextLayerProvider">

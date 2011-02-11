@@ -43,8 +43,9 @@ package org.kalypso.chart.ui.layer.selection;
 import java.net.URL;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
@@ -57,8 +58,12 @@ public class AxisSelectionLayerProvider extends AbstractLayerProvider
    * @see de.openali.odysseus.chart.framework.model.layer.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
-  public IChartLayer getLayer( final URL context ) throws ConfigurationException
+  public IChartLayer getLayer( final URL context )
   {
-    return new AxisSelectionLayer( this );
+    final StyleSetVisitor visitor = new StyleSetVisitor();
+
+    final ILineStyle style = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
+
+    return new AxisSelectionLayer( this, style );
   }
 }
