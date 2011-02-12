@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.serialize;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Formatter;
+import java.util.Locale;
 
 import org.kalypso.core.i18n.Messages;
 
@@ -85,7 +86,7 @@ public class HMOSerializer
 
   public void formatPoint( final int id, final double x, final double y, final double z )
   {
-    m_formatter.format( "P:%10d%20.7f%20.7f%20.7f%n", id, x, y, z );
+    m_formatter.format( Locale.US, "P:%10d%20.7f%20.7f%20.7f%n", id, x, y, z );
   }
 
   public void finish( )
