@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
@@ -143,7 +144,7 @@ public class DictionaryCatalog
     final DictionaryEntry dictEntry = m_featureMap.get( entry );
     if( dictEntry == null )
     {
-      final IStatus status = StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.gml.dict.DictionaryCatalog.11", entry ) ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), Messages.getString( "org.kalypso.ogc.gml.dict.DictionaryCatalog.11", entry ) ); //$NON-NLS-1$
       KalypsoGisPlugin.getDefault().getLog().log( status );
       return;
     }
