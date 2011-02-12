@@ -294,9 +294,14 @@ public class FileChooserGroup
   {
     final String path = file == null ? "" : file.getAbsolutePath();
 
-    final String text = m_text.getText();
-    if( !path.equals( text ) )
-      m_text.setText( path );
+    if( m_text == null )
+      m_path = path;
+    else
+    {
+      final String text = m_text.getText();
+      if( !path.equals( text ) )
+        m_text.setText( path );
+    }
   }
 
   protected void textModified( final String text )
