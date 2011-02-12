@@ -44,6 +44,7 @@ import java.io.StringReader;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
@@ -69,6 +70,12 @@ public class ZmlTest extends TestCase
 
   // contains the list of ZMLs to test
   private final static String[] ZMLS = { "resources/beispiel.zml", "resources/inline_ex.zml" }; //$NON-NLS-1$ //$NON-NLS-2$
+
+  public ZmlTest( )
+  {
+    m_df.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
+    // TODO Auto-generated constructor stub
+  }
 
   public void testZmls( ) throws SensorException, ParseException
   {

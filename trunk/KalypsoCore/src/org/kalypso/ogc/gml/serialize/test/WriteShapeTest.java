@@ -1,11 +1,14 @@
 package org.kalypso.ogc.gml.serialize.test;
 
 import java.io.File;
+import java.io.FilenameFilter;
 
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gmlschema.GMLSchemaFactory;
@@ -70,5 +73,10 @@ public class WriteShapeTest extends TestCase
     ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null );
 
     System.out.println( "Wrote shapeFile to:" + shapeFile.getAbsolutePath() );
+
+    final IOFileFilter prefixFileFilter = FileFilterUtils.prefixFileFilter( shapeFile.getName() );
+    final File[] shapeParts = shapeFile.getParentFile().listFiles( (FilenameFilter) prefixFileFilter );
+    for( final File part : shapeParts )
+      part.delete();
   }
 }

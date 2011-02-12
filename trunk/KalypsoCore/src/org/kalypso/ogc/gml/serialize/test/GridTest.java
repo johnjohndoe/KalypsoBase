@@ -42,6 +42,8 @@ package org.kalypso.ogc.gml.serialize.test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import junit.framework.TestCase;
 
@@ -76,7 +78,10 @@ public class GridTest extends TestCase
     final GMLWorkspace outputWorkspace = FeatureFactory.createGMLWorkspace( ICoverageCollection.QNAME, tmpFile.toURI().toURL(), null );
     final ICoverageCollection outputCoverages = (ICoverageCollection) outputWorkspace.getRootFeature().getAdapter( ICoverageCollection.class );
 
-    IFeatureBindingCollection<ICoverage> coverages = inputCoverages.getCoverages();
+    final IFeatureBindingCollection<ICoverage> coverages = inputCoverages.getCoverages();
+
+    final Collection<File> gridFiles = new ArrayList<File>();
+
     for( final ICoverage inputCoverage : coverages )
     {
       final IGeoGrid inputGrid = GeoGridUtilities.toGrid( inputCoverage );
@@ -99,9 +104,15 @@ public class GridTest extends TestCase
       GeoGridUtilities.addCoverage( outputCoverages, outputGrid, file, filePath, "image/bin", new NullProgressMonitor() ); //$NON-NLS-1$
 
       inputGrid.dispose();
+
+      gridFiles.add( file );
     }
 
     /* Write result workspace */
     GmlSerializer.serializeWorkspace( tmpFile, outputWorkspace, "UTF-8" ); //$NON-NLS-1$
+
+    tmpFile.delete();
+    for( final File file : gridFiles )
+      file.delete();
   }
 }

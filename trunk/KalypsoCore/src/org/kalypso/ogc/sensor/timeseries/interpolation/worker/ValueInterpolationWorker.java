@@ -100,7 +100,6 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
       final DateRange dateRange = getDateRange();
       final IAxis[] valueAxes = getValueAxes();
       final Calendar calendar = Calendar.getInstance();
-//      calendar.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
 
       final LocalCalculationStack stack = new LocalCalculationStack( valueAxes.length );
 

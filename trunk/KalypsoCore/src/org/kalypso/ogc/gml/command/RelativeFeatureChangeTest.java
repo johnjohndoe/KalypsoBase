@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.command;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -84,12 +85,11 @@ public class RelativeFeatureChangeTest extends TestCase
     final FeatureList featureList = (FeatureList) feature.getProperty( feature.getFeatureType().getProperties()[0] );
 
     m_original = (Feature) featureList.first();
-// for( int i = 0; i < COMMAND_COUNT; i++ )
-// {
-// // FIXME
-// // m_result[i] = (Feature) featureList.get( i + 1 );
-// // m_changes[i] = new ArrayList<FeatureChange>();
-// }
+    for( int i = 0; i < COMMAND_COUNT; i++ )
+    {
+      m_result[i] = (Feature) featureList.get( i + 1 );
+      m_changes[i] = new ArrayList<FeatureChange>();
+    }
 
     m_originalProperties = m_original.getFeatureType().getProperties();
 

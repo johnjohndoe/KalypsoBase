@@ -43,12 +43,14 @@ package org.kalypso.ogc.gml.serialize.test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 import javax.xml.namespace.QName;
 
 import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.net.UrlUtilities;
@@ -59,41 +61,43 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
-
 /**
  * @author felipe maximino
  *
  */
 public class GmlTriSurface2HmoConverterTest extends Assert
 {
- 
   @Test
   public void testSerialize() throws Exception
   {
-    URL gmlLocation = getClass().getResource( "resources/tinyTin.gml" );
+    final URL gmlLocation = getClass().getResource( "resources/tinyTin.gml" );
     assertNotNull( gmlLocation );
 
-    URL hmoLocation = getClass().getResource( "resources/tinyTin.hmo" );
+    final URL hmoLocation = getClass().getResource( "resources/tinyTin.hmo" );
     assertNotNull( hmoLocation );
 
-    GMLWorkspace tinWorkspace = GmlSerializer.createGMLWorkspace( gmlLocation, null );
-    Feature rootFeature = tinWorkspace.getRootFeature();
-    GM_TriangulatedSurface tin = (GM_TriangulatedSurface) rootFeature.getProperty( new QName( "org.kalypso.deegree.gmlparsertest", "triangularSurfaceMember" ) );
-    
-    File result = FileUtilities.createNewUniqueFile( "hmoTest", FileUtilities.TMP_DIR );
-    
-    Gml2HmoConverter conv = new GmlTriSurface2HmoConverter(tin);
+    final GMLWorkspace tinWorkspace = GmlSerializer.createGMLWorkspace( gmlLocation, null );
+    final Feature rootFeature = tinWorkspace.getRootFeature();
+    final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) rootFeature.getProperty( new QName( "org.kalypso.deegree.gmlparsertest", "triangularSurfaceMember" ) );
+
+    final File result = FileUtilities.createNewUniqueFile( "hmoTest", FileUtilities.TMP_DIR );
+
+    final Gml2HmoConverter conv = new GmlTriSurface2HmoConverter(tin);
     conv.writeHmo( result );
-    
+
     assertContentEquals( result, hmoLocation );
 
     result.delete();
   }
-  
-  private void assertContentEquals( File file, URL location ) throws IOException
+
+  private void assertContentEquals( final File file, final URL location ) throws IOException
   {
-    String fileContent = FileUtils.readFileToString( new File(file.getAbsolutePath()), System.getProperty( "file.encoding" ) );
-    String urlContent = UrlUtilities.toString( location, System.getProperty( "file.encoding" ) );
-    assertEquals( fileContent, urlContent );
+    final String fileContent = FileUtils.readFileToString( new File( file.getAbsolutePath() ) );
+    final String urlContent = UrlUtilities.toString( location, Charset.defaultCharset().name() );
+
+    final String fileContentClean = StringUtils.replaceChars( fileContent, "\r", null );
+    final String urlContentClean = StringUtils.replaceChars( urlContent, "\r", null );
+
+    assertEquals( fileContentClean, urlContentClean );
   }
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<observation xmlns="zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="zml.kalypso.org
-./observation.xsd" xmlns:xlink="http://www.w3.org/1999/xlink">
+<observation xmlns="zml.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<name>Eine Test-Observation</name>
 
 	<metadataList>
@@ -9,6 +8,7 @@
 		<metadata name="Hochwert" value="887766"/>
 		<metadata name="Alarmstufe 1" value="4.3"/>
 		<metadata name="Alarmstufe 2" value="5.6"/>
+        <metadata name="Zeitzone" value="UTC"/>
 	</metadataList>
 
 	<axis name="Datum" key="true" type="datum" unit="" datatype="TYPE=xs:date#FORMAT=dd.MM.yyyy">
