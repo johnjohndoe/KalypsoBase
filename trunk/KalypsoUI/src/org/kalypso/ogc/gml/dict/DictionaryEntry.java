@@ -42,8 +42,10 @@ package org.kalypso.ogc.gml.dict;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
@@ -70,7 +72,7 @@ public class DictionaryEntry extends Job implements IPoolListener
 
     m_key = key;
 
-    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     pool.addPoolListener( this, m_key );
   }
 
@@ -119,7 +121,7 @@ public class DictionaryEntry extends Job implements IPoolListener
   {
     m_disposed = true;
 
-    final ResourcePool pool = KalypsoGisPlugin.getDefault().getPool();
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     pool.removePoolListener( this );
   }
 
@@ -130,7 +132,7 @@ public class DictionaryEntry extends Job implements IPoolListener
   protected IStatus run( final IProgressMonitor monitor )
   {
     if( isDisposed() )
-      return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ogc.gml.dict.DictionaryEntry.alreadyDisposed") ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "org.kalypso.ogc.gml.dict.DictionaryEntry.alreadyDisposed" ) ); //$NON-NLS-1$
 
     // Just waits until we first where called from the pool.
     while( m_status == null )

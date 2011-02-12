@@ -80,7 +80,7 @@ public class DictionaryFeature implements Feature
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
   @Override
-  public Object getAdapter( final Class adapter )
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     return m_feature.getAdapter( adapter );
   }
