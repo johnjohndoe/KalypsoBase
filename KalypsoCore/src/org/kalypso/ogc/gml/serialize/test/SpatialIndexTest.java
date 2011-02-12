@@ -141,6 +141,10 @@ public class SpatialIndexTest extends TestCase
     if( filename.toLowerCase().endsWith( ".gml" ) ) //$NON-NLS-1$
       return GmlSerializer.createGMLWorkspace( fileBase.toURI().toURL(), null );
 
-    return ShapeSerializer.deserialize( fileBase.getAbsolutePath(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    final GMLWorkspace workspace = ShapeSerializer.deserialize( fileBase.getAbsolutePath(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+
+    FileUtils.deleteDirectory( unzipDir );
+
+    return workspace;
   }
 }

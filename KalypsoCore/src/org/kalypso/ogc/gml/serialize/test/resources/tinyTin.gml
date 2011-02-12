@@ -6,7 +6,7 @@
     <gml:Triangle interpolation="planar">
      <gml:exterior>
       <gml:LinearRing>
-       <gml:posList srsDimension="3">0.0 0.0 0.0 0.0 1.0 1.0 1.0 0.0 2.0 0.0 0.0 0.0 </gml:posLsit>
+       <gml:posList srsDimension="3">0.0 0.0 0.0 0.0 1.0 1.0 1.0 0.0 2.0 0.0 0.0 0.0</gml:posList>
       </gml:LinearRing>
      </gml:exterior>
     </gml:Triangle>
