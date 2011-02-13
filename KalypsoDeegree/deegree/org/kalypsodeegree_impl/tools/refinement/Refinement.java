@@ -51,7 +51,7 @@ public class Refinement
     if( inputCurve.getStartPoint().equals( inputCurve.getEndPoint() ) )
     {
       final GM_LineString lineString = inputCurve.getAsLineString();
-      final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( lineString.getPositions(), null, inputCurve.getCoordinateSystem() );
+      final GM_Surface< ? extends GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( lineString.getPositions(), null, inputCurve.getCoordinateSystem() );
       GM_Object remainingSurface = surface;
       for( final GM_MultiSurface multiSurface : inputSurfaces )
       {

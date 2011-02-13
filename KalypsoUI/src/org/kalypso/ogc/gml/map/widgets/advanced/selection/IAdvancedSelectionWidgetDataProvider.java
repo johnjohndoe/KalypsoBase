@@ -51,15 +51,15 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
  */
 public interface IAdvancedSelectionWidgetDataProvider
 {
-  Feature[] query( GM_Surface<GM_SurfacePatch> surface, EDIT_MODE editMode );
+  Feature[] query( GM_Surface< ? extends GM_SurfacePatch> surface, EDIT_MODE editMode );
 
   Feature[] getLastQuery( );
   /**
    * features which are sorted out and  not returned from the last query
    */
   Feature[] getMissed();
-  
-  
+
+
   /**
    * post selection changes
    */
@@ -69,5 +69,5 @@ public interface IAdvancedSelectionWidgetDataProvider
 
   public void removeSelectionChangeListener( IAdvancedWidgetChangeListener listener );
 
-  
+
 }

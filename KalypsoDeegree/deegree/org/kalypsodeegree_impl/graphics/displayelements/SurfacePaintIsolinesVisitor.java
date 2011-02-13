@@ -85,7 +85,7 @@ public class SurfacePaintIsolinesVisitor implements ISurfacePatchVisitor<GM_Tria
   {
     /* DEBUG: Paint the triangle. */
     // paintTriangle( triangle );
-    
+
     /* Paint the iso lines. */
     getTriangleIsoLines( triangle );
 
@@ -95,23 +95,23 @@ public class SurfacePaintIsolinesVisitor implements ISurfacePatchVisitor<GM_Tria
   /**
    * This function paints the triangle.
    */
-  protected void paintTriangle( GM_Triangle triangle )
+  protected void paintTriangle( final GM_Triangle triangle )
   {
     try
     {
       /* Define how the triangles will be drawn. */
-      PolygonSymbolizer triangleSymbolizer = new PolygonSymbolizer_Impl();
+      final PolygonSymbolizer triangleSymbolizer = new PolygonSymbolizer_Impl();
       triangleSymbolizer.getFill().setOpacity( 0 );
       triangleSymbolizer.getStroke().setStroke( Color.BLACK );
       triangleSymbolizer.getStroke().setWidth( 1 );
 
       /* Draw the triangle. */
-      GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( triangle );
+      final GM_Surface< ? extends GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( triangle );
 
-      PolygonDisplayElement triangleDisplayElement = DisplayElementFactory.buildPolygonDisplayElement( null, surface, triangleSymbolizer );
+      final PolygonDisplayElement triangleDisplayElement = DisplayElementFactory.buildPolygonDisplayElement( null, surface, triangleSymbolizer );
       triangleDisplayElement.paint( m_gc, m_projection, new NullProgressMonitor() );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       ex.printStackTrace();
     }

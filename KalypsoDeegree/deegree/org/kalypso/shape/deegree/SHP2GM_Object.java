@@ -205,7 +205,7 @@ public final class SHP2GM_Object
         innerRings.add( ring );
     }
 
-    final List<GM_Surface<GM_SurfacePatch>> wkslp = new ArrayList<GM_Surface<GM_SurfacePatch>>();
+    final List<GM_Surface< ? extends GM_SurfacePatch>> wkslp = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>();
 
     for( final GM_Position[] out_ring : outerRings )
     {
@@ -240,7 +240,7 @@ public final class SHP2GM_Object
       try
       {
         final GM_Position[][] inrings = innerOfOuter.toArray( new GM_Position[innerOfOuter.size()][] );
-        final GM_Surface<GM_SurfacePatch> sur = GeometryFactory.createGM_Surface( out_ring, inrings, crs );
+        final GM_Surface< ? extends GM_SurfacePatch> sur = GeometryFactory.createGM_Surface( out_ring, inrings, crs );
         wkslp.add( sur );
       }
       catch( final GM_Exception e )
@@ -253,7 +253,7 @@ public final class SHP2GM_Object
   }
 
   @SuppressWarnings("unchecked")
-  private static GM_Surface<GM_SurfacePatch>[] toArray( final List<GM_Surface<GM_SurfacePatch>> wkslp )
+  private static GM_Surface<GM_SurfacePatch>[] toArray( final List<GM_Surface< ? extends GM_SurfacePatch>> wkslp )
   {
     return wkslp.toArray( new GM_Surface[wkslp.size()] );
   }

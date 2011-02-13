@@ -86,12 +86,12 @@ public class JMSelector
         else
           continue;
 
-        final GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
+        final GM_Object defaultGeometryProperty = feature.getDefaultGeometryPropertyValue();
         if( defaultGeometryProperty != null )
         {
           final String coordinateSystem = defaultGeometryProperty.getCoordinateSystem();
 
-          final GM_Surface<GM_SurfacePatch> bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
+          final GM_Surface< ? extends GM_SurfacePatch> bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
 
           if( (selectWithinBoxStatus && bbox.contains( defaultGeometryProperty )) || (!selectWithinBoxStatus && bbox.intersects( defaultGeometryProperty )) )
             testFE.add( fe );
@@ -129,7 +129,7 @@ public class JMSelector
 
       try
       {
-        if( feature.getDefaultGeometryProperty().contains( position ) )
+        if( feature.getDefaultGeometryPropertyValue().contains( position ) )
           testFe.add( object );
       }
       catch( final Exception err )
@@ -176,7 +176,7 @@ public class JMSelector
       // TODO: ich bin der Meinung das ist bloedsinn, Gernot
       // TODO: nachtrag: es konnte auch bisher nicht richtig funktionierne,
       // weil deegree die distance nicht implementiert hat!
-      final GM_Object defaultGeometryProperty = feature.getDefaultGeometryProperty();
+      final GM_Object defaultGeometryProperty = feature.getDefaultGeometryPropertyValue();
       double distance = defaultGeometryProperty.distance( pos );
       // some geometries must be prefered, otherwise it is not possible to
       // select a point inside a polygon as the polygone is always more near
@@ -200,7 +200,7 @@ public class JMSelector
     {
       if( geom instanceof GM_Surface )
       {
-        final GM_Surface< ? extends GM_SurfacePatch> surface = (GM_Surface< ? extends GM_SurfacePatch>) geom;
+        final GM_Surface< ? extends GM_SurfacePatch> surface = (GM_Surface< ? >) geom;
         positions = surface.getSurfaceBoundary().getExteriorRing().getPositions();
       }
       else if( geom instanceof GM_Curve )

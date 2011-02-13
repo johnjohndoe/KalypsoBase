@@ -477,8 +477,8 @@ public class ImportWfsFilterWizardPage extends WizardPage
     return new Object[0];
   }
 
-  GM_Surface<GM_SurfacePatch> getBBoxFromActiveMap( )
-  {
+  GM_Surface< ? extends GM_SurfacePatch> getBBoxFromActiveMap( )
+      {
     final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     // if this Wizard is activated we assume there is always a map (GisMapEditor) open.
     final IEditorPart activeEditor = activePage.getActiveEditor();
@@ -501,7 +501,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
       }
     }
     return null;
-  }
+      }
 
   class GeometryPropertyFilter extends ViewerFilter
   {
