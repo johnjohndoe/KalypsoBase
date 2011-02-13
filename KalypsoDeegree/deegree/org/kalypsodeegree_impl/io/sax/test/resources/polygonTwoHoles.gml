@@ -9,4 +9,9 @@
       <gml:coordinates>0.0,0.0,0.2 0.3,0.6,4.0 0.6,0.3,5.0 0.0,0.0,0.2</gml:coordinates>
     </gml:LinearRing>
   </gml:interior>
+  <gml:interior>
+    <gml:LinearRing>
+      <gml:coordinates cs=";" decimal="," ts="#">1,0;1,0;1,2#0,7;0,6;7,0#0,6;0,7;6,0#1,0;1,0;1,2</gml:coordinates>
+    </gml:LinearRing>
+  </gml:interior>
 </gml:Polygon>

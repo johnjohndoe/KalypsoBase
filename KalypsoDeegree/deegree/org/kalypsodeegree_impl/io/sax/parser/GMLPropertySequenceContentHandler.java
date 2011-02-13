@@ -43,6 +43,7 @@ package org.kalypsodeegree_impl.io.sax.parser;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.types.AbstractGmlContentHandler;
+import org.kalypso.gmlschema.types.IGMLElementHandler;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.IGeometrySpecification;
 import org.xml.sax.Attributes;
@@ -50,13 +51,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * When a feature can be specified using more than one property, this content handler can be set as delegate, and the
- * properties that can specify the feature must be registered. This content handler then delegates the parsing to a
- * child content handler that parses an specific sub-element.
+ * Handles sequences of properties.
  * 
- * @author Felipe Maximino
+ * @author Gernot Belger
  */
-public class GMLPropertyChoiceContentHandler extends AbstractGmlContentHandler
+public class GMLPropertySequenceContentHandler extends AbstractGmlContentHandler implements IGMLElementHandler<Object>
 {
   private final IGeometrySpecification m_spec;
 
@@ -64,13 +63,14 @@ public class GMLPropertyChoiceContentHandler extends AbstractGmlContentHandler
 
   private final IGmlContentHandler m_receiver;
 
-  public GMLPropertyChoiceContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final IGmlContentHandler receiver, final String defaultSrs, final IGeometrySpecification spec )
+  public GMLPropertySequenceContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final IGmlContentHandler receiver, final String defaultSrs, final IGeometrySpecification specificatino )
   {
     super( reader, parentContentHandler );
 
     m_receiver = receiver;
+
     m_defaultSrs = defaultSrs;
-    m_spec = spec;
+    m_spec = specificatino;
   }
 
   @Override
@@ -99,5 +99,14 @@ public class GMLPropertyChoiceContentHandler extends AbstractGmlContentHandler
   private IGmlContentHandler findDelegate( final QName property )
   {
     return m_spec.getHandler( property, getXMLReader(), this, m_receiver, m_defaultSrs );
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.IGMLElementHandler#handle(java.lang.Object)
+   */
+  @Override
+  public void handle( final Object element ) throws SAXException
+  {
+    ((GMLPropertySequenceContentHandler) getParentContentHandler()).handle( element );
   }
 }

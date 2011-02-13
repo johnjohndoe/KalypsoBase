@@ -109,7 +109,7 @@ public class PolygonPatchContentHandler extends GMLElementContentHandler impleme
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
     // FIXME: Eeek! We need to support interior rings as well!
-    final ExteriorContentHandler exteriorContentHandler = new ExteriorContentHandler( getXMLReader(), this, m_defaultSrs );
+    final ExteriorContentHandler exteriorContentHandler = new ExteriorContentHandler( getXMLReader(), this, this, m_defaultSrs );
     exteriorContentHandler.setElementMinOccurs( 0 );
     exteriorContentHandler.activate();
   }

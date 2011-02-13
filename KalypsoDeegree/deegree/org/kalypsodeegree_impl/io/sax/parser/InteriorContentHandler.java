@@ -47,14 +47,14 @@ import org.xml.sax.XMLReader;
  * @author Gernot Belger
  * @author Felipe Maximino
  */
-public class ExteriorContentHandler extends AbstractRingPropertyContentHandler
+public class InteriorContentHandler extends AbstractRingPropertyContentHandler
 {
-  public static final String ELEMENT_EXTERIOR = "exterior";
+  public static final String ELEMENT_INTERIOR = "interior";
 
-  public static final QName QNAME_EXTERIOR = new QName( NS.GML3, ELEMENT_EXTERIOR );
+  public static final QName QNAME_INTERIOR = new QName( NS.GML3, ELEMENT_INTERIOR );
 
-  public ExteriorContentHandler( final XMLReader reader, final IGmlContentHandler parent, final IRingHandler exteriorHandler, final String defaultSrs )
+  public InteriorContentHandler( final XMLReader reader, final IGmlContentHandler parent, final IRingHandler exteriorHandler, final String defaultSrs )
   {
-    super( reader, QNAME_EXTERIOR, parent, exteriorHandler, defaultSrs, 1 );
+    super( reader, QNAME_INTERIOR, parent, exteriorHandler, defaultSrs, 1 );
   }
 }

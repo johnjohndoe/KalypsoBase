@@ -47,6 +47,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.io.sax.parser.IPositionHandler.PositionsWithSrs;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -74,10 +75,11 @@ public class PosListContentHandler extends GMLElementContentHandler
 
   private final IPositionHandler m_positionHandler;
 
-  public PosListContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final IControlPointHandler positionHandler, final String defaultSrs )
+  public PosListContentHandler( final XMLReader reader, final IGmlContentHandler parent, final IPositionHandler positionHandler, final String defaultSrs )
   {
-    super( reader, NS.GML3, ELEMENT_POSLIST, defaultSrs, parentContentHandler );
-    m_positionHandler = (IPositionHandler) positionHandler;
+    super( reader, NS.GML3, ELEMENT_POSLIST, defaultSrs, parent );
+
+    m_positionHandler = positionHandler;
   }
 
   @Override
@@ -94,7 +96,7 @@ public class PosListContentHandler extends GMLElementContentHandler
   {
     final GM_Position[] posList = endPosList();
 
-    m_positionHandler.handle( posList, m_srs );
+    m_positionHandler.handle( new PositionsWithSrs( posList, m_srs ) );
   }
 
   /**
@@ -173,7 +175,7 @@ public class PosListContentHandler extends GMLElementContentHandler
         positions.add( GeometryFactory.createGM_Position( doubles[i++], doubles[i++] ) );
     }
     else
-    // dimension = 3
+      // dimension = 3
     {
       for( int i = 0; i < coordsSize; )
         positions.add( GeometryFactory.createGM_Position( doubles[i++], doubles[i++], doubles[i++] ) );

@@ -70,7 +70,7 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
   protected void startMarshalling( ) throws SAXException
   {
     /* gets the dimension of any point in the posList */
-    GM_Position[] positions = getMarshalledObject();
+    final GM_Position[] positions = getMarshalledObject();
     m_srsDimension = findSrsDimension( positions );
 
     final AttributesImpl atts = new AttributesImpl();
@@ -80,10 +80,10 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
     contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
   }
 
-  private int findSrsDimension( GM_Position[] positions )
+  private int findSrsDimension( final GM_Position[] positions )
   {
     int srsDim = 0;
-    for( GM_Position pos : positions )
+    for( final GM_Position pos : positions )
       srsDim = Math.max( srsDim, pos.getCoordinateDimension() );
     return srsDim;
   }

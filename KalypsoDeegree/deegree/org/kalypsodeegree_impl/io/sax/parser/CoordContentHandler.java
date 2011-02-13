@@ -74,9 +74,9 @@ public class CoordContentHandler extends GMLElementContentHandler
 
   private String m_currentName;
 
-  public CoordContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final ICoordinatesHandler coordinatesHandler, final String defaultSrs )
+  public CoordContentHandler( final XMLReader reader, final IGmlContentHandler parent, final ICoordinatesHandler coordinatesHandler, final String defaultSrs )
   {
-    super( reader, NS.GML3, ELEMENT_COORD, defaultSrs, parentContentHandler );
+    super( reader, NS.GML3, ELEMENT_COORD, defaultSrs, parent );
 
     m_coordinatesHandler = coordinatesHandler;
   }

@@ -42,13 +42,13 @@ package org.kalypsodeegree_impl.io.sax.parser;
 
 import java.util.List;
 
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.xml.sax.SAXParseException;
 
 /**
  * @author Felipe Maximino
- *
  */
-public interface ICoordinatesHandler extends IControlPointHandler
+public interface ICoordinatesHandler extends IGmlContentHandler
 {
   void handle( List<Double[]> element ) throws SAXParseException;
 }

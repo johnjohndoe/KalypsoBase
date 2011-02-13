@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.test;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,8 +48,10 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.junit.Test;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.io.sax.marshaller.PointMarshaller;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.io.sax.marshaller.LineStringMarshaller;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -58,54 +59,36 @@ import org.xml.sax.XMLReader;
 /**
  * @author Felipe Maximino
  */
-public class MarshallGMPointTest extends TestCase
+public class MarshallPolygonTest extends TestCase
 {
-  private static final GM_Point point2D = GeometryFactory.createGM_Point( 0.0, 1.0, "EPSG:31467" );
-
-  private static final GM_Point point3D = GeometryFactory.createGM_Point( 0.0, 1.0, 2.0, "EPSG:31467" );
-
-  /**
-   * tests a 2DPoint marshalling
-   */
   @Test
-  public void testPoint1( ) throws IOException, SAXException
+  public void testLineString( ) throws IOException, SAXException, GM_Exception
   {
-    final File f = File.createTempFile( "point2d", "gml" );
-    f.deleteOnExit();
+    final File temp = File.createTempFile( "lineString", "gml" );
+    temp.deleteOnExit();
 
-    final BufferedOutputStream os = new BufferedOutputStream( new FileOutputStream( f ) );
+    final GM_Curve lineString = createLineString();
+
+    final FileOutputStream os = new FileOutputStream( temp );
     final XMLReader reader = SaxParserTestUtils.createXMLReader( os );
-
-    final PointMarshaller marshaller = new PointMarshaller( reader, point2D );
+    final LineStringMarshaller marshaller = new LineStringMarshaller( reader, lineString );
     SaxParserTestUtils.marshallDocument( reader, marshaller );
     os.close();
 
-    final URL filePoint2D = getClass().getResource( "resources/pointb.gml" );
-    assertNotNull( filePoint2D );
+    final URL url = getClass().getResource( "resources/lineString_marshall.gml" );
 
-    SaxParserTestUtils.assertContentEquals( f, filePoint2D );
+    SaxParserTestUtils.assertContentEquals( temp, url );
   }
 
-  /**
-   * tests a 3DPoint marshalling with specific tuples and coordinates separator as well as the decimal separator
-   */
-  @Test
-  public void testPoint2( ) throws IOException, SAXException
+  private GM_Curve createLineString( ) throws GM_Exception
   {
-    final File f = File.createTempFile( "point3d", "gml" );
-    f.deleteOnExit();
+    final GM_Position[] positions = new GM_Position[5];
+    positions[0] = GeometryFactory.createGM_Position( 0.0, 0.0, 0.0 );
+    positions[1] = GeometryFactory.createGM_Position( 0.0, 1.0, 2.0 );
+    positions[2] = GeometryFactory.createGM_Position( 1.0, 2.0, 2.0 );
+    positions[3] = GeometryFactory.createGM_Position( 2.0, 2.0, 2.0 );
+    positions[4] = GeometryFactory.createGM_Position( 2.5, 2.0, 1.0 );
 
-    final BufferedOutputStream os = new BufferedOutputStream( new FileOutputStream( f ) );
-    final XMLReader reader = SaxParserTestUtils.createXMLReader( os );
-
-    final PointMarshaller marshaller = new PointMarshaller( reader, point3D );
-    SaxParserTestUtils.marshallDocument( reader, marshaller );
-    os.close();
-
-    final URL filePoint3D = getClass().getResource( "resources/pointa.gml" );
-    assertNotNull( filePoint3D );
-
-    SaxParserTestUtils.assertContentEquals( f, filePoint3D );
+    return GeometryFactory.createGM_Curve( positions, "EPSG:31467" );
   }
-
 }

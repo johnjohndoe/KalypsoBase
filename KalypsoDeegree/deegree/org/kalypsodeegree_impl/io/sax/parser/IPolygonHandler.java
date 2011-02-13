@@ -49,5 +49,5 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
  */
 public interface IPolygonHandler extends IGMLElementHandler<GM_Polygon>
 {
-  
+
 }

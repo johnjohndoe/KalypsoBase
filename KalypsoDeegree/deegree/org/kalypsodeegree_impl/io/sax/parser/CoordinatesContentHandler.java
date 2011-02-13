@@ -41,9 +41,10 @@
 package org.kalypsodeegree_impl.io.sax.parser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.StringTokenizer;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree_impl.tools.GMLConstants;
@@ -80,9 +81,9 @@ public class CoordinatesContentHandler extends GMLElementContentHandler
   /* decimal indicator */
   private String m_decimal;
 
-  public CoordinatesContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final ICoordinatesHandler coordinatesHandler, final String defaultSrs )
+  public CoordinatesContentHandler( final XMLReader reader, final IGmlContentHandler parent, final ICoordinatesHandler coordinatesHandler, final String defaultSrs )
   {
-    super( reader, NS.GML3, ELEMENT_COORDINATES, defaultSrs, parentContentHandler );
+    super( reader, NS.GML3, ELEMENT_COORDINATES, defaultSrs, parent );
 
     m_coordinatesHandler = coordinatesHandler;
   }
@@ -110,57 +111,42 @@ public class CoordinatesContentHandler extends GMLElementContentHandler
 
   private List<Double[]> endCoordinates( )
   {
-    String coordinatesString = m_coordBuffer == null ? "" : m_coordBuffer.toString(); 
-
-    /* if necessary, replace the decimal indicator to '.' to get a java value */
-    if( !".".equals( m_decimal ) )
-    {
-      coordinatesString = coordinatesString.replace( m_decimal, "." );
-    }
-
-    final String[] tuples = separateTuples( coordinatesString );
-
-    /* List of tuples. each double is a Double array */
-    final List<Double[]> coordinates = separateCoordinates( tuples );
-
-    return coordinates;
+    final String coordinatesString = m_coordBuffer == null ? "" : m_coordBuffer.toString(); 
+    final String[] tuples = StringUtils.split( coordinatesString, m_ts );
+    return parseCoordinates( tuples );
   }
 
-  private List<Double[]> separateCoordinates( final String[] tuples )
+  private List<Double[]> parseCoordinates( final String[] tuples )
   {
     final List<Double[]> coordinates = new ArrayList<Double[]>();
     for( final String tuple : tuples )
-    { 
-      final StringTokenizer st = new StringTokenizer( tuple, m_cs );
-      final Double[] tupleValue = new Double[st.countTokens()];
-      int i = 0;
-      while( st.hasMoreTokens() )
-      { 
-        tupleValue[i++] = Double.valueOf( st.nextToken() );
+    {
+      final String[] cs = StringUtils.split( tuple, m_cs );
+      final Double[] values = new Double[cs.length];
+      for( int i = 0; i < values.length; i++ )
+      {
+        final String token = cs[i];
+        values[i] = parseCoordinate( token );
       }
-      coordinates.add( tupleValue );
+
+      coordinates.add( values );
     } 
 
-    return coordinates;
+    return Collections.unmodifiableList( coordinates );
   }
 
-  private String[] separateTuples( final String coordinatesString )
-  { 
-    final StringTokenizer st = new StringTokenizer( coordinatesString, m_ts );
+  private Double parseCoordinate( final String token )
+  {
+    /* if necessary, replace the decimal indicator to '.' to get a java value */
+    String tokenDecimal;
+    if( GMLConstants.DEFAULT_DECIMAL.equals( m_decimal ) )
+      tokenDecimal = token;
+    else
+      tokenDecimal = token.replace( m_decimal, GMLConstants.DEFAULT_DECIMAL );
 
-    final String[] tuples = new String[st.countTokens()];
-    int i = 0;
-    while ( st.hasMoreTokens() ) 
-    {
-      tuples[i++] = st.nextToken();
-    }
-
-    return tuples;
+    return Double.valueOf( tokenDecimal );
   }
 
-  /**
-   * @see org.xml.sax.helpers.DefaultHandler#characters(char[], int, int)
-   */
   @Override
   public void characters( final char[] ch, final int start, final int length )
   {

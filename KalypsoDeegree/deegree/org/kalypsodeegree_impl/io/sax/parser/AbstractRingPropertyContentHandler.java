@@ -35,67 +35,76 @@
  */
 package org.kalypsodeegree_impl.io.sax.parser;
 
-import org.kalypso.commons.xml.NS;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Position;
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * A content handler which parses a gml:LinearRing element.<br>
+ * A content handler which parses a gml:exterior element.<br>
  * 
  * @author Gernot Belger
+ * @author Felipe Maximino
  */
-public class TriangleContentHandler extends GMLElementContentHandler implements IRingHandler
+public class AbstractRingPropertyContentHandler extends GMLElementContentHandler implements IRingHandler
 {
-  public static final String ELEMENT_TRIANGLE = "Triangle";
+  /*
+   * xsd attribute 'minOccurs'. If it is 0, we should not always throw an exception if this element doesn't appear.
+   */
+  private int m_elementMinOccurs;
 
-  private final ITriangleHandler m_triangleHandler;
+  private final IRingHandler m_ringHandler;
 
   private GM_Ring m_ring;
 
-  public TriangleContentHandler( final XMLReader reader, final ITriangleHandler triangleHandler, final String defaultSrs )
+  public AbstractRingPropertyContentHandler( final XMLReader reader, final QName elementName, final IGmlContentHandler parent, final IRingHandler ringHandler, final String defaultSrs, final int minOccurs )
   {
-    super( reader, NS.GML3, ELEMENT_TRIANGLE, defaultSrs, triangleHandler );
+    super( reader, elementName.getNamespaceURI(), elementName.getLocalPart(), defaultSrs, parent );
 
-    m_triangleHandler = triangleHandler;
+    m_ringHandler = ringHandler;
+    m_elementMinOccurs = minOccurs;
   }
 
   @Override
-  public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
+  protected void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
   {
-    new ExteriorContentHandler( getXMLReader(), this, this, m_defaultSrs ).activate();
+    new LinearRingContentHandler( getXMLReader(), this, m_defaultSrs ).activate();
   }
 
+  /**
+   * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+   */
   @Override
   public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
-  { 
-    if( m_ring == null )
-      throwSAXParseException( "Triangle contains no valid exterior." );
-
-    final GM_Position[] ring = m_ring.getPositions();
-
-    if( ring.length != 4 )
-      throwSAXParseException( "Triangle must contain exactly 4 coordinates: %d", ring.length );
-
-    final String srs = m_ring.getCoordinateSystem();
-    m_ring = null;
-
+  {
     try
     {
-      final GM_Triangle gmTriangle = GeometryFactory.createGM_Triangle( ring[0], ring[1], ring[2], srs );
-      m_triangleHandler.handle( gmTriangle );
+      m_ringHandler.handle( m_ring );
     }
-    catch( final GM_Exception e )
+    finally
     {
-      e.printStackTrace();
-
-      throwSAXParseException( e, "Failed to create triangle" );
+      m_ring = null;
     }
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
+   */
+  @Override
+  public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
+  {
+    final GMLElementContentHandler parentContentHandler = (GMLElementContentHandler) getParentContentHandler();
+    if( m_elementMinOccurs == 0 && localName.equals( parentContentHandler.getLocalName() ) )
+    {
+      activateParent();
+      parentContentHandler.endElement( uri, localName, name );
+    }
+    else
+      super.handleUnexpectedEndElement( uri, localName, name );
   }
 
   /**
@@ -105,5 +114,10 @@ public class TriangleContentHandler extends GMLElementContentHandler implements 
   public void handle( final GM_Ring ring )
   {
     m_ring = ring;
+  }
+
+  public void setElementMinOccurs( final int elementMinOccurs )
+  {
+    m_elementMinOccurs = elementMinOccurs;
   }
 }
