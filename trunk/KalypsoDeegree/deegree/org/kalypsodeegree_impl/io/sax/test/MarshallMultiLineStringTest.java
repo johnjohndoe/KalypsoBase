@@ -95,7 +95,7 @@ public class MarshallMultiLineStringTest extends TestCase
 
     final URL url = getClass().getResource( "resources/multiLineString_marshall1.gml" );
 
-    SaxParserTestUtils.assertContentEquals( temp, url );
+    SaxParserTestUtils.assertContentEquals( url, temp );
   }
 
   @Test
@@ -110,7 +110,7 @@ public class MarshallMultiLineStringTest extends TestCase
 
     final URL url = getClass().getResource( "resources/multiLineString_marshall2.gml" );
 
-    SaxParserTestUtils.assertContentEquals( temp, url );
+    SaxParserTestUtils.assertContentEquals( url, temp );
   }
 
   private void marshallMultiLineString( final GM_MultiCurve multiLineString, final File temp ) throws Exception

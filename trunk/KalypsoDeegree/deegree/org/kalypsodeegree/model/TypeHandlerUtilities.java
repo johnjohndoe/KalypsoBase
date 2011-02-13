@@ -50,18 +50,16 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.JAXBContextProvider;
 import org.kalypso.gmlschema.types.TypeRegistryException;
-import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.typeHandler.GM_EnvelopeBindingTypeHandler;
 import org.kalypsodeegree.model.typeHandler.GenericGM_ObjectBindingTypeHandler;
 import org.kalypsodeegree.model.typeHandler.LineStringHandler;
 import org.kalypsodeegree.model.typeHandler.MultiLineStringHandler;
 import org.kalypsodeegree.model.typeHandler.MultiPointHandler;
 import org.kalypsodeegree.model.typeHandler.PointHandler;
+import org.kalypsodeegree.model.typeHandler.PolygonHandler;
 import org.kalypsodeegree.model.typeHandler.PolyhedralSurfaceHandler;
 import org.kalypsodeegree.model.typeHandler.TriangulatedSurfaceHandler;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandlerBigDecimal;
@@ -258,29 +256,32 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_GEOMETRY, GMLConstants.QN_GEOMETRY, GM_Object.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_LOCATION, GMLConstants.QN_LOCATION, GM_Object.class, true ) );
 
-    // TODO: imeplements as sax handlers
+    // TODO: implements as sax handlers
     // TODO: in adapter supported, but not yet implemented:
     // - MultiSurface from MultiSurfaceTye
-    // - Surface from SurfaceTye
-    // - Surface from PolygonTye
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_SURFACE, GMLConstants.QN_SURFACE, GM_Surface.class, true ) );
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_POLYGON, GMLConstants.QN_POLYGON, GM_Surface.class, true ) );
+    // - Surface from SurfaceType
+    // - Surface from PolygonType
+
+    // registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
+// GMLConstants.QN_SURFACE, GMLConstants.QN_SURFACE, GM_Surface.class, true ) );
+    // registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
+// GMLConstants.QN_POLYGON, GMLConstants.QN_POLYGON, GM_Surface.class, true ) );
+
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_MULTI_POLYGON, GMLConstants.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
-    
-    // TODO: 'Curve' and 'MultiCurve' commented out, because we believe it did not work anyways...
-//    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_CURVE, GMLConstants.QN_CURVE, GM_Curve.class, true ) );
-//    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_MULTI_CURVE, GMLConstants.QN_MULTI_CURVE, GM_MultiCurve.class, true ) );
-        
+
     registry.registerTypeHandler( new PointHandler() );
     registry.registerTypeHandler( new MultiPointHandler() );
 
     registry.registerTypeHandler( new LineStringHandler() );
     registry.registerTypeHandler( new MultiLineStringHandler() );
-    
+
+    registry.registerTypeHandler( new PolygonHandler() );
+
     registry.registerTypeHandler( new TriangulatedSurfaceHandler() );
     registry.registerTypeHandler( new PolyhedralSurfaceHandler() );
-    
+
     // Coverages
+    // TODO: implement sax parsers
     registry.registerTypeHandler( new GenericBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "RangeSetType" ), new QName( NS.GML3, "File" ), FileType.class, false ) );
     registry.registerTypeHandler( new RectifiedGridDomainTypeHandlerGml3() );
 

@@ -89,15 +89,13 @@ public class PosListMarshaller extends AbstractMarshaller<GM_Position[]>
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall()
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  protected void doMarshall( ) throws SAXException
+  protected void doMarshallContent( final GM_Position[] marshalledObject ) throws SAXException
   {
-    for( final GM_Position pos : getMarshalledObject() )
-    {
+    for( final GM_Position pos : marshalledObject )
       marshallPosition( pos );
-    }
   }
 
   private void marshallPosition( final GM_Position pos ) throws SAXException

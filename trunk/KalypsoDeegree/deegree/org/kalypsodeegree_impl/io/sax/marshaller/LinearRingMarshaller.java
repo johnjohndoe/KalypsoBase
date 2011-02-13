@@ -45,7 +45,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * A marshaller for gml:Exterior. It delegates the marshalling to the corresponding gml:pos elements marshallers.
+ * FIXME: Should marshall GM_Ring's instead of GM_Position[]s<br/>
+ * A marshaller for gml:LinearRing. It delegates the marshalling to the corresponding gml:pos elements marshallers.
  * 
  * @author Felipe Maximino
  */
@@ -59,13 +60,13 @@ public class LinearRingMarshaller extends AbstractMarshaller<GM_Position[]>
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.AbstractMarshaller#doMarshall()
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  public void doMarshall( ) throws SAXException
+  protected void doMarshallContent( final GM_Position[] marshalledObject ) throws SAXException
   {
     final PosMarshaller positionMarshaller = new PosMarshaller( getXMLReader() );
-    for( final GM_Position position : getMarshalledObject() )
+    for( final GM_Position position : marshalledObject )
     {
       positionMarshaller.setPosition( position );
       positionMarshaller.marshall();

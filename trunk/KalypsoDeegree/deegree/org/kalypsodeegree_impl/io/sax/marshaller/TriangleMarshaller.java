@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -64,11 +65,12 @@ public class TriangleMarshaller extends SurfacePatchMarshaller<GM_Triangle>
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.PatchMarshaller#doMarshall()
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  public void doMarshall( ) throws SAXException
+  protected void doMarshallContent( final GM_Triangle marshalledObject ) throws SAXException
   {
-    (new ExteriorMarshaller( getXMLReader(), getMarshalledObject() )).marshall();
+    final GM_Position[] exterior = marshalledObject.getExteriorRing();
+    new ExteriorMarshaller( getXMLReader(), exterior ).marshall();
   }
 }

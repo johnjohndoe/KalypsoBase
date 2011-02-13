@@ -110,14 +110,14 @@ public class CoordinatesMarshaller extends AbstractMarshaller<List<double[]>>
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall()
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  public void doMarshall( ) throws SAXException
+  protected void doMarshallContent( final List<double[]> marshalledObject ) throws SAXException
   {
     final ContentHandler contentHandler = getXMLReader().getContentHandler();
 
-    final int nTuples = getMarshalledObject().size();
+    final int nTuples = marshalledObject.size();
     for( int i = 0; i < nTuples; i++ )
     {
       final double[] tuple = getMarshalledObject().get( i );

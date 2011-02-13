@@ -76,7 +76,7 @@ public class MarshallGMMultiPointTest extends TestCase
 
     final URL url = getClass().getResource( "resources/multiPointa.gml" );
 
-    SaxParserTestUtils.assertContentEquals( temp, url );
+    SaxParserTestUtils.assertContentEquals( url, temp );
   }
 
   private GM_MultiPoint createMultiPoint( )

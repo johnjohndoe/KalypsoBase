@@ -61,14 +61,14 @@ public class MultiPointMarshaller extends GeometryMarshaller<GM_MultiPoint>
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall()
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  protected void doMarshall( ) throws SAXException
+  protected void doMarshallContent( final GM_MultiPoint marshalledObject ) throws SAXException
   {
     final PointMemberMarshaller pointMemberMarshllaer = new PointMemberMarshaller( getXMLReader() );
 
-    final GM_Point[] points = getMarshalledObject().getAllPoints();
+    final GM_Point[] points = marshalledObject.getAllPoints();
     for( final GM_Point point : points )
     {
       pointMemberMarshllaer.setMember( point );

@@ -124,7 +124,7 @@ public class MarshallGmTriangleTest
       os.close();
 
       final URL url = getClass().getResource( "resources/triangulatedSurface_marshall.gml" );
-      SaxParserTestUtils.assertContentEquals( tinFile, url );
+      SaxParserTestUtils.assertContentEquals( url, tinFile );
     }
     finally
     {

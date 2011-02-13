@@ -60,14 +60,14 @@ public class PosMarshaller extends AbstractMarshaller<GM_Position>
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.AbstractMarshaller#doMarshall()
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  public void doMarshall( ) throws SAXException
+  protected void doMarshallContent( final GM_Position marshalledObject ) throws SAXException
   {
     final ContentHandler contentHandler = getXMLReader().getContentHandler();
 
-    final double[] asArray = getMarshalledObject().getAsArray();
+    final double[] asArray = marshalledObject.getAsArray();
     for( int i = 0; i < asArray.length; i++ )
     {
       final double d = asArray[i];

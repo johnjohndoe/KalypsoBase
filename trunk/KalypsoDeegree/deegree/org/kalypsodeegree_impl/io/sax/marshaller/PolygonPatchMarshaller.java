@@ -41,6 +41,7 @@
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -64,11 +65,19 @@ public class PolygonPatchMarshaller extends SurfacePatchMarshaller<GM_Polygon>
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.PatchMarshaller#doMarshall()
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  public void doMarshall( ) throws SAXException
+  protected void doMarshallContent( final GM_Polygon marshalledObject ) throws SAXException
   {
-    (new ExteriorMarshaller( getXMLReader(), getMarshalledObject() )).marshall();
+    final GM_Position[] exteriorRing = marshalledObject.getExteriorRing();
+    new ExteriorMarshaller( getXMLReader(), exteriorRing ).marshall();
+
+    final GM_Position[][] interiorRings = marshalledObject.getInteriorRings();
+    if( interiorRings != null )
+    {
+      for( final GM_Position[] interior : interiorRings )
+        new InteriorMarshaller( getXMLReader(), interior ).marshall();
+    }
   }
 }

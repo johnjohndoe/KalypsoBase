@@ -77,7 +77,7 @@ public class MarshallLineStringTest extends TestCase
 
     final URL url = getClass().getResource( "resources/lineString_marshall.gml" );
 
-    SaxParserTestUtils.assertContentEquals( temp, url );
+    SaxParserTestUtils.assertContentEquals( url, temp );
   }
 
   private GM_Curve createLineString( ) throws GM_Exception

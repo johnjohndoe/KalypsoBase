@@ -60,14 +60,14 @@ public class MultiLineStringMarshaller extends GeometryMarshaller<GM_MultiCurve>
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall()
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  protected void doMarshall( ) throws SAXException
+  protected void doMarshallContent( final GM_MultiCurve marshalledObject ) throws SAXException
   {
     final LineStringMemberMarshaller lineStringMemberMarshaller = new LineStringMemberMarshaller( getXMLReader() );
 
-    final GM_Curve[] lineStrings = getMarshalledObject().getAllCurves();
+    final GM_Curve[] lineStrings = marshalledObject.getAllCurves();
     for( final GM_Curve lineString : lineStrings )
     {
       lineStringMemberMarshaller.setLineString( lineString );

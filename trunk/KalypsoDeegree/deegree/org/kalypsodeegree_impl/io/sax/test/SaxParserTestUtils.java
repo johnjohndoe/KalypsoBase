@@ -62,6 +62,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public final class SaxParserTestUtils
 {
+  public static final String ENCODING = "UTF-8";
+
   private SaxParserTestUtils( )
   {
     throw new UnsupportedOperationException( "Helper class, do not instantiate" );
@@ -78,7 +80,7 @@ public final class SaxParserTestUtils
     xmlStream.setLineSepUse( true );
     xmlStream.setIndent( true );
     xmlStream.setIndentAmount( 1 );
-    xmlStream.setEncoding( "UTF-8" );
+    xmlStream.setEncoding( ENCODING );
 
     final XMLReader reader = XMLReaderFactory.createXMLReader();
     reader.setContentHandler( xmlStream );
@@ -94,17 +96,28 @@ public final class SaxParserTestUtils
     contentHandler.endDocument();
   }
 
-  public static void assertContentEquals( final File file, final URL fileExpected ) throws IOException
+  private static void assertContentEquals( final String expected, final String actual )
   {
-    final String actual = FileUtils.readFileToString( file, System.getProperty( "file.encoding" ) );
-    final String expected = UrlUtilities.toString( fileExpected, System.getProperty( "file.encoding" ) );
-
     final Pattern whitespacePattern = Pattern.compile( "\\s", Pattern.MULTILINE );
 
     final String actualCleaned = whitespacePattern.matcher( actual ).replaceAll( "" );
     final String expectedCleaned = whitespacePattern.matcher( expected ).replaceAll( "" );
 
     Assert.assertEquals( expectedCleaned, actualCleaned );
+  }
+
+  public static void assertContentEquals( final URL expectedContent, final File actualContent ) throws IOException
+  {
+    final String actual = FileUtils.readFileToString( actualContent, ENCODING );
+    final String expected = UrlUtilities.toString( expectedContent, ENCODING );
+
+    assertContentEquals( expected, actual );
+  }
+
+  public static void assertContentEquals( final URL expectedContent, final String actualContent ) throws IOException
+  {
+    final String expected = UrlUtilities.toString( expectedContent, ENCODING );
+    assertContentEquals( expected, actualContent );
   }
 
 }

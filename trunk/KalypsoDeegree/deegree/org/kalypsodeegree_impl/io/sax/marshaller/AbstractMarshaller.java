@@ -104,7 +104,7 @@ public abstract class AbstractMarshaller<T extends Object> implements IMashaller
   public void marshall( ) throws SAXException
   {
     startMarshalling();
-    doMarshall();
+    doMarshallContent( getMarshalledObject() );
     endMarshalling();
   }
 
@@ -114,7 +114,7 @@ public abstract class AbstractMarshaller<T extends Object> implements IMashaller
     contentHandler.startElement( NS.GML3, m_tag, m_qName, EMPTY_ATTRIBUTES );
   }
 
-  protected abstract void doMarshall( ) throws SAXException;
+  protected abstract void doMarshallContent( T marshalledObject ) throws SAXException;
 
   protected void endMarshalling( ) throws SAXException
   {

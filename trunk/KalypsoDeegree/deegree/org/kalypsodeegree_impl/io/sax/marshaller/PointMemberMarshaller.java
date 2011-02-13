@@ -59,12 +59,12 @@ public class PointMemberMarshaller extends AbstractMarshaller<GM_Point>
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall()
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  protected void doMarshall( ) throws SAXException
+  protected void doMarshallContent( final GM_Point marshalledObject ) throws SAXException
   {
-    new PointMarshaller( getXMLReader(), getMarshalledObject() ).marshall();
+    new PointMarshaller( getXMLReader(), marshalledObject ).marshall();
   }
 
   public void setMember( final GM_Point point )
