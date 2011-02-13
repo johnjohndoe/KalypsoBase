@@ -8,6 +8,7 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoGmlProcessesPlugin extends Plugin
 {
+  public static final String PLUGIN_ID = "org.kalypso.gml.processes"; //$NON-NLS-1$
 
   // The shared instance.
   private static KalypsoGmlProcessesPlugin plugin;
@@ -24,7 +25,7 @@ public class KalypsoGmlProcessesPlugin extends Plugin
    * This method is called upon plug-in activation
    */
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
   }
@@ -33,7 +34,7 @@ public class KalypsoGmlProcessesPlugin extends Plugin
    * This method is called when the plug-in is stopped
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
     plugin = null;
