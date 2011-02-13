@@ -214,25 +214,6 @@
       </feature>
    </extension>
    <extension
-         point="org.kalypso.gmlschema.geometrySpecification">
-      <GeometrySpecification
-      	qName="{http://www.opengis.net/gml}LinearRing"
-      	class="org.kalypsodeegree_impl.io.sax.parser.geometrySpec.LinearRingSpecification">
-      </GeometrySpecification>
-      <GeometrySpecification
-      	qName="{http://www.opengis.net/gml}Point"
-      	class="org.kalypsodeegree_impl.io.sax.parser.geometrySpec.PointSpecification">
-      </GeometrySpecification>
-      <GeometrySpecification
-      	qName="{http://www.opengis.net/gml}MultiPoint"
-      	class="org.kalypsodeegree_impl.io.sax.parser.geometrySpec.MultiPointSpecification">
-      </GeometrySpecification>
-      <GeometrySpecification
-      	qName="{http://www.opengis.net/gml}LineString"
-      	class="org.kalypsodeegree_impl.io.sax.parser.geometrySpec.LineStringSpecification">
-      </GeometrySpecification>
-   </extension>
-   <extension
          point="org.eclipse.wst.xml.core.catalogContributions">
       <catalogContribution>
          <nextCatalog

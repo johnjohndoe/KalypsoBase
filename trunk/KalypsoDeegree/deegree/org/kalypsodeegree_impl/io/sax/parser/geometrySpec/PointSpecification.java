@@ -40,11 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser.geometrySpec;
 
-import org.kalypso.gmlschema.types.GeometrySpecificationCatalog;
-import org.kalypso.gmlschema.types.IGeometrySpecification;
-import org.kalypsodeegree.model.typeHandler.CoordHandler;
-import org.kalypsodeegree.model.typeHandler.CoordinatesHandler;
-import org.kalypsodeegree.model.typeHandler.PosHandler;
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.types.IGmlContentHandler;
+import org.kalypsodeegree_impl.io.sax.parser.CoordContentHandler;
+import org.kalypsodeegree_impl.io.sax.parser.CoordinatesContentHandler;
+import org.kalypsodeegree_impl.io.sax.parser.ICoordinatesHandler;
+import org.kalypsodeegree_impl.io.sax.parser.IPositionHandler;
+import org.kalypsodeegree_impl.io.sax.parser.PosContentHandler;
+import org.kalypsodeegree_impl.tools.GMLConstants;
+import org.xml.sax.XMLReader;
 
 /**
  * @author Felipe Maximino
@@ -52,19 +57,28 @@ import org.kalypsodeegree.model.typeHandler.PosHandler;
 public class PointSpecification implements IGeometrySpecification
 {
   /**
-   * @see org.kalypso.gmlschema.types.IGeometrySpecification#fillSpecifications(org.kalypso.gmlschema.types.GeometrySpecificationCatalog)
+   * @see org.kalypsodeegree_impl.io.sax.parser.geometrySpec.IGeometrySpecification#getHandler(javax.xml.namespace.QName,
+   *      org.xml.sax.XMLReader, org.kalypso.gmlschema.types.IGmlContentHandler,
+   *      org.kalypso.gmlschema.types.IGmlContentHandler, java.lang.String)
    */
   @Override
-  public void fillSpecifications( final GeometrySpecificationCatalog specs )
+  public IGmlContentHandler getHandler( final QName property, final XMLReader reader, final IGmlContentHandler parent, final IGmlContentHandler receiver, final String defaultSrs )
   {
     /* gml:pos */
-    specs.registerSpecificationForGeometry( new PosHandler() );
+    if( GMLConstants.QN_POS.equals( property ) )
+      return new PosContentHandler( reader, parent, (IPositionHandler) receiver, defaultSrs );
+
     /*
      * gml:coordinates - Deprecated with GML version 3.1.0 for coordinates with ordinate values that are numbers. Use
      * "pos" instead
      */
-    specs.registerSpecificationForGeometry( new CoordinatesHandler() );
+    if( GMLConstants.QN_COORDINATES.equals( property ) )
+      return new CoordinatesContentHandler( reader, parent, (ICoordinatesHandler) receiver, defaultSrs );
+
     /* gml:coord - Deprecated with GML version 3.0. Use "pos" instead. */
-    specs.registerSpecificationForGeometry( new CoordHandler() );
+    if( GMLConstants.QN_COORD.equals( property ) )
+      return new CoordContentHandler( reader, parent, (ICoordinatesHandler) receiver, defaultSrs );
+
+    return null;
   }
 }
