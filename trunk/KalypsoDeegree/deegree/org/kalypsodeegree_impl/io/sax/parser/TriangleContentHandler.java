@@ -68,7 +68,7 @@ public class TriangleContentHandler extends GMLElementContentHandler implements 
   @Override
   public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
   {
-    new ExteriorContentHandler( getXMLReader(), this, m_defaultSrs ).activate();
+    new ExteriorContentHandler( getXMLReader(), this, this, m_defaultSrs ).activate();
   }
 
   @Override

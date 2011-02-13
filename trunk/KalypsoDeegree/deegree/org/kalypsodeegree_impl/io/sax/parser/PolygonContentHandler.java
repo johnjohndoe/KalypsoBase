@@ -44,15 +44,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.commons.xml.NS;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.PolygonSpecification;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
@@ -62,7 +64,7 @@ import org.xml.sax.XMLReader;
  * 
  * @author Gernot Belger
  */
-public class PolygonContentHandler extends GMLElementContentHandler implements IOuterBoundaryIsHandler, IInnerBoundaryIsHandler
+public class PolygonContentHandler extends GMLElementContentHandler implements IRingHandler
 {
   public static final String ELEMENT_POLYGON = GMLConstants.QN_POLYGON.getLocalPart();
 
@@ -74,25 +76,26 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
 
   private Integer m_srsDimension;
 
-  private final GM_Position[] m_exteriorRing = null;
+  private GM_Position[] m_exteriorRing = null;
 
   private final List<GM_Position[]> m_interiorRings = new ArrayList<GM_Position[]>();
 
   private final ISurfaceHandler<GM_Polygon> m_surfaceHandler;
 
-  public PolygonContentHandler( final UnmarshallResultEater resultEater, final ContentHandler parentContentHandler, final XMLReader xmlReader )
+  public PolygonContentHandler( final XMLReader xmlReader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler )
   {
-    this( null, resultEater, parentContentHandler, null, xmlReader );
+    this( xmlReader, null, resultEater, parentContentHandler, null );
   }
 
-  public PolygonContentHandler( final ISurfaceHandler<GM_Polygon> surfaceHandler, final String defaultSrs, final XMLReader xmlReader )
-  {
-    this( surfaceHandler, null, surfaceHandler, defaultSrs, xmlReader );
-  }
+// public PolygonContentHandler( final XMLReader xmlReader, final ISurfaceHandler<GM_Polygon> surfaceHandler, final
+// String defaultSrs )
+// {
+// this( xmlReader, surfaceHandler, null, surfaceHandler, defaultSrs );
+// }
 
-  private PolygonContentHandler( final ISurfaceHandler<GM_Polygon> surfaceHandler, final UnmarshallResultEater resultEater, final ContentHandler parentContentHandler, final String defaultSrs, final XMLReader xmlReader )
+  private PolygonContentHandler( final XMLReader xmlReader, final ISurfaceHandler<GM_Polygon> surfaceHandler, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
   {
-    super( NS.GML3, ELEMENT_POLYGON, xmlReader, defaultSrs, parentContentHandler );
+    super( xmlReader, NS.GML3, ELEMENT_POLYGON, defaultSrs, parentContentHandler );
 
     m_resultEater = resultEater;    
     m_surfaceHandler = surfaceHandler;
@@ -122,8 +125,8 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
     // maybe the property was expecting a polygon, but it was empty */
     if( m_surface == null )
     {
-      endDelegation();
-      m_parentContentHandler.endElement( uri, localName, name );
+      activateParent();
+      getParentContentHandler().endElement( uri, localName, name );
     }
     else
       super.handleUnexpectedEndElement( uri, localName, name );
@@ -133,14 +136,12 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
    * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXParseException
+  protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
     m_activeSrs = ContentHandlerUtils.parseSrsFromAttributes( atts, m_defaultSrs );
     m_srsDimension = ContentHandlerUtils.parseSrsDimensionFromAttributes( atts );
 
-    // FIXME!
-    final GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( this, m_xmlReader, m_activeSrs );
-    choiceContentHandler.loadPropertiesFor( GMLConstants.QN_LINE_STRING );
+    final GMLPropertySequenceContentHandler choiceContentHandler = new GMLPropertySequenceContentHandler( getXMLReader(), this, this, m_activeSrs, new PolygonSpecification() );
     setDelegate( choiceContentHandler );
   }  
 
@@ -149,61 +150,79 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
     try
     {
       if( m_exteriorRing == null )
-        throw new SAXParseException( "A gml:Polygon must have an exterior ring!", m_locator );
+        throwSAXParseException( "A gml:Polygon must have an exterior ring!" );
 
       final GM_Position[][] interiorRings = m_interiorRings.toArray( new GM_Position[m_interiorRings.size()][] );
       return GeometryFactory.createGM_Surface( m_exteriorRing, interiorRings, m_activeSrs );
     }
     catch( final GM_Exception e)
     {
-      throw new SAXParseException( "It was not possible to create a gml:Polygon!", m_locator );
+      throwSAXParseException( "It was not possible to create a gml:Polygon!" );
+      return null;
     }        
+  }
+
+  /**
+   * @see org.kalypso.gmlschema.types.IGMLElementHandler#handle(java.lang.Object)
+   */
+  @Override
+  public void handle( final GM_Ring ring )
+  {
+    if( m_exteriorRing == null )
+      m_exteriorRing = ring.getPositions();
+    else
+      m_interiorRings.add( ring.getPositions() );
   }
 
   // / FIXME Tricky: we need to handle to different events of the same kind at once...
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.IPositionHandler#handle(org.kalypsodeegree.model.geometry.GM_Position[], java.lang.String)
-   */
-  @Override
-  public void handle( final GM_Position[] positions, final String srs ) throws SAXParseException
-  {
-    for( final GM_Position position : positions )
-    {
-      /* check srsDimension */
-      if( m_srsDimension != null && position.getCoordinateDimension() != m_srsDimension )
-      {
-        throw new SAXParseException( "The position " + position.toString() +  "in this gml:LineString does not have the number of coordinates specified in 'srsDimension': " + m_srsDimension, m_locator );
-      }    
+// /**
+// * @see org.kalypsodeegree_impl.io.sax.parser.IPositionHandler#handle(org.kalypsodeegree.model.geometry.GM_Position[],
+// java.lang.String)
+// */
+// @Override
+// public void handle( final GM_Position[] positions, final String srs ) throws SAXParseException
+// {
+// for( final GM_Position position : positions )
+// {
+// /* check srsDimension */
+// if( m_srsDimension != null && position.getCoordinateDimension() != m_srsDimension )
+// {
+// throw new SAXParseException( "The position " + position.toString() +
+// "in this gml:LineString does not have the number of coordinates specified in 'srsDimension': " + m_srsDimension,
+// m_locator );
+// }
+//
+// m_positions.add( position );
+// }
+// }
 
-      m_positions.add( position );
-    }
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.ICoordinatesHandler#handle(java.util.List)
-   */
-  @Override
-  public void handle( final List<Double[]> element ) throws SAXParseException
-  {
-    for( final Double[] tuple : element )
-    {
-      final int tupleSize = tuple.length;
-
-      /* check srsDimension */
-      if( m_srsDimension != null && tupleSize != m_srsDimension )
-      {
-        throw new SAXParseException( "The position " + tuple.toString() +  "in this gml:LineString does not have the number of coordinates specified in 'srsDimension': " + m_srsDimension, m_locator );
-      } 
-
-      if( tuple.length == 2 )
-      {
-        m_positions.add( GeometryFactory.createGM_Position( tuple[0], tuple[1] ) );
-      }
-      else
-      {
-        m_positions.add( GeometryFactory.createGM_Position( tuple[0], tuple[1], tuple[2] ) );
-      }
-    }    
-  }
+// /**
+// * @see org.kalypsodeegree_impl.io.sax.parser.ICoordinatesHandler#handle(java.util.List)
+// */
+// @Override
+// public void handle( final List<Double[]> element ) throws SAXParseException
+// {
+// for( final Double[] tuple : element )
+// {
+// final int tupleSize = tuple.length;
+//
+// /* check srsDimension */
+// if( m_srsDimension != null && tupleSize != m_srsDimension )
+// {
+// throw new SAXParseException( "The position " + tuple.toString() +
+// "in this gml:LineString does not have the number of coordinates specified in 'srsDimension': " + m_srsDimension,
+// m_locator );
+// }
+//
+// if( tuple.length == 2 )
+// {
+// m_positions.add( GeometryFactory.createGM_Position( tuple[0], tuple[1] ) );
+// }
+// else
+// {
+// m_positions.add( GeometryFactory.createGM_Position( tuple[0], tuple[1], tuple[2] ) );
+// }
+// }
+// }
 }

@@ -38,6 +38,7 @@ package org.kalypsodeegree_impl.io.sax.parser;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.io.sax.parser.IPositionHandler.PositionsWithSrs;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -60,9 +61,10 @@ public class PosContentHandler extends GMLElementContentHandler
 
   private final IPositionHandler m_positionHandler;
 
-  public PosContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final IPositionHandler positionHandler, final String defaultSrs )
+  public PosContentHandler( final XMLReader reader, final IGmlContentHandler parent, final IPositionHandler positionHandler, final String defaultSrs )
   {
-    super( reader, NS.GML3, ELEMENT_POS, defaultSrs, parentContentHandler );
+    super( reader, NS.GML3, ELEMENT_POS, defaultSrs, parent );
+
     m_positionHandler = positionHandler;
   }
 
@@ -76,7 +78,7 @@ public class PosContentHandler extends GMLElementContentHandler
   public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
     final GM_Position pos = endPos();
-    m_positionHandler.handle( new GM_Position[] { pos }, m_srs );
+    m_positionHandler.handle( new PositionsWithSrs( new GM_Position[] { pos }, m_srs ) );
   }
 
   private GM_Position endPos( ) throws SAXParseException

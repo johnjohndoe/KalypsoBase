@@ -58,9 +58,9 @@ public class PointMemberContentHandler extends GMLElementContentHandler implemen
 
   private final IPointHandler m_pointHandler;  
 
-  public PointMemberContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final IPointHandler pointHandler, final String defaultSrs )
+  public PointMemberContentHandler( final XMLReader reader, final IGmlContentHandler parent, final IPointHandler pointHandler, final String defaultSrs )
   {
-    super( reader, NS.GML3, ELEMENT_POINT_MEMBER, defaultSrs, parentContentHandler );
+    super( reader, NS.GML3, ELEMENT_POINT_MEMBER, defaultSrs, parent );
 
     m_pointHandler = pointHandler;    
   }

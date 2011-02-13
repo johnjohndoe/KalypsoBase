@@ -40,19 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
-import org.kalypso.gmlschema.property.IPropertyMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.AbstractGmlContentHandler;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
-import org.kalypso.gmlschema.types.IValueHandler;
+import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.IGeometrySpecification;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -64,15 +58,19 @@ import org.xml.sax.XMLReader;
  */
 public class GMLPropertyChoiceContentHandler extends AbstractGmlContentHandler
 {
-  private final Map<QName, IGmlContentHandler> m_registeredProperties = new HashMap<QName, IGmlContentHandler>();
+  private final IGeometrySpecification m_spec;
 
   private final String m_defaultSrs;
 
-  public GMLPropertyChoiceContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final String defaultSrs )
+  private final IGmlContentHandler m_receiver;
+
+  public GMLPropertyChoiceContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final IGmlContentHandler receiver, final String defaultSrs, final IGeometrySpecification spec )
   {
     super( reader, parentContentHandler );
 
+    m_receiver = receiver;
     m_defaultSrs = defaultSrs;
+    m_spec = spec;
   }
 
   @Override
@@ -91,45 +89,15 @@ public class GMLPropertyChoiceContentHandler extends AbstractGmlContentHandler
   {
     final IGmlContentHandler delegate = findDelegate( new QName( uri, localName ) );
 
-    if( delegate != null )
-    {
-      delegate.activate();
-      delegate.startElement( uri, localName, name, atts );
-    }
-    else
+    if( delegate == null )
       throwSAXParseException( "Unexpected start element: %s - %s -  %s", uri, localName, name );
+
+    delegate.activate();
+    delegate.startElement( uri, localName, name, atts );
   }
 
-  private IGmlContentHandler findDelegate( final QName qName )
+  private IGmlContentHandler findDelegate( final QName property )
   {
-    return m_registeredProperties.get( qName );
-  }
-
-  private void registerProperty( final QName qName, final IGmlContentHandler contentHandler )
-  {
-    m_registeredProperties.put( qName, contentHandler );
-  }
-
-  /**
-   * Loads the properties that can specify the geometry given as parameter
-   */
-  public void loadPropertiesFor( final QName geometry ) throws SAXParseException
-  {
-    try
-    {
-      final IPropertyMarshallingTypeHandler[] allowedProps = KalypsoGMLSchemaPlugin.getDefault().getAllowedProperties( geometry );
-
-      for( final IPropertyMarshallingTypeHandler handler : allowedProps )
-      {
-        final XMLReader reader = getXMLReader();
-        final IValueHandler parentContentHandler = (IValueHandler) getParentContentHandler();
-        registerProperty( handler.getTypeName(), handler.createContentHandler( reader, this, parentContentHandler, m_defaultSrs ) );
-      }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      throwSAXParseException( "Could not get properties for %s: %s", geometry, e.getMessage() );
-    }
+    return m_spec.getHandler( property, getXMLReader(), this, m_receiver, m_defaultSrs );
   }
 }

@@ -41,9 +41,9 @@ import java.util.List;
 import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.LinearRingSpecification;
 import org.kalypsodeegree_impl.model.geometry.GM_Ring_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -73,12 +73,11 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
   }
 
   @Override
-  public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes ) throws SAXParseException
+  public void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
   {
     m_srs = ContentHandlerUtils.parseSrsFromAttributes( attributes, m_defaultSrs );
 
-    final GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, m_defaultSrs );
-    choiceContentHandler.loadPropertiesFor( GMLConstants.QN_LINEAR_RING );
+    final GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, this, m_defaultSrs, new LinearRingSpecification() );
     choiceContentHandler.activate();
   }
 
@@ -115,26 +114,17 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
     }
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.IPositionHandler#handlePosition(org.kalypsodeegree.model.geometry.GM_Position,
-   *      java.lang.String)
-   */
   @Override
-  public void handle( final GM_Position[] positions, final String srs )
+  public void handle( final PositionsWithSrs pws )
   {
     // TODO: should transform the pos if it is not in the same crs as myself
     if( m_srs == null )
-      m_srs = srs;
+      m_srs = pws.getSrs();
 
-    for( final GM_Position pos : positions )
-    {
+    for( final GM_Position pos : pws.getPositions() )
       m_poses.add( pos );
-    }
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.ICoordinatesHandler#handle(java.util.List<java.lang.Double>[])
-   */
   @Override
   public void handle( final List<Double[]> element ) throws SAXParseException
   {

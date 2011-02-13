@@ -47,8 +47,8 @@ import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.PointSpecification;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -128,13 +128,12 @@ public class PointContentHandler extends GMLElementContentHandler implements ICo
    * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXParseException
+  protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
     m_activeSrs = ContentHandlerUtils.parseSrsFromAttributes( atts, m_defaultSrs );
 
     /* creates the controlPointsContentHandler allowing it to parse either gml:coordinates or gml:coord or gml:pos*/
-    final GMLPropertyChoiceContentHandler ctrlPointsContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, m_activeSrs );
-    ctrlPointsContentHandler.loadPropertiesFor( GMLConstants.QN_POINT );
+    final GMLPropertyChoiceContentHandler ctrlPointsContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, this, m_activeSrs, new PointSpecification() );
     setDelegate( ctrlPointsContentHandler ); 
   }
 
@@ -164,12 +163,11 @@ public class PointContentHandler extends GMLElementContentHandler implements ICo
     }
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.IPositionHandler#handle(org.kalypsodeegree.model.geometry.GM_Position[], java.lang.String)
-   */
   @Override
-  public void handle( final GM_Position[] element, final String srs )
+  public void handle( final PositionsWithSrs pws )
   {
-    m_point = GeometryFactory.createGM_Point( element[0], srs );    
+    final GM_Position[] positions = pws.getPositions();
+    final String srs = pws.getSrs();
+    m_point = GeometryFactory.createGM_Point( positions[0], srs );
   }
 }

@@ -35,10 +35,10 @@
  */
 package org.kalypsodeegree_impl.io.sax.parser;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.commons.xml.NS;
-import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.xml.sax.XMLReader;
 
 /**
@@ -47,72 +47,14 @@ import org.xml.sax.XMLReader;
  * @author Gernot Belger
  * @author Felipe Maximino
  */
-public class ExteriorContentHandler extends GMLElementContentHandler implements IRingHandler
+public class ExteriorContentHandler extends AbstractRingPropertyContentHandler
 {
   public static final String ELEMENT_EXTERIOR = "exterior";
 
-  /*
-   * xsd attribute 'minOccurs'. If it is 0, we should not always throw an exception if this element doesn't appear.
-   * Default value it's 1.
-   */
-  private int m_elementMinOccurs;
+  public static final QName QNAME_EXTERIOR = new QName( NS.GML3, ELEMENT_EXTERIOR );
 
-  private final IRingHandler m_exteriorHandler;
-
-  private GM_Ring m_ring;
-
-  public ExteriorContentHandler( final XMLReader reader, final IRingHandler exteriorHandler, final String defaultSrs )
+  public ExteriorContentHandler( final XMLReader reader, final IGmlContentHandler parent, final IRingHandler exteriorHandler, final String defaultSrs )
   {
-    super( reader, NS.GML3, ELEMENT_EXTERIOR, defaultSrs, exteriorHandler );
-
-    m_exteriorHandler = exteriorHandler;
-    m_elementMinOccurs = 1;
-  }
-
-  @Override
-  protected void doStartElement( final String uri, final String localName, final String name, final Attributes attributes )
-  {
-    new LinearRingContentHandler( getXMLReader(), this, m_defaultSrs ).activate();
-  }
-
-  /**
-   * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
-   */
-  @Override
-  public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
-  {
-    m_exteriorHandler.handle( m_ring );
-    m_ring = null;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String,
-   *      java.lang.String, java.lang.String)
-   */
-  @Override
-  public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
-  {
-    final GMLElementContentHandler parentContentHandler = (GMLElementContentHandler) getParentContentHandler();
-    if( m_elementMinOccurs == 0 && localName.equals( parentContentHandler.getLocalName() ) )
-    {
-      activateParent();
-      parentContentHandler.endElement( uri, localName, name );
-    }
-    else
-      super.handleUnexpectedEndElement( uri, localName, name );
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.IRingHandler#handleRing(org.kalypsodeegree.model.geometry.GM_Ring)
-   */
-  @Override
-  public void handle( final GM_Ring ring )
-  {
-    m_ring = ring;
-  }
-
-  public void setElementMinOccurs( final int elementMinOccurs )
-  {
-    m_elementMinOccurs = elementMinOccurs;
+    super( reader, QNAME_EXTERIOR, parent, exteriorHandler, defaultSrs, 1 );
   }
 }

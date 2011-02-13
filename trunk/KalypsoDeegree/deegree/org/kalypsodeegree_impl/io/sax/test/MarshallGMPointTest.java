@@ -61,13 +61,14 @@ import org.xml.sax.XMLReader;
 public class MarshallGMPointTest extends TestCase
 {
   private static final GM_Point point2D = GeometryFactory.createGM_Point( 0.0, 1.0, "EPSG:31467" );
+
   private static final GM_Point point3D = GeometryFactory.createGM_Point( 0.0, 1.0, 2.0, "EPSG:31467" );
 
   /**
    * tests a 2DPoint marshalling
    */
   @Test
-  public void testPoint1() throws IOException, SAXException
+  public void testPoint1( ) throws IOException, SAXException
   {
     final File f = File.createTempFile( "point2d", "gml" );
     f.deleteOnExit();
@@ -86,11 +87,10 @@ public class MarshallGMPointTest extends TestCase
   }
 
   /**
-   * tests a 3DPoint marshalling with specific tuples and coordinates separator
-   * as well as the decimal separator
+   * tests a 3DPoint marshalling with specific tuples and coordinates separator as well as the decimal separator
    */
   @Test
-  public void testPoint2() throws IOException, SAXException
+  public void testPoint2( ) throws IOException, SAXException
   {
     final File f = File.createTempFile( "point3d", "gml" );
     f.deleteOnExit();

@@ -49,8 +49,8 @@ import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.LineStringSpecification;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -61,7 +61,7 @@ import org.xml.sax.XMLReader;
  * 
  * @author Felipe Maximino
  */
-public class LineStringContentHandler extends GMLElementContentHandler implements IPositionHandler, ICoordinatesHandler
+public class LineStringContentHandler extends GMLElementContentHandler implements ICoordinatesHandler, IPositionHandler
 {
   public static final String ELEMENT_LINE_STRING = "LineString";
 
@@ -141,13 +141,12 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
    *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
-  protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXParseException
+  protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
     m_activeSrs = ContentHandlerUtils.parseSrsFromAttributes( atts, m_defaultSrs );
     m_srsDimension = ContentHandlerUtils.parseSrsDimensionFromAttributes( atts );
 
-    final GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, m_activeSrs );
-    choiceContentHandler.loadPropertiesFor( GMLConstants.QN_LINE_STRING );
+    final GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, this, m_activeSrs, new LineStringSpecification() );
     choiceContentHandler.activate();
   }
 
@@ -169,20 +168,15 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
     }
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.IPositionHandler#handle(org.kalypsodeegree.model.geometry.GM_Position[],
-   *      java.lang.String)
-   */
   @Override
-  public void handle( final GM_Position[] positions, final String srs )
+  public void handle( final PositionsWithSrs pws )
   {
-    for( final GM_Position position : positions )
+    // TODO: should transform the pos if it is not in the same crs as myself
+
+    for( final GM_Position position : pws.getPositions() )
       m_positions.add( position );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.ICoordinatesHandler#handle(java.util.List)
-   */
   @Override
   public void handle( final List<Double[]> element ) throws SAXParseException
   {

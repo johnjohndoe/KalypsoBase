@@ -40,13 +40,37 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser;
 
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.xml.sax.SAXParseException;
 
 /**
  * @author Gernot Belger
  */
-public interface IPositionHandler extends IControlPointHandler
+public interface IPositionHandler extends IGmlContentHandler
 {
-  void handle( GM_Position[] element, String srs ) throws SAXParseException;
+  public class PositionsWithSrs
+  {
+    private final GM_Position[] m_positions;
+
+    private final String m_srs;
+
+    public PositionsWithSrs( final GM_Position[] positions, final String srs )
+    {
+      m_positions = positions;
+      m_srs = srs;
+    }
+
+    public GM_Position[] getPositions( )
+    {
+      return m_positions;
+    }
+
+    public String getSrs( )
+    {
+      return m_srs;
+    }
+  }
+
+  void handle( PositionsWithSrs pws ) throws SAXParseException;
 }
