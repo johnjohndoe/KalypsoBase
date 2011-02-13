@@ -40,39 +40,39 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypsodeegree.model.geometry.GM_MultiPoint;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.xml.sax.SAXException;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.xml.sax.XMLReader;
 
 /**
- * A marshaller for gml:MultiPoint. <br>
- * This marshaller always marshalls a gml:MultiPoint specifying it with a gml:pointMember property.
+ * A marshaller for gml:Exterior. It delegates the marshalling to the corresponding gml:LinearRing elements marshallers.
  * 
  * @author Felipe Maximino
  */
-public class MultiPointMarshaller extends GeometryMarshaller<GM_MultiPoint>
+public abstract class AbstractPolygonMarshaller extends AbstractMarshaller<GM_Surface<GM_Polygon>>
 {
-  public static final String TAG_MULTI_POINT = "MultiPoint";
-
-  public MultiPointMarshaller( final XMLReader reader, final GM_MultiPoint multiPoint )
+  public AbstractPolygonMarshaller( final XMLReader reader, final String tag, final GM_Surface<GM_Polygon> polygon )
   {
-    super( reader, TAG_MULTI_POINT, multiPoint );
+    super( reader, tag, polygon );
   }
 
   /**
    * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  protected void doMarshallContent( final GM_MultiPoint marshalledObject ) throws SAXException
+  protected final void doMarshallContent( final GM_Surface<GM_Polygon> marshalledObject )
   {
-    final PointMemberMarshaller pointMemberMarshllaer = new PointMemberMarshaller( getXMLReader() );
+    final GM_Polygon polygon = marshalledObject.get( 0 );
 
-    final GM_Point[] points = marshalledObject.getAllPoints();
-    for( final GM_Point point : points )
+    final GM_Position[] exteriorRing = polygon.getExteriorRing();
+    new ExteriorMarshaller( getXMLReader(), exteriorRing );
+
+    final GM_Position[][] interiorRings = polygon.getInteriorRings();
+    if( interiorRings != null )
     {
-      pointMemberMarshllaer.setMember( point );
-      pointMemberMarshllaer.marshall();
+      for( final GM_Position[] interior : interiorRings )
+        new InteriorMarshaller( getXMLReader(), interior );
     }
   }
 }

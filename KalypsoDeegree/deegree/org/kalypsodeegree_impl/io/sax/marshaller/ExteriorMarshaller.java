@@ -41,8 +41,6 @@
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -50,25 +48,12 @@ import org.xml.sax.XMLReader;
  * 
  * @author Felipe Maximino
  */
-public class ExteriorMarshaller extends AbstractMarshaller<GM_SurfacePatch>
+public class ExteriorMarshaller extends AbstractRingPropertyMarshaller
 {
   public static final String TAG_EXTERIOR = "exterior";
 
-  public ExteriorMarshaller( final XMLReader reader, final GM_SurfacePatch triangle )
+  public ExteriorMarshaller( final XMLReader reader, final GM_Position[] exterior )
   {
-    super( reader, TAG_EXTERIOR, triangle );
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.AbstractMarshaller#doMarshall()
-   */
-  @Override
-  public void doMarshall( ) throws SAXException
-  {
-    final GM_Position[] exteriorRing = getMarshalledObject().getExteriorRing();
-    if( exteriorRing.length != 0 )
-    {
-      (new LinearRingMarshaller( getXMLReader(), exteriorRing )).marshall();
-    }
+    super( reader, TAG_EXTERIOR, exterior );
   }
 }

@@ -61,12 +61,12 @@ public class PolyhedralSurfaceMarshaller extends SurfaceMarshaller<GM_Polygon>
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.SurfaceMarshaller#doMarshall()
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  public void doMarshall( ) throws SAXException
+  protected void doMarshallContent( final GM_Surface<GM_Polygon> marshalledObject ) throws SAXException
   {
-    m_patchesMarshaller = new PolygonPatchesMarshaller( getXMLReader(), getMarshalledObject() );
+    m_patchesMarshaller = new PolygonPatchesMarshaller( getXMLReader(), marshalledObject );
     m_patchesMarshaller.marshall();
   }
 }

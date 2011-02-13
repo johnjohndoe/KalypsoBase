@@ -61,13 +61,13 @@ public abstract class PatchesMarshaller<T extends GM_SurfacePatch> extends Abstr
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.AbstractMarshaller#doMarshall()
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  public void doMarshall( ) throws SAXException
+  protected void doMarshallContent( final GM_Surface<T> marshalledObject ) throws SAXException
   {
     createPatchMarshaller();
-    m_surfacePatchMarshaller.setSurfaceCrs( getMarshalledObject().getCoordinateSystem() );
+    m_surfacePatchMarshaller.setSurfaceCrs( marshalledObject.getCoordinateSystem() );
     for( final T patch : getMarshalledObject() )
     {
       m_surfacePatchMarshaller.setPatch( patch );

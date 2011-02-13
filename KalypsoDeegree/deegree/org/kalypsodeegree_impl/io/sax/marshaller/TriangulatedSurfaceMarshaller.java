@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
+import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.xml.sax.Attributes;
@@ -63,10 +64,10 @@ public class TriangulatedSurfaceMarshaller extends SurfaceMarshaller<GM_Triangle
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.SurfaceMarshaller#doMarshall()
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  public void doMarshall( ) throws SAXException
+  protected void doMarshallContent( final GM_Surface<GM_Triangle> marshalledObject ) throws SAXException
   {
     m_patchesMarshaller.marshall();
   }

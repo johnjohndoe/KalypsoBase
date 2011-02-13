@@ -59,14 +59,14 @@ public class LineStringMarshaller extends GeometryMarshaller<GM_Curve>
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall()
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  protected void doMarshall( ) throws SAXException
+  protected void doMarshallContent( final GM_Curve marshalledObject ) throws SAXException
   {
     try
     {
-      new PosListMarshaller( getXMLReader(), getMarshalledObject().getAsLineString().getPositions() ).marshall();
+      new PosListMarshaller( getXMLReader(), marshalledObject.getAsLineString().getPositions() ).marshall();
     }
     catch( final GM_Exception e )
     {

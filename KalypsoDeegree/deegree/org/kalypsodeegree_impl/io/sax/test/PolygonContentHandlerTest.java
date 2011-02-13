@@ -40,12 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -54,6 +61,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.io.sax.parser.PolygonContentHandler;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -63,25 +71,11 @@ public class PolygonContentHandlerTest extends TestCase
 {
   private final SAXParserFactory m_saxFactory = SAXParserFactory.newInstance();
 
-  private static final GM_Position POSITION0 = GeometryFactory.createGM_Position( 0.0, 0.0, 0.2 );
+  private GM_Surface<GM_Polygon> m_surfaceOneHole;
 
-  private static final GM_Position POSITION1 = GeometryFactory.createGM_Position( 0.0, 1.0, 0.2 );
+  private GM_Surface<GM_Polygon> m_surfaceTwoHoles;
 
-  private static final GM_Position POSITION2 = GeometryFactory.createGM_Position( 1.0, 1.0, 1.2 );
-
-  private static final GM_Position POSITION3 = GeometryFactory.createGM_Position( 1.0, 0.0, 2.2 );
-
-  private static final GM_Position POSITION4 = GeometryFactory.createGM_Position( 0.3, 0.6, 4.0 );
-
-  private static final GM_Position POSITION5 = GeometryFactory.createGM_Position( 0.6, 0.3, 5.0 );
-
-  private static final GM_Position POSITION6 = GeometryFactory.createGM_Position( 0.6, 0.7, 6.0 );
-
-  private static final GM_Position POSITION7 = GeometryFactory.createGM_Position( 0.7, 0.6, 7.0 );
-
-  private static GM_Surface<GM_Polygon> SURFACE_ONE_HOLE;
-
-  private static GM_Surface<GM_Polygon> SURFACE_TWO_HOLES;
+  private GM_Surface<GM_Polygon> m_surfaceNoHole;
 
   /**
    * @see junit.framework.TestCase#setUp()
@@ -89,30 +83,73 @@ public class PolygonContentHandlerTest extends TestCase
   @Override
   protected void setUp( ) throws Exception
   {
-    super.setUp();
-
     m_saxFactory.setNamespaceAware( true );
 
-    final GM_Position[] exteriorRing = new GM_Position[] { POSITION0, POSITION1, POSITION2, POSITION3, POSITION0 };
-    final GM_Position[] interiorRing1 = new GM_Position[] { POSITION0, POSITION4, POSITION5, POSITION0 };
-    final GM_Position[] interiorRing2 = new GM_Position[] { POSITION2, POSITION7, POSITION6, POSITION2 };
+    final GM_Position pos0 = GeometryFactory.createGM_Position( 0.0, 0.0, 0.2 );
 
-    SURFACE_ONE_HOLE = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1 }, "EPSG:31467" );
-    SURFACE_TWO_HOLES = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1, interiorRing2 }, "EPSG:31467" );
+    final GM_Position pos1 = GeometryFactory.createGM_Position( 0.0, 1.0, 0.2 );
+
+    final GM_Position pos2 = GeometryFactory.createGM_Position( 1.0, 1.0, 1.2 );
+
+    final GM_Position pos3 = GeometryFactory.createGM_Position( 1.0, 0.0, 2.2 );
+
+    final GM_Position pos4 = GeometryFactory.createGM_Position( 0.3, 0.6, 4.0 );
+
+    final GM_Position pos5 = GeometryFactory.createGM_Position( 0.6, 0.3, 5.0 );
+
+    final GM_Position pos6 = GeometryFactory.createGM_Position( 0.6, 0.7, 6.0 );
+
+    final GM_Position pos7 = GeometryFactory.createGM_Position( 0.7, 0.6, 7.0 );
+
+    final GM_Position[] exteriorRing = new GM_Position[] { pos0, pos1, pos2, pos3, pos0 };
+    final GM_Position[] interiorRing1 = new GM_Position[] { pos0, pos4, pos5, pos0 };
+    final GM_Position[] interiorRing2 = new GM_Position[] { pos2, pos7, pos6, pos2 };
+
+    m_surfaceNoHole = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] {}, "EPSG:31467" );
+    m_surfaceOneHole = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1 }, "EPSG:31467" );
+    m_surfaceTwoHoles = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1, interiorRing2 }, "EPSG:31467" );
+  }
+
+  @Test
+  public void testPolygonNoHole( ) throws Exception
+  {
+    final GM_Surface<GM_Polygon> polygon = parsePolygon( "resources/polygonNoHole.gml" );
+    assertPolygon( m_surfaceNoHole, polygon );
   }
 
   @Test
   public void testPolygonOneHole( ) throws Exception
   {
-    final GM_Surface<GM_Polygon> polygon = parsePolygon( "resources/polygon1.gml" );
-    assertPolygon( SURFACE_ONE_HOLE, polygon );
+    final GM_Surface<GM_Polygon> polygon = parsePolygon( "resources/polygonOneHole.gml" );
+    assertPolygon( m_surfaceOneHole, polygon );
   }
 
   @Test
   public void testPolygonTwoHoles( ) throws Exception
   {
     final GM_Surface<GM_Polygon> polygon = parsePolygon( "resources/polygonTwoHoles.gml" );
-    assertPolygon( SURFACE_TWO_HOLES, polygon );
+    assertPolygon( m_surfaceTwoHoles, polygon );
+  }
+
+  // Sax: 5 sec
+  public void testReadOften( ) throws Exception
+  {
+    final URL resource = getClass().getResource( "resources/polygonBig.gml" );
+    final String content = UrlUtilities.toString( resource, SaxParserTestUtils.ENCODING );
+
+    for( int i = 0; i < 10000; i++ )
+      parsePolygonFromContent( content );
+
+  }
+
+  // Sax: 55 sec
+  public void testReadOften2( ) throws Exception
+  {
+    final URL resource = getClass().getResource( "resources/polygonBig2.gml" );
+    final String content = UrlUtilities.toString( resource, SaxParserTestUtils.ENCODING );
+
+    for( int i = 0; i < 10000; i++ )
+      parsePolygonFromContent( content );
   }
 
   private void assertPolygon( final GM_Surface<GM_Polygon> expected, final GM_Surface<GM_Polygon> polygon )
@@ -130,10 +167,16 @@ public class PolygonContentHandlerTest extends TestCase
 
     final GM_Position[][] expectedInteriorRings = expectedPatch.getInteriorRings();
     final GM_Position[][] interiorRings = patch.getInteriorRings();
-    assertEquals( expectedInteriorRings.length, interiorRings.length );
 
-    for( int i = 0; i < interiorRings.length; i++ )
-      assertRing( expectedInteriorRings[i], interiorRings[i] );
+    if( expectedInteriorRings == null )
+      assertNull( interiorRings );
+    else
+    {
+      assertEquals( expectedInteriorRings.length, interiorRings.length );
+
+      for( int i = 0; i < interiorRings.length; i++ )
+        assertRing( expectedInteriorRings[i], interiorRings[i] );
+    }
   }
 
   private void assertRing( final GM_Position[] expectedRing, final GM_Position[] ring )
@@ -144,10 +187,25 @@ public class PolygonContentHandlerTest extends TestCase
       assertEquals( expectedRing[i], ring[i] );
   }
 
-  @SuppressWarnings("unchecked")
-  private GM_Surface<GM_Polygon> parsePolygon( final String source ) throws Exception
+  private GM_Surface<GM_Polygon> parsePolygonFromContent( final String content ) throws Exception
   {
-    final InputSource is = new InputSource( getClass().getResourceAsStream( source ) );
+    final InputStream inputStream = IOUtils.toInputStream( content );
+
+    return parsePolygon( inputStream );
+  }
+
+  private GM_Surface<GM_Polygon> parsePolygon( final String resourceLocation ) throws Exception
+  {
+    final URL resource = getClass().getResource( resourceLocation );
+    final String content = UrlUtilities.toString( resource, SaxParserTestUtils.ENCODING );
+    final InputStream inputStream = IOUtils.toInputStream( content );
+
+    return parsePolygon( inputStream );
+  }
+
+  private GM_Surface<GM_Polygon> parsePolygon( final InputStream inputStream ) throws ParserConfigurationException, SAXException, IOException
+  {
+    final InputSource is = new InputSource( inputStream );
 
     final SAXParser saxParser = m_saxFactory.newSAXParser();
     final XMLReader reader = saxParser.getXMLReader();
@@ -169,4 +227,52 @@ public class PolygonContentHandlerTest extends TestCase
 
     return (GM_Surface<GM_Polygon>) result[0];
   }
+
+  // REMARK: exchange method in order to use binding-stuff instead
+  // In order to make this work; change the line 'if( m_level < 0 )' to <= in BindingUnmarshalingContentHandler
+// private GM_Surface<GM_Polygon> parsePolygon( final InputStream inputStream ) throws ParserConfigurationException,
+// SAXException, IOException, TypeRegistryException
+// {
+// final InputSource is = new InputSource( inputStream );
+//
+// final SAXParser saxParser = m_saxFactory.newSAXParser();
+// final XMLReader reader = saxParser.getXMLReader();
+//
+// final GM_Surface< ? >[] result = new GM_Surface< ? >[1];
+// final UnmarshallResultEater resultEater = new UnmarshallResultEater()
+// {
+// @Override
+// public void unmarshallSuccesful( final Object value )
+// {
+// assertTrue( value instanceof GM_Surface );
+// result[0] = (GM_Surface< ? >) value;
+// }
+// };
+//
+// final JAXBContextProvider jaxbContextProvider = new JAXBContextProvider()
+// {
+// @Override
+// public JAXBContext getJaxBContextForGMLVersion( final String gmlVersion )
+// {
+// if( (gmlVersion == null) || gmlVersion.startsWith( "2" ) )
+// {
+// return KalypsoOGC2xJAXBcontext.getContext();
+// }
+// else if( gmlVersion.startsWith( "3" ) )
+// {
+// return KalypsoOGC31JAXBcontext.getContext();
+// }
+// throw new UnsupportedOperationException( "GMLVersion " + gmlVersion + " is not supported" );
+// }
+// };
+//
+// final GenericGM_ObjectBindingTypeHandler handler = new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
+// GMLConstants.QN_POLYGON, GMLConstants.QN_SURFACE, GM_Surface.class, true );
+//
+// handler.unmarshal( reader, null, resultEater, "3" );
+//
+// reader.parse( is );
+//
+// return (GM_Surface<GM_Polygon>) result[0];
+// }
 }

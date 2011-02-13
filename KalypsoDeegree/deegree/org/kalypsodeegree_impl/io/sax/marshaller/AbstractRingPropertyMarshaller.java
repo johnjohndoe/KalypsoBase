@@ -40,39 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypsodeegree.model.geometry.GM_MultiPoint;
-import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * A marshaller for gml:MultiPoint. <br>
- * This marshaller always marshalls a gml:MultiPoint specifying it with a gml:pointMember property.
+ * FIXME: instead of marshalling a GM_Ring we marshall GM_Positions[]: this is because the GM_SurfacePath hold just
+ * GM_Position[]'s as interior and exterior rings.<br/>
+ * We need to change the GM_SurfacePath classes.<br/>
+ * elements marshallers.
  * 
  * @author Felipe Maximino
  */
-public class MultiPointMarshaller extends GeometryMarshaller<GM_MultiPoint>
+public abstract class AbstractRingPropertyMarshaller extends AbstractMarshaller<GM_Position[]>
 {
-  public static final String TAG_MULTI_POINT = "MultiPoint";
-
-  public MultiPointMarshaller( final XMLReader reader, final GM_MultiPoint multiPoint )
+  public AbstractRingPropertyMarshaller( final XMLReader reader, final String tag, final GM_Position[] ring )
   {
-    super( reader, TAG_MULTI_POINT, multiPoint );
+    super( reader, tag, ring );
   }
 
   /**
    * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  protected void doMarshallContent( final GM_MultiPoint marshalledObject ) throws SAXException
+  protected void doMarshallContent( final GM_Position[] marshalledObject ) throws SAXException
   {
-    final PointMemberMarshaller pointMemberMarshllaer = new PointMemberMarshaller( getXMLReader() );
-
-    final GM_Point[] points = marshalledObject.getAllPoints();
-    for( final GM_Point point : points )
-    {
-      pointMemberMarshllaer.setMember( point );
-      pointMemberMarshllaer.marshall();
-    }
+    new LinearRingMarshaller( getXMLReader(), marshalledObject ).marshall();
   }
 }
