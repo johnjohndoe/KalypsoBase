@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Felipe Maximino
  */
-public interface IGMLElementHandler<T> extends IValueHandler
+public interface IGMLElementHandler<T> extends IGmlContentHandler
 {
   public void handle( T element ) throws SAXException;
 }

@@ -1,11 +1,8 @@
 package org.kalypso.gmlschema;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.runtime.Plugin;
 import org.kalypso.contribs.java.JavaApiContributionsExtension;
 import org.kalypso.contribs.java.net.IUrlCatalog;
-import org.kalypso.gmlschema.property.IPropertyMarshallingTypeHandler;
 import org.osgi.framework.BundleContext;
 
 public class KalypsoGMLSchemaPlugin extends Plugin
@@ -53,11 +50,6 @@ public class KalypsoGMLSchemaPlugin extends Plugin
 
     return m_schemaCatalog;
   }
-  
-  public synchronized IPropertyMarshallingTypeHandler[] getAllowedProperties( QName geometry ) throws Exception
-  {
-    return KalypsoGmlSchemaExtensions.getPropertiesHandlersForGeometry( geometry );
-  }  
   
   /**
    * Returns the shared instance.
