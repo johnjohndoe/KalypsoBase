@@ -87,22 +87,22 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
     this( xmlReader, null, resultEater, parentContentHandler, null );
   }
 
-// public PolygonContentHandler( final XMLReader xmlReader, final ISurfaceHandler<GM_Polygon> surfaceHandler, final
-// String defaultSrs )
-// {
-// this( xmlReader, surfaceHandler, null, surfaceHandler, defaultSrs );
-// }
+  public PolygonContentHandler( final XMLReader xmlReader, final ISurfaceHandler<GM_Polygon> surfaceHandler, final String defaultSrs )
+  {
+    this( xmlReader, surfaceHandler, null, surfaceHandler, defaultSrs );
+  }
 
   private PolygonContentHandler( final XMLReader xmlReader, final ISurfaceHandler<GM_Polygon> surfaceHandler, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
   {
     super( xmlReader, NS.GML3, ELEMENT_POLYGON, defaultSrs, parentContentHandler );
 
-    m_resultEater = resultEater;    
+    m_resultEater = resultEater;
     m_surfaceHandler = surfaceHandler;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
    */
   @Override
   protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
@@ -117,7 +117,8 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
    */
   @Override
   public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
@@ -133,7 +134,8 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String,
+   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
@@ -143,7 +145,7 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
 
     final GMLPropertySequenceContentHandler choiceContentHandler = new GMLPropertySequenceContentHandler( getXMLReader(), this, this, m_activeSrs, new PolygonSpecification() );
     setDelegate( choiceContentHandler );
-  }  
+  }
 
   private GM_Surface<GM_Polygon> endSurface( ) throws SAXParseException
   {
@@ -155,11 +157,11 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
       final GM_Position[][] interiorRings = m_interiorRings.toArray( new GM_Position[m_interiorRings.size()][] );
       return GeometryFactory.createGM_Surface( m_exteriorRing, interiorRings, m_activeSrs );
     }
-    catch( final GM_Exception e)
+    catch( final GM_Exception e )
     {
       throwSAXParseException( "It was not possible to create a gml:Polygon!" );
       return null;
-    }        
+    }
   }
 
   /**

@@ -72,10 +72,10 @@ public abstract class GeometryMarshaller<T extends GM_Object> extends AbstractMa
 
     final AttributesImpl atts = new AttributesImpl();
     if( crs != null )
-    {
       atts.addAttribute( "", "srsName", "srsName", "CDATA", crs );
-    }
-    atts.addAttribute( "", "srsDimension", "srsDimension", "decimal", String.valueOf( srsDimension ) );
+
+    if( srsDimension != -1 )
+      atts.addAttribute( "", "srsDimension", "srsDimension", "decimal", String.valueOf( srsDimension ) );
 
     final ContentHandler contentHandler = getXMLReader().getContentHandler();
     contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );

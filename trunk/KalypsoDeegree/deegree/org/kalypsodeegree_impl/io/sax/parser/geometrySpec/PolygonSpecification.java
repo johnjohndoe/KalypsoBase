@@ -45,7 +45,9 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree_impl.io.sax.parser.ExteriorContentHandler;
 import org.kalypsodeegree_impl.io.sax.parser.IRingHandler;
+import org.kalypsodeegree_impl.io.sax.parser.InnerBoundaryContentHandler;
 import org.kalypsodeegree_impl.io.sax.parser.InteriorContentHandler;
+import org.kalypsodeegree_impl.io.sax.parser.OuterBoundaryContentHandler;
 import org.xml.sax.XMLReader;
 
 /**
@@ -65,9 +67,17 @@ public class PolygonSpecification implements IGeometrySpecification
     if( ExteriorContentHandler.QNAME_EXTERIOR.equals( property ) )
       return new ExteriorContentHandler( reader, parent, (IRingHandler) receiver, defaultSrs );
 
+    /* gml:outerBoundaryIs */
+    if( OuterBoundaryContentHandler.QNAME_OUTER_BOUNDARY.equals( property ) )
+      return new OuterBoundaryContentHandler( reader, parent, (IRingHandler) receiver, defaultSrs );
+
     /* gml:interior */
     if( InteriorContentHandler.QNAME_INTERIOR.equals( property ) )
       return new InteriorContentHandler( reader, parent, (IRingHandler) receiver, defaultSrs );
+
+    /* gml:innerBoundaryIs */
+    if( InnerBoundaryContentHandler.QNAME_INNER_BOUNDARY.equals( property ) )
+      return new InnerBoundaryContentHandler( reader, parent, (IRingHandler) receiver, defaultSrs );
 
     return null;
   }
