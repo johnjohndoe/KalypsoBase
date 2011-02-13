@@ -43,42 +43,31 @@ package org.kalypsodeegree_impl.io.sax.parser.geometrySpec;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.types.IGmlContentHandler;
-import org.kalypsodeegree_impl.io.sax.parser.CoordContentHandler;
-import org.kalypsodeegree_impl.io.sax.parser.CoordinatesContentHandler;
-import org.kalypsodeegree_impl.io.sax.parser.ICoordinatesHandler;
-import org.kalypsodeegree_impl.io.sax.parser.IPositionHandler;
-import org.kalypsodeegree_impl.io.sax.parser.PosContentHandler;
-import org.kalypsodeegree_impl.io.sax.parser.PosListContentHandler;
-import org.kalypsodeegree_impl.tools.GMLConstants;
+import org.kalypsodeegree_impl.io.sax.parser.ExteriorContentHandler;
+import org.kalypsodeegree_impl.io.sax.parser.IRingHandler;
+import org.kalypsodeegree_impl.io.sax.parser.InteriorContentHandler;
 import org.xml.sax.XMLReader;
 
 /**
- * @author Felipe Maximino
- *
+ * @author Gernot Belger
  */
-public class LineStringSpecification implements IGeometrySpecification
+public class PolygonSpecification implements IGeometrySpecification
 {
   /**
    * @see org.kalypsodeegree_impl.io.sax.parser.geometrySpec.IGeometrySpecification#getHandler(javax.xml.namespace.QName,
-   *      org.xml.sax.XMLReader, org.kalypso.gmlschema.types.IGmlContentHandler, java.lang.String)
+   *      org.xml.sax.XMLReader, org.kalypso.gmlschema.types.IGmlContentHandler,
+   *      org.kalypso.gmlschema.types.IGmlContentHandler, java.lang.String)
    */
   @Override
   public IGmlContentHandler getHandler( final QName property, final XMLReader reader, final IGmlContentHandler parent, final IGmlContentHandler receiver, final String defaultSrs )
   {
-    if( GMLConstants.QN_POS.equals( property ) )
-      return new PosContentHandler( reader, parent, (IPositionHandler) receiver, defaultSrs );
+    /* gml:exterior */
+    if( ExteriorContentHandler.QNAME_EXTERIOR.equals( property ) )
+      return new ExteriorContentHandler( reader, parent, (IRingHandler) receiver, defaultSrs );
 
-    /* gml:posList */
-    if( GMLConstants.QN_POS_LIST.equals( property ) )
-      return new PosListContentHandler( reader, parent, (IPositionHandler) receiver, defaultSrs );
-
-    /* gml:coordinates for gml:LinearRing is deprecated with GML Version 3.1.0 */
-    if( GMLConstants.QN_COORDINATES.equals( property ) )
-      return new CoordinatesContentHandler( reader, parent, (ICoordinatesHandler) receiver, defaultSrs );
-
-    /* gml:coord for gml:LinearRing is deprecated with GML Version 3.0 */
-    if( GMLConstants.QN_COORD.equals( property ) )
-      return new CoordContentHandler( reader, parent, (ICoordinatesHandler) receiver, defaultSrs );
+    /* gml:interior */
+    if( InteriorContentHandler.QNAME_INTERIOR.equals( property ) )
+      return new InteriorContentHandler( reader, parent, (IRingHandler) receiver, defaultSrs );
 
     return null;
   }

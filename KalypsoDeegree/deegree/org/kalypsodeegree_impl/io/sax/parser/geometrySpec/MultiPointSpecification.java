@@ -40,10 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.parser.geometrySpec;
 
-import org.kalypso.gmlschema.types.GeometrySpecificationCatalog;
-import org.kalypso.gmlschema.types.IGeometrySpecification;
-import org.kalypsodeegree.model.typeHandler.PointMemberHandler;
-import org.kalypsodeegree.model.typeHandler.PointMembersHandler;
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.types.IGmlContentHandler;
+import org.kalypsodeegree_impl.io.sax.parser.IPointHandler;
+import org.kalypsodeegree_impl.io.sax.parser.PointMemberContentHandler;
+import org.kalypsodeegree_impl.io.sax.parser.PointMembersContentHandler;
+import org.kalypsodeegree_impl.tools.GMLConstants;
+import org.xml.sax.XMLReader;
 
 /**
  * @author Felipe Maximino
@@ -51,14 +55,21 @@ import org.kalypsodeegree.model.typeHandler.PointMembersHandler;
 public class MultiPointSpecification implements IGeometrySpecification
 {
   /**
-   * @see org.kalypso.gmlschema.types.IGeometrySpecification#fillSpecifications(org.kalypso.gmlschema.types.GeometrySpecificationCatalog)
+   * @see org.kalypsodeegree_impl.io.sax.parser.geometrySpec.IGeometrySpecification#getHandler(javax.xml.namespace.QName,
+   *      org.xml.sax.XMLReader, org.kalypso.gmlschema.types.IGmlContentHandler,
+   *      org.kalypso.gmlschema.types.IGmlContentHandler, java.lang.String)
    */
   @Override
-  public void fillSpecifications( final GeometrySpecificationCatalog specs )
+  public IGmlContentHandler getHandler( final QName property, final XMLReader reader, final IGmlContentHandler parent, final IGmlContentHandler receiver, final String defaultSrs )
   {
     /* gml:pointMember */
-    specs.registerSpecificationForGeometry( new PointMemberHandler() );
+    if( GMLConstants.QN_POINT_MEMBER.equals( property ) )
+      return new PointMemberContentHandler( reader, parent, (IPointHandler) receiver, defaultSrs );
+
     /* gml:pointMembers */
-    specs.registerSpecificationForGeometry( new PointMembersHandler() );
+    if( GMLConstants.QN_POINT_MEMBERS.equals( property ) )
+      return new PointMembersContentHandler( reader, parent, (IPointHandler) receiver, defaultSrs );
+
+    return null;
   }
 }
