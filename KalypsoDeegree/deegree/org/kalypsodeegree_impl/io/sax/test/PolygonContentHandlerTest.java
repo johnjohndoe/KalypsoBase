@@ -48,9 +48,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.io.IOUtils;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
@@ -67,7 +68,7 @@ import org.xml.sax.XMLReader;
 /**
  * @author Gernot Belger
  */
-public class PolygonContentHandlerTest extends TestCase
+public class PolygonContentHandlerTest extends Assert
 {
   private final SAXParserFactory m_saxFactory = SAXParserFactory.newInstance();
 
@@ -77,11 +78,8 @@ public class PolygonContentHandlerTest extends TestCase
 
   private GM_Surface<GM_Polygon> m_surfaceNoHole;
 
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
-  @Override
-  protected void setUp( ) throws Exception
+  @Before
+  public void setUp( ) throws Exception
   {
     m_saxFactory.setNamespaceAware( true );
 
@@ -132,6 +130,8 @@ public class PolygonContentHandlerTest extends TestCase
   }
 
   // Sax: 5 sec
+  @Test
+  @Ignore(value = "Too slow for normal testing")
   public void testReadOften( ) throws Exception
   {
     final URL resource = getClass().getResource( "resources/polygonBig.gml" );
@@ -143,6 +143,8 @@ public class PolygonContentHandlerTest extends TestCase
   }
 
   // Sax: 55 sec
+  @Test
+  @Ignore(value = "Too slow for normal testing")
   public void testReadOften2( ) throws Exception
   {
     final URL resource = getClass().getResource( "resources/polygonBig2.gml" );
@@ -152,7 +154,7 @@ public class PolygonContentHandlerTest extends TestCase
       parsePolygonFromContent( content );
   }
 
-  private void assertPolygon( final GM_Surface<GM_Polygon> expected, final GM_Surface<GM_Polygon> polygon )
+  public static void assertPolygon( final GM_Surface<GM_Polygon> expected, final GM_Surface<GM_Polygon> polygon )
   {
     assertEquals( expected.getCoordinateSystem(), polygon.getCoordinateSystem() );
 
@@ -161,7 +163,7 @@ public class PolygonContentHandlerTest extends TestCase
     assertPatch( expected.get( 0 ), polygon.get( 0 ) );
   }
 
-  private void assertPatch( final GM_SurfacePatch expectedPatch, final GM_SurfacePatch patch )
+  public static void assertPatch( final GM_SurfacePatch expectedPatch, final GM_SurfacePatch patch )
   {
     assertRing( expectedPatch.getExteriorRing(), patch.getExteriorRing() );
 
@@ -179,7 +181,7 @@ public class PolygonContentHandlerTest extends TestCase
     }
   }
 
-  private void assertRing( final GM_Position[] expectedRing, final GM_Position[] ring )
+  public static void assertRing( final GM_Position[] expectedRing, final GM_Position[] ring )
   {
     assertEquals( expectedRing.length, ring.length );
 
@@ -203,6 +205,7 @@ public class PolygonContentHandlerTest extends TestCase
     return parsePolygon( inputStream );
   }
 
+  @SuppressWarnings("unchecked")
   private GM_Surface<GM_Polygon> parsePolygon( final InputStream inputStream ) throws ParserConfigurationException, SAXException, IOException
   {
     final InputSource is = new InputSource( inputStream );

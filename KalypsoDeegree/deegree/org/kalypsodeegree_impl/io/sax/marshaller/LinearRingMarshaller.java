@@ -65,11 +65,13 @@ public class LinearRingMarshaller extends AbstractMarshaller<GM_Position[]>
   @Override
   protected void doMarshallContent( final GM_Position[] marshalledObject ) throws SAXException
   {
-    final PosMarshaller positionMarshaller = new PosMarshaller( getXMLReader() );
-    for( final GM_Position position : marshalledObject )
-    {
-      positionMarshaller.setPosition( position );
-      positionMarshaller.marshall();
-    }
+    new PosListMarshaller( getXMLReader(), marshalledObject ).marshall();
+
+// final PosMarshaller positionMarshaller = new PosMarshaller( getXMLReader() );
+// for( final GM_Position position : marshalledObject )
+// {
+// positionMarshaller.setPosition( position );
+// positionMarshaller.marshall();
+// }
   }
 }

@@ -51,13 +51,13 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.JAXBContextProvider;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.typeHandler.GM_EnvelopeBindingTypeHandler;
 import org.kalypsodeegree.model.typeHandler.GenericGM_ObjectBindingTypeHandler;
 import org.kalypsodeegree.model.typeHandler.LineStringHandler;
 import org.kalypsodeegree.model.typeHandler.MultiLineStringHandler;
 import org.kalypsodeegree.model.typeHandler.MultiPointHandler;
+import org.kalypsodeegree.model.typeHandler.MultiPolygonHandler;
 import org.kalypsodeegree.model.typeHandler.PointHandler;
 import org.kalypsodeegree.model.typeHandler.PolygonHandler;
 import org.kalypsodeegree.model.typeHandler.PolyhedralSurfaceHandler;
@@ -266,8 +266,8 @@ public class TypeHandlerUtilities
 // GMLConstants.QN_SURFACE, GMLConstants.QN_SURFACE, GM_Surface.class, true ) );
     // registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
 // GMLConstants.QN_POLYGON, GMLConstants.QN_POLYGON, GM_Surface.class, true ) );
-
-    registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_MULTI_POLYGON, GMLConstants.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
+// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
+// GMLConstants.QN_MULTI_POLYGON, GMLConstants.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
 
     registry.registerTypeHandler( new PointHandler() );
     registry.registerTypeHandler( new MultiPointHandler() );
@@ -276,6 +276,7 @@ public class TypeHandlerUtilities
     registry.registerTypeHandler( new MultiLineStringHandler() );
 
     registry.registerTypeHandler( new PolygonHandler() );
+    registry.registerTypeHandler( new MultiPolygonHandler() );
 
     registry.registerTypeHandler( new TriangulatedSurfaceHandler() );
     registry.registerTypeHandler( new PolyhedralSurfaceHandler() );

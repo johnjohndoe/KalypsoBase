@@ -44,6 +44,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Ring;
+import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.PolygonSpecification;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -90,7 +91,6 @@ public class PolygonPatchContentHandler extends GMLElementContentHandler impleme
     try
     {
       final GM_Polygon polygon = (GM_Polygon) GeometryFactory.createGM_SurfacePatch( m_ring, null, crs );
-      m_ring = null;
       m_polygonHandler.handle( polygon );
     }
     catch( final GM_Exception e )
@@ -98,6 +98,10 @@ public class PolygonPatchContentHandler extends GMLElementContentHandler impleme
       e.printStackTrace();
 
       throwSAXParseException( e, "Failed to create polygon" );
+    }
+    finally
+    {
+      m_ring = null;
     }
   }
 
@@ -108,10 +112,17 @@ public class PolygonPatchContentHandler extends GMLElementContentHandler impleme
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
-    // FIXME: Eeek! We need to support interior rings as well!
-    final ExteriorContentHandler exteriorContentHandler = new ExteriorContentHandler( getXMLReader(), this, this, m_defaultSrs );
-    exteriorContentHandler.setElementMinOccurs( 0 );
-    exteriorContentHandler.activate();
+    final String activeSrs = ContentHandlerUtils.parseSrsFromAttributes( atts, m_defaultSrs );
+//    m_srsDimension = ContentHandlerUtils.parseSrsDimensionFromAttributes( atts );
+
+    final GMLPropertySequenceContentHandler choiceContentHandler = new GMLPropertySequenceContentHandler( getXMLReader(), this, this, activeSrs, new PolygonSpecification() );
+    setDelegate( choiceContentHandler );
+
+// // FIXME: Eeek! We need to support interior rings as well!
+// final ExteriorContentHandler exteriorContentHandler = new ExteriorContentHandler( getXMLReader(), this, this,
+// m_defaultSrs );
+// exteriorContentHandler.setElementMinOccurs( 0 );
+// exteriorContentHandler.activate();
   }
 
   /**

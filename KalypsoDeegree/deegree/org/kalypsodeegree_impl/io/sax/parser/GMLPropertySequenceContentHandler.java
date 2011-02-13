@@ -63,14 +63,14 @@ public class GMLPropertySequenceContentHandler extends AbstractGmlContentHandler
 
   private final IGmlContentHandler m_receiver;
 
-  public GMLPropertySequenceContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final IGmlContentHandler receiver, final String defaultSrs, final IGeometrySpecification specificatino )
+  public GMLPropertySequenceContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final IGmlContentHandler receiver, final String defaultSrs, final IGeometrySpecification spec )
   {
     super( reader, parentContentHandler );
 
     m_receiver = receiver;
 
     m_defaultSrs = defaultSrs;
-    m_spec = specificatino;
+    m_spec = spec;
   }
 
   @Override

@@ -64,27 +64,30 @@ public final class GMLConstants
   public static final QName QN_CURVE = new QName( NS.GML3, "_Curve" );
 
   public static final QName QN_MULTI_POINT = new QName( NS.GML3, "MultiPoint" );
-  
+
   public static final QName QN_POINT_MEMBER = new QName( NS.GML3, "pointMember" );
 
   public static final QName QN_POINT_MEMBERS = new QName( NS.GML3, "pointMembers" );
-  
+
+  public static final QName QN_POLYGON_MEMBER = new QName( NS.GML3, "polygonMember" );
+
   public static final QName QN_MULTI_LINE_STRING = new QName( NS.GML3, "MultiLineString" );
 
   public static final QName QN_MULTI_CURVE = new QName( NS.GML3, "MultiCurve" );
 
   public static final QName QN_MULTI_POLYGON = new QName( NS.GML3, "MultiPolygon" );
 
+
   public static final QName QN_LOCATION = new QName( NS.GML3, "location" );
 
   public static final QName QN_DIRECTION = new QName( NS.GML3, "direction" );
-  
+
   public static final QName QN_POS = new QName( NS.GML3, "pos" );
-  
+
   public static final QName QN_POS_LIST = new QName( NS.GML3, "posList" );
-  
+
   public static final QName QN_COORDINATES = new QName( NS.GML3, "coordinates" );
-  
+
   public static final QName QN_COORD = new QName( NS.GML3, "coord" );
 
   public static final String DEFAULT_CS = ",";
@@ -94,4 +97,5 @@ public final class GMLConstants
   public static final String DEFAULT_DECIMAL = ".";
 
   public static final QName QN_LINEAR_RING = new QName( NS.GML3, "LinearRing" );
+
 }

@@ -38,46 +38,35 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.io.sax.marshaller;
+package org.kalypsodeegree_impl.io.sax.parser.geometrySpec;
 
-import org.kalypso.commons.xml.NS;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.types.IGmlContentHandler;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree_impl.io.sax.parser.ISurfaceHandler;
+import org.kalypsodeegree_impl.io.sax.parser.PolygonMemberContentHandler;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * An abstract marshaller for Geometries.
- * <p>
- * A geometry has the characteristic to have its attributes srsDimension and srsName to be marshalled *
- * 
  * @author Felipe Maximino
  */
-public abstract class GeometryMarshaller<T extends GM_Object> extends AbstractMarshaller<T>
+public class MultiPolygonSpecification implements IGeometrySpecification
 {
-  public GeometryMarshaller( final XMLReader reader, final String tag, final T object )
-  {
-    super( reader, tag, object );
-  }
-
   /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#startMarshalling()
+   * @see org.kalypsodeegree_impl.io.sax.parser.geometrySpec.IGeometrySpecification#getHandler(javax.xml.namespace.QName,
+   *      org.xml.sax.XMLReader, org.kalypso.gmlschema.types.IGmlContentHandler,
+   *      org.kalypso.gmlschema.types.IGmlContentHandler, java.lang.String)
    */
+  @SuppressWarnings("unchecked")
   @Override
-  protected void startMarshalling( ) throws SAXException
+  public IGmlContentHandler getHandler( final QName property, final XMLReader reader, final IGmlContentHandler parent, final IGmlContentHandler receiver, final String defaultSrs )
   {
-    final String crs = getMarshalledObject().getCoordinateSystem();
-    final int srsDimension = getMarshalledObject().getCoordinateDimension();
+    /* gml:pointMember */
+    if( GMLConstants.QN_POLYGON_MEMBER.equals( property ) )
+      return new PolygonMemberContentHandler( reader, parent, (ISurfaceHandler<GM_Polygon>) receiver, defaultSrs );
 
-    final AttributesImpl atts = new AttributesImpl();
-    if( crs != null )
-      atts.addAttribute( "", "srsName", "srsName", "CDATA", crs );
-
-    if( srsDimension != -1 )
-      atts.addAttribute( "", "srsDimension", "srsDimension", "decimal", String.valueOf( srsDimension ) );
-
-    final ContentHandler contentHandler = getXMLReader().getContentHandler();
-    contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
+    return null;
   }
 }

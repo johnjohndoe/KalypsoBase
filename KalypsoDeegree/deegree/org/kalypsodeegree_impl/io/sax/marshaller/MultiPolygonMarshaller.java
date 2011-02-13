@@ -40,44 +40,40 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypso.commons.xml.NS;
+import java.util.Iterator;
+
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.xml.sax.ContentHandler;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * An abstract marshaller for Geometries.
- * <p>
- * A geometry has the characteristic to have its attributes srsDimension and srsName to be marshalled *
+ * A marshaller for gml:Exterior. It delegates the marshalling to the corresponding gml:LinearRing elements marshallers.
  * 
  * @author Felipe Maximino
  */
-public abstract class GeometryMarshaller<T extends GM_Object> extends AbstractMarshaller<T>
+public class MultiPolygonMarshaller extends GeometryMarshaller<GM_MultiSurface>
 {
-  public GeometryMarshaller( final XMLReader reader, final String tag, final T object )
+  public static final String TAG_MULTI_POLYGON = GMLConstants.QN_MULTI_POLYGON.getLocalPart();
+
+  public MultiPolygonMarshaller( final XMLReader reader, final GM_MultiSurface multi )
   {
-    super( reader, tag, object );
+    super( reader, TAG_MULTI_POLYGON, multi );
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#startMarshalling()
+   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  protected void startMarshalling( ) throws SAXException
+  protected void doMarshallContent( final GM_MultiSurface marshalledObject ) throws SAXException
   {
-    final String crs = getMarshalledObject().getCoordinateSystem();
-    final int srsDimension = getMarshalledObject().getCoordinateDimension();
-
-    final AttributesImpl atts = new AttributesImpl();
-    if( crs != null )
-      atts.addAttribute( "", "srsName", "srsName", "CDATA", crs );
-
-    if( srsDimension != -1 )
-      atts.addAttribute( "", "srsDimension", "srsDimension", "decimal", String.valueOf( srsDimension ) );
-
-    final ContentHandler contentHandler = getXMLReader().getContentHandler();
-    contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );
+    for( final Iterator<GM_Object> it = marshalledObject.getIterator(); it.hasNext(); )
+    {
+      final GM_Surface<GM_Polygon> object = (GM_Surface<GM_Polygon>) it.next();
+      new PolygonMemberMarshaller( getXMLReader(), object ).marshall();
+    }
   }
 }
