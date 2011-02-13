@@ -170,6 +170,7 @@ public class SHP2WKS
    * transforms the SHPPolygon to a WKSGeometry <BR>
    * gets the polygon that should be transformed <BR>
    */
+  @SuppressWarnings("unchecked")
   public static GM_Surface<GM_SurfacePatch>[] transformPolygon( final String crs, final ISHPParts shppolygon )
   {
     final List<GM_Position[]> outerRings = new ArrayList<GM_Position[]>( shppolygon.getNumParts() );
@@ -192,7 +193,7 @@ public class SHP2WKS
         innerRings.add( ring );
     }
 
-    final List<GM_Surface<GM_SurfacePatch>> wkslp = new ArrayList<GM_Surface<GM_SurfacePatch>>();
+    final List<GM_Surface< ? extends GM_SurfacePatch>> wkslp = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>();
 
     for( final GM_Position[] out_ring : outerRings )
     {
@@ -227,7 +228,7 @@ public class SHP2WKS
       try
       {
         final GM_Position[][] inrings = innerOfOuter.toArray( new GM_Position[innerOfOuter.size()][] );
-        final GM_Surface<GM_SurfacePatch> sur = GeometryFactory.createGM_Surface( out_ring, inrings, crs );
+        final GM_Surface< ? extends GM_SurfacePatch> sur = GeometryFactory.createGM_Surface( out_ring, inrings, crs );
         wkslp.add( sur );
       }
       catch( final GM_Exception e )

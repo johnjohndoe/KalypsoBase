@@ -212,7 +212,7 @@ public class LabelFactory
         // the screen surface and the polygon geometry
         if( pPlacement.isAuto() )
         {
-          final GM_Surface<GM_SurfacePatch> screenSurface = GeometryFactory.createGM_Surface( projection.getSourceRect(), null );
+          final GM_Surface< ? extends GM_SurfacePatch> screenSurface = GeometryFactory.createGM_Surface( projection.getSourceRect(), null );
           final GM_Object intersection = screenSurface.intersection( geometry );
           if( intersection != null )
           {
@@ -232,7 +232,7 @@ public class LabelFactory
     }
     else if( geometry instanceof GM_Curve || geometry instanceof GM_MultiCurve )
     {
-      final GM_Surface<GM_SurfacePatch> screenSurface = GeometryFactory.createGM_Surface( projection.getSourceRect(), null );
+      final GM_Surface< ? extends GM_SurfacePatch> screenSurface = GeometryFactory.createGM_Surface( projection.getSourceRect(), null );
       final GM_Object intersection = screenSurface.intersection( geometry );
       if( intersection != null )
       {
@@ -327,14 +327,14 @@ public class LabelFactory
     {
       pos = calcScreenCoordinates( projection, curve );
     }
-    catch( GM_Exception e )
+    catch( final GM_Exception e )
     {
       e.printStackTrace();
       return new ArrayList<Label>();
     }
 
     // ideal distance from the line
-    double delta = height / 2.0 + lineWidth / 2.0;
+    final double delta = height / 2.0 + lineWidth / 2.0;
 
     // walk along the linestring and "collect" possible placement positions
     final int w = (int) width;
@@ -508,7 +508,7 @@ public class LabelFactory
         while( it.hasNext() )
         {
           final int[] point = it.next();
-          double d = point[1] - start[1];
+          final double d = point[1] - start[1];
           if( d < 0 )
           {
             // candidate for left extreme value
@@ -531,7 +531,7 @@ public class LabelFactory
       while( it.hasNext() )
       {
         final int[] point = it.next();
-        double d = point[0] - start[0];
+        final double d = point[0] - start[0];
         if( d < 0 )
         {
           // candidate for left extreme value
@@ -579,7 +579,7 @@ public class LabelFactory
     {
       // line segment does not run vertical
       final double u = (y2 - y1) / (x2 - x1);
-      double p = -2 * (x0 + u * u * x1 - u * (y1 - y0)) / (u * u + 1);
+      final double p = -2 * (x0 + u * u * x1 - u * (y1 - y0)) / (u * u + 1);
       final double q = ((y1 - y0) * (y1 - y0) + u * u * x1 * x1 + x0 * x0 - 2 * u * x1 * (y1 - y0) - d * d) / (u * u + 1);
       double minX = x1;
       double maxX = x2;
@@ -615,7 +615,7 @@ public class LabelFactory
         maxY = y1;
       }
 
-      double p = -2 * y0;
+      final double p = -2 * y0;
       final double q = y0 * y0 + (x1 - x0) * (x1 - x0) - d * d;
 
       y = -p / 2 - Math.sqrt( (p / 2) * (p / 2) - q );

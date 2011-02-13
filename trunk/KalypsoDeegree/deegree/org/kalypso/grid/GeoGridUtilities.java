@@ -286,7 +286,7 @@ public final class GeoGridUtilities
       final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
 
       /* Create the surface. */
-      final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
+      final GM_Surface< ? extends GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
 
       /* Transform it. */
       Assert.isNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
@@ -347,7 +347,7 @@ public final class GeoGridUtilities
       final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
 
       /* Create the surface. */
-      final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
+      final GM_Surface< ? extends GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
 
       /* Transform it. */
       Assert.isNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
@@ -626,7 +626,7 @@ public final class GeoGridUtilities
    * @param mimeType
    *          The mime type of the created underlying file.
    */
-  public static void setCoverage( RectifiedGridCoverage coverage, IGeoGrid grid, int scale, File file, String filePath, String mimeType, IProgressMonitor monitor ) throws Exception
+  public static void setCoverage( final RectifiedGridCoverage coverage, final IGeoGrid grid, final int scale, final File file, final String filePath, final String mimeType, IProgressMonitor monitor ) throws Exception
   {
     /* Monitor. */
     if( monitor == null )
@@ -669,7 +669,7 @@ public final class GeoGridUtilities
    * @param monitor
    *          A progress monitor.
    */
-  private static void toBinaryGrid( IGeoGrid grid, int scale, File file, IProgressMonitor monitor ) throws GeoGridException
+  private static void toBinaryGrid( final IGeoGrid grid, final int scale, final File file, IProgressMonitor monitor ) throws GeoGridException
   {
     /* Monitor. */
     if( monitor == null )
@@ -692,7 +692,7 @@ public final class GeoGridUtilities
       monitor.subTask( "Copying values..." );
 
       /* Copy the values. */
-      IGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
+      final IGeoGridWalker walker = new CopyGeoGridWalker( outputGrid );
       grid.getWalkingStrategy().walk( grid, walker, null, new SubProgressMonitor( monitor, 750 ) );
     }
     finally
@@ -716,7 +716,7 @@ public final class GeoGridUtilities
    * @param monitor
    *          A progress monitor.
    */
-  private static void toTiff( IGeoGrid grid, File file, IProgressMonitor monitor ) throws GeoGridException
+  private static void toTiff( final IGeoGrid grid, final File file, IProgressMonitor monitor ) throws GeoGridException
   {
     /* Monitor. */
     if( monitor == null )
@@ -729,7 +729,7 @@ public final class GeoGridUtilities
       monitor.subTask( "Creating TIFF..." );
 
       /* Create the TIFF. */
-      TiledImage image = TIFFUtilities.createTiff( DataBuffer.TYPE_FLOAT, grid.getSizeX(), grid.getSizeY() );
+      final TiledImage image = TIFFUtilities.createTiff( DataBuffer.TYPE_FLOAT, grid.getSizeX(), grid.getSizeY() );
 
       /* Monitor. */
       monitor.worked( 250 );
@@ -1011,7 +1011,7 @@ public final class GeoGridUtilities
         final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
 
         /* Create the surface. */
-        final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
+        final GM_Surface< ? extends GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
 
         final Geometry geometry = JTSAdapter.export( surface );
 

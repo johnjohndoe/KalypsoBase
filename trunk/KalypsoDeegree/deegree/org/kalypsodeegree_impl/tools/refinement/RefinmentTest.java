@@ -39,7 +39,7 @@ public class RefinmentTest extends TestCase
 
     final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( exterior, interior, crs );
 
-    final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
+    final GM_Surface< ? extends GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
     final GM_Surface< ? >[] surfaces = new GM_Surface[] { surface };
 
     final GM_MultiSurface multiSurface = GeometryFactory.createGM_MultiSurface( surfaces, crs );

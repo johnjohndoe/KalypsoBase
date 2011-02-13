@@ -90,7 +90,7 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
       Assert.isTrue( base.getCoordinateSystem() == current.getCoordinateSystem() );
 
       final GM_Envelope envelop = GeometryFactory.createGM_Envelope( base.getPosition(), current.getPosition(), base.getCoordinateSystem() );
-      final GM_Surface<GM_SurfacePatch> box = GeometryFactory.createGM_Surface( envelop, envelop.getCoordinateSystem() );
+      final GM_Surface< ? extends GM_SurfacePatch> box = GeometryFactory.createGM_Surface( envelop, envelop.getCoordinateSystem() );
 
       final Feature[] features = getDataProvider().query( box, getEditMode() );
       getDataProvider().post( features, getEditMode() );
@@ -125,7 +125,7 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
       Assert.isTrue( gmBase.getCoordinateSystem() == gmCurrent.getCoordinateSystem() );
 
       final GM_Envelope envelope = GeometryFactory.createGM_Envelope( gmBase.getPosition(), gmCurrent.getPosition(), gmBase.getCoordinateSystem() );
-      final GM_Surface<GM_SurfacePatch> box = GeometryFactory.createGM_Surface( envelope, envelope.getCoordinateSystem() );
+      final GM_Surface< ? extends GM_SurfacePatch> box = GeometryFactory.createGM_Surface( envelope, envelope.getCoordinateSystem() );
 
       final Feature[] features = getDataProvider().query( box, getEditMode() );
       highlightUnderlyingGeometries( features, g, getEditMode() );
@@ -154,7 +154,7 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
   {
     return new String[] { Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.RectanglePolygonDelegate.0") }; //$NON-NLS-1$
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getCursor()
    */

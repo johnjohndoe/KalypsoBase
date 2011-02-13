@@ -62,8 +62,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.io.StreamGobbler;
+import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
 import org.kalypso.gml.processes.constDelaunay.DelaunayImpl.QuadraticAlgorithm;
 import org.kalypso.gml.processes.constDelaunay.DelaunayImpl.TriangulationDT;
 import org.kalypso.gml.processes.i18n.Messages;
@@ -130,7 +130,7 @@ public class ConstraintDelaunayHelper
         try
         {
           final Feature feature = (Feature) geoObject;
-          final GM_Curve curve = (GM_Curve) feature.getDefaultGeometryProperty();
+          final GM_Curve curve = (GM_Curve) feature.getDefaultGeometryPropertyValue();
 
           if( crs == null )
             crs = curve.getCoordinateSystem();
@@ -342,9 +342,9 @@ public class ConstraintDelaunayHelper
     return Status.OK_STATUS;
   }
 
-  public static final List<GM_Surface<GM_SurfacePatch>> parseTriangleElementOutput( final BufferedReader eleReader, final String crs, final GM_Position[] points ) throws IOException, GM_Exception
+  public static final List<GM_Surface< ? extends GM_SurfacePatch>> parseTriangleElementOutput( final BufferedReader eleReader, final String crs, final GM_Position[] points ) throws IOException, GM_Exception
   {
-    final List<GM_Surface<GM_SurfacePatch>> surfaces = new ArrayList<GM_Surface<GM_SurfacePatch>>();
+    final List<GM_Surface< ? extends GM_SurfacePatch>> surfaces = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>();
 
     eleReader.readLine(); // ignore first line
     while( eleReader.ready() )
@@ -364,7 +364,7 @@ public class ConstraintDelaunayHelper
 
       final GM_Position[] triangle = new GM_Position[] { points[p1], points[p2], points[p3], points[p1] };
 
-      final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( triangle, null, crs );
+      final GM_Surface< ? extends GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( triangle, null, crs );
 
       surfaces.add( surface );
 
@@ -456,7 +456,7 @@ public class ConstraintDelaunayHelper
       if( timeRunning >= lTimeout )
       {
         exec.destroy();
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.24" ) ) ); //$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoGmlProcessesPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper.24" ) ) ); //$NON-NLS-1$
       }
 
       /* Wait a few millisec, before continuing. */
@@ -474,15 +474,15 @@ public class ConstraintDelaunayHelper
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
     triangleList.addAll( Arrays.asList( createGM_Triangles( positions, null, crs, false ) ) );
-    
+
     return triangleList.toArray( new GM_Triangle[triangleList.size()] );
   }
-  
+
   @SuppressWarnings("unchecked")
   public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, final String crs, final boolean pBoolWriteFiles ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
- 
+
     final GM_Object[] objects = polygonSurface.getAll();
     for( final GM_Object object : objects )
     {
@@ -703,9 +703,9 @@ public class ConstraintDelaunayHelper
 
       final GM_Position[] points = parseTriangleNodeOutput( nodeReader );
 
-      final List<GM_Surface<GM_SurfacePatch>> elements = parseTriangleElementOutput( eleReader, crs, points );
+      final List<GM_Surface< ? extends GM_SurfacePatch>> elements = parseTriangleElementOutput( eleReader, crs, points );
 
-      for( final GM_Surface<GM_SurfacePatch> element : elements )
+      for( final GM_Surface< ? extends GM_SurfacePatch> element : elements )
       {
         for( final GM_SurfacePatch surfacePatch : element )
         {

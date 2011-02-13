@@ -219,7 +219,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     final String co = getCS_CoordinateSystem( cs, type );
     final List<PolygonPropertyType> polygonMember = type.getPolygonMember();
 
-    final GM_Surface<GM_SurfacePatch>[] surfaces = new GM_Surface[polygonMember.size()];
+    final GM_Surface< ? extends GM_SurfacePatch>[] surfaces = new GM_Surface< ? >[polygonMember.size()];
     int i = 0;
     for( final PolygonPropertyType polygonPropertyType : polygonMember )
     {
@@ -235,22 +235,22 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
   {
     final String co = getCS_CoordinateSystem( cs, type );
 
-    final List<GM_Surface<GM_SurfacePatch>> mySurfaces = new ArrayList<GM_Surface<GM_SurfacePatch>>();
+    final List<GM_Surface< ? extends GM_SurfacePatch>> mySurfaces = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>();
 
     final SurfaceArrayPropertyType surfaceArrayPropertType = type.getSurfaceMembers();
     final List<JAXBElement< ? extends AbstractSurfaceType>> surfaces = surfaceArrayPropertType.getSurface();
 
     for( final JAXBElement< ? extends AbstractSurfaceType> surface : surfaces )
     {
-      final GM_Surface<GM_SurfacePatch> patch = createGM_Surface( (SurfaceType) surface.getValue(), co );
+      final GM_Surface< ? extends GM_SurfacePatch> patch = createGM_Surface( (SurfaceType) surface.getValue(), co );
       mySurfaces.add( patch );
     }
 
     return GeometryFactory.createGM_MultiSurface( mySurfaces.toArray( new GM_Surface[] {} ), co );
   }
 
-  private GM_Surface<GM_SurfacePatch> createGM_Surface( final PolygonType type, final String cs ) throws GM_Exception
-  {
+  private GM_Surface< ? extends GM_SurfacePatch> createGM_Surface( final PolygonType type, final String cs ) throws GM_Exception
+      {
     final String co = getCS_CoordinateSystem( cs, type );
     final AbstractRingPropertyType ringType = type.getExterior().getValue();
 
@@ -260,10 +260,10 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     final List<JAXBElement<AbstractRingPropertyType>> interior = type.getInterior();
 
     return createSurface( abstractLinearRing, interior, co );
-  }
+      }
 
-  private GM_Surface<GM_SurfacePatch> createGM_Surface( final SurfaceType type, final String cs ) throws GM_Exception
-  {
+  private GM_Surface< ? extends GM_SurfacePatch> createGM_Surface( final SurfaceType type, final String cs ) throws GM_Exception
+      {
     final String co = getCS_CoordinateSystem( cs, type );
 
     final SurfacePatchArrayPropertyType surfacePatchArrayPropertyType = type.getPatches().getValue();
@@ -292,10 +292,10 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
 
     throw new NotImplementedException();
 // return GeometryFactory.createGM_Surface( exteriorRing, interiorRings, null, co );
-  }
+      }
 
-  private GM_Surface<GM_SurfacePatch> createSurface( final AbstractRingType abstractLinearRing, final List<JAXBElement<AbstractRingPropertyType>> interior, final String co ) throws GM_Exception
-  {
+  private GM_Surface< ? extends GM_SurfacePatch> createSurface( final AbstractRingType abstractLinearRing, final List<JAXBElement<AbstractRingPropertyType>> interior, final String co ) throws GM_Exception
+      {
     final GM_Position[] exteriorRing = createGM_Positions( abstractLinearRing );
 
     final List<GM_Position[]> interiorList = new ArrayList<GM_Position[]>();
@@ -309,7 +309,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
 
     final GM_Position[][] interiorRings = interiorList.toArray( new GM_Position[interiorList.size()][] );
     return GeometryFactory.createGM_Surface( exteriorRing, interiorRings, co );
-  }
+      }
 
   private GM_Position[] createGM_Positions( final AbstractRingType abstractRingType )
   {
@@ -490,13 +490,13 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
    * @see org.kalypsodeegree_impl.model.geometry.IGMLBindingToValueAdapter#wrapFromBinding(java.lang.Object)
    */
   @Override
-  public Object wrapFromBinding( final Object bindingGeometry, final Class<?> geometryClass ) throws GM_Exception
+  public Object wrapFromBinding( final Object bindingGeometry, final Class< ? > geometryClass ) throws GM_Exception
   {
     if( bindingGeometry == null )
       return null;
 
     if( bindingGeometry instanceof JAXBElement )
-      return wrapFromBinding( ((JAXBElement<?>) bindingGeometry).getValue(), geometryClass );
+      return wrapFromBinding( ((JAXBElement< ? >) bindingGeometry).getValue(), geometryClass );
 
     if( bindingGeometry instanceof AbstractGeometryType )
     {
@@ -508,10 +508,10 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
 
       if( bindingTypeObject instanceof PolygonType )
       {
-        final GM_Surface<?> surface = createGM_Surface( (PolygonType) bindingTypeObject, cs );
+        final GM_Surface< ? > surface = createGM_Surface( (PolygonType) bindingTypeObject, cs );
         if( geometryClass == GeometryUtilities.getMultiPolygonClass() )
         {
-          final GM_Surface<?>[] surfaces = new GM_Surface[] { surface };
+          final GM_Surface< ? >[] surfaces = new GM_Surface[] { surface };
           return GeometryFactory.createGM_MultiSurface( surfaces, cs );
         }
         return surface;

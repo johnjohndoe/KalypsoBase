@@ -108,7 +108,7 @@ public class RectifiedGridDomain
 
   private final GridRange m_gridRange;
 
-  private final GM_Surface<GM_SurfacePatch> m_rasterBoundaryAsSurface;
+  private final GM_Surface< ? extends GM_SurfacePatch> m_rasterBoundaryAsSurface;
 
   public static final QName QNAME = new QName( NS.GML3, "RectifiedGrid" );
 
@@ -128,13 +128,13 @@ public class RectifiedGridDomain
     m_rasterBoundaryAsSurface = getGM_Surface( origin.getCoordinateSystem() );
   }
 
-  public GM_Surface<GM_SurfacePatch> getGM_Surface( final String crs ) throws Exception
-  {
+  public GM_Surface< ? extends GM_SurfacePatch> getGM_Surface( final String crs ) throws Exception
+      {
     return RectifiedGridDomain.calculateSurface( m_origin, m_offsetX, m_offsetY, 0, 0, getNumColumns(), getNumRows(), crs );
-  }
+      }
 
-  private static GM_Surface<GM_SurfacePatch> calculateSurface( final GM_Point origin, final OffsetVector offsetX, final OffsetVector offsetY, final int minX, final int minY, final int maxX, final int maxY, final String cs ) throws Exception
-  {
+  private static GM_Surface< ? extends GM_SurfacePatch> calculateSurface( final GM_Point origin, final OffsetVector offsetX, final OffsetVector offsetY, final int minX, final int minY, final int maxX, final int maxY, final String cs ) throws Exception
+      {
     final GM_Position originPos = origin.getPosition();
 
     final GM_Position pos0 = offsetY.move( offsetX.move( originPos, minX ), minY );
@@ -143,14 +143,14 @@ public class RectifiedGridDomain
     final GM_Position pos3 = offsetY.move( pos0, (maxY - minY) - 1 );
     final GM_Position[] ring = new GM_Position[] { pos0, pos1, pos2, pos3, pos0 };
     final String originCrs = origin.getCoordinateSystem();
-    final GM_Surface<GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( ring, null, originCrs );
+    final GM_Surface< ? extends GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( ring, null, originCrs );
 
     if( originCrs == null || cs == null || originCrs.equals( cs ) )
       return surface;
 
     final IGeoTransformer geoTrans = GeoTransformerFactory.getGeoTransformer( cs );
-    return (GM_Surface<GM_SurfacePatch>) geoTrans.transform( surface );
-  }
+    return (GM_Surface< ? >) geoTrans.transform( surface );
+      }
 
   public String getCoordinateSystem( )
   {
@@ -237,10 +237,10 @@ public class RectifiedGridDomain
     return geoTrans.transform( m_rasterBoundaryAsSurface ).getEnvelope();
   }
 
-  public GM_Surface<GM_SurfacePatch> getGM_Surface( final int lowX, final int lowY, final int highX, final int highY, final String cs ) throws Exception
-  {
+  public GM_Surface< ? extends GM_SurfacePatch> getGM_Surface( final int lowX, final int lowY, final int highX, final int highY, final String cs ) throws Exception
+      {
     return RectifiedGridDomain.calculateSurface( m_origin, m_offsetX, m_offsetY, lowX, lowY, highX, highY, cs );
-  }
+      }
 
   /**
    * get low and high (GridRange) of the RectifiedGridCoverage for the given envelope

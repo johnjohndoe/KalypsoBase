@@ -222,7 +222,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     final QName featureName = new QName( GmlProcessesUrlCatalog.NS_MESH, "Triangle" ); //$NON-NLS-1$
     final QName geomName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" ); //$NON-NLS-1$
 
-    final List<GM_Surface<GM_SurfacePatch>> surfaces = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
+    final List<GM_Surface< ? extends GM_SurfacePatch>> surfaces = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
 
     for( final GM_Surface< ? > surface : surfaces )
     {
