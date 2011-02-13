@@ -43,24 +43,19 @@ package org.kalypso.gmlschema;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyMarshallingTypeHandler;
 import org.kalypso.gmlschema.property.virtual.IFunctionPropertyType;
 import org.kalypso.gmlschema.property.virtual.VirtualFunctionPropertyFactory;
 import org.kalypso.gmlschema.property.virtual.VirtualFunctionValuePropertyType;
-import org.kalypso.gmlschema.types.GeometrySpecificationCatalog;
-import org.kalypso.gmlschema.types.IGeometrySpecification;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 
@@ -71,8 +66,6 @@ public class KalypsoGmlSchemaExtensions
 {
   private static final String EXT_VIRTUALPROPERTY = "org.kalypso.gmlschema.virtualProperty"; //$NON-NLS-1$
 
-  private static final String EXT_GEOMETRYSPECIFICATION = "org.kalypso.gmlschema.geometrySpecification"; //$NON-NLS-1$
-  
   private static final String ATTR_VIRTUALPROPERTY_ALLOWSUBST = "allowSubstitution"; //$NON-NLS-1$
 
   private static final String ATTR_VIRTUALPROPERTY_FEATURE = "feature"; //$NON-NLS-1$
@@ -90,14 +83,8 @@ public class KalypsoGmlSchemaExtensions
   private static final String ATTR_VIRTUALPROPERTY_PROPERTY = "property"; //$NON-NLS-1$
 
   private static final String ATTR_VIRTUALPROPERTY_NAME = "name"; //$NON-NLS-1$
-  
-  private static final String EXT_GEOMETRYSPECIFICATION_QNAME = "qName"; //$NON-NLS-1$
-  
-  private static final String EXT_GEOMETRYSPECIFICATION_CLASS = "class"; //$NON-NLS-1$
 
   private static Map<QName, Collection<IConfigurationElement>> REGISTERED_VIRTUAL_PROPERTIES = null;
-  
-  private static GeometrySpecificationCatalog GEOMETRY_SPECIFICATION_CATALOG = null;
 
   public static IFunctionPropertyType[] createVirtualPropertyTypes( final IFeatureType featureType )
   {
@@ -135,8 +122,8 @@ public class KalypsoGmlSchemaExtensions
     final String qnameString = element.getAttribute( ATTR_VIRTUALPROPERTY_QNAME );
     final String valueQNameString = element.getAttribute( ATTR_VIRTUALPROPERTY_VALUE );
 
-    int minOccurs = VirtualFunctionPropertyFactory.parseInt( element.getAttribute( ATTR_VIRTUALPROPERTY_MIN_OCCURS ), 0 );
-    int maxOccurs = VirtualFunctionPropertyFactory.parseInt( element.getAttribute( ATTR_VIRTUALPROPERTY_MAX_OCCURS ), 1 );
+    final int minOccurs = VirtualFunctionPropertyFactory.parseInt( element.getAttribute( ATTR_VIRTUALPROPERTY_MIN_OCCURS ), 0 );
+    final int maxOccurs = VirtualFunctionPropertyFactory.parseInt( element.getAttribute( ATTR_VIRTUALPROPERTY_MAX_OCCURS ), 1 );
 
     final String functionId = element.getAttribute( ATTR_VIRTUALPROPERTY_FUNCTION );
 
@@ -197,35 +184,5 @@ public class KalypsoGmlSchemaExtensions
     }
 
     return result;
-  }
-  
-  public static IPropertyMarshallingTypeHandler[] getPropertiesHandlersForGeometry( QName geometry ) throws CoreException
-  {
-    if( GEOMETRY_SPECIFICATION_CATALOG == null )
-    {
-      GEOMETRY_SPECIFICATION_CATALOG = createGeometrySpecificationCatalog();
-    }
-    
-    List<IPropertyMarshallingTypeHandler> handlers = GEOMETRY_SPECIFICATION_CATALOG.getSpecificationForGeometry( geometry ); 
-    
-    return handlers.toArray( new IPropertyMarshallingTypeHandler[handlers.size()] );
-  }
-
-  private static GeometrySpecificationCatalog createGeometrySpecificationCatalog( ) throws CoreException
-  {
-    GeometrySpecificationCatalog catalog = new GeometrySpecificationCatalog();
-    
-    IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint( EXT_GEOMETRYSPECIFICATION );
-    IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-
-    for( IConfigurationElement element : configurationElements )
-    {
-      IGeometrySpecification spec = ( IGeometrySpecification ) element.createExecutableExtension( EXT_GEOMETRYSPECIFICATION_CLASS );
-      QName qName = QName.valueOf( element.getAttribute( EXT_GEOMETRYSPECIFICATION_QNAME ) );
-      catalog.setGeometry( qName );
-      spec.fillSpecifications( catalog );
-    }
-    
-    return catalog;
   }
 }
