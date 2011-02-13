@@ -71,9 +71,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * TODO: using the class RepresantationType is not nice. We should rather create 4 differetn type handlers for the 4
+ * TODO: using the class RepresantationType is not nice. We should rather create 4 different type handlers for the 4
  * choices and return the read object respectively.
- *
+ * 
  * @author Marc Schlienger
  */
 public class RepresentationTypeHandler extends SimpleDOMTypeHandler
