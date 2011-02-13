@@ -3,5 +3,4 @@
 <plugin>
    <extension-point id="typeHandlers" name="typeHandlers" schema="schema/typeHandlers.exsd"/>
    <extension-point id="virtualProperty" name="virtualProperty" schema="schema/virtualProperty.exsd"/>
-   <extension-point id="geometrySpecification" name="geometrySpecification" schema="schema/geometrySpecification.exsd"/>
 </plugin>
