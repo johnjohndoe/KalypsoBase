@@ -45,16 +45,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.commons.factory.FactoryException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.view.ObservationViewHelper;
@@ -62,54 +69,51 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.zml.Observation;
 
 /**
  * This class dumps a repository kompletely into the filesystem.
  * 
  * @author Holger Albert
  */
-public class RepositoryDumper
+public class RepositoryDumper implements ICoreRunnableWithProgress
 {
-  /**
-   * The constructor.
-   */
-  private RepositoryDumper()
+  private final File m_directory;
+
+  private final IRepositoryItem m_root;
+
+  public RepositoryDumper( final File directory, final IRepositoryItem root )
   {
-  /* Nothing to do. */
+    m_directory = directory;
+    m_root = root;
   }
 
-  /**
-   * This function dumps the structure into a file in the given directory. Furthermore it create folders and places the
-   * .zmls in it.
-   * 
-   * @param directory
-   *          The choosen directory.
-   * @param monitor
-   *          A progress monitor.
-   * @throws RepositoryException
-   * @throws InterruptedException
-   */
-  public static void dumpExtended( final File directory, final IRepository root, final IProgressMonitor monitor )
-      throws InterruptedException, RepositoryException
+  @Override
+  public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException
   {
+    monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.view.DumpExtendedHandler.5" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+
     Writer structureWriter = null;
 
     try
     {
       /* Create the structure file. */
-      final File structureFile = new File( directory, "structure.txt" ); //$NON-NLS-1$
+      final File structureFile = new File( m_directory, "structure.txt" ); //$NON-NLS-1$
 
       /* The writer to save the file. */
       structureWriter = new OutputStreamWriter( new FileOutputStream( structureFile ), "UTF-8" ); //$NON-NLS-1$
 
+      /* Dump upwards */
+      final File baseDirectory = dumpUpwards( structureWriter );
+
       /* Do the dump into the filesystem. */
-      dumpExtendedRecursive( directory, structureWriter, directory, root, monitor );
+      dumpExtendedRecursive( structureWriter, baseDirectory, m_root, monitor );
 
       structureWriter.close();
 
       /* Update monitor. */
       monitor.worked( 800 );
+
+      return Status.OK_STATUS;
     }
     catch( final InterruptedException e )
     {
@@ -117,21 +121,55 @@ public class RepositoryDumper
     }
     catch( final Exception e )
     {
-      throw new RepositoryException( e );
+      throw new InvocationTargetException( e );
     }
     finally
     {
       IOUtils.closeQuietly( structureWriter );
+      monitor.done();
     }
   }
 
+  private File dumpUpwards( final Writer structureWriter ) throws IOException, SensorException, RepositoryException
+  {
+    final IRepositoryItem[] parentChain = findParentChain( m_root );
+    ArrayUtils.reverse( parentChain );
+
+    File currentDir = m_directory;
+
+    for( final IRepositoryItem parentItem : parentChain )
+      currentDir = dumpItem( structureWriter, currentDir, parentItem );
+
+    return currentDir;
+  }
+
+  private IRepositoryItem[] findParentChain( final IRepositoryItem item ) throws RepositoryException
+  {
+    final List<IRepositoryItem> items = new ArrayList<IRepositoryItem>();
+
+    IRepositoryItem currentItem = item;
+    while( currentItem != null && !(currentItem instanceof IRepository) )
+    {
+      items.add( currentItem );
+      currentItem = currentItem.getParent();
+    }
+
+    if( !items.isEmpty() )
+      items.remove( 0 );
+
+    // BIG HACK: remove last element, as this is the ServiceRepositoryItem -> we do not want it for PSI-Fake
+    if( !items.isEmpty() )
+      items.remove( items.size() - 1 );
+
+    return items.toArray( new IRepositoryItem[items.size()] );
+  }
+
   /**
-   * Creates the dump structure in the file-system and into one structure file <br/>REMARK: this uses the file format
-   * which is compatible to the Kalypso-PSICompact-Fake implementation. So exported repositories can directly be
-   * included via that repository implementation.
+   * Creates the dump structure in the file-system and into one structure file <br/>
+   * REMARK: this uses the file format which is compatible to the Kalypso-PSICompact-Fake implementation. So exported
+   * repositories can directly be included via that repository implementation.
    * 
    * @param structureWriter
-   * 
    * @param directory
    *          The choosen directory.
    * @param monitor
@@ -139,81 +177,100 @@ public class RepositoryDumper
    * @throws InterruptedException
    * @throws RepositoryException
    */
-  private static void dumpExtendedRecursive( final File baseDirectory, final Writer structureWriter, final File directory,
-      final IRepositoryItem item, final IProgressMonitor monitor ) throws InterruptedException, RepositoryException
+  private void dumpExtendedRecursive( final Writer structureWriter, final File directory, final IRepositoryItem item, final IProgressMonitor monitor ) throws InterruptedException, RepositoryException
   {
     /* If the user cancled the operation, abort. */
     if( monitor.isCanceled() )
       throw new InterruptedException();
 
-    FileOutputStream writer = null;
-
     try
     {
-      /* The name will be used as filename. */
-      final String name = FileUtilities.resolveValidFileName( item.getName() );
-
       /* Write entry for structure file */
-      structureWriter.write( item.getIdentifier() );
-      structureWriter.write( ';' );
+      final String identifier = item.getIdentifier();
+      monitor.subTask( identifier );
+
+      final File newDirectory = dumpItem( structureWriter, directory, item );
 
       final IRepositoryItem[] items = item.getChildren();
-
-      /* This is the directory, where the .zml is placed. */
-      final File newDirectory = new File( directory, name );
-      if( items != null && items.length > 0 )
+      if( items != null )
       {
-        /* Only create directory of that name, if children exist */
-        if( !newDirectory.mkdir() )
-          throw new RepositoryException( Messages.getString("org.kalypso.ui.repository.RepositoryDumper.2",newDirectory.getAbsolutePath())); //$NON-NLS-1$
+        for( final IRepositoryItem item2 : items )
+          dumpExtendedRecursive( structureWriter, newDirectory, item2, monitor );
       }
 
-      item.getRepository().getProperties();
-      
-      final IObservation observation = ObservationCache.getInstance().getObservationFor( item );
-      if( observation != null )
-      {
-        final File zmlFile = new File( directory, name + ".zml" ); //$NON-NLS-1$
-
-        structureWriter.write( FileUtilities.getRelativePathTo( baseDirectory, zmlFile ) );
-        structureWriter.write( ';' );
-        structureWriter.write( observation.getName() );
-
-        /* Dump if neccessary. */
-         final DateRange dra = ObservationViewHelper.makeDateRange( item );
-        // PlainObsProvider provider = new PlainObsProvider( observation, new ObservationRequest( dra ) );
-        // IObservation scaledObservation = provider.getObservation();
-        writer = new FileOutputStream( zmlFile );
-        final Observation observationType = ZmlFactory.createXML( observation, new ObservationRequest( dra ) );
-        ZmlFactory.getMarshaller().marshal( observationType, writer );
-        writer.close();
-      }
-
-      structureWriter.write( "\n" ); //$NON-NLS-1$
-
-      if( items == null )
-        return;
-
-      for( final IRepositoryItem item2 : items )
-        dumpExtendedRecursive( baseDirectory, structureWriter, newDirectory, item2, monitor );
+      monitor.worked( 1 );
     }
     catch( final IOException e )
     {
       throw new RepositoryException( e );
     }
-    catch( final FactoryException e )
-    {
-      throw new RepositoryException( e );
-    }
-    catch( final JAXBException e )
+    catch( final SensorException e )
     {
       throw new RepositoryException( e );
     }
     finally
     {
-      IOUtils.closeQuietly( writer );
-
       monitor.worked( 1 );
     }
+  }
+
+  public File dumpItem( final Writer structureWriter, final File directory, final IRepositoryItem item ) throws IOException, SensorException
+  {
+    FileUtils.forceMkdir( directory );
+
+    final String structIdentifier = buildStructIdentifier( item );
+
+    /* The name will be used as filename. */
+    final String name = FileUtilities.resolveValidFileName( item.getName() );
+
+    structureWriter.write( structIdentifier );
+    structureWriter.write( ';' );
+
+    final IObservation observation = ObservationCache.getInstance().getObservationFor( item );
+    if( observation != null )
+    {
+      final File zmlFile = new File( directory, name + ".zml" ); //$NON-NLS-1$
+
+      final String relativePathTo = FileUtilities.getRelativePathTo( m_directory, zmlFile );
+      /*
+       * We write a unix style path here, as this is more generally recognized. Also, we can directly use the
+       * structure.txt for PSI-Fake
+       */
+      final String unixPath = FilenameUtils.separatorsToUnix( relativePathTo );
+
+      structureWriter.write( unixPath );
+      structureWriter.write( ';' );
+      structureWriter.write( observation.getName() );
+
+      /* Dump if neccessary. */
+      final DateRange dra = ObservationViewHelper.makeDateRange( item );
+
+      ZmlFactory.writeToFile( observation, zmlFile, new ObservationRequest( dra ) );
+    }
+
+    structureWriter.write( "\n" ); //$NON-NLS-1$
+
+    /* This is the directory, where the children are placed. */
+    return new File( directory, name );
+  }
+
+  /**
+   * Hacky: in order to directly use the structure.txt for the psi-fake impl, we tweak the written id.
+   */
+  private static String buildStructIdentifier( final IRepositoryItem item )
+  {
+    final String identifier = item.getIdentifier();
+
+    final int index = identifier.indexOf( "://" );
+    if( index == -1 )
+      return identifier;
+
+    return identifier.substring( index + 3 );
+  }
+
+  public static String buildStructIdentifier( final String identifier, final String rootIdentifier )
+  {
+    final String structIdentifier = identifier.substring( rootIdentifier.length() );
+    return structIdentifier;
   }
 }

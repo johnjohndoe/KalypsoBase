@@ -30,26 +30,24 @@
 package org.kalypso.ogc.sensor.view.actions;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
+import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
-import org.kalypso.repository.IRepository;
+import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.ui.repository.RepositoryDumper;
 
 /**
@@ -72,13 +70,13 @@ public class DumpExtendedHandler extends AbstractHandler
     final ObservationChooser chooser = (ObservationChooser) part.getAdapter( ObservationChooser.class );
 
     /* Get the repository. */
-    final IRepository rep = chooser.isRepository( chooser.getSelection() );
-    if( rep == null )
+    final IRepositoryItem item = chooser.isRepositoryItem();
+    if( item == null )
       return null;
 
     /* Ask the user for a directory. */
-    DirectoryDialog dialog = new DirectoryDialog( shell );
-    String directoryPath = dialog.open();
+    final DirectoryDialog dialog = new DirectoryDialog( shell );
+    final String directoryPath = dialog.open();
     if( directoryPath == null )
       return null;
 
@@ -90,62 +88,33 @@ public class DumpExtendedHandler extends AbstractHandler
     }
 
     /* If the 'structure.txt' exists already, ask the user, if he want to delete it. */
-    File structureFile = new File( directory, "structure.txt" ); //$NON-NLS-1$
+    final File structureFile = new File( directory, "structure.txt" ); //$NON-NLS-1$
     if( structureFile.exists() )
     {
-      boolean ok = MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ogc.sensor.view.DumpExtendedHandler.0"), Messages.getString("org.kalypso.ogc.sensor.view.DumpExtendedHandler.2") ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      if( !ok )
+      if( !MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.ogc.sensor.view.DumpExtendedHandler.0" ), Messages.getString( "org.kalypso.ogc.sensor.view.DumpExtendedHandler.2" ) ) )
         return null;
 
-      /* Deletes the complete directory and its content. */
-      FileUtilities.deleteRecursive( directory );
-
-      /* Create the directory again. */
-      if( !directory.mkdir() )
+      try
       {
-        MessageDialog.openError( shell, Messages.getString("org.kalypso.ogc.sensor.view.DumpExtendedHandler.3"), Messages.getString("org.kalypso.ogc.sensor.view.DumpExtendedHandler.4") ); //$NON-NLS-1$ //$NON-NLS-2$
+        FileUtils.deleteDirectory( directory );
+        FileUtils.forceMkdir( directory );
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+        final String title = Messages.getString( "org.kalypso.ogc.sensor.view.DumpExtendedHandler.3" ); //$NON-NLS-1$
+        final String message = Messages.getString( "org.kalypso.ogc.sensor.view.DumpExtendedHandler.4" ); //$NON-NLS-1$
+        MessageDialog.openError( shell, title, message );
         return null;
       }
     }
 
     /* Dump the structure. */
-    final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
-    {
-      @Override
-      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
-      {
-        monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.view.DumpExtendedHandler.5"), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
-
-        try
-        {
-          /* Do the dump. This may take a while. */
-          RepositoryDumper.dumpExtended( directory, rep, monitor );
-          return Status.OK_STATUS;
-        }
-        catch( Exception e )
-        {
-          throw new InvocationTargetException( e );
-        }
-        finally
-        {
-          monitor.done();
-        }
-      }
-    };
+    final ICoreRunnableWithProgress runnable = new RepositoryDumper( directory, item );
 
     final IStatus status = ProgressUtilities.busyCursorWhile( runnable );
-    ErrorDialog.openError( shell, Messages.getString("org.kalypso.ogc.sensor.view.DumpStructureHandler.1"), Messages.getString("org.kalypso.ogc.sensor.view.DumpExtendedHandler.6"), status ); //$NON-NLS-1$ //$NON-NLS-2$
-    
+    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ogc.sensor.view.DumpStructureHandler.1" ), Messages.getString( "org.kalypso.ogc.sensor.view.DumpExtendedHandler.6" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+
     return null;
   }
-
-  // TODO: ui-handler
-//  /**
-//   * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-//   */
-//  public void selectionChanged( SelectionChangedEvent event )
-//  {
-//    setEnabled( getExplorer().isRepository( event.getSelection() ) != null );
-//  }
 }
