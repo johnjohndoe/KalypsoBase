@@ -44,7 +44,7 @@ import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.zml.core.diagram.data.IRequestHandler;
-import org.kalypso.zml.core.diagram.data.ZmlLayerRequestHandler;
+import org.kalypso.zml.core.diagram.data.MetadataRequestHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlLayerFactory;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlLineLayer;
@@ -98,7 +98,7 @@ public class ZmlLineLayerProvider extends AbstractLayerProvider implements ILaye
 
   protected IRequestHandler getRequestHandler( )
   {
-    return new ZmlLayerRequestHandler( getParameterContainer() );
+    return new MetadataRequestHandler( getParameterContainer() );
   }
 
 }

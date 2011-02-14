@@ -50,8 +50,6 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
  */
 public class UpdateAxisVisibilityVisitor implements IAxisVisitor
 {
-  public static final String NO_DATA_LAYER = "noData";
-
   private final String[] m_ignoreTypes;
 
   public UpdateAxisVisibilityVisitor( final String[] currentIgnoreTypes )
