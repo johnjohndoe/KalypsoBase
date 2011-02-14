@@ -171,7 +171,7 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
     if( layerProvider == null )
       return m_provider.getArguments();
 
-    final ZmlLayerRequestHandler handler = new ZmlLayerRequestHandler( layerProvider.getParameterContainer() );
+    final MetadataRequestHandler handler = new MetadataRequestHandler( layerProvider.getParameterContainer() );
     final IObservation observation = getObservation();
     if( observation == null )
       return m_provider.getArguments();

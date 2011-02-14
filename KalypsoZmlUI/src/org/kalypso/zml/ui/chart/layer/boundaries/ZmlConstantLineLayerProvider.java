@@ -44,7 +44,7 @@ package org.kalypso.zml.ui.chart.layer.boundaries;
 import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
-import org.kalypso.zml.core.diagram.data.ZmlLayerRequestHandler;
+import org.kalypso.zml.core.diagram.data.MetadataRequestHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlConstantLineLayer;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlLayerFactory;
@@ -83,7 +83,7 @@ public class ZmlConstantLineLayerProvider extends AbstractLayerProvider implemen
       final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
       if( StringUtils.isNotEmpty( href ) )
       {
-        final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, new ZmlLayerRequestHandler( parameters ) );
+        final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, new MetadataRequestHandler( parameters ) );
         handler.setObsProvider( provider );
         // FIXME: throwing an exception here causes the layer (and also the whole diagram not to load) -> we got a
         // problem!
