@@ -147,7 +147,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
       return getReferenceValue( reference );
 
     /* Type of boundary is different from value type -> we need to retrieve the value ourselfs */
-    final Integer tupleModelIndex = reference.getTupleModelIndex();
+    final Integer tupleModelIndex = reference.getModelIndex();
     if( tupleModelIndex == null )
       return Double.NaN;
 

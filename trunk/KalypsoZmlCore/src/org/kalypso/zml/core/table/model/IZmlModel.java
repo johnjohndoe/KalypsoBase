@@ -47,6 +47,7 @@ import org.kalypso.zml.core.table.schema.ZmlTableType;
  */
 public interface IZmlModel
 {
+
   ZmlTableType getTableType( );
 
   void addListener( IZmlColumnModelListener listener );

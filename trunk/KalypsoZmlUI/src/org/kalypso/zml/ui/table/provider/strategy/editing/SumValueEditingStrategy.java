@@ -47,6 +47,7 @@ import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.VALUE_STATUS;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
@@ -136,13 +137,13 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
     final ZmlDataValueReference reference = (ZmlDataValueReference) previousCell.getValueReference();
 
     final ZmlValueReferenceFactory factory = ZmlValueReferenceFactory.getInstance();
-    return factory.createReference( (ZmlModelRow) reference.getRow(), reference.getColumn(), reference.getTupleModelIndex() + 1 );
+    return factory.createReference( (ZmlModelRow) reference.getRow(), reference.getColumn(), reference.getModelIndex() + 1 );
   }
 
   private void updateAggregatedValue( final IZmlValueReference start, final IZmlValueReference end, final Number targetValue ) throws SensorException
   {
-    final Integer startIndex = start.getTupleModelIndex();
-    final Integer endIndex = end.getTupleModelIndex();
+    final Integer startIndex = start.getModelIndex();
+    final Integer endIndex = end.getModelIndex();
     final int steps = endIndex - startIndex + 1;
 
     final double stepping = targetValue.doubleValue() / steps;
@@ -151,7 +152,7 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
 
     for( int index = startIndex; index <= endIndex; index++ )
     {
-      modelColumn.update( index, stepping );
+      modelColumn.update( index, stepping, VALUE_STATUS.eManual );
     }
   }
 

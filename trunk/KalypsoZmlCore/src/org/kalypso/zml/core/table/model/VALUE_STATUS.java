@@ -43,7 +43,8 @@ package org.kalypso.zml.core.table.model;
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelColumnVisitor
+public enum VALUE_STATUS
 {
-  void visit( IZmlModelColumn column );
+  eInterpolated,
+  eManual;
 }
