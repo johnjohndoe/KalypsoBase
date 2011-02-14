@@ -40,14 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
-import java.util.List;
-
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.jfree.chart.axis.DateTick;
+import org.joda.time.DateTimeField;
 import org.joda.time.DateTimeFieldType;
+import org.joda.time.chrono.GregorianChronology;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -58,14 +55,17 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 public class GenericDateTimeTickCalculator implements ITickCalculator
 {
 
-// private final TickUnitSource m_tickUnitSource = createStandardDateTickUnits(
-// KalypsoCorePlugin.getDefault().getTimeZone() );
+  private final DateTimeFieldType m_tickRaster;
 
-  private DateTimeFieldType m_tickRaster = null;
+  public GenericDateTimeTickCalculator()
+  {
+    m_tickRaster = null;
 
+  }
   public GenericDateTimeTickCalculator( final DateTimeFieldType tickRaster )
   {
     m_tickRaster = tickRaster;
+
   }
 
   /**
@@ -79,108 +79,31 @@ public class GenericDateTimeTickCalculator implements ITickCalculator
   public Number[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
   {
     final IDataRange<Number> numRange = axis.getNumericRange();
-//FIXME: alles
-    m_tickRaster.getRangeDurationType();
-    throw new NotImplementedException();
+    final long start = numRange.getMin().longValue();
+    final long end = numRange.getMax().longValue();
+
+    final DateTimeField field = getTickRaster( numRange ).getField( GregorianChronology.getInstance() );
+    final int tickCount = field.getDifference( end, start );
+    final int maximumTickCount = axis.getScreenHeight()/ticklabelSize.x;
+    final int divisor = Math.max( 1,tickCount/maximumTickCount);
+    final Number[] ticks = new Number[tickCount/divisor];
+    ticks[0] = field.roundCeiling( start );
+
+    for( int i = 1; i < tickCount/divisor; i++ )
+    {
+      ticks[i] = field.add( ticks[i - 1].longValue(), divisor );
+    }
+    return ticks;
   }
-
-  protected List<DateTick> refreshTicksHorizontal( final GC gc, final Rectangle plotArea, final Rectangle dataArea, final IAxis axis )
+  private  DateTimeFieldType calculateTickRaster(final IDataRange<Number> range )
   {
-
-// final List result = new java.util.ArrayList();
-//
-// final Font tickLabelFont = axis.getRenderer().getTickLabelFont();
-// g2.setFont( tickLabelFont );
-//
-// if( isAutoTickUnitSelection() )
-// {
-// selectAutoTickUnit( g2, plotArea, dataArea, edge );
-// }
-//
-// final DateTickUnit unit = getTickUnit();
-// Date tickDate = calculateLowestVisibleTickValue( unit );
-// final Date upperDate = getMaximumDate();
-// // float lastX = Float.MIN_VALUE;
-// while( tickDate.before( upperDate ) )
-// {
-//
-// if( !isHiddenValue( tickDate.getTime() ) )
-// {
-// // work out the value, label and position
-// String tickLabel;
-// final DateFormat formatter = getDateFormatOverride();
-// if( formatter != null )
-// {
-// tickLabel = formatter.format( tickDate );
-// }
-// else
-// {
-// tickLabel = tickUnit.dateToString( tickDate );
-// }
-// TextAnchor anchor = null;
-// TextAnchor rotationAnchor = null;
-// double angle = 0.0;
-// if( isVerticalTickLabels() )
-// {
-// anchor = TextAnchor.CENTER_RIGHT;
-// rotationAnchor = TextAnchor.CENTER_RIGHT;
-// if( edge == RectangleEdge.TOP )
-// {
-// angle = Math.PI / 2.0;
-// }
-// else
-// {
-// angle = -Math.PI / 2.0;
-// }
-// }
-// else
-// {
-// if( edge == RectangleEdge.TOP )
-// {
-// anchor = TextAnchor.BOTTOM_CENTER;
-// rotationAnchor = TextAnchor.BOTTOM_CENTER;
-// }
-// else
-// {
-// anchor = TextAnchor.TOP_CENTER;
-// rotationAnchor = TextAnchor.TOP_CENTER;
-// }
-// }
-//
-// final Tick tick = new DateTick( tickDate, tickLabel, anchor, rotationAnchor, angle );
-// result.add( tick );
-// tickDate = unit.addToDate( tickDate );
-// }
-// else
-// {
-// tickDate = unit.rollDate( tickDate );
-// continue;
-// }
-//
-// // could add a flag to make the following correction optional...
-// switch( unit.getUnit() )
-// {
-//
-// case (DateTickUnit.MILLISECOND):
-// case (DateTickUnit.SECOND):
-// case (DateTickUnit.MINUTE):
-// case (DateTickUnit.HOUR):
-// case (DateTickUnit.DAY):
-// break;
-// case (DateTickUnit.MONTH):
-// tickDate = calculateDateForPosition( new Month( tickDate ), tickMarkPosition );
-// break;
-// case (DateTickUnit.YEAR):
-// tickDate = calculateDateForPosition( new Year( tickDate ), tickMarkPosition );
-// break;
-//
-// default:
-// break;
-//
-// }
-//
-// }
-// return result;
-    throw new NotImplementedException();
+    //TODO: calculate 
+    return m_tickRaster;
+  }
+  public DateTimeFieldType getTickRaster(final IDataRange<Number> range )
+  {
+    if(m_tickRaster==null)
+      return calculateTickRaster(range);
+    return m_tickRaster;
   }
 }

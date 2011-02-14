@@ -42,13 +42,16 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.TimeZone;
 
 import org.jfree.chart.axis.DateTickUnit;
 import org.jfree.chart.axis.DateTickUnitType;
 import org.jfree.chart.axis.TickUnitSource;
 import org.jfree.chart.axis.TickUnits;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeField;
+import org.joda.time.DateTimeFieldType;
+import org.joda.time.chrono.GregorianChronology;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
@@ -144,15 +147,15 @@ public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabel
     return units;
   }
 
-  private SimpleDateFormat m_format = null;
+  private final DateTimeFieldType m_field;
 
   /**
    * @param formatString
    *          z.B. "yyyy-MM-dd\nhh:mm:ss"
    */
-  public DateTimeLabelCreator( final String formatString )
+  public DateTimeLabelCreator( final DateTimeFieldType tickRaster )
   {
-    m_format = new SimpleDateFormat( formatString ); //$NON-NLS-1$ formatString );
+    m_field = tickRaster;
   }
 
   /**
@@ -165,15 +168,15 @@ public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabel
   @Override
   public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
   {
-    return getFormat( range ).format( new Date( ticks[i].longValue() ) );
+    return getLabel( ticks[i], range );
   }
 
   private DateFormat getFormat( final IDataRange<Number> range )
   {
-    if(m_format!=null)
-    return m_format;
-    //FIXME: make it work
-    return new SimpleDateFormat("");
+// if(m_format!=null)
+// return m_format;
+    // FIXME: make it work
+    return new SimpleDateFormat( "" );
   }
 
   /**
@@ -183,7 +186,9 @@ public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabel
   @Override
   public String getLabel( final Number value, final IDataRange<Number> range )
   {
-    return m_format.format( new Date( value.longValue() ) );
+    final DateTimeField field = m_field.getField( GregorianChronology.getInstance() );
+    final long dateTime = field.roundFloor( value.longValue() );
+    return new DateTime( dateTime ).toString("MM-dd\nhh:mm");
   }
 
 }
