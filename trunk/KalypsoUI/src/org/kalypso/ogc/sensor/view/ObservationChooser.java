@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.repository.IRepository;
+import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryContainerSingelton;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.ui.repository.view.RepositoryLabelProvider;
@@ -200,5 +201,19 @@ public class ObservationChooser extends AbstractViewer implements ISelectionProv
   public Shell getShell( )
   {
     return getControl().getShell();
+  }
+
+  public IRepositoryItem isRepositoryItem( )
+  {
+    final ISelection selection = getSelection();
+    if( selection instanceof IStructuredSelection )
+    {
+      final IStructuredSelection structSel = (IStructuredSelection) selection;
+      final Object element = structSel.getFirstElement();
+      if( element instanceof IRepositoryItem )
+        return (IRepositoryItem) element;
+    }
+
+    return null;
   }
 }
