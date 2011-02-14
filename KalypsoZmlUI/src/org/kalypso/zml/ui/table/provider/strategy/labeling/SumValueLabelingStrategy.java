@@ -103,8 +103,8 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
     if( previousReference == null || currentReference == null )
       return null;
 
-    final int startIndex = previousReference.getTupleModelIndex();
-    final int endIndex = currentReference.getTupleModelIndex();
+    final int startIndex = previousReference.getModelIndex();
+    final int endIndex = currentReference.getModelIndex();
 
     final SumOperation operation = new SumOperation();
 

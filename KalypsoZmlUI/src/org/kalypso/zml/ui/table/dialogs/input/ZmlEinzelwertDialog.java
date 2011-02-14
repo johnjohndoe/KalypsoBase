@@ -59,6 +59,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.VALUE_STATUS;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.dialogs.EnhancedTitleAreaDialog;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
@@ -157,7 +158,7 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
       try
       {
         final int index = findIndex( row, modelColumn );
-        modelColumn.update( index, row.getValue() );
+        modelColumn.update( index, row.getValue(), VALUE_STATUS.eManual );
       }
       catch( final Throwable t )
       {

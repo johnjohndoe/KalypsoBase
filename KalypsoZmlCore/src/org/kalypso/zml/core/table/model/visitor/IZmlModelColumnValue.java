@@ -38,39 +38,20 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.walker;
+package org.kalypso.zml.core.table.model.visitor;
 
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlModelWalker
+public interface IZmlModelColumnValue
 {
+  int getModelIndex( );
 
-  private final IZmlModelColumn m_column;
+  Object getIndex( ) throws SensorException;
 
-  public ZmlModelWalker( final IZmlModelColumn column )
-  {
-    m_column = column;
-  }
+  Object getValue( ) throws SensorException;
 
-  public void walk( final IZmlModelOperation operation ) throws SensorException
-  {
-    walk( operation, 0, m_column.size() );
-  }
-
-  public void walk( final IZmlModelOperation operation, final int startIndex, final int endIndex ) throws SensorException
-  {
-    final IAxis axis = m_column.getValueAxis();
-
-    for( int i = startIndex; i <= endIndex; i++ )
-    {
-      final Object obj = m_column.get( i, axis );
-      operation.add( obj );
-    }
-  }
-
+  Object getStatus( ) throws SensorException;
 }

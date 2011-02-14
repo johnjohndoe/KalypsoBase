@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -38,39 +38,54 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.walker;
+package org.kalypso.zml.ui.table.provider.strategy.editing;
 
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.ZmlValueRefernceHelper;
+import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlModelWalker
+public class FindNeighbourStuetzstellenVisitor implements IZmlModelColumnVisitor
 {
+  private final Integer m_modelIndex;
 
-  private final IZmlModelColumn m_column;
+  private IZmlValueReference m_after;
 
-  public ZmlModelWalker( final IZmlModelColumn column )
+  private IZmlValueReference m_before;
+
+  public FindNeighbourStuetzstellenVisitor( final IZmlTableCell base )
   {
-    m_column = column;
+    final IZmlValueReference reference = base.getValueReference();
+    m_modelIndex = reference.getModelIndex();
   }
 
-  public void walk( final IZmlModelOperation operation ) throws SensorException
+  /**
+   * @see org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor#visit(org.kalypso.zml.core.table.model.visitor.IZmlModelColumnValue)
+   */
+  @Override
+  public void visit( final IZmlValueReference reference ) throws SensorException
   {
-    walk( operation, 0, m_column.size() );
+    if( !ZmlValueRefernceHelper.isStuetzstelle( reference ) )
+      return;
+
+    if( reference.getModelIndex() < m_modelIndex )
+      m_before = reference;
+    else if( reference.getModelIndex() > m_modelIndex && m_after == null )
+      m_after = reference;
   }
 
-  public void walk( final IZmlModelOperation operation, final int startIndex, final int endIndex ) throws SensorException
+  public IZmlValueReference getBefore( )
   {
-    final IAxis axis = m_column.getValueAxis();
+    return m_before;
+  }
 
-    for( int i = startIndex; i <= endIndex; i++ )
-    {
-      final Object obj = m_column.get( i, axis );
-      operation.add( obj );
-    }
+  public IZmlValueReference getAfter( )
+  {
+    return m_after;
   }
 
 }

@@ -123,7 +123,7 @@ public class ZmlIndexValueReference implements IZmlValueReference
    * @see org.kalypso.zml.ui.table.model.references.IZmlModelCell#getTupleModelIndex()
    */
   @Override
-  public Integer getTupleModelIndex( )
+  public Integer getModelIndex( )
   {
     throw new UnsupportedOperationException();
   }
