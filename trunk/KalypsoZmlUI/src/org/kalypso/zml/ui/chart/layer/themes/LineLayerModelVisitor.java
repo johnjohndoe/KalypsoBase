@@ -103,8 +103,16 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
   {
     try
     {
-      final Object dateObject = container.get( getDateAxis() );
-      final Object valueObject = container.get( getValueAxis() );
+      final IAxis dateAxis = getDateAxis();
+      final IAxis valueAxis = getValueAxis();
+      if( Objects.isNull( dateAxis, valueAxis ) )
+        return;
+
+      if( !container.hasAxis( getDateAxis().getType(), valueAxis.getType() ) )
+        return;
+
+      final Object dateObject = container.get( dateAxis );
+      final Object valueObject = container.get( valueAxis );
       if( Objects.isNull( dateObject, valueObject ) )
         return;
 

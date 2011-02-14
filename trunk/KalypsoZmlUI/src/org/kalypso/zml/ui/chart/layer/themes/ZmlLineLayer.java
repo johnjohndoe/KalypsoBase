@@ -46,6 +46,7 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
@@ -201,6 +202,9 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
       final IAxis axis = m_handler.getValueAxis();
       if( axis == null )
+        return null;
+
+      if( Objects.isNull( AxisUtils.findAxis( model.getAxes(), axis.getType() ) ) )
         return null;
 
       if( domainIntervall == null )

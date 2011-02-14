@@ -68,7 +68,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
  * @author Dirk Kuch
  * @author kimwerner
  */
-public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer, Cloneable
+public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 {
   private ZmlConstantLineBean[] m_descriptors = new ZmlConstantLineBean[] {};
 
@@ -91,15 +91,6 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     m_parameters = parameters;
     m_styleSet = styleSet;
     m_calculateRange = calculateRange;
-  }
-
-  /**
-   * @see java.lang.Object#clone()
-   */
-  @Override
-  public ZmlConstantLineLayer clone( )
-  {
-    return new ZmlConstantLineLayer( m_parameters, m_styleSet, m_calculateRange );
   }
 
   public boolean isCalculateRange( )

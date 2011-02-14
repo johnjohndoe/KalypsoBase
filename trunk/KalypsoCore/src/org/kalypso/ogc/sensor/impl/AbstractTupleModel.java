@@ -49,6 +49,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
 import org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue;
 
@@ -101,6 +102,18 @@ public abstract class AbstractTupleModel implements ITupleModel
         public Object get( final IAxis axis ) throws SensorException
         {
           return AbstractTupleModel.this.get( index, axis );
+        }
+
+        @Override
+        public boolean hasAxis( final String... types )
+        {
+          for( final String type : types )
+          {
+            if( AxisUtils.findAxis( AbstractTupleModel.this.getAxes(), type ) == null )
+              return false;
+          }
+
+          return true;
         }
       } );
     }

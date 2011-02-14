@@ -52,4 +52,6 @@ public interface ITupleModelVisitorValue
 
   Object get( IAxis axis ) throws SensorException;
 
+  boolean hasAxis( String... types );
+
 }
