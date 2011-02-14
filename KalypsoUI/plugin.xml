@@ -736,7 +736,7 @@
 		</handler>
 		<handler class="org.kalypso.ogc.sensor.view.actions.DumpExtendedHandler" commandId="org.kalypso.ui.command.repositoryDumpExtended">
 			<enabledWhen>
-				<reference definitionId="repositorySelection"/>
+				<reference definitionId="repositoryItemSelection"/>
 			</enabledWhen>
 		</handler>
 		<handler class="org.kalypso.ogc.sensor.view.actions.ExportAsFileHandler" commandId="org.kalypso.ui.command.repositoryExportAsFile">
