@@ -77,7 +77,7 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
   {
     m_srs = ContentHandlerUtils.parseSrsFromAttributes( attributes, m_defaultSrs );
 
-    final GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, this, m_defaultSrs, new LinearRingSpecification() );
+    final GMLPropertyChoiceContentHandler choiceContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, this, m_srs, new LinearRingSpecification() );
     choiceContentHandler.activate();
   }
 

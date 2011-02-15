@@ -44,6 +44,9 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
+ * FIXME: we have the same package/class in Kalypso-UI => eclipse i18n mechism cannot correctly recognize it, this must
+ * be moved into another package
+ * 
  * @author Holger Albert
  */
 public final class Messages
