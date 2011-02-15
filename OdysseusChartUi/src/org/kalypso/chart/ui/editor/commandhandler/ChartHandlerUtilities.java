@@ -43,6 +43,7 @@ package org.kalypso.chart.ui.editor.commandhandler;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
@@ -116,8 +117,15 @@ public class ChartHandlerUtilities
     if( chartVar instanceof IChartPart )
       return (IChartPart) chartVar;
 
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-    return (IChartPart) part.getAdapter( IChartPart.class );
+    final Object objPart = context.getVariable( ISources.ACTIVE_PART_NAME );
+    if( objPart instanceof IWorkbenchPart )
+    {
+      final IWorkbenchPart part = (IWorkbenchPart) objPart;
+
+      return (IChartPart) part.getAdapter( IChartPart.class );
+    }
+
+    throw new NotImplementedException();
   }
 
   /**
