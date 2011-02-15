@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoAFGUIFramework Plug-in
 Bundle-SymbolicName: org.kalypso.afgui; singleton:=true
-Bundle-Version: 10.10.1.qualifier
+Bundle-Version: 10.10.2.qualifier
 Bundle-Activator: org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
