@@ -39,7 +39,14 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
 
     layerManager.accept( new ChangeVisibilityVisitor( getParameter( event ), enabled ) );
 
+    callAdditionalVisitors( layerManager );
+
     return Status.OK_STATUS;
+  }
+
+  protected void callAdditionalVisitors( final ILayerManager layerManager )
+  {
+    // overwrite to execute addinital visitors
   }
 
   private String getParameter( final ExecutionEvent event )

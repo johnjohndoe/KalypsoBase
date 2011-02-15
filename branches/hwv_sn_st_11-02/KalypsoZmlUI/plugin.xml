@@ -278,4 +278,28 @@
           renderer="org.kalypso.zml.ui.chart.legend.ZmlBlockChartLegendRenderer">
     </renderer>
  </extension>
+ <extension
+       point="org.eclipse.ui.commands">
+    <category
+          id="org.kalypso.chart.ui.commands.category"
+          name="command category">
+    </category>
+    <command
+          categoryId="org.kalypso.chart.ui.commands.category"
+          id="org.kalypso.zml.ui.chart.layer.commands.change.visibility"
+          name="Change Visibility">
+       <commandParameter
+             id="layer.parameter"
+             name="layer parameter"
+             optional="false">
+       </commandParameter>
+    </command>
+ </extension>
+ <extension
+       point="org.eclipse.ui.handlers">
+    <handler
+          class="org.kalypso.zml.ui.chart.layer.commands.ZmlChangeVisibilityCommandHandler"
+          commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility">
+    </handler>
+ </extension>
 </plugin>
