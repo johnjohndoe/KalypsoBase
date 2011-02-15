@@ -92,6 +92,7 @@ public class CommandExecutor implements Runnable
         final ExecutionEvent event = new ExecutionEvent( command, parameters, this, context );
         handler.execute( event );
 
+        /** don't set parameters, otherwise the updateElement function of the command handler will not called */
         commandService.refreshElements( id, null );
       }
       catch( final ExecutionException e )

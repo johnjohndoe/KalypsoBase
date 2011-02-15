@@ -6,14 +6,13 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.chart.ui.editor.chart.visitors.ChangeVisibilityVisitor;
 import org.kalypso.chart.ui.editor.chart.visitors.VisibilityInitialStatusVisitor;
+import org.kalypso.chart.ui.editor.commandhandler.utils.CommandHandlerUtils;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -36,7 +35,9 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
 
     final IChartModel model = chart.getChartModel();
     final ILayerManager layerManager = model.getLayerManager();
-    layerManager.accept( new ChangeVisibilityVisitor( getParameter( event ), isSelected( event ) ) );
+    final boolean enabled = CommandHandlerUtils.isEnabled( event );
+
+    layerManager.accept( new ChangeVisibilityVisitor( getParameter( event ), enabled ) );
 
     return Status.OK_STATUS;
   }
@@ -46,21 +47,6 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
     return event.getParameter( LAYER_PARAMETER );
   }
 
-  private boolean isSelected( final ExecutionEvent event )
-  {
-    final Object trigger = event.getTrigger();
-    if( trigger instanceof Event )
-    {
-      final Event triggerEvent = (Event) trigger;
-      final ToolItem item = (ToolItem) triggerEvent.widget;
-
-      return item.getSelection();
-    }
-
-    // otherwise it will be enabled by default!
-    return true;
-  }
-
   /**
    * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
    */
@@ -68,6 +54,7 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
     final IChartModel model = getModel( element );
+
     if( model == null )
       element.setChecked( false );
     else
