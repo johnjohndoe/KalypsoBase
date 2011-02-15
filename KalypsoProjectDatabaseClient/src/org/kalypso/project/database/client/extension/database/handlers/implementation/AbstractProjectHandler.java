@@ -1,5 +1,6 @@
 package org.kalypso.project.database.client.extension.database.handlers.implementation;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IProject;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
@@ -52,7 +53,18 @@ public abstract class AbstractProjectHandler implements Comparable<IProjectHandl
   @Override
   public int hashCode( )
   {
-    return getUniqueName().hashCode();
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( getUniqueName() );
+
+    return builder.toHashCode();
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "Project: %s", getName() );
+  }
 }
