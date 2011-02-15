@@ -4,7 +4,7 @@
     <Styles>
       <LineStyle role="gridLineStyle">
         <Width>1</Width>
-        <LineColor>000000</LineColor>
+        <LineColor>CCCCCC</LineColor>
         <DashOffset>0</DashOffset>
         <DashArray>2 2 2</DashArray>
         <LineCap>ROUND</LineCap>
