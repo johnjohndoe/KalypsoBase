@@ -50,7 +50,7 @@ public class ZoomPanMaximizeCommandHandler extends AbstractHandler implements IE
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-    ElementUpdateHelper.updateElement( element, parameters, ZoomPanMaximizeCommandHandler.class );
+    ElementUpdateHelper.updateElement( element, ZoomPanMaximizeHandler.class );
   }
 
 }

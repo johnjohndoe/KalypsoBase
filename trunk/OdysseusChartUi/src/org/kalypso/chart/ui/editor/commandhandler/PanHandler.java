@@ -42,6 +42,6 @@ public class PanHandler extends AbstractHandler implements IElementUpdater
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-    ElementUpdateHelper.updateElement( element, parameters, DragPanHandler.class );
+    ElementUpdateHelper.updateElement( element, DragPanHandler.class );
   }
 }

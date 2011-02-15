@@ -42,7 +42,7 @@ public class ZoomOutHandler extends AbstractHandler implements IElementUpdater
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-    ElementUpdateHelper.updateElement( element, parameters, DragZoomOutHandler.class );
+    ElementUpdateHelper.updateElement( element, DragZoomOutHandler.class );
   }
 
 }
