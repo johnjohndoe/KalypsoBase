@@ -157,7 +157,7 @@ public class TranscendenceProjectHandler extends AbstractProjectHandler implemen
   {
     try
     {
-      final IRemoteProjectPreferences preferences = this.getRemotePreferences();
+      final IRemoteProjectPreferences preferences = getRemotePreferences();
       return preferences.isLocked();
     }
     catch( final CoreException e )
@@ -177,5 +177,13 @@ public class TranscendenceProjectHandler extends AbstractProjectHandler implemen
   {
     return m_remote.getDescription();
   }
-  
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "Transcendence Project: %s", getName() );
+  }
 }

@@ -110,4 +110,13 @@ public class RemoteProjectHandler extends AbstractProjectHandler implements IRem
     return m_bean.getDescription();
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "Remote Project: %s", getName() );
+  }
+
 }

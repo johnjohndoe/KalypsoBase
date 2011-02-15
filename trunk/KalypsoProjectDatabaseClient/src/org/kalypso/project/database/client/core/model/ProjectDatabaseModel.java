@@ -114,8 +114,8 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 
   synchronized private void buildProjectList( )
   {
-    final ILocalProject[] local = m_local.getProjects();
-    IRemoteProject[] remote = new IRemoteProject[] {};
+    final ILocalProject[] localProjects = m_local.getProjects();
+    IRemoteProject[] remoteProjects = new IRemoteProject[] {};
 
     if( m_remote != null )
     {
@@ -127,19 +127,16 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
         handler.add( new RemoteProjectHandler( bean ) );
       }
 
-      remote = handler.toArray( new IRemoteProject[] {} );
+      remoteProjects = handler.toArray( new IRemoteProject[] {} );
     }
 
-    for( final ILocalProject handler : local )
+    for( final ILocalProject handler : localProjects )
     {
-      if( ArrayUtils.contains( remote, handler ) )
+      final IRemoteProject remote = findRemoteProject( remoteProjects, handler );
+      if( remote != null )
       {
-        final int index = ArrayUtils.indexOf( remote, handler );
-
-        final IRemoteProject r = remote[index];
-        remote = (IRemoteProject[]) ArrayUtils.remove( remote, index );
-
-        m_projects.add( new TranscendenceProjectHandler( handler, r ) );
+        remoteProjects = (IRemoteProject[]) ArrayUtils.removeElement( remoteProjects, remote );
+        m_projects.add( new TranscendenceProjectHandler( handler, remote ) );
       }
       else
       {
@@ -147,10 +144,22 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
       }
     }
 
-    for( final IRemoteProject r : remote )
+    for( final IRemoteProject r : remoteProjects )
     {
       m_projects.add( r );
     }
+  }
+
+  private IRemoteProject findRemoteProject( final IRemoteProject[] remoteProjects, final ILocalProject handler )
+  {
+    final String uniqueName = handler.getUniqueName();
+    for( final IRemoteProject remote : remoteProjects )
+    {
+      if( remote.getUniqueName().equals( uniqueName ) )
+        return remote;
+    }
+
+    return null;
   }
 
   @Override

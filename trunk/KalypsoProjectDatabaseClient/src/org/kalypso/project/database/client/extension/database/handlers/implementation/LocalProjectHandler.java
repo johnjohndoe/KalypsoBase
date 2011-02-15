@@ -286,4 +286,13 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
     return null;
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "Local Project: %s", getName() );
+  }
+
 }
