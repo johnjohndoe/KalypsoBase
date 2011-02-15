@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoGmlProcesses Plug-in
 Bundle-SymbolicName: org.kalypso.gml.processes; singleton:=true
-Bundle-Version: 10.10.1.qualifier
+Bundle-Version: 10.10.2.qualifier
 Bundle-ClassPath: lib/jargs.jar,
  .
 Bundle-Activator: org.kalypso.gml.processes.KalypsoGmlProcessesPlugin

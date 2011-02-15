@@ -53,6 +53,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
 /**
+ * 
  * @author barbarins
  */
 public class BinaryGeoGridWriter implements IWriteableGeoGrid
@@ -80,6 +81,8 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   private int m_linesInBlock;
 
   private int m_amountBlocks;
+
+  private int m_blocksFlushed;
 
   private final int m_sizeX;
 
@@ -133,6 +136,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
 
     writeNaN( m_blockData, m_itemsInBlock );
 
+    m_blocksFlushed = 0;
   }
 
   @Override
@@ -160,7 +164,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
 
     try
     {
-      if( m_blockEnd <= m_linesTotal )
+      if( m_blocksFlushed < m_amountBlocks )
       {
         flushBlock();
       }
@@ -201,10 +205,14 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     {
       e.printStackTrace();
     }
+    m_blocksFlushed++;
     m_blockStart += m_linesInBlock;
     m_blockEnd += m_linesInBlock;
-    if( m_blockEnd > m_linesTotal )
-      m_itemsInBlock = (m_linesTotal - m_blockStart + 1) * m_lineLen / 4;
+
+    if( m_blocksFlushed >= m_amountBlocks )
+      return;
+    if( m_blockEnd >= m_linesTotal )
+      m_itemsInBlock = (m_linesTotal - m_blockStart) * m_lineLen / 4;
 
     writeNaN( m_blockData, m_itemsInBlock );
   }
@@ -213,6 +221,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   public void setValue( final int x, final int y, final double value )
   {
     if( y < m_blockStart )
+      // FIXME: Log it!
       return;
 
     if( y > m_blockEnd )
@@ -223,7 +232,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     final int index = (y - m_blockStart) * (m_lineLen / 4) + x;
 
     int intVal;
-    if( Double.isNaN( value ) != true )
+    if( !Double.isNaN( value ) )
     {
       final BigDecimal scaled = BigDecimal.valueOf( value ).setScale( m_scale, BigDecimal.ROUND_HALF_UP );
       intVal = scaled.unscaledValue().intValue();
@@ -307,7 +316,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public void saveStatistically( )
   {
-    // TODO Auto-generated method stub
 
   }
 
@@ -318,7 +326,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public void setStatistically( final BigDecimal min, final BigDecimal max )
   {
-    // TODO Auto-generated method stub
     close();
   }
 
@@ -329,8 +336,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new NotImplementedException();
   }
 
   /**
@@ -340,8 +346,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Envelope getEnvelope( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new NotImplementedException();
   }
 
   /**
@@ -351,8 +356,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Coordinate getOffsetX( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new NotImplementedException();
   }
 
   /**
@@ -362,8 +366,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Coordinate getOffsetY( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new NotImplementedException();
   }
 
   /**
@@ -373,8 +376,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public Coordinate getOrigin( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new NotImplementedException();
   }
 
   /**
@@ -384,8 +386,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public String getSourceCRS( )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new NotImplementedException();
   }
 
   /**
@@ -394,8 +395,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public GM_Surface< ? > getSurface( final String targetCRS )
   {
-    // TODO Auto-generated method stub
-    return null;
+    throw new NotImplementedException();
   }
 
   /**
