@@ -41,7 +41,10 @@
 package org.kalypso.ogc.gml.table;
 
 import java.text.Collator;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -117,26 +120,38 @@ public class LayerTableSorter extends ViewerSorter
       return sign;
     if( o2 == null )
       return -sign;
+    return sign * compareObjects( o1, o2 );
+  }
+
+  private int compareObjects( final Object o1, final Object o2 )
+  {
     if( o1 instanceof String && o2 instanceof String )
-      return sign * ((String) o1).compareTo( (String) o2 );
+      return ((String) o1).compareTo( (String) o2 );
     else if( o1 instanceof Integer && o2 instanceof Integer )
-      return sign * ((Integer) o1).compareTo( (Integer) o2 );
+      return ((Integer) o1).compareTo( (Integer) o2 );
     else if( o1 instanceof Double && o2 instanceof Double )
-      return sign * ((Double) o1).compareTo( (Double) o2 );
+      return ((Double) o1).compareTo( (Double) o2 );
     else if( o1 instanceof Long && o2 instanceof Long )
-      return sign * ((Long) o1).compareTo( (Long) o2 );
+      return ((Long) o1).compareTo( (Long) o2 );
     else if( o1 instanceof Float && o1 instanceof Float )
-      return sign * ((Float) o1).compareTo( (Float) o2 );
+      return ((Float) o1).compareTo( (Float) o2 );
     else if( o1 instanceof Date && o2 instanceof Date )
-      return sign * ((Date) o1).compareTo( (Date) o2 );
-    else if (o1 instanceof Boolean )
+      return ((Date) o1).compareTo( (Date) o2 );
+    else if( o1 instanceof Boolean )
     {
       final String s1 = String.valueOf( o1 );
       final String s2 = String.valueOf( o2 );
-      return sign * s1.compareTo( s2 );
-    }      
-
-    return 0;
+      return s1.compareTo( s2 );
+    }
+    else if( o1 instanceof List && o2 instanceof List )
+    {
+      // hack: compare the first two items of the lists (e.g. for name or description properties)
+      final List l1 = (List) o1;
+      final List l2 = (List) o2;
+      return compareObjects( l1.get( 0 ), l2.get( 0 ) );
+    }
+    else
+      return 0;
   }
 
   @Override
