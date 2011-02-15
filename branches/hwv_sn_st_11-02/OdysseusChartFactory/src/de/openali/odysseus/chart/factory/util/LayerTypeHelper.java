@@ -75,13 +75,28 @@ public final class LayerTypeHelper
     if( parameters == null )
       return;
 
-    final ProviderType provider = type.getProvider();
+    ProviderType provider = type.getProvider();
     if( provider == null )
-      return;
+    {
+      final ProviderType providerInstance = ProviderType.Factory.newInstance();
+      providerInstance.setEpid( PlainLayerProvider.ID );
+
+      final ParametersType parametersInstance = ParametersType.Factory.newInstance();
+      final ParameterType parameter = parametersInstance.addNewParameter();
+      parameter.setName( "empty" );
+      parameter.setValue( "value" );
+
+      providerInstance.setParameters( parametersInstance );
+
+      type.setProvider( providerInstance );
+      provider = type.getProvider();
+    }
 
     final ParametersType baseType = provider.getParameters();
     if( baseType == null )
+    {
       return;
+    }
 
     final ParameterType[] array = parameters.getParameterArray();
     for( final ParameterType parameter : array )

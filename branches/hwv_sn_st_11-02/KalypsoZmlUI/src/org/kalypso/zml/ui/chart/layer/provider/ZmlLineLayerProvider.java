@@ -62,7 +62,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
  */
 public class ZmlLineLayerProvider extends AbstractLayerProvider implements ILayerProvider
 {
-  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider";
+  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider"; //$NON-NLS-1$
 
   /**
    * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
