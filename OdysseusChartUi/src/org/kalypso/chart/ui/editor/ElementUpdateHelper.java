@@ -40,14 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor;
 
-import java.util.Map;
-
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.ui.menus.UIElement;
-import org.kalypso.chart.ui.IChartPart;
+import org.eclipse.ui.services.IEvaluationService;
+import org.eclipse.ui.services.IServiceLocator;
+import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
@@ -60,21 +60,14 @@ public class ElementUpdateHelper
    * function is called by all radio commands from updateElement (IElementUpdater) in order to synchronize toggle state
    * with chart handler state
    */
-  public static void updateElement( final UIElement element, final Map< ? , ? > parameters, final Class< ? > handlerClass )
+  public static void updateElement( final UIElement element, final Class< ? > handlerClass )
   {
-    // TODO: we get NPEs here
+    final IServiceLocator locator = element.getServiceLocator();
+    final IEvaluationService service = (IEvaluationService) locator.getService( IEvaluationService.class );
+    final IEvaluationContext context = service.getCurrentState();
+    final IChartComposite chart = ChartHandlerUtilities.getChart( context );
 
-    // chart finden,
-    // FIXME: get chart from context
-    final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().getActivePart();
-    if( activePart == null )
-      return;
-
-    final IChartPart chartPart = (IChartPart) activePart.getAdapter( IChartPart.class );
-    if( chartPart == null )
-      return;
-
-    final IPlotHandler plotDragHandler = chartPart.getPlotDragHandler();
+    final IPlotHandler plotDragHandler = chart.getPlotHandler();
     if( plotDragHandler != null )
     {
       final IChartDragHandler[] handlers = plotDragHandler.getActiveHandlers();
