@@ -45,6 +45,7 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -384,21 +385,10 @@ public class WFSClient
     try
     {
       /* Create getFeature URL */
-      final WFSFeatureType featureType = getFeatureType( name );
-      final QualifiedName qname = featureType.getName();
+      final URL getFeatureURL = createGetFeatureURL( name );
+      final URL describeFeatureTypeURL = createDescribeFeatureTypeURL( name );
 
-      final Map<String, String> params = new HashMap<String, String>(); // UrlUtilities.parseQuery( getUrl );
-
-      params.put( URL_PARAM_SERVICE, "WFS" ); //$NON-NLS-1$
-      params.put( URL_PARAM_VERSION, m_wfsCapabilities.getVersion() );
-      params.put( URL_PARAM_REQUEST, OPERATION_GET_FEATURE );
-      params.put( PARAM_DESCRIBE_FEATURE_TYPE_FORMAT, PARAM_DESCRIBE_FEATURE_TYPE_FORMAT_DEFAULT );
-      params.put( PARAM_DESCRIBE_FEATURE_TYPE_NAMESPACE, qname.getNamespace().toString() );
-      params.put( PARAM_DESCRIBE_FEATURE_TYPE_TYPENAME, qname.getLocalName() );
-
-      /* Post the request */
-      final URL url = getGetUrl( name, params );
-      requestString = url.toURI().toString();
+      requestString = getFeatureURL.toURI().toString();
       final GetMethod getMethod = new GetMethod( requestString );
 
       final int statusCode = m_httpClient.executeMethod( getMethod );
@@ -411,7 +401,8 @@ public class WFSClient
 
       inputStream = new BufferedInputStream( getMethod.getResponseBodyAsStream() );
 
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputStream, null, null );
+      final InputSource inputSource = new InputSource( inputStream );
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( inputSource, describeFeatureTypeURL, null, null );
       inputStream.close();
       return workspace;
     }
@@ -459,6 +450,23 @@ public class WFSClient
     {
       IOUtils.closeQuietly( inputStream );
     }
+  }
+
+  public URL createGetFeatureURL( final QName name ) throws MalformedURLException
+  {
+    final WFSFeatureType featureType = getFeatureType( name );
+    final QualifiedName qname = featureType.getName();
+
+    final Map<String, String> params = new HashMap<String, String>(); // UrlUtilities.parseQuery( getUrl );
+
+    params.put( URL_PARAM_SERVICE, "WFS" ); //$NON-NLS-1$
+    params.put( URL_PARAM_VERSION, m_wfsCapabilities.getVersion() );
+    params.put( URL_PARAM_REQUEST, OPERATION_GET_FEATURE );
+    params.put( PARAM_DESCRIBE_FEATURE_TYPE_FORMAT, PARAM_DESCRIBE_FEATURE_TYPE_FORMAT_DEFAULT );
+    params.put( PARAM_DESCRIBE_FEATURE_TYPE_NAMESPACE, qname.getNamespace().toString() );
+    params.put( PARAM_DESCRIBE_FEATURE_TYPE_TYPENAME, qname.getLocalName() );
+
+    return getGetUrl( name, params );
   }
 
   public URL getGetUrl( final QName name, final Map<String, String> params ) throws MalformedURLException
