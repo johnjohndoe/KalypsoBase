@@ -41,7 +41,7 @@
 		<Mappers>
 			<Axis id="Station_Axis">
 				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-				<Label>Stationkim [km]</Label>
+				<Label>Station [km]</Label>
 				<Direction>NEGATIVE</Direction>
 				<Position>BOTTOM</Position>
                 <PreferredAdjustment before="1" range="98" after="1" />

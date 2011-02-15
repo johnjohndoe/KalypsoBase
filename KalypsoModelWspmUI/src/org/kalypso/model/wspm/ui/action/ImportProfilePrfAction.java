@@ -162,7 +162,8 @@ public class ImportProfilePrfAction extends ActionDelegate implements IObjectAct
       final CommandableWorkspace workspace = m_selection.getWorkspace( fate.getParentFeature() );
       final WspmWaterBody water = (WspmWaterBody) fate.getParentFeature();
 
-      final ImportProfilesCommand command = new ImportProfilesCommand( water, profiles );
+      final IProfil[] profs = profiles.toArray( new IProfil[profiles.size()] );
+      final ImportProfilesCommand command = new ImportProfilesCommand( water, profs );
       workspace.postCommand( command );
     }
     catch( final Exception e )
