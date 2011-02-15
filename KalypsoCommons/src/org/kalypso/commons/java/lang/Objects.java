@@ -47,7 +47,6 @@ public final class Objects
 {
   private Objects( )
   {
-
   }
 
   public static boolean isNull( final Object... objects )
@@ -59,5 +58,10 @@ public final class Objects
     }
 
     return false;
+  }
+
+  public static boolean isNotNull( final Object... objects )
+  {
+    return !isNull( objects );
   }
 }
