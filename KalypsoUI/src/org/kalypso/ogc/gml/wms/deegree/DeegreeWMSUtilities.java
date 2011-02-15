@@ -64,6 +64,7 @@ import org.deegree.owscommon_new.Operation;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.net.Proxy;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.Arrays;
@@ -118,16 +119,27 @@ public class DeegreeWMSUtilities
       /* Load the capabilities xml. */
       doc.load( inputStream, XMLFragment.DEFAULT_URL );
 
+      inputStream.close();
+
       /* Create the capabilities. */
       final WMSCapabilities capabilities = (WMSCapabilities) doc.parseCapabilities();
       if( capabilities == null )
-        throw new Exception( Messages.getString( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.0" ) ); //$NON-NLS-1$
+      {
+        final String messsage = Messages.getString( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.0" ); //$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), messsage ) );
+      }
 
       return capabilities;
     }
+    catch( final CoreException ex )
+    {
+      throw ex;
+    }
     catch( final Exception ex )
     {
-      throw new CoreException( StatusUtilities.statusFromThrowable( ex ) );
+      // FIXME: we need better error handling
+      final String message = "Failed to load capabilities document";
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message, ex ) );
     }
     finally
     {
@@ -217,7 +229,7 @@ public class DeegreeWMSUtilities
       wmsParameter.put( "SRS", negotiatedSRS ); //$NON-NLS-1$
 
       final IGeoTransformer gt = GeoTransformerFactory.getGeoTransformer( negotiatedSRS );
-      GM_Envelope requestedEnvLocalCRS = GeometryFactory.createGM_Envelope( requestedEnvLocalSRS.getMinX(), requestedEnvLocalSRS.getMinY(), requestedEnvLocalSRS.getMaxX(), requestedEnvLocalSRS.getMaxY(), localSRS );
+      final GM_Envelope requestedEnvLocalCRS = GeometryFactory.createGM_Envelope( requestedEnvLocalSRS.getMinX(), requestedEnvLocalSRS.getMinY(), requestedEnvLocalSRS.getMaxX(), requestedEnvLocalSRS.getMaxY(), localSRS );
       final GM_Envelope targetEnvRemoteSRS = gt.transform( requestedEnvLocalCRS );
 
       if( targetEnvRemoteSRS.getMax().getX() - targetEnvRemoteSRS.getMin().getX() <= 0 )
