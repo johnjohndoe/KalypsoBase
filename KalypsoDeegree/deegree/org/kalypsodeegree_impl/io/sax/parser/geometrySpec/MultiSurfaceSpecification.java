@@ -38,35 +38,40 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.io.sax.marshaller;
+package org.kalypsodeegree_impl.io.sax.parser.geometrySpec;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.xml.sax.SAXException;
+import org.kalypsodeegree_impl.io.sax.parser.ISurfaceHandler;
+import org.kalypsodeegree_impl.io.sax.parser.SurfaceMemberContentHandler;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.XMLReader;
 
 /**
- * A marshaller for gml:PolyhedralSurfaces
- * 
- * @author Gernot Belger
- * @author Felipe Maximino - Refaktoring
+ * @author Felipe Maximino
  */
-public class PolyhedralSurfaceMarshallerMy extends AbstractSurfaceMarshaller<GM_Polygon>
+public class MultiSurfaceSpecification implements IGeometrySpecification
 {
-  private static final String TAG_POLYHEDRAL_SURFACE = "PolyhedralSurface";
-
-  public PolyhedralSurfaceMarshallerMy( final XMLReader reader, final GM_Surface<GM_Polygon> surface )
-  {
-    super( reader, surface, TAG_POLYHEDRAL_SURFACE );
-  }
-
   /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
+   * @see org.kalypsodeegree_impl.io.sax.parser.geometrySpec.IGeometrySpecification#getHandler(javax.xml.namespace.QName,
+   *      org.xml.sax.XMLReader, org.kalypso.gmlschema.types.IGmlContentHandler,
+   *      org.kalypso.gmlschema.types.IGmlContentHandler, java.lang.String)
    */
+  @SuppressWarnings("unchecked")
   @Override
-  protected void doMarshallContent( final GM_Surface<GM_Polygon> marshalledObject ) throws SAXException
+  public IGmlContentHandler getHandler( final QName property, final XMLReader reader, final IGmlContentHandler parent, final IGmlContentHandler receiver, final String defaultSrs )
   {
-    m_patchesMarshaller = new PolygonPatchesMarshaller( getXMLReader(), marshalledObject );
-    m_patchesMarshaller.marshall();
+
+    /* gml:surfaceMember */
+    if( GMLConstants.QN_SURFACE_MEMBER.equals( property ) )
+      return new SurfaceMemberContentHandler( reader, parent, (ISurfaceHandler<GM_Polygon>) receiver, defaultSrs );
+
+    // TODO: gml:surfaceMembers
+// if( GMLConstants.QN_SURFACE_MEMBER.equals( property ) )
+// return new SurfaceMemberContentHandler( reader, parent, (ISurfaceHandler<GM_Polygon>) receiver, defaultSrs );
+
+    return null;
   }
 }

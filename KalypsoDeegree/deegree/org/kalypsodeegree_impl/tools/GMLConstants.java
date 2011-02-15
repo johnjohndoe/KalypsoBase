@@ -71,12 +71,17 @@ public final class GMLConstants
 
   public static final QName QN_POLYGON_MEMBER = new QName( NS.GML3, "polygonMember" );
 
+  public static final QName QN_SURFACE_MEMBER = new QName( NS.GML3, "surfaceMember" );
+
+  public static final QName QN_SURFACE_MEMBERS = new QName( NS.GML3, "surfaceMembers" );
+
   public static final QName QN_MULTI_LINE_STRING = new QName( NS.GML3, "MultiLineString" );
 
   public static final QName QN_MULTI_CURVE = new QName( NS.GML3, "MultiCurve" );
 
   public static final QName QN_MULTI_POLYGON = new QName( NS.GML3, "MultiPolygon" );
 
+  public static final QName QN_MULTI_SURFACE = new QName( NS.GML3, "MultiSurface" );
 
   public static final QName QN_LOCATION = new QName( NS.GML3, "location" );
 
@@ -97,5 +102,4 @@ public final class GMLConstants
   public static final String DEFAULT_DECIMAL = ".";
 
   public static final QName QN_LINEAR_RING = new QName( NS.GML3, "LinearRing" );
-
 }

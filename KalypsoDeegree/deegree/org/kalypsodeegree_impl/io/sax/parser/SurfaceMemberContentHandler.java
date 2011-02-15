@@ -49,21 +49,20 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-
 /**
  * A content handler that parses a gml:pointMember property.<br>
  * 
  * @author Felipe Maximino
  */
-public class PolygonMemberContentHandler extends GMLElementContentHandler implements ISurfaceHandler<GM_Polygon>
+public class SurfaceMemberContentHandler extends GMLElementContentHandler implements ISurfaceHandler<GM_Polygon>
 {
-  public static final String ELEMENT_POLYGON_MEMBER = GMLConstants.QN_POLYGON_MEMBER.getLocalPart();
+  public static final String ELEMENT_SURFACE_MEMBER = GMLConstants.QN_SURFACE_MEMBER.getLocalPart();
 
   private final ISurfaceHandler<GM_Polygon> m_surfaceHandler;
 
-  public PolygonMemberContentHandler( final XMLReader reader, final IGmlContentHandler parent, final ISurfaceHandler<GM_Polygon> surfaceHandler, final String defaultSrs )
+  public SurfaceMemberContentHandler( final XMLReader reader, final IGmlContentHandler parent, final ISurfaceHandler<GM_Polygon> surfaceHandler, final String defaultSrs )
   {
-    super( reader, NS.GML3, ELEMENT_POLYGON_MEMBER, defaultSrs, parent );
+    super( reader, NS.GML3, ELEMENT_SURFACE_MEMBER, defaultSrs, parent );
 
     m_surfaceHandler = surfaceHandler;
   }
@@ -89,6 +88,7 @@ public class PolygonMemberContentHandler extends GMLElementContentHandler implem
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
     // TODO: verify if this property has an xlink
+    // FIXME: we should allow any element that substitutes _Surface; not only Polygon's
     setDelegate( new PolygonContentHandler( getXMLReader(), this, m_defaultSrs ) );
   }
 

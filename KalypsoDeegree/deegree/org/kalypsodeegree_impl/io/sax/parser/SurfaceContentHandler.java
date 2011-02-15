@@ -38,35 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.io.sax.marshaller;
+package org.kalypsodeegree_impl.io.sax.parser;
 
+import org.kalypso.gmlschema.types.IGmlContentHandler;
+import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * A marshaller for gml:PolyhedralSurfaces
+ * HACK: the SurfaceContentHandler is really just a PolygonContentHandler.<br/>
+ * TODO: we should delegate content handling depending on the real content that should be parsed.
  * 
  * @author Gernot Belger
- * @author Felipe Maximino - Refaktoring
  */
-public class PolyhedralSurfaceMarshallerMy extends AbstractSurfaceMarshaller<GM_Polygon>
+public class SurfaceContentHandler extends PolygonContentHandler
 {
-  private static final String TAG_POLYHEDRAL_SURFACE = "PolyhedralSurface";
-
-  public PolyhedralSurfaceMarshallerMy( final XMLReader reader, final GM_Surface<GM_Polygon> surface )
+  public SurfaceContentHandler( final XMLReader xmlReader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultCrs )
   {
-    super( reader, surface, TAG_POLYHEDRAL_SURFACE );
+    super( xmlReader, resultEater, parentContentHandler, defaultCrs );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
-   */
-  @Override
-  protected void doMarshallContent( final GM_Surface<GM_Polygon> marshalledObject ) throws SAXException
+  public SurfaceContentHandler( final XMLReader xmlReader, final ISurfaceHandler<GM_Polygon> surfaceHandler, final String defaultSrs )
   {
-    m_patchesMarshaller = new PolygonPatchesMarshaller( getXMLReader(), marshalledObject );
-    m_patchesMarshaller.marshall();
+    super( xmlReader, surfaceHandler, defaultSrs );
   }
 }

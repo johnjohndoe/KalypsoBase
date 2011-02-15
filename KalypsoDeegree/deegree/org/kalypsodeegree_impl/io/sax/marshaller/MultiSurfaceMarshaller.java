@@ -40,55 +40,41 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
+import java.util.Iterator;
+
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
-import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.xml.sax.Attributes;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * A marshaller for gml:TriangulatedSurfaces
+ * A marshaller for gml:Exterior. It delegates the marshalling to the corresponding gml:LinearRing elements marshallers.
  * 
- * @author Gernot Belger
- * @author Felipe Maximino - Refaktoring
+ * @author Felipe Maximino
  */
-public class TriangulatedSurfaceMarshaller extends AbstractSurfaceMarshaller<GM_Triangle>
+public class MultiSurfaceMarshaller extends GeometryMarshaller<GM_MultiSurface>
 {
-  private static final String TAG_TRIANGULATED_SURFACE = "TriangulatedSurface";
+  public static final String TAG_MULTI_SURFACE = GMLConstants.QN_MULTI_SURFACE.getLocalPart();
 
-  public TriangulatedSurfaceMarshaller( final XMLReader reader, final GM_TriangulatedSurface surface )
+  public MultiSurfaceMarshaller( final XMLReader reader, final GM_MultiSurface multi )
   {
-    super( reader, surface, TAG_TRIANGULATED_SURFACE );
-    m_patchesMarshaller = new TrianglePatchesMarshaller( reader, surface );
+    super( reader, TAG_MULTI_SURFACE, multi );
   }
 
   /**
    * @see org.kalypsodeegree_impl.io.sax.marshaller.AbstractMarshaller#doMarshall(java.lang.Object)
    */
   @Override
-  protected void doMarshallContent( final GM_Surface<GM_Triangle> marshalledObject ) throws SAXException
+  protected void doMarshallContent( final GM_MultiSurface marshalledObject ) throws SAXException
   {
-    m_patchesMarshaller.marshall();
-  }
-
-  public void marshallTriangle( final GM_Triangle triangle, final String crs ) throws SAXException
-  {
-    final SurfacePatchMarshaller<GM_Triangle> triangleMarshaller = getPatchMarshaller();
-    triangleMarshaller.setPatch( triangle );
-    triangleMarshaller.setSurfaceCrs( crs );
-    triangleMarshaller.marshall();
-  }
-
-  public void startSurface( final Attributes atts ) throws SAXException
-  {
-    startMarshalling( atts );
-    m_patchesMarshaller.startMarshalling();
-  }
-
-  public void endSurface( ) throws SAXException
-  {
-    m_patchesMarshaller.endMarshalling();
-    endMarshalling();
+    for( final Iterator<GM_Object> it = marshalledObject.getIterator(); it.hasNext(); )
+    {
+      // FIXME: we should allow all geometries that substitue '_Surface'
+      final GM_Surface<GM_Polygon> object = (GM_Surface<GM_Polygon>) it.next();
+      new PolygonMemberMarshaller( getXMLReader(), object ).marshall();
+    }
   }
 }

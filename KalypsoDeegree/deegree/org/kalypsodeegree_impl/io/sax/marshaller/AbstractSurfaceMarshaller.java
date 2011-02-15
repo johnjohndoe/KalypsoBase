@@ -53,11 +53,11 @@ import org.xml.sax.XMLReader;
  * 
  * @author Felipe Maximino
  */
-public abstract class SurfaceMarshaller<T extends GM_SurfacePatch> extends GeometryMarshaller<GM_Surface<T>>
+public abstract class AbstractSurfaceMarshaller<T extends GM_SurfacePatch> extends GeometryMarshaller<GM_Surface<T>>
 {
   protected PatchesMarshaller<T> m_patchesMarshaller;
 
-  public SurfaceMarshaller( final XMLReader reader, final GM_Surface<T> surface, final String tag )
+  public AbstractSurfaceMarshaller( final XMLReader reader, final GM_Surface<T> surface, final String tag )
   {
     super( reader, tag, surface );
   }
