@@ -512,39 +512,39 @@ public class GeometryUtilities
   }
 
   public static Class< ? extends GM_Object> getPointClass( )
-  {
+      {
     return GM_Point.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getMultiPointClass( )
-  {
+      {
     return GM_MultiPoint.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getLineStringClass( )
-  {
+      {
     return GM_Curve.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getMultiLineStringClass( )
-  {
+      {
     return GM_MultiCurve.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getPolygonClass( )
-  {
+      {
     return GM_Surface.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getMultiPolygonClass( )
-  {
+      {
     return GM_MultiSurface.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getUndefinedGeometryClass( )
-  {
+      {
     return GM_Object.class;
-  }
+      }
 
   public static boolean isGeometry( final Object o )
   {
@@ -606,10 +606,10 @@ public class GeometryUtilities
       final GM_Position b = positions[i];
       final GM_Position c = positions[i + 1];
       area += (b.getY() - a.getY()) * (a.getX() - c.getX()) // bounding rectangle
-          - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
-              + (b.getX() - c.getX()) * (b.getY() - c.getY())//
+      - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
+          + (b.getX() - c.getX()) * (b.getY() - c.getY())//
           + (a.getX() - c.getX()) * (c.getY() - a.getY())//
-          ) / 2d;
+      ) / 2d;
     }
     return area;
   }
@@ -725,8 +725,8 @@ public class GeometryUtilities
    */
   public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList modelList, final QName[] geomQNames, final QName[] allowedQNames )
   {
-    if( geomQNames == null )
-      return null;
+// if( geomQNames == null )
+// return null;
 
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, grabDistance );
     final List< ? > foundElements = modelList.query( reqEnvelope, null );
@@ -741,7 +741,9 @@ public class GeometryUtilities
       final Feature feature = FeatureHelper.getFeature( workspace, object );
       if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), allowedQNames ) )
       {
-        for( final QName geomQName : geomQNames )
+        final QName[] geomProperties = GeometryUtilities.getGeometryQNames( feature, geomQNames );
+
+        for( final QName geomQName : geomProperties )
         {
           if( feature.getFeatureType().getProperty( geomQName ) == null )
             continue;
@@ -763,7 +765,32 @@ public class GeometryUtilities
     return nearest;
   }
 
-/**
+  /**
+   * Returns either the given qnames or all geometry qname's of the given feature.
+   */
+  public static QName[] getGeometryQNames( final Feature feature, final QName[] geomQNames )
+  {
+    if( feature == null )
+      return geomQNames;
+
+    if( geomQNames == null )
+    {
+      final IValuePropertyType[] properties = feature.getFeatureType().getAllGeomteryProperties();
+      return toQNames( properties );
+    }
+
+    return geomQNames;
+  }
+
+  private static QName[] toQNames( final IValuePropertyType[] properties )
+  {
+    final QName[] result = new QName[properties.length];
+    for( int i = 0; i < properties.length; i++ )
+      result[i] = properties[i].getQName();
+    return result;
+  }
+
+  /**
    * Same as
    * {@link #findNearestFeature(GM_Point, double, FeatureList, QName, QName[]), but with an array of Featurelists.
    *
@@ -1233,17 +1260,17 @@ public class GeometryUtilities
     }
     try
     {
-      List<GM_Position> lListPositionWithValues = new ArrayList<GM_Position>();
-      Set<GM_Point> lSetKeys = mapPositionsValues.keySet();
+      final List<GM_Position> lListPositionWithValues = new ArrayList<GM_Position>();
+      final Set<GM_Point> lSetKeys = mapPositionsValues.keySet();
       GM_Point gmPoint = null;
-      for( Iterator<GM_Point> iterator = lSetKeys.iterator(); iterator.hasNext(); )
+      for( final Iterator<GM_Point> iterator = lSetKeys.iterator(); iterator.hasNext(); )
       {
         gmPoint = iterator.next();
         lListPositionWithValues.add( GeometryFactory.createGM_Position( gmPoint.getX(), gmPoint.getY(), mapPositionsValues.get( gmPoint ) ) );
       }
       return GeometryFactory.createGM_Triangle( lListPositionWithValues.get( 0 ), lListPositionWithValues.get( 1 ), lListPositionWithValues.get( 2 ), gmPoint.getCoordinateSystem() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return null;
     }

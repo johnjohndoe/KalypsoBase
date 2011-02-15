@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.namespace.QName;
 
@@ -313,7 +314,23 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   @Override
   public int getPropertyPosition( final IPropertyType propertyType )
   {
+
     final Integer pos = m_positionMap.get( propertyType );
+    if( pos != null )
+      return pos.intValue();
+
+    // HOTFIX (FIXME): for some conditions, the real property type is not the same as the one in our hash-map -> we do
+    // brute force search for now, in order not to break any other code. FIXME: instead, we should hash by qname.
+    if( propertyType instanceof VirtualFunctionWrapperRelationType || propertyType instanceof VirtualFunctionValueWrapperPropertyType )
+    {
+      for( final Entry<IPropertyType, Integer> entry : m_positionMap.entrySet() )
+      {
+        final IPropertyType key = entry.getKey();
+        if( key.getQName().equals( propertyType.getQName() ) )
+          return entry.getValue().intValue();
+      }
+    }
+
     return pos == null ? -1 : pos.intValue();
   }
 
@@ -413,17 +430,4 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   {
     return m_annotation;
   }
-
-// @Override
-// public long getFullID()
-// {
-// return m_fullID;
-// }
-//  
-// @Override
-// public long getLocalID()
-// {
-// return m_localID;
-// }
-
 }
