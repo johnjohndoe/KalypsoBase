@@ -43,7 +43,7 @@ package org.kalypso.zml.ui.chart.layer.themes;
 import org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider;
 import org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider;
 
-import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
@@ -90,9 +90,9 @@ public final class ZmlLayerFactory
     return createBarLayer( null, style );
   }
 
-  public ZmlConstantLineLayer createConstantLineLayer( final IParameterContainer parameters, final IStyleSet styleSet, final boolean calculatedRange )
+  public ZmlConstantLineLayer createConstantLineLayer( final ILayerProvider provider, final IStyleSet styleSet, final boolean calculatedRange )
   {
-    final ZmlConstantLineLayer layer = new ZmlConstantLineLayer( parameters, styleSet, calculatedRange );
+    final ZmlConstantLineLayer layer = new ZmlConstantLineLayer( provider, styleSet, calculatedRange );
 
     return layer;
   }

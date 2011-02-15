@@ -75,7 +75,7 @@ public class ZmlConstantLineLayerProvider extends AbstractLayerProvider implemen
 
       final ZmlLayerFactory factory = ZmlLayerFactory.getInstance();
 
-      final ZmlConstantLineLayer layer = factory.createConstantLineLayer( parameters, getStyleSet(), false );
+      final ZmlConstantLineLayer layer = factory.createConstantLineLayer( this, getStyleSet(), false );
       final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, getTargetAxisId() );
 
       // BAD; the layer should handle the observation, especially, thew layer should still load even if observation does

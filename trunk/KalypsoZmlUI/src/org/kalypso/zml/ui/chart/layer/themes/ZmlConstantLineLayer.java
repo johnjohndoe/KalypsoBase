@@ -60,6 +60,7 @@ import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -74,22 +75,16 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private boolean m_calculateRange = false;
 
-  private final IParameterContainer m_parameters;
-
-  private final IStyleSet m_styleSet;
-
   private IZmlLayerDataHandler m_handler;
 
   private IObservation m_lastObservation;
 
   private String m_labelDescriptor;
 
-  protected ZmlConstantLineLayer( final IParameterContainer parameters, final IStyleSet styleSet, final boolean calculateRange )
+  protected ZmlConstantLineLayer( final ILayerProvider provider, final IStyleSet styleSet, final boolean calculateRange )
   {
-    super( null, null );
+    super( provider, styleSet );
 
-    m_parameters = parameters;
-    m_styleSet = styleSet;
     m_calculateRange = calculateRange;
   }
 
@@ -216,7 +211,9 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
       return;
 
     final MetadataList metadata = observation.getMetadataList();
-    final MetadataLayerBoundaryBuilder builder = new MetadataLayerBoundaryBuilder( metadata, m_parameters, m_styleSet );
+    final IParameterContainer parameters = getProvider().getParameterContainer();
+
+    final MetadataLayerBoundaryBuilder builder = new MetadataLayerBoundaryBuilder( metadata, parameters, getStyleSet() );
     builder.execute( new NullProgressMonitor() );
 
     final IMetadataLayerBoundary[] boundaryLayers = builder.getBoundaries( m_handler.getTargetAxisId() );

@@ -57,6 +57,11 @@ public abstract class AbstractParameterVisitor implements IChartLayerVisitor
     m_parameter = parameter;
   }
 
+  protected String getParameter( )
+  {
+    return m_parameter;
+  }
+
   protected boolean definesParameter( final IChartLayer layer )
   {
     final ILayerProvider provider = layer.getProvider();
