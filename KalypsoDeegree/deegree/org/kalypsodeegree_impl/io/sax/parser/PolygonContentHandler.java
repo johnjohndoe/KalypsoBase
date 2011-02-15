@@ -82,6 +82,11 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
 
   private final ISurfaceHandler<GM_Polygon> m_surfaceHandler;
 
+  public PolygonContentHandler( final XMLReader xmlReader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
+  {
+    this( xmlReader, null, resultEater, parentContentHandler, defaultSrs );
+  }
+
   public PolygonContentHandler( final XMLReader xmlReader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler )
   {
     this( xmlReader, null, resultEater, parentContentHandler, null );

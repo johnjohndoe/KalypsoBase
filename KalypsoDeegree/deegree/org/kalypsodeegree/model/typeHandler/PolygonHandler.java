@@ -47,6 +47,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.io.sax.marshaller.PolygonMarshaller;
@@ -57,19 +58,20 @@ import org.xml.sax.XMLReader;
 
 /**
  * @author Felipe Maximino
- *
  */
 public class PolygonHandler implements IMarshallingTypeHandler2
 {
   private static final QName QNAME_TYPE = GMLConstants.QN_POLYGON;
 
   /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler2#createContentHandler(org.xml.sax.XMLReader, org.xml.sax.ContentHandler, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler2#createContentHandler(org.xml.sax.XMLReader,
+   *      org.xml.sax.ContentHandler, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String,
+   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {
-    return new PolygonContentHandler( reader, resultEater, parentContentHandler );
+    return new PolygonContentHandler( reader, resultEater, parentContentHandler, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
   }
 
   /**
@@ -92,7 +94,8 @@ public class PolygonHandler implements IMarshallingTypeHandler2
   }
 
   /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader, java.net.URL, java.lang.String)
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader,
+   *      java.net.URL, java.lang.String)
    */
   @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
@@ -110,7 +113,8 @@ public class PolygonHandler implements IMarshallingTypeHandler2
   }
 
   /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader, java.net.URL, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String)
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader, java.net.URL,
+   *      org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String)
    */
   @Override
   public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )

@@ -82,6 +82,11 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
     this( reader, null, resultEater, parentContentHandler, null );
   }
 
+  public LineStringContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
+  {
+    this( reader, null, resultEater, parentContentHandler, defaultSrs );
+  }
+
   public LineStringContentHandler( final XMLReader reader, final ICurveHandler lineStringHandler, final String defaultSrs )
   {
     this( reader, lineStringHandler, null, lineStringHandler, defaultSrs );

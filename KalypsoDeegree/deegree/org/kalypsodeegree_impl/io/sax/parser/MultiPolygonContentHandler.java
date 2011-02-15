@@ -77,6 +77,11 @@ public class MultiPolygonContentHandler extends GMLElementContentHandler impleme
 
   private final IMultiSurfaceHandler m_surfaceHandler;
 
+  public MultiPolygonContentHandler( final XMLReader xmlReader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
+  {
+    this( xmlReader, null, resultEater, parentContentHandler, defaultSrs );
+  }
+
   public MultiPolygonContentHandler( final XMLReader xmlReader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler )
   {
     this( xmlReader, null, resultEater, parentContentHandler, null );
@@ -86,12 +91,13 @@ public class MultiPolygonContentHandler extends GMLElementContentHandler impleme
   {
     super( xmlReader, NS.GML3, ELEMENT_MULTI_POLYGON, defaultSrs, parentContentHandler );
 
-    m_resultEater = resultEater;    
+    m_resultEater = resultEater;
     m_surfaceHandler = surfaceHandler;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
    */
   @Override
   protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
@@ -106,7 +112,8 @@ public class MultiPolygonContentHandler extends GMLElementContentHandler impleme
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
    */
   @Override
   public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
@@ -122,7 +129,8 @@ public class MultiPolygonContentHandler extends GMLElementContentHandler impleme
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String,
+   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
