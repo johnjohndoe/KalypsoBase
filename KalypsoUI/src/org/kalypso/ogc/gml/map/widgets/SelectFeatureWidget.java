@@ -564,13 +564,14 @@ public class SelectFeatureWidget extends AbstractWidget
   /**
    * Finds the geometry properties to select from.<br>
    * If a default type is specified, this will always be used.<br>
-   * Else, all geometrie properties of the target type of the list will be taken.
+   * Else, all geometry properties of the target type of the list will be taken.
    * 
    * @param propertyName
    *          The property of the theme, that may provide the geometry qname.
    * @param feature
    *          The feature that provides the geometries. If <code>null</code>, the target feature type of the given theme
-   *          is analysed.
+   *          is analyzed.
+   * @return May return <code>null</code>, if we cannot determine any good feature type and no hint was given.
    */
   public static QName[] findGeomQName( final IKalypsoFeatureTheme theme, final QName defaultGeometry, final String propertyName, final Feature feature )
   {
@@ -596,13 +597,20 @@ public class SelectFeatureWidget extends AbstractWidget
       return findGeomQName( feature.getFeatureType() );
 
     // REMARK:
-    // ...if not possiple, use the geometries of the feature-lists target feature type.
+    // ...if not possible, use the geometries of the feature-lists target feature type.
     final FeatureList featureList = theme.getFeatureList();
     final IRelationType parentFeatureTypeProperty = featureList.getParentFeatureTypeProperty();
     if( parentFeatureTypeProperty == null )
       return null;
 
-    return findGeomQName( parentFeatureTypeProperty.getTargetFeatureType() );
+    final IFeatureType targetFeatureType = parentFeatureTypeProperty.getTargetFeatureType();
+    // BUGFIX: fixes https://sourceforge.net/apps/trac/kalypso/ticket/653:
+    // If neither to feature type (_Feature is the most common type, so it is always found) can be determined,
+    // nor we have any clue which geometries to use (no selectionGeometry defined above), we allow for all QName's
+    if( targetFeatureType.getQName().equals( Feature.QNAME_FEATURE ) )
+      return null;
+
+    return findGeomQName( targetFeatureType );
   }
 
   public static QName[] findGeomQName( final IFeatureType targetFeatureType )
@@ -611,7 +619,6 @@ public class SelectFeatureWidget extends AbstractWidget
     final QName[] result = new QName[geomProperties.length];
     for( int i = 0; i < geomProperties.length; i++ )
       result[i] = geomProperties[i].getQName();
-
     return result;
   }
 
@@ -683,9 +690,11 @@ public class SelectFeatureWidget extends AbstractWidget
         final Feature feature = FeatureHelper.getFeature( workspace, object );
         final IFeatureType featureType = feature.getFeatureType();
 
+        final QName[] geometryProperties = GeometryUtilities.getGeometryQNames( feature, geomQNames );
+
         if( GMLSchemaUtilities.substitutes( featureType, qnamesToSelect ) )
         {
-          for( final QName geomQName : geomQNames )
+          for( final QName geomQName : geometryProperties )
           {
             final IPropertyType pt = featureType.getProperty( geomQName );
             if( pt == null )
