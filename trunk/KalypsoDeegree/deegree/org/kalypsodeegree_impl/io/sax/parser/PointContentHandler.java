@@ -71,6 +71,11 @@ public class PointContentHandler extends GMLElementContentHandler implements ICo
 
   private GM_Point m_point;
 
+  public PointContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
+  {
+    this( reader, null, resultEater, parentContentHandler, defaultSrs );
+  }
+
   public PointContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler )
   {
     this( reader, null, resultEater, parentContentHandler, null );
@@ -90,7 +95,8 @@ public class PointContentHandler extends GMLElementContentHandler implements ICo
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
    */
   @Override
   protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
@@ -107,7 +113,8 @@ public class PointContentHandler extends GMLElementContentHandler implements ICo
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String,
+   *      java.lang.String, java.lang.String)
    */
   @Override
   public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
@@ -122,19 +129,20 @@ public class PointContentHandler extends GMLElementContentHandler implements ICo
     {
       super.handleUnexpectedEndElement( uri, localName, name );
     }
-  }  
+  }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String,
+   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
     m_activeSrs = ContentHandlerUtils.parseSrsFromAttributes( atts, m_defaultSrs );
 
-    /* creates the controlPointsContentHandler allowing it to parse either gml:coordinates or gml:coord or gml:pos*/
+    /* creates the controlPointsContentHandler allowing it to parse either gml:coordinates or gml:coord or gml:pos */
     final GMLPropertyChoiceContentHandler ctrlPointsContentHandler = new GMLPropertyChoiceContentHandler( getXMLReader(), this, this, m_activeSrs, new PointSpecification() );
-    setDelegate( ctrlPointsContentHandler ); 
+    setDelegate( ctrlPointsContentHandler );
   }
 
   /**
@@ -142,15 +150,15 @@ public class PointContentHandler extends GMLElementContentHandler implements ICo
    */
   @Override
   public void handle( final List<Double[]> element ) throws SAXParseException
-  { 
+  {
     /* a point must have at least one tuple */
     if( element.size() != 1 )
       throwSAXParseException( "One point must have exactly one tuple of coordinates." );
 
-    /* the point is the first tuple.  */
+    /* the point is the first tuple. */
     final Double[] tuple = element.get( 0 );
 
-    if( tuple.length < 2 || tuple.length > 3)
+    if( tuple.length < 2 || tuple.length > 3 )
       throwSAXParseException( "One point must have at least 2 coordinates and at most 3 coordinates!" );
 
     if( tuple.length == 2 )

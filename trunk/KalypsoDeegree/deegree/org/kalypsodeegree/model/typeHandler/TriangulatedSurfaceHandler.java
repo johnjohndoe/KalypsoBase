@@ -43,6 +43,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.io.sax.marshaller.TriangulatedSurfaceMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.TriangulatedSurfaceContentHandler;
@@ -140,6 +141,6 @@ public class TriangulatedSurfaceHandler implements IMarshallingTypeHandler2
   @Override
   public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {
-    return new TriangulatedSurfaceContentHandler( reader, resultEater, parentContentHandler );
+    return new TriangulatedSurfaceContentHandler( reader, resultEater, parentContentHandler, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
   }
 }
