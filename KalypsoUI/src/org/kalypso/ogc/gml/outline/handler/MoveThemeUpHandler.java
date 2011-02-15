@@ -45,9 +45,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -55,8 +52,6 @@ import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.MoveThemeUpCommand;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.outline.ChangeSelectionRunnable;
-import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 
 /**
  * @author Gernot Belger
@@ -70,10 +65,7 @@ public class MoveThemeUpHandler extends AbstractHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final Display display = shell == null ? null : shell.getDisplay();
     final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
-    final GisMapOutlinePage mapOutline = MapHandlerUtils.getMapOutline( context );
 
     /* Order the selection as the themes are ordered in the outline. */
     final IKalypsoTheme[] selectedThemesInOrder = MapHandlerUtils.getSelectedThemesInOrder( selection );
@@ -92,8 +84,7 @@ public class MoveThemeUpHandler extends AbstractHandler
     }
 
     /* (Re-)select moved themes */
-    final StructuredSelection newSelection = new StructuredSelection( selectedThemesInOrder );
-    MapHandlerUtils.postCommandChecked( context, compositeCommand, new ChangeSelectionRunnable( mapOutline, newSelection, display ) );
+    MapHandlerUtils.postCommandChecked( context, compositeCommand, null );
 
     return null;
   }
