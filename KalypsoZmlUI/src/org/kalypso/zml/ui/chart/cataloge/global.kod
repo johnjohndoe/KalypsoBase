@@ -24,7 +24,7 @@
         <FontWeight>NORMAL</FontWeight>
         <FontStyle>NORMAL</FontStyle>
       </TextStyle>
-      <!-- invisible styles -->
+  <!-- invisible styles -->
       <LineStyle role="invisible_line" isVisible="false" />
       <PointStyle role="invisible_point" isVisible="false" />
       <!-- W (blue) styles (line and point) -->
@@ -96,16 +96,16 @@
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <LineStyle role="w_active_dot_line_1">
-        <Width>3</Width>
+        <Width>4</Width>
         <LineColor>3460A9</LineColor>
-        <DashArray>3 3</DashArray>
+        <DashArray>4 4</DashArray>
         <LineCap>ROUND</LineCap>
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <LineStyle role="w_active_wide_dot_line_1">
-        <Width>3</Width>
+        <Width>4</Width>
         <LineColor>3460A9</LineColor>
-        <DashArray>3 12</DashArray>
+        <DashArray>4 14</DashArray>
         <LineCap>ROUND</LineCap>
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
@@ -284,16 +284,16 @@
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <LineStyle role="q_active_dot_line_1">
-        <Width>3</Width>
+        <Width>4</Width>
         <LineColor>65782F</LineColor>
-        <DashArray>3 3</DashArray>
+        <DashArray>4 4</DashArray>
         <LineCap>ROUND</LineCap>
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <LineStyle role="q_active_wide_dot_line_1">
-        <Width>3</Width>
+        <Width>4</Width>
         <LineColor>65782F</LineColor>
-        <DashArray>3 12</DashArray>
+        <DashArray>4 14</DashArray>
         <LineCap>ROUND</LineCap>
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
@@ -555,7 +555,6 @@
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_line_2</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_line_3</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_line_4</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#invisible_point</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
@@ -585,7 +584,6 @@
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_line_2</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_line_3</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_line_4</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#invisible_point</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
@@ -618,7 +616,6 @@
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#n_area_2</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#n_area_3</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#n_area_4</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#invisible_point</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
@@ -637,7 +634,6 @@
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_nn_line_0</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#invisible_point</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
@@ -660,7 +656,6 @@
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_line_2</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_line_3</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_line_4</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#invisible_point</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
