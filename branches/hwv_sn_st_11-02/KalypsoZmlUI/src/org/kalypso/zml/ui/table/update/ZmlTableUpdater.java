@@ -90,9 +90,7 @@ public class ZmlTableUpdater implements Runnable
       for( int index = 0; index < links.length; index++ )
       {
         final TSLinkWithName link = links[index];
-
         update( link, identifier, index );
-
       }
     }
   }
@@ -128,10 +126,11 @@ public class ZmlTableUpdater implements Runnable
     final IZmlTable table = m_part.getTable();
 
     // column already exists?
-    for( final IZmlTableColumn column : table.getColumns() )
+    final IZmlTableColumn[] columns = table.getColumns();
+    for( final IZmlTableColumn column : columns )
     {
       final BaseColumn columnType = column.getColumnType();
-      if( columnType.getIdentifier().equals( identifier ) )
+      if( columnType.getIdentifier().equals( multipleIdentifier ) )
         return multipleIdentifier;
     }
 
