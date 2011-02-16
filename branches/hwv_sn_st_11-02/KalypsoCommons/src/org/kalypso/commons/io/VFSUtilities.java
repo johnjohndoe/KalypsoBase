@@ -53,6 +53,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs.AllFileSelector;
 import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystem;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileSystemManagerWrapper;
@@ -66,6 +67,7 @@ import org.apache.commons.vfs.VFSProviderExtension;
 import org.apache.commons.vfs.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs.impl.DefaultFileSystemManager;
 import org.apache.commons.vfs.impl.StandardFileSystemManager;
+import org.apache.commons.vfs.provider.AbstractFileSystem;
 import org.apache.commons.vfs.provider.http.HttpFileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
 import org.apache.commons.vfs.provider.webdav.WebdavFileSystemConfigBuilder;
@@ -599,7 +601,15 @@ public class VFSUtilities
     {
       /* Close the file object, if it is not null. */
       if( toClose != null )
+      {
+        /* Close the file object. */
         toClose.close();
+
+        /* Close the connection of the file system (e.g. a FTP connection). */
+        FileSystem fileSystem = toClose.getFileSystem();
+        if( fileSystem instanceof AbstractFileSystem )
+          ((AbstractFileSystem) fileSystem).closeCommunicationLink();
+      }
     }
     catch( final FileSystemException ex )
     {
