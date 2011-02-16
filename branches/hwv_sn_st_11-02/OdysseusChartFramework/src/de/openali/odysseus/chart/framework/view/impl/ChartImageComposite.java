@@ -5,6 +5,7 @@ import java.awt.Insets;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -316,7 +317,12 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     if( isDisposed() )
       return;
 
-    m_invalidateChartJob.schedule( 100 );
+    if( m_invalidateChartJob.getState() == Job.SLEEPING )
+    {
+      m_invalidateChartJob.cancel();
+    }
+
+    m_invalidateChartJob.schedule( 50 );
   }
 
   protected void paintDragArea( final GC gcw )

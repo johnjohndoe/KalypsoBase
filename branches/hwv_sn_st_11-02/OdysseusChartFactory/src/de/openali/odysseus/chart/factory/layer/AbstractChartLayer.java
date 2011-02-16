@@ -9,6 +9,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -290,7 +291,22 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public boolean isVisible( )
   {
-    return m_isVisible;
+    if( !m_isVisible )
+      return false;
+
+    final ICoordinateMapper mapper = getCoordinateMapper();
+    if( mapper == null )
+      return true;
+
+    final IAxis domainAxis = mapper.getDomainAxis();
+    if( Objects.isNotNull( domainAxis ) && !domainAxis.isVisible() )
+      return false;
+
+    final IAxis targetAxis = mapper.getTargetAxis();
+    if( Objects.isNotNull( targetAxis ) && !targetAxis.isVisible() )
+      return false;
+
+    return true;
   }
 
   /**
