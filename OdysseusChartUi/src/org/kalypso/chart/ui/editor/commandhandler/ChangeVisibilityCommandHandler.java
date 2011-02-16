@@ -44,9 +44,9 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
     return Status.OK_STATUS;
   }
 
-  protected void callAdditionalVisitors( final ILayerManager layerManager )
+  protected void callAdditionalVisitors( @SuppressWarnings("unused") final ILayerManager layerManager )
   {
-    // overwrite to execute addinital visitors
+    // overwrite to execute additional visitors
   }
 
   private String getParameter( final ExecutionEvent event )

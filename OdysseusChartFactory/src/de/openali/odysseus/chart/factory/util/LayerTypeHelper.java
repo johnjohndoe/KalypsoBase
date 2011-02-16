@@ -42,6 +42,7 @@ package de.openali.odysseus.chart.factory.util;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.xmlbeans.XmlException;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.w3c.dom.Node;
 
@@ -53,6 +54,7 @@ import de.openali.odysseus.chartconfig.x020.ChartDocument;
 import de.openali.odysseus.chartconfig.x020.DerivedLayerType;
 import de.openali.odysseus.chartconfig.x020.LayerDocument;
 import de.openali.odysseus.chartconfig.x020.LayerType;
+import de.openali.odysseus.chartconfig.x020.LayerType.MapperRefs;
 import de.openali.odysseus.chartconfig.x020.ParameterType;
 import de.openali.odysseus.chartconfig.x020.ParametersType;
 import de.openali.odysseus.chartconfig.x020.ProviderType;
@@ -194,6 +196,21 @@ public final class LayerTypeHelper
       throw new IllegalStateException( String.format( "LayerProvider not found: %s", providerType.getEpid() ) ); //$NON-NLS-1$
 
     return provider;
+  }
+
+  public static MapperRefs findMapperReference( final LayerType layerType )
+  {
+    if( Objects.isNull( layerType ) )
+      return null;
+
+    if( layerType.getMapperRefs() == null )
+    {
+      final ReferencableType parent = getParentNode( layerType );
+      if( parent instanceof LayerType )
+        return findMapperReference( (LayerType) parent );
+    }
+
+    return layerType.getMapperRefs();
   }
 
 }

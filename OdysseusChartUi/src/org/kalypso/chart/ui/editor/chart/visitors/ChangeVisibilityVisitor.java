@@ -66,7 +66,6 @@ public class ChangeVisibilityVisitor extends AbstractParameterVisitor
     if( definesParameter( layer ) )
     {
       layer.setVisible( m_enabled );
-
       setVisible( layer );
     }
 
@@ -79,9 +78,11 @@ public class ChangeVisibilityVisitor extends AbstractParameterVisitor
     if( parent instanceof IChartLayer )
     {
       final IChartLayer parentLayer = (IChartLayer) parent;
-      (parentLayer).setVisible( true );
+      if( parentLayer.isVisible() == m_enabled )
+        return;
 
-      setVisible( parentLayer );
+      if( m_enabled ) // set by "default"
+        parentLayer.setVisible( true );
     }
   }
 }
