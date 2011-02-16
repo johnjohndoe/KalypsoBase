@@ -153,4 +153,12 @@ public class MultipleTsLink
     return ArrayUtils.contains( currentIgnoreTypes, type );
   }
 
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "multiple link(%d) - %s", m_links.size(), m_identifier );
+  }
 }
