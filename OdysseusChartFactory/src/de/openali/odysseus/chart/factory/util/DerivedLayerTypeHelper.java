@@ -42,6 +42,9 @@ package de.openali.odysseus.chart.factory.util;
 
 import jregex.Pattern;
 import jregex.RETokenizer;
+
+import org.kalypso.commons.java.lang.Objects;
+
 import de.openali.odysseus.chartconfig.x020.ChildLayerType;
 import de.openali.odysseus.chartconfig.x020.DerivedLayerType;
 import de.openali.odysseus.chartconfig.x020.LayerRefernceType;
@@ -76,6 +79,9 @@ public final class DerivedLayerTypeHelper
   private static LayerType findChildLayerType( final LayerType parent, final String identifier )
   {
     final LayersType layersType = parent.getLayers();
+    if( Objects.isNull( layersType ) )
+      throw new IllegalStateException( String.format( "parent layer '%s' doesn't contains child layer '%s'", parent.getId(), identifier ) );
+
     final LayerType[] layers = layersType.getLayerArray();
     for( final LayerType layerType : layers )
     {
