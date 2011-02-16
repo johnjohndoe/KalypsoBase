@@ -78,6 +78,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.KalypsoCommonsDebug;
 import org.kalypso.commons.internal.i18n.Messages;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.net.ProxyUtilities;
 import org.kalypso.contribs.eclipse.core.net.Proxy;
 
@@ -592,33 +593,40 @@ public class VFSUtilities
    * This function closes the file object. It does not throw any exceptions. It calls {@link FileObject#close()} from
    * the file object given.
    * 
-   * @param toClose
-   *          The file object which should be closed. May be null or already closed.
+   * @param files
+   *          The file objects which should be closed. May be null or already closed.
    */
-  public static void closeQuietly( final FileObject toClose )
+  public static void closeQuietly( final FileObject... files )
   {
-    try
+    for( final FileObject file : files )
     {
-      /* Close the file object, if it is not null. */
-      if( toClose != null )
+      try
       {
-        /* Close the file object. */
-        toClose.close();
+        /* Close the file object, if it is not null. */
+        if( Objects.isNotNull( file ) )
+        {
+          file.close();
 
-        /* Close the connection of the file system (e.g. a FTP connection). */
-        FileSystem fileSystem = toClose.getFileSystem();
-        if( fileSystem instanceof AbstractFileSystem )
-          ((AbstractFileSystem) fileSystem).closeCommunicationLink();
+          /* Close the connection of the file system (e.g. a FTP connection). */
+          final FileSystem fileSystem = file.getFileSystem();
+          if( fileSystem instanceof AbstractFileSystem )
+          {
+            final AbstractFileSystem system = (AbstractFileSystem) fileSystem;
+// if( system.isOpen() )
+            system.closeCommunicationLink();
+          }
+        }
+      }
+      catch( final FileSystemException ignore )
+      {
+        /* If a file system exception is thrown, it was probably already closed. */
+      }
+      catch( final Exception ex )
+      {
+        /* On other exceptions, do tell the developer on the console. */
+        ex.printStackTrace();
       }
     }
-    catch( final FileSystemException ex )
-    {
-      /* If a file system exception is thrown, it was probably already closed. */
-    }
-    catch( final Exception ex )
-    {
-      /* On other exceptions, do tell the developer on the console. */
-      ex.printStackTrace();
-    }
+
   }
 }
