@@ -124,7 +124,6 @@ public class ZmlThemeBackGroundRaster extends AbstractChartLayer
 
     for( final IAxis axis : axes )
     {
-
       if( axis.isVisible() )
         if( ORIENTATION.VERTICAL.equals( axis.getPosition().getOrientation() ) )
           lastTargetAxis = axis;

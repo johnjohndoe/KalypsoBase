@@ -24,6 +24,7 @@ import de.openali.odysseus.chart.framework.model.layer.manager.LayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
+import de.openali.odysseus.chart.framework.model.mapper.IScreenAxis;
 
 /**
  * @author alibu
@@ -298,15 +299,23 @@ public abstract class AbstractChartLayer implements IChartLayer
     if( mapper == null )
       return true;
 
-    final IAxis domainAxis = mapper.getDomainAxis();
-    if( Objects.isNotNull( domainAxis ) && !domainAxis.isVisible() )
+    if( isNotVisible( mapper.getDomainAxis() ) )
       return false;
 
-    final IAxis targetAxis = mapper.getTargetAxis();
-    if( Objects.isNotNull( targetAxis ) && !targetAxis.isVisible() )
+    if( isNotVisible( mapper.getTargetAxis() ) )
       return false;
 
     return true;
+  }
+
+  private boolean isNotVisible( final IAxis axis )
+  {
+    if( Objects.isNull( axis ) )
+      return true;
+    else if( axis instanceof IScreenAxis )
+      return false;
+
+    return !axis.isVisible();
   }
 
   /**
