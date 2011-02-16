@@ -56,6 +56,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
@@ -67,6 +68,7 @@ import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chart.factory.config.StyleHelper;
 import de.openali.odysseus.chart.factory.util.DerivedLayerTypeHelper;
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
+import de.openali.odysseus.chart.factory.util.LayerTypeHelper;
 import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.AxisRendererType;
 import de.openali.odysseus.chartconfig.x020.AxisType;
@@ -76,6 +78,7 @@ import de.openali.odysseus.chartconfig.x020.ChartType.Renderers;
 import de.openali.odysseus.chartconfig.x020.DerivedLayerType;
 import de.openali.odysseus.chartconfig.x020.LayerRefernceType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
+import de.openali.odysseus.chartconfig.x020.LayerType.MapperRefs;
 import de.openali.odysseus.chartconfig.x020.LayersType;
 import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.ScreenAxisType;
@@ -239,7 +242,17 @@ public final class ChartTypeResolver implements IReferenceResolver
       final LayersType children = layer.getLayers();
       final LayerType child = findLayer( children, identifier, context );
       if( child != null )
+      {
+        /** mapper reference can be defined cascading. this could be a problem by handling / initialising derived layers */
+        if( Objects.isNull( child.getMapperRefs() ) )
+        {
+          final MapperRefs reference = LayerTypeHelper.findMapperReference( child );
+          child.setMapperRefs( reference );
+        }
+
         return child;
+      }
+
     }
 
     final LayerRefernceType[] layerReferences = layers.getLayerReferenceArray();
