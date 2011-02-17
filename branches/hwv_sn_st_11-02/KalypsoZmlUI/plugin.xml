@@ -294,12 +294,31 @@
              optional="false">
        </commandParameter>
     </command>
+    <command
+          categoryId="org.kalypso.chart.ui.commands.category"
+          id="org.kalypso.zml.ui.chart.layer.commands.set.filter"
+          name="Set Filter">
+       <commandParameter
+             id="enabled"
+             name="enabled"
+             optional="false">
+       </commandParameter>
+       <commandParameter
+             id="disabled"
+             name="disabled"
+             optional="false">
+       </commandParameter>
+    </command>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
     <handler
           class="org.kalypso.zml.ui.chart.layer.commands.ZmlChangeVisibilityCommandHandler"
           commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility">
+    </handler>
+    <handler
+          class="org.kalypso.zml.ui.chart.layer.commands.SetZmlFilterCommandHandler"
+          commandId="org.kalypso.zml.ui.chart.layer.commands.set.filter">
     </handler>
  </extension>
 </plugin>

@@ -53,6 +53,7 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
 import org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
@@ -68,7 +69,7 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
 
   private IAxis m_dateAxis;
 
-  public LineLayerModelVisitor( final ZmlLineLayer layer, final List<Point> path )
+  public LineLayerModelVisitor( final ZmlLineLayer layer, final List<Point> path, final IZmlLayerFilter[] filter )
   {
     m_layer = layer;
     m_path = path;
@@ -103,6 +104,7 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
   {
     try
     {
+
       final IAxis dateAxis = getDateAxis();
       final IAxis valueAxis = getValueAxis();
       if( Objects.isNull( dateAxis, valueAxis ) )
@@ -113,7 +115,7 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
 
       final Object dateObject = container.get( dateAxis );
       final Object valueObject = container.get( valueAxis );
-      if( Objects.isNull( dateObject, valueObject ) )
+      if( Objects.isNull( dateObject, valueObject ) || isFiltered( valueObject ) )
         return;
 
       final Date adjusted = ChartLayerUtils.addTimezoneOffset( (Date) dateObject );
@@ -125,5 +127,17 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
+  }
+
+  private boolean isFiltered( final Object valueObject )
+  {
+    if( !(valueObject instanceof Number) )
+      return true;
+
+    final Number value = (Number) valueObject;
+    if( value.doubleValue() == 0 )
+      return true;
+
+    return false;
   }
 }

@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="tableRule" name="tableRule" schema="schema/tableRule.exsd"/>
+   <extension-point id="zmlLayerFilter" name="zmlLayerFilter" schema="schema/zmlLayerFilter.exsd"/>
   	<extension
        point="org.kalypso.zml.core.tableRule">
     <rule

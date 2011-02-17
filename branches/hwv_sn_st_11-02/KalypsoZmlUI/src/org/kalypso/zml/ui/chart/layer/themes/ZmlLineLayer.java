@@ -188,7 +188,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
       setLineThemeStyles();
 
       final List<Point> path = new ArrayList<Point>();
-      model.accept( new LineLayerModelVisitor( this, path ) );
+      model.accept( new LineLayerModelVisitor( this, path, m_filter ) );
 
       drawLine( gc, path );
       drawPoints( gc, path );
