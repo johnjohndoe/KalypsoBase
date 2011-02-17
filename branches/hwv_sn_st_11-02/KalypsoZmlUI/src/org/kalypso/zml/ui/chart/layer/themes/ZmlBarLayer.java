@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -318,8 +317,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
    * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setFilter(org.kalypso.zml.core.diagram.layer.IZmlLayerFilter[])
    */
   @Override
-  public void setFilter( final IZmlLayerFilter[] filter )
+  public void setFilter( final IZmlLayerFilter filter )
   {
-    throw new NotImplementedException();
   }
 }

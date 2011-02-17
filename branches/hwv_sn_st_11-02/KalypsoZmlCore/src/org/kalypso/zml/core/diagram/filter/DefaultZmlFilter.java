@@ -47,5 +47,23 @@ import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
  */
 public class DefaultZmlFilter implements IZmlLayerFilter
 {
-  public static final String ID = "org.kalypso.zml.core.diagram.filter.default";
+  public static final String ID = "org.kalypso.zml.core.diagram.filter.default"; // $NON-NLS-1$
+
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayerFilter#isFiltered(java.lang.Number)
+   */
+  @Override
+  public boolean isFiltered( final Number value )
+  {
+    return false;
+  }
+
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayerFilter#getIdentifier()
+   */
+  @Override
+  public String getIdentifier( )
+  {
+    return ID;
+  }
 }

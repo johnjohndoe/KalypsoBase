@@ -42,11 +42,13 @@ package org.kalypso.zml.ui.chart.layer.commands;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.chart.ui.editor.commandhandler.utils.CommandHandlerUtils;
+import org.kalypso.zml.core.KalypsoZmlCore;
+import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
+import org.kalypso.zml.ui.chart.layer.visitor.SetZmlFilterVisitor;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -63,7 +65,7 @@ public class SetZmlFilterCommandHandler extends AbstractHandler
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
@@ -75,9 +77,17 @@ public class SetZmlFilterCommandHandler extends AbstractHandler
     final ILayerManager layerManager = model.getLayerManager();
     final boolean enabled = CommandHandlerUtils.isEnabled( event );
 
-// layerManager.accept( new ChangeVisibilityVisitor( getParameter( event ), enabled ) );
+    final IZmlLayerFilter filter = KalypsoZmlCore.getDefault().findFilter( getFilter( enabled, event ) );
+    layerManager.accept( new SetZmlFilterVisitor( filter ) );
 
     return Status.OK_STATUS;
   }
 
+  private String getFilter( final boolean enabled, final ExecutionEvent event )
+  {
+    if( enabled )
+      return event.getParameter( "enableCommand" ); // $NON-NLS-1$
+
+    return event.getParameter( "disableCommand" ); // $NON-NLS-1$
+  }
 }

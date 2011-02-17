@@ -51,6 +51,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.filter.DefaultZmlFilter;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
 import org.kalypso.zml.ui.KalypsoZmlUI;
@@ -77,7 +78,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private String m_labelDescriptor;
 
-  private IZmlLayerFilter[] m_filter;
+  private IZmlLayerFilter m_filter = new DefaultZmlFilter();
 
   private final ZmlLineLayerRangeHandler m_range = new ZmlLineLayerRangeHandler( this );
 
@@ -255,8 +256,10 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
    * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setFilter(org.kalypso.zml.core.diagram.layer.IZmlLayerFilter)
    */
   @Override
-  public void setFilter( final IZmlLayerFilter[] filter )
+  public void setFilter( final IZmlLayerFilter filter )
   {
     m_filter = filter;
+
+    getEventHandler().fireLayerContentChanged( this );
   }
 }

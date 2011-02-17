@@ -45,5 +45,9 @@ package org.kalypso.zml.core.diagram.layer;
  */
 public interface IZmlLayerFilter
 {
+  String EXTENSION_POINT_ID = "org.kalypso.zml.core.zmlLayerFilter";
 
+  boolean isFiltered( Number value );
+
+  String getIdentifier( );
 }

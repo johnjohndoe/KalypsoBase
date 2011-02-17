@@ -44,7 +44,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -281,9 +280,8 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
    * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setFilter(org.kalypso.zml.core.diagram.layer.IZmlLayerFilter[])
    */
   @Override
-  public void setFilter( final IZmlLayerFilter[] filter )
+  public void setFilter( final IZmlLayerFilter filter )
   {
-    throw new NotImplementedException();
   }
 
 }

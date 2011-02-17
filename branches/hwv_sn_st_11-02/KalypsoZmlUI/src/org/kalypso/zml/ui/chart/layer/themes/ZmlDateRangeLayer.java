@@ -42,7 +42,6 @@ package org.kalypso.zml.ui.chart.layer.themes;
 
 import java.util.Date;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.graphics.GC;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
@@ -175,9 +174,8 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
    * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setFilter(org.kalypso.zml.core.diagram.layer.IZmlLayerFilter[])
    */
   @Override
-  public void setFilter( final IZmlLayerFilter[] filter )
+  public void setFilter( final IZmlLayerFilter filter )
   {
-    throw new NotImplementedException();
   }
 
 }
