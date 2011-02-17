@@ -56,7 +56,7 @@ public class DefaultChartLegendConfig implements IChartLegendConfig
 
   private final Point m_iconSize = new Point( 9, 9 );
 
-  private final Point m_itemSpacer = new Point( 5, 8 );
+  private final Point m_itemSpacer = new Point( 10, 8 );
 
   public DefaultChartLegendConfig( final int width )
   {
