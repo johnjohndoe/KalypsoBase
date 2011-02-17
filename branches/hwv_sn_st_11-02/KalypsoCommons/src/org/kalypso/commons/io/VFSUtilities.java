@@ -590,8 +590,8 @@ public class VFSUtilities
   }
 
   /**
-   * This function closes the file object. It does not throw any exceptions. It calls {@link FileObject#close()} from
-   * the file object given.
+   * This function closes the file object. It does not throw any exceptions. It calls {@link FileObject#close()} of the
+   * given file objects.
    * 
    * @param files
    *          The file objects which should be closed. May be null or already closed.
@@ -602,19 +602,15 @@ public class VFSUtilities
     {
       try
       {
-        /* Close the file object, if it is not null. */
         if( Objects.isNotNull( file ) )
         {
+          /* Close the file object. */
           file.close();
 
           /* Close the connection of the file system (e.g. a FTP connection). */
           final FileSystem fileSystem = file.getFileSystem();
           if( fileSystem instanceof AbstractFileSystem )
-          {
-            final AbstractFileSystem system = (AbstractFileSystem) fileSystem;
-// if( system.isOpen() )
-            system.closeCommunicationLink();
-          }
+            ((AbstractFileSystem) fileSystem).closeCommunicationLink();
         }
       }
       catch( final FileSystemException ignore )
@@ -627,6 +623,5 @@ public class VFSUtilities
         ex.printStackTrace();
       }
     }
-
   }
 }
