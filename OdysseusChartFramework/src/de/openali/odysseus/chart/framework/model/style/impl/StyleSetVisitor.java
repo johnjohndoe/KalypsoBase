@@ -41,12 +41,14 @@
 package de.openali.odysseus.chart.framework.model.style.impl;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.IStyleSetRefernceFilter;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
@@ -83,7 +85,6 @@ public class StyleSetVisitor
   @SuppressWarnings("unchecked")
   public <T extends IStyle> T visit( final IStyleSet set, final Class<T> clazz, final String styleref )
   {
-
     final Map<String, IStyle> map = set.getStyles();
 
     final Set<Entry<String, IStyle>> entries = map.entrySet();
@@ -98,5 +99,42 @@ public class StyleSetVisitor
     }
 
     return StyleUtils.getDefaultStyle( clazz );
+  }
+
+  public String[] findReferences( final IStyleSet set, final Class< ? extends IStyle> clazz )
+  {
+    final Set<String> styles = new LinkedHashSet<String>();
+    final Map<String, IStyle> map = set.getStyles();
+
+    final Set<Entry<String, IStyle>> entries = map.entrySet();
+    for( final Entry<String, IStyle> entry : entries )
+    {
+      final String role = entry.getKey();
+      final IStyle style = entry.getValue();
+      if( clazz.isAssignableFrom( style.getClass() ) )
+      {
+        styles.add( role );
+      }
+    }
+
+    return styles.toArray( new String[] {} );
+  }
+
+  public <T extends IStyle> T findReferences( final IStyleSet set, final Class<T> clazz, final IStyleSetRefernceFilter filter )
+  {
+    final Map<String, IStyle> map = set.getStyles();
+
+    final Set<Entry<String, IStyle>> entries = map.entrySet();
+    for( final Entry<String, IStyle> entry : entries )
+    {
+      final String role = entry.getKey();
+      final IStyle style = entry.getValue();
+      if( clazz.isAssignableFrom( style.getClass() ) && filter.accept( role ) )
+      {
+        return (T) style;
+      }
+    }
+
+    return null;
   }
 }

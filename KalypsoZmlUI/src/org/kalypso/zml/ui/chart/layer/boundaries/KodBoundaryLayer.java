@@ -71,11 +71,6 @@ public class KodBoundaryLayer implements IMetadataLayerBoundary
     m_styles = styleSet;
   }
 
-  protected IStyleSet getStyles( )
-  {
-    return m_styles;
-  }
-
   @Override
   public IMetadataBoundary getBoundary( )
   {
