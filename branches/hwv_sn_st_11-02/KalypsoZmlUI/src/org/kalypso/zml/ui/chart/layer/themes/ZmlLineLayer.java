@@ -267,24 +267,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#isVisible()
-   */
-  @Override
-  public boolean isVisible( )
-  {
-    if( !super.isVisible() )
-      return false;
-
-    // FIXME: what IS that???? Does this makes any sense??? Please AT LEAST comment such strange stuff!
-// else if( getTargetRange( null ) == null )
-// return false;
-// else if( getDomainRange() == null )
-// return false;
-
-    return true;
-  }
-
-  /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
