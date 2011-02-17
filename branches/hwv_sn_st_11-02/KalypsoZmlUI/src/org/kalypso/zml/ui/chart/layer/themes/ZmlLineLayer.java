@@ -70,6 +70,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperat
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.IStyleSetRefernceFilter;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
@@ -351,7 +352,14 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
     final StyleSetVisitor visitor = new StyleSetVisitor();
 
-    final IPointStyle pointStyle = visitor.visit( styleSet, IPointStyle.class, index );
+    final IPointStyle pointStyle = visitor.findReferences( styleSet, IPointStyle.class, new IStyleSetRefernceFilter()
+    {
+      @Override
+      public boolean accept( final String reference )
+      {
+        return !reference.contains( "single" ); //$NON-NLS-1$
+      }
+    } );
     final ILineStyle lineStyle = visitor.visit( styleSet, ILineStyle.class, index );
     final ITextStyle textStyle = visitor.visit( styleSet, ITextStyle.class, index );
 
@@ -359,5 +367,4 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     getPolylineFigure().setStyle( lineStyle );
     getTextFigure().setStyle( textStyle );
   }
-
 }
