@@ -44,6 +44,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -53,6 +54,7 @@ import org.kalypso.ogc.sensor.metadata.IMetadataBoundary;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
+import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
 import org.kalypso.zml.ui.chart.layer.boundaries.IMetadataLayerBoundary;
 import org.kalypso.zml.ui.chart.layer.boundaries.MetadataLayerBoundaryBuilder;
 
@@ -273,6 +275,15 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
       return m_labelDescriptor;
 
     return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
+  }
+
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setFilter(org.kalypso.zml.core.diagram.layer.IZmlLayerFilter[])
+   */
+  @Override
+  public void setFilter( final IZmlLayerFilter[] filter )
+  {
+    throw new NotImplementedException();
   }
 
 }

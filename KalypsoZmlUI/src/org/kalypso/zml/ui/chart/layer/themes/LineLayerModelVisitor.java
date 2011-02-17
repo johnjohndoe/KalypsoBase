@@ -118,7 +118,7 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
 
       final Date adjusted = ChartLayerUtils.addTimezoneOffset( (Date) dateObject );
 
-      final Point screen = m_layer.getCoordinateMapper().numericToScreen( m_layer.getDateDataOperator().logicalToNumeric( adjusted ), m_layer.getNumberDataOperator().logicalToNumeric( (Double) valueObject ) );
+      final Point screen = m_layer.getCoordinateMapper().numericToScreen( m_layer.getRangeHandler().getDateDataOperator().logicalToNumeric( adjusted ), m_layer.getRangeHandler().getNumberDataOperator().logicalToNumeric( (Double) valueObject ) );
       m_path.add( screen );
     }
     catch( final SensorException e )
