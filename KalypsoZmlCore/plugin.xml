@@ -46,5 +46,16 @@
          </nextCatalog>
       </catalogContribution>
  </extension>
+ <extension
+       point="org.kalypso.zml.core.zmlLayerFilter">
+    <filter
+          filter="org.kalypso.zml.core.diagram.filter.DefaultZmlFilter"
+          id="org.kalypso.zml.core.diagram.filter.default">
+    </filter>
+    <filter
+          filter="org.kalypso.zml.core.diagram.filter.NotNullZmlFilter"
+          id="org.kalypso.zml.core.diagram.filter.not.null">
+    </filter>
+ </extension>
 
 </plugin>

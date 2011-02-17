@@ -9,9 +9,11 @@ Require-Bundle: org.kalypso.core;visibility:=reexport,
  de.openali.odysseus.chart.factory;bundle-version="10.10.1";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.kalypso.zml.core.diagram.base,
+Export-Package: org.kalypso.zml.core,
+ org.kalypso.zml.core.diagram.base,
  org.kalypso.zml.core.diagram.base.visitors,
  org.kalypso.zml.core.diagram.data,
+ org.kalypso.zml.core.diagram.filter,
  org.kalypso.zml.core.diagram.layer,
  org.kalypso.zml.core.table,
  org.kalypso.zml.core.table.binding,

@@ -1,13 +1,15 @@
 package org.kalypso.zml.core;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
 import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
@@ -15,7 +17,9 @@ import org.osgi.framework.BundleContext;
 
 public class KalypsoZmlCore extends Plugin implements BundleActivator
 {
-  private static List<IZmlRuleImplementation> ZML_TABLE_RULES = null;
+  private static Map<String, IZmlRuleImplementation> ZML_TABLE_RULES = null;
+
+  private static Map<String, IZmlLayerFilter> ZML_DIAGRAM_FILTERS = null;
 
   private static BundleContext CONTEXT;
 
@@ -61,12 +65,12 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
   /**
    * @return list of feature binding handlers, handling a special featureType qname
    */
-  public synchronized IZmlRuleImplementation[] getRules( )
+  public synchronized Map<String, IZmlRuleImplementation> getRules( )
   {
     // fill binding map
-    if( ZML_TABLE_RULES == null )
+    if( Objects.isNull( ZML_TABLE_RULES ) )
     {
-      ZML_TABLE_RULES = new ArrayList<IZmlRuleImplementation>();
+      ZML_TABLE_RULES = new HashMap<String, IZmlRuleImplementation>();
 
       /* get extension points */
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -82,7 +86,7 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
           final Constructor< ? > constructor = featureClass.getConstructor();
 
           final IZmlRuleImplementation instance = (IZmlRuleImplementation) constructor.newInstance();
-          ZML_TABLE_RULES.add( instance );
+          ZML_TABLE_RULES.put( instance.getIdentifier(), instance );
         }
         catch( final Throwable e )
         {
@@ -91,7 +95,7 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
       }
     }
 
-    return ZML_TABLE_RULES.toArray( new IZmlRuleImplementation[] {} );
+    return ZML_TABLE_RULES;
   }
 
   /**
@@ -99,13 +103,49 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
    */
   public synchronized IZmlRuleImplementation findRule( final String identifier )
   {
-    final IZmlRuleImplementation[] rules = getRules();
-    for( final IZmlRuleImplementation rule : rules )
+    final Map<String, IZmlRuleImplementation> rules = getRules();
+
+    return rules.get( identifier );
+  }
+
+  public synchronized Map<String, IZmlLayerFilter> getFilters( )
+  {
+    // fill binding map
+    if( Objects.isNull( ZML_DIAGRAM_FILTERS ) )
     {
-      if( rule.getIdentifier().equals( identifier ) )
-        return rule;
+      ZML_DIAGRAM_FILTERS = new HashMap<String, IZmlLayerFilter>();
+
+      /* get extension points */
+      final IExtensionRegistry registry = Platform.getExtensionRegistry();
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IZmlLayerFilter.EXTENSION_POINT_ID );
+
+      for( final IConfigurationElement element : elements )
+      {
+        try
+        {
+          final String pluginid = element.getContributor().getName();
+          final Bundle bundle = Platform.getBundle( pluginid );
+          final Class< ? > featureClass = bundle.loadClass( element.getAttribute( "filter" ) ); //$NON-NLS-1$
+          final Constructor< ? > constructor = featureClass.getConstructor();
+
+          final IZmlLayerFilter instance = (IZmlLayerFilter) constructor.newInstance();
+          ZML_DIAGRAM_FILTERS.put( instance.getIdentifier(), instance );
+        }
+        catch( final Throwable e )
+        {
+          e.printStackTrace();
+        }
+      }
     }
 
-    return null;
+    return ZML_DIAGRAM_FILTERS;
   }
+
+  public synchronized IZmlLayerFilter findFilter( final String identifier )
+  {
+    final Map<String, IZmlLayerFilter> filters = getFilters();
+
+    return filters.get( identifier );
+  }
+
 }

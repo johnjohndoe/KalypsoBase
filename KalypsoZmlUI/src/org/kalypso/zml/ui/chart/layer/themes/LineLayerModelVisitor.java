@@ -69,10 +69,13 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
 
   private IAxis m_dateAxis;
 
-  public LineLayerModelVisitor( final ZmlLineLayer layer, final List<Point> path, final IZmlLayerFilter[] filter )
+  private final IZmlLayerFilter m_filter;
+
+  public LineLayerModelVisitor( final ZmlLineLayer layer, final List<Point> path, final IZmlLayerFilter filter )
   {
     m_layer = layer;
     m_path = path;
+    m_filter = filter;
   }
 
   private IAxis getValueAxis( )
@@ -135,9 +138,7 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
       return true;
 
     final Number value = (Number) valueObject;
-    if( value.doubleValue() == 0 )
-      return true;
 
-    return false;
+    return m_filter.isFiltered( value );
   }
 }

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,32 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.filter;
+package org.kalypso.zml.ui.chart.layer.visitor;
 
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
 
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+
 /**
- * @author Dirk Kuch
+ * @author kuch
  */
-public class DefaultZmlFilter implements IZmlLayerFilter
+public class SetZmlFilterVisitor implements IChartLayerVisitor
 {
-  public static final String ID = "org.kalypso.zml.core.diagram.filter.default"; // $NON-NLS-1$
 
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayerFilter#isFiltered(java.lang.Number)
-   */
-  @Override
-  public boolean isFiltered( final Number value )
+  private final IZmlLayerFilter m_filter;
+
+  public SetZmlFilterVisitor( final IZmlLayerFilter filter )
   {
-    return false;
+    m_filter = filter;
   }
 
   /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayerFilter#getIdentifier()
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public String getIdentifier( )
+  public void visit( final IChartLayer layer )
   {
-    return ID;
+    if( layer instanceof IZmlLayer )
+      ((IZmlLayer) layer).setFilter( m_filter );
+
+    layer.getLayerManager().accept( this );
+
   }
+
 }

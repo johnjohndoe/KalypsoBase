@@ -299,13 +299,13 @@
           id="org.kalypso.zml.ui.chart.layer.commands.set.filter"
           name="Set Filter">
        <commandParameter
-             id="enabled"
-             name="enabled"
+             id="enableCommand"
+             name="enableCommand"
              optional="false">
        </commandParameter>
        <commandParameter
-             id="disabled"
-             name="disabled"
+             id="disableCommand"
+             name="disableCommand"
              optional="false">
        </commandParameter>
     </command>
