@@ -54,30 +54,41 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
  */
 public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabelCreator
 {
-  private  DateTimeFieldType m_field;
-
-  private  String m_formatString;
+  private String m_formatString;
 
   /**
    * @param formatString
-   *          z.B. "yyyy-MM-dd\nhh:mm:ss"
+   *          z.B. "yyyy-MM-dd\nhh:mm:ss" ; null=autoformat
    */
-  public DateTimeLabelCreator( final DateTimeFieldType tickRaster, final String formatString )
+  public DateTimeLabelCreator( final String formatString )
   {
-    m_field = tickRaster;
     m_formatString = formatString;
   }
 
- 
-
-  public DateTimeFieldType getField( )
+  public DateTimeLabelCreator( )
   {
-    return m_field;
+    this( null );
+
   }
 
-  public String getFormatString( )
+  final private String getFormatString( final DateTimeFieldType fieldType )
   {
-    return m_formatString;
+    if( fieldType == DateTimeFieldType.dayOfMonth() )
+      return "YYYY.dd.MM";
+    else if( fieldType == DateTimeFieldType.dayOfWeek())
+      return "dd.MM\nHH:mm";
+    else if( fieldType == DateTimeFieldType.halfdayOfDay() )
+      return "dd.MM\nHH:mm";
+    else if( fieldType == DateTimeFieldType.hourOfDay() )
+      return "dd.MM\nHH:mm";
+    else if( fieldType == DateTimeFieldType.minuteOfHour() )
+      return "HH:mm\nss.SSS";
+    else if( fieldType == DateTimeFieldType.secondOfMinute() )
+      return "mm\nss.SSS";
+    else if( fieldType == DateTimeFieldType.millisOfSecond() )
+      return "ss.SSS";
+    else
+      return "dd.MM.YYYY\nHH:mm:ss";
   }
 
   /**
@@ -87,10 +98,16 @@ public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabel
   @Override
   public String getLabel( final Number value, final IDataRange<Number> range )
   {
-    final DateTimeField field = m_field.getField( GregorianChronology.getInstance() );
+
+    final DateTimeFieldType fieldType = DateTimeAxisRenderer.getFieldType( range );
+    final DateTimeField field = fieldType.getField( GregorianChronology.getInstance() );
     final long dateTime = field.roundFloor( value.longValue() );
-    return new DateTime( dateTime ).toString( m_formatString );
+    if( m_formatString != null )
+      return new DateTime( dateTime ).toString( m_formatString );
+    return new DateTime( dateTime ).toString( getFormatString( fieldType ) );
   }
+
+ 
 
   /**
    * @param value
@@ -104,13 +121,6 @@ public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabel
   {
     return getLabel( ticks[i], range );
   }
-
-  public void setField( final DateTimeFieldType field )
-  {
-    m_field = field;
-  }
-
- 
 
   public void setFormatString( final String formatString )
   {
