@@ -46,6 +46,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -152,6 +153,9 @@ public class RemoteImportWorker
         preferences.setModified( false );
         preferences.setChangesCommited( true );
       }
+
+      project.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+
     }
 
     return Status.OK_STATUS;
