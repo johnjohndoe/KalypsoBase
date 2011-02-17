@@ -87,12 +87,12 @@ public class ZmlDiagramUpdater implements Runnable
   @Override
   public void run( )
   {
+    m_manager.accept( new RemoveClonedLayerVisitor() );
+
     for( final MultipleTsLink multiple : m_links )
     {
       if( multiple.isIgnoreType( m_ignoreTypes ) )
         continue;
-
-      m_manager.accept( new RemoveClonedLayerVisitor() );
 
       final ParameterTypeLayerVisitor visitor = new ParameterTypeLayerVisitor( multiple.getIdentifier() );
       m_manager.accept( visitor );
