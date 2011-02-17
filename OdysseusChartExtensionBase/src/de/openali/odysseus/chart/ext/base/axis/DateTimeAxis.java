@@ -41,7 +41,6 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
-import de.openali.odysseus.chart.ext.base.axisrenderer.DateTimeAxisRenderer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
@@ -60,7 +59,7 @@ public class DateTimeAxis extends GenericLinearAxis
   {
 
     super.setNumericRange( range );
-    ((DateTimeAxisRenderer) getRenderer()).updateFormatter( getNumericRange() );
+// ((DateTimeAxisRenderer) getRenderer()).updateFormatter( getNumericRange() );
   }
 
   public DateTimeAxis( final String id, final POSITION pos )
