@@ -59,17 +59,17 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 public class DateTimeTickCalculator implements ITickCalculator
 {
 
-  private DateTimeFieldType m_tickRaster;
+  private DateTimeFieldType m_fieldType;
 
   public DateTimeTickCalculator( )
   {
-    m_tickRaster = null;
+    m_fieldType = null;
 
   }
 
   public DateTimeTickCalculator( final DateTimeFieldType fixDateTimeFieldType )
   {
-    m_tickRaster = fixDateTimeFieldType;
+    m_fieldType = fixDateTimeFieldType;
 
   }
 
@@ -78,6 +78,7 @@ public class DateTimeTickCalculator implements ITickCalculator
     final long firstRoll = field.roundFloor( start );
     if( firstRoll + end - start <= start )
       // out of range, precision too small so we return without adjustment
+      // maybe try roundCeil instead
       return start;
     final int fieldValue = field.get( firstRoll );
     if( fieldValue == 0 )
@@ -85,8 +86,13 @@ public class DateTimeTickCalculator implements ITickCalculator
     final int[] rollOvers = getRollOver( field.getDurationField().getType() );
     for( int i = 1; i < rollOvers.length; i++ )
     {
-      if( fieldValue <= rollOvers[i] )
-        return field.add( firstRoll, rollOvers[i - 1] - fieldValue );
+      if( fieldValue < rollOvers[i] )
+      {
+        if( rollOvers[i - 1] == 1 )
+          return field.add( firstRoll, -fieldValue );
+        else
+          return field.add( firstRoll, rollOvers[i - 1] - fieldValue );
+      }
     }
 
     return field.add( firstRoll, rollOvers[rollOvers.length - 1] - fieldValue );
@@ -95,11 +101,13 @@ public class DateTimeTickCalculator implements ITickCalculator
   private int[] getRollOver( final DurationFieldType durationFieldType )
   {
     if( durationFieldType == DurationFieldType.hours() )
-      return new int[] { 1, 2, 4, 6, 8, 12 };
+      return new int[] { 1, 2, 4, 6, 12 };
     else if( durationFieldType == DurationFieldType.days() )
-      return new int[] { 1, 7, 14 };
+      return new int[] { 1, 2, 4, 7, 14 };
+    else if( durationFieldType == DurationFieldType.halfdays() )
+      return new int[] { 1 };
     else if( durationFieldType == DurationFieldType.minutes() || durationFieldType == DurationFieldType.seconds() )
-      return new int[] { 1, 5, 10, 15, 30 };
+      return new int[] { 1, 15, 30 };
     else if( durationFieldType == DurationFieldType.months() )
       return new int[] { 1, 2, 3, 4, 6 };
     else
@@ -120,12 +128,14 @@ public class DateTimeTickCalculator implements ITickCalculator
     final long start = numRange.getMin().longValue();
     final long end = numRange.getMax().longValue();
 
-    final DateTimeField field = m_tickRaster.getField( GregorianChronology.getInstance() );
+    final DateTimeFieldType fieldType = m_fieldType != null ? m_fieldType : DateTimeAxisRenderer.getFieldType( numRange );
+
+    final DateTimeField field = fieldType.getField( GregorianChronology.getInstance() );
     final int tickCount = Math.max( 1, field.getDifference( end, start ) );
     final int maximumTickCount = axis.getScreenHeight() / (ticklabelSize.x + 2/* Pixel */);
     int rollOver = 1;
     if( tickCount > maximumTickCount )
-
+    {
       for( final int i : getRollOver( field.getDurationField().getType() ) )
       {
         if( tickCount / i < maximumTickCount )
@@ -135,7 +145,11 @@ public class DateTimeTickCalculator implements ITickCalculator
         }
         rollOver = i;
       }
-
+      while( tickCount / rollOver > maximumTickCount )
+      {
+        rollOver = 2 * rollOver;
+      }
+    }
     final List<Number> ticks = new ArrayList<Number>();
     long tick = getFirstRollValue( field, start, end );
     ticks.add( tick );
@@ -145,13 +159,11 @@ public class DateTimeTickCalculator implements ITickCalculator
       ticks.add( tick );
     }
 
-    if( ticks.size() > 50 )
-      return ticks.toArray( new Number[] {} );
     return ticks.toArray( new Number[] {} );
   }
 
-  public void setTickRaster( final DateTimeFieldType tickRaster )
+  public void setFieldType( final DateTimeFieldType fixDateTimeFieldType )
   {
-    m_tickRaster = tickRaster;
+    m_fieldType = fixDateTimeFieldType;
   }
 }
