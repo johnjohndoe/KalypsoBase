@@ -236,14 +236,20 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
       return new Point( 1, 1 );
 
     final int legendEntries = calculateLegendEntries( layers );
-
     final int itemsPerRow = config.getMaximumWidth() / maxItemSize.x;
 
-    double rows = Integer.valueOf( legendEntries ).doubleValue() / Integer.valueOf( itemsPerRow ).doubleValue();
-    if( Double.valueOf( rows ).intValue() - rows != 0 )
-      rows += 1;
+    final int rows = calculateRowNumbers( legendEntries, itemsPerRow );
 
     return new Point( config.getMaximumWidth(), Double.valueOf( rows ).intValue() * maxItemSize.y );
+  }
+
+  private int calculateRowNumbers( final int legendEntries, final int itemsPerRow )
+  {
+    final double rows = Integer.valueOf( legendEntries ).doubleValue() / Integer.valueOf( itemsPerRow ).doubleValue();
+    if( Double.valueOf( rows ).intValue() - rows != 0 )
+      return (int) rows + 1;
+
+    return (int) rows;
   }
 
   private int calculateLegendEntries( final IChartLayer[] layers )
