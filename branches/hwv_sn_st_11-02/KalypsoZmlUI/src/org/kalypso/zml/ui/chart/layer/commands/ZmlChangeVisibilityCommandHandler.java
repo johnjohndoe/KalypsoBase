@@ -50,7 +50,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public class ZmlChangeVisibilityCommandHandler extends ChangeVisibilityCommandHandler
 {
-  public static final String ID = "org.kalypso.zml.ui.chart.layer.commands.change.visibility"; // $NON-NLS-1$
+  public static final String IDENTIFIER = "org.kalypso.zml.ui.chart.layer.commands.change.visibility"; // $NON-NLS-1$
 
   /**
    * @see org.kalypso.chart.ui.editor.commandhandler.ChangeVisibilityCommandHandler#callAdditionalVisitors(de.openali.odysseus.chart.framework.model.layer.ILayerManager)

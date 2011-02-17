@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.chart.layer.themes;
 import java.util.Date;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.ogc.sensor.DateRange;
@@ -53,6 +54,7 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.base.LayerProviderUtils;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
+import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -239,5 +241,14 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
   public void setLabelDescriptor( final String labelDescriptor )
   {
     // not needed
+  }
+
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setFilter(org.kalypso.zml.core.diagram.layer.IZmlLayerFilter[])
+   */
+  @Override
+  public void setFilter( final IZmlLayerFilter[] filter )
+  {
+    throw new NotImplementedException();
   }
 }
