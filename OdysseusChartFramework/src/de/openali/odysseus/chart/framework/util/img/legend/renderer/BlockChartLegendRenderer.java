@@ -238,7 +238,9 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     final int legendEntries = calculateLegendEntries( layers );
 
     final int itemsPerRow = config.getMaximumWidth() / maxItemSize.x;
-    final int rows = legendEntries / itemsPerRow + 1;
+    int rows = legendEntries / itemsPerRow;
+    if( rows == 0 )
+      rows = 1;
 
     return new Point( config.getMaximumWidth(), rows * maxItemSize.y );
   }
