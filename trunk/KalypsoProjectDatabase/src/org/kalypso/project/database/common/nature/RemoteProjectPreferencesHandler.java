@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.kalypso.commons.java.lang.Strings;
 
 class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
 {
@@ -73,11 +74,7 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
   @Override
   public boolean isLocked( )
   {
-    final String ticket = getEditTicket();
-    if( ticket == null || "".equals( ticket.trim() ) ) //$NON-NLS-1$
-      return false;
-
-    return true;
+    return Strings.isNotEmpty( getEditTicket() );
   }
 
   /**
@@ -100,7 +97,14 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
   @Override
   public String getEditTicket( )
   {
-    return m_node.get( PROJECT_LOCK_TICKET, null );
+    try
+    {
+      return m_node.get( PROJECT_LOCK_TICKET, null );
+    }
+    catch( final Throwable t )
+    {
+      return null;
+    }
   }
 
   /**
@@ -118,7 +122,15 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
   @Override
   public Integer getVersion( )
   {
-    return Integer.valueOf( m_node.get( PROJECT_DOWNLOADED_VERSION, "-1" ) ); //$NON-NLS-1$
+    try
+    {
+      return Integer.valueOf( m_node.get( PROJECT_DOWNLOADED_VERSION, "-1" ) ); //$NON-NLS-1$  
+    }
+    catch( final Throwable t )
+    {
+      return -1;
+    }
+
   }
 
   /**
