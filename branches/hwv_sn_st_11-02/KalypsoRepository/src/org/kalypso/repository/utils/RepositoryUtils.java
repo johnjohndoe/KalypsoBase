@@ -35,9 +35,6 @@ import org.kalypso.repository.IRepositoryRegistry;
 import org.kalypso.repository.KalypsoRepository;
 import org.kalypso.repository.RepositoryException;
 
-
-
-
 /**
  * RepositoryUtils provides some utility methods in a static way
  * 
@@ -84,9 +81,20 @@ public final class RepositoryUtils
    */
   public static IRepositoryItem findEquivalentItem( final IRepository repository, final String id ) throws RepositoryException
   {
-    final String identifier = RepositoryItemUtils.replaceIdentifier( id, repository.getIdentifier() );
+    try
+    {
+      final String identifier = RepositoryItemUtils.replaceIdentifier( id, repository.getIdentifier() );
 
-    return repository.findItem( identifier );
+      return repository.findItem( identifier );
+    }
+    catch( final RepositoryException ex )
+    {
+      throw ex;
+    }
+    catch( final Throwable t )
+    {
+      throw new RepositoryException( "Finding equivalent item failed.", t );
+    }
   }
 
   public static boolean continueSearch( final String baseIdendifier, final String lookingFor )
@@ -103,8 +111,8 @@ public final class RepositoryUtils
     for( int i = 0; i < count; i++ )
     {
 
-        if( !baseParts[i].equals( lookingForParts[i] ) )
-          return false;
+      if( !baseParts[i].equals( lookingForParts[i] ) )
+        return false;
     }
 
     return true;
