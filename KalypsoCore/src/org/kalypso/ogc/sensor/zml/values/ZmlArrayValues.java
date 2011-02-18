@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.zml.values;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
@@ -75,6 +76,10 @@ public class ZmlArrayValues implements IZmlValues
   @Override
   public Object getElement( final int index )
   {
+    // FIXME: should never happen, but does
+    if( index < 0 || index > m_values.size() - 1 )
+      return null;
+    
     return m_values.get( index );
   }
 
