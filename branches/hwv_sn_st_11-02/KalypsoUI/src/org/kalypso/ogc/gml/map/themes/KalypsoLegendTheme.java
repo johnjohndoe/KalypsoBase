@@ -167,7 +167,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
 
             /* Create the legend. */
             LegendExporter legendExporter = new LegendExporter();
-            image[0] = legendExporter.exportLegends( m_themeIds, nodes, display, new Insets( m_insets, m_insets, m_insets, m_insets ), m_backgroundColor.getRGB(), -1, -1, subMonitor );
+            image[0] = legendExporter.exportLegends( m_themeIds, nodes, display, new Insets( m_insets, m_insets, m_insets, m_insets ), m_backgroundColor.getRGB(), -1, -1, true, subMonitor );
           }
           catch( CoreException ex )
           {
