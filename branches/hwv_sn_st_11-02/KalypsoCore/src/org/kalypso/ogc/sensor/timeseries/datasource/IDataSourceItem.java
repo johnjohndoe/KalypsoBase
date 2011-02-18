@@ -51,5 +51,5 @@ public interface IDataSourceItem
 
   String SOURCE_UNKNOWN = "source://unknown";
 
-  String SOURCE_MANUAL_CHANGED = "source://manual.changed";
+  String SOURCE_MANUAL_CHANGED = "source://manually.changed";
 }
