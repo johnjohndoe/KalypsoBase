@@ -91,11 +91,13 @@ public class LegendExporter
    * @param sizeHeight
    *          The height of the image, the legend is drawn onto.<br>
    *          If one of sizeWidth or sizeHeight is <=0 the width and height of the image is determined automatically.
+   * @param onlyVisible
+   *          True, if only visible theme nodes should be asked.
    * @param monitor
    *          A progress monitor.
    * @return A status, containing information about the process.
    */
-  public IStatus exportLegends( IThemeNode[] nodes, File file, int format, Device device, Insets insets, int sizeWidth, int sizeHeight, IProgressMonitor monitor )
+  public IStatus exportLegends( IThemeNode[] nodes, File file, int format, Device device, Insets insets, int sizeWidth, int sizeHeight, boolean onlyVisible, IProgressMonitor monitor )
   {
     /* Monitor. */
     SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), 150 ); //$NON-NLS-1$
@@ -110,7 +112,7 @@ public class LegendExporter
         insets = new Insets( 5, 5, 5, 5 );
 
       /* Create the legend image. */
-      image = exportLegends( null, nodes, device, insets, null, sizeWidth, sizeHeight, progress.newChild( 50 ) );
+      image = exportLegends( null, nodes, device, insets, null, sizeWidth, sizeHeight, onlyVisible, progress.newChild( 50 ) );
 
       /* Monitor. */
       ProgressUtilities.worked( progress, 50 );
@@ -159,11 +161,13 @@ public class LegendExporter
    * @param sizeHeight
    *          The height of the image, the legend is drawn onto.<br>
    *          If one of sizeWidth or sizeHeight is <=0 the width and height of the image is determined automatically.
+   * @param onlyVisible
+   *          True, if only visible theme nodes should be asked.
    * @param monitor
    *          A progress monitor.
    * @return The newly created image, must be disposed by the caller.
    */
-  public Image exportLegends( String[] whiteList, IThemeNode[] nodes, Device device, Insets insets, RGB backgroundRGB, int sizeWidth, int sizeHeight, IProgressMonitor monitor ) throws CoreException
+  public Image exportLegends( String[] whiteList, IThemeNode[] nodes, Device device, Insets insets, RGB backgroundRGB, int sizeWidth, int sizeHeight, boolean onlyVisible, IProgressMonitor monitor ) throws CoreException
   {
     /* Set default insets, if none are given. */
     if( insets == null )
@@ -186,6 +190,9 @@ public class LegendExporter
 
       try
       {
+        if( onlyVisible && !themeNode.isChecked( themeNode ) )
+          continue;
+
         /* Get the legend. */
         Image legend = themeNode.getLegendGraphic( whiteList, font );
         if( legend != null )

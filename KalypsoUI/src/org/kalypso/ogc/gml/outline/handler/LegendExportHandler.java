@@ -65,7 +65,7 @@ import org.kalypso.ogc.gml.outline.nodes.LegendExporter;
 
 /**
  * This handler exports the legend of the selected layers in the map outline.
- *
+ * 
  * @author Holger Albert
  */
 public class LegendExportHandler extends AbstractHandler
@@ -136,7 +136,7 @@ public class LegendExportHandler extends AbstractHandler
 
         /* Export the legends. */
         final LegendExporter legendExporter = new LegendExporter();
-        return legendExporter.exportLegends( nodes, legendFile, format, getDisplay(), null, -1, -1, monitor );
+        return legendExporter.exportLegends( nodes, legendFile, format, getDisplay(), null, -1, -1, false, monitor );
       }
     };
     job.setUser( true );
