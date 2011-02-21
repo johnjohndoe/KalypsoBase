@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table;
 import org.eclipse.jface.viewers.CellNavigationStrategy;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.ViewerRow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.commons.java.lang.Objects;
@@ -77,11 +78,55 @@ public class ZmlCellNavigationStrategy extends CellNavigationStrategy
   {
     final ViewerCell cell = current.getNeighbor( direction, sameLevel );
     if( Objects.isNull( cell ) )
-      return null;
+    {
+      final ViewerRow row = current.getViewerRow();
+      if( ViewerCell.LEFT == direction )
+      {
+        final ViewerRow above = row.getNeighbor( ViewerCell.ABOVE, false );
+        return findLastCell( above );
+      }
+      else if( ViewerCell.RIGHT == direction )
+      {
+        final ViewerRow below = row.getNeighbor( ViewerCell.BELOW, false );
+        return findFirstCell( below );
+      }
 
-    if( cell.getBounds().width == 0 )
+      return null;
+    }
+
+    else if( cell.getBounds().width == 0 )
       return findCell( cell, direction, sameLevel );
 
     return cell;
+  }
+
+  private ViewerCell findFirstCell( final ViewerRow row )
+  {
+    if( Objects.isNull( row ) )
+      return null;
+
+    for( int index = 0; index < row.getColumnCount(); index++ )
+    {
+      final ViewerCell cell = row.getCell( index );
+      if( cell.getBounds().width > 0 )
+        return cell;
+    }
+
+    return null;
+  }
+
+  private ViewerCell findLastCell( final ViewerRow row )
+  {
+    if( Objects.isNull( row ) )
+      return null;
+
+    for( int index = row.getColumnCount() - 1; index >= 0; index-- )
+    {
+      final ViewerCell cell = row.getCell( index );
+      if( cell.getBounds().width > 0 )
+        return cell;
+    }
+
+    return null;
   }
 }
