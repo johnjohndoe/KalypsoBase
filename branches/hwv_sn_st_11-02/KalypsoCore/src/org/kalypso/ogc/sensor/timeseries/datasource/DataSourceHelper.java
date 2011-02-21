@@ -68,8 +68,8 @@ public final class DataSourceHelper
 
   /**
    * @param reference
-   *          filter://smeFilterClass?source_1=blub&source_2=blub2&...
-   * @return [blub, blub2]
+   *          filter://smeFilterClass?source_1=SRC_1&source_2=SRC_2&...
+   * @return [SRC_1, SRC_2]
    */
   public static String[] getSources( final String reference )
   {
@@ -104,7 +104,7 @@ public final class DataSourceHelper
   }
 
   /**
-   * @return merged sources (filter://smeFilterClass?source_1=blub&source_2=blub2&mergedSources=1,2)
+   * @return merged sources (filter://smeFilterClass?source_1=SRC_1&source_2=SRC_2&mergedSources=1,2)
    */
   public static String[] getMergedSources( final String reference )
   {
