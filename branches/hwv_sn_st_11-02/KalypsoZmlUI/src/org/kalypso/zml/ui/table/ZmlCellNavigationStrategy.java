@@ -59,33 +59,16 @@ public class ZmlCellNavigationStrategy extends CellNavigationStrategy
   @Override
   public ViewerCell findSelectedCell( final ColumnViewer viewer, final ViewerCell currentSelectedCell, final Event event )
   {
-    switch( event.keyCode )
-    {
-      case SWT.ARROW_UP:
-        if( currentSelectedCell != null )
-        {
-          return findCell( currentSelectedCell, ViewerCell.ABOVE, false );
-        }
-        break;
-      case SWT.ARROW_DOWN:
-        if( currentSelectedCell != null )
-        {
-          return findCell( currentSelectedCell, ViewerCell.BELOW, false );
-        }
-        break;
-      case SWT.ARROW_LEFT:
-        if( currentSelectedCell != null )
-        {
-          return findCell( currentSelectedCell, ViewerCell.LEFT, true );
-        }
-        break;
-      case SWT.ARROW_RIGHT:
-        if( currentSelectedCell != null )
-        {
-          return findCell( currentSelectedCell, ViewerCell.RIGHT, true );
-        }
-        break;
-    }
+    if( Objects.isNull( currentSelectedCell ) )
+      return null;
+    else if( SWT.ARROW_UP == event.keyCode )
+      return findCell( currentSelectedCell, ViewerCell.ABOVE, false );
+    else if( SWT.ARROW_DOWN == event.keyCode )
+      return findCell( currentSelectedCell, ViewerCell.BELOW, false );
+    else if( SWT.ARROW_LEFT == event.keyCode )
+      return findCell( currentSelectedCell, ViewerCell.LEFT, true );
+    else if( SWT.ARROW_RIGHT == event.keyCode )
+      return findCell( currentSelectedCell, ViewerCell.RIGHT, true );
 
     return null;
   }
