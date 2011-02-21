@@ -66,23 +66,9 @@ public class ChangeVisibilityVisitor extends AbstractParameterVisitor
     if( definesParameter( layer ) )
     {
       layer.setVisible( m_enabled );
-      setVisible( layer );
     }
 
     layer.getLayerManager().accept( this );
   }
 
-  private void setVisible( final IChartLayer layer )
-  {
-    final ILayerContainer parent = layer.getParent();
-    if( parent instanceof IChartLayer )
-    {
-      final IChartLayer parentLayer = (IChartLayer) parent;
-      if( parentLayer.isVisible() == m_enabled )
-        return;
-
-      if( m_enabled ) // set by "default"
-        parentLayer.setVisible( true );
-    }
-  }
 }
