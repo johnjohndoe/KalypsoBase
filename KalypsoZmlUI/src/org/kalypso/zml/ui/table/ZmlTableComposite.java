@@ -53,9 +53,15 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewerEditor;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TableViewerEditor;
+import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -178,22 +184,18 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     table.setHeaderVisible( true );
 
     /* keyboard table cursor */
-// final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new
-// FocusCellOwnerDrawHighlighter( m_tableViewer ) );
-// final ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy( m_tableViewer )
-// {
-// @Override
-// protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event )
-// {
-// return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL || event.eventType ==
-// ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
-// || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR) || event.eventType
-// == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
-// }
-// };
-//
-// TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_VERTICAL |
-// ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL );
+    final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new FocusCellOwnerDrawHighlighter( m_tableViewer ), new ZmlCellNavigationStrategy() );
+    final ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy( m_tableViewer )
+    {
+      @Override
+      protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event )
+      {
+        return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL || event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
+            || event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR || event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
+      }
+    };
+
+    TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL );
 
     if( hasToolbar( tableType ) )
       initToolbar( tableType, toolbar, toolkit );
