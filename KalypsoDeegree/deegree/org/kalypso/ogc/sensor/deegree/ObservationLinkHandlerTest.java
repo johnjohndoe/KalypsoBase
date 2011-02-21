@@ -62,8 +62,8 @@ public class ObservationLinkHandlerTest extends TestCase
     final ObjectFactory factory = new ObjectFactory();
     final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
 
-    final Marshaller m_marshaller = JaxbUtilities.createMarshaller( jc );
-    m_marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+    final Marshaller marshaller = JaxbUtilities.createMarshaller( jc );
+    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
     final TimeseriesLinkType link = factory.createTimeseriesLinkType();
 
@@ -72,6 +72,6 @@ public class ObservationLinkHandlerTest extends TestCase
 
     final JAXBElement<TimeseriesLinkType> element = factory.createTimeseriesLink( link );
     // FIXME: compare with some result
-    m_marshaller.marshal( element, new NullOutputStream() );
+    marshaller.marshal( element, new NullOutputStream() );
   }
 }
