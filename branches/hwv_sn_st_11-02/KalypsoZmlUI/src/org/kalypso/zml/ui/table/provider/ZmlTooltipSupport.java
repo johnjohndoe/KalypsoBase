@@ -67,9 +67,21 @@ public class ZmlTooltipSupport
 
   private final ExtendedZmlTableColumn m_column;
 
+  private static boolean SHOW_TOOLTIPS = true;
+
   public ZmlTooltipSupport( final ExtendedZmlTableColumn column )
   {
     m_column = column;
+  }
+
+  public static boolean isShowTooltips( )
+  {
+    return SHOW_TOOLTIPS;
+  }
+
+  public static void setShowTooltips( final boolean tooltipSupport )
+  {
+    SHOW_TOOLTIPS = tooltipSupport;
   }
 
   public String getToolTipText( final ZmlModelRow row )

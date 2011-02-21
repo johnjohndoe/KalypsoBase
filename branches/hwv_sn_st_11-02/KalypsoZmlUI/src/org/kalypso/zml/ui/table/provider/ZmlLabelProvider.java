@@ -230,6 +230,9 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Image getToolTipImage( final Object object )
   {
+    if( !ZmlTooltipSupport.isShowTooltips() )
+      return null;
+
     if( !m_column.isVisible() )
       return null;
     else if( object instanceof IZmlModelRow )
@@ -244,6 +247,9 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public String getToolTipText( final Object element )
   {
+    if( !ZmlTooltipSupport.isShowTooltips() )
+      return null;
+
     if( !m_column.isVisible() )
       return null;
 
