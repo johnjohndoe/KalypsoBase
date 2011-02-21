@@ -150,6 +150,11 @@
           id="org.kalypso.zml.ui.table.commands.toolbar.value.input.dialog"
           name="Eingabe von Einzelwerten">
     </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.tooltip"
+          name="Tooltip ausschalten">
+    </command>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
@@ -202,6 +207,10 @@
           class="org.kalypso.zml.ui.table.commands.toolbar.input.dialog.ZmlCommandOpenValueInputDialog"
           commandId="org.kalypso.zml.ui.table.commands.toolbar.value.input.dialog">
     </handler>
+    <handler
+          class="org.kalypso.zml.ui.table.commands.toolbar.view.DisableTooltipHandler"
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.tooltip">
+    </handler>
  </extension>
   <extension
        point="org.eclipse.ui.commandImages">
@@ -236,6 +245,10 @@
     <image
           commandId="org.kalypso.zml.ui.table.commands.toolbar.value.input.dialog"
           icon="icons/table/value_input_dialog.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.tooltip"
+          icon="icons/table/tooltip.png">
     </image>
  </extension>
  <extension
