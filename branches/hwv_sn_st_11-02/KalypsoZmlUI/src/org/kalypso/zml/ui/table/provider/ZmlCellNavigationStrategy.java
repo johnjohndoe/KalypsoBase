@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.provider;
 
 import org.eclipse.jface.viewers.CellNavigationStrategy;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -53,6 +53,7 @@ import org.kalypso.commons.java.lang.Objects;
  */
 public class ZmlCellNavigationStrategy extends CellNavigationStrategy
 {
+
   /**
    * @see org.eclipse.jface.viewers.CellNavigationStrategy#findSelectedCell(org.eclipse.jface.viewers.ColumnViewer,
    *      org.eclipse.jface.viewers.ViewerCell, org.eclipse.swt.widgets.Event)
@@ -82,12 +83,12 @@ public class ZmlCellNavigationStrategy extends CellNavigationStrategy
       final ViewerRow row = current.getViewerRow();
       if( ViewerCell.LEFT == direction )
       {
-        final ViewerRow above = row.getNeighbor( ViewerCell.ABOVE, false );
+        final ViewerRow above = row.getNeighbor( ViewerRow.ABOVE, false );
         return findLastCell( above );
       }
       else if( ViewerCell.RIGHT == direction )
       {
-        final ViewerRow below = row.getNeighbor( ViewerCell.BELOW, false );
+        final ViewerRow below = row.getNeighbor( ViewerRow.BELOW, false );
         return findFirstCell( below );
       }
 
