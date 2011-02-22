@@ -284,8 +284,12 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     fireTableChanged();
 
-    m_tableViewer.setSelection( selection );
-    m_tableViewer.getTable().setFocus();
+    if( !selection.isEmpty() )
+    {
+      m_tableViewer.setSelection( selection );
+      m_tableViewer.getTable().setFocus();
+    }
+
   }
 
   public void fireTableChanged( )
