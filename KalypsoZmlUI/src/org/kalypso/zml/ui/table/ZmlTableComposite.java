@@ -58,6 +58,7 @@ import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TableViewerEditor;
@@ -277,9 +278,14 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       column.reset();
     }
 
+    final IStructuredSelection selection = (IStructuredSelection) m_tableViewer.getSelection();
+
     m_tableViewer.refresh();
 
     fireTableChanged();
+
+    m_tableViewer.setSelection( selection );
+    m_tableViewer.getTable().setFocus();
   }
 
   public void fireTableChanged( )
