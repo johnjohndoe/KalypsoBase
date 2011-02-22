@@ -88,6 +88,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.provider.ZmlCellNavigationStrategy;
 import org.kalypso.zml.ui.table.provider.ZmlTableEventListener;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
@@ -185,6 +186,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     /* keyboard table cursor */
     final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new FocusCellOwnerDrawHighlighter( m_tableViewer ), new ZmlCellNavigationStrategy() );
+
     final ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy( m_tableViewer )
     {
       @Override
@@ -195,7 +197,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       }
     };
 
-    TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL );
+    TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL
+        | ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR );
 
     if( hasToolbar( tableType ) )
       initToolbar( tableType, toolbar, toolkit );
