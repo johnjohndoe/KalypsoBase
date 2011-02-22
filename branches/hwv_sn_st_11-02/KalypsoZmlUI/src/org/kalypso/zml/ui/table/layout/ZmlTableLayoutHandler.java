@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table.layout;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
@@ -73,6 +74,40 @@ public class ZmlTableLayoutHandler
 
   protected final ZmlTableComposite m_table;
 
+  private final UIJob m_job = new UIJob( "" )
+  {
+
+    @Override
+    public IStatus runInUIThread( final IProgressMonitor monitor )
+    {
+      if( m_table.isDisposed() )
+        return Status.CANCEL_STATUS;
+
+      updateColumns();
+
+      if( m_firstChange )
+      {
+        /* execute as separate ui job, otherwise it won't work */
+        new UIJob( "" )
+        {
+
+          @Override
+          public IStatus runInUIThread( final IProgressMonitor mon )
+          {
+            final RevealTableCommand command = new RevealTableCommand( m_table );
+            command.execute( monitor );
+
+            return Status.OK_STATUS;
+          }
+        }.schedule();
+
+        m_firstChange = false;
+      }
+
+      return Status.OK_STATUS;
+    }
+  };
+
   public ZmlTableLayoutHandler( final ZmlTableComposite table )
   {
     m_table = table;
@@ -80,29 +115,10 @@ public class ZmlTableLayoutHandler
 
   public void tableChanged( )
   {
-    new UIJob( "" )
-    {
+    if( m_job.getState() == Job.SLEEPING )
+      m_job.cancel();
 
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        if( m_table.isDisposed() )
-          return Status.CANCEL_STATUS;
-
-        updateColumns();
-
-        if( m_firstChange )
-        {
-          final RevealTableCommand command = new RevealTableCommand( m_table );
-          final IStatus status = command.execute( monitor );
-          if( status.isOK() )
-            m_firstChange = false;
-        }
-
-        return Status.OK_STATUS;
-      }
-    }.schedule();
-
+    m_job.schedule( 250 );
   }
 
   protected void updateColumns( )
