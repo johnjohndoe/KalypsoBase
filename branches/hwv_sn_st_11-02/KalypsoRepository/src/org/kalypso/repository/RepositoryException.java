@@ -47,22 +47,22 @@ package org.kalypso.repository;
  */
 public class RepositoryException extends Exception
 {
-  public RepositoryException()
+  public RepositoryException( )
   {
     super();
   }
 
-  public RepositoryException( String arg0 )
+  public RepositoryException( final String arg0 )
   {
     super( arg0 );
   }
 
-  public RepositoryException( Throwable arg0 )
+  public RepositoryException( final Throwable arg0 )
   {
     super( arg0 );
   }
 
-  public RepositoryException( String arg0, Throwable arg1 )
+  public RepositoryException( final String arg0, final Throwable arg1 )
   {
     super( arg0, arg1 );
   }
