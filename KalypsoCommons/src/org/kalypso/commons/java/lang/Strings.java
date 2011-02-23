@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.java.lang;
 
+import jregex.Pattern;
+import jregex.RETokenizer;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -92,5 +95,21 @@ public final class Strings
   public static boolean isEqualIgnoreCase( final String s1, final String s2 )
   {
     return StringUtils.equalsIgnoreCase( s1, s2 );
+  }
+
+  public static String tokenize( final String string, final Pattern... patterns )
+  {
+    String working = string;
+    for( final Pattern pattern : patterns )
+    {
+      final RETokenizer tokenizer = new RETokenizer( pattern, working );
+      if( tokenizer.hasMore() )
+        working = tokenizer.nextToken();
+    }
+
+    if( working.equals( string ) )
+      return null;
+
+    return working;
   }
 }
