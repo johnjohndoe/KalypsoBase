@@ -480,6 +480,5 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public void remove( final IExtendedZmlTableColumn column )
   {
     m_columns.remove( column );
-
   }
 }
