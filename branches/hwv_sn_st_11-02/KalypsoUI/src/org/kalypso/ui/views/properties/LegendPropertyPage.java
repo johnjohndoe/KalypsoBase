@@ -45,11 +45,15 @@ import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
@@ -63,6 +67,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.contribs.eclipse.swt.widgets.ImageCanvas;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -331,6 +336,37 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
     /* Select the first tab. */
     legendTabFolder.setSelection( 0 );
+
+    /* Add a listener. */
+    legendTabFolder.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        /* Get the source. */
+        CTabFolder source = (CTabFolder) e.getSource();
+
+        /* Update the preview tab, if it is switched to it. */
+        if( source.getSelectionIndex() == 1 )
+        {
+          ProgressUtilities.busyCursorWhile( new IRunnableWithProgress()
+          {
+            /**
+             * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+             */
+            @Override
+            public void run( IProgressMonitor monitor )
+            {
+              /* Update the preview tab. */
+              updatePreviewTab();
+            }
+          }, "Die Voransicht konnte nicht aktualisiert werden..." );
+        }
+      }
+    } );
   }
 
   /**
@@ -380,8 +416,8 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
         /* Update the properties object. */
         m_properties = properties;
 
-        /* Update the preview tab. */
-        updatePreviewTab();
+        /* HINT: Do not update the preview tab here. */
+        /* HINT: It could be very slow. */
       }
     } );
 
