@@ -333,7 +333,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
       {
         final IFile file = ((IFileEditorInput) input).getFile();
         context = file == null ? null : ResourceUtilities.createURL( file );
-        project = file == null ? null :  file.getProject();
+        project = file == null ? null : file.getProject();
       }
       else
       {
@@ -458,16 +458,16 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
     m_initialEnv = env; // only needed, if mapPanel not yet available
 
     final String partName = getPartName( mapModell );
-   
-    //set as UI-Thread call to prevent the "invalid thread access" exception 
+
+    // set as UI-Thread call to prevent the "invalid thread access" exception
     final Display display = getSite().getShell().getDisplay();
     display.asyncExec( new Runnable()
     {
       @Override
       public void run( )
       {
-       setPartName( partName );
-      } 
+        setPartName( partName );
+      }
     } );
 
     updatePanel( m_mapModell, m_initialEnv );
@@ -550,7 +550,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   @Override
   public IExportableObject[] createExportableObjects( final Configuration conf )
   {
-    return new IExportableObject[] { new ExportableMap( getMapPanel(), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, 640 ), conf.getInt( ImageExportPage.CONF_IMAGE_HEIGHT, 480 ), conf.getString( ImageExportPage.CONF_IMAGE_FORMAT, "png" ) ) }; //$NON-NLS-1$
+    return new IExportableObject[] { new ExportableMap( getMapPanel(), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, 640 ), conf.getInt( ImageExportPage.CONF_IMAGE_HEIGHT, 480 ), null, conf.getString( ImageExportPage.CONF_IMAGE_FORMAT, "png" ) ) }; //$NON-NLS-1$
   }
 
   /**

@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -111,63 +111,124 @@ public final class MapModellHelper
   }
 
   /**
-   * Create an image of a map model and keep aspection ration of displayed map and its extend
+   * This function creates an image of a map model and keeps aspect ratio of the displayed map and its extend.
+   * 
+   * @param panel
+   *          The map panel.
+   * @param width
+   *          The width of the new image.
+   * @param height
+   *          The height of the new image.
+   * @param insets
+   *          The insets of the image define a print border, which is kept empty.
+   * @return The image showing the map.
    */
-  public static BufferedImage createWellFormedImageFromModel( final IMapPanel panel, final int width, final int height )
+  public static BufferedImage createWellFormedImageFromModel( IMapPanel panel, int width, int height, Insets insets )
   {
-    final IMapModell mapModell = panel.getMapModell();
-    final GM_Envelope bbox = panel.getBoundingBox();
+    /* The remaining dimensions for the map considering the insets. */
+    int mapWidth = width;
+    int mapHeight = height;
+    if( insets != null )
+    {
+      /* Calculate the remaining dimensions. */
+      mapWidth = mapWidth - insets.left - insets.right;
+      mapHeight = mapHeight - insets.top - insets.bottom;
+    }
 
-    final double ratio = (double) height / (double) width;
-    final GM_Envelope boundingBox = MapModellHelper.adjustBoundingBox( mapModell, bbox, ratio );
+    /* Get the map model. */
+    IMapModell mapModel = panel.getMapModell();
 
-    final Rectangle bounds = new Rectangle( width, height );
+    /* Get the bounding box. */
+    GM_Envelope boundingBox = panel.getBoundingBox();
 
-    return MapModellHelper.createImageFromModell( boundingBox, bounds, bounds.width, bounds.height, mapModell );
+    /* Calculate the ratio of the width and height of the available to the map. */
+    double ratio = (double) mapHeight / (double) mapWidth;
+
+    /* Adjust the bounding box. */
+    GM_Envelope adjustedBoundingBox = MapModellHelper.adjustBoundingBox( mapModel, boundingBox, ratio );
+
+    return MapModellHelper.createImageFromModell( mapModel, width, height, insets, adjustedBoundingBox );
   }
 
   /**
-   * Is used to create an image of a map model. Does not wait until all themes are loaded. Is used from the map panel as
-   * well, where the drawing is done every refresh of the map. So it does not matter, when some themes finish, if they
-   * finish at last.
+   * This function is used to create an image of a map model. It does not wait until all themes are loaded. It is used
+   * from the map panel as well, where the drawing is done every refresh of the map. So it does not matter, when some
+   * themes finish, if they finish at all.
+   * 
+   * @param panel
+   *          The map panel.
+   * @param width
+   *          The width of the new image.
+   * @param height
+   *          The height of the new image.
+   * @param insets
+   *          The insets of the image define a print border, which is kept empty.
+   * @param boundingBox
+   *          The envelope of the map, which should be exported.
+   * @return The image showing the map.
    */
-  public static BufferedImage createImageFromModell( final GM_Envelope bbox, final Rectangle bounds, final int width, final int height, final IMapModell model )
+  public static BufferedImage createImageFromModell( IMapModell model, int width, int height, Insets insets, GM_Envelope boundingBox )
   {
-    final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
-    if( bbox == null )
-      return image;
+    /* If there is no bounding box, we cannot draw the map. */
+    if( boundingBox == null )
+      return new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
 
-    final Graphics2D gr = (Graphics2D) image.getGraphics();
+    /* If the insets are missing, create them with the width of all borders = 0. */
+    if( insets == null )
+      insets = new Insets( 0, 0, 0, 0 );
+
+    /* Create the image for the map WITH the border. */
+    BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+    Graphics2D gr = (Graphics2D) image.getGraphics();
+
+    /* Calculate the remaining dimensions for the map considering the insets. */
+    int mapWidth = width - insets.left - insets.right;
+    int mapHeight = height - insets.top - insets.bottom;
+
+    /* Create the image for the map WITHOUT the border. */
+    BufferedImage mapImage = new BufferedImage( mapWidth, mapHeight, BufferedImage.TYPE_INT_ARGB );
+    Graphics2D mapgr = (Graphics2D) mapImage.getGraphics();
+
     try
     {
+      /* Make the backgrounds completely white. */
       gr.setColor( Color.white );
       gr.fillRect( 0, 0, width, height );
+      mapgr.setColor( Color.white );
+      mapgr.fillRect( 0, 0, mapWidth, mapHeight );
+
+      /* Set the clips. */
       gr.setColor( Color.black );
       gr.setClip( 0, 0, width, height );
+      mapgr.setColor( Color.black );
+      mapgr.setClip( 0, 0, mapWidth, mapHeight );
 
+      /* Configure the graphics contexts. */
       gr.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
       gr.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
+      mapgr.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+      mapgr.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
 
-      final int x = bounds.x;
-      final int y = bounds.y;
-      final int w = bounds.width;
-      final int h = bounds.height;
+      /* Create the world to screen transform. */
+      GeoTransform world2screen = new WorldToScreenTransform();
+      world2screen.setSourceRect( boundingBox );
+      world2screen.setDestRect( 0, 0, mapWidth, mapHeight, null );
 
-      final GeoTransform world2screen = new WorldToScreenTransform();
-      world2screen.setSourceRect( bbox );
-      world2screen.setDestRect( x, y, w + x, h + y, null );
+      /* Paint the map. */
+      model.paint( mapgr, world2screen, new NullProgressMonitor() );
 
-      try
-      {
-        model.paint( gr, world2screen, new NullProgressMonitor() );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
+      /* Draw it onto the image. */
+      gr.drawImage( mapImage, insets.left, insets.top, null );
+
+    }
+    catch( Exception ex )
+    {
+      /* Print the stack trace. */
+      ex.printStackTrace();
     }
     finally
     {
+      /* Dispose the graphics context. */
       gr.dispose();
     }
 
@@ -268,12 +329,12 @@ public final class MapModellHelper
    * 
    * @param depth
    *          One of the {@link IKalypsoThemeVisitor#DEPTH_} constants.
-   * @param mapModell
+   * @param mapModel
    *          This model is searched
    * @param themeProperty
    *          This where this property is set are found
    */
-  public static IKalypsoTheme[] findThemeByProperty( final IMapModell mapModell, final String themeProperty, final int depth )
+  public static IKalypsoTheme[] findThemeByProperty( final IMapModell mapModel, final String themeProperty, final int depth )
   {
     final IKalypsoThemePredicate predicate = new IKalypsoThemePredicate()
     {
@@ -286,7 +347,7 @@ public final class MapModellHelper
     };
 
     final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
-    mapModell.accept( visitor, depth );
+    mapModel.accept( visitor, depth );
     return visitor.getFoundThemes();
   }
 

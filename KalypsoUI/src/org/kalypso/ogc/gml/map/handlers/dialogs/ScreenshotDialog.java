@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.handlers.dialogs;
 
+import java.awt.Insets;
 import java.io.File;
 
 import org.apache.commons.io.FilenameUtils;
@@ -535,9 +536,20 @@ public class ScreenshotDialog extends Dialog
    * 
    * @return True, if the aspect ratio should be maintained on change of the width or height.
    */
-  public boolean keepAspectRation( )
+  public boolean keepAspectRatio( )
   {
     return m_aspectRatio;
+  }
+
+  /**
+   * This function returns the insets of the image.
+   * 
+   * @return The insets of the image.
+   */
+  public Insets getInsets( )
+  {
+    // TODO
+    return new Insets( 10, 10, 10, 10 );
   }
 
   /**
