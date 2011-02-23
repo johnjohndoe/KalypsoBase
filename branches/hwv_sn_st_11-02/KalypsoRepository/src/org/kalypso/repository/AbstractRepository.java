@@ -89,6 +89,19 @@ public abstract class AbstractRepository implements IRepository
   }
 
   /**
+   * @see org.kalypso.repository.IRepositoryItem#accept(org.kalypso.repository.IRepositoryItemVisitor)
+   */
+  @Override
+  public void accept( final IRepositoryItemVisitor visitor ) throws RepositoryException
+  {
+    final IRepositoryItem[] children = getChildren();
+    for( final IRepositoryItem child : children )
+    {
+      visitor.visit( child );
+    }
+  }
+
+  /**
    * @see org.kalypso.repository.IRepository#dispose()
    */
   @Override
@@ -233,7 +246,7 @@ public abstract class AbstractRepository implements IRepository
   public String toString( )
   {
     final String desc = getDescription();
-    if( (desc != null) && (desc.length() > 0) )
+    if( desc != null && desc.length() > 0 )
       return getLabel() + " (" + desc + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
     return getLabel();
