@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
+import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -61,19 +62,22 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class ExportableMap implements IExportableObject
 {
+  private final IMapPanel m_panel;
+
   private final int m_width;
 
   private final int m_height;
 
+  private final Insets m_insets;
+
   private final String m_format;
 
-  private final IMapPanel m_panel;
-
-  public ExportableMap( final IMapPanel panel, final int width, final int height, final String format )
+  public ExportableMap( final IMapPanel panel, final int width, final int height, Insets insets, final String format )
   {
     m_panel = panel;
     m_width = width;
     m_height = height;
+    m_insets = insets;
     m_format = format;
   }
 
@@ -98,7 +102,7 @@ public class ExportableMap implements IExportableObject
     {
       monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.1" ), 1000 ); //$NON-NLS-1$
 
-      final BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_panel, m_width, m_height );
+      final BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_panel, m_width, m_height, m_insets );
 
       final boolean result = ImageIO.write( image, m_format, output );
       if( !result )

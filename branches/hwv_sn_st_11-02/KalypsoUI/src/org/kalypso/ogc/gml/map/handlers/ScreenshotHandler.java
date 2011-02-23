@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.handlers;
 
+import java.awt.Insets;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -95,6 +96,7 @@ public class ScreenshotHandler extends AbstractHandler
       /* Get the format information. */
       int width = dialog.getImageWidth();
       int height = dialog.getImageHeight();
+      Insets insets = dialog.getInsets();
       String format = dialog.getImageFormat();
 
       /* The target file. */
@@ -107,7 +109,7 @@ public class ScreenshotHandler extends AbstractHandler
       IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
       /* Export the image. */
-      ExportableMap export = new ExportableMap( mapPanel, width, height, format );
+      ExportableMap export = new ExportableMap( mapPanel, width, height, insets, format );
       export.exportObject( os, new NullProgressMonitor() );
 
       return targetFile;

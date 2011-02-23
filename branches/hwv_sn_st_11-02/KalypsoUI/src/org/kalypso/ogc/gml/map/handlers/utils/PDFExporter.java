@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.handlers.utils;
 
+import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -98,7 +99,7 @@ public class PDFExporter
       monitor.subTask( "Erzeuge Inhalt..." );
 
       /* Create the image. */
-      BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapPanel, (int) PageSize.A4.getHeight(), (int) PageSize.A4.getWidth() );
+      BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapPanel, (int) PageSize.A4.getHeight(), (int) PageSize.A4.getWidth(), new Insets( 10, 10, 10, 10 ) );
 
       /* Convert to an itext image. */
       Image img = Image.getInstance( image, null );
