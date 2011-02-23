@@ -49,6 +49,8 @@ import org.kalypso.ogc.sensor.filter.IFilterCreator;
 import org.kalypso.ogc.sensor.filter.IObservationFilter;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.IRepositoryItemVisitor;
+import org.kalypso.repository.RepositoryException;
 import org.kalypso.zml.filters.AbstractFilterType;
 
 /**
@@ -199,5 +201,18 @@ public class VirtualRepositoryItem implements IRepositoryItem
   public boolean isMultipleSourceItem( )
   {
     return false;
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#accept(org.kalypso.repository.IRepositoryItemVisitor)
+   */
+  @Override
+  public void accept( final IRepositoryItemVisitor visitor ) throws RepositoryException
+  {
+    final IRepositoryItem[] children = getChildren();
+    for( final IRepositoryItem child : children )
+    {
+      visitor.visit( child );
+    }
   }
 }
