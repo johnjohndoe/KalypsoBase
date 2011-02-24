@@ -207,4 +207,13 @@ public abstract class AbstractTupleModel implements ITupleModel
 
     return null;
   }
+
+  /**
+   * @see org.kalypso.ogc.sensor.ITupleModel#isEmpty()
+   */
+  @Override
+  public boolean isEmpty( ) throws SensorException
+  {
+    return size() == 0;
+  }
 }

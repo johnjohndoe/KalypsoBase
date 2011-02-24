@@ -60,6 +60,8 @@ public final class RepositoryItemUtils
 
   public static final String ZRXP_ITEM_IDENTIFIER = "Zrxp_"; //$NON-NLS-1$
 
+  private static final Pattern ZRXP_ITEM_PATTERN = new Pattern( "^[\\w\\d_]+\\.Zrxp_.*" ); //$NON-NLS-1$
+
   public static final int ZRXP_PRIORITY_ITEM_OFFSET = 10;
 
   private RepositoryItemUtils( )
@@ -267,7 +269,7 @@ public final class RepositoryItemUtils
     return isForecast( item.getIdentifier() );
   }
 
-  private static final Pattern PATTERN_IS_FORECAST = new Pattern( "[\\w\\d_]+\\.[\\w\\d]+_Prog_[\\w\\d_]+?\\..*" );
+  private static final Pattern PATTERN_IS_FORECAST = new Pattern( "[\\w\\d_]+\\.[\\w\\d]+_Prog_[\\w\\d_]+(\\..*)?" ); //$NON-NLS-1$
 
   public static boolean isForecast( final String identifier )
   {
@@ -297,7 +299,7 @@ public final class RepositoryItemUtils
 
   public static boolean isZrxpItem( final String identifier )
   {
-    return identifier.contains( ZRXP_ITEM_IDENTIFIER );
+    return ZRXP_ITEM_PATTERN.matches( getPlainId( identifier ) );
   }
 
   /**

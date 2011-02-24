@@ -41,7 +41,6 @@
 package org.kalypso.observation.util;
 
 import java.io.ByteArrayInputStream;
-import java.util.Calendar;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -51,7 +50,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.xml.sax.InputSource;
 
@@ -60,7 +58,6 @@ import org.xml.sax.InputSource;
  */
 public final class ObservationHelper
 {
-  public static final int HISTORY = -40;
 
   private ObservationHelper( )
   {
@@ -103,17 +100,6 @@ public final class ObservationHelper
     {
       IOUtils.closeQuietly( outputStream );
     }
-  }
-
-  public static ObservationRequest getDefaultRequest( )
-  {
-    final Calendar from = Calendar.getInstance();
-    final Calendar to = Calendar.getInstance();
-
-    from.add( Calendar.DAY_OF_MONTH, HISTORY );
-    to.add( Calendar.DAY_OF_MONTH, 1 );
-
-    return new ObservationRequest( from.getTime(), to.getTime() );
   }
 
   public static SimpleObservation getSimpleObservation( final SimpleTupleModel model, final IObservation baseObservation )
