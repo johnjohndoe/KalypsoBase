@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.controls.listener;
 
+import java.awt.Insets;
+
 /**
  * Interface for listeners which would like to be notified, if one property of the image properties composite has
  * changed.
@@ -57,8 +59,10 @@ public interface IImagePropertyChangedListener
    *          The height.
    * @param aspectRatio
    *          The aspect ratio.
+   * @param insets
+   *          The insets.
    * @param format
    *          The image format.
    */
-  public void imagePropertyChanged( int width, int height, boolean aspectRatio, String format );
+  public void imagePropertyChanged( int width, int height, boolean aspectRatio, Insets insets, String format );
 }

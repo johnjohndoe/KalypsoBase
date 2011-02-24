@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.controls;
 
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +64,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ui.controls.listener.IImagePropertyChangedListener;
@@ -115,6 +117,16 @@ public class ImagePropertiesComposite extends Composite
   protected double m_aspectFactor;
 
   /**
+   * The spinner for selecting the insets of the image.
+   */
+  private Spinner m_insetsSpinner;
+
+  /**
+   * The insets of the image.
+   */
+  protected Insets m_insets;
+
+  /**
    * The combo viewer, which contains the format of the image.
    */
   private ComboViewer m_imageFormatViewer;
@@ -137,10 +149,12 @@ public class ImagePropertiesComposite extends Composite
    *          The default height.
    * @param defaultAspectRatio
    *          The default aspect ratio.
+   * @param defaultInsets
+   *          The default insets.
    * @param defaultImageFormat
    *          The default image format.
    */
-  public ImagePropertiesComposite( Composite parent, int style, int defaultWidth, int defaultHeight, boolean defaultAspectRatio, String defaultFormat )
+  public ImagePropertiesComposite( Composite parent, int style, int defaultWidth, int defaultHeight, boolean defaultAspectRatio, Insets defaultInsets, String defaultFormat )
   {
     super( parent, style );
 
@@ -153,6 +167,8 @@ public class ImagePropertiesComposite extends Composite
     m_aspectRatioButton = null;
     m_aspectRatio = defaultAspectRatio;
     m_aspectFactor = 0.0;
+    m_insetsSpinner = null;
+    m_insets = defaultInsets;
     m_imageFormatViewer = null;
     m_imageFormat = defaultFormat;
 
@@ -186,6 +202,8 @@ public class ImagePropertiesComposite extends Composite
     m_aspectRatioButton = null;
     m_aspectRatio = false;
     m_aspectFactor = 0.0;
+    m_insetsSpinner = null;
+    m_insets = null;
     m_imageFormatViewer = null;
     m_imageFormat = null;
 
@@ -259,7 +277,7 @@ public class ImagePropertiesComposite extends Composite
         }
 
         /* Fire an image property changed event. */
-        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_imageFormat );
+        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_insets, m_imageFormat );
       }
     } );
 
@@ -305,7 +323,7 @@ public class ImagePropertiesComposite extends Composite
         }
 
         /* Fire an image property changed event. */
-        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_imageFormat );
+        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_insets, m_imageFormat );
       }
     } );
 
@@ -342,6 +360,49 @@ public class ImagePropertiesComposite extends Composite
 
     /* Notify the listeners. */
     m_aspectRatioButton.notifyListeners( SWT.Selection, newEvent );
+
+    /* Separator. */
+    Label separator = new Label( imageGroup, SWT.HORIZONTAL );
+    separator.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+    separator.setText( "" );
+
+    /* Create a label. */
+    Label insetsLabel = new Label( imageGroup, SWT.NONE );
+    insetsLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    insetsLabel.setText( "Druckrand [Pixel]" );
+    insetsLabel.setAlignment( SWT.LEFT );
+
+    /* Create a spinner. */
+    m_insetsSpinner = new Spinner( imageGroup, SWT.BORDER );
+    int insets = 0;
+    if( m_insets != null )
+      insets = m_insets.left;
+    m_insetsSpinner.setValues( insets, 0, 25, 0, 1, 5 );
+    m_insetsSpinner.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_insetsSpinner.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        /* Get the source. */
+        Spinner source = (Spinner) e.getSource();
+
+        /* Get the selection. */
+        int selection = source.getSelection();
+
+        /* Store the values. */
+        if( selection > 0 )
+          m_insets = new Insets( selection, selection, selection, selection );
+        else
+          m_insets = null;
+
+        /* Fire an image property changed event. */
+        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_insets, m_imageFormat );
+      }
+    } );
 
     /* Create a label. */
     Label imageFormatLabel = new Label( imageGroup, SWT.NONE );
@@ -390,7 +451,7 @@ public class ImagePropertiesComposite extends Composite
         m_imageFormat = imageFormat;
 
         /* Fire an image property changed event. */
-        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_imageFormat );
+        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_insets, m_imageFormat );
       }
     } );
 
@@ -408,13 +469,15 @@ public class ImagePropertiesComposite extends Composite
    *          The height.
    * @param aspectRatio
    *          The aspect ratio.
+   * @param insets
+   *          The insets.
    * @param format
    *          The image format.
    */
-  protected void fireImagePropertyChanged( int imageWidth, int imageHeight, boolean aspectRatio, String imageFormat )
+  protected void fireImagePropertyChanged( int imageWidth, int imageHeight, boolean aspectRatio, Insets insets, String imageFormat )
   {
     for( IImagePropertyChangedListener listener : m_listener )
-      listener.imagePropertyChanged( imageWidth, imageHeight, aspectRatio, imageFormat );
+      listener.imagePropertyChanged( imageWidth, imageHeight, aspectRatio, insets, imageFormat );
   }
 
   /**
@@ -516,6 +579,22 @@ public class ImagePropertiesComposite extends Composite
   }
 
   /**
+   * This function sets the insets of the image.
+   * 
+   * @param insets
+   *          The insets of the image or null.
+   */
+  public void setInsets( Insets insets )
+  {
+    if( m_insetsSpinner == null || m_insetsSpinner.isDisposed() )
+      return;
+
+    /* Set the selection. */
+    if( insets.left >= 0 && insets.left <= 25 )
+      m_insetsSpinner.setSelection( insets.left );
+  }
+
+  /**
    * This function sets the format of the image.
    * 
    * @param imageFormat
@@ -559,6 +638,16 @@ public class ImagePropertiesComposite extends Composite
   public boolean keepAspectRatio( )
   {
     return m_aspectRatio;
+  }
+
+  /**
+   * This function returns the insets of the image.
+   * 
+   * @return The insets of the image or null.
+   */
+  public Insets getInsets( )
+  {
+    return m_insets;
   }
 
   /**
