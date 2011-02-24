@@ -91,19 +91,24 @@ public class ScreenshotDialog extends Dialog
   private static String SETTINGS_IMAGE_HEIGHT = "imageHeight"; //$NON-NLS-1$
 
   /**
+   * Key for the dialog settings: aspect ratio.
+   */
+  private static String SETTINGS_KEEP_ASPECT_RATIO = "aspectRatio"; //$NON-NLS-1$
+
+  /**
    * Key for the dialog settings: insets.
    */
   private static String SETTINGS_INSETS = "insets"; //$NON-NLS-1$
 
   /**
+   * Key for the dialog settings: border.
+   */
+  private static final String SETTINGS_HAS_BORDER = "border"; //$NON-NLS-1$
+
+  /**
    * Key for the dialog settings: image format.
    */
   private static String SETTINGS_IMAGE_FORMAT = "imageFormat"; //$NON-NLS-1$
-
-  /**
-   * Key for the dialog settings: aspect ratio.
-   */
-  private static String SETTINGS_KEEP_ASPECT_RATIO = "aspectRatio"; //$NON-NLS-1$
 
   /**
    * The dialog settings.
@@ -144,6 +149,11 @@ public class ScreenshotDialog extends Dialog
    * The insets of the image.
    */
   protected Insets m_insets;
+
+  /**
+   * True, if the drawn border is enabled.
+   */
+  protected boolean m_border;
 
   /**
    * The format of the image.
@@ -194,6 +204,7 @@ public class ScreenshotDialog extends Dialog
     m_imageHeight = defaultHeight;
     m_aspectRatio = false;
     m_insets = null;
+    m_border = false;
     m_imageFormat = null;
   }
 
@@ -219,6 +230,7 @@ public class ScreenshotDialog extends Dialog
     m_imageHeight = defaultHeight;
     m_aspectRatio = false;
     m_insets = null;
+    m_border = false;
     m_imageFormat = null;
   }
 
@@ -305,22 +317,23 @@ public class ScreenshotDialog extends Dialog
     } );
 
     /* Create the image properties composite. */
-    m_imageComposite = new ImagePropertiesComposite( main, SWT.NONE, m_imageWidth, m_imageHeight, m_aspectRatio, m_insets, m_imageFormat );
+    m_imageComposite = new ImagePropertiesComposite( main, SWT.NONE, m_imageWidth, m_imageHeight, m_aspectRatio, m_insets, m_border, m_imageFormat );
     m_imageComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_imageComposite.addImagePropertyChangedListener( new IImagePropertyChangedListener()
     {
       /**
        * @see org.kalypso.ui.controls.listener.IImagePropertyChangedListener#imagePropertyChanged(int, int, boolean,
-       *      java.lang.String)
+       *      java.awt.Insets, boolean, java.lang.String)
        */
       @Override
-      public void imagePropertyChanged( int width, int height, boolean aspectRatio, Insets insets, String format )
+      public void imagePropertyChanged( int width, int height, boolean aspectRatio, Insets insets, boolean border, String format )
       {
         /* Store the values. */
         m_imageWidth = width;
         m_imageHeight = height;
         m_aspectRatio = aspectRatio;
         m_insets = insets;
+        m_border = border;
         m_imageFormat = format;
 
         /* Check, if all data entered is correct. */
@@ -388,6 +401,7 @@ public class ScreenshotDialog extends Dialog
     m_imageHeight = -1;
     m_aspectRatio = false;
     m_insets = null;
+    m_border = false;
     m_imageFormat = null;
 
     super.cancelPressed();
@@ -453,6 +467,10 @@ public class ScreenshotDialog extends Dialog
     int insets = DialogSettingsUtils.getInt( m_dialogSettings, SETTINGS_INSETS, 0 );
     m_imageComposite.setInsets( new Insets( insets, insets, insets, insets ) );
 
+    /* The border. */
+    boolean border = m_dialogSettings.getBoolean( SETTINGS_HAS_BORDER );
+    m_imageComposite.setBorder( border );
+
     /* The format of the image. */
     String imageFormat = m_dialogSettings.get( SETTINGS_IMAGE_FORMAT );
     m_imageComposite.setImageFormat( imageFormat );
@@ -477,6 +495,7 @@ public class ScreenshotDialog extends Dialog
     else
       m_dialogSettings.put( SETTINGS_INSETS, 0 );
     m_dialogSettings.put( SETTINGS_IMAGE_FORMAT, m_imageFormat );
+    m_dialogSettings.put( SETTINGS_HAS_BORDER, m_border );
   }
 
   /**
@@ -570,6 +589,16 @@ public class ScreenshotDialog extends Dialog
   public Insets getInsets( )
   {
     return m_insets;
+  }
+
+  /**
+   * This function returns true, if the drawn border is enabled.
+   * 
+   * @return True, if the drawn border is enabled.
+   */
+  public boolean hasBorder( )
+  {
+    return m_border;
   }
 
   /**

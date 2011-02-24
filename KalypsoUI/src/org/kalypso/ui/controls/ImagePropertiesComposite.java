@@ -127,6 +127,16 @@ public class ImagePropertiesComposite extends Composite
   protected Insets m_insets;
 
   /**
+   * The button, which allows the enablement of a drawn border.
+   */
+  private Button m_borderButton;
+
+  /**
+   * True, if the drawn border is enabled.
+   */
+  protected boolean m_border;
+
+  /**
    * The combo viewer, which contains the format of the image.
    */
   private ComboViewer m_imageFormatViewer;
@@ -151,10 +161,12 @@ public class ImagePropertiesComposite extends Composite
    *          The default aspect ratio.
    * @param defaultInsets
    *          The default insets.
+   * @param defauldBorder
+   *          The default border status.
    * @param defaultImageFormat
    *          The default image format.
    */
-  public ImagePropertiesComposite( Composite parent, int style, int defaultWidth, int defaultHeight, boolean defaultAspectRatio, Insets defaultInsets, String defaultFormat )
+  public ImagePropertiesComposite( Composite parent, int style, int defaultWidth, int defaultHeight, boolean defaultAspectRatio, Insets defaultInsets, boolean defaultBorder, String defaultFormat )
   {
     super( parent, style );
 
@@ -169,6 +181,8 @@ public class ImagePropertiesComposite extends Composite
     m_aspectFactor = 0.0;
     m_insetsSpinner = null;
     m_insets = defaultInsets;
+    m_borderButton = null;
+    m_border = defaultBorder;
     m_imageFormatViewer = null;
     m_imageFormat = defaultFormat;
 
@@ -204,6 +218,8 @@ public class ImagePropertiesComposite extends Composite
     m_aspectFactor = 0.0;
     m_insetsSpinner = null;
     m_insets = null;
+    m_borderButton = null;
+    m_border = false;
     m_imageFormatViewer = null;
     m_imageFormat = null;
 
@@ -277,7 +293,7 @@ public class ImagePropertiesComposite extends Composite
         }
 
         /* Fire an image property changed event. */
-        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_insets, m_imageFormat );
+        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_insets, m_border, m_imageFormat );
       }
     } );
 
@@ -323,11 +339,11 @@ public class ImagePropertiesComposite extends Composite
         }
 
         /* Fire an image property changed event. */
-        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_insets, m_imageFormat );
+        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_insets, m_border, m_imageFormat );
       }
     } );
 
-    /* Create a label. */
+    /* Create a button. */
     m_aspectRatioButton = new Button( imageGroup, SWT.CHECK );
     m_aspectRatioButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false, 2, 1 ) );
     m_aspectRatioButton.setText( "Seitenverhältnis beibehalten" );
@@ -351,15 +367,6 @@ public class ImagePropertiesComposite extends Composite
 
     /* Set the initial selection. */
     m_aspectRatioButton.setSelection( m_aspectRatio );
-
-    /* Create an event. */
-    Event newEvent = new Event();
-    newEvent.display = m_aspectRatioButton.getDisplay();
-    newEvent.doit = true;
-    newEvent.widget = m_aspectRatioButton;
-
-    /* Notify the listeners. */
-    m_aspectRatioButton.notifyListeners( SWT.Selection, newEvent );
 
     /* Separator. */
     Label separator = new Label( imageGroup, SWT.HORIZONTAL );
@@ -400,9 +407,38 @@ public class ImagePropertiesComposite extends Composite
           m_insets = null;
 
         /* Fire an image property changed event. */
-        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_insets, m_imageFormat );
+        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_insets, m_border, m_imageFormat );
       }
     } );
+
+    /* Create a button. */
+    m_borderButton = new Button( imageGroup, SWT.CHECK );
+    m_borderButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false, 2, 1 ) );
+    m_borderButton.setText( "Umrandung aktivieren" );
+    m_borderButton.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        Button source = (Button) e.getSource();
+        boolean border = source.getSelection();
+        m_border = border;
+
+        /* Fire an image property changed event. */
+        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_insets, m_border, m_imageFormat );
+      }
+    } );
+
+    /* Set the initial selection. */
+    m_borderButton.setSelection( m_border );
+
+    /* Separator. */
+    Label separator1 = new Label( imageGroup, SWT.HORIZONTAL );
+    separator1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+    separator1.setText( "" );
 
     /* Create a label. */
     Label imageFormatLabel = new Label( imageGroup, SWT.NONE );
@@ -451,7 +487,7 @@ public class ImagePropertiesComposite extends Composite
         m_imageFormat = imageFormat;
 
         /* Fire an image property changed event. */
-        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_insets, m_imageFormat );
+        fireImagePropertyChanged( m_imageWidth, m_imageHeight, m_aspectRatio, m_insets, m_border, m_imageFormat );
       }
     } );
 
@@ -471,13 +507,15 @@ public class ImagePropertiesComposite extends Composite
    *          The aspect ratio.
    * @param insets
    *          The insets.
+   * @param border
+   *          The border status.
    * @param format
    *          The image format.
    */
-  protected void fireImagePropertyChanged( int imageWidth, int imageHeight, boolean aspectRatio, Insets insets, String imageFormat )
+  protected void fireImagePropertyChanged( int imageWidth, int imageHeight, boolean aspectRatio, Insets insets, boolean border, String imageFormat )
   {
     for( IImagePropertyChangedListener listener : m_listener )
-      listener.imagePropertyChanged( imageWidth, imageHeight, aspectRatio, insets, imageFormat );
+      listener.imagePropertyChanged( imageWidth, imageHeight, aspectRatio, insets, border, imageFormat );
   }
 
   /**
@@ -589,9 +627,44 @@ public class ImagePropertiesComposite extends Composite
     if( m_insetsSpinner == null || m_insetsSpinner.isDisposed() )
       return;
 
-    /* Set the selection. */
     if( insets.left >= 0 && insets.left <= 25 )
+    {
+      /* Set the selection. */
       m_insetsSpinner.setSelection( insets.left );
+
+      /* Create an event. */
+      Event newEvent = new Event();
+      newEvent.display = m_insetsSpinner.getDisplay();
+      newEvent.doit = true;
+      newEvent.widget = m_insetsSpinner;
+
+      /* Notify the listeners. */
+      m_insetsSpinner.notifyListeners( SWT.Selection, newEvent );
+    }
+  }
+
+  /**
+   * This function sets border status.
+   * 
+   * @param aspectRatio
+   *          True, if the drawn border is enabled.
+   */
+  public void setBorder( boolean border )
+  {
+    if( m_borderButton == null || m_borderButton.isDisposed() )
+      return;
+
+    /* Set the selection. */
+    m_borderButton.setSelection( border );
+
+    /* Create an event. */
+    Event newEvent = new Event();
+    newEvent.display = m_borderButton.getDisplay();
+    newEvent.doit = true;
+    newEvent.widget = m_borderButton;
+
+    /* Notify the listeners. */
+    m_borderButton.notifyListeners( SWT.Selection, newEvent );
   }
 
   /**
@@ -648,6 +721,16 @@ public class ImagePropertiesComposite extends Composite
   public Insets getInsets( )
   {
     return m_insets;
+  }
+
+  /**
+   * This function returns true, if the drawn border is enabled.
+   * 
+   * @return True, if the drawn border is enabled.
+   */
+  public boolean hasBorder( )
+  {
+    return m_border;
   }
 
   /**

@@ -61,8 +61,10 @@ public interface IImagePropertyChangedListener
    *          The aspect ratio.
    * @param insets
    *          The insets.
+   * @param border
+   *          The border status.
    * @param format
    *          The image format.
    */
-  public void imagePropertyChanged( int width, int height, boolean aspectRatio, Insets insets, String format );
+  public void imagePropertyChanged( int width, int height, boolean aspectRatio, Insets insets, boolean border, String format );
 }
