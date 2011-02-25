@@ -424,7 +424,7 @@ public class GrafikLauncher
       }
 
       // find out which axes to use
-      final IAxis[] axes = obs.getAxisList();
+      final IAxis[] axes = obs.getAxes();
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
       // REMARK: we use the version with many classes, so no exception is thrown if now number-axis was found.
       final IAxis[] numberAxes = KalypsoStatusUtils.findAxesByClasses( axes, new Class[] { Number.class }, true );

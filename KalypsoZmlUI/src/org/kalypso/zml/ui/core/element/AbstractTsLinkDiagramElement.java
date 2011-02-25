@@ -131,7 +131,7 @@ public abstract class AbstractTsLinkDiagramElement extends AbstractDiagramElemen
     final IObsProvider provider = getObsProvider();
     final IObservation observation = provider.getObservation();
 
-    return ZmlAxisUtils.findValueAxes( observation.getAxisList() );
+    return ZmlAxisUtils.findValueAxes( observation.getAxes() );
   }
 
 }

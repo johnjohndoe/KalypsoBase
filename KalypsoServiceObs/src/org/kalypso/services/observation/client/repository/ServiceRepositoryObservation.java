@@ -162,11 +162,11 @@ public class ServiceRepositoryObservation implements IObservation
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
   @Override
-  public final IAxis[] getAxisList( )
+  public final IAxis[] getAxes( )
   {
     try
     {
-      return getRemote( null ).getAxisList();
+      return getRemote( null ).getAxes();
     }
     catch( final SensorException e )
     {

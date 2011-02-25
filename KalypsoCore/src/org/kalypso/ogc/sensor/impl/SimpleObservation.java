@@ -123,7 +123,7 @@ public class SimpleObservation implements IObservation
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
   @Override
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxes( )
   {
     return m_model.getAxes();
   }
@@ -165,9 +165,9 @@ public class SimpleObservation implements IObservation
     }
 
     final IAxis[] otherAxes = values.getAxes();
-    final Map<IAxis, IAxis> map = new HashMap<IAxis, IAxis>( getAxisList().length );
+    final Map<IAxis, IAxis> map = new HashMap<IAxis, IAxis>( getAxes().length );
 
-    for( final IAxis axis : getAxisList() )
+    for( final IAxis axis : getAxes() )
     {
       try
       {
@@ -180,7 +180,7 @@ public class SimpleObservation implements IObservation
       }
     }
 
-    final IAxis[] keys = ObservationUtilities.findAxesByKey( getAxisList() );
+    final IAxis[] keys = ObservationUtilities.findAxesByKey( getAxes() );
 
     for( int i = 0; i < values.size(); i++ )
     {

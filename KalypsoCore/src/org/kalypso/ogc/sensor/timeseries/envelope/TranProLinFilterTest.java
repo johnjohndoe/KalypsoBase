@@ -68,12 +68,12 @@ public class TranProLinFilterTest extends TestCase
 
     assertEquals( 10, filter.getValues( null ).size() );
 
-    Number valueOrg = (Number) obs.getValues( null ).get( 0, ObservationUtilities.findAxisByType( obs.getAxisList(), "W" ) ); //$NON-NLS-1$
-    Number valueNew = (Number) filter.getValues( null ).get( 0, ObservationUtilities.findAxisByType( filter.getAxisList(), "W" ) ); //$NON-NLS-1$
+    Number valueOrg = (Number) obs.getValues( null ).get( 0, ObservationUtilities.findAxisByType( obs.getAxes(), "W" ) ); //$NON-NLS-1$
+    Number valueNew = (Number) filter.getValues( null ).get( 0, ObservationUtilities.findAxisByType( filter.getAxes(), "W" ) ); //$NON-NLS-1$
     assertEquals( valueOrg.doubleValue(), valueNew.doubleValue(), 0.001 );
 
-    valueOrg = (Number) obs.getValues( null ).get( 9, ObservationUtilities.findAxisByType( obs.getAxisList(), "W" ) ); //$NON-NLS-1$
-    valueNew = (Number) filter.getValues( null ).get( 9, ObservationUtilities.findAxisByType( filter.getAxisList(), "W" ) ); //$NON-NLS-1$
+    valueOrg = (Number) obs.getValues( null ).get( 9, ObservationUtilities.findAxisByType( obs.getAxes(), "W" ) ); //$NON-NLS-1$
+    valueNew = (Number) filter.getValues( null ).get( 9, ObservationUtilities.findAxisByType( filter.getAxes(), "W" ) ); //$NON-NLS-1$
     assertEquals( valueOrg.doubleValue() * 1.15, valueNew.doubleValue(), 0.001 );
 
     final StringWriter w1 = new StringWriter();

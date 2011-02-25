@@ -83,12 +83,12 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   }
 
   @Override
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxes( )
   {
     if( m_obs == null )
       throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.1" ) ); //$NON-NLS-1$
 
-    return m_obs.getAxisList();
+    return m_obs.getAxes();
   }
 
   @Override

@@ -220,7 +220,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
   {
     final Collection<IAxis> result = new ArrayList<IAxis>();
 
-    final IAxis[] axisList = templateObservation.getAxisList();
+    final IAxis[] axisList = templateObservation.getAxes();
 
     for( final IAxis axis : axisList )
     {
@@ -267,7 +267,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
 
     final SimpleObservation target = new SimpleObservation( href, name, targetMetadata, targetAxes );
 
-    final IAxis[] srcAxes = source.getAxisList();
+    final IAxis[] srcAxes = source.getAxes();
 
     final IRequest request = getRequest();
     final ITupleModel values = source.getValues( request );

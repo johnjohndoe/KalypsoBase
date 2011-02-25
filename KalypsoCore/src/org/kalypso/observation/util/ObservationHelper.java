@@ -70,7 +70,7 @@ public final class ObservationHelper
     try
     {
       /* serialize observation to xml (atm we need only the metadata) */
-      final IAxis[] axes = observation.getAxisList();
+      final IAxis[] axes = observation.getAxes();
       final String href = observation.getHref();
       final String name = observation.getName();
       final MetadataList metadataList = observation.getMetadataList();

@@ -178,8 +178,8 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
     final IAxis sourceKeyAxis = getKeyAxis( sourceObs );
     final IAxis targetKeyAxis = getKeyAxis( targetObs );
 
-    final IAxis[] sourceAxes = sourceObs.getAxisList();
-    final IAxis[] targetAxes = targetObs.getAxisList();
+    final IAxis[] sourceAxes = sourceObs.getAxes();
+    final IAxis[] targetAxes = targetObs.getAxes();
 
     final ITupleModel sourceTuples = sourceObs.getValues( null );
     final ITupleModel targetTuples = targetObs.getValues( null );
@@ -287,7 +287,7 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
 
   private IAxis getKeyAxis( final IObservation obs )
   {
-    final IAxis[] axes = ObservationUtilities.findAxesByKey( obs.getAxisList() );
+    final IAxis[] axes = ObservationUtilities.findAxesByKey( obs.getAxes() );
     if( axes.length == 0 || axes.length > 1 )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.util.MergeObservationFeatureVisitor.12" ) ); //$NON-NLS-1$
 

@@ -83,9 +83,9 @@ public class AbstractObservationDecorator implements IObservation
   }
 
   @Override
-  public IAxis[] getAxisList()
+  public IAxis[] getAxes()
   {
-    return m_obs.getAxisList();
+    return m_obs.getAxes();
   }
 
   @Override
