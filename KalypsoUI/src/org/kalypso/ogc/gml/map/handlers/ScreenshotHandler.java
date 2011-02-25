@@ -97,6 +97,7 @@ public class ScreenshotHandler extends AbstractHandler
       int width = dialog.getImageWidth();
       int height = dialog.getImageHeight();
       Insets insets = dialog.getInsets();
+      boolean hasBorder = dialog.hasBorder();
       String format = dialog.getImageFormat();
 
       /* The target file. */
@@ -109,7 +110,7 @@ public class ScreenshotHandler extends AbstractHandler
       IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
       /* Export the image. */
-      ExportableMap export = new ExportableMap( mapPanel, width, height, insets, format );
+      ExportableMap export = new ExportableMap( mapPanel, width, height, insets, hasBorder ? 1 : -1, format );
       export.exportObject( os, new NullProgressMonitor() );
 
       return targetFile;

@@ -550,7 +550,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   @Override
   public IExportableObject[] createExportableObjects( final Configuration conf )
   {
-    return new IExportableObject[] { new ExportableMap( getMapPanel(), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, 640 ), conf.getInt( ImageExportPage.CONF_IMAGE_HEIGHT, 480 ), null, conf.getString( ImageExportPage.CONF_IMAGE_FORMAT, "png" ) ) }; //$NON-NLS-1$
+    return new IExportableObject[] { new ExportableMap( getMapPanel(), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, 640 ), conf.getInt( ImageExportPage.CONF_IMAGE_HEIGHT, 480 ), null, -1, conf.getString( ImageExportPage.CONF_IMAGE_FORMAT, "png" ) ) }; //$NON-NLS-1$
   }
 
   /**

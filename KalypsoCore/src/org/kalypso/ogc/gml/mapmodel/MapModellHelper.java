@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.mapmodel;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -121,9 +122,11 @@ public final class MapModellHelper
    *          The height of the new image.
    * @param insets
    *          The insets of the image define a print border, which is kept empty.
+   * @param borderWidth
+   *          If >0 and <=25 a border will be drawn around the map.
    * @return The image showing the map.
    */
-  public static BufferedImage createWellFormedImageFromModel( IMapPanel panel, int width, int height, Insets insets )
+  public static BufferedImage createWellFormedImageFromModel( IMapPanel panel, int width, int height, Insets insets, int borderWidth )
   {
     /* The remaining dimensions for the map considering the insets. */
     int mapWidth = width;
@@ -133,6 +136,14 @@ public final class MapModellHelper
       /* Calculate the remaining dimensions. */
       mapWidth = mapWidth - insets.left - insets.right;
       mapHeight = mapHeight - insets.top - insets.bottom;
+    }
+
+    /* The remaining dimensions for the map considering the width of the border. */
+    if( borderWidth > 0 && borderWidth <= 25 )
+    {
+      /* Calculate the remaining dimensions. */
+      mapWidth = mapWidth - borderWidth;
+      mapHeight = mapHeight - borderWidth;
     }
 
     /* Get the map model. */
@@ -147,7 +158,7 @@ public final class MapModellHelper
     /* Adjust the bounding box. */
     GM_Envelope adjustedBoundingBox = MapModellHelper.adjustBoundingBox( mapModel, boundingBox, ratio );
 
-    return MapModellHelper.createImageFromModell( mapModel, width, height, insets, adjustedBoundingBox );
+    return MapModellHelper.createImageFromModell( mapModel, width, height, insets, borderWidth, adjustedBoundingBox );
   }
 
   /**
@@ -163,11 +174,13 @@ public final class MapModellHelper
    *          The height of the new image.
    * @param insets
    *          The insets of the image define a print border, which is kept empty.
+   * @param borderWidth
+   *          If >0 and <=25 a border will be drawn around the map.
    * @param boundingBox
    *          The envelope of the map, which should be exported.
    * @return The image showing the map.
    */
-  public static BufferedImage createImageFromModell( IMapModell model, int width, int height, Insets insets, GM_Envelope boundingBox )
+  public static BufferedImage createImageFromModell( IMapModell model, int width, int height, Insets insets, int borderWidth, GM_Envelope boundingBox )
   {
     /* If there is no bounding box, we cannot draw the map. */
     if( boundingBox == null )
@@ -177,15 +190,19 @@ public final class MapModellHelper
     if( insets == null )
       insets = new Insets( 0, 0, 0, 0 );
 
-    /* Create the image for the map WITH the border. */
+    /* Make sure, the width of the border lies within the allowed bounds. */
+    if( borderWidth <= 0 || borderWidth > 25 )
+      borderWidth = 0;
+
+    /* Calculate the remaining dimensions for the map considering the insets and the border. */
+    int mapWidth = width - insets.left - insets.right - borderWidth;
+    int mapHeight = height - insets.top - insets.bottom - borderWidth;
+
+    /* Create the image for the map WITH the insets AND the border. */
     BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
     Graphics2D gr = (Graphics2D) image.getGraphics();
 
-    /* Calculate the remaining dimensions for the map considering the insets. */
-    int mapWidth = width - insets.left - insets.right;
-    int mapHeight = height - insets.top - insets.bottom;
-
-    /* Create the image for the map WITHOUT the border. */
+    /* Create the image for the map WITHOUT the insets AND the border. */
     BufferedImage mapImage = new BufferedImage( mapWidth, mapHeight, BufferedImage.TYPE_INT_ARGB );
     Graphics2D mapgr = (Graphics2D) mapImage.getGraphics();
 
@@ -218,8 +235,22 @@ public final class MapModellHelper
       model.paint( mapgr, world2screen, new NullProgressMonitor() );
 
       /* Draw it onto the image. */
-      gr.drawImage( mapImage, insets.left, insets.top, null );
+      gr.drawImage( mapImage, insets.left + borderWidth, insets.top + borderWidth, null );
 
+      /* Draw the border. */
+      /* The insets and the space for the border are already considered on the image. */
+      Polygon polygon = new Polygon();
+      polygon.addPoint( insets.left, insets.top );
+      polygon.addPoint( insets.left + borderWidth + mapWidth + borderWidth, insets.top );
+      polygon.addPoint( insets.left + borderWidth + mapWidth + borderWidth, insets.top + borderWidth + mapHeight + borderWidth );
+      polygon.addPoint( insets.left, insets.top + borderWidth + mapHeight + borderWidth );
+      polygon.addPoint( insets.left, insets.top );
+      polygon.addPoint( insets.left + borderWidth, insets.top + borderWidth );
+      polygon.addPoint( insets.left + borderWidth + mapWidth, insets.top + borderWidth );
+      polygon.addPoint( insets.left + borderWidth + mapWidth, insets.top + borderWidth + mapHeight );
+      polygon.addPoint( insets.left + borderWidth, insets.top + borderWidth + mapHeight );
+      polygon.addPoint( insets.left + borderWidth, insets.top + borderWidth );
+      gr.fill( polygon );
     }
     catch( Exception ex )
     {
@@ -228,8 +259,9 @@ public final class MapModellHelper
     }
     finally
     {
-      /* Dispose the graphics context. */
+      /* Dispose the graphics contexts. */
       gr.dispose();
+      mapgr.dispose();
     }
 
     return image;
