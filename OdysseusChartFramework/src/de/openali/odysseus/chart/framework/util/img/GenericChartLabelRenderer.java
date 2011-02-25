@@ -258,6 +258,8 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
   private ImageData loadImage( final Device dev, final String text )
   {
+    if( text == null || text.length() == 0 )
+      return null;
 
     InputStream inputStream = null;
     Image image = null;
