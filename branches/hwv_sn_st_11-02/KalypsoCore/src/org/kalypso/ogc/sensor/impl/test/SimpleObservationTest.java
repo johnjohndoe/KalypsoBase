@@ -83,7 +83,7 @@ public class SimpleObservationTest extends TestCase
 
   public void testAxis( )
   {
-    final IAxis[] axes = m_obs.getAxisList();
+    final IAxis[] axes = m_obs.getAxes();
 
     final SimpleAxis axis = new SimpleAxis( axes[0] );
 

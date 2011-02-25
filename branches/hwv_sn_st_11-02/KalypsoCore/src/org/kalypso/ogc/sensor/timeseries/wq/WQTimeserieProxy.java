@@ -115,7 +115,7 @@ public class WQTimeserieProxy implements IObservation
 
   private void configure( final IObservation obs )
   {
-    final IAxis[] axes = obs.getAxisList();
+    final IAxis[] axes = obs.getAxes();
     m_axes = new IAxis[axes.length + 2];
     for( int i = 0; i < axes.length; i++ )
     {
@@ -153,7 +153,7 @@ public class WQTimeserieProxy implements IObservation
    * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getAxisList()
    */
   @Override
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxes( )
   {
     return m_axes;
   }
@@ -188,7 +188,7 @@ public class WQTimeserieProxy implements IObservation
   @Override
   public void setValues( final ITupleModel values ) throws SensorException
   {
-    m_obs.setValues( WQTuppleModel.reverse( values, m_obs.getAxisList() ) );
+    m_obs.setValues( WQTuppleModel.reverse( values, m_obs.getAxes() ) );
   }
 
   public IAxis getDateAxis( )

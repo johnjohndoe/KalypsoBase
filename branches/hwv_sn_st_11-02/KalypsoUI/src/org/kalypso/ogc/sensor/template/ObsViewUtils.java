@@ -80,7 +80,7 @@ public final class ObsViewUtils
 
     for( final ObsViewItem item : items )
     {
-      final IAxis[] axes = item.getObservation().getAxisList();
+      final IAxis[] axes = item.getObservation().getAxes();
       for( int j = 0; j < axes.length; j++ )
       {
         final String axisType = axes[j].getType();

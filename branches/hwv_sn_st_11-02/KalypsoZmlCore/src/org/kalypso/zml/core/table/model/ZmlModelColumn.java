@@ -211,7 +211,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public IAxis[] getAxes( )
   {
-    return m_handler.getObservation().getAxisList();
+    return m_handler.getObservation().getAxes();
   }
 
   /**

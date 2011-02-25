@@ -108,7 +108,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
       {
         try
         {
-          final IAxis obsAxis = ObservationUtilities.findAxisByNameThenByType( obs.getAxisList(), tmap.getObservationAxis() );
+          final IAxis obsAxis = ObservationUtilities.findAxisByNameThenByType( obs.getAxes(), tmap.getObservationAxis() );
 
           if( ignoreTypes.contains( obsAxis.getType() ) )
           {

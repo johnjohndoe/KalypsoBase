@@ -66,7 +66,7 @@ public final class LayerProviderUtils
 
   public static IAxis getValueAxis( final IObsProvider provider, final String type )
   {
-    final IAxis[] axes = provider.getObservation().getAxisList();
+    final IAxis[] axes = provider.getObservation().getAxes();
     for( final IAxis axis : axes )
     {
       if( axis.getType().equals( type ) )

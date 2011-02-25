@@ -69,7 +69,7 @@ public interface IObservation extends IObservationEventProvider
    * 
    * @return axes array
    */
-  IAxis[] getAxisList( );
+  IAxis[] getAxes( );
 
   /**
    * Returns the values resulting from the measurements this observation stands for.

@@ -103,9 +103,9 @@ public class DataSourceProxyObservation implements IObservation
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
   @Override
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxes( )
   {
-    final IAxis[] axes = m_observation.getAxisList();
+    final IAxis[] axes = m_observation.getAxes();
     if( AxisUtils.findDataSourceAxis( axes ) == null )
     {
       return (IAxis[]) ArrayUtils.add( axes, new DefaultAxis( ITimeseriesConstants.TYPE_DATA_SRC, ITimeseriesConstants.TYPE_DATA_SRC, "", Integer.class, false ) );

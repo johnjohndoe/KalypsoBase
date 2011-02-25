@@ -79,7 +79,7 @@ public class RemoveDataSourceObservationHandler
 
   public boolean hasDataSouceAxis( )
   {
-    final IAxis[] axes = m_observation.getAxisList();
+    final IAxis[] axes = m_observation.getAxes();
     final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( axes );
 
     return dataSourceAxis != null;
