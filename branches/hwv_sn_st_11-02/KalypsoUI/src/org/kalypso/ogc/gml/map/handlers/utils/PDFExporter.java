@@ -100,7 +100,7 @@ public class PDFExporter
 
       /* Create the image. */
       Insets insets = new Insets( 10, 10, 10, 10 );
-      BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapPanel, (int) PageSize.A4.getHeight(), (int) PageSize.A4.getWidth(), insets );
+      BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapPanel, (int) PageSize.A4.getHeight(), (int) PageSize.A4.getWidth(), insets, 1 );
 
       /* Convert to an itext image. */
       Image img = Image.getInstance( image, null );
