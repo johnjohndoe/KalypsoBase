@@ -213,7 +213,7 @@
       <styleReference>
         <reference>warnedValueStyle</reference>
       </styleReference>
-      <label>Interpolierte(r) Wert(e)</label>
+      <label>Gewarnte(r) Wert(e)</label>
     </Rule>
     <Rule id="ruleWqConflict" ruleReference="org.kalypso.zml.ui.core.rule.wq.conflict" setHeaderIcon="true">
       <styleReference>
