@@ -45,15 +45,18 @@ import java.awt.Image;
 import java.awt.Point;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Font;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.outline.nodes.ILegendProvider;
 import org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader;
 import org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
@@ -304,5 +307,19 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
       return null;
 
     return ((AbstractDeegreeImageProvider) m_provider).getLastRequest();
+  }
+
+  public org.eclipse.swt.graphics.Image getLegendGraphic( Font font ) throws CoreException
+  {
+    if( m_provider == null || !(m_provider instanceof ILegendProvider) )
+      return null;
+
+    if( m_legend == null )
+    {
+      ILegendProvider legendProvider = (ILegendProvider) m_provider;
+      m_legend = legendProvider.getLegendGraphic( null, font );
+    }
+
+    return m_legend;
   }
 }
