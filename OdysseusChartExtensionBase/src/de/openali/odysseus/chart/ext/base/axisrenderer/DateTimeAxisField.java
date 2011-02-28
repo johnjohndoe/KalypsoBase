@@ -40,52 +40,66 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
-import org.joda.time.DateTime;
-
-import de.openali.odysseus.chart.ext.base.axisrenderer.provider.DateTimeAxisFieldProvider;
-import de.openali.odysseus.chart.ext.base.axisrenderer.provider.IDateTimeAxisFieldProvider;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import org.joda.time.DateTimeFieldType;
 
 /**
  * @author kimwerner
  */
-public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabelCreator
+public class DateTimeAxisField implements IDateTimeAxisField
 {
-  private final IDateTimeAxisFieldProvider m_dateTimeFieldProvider;
+ 
+  private final int[] m_rollovers;
 
-  public DateTimeLabelCreator( final IDateTimeAxisFieldProvider dateTimeFieldProvider )
+  private final int[] m_beginners;
+
+  private final String m_formatString;
+
+  private  final DateTimeFieldType m_fieldType;
+  
+  public DateTimeAxisField( final DateTimeFieldType fieldType, final String formatString, final int[] rollovers, final int[] beginners )
   {
-    m_dateTimeFieldProvider = dateTimeFieldProvider;
-
-  }
-
-  public DateTimeLabelCreator( )
-  {
-    m_dateTimeFieldProvider = new DateTimeAxisFieldProvider();
-
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator#getLabel(java.lang.Number,
-   *      de.openali.odysseus.chart.framework.model.data.IDataRange)
-   */
-  @Override
-  public String getLabel( final Number value, final IDataRange<Number> range )
-  {
-    final IDateTimeAxisField axisField = m_dateTimeFieldProvider.getDateTimeAxisField( range );
-    return new DateTime( value.longValue() ).toString( axisField.getFormatString() );
+    super();
+    m_rollovers = rollovers;
+    m_beginners = beginners;
+    m_formatString = formatString;
+    m_fieldType=fieldType;
   }
 
   /**
-   * @param value
-   *          date in milliseconds
-   * @param range
-   *          can be null, is not evaluated
-   * @see org.kalypso.chart.ext.test.axisrenderer.ILabelCreator#getLabel(java.lang.Number)
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.IDateTimeAxisField#getBeginners()
    */
   @Override
-  public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
+  public int[] getBeginners( )
   {
-    return getLabel( ticks[i], range );
+   return m_beginners;
   }
+
+  
+
+  @Override
+  public DateTimeFieldType getFieldType( )
+  {
+    return m_fieldType;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.IDateTimeAxisField#getFormatString()
+   */
+  @Override
+  public String getFormatString( )
+  {
+    return m_formatString;
+  }
+
+
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.IDateTimeAxisField#getRollovers()
+   */
+  @Override
+  public int[] getRollovers( )
+  {
+    return m_rollovers;
+  }
+
 }
