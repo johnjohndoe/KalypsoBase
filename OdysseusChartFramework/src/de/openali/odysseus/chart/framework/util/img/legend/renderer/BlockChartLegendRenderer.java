@@ -96,6 +96,8 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     final IChartLayer[] layers = getLayers( canvas.getModel() );
     final Point canvasSize = calculateSize( layers, config );
     final Point itemSize = calculateItemSize( layers, config );
+    if( canvasSize.x <= 0 || canvasSize.y <= 0 )
+      return null;
 
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, canvasSize.x, canvasSize.y );
