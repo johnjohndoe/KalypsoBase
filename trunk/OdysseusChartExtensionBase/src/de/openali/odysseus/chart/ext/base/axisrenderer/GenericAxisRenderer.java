@@ -411,7 +411,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     return m_fixedWidth;
   }
 
-  public ILabelCreator getLabelCreator( )
+  protected ILabelCreator getLabelCreator( )
   {
     return m_labelCreator;
   }
@@ -452,7 +452,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     return p;
   }
 
-  public ITickCalculator getTickCalculator( )
+  protected ITickCalculator getTickCalculator( )
   {
     return m_tickCalculator;
   }

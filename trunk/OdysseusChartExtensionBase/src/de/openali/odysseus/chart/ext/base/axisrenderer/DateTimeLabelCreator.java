@@ -41,54 +41,28 @@
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeField;
-import org.joda.time.DateTimeFieldType;
-import org.joda.time.chrono.GregorianChronology;
 
+import de.openali.odysseus.chart.ext.base.axisrenderer.provider.DateTimeAxisFieldProvider;
+import de.openali.odysseus.chart.ext.base.axisrenderer.provider.IDateTimeAxisFieldProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-
-;
 
 /**
  * @author kimwerner
  */
 public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabelCreator
 {
-  private String m_formatString;
+  private final IDateTimeAxisFieldProvider m_dateTimeFieldProvider;
 
-  /**
-   * @param formatString
-   *          z.B. "yyyy-MM-dd\nhh:mm:ss" ; null=autoformat
-   */
-  public DateTimeLabelCreator( final String formatString )
+  public DateTimeLabelCreator( final IDateTimeAxisFieldProvider dateTimeFieldProvider )
   {
-    m_formatString = formatString;
+    m_dateTimeFieldProvider = dateTimeFieldProvider;
+
   }
 
   public DateTimeLabelCreator( )
   {
-    this( null );
+    m_dateTimeFieldProvider = new DateTimeAxisFieldProvider();
 
-  }
-
-  final private String getFormatString( final DateTimeFieldType fieldType )
-  {
-    if( fieldType == DateTimeFieldType.dayOfMonth() )
-      return "YYYY.dd.MM";
-    else if( fieldType == DateTimeFieldType.dayOfWeek())
-      return "dd.MM\nHH:mm";
-    else if( fieldType == DateTimeFieldType.halfdayOfDay() )
-      return "dd.MM\nHH:mm";
-    else if( fieldType == DateTimeFieldType.hourOfDay() )
-      return "dd.MM\nHH:mm";
-    else if( fieldType == DateTimeFieldType.minuteOfHour() )
-      return "HH:mm\nss.SSS";
-    else if( fieldType == DateTimeFieldType.secondOfMinute() )
-      return "mm\nss.SSS";
-    else if( fieldType == DateTimeFieldType.millisOfSecond() )
-      return "ss.SSS";
-    else
-      return "dd.MM.YYYY\nHH:mm:ss";
   }
 
   /**
@@ -98,16 +72,9 @@ public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabel
   @Override
   public String getLabel( final Number value, final IDataRange<Number> range )
   {
-
-    final DateTimeFieldType fieldType = DateTimeAxisRenderer.getFieldType( range );
-    final DateTimeField field = fieldType.getField( GregorianChronology.getInstance() );
-    final long dateTime = field.roundFloor( value.longValue() );
-    if( m_formatString != null )
-      return new DateTime( dateTime ).toString( m_formatString );
-    return new DateTime( dateTime ).toString( getFormatString( fieldType ) );
+    final IDateTimeAxisField axisField = m_dateTimeFieldProvider.getDateTimeAxisField( range );
+    return new DateTime( value.longValue() ).toString( axisField.getFormatString() );
   }
-
- 
 
   /**
    * @param value
@@ -121,10 +88,4 @@ public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabel
   {
     return getLabel( ticks[i], range );
   }
-
-  public void setFormatString( final String formatString )
-  {
-    m_formatString = formatString;
-  }
-
 }

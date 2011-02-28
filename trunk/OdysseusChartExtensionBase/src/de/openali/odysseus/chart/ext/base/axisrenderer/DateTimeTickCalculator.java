@@ -46,10 +46,11 @@ import java.util.List;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.joda.time.DateTimeField;
-import org.joda.time.DateTimeFieldType;
-import org.joda.time.DurationFieldType;
+import org.joda.time.DurationField;
 import org.joda.time.chrono.GregorianChronology;
 
+import de.openali.odysseus.chart.ext.base.axisrenderer.provider.DateTimeAxisFieldProvider;
+import de.openali.odysseus.chart.ext.base.axisrenderer.provider.IDateTimeAxisFieldProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
@@ -59,22 +60,22 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 public class DateTimeTickCalculator implements ITickCalculator
 {
 
-  private DateTimeFieldType m_fieldType;
+  private final IDateTimeAxisFieldProvider m_fieldTypeProvider;
+
+  public DateTimeTickCalculator( final IDateTimeAxisFieldProvider dateTimeFieldProvider )
+  {
+    m_fieldTypeProvider = dateTimeFieldProvider;
+  }
 
   public DateTimeTickCalculator( )
   {
-    m_fieldType = null;
+    m_fieldTypeProvider = new DateTimeAxisFieldProvider();
 
   }
 
-  public DateTimeTickCalculator( final DateTimeFieldType fixDateTimeFieldType )
+  private long getFirstRollValue( final IDateTimeAxisField axisField, final long start, final long end )
   {
-    m_fieldType = fixDateTimeFieldType;
-
-  }
-
-  private long getFirstRollValue( final DateTimeField field, final long start, final long end )
-  {
+    final DateTimeField field = axisField.getFieldType().getField( GregorianChronology.getInstance() );
     final long firstRoll = field.roundFloor( start );
     if( firstRoll + end - start <= start )
       // out of range, precision too small so we return without adjustment
@@ -83,35 +84,17 @@ public class DateTimeTickCalculator implements ITickCalculator
     final int fieldValue = field.get( firstRoll );
     if( fieldValue == 0 )
       return firstRoll;
-    final int[] rollOvers = getRollOver( field.getDurationField().getType() );
-    for( int i = 1; i < rollOvers.length; i++ )
+
+    final int[] beginners = axisField.getBeginners();
+    for( int i = 1; i < beginners.length; i++ )
     {
-      if( fieldValue < rollOvers[i] )
+      if( fieldValue < beginners[i] )
       {
-        if( rollOvers[i - 1] == 1 )
-          return field.add( firstRoll, -fieldValue );
-        else
-          return field.add( firstRoll, rollOvers[i - 1] - fieldValue );
+        return field.add( firstRoll, beginners[i - 1] - fieldValue );
       }
     }
 
-    return field.add( firstRoll, rollOvers[rollOvers.length - 1] - fieldValue );
-  }
-
-  private int[] getRollOver( final DurationFieldType durationFieldType )
-  {
-    if( durationFieldType == DurationFieldType.hours() )
-      return new int[] { 1, 2, 4, 6, 12 };
-    else if( durationFieldType == DurationFieldType.days() )
-      return new int[] { 1, 2, 4, 7, 14 };
-    else if( durationFieldType == DurationFieldType.halfdays() )
-      return new int[] { 1 };
-    else if( durationFieldType == DurationFieldType.minutes() || durationFieldType == DurationFieldType.seconds() )
-      return new int[] { 1, 15, 30 };
-    else if( durationFieldType == DurationFieldType.months() )
-      return new int[] { 1, 2, 3, 4, 6 };
-    else
-      return new int[] { 1, 10, 100, 500 };
+    return field.add( firstRoll, - fieldValue );
   }
 
   /**
@@ -128,15 +111,15 @@ public class DateTimeTickCalculator implements ITickCalculator
     final long start = numRange.getMin().longValue();
     final long end = numRange.getMax().longValue();
 
-    final DateTimeFieldType fieldType = m_fieldType != null ? m_fieldType : DateTimeAxisRenderer.getFieldType( numRange );
+    final IDateTimeAxisField axisField = m_fieldTypeProvider.getDateTimeAxisField( numRange );
 
-    final DateTimeField field = fieldType.getField( GregorianChronology.getInstance() );
+    final DurationField field = axisField.getFieldType().getDurationType().getField( GregorianChronology.getInstance() );
     final int tickCount = Math.max( 1, field.getDifference( end, start ) );
     final int maximumTickCount = axis.getScreenHeight() / (ticklabelSize.x + 2/* Pixel */);
     int rollOver = 1;
     if( tickCount > maximumTickCount )
     {
-      for( final int i : getRollOver( field.getDurationField().getType() ) )
+      for( final int i : axisField.getRollovers() )
       {
         if( tickCount / i < maximumTickCount )
         {
@@ -151,7 +134,7 @@ public class DateTimeTickCalculator implements ITickCalculator
       }
     }
     final List<Number> ticks = new ArrayList<Number>();
-    long tick = getFirstRollValue( field, start, end );
+    long tick = getFirstRollValue( axisField, start, end );
     ticks.add( tick );
     while( tick < end )
     {
@@ -160,10 +143,5 @@ public class DateTimeTickCalculator implements ITickCalculator
     }
 
     return ticks.toArray( new Number[] {} );
-  }
-
-  public void setFieldType( final DateTimeFieldType fixDateTimeFieldType )
-  {
-    m_fieldType = fixDateTimeFieldType;
   }
 }
