@@ -336,18 +336,9 @@ abstract class AbstractThemeNode<T> implements IThemeNode
     if( m_element instanceof KalypsoLegendTheme )
       return null;
 
-    /* The theme ids, which are allowed. */
-    List<String> themeIds = null;
-    if( whiteList != null && whiteList.length > 0 )
-      themeIds = Arrays.asList( whiteList );
-
-    /* Only show themes in the white list. */
-    if( themeIds != null && themeIds.size() > 0 )
-    {
-      final String id = ((AbstractKalypsoTheme) getElement()).getId();
-      if( id != null && id.length() > 0 && !themeIds.contains( id ) )
-        return null;
-    }
+    /* Check, if this theme is allowed. */
+    if( !checkWhiteList( whiteList ) )
+      return null;
 
     /* Memory for all legends. */
     final List<Image> legends = new ArrayList<Image>();
@@ -411,6 +402,31 @@ abstract class AbstractThemeNode<T> implements IThemeNode
     gc.dispose();
 
     return image;
+  }
+
+  /**
+   * This function returns true, if the current theme is allowed by the white list. Otherwise it will return false.
+   * 
+   * @param whiteList
+   *          The list of ids of allowed themes.
+   * @return True, if the current theme is allowed. False otherwise.
+   */
+  protected boolean checkWhiteList( String[] whiteList )
+  {
+    /* The theme ids, which are allowed. */
+    List<String> themeIds = null;
+    if( whiteList != null && whiteList.length > 0 )
+      themeIds = Arrays.asList( whiteList );
+
+    /* Only show themes in the white list. */
+    if( themeIds != null && themeIds.size() > 0 )
+    {
+      final String id = ((AbstractKalypsoTheme) getElement()).getId();
+      if( id != null && id.length() > 0 && !themeIds.contains( id ) )
+        return false;
+    }
+
+    return true;
   }
 
   /**

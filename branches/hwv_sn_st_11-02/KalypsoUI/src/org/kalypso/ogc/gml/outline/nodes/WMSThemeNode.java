@@ -40,42 +40,31 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.nodes;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
-import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 
 /**
+ * This node provides images for the ouline and the legend.
+ * 
  * @author Gernot Belger
+ * @author Holger Albert
  */
 public class WMSThemeNode extends KalypsoThemeNode<KalypsoWMSTheme>
 {
-  private Image m_legend;
-
-  WMSThemeNode( final IThemeNode parent, final KalypsoWMSTheme theme )
+  /**
+   * The constructor.
+   * 
+   * @param parent
+   *          The parent node.
+   * @param theme
+   *          The wms theme.
+   */
+  public WMSThemeNode( IThemeNode parent, KalypsoWMSTheme theme )
   {
     super( parent, theme );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.outline.nodes.KalypsoThemeNode#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    if( m_legend != null )
-    {
-      if( !m_legend.isDisposed() )
-        m_legend.dispose();
-      m_legend = null;
-    }
-
-    super.dispose();
   }
 
   /**
@@ -83,39 +72,21 @@ public class WMSThemeNode extends KalypsoThemeNode<KalypsoWMSTheme>
    *      org.eclipse.swt.graphics.Font)
    */
   @Override
-  public Image getLegendGraphic( final String[] whiteList, final Font font ) throws CoreException
+  public Image getLegendGraphic( String[] whiteList, Font font ) throws CoreException
   {
+    /* Check, if this theme is allowed. */
+    if( !checkWhiteList( whiteList ) )
+      return null;
+
     /* Get the wms theme. */
-    final KalypsoWMSTheme element = getElement();
+    KalypsoWMSTheme element = getElement();
 
-    /* The theme ids, which are allowed. */
-    List<String> themeIds = null;
-    if( whiteList != null && whiteList.length > 0 )
-      themeIds = Arrays.asList( whiteList );
+    /* Ask the theme for a legend. */
+    Image legendGraphic = element.getLegendGraphic( font );
 
-    /* Only show themes in the white list. */
-    if( themeIds != null && themeIds.size() > 0 )
-    {
-      final String id = element.getId();
-      if( id != null && id.length() > 0 && !themeIds.contains( id ) )
-        return null;
-    }
-
-    final IKalypsoImageProvider imageProvider = element.getImageProvider();
-    if( imageProvider == null || !(imageProvider instanceof ILegendProvider) )
-      return super.getLegendGraphic( whiteList, font );
-
-    if( m_legend == null )
-    {
-      final ILegendProvider legendProvider = (ILegendProvider) imageProvider;
-      m_legend = legendProvider.getLegendGraphic( whiteList, font );
-    }
-
-    if( m_legend != null )
-    {
-      // Clone this image, the returned image will be disposed outside!
-      return new Image( font.getDevice(), m_legend, SWT.IMAGE_COPY );
-    }
+    /* Clone this image, the returned image will be disposed outside! */
+    if( legendGraphic != null )
+      return new Image( font.getDevice(), legendGraphic, SWT.IMAGE_COPY );
 
     return super.getLegendGraphic( whiteList, font );
   }

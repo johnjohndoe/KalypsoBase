@@ -110,6 +110,9 @@ public class ThemeNodeContentProvider implements ITreeContentProvider
   @Override
   public Object getParent( final Object element )
   {
+    if( !(element instanceof IThemeNode) )
+      return null;
+
     final IThemeNode node = (IThemeNode) element;
     return node.getParent();
   }
