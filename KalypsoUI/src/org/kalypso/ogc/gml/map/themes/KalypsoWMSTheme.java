@@ -74,19 +74,24 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipProvider
 {
   /**
+   * The source string. Do not remove this, because it is needed, when the template is saved.
+   */
+  private String m_source;
+
+  /**
+   * This variable stores the image provider.
+   */
+  private IKalypsoImageProvider m_provider;
+
+  /**
    * This variable stores the legend, if any.
    */
-  private org.eclipse.swt.graphics.Image m_legend = null;
+  private org.eclipse.swt.graphics.Image m_legend;
 
   /**
    * This variable stores the max envelope of layer on WMS (local SRS).
    */
   protected GM_Envelope m_maxEnvLocalSRS;
-
-  /**
-   * This variable stores the image provider.
-   */
-  protected IKalypsoImageProvider m_provider;
 
   /**
    * This is the stored extent from the last time, a loader was started (call to
@@ -95,13 +100,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   protected GM_Envelope m_extent;
 
   /**
-   * The source string. Do not remove this, because it is needed, when the template is saved.
-   */
-  private final String m_source;
-
-  /**
    * The constructor.
    * 
+   * @param source
+   *          The source.
    * @param linktype
    *          The link type.
    * @param themeName
@@ -118,6 +120,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     m_source = source;
     m_provider = imageProvider;
+    m_legend = null;
   }
 
   /**
