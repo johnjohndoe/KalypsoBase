@@ -295,4 +295,13 @@ public class CompactChartLegendRenderer implements IChartLegendRenderer
     return new Point( x, y );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#rowSize()
+   */
+  @Override
+  public int rowSize( )
+  {
+    return m_numRows;
+  }
+
 }

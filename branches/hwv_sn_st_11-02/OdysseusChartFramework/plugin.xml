@@ -12,6 +12,10 @@
             id="de.openali.odysseus.chart.legend.render.block"
             renderer="de.openali.odysseus.chart.framework.util.img.legend.renderer.BlockChartLegendRenderer">
       </renderer>
+      <renderer
+            id="de.openali.odysseus.chart.legend.render.combined"
+            renderer="de.openali.odysseus.chart.framework.util.img.legend.renderer.CombinedChartLegendRenderer">
+      </renderer>
    </extension>
 
 </plugin>
