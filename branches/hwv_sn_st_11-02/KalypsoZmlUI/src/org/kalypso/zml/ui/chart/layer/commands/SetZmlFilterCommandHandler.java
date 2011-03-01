@@ -46,11 +46,11 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.chart.ui.editor.commandhandler.utils.CommandHandlerUtils;
-import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
 import org.kalypso.zml.ui.chart.layer.visitor.SetZmlFilterVisitor;
 
+import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
@@ -77,7 +77,7 @@ public class SetZmlFilterCommandHandler extends AbstractHandler
     final ILayerManager layerManager = model.getLayerManager();
     final boolean enabled = CommandHandlerUtils.isEnabled( event );
 
-    final IZmlLayerFilter filter = KalypsoZmlCore.getDefault().findFilter( getFilter( enabled, event ) );
+    final IChartLayerFilter filter = OdysseusChartFramework.getDefault().findFilter( getFilter( enabled, event ) );
     layerManager.accept( new SetZmlFilterVisitor( filter ) );
 
     return Status.OK_STATUS;

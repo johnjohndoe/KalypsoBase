@@ -5,7 +5,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 
-import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
+import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGHT;
@@ -108,11 +108,11 @@ public class TextStyle extends AbstractStyle implements ITextStyle
   public void apply( final GC gc )
   {
     final FontData fd = toFontData();
-    final Font font = OdysseusChartFrameworkPlugin.getDefault().getFontRegistry().getResource( gc.getDevice(), fd );
+    final Font font = OdysseusChartFramework.getDefault().getFontRegistry().getResource( gc.getDevice(), fd );
 
     gc.setFont( font );
-    gc.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), m_fillRGB ) );
-    gc.setForeground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), m_textRGB ) );
+    gc.setBackground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( gc.getDevice(), m_fillRGB ) );
+    gc.setForeground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( gc.getDevice(), m_textRGB ) );
     gc.setAlpha( getAlpha() );
   }
 

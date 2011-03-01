@@ -58,5 +58,4 @@ public interface IZmlLayer extends IChartLayer
 
   void setLabelDescriptor( String labelDescriptor );
 
-  void setFilter( IZmlLayerFilter filter );
 }

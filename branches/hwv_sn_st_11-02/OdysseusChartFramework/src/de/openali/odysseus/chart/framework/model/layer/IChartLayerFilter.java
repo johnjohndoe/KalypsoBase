@@ -38,14 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.layer;
+package de.openali.odysseus.chart.framework.model.layer;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlLayerFilter
+public interface IChartLayerFilter
 {
-  String EXTENSION_POINT_ID = "org.kalypso.zml.core.zmlLayerFilter";
+  String EXTENSION_POINT_ID = "de.openali.odysseus.chart.framework.ChartLayerFilter";
 
   boolean isFiltered( Number value );
 

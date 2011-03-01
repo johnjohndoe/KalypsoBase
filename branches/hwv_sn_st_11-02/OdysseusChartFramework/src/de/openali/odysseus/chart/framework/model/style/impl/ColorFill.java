@@ -3,7 +3,7 @@ package de.openali.odysseus.chart.framework.model.style.impl;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 
-import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
+import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.style.IFill;
 
 public class ColorFill implements IFill
@@ -25,7 +25,7 @@ public class ColorFill implements IFill
   @Override
   public void apply( final GC gc )
   {
-    gc.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), getFillColor() ) );
+    gc.setBackground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( gc.getDevice(), getFillColor() ) );
 
   }
 

@@ -147,20 +147,6 @@ public class LayerManager implements ILayerManager
     }
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#addLayer(de.openali.odysseus.chart.framework.model.layer.IChartLayer,
-   *      int)
-   */
-  @Override
-  public void addLayer( final IChartLayer layer, final int position )
-  {
-    m_layers.add( position, layer );
-    layer.setParent( m_container );
-    layer.addListener( m_layerListener );
-
-    m_handler.fireLayerAdded( layer );
-  }
-
   @Override
   public void addListener( final ILayerManagerEventListener l )
   {
@@ -207,6 +193,7 @@ public class LayerManager implements ILayerManager
   public void moveLayerToPosition( final IChartLayer layer, final int position )
   {
     m_layers.remove( layer );
+
     if( position < m_layers.size() )
       m_layers.add( position, layer );
     else

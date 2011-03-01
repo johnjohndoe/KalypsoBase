@@ -1,7 +1,10 @@
 package de.openali.odysseus.chart.factory.layer;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.Color;
@@ -17,6 +20,7 @@ import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.LayerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
@@ -32,6 +36,8 @@ import de.openali.odysseus.chart.framework.model.mapper.IScreenAxis;
 public abstract class AbstractChartLayer implements IChartLayer
 {
   private ICoordinateMapper m_coordinateMapper;
+
+  Set<IChartLayerFilter> m_filters = new LinkedHashSet<IChartLayerFilter>();
 
   /**
    * hash map to store arbitrary key value pairs
@@ -171,7 +177,7 @@ public abstract class AbstractChartLayer implements IChartLayer
           min = Math.min( min, dr.getMin().doubleValue() );
       }
     }
-    if( (min == null) || (max == null) )
+    if( min == null || max == null )
       return null;
     return new DataRange<Number>( min, max );
   }
@@ -248,7 +254,7 @@ public abstract class AbstractChartLayer implements IChartLayer
           min = Math.min( min, dr.getMin().doubleValue() );
       }
     }
-    if( (min == null) || (max == null) )
+    if( min == null || max == null )
       return null;
     return new DataRange<Number>( min, max );
   }
@@ -457,4 +463,28 @@ public abstract class AbstractChartLayer implements IChartLayer
   {
     return m_parent;
   }
+
+  @Override
+  public final void addFilter( final IChartLayerFilter filter )
+  {
+    m_filters.add( filter );
+
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
+  @Override
+  public final void setFilter( final IChartLayerFilter... filters )
+  {
+    m_filters.clear();
+    Collections.addAll( m_filters, filters );
+
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
+  @Override
+  public IChartLayerFilter[] getFilters( )
+  {
+    return m_filters.toArray( new IChartLayerFilter[] {} );
+  }
+
 }

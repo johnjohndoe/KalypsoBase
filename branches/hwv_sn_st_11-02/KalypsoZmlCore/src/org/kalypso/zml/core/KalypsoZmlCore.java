@@ -9,7 +9,6 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
 import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
@@ -18,8 +17,6 @@ import org.osgi.framework.BundleContext;
 public class KalypsoZmlCore extends Plugin implements BundleActivator
 {
   private static Map<String, IZmlRuleImplementation> ZML_TABLE_RULES = null;
-
-  private static Map<String, IZmlLayerFilter> ZML_DIAGRAM_FILTERS = null;
 
   private static BundleContext CONTEXT;
 
@@ -106,46 +103,6 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
     final Map<String, IZmlRuleImplementation> rules = getRules();
 
     return rules.get( identifier );
-  }
-
-  public synchronized Map<String, IZmlLayerFilter> getFilters( )
-  {
-    // fill binding map
-    if( Objects.isNull( ZML_DIAGRAM_FILTERS ) )
-    {
-      ZML_DIAGRAM_FILTERS = new HashMap<String, IZmlLayerFilter>();
-
-      /* get extension points */
-      final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IZmlLayerFilter.EXTENSION_POINT_ID );
-
-      for( final IConfigurationElement element : elements )
-      {
-        try
-        {
-          final String pluginid = element.getContributor().getName();
-          final Bundle bundle = Platform.getBundle( pluginid );
-          final Class< ? > featureClass = bundle.loadClass( element.getAttribute( "filter" ) ); //$NON-NLS-1$
-          final Constructor< ? > constructor = featureClass.getConstructor();
-
-          final IZmlLayerFilter instance = (IZmlLayerFilter) constructor.newInstance();
-          ZML_DIAGRAM_FILTERS.put( instance.getIdentifier(), instance );
-        }
-        catch( final Throwable e )
-        {
-          e.printStackTrace();
-        }
-      }
-    }
-
-    return ZML_DIAGRAM_FILTERS;
-  }
-
-  public synchronized IZmlLayerFilter findFilter( final String identifier )
-  {
-    final Map<String, IZmlLayerFilter> filters = getFilters();
-
-    return filters.get( identifier );
   }
 
 }

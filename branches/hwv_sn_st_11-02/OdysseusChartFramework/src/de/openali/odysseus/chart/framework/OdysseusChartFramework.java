@@ -2,16 +2,20 @@ package de.openali.odysseus.chart.framework;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.kalypso.commons.java.lang.Objects;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer;
 import de.openali.odysseus.chart.framework.util.resource.ColorRegistry;
 import de.openali.odysseus.chart.framework.util.resource.FontRegistry;
@@ -21,13 +25,13 @@ import de.openali.odysseus.chart.framework.util.resource.PatternRegistry;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class OdysseusChartFrameworkPlugin extends Plugin
+public class OdysseusChartFramework extends Plugin
 {
   private static List<IChartLegendRenderer> CHART_LEGEND_RENDERERS = null;
 
   public static final String PLUGIN_ID = "de.openali.odysseus.chart.framework";
 
-  private static OdysseusChartFrameworkPlugin PLUGIN;
+  private static OdysseusChartFramework PLUGIN;
 
   private ColorRegistry m_colorRegistry;
 
@@ -37,10 +41,12 @@ public class OdysseusChartFrameworkPlugin extends Plugin
 
   private FontRegistry m_fontRegistry;
 
+  private static Map<String, IChartLayerFilter> FILTERS = null;
+
   /**
    * The constructor
    */
-  public OdysseusChartFrameworkPlugin( )
+  public OdysseusChartFramework( )
   {
   }
 
@@ -80,7 +86,7 @@ public class OdysseusChartFrameworkPlugin extends Plugin
    * 
    * @return the shared instance
    */
-  public static OdysseusChartFrameworkPlugin getDefault( )
+  public static OdysseusChartFramework getDefault( )
   {
     return PLUGIN;
   }
@@ -152,4 +158,45 @@ public class OdysseusChartFrameworkPlugin extends Plugin
 
     return null;
   }
+
+  public synchronized Map<String, IChartLayerFilter> getFilters( )
+  {
+    // fill binding map
+    if( Objects.isNull( FILTERS ) )
+    {
+      FILTERS = new HashMap<String, IChartLayerFilter>();
+
+      /* get extension points */
+      final IExtensionRegistry registry = Platform.getExtensionRegistry();
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IChartLayerFilter.EXTENSION_POINT_ID );
+
+      for( final IConfigurationElement element : elements )
+      {
+        try
+        {
+          final String pluginid = element.getContributor().getName();
+          final Bundle bundle = Platform.getBundle( pluginid );
+          final Class< ? > featureClass = bundle.loadClass( element.getAttribute( "filter" ) ); //$NON-NLS-1$
+          final Constructor< ? > constructor = featureClass.getConstructor();
+
+          final IChartLayerFilter instance = (IChartLayerFilter) constructor.newInstance();
+          FILTERS.put( instance.getIdentifier(), instance );
+        }
+        catch( final Throwable e )
+        {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    return FILTERS;
+  }
+
+  public synchronized IChartLayerFilter findFilter( final String identifier )
+  {
+    final Map<String, IChartLayerFilter> filters = getFilters();
+
+    return filters.get( identifier );
+  }
+
 }

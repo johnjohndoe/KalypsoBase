@@ -53,7 +53,6 @@ import org.kalypso.ogc.sensor.metadata.IMetadataBoundary;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
-import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
 import org.kalypso.zml.ui.chart.layer.boundaries.IMetadataLayerBoundary;
 import org.kalypso.zml.ui.chart.layer.boundaries.MetadataLayerBoundaryBuilder;
 
@@ -275,13 +274,4 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 
     return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
   }
-
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setFilter(org.kalypso.zml.core.diagram.layer.IZmlLayerFilter[])
-   */
-  @Override
-  public void setFilter( final IZmlLayerFilter filter )
-  {
-  }
-
 }

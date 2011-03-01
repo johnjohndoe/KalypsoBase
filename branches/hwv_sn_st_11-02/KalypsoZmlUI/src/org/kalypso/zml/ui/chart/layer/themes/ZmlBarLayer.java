@@ -55,7 +55,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
-import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
@@ -311,13 +310,5 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
       return m_labelDescriptor;
 
     return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
-  }
-
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setFilter(org.kalypso.zml.core.diagram.layer.IZmlLayerFilter[])
-   */
-  @Override
-  public void setFilter( final IZmlLayerFilter filter )
-  {
   }
 }

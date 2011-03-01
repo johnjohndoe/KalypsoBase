@@ -44,7 +44,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Pattern;
 
-import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
+import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.style.IFill;
 
 /**
@@ -69,7 +69,7 @@ public class ImageFill implements IFill
   @Override
   public void apply( final GC gc )
   {
-    final Pattern p = OdysseusChartFrameworkPlugin.getDefault().getPatternRegistry().getResource( gc.getDevice(), m_id ).getTarget();
+    final Pattern p = OdysseusChartFramework.getDefault().getPatternRegistry().getResource( gc.getDevice(), m_id ).getTarget();
     gc.setBackgroundPattern( p );
   }
 

@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.chart.layer.themes;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -53,10 +54,10 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
 import org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
-import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 
 /**
  * @author Dirk Kuch
@@ -69,13 +70,13 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
 
   private IAxis m_dateAxis;
 
-  private final IZmlLayerFilter m_filter;
+  private final IChartLayerFilter[] m_filters;
 
-  public LineLayerModelVisitor( final ZmlLineLayer layer, final List<Point> path, final IZmlLayerFilter filter )
+  public LineLayerModelVisitor( final ZmlLineLayer layer, final List<Point> path, final IChartLayerFilter[] filters )
   {
     m_layer = layer;
     m_path = path;
-    m_filter = filter;
+    m_filters = filters;
   }
 
   private IAxis getValueAxis( )
@@ -134,11 +135,19 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
 
   private boolean isFiltered( final Object valueObject )
   {
+    if( ArrayUtils.isEmpty( m_filters ) )
+      return false;
+
     if( !(valueObject instanceof Number) )
-      return true;
+      return false;
 
     final Number value = (Number) valueObject;
+    for( final IChartLayerFilter filter : m_filters )
+    {
+      if( filter.isFiltered( value ) )
+        return true;
+    }
 
-    return m_filter.isFiltered( value );
+    return false;
   }
 }
