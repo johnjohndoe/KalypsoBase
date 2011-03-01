@@ -52,7 +52,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
-import org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue;
+import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
@@ -104,11 +104,10 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
    * @see org.kalypso.ogc.sensor.visitor.ITupleModelVisitor#visit(org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue)
    */
   @Override
-  public void visit( final ITupleModelVisitorValue container )
+  public void visit( final ITupleModelValueContainer container )
   {
     try
     {
-
       final IAxis dateAxis = getDateAxis();
       final IAxis valueAxis = getValueAxis();
       if( Objects.isNull( dateAxis, valueAxis ) )
@@ -119,7 +118,10 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
 
       final Object dateObject = container.get( dateAxis );
       final Object valueObject = container.get( valueAxis );
-      if( Objects.isNull( dateObject, valueObject ) || isFiltered( valueObject ) )
+      if( Objects.isNull( dateObject, valueObject ) )
+        return;
+
+      if( isFiltered( container ) )
         return;
 
       final Date adjusted = ChartLayerUtils.addTimezoneOffset( (Date) dateObject );
@@ -133,18 +135,14 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
     }
   }
 
-  private boolean isFiltered( final Object valueObject )
+  private boolean isFiltered( final ITupleModelValueContainer container )
   {
     if( ArrayUtils.isEmpty( m_filters ) )
       return false;
 
-    if( !(valueObject instanceof Number) )
-      return false;
-
-    final Number value = (Number) valueObject;
     for( final IChartLayerFilter filter : m_filters )
     {
-      if( filter.isFiltered( value ) )
+      if( filter.isFiltered( container ) )
         return true;
     }
 

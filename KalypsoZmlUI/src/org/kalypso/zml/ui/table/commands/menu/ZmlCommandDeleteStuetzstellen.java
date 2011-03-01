@@ -55,7 +55,7 @@ import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.model.references.ZmlValueRefernceHelper;
+import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
@@ -94,7 +94,7 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
         try
         {
           final IZmlValueReference reference = cell.getValueReference();
-          if( ZmlValueRefernceHelper.isStuetzstelle( reference ) )
+          if( ZmlValues.isStuetzstelle( reference ) )
           {
             model.set( reference.getModelIndex(), statusAxis, KalypsoStati.BIT_CHECK );
             model.set( reference.getModelIndex(), dataSourceAxis, dataSourceHandler.addDataSource( src, src ) );

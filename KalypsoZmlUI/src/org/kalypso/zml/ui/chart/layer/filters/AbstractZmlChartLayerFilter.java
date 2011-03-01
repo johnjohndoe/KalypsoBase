@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,32 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.layer.filter;
+package org.kalypso.zml.ui.chart.layer.filters;
+
+import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 
 /**
  * @author Dirk Kuch
  */
-public class DefaultChartLayerFilter implements IChartLayerFilter
+public abstract class AbstractZmlChartLayerFilter implements IChartLayerFilter
 {
-  public static final String ID = "org.kalypso.chart.layer.filter.default"; // $NON-NLS-1$
-
   /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayerFilter#isFiltered(java.lang.Number)
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter#isFiltered(java.lang.Object)
    */
   @Override
-  public boolean isFiltered( final Number value )
+  public final boolean isFiltered( final Object object )
   {
-    return false;
+    if( !(object instanceof ITupleModelValueContainer) )
+      return false;
+
+    return filter( (ITupleModelValueContainer) object );
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayerFilter#getIdentifier()
-   */
-  @Override
-  public String getIdentifier( )
-  {
-    return ID;
-  }
+  protected abstract boolean filter( ITupleModelValueContainer container );
 }

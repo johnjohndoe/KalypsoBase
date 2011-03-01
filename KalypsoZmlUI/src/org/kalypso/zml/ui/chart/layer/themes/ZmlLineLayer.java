@@ -71,7 +71,6 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
  */
 public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 {
-
   private IZmlLayerDataHandler m_data;
 
   private String m_labelDescriptor;
@@ -182,7 +181,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
       if( model == null )
         return;
 
-      setLineThemeStyles();
+      final IObservation observation = m_data.getObservation();
 
       final List<Point> path = new ArrayList<Point>();
       model.accept( new LineLayerModelVisitor( this, path, getFilters() ) );

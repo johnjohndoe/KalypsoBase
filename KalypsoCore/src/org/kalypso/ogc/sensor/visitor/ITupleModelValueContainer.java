@@ -40,10 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.visitor;
 
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.SensorException;
+
 /**
  * @author Dirk Kuch
  */
-public interface ITupleModelVisitor
+public interface ITupleModelValueContainer
 {
-  void visit( ITupleModelValueContainer container );
+  int getIndex( );
+
+  Object get( IAxis axis ) throws SensorException;
+
+  boolean hasAxis( String... types );
+
+  IAxis[] getAxes( );
 }

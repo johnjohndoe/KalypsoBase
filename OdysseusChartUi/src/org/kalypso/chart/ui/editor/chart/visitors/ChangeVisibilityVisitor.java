@@ -41,6 +41,7 @@
 package org.kalypso.chart.ui.editor.chart.visitors;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 
 /**
  * @author Dirk Kuch
@@ -49,9 +50,12 @@ public class ChangeVisibilityVisitor extends AbstractParameterVisitor
 {
   private final boolean m_enabled;
 
-  public ChangeVisibilityVisitor( final String parameter, final boolean enabled )
+  private final IChartLayerFilter[] m_filters;
+
+  public ChangeVisibilityVisitor( final String parameter, final IChartLayerFilter[] filters, final boolean enabled )
   {
     super( parameter );
+    m_filters = filters;
 
     m_enabled = enabled;
   }
@@ -65,9 +69,18 @@ public class ChangeVisibilityVisitor extends AbstractParameterVisitor
     if( definesParameter( layer ) )
     {
       layer.setVisible( m_enabled );
+      applyFilters( layer );
     }
 
     layer.getLayerManager().accept( this );
+  }
+
+  private void applyFilters( final IChartLayer layer )
+  {
+    if( m_enabled )
+      layer.addFilter( m_filters );
+    else
+      layer.removeFilter( m_filters );
   }
 
 }

@@ -465,10 +465,9 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @Override
-  public final void addFilter( final IChartLayerFilter filter )
+  public final void addFilter( final IChartLayerFilter... filter )
   {
-    m_filters.add( filter );
-
+    Collections.addAll( m_filters, filter );
     getEventHandler().fireLayerContentChanged( this );
   }
 
@@ -487,4 +486,17 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_filters.toArray( new IChartLayerFilter[] {} );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#removeFilter(de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter[])
+   */
+  @Override
+  public void removeFilter( final IChartLayerFilter... filters )
+  {
+    for( final IChartLayerFilter filter : filters )
+    {
+      m_filters.remove( filter );
+    }
+
+    getEventHandler().fireLayerContentChanged( this );
+  }
 }

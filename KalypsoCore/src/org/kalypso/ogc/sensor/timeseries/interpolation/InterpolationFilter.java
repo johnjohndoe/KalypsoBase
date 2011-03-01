@@ -201,5 +201,4 @@ public class InterpolationFilter extends AbstractObservationFilter implements II
   {
     return super.getMetadataList();
   }
-
 }

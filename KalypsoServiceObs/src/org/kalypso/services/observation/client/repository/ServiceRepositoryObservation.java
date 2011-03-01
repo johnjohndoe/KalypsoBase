@@ -56,6 +56,8 @@ import org.kalypso.ogc.sensor.cache.ObservationCache;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.util.Observations;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.services.observation.ObservationServiceUtils;
 import org.kalypso.services.observation.sei.DataBean;
@@ -226,5 +228,15 @@ public class ServiceRepositoryObservation implements IObservation
   public final String getHref( )
   {
     return ObservationServiceUtils.addServerSideId( m_ob.getId() );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#accept(org.kalypso.ogc.sensor.visitor.IObservationVisitor,
+   *      org.kalypso.ogc.sensor.request.IRequest)
+   */
+  @Override
+  public void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
+  {
+    Observations.accept( this, visitor, request );
   }
 }

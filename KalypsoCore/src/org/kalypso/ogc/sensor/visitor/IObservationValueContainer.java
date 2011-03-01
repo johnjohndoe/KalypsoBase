@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,32 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.references;
+package org.kalypso.ogc.sensor.visitor;
 
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
  * @author Dirk Kuch
  */
-public final class ZmlValueRefernceHelper
+public interface IObservationValueContainer extends ITupleModelValueContainer
 {
-  private ZmlValueRefernceHelper( )
-  {
-  }
-
-  public static boolean isStuetzstelle( final IZmlValueReference reference ) throws SensorException
-  {
-    final Integer status = reference.getStatus();
-    if( (status & KalypsoStati.BIT_USER_MODIFIED) != 0 )
-      return true;
-
-    final String source = reference.getDataSource();
-    if( source == null )
-      return true;
-
-    return !source.startsWith( DataSourceHelper.FILTER_SOURCE ); //$NON-NLS-1$
-  }
+  MetadataList getMetaData( );
 
 }
