@@ -50,7 +50,7 @@ import de.openali.odysseus.chart.framework.util.img.legend.renderer.BlockChartLe
  */
 public class ZmlBlockChartLegendRenderer extends BlockChartLegendRenderer
 {
-  public static final String IDENTIFIER = "org.kalypso.zml.ui.chart.legend.renderer.block";
+  public static final String IDENTIFIER = "org.kalypso.zml.ui.chart.legend.renderer.block"; //$NON-NLS-1$
 
   /**
    * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#getIdentifier()

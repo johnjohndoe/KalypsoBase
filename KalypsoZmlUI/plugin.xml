@@ -290,6 +290,10 @@
           id="org.kalypso.zml.ui.chart.legend.renderer.block"
           renderer="org.kalypso.zml.ui.chart.legend.ZmlBlockChartLegendRenderer">
     </renderer>
+    <renderer
+          id="org.kalypso.zml.ui.chart.legend.renderer.combined"
+          renderer="org.kalypso.zml.ui.chart.legend.ZmlCombinedChartLegendRenderer">
+    </renderer>
  </extension>
  <extension
        point="org.eclipse.ui.commands">

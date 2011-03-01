@@ -64,6 +64,8 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
 {
   public static final String ID = "de.openali.odysseus.chart.legend.render.block"; //$NON-NLS-1$
 
+  private int m_rows;
+
   /**
    * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#getIdentifier()
    */
@@ -240,9 +242,9 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     final int legendEntries = calculateLegendEntries( layers );
     final int itemsPerRow = config.getMaximumWidth() / maxItemSize.x;
 
-    final int rows = calculateRowNumbers( legendEntries, itemsPerRow );
+    m_rows = calculateRowNumbers( legendEntries, itemsPerRow );
 
-    return new Point( config.getMaximumWidth(), Double.valueOf( rows ).intValue() * maxItemSize.y );
+    return new Point( config.getMaximumWidth(), Double.valueOf( m_rows ).intValue() * maxItemSize.y );
   }
 
   private int calculateRowNumbers( final int legendEntries, final int itemsPerRow )
@@ -314,6 +316,15 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     final int y = (rowHeight - textSize.y) / 2;
 
     return new Point( x, y );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#rowSize()
+   */
+  @Override
+  public int rowSize( )
+  {
+    return m_rows;
   }
 
 }
