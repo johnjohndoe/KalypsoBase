@@ -111,7 +111,7 @@ public abstract class AbstractObsProvider implements IObsProvider
    * @see org.kalypso.ogc.sensor.template.IObsProvider#getObservation()
    */
   @Override
-  public final IObservation getObservation( )
+  public IObservation getObservation( )
   {
     return m_observation;
   }

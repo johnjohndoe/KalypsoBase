@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.chart.layer.visitor;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
@@ -96,8 +97,8 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
         try
         {
           final IObservation observation = provider.getObservation();
-          if( observation == null )
-            return false;
+          if( Objects.isNull( observation ) )
+            continue;
 
           final ITupleModel model = observation.getValues( null );
           if( model.size() > 0 )

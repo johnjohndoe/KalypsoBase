@@ -103,7 +103,7 @@ public class ZmlDiagramUpdater implements Runnable
       for( int index = 0; index < links.length; index++ )
       {
         final TSLinkWithName link = links[index];
-        final AsynchronousObservationProvider provider = new AsynchronousObservationProvider( link );
+        final AsynchronousObservationProvider provider = new AsynchronousObservationProvider( link, multiple.getType() );
         m_providers.add( provider );
 
         update( layers, provider, index, link.getName() );
