@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img.legend.renderer;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
@@ -153,7 +154,10 @@ public class CompactChartLegendRenderer implements IChartLegendRenderer
     final LegendChartLayersVisitor visitor = new LegendChartLayersVisitor();
     layerManager.accept( visitor );
 
-    return visitor.getLayers();
+    final IChartLayer[] layers = visitor.getLayers();
+    ArrayUtils.reverse( layers );
+
+    return layers;
   }
 
   private ImageData createLegendItem( final IChartLegendConfig config, final ILegendEntry entry, final int rowHeight )
