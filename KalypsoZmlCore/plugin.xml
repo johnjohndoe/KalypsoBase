@@ -2,7 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="tableRule" name="tableRule" schema="schema/tableRule.exsd"/>
-   <extension-point id="zmlLayerFilter" name="zmlLayerFilter" schema="schema/zmlLayerFilter.exsd"/>
   	<extension
        point="org.kalypso.zml.core.tableRule">
     <rule
@@ -45,17 +44,6 @@
                catalog="etc/schemas/catalog.xmlcatalog">
          </nextCatalog>
       </catalogContribution>
- </extension>
- <extension
-       point="org.kalypso.zml.core.zmlLayerFilter">
-    <filter
-          filter="org.kalypso.zml.core.diagram.filter.DefaultZmlFilter"
-          id="org.kalypso.zml.core.diagram.filter.default">
-    </filter>
-    <filter
-          filter="org.kalypso.zml.core.diagram.filter.NotNullZmlFilter"
-          id="org.kalypso.zml.core.diagram.filter.not.null">
-    </filter>
  </extension>
 
 </plugin>

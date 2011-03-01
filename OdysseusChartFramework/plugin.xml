@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="ChartLegendRenderer" name="ChartLegendRenderer" schema="schema/ChartLegendRenderer.exsd"/>
+   <extension-point id="ChartLayerFilter" name="ChartLayerFilter" schema="schema/ChartLayerFilter.exsd"/>
    <extension
          point="de.openali.odysseus.chart.framework.ChartLegendRenderer">
       <renderer

@@ -38,16 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.filter;
+package org.kalypso.chart.ui.layer.filter;
 
-import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 
 /**
  * @author Dirk Kuch
  */
-public class DefaultZmlFilter implements IZmlLayerFilter
+public class NotNullChartLayerFilter implements IChartLayerFilter
 {
-  public static final String ID = "org.kalypso.zml.core.diagram.filter.default"; // $NON-NLS-1$
+  public static final String ID = "org.kalypso.chart.layer.filter.not.null"; // $NON-NLS-1$
 
   /**
    * @see org.kalypso.zml.core.diagram.layer.IZmlLayerFilter#isFiltered(java.lang.Number)
@@ -55,7 +55,7 @@ public class DefaultZmlFilter implements IZmlLayerFilter
   @Override
   public boolean isFiltered( final Number value )
   {
-    return false;
+    return value.doubleValue() == 0.0;
   }
 
   /**

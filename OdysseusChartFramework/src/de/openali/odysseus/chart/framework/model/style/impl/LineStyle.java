@@ -5,7 +5,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.LineAttributes;
 import org.eclipse.swt.graphics.RGB;
 
-import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
+import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
@@ -128,7 +128,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
   public void apply( final GC gc )
   {
 
-    gc.setForeground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), m_rgb ) );
+    gc.setForeground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( gc.getDevice(), m_rgb ) );
 
     gc.setAlpha( getAlpha() );
 

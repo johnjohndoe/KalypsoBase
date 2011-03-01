@@ -395,4 +395,15 @@
        </provider>
     </extension>
 
+ 	<extension
+       point="de.openali.odysseus.chart.framework.ChartLayerFilter">
+    	<filter
+          filter="org.kalypso.chart.ui.layer.filter.DefaultChartLayerFilter"
+          id="org.kalypso.chart.layer.filter.default">
+    	</filter>
+    	<filter
+          filter="org.kalypso.chart.ui.layer.filter.NotNullChartLayerFilter"
+          id="org.kalypso.chart.layer.filter.not.null">
+    	</filter>
+ </extension>
 </plugin>

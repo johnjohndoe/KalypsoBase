@@ -54,7 +54,6 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.base.LayerProviderUtils;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
-import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -252,11 +251,4 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
     // not needed
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setFilter(org.kalypso.zml.core.diagram.layer.IZmlLayerFilter[])
-   */
-  @Override
-  public void setFilter( final IZmlLayerFilter filter )
-  {
-  }
 }

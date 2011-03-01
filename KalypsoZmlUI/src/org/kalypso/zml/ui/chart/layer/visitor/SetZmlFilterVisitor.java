@@ -41,9 +41,9 @@
 package org.kalypso.zml.ui.chart.layer.visitor;
 
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
-import org.kalypso.zml.core.diagram.layer.IZmlLayerFilter;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
 /**
@@ -52,9 +52,9 @@ import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisito
 public class SetZmlFilterVisitor implements IChartLayerVisitor
 {
 
-  private final IZmlLayerFilter m_filter;
+  private final IChartLayerFilter m_filter;
 
-  public SetZmlFilterVisitor( final IZmlLayerFilter filter )
+  public SetZmlFilterVisitor( final IChartLayerFilter filter )
   {
     m_filter = filter;
   }
@@ -69,7 +69,6 @@ public class SetZmlFilterVisitor implements IChartLayerVisitor
       ((IZmlLayer) layer).setFilter( m_filter );
 
     layer.getLayerManager().accept( this );
-
   }
 
 }

@@ -18,8 +18,6 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
 
   void addLayer( IChartLayer... layer );
 
-  void addLayer( IChartLayer layer, int position );
-
   /**
    * Hiermit wird der Befehl zum Schliessen des LayerManagers erteilt; in der Implementation sollen alle selbst
    * erzeugten Resourcen geschlossen werden
