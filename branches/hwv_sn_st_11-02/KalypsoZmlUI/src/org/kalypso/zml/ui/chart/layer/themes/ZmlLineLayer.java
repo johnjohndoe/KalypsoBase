@@ -47,7 +47,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
@@ -177,14 +176,14 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   {
     try
     {
-      final ITupleModel model = m_data.getModel();
-      if( model == null )
+      final IObservation observation = m_data.getObservation();
+      if( observation == null )
         return;
 
-      final IObservation observation = m_data.getObservation();
+      setLineThemeStyles();
 
       final List<Point> path = new ArrayList<Point>();
-      model.accept( new LineLayerModelVisitor( this, path, getFilters() ) );
+      observation.accept( new LineLayerModelVisitor( this, path, getFilters() ), m_data.getRequest() );
 
       drawLine( gc, path );
       drawPoints( gc, path );

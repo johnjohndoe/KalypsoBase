@@ -44,6 +44,8 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 
@@ -68,11 +70,14 @@ public class ZmlStuetzstellenChartLayerFilter extends AbstractZmlChartLayerFilte
    * @see org.kalypso.zml.ui.chart.layer.filters.AbstractZmlChartLayerFilter#filter(org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue)
    */
   @Override
-  protected boolean filter( final ITupleModelValueContainer container )
+  protected boolean filter( final IObservationValueContainer container )
   {
     try
     {
-      return ZmlValues.isStuetzstelle( getStatus( container ), null );
+      final String dataSource = getDataSource( container );
+      final Number status = getStatus( container );
+
+      return !ZmlValues.isStuetzstelle( status, dataSource );
     }
     catch( final SensorException e )
     {
@@ -82,23 +87,28 @@ public class ZmlStuetzstellenChartLayerFilter extends AbstractZmlChartLayerFilte
     }
   }
 
-  // FIXME tuple model does not consists of meta data
-// private String getDataSource( final ITupleModelVisitorValue container )
-// {
-// final IAxis axis = AxisUtils.findDataSourceAxis( container.getAxes() );
-// if( Objects.isNull( axis ) )
-// return null;
-//
-// return container.get( axis );
-// }
+  private String getDataSource( final IObservationValueContainer container ) throws SensorException
+  {
+    final IAxis axis = AxisUtils.findDataSourceAxis( container.getAxes() );
+    if( Objects.isNull( axis ) )
+      return null;
 
-  private Integer getStatus( final ITupleModelValueContainer container ) throws SensorException
+    final Object object = container.get( axis );
+    if( !(object instanceof Number) )
+      return null;
+
+    final Number source = (Number) object;
+    final DataSourceHandler handler = new DataSourceHandler( container.getMetaData() );
+    return handler.getDataSourceIdentifier( source.intValue() );
+  }
+
+  private Number getStatus( final ITupleModelValueContainer container ) throws SensorException
   {
     final IAxis axis = AxisUtils.findStatusAxis( container.getAxes() );
     if( Objects.isNull( axis ) )
       return null;
 
-    return (Integer) container.get( axis );
+    return (Number) container.get( axis );
   }
 
 }

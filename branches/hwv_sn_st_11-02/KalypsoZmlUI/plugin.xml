@@ -310,6 +310,11 @@
              name="layer parameter"
              optional="false">
        </commandParameter>
+       <commandParameter
+             id="layer.filter"
+             name="layer filter (seperated by &apos;;&apos;)"
+             optional="true">
+       </commandParameter>
     </command>
     <command
           categoryId="org.kalypso.chart.ui.commands.category"

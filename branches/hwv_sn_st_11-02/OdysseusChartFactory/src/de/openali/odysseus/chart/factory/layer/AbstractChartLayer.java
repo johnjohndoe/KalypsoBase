@@ -465,15 +465,21 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @Override
-  public final void addFilter( final IChartLayerFilter... filter )
+  public final void addFilter( final IChartLayerFilter... filters )
   {
-    Collections.addAll( m_filters, filter );
+    if( ArrayUtils.isEmpty( filters ) )
+      return;
+
+    Collections.addAll( m_filters, filters );
     getEventHandler().fireLayerContentChanged( this );
   }
 
   @Override
   public final void setFilter( final IChartLayerFilter... filters )
   {
+    if( ArrayUtils.isEmpty( filters ) )
+      return;
+
     m_filters.clear();
     Collections.addAll( m_filters, filters );
 
@@ -492,6 +498,9 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public void removeFilter( final IChartLayerFilter... filters )
   {
+    if( ArrayUtils.isEmpty( filters ) )
+      return;
+
     for( final IChartLayerFilter filter : filters )
     {
       m_filters.remove( filter );

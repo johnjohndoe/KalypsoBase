@@ -51,8 +51,8 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
-import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
+import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
@@ -62,7 +62,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 /**
  * @author Dirk Kuch
  */
-public class LineLayerModelVisitor implements ITupleModelVisitor
+public class LineLayerModelVisitor implements IObservationVisitor
 {
   private final ZmlLineLayer m_layer;
 
@@ -104,7 +104,7 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
    * @see org.kalypso.ogc.sensor.visitor.ITupleModelVisitor#visit(org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue)
    */
   @Override
-  public void visit( final ITupleModelValueContainer container )
+  public void visit( final IObservationValueContainer container )
   {
     try
     {
@@ -135,7 +135,7 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
     }
   }
 
-  private boolean isFiltered( final ITupleModelValueContainer container )
+  private boolean isFiltered( final IObservationValueContainer container )
   {
     if( ArrayUtils.isEmpty( m_filters ) )
       return false;
