@@ -45,6 +45,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
@@ -89,7 +90,7 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler
       return null;
 
     if( m_dateRange != null )
-      return m_observation.getValues( new ObservationRequest( m_dateRange ) );
+      return m_observation.getValues( getRequest() );
 
     return m_observation.getValues( null );
   }
@@ -136,4 +137,12 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler
     m_dateRange = dateRange;
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler#getRequest()
+   */
+  @Override
+  public IRequest getRequest( )
+  {
+    return new ObservationRequest( m_dateRange );
+  }
 }

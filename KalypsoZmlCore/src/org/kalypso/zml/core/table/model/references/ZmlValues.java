@@ -60,9 +60,9 @@ public final class ZmlValues
 
   }
 
-  public static boolean isStuetzstelle( final Integer status, final String source )
+  public static boolean isStuetzstelle( final Number status, final String source )
   {
-    if( Objects.isNotNull( status ) && (status & KalypsoStati.BIT_USER_MODIFIED) != 0 )
+    if( Objects.isNotNull( status ) && (status.intValue() & KalypsoStati.BIT_USER_MODIFIED) != 0 )
       return true;
 
     if( Objects.isNull( source ) )

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.filters;
 
-import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
+import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 
@@ -55,11 +55,11 @@ public abstract class AbstractZmlChartLayerFilter implements IChartLayerFilter
   @Override
   public final boolean isFiltered( final Object object )
   {
-    if( !(object instanceof ITupleModelValueContainer) )
+    if( !(object instanceof IObservationValueContainer) )
       return false;
 
-    return filter( (ITupleModelValueContainer) object );
+    return filter( (IObservationValueContainer) object );
   }
 
-  protected abstract boolean filter( ITupleModelValueContainer container );
+  protected abstract boolean filter( IObservationValueContainer container );
 }

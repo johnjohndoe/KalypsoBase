@@ -165,7 +165,8 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
     return m_model;
   }
 
-  private IRequest getRequest( )
+  @Override
+  public IRequest getRequest( )
   {
     final ILayerProvider layerProvider = m_layer.getProvider();
     if( layerProvider == null )

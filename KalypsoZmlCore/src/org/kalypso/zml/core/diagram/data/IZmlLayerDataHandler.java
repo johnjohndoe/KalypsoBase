@@ -44,6 +44,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * @author Dirk Kuch
@@ -59,4 +60,6 @@ public interface IZmlLayerDataHandler
   String getTargetAxisId( );
 
   IObservation getObservation( );
+
+  IRequest getRequest( );
 }
