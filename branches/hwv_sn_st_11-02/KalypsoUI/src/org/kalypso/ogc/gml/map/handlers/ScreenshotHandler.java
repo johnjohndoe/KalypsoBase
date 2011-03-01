@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.dialogs.ScreenshotDialog;
-import org.kalypso.ui.editor.mapeditor.ExportableMap;
+import org.kalypso.ui.editor.mapeditor.MapExportableObject;
 
 /**
  * This handler initiates the export of an image of the map.
@@ -110,7 +110,7 @@ public class ScreenshotHandler extends AbstractHandler
       IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
       /* Export the image. */
-      ExportableMap export = new ExportableMap( mapPanel, width, height, insets, hasBorder ? 1 : -1, format );
+      MapExportableObject export = new MapExportableObject( mapPanel, width, height, insets, hasBorder ? 1 : -1, format );
       export.exportObject( os, new NullProgressMonitor() );
 
       return targetFile;

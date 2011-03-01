@@ -41,12 +41,10 @@
 package org.kalypso.ui.editor.mapeditor;
 
 import java.awt.Component;
-import java.awt.Rectangle;
 import java.net.URL;
 
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -58,8 +56,6 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineContributionItem;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
@@ -74,17 +70,13 @@ import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.widgets.Form;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
-import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
-import org.kalypso.metadoc.configuration.IPublishingConfiguration;
-import org.kalypso.metadoc.ui.ImageExportPage;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.BaseMapSchedulingRule;
@@ -112,7 +104,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 // TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
 // (SK) This might have to be looked at. GisMapEditor used to implement AbstractEditorPart for basic gml editor
 // functionality (save when dirty, command target).
-public abstract class AbstractMapPart extends AbstractEditorPart implements IExportableObjectFactory, IMapPanelProvider
+public abstract class AbstractMapPart extends AbstractEditorPart implements IMapPanelProvider
 {
   // TODO: we probably should move this elsewhere
   public static final String MAP_COMMAND_CATEGORY = "org.kalypso.ogc.gml.map.category"; //$NON-NLS-1$
@@ -516,7 +508,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     if( IExportableObjectFactory.class.equals( adapter ) )
-      return this;
+      return new MapExportableObjectFactory( getMapPanel() );
 
     if( IContentOutlinePage.class.equals( adapter ) )
     {
@@ -545,31 +537,8 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IExp
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
+   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
-  @Override
-  public IExportableObject[] createExportableObjects( final Configuration conf )
-  {
-    return new IExportableObject[] { new ExportableMap( getMapPanel(), conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, 640 ), conf.getInt( ImageExportPage.CONF_IMAGE_HEIGHT, 480 ), null, -1, conf.getString( ImageExportPage.CONF_IMAGE_FORMAT, "png" ) ) }; //$NON-NLS-1$
-  }
-
-  /**
-   * @see org.kalypso.metadoc.IExportableObjectFactory#createWizardPages(org.kalypso.metadoc.configuration.IPublishingConfiguration,
-   *      ImageDescriptor)
-   */
-  @Override
-  public IWizardPage[] createWizardPages( final IPublishingConfiguration configuration, final ImageDescriptor defaultImage )
-  {
-    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoGisPlugin.getId(), "icons/util/img_props.gif" ); //$NON-NLS-1$
-    final Rectangle bounds = getMapPanel().getScreenBounds();
-    final double width = bounds.width;
-    final double height = bounds.height;
-    final double actualWidthToHeigthRatio = width / height;
-    final IWizardPage page = new ImageExportPage( configuration, "mapprops", Messages.getString( "org.kalypso.ui.editor.mapeditor.AbstractMapPart.16" ), imgDesc, actualWidthToHeigthRatio ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    return new IWizardPage[] { page };
-  }
-
   @Override
   public void dispose( )
   {
