@@ -49,10 +49,12 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
@@ -268,5 +270,12 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   public Point getToolTipShift( final Object object )
   {
     return new Point( 10, 20 );
+  }
+
+  public Object getPlainValue( final IZmlModelRow row ) throws SensorException
+  {
+    final IZmlValueReference reference = row.get( m_column.getModelColumn() );
+
+    return reference.getValue();
   }
 }

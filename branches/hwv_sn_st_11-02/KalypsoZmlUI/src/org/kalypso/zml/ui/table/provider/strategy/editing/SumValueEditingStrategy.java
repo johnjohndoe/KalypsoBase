@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider.strategy.editing;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.SensorException;
@@ -78,8 +79,11 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
   {
     try
     {
-      final String text = m_labelProvider.getText( row );
-      final double value = NumberUtils.parseDouble( text );
+      final Object plain = m_labelProvider.getPlainValue( row );
+      if( Objects.isNull( plain ) )
+        return null;
+
+      final double value = NumberUtils.parseDouble( plain.toString() );
 
       final CellStyle style = getStyle();
       return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value );
