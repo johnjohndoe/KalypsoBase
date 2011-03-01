@@ -38,25 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.layer.filter;
+package org.kalypso.zml.ui.chart.layer.filters;
 
-import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 
 /**
  * @author Dirk Kuch
  */
-public class NotNullChartLayerFilter implements IChartLayerFilter
+public class ZmlNotNullChartLayerFilter extends AbstractZmlChartLayerFilter
 {
   public static final String ID = "org.kalypso.chart.layer.filter.not.null"; // $NON-NLS-1$
-
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayerFilter#isFiltered(java.lang.Number)
-   */
-  @Override
-  public boolean isFiltered( final Number value )
-  {
-    return value.doubleValue() == 0.0;
-  }
 
   /**
    * @see org.kalypso.zml.core.diagram.layer.IZmlLayerFilter#getIdentifier()
@@ -65,5 +59,31 @@ public class NotNullChartLayerFilter implements IChartLayerFilter
   public String getIdentifier( )
   {
     return ID;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter#isFiltered(java.lang.Object)
+   */
+  @Override
+  protected boolean filter( final ITupleModelValueContainer container )
+  {
+    try
+    {
+      final IAxis axis = AxisUtils.findValueAxis( container.getAxes() );
+
+      final Object value = container.get( axis );
+      if( !(value instanceof Number) )
+        return false;
+
+      final Number number = (Number) value;
+
+      return number.doubleValue() == 0.0;
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+
+      return false;
+    }
   }
 }

@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor;
 
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
 /**
  * Eine sog. Observation im Sinne von OGC Sensor-ML. Beschreibt eine maschinelle oder menschliche Wert-Erfassung.
@@ -50,6 +51,9 @@ import org.kalypso.ogc.sensor.request.IRequest;
  */
 public interface IObservation extends IObservationEventProvider
 {
+
+  void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException;
+
   /**
    * Returns the name of this Observation
    * 

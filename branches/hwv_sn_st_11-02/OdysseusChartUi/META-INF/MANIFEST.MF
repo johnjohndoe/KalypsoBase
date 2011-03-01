@@ -22,6 +22,5 @@ Export-Package: org.kalypso.chart.ui,
  org.kalypso.chart.ui.editor.dnd,
  org.kalypso.chart.ui.editor.mousehandler,
  org.kalypso.chart.ui.editor.ui,
- org.kalypso.chart.ui.layer.filter,
  org.kalypso.chart.ui.view
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -92,6 +92,11 @@
                name="Layer defines parameter &apos;x&apos;"
                optional="false">
          </commandParameter>
+         <commandParameter
+               id="layer.filter"
+               name="apply filter referenced filters (seperator &apos;;&apos;)"
+               optional="true">
+         </commandParameter>
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
@@ -394,16 +399,4 @@
              id="org.kalypso.chart.ui.layer.provider.axis.selection">
        </provider>
     </extension>
-
- 	<extension
-       point="de.openali.odysseus.chart.framework.ChartLayerFilter">
-    	<filter
-          filter="org.kalypso.chart.ui.layer.filter.DefaultChartLayerFilter"
-          id="org.kalypso.chart.layer.filter.default">
-    	</filter>
-    	<filter
-          filter="org.kalypso.chart.ui.layer.filter.NotNullChartLayerFilter"
-          id="org.kalypso.chart.layer.filter.not.null">
-    	</filter>
- </extension>
 </plugin>

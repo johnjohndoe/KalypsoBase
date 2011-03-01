@@ -47,7 +47,7 @@ public interface IChartLayerFilter
 {
   String EXTENSION_POINT_ID = "de.openali.odysseus.chart.framework.ChartLayerFilter";
 
-  boolean isFiltered( Number value );
+  boolean isFiltered( Object object );
 
   String getIdentifier( );
 }

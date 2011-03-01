@@ -106,7 +106,9 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
 
   void setVisible( final boolean isVisible );
 
-  void addFilter( IChartLayerFilter filter );
+  void addFilter( IChartLayerFilter... filter );
+
+  void removeFilter( IChartLayerFilter... filter );
 
   void setFilter( IChartLayerFilter... filters );
 

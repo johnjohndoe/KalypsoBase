@@ -47,6 +47,8 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.util.Observations;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
 /**
  * AbstractObservationDecorator decorates an IObservation. Decorates all the methods of IObservation and delegates the
@@ -83,19 +85,19 @@ public class AbstractObservationDecorator implements IObservation
   }
 
   @Override
-  public IAxis[] getAxes()
+  public IAxis[] getAxes( )
   {
     return m_obs.getAxes();
   }
 
   @Override
-  public MetadataList getMetadataList()
+  public MetadataList getMetadataList( )
   {
     return m_obs.getMetadataList();
   }
 
   @Override
-  public String getName()
+  public String getName( )
   {
     return m_obs.getName();
   }
@@ -117,7 +119,7 @@ public class AbstractObservationDecorator implements IObservation
   {
     m_obs.removeListener( listener );
   }
-  
+
   @Override
   public void fireChangedEvent( final Object source )
   {
@@ -131,14 +133,24 @@ public class AbstractObservationDecorator implements IObservation
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     return m_obs.toString();
   }
 
   @Override
-  public String getHref()
+  public String getHref( )
   {
     return m_obs.getHref();
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#accept(org.kalypso.ogc.sensor.visitor.IObservationVisitor,
+   *      org.kalypso.ogc.sensor.request.IRequest)
+   */
+  @Override
+  public void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
+  {
+    Observations.accept( this, visitor, request );
   }
 }

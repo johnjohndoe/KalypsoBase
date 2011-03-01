@@ -51,6 +51,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IObservationFilter;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.util.Observations;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
 /**
  * AbstractObservationFilter
@@ -189,5 +191,15 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   protected void setObservation( final IObservation observation )
   {
     m_obs = observation;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#accept(org.kalypso.ogc.sensor.visitor.IObservationVisitor,
+   *      org.kalypso.ogc.sensor.request.IRequest)
+   */
+  @Override
+  public final void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
+  {
+    Observations.accept( this, visitor, request );
   }
 }

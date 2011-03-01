@@ -338,4 +338,20 @@
           commandId="org.kalypso.zml.ui.chart.layer.commands.set.filter">
     </handler>
  </extension>
+ 
+ <extension
+       point="de.openali.odysseus.chart.framework.ChartLayerFilter">
+    	<filter
+          filter="org.kalypso.zml.ui.chart.layer.filters.ZmlDefaultChartLayerFilter"
+          id="org.kalypso.chart.layer.filter.default">
+    	</filter>
+    	<filter
+          filter="org.kalypso.zml.ui.chart.layer.filters.ZmlNotNullChartLayerFilter"
+          id="org.kalypso.chart.layer.filter.not.null">
+    	</filter>
+     <filter
+           filter="org.kalypso.zml.ui.chart.layer.filters.ZmlStuetzstellenChartLayerFilter"
+           id="org.kalypso.chart.layer.filter.stuetzstelle">
+     </filter>
+ </extension>
 </plugin>

@@ -51,7 +51,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
-import org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue;
+import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 
 /**
  * Provides common functionnality:
@@ -90,7 +90,7 @@ public abstract class AbstractTupleModel implements ITupleModel
     {
       final int index = i;
 
-      visitor.visit( new ITupleModelVisitorValue()
+      visitor.visit( new ITupleModelValueContainer()
       {
         @Override
         public int getIndex( )
@@ -114,6 +114,12 @@ public abstract class AbstractTupleModel implements ITupleModel
           }
 
           return true;
+        }
+
+        @Override
+        public IAxis[] getAxes( )
+        {
+          return AbstractTupleModel.this.getAxes();
         }
       } );
     }

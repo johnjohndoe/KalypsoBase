@@ -45,5 +45,5 @@ package org.kalypso.ogc.sensor.visitor;
  */
 public interface ITupleModelVisitor
 {
-  void visit( ITupleModelVisitorValue container );
+  void visit( ITupleModelValueContainer container );
 }
