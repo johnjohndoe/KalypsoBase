@@ -59,16 +59,21 @@ public class TableCursor extends AbstractCellCursor
     final int offset = drawImage( gc, cell, 0 );
     drawText( gc, cell, offset );
 
-    if( isFocusControl() )
-    {
-      final Point size = getSize();
-      gc.setBackground( display.getSystemColor( SWT.COLOR_BLACK ) );
-      gc.setForeground( display.getSystemColor( SWT.COLOR_WHITE ) );
-      gc.drawFocus( 0, 0, size.x, size.y );
-    }
+    drawFocus( gc, display );
 
     gc.setBackground( background );
     gc.setForeground( foreground );
+  }
+
+  private void drawFocus( final GC gc, final Display display )
+  {
+    final Point size = getSize();
+    gc.setBackground( display.getSystemColor( SWT.COLOR_BLACK ) );
+    gc.setForeground( display.getSystemColor( SWT.COLOR_BLACK ) );
+
+    gc.drawRectangle( 1, 1, size.x - 2, size.y - 2 );
+    gc.drawRectangle( 2, 2, size.x - 4, size.y - 4 );
+
   }
 
   private void drawText( final GC gc, final ViewerCell cell, final int x )
