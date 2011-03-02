@@ -161,9 +161,9 @@ public class ImagePropertiesComposite extends Composite
    *          The default aspect ratio.
    * @param defaultInsets
    *          The default insets.
-   * @param defauldBorder
+   * @param defaultBorder
    *          The default border status.
-   * @param defaultImageFormat
+   * @param defaultFormat
    *          The default image format.
    */
   public ImagePropertiesComposite( Composite parent, int style, int defaultWidth, int defaultHeight, boolean defaultAspectRatio, Insets defaultInsets, boolean defaultBorder, String defaultFormat )

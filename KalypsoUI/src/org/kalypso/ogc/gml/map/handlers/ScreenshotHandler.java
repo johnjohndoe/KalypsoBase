@@ -110,7 +110,7 @@ public class ScreenshotHandler extends AbstractHandler
       IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
       /* Export the image. */
-      MapExportableObject export = new MapExportableObject( mapPanel, width, height, insets, hasBorder ? 1 : -1, format );
+      MapExportableObject export = new MapExportableObject( mapPanel, targetFile.getName(), width, height, insets, hasBorder ? 1 : -1, format );
       export.exportObject( os, new NullProgressMonitor() );
 
       return targetFile;
