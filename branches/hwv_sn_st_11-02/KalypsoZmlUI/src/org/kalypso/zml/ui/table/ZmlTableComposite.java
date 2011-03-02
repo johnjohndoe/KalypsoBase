@@ -188,7 +188,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     /* keyboard table cursor */
     final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new CursorCellHighlighter( m_tableViewer, new TableCursor( m_tableViewer ) ), new ZmlCellNavigationStrategy() );
-
     final ColumnViewerEditorActivationStrategy activationSupport = new ColumnViewerEditorActivationStrategy( m_tableViewer )
     {
       @Override
