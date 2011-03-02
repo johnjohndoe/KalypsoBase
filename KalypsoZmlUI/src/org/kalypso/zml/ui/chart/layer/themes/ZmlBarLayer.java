@@ -44,6 +44,7 @@ import java.util.Date;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -150,18 +151,9 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
         try
         {
           final Object domainValue = model.get( i, dateAxis );
-          Object targetValue = model.get( i, m_handler.getValueAxis() );
-          if( domainValue == null || targetValue == null )
+          final Object targetValue = getTargetValue( model, i );
+          if( Objects.isNull( domainValue, targetValue ) )
             continue;
-
-          /** @hack for polder control */
-          if( targetValue instanceof Boolean )
-          {
-            if( Boolean.valueOf( (Boolean) targetValue ) )
-              targetValue = 1;
-            else
-              targetValue = 0;
-          }
 
           final Number logicalDomain = m_range.getDateDataOperator().logicalToNumeric( ChartLayerUtils.addTimezoneOffset( (Date) domainValue ) );
           final Number logicalTarget = m_range.getNumberDataOperator().logicalToNumeric( (Number) targetValue );
@@ -170,10 +162,11 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
           // don't draw empty lines only rectangles
           if( screen.y != base.y )
           {
-            final int lastScreenX = lastScreen == null ? screen.x : lastScreen.x;
-            pf.setPoints( new Point[] { new Point( lastScreenX, base.y ), new Point( lastScreenX, screen.y ), screen, new Point( screen.x, base.y ) } );
+            final int x = getX( lastScreen, screen );
+            pf.setPoints( new Point[] { new Point( x, base.y ), new Point( x, screen.y ), screen, new Point( screen.x, base.y ) } );
             pf.paint( gc );
           }
+
           lastScreen = screen;
         }
         catch( final Throwable t )
@@ -186,6 +179,30 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
+  }
+
+  private int getX( final Point p1, final Point p2 )
+  {
+    if( p1 == null )
+      return p2.x;
+
+    return p1.x;
+  }
+
+  private Object getTargetValue( final ITupleModel model, final int i ) throws SensorException
+  {
+    Object value = model.get( i, m_handler.getValueAxis() );
+
+    /** @hack for polder control */
+    if( value instanceof Boolean )
+    {
+      if( Boolean.valueOf( (Boolean) value ) )
+        value = 1;
+      else
+        value = 0;
+    }
+
+    return value;
   }
 
   /**
