@@ -31,6 +31,7 @@ import com.google.common.base.Strings;
 
 public class TableCursor extends AbstractCellCursor
 {
+  private static final Color COLOR_BACKGROUND_SELECTION = new Color( null, new RGB( 0xBA, 0xFF, 0xEC ) );
 
   public TableCursor( final AbstractTableViewer viewer )
   {
@@ -51,7 +52,7 @@ public class TableCursor extends AbstractCellCursor
     final Color background = gc.getBackground();
     final Color foreground = gc.getForeground();
 
-    gc.setBackground( new Color( null, new RGB( 0xBA, 0xFF, 0xEC ) ) );
+    gc.setBackground( COLOR_BACKGROUND_SELECTION );
     gc.setForeground( getForeground() );
 
     gc.fillRectangle( event.x, event.y, event.width, event.height );

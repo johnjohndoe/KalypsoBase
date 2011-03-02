@@ -101,6 +101,7 @@ public class ZmlTableEventListener implements MouseMoveListener, Listener
       return;
 
     handleMenuDetect( event );
+
     final Menu menu = m_contextMenuManager.getMenu();
     menu.setVisible( true );
   }
@@ -117,9 +118,11 @@ public class ZmlTableEventListener implements MouseMoveListener, Listener
     final Point pt = table.toControl( eventPoint );
 
     final Rectangle clientArea = table.getClientArea();
-    final boolean header = clientArea.y <= pt.y && pt.y < (clientArea.y + table.getHeaderHeight());
+    final boolean header = clientArea.y <= pt.y && pt.y < clientArea.y + table.getHeaderHeight();
 
-    final int columnIndex = findColumnIndex( pt.x );
+    int columnIndex = findColumnIndex( pt.x );
+    if( columnIndex == -1 )
+      columnIndex = findColumnIndex( eventPoint.x );
     if( columnIndex == -1 )
       return;
 
