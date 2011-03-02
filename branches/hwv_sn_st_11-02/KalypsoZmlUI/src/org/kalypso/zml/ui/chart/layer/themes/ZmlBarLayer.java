@@ -61,6 +61,8 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
@@ -77,9 +79,12 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
   private final ZmlBarLayerRangeHandler m_range = new ZmlBarLayerRangeHandler( this );
 
-  protected ZmlBarLayer( final ILayerProvider layerProvider, final IAreaStyle style )
+  private final IStyleSet m_styleSet;
+
+  protected ZmlBarLayer( final ILayerProvider layerProvider, final IStyleSet styleSet )
   {
-    super( layerProvider, style );
+    super( layerProvider, null );
+    m_styleSet = styleSet;
   }
 
   /**
@@ -224,5 +229,25 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
       return m_labelDescriptor;
 
     return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer#getAreaStyle()
+   */
+  @Override
+  protected IAreaStyle getAreaStyle( )
+  {
+    final IStyleSet styleSet = getStyleSet();
+    final int index = ZmlLayerHelper.getLayerIndex( getId() );
+
+    final StyleSetVisitor visitor = new StyleSetVisitor();
+    final IAreaStyle style = visitor.visit( styleSet, IAreaStyle.class, index );
+
+    return style;
+  }
+
+  protected IStyleSet getStyleSet( )
+  {
+    return m_styleSet;
   }
 }

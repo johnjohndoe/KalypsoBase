@@ -78,6 +78,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
   {
     if( m_areaStyle == null )
       return StyleUtils.getDefaultAreaStyle();
+
     return m_areaStyle;
   }
 
