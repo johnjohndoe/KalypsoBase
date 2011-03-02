@@ -78,27 +78,27 @@ public class ScreenshotDialog extends Dialog
   /**
    * Key for the dialog settings: target path.
    */
-  private static String SETTINGS_TARGET_PATH = "targetPath"; //$NON-NLS-1$
+  private static final String SETTINGS_TARGET_PATH = "targetPath"; //$NON-NLS-1$
 
   /**
    * Key for the dialog settings: image width.
    */
-  private static String SETTINGS_IMAGE_WIDTH = "imageWidth"; //$NON-NLS-1$
+  private static final String SETTINGS_IMAGE_WIDTH = "imageWidth"; //$NON-NLS-1$
 
   /**
    * Key for the dialog settings: image height.
    */
-  private static String SETTINGS_IMAGE_HEIGHT = "imageHeight"; //$NON-NLS-1$
+  private static final String SETTINGS_IMAGE_HEIGHT = "imageHeight"; //$NON-NLS-1$
 
   /**
    * Key for the dialog settings: aspect ratio.
    */
-  private static String SETTINGS_KEEP_ASPECT_RATIO = "aspectRatio"; //$NON-NLS-1$
+  private static final String SETTINGS_KEEP_ASPECT_RATIO = "aspectRatio"; //$NON-NLS-1$
 
   /**
    * Key for the dialog settings: insets.
    */
-  private static String SETTINGS_INSETS = "insets"; //$NON-NLS-1$
+  private static final String SETTINGS_INSETS = "insets"; //$NON-NLS-1$
 
   /**
    * Key for the dialog settings: border.
@@ -108,7 +108,7 @@ public class ScreenshotDialog extends Dialog
   /**
    * Key for the dialog settings: image format.
    */
-  private static String SETTINGS_IMAGE_FORMAT = "imageFormat"; //$NON-NLS-1$
+  private static final String SETTINGS_IMAGE_FORMAT = "imageFormat"; //$NON-NLS-1$
 
   /**
    * The dialog settings.

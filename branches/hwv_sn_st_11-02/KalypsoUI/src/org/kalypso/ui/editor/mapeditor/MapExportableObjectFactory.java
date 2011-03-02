@@ -48,8 +48,8 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
-import org.kalypso.metadoc.ui.ImageExportPage;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ui.controls.ImagePropertiesWizardPage;
 
 /**
  * The map exportable object factory.
@@ -80,14 +80,15 @@ public class MapExportableObjectFactory implements IExportableObjectFactory
   @Override
   public IExportableObject[] createExportableObjects( Configuration conf )
   {
-    // TODO
-    int width = conf.getInt( ImageExportPage.CONF_IMAGE_WIDTH, 640 );
-    int height = conf.getInt( ImageExportPage.CONF_IMAGE_HEIGHT, 480 );
-    Insets insets = (Insets) conf.getProperty( "insets" );
-    int borderWidth = conf.getInt( "borderWidth" );
-    String format = conf.getString( ImageExportPage.CONF_IMAGE_FORMAT, "png" );
+    String preferredDocumentName = m_mapPanel.getMapModell().getName().getValue();
+    int width = conf.getInt( ImagePropertiesWizardPage.CONFIG_IMAGE_WIDTH, 640 );
+    int height = conf.getInt( ImagePropertiesWizardPage.CONFIG_IMAGE_HEIGHT, 480 );
+    Insets insets = (Insets) conf.getProperty( ImagePropertiesWizardPage.CONFIG_INSETS );
+    boolean border = conf.getBoolean( ImagePropertiesWizardPage.CONFIG_HAS_BORDER, false );
+    int borderWidth = border ? 1 : 0;
+    String format = conf.getString( ImagePropertiesWizardPage.CONFIG_IMAGE_FORMAT, "PNG" );
 
-    return new IExportableObject[] { new MapExportableObject( m_mapPanel, width, height, insets, borderWidth, format ) };
+    return new IExportableObject[] { new MapExportableObject( m_mapPanel, preferredDocumentName, width, height, insets, borderWidth, format ) };
   }
 
   /**
@@ -97,8 +98,6 @@ public class MapExportableObjectFactory implements IExportableObjectFactory
   @Override
   public IWizardPage[] createWizardPages( IPublishingConfiguration configuration, ImageDescriptor defaultImage )
   {
-    // TODO
-
-    return null;
+    return new IWizardPage[] { new ImagePropertiesWizardPage( "ImagePropertiesWizardPage", "Karteneigenschaften", defaultImage, configuration, -1, -1, false, null, false, "PNG" ) };
   }
 }

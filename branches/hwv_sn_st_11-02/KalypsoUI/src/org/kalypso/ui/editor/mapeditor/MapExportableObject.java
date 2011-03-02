@@ -47,6 +47,7 @@ import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -69,6 +70,11 @@ public class MapExportableObject implements IExportableObject
    * The map panel.
    */
   private IMapPanel m_panel;
+
+  /**
+   * The preferred document name.
+   */
+  private String m_preferredDocumentName;
 
   /**
    * The width of the new image.
@@ -100,6 +106,8 @@ public class MapExportableObject implements IExportableObject
    * 
    * @param panel
    *          The map panel.
+   * @param preferredDocumentName
+   *          The preferred document name.
    * @param width
    *          The width of the new image.
    * @param height
@@ -111,9 +119,10 @@ public class MapExportableObject implements IExportableObject
    * @param format
    *          The format of the image.
    */
-  public MapExportableObject( IMapPanel panel, int width, int height, Insets insets, int borderWidth, String format )
+  public MapExportableObject( IMapPanel panel, String preferredDocumentName, int width, int height, Insets insets, int borderWidth, String format )
   {
     m_panel = panel;
+    m_preferredDocumentName = preferredDocumentName;
     m_width = width;
     m_height = height;
     m_insets = insets;
@@ -127,8 +136,10 @@ public class MapExportableObject implements IExportableObject
   @Override
   public String getPreferredDocumentName( )
   {
-    // TODO besserer Name? JA: mapModell.getName()!
-    return FileUtilities.validateName( Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.0" ) + m_format, "_" ); //$NON-NLS-1$ //$NON-NLS-2$
+    String baseName = FilenameUtils.removeExtension( m_preferredDocumentName );
+    String fileName = String.format( "%s.%s", baseName, m_format );
+
+    return FileUtilities.validateName( fileName, "_" );
   }
 
   /**
