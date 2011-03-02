@@ -74,8 +74,6 @@ public abstract class AbstractCellCursor extends Canvas
     addListener( SWT.KeyDown, listener );
     addListener( SWT.MouseDown, listener );
     addListener( SWT.MouseDoubleClick, listener );
-
-    getParent().addListener( SWT.FocusIn, listener );
   }
 
   protected void keyDown( final Event event )
