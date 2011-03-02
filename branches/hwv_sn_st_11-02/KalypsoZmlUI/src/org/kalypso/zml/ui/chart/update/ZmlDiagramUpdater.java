@@ -163,6 +163,10 @@ public class ZmlDiagramUpdater implements Runnable
     final ICoordinateMapper baseMapper = baseLayer.getCoordinateMapper();
     clone.setCoordinateMapper( new CoordinateMapper( baseMapper.getDomainAxis(), baseMapper.getTargetAxis() ) );
 
+    clone.setVisible( baseLayer.isVisible() );
+    clone.setFilter( baseLayer.getFilters() );
+    clone.setTitle( baseLayer.getTitle() );
+
     final ILayerContainer parent = baseLayer.getParent();
     parent.getLayerManager().addLayer( clone );
 
