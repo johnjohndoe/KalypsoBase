@@ -235,7 +235,7 @@ public abstract class AbstractChartLayer implements IChartLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> intervall )
   {
     Double min = null;
     Double max = null;
