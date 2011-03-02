@@ -59,7 +59,7 @@ public abstract class AbstractCellCursor extends Canvas
         }
         else if( SWT.MouseDown == event.type )
         {
-          getParent().notifyListeners( SWT.MouseDown, copyEvent( event ) );
+          mouseDown( event );
         }
         else if( SWT.MouseDoubleClick == event.type )
         {
@@ -71,6 +71,7 @@ public abstract class AbstractCellCursor extends Canvas
             forceFocus();
         }
       }
+
     };
 
     addListener( SWT.Paint, l );
@@ -90,6 +91,14 @@ public abstract class AbstractCellCursor extends Canvas
     }
 
     m_viewer.setSelection( new StructuredSelection( list ) );
+  }
+
+  protected void mouseDown( final Event event )
+  {
+    if( event.button == 3 )
+      getParent().notifyListeners( SWT.MouseDown | SWT.MenuDetect, copyEvent( event ) );
+
+    getParent().notifyListeners( SWT.MouseDown, copyEvent( event ) );
   }
 
   public void setSelection( final ViewerCell cell )
