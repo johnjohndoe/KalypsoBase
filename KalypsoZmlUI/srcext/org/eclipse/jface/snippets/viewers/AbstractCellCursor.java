@@ -12,10 +12,7 @@
 
 package org.eclipse.jface.snippets.viewers;
 
-import java.util.ArrayList;
-
 import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -30,9 +27,9 @@ import org.kalypso.commons.java.lang.Objects;
  */
 public abstract class AbstractCellCursor extends Canvas
 {
-  private ViewerCell[] m_cells = new ViewerCell[0];
-
   private final ColumnViewer m_viewer;
+
+  private ViewerCell m_focusCell;
 
   /**
    * @param viewer
@@ -43,9 +40,8 @@ public abstract class AbstractCellCursor extends Canvas
     super( (Composite) viewer.getControl(), style );
     m_viewer = viewer;
 
-    final Listener l = new Listener()
+    final Listener listener = new Listener()
     {
-
       @Override
       public void handleEvent( final Event event )
       {
@@ -74,23 +70,17 @@ public abstract class AbstractCellCursor extends Canvas
 
     };
 
-    addListener( SWT.Paint, l );
-    addListener( SWT.KeyDown, l );
-    addListener( SWT.MouseDown, l );
-    addListener( SWT.MouseDoubleClick, l );
-    getParent().addListener( SWT.FocusIn, l );
+    addListener( SWT.Paint, listener );
+    addListener( SWT.KeyDown, listener );
+    addListener( SWT.MouseDown, listener );
+    addListener( SWT.MouseDoubleClick, listener );
+
+    getParent().addListener( SWT.FocusIn, listener );
   }
 
   protected void keyDown( final Event event )
   {
     getParent().notifyListeners( SWT.KeyDown, event );
-    final ArrayList<Object> list = new ArrayList<Object>();
-    for( final ViewerCell cell : m_cells )
-    {
-      list.add( cell.getElement() );
-    }
-
-    m_viewer.setSelection( new StructuredSelection( list ) );
   }
 
   protected void mouseDown( final Event event )
@@ -101,15 +91,16 @@ public abstract class AbstractCellCursor extends Canvas
     getParent().notifyListeners( SWT.MouseDown, copyEvent( event ) );
   }
 
-  public void setSelection( final ViewerCell cell )
+  public void setFocusCell( final ViewerCell cell )
   {
-    if( Objects.isNull( cell ) )
-      m_cells = new ViewerCell[] {};
-    else
-    {
-      m_cells = new ViewerCell[] { cell };
+    m_focusCell = cell;
+
+    if( Objects.isNotNull( cell ) )
       setBounds( cell.getBounds() );
-    }
+  }
+
+  public void refresh( )
+  {
 
     forceFocus();
     redraw();
@@ -118,9 +109,9 @@ public abstract class AbstractCellCursor extends Canvas
   /**
    * @return the cells who should be highlighted
    */
-  protected ViewerCell[] getSelectedCells( )
+  protected ViewerCell getFocusCell( )
   {
-    return m_cells;
+    return m_focusCell;
   }
 
   protected Event copyEvent( final Event event )
@@ -137,7 +128,7 @@ public abstract class AbstractCellCursor extends Canvas
     cEvent.gc = event.gc;
     cEvent.height = event.height;
     cEvent.index = event.index;
-    cEvent.item = getSelectedCells()[0].getControl();
+    cEvent.item = getFocusCell().getControl();
     cEvent.keyCode = event.keyCode;
     cEvent.start = event.start;
     cEvent.stateMask = event.stateMask;
