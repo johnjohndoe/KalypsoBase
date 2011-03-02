@@ -52,12 +52,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.snippets.viewers.CursorCellHighlighter;
+import org.eclipse.jface.snippets.viewers.TableCursor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.FocusCellOwnerDrawHighlighter;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -186,9 +187,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     table.setHeaderVisible( true );
 
     /* keyboard table cursor */
-    final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new FocusCellOwnerDrawHighlighter( m_tableViewer ), new ZmlCellNavigationStrategy() );
+    final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new CursorCellHighlighter( m_tableViewer, new TableCursor( m_tableViewer ) ), new ZmlCellNavigationStrategy() );
 
-    final ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy( m_tableViewer )
+    final ColumnViewerEditorActivationStrategy activationSupport = new ColumnViewerEditorActivationStrategy( m_tableViewer )
     {
       @Override
       protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event )
@@ -198,8 +199,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       }
     };
 
-    TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL
-        | ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR );
+    TableViewerEditor.create( m_tableViewer, focusCellManager, activationSupport, ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION
+        | ColumnViewerEditorActivationEvent.TRAVERSAL | ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR );
 
     if( hasToolbar( tableType ) )
       initToolbar( tableType, toolbar, toolkit );
