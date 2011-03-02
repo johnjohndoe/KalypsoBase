@@ -41,10 +41,9 @@ public class TableCursor extends AbstractCellCursor
   @Override
   protected void paint( final Event event )
   {
-    if( getSelectedCells().length == 1 && Objects.isNull( getSelectedCells()[0] ) )
+    final ViewerCell cell = getFocusCell();
+    if( Objects.isNull( cell ) )
       return;
-
-    final ViewerCell cell = getSelectedCells()[0];
 
     final GC gc = event.gc;
     final Display display = getDisplay();

@@ -66,6 +66,8 @@ import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -193,8 +195,19 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       @Override
       protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event )
       {
-        return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL || event.eventType == ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
-            || event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR || event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
+        if( ColumnViewerEditorActivationEvent.TRAVERSAL == event.eventType )
+          return true;
+        else if( ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION == event.eventType )
+          return true;
+        else if( ColumnViewerEditorActivationEvent.KEY_PRESSED == event.eventType )
+        {
+          if( SWT.CR == event.keyCode || SWT.F2 == event.keyCode )
+            return true;
+        }
+        else if( ColumnViewerEditorActivationEvent.PROGRAMMATIC == event.eventType )
+          return true;
+
+        return false;
       }
     };
 
@@ -203,6 +216,22 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     if( hasToolbar( tableType ) )
       initToolbar( tableType, toolbar, toolkit );
+
+    table.addSelectionListener( new SelectionListener()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        final int asdf = 0;
+      }
+
+      @Override
+      public void widgetDefaultSelected( final SelectionEvent e )
+      {
+        // TODO Auto-generated method stub
+
+      }
+    } );
 
     refresh();
   }

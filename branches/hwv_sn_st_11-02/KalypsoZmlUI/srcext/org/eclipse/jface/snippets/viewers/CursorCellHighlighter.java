@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.ColumnViewerEditorActivationListener;
 import org.eclipse.jface.viewers.ColumnViewerEditorDeactivationEvent;
 import org.eclipse.jface.viewers.FocusCellHighlighter;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.kalypso.commons.java.lang.Objects;
 
 /**
  * @since 3.3
@@ -44,10 +45,12 @@ public class CursorCellHighlighter extends FocusCellHighlighter
   @Override
   protected void focusCellChanged( final ViewerCell cell )
   {
-    super.focusCellChanged( cell );
+    if( Objects.isNull( cell ) )
+      return;
+
     if( !m_viewer.isCellEditorActive() )
     {
-      m_cursor.setSelection( cell );
+      m_cursor.setFocusCell( cell );
       m_cursor.setVisible( true );
     }
   }
@@ -62,18 +65,16 @@ public class CursorCellHighlighter extends FocusCellHighlighter
   {
     final ColumnViewerEditorActivationListener listener = new ColumnViewerEditorActivationListener()
     {
-
       @Override
       public void afterEditorActivated( final ColumnViewerEditorActivationEvent event )
       {
-
       }
 
       @Override
       public void afterEditorDeactivated( final ColumnViewerEditorDeactivationEvent event )
       {
         m_cursor.setVisible( true );
-        m_cursor.setSelection( getFocusCell() );
+        m_cursor.setFocusCell( getFocusCell() );
       }
 
       @Override
@@ -85,7 +86,6 @@ public class CursorCellHighlighter extends FocusCellHighlighter
       @Override
       public void beforeEditorDeactivated( final ColumnViewerEditorDeactivationEvent event )
       {
-
       }
     };
 
