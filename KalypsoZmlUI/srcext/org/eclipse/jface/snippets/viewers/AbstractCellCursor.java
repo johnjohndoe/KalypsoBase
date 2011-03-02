@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     @author changed / updated by: Dirk Kuch
  ******************************************************************************/
 
 package org.eclipse.jface.snippets.viewers;
@@ -22,19 +23,16 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.kalypso.commons.java.lang.Objects;
 
 /**
  * @since 3.3
  */
 public abstract class AbstractCellCursor extends Canvas
 {
-  private ViewerCell[] cells = new ViewerCell[0];
+  private ViewerCell[] m_cells = new ViewerCell[0];
 
-  private final ColumnViewer viewer;
-
-  private int activationTime = 0;
-
-  private boolean inFocusRequest = false;
+  private final ColumnViewer m_viewer;
 
   /**
    * @param viewer
@@ -43,7 +41,7 @@ public abstract class AbstractCellCursor extends Canvas
   public AbstractCellCursor( final ColumnViewer viewer, final int style )
   {
     super( (Composite) viewer.getControl(), style );
-    this.viewer = viewer;
+    m_viewer = viewer;
 
     final Listener l = new Listener()
     {
@@ -51,48 +49,26 @@ public abstract class AbstractCellCursor extends Canvas
       @Override
       public void handleEvent( final Event event )
       {
-        switch( event.type )
+        if( SWT.Paint == event.type )
         {
-          case SWT.Paint:
-            paint( event );
-            break;
-          case SWT.KeyDown:
-            getParent().notifyListeners( SWT.KeyDown, event );
-            final ArrayList list = new ArrayList();
-            for( final ViewerCell cell : cells )
-            {
-              list.add( cell.getElement() );
-            }
-            AbstractCellCursor.this.viewer.setSelection( new StructuredSelection( list ) );
-
-            break;
-          case SWT.MouseDown:
-            if( event.time < activationTime )
-            {
-              final Event cEvent = copyEvent( event );
-              cEvent.type = SWT.MouseDoubleClick;
-              getParent().notifyListeners( SWT.MouseDoubleClick, cEvent );
-            }
-            else
-            {
-              getParent().notifyListeners( SWT.MouseDown, copyEvent( event ) );
-            }
-            break;
-          case SWT.MouseDoubleClick:
-            getParent().notifyListeners( SWT.MouseDoubleClick, copyEvent( event ) );
-            break;
-          case SWT.FocusIn:
-            if( isVisible() )
-            {
-              inFocusRequest = true;
-              if( !inFocusRequest )
-              {
-                forceFocus();
-              }
-              inFocusRequest = false;
-            }
-          default:
-            break;
+          paint( event );
+        }
+        else if( SWT.KeyDown == event.type )
+        {
+          keyDown( event );
+        }
+        else if( SWT.MouseDown == event.type )
+        {
+          getParent().notifyListeners( SWT.MouseDown, copyEvent( event ) );
+        }
+        else if( SWT.MouseDoubleClick == event.type )
+        {
+          getParent().notifyListeners( SWT.MouseDoubleClick, copyEvent( event ) );
+        }
+        else if( SWT.FocusIn == event.type )
+        {
+          if( isVisible() )
+            forceFocus();
         }
       }
     };
@@ -104,17 +80,30 @@ public abstract class AbstractCellCursor extends Canvas
     getParent().addListener( SWT.FocusIn, l );
   }
 
-  /**
-   * @param cell
-   * @param eventTime
-   */
-  public void setSelection( final ViewerCell cell, final int eventTime )
+  protected void keyDown( final Event event )
   {
-    cells = new ViewerCell[] { cell };
-    setBounds( cell.getBounds() );
+    getParent().notifyListeners( SWT.KeyDown, event );
+    final ArrayList<Object> list = new ArrayList<Object>();
+    for( final ViewerCell cell : m_cells )
+    {
+      list.add( cell.getElement() );
+    }
+
+    m_viewer.setSelection( new StructuredSelection( list ) );
+  }
+
+  public void setSelection( final ViewerCell cell )
+  {
+    if( Objects.isNull( cell ) )
+      m_cells = new ViewerCell[] {};
+    else
+    {
+      m_cells = new ViewerCell[] { cell };
+      setBounds( cell.getBounds() );
+    }
+
     forceFocus();
     redraw();
-    activationTime = eventTime + getDisplay().getDoubleClickTime();
   }
 
   /**
@@ -122,10 +111,10 @@ public abstract class AbstractCellCursor extends Canvas
    */
   protected ViewerCell[] getSelectedCells( )
   {
-    return cells;
+    return m_cells;
   }
 
-  private Event copyEvent( final Event event )
+  protected Event copyEvent( final Event event )
   {
     final Event cEvent = new Event();
     cEvent.button = event.button;
@@ -148,7 +137,7 @@ public abstract class AbstractCellCursor extends Canvas
     cEvent.type = event.type;
     cEvent.widget = event.widget;
     cEvent.width = event.width;
-    final Point p = viewer.getControl().toControl( toDisplay( event.x, event.y ) );
+    final Point p = m_viewer.getControl().toControl( toDisplay( event.x, event.y ) );
     cEvent.x = p.x;
     cEvent.y = p.y;
 

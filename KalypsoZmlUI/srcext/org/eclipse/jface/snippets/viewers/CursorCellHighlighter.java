@@ -7,6 +7,8 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     
+ *     @author changed / updated by: Dirk Kuch
  ******************************************************************************/
 
 package org.eclipse.jface.snippets.viewers;
@@ -23,9 +25,9 @@ import org.eclipse.jface.viewers.ViewerCell;
  */
 public class CursorCellHighlighter extends FocusCellHighlighter
 {
-  private final ColumnViewer viewer;
+  private final ColumnViewer m_viewer;
 
-  private final AbstractCellCursor cursor;
+  protected final AbstractCellCursor m_cursor;
 
   /**
    * @param viewer
@@ -34,18 +36,19 @@ public class CursorCellHighlighter extends FocusCellHighlighter
   public CursorCellHighlighter( final ColumnViewer viewer, final AbstractCellCursor cursor )
   {
     super( viewer );
-    this.viewer = viewer;
-    this.cursor = cursor;
+
+    m_viewer = viewer;
+    m_cursor = cursor;
   }
 
   @Override
   protected void focusCellChanged( final ViewerCell cell )
   {
     super.focusCellChanged( cell );
-    if( !viewer.isCellEditorActive() )
+    if( !m_viewer.isCellEditorActive() )
     {
-      cursor.setSelection( cell, 0 ); // TODO THE TIME
-      cursor.setVisible( true );
+      m_cursor.setSelection( cell );
+      m_cursor.setVisible( true );
     }
   }
 
@@ -69,14 +72,14 @@ public class CursorCellHighlighter extends FocusCellHighlighter
       @Override
       public void afterEditorDeactivated( final ColumnViewerEditorDeactivationEvent event )
       {
-        cursor.setVisible( true );
-        cursor.setSelection( getFocusCell(), 0 ); // TODO THE TIME
+        m_cursor.setVisible( true );
+        m_cursor.setSelection( getFocusCell() );
       }
 
       @Override
       public void beforeEditorActivated( final ColumnViewerEditorActivationEvent event )
       {
-        cursor.setVisible( false );
+        m_cursor.setVisible( false );
       }
 
       @Override
@@ -86,6 +89,6 @@ public class CursorCellHighlighter extends FocusCellHighlighter
       }
     };
 
-    viewer.getColumnViewerEditor().addEditorActivationListener( listener );
+    m_viewer.getColumnViewerEditor().addEditorActivationListener( listener );
   }
 }
