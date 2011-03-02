@@ -71,9 +71,9 @@ public class TableCursor extends AbstractCellCursor
     gc.setBackground( display.getSystemColor( SWT.COLOR_BLACK ) );
     gc.setForeground( display.getSystemColor( SWT.COLOR_BLACK ) );
 
+    // TODO crap
     gc.drawRectangle( 1, 1, size.x - 2, size.y - 2 );
     gc.drawRectangle( 2, 2, size.x - 4, size.y - 4 );
-
   }
 
   private void drawText( final GC gc, final ViewerCell cell, final int x )
