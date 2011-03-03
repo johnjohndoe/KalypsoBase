@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.table;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,22 +53,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.snippets.viewers.CursorCellHighlighter;
-import org.eclipse.jface.snippets.viewers.TableCursor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TableViewerEditor;
-import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
@@ -76,6 +68,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
@@ -92,8 +85,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
-import org.kalypso.zml.ui.table.provider.ZmlCellNavigationStrategy;
-import org.kalypso.zml.ui.table.provider.ZmlTableEventListener;
+import org.kalypso.zml.ui.table.provider.ZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
@@ -108,7 +100,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private final IZmlModel m_model;
 
-  private ZmlTableEventListener m_eventListener;
+  private ZmlTableSelectionHandler m_selection;
 
   private ZmlTableUiUpdateJob m_updateJob;
 
@@ -143,10 +135,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_tableViewer.getTable().setLinesVisible( true );
 
-    final TableCursor cursor = new TableCursor( m_tableViewer );
-    m_eventListener = new ZmlTableEventListener( this, cursor );
-    m_tableViewer.getTable().addMouseMoveListener( m_eventListener );
-    m_tableViewer.getTable().addListener( SWT.MenuDetect, m_eventListener );
+    m_selection = new ZmlTableSelectionHandler( this );
 
     ColumnViewerToolTipSupport.enableFor( m_tableViewer, ToolTip.NO_RECREATE );
 
@@ -188,49 +177,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     table.setHeaderVisible( true );
 
-    final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new CursorCellHighlighter( m_tableViewer, cursor ), new ZmlCellNavigationStrategy() );
-    final ColumnViewerEditorActivationStrategy activationSupport = new ColumnViewerEditorActivationStrategy( m_tableViewer )
-    {
-      @Override
-      protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event )
-      {
-        if( ColumnViewerEditorActivationEvent.TRAVERSAL == event.eventType )
-          return true;
-        else if( ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION == event.eventType )
-          return true;
-        else if( ColumnViewerEditorActivationEvent.KEY_PRESSED == event.eventType )
-        {
-          if( SWT.CR == event.keyCode || SWT.F2 == event.keyCode )
-            return true;
-        }
-        else if( ColumnViewerEditorActivationEvent.PROGRAMMATIC == event.eventType )
-          return true;
-
-        return false;
-      }
-    };
-
-    TableViewerEditor.create( m_tableViewer, focusCellManager, activationSupport, ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION
-        | ColumnViewerEditorActivationEvent.TRAVERSAL | ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR );
-
     if( hasToolbar( tableType ) )
       initToolbar( tableType, toolbar, toolkit );
-
-    table.addSelectionListener( new SelectionListener()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        final int asdf = 0;
-      }
-
-      @Override
-      public void widgetDefaultSelected( final SelectionEvent e )
-      {
-        // TODO Auto-generated method stub
-
-      }
-    } );
 
     refresh();
   }
@@ -301,12 +249,14 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     if( m_tableViewer.getTable().isDisposed() )
       return;
 
-    final IStructuredSelection selection = (IStructuredSelection) m_tableViewer.getSelection();
-
     for( final ExtendedZmlTableColumn column : m_columns )
     {
       column.reset();
     }
+
+    final IStructuredSelection selection = (IStructuredSelection) m_tableViewer.getSelection();
+
+    final IZmlTableCell cell = m_selection.findActiveCell();
 
     m_tableViewer.refresh();
 
@@ -317,6 +267,18 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       m_tableViewer.setSelection( selection );
       m_tableViewer.getTable().setFocus();
     }
+
+    if( Objects.isNotNull( cell ) )
+      new UIJob( "" )
+      {
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
+        {
+          m_selection.setFocusCell( (Date) cell.getRow().getModelRow().getIndexValue(), cell.getColumn() );
+
+          return Status.OK_STATUS;
+        }
+      }.schedule( 250 );
 
   }
 
@@ -371,7 +333,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   @Override
   public IZmlTableCell getActiveCell( )
   {
-    return m_eventListener.findActiveCell();
+    return m_selection.findActiveCell();
   }
 
   /**
@@ -380,7 +342,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   @Override
   public IZmlTableColumn getActiveColumn( )
   {
-    return m_eventListener.findActiveColumn();
+    return m_selection.findActiveColumn();
   }
 
   /**
@@ -389,7 +351,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   @Override
   public IZmlTableRow getActiveRow( )
   {
-    return m_eventListener.findActiveRow();
+    return m_selection.findActiveRow();
   }
 
   /**
@@ -398,7 +360,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   @Override
   public IZmlTableRow[] getSelectedRows( )
   {
-    return m_eventListener.findSelectedRows();
+    return m_selection.findSelectedRows();
   }
 
   /**
