@@ -153,6 +153,9 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       addRow( body, m_toolkit, row );
     }
 
+    form.layout();
+    form.reflow( true );
+
     this.layout();
   }
 
@@ -260,7 +263,6 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
   private void addRowControls( final Composite parent, final FormToolkit toolkit, final ZmlEinzelwert row )
   {
-
     final ToolBar toolBar = new ToolBar( parent, SWT.FLAT | SWT.RIGHT_TO_LEFT );
     final GridData layoutData = new GridData( GridData.END, GridData.FILL, false, false );
     layoutData.widthHint = layoutData.minimumWidth = 150;
