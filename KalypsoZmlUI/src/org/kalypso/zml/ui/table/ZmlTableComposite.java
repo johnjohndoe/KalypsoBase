@@ -143,8 +143,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_tableViewer.getTable().setLinesVisible( true );
 
-    m_eventListener = new ZmlTableEventListener( this );
-
+    final TableCursor cursor = new TableCursor( m_tableViewer );
+    m_eventListener = new ZmlTableEventListener( this, cursor );
     m_tableViewer.getTable().addMouseMoveListener( m_eventListener );
     m_tableViewer.getTable().addListener( SWT.MenuDetect, m_eventListener );
 
@@ -188,8 +188,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     table.setHeaderVisible( true );
 
-    /* keyboard table cursor */
-    final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new CursorCellHighlighter( m_tableViewer, new TableCursor( m_tableViewer ) ), new ZmlCellNavigationStrategy() );
+    final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new CursorCellHighlighter( m_tableViewer, cursor ), new ZmlCellNavigationStrategy() );
     final ColumnViewerEditorActivationStrategy activationSupport = new ColumnViewerEditorActivationStrategy( m_tableViewer )
     {
       @Override
@@ -302,12 +301,12 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     if( m_tableViewer.getTable().isDisposed() )
       return;
 
+    final IStructuredSelection selection = (IStructuredSelection) m_tableViewer.getSelection();
+
     for( final ExtendedZmlTableColumn column : m_columns )
     {
       column.reset();
     }
-
-    final IStructuredSelection selection = (IStructuredSelection) m_tableViewer.getSelection();
 
     m_tableViewer.refresh();
 

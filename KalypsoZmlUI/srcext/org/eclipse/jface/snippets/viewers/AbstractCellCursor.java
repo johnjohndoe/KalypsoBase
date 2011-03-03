@@ -95,10 +95,6 @@ public abstract class AbstractCellCursor extends Canvas
 
     if( Objects.isNotNull( cell ) )
       setBounds( cell.getBounds() );
-  }
-
-  public void refresh( )
-  {
 
     forceFocus();
     redraw();
@@ -107,7 +103,7 @@ public abstract class AbstractCellCursor extends Canvas
   /**
    * @return the cells who should be highlighted
    */
-  protected ViewerCell getFocusCell( )
+  public ViewerCell getFocusCell( )
   {
     return m_focusCell;
   }
