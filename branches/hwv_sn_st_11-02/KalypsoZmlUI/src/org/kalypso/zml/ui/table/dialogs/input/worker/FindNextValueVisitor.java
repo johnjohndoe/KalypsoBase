@@ -68,7 +68,7 @@ public class FindNextValueVisitor implements IZmlModelColumnVisitor
   @Override
   public boolean visit( final IZmlValueReference reference ) throws SensorException
   {
-    if( Objects.isNotNull( reference ) )
+    if( Objects.isNotNull( m_reference ) )
       return false;
 
     final Date date = (Date) reference.getIndexValue();
