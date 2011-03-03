@@ -63,7 +63,7 @@ public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
    * @see org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor#accept(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public boolean visit( final IChartLayer layer )
   {
     if( layer instanceof ZmlForecastLayer )
     {
@@ -72,6 +72,8 @@ public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
     }
 
     layer.getLayerManager().accept( this );
+
+    return true;
   }
 
   private IObsProvider getProvider( )

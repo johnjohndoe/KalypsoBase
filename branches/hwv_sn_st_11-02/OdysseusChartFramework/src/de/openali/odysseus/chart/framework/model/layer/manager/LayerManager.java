@@ -117,7 +117,8 @@ public class LayerManager implements ILayerManager
   {
     for( final IChartLayer layer : getLayers() )
     {
-      visitor.visit( layer );
+      if( !visitor.visit( layer ) )
+        return;
     }
   }
 

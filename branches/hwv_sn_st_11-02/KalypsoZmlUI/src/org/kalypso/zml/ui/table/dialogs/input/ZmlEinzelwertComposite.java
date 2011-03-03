@@ -67,10 +67,13 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.validators.IntegerInputValidator;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedComboViewer;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
@@ -80,6 +83,7 @@ import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DateWidgetRule;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
 import org.kalypso.zml.ui.table.base.widgets.rules.TimeWidgetRule;
+import org.kalypso.zml.ui.table.dialogs.input.worker.FindNextValueVisitor;
 
 /**
  * @author Dirk Kuch
@@ -291,7 +295,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
     final ToolItem itemAdd = new ToolItem( toolBar, SWT.PUSH );
     itemAdd.setImage( IMG_ADD );
-    itemAdd.setToolTipText( "Wert hinzufügen (benutzerdefinierte Schrittweite)" );
+    itemAdd.setToolTipText( "Eingabefeld hinzufügen" );
 
     itemAdd.addSelectionListener( new SelectionAdapter()
     {
@@ -320,7 +324,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
     final ToolItem itemAddOne = new ToolItem( toolBar, SWT.PUSH );
     itemAddOne.setImage( IMG_ADD_ONE );
-    itemAddOne.setToolTipText( "Wert hinzufügen (Schrittweite +1 Stunde )" );
+    itemAddOne.setToolTipText( "Eingabe nächster Wert" );
 
     itemAddOne.addSelectionListener( new SelectionAdapter()
     {
@@ -332,11 +336,24 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       {
         try
         {
-          m_model.addRow( row.getDate(), 1 );
+          final IZmlModelColumn column = m_model.getColumn();
+          final FindNextValueVisitor visitor = new FindNextValueVisitor( row );
+          column.accept( visitor );
+
+          final IZmlValueReference reference = visitor.getReference();
+          if( Objects.isNotNull( reference ) )
+          {
+            final Object object = reference.getValue();
+            if( object instanceof Number )
+              m_model.addRow( new ZmlEinzelwert( m_model, (Date) reference.getIndexValue(), ((Number) object).doubleValue() ) );
+            else
+              m_model.addRow( new ZmlEinzelwert( m_model, (Date) reference.getIndexValue(), 0.0 ) );
+          }
+
         }
-        catch( final Throwable t )
+        catch( final SensorException e1 )
         {
-          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
         }
       }
     } );

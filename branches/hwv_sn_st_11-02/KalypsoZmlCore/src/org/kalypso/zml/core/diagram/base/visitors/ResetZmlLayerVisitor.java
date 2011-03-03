@@ -58,7 +58,7 @@ public class ResetZmlLayerVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public boolean visit( final IChartLayer layer )
   {
     if( layer instanceof IZmlLayer )
     {
@@ -68,6 +68,7 @@ public class ResetZmlLayerVisitor implements IChartLayerVisitor
     final ILayerManager manager = layer.getLayerManager();
     manager.accept( this );
 
+    return true;
   }
 
   private void reset( final IZmlLayer layer )
