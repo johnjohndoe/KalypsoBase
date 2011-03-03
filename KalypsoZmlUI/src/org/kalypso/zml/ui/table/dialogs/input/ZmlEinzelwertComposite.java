@@ -90,11 +90,11 @@ import org.kalypso.zml.ui.table.dialogs.input.worker.FindNextValueVisitor;
  */
 public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertModelListener, IAbstractEnhancedWidgetChangeListener
 {
-  private static final Image IMG_ADD = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/add.png" ) );
+  private static final Image IMG_ADD = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/add.png" ) ); //$NON-NLS-1$
 
-  private static final Image IMG_ADD_ONE = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/add_one.png" ) );
+  private static final Image IMG_ADD_ONE = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/add_one.png" ) ); //$NON-NLS-1$
 
-  private static final Image IMG_REMOVE = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/remove.png" ) );
+  private static final Image IMG_REMOVE = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/remove.png" ) ); //$NON-NLS-1$
 
   protected final ZmlEinzelwertModel m_model;
 
@@ -152,9 +152,6 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
     {
       addRow( body, m_toolkit, row );
     }
-
-    form.layout();
-    form.reflow( true );
 
     this.layout();
   }
@@ -271,7 +268,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
     final ToolItem itemRemove = new ToolItem( toolBar, SWT.PUSH );
     itemRemove.setImage( IMG_REMOVE );
-    itemRemove.setToolTipText( "Wert entfernen" );
+    itemRemove.setToolTipText( "Eingabefeld entfernen" );
 
     itemRemove.addSelectionListener( new SelectionAdapter()
     {
@@ -326,7 +323,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
     final ToolItem itemAddOne = new ToolItem( toolBar, SWT.PUSH );
     itemAddOne.setImage( IMG_ADD_ONE );
-    itemAddOne.setToolTipText( "Eingabe nächster Wert" );
+    itemAddOne.setToolTipText( "Eingabefeld für nächsten Wert" );
 
     itemAddOne.addSelectionListener( new SelectionAdapter()
     {
