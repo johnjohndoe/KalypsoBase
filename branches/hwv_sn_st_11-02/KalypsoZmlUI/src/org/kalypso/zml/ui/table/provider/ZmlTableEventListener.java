@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.snippets.viewers.TableCursor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
@@ -82,9 +83,12 @@ public class ZmlTableEventListener implements MouseMoveListener, Listener
 
   private final ZmlTableComposite m_table;
 
-  public ZmlTableEventListener( final ZmlTableComposite table )
+  private final TableCursor m_cursor;
+
+  public ZmlTableEventListener( final ZmlTableComposite table, final TableCursor cursor )
   {
     m_table = table;
+    m_cursor = cursor;
 
     m_contextMenuManager.setRemoveAllWhenShown( false );
     final Menu contextMenu = m_contextMenuManager.createContextMenu( table );
@@ -173,23 +177,25 @@ public class ZmlTableEventListener implements MouseMoveListener, Listener
     m_position = new Point( e.x, e.y );
   }
 
-  private ViewerCell getActiveCell( )
+  public ViewerCell getActiveViewerCell( )
   {
-    if( m_position == null )
-      return null;
+    return m_cursor.getFocusCell();
 
-    final TableViewer tableViewer = m_table.getTableViewer();
-    if( tableViewer == null )
-      return null;
-
-    final ViewerCell cell = tableViewer.getCell( m_position );
-
-    return cell;
+// if( m_position == null )
+// return null;
+//
+// final TableViewer tableViewer = m_table.getTableViewer();
+// if( tableViewer == null )
+// return null;
+//
+// final ViewerCell cell = tableViewer.getCell( m_position );
+//
+// return cell;
   }
 
   public IZmlTableColumn findActiveColumn( )
   {
-    final ViewerCell cell = getActiveCell();
+    final ViewerCell cell = getActiveViewerCell();
     if( cell == null )
     {
       return null;
@@ -200,7 +206,7 @@ public class ZmlTableEventListener implements MouseMoveListener, Listener
 
   public IZmlTableRow findActiveRow( )
   {
-    final ViewerCell cell = getActiveCell();
+    final ViewerCell cell = getActiveViewerCell();
     if( cell == null )
       return null;
 
