@@ -227,7 +227,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
         toolkit.adapt( control );
         composite.layout();
-        ZmlTableComposite.this.layout();
+        layout();
 
         return Status.OK_STATUS;
       }
