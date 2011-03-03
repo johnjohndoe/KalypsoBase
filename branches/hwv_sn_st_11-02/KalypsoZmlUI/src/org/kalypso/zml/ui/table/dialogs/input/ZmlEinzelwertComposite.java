@@ -49,7 +49,6 @@ import java.util.TreeSet;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -69,7 +68,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.validators.IntegerInputValidator;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
@@ -100,7 +98,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
   private Composite m_base;
 
-  private final FormToolkit m_toolkit;
+  protected final FormToolkit m_toolkit;
 
   private final Set<IZmlEinzelwertCompositeListener> m_listeners = new LinkedHashSet<IZmlEinzelwertCompositeListener>();
 
@@ -304,20 +302,31 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final InputDialog dialog = new InputDialog( toolBar.getShell(), "Schrittweite", "Bitte geben Sie den Stunden-Offset (Schrittweite) des nächsten Wertes an", "1", new IntegerInputValidator() );
-        final int status = dialog.open();
-        if( Window.OK == status )
+        try
         {
-          try
+          final IZmlModelColumn column = m_model.getColumn();
+          final IndexVisitor visitor = new IndexVisitor( row );
+          column.accept( visitor );
+
+          final Integer[] steppings = visitor.getSteppings();
+
+          final ChooseSteppingDialog dialog = new ChooseSteppingDialog( toolBar.getShell(), row, steppings, m_toolkit );
+          final int status = dialog.open();
+          if( Window.OK == status )
           {
-            final Integer stepping = Integer.valueOf( dialog.getValue() );
-            m_model.addRow( row.getDate(), stepping );
-          }
-          catch( final Throwable t )
-          {
-            KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+            m_model.addRow( row.getDate(), dialog.getOffset() );
           }
         }
+        catch( final SensorException e1 )
+        {
+          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+        }
+//
+// final InputDialog dialog = new InputDialog( toolBar.getShell(), "Schrittweite",
+// "Bitte geben Sie den Stunden-Offset (Schrittweite) des nächsten Wertes an", "1", new IntegerInputValidator() );
+// final int status = dialog.open();
+//
+// }
       }
     } );
 
