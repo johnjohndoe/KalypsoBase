@@ -95,9 +95,6 @@ public abstract class AbstractCellCursor extends Canvas
 
     if( Objects.isNotNull( cell ) )
       setBounds( cell.getBounds() );
-
-    forceFocus();
-    redraw();
   }
 
   /**
