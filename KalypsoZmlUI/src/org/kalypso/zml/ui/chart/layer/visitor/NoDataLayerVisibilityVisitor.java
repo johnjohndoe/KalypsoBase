@@ -70,7 +70,7 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
    * @see org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor#accept(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public boolean visit( final IChartLayer layer )
   {
     if( layer instanceof DefaultTextLayer )
     {
@@ -79,6 +79,8 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
         layer.setVisible( isVisible() );
       }
     }
+
+    return true;
   }
 
   /**

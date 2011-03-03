@@ -58,7 +58,7 @@ public class EditableChartLayerVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public boolean visit( final IChartLayer layer )
   {
     if( layer instanceof IEditableChartLayer )
     {
@@ -67,6 +67,7 @@ public class EditableChartLayerVisitor implements IChartLayerVisitor
         m_layers.add( editable );
     }
 
+    return true;
   }
 
   public IEditableChartLayer[] getLayers( )

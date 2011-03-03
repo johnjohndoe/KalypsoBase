@@ -62,18 +62,21 @@ public class FindLayerVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public boolean visit( final IChartLayer layer )
   {
     if( m_layer != null )
-      return;
+      return false;
 
     if( layer.getId().equals( m_identifier ) )
     {
       m_layer = layer;
+      return false;
     }
 
     final ILayerManager layerManager = layer.getLayerManager();
     layerManager.accept( this );
+
+    return true;
   }
 
   public IChartLayer getLayer( )

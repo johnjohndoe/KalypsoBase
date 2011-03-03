@@ -171,9 +171,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener
 
     final Point eventPoint = new Point( event.x, event.y );
     final Point pt = table.toControl( eventPoint );
-
-    final Rectangle clientArea = table.getClientArea();
-    final boolean header = clientArea.y <= pt.y && pt.y < clientArea.y + table.getHeaderHeight();
+    final boolean header = pt.x > 0;
 
     int columnIndex = findColumnIndex( pt.x );
     if( columnIndex == -1 )

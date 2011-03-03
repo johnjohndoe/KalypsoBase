@@ -43,6 +43,7 @@ package org.kalypso.zml.core.table.model;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -287,8 +288,11 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     for( final IZmlModelRow row : rows )
     {
       final IZmlValueReference reference = row.get( this );
-      if( reference != null )
-        visitor.visit( reference );
+      if( Objects.isNotNull( reference ) )
+      {
+        if( !visitor.visit( reference ) )
+          return;
+      }
     }
   }
 

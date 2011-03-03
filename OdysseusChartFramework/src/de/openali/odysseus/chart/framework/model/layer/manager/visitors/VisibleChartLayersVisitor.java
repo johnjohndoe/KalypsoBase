@@ -58,13 +58,15 @@ public class VisibleChartLayersVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public boolean visit( final IChartLayer layer )
   {
     if( layer.isVisible() )
       m_layers.add( layer );
 
     final ILayerManager layerManager = layer.getLayerManager();
     layerManager.accept( this );
+
+    return true;
   }
 
   public IChartLayer[] getLayers( )

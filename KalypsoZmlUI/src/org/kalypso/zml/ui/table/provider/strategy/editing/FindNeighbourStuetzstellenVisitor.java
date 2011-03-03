@@ -67,15 +67,17 @@ public class FindNeighbourStuetzstellenVisitor implements IZmlModelColumnVisitor
    * @see org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor#visit(org.kalypso.zml.core.table.model.visitor.IZmlModelColumnValue)
    */
   @Override
-  public void visit( final IZmlValueReference reference ) throws SensorException
+  public boolean visit( final IZmlValueReference reference ) throws SensorException
   {
     if( !ZmlValues.isStuetzstelle( reference ) )
-      return;
+      return true;
 
     if( reference.getModelIndex() < m_modelIndex )
       m_before = reference;
     else if( reference.getModelIndex() > m_modelIndex && m_after == null )
       m_after = reference;
+
+    return true;
   }
 
   public IZmlValueReference getBefore( )

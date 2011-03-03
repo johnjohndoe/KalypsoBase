@@ -66,10 +66,10 @@ public class ParameterTypeLayerVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public boolean visit( final IChartLayer layer )
   {
     if( !isTypeOf( layer ) )
-      return;
+      return true;
 
     if( layer instanceof IZmlLayer )
       m_layers.add( (IZmlLayer) layer );
@@ -82,6 +82,8 @@ public class ParameterTypeLayerVisitor implements IChartLayerVisitor
         m_layers.add( (IZmlLayer) child );
       }
     }
+
+    return true;
   }
 
   public IZmlLayer[] getLayers( )
