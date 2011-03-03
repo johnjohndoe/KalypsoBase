@@ -41,12 +41,19 @@
 package org.kalypso.zml.ui.table.provider;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.snippets.viewers.CursorCellHighlighter;
 import org.eclipse.jface.snippets.viewers.TableCursor;
+import org.eclipse.jface.viewers.ColumnViewerEditor;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerEditor;
+import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -58,6 +65,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+import org.kalypso.contribs.eclipse.jface.viewers.table.Tables;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
@@ -75,7 +84,7 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
  * 
  * @author Dirk Kuch
  */
-public class ZmlTableEventListener implements MouseMoveListener, Listener
+public class ZmlTableSelectionHandler implements MouseMoveListener, Listener
 {
   Point m_position;
 
@@ -83,16 +92,58 @@ public class ZmlTableEventListener implements MouseMoveListener, Listener
 
   private final ZmlTableComposite m_table;
 
-  private final TableCursor m_cursor;
+  private TableCursor m_cursor;
 
-  public ZmlTableEventListener( final ZmlTableComposite table, final TableCursor cursor )
+  public ZmlTableSelectionHandler( final ZmlTableComposite table )
   {
     m_table = table;
-    m_cursor = cursor;
 
+    init();
+  }
+
+  private void init( )
+  {
+    final TableViewer viewer = m_table.getTableViewer();
+
+    m_cursor = new TableCursor( viewer );
+
+    viewer.getTable().addMouseMoveListener( this );
+    viewer.getTable().addListener( SWT.MenuDetect, this );
+
+    /**
+     * context menu
+     */
     m_contextMenuManager.setRemoveAllWhenShown( false );
-    final Menu contextMenu = m_contextMenuManager.createContextMenu( table );
-    table.setMenu( contextMenu );
+    final Menu contextMenu = m_contextMenuManager.createContextMenu( m_table );
+    m_table.setMenu( contextMenu );
+
+    /**
+     * focus handling
+     */
+    final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( viewer, new CursorCellHighlighter( viewer, m_cursor ), new ZmlCellNavigationStrategy() );
+    final ColumnViewerEditorActivationStrategy activationSupport = new ColumnViewerEditorActivationStrategy( viewer )
+    {
+      @Override
+      protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event )
+      {
+        if( ColumnViewerEditorActivationEvent.TRAVERSAL == event.eventType )
+          return true;
+        else if( ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION == event.eventType )
+          return true;
+        else if( ColumnViewerEditorActivationEvent.KEY_PRESSED == event.eventType )
+        {
+          if( SWT.CR == event.keyCode || SWT.F2 == event.keyCode )
+            return true;
+        }
+        else if( ColumnViewerEditorActivationEvent.PROGRAMMATIC == event.eventType )
+          return true;
+
+        return false;
+      }
+    };
+
+    TableViewerEditor.create( viewer, focusCellManager, activationSupport, ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL
+        | ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR );
   }
 
   /**
@@ -180,17 +231,6 @@ public class ZmlTableEventListener implements MouseMoveListener, Listener
   public ViewerCell getActiveViewerCell( )
   {
     return m_cursor.getFocusCell();
-
-// if( m_position == null )
-// return null;
-//
-// final TableViewer tableViewer = m_table.getTableViewer();
-// if( tableViewer == null )
-// return null;
-//
-// final ViewerCell cell = tableViewer.getCell( m_position );
-//
-// return cell;
   }
 
   public IZmlTableColumn findActiveColumn( )
@@ -252,4 +292,25 @@ public class ZmlTableEventListener implements MouseMoveListener, Listener
     return rows.toArray( new IZmlTableRow[] {} );
   }
 
+  public void setFocusCell( final Date index, final IZmlTableColumn column )
+  {
+    final TableViewer viewer = m_table.getTableViewer();
+    final Table table = viewer.getTable();
+    final TableItem[] items = table.getItems();
+
+    final int ptrX = Tables.getX( table, column.getTableViewerColumn().getColumn() );
+
+    for( final TableItem item : items )
+    {
+      final IZmlModelRow row = (IZmlModelRow) item.getData();
+      if( row.getIndexValue().equals( index ) )
+      {
+        final Rectangle bounds = item.getBounds();
+        final ViewerCell cell = viewer.getCell( new Point( ptrX, bounds.y ) );
+
+        m_cursor.setFocusCell( cell );
+        return;
+      }
+    }
+  }
 }
