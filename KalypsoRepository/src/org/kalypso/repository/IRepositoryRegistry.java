@@ -49,4 +49,6 @@ public interface IRepositoryRegistry
   IRepository getRepository( String protocol );
 
   void registerProtocol( final IRepository repository );
+
+  IRepository[] getRepositories( );
 }
