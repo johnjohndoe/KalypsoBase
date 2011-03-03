@@ -69,7 +69,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
  */
 public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZmlEinzelwertCompositeListener
 {
-  private static final String SCREEN_SIZE = "zml.input.dialog.screen.size";
+  private static final String SCREEN_SIZE = "zml.input.dialog.screen.size"; // $NON-NLS-1$
 
   private final ZmlEinzelwertModel m_model;
 
@@ -84,6 +84,8 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
     m_model = new ZmlEinzelwertModel( column );
 
     setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
+
+    setHelpAvailable( false );
   }
 
   /**
@@ -95,7 +97,7 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
     getShell().setText( "Eingabe von Einzelwerten" );
 
     setTitle( String.format( "Bearbeiten der Zeitreihe: \"%s\"", m_model.getLabel() ) );
-    setMessage( "Mit Hilfe dieses Dialogs können Sie gezielt Änderungen an einzelnen Werten vornehmen." );
+    setMessage( "In diesem Dialog können Sie Änderungen an bestehenden Werten vornehmen." );
 
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
 
@@ -139,7 +141,7 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
   {
     if( !m_composite.isValid() )
     {
-      MessageDialog.openError( getParentShell(), "Ungültige Werte", "Eine Verarbeitung ist nicht möglich, da Tabelle ungültige Werte enthält." );
+      MessageDialog.openError( getParentShell(), "Ungültige Eingabe", "Eine Verarbeitung ist nicht möglich, da Tabelle eine ungültige Eingabe enthält." );
       return;
     }
 
