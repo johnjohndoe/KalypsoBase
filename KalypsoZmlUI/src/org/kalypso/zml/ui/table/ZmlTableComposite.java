@@ -100,7 +100,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private final IZmlModel m_model;
 
-  private ZmlTableSelectionHandler m_selection;
+  protected ZmlTableSelectionHandler m_selection;
 
   private ZmlTableUiUpdateJob m_updateJob;
 

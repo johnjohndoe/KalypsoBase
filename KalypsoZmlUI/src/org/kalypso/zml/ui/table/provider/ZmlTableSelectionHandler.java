@@ -307,6 +307,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener
         final ViewerCell cell = viewer.getCell( new Point( ptrX, bounds.y ) );
 
         m_cursor.setFocusCell( cell );
+
         return;
       }
     }
