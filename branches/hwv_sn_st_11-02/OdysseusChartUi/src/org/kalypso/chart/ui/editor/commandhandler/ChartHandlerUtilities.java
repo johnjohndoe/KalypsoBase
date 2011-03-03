@@ -43,7 +43,6 @@ package org.kalypso.chart.ui.editor.commandhandler;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
@@ -125,7 +124,7 @@ public class ChartHandlerUtilities
       return (IChartPart) part.getAdapter( IChartPart.class );
     }
 
-    throw new NotImplementedException();
+    return null;
   }
 
   /**
