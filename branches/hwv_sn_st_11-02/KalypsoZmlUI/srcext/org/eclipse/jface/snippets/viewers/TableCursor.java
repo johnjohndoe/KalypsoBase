@@ -131,14 +131,24 @@ public class TableCursor extends AbstractCellCursor
 
   private int drawImage( final GC gc, final ViewerCell cell, final int x )
   {
-    final Image image = cell.getImage();
-    if( image == null )
+    try
+    {
+      final Image image = cell.getImage();
+      if( image == null )
+        return 0;
+
+      final Rectangle imageSize = image.getBounds();
+      final int imageY = (getSize().y - imageSize.height) / 2;
+      gc.drawImage( image, x, imageY );
+
+      return imageSize.width;
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
+
       return 0;
+    }
 
-    final Rectangle imageSize = image.getBounds();
-    final int imageY = (getSize().y - imageSize.height) / 2;
-    gc.drawImage( image, x, imageY );
-
-    return imageSize.width;
   }
 }

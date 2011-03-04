@@ -66,8 +66,12 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.viewers.table.Tables;
+import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.schema.DataColumnType;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuProvider;
@@ -296,20 +300,48 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener
     final Table table = viewer.getTable();
     final TableItem[] items = table.getItems();
 
-    final int ptrX = Tables.getX( table, column.getTableViewerColumn().getColumn() );
-
     for( final TableItem item : items )
     {
       final IZmlModelRow row = (IZmlModelRow) item.getData();
       if( row.getIndexValue().equals( index ) )
       {
         final Rectangle bounds = item.getBounds();
-        final ViewerCell cell = viewer.getCell( new Point( ptrX, bounds.y ) );
+
+        final ViewerCell cell = findCell( column, bounds.y );
 
         m_cursor.setFocusCell( cell );
 
         return;
       }
     }
+  }
+
+  private ViewerCell findCell( final IZmlTableColumn column, final int y )
+  {
+    final IZmlTable table = column.getTable();
+    final TableViewer viewer = table.getTableViewer();
+
+    /** focus on the same row and column of the old table cell */
+    final int ptrX = Tables.getX( viewer.getTable(), column.getTableViewerColumn().getColumn() );
+    final ViewerCell cell = viewer.getCell( new Point( ptrX, y ) );
+    if( Objects.isNotNull( cell ) )
+      return cell;
+
+    /** if not, focus on the same row */
+    final IZmlTableColumn[] columns = table.getColumns();
+    for( final IZmlTableColumn col : columns )
+    {
+      final BaseColumn type = col.getColumnType();
+      if( !(type.getType() instanceof DataColumnType) )
+        continue;
+
+      final int x = Tables.getX( viewer.getTable(), col.getTableViewerColumn().getColumn() );
+      final ViewerCell c = viewer.getCell( new Point( x, y ) );
+      if( Objects.isNotNull( c ) )
+        return c;
+    }
+
+    /** hmmm, try to focus on the same row index value */
+    return viewer.getCell( new Point( 1, y ) );
   }
 }
