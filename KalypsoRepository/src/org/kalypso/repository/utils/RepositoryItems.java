@@ -261,7 +261,7 @@ public final class RepositoryItems
 
   public static boolean isPlainId( final String identifier )
   {
-    return !identifier.contains( ":" ); //$NON-NLS-1$
+    return !identifier.contains( "://" ); //$NON-NLS-1$
   }
 
   public static boolean isForecast( final IRepositoryItem item )
