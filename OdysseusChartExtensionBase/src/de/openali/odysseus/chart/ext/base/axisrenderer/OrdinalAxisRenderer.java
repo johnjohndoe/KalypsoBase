@@ -213,7 +213,8 @@ public class OrdinalAxisRenderer implements IAxisRenderer
       final boolean drawTick = true;
 
       final int tickPos = ticks[i].intValue();
-      final int tickScreenDistance = i < m_contentProvider.size() - 1 ? ticks[i + 1].intValue() - tickPos : -1;
+      final int index2 = i + (i < m_contentProvider.size() - 1 ? 1 : -1);
+      final int tickScreenDistance = index2 > -1 ? Math.abs( ticks[index2].intValue() - tickPos ) : -1;
       // HORIZONTAL
       if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
       {
@@ -320,8 +321,6 @@ public class OrdinalAxisRenderer implements IAxisRenderer
       if( m_config != null )
       {
         m_tickLabelRenderer.getTitleTypeBean().setInsets( m_config.tickLabelInsets );
-// m_tickLabelRenderer.getTitleTypeBean().setAlignment( ALIGNMENT.CENTERED_HORIZONTAL, ALIGNMENT.CENTERED_VERTICAL );
-// m_tickLabelRenderer.getTitleTypeBean().setTextAnchor( ALIGNMENT.LEFT, ALIGNMENT.TOP );
         m_tickLabelRenderer.getTitleTypeBean().setTextStyle( m_config.labelStyle );
       }
       if( axis != null )

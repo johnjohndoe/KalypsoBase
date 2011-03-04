@@ -60,6 +60,8 @@ public class GenericNumberTickCalculator implements ITickCalculator
     final double numericMax = axis.screenToNumeric( screenMax ).doubleValue();
 
     final double numericRange = Math.abs( numericMax - numericMin );
+    if( Double.isNaN( numericRange ) )
+      return new Number[] {};
 
     // der minimale logische Abstand; TODO: überprüfen, ob das auch mit negativen Werten geht
     final double minLogInterval = Math.abs( axis.screenToNumeric( minScreenInterval ).doubleValue() - axis.screenToNumeric( 0 ).doubleValue() );
