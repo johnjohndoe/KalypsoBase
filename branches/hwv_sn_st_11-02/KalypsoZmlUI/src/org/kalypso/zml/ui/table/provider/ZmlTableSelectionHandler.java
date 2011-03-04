@@ -308,7 +308,6 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener
         final Rectangle bounds = item.getBounds();
 
         final ViewerCell cell = findCell( column, bounds.y );
-
         m_cursor.setFocusCell( cell );
 
         return;
