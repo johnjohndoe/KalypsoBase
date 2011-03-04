@@ -56,7 +56,7 @@ import org.kalypso.repository.IRepositoryItem;
  */
 public final class RepositoryItems
 {
-  private static final int PARAMETER_START_BORDER = 4;
+  public static final int PARAMETER_START_BORDER = 4;
 
   public static final String ZRXP_ITEM_IDENTIFIER = "Zrxp_"; //$NON-NLS-1$
 
