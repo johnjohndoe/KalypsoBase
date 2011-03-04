@@ -49,11 +49,9 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
-import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
@@ -147,7 +145,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   }
 
   @Override
-  public void update( final int index, final Object value, final VALUE_STATUS type ) throws SensorException
+  public void update( final int index, final Object value, final String source, final Integer status ) throws SensorException
   {
     final ITupleModel model = getTupleModel();
     final IAxis[] axes = model.getAxes();
@@ -157,21 +155,14 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
       if( AxisUtils.isDataSrcAxis( axis ) )
       {
         // FIXME - user modified triggerd interpolated state?!?
-        if( VALUE_STATUS.eManual.equals( type ) )
-        {
-          final DataSourceHandler handler = new DataSourceHandler( getMetadata() );
-          final int source = handler.addDataSource( IDataSourceItem.SOURCE_MANUAL_CHANGED, IDataSourceItem.SOURCE_MANUAL_CHANGED );
+        final DataSourceHandler handler = new DataSourceHandler( getMetadata() );
+        final int sourceIndex = handler.addDataSource( source, source );
 
-          model.set( index, axis, source );
-        }
+        model.set( index, axis, sourceIndex );
       }
       else if( AxisUtils.isStatusAxis( axis ) )
       {
-        // FIXME - user modified triggerd interpolated state?!?
-        if( VALUE_STATUS.eManual.equals( type ) )
-        {
-          model.set( index, axis, KalypsoStati.BIT_USER_MODIFIED );
-        }
+        model.set( index, axis, status );
       }
       else if( isTargetAxis( axis ) )
       {

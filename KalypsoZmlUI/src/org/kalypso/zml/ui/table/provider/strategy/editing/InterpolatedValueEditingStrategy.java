@@ -43,6 +43,8 @@ package org.kalypso.zml.ui.table.provider.strategy.editing;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.interpolation.worker.IInterpolationFilter;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
@@ -113,7 +115,7 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
       final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
 
       final Object targetValue = getTargetValue( value );
-      reference.update( targetValue );
+      reference.update( targetValue, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_CHECK );
 
       final ExtendedZmlTableColumn column = getColumn();
       final IZmlTableCell cell = column.findCell( row );

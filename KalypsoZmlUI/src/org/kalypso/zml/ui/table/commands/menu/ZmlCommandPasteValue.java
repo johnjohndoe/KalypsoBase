@@ -48,6 +48,8 @@ import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
@@ -75,7 +77,7 @@ public class ZmlCommandPasteValue extends AbstractHandler
       final String data = (String) clipboard.getContents( transfer );
 
       final double value = NumberUtils.parseDouble( data );
-      reference.update( value );
+      reference.update( value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
       return Status.OK_STATUS;
     }
