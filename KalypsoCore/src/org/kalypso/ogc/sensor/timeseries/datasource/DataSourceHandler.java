@@ -48,7 +48,7 @@ import java.util.TreeMap;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.utils.RepositoryItemUtils;
+import org.kalypso.repository.utils.RepositoryItems;
 
 /**
  * Handles data sources of meta data lists
@@ -83,14 +83,14 @@ public class DataSourceHandler
    */
   public synchronized int getDataSourceIndex( final String identifier )
   {
-    final String plainIdentifier = RepositoryItemUtils.getPlainId( identifier );
+    final String plainIdentifier = RepositoryItems.getPlainId( identifier );
 
     final Map<Integer, String> dataSourceIndex = getDataSources();
     final Set<Entry<Integer, String>> entries = dataSourceIndex.entrySet();
 
     for( final Entry<Integer, String> entry : entries )
     {
-      final String plainSource = RepositoryItemUtils.getPlainId( entry.getValue() );
+      final String plainSource = RepositoryItems.getPlainId( entry.getValue() );
 
       if( plainIdentifier.equalsIgnoreCase( plainSource ) )
         return entry.getKey();

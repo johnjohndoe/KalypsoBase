@@ -38,12 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.repository;
+package org.kalypso.repository.utils;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.IRepositoryItemVisitor;
+import org.kalypso.repository.RepositoryException;
 
 /**
  * @author Dirk Kuch
  */
-public interface IRepositoryItemVisitor
+public final class RepositoryVisitors
 {
-  boolean visit( IRepositoryItem item ) throws RepositoryException;
+  private RepositoryVisitors( )
+  {
+  }
+
+  public static void accept( final IRepositoryItem item, final IRepositoryItemVisitor visitor, final IProgressMonitor monitor, final String job ) throws RepositoryException
+  {
+    final IRepositoryItem[] children = item.getChildren();
+    monitor.beginTask( job, children.length );
+
+    for( final IRepositoryItem child : children )
+    {
+      if( monitor.isCanceled() )
+        return;
+
+      monitor.subTask( String.format( "Zweig: %s", child.getIdentifier() ) );
+      if( !visitor.visit( child ) )
+        return;
+
+      monitor.worked( 1 );
+    }
+
+    monitor.done();
+  }
+
+  public static void accept( final IRepositoryItem item, final IRepositoryItemVisitor visitor ) throws RepositoryException
+  {
+    final IRepositoryItem[] children = item.getChildren();
+    for( final IRepositoryItem child : children )
+    {
+      if( !visitor.visit( child ) )
+        break;
+    }
+
+  }
+
 }
