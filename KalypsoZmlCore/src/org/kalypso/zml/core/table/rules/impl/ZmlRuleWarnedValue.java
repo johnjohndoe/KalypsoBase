@@ -41,6 +41,7 @@ package org.kalypso.zml.core.table.rules.impl;
  *   
  *  ---------------------------------------------------------------------------*/
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
@@ -86,6 +87,8 @@ public class ZmlRuleWarnedValue extends AbstractZmlTableRule
         return false;
 
       final Integer status = reference.getStatus();
+      if( Objects.isNull( status ) )
+        return false;
 
       return KalypsoStati.BIT_CHECK == (KalypsoStati.BIT_CHECK & status);
     }
