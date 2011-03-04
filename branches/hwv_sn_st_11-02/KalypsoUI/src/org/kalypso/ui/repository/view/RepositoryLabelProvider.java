@@ -46,7 +46,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.utils.RepositoryItemUtils;
+import org.kalypso.repository.utils.RepositoryItems;
 import org.kalypso.ui.ImageProvider;
 
 /**
@@ -76,7 +76,7 @@ public class RepositoryLabelProvider extends LabelProvider
       try
       {
         final IRepositoryItem item = (IRepositoryItem) element;
-        if( RepositoryItemUtils.isVirtual( item.getIdentifier() ) )
+        if( RepositoryItems.isVirtual( item.getIdentifier() ) )
         {
           if( item.hasChildren() )
             return IMG_FOLDER;

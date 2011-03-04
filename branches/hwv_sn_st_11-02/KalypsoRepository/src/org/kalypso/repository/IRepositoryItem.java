@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.IAdaptable;
  */
 public interface IRepositoryItem extends IAdaptable
 {
-
   void accept( IRepositoryItemVisitor visitor ) throws RepositoryException;
 
   /**

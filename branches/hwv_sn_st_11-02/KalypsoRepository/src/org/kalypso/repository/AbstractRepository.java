@@ -48,6 +48,7 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.commons.java.util.PropertiesHelper;
+import org.kalypso.repository.utils.RepositoryVisitors;
 
 /**
  * Abstract implementation of <code>IRepository</code> to provide basic functionality.
@@ -92,13 +93,9 @@ public abstract class AbstractRepository implements IRepository
    * @see org.kalypso.repository.IRepositoryItem#accept(org.kalypso.repository.IRepositoryItemVisitor)
    */
   @Override
-  public void accept( final IRepositoryItemVisitor visitor ) throws RepositoryException
+  public final void accept( final IRepositoryItemVisitor visitor ) throws RepositoryException
   {
-    final IRepositoryItem[] children = getChildren();
-    for( final IRepositoryItem child : children )
-    {
-      visitor.visit( child );
-    }
+    RepositoryVisitors.accept( this, visitor );
   }
 
   /**

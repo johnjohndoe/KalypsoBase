@@ -46,7 +46,7 @@ import java.util.Set;
 
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
-import org.kalypso.repository.utils.RepositoryItemUtils;
+import org.kalypso.repository.utils.RepositoryItems;
 
 /**
  * @author Dirk Kuch
@@ -70,14 +70,14 @@ public class CopyObservationMetadataHelper extends MetadataHelper
 
   private static Integer findCopyObservationIndex( final MetadataList mdl, final String baseIdentifier )
   {
-    final String plainBaseIdentifier = RepositoryItemUtils.getPlainId( baseIdentifier );
+    final String plainBaseIdentifier = RepositoryItems.getPlainId( baseIdentifier );
 
     for( final Object obj : mdl.keySet() )
     {
       final String key = (String) obj;
       if( key.startsWith( MD_TIME_SERIES_SOURCE ) )
       {
-        final String reference = RepositoryItemUtils.getPlainId( mdl.getProperty( key ) );
+        final String reference = RepositoryItems.getPlainId( mdl.getProperty( key ) );
 
         if( plainBaseIdentifier.equals( reference ) )
         {

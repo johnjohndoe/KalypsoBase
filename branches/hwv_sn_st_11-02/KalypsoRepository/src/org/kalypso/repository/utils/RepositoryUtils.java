@@ -71,7 +71,7 @@ public final class RepositoryUtils
    */
   public static IRepositoryItem findEquivalentItem( final IRepository destinationRepository, final IRepositoryItem baseItem ) throws RepositoryException
   {
-    final String id = RepositoryItemUtils.resolveDestinationId( baseItem, destinationRepository );
+    final String id = RepositoryItems.resolveDestinationId( baseItem, destinationRepository );
 
     return destinationRepository.findItem( id );
   }
@@ -83,7 +83,7 @@ public final class RepositoryUtils
   {
     try
     {
-      final String identifier = RepositoryItemUtils.replaceIdentifier( id, repository.getIdentifier() );
+      final String identifier = RepositoryItems.replaceIdentifier( id, repository.getIdentifier() );
 
       return repository.findItem( identifier );
     }
@@ -120,7 +120,7 @@ public final class RepositoryUtils
 
   public static IRepository findRegisteredRepository( final String itemIdentifier )
   {
-    final String protocol = RepositoryItemUtils.getProtocol( itemIdentifier );
+    final String protocol = RepositoryItems.getProtocol( itemIdentifier );
     final IRepositoryRegistry repositoryRegistry = KalypsoRepository.getDefault().getRepositoryRegistry();
 
     return repositoryRegistry.getRepository( protocol );

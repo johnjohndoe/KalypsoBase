@@ -81,7 +81,7 @@ import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
-import org.kalypso.repository.utils.RepositoryItemUtils;
+import org.kalypso.repository.utils.RepositoryItems;
 import org.kalypso.repository.utils.RepositoryUtils;
 import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.ObservationServiceUtils;
@@ -691,7 +691,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       if( repository instanceof IModifyableRepository )
       {
         final IModifyableRepository modifyable = (IModifyableRepository) repository;
-        modifyable.makeItem( RepositoryItemUtils.replaceIdentifier( itemIdentifier, repository.getIdentifier() ) );
+        modifyable.makeItem( RepositoryItems.replaceIdentifier( itemIdentifier, repository.getIdentifier() ) );
       }
     }
   }
@@ -709,7 +709,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       if( repository instanceof IModifyableRepository )
       {
         final IModifyableRepository modifyable = (IModifyableRepository) repository;
-        modifyable.deleteItem( RepositoryItemUtils.replaceIdentifier( identifier, repository.getIdentifier() ) );
+        modifyable.deleteItem( RepositoryItems.replaceIdentifier( identifier, repository.getIdentifier() ) );
       }
     }
   }

@@ -45,5 +45,5 @@ package org.kalypso.repository;
  */
 public interface IRepositoryItemVisitor
 {
-  void visit( IRepositoryItem item ) throws RepositoryException;
+  boolean visit( IRepositoryItem item ) throws RepositoryException;
 }

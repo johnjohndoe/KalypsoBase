@@ -54,7 +54,7 @@ import org.kalypso.repository.IRepositoryItem;
 /**
  * @author Dirk Kuch
  */
-public final class RepositoryItemUtils
+public final class RepositoryItems
 {
   private static final int PARAMETER_START_BORDER = 4;
 
@@ -64,7 +64,7 @@ public final class RepositoryItemUtils
 
   public static final int ZRXP_PRIORITY_ITEM_OFFSET = 10;
 
-  private RepositoryItemUtils( )
+  private RepositoryItems( )
   {
   }
 
