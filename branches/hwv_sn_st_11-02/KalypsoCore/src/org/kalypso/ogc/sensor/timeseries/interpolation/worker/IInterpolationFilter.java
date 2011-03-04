@@ -42,12 +42,16 @@ package org.kalypso.ogc.sensor.timeseries.interpolation.worker;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
+import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 
 /**
  * @author Dirk Kuch
  */
 public interface IInterpolationFilter
 {
+  String DATA_SOURCE = DataSourceHelper.FILTER_SOURCE + InterpolationFilter.FILTER_ID;
+
   IObservation getObservation( );
 
   boolean isFilled( );

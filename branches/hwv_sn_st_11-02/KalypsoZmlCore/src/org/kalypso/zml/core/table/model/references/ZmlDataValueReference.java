@@ -53,7 +53,6 @@ import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.VALUE_STATUS;
 
 /**
  * @author Dirk Kuch
@@ -90,9 +89,9 @@ public class ZmlDataValueReference implements IZmlValueReference
   }
 
   @Override
-  public void update( final Object value ) throws SensorException
+  public void update( final Object value, final String source, final Integer status ) throws SensorException
   {
-    m_column.update( m_tupleModelIndex, value, VALUE_STATUS.eManual );
+    m_column.update( m_tupleModelIndex, value, source, status );
   }
 
   public String getIdentifier( )
@@ -186,4 +185,5 @@ public class ZmlDataValueReference implements IZmlValueReference
 
     return href;
   }
+
 }

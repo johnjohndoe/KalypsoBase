@@ -44,11 +44,13 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.filter.filters.interval.IntervalSourceHandler;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.VALUE_STATUS;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
@@ -156,12 +158,12 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
 
     for( int index = startIndex; index <= endIndex; index++ )
     {
-      modelColumn.update( index, stepping, VALUE_STATUS.eManual );
+      modelColumn.update( index, stepping, IntervalSourceHandler.SOURCE_INTERVAL_FITLER, KalypsoStati.BIT_USER_MODIFIED );
     }
   }
 
   private void updateOriginValue( final IZmlValueReference reference, final Number targetValue ) throws SensorException
   {
-    reference.update( targetValue );
+    reference.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
   }
 }

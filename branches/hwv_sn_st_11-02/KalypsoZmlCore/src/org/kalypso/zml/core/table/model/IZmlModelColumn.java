@@ -88,6 +88,6 @@ public interface IZmlModelColumn
 
   int size( ) throws SensorException;
 
-  void update( int index, Object value, VALUE_STATUS status ) throws SensorException;
+  void update( int index, Object value, final String source, final Integer status ) throws SensorException;
 
 }
