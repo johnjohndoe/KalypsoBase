@@ -143,6 +143,9 @@ public final class RepositoryItems
     if( isPlainId( identifier ) )
       return identifier;
 
+    if( PATTERN_PLAIN_ID_TOKENIZER.matches( identifier ) )
+      return ""; // "plain id" of an IRepository
+
     final RETokenizer tokenizer = new RETokenizer( PATTERN_PLAIN_ID_TOKENIZER, identifier );
 
     return tokenizer.nextToken();
