@@ -16,6 +16,7 @@ import org.eclipse.jface.util.Util;
 import org.eclipse.jface.viewers.AbstractTableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -45,23 +46,36 @@ public class TableCursor extends AbstractCellCursor
     if( Objects.isNull( cell ) )
       return;
 
-    final GC gc = event.gc;
-    final Display display = getDisplay();
+    try
+    {
+      if( cell.getControl().isDisposed() )
+        return;
 
-    final Color background = gc.getBackground();
-    final Color foreground = gc.getForeground();
+      final GC gc = event.gc;
+      final Display display = getDisplay();
 
-    gc.setBackground( COLOR_BACKGROUND_SELECTION );
-    gc.setForeground( getForeground() );
+      final Color background = gc.getBackground();
+      final Color foreground = gc.getForeground();
 
-    gc.fillRectangle( event.x, event.y, event.width, event.height );
+      gc.setBackground( COLOR_BACKGROUND_SELECTION );
+      gc.setForeground( getForeground() );
 
-    final int offset = drawImage( gc, cell, 0 );
-    drawText( gc, cell, offset );
-    drawFocus( gc, display );
+      gc.fillRectangle( event.x, event.y, event.width, event.height );
 
-    gc.setBackground( background );
-    gc.setForeground( foreground );
+      final int offset = drawImage( gc, cell, 0 );
+      drawText( gc, cell, offset );
+      drawFocus( gc, display );
+
+      gc.setBackground( background );
+      gc.setForeground( foreground );
+    }
+    catch( final Throwable t )
+    {
+      if( t instanceof SWTException )
+        return;
+
+      t.printStackTrace();
+    }
   }
 
   private void drawFocus( final GC gc, final Display display )
@@ -77,83 +91,67 @@ public class TableCursor extends AbstractCellCursor
 
   private void drawText( final GC gc, final ViewerCell cell, final int x )
   {
-    try
+    final String text = cell.getText();
+    if( Strings.isNullOrEmpty( text ) )
+      return;
+
+    int ptrX = x;
+
+    final Rectangle bounds = cell.getBounds();
+    final Point extent = gc.stringExtent( text );
+
+    // Temporary code - need a better way to determine table trim
+    if( Util.isWin32() )
     {
-      if( cell.getControl().isDisposed() )
-        return;
-
-      final String text = cell.getText();
-      if( Strings.isNullOrEmpty( text ) )
-        return;
-
-      int ptrX = x;
-
-      final Rectangle bounds = cell.getBounds();
-      final Point extent = gc.stringExtent( text );
-
-      // Temporary code - need a better way to determine table trim
-      if( Util.isWin32() )
+      if( ((Table) getParent()).getColumnCount() == 0 || cell.getColumnIndex() == 0 )
       {
-        if( ((Table) getParent()).getColumnCount() == 0 || cell.getColumnIndex() == 0 )
-        {
-          ptrX += 2;
-        }
-        else
-        {
-          final int alignmnent = ((Table) getParent()).getColumn( cell.getColumnIndex() ).getAlignment();
-          if( SWT.LEFT == alignmnent )
-            ptrX += 6;
-          else if( SWT.RIGHT == alignmnent )
-            ptrX = bounds.width - extent.x - 6;
-          else if( SWT.CENTER == alignmnent )
-            ptrX += (bounds.width - x - extent.x) / 2;
-        }
+        ptrX += 2;
       }
       else
       {
-        if( ((Table) getParent()).getColumnCount() == 0 )
-        {
-          ptrX += 5;
-        }
-        else
-        {
-          final int alignmnent = ((Table) getParent()).getColumn( cell.getColumnIndex() ).getAlignment();
-
-          if( SWT.LEFT == alignmnent )
-            ptrX += 5;
-          else if( SWT.RIGHT == alignmnent )
-            ptrX = bounds.width - extent.x - 2;
-          else if( SWT.CENTER == alignmnent )
-            ptrX += (bounds.width - x - extent.x) / 2 + 2;
-        }
+        final int alignmnent = ((Table) getParent()).getColumn( cell.getColumnIndex() ).getAlignment();
+        if( SWT.LEFT == alignmnent )
+          ptrX += 6;
+        else if( SWT.RIGHT == alignmnent )
+          ptrX = bounds.width - extent.x - 6;
+        else if( SWT.CENTER == alignmnent )
+          ptrX += (bounds.width - x - extent.x) / 2;
       }
-
-      final int textY = (getSize().y - extent.y) / 2;
-      gc.drawString( text, ptrX, textY );
     }
-    catch( final Throwable t )
+    else
     {
+      if( ((Table) getParent()).getColumnCount() == 0 )
+      {
+        ptrX += 5;
+      }
+      else
+      {
+        final int alignmnent = ((Table) getParent()).getColumn( cell.getColumnIndex() ).getAlignment();
+
+        if( SWT.LEFT == alignmnent )
+          ptrX += 5;
+        else if( SWT.RIGHT == alignmnent )
+          ptrX = bounds.width - extent.x - 2;
+        else if( SWT.CENTER == alignmnent )
+          ptrX += (bounds.width - x - extent.x) / 2 + 2;
+      }
     }
+
+    final int textY = (getSize().y - extent.y) / 2;
+    gc.drawString( text, ptrX, textY );
   }
 
   private int drawImage( final GC gc, final ViewerCell cell, final int x )
   {
-    try
-    {
-      final Image image = cell.getImage();
-      if( image == null )
-        return 0;
-
-      final Rectangle imageSize = image.getBounds();
-      final int imageY = (getSize().y - imageSize.height) / 2;
-      gc.drawImage( image, x, imageY );
-
-      return imageSize.width;
-    }
-    catch( final Throwable t )
-    {
+    final Image image = cell.getImage();
+    if( image == null )
       return 0;
-    }
+
+    final Rectangle imageSize = image.getBounds();
+    final int imageY = (getSize().y - imageSize.height) / 2;
+    gc.drawImage( image, x, imageY );
+
+    return imageSize.width;
 
   }
 }
