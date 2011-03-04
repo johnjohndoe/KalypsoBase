@@ -100,6 +100,7 @@ public class ChartPainter
     m_plotInsets = new Insets( top, axisLeftWidth, bottom, axisRightWidth );
 
     // need it here ??? -> move to createImage()
+    // -> check callers from getPlotInsets() first
     setAxesHeight();
     m_plotPainter = new ChartPlotPainter( model, new Point( size.width - m_plotInsets.left - m_plotInsets.right, size.height - m_plotInsets.bottom - m_plotInsets.top ) );
   }
