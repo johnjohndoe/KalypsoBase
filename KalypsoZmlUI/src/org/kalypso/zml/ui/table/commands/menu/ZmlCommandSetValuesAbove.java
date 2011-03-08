@@ -52,6 +52,7 @@ import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
 
 /**
  * @author Dirk Kuch
@@ -67,7 +68,8 @@ public class ZmlCommandSetValuesAbove extends AbstractHandler
     try
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final IZmlTableCell active = table.getActiveCell();
+      final IZmlTableSelectionHandler selection = table.getSelectionHandler();
+      final IZmlTableCell active = selection.getActiveCell();
       final IZmlValueReference reference = active.getValueReference();
       final Object targetValue = reference.getValue();
 

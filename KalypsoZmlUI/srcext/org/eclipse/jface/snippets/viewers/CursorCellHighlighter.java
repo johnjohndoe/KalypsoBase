@@ -55,6 +55,15 @@ public class CursorCellHighlighter extends FocusCellHighlighter
     }
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.FocusCellHighlighter#getFocusCell()
+   */
+  @Override
+  public ViewerCell getFocusCell( )
+  {
+    return m_cursor.getFocusCell();
+  }
+
   @Override
   protected void init( )
   {

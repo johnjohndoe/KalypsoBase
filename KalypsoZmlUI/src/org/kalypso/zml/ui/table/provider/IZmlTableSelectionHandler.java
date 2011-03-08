@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  DenickestraÃŸe 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,41 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.toolbar.input.dialog;
+package org.kalypso.zml.ui.table.provider;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.dialogs.input.ZmlEinzelwertDialog;
+import org.eclipse.jface.viewers.ViewerCell;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
+import org.kalypso.zml.ui.table.model.IZmlTableRow;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommandOpenValueInputDialog extends AbstractHandler
+public interface IZmlTableSelectionHandler
 {
+  ViewerCell findViewerCell( IZmlTableCell next );
 
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  public Object execute( final ExecutionEvent event )
-  {
-    final IZmlTable table = ZmlHandlerUtil.getTable( event );
-    final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-    final IZmlTableColumn column = selection.getActiveColumn();
-    if( column == null )
-      throw new IllegalStateException( "Konnte aktive Spalte nicht ermitteln. Bitte Linkklick in der zu bearbeitenden Spalte ausführen und Aktion erneut versuchen." );
+  IZmlTableCell getActiveCell( );
 
-    final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    final ZmlEinzelwertDialog dialog = new ZmlEinzelwertDialog( shell, column );
-    dialog.open();
+  IZmlTableColumn getActiveColumn( );
 
-    return Status.OK_STATUS;
-  }
+  IZmlTableRow getActiveRow( );
+
+  IZmlTableRow[] getSelectedRows( );
+
+  void setFocusCell( ViewerCell nextViewerCell );
 }

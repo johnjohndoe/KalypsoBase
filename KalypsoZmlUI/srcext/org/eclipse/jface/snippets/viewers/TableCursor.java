@@ -36,7 +36,7 @@ public class TableCursor extends AbstractCellCursor
 
   public TableCursor( final TableViewer viewer )
   {
-    super( viewer, SWT.NONE );
+    super( viewer );
   }
 
   @Override
