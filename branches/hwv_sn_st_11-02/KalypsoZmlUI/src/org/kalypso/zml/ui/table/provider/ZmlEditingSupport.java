@@ -43,7 +43,6 @@ package org.kalypso.zml.ui.table.provider;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.ViewerCell;
@@ -96,22 +95,35 @@ public class ZmlEditingSupport extends EditingSupport
       @Override
       public void keyPressed( final KeyEvent e )
       {
-        if( SWT.ARROW_DOWN == e.keyCode )
+        if( SWT.ARROW_UP == e.keyCode )
+        {
+          final IZmlTableCell cell = handler.getActiveCell();
+          if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
+            return;
+
+          final IZmlTableCell previous = cell.findPreviousCell();
+          update( handler.findViewerCell( previous ) );
+        }
+        else if( SWT.ARROW_DOWN == e.keyCode )
         {
           final IZmlTableCell cell = handler.getActiveCell();
           if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
             return;
 
           final IZmlTableCell next = cell.findNextCell();
-          final ViewerCell nextViewerCell = handler.findViewerCell( next );
+          update( handler.findViewerCell( next ) );
 
-          viewer.setSelection( new StructuredSelection( next.getRow().getModelRow() ) );
-          handler.setFocusCell( nextViewerCell );
-
-          viewer.getControl().getParent().setFocus();
-          viewer.getControl().setFocus();
-
+          viewer.editElement( next.getRow().getModelRow(), 1 );
         }
+      }
+
+      private void update( final ViewerCell cell )
+      {
+        if( org.kalypso.commons.java.lang.Objects.isNotNull( cell ) )
+          handler.setFocusCell( cell );
+
+        viewer.getControl().getParent().setFocus();
+        viewer.getControl().setFocus();
       }
     } );
 

@@ -127,6 +127,10 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
       @Override
       public ViewerCell getFocusCell( )
       {
+        /**
+         * FIXME / TODO - SWTFocusCellManager defines it's own focusCell - no chance to change / overwrite / update this
+         * cell from the here!
+         */
         return m_cursor.getFocusCell();
       }
     };
