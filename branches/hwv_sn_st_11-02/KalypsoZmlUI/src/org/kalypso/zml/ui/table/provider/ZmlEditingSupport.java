@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table.provider;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
@@ -83,6 +84,48 @@ public class ZmlEditingSupport extends EditingSupport
     final TableViewer viewer = column.getTable().getTableViewer();
 
     m_cellEditor = new TextCellEditor( (Composite) viewer.getControl(), SWT.NONE );
+
+    m_cellEditor.addListener( new ICellEditorListener()
+    {
+
+      @Override
+      public void editorValueChanged( final boolean oldValidState, final boolean newValidState )
+      {
+        // TODO Auto-generated method stub
+
+      }
+
+      @Override
+      public void cancelEditor( )
+      {
+        // TODO Auto-generated method stub
+
+      }
+
+      @Override
+      public void applyEditorValue( )
+      {
+        // TODO Auto-generated method stub
+
+      }
+    } );
+
+// m_cellEditor.getControl().addKeyListener( new KeyAdapter()
+// {
+// /**
+// * @see java.awt.event.KeyAdapter#keyPressed(java.awt.event.KeyEvent)
+// */
+// @Override
+// public void keyPressed( final KeyEvent e )
+// {
+// if( SWT.ARROW_DOWN == e.getKeyCode() )
+// {
+// // TODO: focus vom cell-editor wegnehmen -> auf den cursor
+//
+// // TODO: cell editor auf celle drunter setze + startEditing
+// }
+// }
+// } );
 
     viewer.getControl().addDisposeListener( new DisposeListener()
     {
