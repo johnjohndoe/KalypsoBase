@@ -85,7 +85,6 @@ public class ObservationServiceJob extends Job
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
-
       /* Create the observation service. */
       final IObservationService observationService = loadService();
 
@@ -97,15 +96,11 @@ public class ObservationServiceJob extends Job
       final IObservationService delegate = m_observationServiceWrapper.getDelegateInternal();
       if( delegate instanceof IDisposable )
       {
-        // System.out.println( "Dispose the old observation service delegate (" + delegate.toString() + ") ... " +
-        // DateFormat.getDateTimeInstance().format( Calendar.getInstance().getTime() ) );
         final IDisposable disposable = (IDisposable) delegate;
         disposable.dispose();
       }
 
       /* Store the result. */
-      // System.out.println( "Set the new observation service delegate (" + observationService.toString() + ") ... " +
-      // DateFormat.getDateTimeInstance().format( Calendar.getInstance().getTime() ) );
       m_observationServiceWrapper.setDelegate( observationService );
 
       return Status.OK_STATUS;
@@ -120,12 +115,8 @@ public class ObservationServiceJob extends Job
   {
     final String property = System.getProperty( SERVICE_IMPLEMENTATION, "" );
     if( property == null || "".equals( property.trim() ) )
-    {
       return new ObservationServiceDelegate();
-    }
 
-    final IObservationService service = (IObservationService) ClassUtilities.newInstance( property, IObservationService.class, ObservationServiceJob.class.getClassLoader(), null, null );
-
-    return service;
+    return (IObservationService) ClassUtilities.newInstance( property, IObservationService.class, ObservationServiceJob.class.getClassLoader(), null, null );
   }
 }

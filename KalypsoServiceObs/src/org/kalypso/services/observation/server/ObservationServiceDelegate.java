@@ -189,18 +189,14 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     // dispose repositories
     final IRepository[] repositories = m_repositories.toArray( new IRepository[] {} );
     for( final IRepository repository : repositories )
-    {
       repository.dispose();
-    }
 
     m_repositories.clear();
 
     // clear temp files
     final File[] files = m_mapDataId2File.values().toArray( new File[] {} );
     for( final File file : files )
-    {
       FileUtilities.deleteQuitly( file );
-    }
 
     m_mapDataId2File.clear();
 
