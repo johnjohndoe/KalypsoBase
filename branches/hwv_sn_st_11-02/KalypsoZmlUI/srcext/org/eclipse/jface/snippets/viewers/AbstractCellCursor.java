@@ -13,13 +13,18 @@
 package org.eclipse.jface.snippets.viewers;
 
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
 
 /**
@@ -35,7 +40,7 @@ public abstract class AbstractCellCursor extends Canvas
    * @param viewer
    * @param style
    */
-  public AbstractCellCursor( final ColumnViewer viewer, final int style )
+  public AbstractCellCursor( final TableViewer viewer, final int style )
   {
     super( (Composite) viewer.getControl(), style );
     m_viewer = viewer;
@@ -74,6 +79,18 @@ public abstract class AbstractCellCursor extends Canvas
     addListener( SWT.KeyDown, listener );
     addListener( SWT.MouseDown, listener );
     addListener( SWT.MouseDoubleClick, listener );
+
+    final Table table = viewer.getTable();
+    final ScrollBar verticalBar = table.getVerticalBar();
+    verticalBar.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        setFocusCell( getFocusCell() );
+      }
+    } );
+
   }
 
   protected void keyDown( final Event event )

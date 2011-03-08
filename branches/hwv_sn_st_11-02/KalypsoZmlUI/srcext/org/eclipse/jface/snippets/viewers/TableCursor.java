@@ -13,7 +13,7 @@
 package org.eclipse.jface.snippets.viewers;
 
 import org.eclipse.jface.util.Util;
-import org.eclipse.jface.viewers.AbstractTableViewer;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -34,7 +34,7 @@ public class TableCursor extends AbstractCellCursor
 {
   private static final Color COLOR_BACKGROUND_SELECTION = new Color( null, new RGB( 0xBA, 0xFF, 0xEC ) );
 
-  public TableCursor( final AbstractTableViewer viewer )
+  public TableCursor( final TableViewer viewer )
   {
     super( viewer, SWT.NONE );
   }
