@@ -85,6 +85,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.provider.ZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
@@ -256,7 +257,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     final IStructuredSelection selection = (IStructuredSelection) m_tableViewer.getSelection();
 
-    final IZmlTableCell cell = m_selection.findActiveCell();
+    final IZmlTableCell cell = m_selection.getActiveCell();
 
     m_tableViewer.refresh();
 
@@ -325,42 +326,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public TableViewer getTableViewer( )
   {
     return m_tableViewer;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getActiveCell()
-   */
-  @Override
-  public IZmlTableCell getActiveCell( )
-  {
-    return m_selection.findActiveCell();
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getActiveColumn()
-   */
-  @Override
-  public IZmlTableColumn getActiveColumn( )
-  {
-    return m_selection.findActiveColumn();
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getActiveRow()
-   */
-  @Override
-  public IZmlTableRow getActiveRow( )
-  {
-    return m_selection.findActiveRow();
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getSelectedRows()
-   */
-  @Override
-  public IZmlTableRow[] getSelectedRows( )
-  {
-    return m_selection.findSelectedRows();
   }
 
   /**
@@ -470,5 +435,14 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public void remove( final IExtendedZmlTableColumn column )
   {
     m_columns.remove( column );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTable#getSelectionHandler()
+   */
+  @Override
+  public IZmlTableSelectionHandler getSelectionHandler( )
+  {
+    return m_selection;
   }
 }

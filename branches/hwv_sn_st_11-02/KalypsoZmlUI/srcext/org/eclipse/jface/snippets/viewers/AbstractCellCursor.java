@@ -40,9 +40,9 @@ public abstract class AbstractCellCursor extends Canvas
    * @param viewer
    * @param style
    */
-  public AbstractCellCursor( final TableViewer viewer, final int style )
+  public AbstractCellCursor( final TableViewer viewer )
   {
-    super( (Composite) viewer.getControl(), style );
+    super( (Composite) viewer.getControl(), SWT.NONE );
     m_viewer = viewer;
 
     final Listener listener = new Listener()
@@ -110,8 +110,8 @@ public abstract class AbstractCellCursor extends Canvas
   {
     m_focusCell = cell;
 
-    if( Objects.isNotNull( cell ) )
-      setBounds( cell.getBounds() );
+    if( Objects.isNotNull( m_focusCell ) )
+      setBounds( m_focusCell.getBounds() );
 
     redraw();
   }

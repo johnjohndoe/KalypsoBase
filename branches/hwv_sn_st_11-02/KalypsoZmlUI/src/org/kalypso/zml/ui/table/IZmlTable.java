@@ -43,9 +43,9 @@ package org.kalypso.zml.ui.table;
 import org.eclipse.jface.viewers.TableViewer;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlModel;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
@@ -53,13 +53,6 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
  */
 public interface IZmlTable
 {
-  IZmlTableCell getActiveCell( );
-
-  IZmlTableColumn getActiveColumn( );
-
-  IZmlTableRow getActiveRow( );
-
-  IZmlTableRow[] getSelectedRows( );
 
   IZmlTableColumn findColumn( BaseColumn column );
 
@@ -85,4 +78,6 @@ public interface IZmlTable
   void removeListener( IZmlTableListener mListener );
 
   void add( ExtendedZmlTableColumn column );
+
+  IZmlTableSelectionHandler getSelectionHandler( );
 }

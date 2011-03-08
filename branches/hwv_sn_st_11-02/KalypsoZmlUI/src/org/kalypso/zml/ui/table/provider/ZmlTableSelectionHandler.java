@@ -70,6 +70,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.viewers.table.Tables;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
@@ -88,15 +89,15 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
  * 
  * @author Dirk Kuch
  */
-public class ZmlTableSelectionHandler implements MouseMoveListener, Listener
+public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZmlTableSelectionHandler
 {
-  Point m_position;
+  protected Point m_position;
 
   private final MenuManager m_contextMenuManager = new MenuManager();
 
   private final ZmlTableComposite m_table;
 
-  private TableCursor m_cursor;
+  protected TableCursor m_cursor;
 
   public ZmlTableSelectionHandler( final ZmlTableComposite table )
   {
@@ -109,8 +110,6 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener
   {
     final TableViewer viewer = m_table.getTableViewer();
 
-    m_cursor = new TableCursor( viewer );
-
     viewer.getTable().addMouseMoveListener( this );
     viewer.getTable().addListener( SWT.MenuDetect, this );
 
@@ -121,10 +120,17 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener
     final Menu contextMenu = m_contextMenuManager.createContextMenu( m_table );
     m_table.setMenu( contextMenu );
 
-    /**
-     * focus handling
-     */
-    final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( viewer, new CursorCellHighlighter( viewer, m_cursor ), new ZmlCellNavigationStrategy() );
+    m_cursor = new TableCursor( viewer );
+
+    final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( viewer, new CursorCellHighlighter( viewer, m_cursor ), new ZmlCellNavigationStrategy() )
+    {
+      @Override
+      public ViewerCell getFocusCell( )
+      {
+        return m_cursor.getFocusCell();
+      }
+    };
+
     final ColumnViewerEditorActivationStrategy activationSupport = new ColumnViewerEditorActivationStrategy( viewer )
     {
       @Override
@@ -144,10 +150,12 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener
 
         return false;
       }
+
     };
 
     TableViewerEditor.create( viewer, focusCellManager, activationSupport, ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL
         | ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR );
+
   }
 
   /**
@@ -235,7 +243,8 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener
     return m_cursor.getFocusCell();
   }
 
-  public IZmlTableColumn findActiveColumn( )
+  @Override
+  public IZmlTableColumn getActiveColumn( )
   {
     final ViewerCell cell = getActiveViewerCell();
     if( cell == null )
@@ -246,7 +255,8 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener
     return m_table.findColumn( cell.getColumnIndex() );
   }
 
-  public IZmlTableRow findActiveRow( )
+  @Override
+  public IZmlTableRow getActiveRow( )
   {
     final ViewerCell cell = getActiveViewerCell();
     if( cell == null )
@@ -263,10 +273,11 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener
     return null;
   }
 
-  public IZmlTableCell findActiveCell( )
+  @Override
+  public IZmlTableCell getActiveCell( )
   {
-    final IZmlTableColumn column = findActiveColumn();
-    final IZmlTableRow row = findActiveRow();
+    final IZmlTableColumn column = getActiveColumn();
+    final IZmlTableRow row = getActiveRow();
     if( column == null || row == null )
       return null;
 
@@ -275,7 +286,8 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener
     return cell;
   }
 
-  public IZmlTableRow[] findSelectedRows( )
+  @Override
+  public IZmlTableRow[] getSelectedRows( )
   {
     final TableViewer viewer = m_table.getTableViewer();
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
@@ -343,4 +355,38 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener
     /** hmmm, try to focus on the same row index value */
     return viewer.getCell( new Point( 1, y ) );
   }
+
+  /**
+   * @see org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler#findViewerCell(org.kalypso.zml.ui.table.model.IZmlTableCell)
+   */
+  @Override
+  public ViewerCell findViewerCell( final IZmlTableCell cell )
+  {
+    final IZmlTable zml = cell.getTable();
+    final Table table = zml.getTableViewer().getTable();
+    final TableItem[] items = table.getItems();
+    for( final TableItem item : items )
+    {
+      final ZmlModelRow row = (ZmlModelRow) item.getData();
+
+      if( row.equals( cell.getRow().getModelRow() ) )
+      {
+        final Rectangle bounds = item.getBounds();
+
+        return findCell( cell.getColumn(), bounds.y + 1 );
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler#setFocusCell(org.eclipse.jface.viewers.ViewerCell)
+   */
+  @Override
+  public void setFocusCell( final ViewerCell cell )
+  {
+    m_cursor.setFocusCell( cell );
+  }
+
 }
