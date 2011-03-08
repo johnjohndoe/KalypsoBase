@@ -482,6 +482,7 @@ public class ExcelTableCursor extends TableCursor
 
     // do not loose pressed character
     final Control control = cellEditor.getControl();
+
     if( keyEvent != null && control != null && !control.isDisposed() && control instanceof Button )
     {
       final Button button = (Button) control;
