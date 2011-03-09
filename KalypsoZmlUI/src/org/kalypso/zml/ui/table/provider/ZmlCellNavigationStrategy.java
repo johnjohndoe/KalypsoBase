@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
+import org.eclipse.jface.snippets.viewers.TableCursor;
 import org.eclipse.jface.viewers.CellNavigationStrategy;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ViewerCell;
@@ -53,24 +54,33 @@ import org.kalypso.commons.java.lang.Objects;
  */
 public class ZmlCellNavigationStrategy extends CellNavigationStrategy
 {
+  private final TableCursor m_cursor;
+
+  public ZmlCellNavigationStrategy( final TableCursor cursor )
+  {
+    m_cursor = cursor;
+  }
 
   /**
+   * @param currentSelectedCell
+   *          don't use current selected cell from swt focus cell manager
    * @see org.eclipse.jface.viewers.CellNavigationStrategy#findSelectedCell(org.eclipse.jface.viewers.ColumnViewer,
    *      org.eclipse.jface.viewers.ViewerCell, org.eclipse.swt.widgets.Event)
    */
   @Override
   public ViewerCell findSelectedCell( final ColumnViewer viewer, final ViewerCell currentSelectedCell, final Event event )
   {
-    if( Objects.isNull( currentSelectedCell ) )
+    final ViewerCell current = m_cursor.getFocusCell();
+    if( Objects.isNull( current ) )
       return null;
     else if( SWT.ARROW_UP == event.keyCode )
-      return findCell( currentSelectedCell, ViewerCell.ABOVE, false );
+      return findCell( current, ViewerCell.ABOVE, false );
     else if( SWT.ARROW_DOWN == event.keyCode )
-      return findCell( currentSelectedCell, ViewerCell.BELOW, false );
+      return findCell( current, ViewerCell.BELOW, false );
     else if( SWT.ARROW_LEFT == event.keyCode )
-      return findCell( currentSelectedCell, ViewerCell.LEFT, true );
+      return findCell( current, ViewerCell.LEFT, true );
     else if( SWT.ARROW_RIGHT == event.keyCode )
-      return findCell( currentSelectedCell, ViewerCell.RIGHT, true );
+      return findCell( current, ViewerCell.RIGHT, true );
 
     return null;
   }
