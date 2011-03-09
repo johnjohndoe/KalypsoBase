@@ -44,7 +44,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.timeseries.interpolation.worker.IInterpolationFilter;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
@@ -115,7 +115,7 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
       final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
 
       final Object targetValue = getTargetValue( value );
-      reference.update( targetValue, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_CHECK );
+      reference.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_OK );
 
       final ExtendedZmlTableColumn column = getColumn();
       final IZmlTableCell cell = column.findCell( row );
