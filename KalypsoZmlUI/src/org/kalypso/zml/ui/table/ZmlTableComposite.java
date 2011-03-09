@@ -48,6 +48,8 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
+import jregex.Pattern;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -58,12 +60,16 @@ import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -86,6 +92,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
+import org.kalypso.zml.ui.table.provider.ZmlEditingSupport;
 import org.kalypso.zml.ui.table.provider.ZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
@@ -95,7 +102,7 @@ import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
  */
 public class ZmlTableComposite extends Composite implements IZmlColumnModelListener, IZmlTable
 {
-  private TableViewer m_tableViewer;
+  protected TableViewer m_tableViewer;
 
   private final Set<ExtendedZmlTableColumn> m_columns = new LinkedHashSet<ExtendedZmlTableColumn>();
 
@@ -172,6 +179,39 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     m_tableViewer.setInput( m_model );
 
     addBasicFilters();
+
+    final Pattern pattern = new Pattern( "[\\w\\d]" ); // $NON-NLS-1$
+    m_tableViewer.getControl().addKeyListener( new KeyAdapter()
+    {
+      @Override
+      public void keyPressed( final KeyEvent e )
+      {
+        final char character = e.character;
+
+        if( org.kalypso.commons.java.lang.Objects.isNotNull( character ) && pattern.matches( String.valueOf( character ) ) )
+        {
+          final IZmlTableCell cell = m_selection.getActiveCell();
+          if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
+            return;
+
+          startEditing( cell, character );
+        }
+      }
+
+      private void startEditing( final IZmlTableCell cell, final char character )
+      {
+        m_tableViewer.editElement( cell.getRow().getModelRow(), cell.findIndex() );
+        final IZmlTableColumn column = cell.getColumn();
+        if( column instanceof IExtendedZmlTableColumn )
+        {
+          final IExtendedZmlTableColumn extended = (IExtendedZmlTableColumn) column;
+          final ZmlEditingSupport support = extended.getEditingSupport();
+          final TextCellEditor editor = support.getCellEditor();
+          ((Text) editor.getControl()).insert( String.valueOf( character ) );
+
+        }
+      }
+    } );
 
     /** layout stuff */
     final Table table = m_tableViewer.getTable();
