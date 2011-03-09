@@ -110,6 +110,15 @@ public class StatusDialog extends AbstractStatusDialog
     return composite;
   }
 
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#isResizable()
+   */
+  @Override
+  protected boolean isResizable( )
+  {
+    return true;
+  }
+
   private void createExceptionControl( final Composite parent, final IStatus status )
   {
     final Throwable exception = status.getException();
