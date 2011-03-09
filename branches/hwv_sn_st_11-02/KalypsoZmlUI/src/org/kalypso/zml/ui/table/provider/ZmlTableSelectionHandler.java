@@ -122,7 +122,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
     m_cursor = new TableCursor( viewer );
 
-    final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( viewer, new CursorCellHighlighter( viewer, m_cursor ), new ZmlCellNavigationStrategy() )
+    final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( viewer, new CursorCellHighlighter( viewer, m_cursor ), new ZmlCellNavigationStrategy( m_cursor ) )
     {
       @Override
       public ViewerCell getFocusCell( )
