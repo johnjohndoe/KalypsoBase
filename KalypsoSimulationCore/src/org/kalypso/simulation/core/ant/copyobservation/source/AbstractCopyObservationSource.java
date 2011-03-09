@@ -127,11 +127,11 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
     {
       return ZmlFactory.parseXML( sourceURL );
     }
-    catch( final SensorException e )
+    catch( final Throwable t )
     {
       final Request requestType = RequestFactory.parseRequest( hrefWithFilterAndRange );
       if( requestType == null )
-        throw new SensorException( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.10" ) + hrefWithFilterAndRange, e );//$NON-NLS-1$
+        throw new SensorException( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.10" ) + hrefWithFilterAndRange, t );//$NON-NLS-1$
 
       // obs could not be created, use the request now
       final String message = String.format( "Abruf von '%s' fehlgeschlagen. Erzeuge synthetische Zeitreihe.", sourceHref );
