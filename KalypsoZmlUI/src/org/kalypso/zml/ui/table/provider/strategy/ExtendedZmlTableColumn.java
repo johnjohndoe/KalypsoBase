@@ -202,6 +202,7 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
     getTableViewerColumn().setEditingSupport( editingSupport );
   }
 
+  @Override
   public ZmlEditingSupport getEditingSupport( )
   {
     return m_editingSupport;
