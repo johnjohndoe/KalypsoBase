@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
-import jregex.Pattern;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -56,8 +53,6 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.contribs.eclipse.swt.custom.ValidateCellEditorListener;
 import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
 import org.kalypso.ogc.sensor.IAxis;
@@ -143,33 +138,6 @@ public class ZmlEditingSupport extends EditingSupport
       }
     } );
 
-    final Pattern pattern = new Pattern( "[\\w\\d]" ); // $NON-NLS-1$
-
-    viewer.getControl().addKeyListener( new KeyAdapter()
-    {
-      @Override
-      public void keyPressed( final KeyEvent e )
-      {
-        final char character = e.character;
-
-        if( org.kalypso.commons.java.lang.Objects.isNotNull( character ) && pattern.matches( String.valueOf( character ) ) )
-        {
-          final IZmlTableCell cell = handler.getActiveCell();
-          if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
-            return;
-
-          startEditing( cell, character );
-        }
-      }
-
-      private void startEditing( final IZmlTableCell cell, final char character )
-      {
-// ((Text) m_cellEditor.getControl()).setText( String.valueOf( character ) ); // $NON-NLS-1$
-        viewer.editElement( cell.getRow().getModelRow(), findIndex( cell ) );
-      }
-
-    } );
-
     viewer.getControl().addDisposeListener( new DisposeListener()
     {
       @Override
@@ -178,25 +146,6 @@ public class ZmlEditingSupport extends EditingSupport
         m_cellEditor.dispose();
       }
     } );
-  }
-
-  protected int findIndex( final IZmlTableCell cell )
-  {
-
-    final TableColumn base = cell.getColumn().getTableViewerColumn().getColumn();
-
-    final TableViewer tableViewer = cell.getTable().getTableViewer();
-    final Table table = tableViewer.getTable();
-    final TableColumn[] columns = table.getColumns();
-    for( final TableColumn col : columns )
-    {
-      if( Objects.equal( base, col ) )
-      {
-        return ArrayUtils.indexOf( columns, col );
-      }
-    }
-
-    return 2;
   }
 
   private void setValidator( )
@@ -272,6 +221,11 @@ public class ZmlEditingSupport extends EditingSupport
       final IZmlEditingStrategy strategy = m_column.getEditingStrategy( m_labelProvider );
       strategy.setValue( (IZmlModelRow) element, (String) value );
     }
+  }
+
+  public TextCellEditor getCellEditor( )
+  {
+    return m_cellEditor;
   }
 
 }
