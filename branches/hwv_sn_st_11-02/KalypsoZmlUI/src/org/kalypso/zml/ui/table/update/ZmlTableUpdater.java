@@ -58,7 +58,6 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
  */
 public class ZmlTableUpdater implements Runnable
 {
-
   private final MultipleTsLink[] m_links;
 
   private final IZmlTableLayoutPart m_part;
