@@ -154,7 +154,6 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
         return false;
       }
-
     };
 
     TableViewerEditor.create( viewer, focusCellManager, activationSupport, ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL
