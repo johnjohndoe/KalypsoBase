@@ -48,6 +48,7 @@ import junit.framework.TestCase;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
@@ -57,7 +58,7 @@ public class TranProLinFilterTest extends TestCase
 {
   public void testGetValues( ) throws SensorException
   {
-    final IObservation obs = TimeseriesUtils.createTestTimeserie( new String[] { "W" }, 10, false ); //$NON-NLS-1$
+    final IObservation obs = TimeseriesUtils.createTestTimeserie( new String[] { ITimeseriesConstants.TYPE_WATERLEVEL }, 10, false ); //$NON-NLS-1$
 
     assertEquals( 10, obs.getValues( null ).size() );
 
@@ -68,12 +69,12 @@ public class TranProLinFilterTest extends TestCase
 
     assertEquals( 10, filter.getValues( null ).size() );
 
-    Number valueOrg = (Number) obs.getValues( null ).get( 0, ObservationUtilities.findAxisByType( obs.getAxes(), "W" ) ); //$NON-NLS-1$
-    Number valueNew = (Number) filter.getValues( null ).get( 0, ObservationUtilities.findAxisByType( filter.getAxes(), "W" ) ); //$NON-NLS-1$
+    Number valueOrg = (Number) obs.getValues( null ).get( 0, ObservationUtilities.findAxisByType( obs.getAxes(), ITimeseriesConstants.TYPE_WATERLEVEL ) ); //$NON-NLS-1$
+    Number valueNew = (Number) filter.getValues( null ).get( 0, ObservationUtilities.findAxisByType( filter.getAxes(), ITimeseriesConstants.TYPE_WATERLEVEL ) ); //$NON-NLS-1$
     assertEquals( valueOrg.doubleValue(), valueNew.doubleValue(), 0.001 );
 
-    valueOrg = (Number) obs.getValues( null ).get( 9, ObservationUtilities.findAxisByType( obs.getAxes(), "W" ) ); //$NON-NLS-1$
-    valueNew = (Number) filter.getValues( null ).get( 9, ObservationUtilities.findAxisByType( filter.getAxes(), "W" ) ); //$NON-NLS-1$
+    valueOrg = (Number) obs.getValues( null ).get( 9, ObservationUtilities.findAxisByType( obs.getAxes(), ITimeseriesConstants.TYPE_WATERLEVEL ) ); //$NON-NLS-1$
+    valueNew = (Number) filter.getValues( null ).get( 9, ObservationUtilities.findAxisByType( filter.getAxes(), ITimeseriesConstants.TYPE_WATERLEVEL ) ); //$NON-NLS-1$
     assertEquals( valueOrg.doubleValue() * 1.15, valueNew.doubleValue(), 0.001 );
 
     final StringWriter w1 = new StringWriter();

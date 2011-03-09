@@ -79,7 +79,7 @@ import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * Perform finish worker for cvs import wizard.
- *
+ * 
  * @author Dirk Kuch
  */
 public class CsvSheetImportWorker implements ICoreRunnableWithProgress
@@ -189,13 +189,13 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
     {
       final WQTable table = new WQTable( new Date(), colOne.toArray( new Double[] {} ), colTwo.toArray( new Double[] {} ) );
 
-      return new WQTableSet( new WQTable[] { table }, "W", "Q" ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new WQTableSet( new WQTable[] { table }, ITimeseriesConstants.TYPE_WATERLEVEL, ITimeseriesConstants.TYPE_DISCHARGE ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     else if( WQ_KIND.eQ.equals( fistColum ) )
     {
       final WQTable table = new WQTable( new Date(), colTwo.toArray( new Double[] {} ), colOne.toArray( new Double[] {} ) );
 
-      return new WQTableSet( new WQTable[] { table }, "W", "Q" ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new WQTableSet( new WQTable[] { table }, ITimeseriesConstants.TYPE_WATERLEVEL, ITimeseriesConstants.TYPE_DISCHARGE ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     throw new NotImplementedException();
@@ -266,7 +266,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
     final File senke = new File( destination, name + ".zml" ); //$NON-NLS-1$
     ZmlFactory.writeToFile( simple, senke );
 
-    new UIJob( Messages.getString("org.kalypso.ogc.sensor.view.wizard.cvssheet.CsvSheetImportWorker.19") ) //$NON-NLS-1$
+    new UIJob( Messages.getString( "org.kalypso.ogc.sensor.view.wizard.cvssheet.CsvSheetImportWorker.19" ) ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
