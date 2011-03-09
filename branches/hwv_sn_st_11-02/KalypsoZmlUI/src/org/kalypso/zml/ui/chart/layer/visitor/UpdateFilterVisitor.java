@@ -40,23 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.visitor;
 
-import org.kalypso.zml.core.diagram.layer.IZmlLayer;
-
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
-public class SetZmlFilterVisitor implements IChartLayerVisitor
+public class UpdateFilterVisitor implements IChartLayerVisitor
 {
+  private final IChartLayerFilter[] m_add;
 
-  private final IChartLayerFilter m_filter;
+  private final IChartLayerFilter[] m_remove;
 
-  public SetZmlFilterVisitor( final IChartLayerFilter filter )
+  public UpdateFilterVisitor( final IChartLayerFilter[] add, final IChartLayerFilter[] remove )
   {
-    m_filter = filter;
+    m_add = add;
+    m_remove = remove;
   }
 
   /**
@@ -65,8 +65,8 @@ public class SetZmlFilterVisitor implements IChartLayerVisitor
   @Override
   public boolean visit( final IChartLayer layer )
   {
-    if( layer instanceof IZmlLayer )
-      ((IZmlLayer) layer).setFilter( m_filter );
+    layer.addFilter( m_add );
+    layer.removeFilter( m_remove );
 
     layer.getLayerManager().accept( this );
 
