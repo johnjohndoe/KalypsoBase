@@ -38,36 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
-
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.progress.UIJob;
+package org.kalypso.zml.core.table.model;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableUiUpdateJob extends UIJob
+public interface IColumnLabelProvider
 {
-
-  private final ZmlTableComposite m_table;
-
-  public ZmlTableUiUpdateJob( final ZmlTableComposite table )
-  {
-    super( "ZmlTableUiUpdateJob" ); //$NON-NLS-1$
-    m_table = table;
-  }
-
-  /**
-   * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  public IStatus runInUIThread( final IProgressMonitor monitor )
-  {
-    m_table.refresh();
-
-    return Status.OK_STATUS;
-  }
-
+  String getLabel( );
 }

@@ -258,7 +258,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     final IStructuredSelection selection = (IStructuredSelection) m_tableViewer.getSelection();
 
     final IZmlTableCell cell = m_selection.getActiveCell();
-
     m_tableViewer.refresh();
 
     fireTableChanged();
