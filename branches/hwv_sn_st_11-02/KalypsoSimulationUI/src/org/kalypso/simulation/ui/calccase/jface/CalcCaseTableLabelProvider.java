@@ -105,7 +105,7 @@ public class CalcCaseTableLabelProvider extends LabelProvider implements ITableL
     return ""; //$NON-NLS-1$
   }
 
-  private final static Date lastModifiedFromFolder( final IFolder folder )
+  private static Date lastModifiedFromFolder( final IFolder folder )
   {
     return new Date( folder.getLocalTimeStamp() );
   }
