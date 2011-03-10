@@ -52,6 +52,7 @@ import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.FilterFactory;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.request.RequestFactory;
 import org.kalypso.ogc.sensor.timeseries.merged.ObservationSource;
@@ -59,6 +60,7 @@ import org.kalypso.ogc.sensor.timeseries.merged.Source;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
+import org.kalypso.simulation.core.ant.copyobservation.CopyObservationHelper;
 import org.kalypso.simulation.core.ant.copyobservation.ICopyObservationSource;
 import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.zml.request.Request;
@@ -125,7 +127,10 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
 
     try
     {
-      return ZmlFactory.parseXML( sourceURL );
+      final IObservation observation = ZmlFactory.parseXML( sourceURL );
+      observation.getValues( null ); // trigger an potential exception
+
+      return observation;
     }
     catch( final Throwable t )
     {
@@ -133,10 +138,14 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
       if( requestType == null )
         throw new SensorException( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.10" ) + hrefWithFilterAndRange, t );//$NON-NLS-1$
 
-      // obs could not be created, use the request now
+      // observation could not be created, use the request now
       final String message = String.format( "Abruf von '%s' fehlgeschlagen. Erzeuge synthetische Zeitreihe.", sourceHref );
       KalypsoSimulationCorePlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( message ) );
-      final IObservation synteticObservation = RequestFactory.createDefaultObservation( requestType );
+      final SimpleObservation synteticObservation = RequestFactory.createDefaultObservation( requestType );
+      synteticObservation.setHref( sourceHref );
+
+      CopyObservationHelper.setCopyObservationSources( synteticObservation.getMetadataList(), new ObservationSource( source, synteticObservation ) );
+
       return FilterFactory.createFilterFrom( source.getFilter(), synteticObservation, null );
     }
   }
