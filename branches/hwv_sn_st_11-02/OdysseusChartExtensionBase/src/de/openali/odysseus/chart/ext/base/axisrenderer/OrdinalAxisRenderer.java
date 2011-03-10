@@ -178,6 +178,7 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   /**
    * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#dispose()
    */
+  @Deprecated
   @Override
   public void dispose( )
   {
@@ -275,10 +276,13 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   {
     final IDataRange<Number> range = axis.getNumericRange();
 
-    if( range.getMin() == null || range.getMax() == null )
+    if( range.getMin() == null || range.getMax() == null || m_contentProvider.size() == 0 )
       return 0;
-    int maxWidth = 0;
+
     final IChartLabelRenderer tickRenderer = getTickLabelRenderer( axis );
+    tickRenderer.getTitleTypeBean().setLabel( m_contentProvider.getLabel( 0 ) );
+    int maxWidth = 0;//getTickLabelRenderer( axis ).getSize().y;
+
     for( int i = range.getMin().intValue(); i <= range.getMax().intValue(); i++ )
     {
       if( i < 0 || i > m_contentProvider.size() - 1 )
