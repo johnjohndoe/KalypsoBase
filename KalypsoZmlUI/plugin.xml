@@ -102,7 +102,7 @@
     <command
           categoryId="org.kalypso.zml.ui.table.commands.category"
           id="org.kalypso.zml.ui.table.commands.toolbar.view.stuetzstellen"
-          name="Stützstellen">
+          name="Stützstellenansicht">
     </command>
     <command
           categoryId="org.kalypso.zml.ui.table.commands.category"
