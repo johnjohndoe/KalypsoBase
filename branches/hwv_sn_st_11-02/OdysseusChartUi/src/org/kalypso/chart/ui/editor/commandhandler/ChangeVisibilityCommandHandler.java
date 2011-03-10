@@ -89,14 +89,14 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
     final IChartModel model = getModel( element );
-
-    if( model == null )
+    if( Objects.isNull( model ) )
       element.setChecked( false );
     else
     {
-      final VisibilityInitialStatusVisitor visitor = new VisibilityInitialStatusVisitor( (String) parameters.get( ChangeVisibilityCommandHandler.LAYER_PARAMETER ) );
-
+      final String parameter = (String) parameters.get( ChangeVisibilityCommandHandler.LAYER_PARAMETER );
       final ILayerManager layerManager = model.getLayerManager();
+
+      final VisibilityInitialStatusVisitor visitor = new VisibilityInitialStatusVisitor( parameter );
       layerManager.accept( visitor );
 
       element.setChecked( visitor.isEnabled() );
