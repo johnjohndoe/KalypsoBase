@@ -55,6 +55,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
@@ -101,7 +103,7 @@ public class FeatureVisitorOperation implements ICoreRunnableWithProgress
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlLocation, null );
       niceMonitor.worked( 10 );
 
-      final List<IStatus> stati = executeFeaturePathes( new SubProgressMonitor( niceMonitor, 70 ), workspace );
+      final IStatus resultStatus = executeFeaturePathes( new SubProgressMonitor( niceMonitor, 70 ), workspace );
 
       if( m_visitorTask.doSaveGml() )
       {
@@ -110,7 +112,7 @@ public class FeatureVisitorOperation implements ICoreRunnableWithProgress
         niceMonitor.worked( 10 );
       }
 
-      return new MultiStatus( KalypsoSimulationCorePlugin.getID(), 0, stati.toArray( new IStatus[stati.size()] ), "", null );
+      return resultStatus;
     }
     catch( final Exception e )
     {
@@ -125,12 +127,15 @@ public class FeatureVisitorOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private List<IStatus> executeFeaturePathes( final IProgressMonitor monitor, final GMLWorkspace workspace ) throws InterruptedException
+  private IStatus executeFeaturePathes( final IProgressMonitor monitor, final GMLWorkspace workspace ) throws InterruptedException
   {
     final String[] featurePathes = m_visitorTask.getFeaturePathes();
     monitor.beginTask( m_visitorTask.getVisitorTaskDescription(), featurePathes.length );
     monitor.subTask( "wird bearbeitet..." );
-    final List<IStatus> stati = new ArrayList<IStatus>();
+    
+    final IStatusCollector stati = new StatusCollector( KalypsoSimulationCorePlugin.getID() );
+    // FIXME: ERRROR-HANDLING: handling: always add OK-stati (but with good messages...)
+    // FIXME: ERRROR-HANDLING:  one status per- feature path (but remove this level if we have only one path)
     for( final String featurePath : featurePathes )
     {
       if( monitor.isCanceled() )
@@ -165,7 +170,11 @@ public class FeatureVisitorOperation implements ICoreRunnableWithProgress
         stati.add( status );
       }
     }
-    return stati;
+    
+    // TODO: where to get the message from?
+    // TODO: get message from the visitor-task
+    
+    return stati.asMultiStatusOrOK( "" );
   }
 
   private ILogger getLogger( )

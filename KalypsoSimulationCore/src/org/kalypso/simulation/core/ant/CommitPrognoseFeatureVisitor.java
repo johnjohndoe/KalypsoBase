@@ -53,9 +53,11 @@ import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.contribs.java.util.logging.LoggerUtilities;
 import org.kalypso.observation.util.ObservationHelper;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -93,7 +95,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
 
   private final DateRange m_dateRange;
 
-  private final Collection<IStatus> m_stati = new ArrayList<IStatus>();
+  private IStatusCollector m_stati = new StatusCollector( KalypsoSimulationCorePlugin.getID() );
 
   private final String m_sourceTS;
 
@@ -119,10 +121,17 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
   public final boolean visit( final Feature f )
   {
     final IStatus work = work( f );
-    System.out.print( work.toString() );
+    
     // FIXME: always return OK_STATUS, else later task will not run because we get a build exception
     // We should introduce a flag, if we should halt on errors
-    // m_stati.add( work );
+     // m_stati.add( work );
+    
+    // FIXME: does not work well, as all OK-stati get logged as INFO, which gives an INFO-status later
+    // Instead, we need to serialise the complete status at a central place.
+    String logLine = LoggerUtilities.formatLogStylish( work, LoggerUtilities.CODE_NEW_MSGBOX );
+    System.out.print( logLine );
+
+    System.out.print( work.toString() );
 
     return true;
   }
@@ -134,10 +143,10 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
     final TimeseriesLinkType sourceLink = (TimeseriesLinkType) f.getProperty( m_sourceTS );
     final TimeseriesLinkType targetLink = (TimeseriesLinkType) f.getProperty( m_targetTS );
     if( sourceLink == null )
-      return new Status( IStatus.WARNING, KalypsoSimulationCorePlugin.getID(), 0, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.0", m_sourceTS, id ), null ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, KalypsoSimulationCorePlugin.getID(), 0, Messages.getString( "org.kalypso.simulation.core.ant.CommitPrognoseFeatureVisitor.0", m_sourceTS, id ), null ); //$NON-NLS-1$
 
     if( targetLink == null )
-      return new Status( IStatus.WARNING, KalypsoSimulationCorePlugin.getID(), 0, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.0", m_targetTS, id ), null ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, KalypsoSimulationCorePlugin.getID(), 0, Messages.getString( "org.kalypso.simulation.core.ant.CommitPrognoseFeatureVisitor.0", m_targetTS, id ), null ); //$NON-NLS-1$
 
     final String sourceHref = sourceLink.getHref();
     final String targetHref = targetLink.getHref();
@@ -151,17 +160,17 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.1" ) + id ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), Messages.getString( "org.kalypso.simulation.core.ant.CommitPrognoseFeatureVisitor.1", id ), e ); //$NON-NLS-1$
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.2" ) + id ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), Messages.getString( "org.kalypso.simulation.core.ant.CommitPrognoseFeatureVisitor.2", id ), e ); //$NON-NLS-1$
     }
     catch( final RepositoryException e )
     {
       e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.2" ) + id ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), Messages.getString( "org.kalypso.simulation.core.ant.CommitPrognoseFeatureVisitor.2", id ), e ); //$NON-NLS-1$
     }
   }
 
@@ -175,7 +184,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
     final IObservation source = ZmlFactory.parseXML( urlRS );
 
     try
-    {
+    {   
       // IMPORTANT: Die ZIELzeitreihe bestimmt, welche Achsen geschrieben werden!
       // Die Datenhaltung muss die Metadaten von WISKI beziehen
       // Wenn Daten in die Datenhaltung geschrieben werden, dürfen nur die Werte, keine
@@ -187,7 +196,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
       // copy values from source into dest, expecting full compatibility
       final IObservation target = optimisticValuesCopy( source, targetAxes );
       if( target == null )
-        return StatusUtilities.createErrorStatus( "Fehler beim Ablegen der Ergebniszeitreihen. Konnte Werte nicht in die Zielzeitreihe kopieren" );
+        return new Status( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), "Fehler beim Ablegen der Ergebniszeitreihen. Konnte Werte nicht in die Zielzeitreihe kopieren" );
 
       final IRepository repository = RepositoryUtils.findRegisteredRepository( targetHref );
       if( repository instanceof IWriteableRepository )
@@ -206,11 +215,10 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
         else
           throw new RepositoryException( String.format( "Zeitreihen-Repository '%s' ist nicht beschreibbar ", repository.getLabel() ) );
       }
-
     }
     catch( final IllegalArgumentException e )
     {
-      return new Status( IStatus.WARNING, KalypsoSimulationCorePlugin.getID(), 0, Messages.getString( "org.kalypso.services.observation.client.CommitPrognoseFeatureVisitor.3", source ), e );
+      return new Status( IStatus.WARNING, KalypsoSimulationCorePlugin.getID(), 0, Messages.getString( "org.kalypso.simulation.core.ant.CommitPrognoseFeatureVisitor.3", source ), e );
     }
 
     return Status.OK_STATUS;
@@ -249,12 +257,13 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
       filteredSourceHref = sourceHref + "?" + m_sourceFilter; //$NON-NLS-1$
     else
       filteredSourceHref = sourceHref;
+    
     return filteredSourceHref;
   }
 
-  public final IStatus[] getStati( )
+  public IStatus getResult( )
   {
-    return m_stati.toArray( new IStatus[m_stati.size()] );
+    return m_stati.asMultiStatusOrOK( "Probleme beim Ablegen der Zeitreihen", "Zeitreihen wurden erfolgreich abgelegt" );
   }
 
   private IObservation optimisticValuesCopy( final IObservation source, final IAxis[] targetAxes ) throws SensorException, IllegalStateException
