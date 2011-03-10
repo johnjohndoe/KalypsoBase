@@ -213,44 +213,14 @@ public class Interval
 
   public Interval getIntersection( final Interval other, final MODE mode )
   {
-    final Interval result;
     final int matrix = calcIntersectionMatrix( other );
-    switch( matrix )
-    {
-      // REMARK: not using getters for start/end as cloning the calendars is a performance hot spot of this class.
-
-      case STATUS_INTERSECTION_START:
-        result = new Interval( m_start, other.m_end );
-        break;
-
-      case STATUS_INTERSECTION_END:
-        result = new Interval( other.m_start, m_end );
-        break;
-
-      case STATUS_INTERSECTION_INSIDE:
-        result = new Interval( other.m_start, other.m_end );
-        break;
-
-      case STATUS_INTERSECTION_ARROUND:
-        result = new Interval( m_start, m_end );
-        break;
-
-      case STATUS_INTERSECTION_NONE_BEFORE:
-      case STATUS_INTERSECTION_NONE_AFTER:
-        return null;
-      default:
-        return null;
-    }
+    final Interval result = calcIntersectionInterval( matrix, other );
 
     // calculate interval values;
     final double[] values = getValue();
     final double factor = calcFactorIntersect( result, mode );
-
     for( int i = 0; i < values.length; i++ )
-    {
       values[i] = factor * values[i];
-    }
-
     result.setValue( values );
 
     final int[] status = getStatus();
@@ -258,9 +228,7 @@ public class Interval
     if( result.getDurationInMillis() == 0 )
     {
       for( int i = 0; i < status.length; i++ )
-      {
         status[i] = KalypsoStati.BIT_OK;
-      }
     }
 
     result.setStatus( status );
@@ -270,6 +238,33 @@ public class Interval
     result.setSources( sources );
 
     return result;
+  }
+
+  private Interval calcIntersectionInterval( final int matrix, final Interval other )
+  {
+    switch( matrix )
+    {
+      // REMARK: not using getters for start/end as cloning the calendars is a performance hot spot of this class.
+
+      case STATUS_INTERSECTION_START:
+        return new Interval( m_start, other.m_end );
+
+      case STATUS_INTERSECTION_END:
+        return new Interval( other.m_start, m_end );
+
+      case STATUS_INTERSECTION_INSIDE:
+        return new Interval( other.m_start, other.m_end );
+
+      case STATUS_INTERSECTION_ARROUND:
+        return new Interval( m_start, m_end );
+
+      case STATUS_INTERSECTION_NONE_BEFORE:
+      case STATUS_INTERSECTION_NONE_AFTER:
+        return null;
+
+      default:
+        return null;
+    }
   }
 
   private void setSources( final String[] sources )
