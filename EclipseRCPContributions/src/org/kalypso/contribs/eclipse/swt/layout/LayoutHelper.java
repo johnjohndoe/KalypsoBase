@@ -60,7 +60,7 @@ public final class LayoutHelper
     return layout;
   }
 
-  public static Layout createGridLayout( )
+  public static GridLayout createGridLayout( )
   {
     return createGridLayout( 1 );
   }
