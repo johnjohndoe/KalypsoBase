@@ -190,9 +190,9 @@ public class LogAnalyzer
 
     private final StringBuffer m_message = new StringBuffer();
 
-    private String m_dialogMessage = null;
-
     private MultiStatus m_result;
+
+    private IStatus m_currentStatus;
 
     public GroupStatusStrategry()
     {
@@ -209,7 +209,7 @@ public class LogAnalyzer
       {
       case LoggerUtilities.CODE_NEW_MSGBOX:
         createNewSub();
-        m_dialogMessage = status.getMessage();
+        m_currentStatus = status;
         break;
 
       case LoggerUtilities.CODE_SHOW_DETAILS:
@@ -227,29 +227,31 @@ public class LogAnalyzer
 
     private void createNewSub()
     {
+      final int code = m_result.getCode();
+      final String plugin = m_result.getPlugin();
+
       if( !m_children.isEmpty() )
       {
         final IStatus[] children = m_children.toArray( new IStatus[m_children.size()] );
         final String message = m_message.length() == 0 ? Messages.getString("org.kalypso.commons.runtime.LogAnalyzer.4") : m_message.toString(); //$NON-NLS-1$
 
-        final int code = m_result.getCode();
-        final String plugin = m_result.getPlugin();
-
         final MultiStatus status;
-        if( m_dialogMessage == null )
+        if( m_currentStatus == null )
           status = new MultiStatus( plugin, code, children, message, null );
         else
         {
           status = new DialogMultiStatus( plugin, code, children, message, null );
-          ( (DialogMultiStatus)status ).setDialogMessage( m_dialogMessage );
+          ( (DialogMultiStatus)status ).setDialogMessage( m_currentStatus.getMessage() );
         }
 
         m_result.add( status );
       }
+      else if( m_currentStatus != null )
+        m_result.add( m_currentStatus );
 
       m_children.clear();
       m_message.setLength( 0 );
-      m_dialogMessage = null;
+      m_currentStatus = null;
     }
 
     private void addToCurrent( final IStatus status )
