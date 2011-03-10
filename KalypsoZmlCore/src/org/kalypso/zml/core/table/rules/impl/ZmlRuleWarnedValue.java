@@ -45,7 +45,6 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
@@ -76,14 +75,7 @@ public class ZmlRuleWarnedValue extends AbstractZmlTableRule
     try
     {
       final IZmlModelColumn column = reference.getColumn();
-      if( column == null )
-        return false;
-
-      final String dataSource = reference.getDataSource();
-      if( dataSource == null )
-        return false;
-
-      if( dataSource.startsWith( DataSourceHelper.FILTER_SOURCE ) )
+      if( Objects.isNull( column ) )
         return false;
 
       final Integer status = reference.getStatus();
