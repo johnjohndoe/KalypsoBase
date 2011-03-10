@@ -66,6 +66,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
@@ -125,7 +126,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     m_handler = new ZmlTableLayoutHandler( this );
 
-    setLayout( LayoutHelper.createGridLayout() );
+    GridLayout layout = LayoutHelper.createGridLayout();
+    layout.verticalSpacing = 0;
+    setLayout( layout );
     setup( toolkit );
 
     model.addListener( this );
@@ -138,7 +141,11 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     Composite toolbar = null;
     if( hasToolbar( tableType ) )
+    {
       toolbar = toolkit.createComposite( this );
+      toolbar.setLayout( LayoutHelper.createGridLayout() );
+      toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    }
 
     m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_tableViewer.getTable().setLinesVisible( true );
@@ -208,7 +215,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
           final ZmlEditingSupport support = extended.getEditingSupport();
           final TextCellEditor editor = support.getCellEditor();
           ((Text) editor.getControl()).insert( String.valueOf( character ) );
-
         }
       }
     } );
@@ -242,6 +248,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   private void initToolbar( final ZmlTableType tableType, final Composite composite, final FormToolkit toolkit )
   {
     /** process as job in order to handle toolbar IElementUpdate job actions */
+    // FIXME: this is a sign, that thee is a problem elsewhere: the ui-elements should update as soon as the table is
+// loaded
+    // (maybe fire an source-change event after everything is loaded?)
     new UIJob( "" )
     {
       @Override
@@ -251,13 +260,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         if( toolbarReferences == null || toolbarReferences.isEmpty() )
           return Status.OK_STATUS;
 
-        composite.setLayout( LayoutHelper.createGridLayout() );
-        composite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-
-        final ToolBarManager toolBarManager = new ToolBarManager();
+        final ToolBarManager toolBarManager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT | SWT.RIGHT );
 
         final ToolBar control = toolBarManager.createControl( composite );
-        control.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
+        control.setLayoutData( new GridData( SWT.RIGHT, SWT.FILL, true, false ) );
 
         for( final String reference : toolbarReferences )
         {
@@ -267,8 +273,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         toolBarManager.update( true );
 
         toolkit.adapt( control );
-        composite.layout();
-        layout();
+
+        composite.getParent().layout( true, true );
 
         return Status.OK_STATUS;
       }
