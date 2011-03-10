@@ -284,12 +284,19 @@ public abstract class AbstractFeatureVisitorTask extends Task implements IErrorH
   private void executeSynchron( final FeatureVisitorOperation operation ) throws InterruptedException
   {
     final IProgressMonitor monitor = getProgressMonitor();
-    // IMPORTANT: we put the monitor into a SubPRogressMonitor but do not call beginTask
+    // IMPORTANT: we put the monitor into a SubProgressMonitor but do not call beginTask
     // This is important, as the ant-monitor is already started and calling beginTask again will deactivate the monitor.
     final IStatus status = operation.execute( new SubProgressMonitor( monitor, 1 ) );
+    
+    // TODO: we should allow to serialize the status into an file (esepcially, append it to an existing one)
+    
+    // TODO: add an 'failOnError' attribute to the task (o r an error mask), so we may
+    // decide when to throw an exception or not
+    
     if( status.isOK() )
       return;
 
+    // FIXME: check: this gives a huge error message...
     final String message = StatusUtilities.messageFromStatus( status );
     throw new BuildException( message, status.getException() );
   }
