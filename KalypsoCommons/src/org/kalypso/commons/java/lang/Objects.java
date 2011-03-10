@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.java.lang;
 
+
 /**
  * @author Dirk Kuch
  */
@@ -63,5 +64,10 @@ public final class Objects
   public static boolean isNotNull( final Object... objects )
   {
     return !isNull( objects );
+  }
+
+  public static boolean equal( final Object a, final Object b )
+  {
+    return com.google.common.base.Objects.equal( a, b );
   }
 }
