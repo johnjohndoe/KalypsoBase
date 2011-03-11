@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.diagram.data;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -168,6 +169,9 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   @Override
   public IRequest getRequest( )
   {
+    if( Objects.isNull( m_provider ) )
+      return null;
+
     final ILayerProvider layerProvider = m_layer.getProvider();
     if( layerProvider == null )
       return m_provider.getArguments();
