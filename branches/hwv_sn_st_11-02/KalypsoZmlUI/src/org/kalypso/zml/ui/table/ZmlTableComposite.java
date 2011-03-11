@@ -115,7 +115,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private final Set<IZmlTableListener> m_listeners = new LinkedHashSet<IZmlTableListener>();
 
-  private ZmlViewResolutionFilter m_filter;
+  private final ZmlViewResolutionFilter m_filter = new ZmlViewResolutionFilter( this );
 
   private final ZmlTableLayoutHandler m_handler;
 
@@ -126,7 +126,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     m_handler = new ZmlTableLayoutHandler( this );
 
-    GridLayout layout = LayoutHelper.createGridLayout();
+    final GridLayout layout = LayoutHelper.createGridLayout();
     layout.verticalSpacing = 0;
     setLayout( layout );
     setup( toolkit );
@@ -241,7 +241,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private void addBasicFilters( )
   {
-    m_filter = new ZmlViewResolutionFilter( this );
     m_tableViewer.addFilter( m_filter );
   }
 
@@ -324,7 +323,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
           return Status.OK_STATUS;
         }
-      }.schedule( 250 );
+      }.schedule( 400 );
 
   }
 

@@ -81,7 +81,7 @@ public final class ZmlInterpolation
       final double ptrDiff = ptr.getTime() - beforeDate.getTime();
 
       final double value = beforeValue + diff * ptrDiff;
-      column.update( index, value, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_CHECK );
+      column.update( index, value, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
     }
   }
 
@@ -91,7 +91,7 @@ public final class ZmlInterpolation
     {
       try
       {
-        column.update( index, Double.valueOf( 0.0 ), IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_CHECK );
+        column.update( index, Double.valueOf( 0.0 ), IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
       }
       catch( final SensorException e )
       {

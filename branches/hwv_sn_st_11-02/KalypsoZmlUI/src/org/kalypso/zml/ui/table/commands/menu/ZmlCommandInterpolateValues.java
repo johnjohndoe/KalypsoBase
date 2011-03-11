@@ -100,7 +100,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
         final double value = baseValue + step * stepValue;
 
         final IZmlValueReference ref = cell.getValueReference();
-        ref.update( value, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_CHECK );
+        ref.update( value, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
       }
 
       return Status.OK_STATUS;
