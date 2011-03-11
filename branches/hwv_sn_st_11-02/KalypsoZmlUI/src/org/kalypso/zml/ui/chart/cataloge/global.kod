@@ -1118,7 +1118,6 @@
       </Axis>
       <Axis id="date" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Label>Datum</Label>
         <Direction>POSITIVE</Direction>
         <Position>BOTTOM</Position>
         <PreferredAdjustment before="0" range="100" after="0" />
