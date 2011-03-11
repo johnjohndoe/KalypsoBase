@@ -50,7 +50,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableRow;
  */
 public interface IZmlTableSelectionHandler
 {
-  ViewerCell findViewerCell( IZmlTableCell next );
+  ViewerCell findViewerCell( IZmlTableCell cell );
 
   IZmlTableCell getActiveCell( );
 
@@ -60,5 +60,5 @@ public interface IZmlTableSelectionHandler
 
   IZmlTableRow[] getSelectedRows( );
 
-  void setFocusCell( ViewerCell nextViewerCell );
+  void setFocusCell( ViewerCell cell );
 }

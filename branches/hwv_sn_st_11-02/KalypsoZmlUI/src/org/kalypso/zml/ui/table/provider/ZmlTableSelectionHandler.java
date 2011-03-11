@@ -250,9 +250,18 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   public IZmlTableColumn getActiveColumn( )
   {
     final ViewerCell cell = getActiveViewerCell();
-    if( cell == null )
+    if( Objects.isNull( cell ) )
     {
-      return null;
+      if( Objects.isNull( m_position ) )
+        return null;
+
+      final ViewerCell viewerCell = m_table.getTableViewer().getCell( m_position );
+      if( Objects.isNull( viewerCell ) )
+        return null;
+
+      setFocusCell( viewerCell );
+
+      return m_table.findColumn( viewerCell.getColumnIndex() );
     }
 
     return m_table.findColumn( cell.getColumnIndex() );
