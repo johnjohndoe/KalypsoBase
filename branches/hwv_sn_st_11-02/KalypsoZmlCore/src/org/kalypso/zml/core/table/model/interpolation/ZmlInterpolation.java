@@ -45,7 +45,7 @@ import java.util.Date;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.timeseries.interpolation.worker.IInterpolationFilter;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
@@ -81,7 +81,7 @@ public final class ZmlInterpolation
       final double ptrDiff = ptr.getTime() - beforeDate.getTime();
 
       final double value = beforeValue + diff * ptrDiff;
-      column.update( index, value, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
+      column.update( index, value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_OK );
     }
   }
 
@@ -91,7 +91,7 @@ public final class ZmlInterpolation
     {
       try
       {
-        column.update( index, Double.valueOf( 0.0 ), IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
+        column.update( index, Double.valueOf( 0.0 ), IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_OK );
       }
       catch( final SensorException e )
       {

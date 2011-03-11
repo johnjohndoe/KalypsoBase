@@ -46,7 +46,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.timeseries.interpolation.worker.IInterpolationFilter;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
@@ -100,7 +100,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
         final double value = baseValue + step * stepValue;
 
         final IZmlValueReference ref = cell.getValueReference();
-        ref.update( value, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
+        ref.update( value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_OK );
       }
 
       return Status.OK_STATUS;
