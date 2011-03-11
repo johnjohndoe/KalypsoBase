@@ -61,4 +61,6 @@ public interface IZmlTableSelectionHandler
   IZmlTableRow[] getSelectedRows( );
 
   void setFocusCell( ViewerCell cell );
+
+  IZmlTableColumn getSetActiveColumn( );
 }

@@ -42,6 +42,7 @@ package org.kalypso.zml.ui.chart.layer.themes;
 
 import java.util.Date;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -76,19 +77,18 @@ public class ZmlBarLayerRangeHandler
     try
     {
       final ITupleModel model = m_layer.getDataHandler().getModel();
-      if( model == null )
+      if( Objects.isNull( model ) )
         return null;
 
       final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
       final IAxisRange range = model.getRange( dateAxis );
-      if( range == null )
+      if( Objects.isNull( range ) )
         return null;
 
       final Date min = (Date) range.getLower();
       final Date max = (Date) range.getUpper();
 
-      final IDataRange<Number> numRange = new DataRange<Number>( getDateDataOperator().logicalToNumeric( min ), getDateDataOperator().logicalToNumeric( max ) );
-      return numRange;
+      return new DataRange<Number>( getDateDataOperator().logicalToNumeric( min ), getDateDataOperator().logicalToNumeric( max ) );
     }
     catch( final SensorException e )
     {

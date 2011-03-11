@@ -81,7 +81,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableCell;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
  * handles mouse move and menu detect events (active selection of table cells, columns and rows and updating of the
@@ -194,18 +194,18 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     if( columnIndex == -1 )
       return;
 
-    final ExtendedZmlTableColumn zmlColumn = (ExtendedZmlTableColumn) m_table.findColumn( columnIndex );
+    final IExtendedZmlTableColumn column = (IExtendedZmlTableColumn) m_table.findColumn( columnIndex );
 
     if( header )
     {
       final ZmlTableHeaderContextMenuProvider menuProvider = new ZmlTableHeaderContextMenuProvider();
-      menuProvider.fillMenu( zmlColumn, m_contextMenuManager );
+      menuProvider.fillMenu( column, m_contextMenuManager );
       m_contextMenuManager.update( true );
     }
     else
     {
       final ZmlTableContextMenuProvider menuProvider = new ZmlTableContextMenuProvider();
-      menuProvider.fillMenu( zmlColumn, m_contextMenuManager );
+      menuProvider.fillMenu( column, m_contextMenuManager );
       m_contextMenuManager.update( true );
     }
   }
@@ -247,21 +247,27 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   }
 
   @Override
+  public IZmlTableColumn getSetActiveColumn( )
+  {
+    if( Objects.isNull( m_position ) )
+      return null;
+
+    final ViewerCell viewerCell = m_table.getTableViewer().getCell( m_position );
+    if( Objects.isNull( viewerCell ) )
+      return null;
+
+    setFocusCell( viewerCell );
+
+    return m_table.findColumn( viewerCell.getColumnIndex() );
+  }
+
+  @Override
   public IZmlTableColumn getActiveColumn( )
   {
     final ViewerCell cell = getActiveViewerCell();
     if( Objects.isNull( cell ) )
     {
-      if( Objects.isNull( m_position ) )
-        return null;
-
-      final ViewerCell viewerCell = m_table.getTableViewer().getCell( m_position );
-      if( Objects.isNull( viewerCell ) )
-        return null;
-
-      setFocusCell( viewerCell );
-
-      return m_table.findColumn( viewerCell.getColumnIndex() );
+      return getSetActiveColumn();
     }
 
     return m_table.findColumn( cell.getColumnIndex() );
