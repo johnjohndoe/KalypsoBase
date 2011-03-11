@@ -41,8 +41,10 @@ package org.kalypso.zml.core.table.rules.impl;
  *   
  *  ---------------------------------------------------------------------------*/
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
@@ -72,10 +74,17 @@ public class ZmlRuleUserModified extends AbstractZmlTableRule
     try
     {
       final Integer status = reference.getStatus();
-      if( status == null )
+      if( Objects.isNotNull( status ) )
+      {
+        if( KalypsoStati.BIT_USER_MODIFIED == (KalypsoStati.BIT_USER_MODIFIED & status) )
+          return true;
+      }
+
+      final String dataSource = reference.getDataSource();
+      if( dataSource == null )
         return false;
 
-      return KalypsoStati.BIT_USER_MODIFIED == (KalypsoStati.BIT_USER_MODIFIED & status);
+      return IDataSourceItem.SOURCE_MANUAL_CHANGED.equals( dataSource );
     }
     catch( final Throwable t )
     {

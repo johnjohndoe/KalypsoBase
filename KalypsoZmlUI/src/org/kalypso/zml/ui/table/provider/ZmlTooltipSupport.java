@@ -125,7 +125,7 @@ public class ZmlTooltipSupport
 
     for( final ZmlRule rule : activeRules )
     {
-      buffer.append( String.format( "    - %s", rule.getLabel() ) );//$NON-NLS-1$
+      buffer.append( String.format( "    - %s\n", rule.getLabel() ) );//$NON-NLS-1$
     }
 
     return buffer.toString();
