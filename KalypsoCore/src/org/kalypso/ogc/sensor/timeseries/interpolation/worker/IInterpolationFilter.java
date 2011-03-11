@@ -50,6 +50,10 @@ import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
  */
 public interface IInterpolationFilter
 {
+  String SETTING_FILL_LAST_WITH_VALID = "IInterpolationFilter.setting.fillLastWithValid"; //$NON-NLS-1$
+
+  String SETTING_DEFAULT_VALUE = "IInterpolationFilter.setting.defaultValue"; //$NON-NLS-1$
+
   String DATA_SOURCE = DataSourceHelper.FILTER_SOURCE + InterpolationFilter.FILTER_ID;
 
   IObservation getObservation( );

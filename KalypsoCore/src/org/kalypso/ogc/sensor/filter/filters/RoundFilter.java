@@ -52,6 +52,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
@@ -108,6 +109,14 @@ public class RoundFilter extends AbstractObservationFilter
     m_baseobservation = baseObs;
 
     super.initFilter( dummy, baseObs, context );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#appendSettings(org.kalypso.ogc.sensor.metadata.MetadataList)
+   */
+  @Override
+  protected void appendSettings( final MetadataList metadata )
+  {
   }
 
   @Override

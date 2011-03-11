@@ -73,7 +73,11 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException
   {
     m_obs = obs;
+
+    appendSettings( getMetadataList() );
   }
+
+  protected abstract void appendSettings( MetadataList metadata );
 
   @Override
   public boolean equals( final Object obj )

@@ -72,19 +72,25 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
   {
     try
     {
+      final boolean setLastValidValue = ZmlInterpolation.isSetLastValidValue( m_column.getMetadata() );
+      final Double defaultValue = ZmlInterpolation.getDefaultValue( m_column.getMetadata() );
+
       final FindStuetzstellenVisitor visitor = new FindStuetzstellenVisitor();
       m_column.accept( visitor );
 
       final IZmlValueReference[] stuetzstellen = visitor.getStuetzstellen();
       if( ArrayUtils.isEmpty( stuetzstellen ) )
       {
-        ZmlInterpolation.setNull( m_column, 0, m_column.size() );
+
+        ZmlInterpolation.fillValue( m_column, 0, m_column.size(), defaultValue );
         return Status.OK_STATUS;
       }
 
       // set all values 0 before first stuetzstelle
       if( stuetzstellen[0].getModelIndex() > 0 )
-        ZmlInterpolation.setNull( m_column, 0, stuetzstellen[0].getModelIndex() );
+      {
+        ZmlInterpolation.fillValue( m_column, 0, stuetzstellen[0].getModelIndex(), defaultValue );
+      }
 
       for( int index = 0; index < stuetzstellen.length - 2; index++ )
       {
@@ -96,7 +102,12 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
       // set all values 0 after last stuetzstelle
       final IZmlValueReference last = stuetzstellen[stuetzstellen.length - 1];
       if( last.getModelIndex() != m_column.size() - 1 )
-        ZmlInterpolation.setNull( m_column, last.getModelIndex() + 1, m_column.size() );
+      {
+        if( setLastValidValue )
+          ZmlInterpolation.fillValue( m_column, last.getModelIndex() + 1, m_column.size(), (Double) last.getValue() );
+        else
+          ZmlInterpolation.fillValue( m_column, last.getModelIndex() + 1, m_column.size(), defaultValue );
+      }
 
       return Status.OK_STATUS;
     }
