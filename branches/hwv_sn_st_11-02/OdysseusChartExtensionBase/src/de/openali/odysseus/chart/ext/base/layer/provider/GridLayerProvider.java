@@ -15,48 +15,39 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
  * as line chart The following configuration parameters are needed for the LayerProvider: dataSource: URL or relative
  * path leading to observation data
  * 
- * @author burtscher Layer
+ * @author burtscher 
  */
 public class GridLayerProvider extends AbstractLayerProvider
 {
-
   /**
    * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
    */
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    IChartLayer icl = null;
-
     final ILineStyle gridStyle = getStyleSet().getStyle( "line", ILineStyle.class );
 
     try
     {
-      GridOrientation go;
       final String orientation = getParameterContainer().getParameterValue( "orientation", "BOTH" );
 
+      GridOrientation go;
       if( orientation.compareTo( "VERTICAL" ) == 0 )
-      {
         go = GridOrientation.VERTICAL;
-      }
       else if( orientation.compareTo( "HORIZONTAL" ) == 0 )
-      {
         go = GridOrientation.HORIZONTAL;
-      }
       else
-      {
         go = GridOrientation.BOTH;
-      }
 
-      icl = new GridLayer( this, go, gridStyle );
+      return new GridLayer( this, go, gridStyle );
     }
 
     catch( final Exception e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
+      return null;
     }
-    return icl;
   }
 
 }
