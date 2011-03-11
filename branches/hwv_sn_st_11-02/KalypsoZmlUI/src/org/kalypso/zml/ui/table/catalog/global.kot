@@ -201,7 +201,7 @@
       <styleReference>
         <reference>interpolatedValueStyle</reference>
       </styleReference>
-      <label>Interpolierte(r) Wert(e)</label>
+      <label>Berechnete(r) Wert(e)</label>
     </Rule>
     <Rule id="ruleIntervalValue" ruleReference="org.kalypso.zml.ui.core.rule.value.interval" setHeaderIcon="true">
       <styleReference>
