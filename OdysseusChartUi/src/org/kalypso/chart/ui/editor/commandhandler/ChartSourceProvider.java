@@ -86,54 +86,6 @@ public class ChartSourceProvider extends AbstractSourceProvider
 
   private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_CHART_NAME };
 
-  // FIXME: implement similar listeners
-
-// protected final IMapModellListener m_mapModellListener = new MapModellAdapter()
-// {
-// // TODO: we should fire a source change on any change of the modell
-//
-// /**
-// * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
-// * org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
-// */
-// @Override
-// public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme
-// nowActive )
-// {
-// refreshUIelements();
-// }
-//
-// /**
-// * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeContextChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
-// * org.kalypso.ogc.gml.IKalypsoTheme)
-// */
-// @Override
-// public void themeContextChanged( final IMapModell source, final IKalypsoTheme theme )
-// {
-// refreshUIelements();
-// }
-// };
-//
-// private final IMapPanelListener m_mapPanelListener = new MapPanelAdapter()
-// {
-// // TODO: we should fire a source change on any change of the panel
-//
-// /**
-// * @see org.kalypso.ogc.gml.map.listeners.MapPanelAdapter#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
-// * org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
-// */
-// @Override
-// public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
-// {
-// if( oldModel != null )
-// oldModel.removeMapModelListener( m_mapModellListener );
-// if( newModel != null )
-// newModel.addMapModelListener( m_mapModellListener );
-//
-// refreshUIelements();
-// }
-// };
-
   /**
    * This collection contains all services, with which this provider has been registered. Used in order to correctly
    * unregister.
@@ -166,18 +118,16 @@ public class ChartSourceProvider extends AbstractSourceProvider
     m_serviceLocator = serviceLocator;
     m_chart = chart;
 
+    // FIXME: refaktor into helper class
     final IContextService contextService = (IContextService) registerServiceWithSources( serviceLocator, IContextService.class );
     registerServiceWithSources( serviceLocator, IEvaluationService.class );
     registerServiceWithSources( serviceLocator, IHandlerService.class );
     registerServiceWithSources( serviceLocator, IMenuService.class );
 
     m_chartContext = contextService.activateContext( CHART_CONTEXT );
-
-    // TODO: fire source chabge?
-
-    // FIXME: register similar listeners here
-// m_mapPanel.addMapPanelListener( m_mapPanelListener );
-// m_mapPanelListener.onMapModelChanged( m_mapPanel, null, m_mapPanel.getMapModell() );
+    
+    // FIXME: check other source providers; they should do the same -> refaktor into helper class
+    refreshUIelements();
   }
 
   private IServiceWithSources registerServiceWithSources( final IServiceLocator serviceLocator, final Class< ? extends IServiceWithSources> serviceClass )
