@@ -106,14 +106,6 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
     final int width = gc.getClipping().width;
     final int heigth = gc.getClipping().height;
 
-    final FullRectangleFigure figureRect = new FullRectangleFigure();
-    final IPointStyle pointStyle = getPointFigure().getStyle();
-    if( pointStyle.isVisible() )
-    {
-      figureRect.setStyle( new AreaStyle( new ColorFill( pointStyle.getInlineColor() ), pointStyle.getAlpha(), pointStyle.getStroke(), pointStyle.isFillVisible() ) );
-      figureRect.setRectangle( new Rectangle( 0, 0, width, heigth ) );
-      figureRect.paint( gc );
-    }
     for( int i = 0; i < domTicks.length; i++ )
     {
       final Point p1 = new Point( getDomainAxis().numericToScreen( domTicks[i] ), 0 );
@@ -128,6 +120,15 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
       final Point p2 = new Point( width, getTargetAxis().numericToScreen( valTicks[i] ) );
 
       drawLine( gc, p1, p2 );
+    }
+    
+    final FullRectangleFigure figureRect = new FullRectangleFigure();
+    final IPointStyle pointStyle = getPointFigure().getStyle();
+    if( pointStyle.isVisible() )
+    {
+      figureRect.setStyle( new AreaStyle( new ColorFill( pointStyle.getInlineColor() ), pointStyle.getAlpha(), pointStyle.getStroke(), pointStyle.isFillVisible() ) );
+      figureRect.setRectangle( new Rectangle( 0, 0, width, heigth ) );
+      figureRect.paint( gc );
     }
   }
 
