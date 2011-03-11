@@ -44,6 +44,7 @@ import java.util.Date;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.interpolation.worker.IInterpolationFilter;
 import org.kalypso.zml.core.KalypsoZmlCore;
@@ -85,18 +86,36 @@ public final class ZmlInterpolation
     }
   }
 
-  public static void setNull( final IZmlModelColumn column, final int start, final int end )
+  public static void fillValue( final IZmlModelColumn column, final int start, final int end, final Double value )
   {
     for( int index = start; index < end; index++ )
     {
       try
       {
-        column.update( index, Double.valueOf( 0.0 ), IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
+        column.update( index, value, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
       }
       catch( final SensorException e )
       {
         KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       }
     }
+  }
+
+  public static boolean isSetLastValidValue( final MetadataList metadata )
+  {
+    final Object setting = metadata.get( IInterpolationFilter.SETTING_FILL_LAST_WITH_VALID );
+    if( !(setting instanceof String) )
+      return false;
+
+    return Boolean.valueOf( (String) setting );
+  }
+
+  public static Double getDefaultValue( final MetadataList metadata )
+  {
+    final Object setting = metadata.get( IInterpolationFilter.SETTING_DEFAULT_VALUE );
+    if( !(setting instanceof String) )
+      return Double.valueOf( 0.0 );
+
+    return Double.valueOf( (String) setting );
   }
 }

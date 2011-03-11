@@ -46,6 +46,7 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.filters.NOperationFilterType;
 
@@ -97,6 +98,14 @@ public class NOperationFilter extends AbstractObservationFilter
     super.initFilter( null, baseObs, null );
 
     m_innerObservations = (IObservation[]) conf;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#appendSettings(org.kalypso.ogc.sensor.metadata.MetadataList)
+   */
+  @Override
+  protected void appendSettings( final MetadataList metadata )
+  {
   }
 
   @Override

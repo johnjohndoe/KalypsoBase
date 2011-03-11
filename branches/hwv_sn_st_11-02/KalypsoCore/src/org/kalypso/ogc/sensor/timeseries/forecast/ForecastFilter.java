@@ -76,6 +76,14 @@ public class ForecastFilter extends AbstractObservationFilter
   }
 
   /**
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#appendSettings(org.kalypso.ogc.sensor.metadata.MetadataList)
+   */
+  @Override
+  protected void appendSettings( final MetadataList metadata )
+  {
+  }
+
+  /**
    * @see org.kalypso.ogc.sensor.IObservation#getValues(org.kalypso.ogc.sensor.request.IRequest)
    * @param args
    *          if <code>args!=null</code>, then the args of the inner observations will be overwritten, usually a

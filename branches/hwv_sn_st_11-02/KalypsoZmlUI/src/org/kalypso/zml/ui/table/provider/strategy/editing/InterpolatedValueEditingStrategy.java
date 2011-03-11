@@ -139,11 +139,22 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
   private void interpolate( final IZmlValueReference before, final IZmlValueReference current, final int direction ) throws SensorException
   {
     final IZmlModelColumn column = getColumn().getModelColumn();
+    final Double defaultValue = ZmlInterpolation.getDefaultValue( column.getMetadata() );
 
     if( direction < 0 && before == null )
-      ZmlInterpolation.setNull( column, 0, current.getModelIndex() );
+    {
+      ZmlInterpolation.fillValue( column, 0, current.getModelIndex(), defaultValue );
+    }
     else if( direction > 0 && current == null )
-      ZmlInterpolation.setNull( column, before.getModelIndex() + 1, column.size() );
+    {
+      if( ZmlInterpolation.isSetLastValidValue( column.getMetadata() ) )
+      {
+        final Double value = (Double) before.getValue();
+        ZmlInterpolation.fillValue( column, before.getModelIndex() + 1, column.size(), value );
+      }
+      else
+        ZmlInterpolation.fillValue( column, before.getModelIndex() + 1, column.size(), defaultValue );
+    }
     else
       ZmlInterpolation.interpolate( column, before, current );
   }
