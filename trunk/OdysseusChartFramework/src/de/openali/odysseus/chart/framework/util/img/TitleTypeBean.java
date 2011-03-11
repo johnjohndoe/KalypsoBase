@@ -67,6 +67,10 @@ public class TitleTypeBean
 
   private Insets m_insets = new Insets( 0, 0, 0, 0 );
 
+  public TitleTypeBean()
+  {
+    // default;
+  }
   public TitleTypeBean( final String text )
   {
     m_text = text;

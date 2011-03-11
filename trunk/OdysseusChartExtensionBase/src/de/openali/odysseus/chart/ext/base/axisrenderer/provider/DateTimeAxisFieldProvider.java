@@ -40,11 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.ext.base.axisrenderer.provider;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.joda.time.DateTimeFieldType;
-import org.joda.time.DurationFieldType;
 
 import de.openali.odysseus.chart.ext.base.axisrenderer.DateTimeAxisField;
 import de.openali.odysseus.chart.ext.base.axisrenderer.IDateTimeAxisField;
@@ -55,19 +51,6 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
  */
 public class DateTimeAxisFieldProvider implements IDateTimeAxisFieldProvider
 {
-
-  private final Map<DurationFieldType, IDateTimeAxisField> m_fieldMap = new HashMap<DurationFieldType, IDateTimeAxisField>();
-
-  public DateTimeAxisFieldProvider( )
-  {
-    m_fieldMap.put( DurationFieldType.millis(), new DateTimeAxisField( DateTimeFieldType.millisOfSecond(), "dd.MM\nHH:mm:ss:SSS", new int[] { 1, 10, 100, 500 }, new int[] {} ) );
-    m_fieldMap.put( DurationFieldType.seconds(), new DateTimeAxisField( DateTimeFieldType.secondOfMinute(), "dd.MM\nHH:mm:ss", new int[] { 1, 15, 30 }, new int[] {} ) );
-    m_fieldMap.put( DurationFieldType.minutes(), new DateTimeAxisField( DateTimeFieldType.minuteOfHour(), "dd.MM\nHH:mm:ss", new int[] { 1, 15, 30 }, new int[] {} ) );
-    m_fieldMap.put( DurationFieldType.hours(), new DateTimeAxisField( DateTimeFieldType.hourOfDay(), "dd.MM\nHH:mm", new int[] { 1, 2, 4, 6, 12 }, new int[] { 12 } ) );
-    m_fieldMap.put( DurationFieldType.days(), new DateTimeAxisField( DateTimeFieldType.dayOfMonth(), "YYYY.dd.MM\ndddd", new int[] { 1, 2, 7, 14 }, new int[] {7, 14, 28 } ) );
-    m_fieldMap.put( DurationFieldType.months(), new DateTimeAxisField( DateTimeFieldType.monthOfYear(), "YYYY.dd.MM", new int[] { 1, 2, 3, 4, 6 }, new int[] { 6 } ) );
-
-  }
 
   @Override
   public IDateTimeAxisField getDateTimeAxisField( final IDataRange<Number> range )
@@ -80,20 +63,18 @@ public class DateTimeAxisFieldProvider implements IDateTimeAxisFieldProvider
     final long day = 24 * hour;
 
     if( dr < 3 * sec )
-      return m_fieldMap.get( DurationFieldType.millis() );
+      return new DateTimeAxisField( DateTimeFieldType.millisOfSecond(), "YYYY.dd.MM\nHH:mm:ss:SSS", new int[] { 1, 10, 100, 500 }, new int[] {} );
     else if( dr < 3 * min )
-      return m_fieldMap.get( DurationFieldType.seconds() );
+      return new DateTimeAxisField( DateTimeFieldType.secondOfMinute(), "YY.dd.MM\nHH:mm:ss", new int[] { 1, 15, 30 }, new int[] {} );
     else if( dr < 3 * hour )
-      return m_fieldMap.get( DurationFieldType.minutes() );
-     else if( dr < 7 * day )
-      return m_fieldMap.get( DurationFieldType.hours() );
+      return new DateTimeAxisField( DateTimeFieldType.minuteOfHour(), "YY.dd.MM\nHH:mm:ss", new int[] { 1, 15, 30 }, new int[] {} );
+    else if( dr < 3 * day )
+      return new DateTimeAxisField( DateTimeFieldType.minuteOfDay(), "dd.MM\nHH:mm", new int[] { 1,15,30 }, new int[] { } );
+    else if( dr < 7 * day )
+      return new DateTimeAxisField( DateTimeFieldType.hourOfDay(), "dd.MM\nHH:mm", new int[] {1,2,4,6,8,12}, new int[] {12 } );
     else if( dr < 30 * day )
-      return m_fieldMap.get( DurationFieldType.days() );
-    else if( dr < 90 * day )
-      return m_fieldMap.get( DurationFieldType.months() );
+      return new DateTimeAxisField( DateTimeFieldType.dayOfMonth(), "YYYY.dd.MM\ndddd", new int[] { 1, 2, 7, 14 }, new int[] { 7, 14, 28 } );
     else
-      return new DateTimeAxisField( DateTimeFieldType.millisOfSecond(), "YYYY.dd\nMM:HH\nss.SSS", new int[] { 1 }, new int[] {} );
-
+      return new DateTimeAxisField( DateTimeFieldType.monthOfYear(), "YYYY.dd.MM", new int[] { 1, 2, 3, 4, 6 }, new int[] { 6 } );
   }
-
 }

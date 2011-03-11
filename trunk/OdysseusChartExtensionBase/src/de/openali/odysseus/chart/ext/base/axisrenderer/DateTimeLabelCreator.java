@@ -45,6 +45,8 @@ import org.joda.time.DateTime;
 import de.openali.odysseus.chart.ext.base.axisrenderer.provider.DateTimeAxisFieldProvider;
 import de.openali.odysseus.chart.ext.base.axisrenderer.provider.IDateTimeAxisFieldProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.util.img.GenericChartLabelRenderer;
+import de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer;
 
 /**
  * @author kimwerner
@@ -53,16 +55,24 @@ public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabel
 {
   private final IDateTimeAxisFieldProvider m_dateTimeFieldProvider;
 
+  private final IChartLabelRenderer m_tickRenderer;
+
   public DateTimeLabelCreator( final IDateTimeAxisFieldProvider dateTimeFieldProvider )
   {
+    this( new GenericChartLabelRenderer(), dateTimeFieldProvider );
+
+  }
+
+  public DateTimeLabelCreator( final IChartLabelRenderer tickLabelRenderer, final IDateTimeAxisFieldProvider dateTimeFieldProvider )
+  {
     m_dateTimeFieldProvider = dateTimeFieldProvider;
+    m_tickRenderer = tickLabelRenderer;
 
   }
 
   public DateTimeLabelCreator( )
   {
-    m_dateTimeFieldProvider = new DateTimeAxisFieldProvider();
-
+    this( new GenericChartLabelRenderer(), new DateTimeAxisFieldProvider() );
   }
 
   /**
