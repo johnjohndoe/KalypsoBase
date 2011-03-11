@@ -41,14 +41,18 @@
 package org.kalypso.zml.ui.chart.layer.themes;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
@@ -57,6 +61,7 @@ import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -168,22 +173,64 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public void paint( final GC gc )
   {
-    drawLineTheme( gc );
-    drawSelectionTheme( gc );
+    final IObservation observation = m_data.getObservation();
+    if( observation == null )
+      return;
+
+    final DateRange range = getRange();
+    final Rectangle oldClip = gc.getClipping();
+    try
+    {
+      setClip( gc, range );
+      drawLineTheme( gc, observation );
+// drawSelectionTheme();
+    }
+    finally
+    {
+      gc.setClipping( oldClip );
+    }
   }
 
-  private void drawLineTheme( final GC gc )
+  private void setClip( final GC gc, final DateRange range )
+  {
+    if( range == null || range.getFrom() == null && range.getTo() == null )
+      return;
+
+    final ICoordinateMapper mapper = getCoordinateMapper();
+    final Point screenSize = mapper.getScreenSize();
+
+    final int fromScreen = getDomainScreen( range.getFrom(), 0 );
+    final int toScreen = getDomainScreen( range.getTo(), screenSize.x );
+
+    gc.setClipping( fromScreen, 0, toScreen - fromScreen, screenSize.y );
+  }
+
+  private int getDomainScreen( final Date domainValue, final int defaultValue )
+  {
+    if( domainValue == null )
+      return defaultValue;
+
+    final Point screen = getCoordinateMapper().numericToScreen( getRangeHandler().getDateDataOperator().logicalToNumeric( domainValue ), 0.0 );
+    return screen.x;
+  }
+
+  private DateRange getRange( )
+  {
+    final IRequest request = m_data.getRequest();
+    if( request == null )
+      return null;
+
+    return request.getDateRange();
+  }
+
+  private void drawLineTheme( final GC gc, final IObservation observation )
   {
     try
     {
-      final IObservation observation = m_data.getObservation();
-      if( observation == null )
-        return;
-
       setLineThemeStyles();
 
       final List<Point> path = new ArrayList<Point>();
-      observation.accept( new LineLayerModelVisitor( this, path, getFilters() ), m_data.getRequest() );
+      observation.accept( new LineLayerModelVisitor( this, path, getFilters() ), null );
 
       drawLine( gc, path );
       drawPoints( gc, path );
@@ -194,12 +241,12 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     }
   }
 
-  private void drawSelectionTheme( final GC gc )
-  {
-    final de.openali.odysseus.chart.framework.model.mapper.IAxis domainAxis = getDomainAxis();
-    if( domainAxis.getSelection() == null )
-      return;
-  }
+// private void drawSelectionTheme( )
+// {
+// final de.openali.odysseus.chart.framework.model.mapper.IAxis domainAxis = getDomainAxis();
+// if( domainAxis.getSelection() == null )
+// return;
+// }
 
   /**
    * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setDataHandler(org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler)

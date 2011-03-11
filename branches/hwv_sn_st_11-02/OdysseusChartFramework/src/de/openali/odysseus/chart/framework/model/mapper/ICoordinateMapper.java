@@ -59,4 +59,6 @@ public interface ICoordinateMapper
 
   Point logicalToScreen( Object domainValue, Object targetValue );
 
+  Point getScreenSize( );
+
 }
