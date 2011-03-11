@@ -76,13 +76,6 @@ public class OrdinalAxisRenderer implements IAxisRenderer
 
   private int m_fixedMaxWidth;
 
-  public void setFixedWidth( final int minWidth, final int maxWidth )
-  {
-    m_fixedMinWidth = minWidth;
-
-    m_fixedMaxWidth = maxWidth;
-  }
-
   private ITextStyle m_tickStyle = null;
 
   private final Map<String, Object> m_dataMap = new HashMap<String, Object>();
@@ -90,6 +83,21 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   private final IAxisContentProvider m_contentProvider;
 
   private final AxisRendererConfig m_config;
+
+  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config )
+  {
+    this( id, config, null, null );
+  }
+
+  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IAxisContentProvider contentProvider )
+  {
+    this( id, config, null, null, contentProvider );
+  }
+
+  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IChartLabelRenderer tickLabelRenderer, final IAxisContentProvider contentProvider )
+  {
+    this( id, config, tickLabelRenderer, null, contentProvider );
+  }
 
   public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IChartLabelRenderer tickLabelRenderer, final IChartLabelRenderer axisTitleRenderer, final IAxisContentProvider contentProvider )
   {
@@ -105,21 +113,6 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     m_id = id;
     m_contentProvider = contentProvider;
     m_config = config;
-  }
-
-  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IChartLabelRenderer tickLabelRenderer, final IAxisContentProvider contentProvider )
-  {
-    this( id, config, tickLabelRenderer, null, contentProvider );
-  }
-
-  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IAxisContentProvider contentProvider )
-  {
-    this( id, config, null, null, contentProvider );
-  }
-
-  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config )
-  {
-    this( id, config, null, null );
   }
 
   /**
@@ -416,6 +409,13 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   {
     m_dataMap.put( identifier, data );
 
+  }
+
+  public void setFixedWidth( final int minWidth, final int maxWidth )
+  {
+    m_fixedMinWidth = minWidth;
+
+    m_fixedMaxWidth = maxWidth;
   }
 
   /**
