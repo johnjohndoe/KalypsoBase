@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.controls;
+package org.kalypso.ui.controls.images;
 
 import java.awt.Insets;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.ui.controls.listener.IImagePropertyChangedListener;
+import org.kalypso.ui.controls.images.listener.IImagePropertyChangedListener;
 
 /**
  * This composite provides controls for editing image properties like width, height and format.

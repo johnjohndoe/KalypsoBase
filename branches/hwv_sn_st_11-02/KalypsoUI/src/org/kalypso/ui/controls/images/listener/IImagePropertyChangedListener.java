@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.controls.listener;
+package org.kalypso.ui.controls.images.listener;
 
 import java.awt.Insets;
 

@@ -43,30 +43,24 @@ package org.kalypso.ogc.gml.map.handlers.dialogs;
 import java.awt.Insets;
 import java.io.File;
 
-import org.apache.commons.io.FilenameUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.controls.ImagePropertiesComposite;
-import org.kalypso.ui.controls.listener.IImagePropertyChangedListener;
+import org.kalypso.ui.controls.files.FileChooserComposite;
+import org.kalypso.ui.controls.files.listener.IFileChooserListener;
+import org.kalypso.ui.controls.images.ImagePropertiesComposite;
+import org.kalypso.ui.controls.images.listener.IImagePropertyChangedListener;
 
 /**
  * This dialog enables the selection of the format and a target for the image file.
@@ -116,9 +110,9 @@ public class ScreenshotDialog extends Dialog
   private IDialogSettings m_dialogSettings;
 
   /**
-   * The text field, which contains the path of the target.
+   * The file chooser composite.
    */
-  protected Text m_targetPathText;
+  protected FileChooserComposite m_fileComposite;
 
   /**
    * The path of the target.
@@ -197,7 +191,7 @@ public class ScreenshotDialog extends Dialog
     super( shell );
 
     m_dialogSettings = null;
-    m_targetPathText = null;
+    m_fileComposite = null;
     m_targetPath = null;
     m_imageComposite = null;
     m_imageWidth = defaultWidth;
@@ -223,7 +217,7 @@ public class ScreenshotDialog extends Dialog
     super( parentShell );
 
     m_dialogSettings = null;
-    m_targetPathText = null;
+    m_fileComposite = null;
     m_targetPath = null;
     m_imageComposite = null;
     m_imageWidth = defaultWidth;
@@ -251,68 +245,22 @@ public class ScreenshotDialog extends Dialog
     main.setLayout( new GridLayout( 1, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    /* Create a group. */
-    Group targetGroup = new Group( main, SWT.NONE );
-    targetGroup.setLayout( new GridLayout( 2, false ) );
-    targetGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    targetGroup.setText( "Zieldatei (ohne Endung)" );
-
-    /* Create a text field. */
-    m_targetPathText = new Text( targetGroup, SWT.BORDER );
-    GridData targetData = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    targetData.widthHint = 350;
-    m_targetPathText.setLayoutData( targetData );
-    m_targetPathText.addModifyListener( new ModifyListener()
+    /* Create the file chooser composite. */
+    m_fileComposite = new FileChooserComposite( main, SWT.NONE, null, null, "Zieldatei (ohne Endung)", m_targetPath );
+    m_fileComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_fileComposite.addFileChooserListener( new IFileChooserListener()
     {
       /**
-       * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+       * @see org.kalypso.ui.controls.files.listener.IFileChooserListener#pathChanged(java.lang.String)
        */
       @Override
-      public void modifyText( ModifyEvent e )
+      public void pathChanged( String path )
       {
-        /* Get the source. */
-        Text source = (Text) e.getSource();
-
         /* Store the text. */
-        m_targetPath = source.getText();
+        m_targetPath = path;
 
         /* Check, if all data entered is correct. */
         checkDialogComplete();
-      }
-    } );
-
-    /* Create a button. */
-    Button targetButton = new Button( targetGroup, SWT.NONE );
-    targetButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
-    targetButton.setText( "..." ); //$NON-NLS-1$
-    targetButton.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( SelectionEvent e )
-      {
-        /* Get the source. */
-        Button source = (Button) e.getSource();
-
-        /* Create the dialog. */
-        FileDialog dialog = new FileDialog( source.getParent().getShell(), SWT.OPEN );
-        dialog.setText( "Bildexport" );
-        File f = new File( m_targetPathText.getText() );
-        dialog.setFilterPath( f.getPath() );
-        dialog.setFileName( "" ); //$NON-NLS-1$
-
-        /* Get the selection of the user. */
-        String targetPath = dialog.open();
-        if( targetPath == null || targetPath.length() == 0 )
-          return;
-
-        /* Remove the file extension. */
-        targetPath = FilenameUtils.removeExtension( targetPath );
-
-        /* Adjust the text field. */
-        m_targetPathText.setText( targetPath );
       }
     } );
 
@@ -442,7 +390,7 @@ public class ScreenshotDialog extends Dialog
     /* The path of the target. */
     String targetPath = m_dialogSettings.get( SETTINGS_TARGET_PATH );
     if( targetPath != null && targetPath.length() > 0 )
-      m_targetPathText.setText( targetPath );
+      m_fileComposite.setSelectedPath( targetPath );
 
     /* The width of the image. */
     if( m_imageWidth < 0 )

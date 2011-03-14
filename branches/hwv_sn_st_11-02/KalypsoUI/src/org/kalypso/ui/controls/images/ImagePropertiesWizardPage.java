@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.controls;
+package org.kalypso.ui.controls.images;
 
 import java.awt.Insets;
 
@@ -48,7 +48,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
-import org.kalypso.ui.controls.listener.IImagePropertyChangedListener;
+import org.kalypso.ui.controls.images.listener.IImagePropertyChangedListener;
 
 /**
  * A page for selecting export information for an image. If a publishing configuration is given it will store the

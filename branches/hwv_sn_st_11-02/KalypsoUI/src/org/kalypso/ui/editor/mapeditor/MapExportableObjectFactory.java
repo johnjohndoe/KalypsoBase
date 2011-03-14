@@ -49,7 +49,7 @@ import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.IPublishingConfiguration;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ui.controls.ImagePropertiesWizardPage;
+import org.kalypso.ui.controls.images.ImagePropertiesWizardPage;
 
 /**
  * The map exportable object factory.
