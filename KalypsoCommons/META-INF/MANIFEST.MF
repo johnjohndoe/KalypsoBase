@@ -3,8 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoCommons Plug-in
 Bundle-SymbolicName: org.kalypso.commons;singleton:=true
 Bundle-Version: 10.10.1.qualifier
-Bundle-ClassPath: .,
- lib/apache/lang/commons-lang-2.6.jar,
+Bundle-ClassPath: lib/apache/lang/commons-lang-2.6.jar,
  lib/modified-httpclient-contribs.jar,
  lib/jaxb_2_1_7/activation.jar,
  lib/jaxb_2_1_7/jaxb-api.jar,
@@ -57,7 +56,8 @@ Bundle-ClassPath: .,
  lib/slf4j_1_6_1/slf4j-simple-1.6.1.jar,
  lib/itext-5.0.5/iText-5.0.5.jar,
  lib/pdf-renderer/PDFRenderer.jar,
- lib/guava/guava-r08.jar
+ lib/guava/guava-r08.jar,
+ .
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin

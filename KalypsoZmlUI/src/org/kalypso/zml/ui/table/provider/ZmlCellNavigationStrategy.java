@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
-import org.eclipse.jface.snippets.viewers.TableCursor;
 import org.eclipse.jface.viewers.CellNavigationStrategy;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ViewerCell;
@@ -48,6 +47,7 @@ import org.eclipse.jface.viewers.ViewerRow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.ui.table.cursor.TableCursor;
 
 /**
  * @author Dirk Kuch

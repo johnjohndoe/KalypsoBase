@@ -155,7 +155,7 @@
 	<!-- Available parameters :                                                -->
 	<!--   destination.temp.folder - destination folder                        -->
 	<!-- ===================================================================== -->
-	<target name="pre.clean">     
+	<target name="pre.clean">
 		<antcall target="clean"/>
 	</target>
 
