@@ -10,7 +10,7 @@
  *     
  *     @author changed / updated by: Dirk Kuch
  *******************************************************************************/
-package org.eclipse.jface.snippets.viewers;
+package org.kalypso.zml.ui.table.cursor;
 
 import org.eclipse.jface.util.Util;
 import org.eclipse.jface.viewers.TableViewer;

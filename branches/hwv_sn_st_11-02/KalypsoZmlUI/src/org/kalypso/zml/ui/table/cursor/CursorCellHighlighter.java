@@ -11,7 +11,7 @@
  *     @author changed / updated by: Dirk Kuch
  ******************************************************************************/
 
-package org.eclipse.jface.snippets.viewers;
+package org.kalypso.zml.ui.table.cursor;
 
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
