@@ -83,4 +83,8 @@ public class RepositoryRegistry implements IRepositoryRegistry
     m_repositories.put( protocol, repository );
   }
 
+  public IRepository[] getRepositories( )
+  {
+    return m_repositories.values().toArray( new IRepository[] {} );
+  }
 }

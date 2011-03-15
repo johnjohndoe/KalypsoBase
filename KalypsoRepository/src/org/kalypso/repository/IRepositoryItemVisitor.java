@@ -41,14 +41,9 @@
 package org.kalypso.repository;
 
 /**
- * @author Gernot Belger
  * @author Dirk Kuch
  */
-public interface IRepositoryRegistry
+public interface IRepositoryItemVisitor
 {
-  IRepository getRepository( String protocol );
-
-  void registerProtocol( final IRepository repository );
-
-  IRepository[] getRepositories( );
+  boolean visit( IRepositoryItem item ) throws RepositoryException;
 }

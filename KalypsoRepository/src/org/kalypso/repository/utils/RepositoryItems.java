@@ -43,44 +43,29 @@ package org.kalypso.repository.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import jregex.Pattern;
+import jregex.RETokenizer;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.RepositoryException;
 
 /**
  * @author Dirk Kuch
  */
-public final class RepositoryItemUtils
+public final class RepositoryItems
 {
-  private static final int PARAMETER_START_BORDER = 4;
+  public static final int PARAMETER_START_BORDER = 4;
 
-  public static final String ZRXP_ITEM_IDENTIFIER = "Zrxp_";
+  public static final String ZRXP_ITEM_IDENTIFIER = "Zrxp_"; //$NON-NLS-1$
+
+  private static final Pattern ZRXP_ITEM_PATTERN = new Pattern( "^[\\w\\d_]+\\.Zrxp_.*" ); //$NON-NLS-1$
 
   public static final int ZRXP_PRIORITY_ITEM_OFFSET = 10;
 
-  private RepositoryItemUtils( )
+  private RepositoryItems( )
   {
-  }
-
-  /**
-   * Return only the item-id part of the full id. If id is null, it returns null.
-   * 
-   * @return the id part of the item. This is pretty much straightforward since the convention (as defined in the
-   *         IRepositoryItem interface) specifies that an Item's identifier should be build using the repository id +
-   *         item specific id (follows URL specification): repository-id://item-id-part
-   */
-  public static String getItemId( final String fullId )
-  {
-    if( fullId == null )
-      return null;
-
-    final int ix = fullId.indexOf( "://" ); //$NON-NLS-1$
-    if( ix == -1 )
-      throw new IllegalArgumentException( "Identifier does not follow the URL-rule: " + fullId ); //$NON-NLS-1$
-
-    return fullId.substring( ix + 3 );
   }
 
   /**
@@ -139,50 +124,31 @@ public final class RepositoryItemUtils
     return StringUtils.chop( parent );
   }
 
+  private static final Pattern PATTERN_PARENT_ITEM_TOKINZER = new Pattern( "\\.[\\w\\d_]*$" ); //$NON-NLS-1$
+
   public static String getParentItemId( final String identifier )
   {
-    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
-    if( parts.length == 1 )
-      return RepositoryUtils.getRepositoryId( identifier );
+    final RETokenizer tokenizer = new RETokenizer( PATTERN_PARENT_ITEM_TOKINZER, identifier );
 
-    String parent = "";
-    for( int i = 0; i < parts.length - 1; i++ )
-    {
-      parent += parts[i] + "."; //$NON-NLS-1$
-    }
-
-    return StringUtils.chop( parent );
+    return tokenizer.nextToken();
   }
+
+  private static final Pattern PATTERN_PLAIN_ID_TOKENIZER = new Pattern( ".*\\://" ); //$NON-NLS-1$
 
   /**
    * @return "plain" item id without "protocol" (the original source, like zml-proxy://, datastore://)
    */
   public static String getPlainId( final String identifier )
   {
-    final String[] parts = identifier.split( "://" ); //$NON-NLS-1$
+    if( isPlainId( identifier ) )
+      return identifier;
 
-    /**
-     * sometime an identifier looks like:<br/>
-     * <br/>
-     * filter://org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter?source_0=
-     * datastore://HVZ_Modelle_Saale.Saale_Prio_1.41524.N
-     */
-    if( parts.length > 2 )
-    {
-      final StringBuffer plain = new StringBuffer();
+    if( PATTERN_PLAIN_ID_TOKENIZER.matches( identifier ) )
+      return ""; // "plain id" of an IRepository
 
-      for( int i = 0; i < parts.length; i++ )
-      {
-        if( i == parts.length - 1 )
-          plain.append( parts[i] + "://" ); //$NON-NLS-1$
-        else
-          plain.append( parts[i] + "://" ); //$NON-NLS-1$
-      }
+    final RETokenizer tokenizer = new RETokenizer( PATTERN_PLAIN_ID_TOKENIZER, identifier );
 
-      return plain.toString();
-    }
-
-    return parts[parts.length - 1];
+    return tokenizer.nextToken();
   }
 
   /**
@@ -267,14 +233,6 @@ public final class RepositoryItemUtils
     return StringUtils.equalsIgnoreCase( type1, type2 );
   }
 
-  /**
-   * @return wiski://HVZ_Modelle_Elbe.Elbe_Prio_1.56500 -> will return true
-   */
-  public static boolean isStationItem( final IRepositoryItem item )
-  {
-    return isStationItem( item.getIdentifier() );
-  }
-
   public static boolean isStationItem( final String identifier )
   {
     final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
@@ -306,7 +264,7 @@ public final class RepositoryItemUtils
 
   public static boolean isPlainId( final String identifier )
   {
-    return !identifier.contains( "\\:" ); //$NON-NLS-1$
+    return !identifier.contains( "://" ); //$NON-NLS-1$
   }
 
   public static boolean isForecast( final IRepositoryItem item )
@@ -314,22 +272,17 @@ public final class RepositoryItemUtils
     return isForecast( item.getIdentifier() );
   }
 
+  private static final Pattern PATTERN_IS_FORECAST = new Pattern( "[\\w\\d_]+\\.[\\w\\d]+_Prog_[\\w\\d_]+(\\..*)?" ); //$NON-NLS-1$
+
   public static boolean isForecast( final String identifier )
   {
     /**
      * the group has to be forecast, not the station value itself's
      */
-    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
-    if( parts.length > 2 )
-    {
-      if( parts[1].toLowerCase().contains( "_prog_" ) )//$NON-NLS-1$
-        return true;
-      else if( parts[parts.length - 1].toLowerCase().contains( "prognose" ) )
-        return true;
+    // like: HVZ_Modelle_Bode.Bode_Prog_Neu_Pegel.579040
+    final String plain = getPlainId( identifier );
 
-    }
-
-    return false;
+    return PATTERN_IS_FORECAST.matches( plain );
   }
 
   public static boolean isRepositoryItem( final String identifier )
@@ -349,7 +302,7 @@ public final class RepositoryItemUtils
 
   public static boolean isZrxpItem( final String identifier )
   {
-    return identifier.contains( ZRXP_ITEM_IDENTIFIER );
+    return ZRXP_ITEM_PATTERN.matches( getPlainId( identifier ) );
   }
 
   /**
@@ -387,59 +340,6 @@ public final class RepositoryItemUtils
     return getPlainId( part );
   }
 
-  public static String resolveItemName( final IRepositoryItem item ) throws RepositoryException
-  {
-    if( item instanceof IRepository )
-      return item.getIdentifier();
-
-    String base = ""; //$NON-NLS-1$
-
-    final IRepositoryItem parent = item.getParent();
-    if( parent != null )
-      base += resolveItemName( parent );
-
-    if( base.endsWith( "/" ) || base.endsWith( "." ) ) //$NON-NLS-1$
-      base += item.getName();
-    else
-      base += "." + item.getName(); //$NON-NLS-1$
-
-    return base;
-  }
-
-  /**
-   * @param parameterUrlParts
-   *          assumption an identifier of a parameter consists of 'x' parts
-   */
-  public static boolean isParameterItem( final IRepositoryItem item, final int parameterUrlParts ) throws RepositoryException
-  {
-    if( isVirtual( item ) )
-    {
-      final String identifier = item.getIdentifier();
-      final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
-
-      return parts.length == parameterUrlParts;
-    }
-
-    if( !ArrayUtils.isEmpty( item.getChildren() ) )
-      return false;
-
-    final String identifier = item.getIdentifier();
-    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
-
-    if( parts.length == parameterUrlParts )
-    {
-      return true;
-    }
-    else if( parts.length - 1 == parameterUrlParts )
-    {
-      // is prognose
-      if( isForecast( item ) )
-        return true;
-    }
-
-    return false;
-  }
-
   public static boolean isVirtual( final IRepositoryItem item )
   {
     return isVirtual( item.getIdentifier() );
@@ -452,7 +352,7 @@ public final class RepositoryItemUtils
 
   public static int countParts( final String identifier )
   {
-    final String[] parts = identifier.split( "\\." );
+    final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
 
     return parts.length;
   }

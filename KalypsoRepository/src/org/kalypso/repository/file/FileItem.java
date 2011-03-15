@@ -47,6 +47,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.IRepositoryItemVisitor;
+import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.utils.RepositoryVisitors;
 
 /**
  * An item of a <code>FileRepository</code> that represents a <code>File</code>.
@@ -197,4 +200,12 @@ public class FileItem implements IRepositoryItem
     return false;
   }
 
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#accept(org.kalypso.repository.IRepositoryItemVisitor)
+   */
+  @Override
+  public void accept( final IRepositoryItemVisitor visitor ) throws RepositoryException
+  {
+    RepositoryVisitors.accept( this, visitor );
+  }
 }
