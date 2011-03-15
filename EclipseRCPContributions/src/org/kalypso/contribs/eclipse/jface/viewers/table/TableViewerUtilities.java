@@ -38,31 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.swt.layout;
+package org.kalypso.contribs.eclipse.jface.viewers.table;
 
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Layout;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
 
 /**
- * @author Dirk Kuch
+ * This class provides functions for dealing with table viewers.
+ * 
+ * @author Holger Albert
  */
-public final class LayoutHelper
+public class TableViewerUtilities
 {
-  private LayoutHelper( )
+  /**
+   * The constructor.
+   */
+  public TableViewerUtilities( )
   {
   }
 
-  public static GridLayout createGridLayout( final int numColumns )
+  /**
+   * This function adds a listener to the parent of a table of a table viewer, which adjusts the width of all columns,
+   * to match the client area of the contained table. Very usefull if you only have one column or some more with small
+   * content.
+   * 
+   * @param viewer
+   *          The table viewer.
+   */
+  public static void addColumnsResizeListener( TableViewer viewer )
   {
-    final GridLayout layout = new GridLayout( numColumns, false );
-    layout.marginHeight = layout.marginWidth = 0;
+    /* Get the table. */
+    Table table = viewer.getTable();
+    if( table.getColumnCount() == 0 )
+      return;
 
-    return layout;
+    /* Add the listener. */
+    Composite parent = table.getParent();
+    parent.addControlListener( new ColumnsResizeControlListener( table ) );
   }
-
-  public static GridLayout createGridLayout( )
-  {
-    return createGridLayout( 1 );
-  }
-
 }

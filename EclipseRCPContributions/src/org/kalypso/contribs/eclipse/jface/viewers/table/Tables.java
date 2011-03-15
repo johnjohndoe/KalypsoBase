@@ -38,31 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.swt.layout;
+package org.kalypso.contribs.eclipse.jface.viewers.table;
 
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public final class LayoutHelper
+public final class Tables
 {
-  private LayoutHelper( )
+  private Tables( )
   {
+
   }
 
-  public static GridLayout createGridLayout( final int numColumns )
+  public static int getX( final Table table, final TableColumn column )
   {
-    final GridLayout layout = new GridLayout( numColumns, false );
-    layout.marginHeight = layout.marginWidth = 0;
+    int ptrX = 0;
 
-    return layout;
+    final TableColumn[] columns = table.getColumns();
+    for( final TableColumn c : columns )
+    {
+      if( c == column )
+        return ptrX + 1; // small offset
+
+      ptrX += c.getWidth();
+    }
+
+    return -1;
   }
-
-  public static GridLayout createGridLayout( )
-  {
-    return createGridLayout( 1 );
-  }
-
 }

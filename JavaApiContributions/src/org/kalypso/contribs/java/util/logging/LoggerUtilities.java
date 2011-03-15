@@ -94,8 +94,17 @@ public class LoggerUtilities
   }
 
   /**
-   * Formats a log-message similar to java.util.logging.Logger's do it.
-   * <p>
+  * Formats a log-message similar to java.util.logging.Logger's do it.<br/>
+  */
+  public static String formatLogStylish( IStatus status, int code )
+  {
+    Level level = levelFromStatus( status );
+    return formatLogStylish( level, code, status.getMessage() );
+  }
+
+  
+  /**
+   * Formats a log-message similar to java.util.logging.Logger's do it.<br/>
    * Example:
    * <p>
    * WARNING[19]: My mesage
@@ -162,6 +171,29 @@ public class LoggerUtilities
   }
 
   /**
+   * Converts a IStatus-severity into a Level.
+   */
+  private static Level levelFromStatus( final IStatus status )
+  {
+    if( status.matches( IStatus.ERROR ) )
+      return Level.SEVERE;
+    
+    if( status.matches( IStatus.WARNING ) )
+      return Level.WARNING;
+    
+    if( status.matches( IStatus.INFO ) )
+      return Level.INFO;
+
+    if( status.matches( IStatus.CANCEL ) )
+      return Level.INFO;
+
+    if( status.isOK() )
+      return Level.FINE;
+    
+    return Level.FINE;
+  }
+  
+  /**
    * Converts a Level into a IStatus-severity.
    */
   private static int severityFromLevel( final Level level )
@@ -173,19 +205,19 @@ public class LoggerUtilities
       return IStatus.WARNING;
 
     if( level == Level.INFO )
-      return IStatus.INFO;
+      return IStatus.OK;
 
     if( level == Level.CONFIG )
-      return IStatus.INFO;
+      return IStatus.OK;
 
     if( level == Level.FINE )
-      return IStatus.INFO;
+      return IStatus.OK;
 
     if( level == Level.FINER )
-      return IStatus.INFO;
+      return IStatus.OK;
     
     if( level == Level.FINEST )
-      return IStatus.INFO;
+      return IStatus.OK;
 
     return IStatus.OK;
   }
