@@ -74,7 +74,6 @@ public class PooledObsProvider extends AbstractObsProvider implements IPoolListe
   private PooledObsProvider( final IPoolableObjectType key, final IObservation observation )
   {
     m_key = key;
-
     setObservation( observation );
 
     m_pool.addPoolListener( this, key );
@@ -89,38 +88,6 @@ public class PooledObsProvider extends AbstractObsProvider implements IPoolListe
 
     super.dispose();
   }
-
-// /**
-// * @see java.lang.Object#equals(java.lang.Object)
-// */
-// @Override
-// public boolean equals( final Object obj )
-// {
-// if( obj instanceof PooledObsProvider )
-// {
-// final PooledObsProvider other = (PooledObsProvider) obj;
-//
-// final EqualsBuilder builder = new EqualsBuilder();
-// builder.append( m_key.hashCode(), other.m_key.hashCode() );
-//
-// return builder.isEquals();
-// }
-//
-// return super.equals( obj );
-// }
-//
-// /**
-// * @see java.lang.Object#hashCode()
-// */
-// @Override
-// public int hashCode( )
-// {
-// final HashCodeBuilder builder = new HashCodeBuilder();
-// builder.append( getClass().getName() );
-// builder.append( m_key.hashCode() );
-//
-// return builder.toHashCode();
-// }
 
   /**
    * Remove the observation and inform listeners that theme changed

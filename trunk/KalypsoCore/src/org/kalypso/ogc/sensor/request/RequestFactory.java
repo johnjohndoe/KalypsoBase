@@ -122,7 +122,7 @@ public final class RequestFactory
    * 
    * @return a new instance of SimpleObservation that will satisfy the request specification
    */
-  public static IObservation createDefaultObservation( final Request xmlReq )
+  public static SimpleObservation createDefaultObservation( final Request xmlReq )
   {
     final ObservationRequest request = ObservationRequest.createWith( xmlReq );
     final String[] axesTypes = request.getAxisTypes();

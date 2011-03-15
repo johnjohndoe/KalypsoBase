@@ -117,14 +117,15 @@ public class ResourcePool
    * Fügt einen neuen Listener zum Pool für eine bestimmten Key hinzu Ist das Objekt für den key vorhanden, wird der
    * Listener sofort informiert
    */
-  public KeyInfo addPoolListener( final IPoolListener l, final IPoolableObjectType key )
+  public KeyInfo addPoolListener( final IPoolListener listener, final IPoolableObjectType key )
   {
     // never register a disposed listener to the pool !
-    if( l.isDisposed() )
+    if( listener.isDisposed() )
       return null;
 
     final KeyInfo info = getOrCreateInfo( key );
-    info.addListener( l );
+    info.addListener( listener );
+
     return info;
   }
 

@@ -62,7 +62,12 @@ public interface KalypsoStati
   /** User input is REQUIRED for this value ( bin: 0000 0100 dec: 4 ) */
   int BIT_REQUIRED = 0x04;
 
-  /** Value has been MODIFIED by user ( bin: 0000 1000 dec: 8 ) */
+  /**
+   * Value has been MODIFIED by user ( bin: 0000 1000 dec: 8 )
+   * 
+   * @deprecated instead use data source reference IDataSourceItem.SOURCE_MANUAL_CHANGED
+   */
+  @Deprecated
   int BIT_USER_MODIFIED = 0x08;
 
   /** Value could not be computed or derived from another value ( bin: 0001 0000 dec: 16 ) */

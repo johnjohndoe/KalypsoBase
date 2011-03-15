@@ -59,6 +59,8 @@ public final class IntervalSourceHandler
 
   public static final String SOURCE_INITIAL_VALUE = "source://initialValue"; // $NON-NLS-1$
 
+  public static final String SOURCE_INTERVAL_FITLER = DataSourceHelper.FILTER_SOURCE + IntervalFilter.FILTER_ID;
+
   private IntervalSourceHandler( )
   {
   }
@@ -73,7 +75,7 @@ public final class IntervalSourceHandler
         final String[] srcs = DataSourceHelper.getSources( sources[i] );
 
         final StringBuffer buffer = new StringBuffer();
-        buffer.append( String.format( "%s%s?", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID ) ); // $NON-NLS-1$
+        buffer.append( String.format( "%s?", SOURCE_INTERVAL_FITLER ) ); // $NON-NLS-1$
 
         if( !ArrayUtils.isEmpty( srcs ) )
         {

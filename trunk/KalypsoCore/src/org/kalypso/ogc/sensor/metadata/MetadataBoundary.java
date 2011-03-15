@@ -80,7 +80,7 @@ public final class MetadataBoundary implements IMetadataBoundary
       return String.valueOf( key.charAt( IMetadataConstants.BOUNDARY_PREFIX.length() ) );
 
     /** hack for sachsen, so old typeless entries will work */
-    return "W";
+    return ITimeseriesConstants.TYPE_WATERLEVEL;
   }
 
   /**

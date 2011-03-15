@@ -41,7 +41,6 @@
 package org.kalypso.ogc.sensor.timeseries;
 
 import java.awt.Color;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -234,12 +233,14 @@ public final class TimeseriesUtils implements ITimeseriesConstants
           if( timeseriesConfigUrl != null )
             configIs = timeseriesConfigUrl.openStream();
         }
-        catch( final FileNotFoundException ioe )
+        catch( final Throwable t )
         {
           // ignore: there is no config file; we are using standard instead
           final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, "Specified timeseries config file at " + timeseriesConfigUrl.toExternalForm() //$NON-NLS-1$
               + " does not exist. Using default settings.", null ); //$NON-NLS-1$
           KalypsoCorePlugin.getDefault().getLog().log( status );
+
+          t.printStackTrace();
         }
 
         if( configIs != null )

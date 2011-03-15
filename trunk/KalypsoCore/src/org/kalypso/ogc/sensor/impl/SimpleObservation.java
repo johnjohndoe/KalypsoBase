@@ -55,6 +55,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.util.Observations;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
 /**
  * Default implementation of the <code>IObservation</code> interface.
@@ -123,7 +125,7 @@ public class SimpleObservation implements IObservation
    * @see org.kalypso.ogc.sensor.IObservation#getAxisList()
    */
   @Override
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxes( )
   {
     return m_model.getAxes();
   }
@@ -140,7 +142,7 @@ public class SimpleObservation implements IObservation
     // TODO this leads to unsaved changes when a value is set because the underlying
     // (real) model isn't changed, just the copy of it (see setFrom and the calling
     // constructors in SimpleTuppleModel).
-    if( (request != null) && (request.getDateRange() != null) )
+    if( request != null && request.getDateRange() != null )
       return new SimpleTupleModel( m_model, request.getDateRange() );
 
     return m_model;
@@ -165,9 +167,9 @@ public class SimpleObservation implements IObservation
     }
 
     final IAxis[] otherAxes = values.getAxes();
-    final Map<IAxis, IAxis> map = new HashMap<IAxis, IAxis>( getAxisList().length );
+    final Map<IAxis, IAxis> map = new HashMap<IAxis, IAxis>( getAxes().length );
 
-    for( final IAxis axis : getAxisList() )
+    for( final IAxis axis : getAxes() )
     {
       try
       {
@@ -180,7 +182,7 @@ public class SimpleObservation implements IObservation
       }
     }
 
-    final IAxis[] keys = ObservationUtilities.findAxesByKey( getAxisList() );
+    final IAxis[] keys = ObservationUtilities.findAxesByKey( getAxes() );
 
     for( int i = 0; i < values.size(); i++ )
     {
@@ -192,7 +194,7 @@ public class SimpleObservation implements IObservation
         final Object obj = values.get( i, map.get( key ) );
         final int ix = m_model.indexOf( obj, key );
 
-        if( (ix >= 0) && (ixPresent != -1) )
+        if( ix >= 0 && ixPresent != -1 )
         {
           if( ixPresent != ix )
             break;
@@ -307,4 +309,14 @@ public class SimpleObservation implements IObservation
     return Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleObservation.8" ) + m_name + Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleObservation.10" ) + m_href; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#accept(org.kalypso.ogc.sensor.visitor.IObservationVisitor,
+   *      org.kalypso.ogc.sensor.request.IRequest)
+   */
+  @Override
+  public void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
+  {
+    Observations.accept( this, visitor, request );
+
+  }
 }

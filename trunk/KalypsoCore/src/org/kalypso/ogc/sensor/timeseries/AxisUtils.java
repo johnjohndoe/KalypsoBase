@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
@@ -188,6 +189,11 @@ public final class AxisUtils implements ITimeseriesConstants
     }
 
     return null;
+  }
+
+  public static boolean hasAxis( final IAxis[] axes, final String type )
+  {
+    return Objects.isNotNull( findAxis( axes, type ) );
   }
 
 }

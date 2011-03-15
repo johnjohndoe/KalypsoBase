@@ -51,6 +51,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IObservationFilter;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.util.Observations;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
 /**
  * AbstractObservationFilter
@@ -71,7 +73,11 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException
   {
     m_obs = obs;
+
+    appendSettings( getMetadataList() );
   }
+
+  protected abstract void appendSettings( MetadataList metadata );
 
   @Override
   public boolean equals( final Object obj )
@@ -83,12 +89,12 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   }
 
   @Override
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxes( )
   {
     if( m_obs == null )
       throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter.1" ) ); //$NON-NLS-1$
 
-    return m_obs.getAxisList();
+    return m_obs.getAxes();
   }
 
   @Override
@@ -189,5 +195,15 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   protected void setObservation( final IObservation observation )
   {
     m_obs = observation;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#accept(org.kalypso.ogc.sensor.visitor.IObservationVisitor,
+   *      org.kalypso.ogc.sensor.request.IRequest)
+   */
+  @Override
+  public final void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
+  {
+    Observations.accept( this, visitor, request );
   }
 }
