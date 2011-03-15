@@ -43,16 +43,15 @@ package org.kalypso.zml.core.table.model;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
-import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
@@ -69,7 +68,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   private final DataColumn m_type;
 
-  private final String m_label;
+  private final IColumnLabelProvider m_label;
 
   private final IZmlModelColumnDataHandler m_handler;
 
@@ -77,7 +76,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   private final IZmlModel m_model;
 
-  public ZmlModelColumn( final IZmlModel model, final String identifier, final String label, final DataColumn type, final IZmlModelColumnDataHandler dataHandler )
+  public ZmlModelColumn( final IZmlModel model, final String identifier, final IColumnLabelProvider label, final DataColumn type, final IZmlModelColumnDataHandler dataHandler )
   {
     m_model = model;
     m_identifier = identifier;
@@ -90,7 +89,14 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   public ZmlModelColumn( final IZmlModel model, final DataColumn column, final ObservationZmlColumnDataHandler handler )
   {
-    this( model, column.getIdentifier(), column.getLabel(), column, handler );
+    this( model, column.getIdentifier(), new IColumnLabelProvider()
+    {
+      @Override
+      public String getLabel( )
+      {
+        return column.getLabel();
+      }
+    }, column, handler );
   }
 
   @Override
@@ -146,7 +152,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   }
 
   @Override
-  public void update( final int index, final Object value, final VALUE_STATUS type ) throws SensorException
+  public void update( final int index, final Object value, final String source, final Integer status ) throws SensorException
   {
     final ITupleModel model = getTupleModel();
     final IAxis[] axes = model.getAxes();
@@ -156,21 +162,14 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
       if( AxisUtils.isDataSrcAxis( axis ) )
       {
         // FIXME - user modified triggerd interpolated state?!?
-        if( VALUE_STATUS.eManual.equals( type ) )
-        {
-          final DataSourceHandler handler = new DataSourceHandler( getMetadata() );
-          final int source = handler.addDataSource( IDataSourceItem.SOURCE_MANUAL_CHANGED, IDataSourceItem.SOURCE_MANUAL_CHANGED );
+        final DataSourceHandler handler = new DataSourceHandler( getMetadata() );
+        final int sourceIndex = handler.addDataSource( source, source );
 
-          model.set( index, axis, source );
-        }
+        model.set( index, axis, sourceIndex );
       }
       else if( AxisUtils.isStatusAxis( axis ) )
       {
-        // FIXME - user modified triggerd interpolated state?!?
-        if( VALUE_STATUS.eManual.equals( type ) )
-        {
-          model.set( index, axis, KalypsoStati.BIT_USER_MODIFIED );
-        }
+        model.set( index, axis, status );
       }
       else if( isTargetAxis( axis ) )
       {
@@ -199,7 +198,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public String getLabel( )
   {
-    return m_label;
+    return m_label.getLabel();
   }
 
   @Override
@@ -211,7 +210,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public IAxis[] getAxes( )
   {
-    return m_handler.getObservation().getAxisList();
+    return m_handler.getObservation().getAxes();
   }
 
   /**
@@ -287,8 +286,11 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     for( final IZmlModelRow row : rows )
     {
       final IZmlValueReference reference = row.get( this );
-      if( reference != null )
-        visitor.visit( reference );
+      if( Objects.isNotNull( reference ) )
+      {
+        if( !visitor.visit( reference ) )
+          return;
+      }
     }
   }
 

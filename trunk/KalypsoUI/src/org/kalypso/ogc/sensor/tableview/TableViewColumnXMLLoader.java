@@ -93,7 +93,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
   {
     final IObservation obs = (IObservation) newValue;
 
-    final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( obs.getAxisList() );
+    final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( obs.getAxes() );
     if( keyAxes.length == 0 )
       throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.tableview.TableViewColumnXMLLoader.0" ) ); //$NON-NLS-1$
 
@@ -110,7 +110,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
 
       try
       {
-        final IAxis valueAxis = ObservationUtilities.findAxisByNameThenByType( obs.getAxisList(), tcol.getAxis() );
+        final IAxis valueAxis = ObservationUtilities.findAxisByNameThenByType( obs.getAxes(), tcol.getAxis() );
 
         if( !ignoreTypeList.contains( valueAxis.getType() ) )
         {

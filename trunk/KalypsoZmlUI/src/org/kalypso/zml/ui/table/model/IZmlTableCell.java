@@ -58,4 +58,6 @@ public interface IZmlTableCell extends IZmlTableObject
   IZmlTableCell findPreviousCell( );
 
   IZmlTableCell findNextCell( );
+
+  int findIndex( );
 }

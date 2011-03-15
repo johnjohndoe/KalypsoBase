@@ -55,6 +55,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
 
 /**
  * @author Dirk Kuch
@@ -169,7 +170,8 @@ public class ZmlTableColumn extends ZmlTableElement implements IZmlTableColumn
   {
     final List<IZmlTableCell> selected = new ArrayList<IZmlTableCell>();
 
-    final IZmlTableRow[] rows = getTable().getSelectedRows();
+    final IZmlTableSelectionHandler selection = getTable().getSelectionHandler();
+    final IZmlTableRow[] rows = selection.getSelectedRows();
     for( final IZmlTableRow row : rows )
     {
       selected.add( row.getCell( this ) );

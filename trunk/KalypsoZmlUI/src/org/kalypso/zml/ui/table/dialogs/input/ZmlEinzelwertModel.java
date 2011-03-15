@@ -62,6 +62,10 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
  */
 public class ZmlEinzelwertModel
 {
+  private final IZmlTableColumn m_column;
+
+  Set<IZmlEinzelwertModelListener> m_listeners = new LinkedHashSet<IZmlEinzelwertModelListener>();
+
   Set<ZmlEinzelwert> m_rows = new TreeSet<ZmlEinzelwert>( new Comparator<ZmlEinzelwert>()
   {
     @Override
@@ -71,10 +75,6 @@ public class ZmlEinzelwertModel
     }
   } );
 
-  Set<IZmlEinzelwertModelListener> m_listeners = new LinkedHashSet<IZmlEinzelwertModelListener>();
-
-  private final IZmlTableColumn m_column;
-
   public ZmlEinzelwertModel( final IZmlTableColumn column )
   {
     m_column = column;
@@ -82,88 +82,14 @@ public class ZmlEinzelwertModel
     init();
   }
 
-  private void init( )
+  public IZmlModelColumn getColumn( )
   {
-    try
-    {
-      final IZmlModelColumn column = m_column.getModelColumn();
-      final ITupleModel model = column.getTupleModel();
-      if( model.size() > 0 )
-      {
-        final Date date = (Date) model.get( 0, column.getIndexAxis() );
-        final Double value = (Double) model.get( 0, column.getValueAxis() );
-
-        m_rows.add( new ZmlEinzelwert( this, date, value ) );
-      }
-    }
-    catch( final Exception e )
-    {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-
+    return m_column.getModelColumn();
   }
 
-  public ZmlEinzelwert[] getRows( )
+  public void addListener( final IZmlEinzelwertModelListener listener )
   {
-    return m_rows.toArray( new ZmlEinzelwert[] {} );
-  }
-
-  public void addRow( final ZmlEinzelwert row )
-  {
-    m_rows.add( row );
-
-    fireModelChanged();
-  }
-
-  protected void fireModelChanged( )
-  {
-    cleanUp();
-
-    final IZmlEinzelwertModelListener[] listeners = m_listeners.toArray( new IZmlEinzelwertModelListener[] {} );
-    for( final IZmlEinzelwertModelListener listener : listeners )
-    {
-      listener.modelChangedEvent();
-    }
-  }
-
-  /** sort out duplicate entries */
-  private void cleanUp( )
-  {
-    final Map<Date, ZmlEinzelwert> map = new HashMap<Date, ZmlEinzelwert>();
-
-    final ZmlEinzelwert[] rows = m_rows.toArray( new ZmlEinzelwert[] {} );
-    m_rows.clear();
-    for( final ZmlEinzelwert row : rows )
-    {
-      map.put( row.getDate(), row );
-    }
-
-    m_rows.addAll( map.values() );
-  }
-
-  public String getLabel( )
-  {
-    return m_column.getModelColumn().getLabel();
-  }
-
-  public Date[] getExistingDateValues( ) throws SensorException
-  {
-    final Set<Date> existing = new TreeSet<Date>();
-
-    final IZmlModelColumn columnModel = m_column.getModelColumn();
-    final IAxis axis = columnModel.getIndexAxis();
-    final ITupleModel model = columnModel.getTupleModel();
-
-    for( int index = 0; index < model.size(); index++ )
-    {
-      final Object object = model.get( index, axis );
-      if( object instanceof Date )
-      {
-        existing.add( (Date) object );
-      }
-    }
-
-    return existing.toArray( new Date[] {} );
+    m_listeners.add( listener );
   }
 
   /**
@@ -202,9 +128,88 @@ public class ZmlEinzelwertModel
     }
   }
 
-  public void addListener( final IZmlEinzelwertModelListener listener )
+  public void addRow( final ZmlEinzelwert row )
   {
-    m_listeners.add( listener );
+    m_rows.add( row );
+
+    fireModelChanged();
+  }
+
+  /** sort out duplicate entries */
+  private void cleanUp( )
+  {
+    final Map<Date, ZmlEinzelwert> map = new HashMap<Date, ZmlEinzelwert>();
+
+    final ZmlEinzelwert[] rows = m_rows.toArray( new ZmlEinzelwert[] {} );
+    m_rows.clear();
+    for( final ZmlEinzelwert row : rows )
+    {
+      map.put( row.getDate(), row );
+    }
+
+    m_rows.addAll( map.values() );
+  }
+
+  protected void fireModelChanged( )
+  {
+    cleanUp();
+
+    final IZmlEinzelwertModelListener[] listeners = m_listeners.toArray( new IZmlEinzelwertModelListener[] {} );
+    for( final IZmlEinzelwertModelListener listener : listeners )
+    {
+      listener.modelChangedEvent();
+    }
+  }
+
+  public Date[] getExistingDateValues( ) throws SensorException
+  {
+    final Set<Date> existing = new TreeSet<Date>();
+
+    final IZmlModelColumn columnModel = m_column.getModelColumn();
+    final IAxis axis = columnModel.getIndexAxis();
+    final ITupleModel model = columnModel.getTupleModel();
+
+    for( int index = 0; index < model.size(); index++ )
+    {
+      final Object object = model.get( index, axis );
+      if( object instanceof Date )
+      {
+        existing.add( (Date) object );
+      }
+    }
+
+    return existing.toArray( new Date[] {} );
+  }
+
+  public String getLabel( )
+  {
+    return m_column.getModelColumn().getLabel();
+  }
+
+  public ZmlEinzelwert[] getRows( )
+  {
+    return m_rows.toArray( new ZmlEinzelwert[] {} );
+  }
+
+  private void init( )
+  {
+    try
+    {
+      final IZmlModelColumn column = m_column.getModelColumn();
+      final ITupleModel model = column.getTupleModel();
+      if( model.size() > 0 )
+      {
+        final Date date = (Date) model.get( 0, column.getIndexAxis() );
+        final Double value = (Double) model.get( 0, column.getValueAxis() );
+
+        m_rows.add( new ZmlEinzelwert( this, date, value ) );
+      }
+    }
+    catch( final Exception e )
+    {
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
   }
 
   public void removeRow( final ZmlEinzelwert row )

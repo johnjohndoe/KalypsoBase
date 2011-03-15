@@ -11,7 +11,15 @@
         <LineJoin>ROUND</LineJoin>
         <MiterLimit>1</MiterLimit>
       </LineStyle>
-      <PointStyle role="gridPointStyle" isVisible="false" />
+      <PointStyle role="gridPointStyle">
+            <Stroke>
+              <Width>2</Width>
+              <LineColor>000000</LineColor>
+            </Stroke>
+            <FillColor isVisible="false">
+              <Color>000000</Color>
+            </FillColor>
+      </PointStyle>
     </Styles>
     <Layers>
       <Layer id="grid" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">

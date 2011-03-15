@@ -102,7 +102,7 @@
     <command
           categoryId="org.kalypso.zml.ui.table.commands.category"
           id="org.kalypso.zml.ui.table.commands.toolbar.view.stuetzstellen"
-          name="Stützstellen">
+          name="Stützstellenansicht">
     </command>
     <command
           categoryId="org.kalypso.zml.ui.table.commands.category"
@@ -149,6 +149,11 @@
           categoryId="org.kalypso.zml.ui.table.commands.category"
           id="org.kalypso.zml.ui.table.commands.toolbar.value.input.dialog"
           name="Eingabe von Einzelwerten">
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.tooltip"
+          name="Tooltip ausschalten">
     </command>
  </extension>
  <extension
@@ -202,6 +207,10 @@
           class="org.kalypso.zml.ui.table.commands.toolbar.input.dialog.ZmlCommandOpenValueInputDialog"
           commandId="org.kalypso.zml.ui.table.commands.toolbar.value.input.dialog">
     </handler>
+    <handler
+          class="org.kalypso.zml.ui.table.commands.toolbar.view.DisableTooltipHandler"
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.tooltip">
+    </handler>
  </extension>
   <extension
        point="org.eclipse.ui.commandImages">
@@ -236,6 +245,10 @@
     <image
           commandId="org.kalypso.zml.ui.table.commands.toolbar.value.input.dialog"
           icon="icons/table/value_input_dialog.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.tooltip"
+          icon="icons/table/tooltip.png">
     </image>
  </extension>
  <extension
@@ -277,5 +290,73 @@
           id="org.kalypso.zml.ui.chart.legend.renderer.block"
           renderer="org.kalypso.zml.ui.chart.legend.ZmlBlockChartLegendRenderer">
     </renderer>
+    <renderer
+          id="org.kalypso.zml.ui.chart.legend.renderer.combined"
+          renderer="org.kalypso.zml.ui.chart.legend.ZmlCombinedChartLegendRenderer">
+    </renderer>
+ </extension>
+ <extension
+       point="org.eclipse.ui.commands">
+    <category
+          id="org.kalypso.chart.ui.commands.category"
+          name="command category">
+    </category>
+    <command
+          categoryId="org.kalypso.chart.ui.commands.category"
+          id="org.kalypso.zml.ui.chart.layer.commands.change.visibility"
+          name="Change Visibility">
+       <commandParameter
+             id="layer.parameter"
+             name="layer parameter"
+             optional="false">
+       </commandParameter>
+       <commandParameter
+             id="layer.filter"
+             name="layer filter (seperated by &apos;;&apos;)"
+             optional="true">
+       </commandParameter>
+    </command>
+    <command
+          categoryId="org.kalypso.chart.ui.commands.category"
+          id="org.kalypso.zml.ui.chart.layer.commands.set.filter"
+          name="Set Filter">
+       <commandParameter
+             id="enableCommand"
+             name="enableCommand"
+             optional="false">
+       </commandParameter>
+       <commandParameter
+             id="disableCommand"
+             name="disableCommand"
+             optional="false">
+       </commandParameter>
+    </command>
+ </extension>
+ <extension
+       point="org.eclipse.ui.handlers">
+    <handler
+          class="org.kalypso.zml.ui.chart.layer.commands.ZmlChangeVisibilityCommandHandler"
+          commandId="org.kalypso.zml.ui.chart.layer.commands.change.visibility">
+    </handler>
+    <handler
+          class="org.kalypso.zml.ui.chart.layer.commands.SetZmlFilterCommandHandler"
+          commandId="org.kalypso.zml.ui.chart.layer.commands.set.filter">
+    </handler>
+ </extension>
+ 
+ <extension
+       point="de.openali.odysseus.chart.framework.ChartLayerFilter">
+    	<filter
+          filter="org.kalypso.zml.ui.chart.layer.filters.ZmlDefaultChartLayerFilter"
+          id="org.kalypso.chart.layer.filter.default">
+    	</filter>
+    	<filter
+          filter="org.kalypso.zml.ui.chart.layer.filters.ZmlNotNullChartLayerFilter"
+          id="org.kalypso.chart.layer.filter.not.null">
+    	</filter>
+     <filter
+           filter="org.kalypso.zml.ui.chart.layer.filters.ZmlStuetzstellenChartLayerFilter"
+           id="org.kalypso.chart.layer.filter.stuetzstelle">
+     </filter>
  </extension>
 </plugin>

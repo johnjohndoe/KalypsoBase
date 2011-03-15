@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 
 /**
  * @author Dirk Kuch
@@ -202,9 +203,9 @@ public class CsvSheetImportDataModel
       switch( kind )
       {
         case eW:
-          return "W"; //$NON-NLS-1$
+          return ITimeseriesConstants.TYPE_WATERLEVEL;
         case eQ:
-          return "Q"; //$NON-NLS-1$
+          return ITimeseriesConstants.TYPE_DISCHARGE;
         default:
           throw new NotImplementedException();
       }

@@ -61,7 +61,7 @@ public class ZmlChartLegendLayersVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public boolean visit( final IChartLayer layer )
   {
     if( isValid( layer ) )
     {
@@ -70,6 +70,8 @@ public class ZmlChartLegendLayersVisitor implements IChartLayerVisitor
       final ILayerManager layerManager = layer.getLayerManager();
       layerManager.accept( this );
     }
+
+    return true;
   }
 
   private boolean isValid( final IChartLayer layer )

@@ -132,7 +132,7 @@ public class ZmlIndexValueReference implements IZmlValueReference
    * @see org.kalypso.zml.ui.table.model.references.IZmlModelCell#update(java.lang.Object)
    */
   @Override
-  public void update( final Object targetValue )
+  public void update( final Object targetValue, final String source, final Integer status )
   {
     throw new UnsupportedOperationException();
   }

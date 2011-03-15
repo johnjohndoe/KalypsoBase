@@ -47,6 +47,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -438,27 +439,8 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     if( layers == null || layers.length == 0 )
       return null;
 
-    // TODO: we should show all styles of all layers as a tree in the outline
-    // Instead, we show the graphic of the first style of the first layer
-    final Style[] styles = layers[0].getStyles();
-
-    /* No styles, no legend graphic. */
-    if( styles.length == 0 )
-      return null;
-
-    final Style style = styles[0];
-
-    // TODO: only use styles, denoted by m_styles
-
-    /* Get the URLs for the legend. */
-    final LegendURL[] legendURLs = style.getLegendURL();
-
-    /* No legend URLs, no legend. */
-    if( legendURLs.length == 0 )
-      return null;
-
-    /* TODO: Only the first legend URL will be used for now. */
-    final LegendURL legendURL = legendURLs[0];
+    /* Get the URL of the legend. */
+    final LegendURL legendURL = findLegendURL( layers );
 
     /* Get the real URL. */
     final URL onlineResource = legendURL.getOnlineResource();
@@ -470,9 +452,6 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     {
       /* Open the stream. */
       inputStream = onlineResource.openStream();
-
-      // TODO: is service throws exception; we get a problem here;
-      // maybe we should first try to check this
 
       /* The result image. */
       final org.eclipse.swt.graphics.Image result = new org.eclipse.swt.graphics.Image( device, inputStream );
@@ -509,6 +488,35 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     }
 
     return result.toArray( new Layer[result.size()] );
+  }
+
+  private LegendURL findLegendURL( Layer[] layers )
+  {
+    /* End recursion. */
+    if( layers == null || layers.length == 0 )
+      return null;
+
+    // TODO: we should show all styles of all layers as a tree in the outline
+    // TODO: Instead, we show the graphic of the first style of the first layer
+    Style[] styles = layers[0].getStyles();
+    if( styles.length == 0 )
+      return findLegendURL( layers[0].getLayer() );
+
+    /* TODO Only the first style will be used for now. */
+    Style style = styles[0];
+
+    /* Only use styles, denoted by m_styles. */
+    List<String> styleList = Arrays.asList( m_styles );
+    if( !styleList.contains( style.getName() ) )
+      return null;
+
+    /* Get the URLs for the legend. */
+    LegendURL[] legendURLs = style.getLegendURL();
+    if( legendURLs.length == 0 )
+      return null;
+
+    // TODO: Only the first legend URL will be used for now.
+    return legendURLs[0];
   }
 
   /**

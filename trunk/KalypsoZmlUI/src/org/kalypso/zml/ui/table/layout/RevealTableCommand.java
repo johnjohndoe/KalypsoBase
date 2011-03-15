@@ -45,6 +45,7 @@ import java.util.Date;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
@@ -90,7 +91,7 @@ public class RevealTableCommand implements ICoreRunnableWithProgress
       if( index.equals( forecastStart ) )
       {
         final TableViewer tableViewer = m_table.getTableViewer();
-        tableViewer.reveal( row );
+        tableViewer.setSelection( new StructuredSelection( row ), true );
 
         return Status.OK_STATUS;
       }

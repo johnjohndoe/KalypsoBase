@@ -43,6 +43,8 @@ package org.kalypso.zml.core.table.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
 import org.kalypso.zml.core.table.model.references.ZmlIndexValueReference;
@@ -126,6 +128,37 @@ public class ZmlModelRow implements IZmlModelRow
   public String toString( )
   {
     return String.format( "%s, Index: %s", getClass().getName(), m_index.toString() );
+  }
+
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof ZmlModelRow )
+    {
+      final ZmlModelRow other = (ZmlModelRow) obj;
+
+      final EqualsBuilder builder = new EqualsBuilder();
+      builder.append( getIndexValue(), other.getIndexValue() );
+
+      return builder.isEquals();
+    }
+    return super.equals( obj );
+  }
+
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( getClass().getName() );
+    builder.append( getIndexValue() );
+
+    return builder.toHashCode();
   }
 
 }

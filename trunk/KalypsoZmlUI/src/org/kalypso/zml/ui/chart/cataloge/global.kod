@@ -2,6 +2,10 @@
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="global">
     <Styles>
+      <LineStyle role="axisLine">
+        <Width>2</Width>
+        <LineColor>000000</LineColor>
+      </LineStyle>
       <!-- TextStyles -->
       <TextStyle role="axisLabel">
         <Size>8</Size>
@@ -32,6 +36,17 @@
         <Width>2</Width>
         <LineColor>8FADDF</LineColor>
       </LineStyle>
+      <PointStyle role="w_singlePoint_0">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>8FADDF</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>8FADDF</Color>
+        </FillColor>
+      </PointStyle>
       <PointStyle role="w_point_0">
         <Width>4</Width>
         <Height>4</Height>
@@ -58,10 +73,42 @@
           <Color>8FADDF</Color>
         </FillColor>
       </PointStyle>
+      <LineStyle role="w_active_dash_line_0">
+        <Width>3</Width>
+        <LineColor>8FADDF</LineColor>
+        <DashArray>16 6</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="w_active_dot_line_0">
+        <Width>4</Width>
+        <LineColor>8FADDF</LineColor>
+        <DashArray>4 4</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="w_active_wide_dot_line_0">
+        <Width>4</Width>
+        <LineColor>8FADDF</LineColor>
+        <DashArray>4 14</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
       <LineStyle role="w_line_1">
         <Width>2</Width>
         <LineColor>3460A9</LineColor>
       </LineStyle>
+      <PointStyle role="w_singlePoint_1">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>3460A9</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>3460A9</Color>
+        </FillColor>
+      </PointStyle>
       <PointStyle role="w_point_1">
         <Width>4</Width>
         <Height>4</Height>
@@ -96,16 +143,16 @@
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <LineStyle role="w_active_dot_line_1">
-        <Width>3</Width>
+        <Width>4</Width>
         <LineColor>3460A9</LineColor>
-        <DashArray>3 3</DashArray>
+        <DashArray>4 4</DashArray>
         <LineCap>ROUND</LineCap>
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <LineStyle role="w_active_wide_dot_line_1">
-        <Width>3</Width>
+        <Width>4</Width>
         <LineColor>3460A9</LineColor>
-        <DashArray>3 12</DashArray>
+        <DashArray>4 14</DashArray>
         <LineCap>ROUND</LineCap>
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
@@ -113,6 +160,17 @@
         <Width>2</Width>
         <LineColor>BDD3F6</LineColor>
       </LineStyle>
+      <PointStyle role="w_singlePoint_2">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>BDD3F6</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>BDD3F6</Color>
+        </FillColor>
+      </PointStyle>
       <PointStyle role="w_point_2">
         <Width>4</Width>
         <Height>4</Height>
@@ -139,10 +197,42 @@
           <Color>BDD3F6</Color>
         </FillColor>
       </PointStyle>
+      <LineStyle role="w_active_dash_line_2">
+        <Width>3</Width>
+        <LineColor>BDD3F6</LineColor>
+        <DashArray>16 6</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="w_active_dot_line_2">
+        <Width>4</Width>
+        <LineColor>BDD3F6</LineColor>
+        <DashArray>4 4</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="w_active_wide_dot_line_2">
+        <Width>4</Width>
+        <LineColor>BDD3F6</LineColor>
+        <DashArray>4 14</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
       <LineStyle role="w_line_3">
         <Width>2</Width>
         <LineColor>093689</LineColor>
       </LineStyle>
+      <PointStyle role="w_singlePoint_3">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>093689</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>093689</Color>
+        </FillColor>
+      </PointStyle>
       <PointStyle role="w_point_3">
         <Width>4</Width>
         <Height>4</Height>
@@ -169,10 +259,42 @@
           <Color>093689</Color>
         </FillColor>
       </PointStyle>
+      <LineStyle role="w_active_dash_line_3">
+        <Width>3</Width>
+        <LineColor>093689</LineColor>
+        <DashArray>16 6</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="w_active_dot_line_3">
+        <Width>4</Width>
+        <LineColor>093689</LineColor>
+        <DashArray>4 4</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="w_active_wide_dot_line_3">
+        <Width>4</Width>
+        <LineColor>093689</LineColor>
+        <DashArray>4 14</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
       <LineStyle role="w_line_4">
         <Width>2</Width>
         <LineColor>6186C3</LineColor>
       </LineStyle>
+      <PointStyle role="w_singlePoint_4">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>6186C3</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>6186C3</Color>
+        </FillColor>
+      </PointStyle>
       <PointStyle role="w_point_4">
         <Width>4</Width>
         <Height>4</Height>
@@ -199,6 +321,27 @@
           <Color>6186C3</Color>
         </FillColor>
       </PointStyle>
+      <LineStyle role="w_active_dash_line_4">
+        <Width>3</Width>
+        <LineColor>6186C3</LineColor>
+        <DashArray>16 6</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="w_active_dot_line_4">
+        <Width>4</Width>
+        <LineColor>6186C3</LineColor>
+        <DashArray>4 4</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="w_active_wide_dot_line_4">
+        <Width>4</Width>
+        <LineColor>6186C3</LineColor>
+        <DashArray>4 14</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
       <!-- W_NN styles (line and point) -->
       <LineStyle role="w_nn_line_0">
         <Width>2</Width>
@@ -220,6 +363,17 @@
         <Width>2</Width>
         <LineColor>ABB985</LineColor>
       </LineStyle>
+      <PointStyle role="q_singlePoint_0">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>ABB985</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>ABB985</Color>
+        </FillColor>
+      </PointStyle>
       <PointStyle role="q_point_0">
         <Width>4</Width>
         <Height>4</Height>
@@ -246,10 +400,42 @@
           <Color>ABB985</Color>
         </FillColor>
       </PointStyle>
+      <LineStyle role="q_active_dash_line_0">
+        <Width>3</Width>
+        <LineColor>ABB985</LineColor>
+        <DashArray>16 6</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="q_active_dot_line_0">
+        <Width>4</Width>
+        <LineColor>ABB985</LineColor>
+        <DashArray>4 4</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="q_active_wide_dot_line_0">
+        <Width>4</Width>
+        <LineColor>ABB985</LineColor>
+        <DashArray>4 14</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
       <LineStyle role="q_line_1">
         <Width>2</Width>
         <LineColor>65782F</LineColor>
       </LineStyle>
+      <PointStyle role="q_singlePoint_1">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>65782F</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>65782F</Color>
+        </FillColor>
+      </PointStyle>
       <PointStyle role="q_point_1">
         <Width>4</Width>
         <Height>4</Height>
@@ -284,16 +470,16 @@
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <LineStyle role="q_active_dot_line_1">
-        <Width>3</Width>
+        <Width>4</Width>
         <LineColor>65782F</LineColor>
-        <DashArray>3 3</DashArray>
+        <DashArray>4 4</DashArray>
         <LineCap>ROUND</LineCap>
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <LineStyle role="q_active_wide_dot_line_1">
-        <Width>3</Width>
+        <Width>4</Width>
         <LineColor>65782F</LineColor>
-        <DashArray>3 12</DashArray>
+        <DashArray>4 14</DashArray>
         <LineCap>ROUND</LineCap>
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
@@ -301,6 +487,17 @@
         <Width>2</Width>
         <LineColor>CFDAB2</LineColor>
       </LineStyle>
+      <PointStyle role="q_singlePoint_2">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>CFDAB2</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>CFDAB2</Color>
+        </FillColor>
+      </PointStyle>
       <PointStyle role="q_point_2">
         <Width>4</Width>
         <Height>4</Height>
@@ -327,10 +524,42 @@
           <Color>CFDAB2</Color>
         </FillColor>
       </PointStyle>
+      <LineStyle role="q_active_dash_line_2">
+        <Width>3</Width>
+        <LineColor>CFDAB2</LineColor>
+        <DashArray>16 6</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="q_active_dot_line_2">
+        <Width>4</Width>
+        <LineColor>CFDAB2</LineColor>
+        <DashArray>4 4</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="q_active_wide_dot_line_2">
+        <Width>4</Width>
+        <LineColor>CFDAB2</LineColor>
+        <DashArray>4 14</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
       <LineStyle role="q_line_3">
         <Width>2</Width>
         <LineColor>3D5208</LineColor>
       </LineStyle>
+      <PointStyle role="q_singlePoint_3">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>3D5208</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>3D5208</Color>
+        </FillColor>
+      </PointStyle>
       <PointStyle role="q_point_3">
         <Width>4</Width>
         <Height>4</Height>
@@ -357,10 +586,42 @@
           <Color>3D5208</Color>
         </FillColor>
       </PointStyle>
+      <LineStyle role="q_active_dash_line_3">
+        <Width>3</Width>
+        <LineColor>3D5208</LineColor>
+        <DashArray>16 6</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="q_active_dot_line_3">
+        <Width>4</Width>
+        <LineColor>3D5208</LineColor>
+        <DashArray>4 4</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="q_active_wide_dot_line_3">
+        <Width>4</Width>
+        <LineColor>3D5208</LineColor>
+        <DashArray>4 14</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
       <LineStyle role="q_line_4">
         <Width>2</Width>
         <LineColor>879859</LineColor>
       </LineStyle>
+      <PointStyle role="q_singlePoint_4">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>879859</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>879859</Color>
+        </FillColor>
+      </PointStyle>
       <PointStyle role="q_point_4">
         <Width>4</Width>
         <Height>4</Height>
@@ -387,11 +648,43 @@
           <Color>879859</Color>
         </FillColor>
       </PointStyle>
+      <LineStyle role="q_active_dash_line_4">
+        <Width>3</Width>
+        <LineColor>879859</LineColor>
+        <DashArray>16 6</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="q_active_dot_line_4">
+        <Width>4</Width>
+        <LineColor>879859</LineColor>
+        <DashArray>4 4</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+      <LineStyle role="q_active_wide_dot_line_4">
+        <Width>4</Width>
+        <LineColor>879859</LineColor>
+        <DashArray>4 14</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
       <!-- V styles (line and point) -->
       <LineStyle role="v_line_0">
         <Width>2</Width>
         <LineColor>BDAB7A</LineColor>
       </LineStyle>
+      <PointStyle role="v_singlePoint_0">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>BDAB7A</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>BDAB7A</Color>
+        </FillColor>
+      </PointStyle>
       <PointStyle role="v_point_0">
         <Width>4</Width>
         <Height>4</Height>
@@ -407,6 +700,17 @@
         <Width>2</Width>
         <LineColor>769844</LineColor>
       </LineStyle>
+      <PointStyle role="v_singlePoint_1">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>769844</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>769844</Color>
+        </FillColor>
+      </PointStyle>
       <PointStyle role="v_point_1">
         <Width>4</Width>
         <Height>4</Height>
@@ -422,6 +726,17 @@
         <Width>2</Width>
         <LineColor>DFD0A7</LineColor>
       </LineStyle>
+      <PointStyle role="v_singlePoint_2">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>DFD0A7</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>DFD0A7</Color>
+        </FillColor>
+      </PointStyle>
       <PointStyle role="v_point_2">
         <Width>4</Width>
         <Height>4</Height>
@@ -437,6 +752,17 @@
         <Width>2</Width>
         <LineColor>4D3907</LineColor>
       </LineStyle>
+      <PointStyle role="v_singlePoint_3">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>4D3907</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>4D3907</Color>
+        </FillColor>
+      </PointStyle>
       <PointStyle role="v_point_3">
         <Width>4</Width>
         <Height>4</Height>
@@ -452,6 +778,17 @@
         <Width>2</Width>
         <LineColor>998652</LineColor>
       </LineStyle>
+      <PointStyle role="v_singlePoint_4">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>998652</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>998652</Color>
+        </FillColor>
+      </PointStyle>
       <PointStyle role="v_point_4">
         <Width>4</Width>
         <Height>4</Height>
@@ -551,11 +888,15 @@
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_line_0</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_singlePoint_0</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_line_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_singlePoint_1</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_line_2</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_singlePoint_2</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_line_3</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_singlePoint_3</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_line_4</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#invisible_point</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_singlePoint_4</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
@@ -576,16 +917,23 @@
         <Layers>
           <Layer id="Abfluss" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
             </Provider>
             <Title>Abfluss</Title>
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_line_0</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_singlePoint_0</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_line_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_singlePoint_1</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_line_2</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_singlePoint_2</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_line_3</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_singlePoint_3</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_line_4</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#invisible_point</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_singlePoint_4</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
@@ -618,7 +966,7 @@
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#n_area_2</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#n_area_3</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#n_area_4</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#invisible_point</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#n_area_5</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
@@ -637,7 +985,6 @@
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_nn_line_0</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#invisible_point</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
@@ -651,16 +998,24 @@
         <Title>Volumen</Title>
         <Layers>
           <Layer id="Volumen" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
             <Title>Volumen</Title>
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_line_0</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_singlePoint_0</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_line_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_singlePoint_1</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_line_2</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_singlePoint_2</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_line_3</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_singlePoint_3</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_line_4</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#invisible_point</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#v_singlePoint_4</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
@@ -767,7 +1122,6 @@
       </Axis>
       <Axis id="date" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Label>Datum</Label>
         <Direction>POSITIVE</Direction>
         <Position>BOTTOM</Position>
         <PreferredAdjustment before="0" range="100" after="0" />
@@ -796,6 +1150,7 @@
           </Parameters>
         </Provider>
         <Styles>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#axisLine</StyleReference>
           <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#axisLabel</StyleReference>
           <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#tickLabel</StyleReference>
         </Styles>
@@ -811,6 +1166,7 @@
           </Parameters>
         </Provider>
         <Styles>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#axisLine</StyleReference>
           <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#axisLabel</StyleReference>
           <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#tickLabel</StyleReference>
         </Styles>
@@ -829,6 +1185,7 @@
           </Parameters>
         </Provider>
         <Styles>
+          <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#axisLine</StyleReference>
           <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#axisLabel</StyleReference>
           <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#tickLabel</StyleReference>
         </Styles>

@@ -7,7 +7,7 @@
  Institute of River and coastal engineering
  Denickestr. 22
  21073 Hamburg, Germany
- http://www.tuhh.de/wbprivate final ExportMapOptionsPage
+ http://www.tuhh.de/wbprivate ExportMapOptionsPage
 
  and
 
@@ -40,12 +40,14 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.mapeditor;
 
+import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -57,23 +59,74 @@ import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * @author belger
+ * The map exportable object.
+ * 
+ * @author Gernot Belger
+ * @author Holger Albert
  */
-public class ExportableMap implements IExportableObject
+public class MapExportableObject implements IExportableObject
 {
-  private final int m_width;
+  /**
+   * The map panel.
+   */
+  private IMapPanel m_panel;
 
-  private final int m_height;
+  /**
+   * The preferred document name.
+   */
+  private String m_preferredDocumentName;
 
-  private final String m_format;
+  /**
+   * The width of the new image.
+   */
+  private int m_width;
 
-  private final IMapPanel m_panel;
+  /**
+   * The height of the new image.
+   */
+  private int m_height;
 
-  public ExportableMap( final IMapPanel panel, final int width, final int height, final String format )
+  /**
+   * The insets of the image define a print border, which is kept empty.
+   */
+  private Insets m_insets;
+
+  /**
+   * If >0 and <=25 a border will be drawn around the map.
+   */
+  private int m_borderWidth;
+
+  /**
+   * The format of the image.
+   */
+  private String m_format;
+
+  /**
+   * The constructor.
+   * 
+   * @param panel
+   *          The map panel.
+   * @param preferredDocumentName
+   *          The preferred document name.
+   * @param width
+   *          The width of the new image.
+   * @param height
+   *          The height of the new image.
+   * @param insets
+   *          The insets of the image define a print border, which is kept empty.
+   * @param borderWidth
+   *          If >0 and <=25 a border will be drawn around the map.
+   * @param format
+   *          The format of the image.
+   */
+  public MapExportableObject( IMapPanel panel, String preferredDocumentName, int width, int height, Insets insets, int borderWidth, String format )
   {
     m_panel = panel;
+    m_preferredDocumentName = preferredDocumentName;
     m_width = width;
     m_height = height;
+    m_insets = insets;
+    m_borderWidth = borderWidth;
     m_format = format;
   }
 
@@ -83,8 +136,10 @@ public class ExportableMap implements IExportableObject
   @Override
   public String getPreferredDocumentName( )
   {
-    // TODO besserer Name? JA: mapModell.getName()!
-    return FileUtilities.validateName( Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.0" ) + m_format, "_" ); //$NON-NLS-1$ //$NON-NLS-2$
+    String baseName = FilenameUtils.removeExtension( m_preferredDocumentName );
+    String fileName = String.format( "%s.%s", baseName, m_format );
+
+    return FileUtilities.validateName( fileName, "_" );
   }
 
   /**
@@ -92,22 +147,21 @@ public class ExportableMap implements IExportableObject
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor )
+  public IStatus exportObject( OutputStream output, IProgressMonitor monitor )
   {
     try
     {
       monitor.beginTask( Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.1" ), 1000 ); //$NON-NLS-1$
 
-      final BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_panel, m_width, m_height );
+      BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_panel, m_width, m_height, m_insets, m_borderWidth );
 
-      final boolean result = ImageIO.write( image, m_format, output );
+      boolean result = ImageIO.write( image, m_format, output );
       if( !result )
         return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.2" ) + m_format, null ); //$NON-NLS-1$
     }
-    catch( final IOException e )
+    catch( IOException e )
     {
       e.printStackTrace();
-
       return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString( "org.kalypso.ui.editor.mapeditor.ExportableMap.3" ), e ); //$NON-NLS-1$
     }
     finally

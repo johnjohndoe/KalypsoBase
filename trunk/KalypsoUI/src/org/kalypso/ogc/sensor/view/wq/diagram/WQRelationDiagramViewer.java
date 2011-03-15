@@ -134,8 +134,8 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
       final IObservation obs = WQCurveFactory.createObservation( table );
 
       final AxisMapping[] axmaps = new AxisMapping[2];
-      axmaps[0] = new AxisMapping( obs.getAxisList()[0], diagramAxisFrom );
-      axmaps[1] = new AxisMapping( obs.getAxisList()[1], diagramAxisTo );
+      axmaps[0] = new AxisMapping( obs.getAxes()[0], diagramAxisFrom );
+      axmaps[1] = new AxisMapping( obs.getAxes()[1], diagramAxisTo );
 
       final DiagViewCurve curve = new DiagViewCurve( m_diagView, new PlainObsProvider( obs, null ), obs.getName(),
           ColorUtilities.random(), null, axmaps );

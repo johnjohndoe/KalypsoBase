@@ -207,6 +207,8 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     {
       if( m_rowsDirty )
       {
+        m_rows.clear();
+
         final ZmlModelBuilder builder = new ZmlModelBuilder( this );
         builder.execute( new NullProgressMonitor() );
 

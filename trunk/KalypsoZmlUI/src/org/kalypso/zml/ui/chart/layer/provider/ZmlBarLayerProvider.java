@@ -55,9 +55,7 @@ import de.openali.odysseus.chart.framework.model.exception.ConfigurationExceptio
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
-import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
@@ -75,18 +73,15 @@ public class ZmlBarLayerProvider extends AbstractLayerProvider implements ILayer
     try
     {
       final IStyleSet styleSet = getStyleSet();
-      final StyleSetVisitor visitor = new StyleSetVisitor();
-
-      final IAreaStyle style = visitor.visit( styleSet, IAreaStyle.class, 0 );
       final String targetAxisId = getTargetAxisId();
 
       final ZmlLayerFactory factory = ZmlLayerFactory.getInstance();
 
-      final ZmlBarLayer layer = factory.createBarLayer( this, style );
+      final ZmlBarLayer layer = factory.createBarLayer( this, styleSet );
       final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, targetAxisId );
 
       final IParameterContainer parameters = getParameterContainer();
-      final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
+      final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$ //$NON-NLS-2$
       if( !StringUtils.isEmpty( href ) )
       {
         final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, getRequestHandler() );

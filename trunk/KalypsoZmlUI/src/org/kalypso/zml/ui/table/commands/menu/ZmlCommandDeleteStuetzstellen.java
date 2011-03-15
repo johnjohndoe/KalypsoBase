@@ -44,6 +44,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -54,13 +55,15 @@ import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.model.references.ZmlValueRefernceHelper;
+import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
 
 /**
  * @author Dirk Kuch
@@ -76,7 +79,8 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
     try
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final IZmlTableColumn column = table.getActiveColumn();
+      final IZmlTableSelectionHandler selection = table.getSelectionHandler();
+      final IZmlTableColumn column = selection.getSetActiveColumn();
       if( column == null )
         throw new IllegalStateException( "Konnte aktive Spalte nicht ermitteln. Bitte Linkklick in der zu bearbeitenden Spalte ausführen und Aktion erneut versuchen." );
 
@@ -94,7 +98,7 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
         try
         {
           final IZmlValueReference reference = cell.getValueReference();
-          if( ZmlValueRefernceHelper.isStuetzstelle( reference ) )
+          if( ZmlValues.isStuetzstelle( reference ) )
           {
             model.set( reference.getModelIndex(), statusAxis, KalypsoStati.BIT_CHECK );
             model.set( reference.getModelIndex(), dataSourceAxis, dataSourceHandler.addDataSource( src, src ) );
@@ -105,6 +109,8 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
           KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
         }
       }
+
+      ProgressUtilities.busyCursorWhile( new ZmlInterpolationWorker( modelColumn ) );
 
       // FIXME improve update value handling
       final IObservation observation = modelColumn.getObservation();

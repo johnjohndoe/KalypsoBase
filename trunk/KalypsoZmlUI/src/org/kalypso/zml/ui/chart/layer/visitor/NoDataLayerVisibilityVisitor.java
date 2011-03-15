@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.chart.layer.visitor;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
@@ -69,7 +70,7 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
    * @see org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor#accept(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public boolean visit( final IChartLayer layer )
   {
     if( layer instanceof DefaultTextLayer )
     {
@@ -78,6 +79,8 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
         layer.setVisible( isVisible() );
       }
     }
+
+    return true;
   }
 
   /**
@@ -96,8 +99,8 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
         try
         {
           final IObservation observation = provider.getObservation();
-          if( observation == null )
-            return false;
+          if( Objects.isNull( observation ) )
+            continue;
 
           final ITupleModel model = observation.getValues( null );
           if( model.size() > 0 )

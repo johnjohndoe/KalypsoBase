@@ -89,7 +89,8 @@ public class ZmlTableColumnBuilder implements ICoreRunnableWithProgress
     /** edit support */
     if( m_column.getType() instanceof DataColumnType && m_column.isEditable() )
     {
-      viewerColumn.setEditingSupport( new ZmlEditingSupport( column, labelProvider ) );
+      final ZmlEditingSupport editingSupport = new ZmlEditingSupport( column, labelProvider, m_table.getSelectionHandler() );
+      column.setEditingSupport( editingSupport );
     }
 
     return Status.OK_STATUS;

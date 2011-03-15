@@ -45,15 +45,18 @@ import java.awt.Image;
 import java.awt.Point;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Font;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.outline.nodes.ILegendProvider;
 import org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader;
 import org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
@@ -71,19 +74,24 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipProvider
 {
   /**
+   * The source string. Do not remove this, because it is needed, when the template is saved.
+   */
+  private String m_source;
+
+  /**
+   * This variable stores the image provider.
+   */
+  private IKalypsoImageProvider m_provider;
+
+  /**
    * This variable stores the legend, if any.
    */
-  private org.eclipse.swt.graphics.Image m_legend = null;
+  private org.eclipse.swt.graphics.Image m_legend;
 
   /**
    * This variable stores the max envelope of layer on WMS (local SRS).
    */
   protected GM_Envelope m_maxEnvLocalSRS;
-
-  /**
-   * This variable stores the image provider.
-   */
-  protected IKalypsoImageProvider m_provider;
 
   /**
    * This is the stored extent from the last time, a loader was started (call to
@@ -92,13 +100,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   protected GM_Envelope m_extent;
 
   /**
-   * The source string. Do not remove this, because it is needed, when the template is saved.
-   */
-  private final String m_source;
-
-  /**
    * The constructor.
    * 
+   * @param source
+   *          The source.
    * @param linktype
    *          The link type.
    * @param themeName
@@ -115,6 +120,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     m_source = source;
     m_provider = imageProvider;
+    m_legend = null;
   }
 
   /**
@@ -304,5 +310,19 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
       return null;
 
     return ((AbstractDeegreeImageProvider) m_provider).getLastRequest();
+  }
+
+  public org.eclipse.swt.graphics.Image getLegendGraphic( Font font ) throws CoreException
+  {
+    if( m_provider == null || !(m_provider instanceof ILegendProvider) )
+      return null;
+
+    if( m_legend == null )
+    {
+      ILegendProvider legendProvider = (ILegendProvider) m_provider;
+      m_legend = legendProvider.getLegendGraphic( null, font );
+    }
+
+    return m_legend;
   }
 }

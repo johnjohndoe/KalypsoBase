@@ -44,7 +44,6 @@ import org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider;
 import org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider;
 
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
-import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
@@ -78,16 +77,16 @@ public final class ZmlLayerFactory
     return createLineLayer( null, styleSet );
   }
 
-  public ZmlBarLayer createBarLayer( final ZmlBarLayerProvider provider, final IAreaStyle style )
+  public ZmlBarLayer createBarLayer( final ZmlBarLayerProvider provider, final IStyleSet styleSet )
   {
-    final ZmlBarLayer layer = new ZmlBarLayer( provider, style );
+    final ZmlBarLayer layer = new ZmlBarLayer( provider, styleSet );
 
     return layer;
   }
 
-  public ZmlBarLayer createBarLayer( final IAreaStyle style )
+  public ZmlBarLayer createBarLayer( final IStyleSet styleSet )
   {
-    return createBarLayer( null, style );
+    return createBarLayer( null, styleSet );
   }
 
   public ZmlConstantLineLayer createConstantLineLayer( final ILayerProvider provider, final IStyleSet styleSet, final boolean calculatedRange )

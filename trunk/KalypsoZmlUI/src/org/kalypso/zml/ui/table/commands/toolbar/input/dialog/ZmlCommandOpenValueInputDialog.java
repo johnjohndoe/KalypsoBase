@@ -49,6 +49,7 @@ import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.dialogs.input.ZmlEinzelwertDialog;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
 
 /**
  * @author Dirk Kuch
@@ -63,7 +64,8 @@ public class ZmlCommandOpenValueInputDialog extends AbstractHandler
   public Object execute( final ExecutionEvent event )
   {
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
-    final IZmlTableColumn column = table.getActiveColumn();
+    final IZmlTableSelectionHandler selection = table.getSelectionHandler();
+    final IZmlTableColumn column = selection.getSetActiveColumn();
     if( column == null )
       throw new IllegalStateException( "Konnte aktive Spalte nicht ermitteln. Bitte Linkklick in der zu bearbeitenden Spalte ausführen und Aktion erneut versuchen." );
 

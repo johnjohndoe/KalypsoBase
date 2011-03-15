@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.chart.layer.themes;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -50,17 +51,18 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
-import org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue;
+import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 
 /**
  * @author Dirk Kuch
  */
-public class LineLayerModelVisitor implements ITupleModelVisitor
+public class LineLayerModelVisitor implements IObservationVisitor
 {
   private final ZmlLineLayer m_layer;
 
@@ -68,10 +70,13 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
 
   private IAxis m_dateAxis;
 
-  public LineLayerModelVisitor( final ZmlLineLayer layer, final List<Point> path )
+  private final IChartLayerFilter[] m_filters;
+
+  public LineLayerModelVisitor( final ZmlLineLayer layer, final List<Point> path, final IChartLayerFilter[] filters )
   {
     m_layer = layer;
     m_path = path;
+    m_filters = filters;
   }
 
   private IAxis getValueAxis( )
@@ -99,7 +104,7 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
    * @see org.kalypso.ogc.sensor.visitor.ITupleModelVisitor#visit(org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue)
    */
   @Override
-  public void visit( final ITupleModelVisitorValue container )
+  public void visit( final IObservationValueContainer container )
   {
     try
     {
@@ -116,14 +121,31 @@ public class LineLayerModelVisitor implements ITupleModelVisitor
       if( Objects.isNull( dateObject, valueObject ) )
         return;
 
+      if( isFiltered( container ) )
+        return;
+
       final Date adjusted = ChartLayerUtils.addTimezoneOffset( (Date) dateObject );
 
-      final Point screen = m_layer.getCoordinateMapper().numericToScreen( m_layer.getDateDataOperator().logicalToNumeric( adjusted ), m_layer.getNumberDataOperator().logicalToNumeric( (Double) valueObject ) );
+      final Point screen = m_layer.getCoordinateMapper().numericToScreen( m_layer.getRangeHandler().getDateDataOperator().logicalToNumeric( adjusted ), m_layer.getRangeHandler().getNumberDataOperator().logicalToNumeric( (Double) valueObject ) );
       m_path.add( screen );
     }
     catch( final SensorException e )
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
+  }
+
+  private boolean isFiltered( final IObservationValueContainer container )
+  {
+    if( ArrayUtils.isEmpty( m_filters ) )
+      return false;
+
+    for( final IChartLayerFilter filter : m_filters )
+    {
+      if( filter.isFiltered( container ) )
+        return true;
+    }
+
+    return false;
   }
 }

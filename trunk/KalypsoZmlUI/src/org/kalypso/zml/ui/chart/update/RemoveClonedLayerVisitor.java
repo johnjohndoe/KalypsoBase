@@ -54,7 +54,7 @@ public class RemoveClonedLayerVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public boolean visit( final IChartLayer layer )
   {
     layer.getLayerManager().accept( this );
 
@@ -63,5 +63,7 @@ public class RemoveClonedLayerVisitor implements IChartLayerVisitor
       if( layer.getId().contains( IClonedLayer.CLONED_LAYER_POSTFIX ) )
         layer.getParent().getLayerManager().removeLayer( layer );
     }
+
+    return true;
   }
 }

@@ -53,14 +53,14 @@ import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ColumnHeader;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableHeaderContextMenuProvider
 {
-  public void fillMenu( final ExtendedZmlTableColumn column, final MenuManager menuManager )
+  public void fillMenu( final IExtendedZmlTableColumn column, final MenuManager menuManager )
   {
     if( column == null )
       return;
@@ -77,7 +77,7 @@ public class ZmlTableHeaderContextMenuProvider
     addAdditionalItems( column, menuManager );
   }
 
-  private void addAdditionalItems( final ExtendedZmlTableColumn column, final MenuManager menuManager )
+  private void addAdditionalItems( final IExtendedZmlTableColumn column, final MenuManager menuManager )
   {
     menuManager.add( new Separator() );
 

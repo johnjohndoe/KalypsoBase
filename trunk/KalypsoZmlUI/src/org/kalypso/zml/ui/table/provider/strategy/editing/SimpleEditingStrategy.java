@@ -42,6 +42,8 @@ package org.kalypso.zml.ui.table.provider.strategy.editing;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
@@ -96,7 +98,7 @@ public class SimpleEditingStrategy extends AbstractEditingStrategy
       final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
 
       final Object targetValue = getTargetValue( value );
-      reference.update( targetValue );
+      reference.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
     }
     catch( final SensorException e )
     {

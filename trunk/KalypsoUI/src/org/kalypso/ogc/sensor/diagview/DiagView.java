@@ -201,8 +201,8 @@ public class DiagView extends ObsView
 
     if( obs != null )
     {
-      final IAxis[] valueAxis = KalypsoStatusUtils.findAxesByClasses( obs.getAxisList(), new Class[] { Number.class, Boolean.class }, true );
-      final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( obs.getAxisList() );
+      final IAxis[] valueAxis = KalypsoStatusUtils.findAxesByClasses( obs.getAxes(), new Class[] { Number.class, Boolean.class }, true );
+      final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( obs.getAxes() );
 
       if( keyAxes.length == 0 )
         return;

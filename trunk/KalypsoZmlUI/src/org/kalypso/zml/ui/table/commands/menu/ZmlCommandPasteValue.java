@@ -48,10 +48,13 @@ import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
 
 /**
  * @author Dirk Kuch
@@ -67,7 +70,8 @@ public class ZmlCommandPasteValue extends AbstractHandler
     try
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final IZmlTableCell cell = table.getActiveCell();
+      final IZmlTableSelectionHandler selection = table.getSelectionHandler();
+      final IZmlTableCell cell = selection.getActiveCell();
       final IZmlValueReference reference = cell.getValueReference();
 
       final Clipboard clipboard = new Clipboard( PlatformUI.getWorkbench().getDisplay() );
@@ -75,7 +79,7 @@ public class ZmlCommandPasteValue extends AbstractHandler
       final String data = (String) clipboard.getContents( transfer );
 
       final double value = NumberUtils.parseDouble( data );
-      reference.update( value );
+      reference.update( value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
       return Status.OK_STATUS;
     }
