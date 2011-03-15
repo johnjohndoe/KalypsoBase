@@ -194,8 +194,8 @@ public class TranProLinFilter extends AbstractObservationFilter
       final IAxis[] axesCopy = axesListToCopy.toArray( new IAxis[axesListToCopy.size()] );
       final IAxis[] axesTransform = axesListToTransform.toArray( new IAxis[axesListToTransform.size()] );
       final Date[] targetDates = new Date[targetMaxRows];
-      for( int row = sourceIndexBegin; row < sourceIndexEnd + 1; row++ )
-        targetDates[row] = (Date) outerSource.get( row, dateAxis );
+      for( int row = 0; row < targetMaxRows; row++ )
+        targetDates[row] = (Date) outerSource.get( row + sourceIndexBegin, dateAxis );
 
       final ITupleModel innerSource;
       // find inner source to initialize inner target model
@@ -281,7 +281,7 @@ public class TranProLinFilter extends AbstractObservationFilter
       final Date date = (Date) outerSource.get( sourceRow, dateAxis );
 
       final long hereTime = date.getTime() - dateBegin.getTime();
-      final double hereCoeff = m_operandBegin + deltaOperand * (double) hereTime / (double) distTime;
+      final double hereCoeff = m_operandBegin + deltaOperand * hereTime / distTime;
 
       for( final IAxis axis : axesTransform )
       {
