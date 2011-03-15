@@ -55,8 +55,6 @@ import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
-import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
@@ -188,8 +186,8 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
   protected Integer getDataSourceIndex( )
   {
     final DataSourceHandler handler = new DataSourceHandler( m_filter.getMetaDataList() );
-    final String src = String.format( "%s%s", DataSourceHelper.FILTER_SOURCE, InterpolationFilter.FILTER_ID );
-    return handler.addDataSource( src, src );
+
+    return handler.addDataSource( IInterpolationFilter.DATA_SOURCE, IInterpolationFilter.DATA_SOURCE );
   }
 
   /**

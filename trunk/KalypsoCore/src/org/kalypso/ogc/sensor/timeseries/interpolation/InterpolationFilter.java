@@ -63,7 +63,8 @@ import org.kalypso.ogc.sensor.timeseries.interpolation.worker.IInterpolationFilt
  */
 public class InterpolationFilter extends AbstractObservationFilter implements IInterpolationFilter
 {
-  public static final String FILTER_ID = "InterpolationFilter";
+
+  public static final String FILTER_ID = "InterpolationFilter"; //$NON-NLS-1$
 
   private final int m_calField;
 
@@ -101,6 +102,14 @@ public class InterpolationFilter extends AbstractObservationFilter implements II
     m_fillLastWithValid = fillLastWithValid;
     m_defaultStatus = new Integer( defaultStatus );
     m_defValue = defaultValue;
+
+  }
+
+  @Override
+  protected void appendSettings( final MetadataList metadata )
+  {
+    metadata.put( SETTING_FILL_LAST_WITH_VALID, Boolean.valueOf( m_fillLastWithValid ).toString() );
+    metadata.put( SETTING_DEFAULT_VALUE, m_defValue );
   }
 
   public InterpolationFilter( final int calendarField, final int amount, final boolean forceFill, final String defaultValue, final int defaultStatus )
@@ -201,5 +210,4 @@ public class InterpolationFilter extends AbstractObservationFilter implements II
   {
     return super.getMetadataList();
   }
-
 }

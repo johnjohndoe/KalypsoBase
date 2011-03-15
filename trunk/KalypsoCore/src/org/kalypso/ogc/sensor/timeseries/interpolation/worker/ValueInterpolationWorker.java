@@ -65,6 +65,8 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
  */
 public class ValueInterpolationWorker extends AbstractInterpolationWorker
 {
+  private final Integer m_bitOK = new Integer( KalypsoStati.BIT_OK );
+
   protected class LocalCalculationStack
   {
     public Date d1 = null;
@@ -251,11 +253,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
             tuple[position] = new Integer( (int) valStop );
           else
           {
-            // this is the status axis: no interpolation
-            // tuple[position] = new Integer( KalypsoStatusUtils.performInterpolation( (int) valStart, (int) valStop )
-            // // );
-            tuple[position] = new Integer( KalypsoStati.BIT_CHECK );
-
+            tuple[position] = m_bitOK;
             interpolated = true;
           }
         }

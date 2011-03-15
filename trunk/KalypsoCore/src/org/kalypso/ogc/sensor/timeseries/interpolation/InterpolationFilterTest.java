@@ -83,9 +83,9 @@ public class InterpolationFilterTest extends TestCase
     m_obs = ZmlFactory.parseXML( url ); //$NON-NLS-1$
     assertNotNull( m_obs );
 
-    m_dateAxis = ObservationUtilities.findAxisByClass( m_obs.getAxisList(), Date.class );
+    m_dateAxis = ObservationUtilities.findAxisByClass( m_obs.getAxes(), Date.class );
     assertNotNull( m_dateAxis );
-    m_valueAxis = KalypsoStatusUtils.findAxisByClass( m_obs.getAxisList(), Double.class, true );
+    m_valueAxis = KalypsoStatusUtils.findAxisByClass( m_obs.getAxes(), Double.class, true );
     assertNotNull( m_valueAxis );
   }
 

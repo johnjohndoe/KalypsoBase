@@ -61,6 +61,7 @@ import org.kalypso.ogc.sensor.timeseries.merged.ObservationSource;
 public class ForecastFilter extends AbstractObservationFilter
 {
   private IObservation[] m_observations = null;
+
   private MetadataList m_metadata;
 
   /**
@@ -72,6 +73,14 @@ public class ForecastFilter extends AbstractObservationFilter
     super.initFilter( observations, baseObs, context );
 
     m_observations = observations;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#appendSettings(org.kalypso.ogc.sensor.metadata.MetadataList)
+   */
+  @Override
+  protected void appendSettings( final MetadataList metadata )
+  {
   }
 
   /**
@@ -91,20 +100,19 @@ public class ForecastFilter extends AbstractObservationFilter
 
     m_metadata = MergedObservation.getMetaData( sources );
 
-    
     final MergedObservation observation = new MergedObservation( getHref(), sources, m_metadata );
     return observation.getValues( args );
   }
-  
+
   /**
    * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getMetadataList()
    */
   @Override
   public MetadataList getMetadataList( )
   {
-    if (m_metadata != null)
+    if( m_metadata != null )
       return m_metadata;
-    
+
     return super.getMetadataList();
   }
 }

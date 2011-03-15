@@ -46,6 +46,7 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQPair;
 
 /**
@@ -62,8 +63,8 @@ public class TestAtTable extends TestCase
 
     assertEquals( "BDUE  Elba-Nr.: 12 Wmin:   130.0 Wmax:   900.0", table.getName() ); //$NON-NLS-1$
     assertEquals( 79, table.getSize() );
-    assertEquals( "W", table.getTypeFrom() ); //$NON-NLS-1$
-    assertEquals( "Q", table.getTypeTo() ); //$NON-NLS-1$
+    assertEquals( ITimeseriesConstants.TYPE_WATERLEVEL, table.getTypeFrom() ); //$NON-NLS-1$
+    assertEquals( ITimeseriesConstants.TYPE_DISCHARGE, table.getTypeTo() ); //$NON-NLS-1$
     final WQPair[] values = table.getValues();
     assertEquals( new Double( "120" ).doubleValue(), values[0].getW(), 0.0001 ); //$NON-NLS-1$
     assertEquals( new Double( "5.5" ).doubleValue(), values[0].getQ(), 0.0001 ); //$NON-NLS-1$
