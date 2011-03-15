@@ -46,6 +46,7 @@ import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
+import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
@@ -66,9 +67,11 @@ public class ElementUpdateHelper
     final IEvaluationService service = (IEvaluationService) locator.getService( IEvaluationService.class );
     final IEvaluationContext context = service.getCurrentState();
     final IChartComposite chart = ChartHandlerUtilities.getChart( context );
+    if( chart == null )
+      return;
 
     final IPlotHandler plotDragHandler = chart.getPlotHandler();
-    if( plotDragHandler != null )
+    if( Objects.isNotNull( plotDragHandler ) )
     {
       final IChartDragHandler[] handlers = plotDragHandler.getActiveHandlers();
       element.setChecked( isChecked( handlers, handlerClass ) );
