@@ -44,13 +44,13 @@ import java.net.URL;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProviderSource;
 
 /**
  * @author burtscher1
  */
 public class PlainLayerProvider extends AbstractLayerProvider
 {
+  public static final String ID = "de.openali.odysseus.chart.factory.layer.PlainLayerProvider";
 
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
@@ -61,14 +61,4 @@ public class PlainLayerProvider extends AbstractLayerProvider
     return new PlainLayer( this );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#init(de.openali.odysseus.chart.framework.model.IChartModel,
-   *      java.lang.String, java.lang.String, java.util.Map, de.openali.odysseus.chart.framework.model.style.IStyleSet,
-   *      de.openali.odysseus.chart.factory.config.parameters.IParameterContainer, java.net.URL)
-   */
-  @Override
-  public void init( final ILayerProviderSource source )
-  {
-    // nothing to do
-  }
 }

@@ -47,10 +47,6 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
  */
 public class PlainLayer extends AbstractChartLayer
 {
-  public PlainLayer( )
-  {
-    this( null );
-  }
 
   public PlainLayer( final ILayerProvider provider )
   {

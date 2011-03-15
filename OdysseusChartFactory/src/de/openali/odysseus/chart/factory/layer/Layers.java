@@ -55,7 +55,7 @@ public final class Layers
   {
   }
 
-  public static final boolean isVisible( final IChartLayer layer )
+  public static boolean isVisible( final IChartLayer layer )
   {
     if( !layer.isVisible() )
       return false;
