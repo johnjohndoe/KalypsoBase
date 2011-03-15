@@ -44,8 +44,6 @@ import java.net.URL;
 import java.util.Date;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
@@ -53,7 +51,6 @@ import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.simulation.core.ant.CommitPrognoseFeatureVisitor;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
@@ -130,10 +127,7 @@ public class CommitObservationsTask extends AbstractFeatureVisitorTask
   public final IStatus statusFromVisitor( final FeatureVisitor visitor )
   {
     final CommitPrognoseFeatureVisitor v = (CommitPrognoseFeatureVisitor) visitor;
-    if( v.getStati().length > 0 )
-      return new MultiStatus( KalypsoGisPlugin.getId(), 0, v.getStati(), "", null );
-
-    return Status.OK_STATUS;
+    return v.getResult();
   }
 
   /**

@@ -61,12 +61,12 @@ public final class CopyObservationHelper implements ICopyObservationMetaDataCons
   {
   }
 
-  public static void setCopyObservationSources( final MetadataList metadata, final ObservationSource[] sources )
+  public static void setCopyObservationSources( final MetadataList metadata, final ObservationSource... sources )
   {
-    for( int i = 0; i < sources.length; i++ )
+    for( int index = 0; index < sources.length; index++ )
     {
-      final ObservationSource source = sources[i];
-      final Map<String, String> srcSettings = getSourceMetadataSettings( source, i );
+      final ObservationSource source = sources[index];
+      final Map<String, String> srcSettings = getSourceMetadataSettings( source, index );
 
       metadata.putAll( srcSettings );
     }
