@@ -47,7 +47,9 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.repository.IRepositoryItemVisitor;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.repository.utils.RepositoryVisitors;
 import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
 import org.kalypso.services.observation.sei.ObservationBean;
@@ -208,6 +210,15 @@ public class ServiceRepositoryItem implements IRepositoryItem
   public boolean isMultipleSourceItem( ) throws RepositoryException
   {
     return m_srv.isMultipleSourceItem( getIdentifier() );
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#accept(org.kalypso.repository.IRepositoryItemVisitor)
+   */
+  @Override
+  public void accept( final IRepositoryItemVisitor visitor ) throws RepositoryException
+  {
+    RepositoryVisitors.accept( this, visitor );
   }
 
 }
