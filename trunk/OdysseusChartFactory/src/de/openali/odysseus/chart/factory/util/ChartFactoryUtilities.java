@@ -76,7 +76,7 @@ public final class ChartFactoryUtilities
         }
         catch( final IOException e )
         {
-          // nix machen
+          // do nothing
         }
     }
 
