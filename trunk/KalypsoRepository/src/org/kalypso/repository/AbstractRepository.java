@@ -48,6 +48,7 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.commons.java.util.PropertiesHelper;
+import org.kalypso.repository.utils.RepositoryVisitors;
 
 /**
  * Abstract implementation of <code>IRepository</code> to provide basic functionality.
@@ -86,6 +87,15 @@ public abstract class AbstractRepository implements IRepository
 
     m_listeners = new Vector<IRepositoryListener>();
     m_properties = new Properties();
+  }
+
+  /**
+   * @see org.kalypso.repository.IRepositoryItem#accept(org.kalypso.repository.IRepositoryItemVisitor)
+   */
+  @Override
+  public final void accept( final IRepositoryItemVisitor visitor ) throws RepositoryException
+  {
+    RepositoryVisitors.accept( this, visitor );
   }
 
   /**
@@ -233,7 +243,7 @@ public abstract class AbstractRepository implements IRepository
   public String toString( )
   {
     final String desc = getDescription();
-    if( (desc != null) && (desc.length() > 0) )
+    if( desc != null && desc.length() > 0 )
       return getLabel() + " (" + desc + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 
     return getLabel();

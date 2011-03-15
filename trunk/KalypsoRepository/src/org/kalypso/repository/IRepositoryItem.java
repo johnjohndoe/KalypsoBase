@@ -49,6 +49,8 @@ import org.eclipse.core.runtime.IAdaptable;
  */
 public interface IRepositoryItem extends IAdaptable
 {
+  void accept( IRepositoryItemVisitor visitor ) throws RepositoryException;
+
   /**
    * Returns the item's name. The name is used to display the item in the repository for instance.
    * 
