@@ -47,6 +47,7 @@ import java.util.List;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
@@ -58,6 +59,7 @@ import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
@@ -199,8 +201,11 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     final ICoordinateMapper mapper = getCoordinateMapper();
     final Point screenSize = mapper.getScreenSize();
 
-    final int fromScreen = getDomainScreen( range.getFrom(), 0 );
-    final int toScreen = getDomainScreen( range.getTo(), screenSize.x );
+    Date from = Objects.isNotNull( range.getFrom()) ? ChartLayerUtils.addTimezoneOffset(  range.getFrom()) : null;
+    Date to = Objects.isNotNull( range.getTo()) ? ChartLayerUtils.addTimezoneOffset(  range.getTo()) : null;
+    
+    final int fromScreen = getDomainScreen(from , 0 );
+    final int toScreen = getDomainScreen( to, screenSize.x );
 
     gc.setClipping( fromScreen, 0, toScreen - fromScreen, screenSize.y );
   }
