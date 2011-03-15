@@ -42,7 +42,7 @@ package org.kalypso.zml.ui.table.provider.strategy.editing;
 
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.model.references.ZmlValueRefernceHelper;
+import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 
@@ -67,15 +67,17 @@ public class FindNeighbourStuetzstellenVisitor implements IZmlModelColumnVisitor
    * @see org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor#visit(org.kalypso.zml.core.table.model.visitor.IZmlModelColumnValue)
    */
   @Override
-  public void visit( final IZmlValueReference reference ) throws SensorException
+  public boolean visit( final IZmlValueReference reference ) throws SensorException
   {
-    if( !ZmlValueRefernceHelper.isStuetzstelle( reference ) )
-      return;
+    if( !ZmlValues.isStuetzstelle( reference ) )
+      return true;
 
     if( reference.getModelIndex() < m_modelIndex )
       m_before = reference;
     else if( reference.getModelIndex() > m_modelIndex && m_after == null )
       m_after = reference;
+
+    return true;
   }
 
   public IZmlValueReference getBefore( )

@@ -146,11 +146,24 @@ public class MultipleTsLink
     if( StringUtils.isEmpty( identifier ) )
       return false;
 
-    /** convention: type is encode in identifier of the time series link - like W, W_MODELL or Q, Q_MODELL */
-    final RETokenizer tokenizer = new RETokenizer( new Pattern( "_.*" ), identifier );
-    final String type = tokenizer.nextToken();
+    final String type = getType();
 
     return ArrayUtils.contains( currentIgnoreTypes, type );
   }
 
+  public String getType( )
+  {
+    /** convention: type is encode in identifier of the time series link - like W, W_MODELL or Q, Q_MODELL */
+    final RETokenizer tokenizer = new RETokenizer( new Pattern( "_.*" ), getIdentifier() );
+    return tokenizer.nextToken();
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "multiple link(%d) - %s", m_links.size(), m_identifier );
+  }
 }

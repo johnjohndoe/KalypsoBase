@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,27 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.controls.listener;
+package org.kalypso.zml.core.table.model.references;
+
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 
 /**
- * Interface for listeners which would like to be notified, if one property of the image properties composite has
- * changed.
- * 
- * @author Holger Albert
+ * @author Dirk Kuch
  */
-public interface IImagePropertyChangedListener
+public final class ZmlValues
 {
-  /**
-   * This function is notified, if one image property has changed.
-   * 
-   * @param width
-   *          The width.
-   * @param height
-   *          The height.
-   * @param aspectRatio
-   *          The aspect ratio.
-   * @param format
-   *          The image format.
-   */
-  public void imagePropertyChanged( int width, int height, boolean aspectRatio, String format );
+  private ZmlValues( )
+  {
+  }
+
+  public static boolean isStuetzstelle( final IZmlValueReference reference ) throws SensorException
+  {
+    return isStuetzstelle( reference.getStatus(), reference.getDataSource() );
+
+  }
+
+  public static boolean isStuetzstelle( final Number status, final String source )
+  {
+    if( Objects.isNotNull( status ) && (status.intValue() & KalypsoStati.BIT_USER_MODIFIED) != 0 )
+      return true;
+
+    if( Objects.isNull( source ) )
+      return true;
+
+    return !source.startsWith( DataSourceHelper.FILTER_SOURCE ); //$NON-NLS-1$
+  }
+
 }

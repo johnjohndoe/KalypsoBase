@@ -56,27 +56,25 @@ public interface IZmlModelColumn
 {
   void accept( IZmlModelColumnVisitor visitor ) throws SensorException;
 
-  IZmlModel getModel( );
-
-  DataColumn getDataColumn( );
-
-  IAxis[] getAxes( );
-
-  IAxis getValueAxis( );
-
-  int size( ) throws SensorException;
+  void addListener( IZmlModelColumnListener listener );
 
   Object get( int i, IAxis axis ) throws SensorException;
 
-  void update( int index, Object value, VALUE_STATUS status ) throws SensorException;
+  IAxis[] getAxes( );
+
+  DataColumn getDataColumn( );
+
+  IZmlModelColumnDataHandler getDataHandler( );
 
   String getIdentifier( );
 
-  MetadataList getMetadata( );
-
-  boolean isMetadataSource( );
+  IAxis getIndexAxis( );
 
   String getLabel( );
+
+  MetadataList getMetadata( );
+
+  IZmlModel getModel( );
 
   IObservation getObservation( );
 
@@ -84,10 +82,12 @@ public interface IZmlModelColumn
 
   ITupleModel getTupleModel( ) throws SensorException;
 
-  IAxis getIndexAxis( );
+  IAxis getValueAxis( );
 
-  IZmlModelColumnDataHandler getDataHandler( );
+  boolean isMetadataSource( );
 
-  void addListener( IZmlModelColumnListener listener );
+  int size( ) throws SensorException;
+
+  void update( int index, Object value, final String source, final Integer status ) throws SensorException;
 
 }

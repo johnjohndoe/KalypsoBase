@@ -45,11 +45,14 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
 
 /**
  * @author Dirk Kuch
@@ -65,7 +68,8 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
     try
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final IZmlTableCell active = table.getActiveCell();
+      final IZmlTableSelectionHandler selection = table.getSelectionHandler();
+      final IZmlTableCell active = selection.getActiveCell();
       final IZmlTableColumn column = active.getColumn();
       final IZmlTableCell[] selected = column.getSelectedCells();
       if( selected.length < 2 )
@@ -96,7 +100,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
         final double value = baseValue + step * stepValue;
 
         final IZmlValueReference ref = cell.getValueReference();
-        ref.update( value );
+        ref.update( value, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_OK );
       }
 
       return Status.OK_STATUS;

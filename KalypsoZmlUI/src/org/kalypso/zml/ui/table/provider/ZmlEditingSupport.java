@@ -45,9 +45,12 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.swt.custom.ValidateCellEditorListener;
@@ -55,6 +58,7 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 
@@ -75,7 +79,7 @@ public class ZmlEditingSupport extends EditingSupport
 
   private final ZmlLabelProvider m_labelProvider;
 
-  public ZmlEditingSupport( final ExtendedZmlTableColumn column, final ZmlLabelProvider labelProvider )
+  public ZmlEditingSupport( final ExtendedZmlTableColumn column, final ZmlLabelProvider labelProvider, final IZmlTableSelectionHandler handler )
   {
     super( column.getTable().getTableViewer() );
     m_column = column;
@@ -83,6 +87,56 @@ public class ZmlEditingSupport extends EditingSupport
     final TableViewer viewer = column.getTable().getTableViewer();
 
     m_cellEditor = new TextCellEditor( (Composite) viewer.getControl(), SWT.NONE );
+    m_cellEditor.getControl().addKeyListener( new KeyAdapter()
+    {
+      /**
+       * @see java.awt.event.KeyAdapter#keyPressed(java.awt.event.KeyEvent)
+       */
+      @Override
+      public void keyPressed( final KeyEvent e )
+      {
+        if( SWT.ARROW_UP == e.keyCode )
+        {
+          final IZmlTableCell cell = handler.getActiveCell();
+          if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
+            return;
+
+          final IZmlTableCell previous = cell.findPreviousCell();
+          update( previous );
+        }
+        else if( SWT.ARROW_DOWN == e.keyCode )
+        {
+          final IZmlTableCell cell = handler.getActiveCell();
+          if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
+            return;
+
+          final IZmlTableCell next = cell.findNextCell();
+          update( next );
+        }
+      }
+
+      private void update( final IZmlTableCell cell )
+      {
+        final ViewerCell viewerCell = handler.findViewerCell( cell );
+        if( org.kalypso.commons.java.lang.Objects.isNotNull( viewerCell ) )
+          handler.setFocusCell( viewerCell );
+
+        viewer.getControl().getParent().setFocus();
+        viewer.getControl().setFocus();
+
+// viewer.editElement( cell.getRow().getModelRow(), findIndex( cell ) );
+//
+// new UIJob( "" )
+// {
+// @Override
+// public IStatus runInUIThread( final IProgressMonitor monitor )
+// {
+// m_cellEditor.performSelectAll();
+// return Status.OK_STATUS;
+// }
+// }.schedule();
+      }
+    } );
 
     viewer.getControl().addDisposeListener( new DisposeListener()
     {
@@ -168,4 +222,10 @@ public class ZmlEditingSupport extends EditingSupport
       strategy.setValue( (IZmlModelRow) element, (String) value );
     }
   }
+
+  public TextCellEditor getCellEditor( )
+  {
+    return m_cellEditor;
+  }
+
 }

@@ -87,12 +87,12 @@ public class ZmlDiagramUpdater implements Runnable
   @Override
   public void run( )
   {
+    m_manager.accept( new RemoveClonedLayerVisitor() );
+
     for( final MultipleTsLink multiple : m_links )
     {
       if( multiple.isIgnoreType( m_ignoreTypes ) )
         continue;
-
-      m_manager.accept( new RemoveClonedLayerVisitor() );
 
       final ParameterTypeLayerVisitor visitor = new ParameterTypeLayerVisitor( multiple.getIdentifier() );
       m_manager.accept( visitor );
@@ -103,7 +103,7 @@ public class ZmlDiagramUpdater implements Runnable
       for( int index = 0; index < links.length; index++ )
       {
         final TSLinkWithName link = links[index];
-        final AsynchronousObservationProvider provider = new AsynchronousObservationProvider( link );
+        final AsynchronousObservationProvider provider = new AsynchronousObservationProvider( link, multiple.getType() );
         m_providers.add( provider );
 
         update( layers, provider, index, link.getName() );
@@ -162,6 +162,10 @@ public class ZmlDiagramUpdater implements Runnable
 
     final ICoordinateMapper baseMapper = baseLayer.getCoordinateMapper();
     clone.setCoordinateMapper( new CoordinateMapper( baseMapper.getDomainAxis(), baseMapper.getTargetAxis() ) );
+
+    clone.setVisible( baseLayer.isVisible() );
+    clone.setFilter( baseLayer.getFilters() );
+    clone.setTitle( baseLayer.getTitle() );
 
     final ILayerContainer parent = baseLayer.getParent();
     parent.getLayerManager().addLayer( clone );

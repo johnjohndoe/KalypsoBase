@@ -40,9 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
+
+import com.google.common.base.Objects;
 
 /**
  * @author Dirk Kuch
@@ -156,5 +162,24 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     final IZmlTableRow nextRow = table.getRow( index + 1 );
 
     return new ZmlTableCell( m_column, nextRow );
+  }
+
+  @Override
+  public int findIndex( )
+  {
+    final TableColumn base = getColumn().getTableViewerColumn().getColumn();
+
+    final TableViewer tableViewer = getTable().getTableViewer();
+    final Table table = tableViewer.getTable();
+    final TableColumn[] columns = table.getColumns();
+    for( final TableColumn col : columns )
+    {
+      if( Objects.equal( base, col ) )
+      {
+        return ArrayUtils.indexOf( columns, col );
+      }
+    }
+
+    return 2;
   }
 }

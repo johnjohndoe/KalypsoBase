@@ -1,13 +1,14 @@
 package org.kalypso.zml.core;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
@@ -15,7 +16,7 @@ import org.osgi.framework.BundleContext;
 
 public class KalypsoZmlCore extends Plugin implements BundleActivator
 {
-  private static List<IZmlRuleImplementation> ZML_TABLE_RULES = null;
+  private static Map<String, IZmlRuleImplementation> ZML_TABLE_RULES = null;
 
   private static BundleContext CONTEXT;
 
@@ -61,12 +62,12 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
   /**
    * @return list of feature binding handlers, handling a special featureType qname
    */
-  public synchronized IZmlRuleImplementation[] getRules( )
+  public synchronized Map<String, IZmlRuleImplementation> getRules( )
   {
     // fill binding map
-    if( ZML_TABLE_RULES == null )
+    if( Objects.isNull( ZML_TABLE_RULES ) )
     {
-      ZML_TABLE_RULES = new ArrayList<IZmlRuleImplementation>();
+      ZML_TABLE_RULES = new HashMap<String, IZmlRuleImplementation>();
 
       /* get extension points */
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -82,7 +83,7 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
           final Constructor< ? > constructor = featureClass.getConstructor();
 
           final IZmlRuleImplementation instance = (IZmlRuleImplementation) constructor.newInstance();
-          ZML_TABLE_RULES.add( instance );
+          ZML_TABLE_RULES.put( instance.getIdentifier(), instance );
         }
         catch( final Throwable e )
         {
@@ -91,7 +92,7 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
       }
     }
 
-    return ZML_TABLE_RULES.toArray( new IZmlRuleImplementation[] {} );
+    return ZML_TABLE_RULES;
   }
 
   /**
@@ -99,13 +100,9 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
    */
   public synchronized IZmlRuleImplementation findRule( final String identifier )
   {
-    final IZmlRuleImplementation[] rules = getRules();
-    for( final IZmlRuleImplementation rule : rules )
-    {
-      if( rule.getIdentifier().equals( identifier ) )
-        return rule;
-    }
+    final Map<String, IZmlRuleImplementation> rules = getRules();
 
-    return null;
+    return rules.get( identifier );
   }
+
 }

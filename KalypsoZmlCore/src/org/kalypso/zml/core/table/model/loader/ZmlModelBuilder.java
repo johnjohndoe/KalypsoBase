@@ -46,6 +46,7 @@ import java.util.TreeMap;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.IAxis;
@@ -96,7 +97,7 @@ public class ZmlModelBuilder implements ICoreRunnableWithProgress
           final Object indexValue = column.get( modelIndex, indexAxis );
 
           IZmlModelRow row = rows.get( indexValue );
-          if( row == null )
+          if( Objects.isNull( row ) )
           {
             row = modelFactory.createRow( m_model, indexValue );
             rows.put( indexValue, row );

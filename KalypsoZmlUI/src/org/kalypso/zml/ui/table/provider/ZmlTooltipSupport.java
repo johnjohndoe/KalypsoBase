@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table.provider;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
@@ -54,6 +55,8 @@ import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand;
+import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 import com.google.common.base.Strings;
@@ -67,9 +70,21 @@ public class ZmlTooltipSupport
 
   private final ExtendedZmlTableColumn m_column;
 
+  private static boolean SHOW_TOOLTIPS = true;
+
   public ZmlTooltipSupport( final ExtendedZmlTableColumn column )
   {
     m_column = column;
+  }
+
+  public static boolean isShowTooltips( )
+  {
+    return SHOW_TOOLTIPS;
+  }
+
+  public static void setShowTooltips( final boolean tooltipSupport )
+  {
+    SHOW_TOOLTIPS = tooltipSupport;
   }
 
   public String getToolTipText( final ZmlModelRow row )
@@ -80,7 +95,7 @@ public class ZmlTooltipSupport
       final DataColumnType dataColumn = (DataColumnType) type;
       final IZmlValueReference reference = row.get( dataColumn );
 
-      final String tip1 = getSourceTooltip( reference );
+      final String tip1 = getSourceTooltip( reference, isAggregated() );
       final String tip2 = getRuleTooltip( row );
       final String tip3 = getModelTooltip( dataColumn );
 
@@ -88,6 +103,15 @@ public class ZmlTooltipSupport
     }
 
     return null;
+  }
+
+  private boolean isAggregated( )
+  {
+    final ZmlViewResolutionFilter filter = AbstractHourViewCommand.resolveFilter( m_column.getTable() );
+    if( Objects.isNull( filter ) )
+      return false;
+
+    return filter.getResolution() > 1;
   }
 
   private String getRuleTooltip( final IZmlModelRow row )
@@ -101,7 +125,7 @@ public class ZmlTooltipSupport
 
     for( final ZmlRule rule : activeRules )
     {
-      buffer.append( String.format( "    - %s", rule.getLabel() ) );//$NON-NLS-1$
+      buffer.append( String.format( "    - %s\n", rule.getLabel() ) );//$NON-NLS-1$
     }
 
     return buffer.toString();
@@ -114,16 +138,16 @@ public class ZmlTooltipSupport
     final String indexAxis = column.getIndexAxis();
     final String valueAxis = column.getValueAxis();
 
-    if( indexAxis != null )
+    if( Objects.isNotNull( indexAxis ) )
       buffer.append( buildInfoText( "Indexachse", indexAxis ) );
 
-    if( valueAxis != null )
+    if( Objects.isNotNull( valueAxis ) )
       buffer.append( buildInfoText( "Datenachse", valueAxis ) );
 
     return StringUtils.chop( buffer.toString() );
   }
 
-  private String getSourceTooltip( final IZmlValueReference reference )
+  private String getSourceTooltip( final IZmlValueReference reference, final boolean aggregated )
   {
     final StringBuffer buffer = new StringBuffer();
 
@@ -135,16 +159,16 @@ public class ZmlTooltipSupport
 
       final String href = reference.getHref();
 
-      if( value instanceof Number )
+      if( value instanceof Number && !aggregated )
         buffer.append( buildInfoText( "Wert", value.toString() ) );
 
-      if( status != null )
+      if( Objects.isNotNull( status ) && !aggregated )
         buffer.append( buildInfoText( "Status", getStatus( status ) ) );
 
-      if( source != null )
+      if( Objects.isNotNull( source ) )
         buffer.append( buildInfoText( "Modellquelle", source ) );
 
-      if( href != null )
+      if( Objects.isNotNull( href ) )
         buffer.append( buildInfoText( "Lokale Quelle", href ) );
     }
     catch( final SensorException e )

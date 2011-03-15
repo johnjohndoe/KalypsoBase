@@ -48,5 +48,8 @@ import org.kalypso.zml.core.table.model.references.IZmlValueReference;
  */
 public interface IZmlModelColumnVisitor
 {
-  void visit( IZmlValueReference reference ) throws SensorException;
+  /**
+   * @return continue search?
+   */
+  boolean visit( IZmlValueReference reference ) throws SensorException;
 }

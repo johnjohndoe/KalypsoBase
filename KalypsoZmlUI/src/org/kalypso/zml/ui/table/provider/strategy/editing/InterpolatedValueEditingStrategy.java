@@ -40,14 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider.strategy.editing;
 
-import java.util.Date;
-
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.VALUE_STATUS;
+import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolation;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
@@ -84,13 +85,13 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
     try
     {
       final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
-      if( reference == null )
-        return "";
+      if( Objects.isNull( reference ) )
+        return ""; //$NON-NLS-1$
 
       final Object value = reference.getValue();
 
       final CellStyle style = getStyle();
-      return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value );
+      return String.format( style.getTextFormat() == null ? "%s" : style.getTextFormat(), value ); //$NON-NLS-1$
     }
     catch( final Throwable t )
     {
@@ -114,12 +115,12 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
       final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
 
       final Object targetValue = getTargetValue( value );
-      reference.update( targetValue );
+      reference.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
       final ExtendedZmlTableColumn column = getColumn();
       final IZmlTableCell cell = column.findCell( row );
 
-      /** update interpolated values before and afte */
+      /** update interpolated values before and after */
       final IZmlModelColumn modelColumn = column.getModelColumn();
 
       final FindNeighbourStuetzstellenVisitor visitor = new FindNeighbourStuetzstellenVisitor( cell );
@@ -137,58 +138,25 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
 
   private void interpolate( final IZmlValueReference before, final IZmlValueReference current, final int direction ) throws SensorException
   {
+    final IZmlModelColumn column = getColumn().getModelColumn();
+    final Double defaultValue = ZmlInterpolation.getDefaultValue( column.getMetadata() );
+
     if( direction < 0 && before == null )
     {
-      setNull( 0, current.getModelIndex() );
+      ZmlInterpolation.fillValue( column, 0, current.getModelIndex(), defaultValue );
     }
     else if( direction > 0 && current == null )
     {
-      setNull( before.getModelIndex() + 1, getColumn().getModelColumn().size() );
+      if( ZmlInterpolation.isSetLastValidValue( column.getMetadata() ) )
+      {
+        final Double value = (Double) before.getValue();
+        ZmlInterpolation.fillValue( column, before.getModelIndex() + 1, column.size(), value );
+      }
+      else
+        ZmlInterpolation.fillValue( column, before.getModelIndex() + 1, column.size(), defaultValue );
     }
     else
-    {
-      interpolate( before, current );
-    }
+      ZmlInterpolation.interpolate( column, before, current );
   }
 
-  private void setNull( final int start, final int end )
-  {
-    final IZmlModelColumn column = getColumn().getModelColumn();
-    for( int index = start; index < end; index++ )
-    {
-      try
-      {
-        column.update( index, Double.valueOf( 0.0 ), VALUE_STATUS.eInterpolated );
-      }
-      catch( final SensorException e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
-    }
-  }
-
-  private void interpolate( final IZmlValueReference before, final IZmlValueReference current ) throws SensorException
-  {
-    final IZmlModelColumn column = getColumn().getModelColumn();
-    final Date baseDate = (Date) current.getIndexValue();
-    final Double baseValue = (Double) current.getValue();
-
-    final Date beforeDate = (Date) before.getIndexValue();
-    final Double beforeValue = (Double) before.getValue();
-
-    final long timeDiff = baseDate.getTime() - beforeDate.getTime();
-    final double valueDiff = baseValue - beforeValue;
-
-    final double diff = valueDiff / timeDiff;
-
-    for( int index = before.getModelIndex() + 1; index < current.getModelIndex(); index++ )
-    {
-      final Date ptr = (Date) column.get( index, column.getIndexAxis() );
-      final double ptrDiff = ptr.getTime() - beforeDate.getTime();
-
-      final double value = beforeValue + (diff * ptrDiff);
-      column.update( index, value, VALUE_STATUS.eInterpolated );
-    }
-
-  }
 }

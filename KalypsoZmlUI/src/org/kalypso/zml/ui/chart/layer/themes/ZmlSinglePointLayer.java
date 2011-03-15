@@ -45,6 +45,7 @@ import java.util.Date;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -186,6 +187,12 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
 
       final Double value = findValue( handler, position );
 
+      if( Objects.isNull( value ) )
+      {
+        m_descriptors = new ZmlSinglePointBean[] {};
+        return;
+      }
+
       final IStyleSet styleSet = getStyleSet();
       final StyleSetVisitor visitor = new StyleSetVisitor();
 
@@ -210,7 +217,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
     final IAxis valueAxis = provider.getValueAxis();
 
     double diff = Double.MAX_VALUE;
-    Number value = 0;
+    Number value = null;
 
     for( int i = 0; i < model.size(); i++ )
     {
@@ -229,6 +236,9 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
 
     }
 
+    if( value == null )
+      return null;
+
     return value.doubleValue();
   }
 
@@ -240,4 +250,5 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
   {
     // not needed
   }
+
 }

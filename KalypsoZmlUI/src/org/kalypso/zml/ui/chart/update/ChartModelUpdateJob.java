@@ -64,9 +64,12 @@ public class ChartModelUpdateJob extends UIJob
 
   private final ICommandExecutorTrigger m_trigger;
 
+  private boolean m_firstRun = true;
+
   public ChartModelUpdateJob( final ICommandExecutorTrigger trigger, final IChartModel model )
   {
     super( "Aktualisiere Diagramm" );
+
     m_trigger = trigger;
     m_model = model;
   }
@@ -87,8 +90,13 @@ public class ChartModelUpdateJob extends UIJob
     final ILayerManager layerManager = m_model.getLayerManager();
     layerManager.accept( visitors );
 
-    final CommandExecutor exec = new CommandExecutor( m_trigger );
-    exec.run();
+// if( m_firstRun )
+    {
+      final CommandExecutor exec = new CommandExecutor( m_trigger, m_firstRun );
+      exec.run();
+
+      m_firstRun = false;
+    }
 
     m_model.autoscale();
 

@@ -46,6 +46,7 @@ import java.util.Set;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
 /**
@@ -66,13 +67,15 @@ public class ParameterTypeLayerVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public boolean visit( final IChartLayer layer )
   {
     if( !isTypeOf( layer ) )
-      return;
+      return true;
 
     if( layer instanceof IZmlLayer )
       m_layers.add( (IZmlLayer) layer );
+
+    add( layer.getLayerManager() );
 
     final IChartLayer[] children = layer.getLayerManager().getLayers();
     for( final IChartLayer child : children )
@@ -81,6 +84,20 @@ public class ParameterTypeLayerVisitor implements IChartLayerVisitor
       {
         m_layers.add( (IZmlLayer) child );
       }
+    }
+
+    return true;
+  }
+
+  private void add( final ILayerManager layerManager )
+  {
+    final IChartLayer[] layers = layerManager.getLayers();
+    for( final IChartLayer layer : layers )
+    {
+      if( layer instanceof IZmlLayer )
+        m_layers.add( (IZmlLayer) layer );
+
+      add( layer.getLayerManager() );
     }
   }
 

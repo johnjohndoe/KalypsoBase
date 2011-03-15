@@ -168,5 +168,4 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
   {
     // nothing to do
   }
-
 }

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.wms.provider.images;
 
-
 import org.deegree.ogcwebservices.wms.RemoteWMService;
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.kalypso.i18n.Messages;
@@ -70,7 +69,7 @@ public class WMSImageProvider extends AbstractDeegreeImageProvider
    * @see org.kalypso.ogc.gml.wms.provider.AbstractDeegreeImageProvider#getRemoteService(org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities)
    */
   @Override
-  protected RemoteWMService getRemoteService( final WMSCapabilities capabilities )
+  protected RemoteWMService getRemoteService( WMSCapabilities capabilities )
   {
     return new RemoteWMService( capabilities );
   }
@@ -81,6 +80,6 @@ public class WMSImageProvider extends AbstractDeegreeImageProvider
   @Override
   public String getLabel( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.wms.loader.images.WMSImageProvider.6") + getService(); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.wms.loader.images.WMSImageProvider.6" ) + getService(); //$NON-NLS-1$
   }
 }

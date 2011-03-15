@@ -112,7 +112,7 @@ final class RememberForSync
 
       final ITupleModel values = obs.getValues( null );
 
-      final IAxis[] axes = obs.getAxisList();
+      final IAxis[] axes = obs.getAxes();
 
       final IAxis dateAxis = ObservationUtilities.findAxisByClass( axes, Date.class );
 

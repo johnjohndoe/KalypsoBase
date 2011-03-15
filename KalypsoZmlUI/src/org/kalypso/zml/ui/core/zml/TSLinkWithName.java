@@ -47,7 +47,6 @@ import java.net.URL;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 
@@ -195,6 +194,6 @@ public class TSLinkWithName
   @Override
   public String toString( )
   {
-    return ToStringBuilder.reflectionToString( this );
+    return String.format( "link %s", m_href );
   }
 }

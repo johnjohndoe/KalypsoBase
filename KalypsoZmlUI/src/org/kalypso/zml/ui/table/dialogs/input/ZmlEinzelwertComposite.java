@@ -49,7 +49,6 @@ import java.util.TreeSet;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -67,10 +66,12 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.validators.IntegerInputValidator;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedComboViewer;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
@@ -80,23 +81,24 @@ import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DateWidgetRule;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
 import org.kalypso.zml.ui.table.base.widgets.rules.TimeWidgetRule;
+import org.kalypso.zml.ui.table.dialogs.input.worker.FindNextValueVisitor;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertModelListener, IAbstractEnhancedWidgetChangeListener
 {
-  private static final Image IMG_ADD = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/add.png" ) );
+  private static final Image IMG_ADD = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/add.png" ) ); //$NON-NLS-1$
 
-  private static final Image IMG_ADD_ONE = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/add_one.png" ) );
+  private static final Image IMG_ADD_ONE = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/add_one.png" ) ); //$NON-NLS-1$
 
-  private static final Image IMG_REMOVE = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/remove.png" ) );
+  private static final Image IMG_REMOVE = new Image( null, ZmlEinzelwertComposite.class.getResourceAsStream( "icons/remove.png" ) ); //$NON-NLS-1$
 
   protected final ZmlEinzelwertModel m_model;
 
   private Composite m_base;
 
-  private final FormToolkit m_toolkit;
+  protected final FormToolkit m_toolkit;
 
   private final Set<IZmlEinzelwertCompositeListener> m_listeners = new LinkedHashSet<IZmlEinzelwertCompositeListener>();
 
@@ -256,7 +258,6 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
   private void addRowControls( final Composite parent, final FormToolkit toolkit, final ZmlEinzelwert row )
   {
-
     final ToolBar toolBar = new ToolBar( parent, SWT.FLAT | SWT.RIGHT_TO_LEFT );
     final GridData layoutData = new GridData( GridData.END, GridData.FILL, false, false );
     layoutData.widthHint = layoutData.minimumWidth = 150;
@@ -265,7 +266,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
     final ToolItem itemRemove = new ToolItem( toolBar, SWT.PUSH );
     itemRemove.setImage( IMG_REMOVE );
-    itemRemove.setToolTipText( "Wert entfernen" );
+    itemRemove.setToolTipText( "Eingabefeld entfernen" );
 
     itemRemove.addSelectionListener( new SelectionAdapter()
     {
@@ -291,7 +292,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
     final ToolItem itemAdd = new ToolItem( toolBar, SWT.PUSH );
     itemAdd.setImage( IMG_ADD );
-    itemAdd.setToolTipText( "Wert hinzufügen (benutzerdefinierte Schrittweite)" );
+    itemAdd.setToolTipText( "Eingabefeld hinzufügen" );
 
     itemAdd.addSelectionListener( new SelectionAdapter()
     {
@@ -301,26 +302,37 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final InputDialog dialog = new InputDialog( toolBar.getShell(), "Schrittweite", "Bitte geben Sie den Stunden-Offset (Schrittweite) des nächsten Wertes an", "1", new IntegerInputValidator() );
-        final int status = dialog.open();
-        if( Window.OK == status )
+        try
         {
-          try
+          final IZmlModelColumn column = m_model.getColumn();
+          final IndexVisitor visitor = new IndexVisitor( row );
+          column.accept( visitor );
+
+          final Integer[] steppings = visitor.getSteppings();
+
+          final ChooseSteppingDialog dialog = new ChooseSteppingDialog( toolBar.getShell(), row, steppings, m_toolkit );
+          final int status = dialog.open();
+          if( Window.OK == status )
           {
-            final Integer stepping = Integer.valueOf( dialog.getValue() );
-            m_model.addRow( row.getDate(), stepping );
-          }
-          catch( final Throwable t )
-          {
-            KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+            m_model.addRow( row.getDate(), dialog.getOffset() );
           }
         }
+        catch( final SensorException e1 )
+        {
+          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+        }
+//
+// final InputDialog dialog = new InputDialog( toolBar.getShell(), "Schrittweite",
+// "Bitte geben Sie den Stunden-Offset (Schrittweite) des nächsten Wertes an", "1", new IntegerInputValidator() );
+// final int status = dialog.open();
+//
+// }
       }
     } );
 
     final ToolItem itemAddOne = new ToolItem( toolBar, SWT.PUSH );
     itemAddOne.setImage( IMG_ADD_ONE );
-    itemAddOne.setToolTipText( "Wert hinzufügen (Schrittweite +1 Stunde )" );
+    itemAddOne.setToolTipText( "Eingabefeld für nächsten Wert" );
 
     itemAddOne.addSelectionListener( new SelectionAdapter()
     {
@@ -332,11 +344,24 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       {
         try
         {
-          m_model.addRow( row.getDate(), 1 );
+          final IZmlModelColumn column = m_model.getColumn();
+          final FindNextValueVisitor visitor = new FindNextValueVisitor( row );
+          column.accept( visitor );
+
+          final IZmlValueReference reference = visitor.getReference();
+          if( Objects.isNotNull( reference ) )
+          {
+            final Object object = reference.getValue();
+            if( object instanceof Number )
+              m_model.addRow( new ZmlEinzelwert( m_model, (Date) reference.getIndexValue(), ((Number) object).doubleValue() ) );
+            else
+              m_model.addRow( new ZmlEinzelwert( m_model, (Date) reference.getIndexValue(), 0.0 ) );
+          }
+
         }
-        catch( final Throwable t )
+        catch( final SensorException e1 )
         {
-          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
         }
       }
     } );

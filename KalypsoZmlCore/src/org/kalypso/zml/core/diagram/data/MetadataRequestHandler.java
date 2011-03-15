@@ -53,9 +53,7 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 
-import de.openali.odysseus.chart.factory.config.parameters.impl.XmlbeansParameterContainer;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
-import de.openali.odysseus.chartconfig.x020.ParametersType;
 
 /**
  * @author Dirk Kuch
@@ -67,11 +65,6 @@ public class MetadataRequestHandler implements IRequestHandler
   public MetadataRequestHandler( final IParameterContainer parameters )
   {
     m_parameters = parameters;
-  }
-
-  public MetadataRequestHandler( final ParametersType parameters )
-  {
-    m_parameters = new XmlbeansParameterContainer( "", "", parameters );
   }
 
   /**

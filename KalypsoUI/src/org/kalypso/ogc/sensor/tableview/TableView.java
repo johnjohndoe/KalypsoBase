@@ -114,7 +114,7 @@ public class TableView extends ObsView
     // again, if the provider-observation changes
     if( obs != null )
     {
-      final IAxis[] axes = obs.getAxisList();
+      final IAxis[] axes = obs.getAxes();
 
       // do not even continue if there are no axes
       if( axes == null || axes.length == 0 )

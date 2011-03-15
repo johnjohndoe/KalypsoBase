@@ -38,32 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.references;
-
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
+package org.kalypso.zml.core.table.model;
 
 /**
  * @author Dirk Kuch
  */
-public final class ZmlValueRefernceHelper
+public interface IColumnLabelProvider
 {
-  private ZmlValueRefernceHelper( )
-  {
-  }
-
-  public static boolean isStuetzstelle( final IZmlValueReference reference ) throws SensorException
-  {
-    final Integer status = reference.getStatus();
-    if( (status & KalypsoStati.BIT_USER_MODIFIED) != 0 )
-      return true;
-
-    final String source = reference.getDataSource();
-    if( source == null )
-      return true;
-
-    return !source.startsWith( DataSourceHelper.FILTER_SOURCE ); //$NON-NLS-1$
-  }
-
+  String getLabel( );
 }

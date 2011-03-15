@@ -176,6 +176,15 @@
       </RuleInstructions>
       <label>Restrechenzeitraum</label>
     </Rule>
+    <Rule ruleReference="org.kalypso.zml.ui.core.rule.forecast.value" id="ruleForecastUnsafeAndRestrechenzeitraum">
+      <styleReference>
+        <reference>forecastCellStyleRestrechenzeitraum</reference>
+      </styleReference>
+      <RuleInstructions>
+        <MetadataDateRangeInstruction propertyFrom="sichere Vorhersage Ende" propertyTo="Vorhersage Ende" propertyToInclusive="true" />
+      </RuleInstructions>
+      <label>Restrechenzeitraum</label>
+    </Rule>
     <Rule id="ruleDerivedValue" ruleReference="org.kalypso.zml.ui.core.rule.derived.value" setHeaderIcon="true">
       <styleReference>
         <reference>derivedValueCellStyle</reference>
@@ -192,7 +201,7 @@
       <styleReference>
         <reference>interpolatedValueStyle</reference>
       </styleReference>
-      <label>Interpolierte(r) Wert(e)</label>
+      <label>Berechnete(r) Wert(e)</label>
     </Rule>
     <Rule id="ruleIntervalValue" ruleReference="org.kalypso.zml.ui.core.rule.value.interval" setHeaderIcon="true">
       <styleReference>
@@ -204,7 +213,7 @@
       <styleReference>
         <reference>warnedValueStyle</reference>
       </styleReference>
-      <label>Interpolierte(r) Wert(e)</label>
+      <label>Gewarnte(r) Wert(e)</label>
     </Rule>
     <Rule id="ruleWqConflict" ruleReference="org.kalypso.zml.ui.core.rule.wq.conflict" setHeaderIcon="true">
       <styleReference>

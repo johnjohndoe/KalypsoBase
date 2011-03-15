@@ -214,18 +214,9 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
   @Override
   public Image getLegendGraphic( final String[] whiteList, final Font font )
   {
-    /* The theme ids, which are allowed. */
-    List<String> themeIds = null;
-    if( whiteList != null && whiteList.length > 0 )
-      themeIds = Arrays.asList( whiteList );
-
-    /* Only show themes in the white list. */
-    if( themeIds != null && themeIds.size() > 0 )
-    {
-      final String id = getElement().getId();
-      if( id != null && id.length() > 0 && !themeIds.contains( id ) )
-        return null;
-    }
+    /* Check, if this theme is allowed. */
+    if( !checkWhiteList( whiteList ) )
+      return null;
 
     /* All elements in this theme. */
     final List<LegendElement> elements = collectElements( font );

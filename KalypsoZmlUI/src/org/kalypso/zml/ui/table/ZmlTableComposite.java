@@ -41,11 +41,14 @@
 package org.kalypso.zml.ui.table;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
+
+import jregex.Pattern;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -54,18 +57,25 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
@@ -82,7 +92,9 @@ import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
-import org.kalypso.zml.ui.table.provider.ZmlTableEventListener;
+import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
+import org.kalypso.zml.ui.table.provider.ZmlEditingSupport;
+import org.kalypso.zml.ui.table.provider.ZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
@@ -91,19 +103,19 @@ import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
  */
 public class ZmlTableComposite extends Composite implements IZmlColumnModelListener, IZmlTable
 {
-  private TableViewer m_tableViewer;
+  protected TableViewer m_tableViewer;
 
   private final Set<ExtendedZmlTableColumn> m_columns = new LinkedHashSet<ExtendedZmlTableColumn>();
 
   private final IZmlModel m_model;
 
-  private ZmlTableEventListener m_eventListener;
+  protected ZmlTableSelectionHandler m_selection;
 
   private ZmlTableUiUpdateJob m_updateJob;
 
   private final Set<IZmlTableListener> m_listeners = new LinkedHashSet<IZmlTableListener>();
 
-  private ZmlViewResolutionFilter m_filter;
+  private final ZmlViewResolutionFilter m_filter = new ZmlViewResolutionFilter( this );
 
   private final ZmlTableLayoutHandler m_handler;
 
@@ -114,7 +126,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     m_handler = new ZmlTableLayoutHandler( this );
 
-    setLayout( LayoutHelper.createGridLayout() );
+    final GridLayout layout = LayoutHelper.createGridLayout();
+    layout.verticalSpacing = 0;
+    setLayout( layout );
     setup( toolkit );
 
     model.addListener( this );
@@ -127,15 +141,16 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     Composite toolbar = null;
     if( hasToolbar( tableType ) )
+    {
       toolbar = toolkit.createComposite( this );
+      toolbar.setLayout( LayoutHelper.createGridLayout() );
+      toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    }
 
     m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_tableViewer.getTable().setLinesVisible( true );
 
-    m_eventListener = new ZmlTableEventListener( this );
-
-    m_tableViewer.getTable().addMouseMoveListener( m_eventListener );
-    m_tableViewer.getTable().addListener( SWT.MenuDetect, m_eventListener );
+    m_selection = new ZmlTableSelectionHandler( this );
 
     ColumnViewerToolTipSupport.enableFor( m_tableViewer, ToolTip.NO_RECREATE );
 
@@ -172,28 +187,42 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     addBasicFilters();
 
+    final Pattern pattern = new Pattern( "[\\w\\d]" ); // $NON-NLS-1$
+    m_tableViewer.getControl().addKeyListener( new KeyAdapter()
+    {
+      @Override
+      public void keyPressed( final KeyEvent e )
+      {
+        final char character = e.character;
+
+        if( org.kalypso.commons.java.lang.Objects.isNotNull( character ) && pattern.matches( String.valueOf( character ) ) )
+        {
+          final IZmlTableCell cell = m_selection.getActiveCell();
+          if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
+            return;
+
+          startEditing( cell, character );
+        }
+      }
+
+      private void startEditing( final IZmlTableCell cell, final char character )
+      {
+        m_tableViewer.editElement( cell.getRow().getModelRow(), cell.findIndex() );
+        final IZmlTableColumn column = cell.getColumn();
+        if( column instanceof IExtendedZmlTableColumn )
+        {
+          final IExtendedZmlTableColumn extended = (IExtendedZmlTableColumn) column;
+          final ZmlEditingSupport support = extended.getEditingSupport();
+          final TextCellEditor editor = support.getCellEditor();
+          ((Text) editor.getControl()).insert( String.valueOf( character ) );
+        }
+      }
+    } );
+
     /** layout stuff */
     final Table table = m_tableViewer.getTable();
     table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     table.setHeaderVisible( true );
-
-    /* keyboard table cursor */
-// final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( m_tableViewer, new
-// FocusCellOwnerDrawHighlighter( m_tableViewer ) );
-// final ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy( m_tableViewer )
-// {
-// @Override
-// protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event )
-// {
-// return event.eventType == ColumnViewerEditorActivationEvent.TRAVERSAL || event.eventType ==
-// ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION
-// || (event.eventType == ColumnViewerEditorActivationEvent.KEY_PRESSED && event.keyCode == SWT.CR) || event.eventType
-// == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
-// }
-// };
-//
-// TableViewerEditor.create( m_tableViewer, focusCellManager, actSupport, ColumnViewerEditor.TABBING_VERTICAL |
-// ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL );
 
     if( hasToolbar( tableType ) )
       initToolbar( tableType, toolbar, toolkit );
@@ -212,13 +241,15 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private void addBasicFilters( )
   {
-    m_filter = new ZmlViewResolutionFilter( this );
     m_tableViewer.addFilter( m_filter );
   }
 
   private void initToolbar( final ZmlTableType tableType, final Composite composite, final FormToolkit toolkit )
   {
     /** process as job in order to handle toolbar IElementUpdate job actions */
+    // FIXME: this is a sign, that thee is a problem elsewhere: the ui-elements should update as soon as the table is
+// loaded
+    // (maybe fire an source-change event after everything is loaded?)
     new UIJob( "" )
     {
       @Override
@@ -228,13 +259,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         if( toolbarReferences == null || toolbarReferences.isEmpty() )
           return Status.OK_STATUS;
 
-        composite.setLayout( LayoutHelper.createGridLayout() );
-        composite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-
-        final ToolBarManager toolBarManager = new ToolBarManager();
+        final ToolBarManager toolBarManager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT | SWT.RIGHT );
 
         final ToolBar control = toolBarManager.createControl( composite );
-        control.setLayoutData( new GridData( SWT.RIGHT, GridData.FILL, true, false ) );
+        control.setLayoutData( new GridData( SWT.RIGHT, SWT.FILL, true, false ) );
 
         for( final String reference : toolbarReferences )
         {
@@ -244,8 +272,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         toolBarManager.update( true );
 
         toolkit.adapt( control );
-        composite.layout();
-        ZmlTableComposite.this.layout();
+
+        composite.getParent().layout( true, true );
 
         return Status.OK_STATUS;
       }
@@ -272,9 +300,31 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       column.reset();
     }
 
-    m_tableViewer.refresh();
+    final IStructuredSelection selection = (IStructuredSelection) m_tableViewer.getSelection();
 
+    final IZmlTableCell cell = m_selection.getActiveCell();
     fireTableChanged();
+
+    m_tableViewer.refresh( true, true );
+
+    if( !selection.isEmpty() )
+    {
+      m_tableViewer.setSelection( selection );
+      m_tableViewer.getTable().setFocus();
+    }
+
+    if( Objects.isNotNull( cell ) )
+      new UIJob( "" )
+      {
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
+        {
+          m_selection.setFocusCell( (Date) cell.getRow().getModelRow().getIndexValue(), cell.getColumn() );
+
+          return Status.OK_STATUS;
+        }
+      }.schedule( 400 );
+
   }
 
   public void fireTableChanged( )
@@ -320,42 +370,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public TableViewer getTableViewer( )
   {
     return m_tableViewer;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getActiveCell()
-   */
-  @Override
-  public IZmlTableCell getActiveCell( )
-  {
-    return m_eventListener.findActiveCell();
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getActiveColumn()
-   */
-  @Override
-  public IZmlTableColumn getActiveColumn( )
-  {
-    return m_eventListener.findActiveColumn();
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getActiveRow()
-   */
-  @Override
-  public IZmlTableRow getActiveRow( )
-  {
-    return m_eventListener.findActiveRow();
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getSelectedRows()
-   */
-  @Override
-  public IZmlTableRow[] getSelectedRows( )
-  {
-    return m_eventListener.findSelectedRows();
   }
 
   /**
@@ -465,6 +479,14 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public void remove( final IExtendedZmlTableColumn column )
   {
     m_columns.remove( column );
+  }
 
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTable#getSelectionHandler()
+   */
+  @Override
+  public IZmlTableSelectionHandler getSelectionHandler( )
+  {
+    return m_selection;
   }
 }
