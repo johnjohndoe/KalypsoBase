@@ -131,6 +131,8 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       return line;
     final Point letterSize = calcSize( StringUtils.substring( line, 0, 5 ) + StringUtils.substring( line, line.length() - 5 ) );
     final int charAnz = width * 10 / letterSize.x;
+    if(charAnz < 6)
+      return (StringUtils.abbreviate( line, 5 ));
     if( charAnz < line.length() )
       return StringUtils.abbreviateMiddle( line, "...", charAnz );
     return line;
@@ -258,6 +260,8 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
   private ImageData loadImage( final Device dev, final String text )
   {
+    if( text == null || text.length() == 0 )
+      return null;
 
     InputStream inputStream = null;
     Image image = null;

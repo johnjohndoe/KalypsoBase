@@ -5,6 +5,7 @@ import java.awt.Insets;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -23,7 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
-import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
+import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
@@ -255,7 +256,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
       }
     } );
-    setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
+    setBackground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
     setChartModel( model );
   }
 
@@ -316,7 +317,12 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     if( isDisposed() )
       return;
 
-    m_invalidateChartJob.schedule( 100 );
+    if( m_invalidateChartJob.getState() == Job.SLEEPING )
+    {
+      m_invalidateChartJob.cancel();
+    }
+
+    m_invalidateChartJob.schedule( 50 );
   }
 
   protected void paintDragArea( final GC gcw )

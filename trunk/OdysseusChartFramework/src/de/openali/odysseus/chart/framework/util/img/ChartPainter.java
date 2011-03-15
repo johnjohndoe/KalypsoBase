@@ -88,7 +88,7 @@ public class ChartPainter
     final int axisTopWidth = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ) );
     final int axisBottomWidth = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ) );
 
-    m_legendPainter = new ChartLegendCanvas( model, new DefaultChartLegendConfig( size.width - axisLeftWidth - axisRightWidth ) );
+    m_legendPainter = new ChartLegendCanvas( model, new DefaultChartLegendConfig( size.width ) );
     m_legendSize = m_legendPainter.getSize();
 
     m_titlePainter = new ChartTitlePainter2();// new ChartTitlePainter( model, size );
@@ -100,6 +100,7 @@ public class ChartPainter
     m_plotInsets = new Insets( top, axisLeftWidth, bottom, axisRightWidth );
 
     // need it here ??? -> move to createImage()
+    // -> check callers from getPlotInsets() first
     setAxesHeight();
     m_plotPainter = new ChartPlotPainter( model, new Point( size.width - m_plotInsets.left - m_plotInsets.right, size.height - m_plotInsets.bottom - m_plotInsets.top ) );
   }
@@ -213,7 +214,7 @@ public class ChartPainter
         gc.drawImage( rightImage, m_size.width - m_plotInsets.right, m_plotInsets.top );
 
       if( legendImage != null )
-        gc.drawImage( legendImage, m_plotInsets.left, m_size.height - m_legendPainter.getSize().y );
+        gc.drawImage( legendImage, 0, m_size.height - m_legendPainter.getSize().y );
     }
     finally
     {

@@ -47,5 +47,9 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
  */
 public interface IChartLayerVisitor
 {
-  void visit( IChartLayer layer );
+
+  /**
+   * @return continue search
+   */
+  boolean visit( IChartLayer layer );
 }
