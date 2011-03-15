@@ -52,6 +52,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -218,7 +219,6 @@ public class ChartLayerFactory extends AbstractChartFactory
     final IAxis domainAxis = buildMapper( domainAxisRef );
     final IAxis targetAxis = buildMapper( targetAxisRef );
 
-    final CoordinateMapper mapper = new CoordinateMapper( domainAxis, targetAxis );
     buildRoleReferences( layerType );
 
     final IParameterContainer parameters = createParameterContainer( layerType.getId(), provider.getId(), layerType.getProvider() );
@@ -280,7 +280,9 @@ public class ChartLayerFactory extends AbstractChartFactory
 
     final IChartLayer layer = provider.getLayer( getContext() );
     setBasicParameters( layerType, layer );
-    layer.setCoordinateMapper( mapper );
+
+    if( Objects.isNotNull( domainAxis, targetAxis ) )
+      layer.setCoordinateMapper( new CoordinateMapper( domainAxis, targetAxis ) );
 
     layer.setData( CONFIGURATION_TYPE_KEY, layerType );
     layer.init();
@@ -320,6 +322,8 @@ public class ChartLayerFactory extends AbstractChartFactory
   private ReferencingType getTargetAxisReference( final LayerType layerType, final ReferencableType... baseTypes )
   {
     final MapperRefs reference = findMapperReference( layerType, baseTypes );
+    if( Objects.isNull( reference ) )
+      return null;
 
     return reference.getTargetAxisRef();
   }
@@ -327,6 +331,8 @@ public class ChartLayerFactory extends AbstractChartFactory
   private ReferencingType getDomainAxisReference( final LayerType layerType, final ReferencableType... baseTypes )
   {
     final MapperRefs reference = findMapperReference( layerType, baseTypes );
+    if( reference == null )
+      return null;
 
     return reference.getDomainAxisRef();
   }
@@ -348,7 +354,7 @@ public class ChartLayerFactory extends AbstractChartFactory
       }
     }
 
-    throw new NotImplementedException();
+    return null;
   }
 
   private void setBasicParameters( final LayerType layerType, final IChartLayer layer )
@@ -384,7 +390,7 @@ public class ChartLayerFactory extends AbstractChartFactory
     if( mapperType != null )
     {
       final String mpId = mapperType.getProvider().getEpid();
-      if( (mpId != null) && (mpId.length() > 0) )
+      if( mpId != null && mpId.length() > 0 )
         try
         {
           final IMapperRegistry mr = getModel().getMapperRegistry();

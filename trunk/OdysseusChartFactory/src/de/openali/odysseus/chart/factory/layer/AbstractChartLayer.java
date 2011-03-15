@@ -1,7 +1,10 @@
 package de.openali.odysseus.chart.factory.layer;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.Color;
@@ -9,6 +12,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -16,6 +20,7 @@ import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.LayerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
@@ -23,6 +28,7 @@ import de.openali.odysseus.chart.framework.model.layer.manager.LayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
+import de.openali.odysseus.chart.framework.model.mapper.IScreenAxis;
 
 /**
  * @author alibu
@@ -30,6 +36,8 @@ import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
 public abstract class AbstractChartLayer implements IChartLayer
 {
   private ICoordinateMapper m_coordinateMapper;
+
+  Set<IChartLayerFilter> m_filters = new LinkedHashSet<IChartLayerFilter>();
 
   /**
    * hash map to store arbitrary key value pairs
@@ -169,7 +177,7 @@ public abstract class AbstractChartLayer implements IChartLayer
           min = Math.min( min, dr.getMin().doubleValue() );
       }
     }
-    if( (min == null) || (max == null) )
+    if( min == null || max == null )
       return null;
     return new DataRange<Number>( min, max );
   }
@@ -227,7 +235,7 @@ public abstract class AbstractChartLayer implements IChartLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> intervall )
   {
     Double min = null;
     Double max = null;
@@ -246,7 +254,7 @@ public abstract class AbstractChartLayer implements IChartLayer
           min = Math.min( min, dr.getMin().doubleValue() );
       }
     }
-    if( (min == null) || (max == null) )
+    if( min == null || max == null )
       return null;
     return new DataRange<Number>( min, max );
   }
@@ -290,7 +298,30 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public boolean isVisible( )
   {
-    return m_isVisible;
+    if( !m_isVisible )
+      return false;
+
+    final ICoordinateMapper mapper = getCoordinateMapper();
+    if( mapper == null )
+      return true;
+
+    if( isNotVisible( mapper.getDomainAxis() ) )
+      return false;
+
+    if( isNotVisible( mapper.getTargetAxis() ) )
+      return false;
+
+    return true;
+  }
+
+  private boolean isNotVisible( final IAxis axis )
+  {
+    if( Objects.isNull( axis ) )
+      return true;
+    else if( axis instanceof IScreenAxis )
+      return false;
+
+    return !axis.isVisible();
   }
 
   /**
@@ -431,5 +462,50 @@ public abstract class AbstractChartLayer implements IChartLayer
   public ILayerContainer getParent( )
   {
     return m_parent;
+  }
+
+  @Override
+  public final void addFilter( final IChartLayerFilter... filters )
+  {
+    if( ArrayUtils.isEmpty( filters ) )
+      return;
+
+    Collections.addAll( m_filters, filters );
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
+  @Override
+  public final void setFilter( final IChartLayerFilter... filters )
+  {
+    if( ArrayUtils.isEmpty( filters ) )
+      return;
+
+    m_filters.clear();
+    Collections.addAll( m_filters, filters );
+
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
+  @Override
+  public IChartLayerFilter[] getFilters( )
+  {
+    return m_filters.toArray( new IChartLayerFilter[] {} );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#removeFilter(de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter[])
+   */
+  @Override
+  public void removeFilter( final IChartLayerFilter... filters )
+  {
+    if( ArrayUtils.isEmpty( filters ) )
+      return;
+
+    for( final IChartLayerFilter filter : filters )
+    {
+      m_filters.remove( filter );
+    }
+
+    getEventHandler().fireLayerContentChanged( this );
   }
 }
