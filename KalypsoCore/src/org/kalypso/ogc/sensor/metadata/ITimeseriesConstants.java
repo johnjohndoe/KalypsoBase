@@ -169,6 +169,8 @@ public interface ITimeseriesConstants extends IMetadataConstants
   /** Abfluss */
   String TYPE_RUNOFF = "Q"; //$NON-NLS-1$
 
+  String TYPE_DISCHARGE = TYPE_RUNOFF;
+
   String TYPE_RUNOFF_RHB = "Qrhb"; //$NON-NLS-1$
 
   String TYPE_RUNOFF_Q2 = "Q2"; //$NON-NLS-1$

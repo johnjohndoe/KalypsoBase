@@ -48,6 +48,7 @@ import org.kalypso.observation.result.Component;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 
 /**
  * @author schlienger
@@ -60,7 +61,7 @@ public class TupleResultTest extends TestCase
     Assert.assertEquals( 0, result.getComponents().length );
     Assert.assertEquals( 0, result.size() );
 
-    final IComponent comp = new Component( "Q", "Abfluss", null, "m³/s", null, XmlTypes.XS_DOUBLE, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final IComponent comp = new Component( ITimeseriesConstants.TYPE_DISCHARGE, "Abfluss", null, "m³/s", null, XmlTypes.XS_DOUBLE, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     result.addComponent( comp );
     Assert.assertEquals( 1, result.getComponents().length );
 
@@ -109,7 +110,7 @@ public class TupleResultTest extends TestCase
 
   public void testComponent( )
   {
-    final Component comp = new Component( "Q", "Abfluss", null, "m³/s", null, XmlTypes.XS_DOUBLE, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final Component comp = new Component( ITimeseriesConstants.TYPE_DISCHARGE, "Abfluss", null, "m³/s", null, XmlTypes.XS_DOUBLE, null, null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     Assert.assertEquals( "Abfluss", comp.getName() ); //$NON-NLS-1$
     Assert.assertNull( comp.getDescription() );
     Assert.assertEquals( "m³/s", comp.getUnit() ); //$NON-NLS-1$

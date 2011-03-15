@@ -96,4 +96,6 @@ public interface ITupleModel
    */
   int indexOf( final Object element, final IAxis axis ) throws SensorException;
 
+  boolean isEmpty( ) throws SensorException;
+
 }

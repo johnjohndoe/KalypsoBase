@@ -108,7 +108,7 @@ public final class AutoProxyFactory implements IProxyFactory
         boolean foundType1 = false;
         boolean foundType2 = false;
 
-        final IAxis[] axes = obs.getAxisList();
+        final IAxis[] axes = obs.getAxes();
         for( int i = 0; i < axes.length; i++ )
         {
           if( axes[i].getType().equals( type1 ) )
@@ -153,7 +153,7 @@ public final class AutoProxyFactory implements IProxyFactory
     {
       boolean foundW = false;
       boolean foundQ = false;
-      final IAxis[] axes = obs.getAxisList();
+      final IAxis[] axes = obs.getAxes();
       for( int i = 0; i < axes.length; i++ )
       {
         if( axes[i].getType().equals( ITimeseriesConstants.TYPE_RUNOFF ) )

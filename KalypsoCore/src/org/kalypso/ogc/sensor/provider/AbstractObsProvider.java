@@ -72,7 +72,6 @@ public abstract class AbstractObsProvider implements IObsProvider
     m_request = args;
   }
 
-
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#dispose()
    */
@@ -102,14 +101,17 @@ public abstract class AbstractObsProvider implements IObsProvider
     if( m_observation != null )
       m_observation.addListener( m_observationListeer );
 
-    fireChanged();
+    synchronized( this )
+    {
+      fireChanged();
+    }
   }
 
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#getObservation()
    */
   @Override
-  public final IObservation getObservation( )
+  public IObservation getObservation( )
   {
     return m_observation;
   }
@@ -152,7 +154,6 @@ public abstract class AbstractObsProvider implements IObsProvider
     for( final Object listener : listeners )
       ((IObsProviderListener) listener).observationChanged( source );
   }
-
 
   /**
    * ATM only triggered from setObservation

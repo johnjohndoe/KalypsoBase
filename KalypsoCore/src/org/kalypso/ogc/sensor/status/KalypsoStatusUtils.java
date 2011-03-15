@@ -202,7 +202,8 @@ public final class KalypsoStatusUtils
         return axe;
     }
 
-    throw new NoSuchElementException( Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoStatusUtils.14" ) + axis ); //$NON-NLS-1$
+    return null;
+//    throw new NoSuchElementException( Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoStatusUtils.14" ) + axis ); //$NON-NLS-1$
   }
 
   /**
