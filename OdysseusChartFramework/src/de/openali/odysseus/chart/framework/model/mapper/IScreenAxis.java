@@ -38,50 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.model.layer.manager.visitors;
-
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+package de.openali.odysseus.chart.framework.model.mapper;
 
 /**
+ * marker interface for screen axis
+ * 
  * @author Dirk Kuch
  */
-public class FindLayerVisitor implements IChartLayerVisitor
+public interface IScreenAxis extends IAxis
 {
-  private final String m_identifier;
-
-  private IChartLayer m_layer;
-
-  public FindLayerVisitor( final String identifier )
-  {
-    m_identifier = identifier;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  @Override
-  public boolean visit( final IChartLayer layer )
-  {
-    if( m_layer != null )
-      return false;
-
-    if( layer.getId().equals( m_identifier ) )
-    {
-      m_layer = layer;
-      return false;
-    }
-
-    final ILayerManager layerManager = layer.getLayerManager();
-    layerManager.accept( this );
-
-    return true;
-  }
-
-  public IChartLayer getLayer( )
-  {
-    return m_layer;
-  }
 
 }

@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
+import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
@@ -95,7 +95,7 @@ public class BasicChartSettings implements IBasicChartSettings
     if( m_renderer == null )
       m_renderer = CompactChartLegendRenderer.ID;
 
-    return OdysseusChartFrameworkPlugin.getDefault().getRenderers( m_renderer );
+    return OdysseusChartFramework.getDefault().getRenderers( m_renderer );
   }
 
   @Override

@@ -3,7 +3,7 @@ package de.openali.odysseus.chart.framework.model.style.impl;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 
-import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
+import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IMarker;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -131,7 +131,7 @@ public class PointStyle extends AbstractStyle implements IPointStyle
 
     gc.setAlpha( getAlpha() );
 
-    gc.setBackground( OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), getInlineColor() ) );
+    gc.setBackground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( gc.getDevice(), getInlineColor() ) );
 
   }
 

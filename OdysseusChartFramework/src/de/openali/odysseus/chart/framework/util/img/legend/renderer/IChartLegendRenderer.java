@@ -58,4 +58,9 @@ public interface IChartLegendRenderer
   Point calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config );
 
   String getIdentifier( );
+
+  /**
+   * @return number of rows
+   */
+  int rowSize( );
 }

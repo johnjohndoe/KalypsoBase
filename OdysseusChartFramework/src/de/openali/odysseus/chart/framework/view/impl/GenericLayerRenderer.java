@@ -14,7 +14,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
-import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
+import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -46,7 +46,7 @@ public class GenericLayerRenderer
     final GC tmpGC = new GC( image );
 
     // Hintergrund explizit malen - der wird später transparent gezeichnet
-    final Color transparentColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), new RGB( 0xfe, 0xff, 0xff ) );
+    final Color transparentColor = OdysseusChartFramework.getDefault().getColorRegistry().getResource( gc.getDevice(), new RGB( 0xfe, 0xff, 0xff ) );
     tmpGC.setBackground( transparentColor );
     tmpGC.fillRectangle( gc.getClipping() );
 

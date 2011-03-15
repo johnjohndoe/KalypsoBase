@@ -31,7 +31,7 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
   IDataRange<Number> getDomainRange( );
 
   /**
-   * Gibt die ID des Layers zurück; die ID wird verwendet, um das Layer im Chart zu referenzieren
+   * the "unique" (TODO) identifier of the chart layer
    */
   String getId( );
 
@@ -105,4 +105,12 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
   void setTitle( final String title );
 
   void setVisible( final boolean isVisible );
+
+  void addFilter( IChartLayerFilter... filter );
+
+  void removeFilter( IChartLayerFilter... filter );
+
+  void setFilter( IChartLayerFilter... filters );
+
+  IChartLayerFilter[] getFilters( );
 }

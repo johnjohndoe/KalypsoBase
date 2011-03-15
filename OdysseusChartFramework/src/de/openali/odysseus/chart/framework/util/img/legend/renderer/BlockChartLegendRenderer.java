@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img.legend.renderer;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
@@ -63,6 +64,8 @@ import de.openali.odysseus.chart.framework.util.img.legend.utils.LegendChartLaye
 public class BlockChartLegendRenderer implements IChartLegendRenderer
 {
   public static final String ID = "de.openali.odysseus.chart.legend.render.block"; //$NON-NLS-1$
+
+  private int m_rows;
 
   /**
    * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#getIdentifier()
@@ -96,6 +99,8 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     final IChartLayer[] layers = getLayers( canvas.getModel() );
     final Point canvasSize = calculateSize( layers, config );
     final Point itemSize = calculateItemSize( layers, config );
+    if( canvasSize.x <= 0 || canvasSize.y <= 0 )
+      return null;
 
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, canvasSize.x, canvasSize.y );
@@ -148,7 +153,10 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     final LegendChartLayersVisitor visitor = new LegendChartLayersVisitor();
     layerManager.accept( visitor );
 
-    return visitor.getLayers();
+    final IChartLayer[] layers = visitor.getLayers();
+    ArrayUtils.reverse( layers );
+
+    return layers;
   }
 
   private ImageData createLegendItem( final ILegendEntry entry, final IChartLegendConfig config, final Point size )
@@ -236,11 +244,21 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
       return new Point( 1, 1 );
 
     final int legendEntries = calculateLegendEntries( layers );
+    //never return 0 itemsperrow, 
+    final int itemsPerRow = Math.max( 1,config.getMaximumWidth() / maxItemSize.x);
 
-    final int itemsPerRow = config.getMaximumWidth() / maxItemSize.x;
-    final int rows = legendEntries / itemsPerRow + 1;
+    m_rows = calculateRowNumbers( legendEntries, itemsPerRow );
 
-    return new Point( config.getMaximumWidth(), rows * maxItemSize.y );
+    return new Point( config.getMaximumWidth(), Double.valueOf( m_rows ).intValue() * maxItemSize.y );
+  }
+
+  private int calculateRowNumbers( final int legendEntries, final int itemsPerRow )
+  {
+    final double rows = Integer.valueOf( legendEntries ).doubleValue() / Integer.valueOf( itemsPerRow ).doubleValue();
+    if( Double.valueOf( rows ).intValue() - rows != 0 )
+      return (int) rows + 1;
+
+    return (int) rows;
   }
 
   private int calculateLegendEntries( final IChartLayer[] layers )
@@ -303,6 +321,15 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     final int y = (rowHeight - textSize.y) / 2;
 
     return new Point( x, y );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#rowSize()
+   */
+  @Override
+  public int rowSize( )
+  {
+    return m_rows;
   }
 
 }

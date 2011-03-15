@@ -127,4 +127,16 @@ public class CoordinateMapper implements ICoordinateMapper
     final Number targetNum = getTargetAxis().screenToNumeric( targetScreen );
     return new Pair<Number, Number>( domainNum, targetNum );
   }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper#getScreenSize()
+   */
+  @Override
+  public Point getScreenSize( )
+  {
+    final IAxis domainAxis = getDomainAxis();
+    final IAxis targetAxis = getTargetAxis();
+
+    return new Point( domainAxis.getScreenHeight(), targetAxis.getScreenHeight() );
+  }
 }
