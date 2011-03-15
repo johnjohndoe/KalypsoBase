@@ -116,8 +116,15 @@ public class ChartHandlerUtilities
     if( chartVar instanceof IChartPart )
       return (IChartPart) chartVar;
 
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-    return (IChartPart) part.getAdapter( IChartPart.class );
+    final Object objPart = context.getVariable( ISources.ACTIVE_PART_NAME );
+    if( objPart instanceof IWorkbenchPart )
+    {
+      final IWorkbenchPart part = (IWorkbenchPart) objPart;
+
+      return (IChartPart) part.getAdapter( IChartPart.class );
+    }
+
+    return null;
   }
 
   /**

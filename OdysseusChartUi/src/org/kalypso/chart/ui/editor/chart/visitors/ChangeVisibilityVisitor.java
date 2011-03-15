@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.chart.visitors;
 
-import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 
 /**
  * @author Dirk Kuch
@@ -50,9 +50,12 @@ public class ChangeVisibilityVisitor extends AbstractParameterVisitor
 {
   private final boolean m_enabled;
 
-  public ChangeVisibilityVisitor( final String parameter, final boolean enabled )
+  private final IChartLayerFilter[] m_filters;
+
+  public ChangeVisibilityVisitor( final String parameter, final IChartLayerFilter[] filters, final boolean enabled )
   {
     super( parameter );
+    m_filters = filters;
 
     m_enabled = enabled;
   }
@@ -61,27 +64,25 @@ public class ChangeVisibilityVisitor extends AbstractParameterVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public boolean visit( final IChartLayer layer )
   {
     if( definesParameter( layer ) )
     {
       layer.setVisible( m_enabled );
-
-      setVisible( layer );
+      applyFilters( layer );
     }
 
     layer.getLayerManager().accept( this );
+
+    return true;
   }
 
-  private void setVisible( final IChartLayer layer )
+  private void applyFilters( final IChartLayer layer )
   {
-    final ILayerContainer parent = layer.getParent();
-    if( parent instanceof IChartLayer )
-    {
-      final IChartLayer parentLayer = (IChartLayer) parent;
-      (parentLayer).setVisible( true );
-
-      setVisible( parentLayer );
-    }
+    if( m_enabled )
+      layer.addFilter( m_filters );
+    else
+      layer.removeFilter( m_filters );
   }
+
 }

@@ -58,17 +58,17 @@ public class VisibilityInitialStatusVisitor extends AbstractParameterVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public void visit( final IChartLayer layer )
+  public boolean visit( final IChartLayer layer )
   {
     if( layer.isVisible() )
       if( definesParameter( layer ) )
       {
         m_enabled = true;
-
-        return;
+        return false;
       }
 
     layer.getLayerManager().accept( this );
+    return true;
   }
 
   public boolean isEnabled( )

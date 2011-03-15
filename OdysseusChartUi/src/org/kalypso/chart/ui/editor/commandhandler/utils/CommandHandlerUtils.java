@@ -59,7 +59,7 @@ public class CommandHandlerUtils
     /**
      * event specifies an parameter?
      */
-    final String parameter = event.getParameter( "enabled" ); //$NON-NLS-1$
+    final String parameter = event.getParameter( "enabled" ); // $NON-NLS-1$
     if( StringUtils.isNotEmpty( parameter ) )
       return Boolean.valueOf( parameter );
 

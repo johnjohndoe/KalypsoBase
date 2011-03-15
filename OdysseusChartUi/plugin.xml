@@ -92,6 +92,11 @@
                name="Layer defines parameter &apos;x&apos;"
                optional="false">
          </commandParameter>
+         <commandParameter
+               id="layer.filter"
+               name="apply filter referenced filters (seperator &apos;;&apos;)"
+               optional="true">
+         </commandParameter>
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
@@ -394,5 +399,4 @@
              id="org.kalypso.chart.ui.layer.provider.axis.selection">
        </provider>
     </extension>
-
 </plugin>
