@@ -116,7 +116,7 @@ public class MergedObservation extends AbstractObservationDecorator implements I
       final IObservation observation = source.getObservation();
       final Collection<IAxis> resultAxes = new ArrayList<IAxis>();
 
-      final IAxis[] axes = observation.getAxisList();
+      final IAxis[] axes = observation.getAxes();
       for( final IAxis axis : axes )
       {
         if( axis.isPersistable() )

@@ -38,51 +38,73 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.timeseries.datasource;
+package org.kalypso.ogc.sensor.util;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class RemoveDataSourceObservationHandler
+public final class Observations
 {
-
-  private final IObservation m_observation;
-
-  public RemoveDataSourceObservationHandler( final IObservation observation )
+  private Observations( )
   {
-    m_observation = observation;
   }
 
-  /**
-   * @return cloned observation extended by data source axis if no data source axis exists
-   */
-  public IObservation remove( ) throws SensorException
+  public static void accept( final IObservation observation, final IObservationVisitor visitor, final IRequest request ) throws SensorException
   {
-    if( !hasDataSouceAxis() )
-      return m_observation;
+    final ITupleModel model = observation.getValues( request );
 
-    final RemoveDataSourceModelHandler handler = new RemoveDataSourceModelHandler( m_observation.getValues( null ) );
-    final ITupleModel model = handler.remove();
+    for( int i = 0; i < model.size(); i++ )
+    {
+      final int index = i;
 
-    final DataSourceHandler dataSourceHandler = new DataSourceHandler( m_observation.getMetadataList() );
-    dataSourceHandler.removeAllDataSources();
+      visitor.visit( new IObservationValueContainer()
+      {
+        @Override
+        public boolean hasAxis( final String... types )
+        {
+          for( final String type : types )
+          {
+            if( AxisUtils.findAxis( model.getAxes(), type ) == null )
+              return false;
+          }
 
-    return new SimpleObservation( m_observation.getHref(), m_observation.getName(), m_observation.getMetadataList(), model );
+          return true;
+        }
+
+        @Override
+        public int getIndex( )
+        {
+          return index;
+        }
+
+        @Override
+        public IAxis[] getAxes( )
+        {
+          return model.getAxes();
+        }
+
+        @Override
+        public Object get( final IAxis axis ) throws SensorException
+        {
+          return model.get( index, axis );
+        }
+
+        @Override
+        public MetadataList getMetaData( )
+        {
+          return observation.getMetadataList();
+        }
+      } );
+    }
   }
-
-  public boolean hasDataSouceAxis( )
-  {
-    final IAxis[] axes = m_observation.getAxes();
-    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( axes );
-
-    return dataSourceAxis != null;
-  }
-
 }

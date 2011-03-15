@@ -59,6 +59,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.WQTuppleModel;
@@ -102,6 +103,14 @@ public class TranProLinFilter extends AbstractObservationFilter
     m_operation = MathOperationFactory.createMathOperation( operator );
     if( dateBegin != null && dateEnd != null && (dateBegin.after( dateEnd ) || dateBegin.equals( dateEnd )) )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter.0" ) + dateBegin + " - " + dateEnd ); //$NON-NLS-1$ //$NON-NLS-2$
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#appendSettings(org.kalypso.ogc.sensor.metadata.MetadataList)
+   */
+  @Override
+  protected void appendSettings( final MetadataList metadata )
+  {
   }
 
   /**
@@ -169,9 +178,8 @@ public class TranProLinFilter extends AbstractObservationFilter
       final List<IAxis> axesListToCopy = new ArrayList<IAxis>();
       final List<IAxis> axesListToTransform = new ArrayList<IAxis>();
       final List<IAxis> axesListStatus = new ArrayList<IAxis>();
-      for( int i = 0; i < axes.length; i++ )
+      for( final IAxis axis : axes )
       {
-        final IAxis axis = axes[i];
         if( axis.getDataClass() == Date.class ) // always copy date axis
           continue;
         // axesListToCopy.add( axis );
@@ -252,17 +260,15 @@ public class TranProLinFilter extends AbstractObservationFilter
     for( int sourceRow = sourceIndexBegin; sourceRow < sourceIndexEnd + 1; sourceRow++ )
     {
       // copy
-      for( int t = 0; t < axesCopy.length; t++ )
+      for( final IAxis axis : axesCopy )
       {
-        final IAxis axis = axesCopy[t];
         final Object value = outerSource.get( sourceRow, axis );
         outerTarget.set( targetRow, axis, value );
       }
 
       // status
-      for( int t = 0; t < axesStatus.length; t++ )
+      for( final IAxis axis : axesStatus )
       {
-        final IAxis axis = axesStatus[t];
         final Number oldValue = (Number) outerSource.get( sourceRow, axis );
         final Number newValue = new Integer( KalypsoStatusUtils.performArithmetic( oldValue.intValue(), m_statusToMerge ) );
         outerTarget.set( targetRow, axis, newValue );
@@ -275,11 +281,10 @@ public class TranProLinFilter extends AbstractObservationFilter
       final Date date = (Date) outerSource.get( sourceRow, dateAxis );
 
       final long hereTime = date.getTime() - dateBegin.getTime();
-      final double hereCoeff = m_operandBegin + deltaOperand * ((double) hereTime / (double) distTime);
+      final double hereCoeff = m_operandBegin + deltaOperand * (double) hereTime / (double) distTime;
 
-      for( int t = 0; t < axesTransform.length; t++ )
+      for( final IAxis axis : axesTransform )
       {
-        final IAxis axis = axesTransform[t];
         final String type = axis.getType();
 
         final double currentValue = ((Number) outerSource.get( sourceRow, axis )).doubleValue();

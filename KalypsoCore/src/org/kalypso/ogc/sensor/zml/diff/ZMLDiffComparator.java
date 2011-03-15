@@ -90,8 +90,8 @@ public class ZMLDiffComparator implements IDiffComparator
   {
     boolean result = false;
     double differenceAll = 0;
-    final IAxis[] axes1 = obs1.getAxisList();
-    final IAxis[] axes2 = obs2.getAxisList();
+    final IAxis[] axes1 = obs1.getAxes();
+    final IAxis[] axes2 = obs2.getAxes();
     final IAxis dateAxis1 = ObservationUtilities.findAxisByClass( axes1, Date.class );
     final IAxis dateAxis2 = ObservationUtilities.findAxisByClass( axes2, Date.class );
     final IAxis valueAxis1 = ObservationUtilities.findAxisByClass( axes1, Double.class );

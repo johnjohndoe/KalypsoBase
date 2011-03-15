@@ -42,12 +42,20 @@ package org.kalypso.ogc.sensor.timeseries.interpolation.worker;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
+import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 
 /**
  * @author Dirk Kuch
  */
 public interface IInterpolationFilter
 {
+  String SETTING_FILL_LAST_WITH_VALID = "IInterpolationFilter.setting.fillLastWithValid"; //$NON-NLS-1$
+
+  String SETTING_DEFAULT_VALUE = "IInterpolationFilter.setting.defaultValue"; //$NON-NLS-1$
+
+  String DATA_SOURCE = DataSourceHelper.FILTER_SOURCE + InterpolationFilter.FILTER_ID;
+
   IObservation getObservation( );
 
   boolean isFilled( );

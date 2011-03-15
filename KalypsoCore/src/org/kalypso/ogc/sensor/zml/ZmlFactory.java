@@ -601,7 +601,7 @@ public final class ZmlFactory
         }
       } );
 
-      for( final IAxis axis : obs.getAxisList() )
+      for( final IAxis axis : obs.getAxes() )
       {
         sortedAxis.add( axis );
       }

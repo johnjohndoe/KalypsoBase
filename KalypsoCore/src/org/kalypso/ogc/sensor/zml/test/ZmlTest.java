@@ -112,7 +112,7 @@ public class ZmlTest extends TestCase
 
   private void _testGetAxisList( final IObservation obs )
   {
-    final IAxis[] axes = obs.getAxisList();
+    final IAxis[] axes = obs.getAxes();
     assertNotNull( axes );
 
     assertTrue( axes.length == 3 );
@@ -147,7 +147,7 @@ public class ZmlTest extends TestCase
 
   private void _testSetValues( final IObservation obs ) throws SensorException, ParseException
   {
-    final IAxis[] axes = obs.getAxisList();
+    final IAxis[] axes = obs.getAxes();
 
     final IAxis dateAxis = ObservationUtilities.findAxisByName( axes, "Datum" ); //$NON-NLS-1$
     assertNotNull( dateAxis );
@@ -158,7 +158,7 @@ public class ZmlTest extends TestCase
     final IAxis vAxis2 = ObservationUtilities.findAxisByName( axes, "Pegel2" ); //$NON-NLS-1$
     assertNotNull( vAxis2 );
 
-    final SimpleTupleModel m = new SimpleTupleModel( obs.getAxisList() );
+    final SimpleTupleModel m = new SimpleTupleModel( obs.getAxes() );
 
     final Object[] t1 = new Object[3];
     t1[m.getPosition( dateAxis )] = m_df.parse( "20.01.2004" ); //$NON-NLS-1$

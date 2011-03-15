@@ -65,9 +65,9 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
 {
-  private final int m_sizeX;
+  private int m_sizeX;
 
-  private final int m_sizeY;
+  private int m_sizeY;
 
   private RenderedOp m_image;
 
@@ -81,12 +81,12 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
 
     m_image = JAI.create( "url", imageURL );
 
-    m_sizeX = m_image.getWidth();
-    m_sizeY = m_image.getHeight();
+    m_sizeX = -1;
+    m_sizeY = -1;
     m_min = null;
     m_max = null;
 
-    //initialize();
+    // initialize();
   }
 
   /**
@@ -112,6 +112,9 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   @Override
   public int getSizeX( )
   {
+    if( m_sizeX < 1 )
+      m_sizeX = m_image.getWidth();
+
     return m_sizeX;
   }
 
@@ -121,6 +124,9 @@ public class ImageGeoGrid extends AbstractGeoGrid implements IGeoGrid
   @Override
   public int getSizeY( )
   {
+    if( m_sizeY < 1 )
+      m_sizeY = m_image.getHeight();
+
     return m_sizeY;
   }
 

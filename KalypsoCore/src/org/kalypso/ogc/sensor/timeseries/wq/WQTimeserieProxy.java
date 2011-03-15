@@ -56,6 +56,8 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ogc.sensor.util.Observations;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
 /**
  * WQTimeserieProxy for proxying W, Q, and V Timeseries.
@@ -115,7 +117,7 @@ public class WQTimeserieProxy implements IObservation
 
   private void configure( final IObservation obs )
   {
-    final IAxis[] axes = obs.getAxisList();
+    final IAxis[] axes = obs.getAxes();
     m_axes = new IAxis[axes.length + 2];
     for( int i = 0; i < axes.length; i++ )
     {
@@ -153,7 +155,7 @@ public class WQTimeserieProxy implements IObservation
    * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getAxisList()
    */
   @Override
-  public IAxis[] getAxisList( )
+  public IAxis[] getAxes( )
   {
     return m_axes;
   }
@@ -164,7 +166,7 @@ public class WQTimeserieProxy implements IObservation
   @Override
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
-    if( m_cachedModel != null && (m_cachedArgs == null && args == null || (m_cachedArgs != null && m_cachedArgs.equals( args ))) )
+    if( m_cachedModel != null && (m_cachedArgs == null && args == null || m_cachedArgs != null && m_cachedArgs.equals( args )) )
       return m_cachedModel;
 
     m_cachedModel = new WQTuppleModel( m_obs.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_srcStatusAxis, m_destAxis, m_destStatusAxis, getWQConverter(), m_destAxisPos, m_destStatusAxisPos );
@@ -188,7 +190,7 @@ public class WQTimeserieProxy implements IObservation
   @Override
   public void setValues( final ITupleModel values ) throws SensorException
   {
-    m_obs.setValues( WQTuppleModel.reverse( values, m_obs.getAxisList() ) );
+    m_obs.setValues( WQTuppleModel.reverse( values, m_obs.getAxes() ) );
   }
 
   public IAxis getDateAxis( )
@@ -279,6 +281,16 @@ public class WQTimeserieProxy implements IObservation
   public int hashCode( )
   {
     return m_obs.hashCode();
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservation#accept(org.kalypso.ogc.sensor.visitor.IObservationVisitor,
+   *      org.kalypso.ogc.sensor.request.IRequest)
+   */
+  @Override
+  public void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException
+  {
+    Observations.accept( this, visitor, request );
   }
 
 }

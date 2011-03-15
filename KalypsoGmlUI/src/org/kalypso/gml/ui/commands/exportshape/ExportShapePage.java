@@ -209,7 +209,7 @@ public class ExportShapePage extends WizardPage
     final Label charsetLabel = new Label( parent, SWT.NONE );
     charsetLabel.setText( "Charset" );
     final Charset shapeDefaultCharset = ShapeSerializer.getShapeDefaultCharset();
-    final String tooltip = String.format( "The chosen charset will be used for string encodings of .dbf file. Default for ESRI Shape Files is %s.", shapeDefaultCharset.displayName() );
+    final String tooltip = String.format( "The choosen charset will be used for string encodings of .dbf file. Default for ESRI Shape Files is %s.", shapeDefaultCharset.displayName() );
     charsetLabel.setToolTipText( tooltip );
     charsetLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
 
