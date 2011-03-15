@@ -54,7 +54,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
-import de.openali.odysseus.chart.framework.OdysseusChartFrameworkPlugin;
+import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
@@ -104,7 +104,7 @@ public class TortenLayer extends AbstractChartLayer
 
       final RGB fillRGB = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
 
-      final Color fillColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), fillRGB );
+      final Color fillColor = OdysseusChartFramework.getDefault().getColorRegistry().getResource( gc.getDevice(), fillRGB );
       gc.setBackground( fillColor );
       gc.fillArc( centerX, centerY, width - 1, height - 1, angleStart, angle );
       fillColor.dispose();
@@ -156,7 +156,7 @@ public class TortenLayer extends AbstractChartLayer
 
       final RGB fillRGB = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
 
-      final Color fillColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( dev, fillRGB );
+      final Color fillColor = OdysseusChartFramework.getDefault().getColorRegistry().getResource( dev, fillRGB );
       gc.setBackground( fillColor );
       gc.setForeground( dev.getSystemColor( SWT.COLOR_BLACK ) );
       gc.setLineWidth( 5 );
@@ -248,7 +248,7 @@ public class TortenLayer extends AbstractChartLayer
           final int height = size.y;
           final java.awt.Color color = new java.awt.Color( java.awt.Color.HSBtoRGB( ((1.0f / m_pieces) * (count)), 1.0f, 1.0f ) );
           final RGB fillRGB = new RGB( color.getRed(), color.getGreen(), color.getBlue() );
-          final Color fillColor = OdysseusChartFrameworkPlugin.getDefault().getColorRegistry().getResource( gc.getDevice(), fillRGB );
+          final Color fillColor = OdysseusChartFramework.getDefault().getColorRegistry().getResource( gc.getDevice(), fillRGB );
           gc.setBackground( fillColor );
           gc.fillRectangle( 0, 0, width, height );
         }
