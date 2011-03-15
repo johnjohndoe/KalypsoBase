@@ -3,12 +3,13 @@ package de.openali.odysseus.chart.ext.base.axis;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.IScreenAxis;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
  * @author kimwerner
  */
-public class ScreenCoordinateAxis extends AbstractAxis
+public class ScreenCoordinateAxis extends AbstractAxis implements IScreenAxis
 {
   public ScreenCoordinateAxis( final String id, final POSITION pos )
   {

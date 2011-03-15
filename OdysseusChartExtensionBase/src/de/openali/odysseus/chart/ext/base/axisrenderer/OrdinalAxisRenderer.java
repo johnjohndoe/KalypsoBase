@@ -171,6 +171,7 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   /**
    * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#dispose()
    */
+  @Deprecated
   @Override
   public void dispose( )
   {
@@ -206,7 +207,8 @@ public class OrdinalAxisRenderer implements IAxisRenderer
       final boolean drawTick = true;
 
       final int tickPos = ticks[i].intValue();
-      final int tickScreenDistance = i < m_contentProvider.size() - 1 ? ticks[i + 1].intValue() - tickPos : -1;
+      final int index2 = i + (i < m_contentProvider.size() - 1 ? 1 : -1);
+      final int tickScreenDistance = index2 > -1 ? Math.abs( ticks[index2].intValue() - tickPos ) : -1;
       // HORIZONTAL
       if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
       {
@@ -267,10 +269,13 @@ public class OrdinalAxisRenderer implements IAxisRenderer
   {
     final IDataRange<Number> range = axis.getNumericRange();
 
-    if( range.getMin() == null || range.getMax() == null )
+    if( range.getMin() == null || range.getMax() == null || m_contentProvider.size() == 0 )
       return 0;
-    int maxWidth = 0;
+
     final IChartLabelRenderer tickRenderer = getTickLabelRenderer( axis );
+    tickRenderer.getTitleTypeBean().setLabel( m_contentProvider.getLabel( 0 ) );
+    int maxWidth = 0;//getTickLabelRenderer( axis ).getSize().y;
+
     for( int i = range.getMin().intValue(); i <= range.getMax().intValue(); i++ )
     {
       if( i < 0 || i > m_contentProvider.size() - 1 )
@@ -313,8 +318,6 @@ public class OrdinalAxisRenderer implements IAxisRenderer
       if( m_config != null )
       {
         m_tickLabelRenderer.getTitleTypeBean().setInsets( m_config.tickLabelInsets );
-// m_tickLabelRenderer.getTitleTypeBean().setAlignment( ALIGNMENT.CENTERED_HORIZONTAL, ALIGNMENT.CENTERED_VERTICAL );
-// m_tickLabelRenderer.getTitleTypeBean().setTextAnchor( ALIGNMENT.LEFT, ALIGNMENT.TOP );
         m_tickLabelRenderer.getTitleTypeBean().setTextStyle( m_config.labelStyle );
       }
       if( axis != null )

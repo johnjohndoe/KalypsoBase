@@ -131,6 +131,7 @@ public class GridLayer extends AbstractChartLayer
     return null;
   }
 
+  // FIXME: was soll das? Wird ncith benutzt-....
   public void drawIcon( final Image img )
   {
     final Rectangle bounds = img.getBounds();
@@ -247,6 +248,6 @@ public class GridLayer extends AbstractChartLayer
   @Override
   public void dispose( )
   {
-
+    // FIXME: warum wird hier nicht super aufgerufen? 
   }
 }
