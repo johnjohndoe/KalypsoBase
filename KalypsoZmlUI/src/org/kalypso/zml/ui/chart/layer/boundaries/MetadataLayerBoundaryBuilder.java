@@ -115,6 +115,7 @@ public class MetadataLayerBoundaryBuilder implements ICoreRunnableWithProgress
     {
       try
       {
+        // filter invalid boundaries
         if( boundary.getValue().doubleValue() == 0.0 )
           continue;
 
