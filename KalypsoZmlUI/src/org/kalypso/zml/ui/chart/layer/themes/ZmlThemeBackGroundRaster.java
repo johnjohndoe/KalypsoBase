@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
@@ -103,8 +104,10 @@ public class ZmlThemeBackGroundRaster extends AbstractChartLayer
         layer.paint( gc );
         return;
       }
-
     }
+
+    if( ArrayUtils.isNotEmpty( layers ) )
+      layers[0].paint( gc );
 
   }
 
