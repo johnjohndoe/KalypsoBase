@@ -52,8 +52,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.ICatalog;
+import org.kalypso.contribs.eclipse.utils.ConfigUtils;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.metadata.IMetadataBoundary;
@@ -80,7 +79,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
  */
 public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 {
-  private static final String GLOBAL_ALARMSTUFEN_KOD = "urn:org:kalypso:zml:ui:diagramm:alarmstufen";
+// private static final String GLOBAL_ALARMSTUFEN_KOD = "urn:org:kalypso:zml:ui:diagramm:alarmstufen";
 
   private ZmlConstantLineBean[] m_descriptors = new ZmlConstantLineBean[] {};
 
@@ -259,11 +258,16 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
       return builder.getBoundaries( m_handler.getTargetAxisId() );
     }
 
-    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-    final String uri = baseCatalog.resolve( GLOBAL_ALARMSTUFEN_KOD, GLOBAL_ALARMSTUFEN_KOD );
+    final URL url = ConfigUtils.findCentralConfigLocation( "layers/grenzwerte/alarmstufen.kod" );
 
-    final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, new URL( uri ) );
+    final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, url );
     return provider.getBoundaries();
+
+// final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+// final String uri = baseCatalog.resolve( GLOBAL_ALARMSTUFEN_KOD, GLOBAL_ALARMSTUFEN_KOD );
+//
+// final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, new URL( uri ) );
+// return provider.getBoundaries();
   }
 
   /**

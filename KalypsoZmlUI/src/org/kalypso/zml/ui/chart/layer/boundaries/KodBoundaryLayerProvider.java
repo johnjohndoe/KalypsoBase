@@ -71,7 +71,6 @@ public class KodBoundaryLayerProvider implements IBoundaryLayerProvider
   public KodBoundaryLayerProvider( final MetadataList metadata, final URL url ) throws XmlException, IOException
   {
     m_metadata = metadata;
-
     bootstrap( url );
   }
 
