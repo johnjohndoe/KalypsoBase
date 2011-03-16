@@ -115,6 +115,9 @@ public class MetadataLayerBoundaryBuilder implements ICoreRunnableWithProgress
     {
       try
       {
+        if( boundary.getValue().doubleValue() == 0.0 )
+          continue;
+
         m_boundaries.add( new KodBoundaryLayer( boundary, label, labelTokenizer, m_styleSet ) );
       }
       catch( final Throwable t )
