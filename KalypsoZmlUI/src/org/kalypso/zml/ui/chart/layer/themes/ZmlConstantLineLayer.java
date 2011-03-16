@@ -258,9 +258,9 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
       return builder.getBoundaries( m_handler.getTargetAxisId() );
     }
 
-    final URL url = ConfigUtils.findCentralConfigLocation( "layers/grenzwerte/alarmstufen.kod" );
+    final URL url = ConfigUtils.findCentralConfigLocation( "layers/grenzwerte/alarmstufen.kod" ); //$NON-NLS-1$
 
-    final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, url );
+    final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, url, getDataHandler().getTargetAxisId() );
     return provider.getBoundaries();
 
 // final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
