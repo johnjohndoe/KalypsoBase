@@ -48,8 +48,10 @@ import java.util.Set;
 
 import jregex.Pattern;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.metadata.IMetadataBoundary;
@@ -101,26 +103,24 @@ public class MetadataLayerBoundaryBuilder implements ICoreRunnableWithProgress
   {
     final List<IStatus> statis = new ArrayList<IStatus>();
 
-    final Pattern pattern = new Pattern( getGrenzwertPattern() );
     final String label = getLabel();
     final String labelTokenizer = getLabelTokenizer();
 
-    final String[] keys = MetadataBoundary.findBoundaryKeys( m_metaData );
+    final String[] keys = MetadataBoundary.findBoundaryKeys( m_metaData, new Pattern( getGrenzwertPattern() ) );
+    if( ArrayUtils.isEmpty( keys ) )
+      return Status.OK_STATUS;
+
     final MetadataBoundary[] boundaries = MetadataBoundary.getBoundaries( m_metaData, keys );
     for( final MetadataBoundary boundary : boundaries )
     {
-      final String key = boundary.getName();
-      if( pattern.matches( key ) )
+      try
       {
-        try
-        {
-          m_boundaries.add( new KodBoundaryLayer( boundary, label, labelTokenizer, m_styleSet ) );
-        }
-        catch( final Throwable t )
-        {
-          final String msg = String.format( "Auswertung des Metadatums: \"%s\" fehlgeschlagen.", key );
-          statis.add( StatusUtilities.createExceptionalErrorStatus( msg, t ) );
-        }
+        m_boundaries.add( new KodBoundaryLayer( boundary, label, labelTokenizer, m_styleSet ) );
+      }
+      catch( final Throwable t )
+      {
+        final String msg = String.format( "Auswertung des Metadatums: \"%s\" fehlgeschlagen.", boundary.getName() );
+        statis.add( StatusUtilities.createExceptionalErrorStatus( msg, t ) );
       }
     }
 
