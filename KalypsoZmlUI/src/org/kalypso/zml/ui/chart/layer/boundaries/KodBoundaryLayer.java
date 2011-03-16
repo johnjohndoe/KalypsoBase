@@ -115,9 +115,7 @@ public class KodBoundaryLayer implements IMetadataLayerBoundary
 
     // like Alarmstufe 4
     final String boundary = m_boundary.getName();
-
-    final RETokenizer tokenizer = new RETokenizer( PATTERN_BOUNDARY, boundary );
-    final String id = tokenizer.nextToken();
+    final String id = boundary.substring( boundary.lastIndexOf( " " ) + 1 ); //$NON-NLS-1$
 
     for( final String style : styles )
     {
@@ -139,7 +137,25 @@ public class KodBoundaryLayer implements IMetadataLayerBoundary
   {
     final StyleSetVisitor visitor = new StyleSetVisitor();
 
+    final String[] styles = visitor.findReferences( m_styles, ITextStyle.class );
+    if( ArrayUtils.isEmpty( styles ) )
+      return visitor.visit( m_styles, ITextStyle.class, 0 ); // should return default style!
+    else if( styles.length == 1 )
+      return (ITextStyle) m_styles.getStyle( styles[0] );
+
+    // like Alarmstufe 4
+    final String boundary = m_boundary.getName();
+    final String id = boundary.substring( boundary.lastIndexOf( " " ) + 1 ); //$NON-NLS-1$
+
+    for( final String style : styles )
+    {
+      final RETokenizer styleTokenizer = new RETokenizer( PATTERN_STYLE_ID, style );
+      final String token = styleTokenizer.nextToken();
+
+      if( token.equals( id ) )
+        return (ITextStyle) m_styles.getStyle( style );
+    }
+
     return visitor.visit( m_styles, ITextStyle.class, 0 );
   }
-
 }
