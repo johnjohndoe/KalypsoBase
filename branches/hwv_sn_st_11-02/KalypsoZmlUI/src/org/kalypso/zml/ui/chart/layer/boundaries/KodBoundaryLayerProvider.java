@@ -64,13 +64,17 @@ public class KodBoundaryLayerProvider implements IBoundaryLayerProvider
 
   private ChartType[] m_charts;
 
+  private final String m_type;
+
   /**
    * @param file
    *          .kod file
    */
-  public KodBoundaryLayerProvider( final MetadataList metadata, final URL url ) throws XmlException, IOException
+  public KodBoundaryLayerProvider( final MetadataList metadata, final URL url, final String type ) throws XmlException, IOException
   {
     m_metadata = metadata;
+    m_type = type;
+
     bootstrap( url );
   }
 
@@ -97,7 +101,7 @@ public class KodBoundaryLayerProvider implements IBoundaryLayerProvider
         final MetadataLayerBoundaryBuilder builder = new MetadataLayerBoundaryBuilder( m_metadata, layerType );
         builder.execute( new NullProgressMonitor() );
 
-        Collections.addAll( boundaries, builder.getBoundaries() );
+        Collections.addAll( boundaries, builder.getBoundaries( m_type ) );
       }
     }
 
