@@ -238,7 +238,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   @Override
   public String toString( )
   {
-    return String.format( "%s {%s, %s, %s }", m_label, m_id, m_pos, m_dir ); //$NON-NLS-1$
+    return String.format( "%s {id=%s, pos=%s, dir=%s, visible=%s }", m_label, m_id, m_pos, m_dir, isVisible() ); //$NON-NLS-1$
   }
 
   protected IDataRange<Number> validateDataRange( final IDataRange<Number> range, final DataRangeRestriction<Number> restriction )
