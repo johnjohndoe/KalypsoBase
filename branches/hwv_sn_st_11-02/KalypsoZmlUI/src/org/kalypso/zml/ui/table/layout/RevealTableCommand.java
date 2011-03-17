@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
@@ -79,25 +80,18 @@ public class RevealTableCommand implements ICoreRunnableWithProgress
       return Status.CANCEL_STATUS;
 
     final IZmlModel model = m_table.getDataModel();
-    final IZmlModelRow[] rows = model.getRows();
-    for( final IZmlModelRow row : rows )
+
+    final ClosestDateVisitor visitor = new ClosestDateVisitor( forecastStart );
+    model.accept( visitor );
+
+    final IZmlModelRow row = visitor.getModelRow();
+    if( Objects.isNotNull( row ) )
     {
-      final Object objIndex = row.getIndexValue();
-      if( !(objIndex instanceof Date) )
-        continue;
-
-      final Date index = (Date) objIndex;
-
-      if( index.equals( forecastStart ) )
-      {
-        final TableViewer tableViewer = m_table.getTableViewer();
-        tableViewer.setSelection( new StructuredSelection( row ), true );
-
-        return Status.OK_STATUS;
-      }
+      final TableViewer tableViewer = m_table.getTableViewer();
+      tableViewer.setSelection( new StructuredSelection( row ), true );
     }
 
-    return Status.CANCEL_STATUS;
+    return Status.OK_STATUS;
   }
 
   private Date findForecastDate( )

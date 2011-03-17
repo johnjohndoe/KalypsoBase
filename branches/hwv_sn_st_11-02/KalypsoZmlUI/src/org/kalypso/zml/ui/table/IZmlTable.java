@@ -80,4 +80,8 @@ public interface IZmlTable
   void add( ExtendedZmlTableColumn column );
 
   IZmlTableSelectionHandler getSelectionHandler( );
+
+  void accept( IZmlTableColumnVisitor visitor );
+
+  void accept( IZmlTableRowVisitor visitor );
 }

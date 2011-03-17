@@ -358,11 +358,21 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     return m_columns.toArray( new ExtendedZmlTableColumn[] {} );
   }
 
+  @Override
   public void accept( final IZmlTableColumnVisitor visitor )
   {
     for( final ExtendedZmlTableColumn column : getColumns() )
     {
       visitor.accept( column );
+    }
+  }
+
+  @Override
+  public void accept( final IZmlTableRowVisitor visitor )
+  {
+    for( final IZmlTableRow row : getRows() )
+    {
+      visitor.accept( row );
     }
   }
 

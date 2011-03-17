@@ -43,11 +43,10 @@ public final class ObservationServiceUtils
 {
   public static final String ID_OBSERVATION_REPOSITORY = ObservationServiceRepository.ID;
 
-  public static final String REPOSITORY_FACTORY = "org.kalypso.services.observation.client.repository.ObservationServiceRepositoryFactory";//$NON-NLS-1$
+  public static final String REPOSITORY_FACTORY = "org.kalypso.services.observation.client.repository.ObservationServiceRepositoryFactory"; //$NON-NLS-1$
 
   private ObservationServiceUtils( )
   {
-    // not intended to be instanciated
   }
 
   /**

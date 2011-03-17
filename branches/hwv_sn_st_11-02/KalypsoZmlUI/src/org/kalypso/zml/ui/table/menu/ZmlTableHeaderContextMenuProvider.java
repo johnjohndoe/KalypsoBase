@@ -46,6 +46,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.core.table.binding.BaseColumn;
@@ -156,7 +157,9 @@ public class ZmlTableHeaderContextMenuProvider
         try
         {
           final CellStyle style = rule.getPlainStyle();
-          return ImageDescriptor.createFromImage( style.getImage() );
+          final Image image = style.getImage();
+          if( Objects.isNotNull( image ) )
+            return ImageDescriptor.createFromImage( image );
         }
         catch( final Throwable t )
         {

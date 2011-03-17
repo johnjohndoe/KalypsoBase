@@ -66,7 +66,7 @@ public class RepositoryRegistry implements IRepositoryRegistry
 
   private String getProtocol( final String protocol )
   {
-    if( protocol.endsWith( "://" ) )
+    if( protocol.endsWith( "://" ) ) //$NON-NLS-1$
       return protocol.substring( 0, protocol.length() - 3 );
 
     return protocol;
@@ -80,9 +80,11 @@ public class RepositoryRegistry implements IRepositoryRegistry
   {
     final String identifier = repository.getIdentifier();
     final String protocol = getProtocol( identifier );
+
     m_repositories.put( protocol, repository );
   }
 
+  @Override
   public IRepository[] getRepositories( )
   {
     return m_repositories.values().toArray( new IRepository[] {} );
