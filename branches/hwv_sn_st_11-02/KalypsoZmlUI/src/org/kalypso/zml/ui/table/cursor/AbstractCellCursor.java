@@ -66,11 +66,11 @@ public abstract class AbstractCellCursor extends Canvas
         {
           getParent().notifyListeners( SWT.MouseDoubleClick, copyEvent( event ) );
         }
-        else if( SWT.FocusIn == event.type )
-        {
-          if( isVisible() )
-            forceFocus();
-        }
+// else if( SWT.FocusIn == event.type )
+// {
+// if( isVisible() )
+// forceFocus();
+// }
       }
 
     };
