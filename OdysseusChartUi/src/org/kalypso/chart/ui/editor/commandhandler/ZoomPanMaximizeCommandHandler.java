@@ -18,6 +18,8 @@ import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 public class ZoomPanMaximizeCommandHandler extends AbstractHandler implements IElementUpdater
 {
+  ZoomPanMaximizeHandler m_handler;
+
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -28,13 +30,20 @@ public class ZoomPanMaximizeCommandHandler extends AbstractHandler implements IE
       return Status.CANCEL_STATUS;
 
     final IPlotHandler plotHandler = chart.getPlotHandler();
-    plotHandler.activatePlotHandler( new ZoomPanMaximizeHandler( chart, getDirection( event ) ) );
+    m_handler = new ZoomPanMaximizeHandler( chart, getDirection( event ) );
+
+    plotHandler.activatePlotHandler( m_handler );
 
     final IChartPart part = ChartHandlerUtilities.findChartComposite( context );
     if( part != null )
       ChartHandlerUtilities.updateElements( part );
 
     return Status.OK_STATUS;
+  }
+
+  protected ZoomPanMaximizeHandler getHandler( )
+  {
+    return m_handler;
   }
 
   private ZoomPanMaximizeHandler.DIRECTION getDirection( final ExecutionEvent event )

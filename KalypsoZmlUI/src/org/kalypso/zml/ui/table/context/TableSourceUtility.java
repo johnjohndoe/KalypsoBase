@@ -38,12 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.repository;
+package org.kalypso.zml.ui.table.context;
+
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.kalypso.zml.ui.table.IZmlTable;
 
 /**
  * @author Dirk Kuch
  */
-public interface IRepositoryItemVisitor
+public final class TableSourceUtility
 {
-  void visit( IRepositoryItem item ) throws RepositoryException, CancelVisitorException;
+  private TableSourceUtility( )
+  {
+  }
+
+  /**
+   * Gets the currently active table from the handler event.<br>
+   * 
+   * @return <code>null</code>, if no {@link IMapPanel} was found in the context.
+   */
+  public static IZmlTable getTable( final IEvaluationContext context )
+  {
+    return (IZmlTable) context.getVariable( TableSourceProvider.ACTIVE_TABLE_NAME );
+  }
+
 }

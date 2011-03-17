@@ -201,10 +201,10 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     final ICoordinateMapper mapper = getCoordinateMapper();
     final Point screenSize = mapper.getScreenSize();
 
-    Date from = Objects.isNotNull( range.getFrom()) ? ChartLayerUtils.addTimezoneOffset(  range.getFrom()) : null;
-    Date to = Objects.isNotNull( range.getTo()) ? ChartLayerUtils.addTimezoneOffset(  range.getTo()) : null;
-    
-    final int fromScreen = getDomainScreen(from , 0 );
+    final Date from = Objects.isNotNull( range.getFrom() ) ? ChartLayerUtils.addTimezoneOffset( range.getFrom() ) : null;
+    final Date to = Objects.isNotNull( range.getTo() ) ? ChartLayerUtils.addTimezoneOffset( range.getTo() ) : null;
+
+    final int fromScreen = getDomainScreen( from, 0 );
     final int toScreen = getDomainScreen( to, screenSize.x );
 
     gc.setClipping( fromScreen, 0, toScreen - fromScreen, screenSize.y );

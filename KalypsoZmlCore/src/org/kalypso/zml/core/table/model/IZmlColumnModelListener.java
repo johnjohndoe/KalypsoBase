@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model;
 
+
 /**
  * @author Dirk Kuch
  */
 public interface IZmlColumnModelListener
 {
   void modelChanged( );
+
 }

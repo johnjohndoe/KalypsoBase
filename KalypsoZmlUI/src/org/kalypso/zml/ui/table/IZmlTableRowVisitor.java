@@ -38,12 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.repository;
+package org.kalypso.zml.ui.table;
+
+import org.kalypso.zml.ui.table.model.IZmlTableRow;
 
 /**
  * @author Dirk Kuch
  */
-public interface IRepositoryItemVisitor
+public interface IZmlTableRowVisitor
 {
-  void visit( IRepositoryItem item ) throws RepositoryException, CancelVisitorException;
+
+  void accept( IZmlTableRow row );
+
 }

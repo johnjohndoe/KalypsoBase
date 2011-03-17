@@ -38,12 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.repository;
+package org.kalypso.chart.ui.editor.mousehandler;
+
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 
 /**
  * @author Dirk Kuch
  */
-public interface IRepositoryItemVisitor
+public interface IChartSelectionChangedListener
 {
-  void visit( IRepositoryItem item ) throws RepositoryException, CancelVisitorException;
+
+  void selctionChanged( EditInfo editInfo );
+
 }

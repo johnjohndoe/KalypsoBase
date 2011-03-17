@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.provider;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -52,7 +53,7 @@ import org.kalypso.ogc.sensor.request.IRequest;
  */
 public abstract class AbstractObsProvider implements IObsProvider
 {
-  private final Set<IObsProviderListener> m_listeners = new LinkedHashSet<IObsProviderListener>();
+  private final Set<IObsProviderListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IObsProviderListener>() );
 
   private IRequest m_request;
 
@@ -101,10 +102,7 @@ public abstract class AbstractObsProvider implements IObsProvider
     if( m_observation != null )
       m_observation.addListener( m_observationListeer );
 
-    synchronized( this )
-    {
-      fireChanged();
-    }
+    fireChanged();
   }
 
   /**
@@ -145,14 +143,12 @@ public abstract class AbstractObsProvider implements IObsProvider
 
   protected final void fireObservationChanged( final Object source )
   {
-    final Object[] listeners;
-    synchronized( m_listeners )
+    final Object[] listeners = m_listeners.toArray();
+    for( final Object listener : listeners )
     {
-      listeners = m_listeners.toArray();
+      ((IObsProviderListener) listener).observationChanged( source );
     }
 
-    for( final Object listener : listeners )
-      ((IObsProviderListener) listener).observationChanged( source );
   }
 
   /**
@@ -160,13 +156,10 @@ public abstract class AbstractObsProvider implements IObsProvider
    */
   public void fireChanged( )
   {
-    final Object[] listeners;
-    synchronized( m_listeners )
-    {
-      listeners = m_listeners.toArray();
-    }
-
+    final Object[] listeners = m_listeners.toArray();
     for( final Object listener : listeners )
+    {
       ((IObsProviderListener) listener).observationReplaced();
+    }
   }
 }

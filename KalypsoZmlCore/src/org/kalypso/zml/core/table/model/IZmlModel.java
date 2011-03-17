@@ -63,4 +63,6 @@ public interface IZmlModel
   IZmlModelRow getRowAt( final int index );
 
   IZmlModelRow[] getRows( );
+
+  void accept( IZmlModelRowVisitor visitor );
 }
