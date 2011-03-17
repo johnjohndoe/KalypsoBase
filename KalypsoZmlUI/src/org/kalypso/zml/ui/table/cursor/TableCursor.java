@@ -53,6 +53,7 @@ public class TableCursor extends AbstractCellCursor
 
       final GC gc = event.gc;
       final Display display = getDisplay();
+      setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
 
       final Color background = gc.getBackground();
       final Color foreground = gc.getForeground();
