@@ -116,6 +116,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
     viewer.getTable().addMouseMoveListener( this );
     viewer.getTable().addListener( SWT.MenuDetect, this );
+    viewer.getTable().addListener( SWT.MouseDown, this );
 
     /**
      * context menu
@@ -137,6 +138,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
          */
         return m_cursor.getFocusCell();
       }
+
     };
 
     final ColumnViewerEditorActivationStrategy activationSupport = new ColumnViewerEditorActivationStrategy( viewer )
@@ -171,8 +173,12 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   @Override
   public void handleEvent( final Event event )
   {
-    if( SWT.MenuDetect != event.type )
+    if( SWT.MenuDetect != event.type && SWT.MouseDown != event.type )
       return;
+
+    if( SWT.MouseDown == event.type )
+      if( event.button != 3 )
+        return;
 
     handleMenuDetect( event );
 
