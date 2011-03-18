@@ -69,9 +69,12 @@ public class TableCursor extends AbstractCellCursor
 
       gc.setBackground( background );
       gc.setForeground( foreground );
+
+      setVisible( true );
     }
     catch( final Throwable t )
     {
+      setVisible( false );
       if( t instanceof SWTException )
         return;
 

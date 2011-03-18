@@ -58,6 +58,7 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
@@ -123,18 +124,6 @@ public class ZmlEditingSupport extends EditingSupport
 
         viewer.getControl().getParent().setFocus();
         viewer.getControl().setFocus();
-
-// viewer.editElement( cell.getRow().getModelRow(), findIndex( cell ) );
-//
-// new UIJob( "" )
-// {
-// @Override
-// public IStatus runInUIThread( final IProgressMonitor monitor )
-// {
-// m_cellEditor.performSelectAll();
-// return Status.OK_STATUS;
-// }
-// }.schedule();
       }
     } );
 

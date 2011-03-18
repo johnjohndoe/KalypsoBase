@@ -38,12 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table.cursor;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
@@ -64,6 +67,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.viewers.table.Tables;
 import org.kalypso.zml.core.table.binding.BaseColumn;
@@ -71,9 +75,9 @@ import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableListener;
+import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.cursor.CursorCellHighlighter;
-import org.kalypso.zml.ui.table.cursor.TableCursor;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuProvider;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
@@ -89,7 +93,7 @@ import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
  * 
  * @author Dirk Kuch
  */
-public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZmlTableSelectionHandler
+public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZmlTableSelectionHandler, IZmlTableListener
 {
   protected Point m_position;
 
@@ -405,6 +409,24 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   public void setFocusCell( final ViewerCell cell )
   {
     m_cursor.setFocusCell( cell );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTableListener#eventTableChanged()
+   */
+  @Override
+  public void eventTableChanged( )
+  {
+    new UIJob( "" )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        m_cursor.redraw();
+
+        return Status.OK_STATUS;
+      }
+    }.schedule();
   }
 
 }
