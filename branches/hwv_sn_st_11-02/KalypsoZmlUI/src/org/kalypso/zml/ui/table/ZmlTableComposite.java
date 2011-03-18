@@ -87,14 +87,13 @@ import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
+import org.kalypso.zml.ui.table.cursor.ZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.layout.ZmlTableLayoutHandler;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
-import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.provider.ZmlEditingSupport;
-import org.kalypso.zml.ui.table.provider.ZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
@@ -151,6 +150,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     m_tableViewer.getTable().setLinesVisible( true );
 
     m_selection = new ZmlTableSelectionHandler( this );
+    addListener( m_selection );
 
     ColumnViewerToolTipSupport.enableFor( m_tableViewer, ToolTip.NO_RECREATE );
 

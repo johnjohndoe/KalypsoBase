@@ -55,7 +55,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
+import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 
 /**
  * @author Dirk Kuch

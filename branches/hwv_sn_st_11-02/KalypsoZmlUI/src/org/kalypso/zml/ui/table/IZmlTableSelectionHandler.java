@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table;
 
 import org.eclipse.jface.viewers.ViewerCell;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
