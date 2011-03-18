@@ -45,6 +45,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
@@ -74,9 +75,10 @@ public class RuleMapper
       return m_rules;
 
     final List<ZmlRule> rules = new ArrayList<ZmlRule>();
-    if( reference != null )
+    if( Objects.isNotNull( reference ) )
     {
-      for( final ZmlRule rule : m_column.getRules() )
+      final ZmlRule[] columnRules = m_column.getRules();
+      for( final ZmlRule rule : columnRules )
       {
         final IZmlRuleImplementation impl = rule.getImplementation();
         if( impl.apply( rule, reference ) )
