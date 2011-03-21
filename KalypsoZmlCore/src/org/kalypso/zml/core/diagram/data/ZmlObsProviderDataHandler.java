@@ -108,7 +108,6 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
     if( provider != null )
     {
       provider.addListener( m_observationProviderListener );
-
     }
 
     m_layer.getEventHandler().fireLayerContentChanged( m_layer );

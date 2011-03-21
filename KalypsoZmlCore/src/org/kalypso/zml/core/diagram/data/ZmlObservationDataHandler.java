@@ -40,9 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.diagram.data;
 
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.IObservationListener;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -53,9 +58,8 @@ import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 /**
  * @author Dirk Kuch
  */
-public class ZmlObservationDataHandler implements IZmlLayerDataHandler
+public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObservationListener
 {
-
   private final String m_targetAxisId;
 
   private IObservation m_observation;
@@ -65,6 +69,8 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler
   private final IZmlLayer m_layer;
 
   private DateRange m_dateRange;
+
+  private final Set<IObservationListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IObservationListener>() );
 
   public ZmlObservationDataHandler( final IZmlLayer layer, final String targetAxisId )
   {
@@ -127,7 +133,11 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler
 
   public void setObservation( final IObservation observation )
   {
+    if( m_observation != null )
+      m_observation.removeListener( this );
+
     m_observation = observation;
+    m_observation.addListener( this );
 
     m_layer.getEventHandler().fireLayerContentChanged( m_layer );
   }
@@ -144,5 +154,24 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler
   public IRequest getRequest( )
   {
     return new ObservationRequest( m_dateRange );
+  }
+
+  public void addListener( final IObservationListener listener )
+  {
+    m_listeners.add( listener );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.IObservationListener#observationChanged(org.kalypso.ogc.sensor.IObservation,
+   *      java.lang.Object)
+   */
+  @Override
+  public void observationChanged( final IObservation obs, final Object source )
+  {
+    final IObservationListener[] listeners = m_listeners.toArray( new IObservationListener[] {} );
+    for( final IObservationListener listener : listeners )
+    {
+      listener.observationChanged( obs, source );
+    }
   }
 }

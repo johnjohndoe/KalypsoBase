@@ -90,10 +90,15 @@ public class ZmlTooltipSupport
   public String getToolTipText( final ZmlModelRow row )
   {
     final AbstractColumnType type = m_column.getColumnType().getType();
+    if( !type.isTooltip() )
+      return null;
+
     if( type instanceof DataColumnType )
     {
       final DataColumnType dataColumn = (DataColumnType) type;
       final IZmlValueReference reference = row.get( dataColumn );
+      if( Objects.isNull( reference ) )
+        return null;
 
       final String tip1 = getSourceTooltip( reference, isAggregated() );
       final String tip2 = getRuleTooltip( row );

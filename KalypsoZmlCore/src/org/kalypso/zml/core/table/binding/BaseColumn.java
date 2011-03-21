@@ -304,4 +304,9 @@ public class BaseColumn
   {
     return getIdentifier();
   }
+
+  public boolean isTooltip( )
+  {
+    return m_type.isTooltip();
+  }
 }
