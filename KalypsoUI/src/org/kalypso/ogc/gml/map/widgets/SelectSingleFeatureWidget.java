@@ -43,7 +43,8 @@ package org.kalypso.ogc.gml.map.widgets;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
@@ -81,7 +82,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * 
  * @author Gernot Belger
  */
-public class SelectSingleFeatureWidget extends AbstractWidget
+public class SelectSingleFeatureWidget extends AbstractWidget implements MouseListener
 {
   private static final String THEME_PROPERTY_SHOW_INFO = "singleSelectShowInfo";
 
@@ -125,8 +126,6 @@ public class SelectSingleFeatureWidget extends AbstractWidget
   private IKalypsoFeatureTheme m_hoverTheme;
 
   private Point m_currentPoint;
-
-  private boolean m_toggle = false;
 
   public SelectSingleFeatureWidget( )
   {
@@ -283,8 +282,11 @@ public class SelectSingleFeatureWidget extends AbstractWidget
     return formatter.toString();
   }
 
+  /**
+   * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+   */
   @Override
-  public void leftPressed( final Point p )
+  public void mousePressed( final MouseEvent event )
   {
     final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
@@ -298,14 +300,16 @@ public class SelectSingleFeatureWidget extends AbstractWidget
         final List<Feature> selectedFeatures = new ArrayList<Feature>();
         selectedFeatures.add( m_hoverFeature );
         final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-        if( selectionManager.size() == 1 && m_toggle )
+
+        final boolean toggle = event.isControlDown();
+        if( selectionManager.size() == 1 && toggle )
         {
           // Do not allow deselection of last item
           if( selectionManager.getAllFeatures()[0].getFeature() == m_hoverFeature )
             return;
         }
 
-        SelectFeatureWidget.changeSelection( selectionManager, selectedFeatures, m_themes, false, m_toggle );
+        SelectFeatureWidget.changeSelection( selectionManager, selectedFeatures, m_themes, false, toggle );
       }
     }
     catch( final Exception e )
@@ -318,35 +322,24 @@ public class SelectSingleFeatureWidget extends AbstractWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
-   */
   @Override
-  public void keyPressed( final KeyEvent e )
+  public void mouseClicked( final MouseEvent e )
   {
-    m_toggle = false;
-
-    final int keyCode = e.getKeyCode();
-    switch( keyCode )
-    {
-      // "STRG": Toggle mode
-      case KeyEvent.VK_CONTROL:
-        m_toggle = true;
-        break;
-    }
-
-    repaintMap();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
-   */
   @Override
-  public void keyReleased( final KeyEvent e )
+  public void mouseEntered( final MouseEvent e )
   {
-    m_toggle = false;
+  }
 
-    repaintMap();
+  @Override
+  public void mouseExited( final MouseEvent e )
+  {
+  }
+
+  @Override
+  public void mouseReleased( final MouseEvent e )
+  {
   }
 
   /**
