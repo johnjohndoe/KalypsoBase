@@ -164,7 +164,6 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
     TableViewerEditor.create( viewer, focusCellManager, activationSupport, ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL
         | ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR );
-
   }
 
   /**
@@ -266,9 +265,12 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     if( Objects.isNull( viewerCell ) )
       return null;
 
-    setFocusCell( viewerCell );
+    final IZmlTableColumn active = getActiveColumn();
+    final IZmlTableColumn current = m_table.findColumn( viewerCell.getColumnIndex() );
+    if( active != current )
+      setFocusCell( viewerCell );
 
-    return m_table.findColumn( viewerCell.getColumnIndex() );
+    return current;
   }
 
   @Override
@@ -277,7 +279,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     final ViewerCell cell = getActiveViewerCell();
     if( Objects.isNull( cell ) )
     {
-      return getSetActiveColumn();
+      return null;
     }
 
     return m_table.findColumn( cell.getColumnIndex() );
