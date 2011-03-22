@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,62 +38,87 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.filters;
+package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.util.Date;
+
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
+
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlNotNullChartLayerFilter extends AbstractZmlChartLayerFilter
+public class DateDataRangeModelVisitor extends AbstractDataRangeVisitor
 {
-  public static final String ID = "org.kalypso.chart.layer.filter.not.null"; // $NON-NLS-1$
+  Date m_min = null;
 
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayerFilter#getIdentifier()
-   */
-  @Override
-  public String getIdentifier( )
+  Date m_max = null;
+
+  public DateDataRangeModelVisitor( final IAxis axis, final IChartLayerFilter[] filters )
   {
-    return ID;
+    super( axis, filters );
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter#isFiltered(java.lang.Object)
+   * @see org.kalypso.ogc.sensor.visitor.ITupleModelVisitor#visit(org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer)
    */
   @Override
-  protected boolean filter( final ITupleModelValueContainer container )
+  public void visit( final ITupleModelValueContainer container )
   {
+    if( Objects.isNull( getAxis() ) )
+      return;
+
     try
     {
-      if( isStuetzstelle( container ) )
-        return false;
+      final Object object = container.get( getAxis() );
+      if( !(object instanceof Date) )
+        return;
 
-      final IAxis valueAxis = AxisUtils.findValueAxis( container.getAxes() );
+      final Date date = (Date) object;
+      if( isFiltered( container ) )
+        return;
 
-      final Object value = container.get( valueAxis );
-      if( !(value instanceof Number) )
-        return false;
-      final Number number = (Number) value;
+      if( isBefore( date ) )
+        m_min = date;
 
-      return number.doubleValue() == 0.0;
+      if( isAfter( date ) )
+        m_max = date;
 
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
-
-      return false;
     }
+
   }
 
-  private boolean isStuetzstelle( final ITupleModelValueContainer container )
+  private boolean isBefore( final Date date )
   {
-    final ZmlStuetzstellenChartLayerFilter filter = new ZmlStuetzstellenChartLayerFilter();
+    if( Objects.isNull( m_min ) )
+      return true;
 
-    return filter.isFiltered( container );
+    return date.before( m_min );
+  }
+
+  private boolean isAfter( final Date date )
+  {
+    if( Objects.isNull( m_max ) )
+      return true;
+
+    return date.after( m_max );
+  }
+
+  public Date getMin( )
+  {
+    return m_min;
+  }
+
+  public Date getMax( )
+  {
+    return m_max;
   }
 }

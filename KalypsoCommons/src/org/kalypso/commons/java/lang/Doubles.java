@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,62 +38,48 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.filters;
-
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
+package org.kalypso.commons.java.lang;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlNotNullChartLayerFilter extends AbstractZmlChartLayerFilter
+public final class Doubles
 {
-  public static final String ID = "org.kalypso.chart.layer.filter.not.null"; // $NON-NLS-1$
-
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayerFilter#getIdentifier()
-   */
-  @Override
-  public String getIdentifier( )
+  private Doubles( )
   {
-    return ID;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter#isFiltered(java.lang.Object)
-   */
-  @Override
-  protected boolean filter( final ITupleModelValueContainer container )
+  public static Double min( final Double... doubles )
   {
-    try
+    Double min = Double.MAX_VALUE;
+    for( final Double value : doubles )
     {
-      if( isStuetzstelle( container ) )
-        return false;
+      if( Objects.isNull( value ) )
+        continue;
 
-      final IAxis valueAxis = AxisUtils.findValueAxis( container.getAxes() );
-
-      final Object value = container.get( valueAxis );
-      if( !(value instanceof Number) )
-        return false;
-      final Number number = (Number) value;
-
-      return number.doubleValue() == 0.0;
-
+      min = Math.min( min, value );
     }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
 
-      return false;
-    }
+    if( Double.MAX_VALUE == min )
+      return null;
+
+    return min;
   }
 
-  private boolean isStuetzstelle( final ITupleModelValueContainer container )
+  public static Double max( final Double... doubles )
   {
-    final ZmlStuetzstellenChartLayerFilter filter = new ZmlStuetzstellenChartLayerFilter();
+    Double max = -Double.MAX_VALUE;
+    for( final Double value : doubles )
+    {
+      if( Objects.isNull( value ) )
+        continue;
 
-    return filter.isFiltered( container );
+      max = Math.max( max, value );
+    }
+
+    if( -Double.MAX_VALUE == max )
+      return null;
+
+    return max;
   }
 }

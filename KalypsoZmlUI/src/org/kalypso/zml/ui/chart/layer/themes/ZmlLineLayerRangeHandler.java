@@ -45,7 +45,6 @@ import java.util.Date;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -81,12 +80,14 @@ public class ZmlLineLayerRangeHandler
         return null;
 
       final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
-      final IAxisRange range = model.getRange( dateAxis );
-      if( range == null )
-        return null;
 
-      final Date min = (Date) range.getLower();
-      final Date max = (Date) range.getUpper();
+      final DateDataRangeModelVisitor visitor = new DateDataRangeModelVisitor( dateAxis, m_layer.getFilters() );
+      model.accept( visitor );
+
+      final Date min = visitor.getMin();
+      final Date max = visitor.getMax();
+      if( Objects.isNull( min, max ) )
+        return null;
 
       return new DataRange<Number>( getDateDataOperator().logicalToNumeric( min ), getDateDataOperator().logicalToNumeric( max ) );
     }
@@ -108,51 +109,26 @@ public class ZmlLineLayerRangeHandler
     try
     {
       final ITupleModel model = m_layer.getDataHandler().getModel();
-      if( model == null )
+      if( Objects.isNull( model ) )
         return null;
 
-      final IAxis axis = m_layer.getDataHandler().getValueAxis();
-      if( axis == null )
+      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
+      final IAxis valueAxis = m_layer.getDataHandler().getValueAxis();
+      if( Objects.isNull( valueAxis, dateAxis ) )
         return null;
 
-      if( Objects.isNull( AxisUtils.findAxis( model.getAxes(), axis.getType() ) ) )
+      if( Objects.isNull( AxisUtils.findAxis( model.getAxes(), valueAxis.getType() ) ) )
         return null;
 
-      if( domainIntervall == null )
-      {
-        final IAxisRange range = model.getRange( axis );
-        if( range == null )
-          return null;
+      final NumberDataRangeModelVisitor visitor = new NumberDataRangeModelVisitor( valueAxis, m_layer.getFilters(), domainIntervall, dateAxis );
+      model.accept( visitor );
 
-        final IDataRange<Number> numRange = new DataRange<Number>( getNumberDataOperator().logicalToNumeric( (Number) range.getLower() ), getNumberDataOperator().logicalToNumeric( (Number) range.getUpper() ) );
+      final Number min = visitor.getMin();
+      final Number max = visitor.getMax();
+      if( Objects.isNull( min, max ) )
+        return null;
 
-        return numRange;
-      }
-      else
-      {
-        final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
-
-        Number minValue = null;
-        Number maxValue = null;
-        for( int i = 0; i < model.size(); i++ )
-        {
-
-          final Object domainValue = model.get( i, dateAxis );
-
-          if( domainValue == null )
-            continue;
-          if( minValue == null && ((Date) domainValue).getTime() > domainIntervall.getMin().longValue() )
-          {
-            minValue = (Number) model.get( i - 1, axis );
-          }
-          if( maxValue == null && ((Date) domainValue).getTime() > domainIntervall.getMax().longValue() )
-          {
-            maxValue = (Number) model.get( i, axis );
-          }
-        }
-
-        return new DataRange<Number>( getNumberDataOperator().logicalToNumeric( minValue ), getNumberDataOperator().logicalToNumeric( maxValue ) );
-      }
+      return new DataRange<Number>( getNumberDataOperator().logicalToNumeric( min ), getNumberDataOperator().logicalToNumeric( max ) );
     }
     catch( final SensorException e )
     {
