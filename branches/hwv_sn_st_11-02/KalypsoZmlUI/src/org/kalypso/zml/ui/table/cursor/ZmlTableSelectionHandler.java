@@ -430,7 +430,8 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        m_cursor.redraw();
+        if( m_cursor != null && !m_cursor.isDisposed() )
+          m_cursor.redraw();
 
         return Status.OK_STATUS;
       }
