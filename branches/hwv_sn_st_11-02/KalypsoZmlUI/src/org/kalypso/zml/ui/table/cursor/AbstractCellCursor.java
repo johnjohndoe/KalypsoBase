@@ -13,8 +13,6 @@
 package org.kalypso.zml.ui.table.cursor;
 
 import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
@@ -88,15 +86,6 @@ public abstract class AbstractCellCursor extends Canvas
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
-      {
-        setFocusCell( getFocusCell() );
-      }
-    } );
-
-    viewer.addSelectionChangedListener( new ISelectionChangedListener()
-    {
-      @Override
-      public void selectionChanged( final SelectionChangedEvent event )
       {
         setFocusCell( getFocusCell() );
       }

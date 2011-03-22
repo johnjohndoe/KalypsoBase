@@ -43,9 +43,7 @@ package org.kalypso.zml.ui.chart.layer.filters;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
-import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
-import org.kalypso.zml.core.table.model.references.ZmlValues;
+import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 
 /**
  * @author Dirk Kuch
@@ -67,7 +65,7 @@ public class ZmlNotNullChartLayerFilter extends AbstractZmlChartLayerFilter
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter#isFiltered(java.lang.Object)
    */
   @Override
-  protected boolean filter( final IObservationValueContainer container )
+  protected boolean filter( final ITupleModelValueContainer container )
   {
     try
     {
@@ -92,27 +90,10 @@ public class ZmlNotNullChartLayerFilter extends AbstractZmlChartLayerFilter
     }
   }
 
-  private boolean isStuetzstelle( final IObservationValueContainer container ) throws SensorException
+  private boolean isStuetzstelle( final ITupleModelValueContainer container )
   {
-    final IAxis[] axes = container.getAxes();
-    final IAxis statusAxis = AxisUtils.findStatusAxis( axes );
-    final IAxis sourceAxis = AxisUtils.findDataSourceAxis( axes );
+    final ZmlStuetzstellenChartLayerFilter filter = new ZmlStuetzstellenChartLayerFilter();
 
-    final Object objStatus = container.get( statusAxis );
-    final Object objSource = container.get( sourceAxis );
-
-    Number status = null;
-    String source = null;
-
-    if( objStatus instanceof Number )
-      status = (Number) objStatus;
-
-    if( objSource instanceof Number )
-    {
-      final DataSourceHandler handler = new DataSourceHandler( container.getMetaData() );
-      source = handler.getDataSourceIdentifier( ((Number) objSource).intValue() );
-    }
-
-    return ZmlValues.isStuetzstelle( status, source );
+    return filter.isFiltered( container );
   }
 }
