@@ -58,6 +58,7 @@ import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
@@ -196,7 +197,11 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     // clear temp files
     final File[] files = m_mapDataId2File.values().toArray( new File[] {} );
     for( final File file : files )
-      FileUtilities.deleteQuitly( file );
+    {
+      // File may already have been deleted
+      if( file.exists() )
+        FileUtils.deleteQuietly( file );
+    }
 
     m_mapDataId2File.clear();
 
@@ -495,17 +500,17 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     if( parent == null )
       return m_repositories.size() > 0;
 
-    try
-    {
-      final IRepositoryItem item = itemFromBean( parent );
+      try
+      {
+        final IRepositoryItem item = itemFromBean( parent );
 
-      return item.hasChildren();
-    }
-    catch( final RepositoryException e )
-    {
-      m_logger.throwing( getClass().getName(), "hasChildren", e ); //$NON-NLS-1$
-      throw e;
-    }
+        return item.hasChildren();
+      }
+      catch( final RepositoryException e )
+      {
+        m_logger.throwing( getClass().getName(), "hasChildren", e ); //$NON-NLS-1$
+        throw e;
+      }
   }
 
   /**
@@ -648,14 +653,14 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
         item = rep;
       else
         try
-        {
+      {
           item = rep.findItem( id );
-        }
-        catch( final RepositoryException e )
-        {
-          m_logger.throwing( getClass().getName(), "findItem", e ); //$NON-NLS-1$
-          throw e;
-        }
+      }
+      catch( final RepositoryException e )
+      {
+        m_logger.throwing( getClass().getName(), "findItem", e ); //$NON-NLS-1$
+        throw e;
+      }
 
       if( item == null )
         continue;
