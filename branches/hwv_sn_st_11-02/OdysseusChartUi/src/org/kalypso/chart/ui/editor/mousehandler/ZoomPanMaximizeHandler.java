@@ -146,9 +146,9 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
     if( m_button == SWT.BUTTON1 )
     {
       if( Objects.isNotNull( end ) )
-        doMouseUpZoom( end, editInfo );
-
-      fireSelectionChanged( editInfo );
+        doMouseUpZoom( end, editInfo ); // zoom
+      else
+        fireSelectionChanged( editInfo ); // update selection
     }
     else if( m_button == SWT.BUTTON2 )
     {
