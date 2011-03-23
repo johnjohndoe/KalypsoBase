@@ -157,7 +157,7 @@ public class ZmlDiagramUpdater implements Runnable
 
     final ILayerProvider provider = baseLayer.getProvider();
     final IZmlLayer clone = (IZmlLayer) provider.getLayer( provider.getContext() );
-    clone.setId( String.format( IClonedLayer.CLONED_LAYER_POSTFIX_FORMAT, baseLayer.getId(), index ) );
+    clone.setIdentifier( String.format( IClonedLayer.CLONED_LAYER_POSTFIX_FORMAT, baseLayer.getIdentifier(), index ) );
     clone.setDataHandler( new ZmlObsProviderDataHandler( clone, baseLayer.getDataHandler().getTargetAxisId() ) );
 
     final ICoordinateMapper baseMapper = baseLayer.getCoordinateMapper();

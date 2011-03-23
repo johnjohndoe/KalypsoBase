@@ -92,7 +92,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
       m_targetData = data.getTargetValues();
     }
     else
-      Logger.logWarning( Logger.TOPIC_LOG_GENERAL, "Layer " + getId() + " has not yet been opened" );
+      Logger.logWarning( Logger.TOPIC_LOG_GENERAL, "Layer " + getIdentifier() + " has not yet been opened" );
   }
 
   /**
@@ -119,17 +119,17 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
 
       final Number domVal = dopDom.logicalToNumeric( m_domainData.get( i ) );
       boolean setPoint = false;
-      if( (comp.compare( domVal, min ) >= 0) && (comp.compare( domVal, max ) <= 0) )
+      if( comp.compare( domVal, min ) >= 0 && comp.compare( domVal, max ) <= 0 )
         setPoint = true;
       else // kleiner als min: Nachfolger muss >= min sein
-      if( (comp.compare( domVal, min ) <= 0) && (i < m_domainData.size() - 1) )
+      if( comp.compare( domVal, min ) <= 0 && i < m_domainData.size() - 1 )
       {
         final Object next = m_domainData.get( i + 1 );
         if( comp.compare( next, min ) >= 0 )
           setPoint = true;
       }
       // größer als max: Vorgänger muss <= max sein
-      else if( (comp.compare( domVal, max ) >= 0) && (i > 0) )
+      else if( comp.compare( domVal, max ) >= 0 && i > 0 )
       {
         final Object prev = m_domainData.get( i - 1 );
         if( comp.compare( prev, max ) <= 0 )
@@ -226,7 +226,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
       if( cd.compare( domainVal, domainValMin ) >= 0 )
       {
         final Object targetVal = m_targetData.get( i );
-        if( (ct.compare( targetVal, targetValMin ) >= 0) && (ct.compare( targetVal, targetValMax ) <= 0) )
+        if( ct.compare( targetVal, targetValMin ) >= 0 && ct.compare( targetVal, targetValMax ) <= 0 )
           return createEditInfo( p, i, false );
       }
     }
@@ -288,7 +288,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     else
       targetVal = (T_target) dc.getTargetValues().get( pos );
 
-    if( (domainVal != null) && (targetVal != null) )
+    if( domainVal != null && targetVal != null )
     {
       final IAxis domainAxis = getDomainAxis();
       final IAxis targetAxis = getTargetAxis();
@@ -322,13 +322,13 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
       final Number postTargetValNum = dopTarget.logicalToNumeric( postTargetVal );
 
       Point dataPos = null;
-      if( (dataDomainValNum != null) && (dataTargetValNum != null) )
+      if( dataDomainValNum != null && dataTargetValNum != null )
         dataPos = getCoordinateMapper().numericToScreen( dataDomainValNum, dataTargetValNum );
       Point preDataPos = null;
-      if( (preDomainValNum != null) && (preTargetValNum != null) )
+      if( preDomainValNum != null && preTargetValNum != null )
         preDataPos = getCoordinateMapper().numericToScreen( preDomainValNum, preTargetValNum );
       Point postDataPos = null;
-      if( (postDomainValNum != null) && (postTargetValNum != null) )
+      if( postDomainValNum != null && postTargetValNum != null )
         postDataPos = getCoordinateMapper().numericToScreen( postDomainValNum, postTargetValNum );
 
       final Point[] editPoints = new Point[] { preDataPos, editPos, postDataPos };
@@ -344,7 +344,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
       // text für ToolTip
       final String domainValStr = domainAxis.getDataOperator( (Class<T_domain>) domainVal.getClass() ).getFormat( domainAxis.getNumericRange() ).format( domainVal );
       final String targetValStr = targetAxis.getDataOperator( (Class<T_target>) targetVal.getClass() ).getFormat( targetAxis.getNumericRange() ).format( targetVal );
-      final String editText = getId() + "\n" + domainAxis.getLabel() + ":\t" + domainValStr + "\n" + targetAxis.getLabel() + ":\t" + targetValStr;
+      final String editText = getIdentifier() + "\n" + domainAxis.getLabel() + ":\t" + domainValStr + "\n" + targetAxis.getLabel() + ":\t" + targetValStr;
 
       // übergibt nur die position des Datensatzes, der geändert wird
       final Object editData = pos;

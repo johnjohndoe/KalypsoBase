@@ -83,7 +83,7 @@ public class CursorCellHighlighter extends FocusCellHighlighter
       public void afterEditorDeactivated( final ColumnViewerEditorDeactivationEvent event )
       {
         m_cursor.setVisible( true );
-        m_cursor.setFocusCell( getFocusCell() );
+        m_cursor.redraw();
       }
 
       @Override

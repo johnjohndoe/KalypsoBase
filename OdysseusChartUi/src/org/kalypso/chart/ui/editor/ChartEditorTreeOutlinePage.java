@@ -296,7 +296,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
         if( elt instanceof IChartLayer )
         {
           final IChartLayer layer = (IChartLayer) elt;
-          event.data = layer.getId();
+          event.data = layer.getIdentifier();
         }
       }
 

@@ -30,11 +30,6 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
 
   IDataRange<Number> getDomainRange( );
 
-  /**
-   * the "unique" (TODO) identifier of the chart layer
-   */
-  String getId( );
-
   ILegendEntry[] getLegendEntries( );
 
   ILayerProvider getProvider( );
@@ -85,11 +80,6 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
    * sets a description for the layer
    */
   void setDescription( String description );
-
-  /**
-   * Setzt die ID des Layers; die ID wird verwendet, um das Layer im Chart zu referenzieren
-   */
-  void setId( final String id );
 
   /**
    * @param isVisible

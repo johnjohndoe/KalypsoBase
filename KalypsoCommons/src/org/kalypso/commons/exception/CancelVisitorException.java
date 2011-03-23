@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.repository;
+package org.kalypso.commons.exception;
 
 /**
  * @author Dirk Kuch

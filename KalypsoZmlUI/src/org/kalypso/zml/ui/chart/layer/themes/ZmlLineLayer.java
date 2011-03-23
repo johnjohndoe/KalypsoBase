@@ -277,7 +277,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   private void setLineThemeStyles( )
   {
     final IStyleSet styleSet = getStyleSet();
-    final int index = ZmlLayerHelper.getLayerIndex( getId() );
+    final int index = ZmlLayerHelper.getLayerIndex( getIdentifier() );
 
     final StyleSetVisitor visitor = new StyleSetVisitor();
 

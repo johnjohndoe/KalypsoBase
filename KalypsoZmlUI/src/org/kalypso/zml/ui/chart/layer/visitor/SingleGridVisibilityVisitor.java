@@ -63,7 +63,7 @@ public class SingleGridVisibilityVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public boolean visit( final IChartLayer layer )
+  public void visit( final IChartLayer layer )
   {
     if( Layers.isVisible( layer ) )
       layer.getLayerManager().accept( this );
@@ -78,8 +78,6 @@ public class SingleGridVisibilityVisitor implements IChartLayerVisitor
       else
         layer.setVisible( false );
     }
-
-    return true;
   }
 
   private boolean isValid( final IChartLayer layer )
@@ -98,7 +96,7 @@ public class SingleGridVisibilityVisitor implements IChartLayerVisitor
       return false;
 
     final IZmlLayerDataHandler handler = zmlLayer.getDataHandler();
-    if( handler.getObservation() == null )
+    if( Objects.isNull( handler.getObservation() ) )
       return false;
 
     return true;

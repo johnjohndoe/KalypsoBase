@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.layer.manager.visitors;
 
+import org.kalypso.commons.exception.CancelVisitorException;
+import org.kalypso.commons.java.lang.Objects;
+
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
@@ -62,21 +65,19 @@ public class FindLayerVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public boolean visit( final IChartLayer layer )
+  public void visit( final IChartLayer layer ) throws CancelVisitorException
   {
-    if( m_layer != null )
-      return false;
+    if( Objects.isNotNull( m_layer ) )
+      throw new CancelVisitorException();
 
-    if( layer.getId().equals( m_identifier ) )
+    if( layer.getIdentifier().equals( m_identifier ) )
     {
       m_layer = layer;
-      return false;
+      throw new CancelVisitorException();
     }
 
     final ILayerManager layerManager = layer.getLayerManager();
     layerManager.accept( this );
-
-    return true;
   }
 
   public IChartLayer getLayer( )

@@ -61,12 +61,12 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
   /**
    * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getId()
    */
-  private static final String ID = "de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer";
+  private static final String ID = "de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer"; //$NON-NLS-1$
 
   public DefaultTickRasterLayer( final ILayerProvider provider, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
     super( provider, lineStyle, pointStyle );
-    setId( ID );
+    setIdentifier( ID );
   }
 
   /**
@@ -106,22 +106,22 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
     final int width = gc.getClipping().width;
     final int heigth = gc.getClipping().height;
 
-    for( int i = 0; i < domTicks.length; i++ )
+    for( final Number domTick : domTicks )
     {
-      final Point p1 = new Point( getDomainAxis().numericToScreen( domTicks[i] ), 0 );
-      final Point p2 = new Point( getDomainAxis().numericToScreen( domTicks[i] ), heigth );
+      final Point p1 = new Point( getDomainAxis().numericToScreen( domTick ), 0 );
+      final Point p2 = new Point( getDomainAxis().numericToScreen( domTick ), heigth );
 
       drawLine( gc, p1, p2 );
     }
 
-    for( int i = 0; i < valTicks.length; i++ )
+    for( final Number valTick : valTicks )
     {
-      final Point p1 = new Point( 0, getTargetAxis().numericToScreen( valTicks[i] ) );
-      final Point p2 = new Point( width, getTargetAxis().numericToScreen( valTicks[i] ) );
+      final Point p1 = new Point( 0, getTargetAxis().numericToScreen( valTick ) );
+      final Point p2 = new Point( width, getTargetAxis().numericToScreen( valTick ) );
 
       drawLine( gc, p1, p2 );
     }
-    
+
     final FullRectangleFigure figureRect = new FullRectangleFigure();
     final IPointStyle pointStyle = getPointFigure().getStyle();
     if( pointStyle.isVisible() )

@@ -59,12 +59,10 @@ public class TooltipChartLayerVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public boolean visit( final IChartLayer layer )
+  public void visit( final IChartLayer layer )
   {
     if( layer instanceof ITooltipChartLayer )
       m_layers.add( (ITooltipChartLayer) layer );
-
-    return true;
   }
 
   public ITooltipChartLayer[] getLayers( )
