@@ -71,7 +71,7 @@ public class ChartLayerState implements IChartLayerState
 
   private void setState( final IChartLayer chartLayer )
   {
-    setID( chartLayer.getId() );
+    setID( chartLayer.getIdentifier() );
     setVisible( chartLayer.isVisible() );
     setActive( chartLayer.isActive() );
   }

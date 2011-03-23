@@ -1,9 +1,9 @@
 package de.openali.odysseus.chart.ext.base.axisrenderer.provider;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.joda.time.DateTimeFieldType;
 
 import de.openali.odysseus.chart.ext.base.axisrenderer.DateTimeAxisField;
-import de.openali.odysseus.chart.ext.base.axisrenderer.DateTimeLabelCreator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.DateTimeTickCalculator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.IDateTimeAxisField;
 import de.openali.odysseus.chart.ext.base.axisrenderer.IDateTimeAxisFieldProvider;
@@ -32,15 +32,15 @@ public class DateTimeAxisRendererProvider extends AbstractGenericAxisRendererPro
       if( dr < 3 * min )
         return new DateTimeAxisField( DateTimeFieldType.millisOfSecond(), "dd.MM.YYYY\nHH:mm:ss:SSS", new int[] { 1, 10, 100, 500 }, new int[] {} );
       else if( dr < 2 * hour )
-        return new DateTimeAxisField( DateTimeFieldType.minuteOfHour(), "dd.MM.YY\nHH:mm", new int[] { 1,5,10 ,15,20, 30 }, new int[] {5,15,30} );
+        return new DateTimeAxisField( DateTimeFieldType.minuteOfHour(), "dd.MM.YY\nHH:mm", new int[] { 1, 5, 10, 15, 20, 30 }, new int[] { 5, 15, 30 } );
       else if( dr < 7 * hour )
-        return new DateTimeAxisField( DateTimeFieldType.minuteOfHour(), "dd.MM\nHH:mm", new int[] { 1,5,10, 15, 20,30 }, new int[] {15,30,45} );
+        return new DateTimeAxisField( DateTimeFieldType.minuteOfHour(), "dd.MM\nHH:mm", new int[] { 1, 5, 10, 15, 20, 30 }, new int[] { 15, 30, 45 } );
       else if( dr < 3 * day )
         return new DateTimeAxisField( DateTimeFieldType.minuteOfDay(), "dd.MM\nHH:mm", new int[] { 1, 15, 30 }, new int[] {} );
       else if( dr < 7 * day )
         return new DateTimeAxisField( DateTimeFieldType.hourOfDay(), "dd.MM.YY\nHH:mm", new int[] { 1, 2, 4, 6, 8, 12 }, new int[] { 12 } );
       else if( dr < 180 * day )
-        return new DateTimeAxisField( DateTimeFieldType.halfdayOfDay(), "dd.MM.YY\nHH:mm", new int[] {}, new int[] {1} );
+        return new DateTimeAxisField( DateTimeFieldType.halfdayOfDay(), "dd.MM.YY\nHH:mm", new int[] {}, new int[] { 1 } );
       else
         return new DateTimeAxisField( DateTimeFieldType.monthOfYear(), "dd.MM.YYYY", new int[] { 1, 2, 3, 4, 6 }, new int[] { 6 } );
 
@@ -53,7 +53,9 @@ public class DateTimeAxisRendererProvider extends AbstractGenericAxisRendererPro
   @Override
   public ILabelCreator getLabelCreator( )
   {
-    return new DateTimeLabelCreator( m_axisFieldProvider );
+    // FIXME
+    throw new NotImplementedException();
+// return new DateTimeLabelCreator( m_axisFieldProvider );
   }
 
   /**

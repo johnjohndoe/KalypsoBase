@@ -191,7 +191,7 @@ public abstract class AbstractChartLayer implements IChartLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getId()
    */
   @Override
-  public String getId( )
+  public String getIdentifier( )
   {
     return m_id;
   }
@@ -394,7 +394,7 @@ public abstract class AbstractChartLayer implements IChartLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setID(java.lang.String)
    */
   @Override
-  public void setId( final String id )
+  public void setIdentifier( final String id )
   {
     m_id = id;
   }
@@ -437,7 +437,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public String toString( )
   {
-    return String.format( "IChartLayer - id: %s, visible: %s", getId(), Boolean.valueOf( isVisible() ).toString() );
+    return String.format( "IChartLayer - id: %s, visible: %s", getIdentifier(), Boolean.valueOf( isVisible() ).toString() );
   }
 
   @Override

@@ -41,7 +41,7 @@
 package org.kalypso.repository.utils;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.repository.CancelVisitorException;
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.IRepositoryItemVisitor;
 import org.kalypso.repository.RepositoryException;

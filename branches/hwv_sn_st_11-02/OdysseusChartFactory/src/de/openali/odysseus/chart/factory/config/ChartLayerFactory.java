@@ -361,7 +361,7 @@ public class ChartLayerFactory extends AbstractChartFactory
   {
     final String identifier = layerType.getId();
     if( StringUtils.isNotEmpty( identifier ) )
-      layer.setId( identifier );
+      layer.setIdentifier( identifier );
 
     final String title = layerType.getTitle();
     if( StringUtils.isNotEmpty( title ) )

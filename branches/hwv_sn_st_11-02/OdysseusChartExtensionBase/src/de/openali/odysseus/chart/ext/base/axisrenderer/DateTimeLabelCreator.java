@@ -55,8 +55,6 @@ import org.joda.time.chrono.GregorianChronology;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
-;
-
 /**
  * @author kimwerner
  */
@@ -188,7 +186,7 @@ public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabel
   {
     final DateTimeField field = m_field.getField( GregorianChronology.getInstance() );
     final long dateTime = field.roundFloor( value.longValue() );
-    return new DateTime( dateTime ).toString("MM-dd\nhh:mm");
+    return new DateTime( dateTime ).toString( "MM-dd\nhh:mm" );
   }
 
 }

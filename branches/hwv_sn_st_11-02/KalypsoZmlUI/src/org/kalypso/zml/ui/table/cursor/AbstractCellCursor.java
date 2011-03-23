@@ -13,9 +13,12 @@
 package org.kalypso.zml.ui.table.cursor;
 
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -87,9 +90,19 @@ public abstract class AbstractCellCursor extends Canvas
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        setFocusCell( getFocusCell() );
+        redraw();
       }
     } );
+
+    viewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        redraw();
+      }
+    } );
+
   }
 
   protected void keyDown( final Event event )
@@ -109,10 +122,29 @@ public abstract class AbstractCellCursor extends Canvas
   {
     m_focusCell = cell;
 
-    if( Objects.isNotNull( m_focusCell ) )
-      setBounds( m_focusCell.getBounds() );
-
     redraw();
+  }
+
+  /**
+   * @see org.eclipse.swt.widgets.Control#redraw()
+   */
+  @Override
+  public void redraw( )
+  {
+    if( isDisposed() )
+      return;
+
+    try
+    {
+      if( Objects.isNotNull( m_focusCell ) )
+        setBounds( m_focusCell.getBounds() );
+    }
+    catch( final SWTException ex )
+    {
+      // ignore
+    }
+
+    super.redraw();
   }
 
   /**

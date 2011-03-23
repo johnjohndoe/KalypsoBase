@@ -44,7 +44,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
 /**
@@ -58,15 +57,12 @@ public class LegendChartLayersVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public boolean visit( final IChartLayer layer )
+  public void visit( final IChartLayer layer )
   {
     if( isValid( layer ) )
       m_layers.add( layer );
 
-    final ILayerManager layerManager = layer.getLayerManager();
-    layerManager.accept( this );
-
-    return true;
+    layer.getLayerManager().accept( this );
   }
 
   private boolean isValid( final IChartLayer layer )

@@ -300,7 +300,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getId()
    */
   @Override
-  public String getId( )
+  public String getIdentifier( )
   {
     return m_id;
   }

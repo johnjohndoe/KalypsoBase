@@ -103,7 +103,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_profil = profil;
     m_targetRangeProperty = targetRangeProperty;
     m_domainComponent = IWspmConstants.POINT_PROPERTY_BREITE;
-    setId( id );
+    setIdentifier( id );
     createStyles( styleProvider, id );
   }
 
@@ -295,7 +295,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( m_lineStyle_hover == null )
     {
       m_lineStyle_hover = getLineStyle().clone();
-      m_lineStyle_hover.setDash( 0f, HOVER_DASH);
+      m_lineStyle_hover.setDash( 0f, HOVER_DASH );
       m_lineStyle_hover.setLineCap( LINECAP.FLAT );
     }
     return m_lineStyle_hover;

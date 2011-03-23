@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.repository;
 
+import org.kalypso.commons.exception.CancelVisitorException;
+
 /**
  * @author Dirk Kuch
  */
