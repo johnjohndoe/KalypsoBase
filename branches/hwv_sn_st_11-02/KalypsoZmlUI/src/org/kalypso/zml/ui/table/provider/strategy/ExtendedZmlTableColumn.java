@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table.provider.strategy;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
@@ -102,7 +103,7 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
     else
     {
       final DataColumnType dataColumnType = (DataColumnType) type;
-      if( "N".equals( dataColumnType.getValueAxis() ) )
+      if( ITimeseriesConstants.TYPE_RAINFALL.equals( dataColumnType.getValueAxis() ) )
         m_editing = new SumValueEditingStrategy( this, labelProvider );
       else
         m_editing = new InterpolatedValueEditingStrategy( this );
@@ -124,7 +125,7 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
     {
       final DataColumnType dataColumnType = (DataColumnType) type;
 
-      if( "N".equals( dataColumnType.getValueAxis() ) )
+      if( ITimeseriesConstants.TYPE_RAINFALL.equals( dataColumnType.getValueAxis() ) )
         m_labeling = new SumValueLabelingStrategy( this );
       else
         m_labeling = new InstantaneousValueLabelingStrategy( this );
@@ -177,6 +178,7 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
     m_mapper.reset();
   }
 
+  @Override
   public ZmlRule[] getAppliedRules( )
   {
     return m_mapper.getAppliedRules();

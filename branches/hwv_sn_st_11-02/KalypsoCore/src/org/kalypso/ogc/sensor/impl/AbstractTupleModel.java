@@ -50,8 +50,8 @@ import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
 import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
+import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
 
 /**
  * Provides common functionnality:
