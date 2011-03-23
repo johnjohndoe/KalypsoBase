@@ -38,7 +38,6 @@ package org.kalypsodeegree_impl.io.shpapi;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -50,7 +49,6 @@ import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;

@@ -44,8 +44,8 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
+import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.io.sax.marshaller.PointMarshaller;

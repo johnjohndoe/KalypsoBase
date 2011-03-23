@@ -130,7 +130,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
     GregorianCalendar previousNlineCalendar = null;
     while( (lineIn = reader.readLine()) != null )
     {
-      if( !continueWithErrors && (numberOfErrors > MAX_NO_OF_ERRORS) )
+      if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
         return null;
       try
       {
@@ -167,7 +167,7 @@ public class NativeObservationDVWKAdapter implements INativeObservationAdapter
           }
 
           // data line
-          if( "N".equals( matcher.group( 4 ) ) ) //$NON-NLS-1$
+          if( ITimeseriesConstants.TYPE_RAINFALL.equals( matcher.group( 4 ) ) ) //$NON-NLS-1$
           {
             // TODO check if this is means all zeros for the whole day
             // or just for this hour,

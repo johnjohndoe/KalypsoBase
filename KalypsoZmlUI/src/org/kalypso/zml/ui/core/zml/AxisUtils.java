@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.core.zml;
 
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
@@ -55,7 +57,7 @@ public final class AxisUtils
   {
     for( final IAxis axis : axes )
     {
-      if( "date".equals( axis.getIdentifier() ) ) //$NON-NLS-1$
+      if( ITimeseriesConstants.TYPE_DATE.equals( axis.getIdentifier() ) ) //$NON-NLS-1$
         return axis;
     }
 

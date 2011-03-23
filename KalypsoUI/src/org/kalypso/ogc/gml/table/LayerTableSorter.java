@@ -41,8 +41,6 @@
 package org.kalypso.ogc.gml.table;
 
 import java.text.Collator;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
