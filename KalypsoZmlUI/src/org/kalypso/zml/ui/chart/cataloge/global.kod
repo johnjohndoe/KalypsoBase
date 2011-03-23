@@ -1102,7 +1102,7 @@
         <Position>RIGHT</Position>
         <PreferredAdjustment before="0" range="50" after="50" fixMaxRange="1.0" />
         <RendererRef ref="AutoNumberAxisRenderer" />
-        <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" />
+        <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" fixMinValue="true" />
       </Axis>
       <Axis id="W_NN" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
@@ -1172,7 +1172,7 @@
         </Styles>
       </AxisRenderer>
       <AxisRenderer id="DateAxisRenderer">
-        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericCalendarAxisRendererProvider">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.DateTimeAxisRendererProvider">
           <Parameters>
             <Parameter name="inset_tick" value="2" />
             <Parameter name="inset_label" value="2" />
