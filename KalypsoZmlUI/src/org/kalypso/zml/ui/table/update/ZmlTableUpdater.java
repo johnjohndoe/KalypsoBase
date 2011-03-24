@@ -42,8 +42,9 @@ package org.kalypso.zml.ui.table.update;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.zml.core.table.IZmlTableElement;
+import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.IClonedColumn;
 import org.kalypso.zml.core.table.binding.TableTypeHelper;
@@ -53,6 +54,7 @@ import org.kalypso.zml.ui.core.zml.MultipleTsLink;
 import org.kalypso.zml.ui.core.zml.TSLinkWithName;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.ZmlTableColumnBuilder;
+import org.kalypso.zml.ui.table.memento.ILabeledObsProvider;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
@@ -60,6 +62,20 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
  */
 public class ZmlTableUpdater implements Runnable
 {
+  private final IObsProviderListener m_obsListenber = new IObsProviderListener()
+  {
+    @Override
+    public void observationReplaced( )
+    {
+    }
+
+    @Override
+    public void observationChanged( final Object source )
+    {
+      handleObservationChanged();
+    }
+  };
+
   private final MultipleTsLink[] m_links;
 
   private final IZmlTableLayoutPart m_part;
@@ -68,6 +84,11 @@ public class ZmlTableUpdater implements Runnable
   {
     m_part = part;
     m_links = links;
+  }
+
+  protected void handleObservationChanged( )
+  {
+    m_part.onObservationChanged();
   }
 
   /**
@@ -98,15 +119,21 @@ public class ZmlTableUpdater implements Runnable
 
   private void update( final TSLinkWithName link, final String identifier, final int index )
   {
-    final IZmlTableElement element = createZmlDiagrammElement( link, identifier, index );
+    final ZmlLinkDiagramElement element = createZmlDiagrammElement( link, identifier, index );
     final IObsProvider clonedProvider = element.getObsProvider().copy();
 
     m_part.getModel().loadColumn( element );
 
-    m_part.getMemento().register( clonedProvider );
+    // REMARK: no need to unregister that listener: the memento will dispose the 'clonedProvider'
+    clonedProvider.addListener( m_obsListenber );
+
+
+    final ILabeledObsProvider obsWithLabel = new TsLinkObsProvider( link, clonedProvider );
+    final IPoolableObjectType poolKey = element.getPoolKey();
+    m_part.getMemento().register( poolKey, obsWithLabel );
   }
 
-  private IZmlTableElement createZmlDiagrammElement( final TSLinkWithName link, final String identifier, final int index )
+  private ZmlLinkDiagramElement createZmlDiagrammElement( final TSLinkWithName link, final String identifier, final int index )
   {
     if( index == 0 )
       return new ZmlLinkDiagramElement( link );

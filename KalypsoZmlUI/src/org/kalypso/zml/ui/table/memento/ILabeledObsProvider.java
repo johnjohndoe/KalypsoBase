@@ -38,28 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.update;
+package org.kalypso.zml.ui.table.memento;
 
-import org.kalypso.zml.core.table.model.ZmlModel;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.memento.IZmlTableMemento;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public interface IZmlTableLayoutPart
+public interface ILabeledObsProvider extends IObsProvider
 {
-  String[] getIgnoreTypes( );
-
-  ZmlModel getModel( );
-
-  IZmlTableMemento getMemento( );
-
-  IZmlTable getTable( );
-
-  /**
-   * Should be called, if any of the underlying observations is changed.<br/>
-   * The part needs this to update the wizard.
-   */
-  void onObservationChanged( );
+  String getLabel( );
 }

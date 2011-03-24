@@ -43,12 +43,13 @@ package org.kalypso.zml.ui.table.memento;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ogc.sensor.IObservation;
@@ -59,7 +60,7 @@ import org.kalypso.ogc.sensor.provider.IObsProvider;
  */
 public class ZmlTableMemento implements IZmlTableMemento
 {
-  private final Set<IObsProvider> m_elements = Collections.synchronizedSet( new HashSet<IObsProvider>() );
+  private final Map<IPoolableObjectType, ILabeledObsProvider> m_elements = Collections.synchronizedMap( new HashMap<IPoolableObjectType, ILabeledObsProvider>() );
 
   /**
    * @see org.kalypso.zml.ui.table.memento.IZmlTableMemento#dispose()
@@ -71,9 +72,9 @@ public class ZmlTableMemento implements IZmlTableMemento
   }
 
   @Override
-  public void register( final IObsProvider element )
+  public void register( final IPoolableObjectType poolKey, final ILabeledObsProvider provider )
   {
-    m_elements.add( element );
+    m_elements.put( poolKey, provider );
   }
 
   /**
@@ -96,20 +97,20 @@ public class ZmlTableMemento implements IZmlTableMemento
 
   private synchronized void cleanup( )
   {
-    for( final IObsProvider provider : m_elements )
+    for( final IObsProvider provider : m_elements.values() )
       provider.dispose();
 
     m_elements.clear();
   }
 
   @Override
-  public synchronized IObsProvider[] findDirtyElements( )
+  public synchronized ILabeledObsProvider[] findDirtyElements( )
   {
-    final Collection<IObsProvider> result = new ArrayList<IObsProvider>();
+    final Collection<ILabeledObsProvider> result = new ArrayList<ILabeledObsProvider>();
 
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 
-    for( final IObsProvider provider : m_elements )
+    for( final ILabeledObsProvider provider : m_elements.values() )
     {
       final IObservation observation = provider.getObservation();
       if( observation != null )
@@ -120,6 +121,6 @@ public class ZmlTableMemento implements IZmlTableMemento
       }
     }
 
-    return result.toArray( new IObsProvider[result.size()] );
+    return result.toArray( new ILabeledObsProvider[result.size()] );
   }
 }
