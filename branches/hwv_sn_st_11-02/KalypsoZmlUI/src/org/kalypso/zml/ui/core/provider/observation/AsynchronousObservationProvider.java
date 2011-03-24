@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.core.provider.observation;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.core.zml.TSLinkWithName;
@@ -54,6 +55,8 @@ public class AsynchronousObservationProvider extends PooledObsProvider
 {
   private final String m_type;
 
+  private final TSLinkWithName m_link;
+
   public AsynchronousObservationProvider( final TSLinkWithName link )
   {
     this( link, null );
@@ -62,7 +65,18 @@ public class AsynchronousObservationProvider extends PooledObsProvider
   public AsynchronousObservationProvider( final TSLinkWithName link, final String type )
   {
     super( new PoolableObjectType( "zml", link.getHref(), link.getContext(), true ) ); //$NON-NLS-1$
+
+    m_link = link;
     m_type = type;
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.template.IObsProvider#copy()
+   */
+  @Override
+  public IObsProvider copy( )
+  {
+    return new AsynchronousObservationProvider( m_link, m_type );
   }
 
   /**

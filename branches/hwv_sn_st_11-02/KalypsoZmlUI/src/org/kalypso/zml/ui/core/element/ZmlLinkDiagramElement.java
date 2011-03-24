@@ -59,7 +59,7 @@ import de.openali.odysseus.chartconfig.x020.LayerType;
 /**
  * @author Dirk Kuch
  */
-public class ZmlLinkDiagramElement extends AbstractTsLinkDiagramElement implements IZmlDiagramElement, IZmlTableElement
+public class ZmlLinkDiagramElement extends AbstractTsLinkDiagramElement implements IZmlTableElement
 {
   public ZmlLinkDiagramElement( final TSLinkWithName link )
   {
@@ -115,5 +115,4 @@ public class ZmlLinkDiagramElement extends AbstractTsLinkDiagramElement implemen
 
     return name;
   }
-
 }

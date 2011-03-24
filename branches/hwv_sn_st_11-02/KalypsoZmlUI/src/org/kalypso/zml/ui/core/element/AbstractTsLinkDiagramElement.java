@@ -54,7 +54,7 @@ import org.kalypso.zml.ui.core.zml.ZmlAxisUtils;
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractTsLinkDiagramElement extends AbstractDiagramElement implements IZmlDiagramElement
+public abstract class AbstractTsLinkDiagramElement extends AbstractDiagramElement
 {
   private final TSLinkWithName m_link;
 
@@ -120,6 +120,16 @@ public abstract class AbstractTsLinkDiagramElement extends AbstractDiagramElemen
     }
 
     return m_provider;
+  }
+
+  @Override
+  public final synchronized void dispose( )
+  {
+    if( m_provider != null )
+    {
+      m_provider.dispose();
+      m_provider = null;
+    }
   }
 
   /**
