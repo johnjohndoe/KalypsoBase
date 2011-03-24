@@ -209,17 +209,17 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     }
   }
 
-  protected void printAddTraces( @SuppressWarnings("unused") final KeyInfo info, final Object[] result )
+  protected void printAddTraces( final KeyInfo info, final Object[] result )
   {
     for( final Object object : result )
     {
       if( object instanceof IPoolListener )
       {
         // Deaktivated for the moment, we must wait until the prognose branch was mrged into the trunc
-// final Exception addTrace = info.getAddTrace( (IPoolListener) object );
-// System.out.println( "Listener: " + object.toString() );
-// addTrace.printStackTrace();
-// System.out.println();
+        final Exception addTrace = info.getAddTrace( (IPoolListener) object );
+        System.out.println( "Listener: " + object.toString() );
+        addTrace.printStackTrace();
+        System.out.println();
       }
     }
   }
