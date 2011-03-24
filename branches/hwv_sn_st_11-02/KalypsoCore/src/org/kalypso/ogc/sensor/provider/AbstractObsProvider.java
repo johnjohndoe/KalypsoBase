@@ -81,6 +81,8 @@ public abstract class AbstractObsProvider implements IObsProvider
   {
     if( m_observation != null )
       m_observation.removeListener( m_observationListeer );
+
+    m_listeners.clear();
   }
 
   /**
