@@ -48,7 +48,6 @@ import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisito
  */
 public class DisposeLayersVisitor implements IChartLayerVisitor
 {
-
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
