@@ -47,5 +47,5 @@ import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
  */
 public interface IZmlTableColumnVisitor
 {
-  void accept( IExtendedZmlTableColumn column );
+  void visit( IExtendedZmlTableColumn column );
 }

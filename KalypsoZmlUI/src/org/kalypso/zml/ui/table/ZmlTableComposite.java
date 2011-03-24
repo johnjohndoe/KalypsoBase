@@ -363,7 +363,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   {
     for( final ExtendedZmlTableColumn column : getColumns() )
     {
-      visitor.accept( column );
+      visitor.visit( column );
     }
   }
 
