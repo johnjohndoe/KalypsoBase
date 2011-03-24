@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.memento;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,14 +53,13 @@ import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.zml.ui.core.element.IZmlDiagramElement;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableMemento implements IZmlTableMemento
 {
-  private final Set<IZmlDiagramElement> m_elements = new HashSet<IZmlDiagramElement>();
+  private final Set<IObsProvider> m_elements = Collections.synchronizedSet( new HashSet<IObsProvider>() );
 
   /**
    * @see org.kalypso.zml.ui.table.memento.IZmlTableMemento#dispose()
@@ -65,14 +67,11 @@ public class ZmlTableMemento implements IZmlTableMemento
   @Override
   public void dispose( )
   {
-    m_elements.clear();
+    cleanup();
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.memento.IZmlTableMemento#register(org.kalypso.zml.ui.core.element.IZmlDiagramElement)
-   */
   @Override
-  public void register( final IZmlDiagramElement element )
+  public void register( final IObsProvider element )
   {
     m_elements.add( element );
   }
@@ -81,31 +80,46 @@ public class ZmlTableMemento implements IZmlTableMemento
    * @see org.kalypso.hwv.ui.wizards.calculation.modelpages.layout.ILayoutPart#saveData(boolean)
    */
   @Override
-  public void store( ) throws CoreException
+  public synchronized void store( ) throws CoreException
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-    for( final IZmlDiagramElement element : m_elements )
+    final IObsProvider[] dirtyElements = findDirtyElements();
+    for( final IObsProvider provider : dirtyElements )
     {
-      final IObsProvider provider = element.getObsProvider();
-      try
+      final IObservation observation = provider.getObservation();
+      if( observation != null )
+        pool.saveObject( observation, new NullProgressMonitor() );
+    }
+
+    cleanup();
+  }
+
+  private synchronized void cleanup( )
+  {
+    for( final IObsProvider provider : m_elements )
+      provider.dispose();
+
+    m_elements.clear();
+  }
+
+  @Override
+  public synchronized IObsProvider[] findDirtyElements( )
+  {
+    final Collection<IObsProvider> result = new ArrayList<IObsProvider>();
+
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+
+    for( final IObsProvider provider : m_elements )
+    {
+      final IObservation observation = provider.getObservation();
+      if( observation != null )
       {
-        final IObservation observation = provider.getObservation();
-        if( observation != null )
-        {
-          final KeyInfo info = pool.getInfo( observation );
-          if( info.isDirty() )
-          {
-// System.out.println( String.format( "Saving observation: %s", observation.getHref() ) );
-            pool.saveObject( observation, new NullProgressMonitor() );
-          }
-        }
-      }
-      finally
-      {
-        provider.dispose();
+        final KeyInfo info = pool.getInfo( observation );
+        if( info.isDirty() )
+          result.add( provider );
       }
     }
 
-    m_elements.clear();
+    return result.toArray( new IObsProvider[result.size()] );
   }
 }

@@ -56,7 +56,6 @@ import de.openali.odysseus.chartconfig.x020.LayerType;
  */
 public abstract class AbstractDiagramElement implements IZmlDiagramElement
 {
-
   @Override
   public final <T extends IStyle> T getStyle( final Class<T> clazz, final String type, final int index )
   {
@@ -83,5 +82,4 @@ public abstract class AbstractDiagramElement implements IZmlDiagramElement
 
     return StyleUtils.getDefaultStyle( clazz );
   }
-
 }

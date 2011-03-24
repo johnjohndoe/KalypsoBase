@@ -42,6 +42,8 @@ package org.kalypso.zml.ui.table.update;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.IClonedColumn;
 import org.kalypso.zml.core.table.binding.TableTypeHelper;
@@ -96,27 +98,28 @@ public class ZmlTableUpdater implements Runnable
 
   private void update( final TSLinkWithName link, final String identifier, final int index )
   {
-    final ZmlLinkDiagramElement element;
-
-    if( index == 0 )
-    {
-      element = new ZmlLinkDiagramElement( link );
-    }
-    else
-    {
-      final String multipleIdentifier = duplicateColumn( identifier, index );
-      element = new ZmlLinkDiagramElement( link )
-      {
-        @Override
-        public String getIdentifier( )
-        {
-          return multipleIdentifier;
-        }
-      };
-    }
+    final IZmlTableElement element = createZmlDiagrammElement( link, identifier, index );
+    final IObsProvider clonedProvider = element.getObsProvider().copy();
 
     m_part.getModel().loadColumn( element );
-    m_part.getMemento().register( element );
+
+    m_part.getMemento().register( clonedProvider );
+  }
+
+  private IZmlTableElement createZmlDiagrammElement( final TSLinkWithName link, final String identifier, final int index )
+  {
+    if( index == 0 )
+      return new ZmlLinkDiagramElement( link );
+
+    final String multipleIdentifier = duplicateColumn( identifier, index );
+    return new ZmlLinkDiagramElement( link )
+    {
+      @Override
+      public String getIdentifier( )
+      {
+        return multipleIdentifier;
+      }
+    };
   }
 
   public String duplicateColumn( final String identifier, final int index )
