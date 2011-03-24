@@ -83,6 +83,18 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    if( Objects.isNotNull( m_handler ) )
+      m_handler.dispose();
+
+    super.dispose();
+  }
+
+  /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
