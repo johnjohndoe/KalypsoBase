@@ -44,7 +44,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.core.util.pool.IPoolListener;
@@ -136,7 +135,7 @@ public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider imple
       return;
 
     // clear the theme
-    setWorkspace( null, StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.gml.PoolGmlWorkspaceProvider.2" ) ) ); //$NON-NLS-1$
+    setWorkspace( null, new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), Messages.getString( "org.kalypso.ogc.gml.PoolGmlWorkspaceProvider.2" ) ) ); //$NON-NLS-1$
   }
 
 
@@ -149,7 +148,8 @@ public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider imple
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     final KeyInfo info = pool.getInfoForKey( m_poolKey );
-    info.saveObject( monitor );
+    if( info.isDirty() )
+      info.saveObject( monitor );
   }
 
 }
