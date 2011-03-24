@@ -24,6 +24,10 @@
           id="org.kalypso.zml.ui.chart.layer.provider.ZmlForecastLayerProvider">
     </provider>
     <provider
+          class="org.kalypso.zml.ui.chart.layer.provider.ZmlSelectionLayerProvider"
+          id="org.kalypso.zml.ui.chart.layer.provider.ZmlSelectionLayerProvider">
+    </provider>
+    <provider
           class="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider"
           id="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider">
     </provider>

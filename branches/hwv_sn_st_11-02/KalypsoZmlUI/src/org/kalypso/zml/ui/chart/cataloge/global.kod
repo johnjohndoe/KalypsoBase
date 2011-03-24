@@ -1075,6 +1075,31 @@
           </TextStyle>
         </Styles>
       </Layer>
+      <Layer id="selectionLayer" visible="true" legend="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlSelectionLayerProvider">
+          <Parameters>
+            <Parameter name="hideOnMultiSelect" value="false" />
+          </Parameters>
+        </Provider>
+        <Title>Vorhersagezeitraum</Title>
+        <Description />
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#screenAxisY" />
+        </MapperRefs>
+        <Styles>
+          <LineStyle role="selectionStyle">
+            <Width>3</Width>
+            <LineColor>BAFFEC</LineColor>
+            <DashOffset>16</DashOffset>
+            <DashArray>12 7</DashArray>
+            <LineCap>ROUND</LineCap>
+            <LineJoin>MITER</LineJoin>
+            <MiterLimit>1</MiterLimit>
+          </LineStyle>
+        </Styles>
+      </Layer>
+
     </Layers>
     <Mappers>
       <Axis id="W" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">

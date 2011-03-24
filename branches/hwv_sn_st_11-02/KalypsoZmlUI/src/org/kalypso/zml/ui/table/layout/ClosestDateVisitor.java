@@ -60,6 +60,8 @@ public class ClosestDateVisitor implements IZmlTableRowVisitor, IZmlModelRowVisi
 
   private IZmlModelRow m_modelRow;
 
+  private Date m_date;
+
   public ClosestDateVisitor( final Date date )
   {
     m_base = date.getTime();
@@ -80,17 +82,8 @@ public class ClosestDateVisitor implements IZmlTableRowVisitor, IZmlModelRowVisi
     {
       m_diff = diff;
       m_tableRow = row;
+      m_date = date;
     }
-  }
-
-  public IZmlTableRow getTableRow( )
-  {
-    return m_tableRow;
-  }
-
-  public IZmlModelRow getModelRow( )
-  {
-    return m_modelRow;
   }
 
   /**
@@ -107,8 +100,22 @@ public class ClosestDateVisitor implements IZmlTableRowVisitor, IZmlModelRowVisi
     {
       m_diff = diff;
       m_modelRow = row;
+      m_date = date;
     }
-
   }
 
+  public IZmlTableRow getTableRow( )
+  {
+    return m_tableRow;
+  }
+
+  public IZmlModelRow getModelRow( )
+  {
+    return m_modelRow;
+  }
+
+  public Date getDate( )
+  {
+    return m_date;
+  }
 }
