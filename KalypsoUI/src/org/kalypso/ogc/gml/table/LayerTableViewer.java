@@ -810,7 +810,8 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
         final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
         final IPoolableObjectType poolKey = ((PoolLayerTableInput) input).getPoolKey();
         final KeyInfo info = pool.getInfoForKey( poolKey );
-        info.saveObject( monitor );
+        if( info.isDirty() )
+          info.saveObject( monitor );
       }
     }
     catch( final Exception e )
