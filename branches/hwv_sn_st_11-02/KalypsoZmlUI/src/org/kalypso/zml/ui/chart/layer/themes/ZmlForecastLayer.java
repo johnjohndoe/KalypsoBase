@@ -196,7 +196,8 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
   @Override
   public void dispose( )
   {
-    m_provider.dispose();
+    if( m_provider != null )
+      m_provider.dispose();
   }
 
   /**
