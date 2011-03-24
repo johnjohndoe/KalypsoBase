@@ -94,6 +94,7 @@ public abstract class AbstractCellCursor extends Canvas
       }
     } );
 
+    // triggered from chart layer mouse selection
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
@@ -102,7 +103,6 @@ public abstract class AbstractCellCursor extends Canvas
         redraw();
       }
     } );
-
   }
 
   protected void keyDown( final Event event )
