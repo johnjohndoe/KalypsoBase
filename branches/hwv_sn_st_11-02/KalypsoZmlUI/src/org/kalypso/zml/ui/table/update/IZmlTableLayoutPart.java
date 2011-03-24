@@ -56,4 +56,10 @@ public interface IZmlTableLayoutPart
   IZmlTableMemento getMemento( );
 
   IZmlTable getTable( );
+
+  /**
+   * Should be called, if any of the underlying observations is changed.<br/>
+   * The part needs this to update the wizard.
+   */
+  void onObservationChanged( );
 }

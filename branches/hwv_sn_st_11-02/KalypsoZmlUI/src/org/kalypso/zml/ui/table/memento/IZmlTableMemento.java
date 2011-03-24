@@ -41,18 +41,18 @@
 package org.kalypso.zml.ui.table.memento;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 
 /**
  * @author Dirk Kuch
  */
 public interface IZmlTableMemento
 {
-  void register( IObsProvider observationProvider );
+  void register( IPoolableObjectType poolKey, ILabeledObsProvider observationProvider );
 
   void dispose( );
 
   void store( ) throws CoreException;
 
-  IObsProvider[] findDirtyElements( );
+  ILabeledObsProvider[] findDirtyElements( );
 }

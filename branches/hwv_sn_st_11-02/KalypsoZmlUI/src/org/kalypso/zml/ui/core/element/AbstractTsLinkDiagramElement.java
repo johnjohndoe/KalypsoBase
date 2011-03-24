@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.core.element;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
@@ -58,7 +59,7 @@ public abstract class AbstractTsLinkDiagramElement extends AbstractDiagramElemen
 {
   private final TSLinkWithName m_link;
 
-  private IObsProvider m_provider;
+  private AsynchronousObservationProvider m_provider;
 
   public AbstractTsLinkDiagramElement( final TSLinkWithName link )
   {
@@ -105,7 +106,7 @@ public abstract class AbstractTsLinkDiagramElement extends AbstractDiagramElemen
   }
 
   @Override
-  public final synchronized IObsProvider getObsProvider( )
+  public final synchronized AsynchronousObservationProvider getObsProvider( )
   {
     if( m_provider == null )
     {
@@ -144,4 +145,8 @@ public abstract class AbstractTsLinkDiagramElement extends AbstractDiagramElemen
     return ZmlAxisUtils.findValueAxes( observation.getAxes() );
   }
 
+  public IPoolableObjectType getPoolKey( )
+  {
+    return getObsProvider().getPoolKey();
+  }
 }

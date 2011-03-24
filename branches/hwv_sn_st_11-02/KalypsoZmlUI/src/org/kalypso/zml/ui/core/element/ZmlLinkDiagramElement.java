@@ -111,8 +111,6 @@ public class ZmlLinkDiagramElement extends AbstractTsLinkDiagramElement implemen
   {
     final String tokenizedName = getLink().getName();
     final IObservation observation = getObsProvider().getObservation();
-    final String name = ObservationTokenHelper.replaceTokens( tokenizedName, observation, axis );
-
-    return name;
+    return ObservationTokenHelper.replaceTokens( tokenizedName, observation, axis );
   }
 }
