@@ -98,6 +98,18 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     m_calculateRange = calculateRange;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    if( Objects.isNotNull( m_handler ) )
+      m_handler.dispose();
+
+    super.dispose();
+  }
+
   public boolean isCalculateRange( )
   {
     return m_calculateRange;

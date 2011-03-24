@@ -120,6 +120,10 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
   @Override
   public void dispose( )
   {
+    if( Objects.isNotNull( m_handler ) )
+      m_handler.dispose();
+
+    super.dispose();
   }
 
   /**

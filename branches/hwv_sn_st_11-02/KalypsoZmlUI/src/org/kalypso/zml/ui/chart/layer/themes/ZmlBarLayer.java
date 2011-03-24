@@ -94,7 +94,8 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   @Override
   public void dispose( )
   {
-    m_handler.dispose();
+    if( Objects.isNotNull( m_handler ) )
+      m_handler.dispose();
 
     super.dispose();
   }
