@@ -56,7 +56,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
-      if( (m_image != null) && !m_image.isDisposed() )
+      if( m_image != null && !m_image.isDisposed() )
       {
         m_image.dispose();
         m_image = null;
@@ -295,6 +295,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     return this;
   }
 
+  @Override
   public final Rectangle getPlotRect( )
   {
     return m_plotRect;

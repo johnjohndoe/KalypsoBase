@@ -185,7 +185,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     {
       setClip( gc, range );
       drawLineTheme( gc, observation );
-// drawSelectionTheme();
     }
     finally
     {
@@ -245,13 +244,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
   }
-
-// private void drawSelectionTheme( )
-// {
-// final de.openali.odysseus.chart.framework.model.mapper.IAxis domainAxis = getDomainAxis();
-// if( domainAxis.getSelection() == null )
-// return;
-// }
 
   /**
    * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setDataHandler(org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler)
