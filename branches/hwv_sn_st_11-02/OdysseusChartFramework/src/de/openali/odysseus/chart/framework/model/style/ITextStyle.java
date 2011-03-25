@@ -16,8 +16,10 @@ public interface ITextStyle extends IStyle
 
   RGB getFillColor( );
 
+  // FIXME: bad: not in xml, used for special situations, does not belong here
   ALIGNMENT getAlignment( );
 
+  // FIXME: bad: not in xml, used for special situations, does not belong here
   void setAlignment( final ALIGNMENT position );
 
   FONTSTYLE getFontStyle( );
