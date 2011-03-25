@@ -90,6 +90,15 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#onObservationChanged()
+   */
+  @Override
+  public void onObservationChanged( )
+  {
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
+  /**
    * @see de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer#createLegendEntries()
    */
   @Override

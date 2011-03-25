@@ -110,7 +110,7 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
       provider.addListener( m_observationProviderListener );
     }
 
-    m_layer.getEventHandler().fireLayerContentChanged( m_layer );
+    m_layer.onObservationChanged();
   }
 
   @Override
@@ -126,13 +126,14 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   {
     m_model = null;
 
-    m_layer.getEventHandler().fireLayerContentChanged( m_layer );
+    m_layer.onObservationChanged();
   }
 
   protected void onObservationChanged( )
   {
     m_model = null;
-    m_layer.getEventHandler().fireLayerContentChanged( m_layer );
+
+    m_layer.onObservationChanged();
   }
 
   /**

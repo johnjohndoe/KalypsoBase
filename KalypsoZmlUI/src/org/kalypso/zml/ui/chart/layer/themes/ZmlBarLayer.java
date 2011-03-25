@@ -99,6 +99,15 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     super.dispose();
   }
 
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#onObservationChanged()
+   */
+  @Override
+  public void onObservationChanged( )
+  {
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
