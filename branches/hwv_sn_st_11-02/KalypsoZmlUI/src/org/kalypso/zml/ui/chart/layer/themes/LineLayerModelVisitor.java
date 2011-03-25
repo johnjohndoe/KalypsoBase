@@ -91,6 +91,9 @@ public class LineLayerModelVisitor implements IObservationVisitor
     {
       final IZmlLayerDataHandler handler = m_layer.getDataHandler();
       final ITupleModel model = handler.getModel();
+      if( model == null )
+        return null;
+
       final IAxis[] axes = model.getAxes();
 
       m_dateAxis = AxisUtils.findDateAxis( axes );

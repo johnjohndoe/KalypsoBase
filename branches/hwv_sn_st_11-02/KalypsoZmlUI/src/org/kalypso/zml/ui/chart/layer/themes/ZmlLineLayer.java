@@ -191,6 +191,10 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     final Rectangle oldClip = gc.getClipping();
     try
     {
+      // FIXME: possible NPE here, because of the useage of IZmlLayerDataHandler!
+      // the handler may now have a null-model, as it is changed asynchronously...
+      // as we already have the observation, why access the model via the data handler at all?
+
       setClip( gc, range );
       drawLineTheme( gc, observation );
     }
@@ -239,6 +243,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   {
     try
     {
+      // FIXME: why is this necessary on every paint?
       setLineThemeStyles();
 
       final List<Point> path = new ArrayList<Point>();
@@ -274,9 +279,12 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     m_labelDescriptor = labelDescriptor;
   }
 
+  // FIXME: should only be done once (in the constructor), keep the styles in memeber variables
   private void setLineThemeStyles( )
   {
     final IStyleSet styleSet = getStyleSet();
+
+    // FIXME: strange! we need better helper classes here...
     final int index = ZmlLayerHelper.getLayerIndex( getIdentifier() );
 
     final StyleSetVisitor visitor = new StyleSetVisitor();
