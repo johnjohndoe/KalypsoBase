@@ -54,12 +54,15 @@ import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
@@ -67,6 +70,8 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
  */
 public class ZmlForecastLayer extends AbstractChartLayer implements IObsProviderListener
 {
+  private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
+
   private IObsProvider m_provider;
 
   private final ILineStyle m_style;
@@ -145,6 +150,9 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
 
   private Calendar getForecast( )
   {
+    if( m_provider == null )
+      return null;
+
     final IObservation observation = m_provider.getObservation();
     if( observation == null )
       return null;
@@ -178,7 +186,25 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
   @Override
   public IDataRange<Number> getDomainRange( )
   {
-    return null;
+    // TODO: all three parameters should eventually be set from outside
+    final boolean shouldAutomax = true;
+    final int bufferField = Calendar.HOUR_OF_DAY;
+    final int bufferAmount = -2;
+
+    if( !shouldAutomax )
+      return null;
+
+    final Calendar forecast = getForecast();
+    if( forecast == null )
+      return null;
+
+    final Calendar from = (Calendar) forecast.clone();
+    final Calendar end = (Calendar) forecast.clone();
+
+    from.add( bufferField, -bufferAmount );
+    end.add( bufferField, bufferAmount );
+
+    return new DataRange<Number>( m_dateDataOperator.logicalToNumeric( from.getTime() ), m_dateDataOperator.logicalToNumeric( end.getTime() ) );
   }
 
   /**
