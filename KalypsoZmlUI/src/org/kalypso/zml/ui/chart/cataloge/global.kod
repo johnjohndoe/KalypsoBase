@@ -1091,8 +1091,6 @@
           <LineStyle role="selectionStyle">
             <Width>3</Width>
             <LineColor>BAFFEC</LineColor>
-            <DashOffset>16</DashOffset>
-            <DashArray>12 7</DashArray>
             <LineCap>ROUND</LineCap>
             <LineJoin>MITER</LineJoin>
             <MiterLimit>1</MiterLimit>
