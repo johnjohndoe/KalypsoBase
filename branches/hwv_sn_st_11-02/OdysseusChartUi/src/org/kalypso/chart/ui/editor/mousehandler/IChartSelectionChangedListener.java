@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
-import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+import org.eclipse.swt.graphics.Point;
 
 /**
  * @author Dirk Kuch
@@ -48,6 +48,6 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 public interface IChartSelectionChangedListener
 {
 
-  void selctionChanged( EditInfo editInfo );
+  void selctionChanged( Point... positions );
 
 }

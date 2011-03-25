@@ -40,19 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.DateRange;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
@@ -60,14 +65,20 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
  */
 public class ZmlSelectionLayer extends AbstractChartLayer
 {
-  private final ILineStyle m_style;
+  private final ILineStyle m_lineStyle;
 
   private Date m_selection;
 
-  public ZmlSelectionLayer( final ILayerProvider layerProvider, final ILineStyle style )
+  private DateRange m_selectedDateRange;
+
+  private final IAreaStyle m_areaStyle;
+
+  public ZmlSelectionLayer( final ILayerProvider layerProvider, final ILineStyle lineStyle, final IAreaStyle areaStyle )
   {
     super( layerProvider );
-    m_style = style;
+
+    m_lineStyle = lineStyle;
+    m_areaStyle = areaStyle;
   }
 
   /**
@@ -76,9 +87,53 @@ public class ZmlSelectionLayer extends AbstractChartLayer
   @Override
   public void paint( final GC gc )
   {
-    if( Objects.isNull( m_selection ) )
+    if( Objects.allNull( m_selection, m_selectedDateRange ) )
       return;
 
+    if( Objects.isNotNull( m_selection ) )
+      paintSingleSelect( gc );
+    else if( Objects.isNotNull( m_selectedDateRange ) )
+      paintMultiSelect( gc );
+  }
+
+  private void paintMultiSelect( final GC gc )
+  {
+    final ICoordinateMapper mapper = getCoordinateMapper();
+
+    final IAxis domainAxis = mapper.getDomainAxis();
+    final IAxis targetAxis = mapper.getTargetAxis();
+
+    final IDataRange<Number> domainRange = domainAxis.getNumericRange();
+    final IDataRange<Number> targetRange = targetAxis.getNumericRange();
+
+    final Number min = domainRange.getMin();
+    final Number max = domainRange.getMax();
+    if( Objects.isNull( min, max ) )
+      return;
+
+    final double logicalX1 = min.doubleValue() + m_selectedDateRange.getFrom().getTime() - min.doubleValue();
+    final double logicalX2 = min.doubleValue() + m_selectedDateRange.getTo().getTime() - min.doubleValue();
+    final Integer x1 = Math.abs( domainAxis.numericToScreen( logicalX1 ) );
+    final Integer x2 = Math.abs( domainAxis.numericToScreen( logicalX2 ) );
+
+    final Integer yMin = targetAxis.numericToScreen( targetRange.getMin() );
+    final Integer yMax = targetAxis.numericToScreen( targetRange.getMax() );
+
+    final PolygonFigure figure = new PolygonFigure();
+    figure.setStyle( m_areaStyle );
+
+    final List<Point> points = new ArrayList<Point>();
+    points.add( new Point( x1, yMin ) );
+    points.add( new Point( x1, yMax ) );
+    points.add( new Point( x2, yMax ) );
+    points.add( new Point( x2, yMin ) );
+
+    figure.setPoints( points.toArray( new Point[] {} ) );
+    figure.paint( gc );
+  }
+
+  private void paintSingleSelect( final GC gc )
+  {
     final ICoordinateMapper mapper = getCoordinateMapper();
 
     final IAxis domainAxis = mapper.getDomainAxis();
@@ -95,18 +150,28 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     final double logicalX = min.doubleValue() + m_selection.getTime() - min.doubleValue();
     final Integer x = Math.abs( domainAxis.numericToScreen( logicalX ) );
 
-    final Integer y0 = targetAxis.numericToScreen( targetRange.getMin() );
-    final Integer y1 = targetAxis.numericToScreen( targetRange.getMax() );
+    final Integer yMin = targetAxis.numericToScreen( targetRange.getMin() );
+    final Integer yMax = targetAxis.numericToScreen( targetRange.getMax() );
 
     final PolylineFigure polylineFigure = new PolylineFigure();
-    polylineFigure.setStyle( m_style );
-    polylineFigure.setPoints( new Point[] { new Point( x, y0 ), new Point( x, y1 ) } );
+    polylineFigure.setStyle( m_lineStyle );
+    polylineFigure.setPoints( new Point[] { new Point( x, yMin ), new Point( x, yMax ) } );
     polylineFigure.paint( gc );
   }
 
   public void setSelection( final Date selection )
   {
     m_selection = selection;
+    m_selectedDateRange = null;
+
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
+  public void setSelection( final DateRange dateRange )
+  {
+    m_selection = null;
+    m_selectedDateRange = dateRange;
+
     getEventHandler().fireLayerContentChanged( this );
   }
 

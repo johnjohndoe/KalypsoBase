@@ -46,6 +46,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -83,6 +84,8 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
   }
 
   private int m_button = -1;
+
+  private boolean m_controlKeyPressed = false;
 
   private final DIRECTION m_direction;
 
@@ -143,21 +146,24 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
   @Override
   public void doMouseUpAction( final Point end, final EditInfo editInfo )
   {
+    final Point start = editInfo.getPosition();
+
     if( m_button == SWT.BUTTON1 )
     {
       if( Objects.isNotNull( end ) )
-        doMouseUpZoom( end, editInfo ); // zoom
+      {
+        if( m_controlKeyPressed )
+          fireSelectionChanged( start, end );
+        else
+          doMouseUpZoom( start, end ); // zoom
+      }
       else
-        fireSelectionChanged( editInfo ); // update selection
+        fireSelectionChanged( start );
     }
     else if( m_button == SWT.BUTTON2 )
     {
       if( Objects.isNotNull( end ) )
-        doMouseUpPan( end, editInfo );
-
-      fireSelectionChanged( editInfo );
-// /** update active point */
-// updateSelection( editInfo );
+        doMouseUpPan( start, end );
     }
     else if( m_button == SWT.BUTTON3 )
     {
@@ -165,28 +171,27 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
     }
   }
 
-  private void doMouseUpPan( final Point point, final EditInfo editInfo )
+  private void doMouseUpPan( final Point start, final Point end )
   {
     getChart().setPanOffset( null, null, null );
-    final PanToVisitor visitor = new PanToVisitor( point, editInfo.getPosition() );
+    final PanToVisitor visitor = new PanToVisitor( end, start );
 
     final IChartModel model = getChart().getChartModel();
     model.getMapperRegistry().accept( visitor );
-
   }
 
-  private void doMouseUpZoom( final Point point, final EditInfo editInfo )
+  private void doMouseUpZoom( final Point start, final Point end )
   {
-    if( Objects.isNull( point ) )
+    if( Objects.isNull( end ) )
       return;
 
     try
     {
-      if( point.x < editInfo.getPosition().x )
+      if( end.x < start.x )
         getChart().getChartModel().autoscale();
       else
       {
-        final ZoomInVisitor visitor = new ZoomInVisitor( editInfo.getPosition(), point );
+        final ZoomInVisitor visitor = new ZoomInVisitor( start, end );
 
         final IChartModel model = getChart().getChartModel();
         model.getMapperRegistry().accept( visitor );
@@ -213,13 +218,41 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
     m_listeners.add( listener );
   }
 
-  private void fireSelectionChanged( final EditInfo editInfo )
+  private void fireSelectionChanged( final Point... points )
   {
     final IChartSelectionChangedListener[] listeners = m_listeners.toArray( new IChartSelectionChangedListener[] {} );
     for( final IChartSelectionChangedListener listener : listeners )
     {
-      listener.selctionChanged( editInfo );
+      listener.selctionChanged( points );
     }
+  }
+
+  /**
+   * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
+   */
+  @Override
+  public void keyPressed( final KeyEvent e )
+  {
+    if( SWT.CONTROL == e.keyCode )
+    {
+      m_controlKeyPressed = true;
+    }
+
+    super.keyPressed( e );
+  }
+
+  /**
+   * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
+   */
+  @Override
+  public void keyReleased( final KeyEvent e )
+  {
+    if( SWT.CONTROL == e.keyCode )
+    {
+      m_controlKeyPressed = false;
+    }
+
+    super.keyReleased( e );
 
   }
 }
