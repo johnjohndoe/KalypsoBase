@@ -288,6 +288,11 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
   @Override
   public void mousePressed( final MouseEvent event )
   {
+    if( event.getButton() != MouseEvent.BUTTON1 )
+      return;
+
+    event.consume();
+
     final IMapPanel mapPanel = getMapPanel();
     if( mapPanel == null )
       return;
