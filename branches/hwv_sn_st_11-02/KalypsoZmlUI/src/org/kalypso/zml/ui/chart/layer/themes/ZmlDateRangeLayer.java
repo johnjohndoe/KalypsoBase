@@ -79,6 +79,15 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
   }
 
   /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#onObservationChanged()
+   */
+  @Override
+  public void onObservationChanged( )
+  {
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
+  /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override

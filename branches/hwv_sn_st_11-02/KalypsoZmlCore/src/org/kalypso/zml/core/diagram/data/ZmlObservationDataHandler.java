@@ -139,7 +139,7 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
     m_observation = observation;
     m_observation.addListener( this );
 
-    m_layer.getEventHandler().fireLayerContentChanged( m_layer );
+    m_layer.onObservationChanged();
   }
 
   public void setDateRange( final DateRange dateRange )
