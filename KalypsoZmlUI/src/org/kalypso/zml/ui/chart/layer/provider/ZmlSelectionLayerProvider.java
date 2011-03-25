@@ -50,6 +50,7 @@ import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
@@ -69,9 +70,10 @@ public class ZmlSelectionLayerProvider extends AbstractLayerProvider implements 
     try
     {
       final StyleSetVisitor visitor = new StyleSetVisitor();
-      final ILineStyle style = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
+      final ILineStyle lineStyle = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
+      final IAreaStyle areaStyle = visitor.visit( getStyleSet(), IAreaStyle.class, 0 );
 
-      return new ZmlSelectionLayer( this, style );
+      return new ZmlSelectionLayer( this, lineStyle, areaStyle );
     }
     catch( final Throwable t )
     {
