@@ -41,7 +41,11 @@
 package org.kalypso.zml.ui.table.update;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.IObsProviderListener;
@@ -80,13 +84,30 @@ public class ZmlTableUpdater implements Runnable
 
   private final IZmlTableLayoutPart m_part;
 
+  private final UIJob m_resetUpdateJob = new UIJob( "Update Reset Button" )
+  {
+    @Override
+    public IStatus runInUIThread( final IProgressMonitor monitor )
+    {
+      updateResetButtons();
+      return Status.OK_STATUS;
+    }
+  };
+
   public ZmlTableUpdater( final IZmlTableLayoutPart part, final MultipleTsLink[] links )
   {
     m_part = part;
     m_links = links;
   }
 
+
   protected void handleObservationChanged( )
+  {
+    m_resetUpdateJob.cancel();
+    m_resetUpdateJob.schedule( 100 );
+  }
+
+  protected void updateResetButtons( )
   {
     m_part.onObservationChanged();
   }
