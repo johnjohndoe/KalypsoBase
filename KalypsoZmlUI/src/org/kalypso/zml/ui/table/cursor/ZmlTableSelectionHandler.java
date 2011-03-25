@@ -164,6 +164,10 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
     TableViewerEditor.create( viewer, focusCellManager, activationSupport, ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL
         | ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR );
+
+    /* selection change listener -> updates selection in chart composite */
+    viewer.addSelectionChangedListener( new UpdateChartSelectionListener( this ) );
+
   }
 
   /**

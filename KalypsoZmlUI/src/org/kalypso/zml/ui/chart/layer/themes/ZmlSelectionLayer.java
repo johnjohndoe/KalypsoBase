@@ -175,6 +175,14 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     getEventHandler().fireLayerContentChanged( this );
   }
 
+  public void purgeSelection( )
+  {
+    m_selection = null;
+    m_selectedDateRange = null;
+
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */

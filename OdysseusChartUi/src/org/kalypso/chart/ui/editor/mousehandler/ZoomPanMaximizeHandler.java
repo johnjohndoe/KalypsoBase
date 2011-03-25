@@ -106,7 +106,10 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
   {
     if( m_button == SWT.BUTTON1 )
     {
-      doMouseMoveZoom( end, editInfo );
+      if( m_controlKeyPressed )
+        doMouseMoveSelection( end, editInfo );
+      else
+        doMouseMoveZoom( end, editInfo );
     }
     else if( m_button == SWT.BUTTON2 )
     {
@@ -127,6 +130,15 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
     }
     else
       throw new NotImplementedException();
+  }
+
+  protected void doMouseMoveSelection( final Point end, final EditInfo editInfo )
+  {
+    final Rectangle plotRect = getChart().getPlotRect();
+    final int minY = plotRect.y;
+    final int height = plotRect.height;
+
+    getChart().setDragArea( new Rectangle( editInfo.getPosition().x, minY, end.x - editInfo.getPosition().x, height ) );
   }
 
   protected void doMouseMoveZoom( final Point end, final EditInfo editInfo )

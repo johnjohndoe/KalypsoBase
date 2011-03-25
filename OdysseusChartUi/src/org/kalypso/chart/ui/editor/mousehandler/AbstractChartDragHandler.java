@@ -63,7 +63,7 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
 
   protected final int button2Mask( final int button )
   {
-    return 1 << (18 + button);
+    return 1 << 18 + button;
   }
 
   abstract public void doMouseMoveAction( final Point end, final EditInfo editInfo );
@@ -155,13 +155,13 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
   {
     if( (button2Mask( e.button ) & m_observedButtonMask) == 0 )
       return;
-    mouseDown( new Point( e.x, e.y ) );
 
+    mouseDown( new Point( e.x, e.y ) );
   }
 
   protected void mouseMove( final Point move )
   {
-    if( (m_editInfo == null) && ((Math.abs( move.x - m_startX ) > m_trashOld) || (Math.abs( move.y - m_startY ) > m_trashOld)) )
+    if( m_editInfo == null && (Math.abs( move.x - m_startX ) > m_trashOld || Math.abs( move.y - m_startY ) > m_trashOld) )
       m_editInfo = m_clickInfo.clone();
 
     final Point plotPoint = getChart().screen2plotPoint( new Point( move.x - m_deltaSnapX, move.y - m_deltaSnapY ) );

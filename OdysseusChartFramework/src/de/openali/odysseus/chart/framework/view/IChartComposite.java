@@ -57,6 +57,8 @@ public interface IChartComposite
 
   Canvas getPlot( );
 
+  Rectangle getPlotRect( );
+
   EditInfo getTooltipInfo( );
 
   Point screen2plotPoint( Point screen );
