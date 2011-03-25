@@ -111,6 +111,10 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     if( Objects.isNull( min, max ) )
       return;
 
+    final DateRange dateRange = new DateRange( new Date( min.longValue() ), new Date( max.longValue() ) );
+    if( !dateRange.intersects( m_selectedDateRange ) )
+      return;
+
     final double logicalX1 = min.doubleValue() + m_selectedDateRange.getFrom().getTime() - min.doubleValue();
     final double logicalX2 = min.doubleValue() + m_selectedDateRange.getTo().getTime() - min.doubleValue();
     final Integer x1 = Math.abs( domainAxis.numericToScreen( logicalX1 ) );
@@ -145,6 +149,10 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     final Number min = domainRange.getMin();
     final Number max = domainRange.getMax();
     if( Objects.isNull( min, max ) )
+      return;
+
+    final DateRange dateRange = new DateRange( new Date( min.longValue() ), new Date( max.longValue() ) );
+    if( !dateRange.containsLazyInclusive( m_selection ) )
       return;
 
     final double logicalX = min.doubleValue() + m_selection.getTime() - min.doubleValue();

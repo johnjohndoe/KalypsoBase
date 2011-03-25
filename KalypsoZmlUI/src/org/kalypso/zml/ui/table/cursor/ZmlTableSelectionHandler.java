@@ -167,7 +167,6 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
     /* selection change listener -> updates selection in chart composite */
     viewer.addSelectionChangedListener( new UpdateChartSelectionListener( this ) );
-
   }
 
   /**
