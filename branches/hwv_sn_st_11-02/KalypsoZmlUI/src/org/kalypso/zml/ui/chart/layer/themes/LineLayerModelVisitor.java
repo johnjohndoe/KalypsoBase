@@ -56,7 +56,6 @@ import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
-import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 
 /**
@@ -124,7 +123,7 @@ public class LineLayerModelVisitor implements IObservationVisitor
       if( isFiltered( container ) )
         return;
 
-      final Date adjusted = ChartLayerUtils.addTimezoneOffset( (Date) dateObject );
+      final Date adjusted = (Date) dateObject;
 
       final Point screen = m_layer.getCoordinateMapper().numericToScreen( m_layer.getRangeHandler().getDateDataOperator().logicalToNumeric( adjusted ), m_layer.getRangeHandler().getNumberDataOperator().logicalToNumeric( (Double) valueObject ) );
       m_path.add( screen );

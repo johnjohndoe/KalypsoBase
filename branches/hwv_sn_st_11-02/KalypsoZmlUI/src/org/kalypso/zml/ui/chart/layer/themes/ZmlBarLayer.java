@@ -56,7 +56,6 @@ import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
-import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
@@ -156,7 +155,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
           if( Objects.isNull( domainValue, targetValue ) )
             continue;
 
-          final Number logicalDomain = m_range.getDateDataOperator().logicalToNumeric( ChartLayerUtils.addTimezoneOffset( (Date) domainValue ) );
+          final Number logicalDomain = m_range.getDateDataOperator().logicalToNumeric( (Date) domainValue );
           final Number logicalTarget = m_range.getNumberDataOperator().logicalToNumeric( (Number) targetValue );
           final Point screen = getCoordinateMapper().numericToScreen( logicalDomain, logicalTarget );
 

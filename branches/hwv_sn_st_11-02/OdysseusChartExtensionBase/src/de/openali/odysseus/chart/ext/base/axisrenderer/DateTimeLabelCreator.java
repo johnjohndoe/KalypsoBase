@@ -41,6 +41,8 @@
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.kalypso.core.KalypsoCorePlugin;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
@@ -63,8 +65,12 @@ public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabel
   @Override
   public String getLabel( final Number value, final IDataRange<Number> range )
   {
+// ChartLayerUtils.addTimezoneOffset(
     final IDateTimeAxisField axisField = m_dateTimeFieldProvider.getDateTimeAxisField( range );
-    return new DateTime( value.longValue() ).toString( axisField.getFormatString() );
+    final DateTimeZone zone = DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+    final DateTime dateTime = new DateTime( value.longValue(), zone );
+
+    return dateTime.toString( axisField.getFormatString() );
   }
 
   /**

@@ -49,7 +49,6 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 
-import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 
@@ -132,7 +131,7 @@ public class NumberDataRangeModelVisitor extends AbstractDataRangeVisitor
     if( Objects.isNull( max ) )
       return null;
 
-    m_to = ChartLayerUtils.addTimezoneOffset( new Date( max.longValue() ) );
+    m_to = new Date( max.longValue() );
     return m_to;
   }
 
@@ -145,7 +144,7 @@ public class NumberDataRangeModelVisitor extends AbstractDataRangeVisitor
     if( Objects.isNull( min ) )
       return null;
 
-    m_from = ChartLayerUtils.addTimezoneOffset( new Date( min.longValue() ) );
+    m_from = new Date( min.longValue() );
     return m_from;
   }
 
