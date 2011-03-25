@@ -164,14 +164,6 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     gc.dispose();
   }
 
-  protected void drawText( final GC gc, final String text, final Point leftTopPoint )
-  {
-    final TextFigure tf = getTextFigure();
-    tf.setText( text );
-    tf.setPoints( new Point[] { leftTopPoint } );
-    tf.paint( gc );
-  }
-
   protected void drawLine( final GC gc, final List<Point> path )
   {
     drawLine( gc, path.toArray( new Point[] {} ) );
@@ -210,6 +202,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     return getPolylineFigure().getStyle();
   }
 
+  // UGLY: was has every layer exactly one PointFigure? Wrong abstraction!
   protected PointFigure getPointFigure( )
   {
     if( m_pointFigure == null )
@@ -220,9 +213,9 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
   protected IPointStyle getPointStyle( )
   {
     return getPointFigure().getStyle();
-
   }
 
+  // UGLY: was has every layer exactly one PolylineFigure? Wrong abstraction!
   protected PolylineFigure getPolylineFigure( )
   {
     if( m_polylineFigure == null )
@@ -230,6 +223,11 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     return m_polylineFigure;
   }
 
+  // UGLY: was has every layer exactly one TextFigure? Wrong abstraction!
+  /**
+   * @deprecated Create your TextFigure on deman, and throw it away afterwards.
+   */
+  @Deprecated
   public TextFigure getTextFigure( )
   {
     if( m_textFigure == null )
