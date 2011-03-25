@@ -1197,8 +1197,7 @@
         </Styles>
       </AxisRenderer>
       <AxisRenderer id="DateAxisRenderer">
-        <!-- FIXME -->
-        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericCalendarAxisRendererProvider">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.DateTimeAxisRendererProvider">
           <Parameters>
             <Parameter name="inset_tick" value="2" />
             <Parameter name="inset_label" value="2" />
