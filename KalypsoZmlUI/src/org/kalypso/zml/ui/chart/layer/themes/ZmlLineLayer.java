@@ -59,7 +59,6 @@ import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
-import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
@@ -200,8 +199,8 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     final ICoordinateMapper mapper = getCoordinateMapper();
     final Point screenSize = mapper.getScreenSize();
 
-    final Date from = Objects.isNotNull( range.getFrom() ) ? ChartLayerUtils.addTimezoneOffset( range.getFrom() ) : null;
-    final Date to = Objects.isNotNull( range.getTo() ) ? ChartLayerUtils.addTimezoneOffset( range.getTo() ) : null;
+    final Date from = Objects.isNotNull( range.getFrom() ) ? range.getFrom() : null;
+    final Date to = Objects.isNotNull( range.getTo() ) ? range.getTo() : null;
 
     final int fromScreen = getDomainScreen( from, 0 );
     final int toScreen = getDomainScreen( to, screenSize.x );
