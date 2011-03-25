@@ -95,7 +95,6 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
 
     final ITickCalculator tickCalculator = getTickCalculator();
     final ILabelCreator labelCreator = getLabelCreator();
-
     final IAxisRenderer calendarAxisRenderer = new GenericAxisRenderer( getId(), tickLength, insetsTick, insetsLabel, gap, labelCreator, tickCalculator, minTickInterval, hideCut, fixedWidth, axisLine, labelText, tickLine, tickLabelText, borderSize, ALIGNMENT.TICK_CENTERED );
     return calendarAxisRenderer;
   }
