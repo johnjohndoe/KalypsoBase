@@ -100,7 +100,7 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
           final IZmlValueReference reference = cell.getValueReference();
           if( ZmlValues.isStuetzstelle( reference ) )
           {
-            model.set( reference.getModelIndex(), statusAxis, KalypsoStati.BIT_CHECK );
+            model.set( reference.getModelIndex(), statusAxis, KalypsoStati.BIT_OK );
             model.set( reference.getModelIndex(), dataSourceAxis, dataSourceHandler.addDataSource( src, src ) );
           }
         }
