@@ -119,7 +119,11 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   {
     final IWidget actualWidget = getActualWidget();
     if( actualWidget instanceof MouseListener )
+    {
       ((MouseListener) actualWidget).mouseClicked( e );
+      if( e.isConsumed() )
+        return;
+    }
     else if( actualWidget == null )
       return;
 
@@ -163,7 +167,8 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     final IWidget actualWidget = getActualWidget();
     if( actualWidget instanceof MouseMotionListener )
       ((MouseMotionListener) actualWidget).mouseMoved( e );
-    else if( actualWidget != null )
+
+    if( !e.isConsumed() && actualWidget != null )
       actualWidget.moved( e.getPoint() );
 
     m_mapPanel.fireMouseMouveEvent( e.getX(), e.getY() );
@@ -177,7 +182,8 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     if( actualWidget instanceof MouseMotionListener )
     {
       ((MouseMotionListener) actualWidget).mouseDragged( e );
-      return;
+      if( e.isConsumed() )
+        return;
     }
 
     if( m_middleDown )
@@ -213,7 +219,8 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     if( actualWidget instanceof MouseListener )
     {
       ((MouseListener) actualWidget).mousePressed( e );
-      return;
+      if( e.isConsumed() )
+        return;
     }
 
     if( e.isPopupTrigger() && actualWidget != null )
@@ -250,7 +257,8 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     if( actualWidget instanceof MouseListener )
     {
       ((MouseListener) actualWidget).mouseReleased( e );
-      return;
+      if( e.isConsumed() )
+        return;
     }
 
     if( e.isPopupTrigger() && getActualWidget() != null )
@@ -291,7 +299,8 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     if( actualWidget instanceof MouseWheelListener )
     {
       ((MouseWheelListener) actualWidget).mouseWheelMoved( e );
-      return;
+      if( e.isConsumed() )
+        return;
     }
 
     e.consume();
