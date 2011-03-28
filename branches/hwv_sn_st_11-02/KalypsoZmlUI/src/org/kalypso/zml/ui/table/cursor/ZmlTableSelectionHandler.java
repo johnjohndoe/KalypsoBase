@@ -101,7 +101,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
   private final ZmlTableComposite m_table;
 
-  protected TableCursor m_cursor;
+  protected ZmlTableCursor m_cursor;
 
   public ZmlTableSelectionHandler( final ZmlTableComposite table )
   {
@@ -125,9 +125,9 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     final Menu contextMenu = m_contextMenuManager.createContextMenu( m_table );
     m_table.setMenu( contextMenu );
 
-    m_cursor = new TableCursor( m_table );
+    m_cursor = new ZmlTableCursor( m_table );
 
-    final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( viewer, new CursorCellHighlighter( viewer, m_cursor ), new ZmlCellNavigationStrategy( m_cursor ) )
+    final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( viewer, new ZmlCursorCellHighlighter( viewer, m_cursor ), new ZmlCellNavigationStrategy( m_cursor ) )
     {
       @Override
       public ViewerCell getFocusCell( )

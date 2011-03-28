@@ -41,15 +41,15 @@
 package org.kalypso.zml.ui.chart.layer.themes;
 
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
-import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
+import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractDataRangeVisitor implements ITupleModelVisitor
+public abstract class AbstractDataRangeVisitor implements IObservationVisitor
 {
   private final IChartLayerFilter[] m_filters;
 
@@ -61,7 +61,7 @@ public abstract class AbstractDataRangeVisitor implements ITupleModelVisitor
     m_filters = filters;
   }
 
-  protected boolean isFiltered( final ITupleModelValueContainer container )
+  protected boolean isFiltered( final IObservationValueContainer container )
   {
     for( final IChartLayerFilter filter : m_filters )
     {

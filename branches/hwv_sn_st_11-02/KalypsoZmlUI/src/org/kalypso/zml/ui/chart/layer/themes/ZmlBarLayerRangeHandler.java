@@ -45,6 +45,7 @@ import java.util.Date;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxisRange;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -76,11 +77,12 @@ public class ZmlBarLayerRangeHandler
   {
     try
     {
-      final ITupleModel model = m_layer.getDataHandler().getModel();
-      if( Objects.isNull( model ) )
+      final IObservation observation = m_layer.getDataHandler().getObservation();
+      if( Objects.isNull( observation ) )
         return null;
 
-      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
+      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( observation.getAxes() );
+      final ITupleModel model = observation.getValues( m_layer.getDataHandler().getRequest() );
       final IAxisRange range = model.getRange( dateAxis );
       if( Objects.isNull( range ) )
         return null;
@@ -108,9 +110,11 @@ public class ZmlBarLayerRangeHandler
     try
     {
       final IZmlLayerDataHandler handler = m_layer.getDataHandler();
-      final ITupleModel model = handler.getModel();
-      if( model == null )
+      final IObservation observation = handler.getObservation();
+      if( Objects.isNull( observation ) )
         return null;
+
+      final ITupleModel model = observation.getValues( handler.getRequest() );
 
       /** hack for polder control which consists of boolean values */
       final Class< ? > dataClass = handler.getValueAxis().getDataClass();

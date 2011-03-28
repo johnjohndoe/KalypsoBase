@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.chart.layer.filters;
 
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 
 /**
@@ -63,7 +64,7 @@ public class ZmlNotNullChartLayerFilter extends AbstractZmlChartLayerFilter
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter#isFiltered(java.lang.Object)
    */
   @Override
-  protected boolean filter( final ITupleModelValueContainer container )
+  protected boolean filter( final IObservationValueContainer container )
   {
     try
     {

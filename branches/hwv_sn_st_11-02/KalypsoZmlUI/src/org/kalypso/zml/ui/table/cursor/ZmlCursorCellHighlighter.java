@@ -24,17 +24,17 @@ import org.kalypso.commons.java.lang.Objects;
 /**
  * @since 3.3
  */
-public class CursorCellHighlighter extends FocusCellHighlighter
+public class ZmlCursorCellHighlighter extends FocusCellHighlighter
 {
   private final ColumnViewer m_viewer;
 
-  protected final AbstractCellCursor m_cursor;
+  protected final AbstractZmlCellCursor m_cursor;
 
   /**
    * @param viewer
    * @param cursor
    */
-  public CursorCellHighlighter( final ColumnViewer viewer, final AbstractCellCursor cursor )
+  public ZmlCursorCellHighlighter( final ColumnViewer viewer, final AbstractZmlCellCursor cursor )
   {
     super( viewer );
 

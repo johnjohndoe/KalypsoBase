@@ -43,8 +43,6 @@ package org.kalypso.zml.core.diagram.data;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -80,8 +78,6 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
 
   private IObsProvider m_provider;
 
-  private ITupleModel m_model;
-
   private final String m_targetAxisId;
 
   private IAxis m_valueAxis;
@@ -103,7 +99,6 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
     }
 
     m_provider = provider;
-    m_model = null;
 
     if( provider != null )
     {
@@ -124,15 +119,11 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
 
   protected void onObservationLoaded( )
   {
-    m_model = null;
-
     m_layer.onObservationChanged();
   }
 
   protected void onObservationChanged( )
   {
-    m_model = null;
-
     m_layer.onObservationChanged();
   }
 
@@ -147,23 +138,6 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
       m_provider.removeListener( m_observationProviderListener );
       m_provider.dispose();
     }
-  }
-
-  @Override
-  public ITupleModel getModel( ) throws SensorException
-  {
-    if( m_provider == null )
-      return null;
-
-    if( m_model == null )
-    {
-      final IRequest request = getRequest();
-      final IObservation observation = m_provider.getObservation();
-      if( observation != null )
-        m_model = observation.getValues( request );
-    }
-
-    return m_model;
   }
 
   @Override

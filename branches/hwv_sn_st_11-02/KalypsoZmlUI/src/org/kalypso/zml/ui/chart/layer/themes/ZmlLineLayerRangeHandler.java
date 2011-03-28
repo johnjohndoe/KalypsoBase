@@ -45,9 +45,10 @@ import java.util.Date;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
@@ -75,14 +76,15 @@ public class ZmlLineLayerRangeHandler
   {
     try
     {
-      final ITupleModel model = m_layer.getDataHandler().getModel();
-      if( model == null )
+      final IZmlLayerDataHandler handler = m_layer.getDataHandler();
+      final IObservation observation = handler.getObservation();
+      if( Objects.isNull( observation ) )
         return null;
 
-      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
+      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( observation.getAxes() );
 
       final DateDataRangeModelVisitor visitor = new DateDataRangeModelVisitor( dateAxis, m_layer.getFilters() );
-      model.accept( visitor );
+      observation.accept( visitor, handler.getRequest() );
 
       final Date min = visitor.getMin();
       final Date max = visitor.getMax();
@@ -108,20 +110,21 @@ public class ZmlLineLayerRangeHandler
   {
     try
     {
-      final ITupleModel model = m_layer.getDataHandler().getModel();
-      if( Objects.isNull( model ) )
+      final IZmlLayerDataHandler handler = m_layer.getDataHandler();
+      final IObservation observation = handler.getObservation();
+      if( Objects.isNull( observation ) )
         return null;
 
-      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
+      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( observation.getAxes() );
       final IAxis valueAxis = m_layer.getDataHandler().getValueAxis();
       if( Objects.isNull( valueAxis, dateAxis ) )
         return null;
 
-      if( Objects.isNull( AxisUtils.findAxis( model.getAxes(), valueAxis.getType() ) ) )
+      if( Objects.isNull( AxisUtils.findAxis( observation.getAxes(), valueAxis.getType() ) ) )
         return null;
 
       final NumberDataRangeModelVisitor visitor = new NumberDataRangeModelVisitor( valueAxis, m_layer.getFilters(), domainIntervall, dateAxis );
-      model.accept( visitor );
+      observation.accept( visitor, handler.getRequest() );
 
       final Number min = visitor.getMin();
       final Number max = visitor.getMax();

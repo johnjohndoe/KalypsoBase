@@ -46,7 +46,6 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
-import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 
 /**
@@ -54,9 +53,9 @@ import org.kalypso.zml.core.table.model.references.ZmlValues;
  */
 public class ContainerAsValue
 {
-  private final ITupleModelValueContainer m_container;
+  private final IObservationValueContainer m_container;
 
-  public ContainerAsValue( final ITupleModelValueContainer container )
+  public ContainerAsValue( final IObservationValueContainer container )
   {
     m_container = container;
   }
@@ -72,21 +71,16 @@ public class ContainerAsValue
 
   public String getDataSource( ) throws SensorException
   {
-    if( !(m_container instanceof IObservationValueContainer) )
-      return null;
-
-    final IObservationValueContainer container = (IObservationValueContainer) m_container;
-
-    final IAxis axis = AxisUtils.findDataSourceAxis( container.getAxes() );
+    final IAxis axis = AxisUtils.findDataSourceAxis( m_container.getAxes() );
     if( Objects.isNull( axis ) )
       return null;
 
-    final Object object = container.get( axis );
+    final Object object = m_container.get( axis );
     if( !(object instanceof Number) )
       return null;
 
     final Number source = (Number) object;
-    final DataSourceHandler handler = new DataSourceHandler( container.getMetaData() );
+    final DataSourceHandler handler = new DataSourceHandler( m_container.getMetaData() );
     return handler.getDataSourceIdentifier( source.intValue() );
   }
 
@@ -104,6 +98,7 @@ public class ContainerAsValue
   {
     final String dataSource = getDataSource();
     final Number status = getStatus();
+
     return ZmlValues.isStuetzstelle( status, dataSource );
   }
 
@@ -112,6 +107,7 @@ public class ContainerAsValue
     final String dataSource = getDataSource();
     final Number status = getStatus();
     final Number value = getValue();
+
     return ZmlValues.isNullstelle( value, status, dataSource );
   }
 }

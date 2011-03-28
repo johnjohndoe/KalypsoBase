@@ -48,7 +48,7 @@ import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
@@ -85,16 +85,16 @@ public class LineLayerModelVisitor implements IObservationVisitor
     return handler.getValueAxis();
   }
 
-  private IAxis getDateAxis( ) throws SensorException
+  private IAxis getDateAxis( )
   {
     if( m_dateAxis == null )
     {
       final IZmlLayerDataHandler handler = m_layer.getDataHandler();
-      final ITupleModel model = handler.getModel();
-      if( model == null )
+      final IObservation observation = handler.getObservation();
+      if( Objects.isNull( observation ) )
         return null;
 
-      final IAxis[] axes = model.getAxes();
+      final IAxis[] axes = observation.getAxes();
 
       m_dateAxis = AxisUtils.findDateAxis( axes );
     }

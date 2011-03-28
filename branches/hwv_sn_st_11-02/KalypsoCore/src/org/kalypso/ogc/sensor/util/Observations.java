@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.util;
 
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -67,44 +68,51 @@ public final class Observations
     {
       final int index = i;
 
-      visitor.visit( new IObservationValueContainer()
+      try
       {
-        @Override
-        public boolean hasAxis( final String... types )
+        visitor.visit( new IObservationValueContainer()
         {
-          for( final String type : types )
+          @Override
+          public boolean hasAxis( final String... types )
           {
-            if( AxisUtils.findAxis( model.getAxes(), type ) == null )
-              return false;
+            for( final String type : types )
+            {
+              if( AxisUtils.findAxis( model.getAxes(), type ) == null )
+                return false;
+            }
+
+            return true;
           }
 
-          return true;
-        }
+          @Override
+          public int getIndex( )
+          {
+            return index;
+          }
 
-        @Override
-        public int getIndex( )
-        {
-          return index;
-        }
+          @Override
+          public IAxis[] getAxes( )
+          {
+            return model.getAxes();
+          }
 
-        @Override
-        public IAxis[] getAxes( )
-        {
-          return model.getAxes();
-        }
+          @Override
+          public Object get( final IAxis axis ) throws SensorException
+          {
+            return model.get( index, axis );
+          }
 
-        @Override
-        public Object get( final IAxis axis ) throws SensorException
-        {
-          return model.get( index, axis );
-        }
-
-        @Override
-        public MetadataList getMetaData( )
-        {
-          return observation.getMetadataList();
-        }
-      } );
+          @Override
+          public MetadataList getMetaData( )
+          {
+            return observation.getMetadataList();
+          }
+        } );
+      }
+      catch( final CancelVisitorException e )
+      {
+        return;
+      }
     }
   }
 }

@@ -34,13 +34,13 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 import com.google.common.base.Strings;
 
-public class TableCursor extends AbstractCellCursor
+public class ZmlTableCursor extends AbstractZmlCellCursor
 {
   private static final Color COLOR_BACKGROUND_SELECTION = new Color( null, new RGB( 0xBA, 0xFF, 0xEC ) );
 
   private static final Color COLOR_BACKGROUND_SELECTION_DISABLED = new Color( null, new RGB( 0xCC, 0xCC, 0xCC ) );
 
-  public TableCursor( final IZmlTable table )
+  public ZmlTableCursor( final IZmlTable table )
   {
     super( table );
   }

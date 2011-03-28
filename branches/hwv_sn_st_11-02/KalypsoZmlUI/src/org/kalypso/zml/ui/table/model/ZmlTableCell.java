@@ -43,10 +43,12 @@ package org.kalypso.zml.ui.table.model;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 
 import com.google.common.base.Objects;
 
@@ -181,5 +183,17 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     }
 
     return 2;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.IZmlTableCell#getCell()
+   */
+  @Override
+  public ViewerCell getViewerCell( )
+  {
+    final IZmlTable table = m_column.getTable();
+    final IZmlTableSelectionHandler handler = table.getSelectionHandler();
+
+    return handler.findViewerCell( this );
   }
 }
