@@ -12,7 +12,6 @@
 
 package org.kalypso.zml.ui.table.cursor;
 
-import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
@@ -27,15 +26,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
-import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.ui.table.IZmlTable;
 
 /**
  * @since 3.3
  */
 public abstract class AbstractCellCursor extends Canvas
 {
-  private final ColumnViewer m_viewer;
+  private final IZmlTable m_table;
 
   private ViewerCell m_focusCell;
 
@@ -43,10 +42,10 @@ public abstract class AbstractCellCursor extends Canvas
    * @param viewer
    * @param style
    */
-  public AbstractCellCursor( final TableViewer viewer )
+  public AbstractCellCursor( final IZmlTable table )
   {
-    super( (Composite) viewer.getControl(), SWT.NONE );
-    m_viewer = viewer;
+    super( (Composite) table.getTableViewer().getControl(), SWT.NONE );
+    m_table = table;
 
     final Listener listener = new Listener()
     {
@@ -83,8 +82,8 @@ public abstract class AbstractCellCursor extends Canvas
     addListener( SWT.MouseDown, listener );
     addListener( SWT.MouseDoubleClick, listener );
 
-    final Table table = viewer.getTable();
-    final ScrollBar verticalBar = table.getVerticalBar();
+    final TableViewer viewer = table.getTableViewer();
+    final ScrollBar verticalBar = viewer.getTable().getVerticalBar();
     verticalBar.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -103,6 +102,11 @@ public abstract class AbstractCellCursor extends Canvas
         redraw();
       }
     } );
+  }
+
+  protected IZmlTable getTable( )
+  {
+    return m_table;
   }
 
   protected void keyDown( final Event event )
@@ -178,7 +182,7 @@ public abstract class AbstractCellCursor extends Canvas
     cEvent.type = event.type;
     cEvent.widget = event.widget;
     cEvent.width = event.width;
-    final Point p = m_viewer.getControl().toControl( toDisplay( event.x, event.y ) );
+    final Point p = m_table.getTableViewer().getControl().toControl( toDisplay( event.x, event.y ) );
     cEvent.x = p.x;
     cEvent.y = p.y;
 
