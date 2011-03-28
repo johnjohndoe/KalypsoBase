@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model;
 
+import org.eclipse.jface.viewers.ViewerCell;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 
 /**
@@ -60,4 +61,6 @@ public interface IZmlTableCell extends IZmlTableObject
   IZmlTableCell findNextCell( );
 
   int findIndex( );
+
+  ViewerCell getViewerCell( );
 }

@@ -48,8 +48,6 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -84,21 +82,6 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
   @Override
   public void dispose( )
   {
-  }
-
-  /**
-   * @see org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler#getModel()
-   */
-  @Override
-  public ITupleModel getModel( ) throws SensorException
-  {
-    if( m_observation == null )
-      return null;
-
-    if( m_dateRange != null )
-      return m_observation.getValues( getRequest() );
-
-    return m_observation.getValues( null );
   }
 
   /**

@@ -41,7 +41,7 @@
 package org.kalypso.zml.ui.chart.layer.filters;
 
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
+import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 
 /**
  * @author Dirk Kuch
@@ -64,7 +64,7 @@ public class ZmlStuetzstellenChartLayerFilter extends AbstractZmlChartLayerFilte
    * @see org.kalypso.zml.ui.chart.layer.filters.AbstractZmlChartLayerFilter#filter(org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue)
    */
   @Override
-  protected boolean filter( final ITupleModelValueContainer container )
+  protected boolean filter( final IObservationValueContainer container )
   {
     try
     {

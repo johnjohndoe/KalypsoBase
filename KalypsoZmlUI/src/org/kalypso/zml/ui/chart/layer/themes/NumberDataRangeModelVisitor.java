@@ -47,7 +47,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
+import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
@@ -80,7 +80,7 @@ public class NumberDataRangeModelVisitor extends AbstractDataRangeVisitor
    * @see org.kalypso.ogc.sensor.visitor.ITupleModelVisitor#visit(org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer)
    */
   @Override
-  public void visit( final ITupleModelValueContainer container )
+  public void visit( final IObservationValueContainer container )
   {
     if( Objects.isNull( getAxis() ) )
       return;
@@ -108,7 +108,7 @@ public class NumberDataRangeModelVisitor extends AbstractDataRangeVisitor
 
   }
 
-  private boolean isPartOfDomainInterval( final ITupleModelValueContainer container ) throws SensorException
+  private boolean isPartOfDomainInterval( final IObservationValueContainer container ) throws SensorException
   {
     if( Objects.isNull( m_intervall ) )
       return true;

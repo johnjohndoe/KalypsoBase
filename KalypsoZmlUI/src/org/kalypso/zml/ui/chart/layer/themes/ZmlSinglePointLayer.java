@@ -47,10 +47,8 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.base.LayerProviderUtils;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
@@ -232,35 +230,12 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
 
   private Double findValue( final IZmlLayerDataHandler provider, final Date position ) throws SensorException
   {
-    final ITupleModel model = provider.getModel();
+    final IObservation observation = provider.getObservation();
 
-    final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
-    final IAxis valueAxis = provider.getValueAxis();
+    final ZmlSinglePointLayerVisitor visitor = new ZmlSinglePointLayerVisitor( position );
+    observation.accept( visitor, provider.getRequest() );
 
-    double diff = Double.MAX_VALUE;
-    Number value = null;
-
-    for( int i = 0; i < model.size(); i++ )
-    {
-      final Date date = (Date) model.get( i, dateAxis );
-      final Number v = (Number) model.get( i, valueAxis );
-
-      final double d = Math.abs( date.getTime() - position.getTime() );
-      if( d < diff )
-      {
-        if( d == 0 )
-          return v.doubleValue();
-
-        diff = d;
-        value = v;
-      }
-
-    }
-
-    if( value == null )
-      return null;
-
-    return value.doubleValue();
+    return visitor.getValue();
   }
 
   /**

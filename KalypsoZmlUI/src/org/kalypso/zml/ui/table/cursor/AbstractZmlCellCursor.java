@@ -12,6 +12,9 @@
 
 package org.kalypso.zml.ui.table.cursor;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
@@ -26,13 +29,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.ui.table.IZmlTable;
 
 /**
  * @since 3.3
  */
-public abstract class AbstractCellCursor extends Canvas
+public abstract class AbstractZmlCellCursor extends Canvas
 {
   private final IZmlTable m_table;
 
@@ -42,7 +46,7 @@ public abstract class AbstractCellCursor extends Canvas
    * @param viewer
    * @param style
    */
-  public AbstractCellCursor( final IZmlTable table )
+  public AbstractZmlCellCursor( final IZmlTable table )
   {
     super( (Composite) table.getTableViewer().getControl(), SWT.NONE );
     m_table = table;
@@ -99,7 +103,21 @@ public abstract class AbstractCellCursor extends Canvas
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        redraw();
+        final ZmlSelectionUpdater updater = new ZmlSelectionUpdater( getTable() );
+        updater.run();
+
+        new UIJob( "" )
+        {
+
+          @Override
+          public IStatus runInUIThread( final IProgressMonitor monitor )
+          {
+            redraw();
+            return Status.OK_STATUS;
+          }
+
+        }.schedule();
+
       }
     } );
   }

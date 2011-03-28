@@ -42,83 +42,85 @@ package org.kalypso.zml.ui.chart.layer.themes;
 
 import java.util.Date;
 
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
-
-import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
+import org.kalypso.zml.ui.KalypsoZmlUI;
 
 /**
  * @author Dirk Kuch
  */
-public class DateDataRangeModelVisitor extends AbstractDataRangeVisitor
+public class ZmlSinglePointLayerVisitor implements IObservationVisitor
 {
-  Date m_min = null;
+  double m_diff = Double.MAX_VALUE;
 
-  Date m_max = null;
+  Number m_value = null;
 
-  public DateDataRangeModelVisitor( final IAxis axis, final IChartLayerFilter[] filters )
+  private IAxis m_valueAxis;
+
+  private IAxis m_dateAxis;
+
+  private final Date m_position;
+
+  public ZmlSinglePointLayerVisitor( final Date position )
   {
-    super( axis, filters );
+    m_position = position;
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.visitor.ITupleModelVisitor#visit(org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer)
+   * @see org.kalypso.ogc.sensor.visitor.IObservationVisitor#visit(org.kalypso.ogc.sensor.visitor.IObservationValueContainer)
    */
   @Override
-  public void visit( final IObservationValueContainer container )
+  public void visit( final IObservationValueContainer container ) throws CancelVisitorException
   {
-    if( Objects.isNull( getAxis() ) )
-      return;
-
     try
     {
-      final Object object = container.get( getAxis() );
-      if( !(object instanceof Date) )
-        return;
+      final Date date = (Date) container.get( getDateAxis( container ) );
+      final Number v = (Number) container.get( getValueAxis( container ) );
 
-      final Date date = (Date) object;
-      if( isFiltered( container ) )
-        return;
+      final double d = Math.abs( date.getTime() - m_position.getTime() );
+      if( d < m_diff )
+      {
+        if( d == 0 )
+        {
+          m_value = v.doubleValue();
+          throw new CancelVisitorException();
+        }
 
-      if( isBefore( date ) )
-        m_min = date;
-
-      if( isAfter( date ) )
-        m_max = date;
-
+        m_diff = d;
+        m_value = v;
+      }
     }
     catch( final SensorException e )
     {
-      e.printStackTrace();
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
   }
 
-  private boolean isBefore( final Date date )
+  private IAxis getValueAxis( final IObservationValueContainer container )
   {
-    if( Objects.isNull( m_min ) )
-      return true;
+    if( Objects.isNull( m_valueAxis ) )
+      m_valueAxis = AxisUtils.findValueAxis( container.getAxes() );
 
-    return date.before( m_min );
+    return m_valueAxis;
   }
 
-  private boolean isAfter( final Date date )
+  private IAxis getDateAxis( final IObservationValueContainer container )
   {
-    if( Objects.isNull( m_max ) )
-      return true;
+    if( Objects.isNull( m_dateAxis ) )
+      m_dateAxis = AxisUtils.findDateAxis( container.getAxes() );
 
-    return date.after( m_max );
+    return m_dateAxis;
   }
 
-  public Date getMin( )
+  public Double getValue( )
   {
-    return m_min;
-  }
-
-  public Date getMax( )
-  {
-    return m_max;
+    return m_value.doubleValue();
   }
 }

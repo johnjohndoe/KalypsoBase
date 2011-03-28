@@ -53,9 +53,9 @@ import org.kalypso.commons.java.lang.Objects;
  */
 public class ZmlCellNavigationStrategy extends CellNavigationStrategy
 {
-  private final TableCursor m_cursor;
+  private final ZmlTableCursor m_cursor;
 
-  public ZmlCellNavigationStrategy( final TableCursor cursor )
+  public ZmlCellNavigationStrategy( final ZmlTableCursor cursor )
   {
     m_cursor = cursor;
   }
