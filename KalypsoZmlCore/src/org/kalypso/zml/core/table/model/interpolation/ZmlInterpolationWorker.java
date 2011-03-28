@@ -47,22 +47,34 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
 {
+  private final ITimeseriesObservation m_observation;
 
-  private final IZmlModelColumn m_column;
+  public ZmlInterpolationWorker( final IObservation observation )
+  {
+    this( new TimeseriesObservation( observation, AxisUtils.findValueAxis( observation.getAxes() ) ) );
+  }
 
   public ZmlInterpolationWorker( final IZmlModelColumn column )
   {
-    m_column = column;
+    this( new TimeseriesObservation( column.getObservation(), column.getValueAxis() ) );
   }
+
+  public ZmlInterpolationWorker( final ITimeseriesObservation observation )
+  {
+    m_observation = observation;
+  }
+
 
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
@@ -72,42 +84,49 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
   {
     try
     {
-      final boolean setLastValidValue = ZmlInterpolation.isSetLastValidValue( m_column.getMetadata() );
-      final Double defaultValue = ZmlInterpolation.getDefaultValue( m_column.getMetadata() );
+      final ITupleModel values = m_observation.getValues( null );
+      final int size = values.size();
 
-      final FindStuetzstellenVisitor visitor = new FindStuetzstellenVisitor();
-      m_column.accept( visitor );
+      m_observation.startTransaction();
 
-      final IZmlValueReference[] stuetzstellen = visitor.getStuetzstellen();
+      final boolean setLastValidValue = ZmlInterpolation.isSetLastValidValue( m_observation.getMetadataList() );
+      final Double defaultValue = ZmlInterpolation.getDefaultValue( m_observation.getMetadataList() );
+
+      final FindStuetzstellenVisitor visitor = new FindStuetzstellenVisitor( m_observation );
+      values.accept( visitor );
+
+      final Integer[] stuetzstellen = visitor.getStuetzstellen();
       if( ArrayUtils.isEmpty( stuetzstellen ) )
       {
-
-        ZmlInterpolation.fillValue( m_column, 0, m_column.size(), defaultValue );
+        ZmlInterpolation.fillValue( m_observation, 0, size, defaultValue );
         return Status.OK_STATUS;
       }
 
       // set all values 0 before first stuetzstelle
-      if( stuetzstellen[0].getModelIndex() > 0 )
-      {
-        ZmlInterpolation.fillValue( m_column, 0, stuetzstellen[0].getModelIndex(), defaultValue );
-      }
+      if( stuetzstellen[0] > 0 )
+        ZmlInterpolation.fillValue( m_observation, 0, stuetzstellen[0], defaultValue );
 
-      for( int index = 0; index < stuetzstellen.length - 2; index++ )
+      for( int index = 0; index < stuetzstellen.length - 1; index++ )
       {
-        final IZmlValueReference stuetzstelle1 = stuetzstellen[index];
-        final IZmlValueReference stuetzstelle2 = stuetzstellen[index + 1];
-        ZmlInterpolation.interpolate( m_column, stuetzstelle1, stuetzstelle2 );
+        final Integer stuetzstelle1 = stuetzstellen[index];
+        final Integer stuetzstelle2 = stuetzstellen[index + 1];
+        ZmlInterpolation.interpolate( m_observation, stuetzstelle1, stuetzstelle2 );
       }
 
       // set all values 0 after last stuetzstelle
-      final IZmlValueReference last = stuetzstellen[stuetzstellen.length - 1];
-      if( last.getModelIndex() != m_column.size() - 1 )
+      final Integer last = stuetzstellen[stuetzstellen.length - 1];
+      if( last != size - 1 )
       {
         if( setLastValidValue )
-          ZmlInterpolation.fillValue( m_column, last.getModelIndex() + 1, m_column.size(), (Double) last.getValue() );
+        {
+          final Object lastValue = m_observation.getValue( last );
+          ZmlInterpolation.fillValue( m_observation, last + 1, size, (Double) lastValue );
+        }
         else
-          ZmlInterpolation.fillValue( m_column, last.getModelIndex() + 1, m_column.size(), defaultValue );
+          ZmlInterpolation.fillValue( m_observation, last + 1, size, defaultValue );
       }
+
+      m_observation.stopTransaction();
 
       return Status.OK_STATUS;
     }
@@ -118,5 +137,4 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
       throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "(Re)Interpolating values failed", e ) );
     }
   }
-
 }
