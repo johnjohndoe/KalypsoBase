@@ -40,9 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.filters;
 
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 
 /**
@@ -69,18 +67,8 @@ public class ZmlNotNullChartLayerFilter extends AbstractZmlChartLayerFilter
   {
     try
     {
-      if( isStuetzstelle( container ) )
-        return false;
-
-      final IAxis valueAxis = AxisUtils.findValueAxis( container.getAxes() );
-
-      final Object value = container.get( valueAxis );
-      if( !(value instanceof Number) )
-        return false;
-      final Number number = (Number) value;
-
-      return number.doubleValue() == 0.0;
-
+      final ContainerAsValue value = new ContainerAsValue( container );
+      return value.isNullstelle();
     }
     catch( final SensorException e )
     {
@@ -88,12 +76,5 @@ public class ZmlNotNullChartLayerFilter extends AbstractZmlChartLayerFilter
 
       return false;
     }
-  }
-
-  private boolean isStuetzstelle( final ITupleModelValueContainer container )
-  {
-    final ZmlStuetzstellenChartLayerFilter filter = new ZmlStuetzstellenChartLayerFilter();
-
-    return filter.isFiltered( container );
   }
 }
