@@ -51,7 +51,6 @@ import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
  */
 public interface IObservation extends IObservationEventProvider
 {
-
   void accept( final IObservationVisitor visitor, final IRequest request ) throws SensorException;
 
   /**
