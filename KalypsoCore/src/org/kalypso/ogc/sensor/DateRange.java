@@ -268,6 +268,6 @@ public class DateRange implements Comparable<DateRange>
     if( containsLazyInclusive( other.getTo() ) )
       return true;
 
-    return false;
+    return other.intersects( this );
   }
 }

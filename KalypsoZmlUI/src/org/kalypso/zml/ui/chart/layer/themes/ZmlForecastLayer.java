@@ -135,8 +135,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     if( !to.after( forecast ) )
       return;
 
-    final double logicalX = min.doubleValue() + forecast.getTimeInMillis() - min.doubleValue();
-    final Integer x = Math.abs( domainAxis.numericToScreen( logicalX ) );
+    final Integer x = Math.abs( domainAxis.numericToScreen( forecast.getTimeInMillis() ) );
 
     final Integer y0 = targetAxis.numericToScreen( targetRange.getMin() );
     final Integer y1 = targetAxis.numericToScreen( targetRange.getMax() );
