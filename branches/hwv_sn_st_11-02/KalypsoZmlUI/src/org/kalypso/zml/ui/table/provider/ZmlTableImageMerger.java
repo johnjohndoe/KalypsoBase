@@ -43,7 +43,6 @@ package org.kalypso.zml.ui.table.provider;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -134,7 +133,7 @@ public final class ZmlTableImageMerger
         @Override
         protected void drawTopRight( final ImageDescriptor ov )
         {
-          drawImage( ov.getImageData(), getX( m_numberOfIcons ) + m_iconSize.x, 0 );
+          drawImage( ov.getImageData(), getX( m_numberOfIcons ), 0 );
         }
       };
 
@@ -156,7 +155,8 @@ public final class ZmlTableImageMerger
       buffer.append( ";" );
     }
 
-    return StringUtils.chop( buffer.toString() );
+    buffer.append( Integer.valueOf( m_numberOfIcons ).toString() );
+    return buffer.toString();
   }
 
   private Point getSize( )

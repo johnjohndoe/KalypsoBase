@@ -175,7 +175,7 @@ public class ZmlTableLayoutHandler
     final TableColumn tableColumn = column.getTableViewerColumn().getColumn();
     final ZmlRule[] applied = column.getAppliedRules();
 
-    final ZmlTableImageMerger provider = new ZmlTableImageMerger( 2 );
+    final ZmlTableImageMerger provider = new ZmlTableImageMerger( 1 );
 
     final BaseColumn columnType = column.getColumnType();
     for( final ColumnHeader header : columnType.getHeaders() )
