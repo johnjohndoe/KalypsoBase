@@ -42,6 +42,7 @@ package org.kalypso.zml.core.table.model.interpolation;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
@@ -62,42 +63,84 @@ public final class ZmlInterpolation
 
   public static void interpolate( final IZmlModelColumn column, final IZmlValueReference before, final IZmlValueReference current ) throws SensorException
   {
-    if( current.getModelIndex() - before.getModelIndex() == 1 )
+    final ITimeseriesObservation timeseriesObservation = new TimeseriesObservation( column.getObservation(), column.getValueAxis() );
+    timeseriesObservation.startTransaction();
+
+    interpolate( timeseriesObservation, before.getModelIndex(), current.getModelIndex() );
+
+    timeseriesObservation.stopTransaction();
+  }
+
+  public static void interpolate( final ITimeseriesObservation observation, final Integer before, final Integer current ) throws SensorException
+  {
+    Assert.isTrue( observation.inTransaction() );
+
+    if( current - before == 1 )
       return;
 
-    final Date baseDate = (Date) current.getIndexValue();
-    final Double baseValue = (Double) current.getValue();
+    final Date baseDate = observation.getDate( current );
+    final Double baseValue = (Double) observation.getValue( current );
 
-    final Date beforeDate = (Date) before.getIndexValue();
-    final Double beforeValue = (Double) before.getValue();
+    final Date beforeDate = observation.getDate( before );
+    final Double beforeValue = (Double) observation.getValue( before );
 
     final long timeDiff = baseDate.getTime() - beforeDate.getTime();
     final double valueDiff = baseValue - beforeValue;
 
     final double diff = valueDiff / timeDiff;
 
-    for( int index = before.getModelIndex() + 1; index < current.getModelIndex(); index++ )
+    for( int index = before + 1; index < current; index++ )
     {
-      final Date ptr = (Date) column.get( index, column.getIndexAxis() );
+      final Date ptr = observation.getDate( index );
       final double ptrDiff = ptr.getTime() - beforeDate.getTime();
 
       final double value = beforeValue + diff * ptrDiff;
-      column.update( index, value, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
+
+      observation.update( index, value, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
     }
   }
 
   public static void fillValue( final IZmlModelColumn column, final int start, final int end, final Double value )
   {
-    for( int index = start; index < end; index++ )
+    try
     {
-      try
-      {
-        column.update( index, value, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
-      }
-      catch( final SensorException e )
-      {
-        KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
+      final ITimeseriesObservation timeseriesObservation = new TimeseriesObservation( column.getObservation(), column.getValueAxis() );
+      timeseriesObservation.startTransaction();
+
+      fillValue( timeseriesObservation, start, end, value );
+
+      timeseriesObservation.stopTransaction();
+    }
+    catch( final SensorException e )
+    {
+      KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+// for( int index = start; index < end; index++ )
+// {
+// try
+// {
+// column.update( index, value, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
+// }
+// catch( final SensorException e )
+// {
+// KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+// }
+// }
+  }
+
+  public static void fillValue( final ITimeseriesObservation observation, final int start, final int end, final Double value )
+  {
+    try
+    {
+      Assert.isTrue( observation.inTransaction() );
+
+      for( int index = start; index < end; index++ )
+        observation.update( index, value, IInterpolationFilter.DATA_SOURCE, KalypsoStati.BIT_OK );
+    }
+    catch( final SensorException e )
+    {
+      KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
   }
 
