@@ -83,4 +83,6 @@ public interface IZmlTable
   void accept( IZmlTableColumnVisitor visitor );
 
   void accept( IZmlTableRowVisitor visitor );
+
+  IZmlTableColumn findColumn( int columnIndex );
 }

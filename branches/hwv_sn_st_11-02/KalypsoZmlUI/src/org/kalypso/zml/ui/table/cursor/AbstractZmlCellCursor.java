@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.cursor.update.ZmlSelectionUpdater;
 
 /**
  * @since 3.3
@@ -158,7 +159,7 @@ public abstract class AbstractZmlCellCursor extends Canvas
 
     try
     {
-      if( Objects.isNotNull( m_focusCell ) )
+      if( Objects.isNotNull( m_focusCell ) && !m_focusCell.getControl().isDisposed() )
         setBounds( m_focusCell.getBounds() );
     }
     catch( final SWTException ex )

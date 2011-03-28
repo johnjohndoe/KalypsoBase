@@ -78,6 +78,7 @@ import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.cursor.update.ZmlSelectionUpdater;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuProvider;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
@@ -261,19 +262,10 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   @Override
   public IZmlTableColumn getSetActiveColumn( )
   {
-    if( Objects.isNull( m_position ) )
-      return null;
+    final ZmlSelectionUpdater updater = new ZmlSelectionUpdater( m_table, m_position );
+    updater.run();
 
-    final ViewerCell viewerCell = m_table.getTableViewer().getCell( m_position );
-    if( Objects.isNull( viewerCell ) )
-      return null;
-
-    final IZmlTableColumn active = getActiveColumn();
-    final IZmlTableColumn current = m_table.findColumn( viewerCell.getColumnIndex() );
-    if( active != current )
-      setFocusCell( viewerCell );
-
-    return current;
+    return getActiveColumn();
   }
 
   @Override

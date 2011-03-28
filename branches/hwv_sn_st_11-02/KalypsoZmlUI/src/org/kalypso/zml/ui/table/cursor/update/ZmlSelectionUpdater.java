@@ -38,9 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.cursor;
+package org.kalypso.zml.ui.table.cursor.update;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
@@ -55,9 +57,17 @@ public class ZmlSelectionUpdater implements Runnable
 {
   private final IZmlTable m_table;
 
+  private final Point m_position;
+
   public ZmlSelectionUpdater( final IZmlTable table )
   {
+    this( table, null );
+  }
+
+  public ZmlSelectionUpdater( final IZmlTable table, final Point position )
+  {
     m_table = table;
+    m_position = position;
   }
 
   /**
@@ -65,6 +75,43 @@ public class ZmlSelectionUpdater implements Runnable
    */
   @Override
   public void run( )
+  {
+    if( Objects.isNull( m_position ) )
+      updateByColumn();
+    else
+      updateByMousePosition();
+
+  }
+
+  private void updateByMousePosition( )
+  {
+    if( Objects.isNull( m_position ) )
+      return;
+
+    final ViewerCell viewerCell = m_table.getTableViewer().getCell( m_position );
+    if( Objects.isNull( viewerCell ) )
+      return;
+
+    final IZmlTableSelectionHandler handler = m_table.getSelectionHandler();
+
+    final IZmlTableColumn active = handler.getActiveColumn();
+    final IZmlTableColumn current = m_table.findColumn( viewerCell.getColumnIndex() );
+
+    if( active != current )
+    {
+      final IZmlTableCell cell = handler.getActiveCell();
+      if( Objects.isNotNull( cell ) )
+      {
+        final IZmlTableRow row = cell.getRow();
+        final IZmlTableCell selectedCell = row.getCell( current );
+        handler.setFocusCell( selectedCell.getViewerCell() );
+      }
+      else
+        handler.setFocusCell( viewerCell );
+    }
+  }
+
+  private void updateByColumn( )
   {
     final IZmlTableSelectionHandler handler = m_table.getSelectionHandler();
     final IZmlTableRow[] selectedRows = handler.getSelectedRows();
