@@ -177,10 +177,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartDragHandler
       if( Objects.isNotNull( end ) )
         doMouseUpPan( start, end );
     }
-    else if( m_button == SWT.BUTTON3 )
-    {
-      doMouseMaximize();
-    }
+
   }
 
   private void doMouseUpPan( final Point start, final Point end )
