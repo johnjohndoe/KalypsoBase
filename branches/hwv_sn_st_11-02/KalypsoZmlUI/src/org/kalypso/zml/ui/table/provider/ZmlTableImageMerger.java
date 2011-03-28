@@ -63,7 +63,7 @@ public final class ZmlTableImageMerger
 
   private static final RGB RGB_WHITE = new RGB( 255, 255, 255 );
 
-  private static final ImageData IMG_ADDITIONAL = new ImageData( ZmlTableImageMerger.class.getResourceAsStream( "icons/additional.png" ) );
+  private static final ImageData IMG_ADDITIONAL = new ImageData( ZmlTableImageMerger.class.getResourceAsStream( "icons/additional.png" ) ); //$NON-NLS-1$
 
   private final Set<ZmlTableImage> m_images = new LinkedHashSet<ZmlTableImage>();
 
@@ -152,7 +152,7 @@ public final class ZmlTableImageMerger
     for( final ZmlTableImage image : images )
     {
       buffer.append( image.getHref() );
-      buffer.append( ";" );
+      buffer.append( ";" ); //$NON-NLS-1$
     }
 
     buffer.append( Integer.valueOf( m_numberOfIcons ).toString() );
