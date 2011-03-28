@@ -213,8 +213,11 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         {
           final IExtendedZmlTableColumn extended = (IExtendedZmlTableColumn) column;
           final ZmlEditingSupport support = extended.getEditingSupport();
-          final TextCellEditor editor = support.getCellEditor();
-          ((Text) editor.getControl()).insert( String.valueOf( character ) );
+          if( support != null )
+          {
+            final TextCellEditor editor = support.getCellEditor();
+            ((Text) editor.getControl()).insert( String.valueOf( character ) );
+          }
         }
       }
     } );
@@ -315,15 +318,15 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     if( Objects.isNotNull( cell ) )
       new UIJob( "" )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        @Override
-        public IStatus runInUIThread( final IProgressMonitor monitor )
-        {
-          m_selection.setFocusCell( (Date) cell.getRow().getModelRow().getIndexValue(), cell.getColumn() );
+        m_selection.setFocusCell( (Date) cell.getRow().getModelRow().getIndexValue(), cell.getColumn() );
 
-          return Status.OK_STATUS;
-        }
-      }.schedule( 400 );
+        return Status.OK_STATUS;
+      }
+    }.schedule( 400 );
 
   }
 
@@ -466,6 +469,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     return null;
   }
 
+  @Override
   public IZmlTableColumn findColumn( final int columnIndex )
   {
     for( final ExtendedZmlTableColumn column : m_columns )
