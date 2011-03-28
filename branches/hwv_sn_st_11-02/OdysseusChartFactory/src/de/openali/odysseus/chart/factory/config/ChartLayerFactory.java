@@ -184,6 +184,9 @@ public class ChartLayerFactory extends AbstractChartFactory
     final ILayerProvider provider = LayerTypeHelper.getLayerTypeProvider( getLoader(), type );
     final IChartLayer layer = buildLayer( type, provider, (ReferencableType[]) ArrayUtils.add( baseTypes, type ) );
 
+    if( reference.isSetTitle() )
+      layer.setTitle( reference.getTitle() );
+
     return layer;
   }
 
