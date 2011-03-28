@@ -325,7 +325,10 @@ public final class StatusUtilities
 
   /**
    * Creates a ok-status with given message and null throwable.
+   * 
+   * @deprecated Directly use Status constructor.
    */
+  @Deprecated
   public static IStatus createOkStatus( final String message, final Object... args )
   {
     return createStatus( IStatus.OK, String.format( message, args ), null );
