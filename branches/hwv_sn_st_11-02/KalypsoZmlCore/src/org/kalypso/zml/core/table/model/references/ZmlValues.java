@@ -57,7 +57,6 @@ public final class ZmlValues
   public static boolean isStuetzstelle( final IZmlValueReference reference ) throws SensorException
   {
     return isStuetzstelle( reference.getStatus(), reference.getDataSource() );
-
   }
 
   public static boolean isStuetzstelle( final Number status, final String source )
@@ -70,5 +69,4 @@ public final class ZmlValues
 
     return !source.startsWith( DataSourceHelper.FILTER_SOURCE ); //$NON-NLS-1$
   }
-
 }
