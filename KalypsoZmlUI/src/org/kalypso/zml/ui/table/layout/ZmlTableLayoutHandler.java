@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.layout;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -115,7 +116,7 @@ public class ZmlTableLayoutHandler
 
   public void tableChanged( )
   {
-    if( m_job.getState() == Job.SLEEPING )
+    if( m_job.getState() == Job.SLEEPING || m_job.getState() == Job.WAITING || m_job.getState() == Job.RUNNING )
       m_job.cancel();
 
     m_job.schedule( 250 );
@@ -151,7 +152,9 @@ public class ZmlTableLayoutHandler
           final String label = modelColumn.getLabel();
 
           tableColumn.setText( label );
-          pack( tableColumn, columnType, label );
+          final boolean empty = ArrayUtils.isEmpty( column.getCells() );
+
+          pack( tableColumn, columnType, label, empty );
         }
       }
       else
@@ -159,7 +162,9 @@ public class ZmlTableLayoutHandler
         final String label = columnType.getLabel();
 
         tableColumn.setText( label );
-        pack( tableColumn, columnType, label );
+        final boolean empty = ArrayUtils.isEmpty( column.getCells() );
+
+        pack( tableColumn, columnType, label, empty );
       }
 
     }
@@ -208,37 +213,47 @@ public class ZmlTableLayoutHandler
     tableColumn.setImage( provider.createImage( tableColumn.getDisplay() ) );
   }
 
-  private void pack( final TableColumn column, final BaseColumn base, final String label )
+  private void pack( final TableColumn column, final BaseColumn base, final String label, final boolean empty )
   {
-    if( base.isAutopack() )
+    if( empty )
     {
-      column.pack();
+      column.setWidth( 0 );
+      column.setResizable( false );
+      column.setMoveable( false );
     }
     else
     {
-      final Integer width = base.getWidth();
-      if( width == null )
+      column.setMoveable( false );
+      column.setResizable( true );
+
+      if( base.isAutopack() )
       {
-        final Integer calculated = calculateSize( column, base, label );
-        if( calculated == null )
-          column.pack();
-        else
-        {
-          /* set biggest value - calculated header with or packed cell width */
-          column.pack();
-          final int packedWith = column.getWidth();
-
-          if( packedWith < calculated )
-            column.setWidth( calculated );
-        }
-
+        column.pack();
       }
       else
-        column.setWidth( width );
+      {
+        final Integer width = base.getWidth();
+        if( width == null )
+        {
+          final Integer calculated = calculateSize( column, base, label );
+          if( calculated == null )
+            column.pack();
+          else
+          {
+            /* set biggest value - calculated header with or packed cell width */
+            column.pack();
+            final int packedWith = column.getWidth();
+
+            if( packedWith < calculated )
+              column.setWidth( calculated );
+          }
+
+        }
+        else
+          column.setWidth( width );
+      }
     }
 
-    column.setMoveable( false );
-    column.setResizable( true );
   }
 
   /**
