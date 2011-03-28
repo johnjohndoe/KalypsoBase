@@ -69,4 +69,15 @@ public final class ZmlValues
 
     return !source.startsWith( DataSourceHelper.FILTER_SOURCE ); //$NON-NLS-1$
   }
+
+  public static boolean isNullstelle( final Number value, final Number status, final String source )
+  {
+    if( isStuetzstelle( status, source ) )
+      return false;
+
+    if( value == null )
+      return false;
+
+    return value.doubleValue() == 0.0;
+  }
 }
