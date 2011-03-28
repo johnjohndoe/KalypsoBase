@@ -1109,7 +1109,6 @@
           </AreaStyle>
         </Styles>
       </Layer>
-
     </Layers>
     <Mappers>
       <Axis id="W" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -1161,7 +1160,7 @@
         <Position>BOTTOM</Position>
         <PreferredAdjustment before="0" range="100" after="0" />
         <RendererRef ref="DateAxisRenderer" />
-        <AxisNumberRangeRestriction minRange="86400000" />
+        <!-- <AxisNumberRangeRestriction minRange="86400000" /> -->
       </Axis>
       <ScreenAxis id="screenAxisX">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
@@ -1215,7 +1214,7 @@
             <Parameter name="min_tick_interval" value="86400000" />
             <Parameter name="hide_cut" value="true" />
             <Parameter name="gap" value="0" />
-            <Parameter name="date-format" value="dd.MM.&#10;HH:mm" />
+            <!-- <Parameter name="date-format" value="dd.MM.&#10;HH:mm" /> -->
             <Parameter name="label_position" value="INTERVALL_CENTERED" />
           </Parameters>
         </Provider>
