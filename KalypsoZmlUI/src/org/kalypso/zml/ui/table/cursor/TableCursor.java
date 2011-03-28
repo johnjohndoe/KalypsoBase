@@ -13,7 +13,6 @@
 package org.kalypso.zml.ui.table.cursor;
 
 import org.eclipse.jface.util.Util;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -27,6 +26,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 import com.google.common.base.Strings;
 
@@ -34,9 +38,11 @@ public class TableCursor extends AbstractCellCursor
 {
   private static final Color COLOR_BACKGROUND_SELECTION = new Color( null, new RGB( 0xBA, 0xFF, 0xEC ) );
 
-  public TableCursor( final TableViewer viewer )
+  private static final Color COLOR_BACKGROUND_SELECTION_DISABLED = new Color( null, new RGB( 0xCC, 0xCC, 0xCC ) );
+
+  public TableCursor( final IZmlTable table )
   {
-    super( viewer );
+    super( table );
   }
 
   @Override
@@ -58,7 +64,7 @@ public class TableCursor extends AbstractCellCursor
       final Color background = gc.getBackground();
       final Color foreground = gc.getForeground();
 
-      gc.setBackground( COLOR_BACKGROUND_SELECTION );
+      gc.setBackground( getBackground() );
       gc.setForeground( getForeground() );
 
       gc.fillRectangle( event.x, event.y, event.width, event.height );
@@ -80,6 +86,24 @@ public class TableCursor extends AbstractCellCursor
 
       t.printStackTrace();
     }
+  }
+
+  /**
+   * @see org.eclipse.swt.widgets.Control#getBackground()
+   */
+  @Override
+  public Color getBackground( )
+  {
+    final IZmlTable table = getTable();
+    final IZmlTableSelectionHandler handler = table.getSelectionHandler();
+
+    final IZmlTableCell cell = handler.getActiveCell();
+    final IZmlTableColumn column = cell.getColumn();
+    final BaseColumn type = column.getColumnType();
+    if( type.isEditable() )
+      return COLOR_BACKGROUND_SELECTION;
+
+    return COLOR_BACKGROUND_SELECTION_DISABLED;
   }
 
   private void drawFocus( final GC gc, final Display display )

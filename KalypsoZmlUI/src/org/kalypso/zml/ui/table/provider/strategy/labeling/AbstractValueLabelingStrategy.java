@@ -44,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
@@ -70,6 +71,8 @@ public abstract class AbstractValueLabelingStrategy implements IZmlLabelStrategy
     if( value instanceof Date )
     {
       final SimpleDateFormat sdf = new SimpleDateFormat( format == null ? "dd.MM.yyyy HH:mm" : format );
+      sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+
       return sdf.format( value );
     }
 

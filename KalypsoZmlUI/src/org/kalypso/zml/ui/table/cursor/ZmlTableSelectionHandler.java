@@ -125,7 +125,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     final Menu contextMenu = m_contextMenuManager.createContextMenu( m_table );
     m_table.setMenu( contextMenu );
 
-    m_cursor = new TableCursor( viewer );
+    m_cursor = new TableCursor( m_table );
 
     final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( viewer, new CursorCellHighlighter( viewer, m_cursor ), new ZmlCellNavigationStrategy( m_cursor ) )
     {
