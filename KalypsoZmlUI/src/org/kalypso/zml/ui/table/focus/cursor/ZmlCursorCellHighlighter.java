@@ -27,7 +27,7 @@ public class ZmlCursorCellHighlighter extends FocusCellHighlighter
 {
   private final ColumnViewer m_viewer;
 
-  private final ZmlTableCursor m_cursor;
+  protected final ZmlTableCursor m_cursor;
 
   /**
    * @param viewer
