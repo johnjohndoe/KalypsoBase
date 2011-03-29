@@ -128,19 +128,9 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
     m_cursor = new ZmlTableCursor( m_table );
 
-    final TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager( viewer, new ZmlCursorCellHighlighter( viewer, m_cursor ), new ZmlCellNavigationStrategy( m_cursor ) )
-    {
-      @Override
-      public ViewerCell getFocusCell( )
-      {
-        /**
-         * FIXME / TODO - SWTFocusCellManager defines it's own focusCell - no chance to change / overwrite / update this
-         * cell from the here!
-         */
-        return m_cursor.getFocusCell();
-      }
-
-    };
+    final ZmlCursorCellHighlighter highlighter = new ZmlCursorCellHighlighter( viewer, m_cursor );
+    final ZmlCellNavigationStrategy navigationStrategy = new ZmlCellNavigationStrategy( m_cursor );
+    final TableViewerFocusCellManager focusCellManager = new ZmlTableFocusCellManager( viewer, highlighter, navigationStrategy, m_cursor );
 
     final ColumnViewerEditorActivationStrategy activationSupport = new ColumnViewerEditorActivationStrategy( viewer )
     {

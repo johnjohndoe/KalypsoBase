@@ -50,6 +50,7 @@ import javax.xml.bind.JAXBElement;
 
 import jregex.Pattern;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -318,15 +319,15 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     if( Objects.isNotNull( cell ) )
       new UIJob( "" )
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        m_selection.setFocusCell( (Date) cell.getRow().getModelRow().getIndexValue(), cell.getColumn() );
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
+        {
+          m_selection.setFocusCell( (Date) cell.getRow().getModelRow().getIndexValue(), cell.getColumn() );
 
-        return Status.OK_STATUS;
-      }
-    }.schedule( 400 );
+          return Status.OK_STATUS;
+        }
+      }.schedule( 400 );
 
   }
 
@@ -502,5 +503,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public IZmlTableSelectionHandler getSelectionHandler( )
   {
     return m_selection;
+  }
+
+  public boolean isEmpty( )
+  {
+    return ArrayUtils.isEmpty( getRows() );
   }
 }

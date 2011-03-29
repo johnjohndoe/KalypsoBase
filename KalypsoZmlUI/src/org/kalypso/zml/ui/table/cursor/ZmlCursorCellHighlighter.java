@@ -19,7 +19,6 @@ import org.eclipse.jface.viewers.ColumnViewerEditorActivationListener;
 import org.eclipse.jface.viewers.ColumnViewerEditorDeactivationEvent;
 import org.eclipse.jface.viewers.FocusCellHighlighter;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.kalypso.commons.java.lang.Objects;
 
 /**
  * @since 3.3
@@ -43,15 +42,12 @@ public class ZmlCursorCellHighlighter extends FocusCellHighlighter
   }
 
   @Override
-  protected void focusCellChanged( final ViewerCell cell )
+  protected void focusCellChanged( final ViewerCell cell, final ViewerCell oldCell )
   {
-    if( Objects.isNull( cell ) )
-      return;
-
     if( !m_viewer.isCellEditorActive() )
     {
       m_cursor.setFocusCell( cell );
-      m_cursor.setVisible( true );
+      m_cursor.setVisible( cell != null );
     }
   }
 
