@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -31,6 +32,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.cursor.update.ZmlSelectionUpdater;
 
@@ -41,7 +43,7 @@ public abstract class AbstractZmlCellCursor extends Canvas
 {
   private final IZmlTable m_table;
 
-  private ViewerCell m_focusCell;
+  private TableViewerFocusCellManager m_cellManager;
 
   /**
    * @param viewer
@@ -73,19 +75,18 @@ public abstract class AbstractZmlCellCursor extends Canvas
         {
           getParent().notifyListeners( SWT.MouseDoubleClick, copyEvent( event ) );
         }
-// else if( SWT.FocusIn == event.type )
-// {
-// if( isVisible() )
-// forceFocus();
-// }
+        else if( SWT.FocusIn == event.type )
+        {
+          table.getTableViewer().getControl().forceFocus();
+        }
       }
-
     };
 
     addListener( SWT.Paint, listener );
     addListener( SWT.KeyDown, listener );
     addListener( SWT.MouseDown, listener );
     addListener( SWT.MouseDoubleClick, listener );
+    addListener( SWT.FocusIn, listener );
 
     final TableViewer viewer = table.getTableViewer();
     final ScrollBar verticalBar = viewer.getTable().getVerticalBar();
@@ -141,13 +142,6 @@ public abstract class AbstractZmlCellCursor extends Canvas
     getParent().notifyListeners( SWT.MouseDown, copyEvent( event ) );
   }
 
-  public void setFocusCell( final ViewerCell cell )
-  {
-    m_focusCell = cell;
-
-    redraw();
-  }
-
   /**
    * @see org.eclipse.swt.widgets.Control#redraw()
    */
@@ -159,8 +153,9 @@ public abstract class AbstractZmlCellCursor extends Canvas
 
     try
     {
-      if( Objects.isNotNull( m_focusCell ) && !m_focusCell.getControl().isDisposed() )
-        setBounds( m_focusCell.getBounds() );
+      final ViewerCell focusCell = getFocusCell();
+      if( Objects.isNotNull( focusCell ) && !focusCell.getControl().isDisposed() )
+        setBounds( focusCell.getBounds() );
     }
     catch( final SWTException ex )
     {
@@ -173,39 +168,30 @@ public abstract class AbstractZmlCellCursor extends Canvas
   /**
    * @return the cells who should be highlighted
    */
-  public ViewerCell getFocusCell( )
+  protected ViewerCell getFocusCell( )
   {
-    return m_focusCell;
+    if( m_cellManager == null )
+      return null;
+
+    return m_cellManager.getFocusCell();
   }
 
   protected Event copyEvent( final Event event )
   {
-    final Event cEvent = new Event();
-    cEvent.button = event.button;
-    cEvent.character = event.character;
-    cEvent.count = event.count;
-    cEvent.data = event.data;
-    cEvent.detail = event.detail;
-    cEvent.display = event.display;
-    cEvent.doit = event.doit;
-    cEvent.end = event.end;
-    cEvent.gc = event.gc;
-    cEvent.height = event.height;
-    cEvent.index = event.index;
-    cEvent.item = getFocusCell().getControl();
-    cEvent.keyCode = event.keyCode;
-    cEvent.start = event.start;
-    cEvent.stateMask = event.stateMask;
-    cEvent.text = event.text;
-    cEvent.time = event.time;
-    cEvent.type = event.type;
-    cEvent.widget = event.widget;
-    cEvent.width = event.width;
+    final Event cEvent = ControlUtils.copyEvent( event );
+
+    final ViewerCell focusCell = getFocusCell();
+    cEvent.item = focusCell == null ? null : focusCell.getControl();
     final Point p = m_table.getTableViewer().getControl().toControl( toDisplay( event.x, event.y ) );
     cEvent.x = p.x;
     cEvent.y = p.y;
 
     return cEvent;
+  }
+
+  public void setCellManager( final TableViewerFocusCellManager cellManager )
+  {
+    m_cellManager = cellManager;
   }
 
   /**
