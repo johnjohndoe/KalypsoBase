@@ -71,7 +71,7 @@ public class ZmlCommandPasteValue extends AbstractHandler
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-      final IZmlTableCell cell = selection.getActiveCell();
+      final IZmlTableCell cell = selection.findActiveCellByPosition();
       final IZmlValueReference reference = cell.getValueReference();
 
       final Clipboard clipboard = new Clipboard( PlatformUI.getWorkbench().getDisplay() );

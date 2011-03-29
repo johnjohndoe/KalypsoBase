@@ -50,17 +50,15 @@ import org.kalypso.zml.ui.table.model.IZmlTableRow;
  */
 public interface IZmlTableSelectionHandler
 {
-  ViewerCell findViewerCell( IZmlTableCell cell );
-
-  IZmlTableCell getActiveCell( );
-
-  IZmlTableColumn getActiveColumn( );
-
-  IZmlTableRow getActiveRow( );
-
   IZmlTableRow[] getSelectedRows( );
 
   void setFocusCell( ViewerCell cell );
 
-  IZmlTableColumn getSetActiveColumn( );
+  IZmlTableColumn findActiveColumnByPosition( );
+
+  IZmlTableCell findActiveCellByPosition( );
+
+  IZmlTableRow findActiveRowByPosition( );
+
+  ViewerCell toViewerCell( IZmlTableCell cell );
 }

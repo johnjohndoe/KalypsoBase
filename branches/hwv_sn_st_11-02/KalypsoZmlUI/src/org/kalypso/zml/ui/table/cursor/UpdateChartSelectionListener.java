@@ -56,6 +56,7 @@ import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlSelectionLayer;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;

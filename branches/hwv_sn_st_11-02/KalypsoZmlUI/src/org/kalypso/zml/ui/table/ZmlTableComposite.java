@@ -82,7 +82,7 @@ import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
-import org.kalypso.zml.ui.table.cursor.ZmlTableSelectionHandler;
+import org.kalypso.zml.ui.table.cursor.ZmlTableFocusCellHandler;
 import org.kalypso.zml.ui.table.layout.ZmlTableLayoutHandler;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
@@ -90,6 +90,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
 
 /**
  * @author Dirk Kuch
@@ -102,22 +103,24 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private final IZmlModel m_model;
 
-  protected ZmlTableSelectionHandler m_selection;
-
   private ZmlTableUiUpdateJob m_updateJob;
 
   private final Set<IZmlTableListener> m_listeners = new LinkedHashSet<IZmlTableListener>();
 
   private final ZmlViewResolutionFilter m_filter = new ZmlViewResolutionFilter( this );
 
-  private final ZmlTableLayoutHandler m_handler;
+  private final ZmlTableLayoutHandler m_layout;
+
+  private ZmlTableFocusCellHandler m_focus;
+
+  protected ZmlTableSelectionHandler m_selection;
 
   public ZmlTableComposite( final IZmlModel model, final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.NULL );
     m_model = model;
 
-    m_handler = new ZmlTableLayoutHandler( this );
+    m_layout = new ZmlTableLayoutHandler( this );
 
     final GridLayout layout = LayoutHelper.createGridLayout();
     layout.verticalSpacing = 0;
@@ -143,8 +146,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_tableViewer.getTable().setLinesVisible( true );
 
+    m_focus = new ZmlTableFocusCellHandler( this );
     m_selection = new ZmlTableSelectionHandler( this );
-    addListener( m_selection );
+
+    addListener( m_focus );
 
     ColumnViewerToolTipSupport.enableFor( m_tableViewer, ToolTip.NO_RECREATE );
 
@@ -264,7 +269,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     final IStructuredSelection selection = (IStructuredSelection) m_tableViewer.getSelection();
 
-    final IZmlTableCell cell = m_selection.getActiveCell();
+    final IZmlTableCell cell = m_focus.getFocusCell();
     fireTableChanged();
 
     m_tableViewer.refresh( true, true );
@@ -294,7 +299,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       listener.eventTableChanged();
     }
 
-    m_handler.tableChanged();
+    m_layout.tableChanged();
   }
 
   /**

@@ -5,6 +5,7 @@ import jregex.Pattern;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -16,17 +17,16 @@ import org.kalypso.zml.ui.table.provider.ZmlEditingSupport;
 import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 final class ZmlTableEditorActivationStrategy extends ColumnViewerEditorActivationStrategy
 {
-  protected final ZmlTableSelectionHandler m_handler;
+  protected final ZmlTableFocusCellManager m_cellManager;
 
-  ZmlTableEditorActivationStrategy( final ZmlTableSelectionHandler handler, final ColumnViewer viewer )
+  public ZmlTableEditorActivationStrategy( final TableViewer viewer, final ZmlTableFocusCellManager cellManager )
   {
     super( viewer );
-
-    m_handler = handler;
+    m_cellManager = cellManager;
 
     hookListener( viewer );
   }
@@ -43,7 +43,7 @@ final class ZmlTableEditorActivationStrategy extends ColumnViewerEditorActivatio
 
         if( org.kalypso.commons.java.lang.Objects.isNotNull( character ) && pattern.matches( String.valueOf( character ) ) )
         {
-          final IZmlTableCell cell = m_handler.getActiveCell();
+          final IZmlTableCell cell = m_cellManager.getFocusTableCell();
           if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
             return;
 

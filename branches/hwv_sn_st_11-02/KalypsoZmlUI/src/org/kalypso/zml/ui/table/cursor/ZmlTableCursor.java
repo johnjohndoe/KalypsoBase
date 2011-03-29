@@ -13,6 +13,7 @@
 package org.kalypso.zml.ui.table.cursor;
 
 import org.eclipse.jface.util.Util;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -27,8 +28,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
@@ -40,9 +39,9 @@ public class ZmlTableCursor extends AbstractZmlCellCursor
 
   private static final Color COLOR_BACKGROUND_SELECTION_DISABLED = new Color( null, new RGB( 0xCC, 0xCC, 0xCC ) );
 
-  public ZmlTableCursor( final IZmlTable table )
+  public ZmlTableCursor( final TableViewer viewer )
   {
-    super( table );
+    super( viewer );
   }
 
   @Override
@@ -94,10 +93,7 @@ public class ZmlTableCursor extends AbstractZmlCellCursor
   @Override
   public Color getBackground( )
   {
-    final IZmlTable table = getTable();
-    final IZmlTableSelectionHandler handler = table.getSelectionHandler();
-
-    final IZmlTableCell cell = handler.getActiveCell();
+    final IZmlTableCell cell = getFocusTableCell();
     final IZmlTableColumn column = cell.getColumn();
     final BaseColumn type = column.getColumnType();
     if( type.isEditable() )

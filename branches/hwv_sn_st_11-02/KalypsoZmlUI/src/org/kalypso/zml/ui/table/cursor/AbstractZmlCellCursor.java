@@ -12,13 +12,9 @@
 
 package org.kalypso.zml.ui.table.cursor;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -30,29 +26,28 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.cursor.update.ZmlSelectionUpdater;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
 
 /**
  * @since 3.3
  */
 public abstract class AbstractZmlCellCursor extends Canvas
 {
-  private final IZmlTable m_table;
 
-  private TableViewerFocusCellManager m_cellManager;
+  private ZmlTableFocusCellManager m_cellManager;
+
+  private final TableViewer m_viewer;
 
   /**
    * @param viewer
    * @param style
    */
-  public AbstractZmlCellCursor( final IZmlTable table )
+  public AbstractZmlCellCursor( final TableViewer viewer )
   {
-    super( (Composite) table.getTableViewer().getControl(), SWT.NONE );
-    m_table = table;
+    super( (Composite) viewer.getControl(), SWT.NONE );
+    m_viewer = viewer;
 
     final Listener listener = new Listener()
     {
@@ -77,7 +72,7 @@ public abstract class AbstractZmlCellCursor extends Canvas
         }
         else if( SWT.FocusIn == event.type )
         {
-          table.getTableViewer().getControl().forceFocus();
+          m_viewer.getControl().forceFocus();
         }
       }
     };
@@ -88,8 +83,7 @@ public abstract class AbstractZmlCellCursor extends Canvas
     addListener( SWT.MouseDoubleClick, listener );
     addListener( SWT.FocusIn, listener );
 
-    final TableViewer viewer = table.getTableViewer();
-    final ScrollBar verticalBar = viewer.getTable().getVerticalBar();
+    final ScrollBar verticalBar = m_viewer.getTable().getVerticalBar();
     verticalBar.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -105,28 +99,25 @@ public abstract class AbstractZmlCellCursor extends Canvas
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final ZmlSelectionUpdater updater = new ZmlSelectionUpdater( getTable() );
-        updater.run();
+// throw new NotImplementedException();
 
-        new UIJob( "" )
-        {
-
-          @Override
-          public IStatus runInUIThread( final IProgressMonitor monitor )
-          {
-            redraw();
-            return Status.OK_STATUS;
-          }
-
-        }.schedule();
+// final ZmlSelectionUpdater updater = new ZmlSelectionUpdater( getTable() );
+// updater.run();
+//
+// new UIJob( "" )
+// {
+//
+// @Override
+// public IStatus runInUIThread( final IProgressMonitor monitor )
+// {
+// redraw();
+// return Status.OK_STATUS;
+// }
+//
+// }.schedule();
 
       }
     } );
-  }
-
-  protected IZmlTable getTable( )
-  {
-    return m_table;
   }
 
   protected void keyDown( final Event event )
@@ -168,9 +159,17 @@ public abstract class AbstractZmlCellCursor extends Canvas
   /**
    * @return the cells who should be highlighted
    */
-  protected ViewerCell getFocusCell( )
+  protected IZmlTableCell getFocusTableCell( )
   {
     if( m_cellManager == null )
+      return null;
+
+    return m_cellManager.getFocusTableCell();
+  }
+
+  protected ViewerCell getFocusCell( )
+  {
+    if( Objects.isNull( m_cellManager ) )
       return null;
 
     return m_cellManager.getFocusCell();
@@ -182,14 +181,14 @@ public abstract class AbstractZmlCellCursor extends Canvas
 
     final ViewerCell focusCell = getFocusCell();
     cEvent.item = focusCell == null ? null : focusCell.getControl();
-    final Point p = m_table.getTableViewer().getControl().toControl( toDisplay( event.x, event.y ) );
+    final Point p = m_viewer.getControl().toControl( toDisplay( event.x, event.y ) );
     cEvent.x = p.x;
     cEvent.y = p.y;
 
     return cEvent;
   }
 
-  public void setCellManager( final TableViewerFocusCellManager cellManager )
+  public void setCellManager( final ZmlTableFocusCellManager cellManager )
   {
     m_cellManager = cellManager;
   }

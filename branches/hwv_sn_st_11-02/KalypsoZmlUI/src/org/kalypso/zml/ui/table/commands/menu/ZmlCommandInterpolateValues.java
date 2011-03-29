@@ -69,7 +69,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-      final IZmlTableCell active = selection.getActiveCell();
+      final IZmlTableCell active = selection.findActiveCellByPosition();
       final IZmlTableColumn column = active.getColumn();
       final IZmlTableCell[] selected = column.getSelectedCells();
       if( selected.length < 2 )
