@@ -157,7 +157,6 @@ public class ZmlTableLayoutHandler
         }
         else
         {
-
           final String label = modelColumn.getLabel();
           tableColumn.setText( label );
 

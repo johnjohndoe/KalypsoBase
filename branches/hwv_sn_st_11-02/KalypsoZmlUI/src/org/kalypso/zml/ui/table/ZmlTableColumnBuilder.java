@@ -49,7 +49,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypeHelper;
 import org.kalypso.zml.core.table.schema.DataColumnType;
-import org.kalypso.zml.ui.table.provider.ZmlEditingSupport;
+import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
@@ -89,7 +89,7 @@ public class ZmlTableColumnBuilder implements ICoreRunnableWithProgress
     /** edit support */
     if( m_column.getType() instanceof DataColumnType && m_column.isEditable() )
     {
-      final ZmlEditingSupport editingSupport = new ZmlEditingSupport( column, labelProvider, m_table.getSelectionHandler() );
+      final ZmlTableEditingSupport editingSupport = new ZmlTableEditingSupport( column, labelProvider, m_table.getFocusHandler() );
       column.setEditingSupport( editingSupport );
     }
 

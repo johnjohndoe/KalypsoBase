@@ -50,6 +50,7 @@ import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerEditor;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
@@ -62,7 +63,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableFocusCellHandler implements IZmlTableListener
+public class ZmlTableFocusCellHandler implements IZmlTableListener, IZmlTableFocusHandler
 {
   private final ZmlTableComposite m_table;
 
@@ -113,11 +114,6 @@ public class ZmlTableFocusCellHandler implements IZmlTableListener
     }.schedule();
   }
 
-  public IZmlTableCell getFocusCell( )
-  {
-    return m_cellManager.getFocusTableCell();
-  }
-
   public void setFocusCell( final Date index, final IZmlTableColumn column )
   {
     throw new NotImplementedException();
@@ -138,5 +134,20 @@ public class ZmlTableFocusCellHandler implements IZmlTableListener
 // return;
 // }
 // }
+  }
+
+  @Override
+  public ViewerCell getFocusCell( )
+  {
+    return m_cellManager.getFocusCell();
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler#getFocusTableCell()
+   */
+  @Override
+  public IZmlTableCell getFocusTableCell( )
+  {
+    return m_cellManager.getFocusTableCell();
   }
 }

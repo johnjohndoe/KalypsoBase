@@ -80,6 +80,7 @@ import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
+import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
 import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellHandler;
 import org.kalypso.zml.ui.table.layout.ZmlTableLayoutHandler;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
@@ -444,5 +445,14 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public boolean isEmpty( )
   {
     return ArrayUtils.isEmpty( getRows() );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.IZmlTable#getFocusHandler()
+   */
+  @Override
+  public IZmlTableFocusHandler getFocusHandler( )
+  {
+    return m_focus;
   }
 }

@@ -53,9 +53,9 @@ import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.RuleMapper;
-import org.kalypso.zml.ui.table.provider.ZmlEditingSupport;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.editing.InterpolatedValueEditingStrategy;
@@ -82,7 +82,7 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
 
   private final int m_tableColumnIndex;
 
-  private ZmlEditingSupport m_editingSupport;
+  private ZmlTableEditingSupport m_editingSupport;
 
   public ExtendedZmlTableColumn( final IZmlTable table, final TableViewerColumn column, final BaseColumn type, final int tableColumnIndex )
   {
@@ -198,14 +198,14 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
     return getColumnType().getIdentifier();
   }
 
-  public void setEditingSupport( final ZmlEditingSupport editingSupport )
+  public void setEditingSupport( final ZmlTableEditingSupport editingSupport )
   {
     m_editingSupport = editingSupport;
     getTableViewerColumn().setEditingSupport( editingSupport );
   }
 
   @Override
-  public ZmlEditingSupport getEditingSupport( )
+  public ZmlTableEditingSupport getEditingSupport( )
   {
     return m_editingSupport;
   }
