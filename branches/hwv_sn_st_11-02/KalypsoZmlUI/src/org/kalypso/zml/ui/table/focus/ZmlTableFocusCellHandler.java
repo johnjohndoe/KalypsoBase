@@ -38,8 +38,11 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.cursor;
+package org.kalypso.zml.ui.table.focus;
 
+import java.util.Date;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -50,7 +53,11 @@ import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.focus.cursor.ZmlCellNavigationStrategy;
+import org.kalypso.zml.ui.table.focus.cursor.ZmlCursorCellHighlighter;
+import org.kalypso.zml.ui.table.focus.cursor.ZmlTableCursor;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -74,9 +81,10 @@ public class ZmlTableFocusCellHandler implements IZmlTableListener
   {
     final TableViewer viewer = m_table.getTableViewer();
     m_cursor = new ZmlTableCursor( viewer );
-    final ZmlCursorCellHighlighter highlighter = new ZmlCursorCellHighlighter( viewer, m_cursor );
 
+    final ZmlCursorCellHighlighter highlighter = new ZmlCursorCellHighlighter( viewer, m_cursor );
     final ZmlCellNavigationStrategy navigationStrategy = new ZmlCellNavigationStrategy();
+
     m_cellManager = new ZmlTableFocusCellManager( m_table, highlighter, navigationStrategy );
 
     m_cursor.setCellManager( m_cellManager );
@@ -108,5 +116,27 @@ public class ZmlTableFocusCellHandler implements IZmlTableListener
   public IZmlTableCell getFocusCell( )
   {
     return m_cellManager.getFocusTableCell();
+  }
+
+  public void setFocusCell( final Date index, final IZmlTableColumn column )
+  {
+    throw new NotImplementedException();
+// final TableViewer viewer = m_table.getTableViewer();
+// final Table table = viewer.getTable();
+// final TableItem[] items = table.getItems();
+//
+// for( final TableItem item : items )
+// {
+// final IZmlModelRow row = (IZmlModelRow) item.getData();
+// if( row.getIndexValue().equals( index ) )
+// {
+// final Rectangle bounds = item.getBounds();
+//
+// final ViewerCell cell = findCell( column, bounds.y );
+// m_cellManager.setFocusCell2( cell );
+//
+// return;
+// }
+// }
   }
 }

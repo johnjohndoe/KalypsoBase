@@ -41,10 +41,8 @@
 package org.kalypso.zml.ui.table.selection;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -71,7 +69,6 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.cursor.UpdateChartSelectionListener;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuProvider;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
@@ -259,28 +256,6 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     return rows.toArray( new IZmlTableRow[] {} );
   }
 
-  public void setFocusCell( final Date index, final IZmlTableColumn column )
-  {
-    throw new NotImplementedException();
-// final TableViewer viewer = m_table.getTableViewer();
-// final Table table = viewer.getTable();
-// final TableItem[] items = table.getItems();
-//
-// for( final TableItem item : items )
-// {
-// final IZmlModelRow row = (IZmlModelRow) item.getData();
-// if( row.getIndexValue().equals( index ) )
-// {
-// final Rectangle bounds = item.getBounds();
-//
-// final ViewerCell cell = findCell( column, bounds.y );
-// m_cellManager.setFocusCell2( cell );
-//
-// return;
-// }
-// }
-  }
-
   private ViewerCell findCell( final IZmlTableColumn column, final int y )
   {
     final IZmlTable table = column.getTable();
@@ -333,16 +308,4 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
     return null;
   }
-
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler#setFocusCell(org.eclipse.jface.viewers.ViewerCell)
-   */
-  @Override
-  public void setFocusCell( final ViewerCell cell )
-  {
-    throw new NotImplementedException();
-
-// m_cellManager.setFocusCell2( cell );
-  }
-
 }

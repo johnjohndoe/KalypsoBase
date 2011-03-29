@@ -70,10 +70,7 @@ import com.google.common.base.Objects;
  */
 public class ZmlEditingSupport extends EditingSupport
 {
-  /**
-   * @author kuch
-   */
-  public final static class ZmlTextCellEditor extends TextCellEditor
+  public static final class ZmlTextCellEditor extends TextCellEditor
   {
     public ZmlTextCellEditor( final Composite parent, final int style )
     {
