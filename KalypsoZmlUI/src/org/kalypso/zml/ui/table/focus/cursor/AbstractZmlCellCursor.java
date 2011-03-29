@@ -35,10 +35,12 @@ import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellManager;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
+
 /**
  * @since 3.3
  */
-public abstract class AbstractZmlCellCursor extends Canvas
+public abstract class AbstractZmlCellCursor extends Canvas implements ITableCursor
 {
   private ZmlTableFocusCellManager m_cellManager;
 
@@ -120,6 +122,7 @@ public abstract class AbstractZmlCellCursor extends Canvas
         }.schedule();
       }
     } );
+
   }
 
   protected void keyDown( final Event event )

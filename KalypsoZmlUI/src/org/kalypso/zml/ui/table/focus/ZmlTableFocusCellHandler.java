@@ -51,6 +51,7 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.focus.cursor.ITableCursor;
 import org.kalypso.zml.ui.table.focus.cursor.ZmlCellNavigationStrategy;
 import org.kalypso.zml.ui.table.focus.cursor.ZmlCursorCellHighlighter;
 import org.kalypso.zml.ui.table.focus.cursor.ZmlTableCursor;
@@ -124,4 +125,11 @@ public class ZmlTableFocusCellHandler implements IZmlTableListener, IZmlTableFoc
   {
     return m_cellManager.getFocusTableCell();
   }
+
+  @Override
+  public ITableCursor getCursor( )
+  {
+    return m_cursor;
+  }
+
 }

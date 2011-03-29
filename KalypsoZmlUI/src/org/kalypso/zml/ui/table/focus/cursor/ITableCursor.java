@@ -38,20 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.focus;
-
-import org.eclipse.jface.viewers.ViewerCell;
-import org.kalypso.zml.ui.table.focus.cursor.ITableCursor;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
+package org.kalypso.zml.ui.table.focus.cursor;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableFocusHandler
+public interface ITableCursor
 {
-  IZmlTableCell getFocusTableCell( );
 
-  ViewerCell getFocusCell( );
+  void redraw( );
 
-  ITableCursor getCursor( );
 }

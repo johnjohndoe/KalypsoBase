@@ -38,20 +38,64 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.focus;
+package org.kalypso.zml.ui.table;
 
+import java.util.Date;
+
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.kalypso.zml.ui.table.focus.cursor.ITableCursor;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.eclipse.swt.graphics.Point;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.ui.table.layout.ClosestDateVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableFocusHandler
+public class RevealTableWorker
 {
-  IZmlTableCell getFocusTableCell( );
 
-  ViewerCell getFocusCell( );
+  private final Date m_index;
 
-  ITableCursor getCursor( );
+  private final IZmlTable m_table;
+
+  public RevealTableWorker( final IZmlTable table )
+  {
+    m_table = table;
+    final TableViewer viewer = table.getTableViewer();
+    m_index = getIndex( viewer );
+  }
+
+  private Date getIndex( final TableViewer viewer )
+  {
+    final ViewerCell cell = viewer.getCell( new Point( 10, 75 ) );
+    if( Objects.isNull( cell ) )
+      return null;
+
+    final Object element = cell.getElement();
+    if( !(element instanceof IZmlModelRow) )
+      return null;
+
+    final IZmlModelRow row = (IZmlModelRow) element;
+    return (Date) row.getIndexValue();
+  }
+
+  public void reveal( )
+  {
+    if( Objects.isNull( m_index ) )
+      return;
+
+    final ClosestDateVisitor visitor = new ClosestDateVisitor( m_index );
+    m_table.accept( visitor );
+
+    final IZmlModelRow row = visitor.getModelRow();
+    if( Objects.isNull( row ) )
+      return;
+
+    m_table.getTableViewer().reveal( row );
+
+    // FIXME AbstractCellCursor has to listen to reveal events
+    m_table.getFocusHandler().getCursor().redraw();
+  }
+
 }
