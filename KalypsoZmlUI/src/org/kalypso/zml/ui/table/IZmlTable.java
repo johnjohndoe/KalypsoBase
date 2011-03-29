@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table;
 import org.eclipse.jface.viewers.TableViewer;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlModel;
+import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
@@ -79,6 +80,8 @@ public interface IZmlTable
   void add( ExtendedZmlTableColumn column );
 
   IZmlTableSelectionHandler getSelectionHandler( );
+
+  IZmlTableFocusHandler getFocusHandler( );
 
   void accept( IZmlTableColumnVisitor visitor );
 

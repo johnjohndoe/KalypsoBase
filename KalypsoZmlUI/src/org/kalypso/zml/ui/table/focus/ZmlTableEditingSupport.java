@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table.focus;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.CellEditor;
@@ -58,8 +58,8 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 
@@ -68,7 +68,7 @@ import com.google.common.base.Objects;
 /**
  * @author Dirk Kuch
  */
-public class ZmlEditingSupport extends EditingSupport
+public class ZmlTableEditingSupport extends EditingSupport
 {
   public static final class ZmlTextCellEditor extends TextCellEditor
   {
@@ -97,9 +97,9 @@ public class ZmlEditingSupport extends EditingSupport
 
   private final ZmlLabelProvider m_labelProvider;
 
-  private final IZmlTableSelectionHandler m_handler;
+  private final IZmlTableFocusHandler m_handler;
 
-  public ZmlEditingSupport( final ExtendedZmlTableColumn column, final ZmlLabelProvider labelProvider, final IZmlTableSelectionHandler handler )
+  public ZmlTableEditingSupport( final ExtendedZmlTableColumn column, final ZmlLabelProvider labelProvider, final IZmlTableFocusHandler handler )
   {
     super( column.getTable().getTableViewer() );
     m_column = column;
@@ -150,7 +150,7 @@ public class ZmlEditingSupport extends EditingSupport
 
   protected void moveNext( )
   {
-    final IZmlTableCell cell = m_handler.findActiveCellByPosition();
+    final IZmlTableCell cell = m_handler.getFocusTableCell();
     if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
       return;
 
@@ -160,7 +160,7 @@ public class ZmlEditingSupport extends EditingSupport
 
   protected void movePrevious( )
   {
-    final IZmlTableCell cell = m_handler.findActiveCellByPosition();
+    final IZmlTableCell cell = m_handler.getFocusTableCell();
     if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
       return;
 

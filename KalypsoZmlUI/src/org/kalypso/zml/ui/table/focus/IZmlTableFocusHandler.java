@@ -38,19 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy;
+package org.kalypso.zml.ui.table.focus;
 
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
-import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.eclipse.jface.viewers.ViewerCell;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
 
 /**
  * @author Dirk Kuch
  */
-public interface IExtendedZmlTableColumn extends IZmlTableColumn
+public interface IZmlTableFocusHandler
 {
-  ZmlTableEditingSupport getEditingSupport( );
+  IZmlTableCell getFocusTableCell( );
 
-  ZmlRule[] getAppliedRules( );
+  ViewerCell getFocusCell( );
 
 }

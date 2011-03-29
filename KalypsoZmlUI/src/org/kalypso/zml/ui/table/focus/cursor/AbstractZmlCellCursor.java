@@ -36,10 +36,9 @@ import org.kalypso.zml.ui.table.model.IZmlTableCell;
  */
 public abstract class AbstractZmlCellCursor extends Canvas
 {
-
   private ZmlTableFocusCellManager m_cellManager;
 
-  private final TableViewer m_viewer;
+  protected final TableViewer m_viewer;
 
   /**
    * @param viewer
