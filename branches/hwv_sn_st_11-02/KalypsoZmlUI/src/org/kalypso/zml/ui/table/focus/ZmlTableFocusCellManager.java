@@ -38,9 +38,4 @@ public final class ZmlTableFocusCellManager extends TableViewerFocusCellManager
 
     return new ZmlTableCell( row, column );
   }
-
-  public void setFocusCell2( final ViewerCell cell )
-  {
-
-  }
 }
