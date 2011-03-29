@@ -180,30 +180,34 @@ public class ChartTitlePainter2
   {
     return createImage( new Rectangle( 0, 0, m_size.x, m_size.y ) );
   }
+public void paint (final GC gc, final Rectangle boundsRect)
+{
+  final int centerWidth = boundsRect.width - getSize().x + m_centerWidth;
+  final int centerHeight = boundsRect.height - getSize().y + m_centerHeight;
+  paintTitle( gc, m_titleTypes.get( ALIGNMENT.LEFT.name() + ALIGNMENT.TOP.name() ), m_leftTop, 0, 0, m_leftWidth, m_topHeight );
+  paintTitle( gc, m_titleTypes.get( ALIGNMENT.CENTER.name() + ALIGNMENT.TOP.name() ), m_centerTop, m_leftWidth, 0, centerWidth, m_topHeight );
+  paintTitle( gc, m_titleTypes.get( ALIGNMENT.RIGHT.name() + ALIGNMENT.TOP.name() ), m_rightTop, m_leftWidth + centerWidth, 0, m_rightWidth, m_topHeight );
+  paintTitle( gc, m_titleTypes.get( ALIGNMENT.LEFT.name() + ALIGNMENT.CENTER.name() ), m_leftCenter, 0, m_topHeight, m_leftWidth, centerHeight );
+  paintTitle( gc, m_titleTypes.get( ALIGNMENT.CENTER.name() + ALIGNMENT.CENTER.name() ), m_centerCenter, m_leftWidth, m_topHeight, centerWidth, centerHeight );
+  paintTitle( gc, m_titleTypes.get( ALIGNMENT.RIGHT.name() + ALIGNMENT.CENTER.name() ), m_rightCenter, m_leftWidth + centerWidth, m_topHeight, m_rightWidth, centerHeight );
+  paintTitle( gc, m_titleTypes.get( ALIGNMENT.LEFT.name() + ALIGNMENT.BOTTOM.name() ), m_leftBottom, 0, m_topHeight + centerHeight, m_leftWidth, m_bottomHeight );
+  paintTitle( gc, m_titleTypes.get( ALIGNMENT.CENTER.name() + ALIGNMENT.BOTTOM.name() ), m_centerBottom, m_leftWidth, m_topHeight + centerHeight, centerWidth, m_bottomHeight );
+  paintTitle( gc, m_titleTypes.get( ALIGNMENT.RIGHT.name() + ALIGNMENT.BOTTOM.name() ), m_rightBottom, m_leftWidth + centerWidth, m_topHeight + centerHeight, m_rightWidth, m_bottomHeight );
 
+}
+  
+  
   public Image createImage( final Rectangle boundsRect )
   {
     if( boundsRect.width == 0 || boundsRect.height == 0 )
       return null;
-    if( m_size == null )
-      m_size = calcSize();
-    final int centerWidth = boundsRect.width - m_size.x + m_centerWidth;
-    final int centerHeight = boundsRect.height - m_size.y + m_centerHeight;
 
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, boundsRect.width, boundsRect.height );
     final GC gcw = new GC( image );
     try
     {
-      paintTitle( gcw, m_titleTypes.get( ALIGNMENT.LEFT.name() + ALIGNMENT.TOP.name() ), m_leftTop, 0, 0, m_leftWidth, m_topHeight );
-      paintTitle( gcw, m_titleTypes.get( ALIGNMENT.CENTER.name() + ALIGNMENT.TOP.name() ), m_centerTop, m_leftWidth, 0, centerWidth, m_topHeight );
-      paintTitle( gcw, m_titleTypes.get( ALIGNMENT.RIGHT.name() + ALIGNMENT.TOP.name() ), m_rightTop, m_leftWidth + centerWidth, 0, m_rightWidth, m_topHeight );
-      paintTitle( gcw, m_titleTypes.get( ALIGNMENT.LEFT.name() + ALIGNMENT.CENTER.name() ), m_leftCenter, 0, m_topHeight, m_leftWidth, centerHeight );
-      paintTitle( gcw, m_titleTypes.get( ALIGNMENT.CENTER.name() + ALIGNMENT.CENTER.name() ), m_centerCenter, m_leftWidth, m_topHeight, centerWidth, centerHeight );
-      paintTitle( gcw, m_titleTypes.get( ALIGNMENT.RIGHT.name() + ALIGNMENT.CENTER.name() ), m_rightCenter, m_leftWidth + centerWidth, m_topHeight, m_rightWidth, centerHeight );
-      paintTitle( gcw, m_titleTypes.get( ALIGNMENT.LEFT.name() + ALIGNMENT.BOTTOM.name() ), m_leftBottom, 0, m_topHeight + centerHeight, m_leftWidth, m_bottomHeight );
-      paintTitle( gcw, m_titleTypes.get( ALIGNMENT.CENTER.name() + ALIGNMENT.BOTTOM.name() ), m_centerBottom, m_leftWidth, m_topHeight + centerHeight, centerWidth, m_bottomHeight );
-      paintTitle( gcw, m_titleTypes.get( ALIGNMENT.RIGHT.name() + ALIGNMENT.BOTTOM.name() ), m_rightBottom, m_leftWidth + centerWidth, m_topHeight + centerHeight, m_rightWidth, m_bottomHeight );
+      paint(gcw,boundsRect);
     }
     finally
     {
