@@ -69,14 +69,15 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.base.helper.ZmlTables;
 import org.kalypso.zml.ui.table.menu.ZmlTableContextMenuProvider;
 import org.kalypso.zml.ui.table.menu.ZmlTableHeaderContextMenuProvider;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.ZmlTableCell;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
-import org.kalypso.zml.ui.table.selection.delegate.PositionActiveColumnHandler;
 
 /**
  * handles mouse move and menu detect events (active selection of table cells, columns and rows and updating of the
@@ -215,25 +216,45 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   @Override
   public IZmlTableColumn findActiveColumnByPosition( )
   {
-    final PositionActiveColumnHandler handler = new PositionActiveColumnHandler( m_table, m_position );
+    final ViewerCell cell = findActiveViewerCell();
+    if( Objects.isNull( cell ) )
+      return null;
 
-    return handler.findActiveColumn();
+    return m_table.findColumn( cell.getColumnIndex() );
   }
 
   @Override
   public IZmlTableCell findActiveCellByPosition( )
   {
-    final PositionActiveColumnHandler handler = new PositionActiveColumnHandler( m_table, m_position );
+    final IZmlTableColumn column = findActiveColumnByPosition();
 
-    return handler.findActiveCell();
+    final IZmlTableRow row = findActiveRowByPosition();
+    if( Objects.isNull( column, row ) )
+      return null;
+
+    return new ZmlTableCell( row, column );
+  }
+
+  public ViewerCell findActiveViewerCell( )
+  {
+    if( Objects.isNull( m_position ) )
+      return null;
+
+    final ViewerCell viewerCell = m_table.getTableViewer().getCell( m_position );
+    if( Objects.isNull( viewerCell ) )
+      return null;
+
+    return viewerCell;
   }
 
   @Override
   public IZmlTableRow findActiveRowByPosition( )
   {
-    final PositionActiveColumnHandler handler = new PositionActiveColumnHandler( m_table, m_position );
+    final ViewerCell cell = findActiveViewerCell();
+    if( Objects.isNull( cell ) )
+      return null;
 
-    return handler.findActiveRow();
+    return ZmlTables.toTableRow( m_table, cell );
   }
 
   @Override
