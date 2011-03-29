@@ -95,7 +95,7 @@ public class ChartPlotPainter
     return m_size;
   }
 
-  private void paint( final GC gc )
+  public void paint( final GC gc )
   {
     for( final IChartLayer layer : getChartLayers() )
     {
