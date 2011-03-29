@@ -61,7 +61,7 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
 
   private final IZmlTableRow m_row;
 
-  public ZmlTableCell( final IZmlTableColumn column, final IZmlTableRow row )
+  public ZmlTableCell( final IZmlTableRow row, final IZmlTableColumn column )
   {
     super( column.getTable() );
 
@@ -146,7 +146,7 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     final IZmlTable table = getTable();
     final IZmlTableRow previousRow = table.getRow( index - 1 );
 
-    return new ZmlTableCell( m_column, previousRow );
+    return new ZmlTableCell( previousRow, m_column );
   }
 
   /**
@@ -163,7 +163,7 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
 
     final IZmlTableRow nextRow = table.getRow( index + 1 );
 
-    return new ZmlTableCell( m_column, nextRow );
+    return new ZmlTableCell( nextRow, m_column );
   }
 
   @Override
@@ -194,6 +194,6 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     final IZmlTable table = m_column.getTable();
     final IZmlTableSelectionHandler handler = table.getSelectionHandler();
 
-    return handler.findViewerCell( this );
+    return handler.toViewerCell( this );
   }
 }

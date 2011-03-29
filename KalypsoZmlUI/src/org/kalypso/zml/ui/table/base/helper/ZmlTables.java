@@ -38,27 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.base.helper;
 
 import org.eclipse.jface.viewers.ViewerCell;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.ZmlTableRow;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableSelectionHandler
+public final class ZmlTables
 {
-  IZmlTableRow[] getSelectedRows( );
+  private ZmlTables( )
+  {
+  }
 
-  void setFocusCell( ViewerCell cell );
+  public static IZmlTableRow toTableRow( final IZmlTable table, final ViewerCell cell )
+  {
+    final Object element = cell.getElement();
+    if( element instanceof IZmlModelRow )
+    {
+      return new ZmlTableRow( table, (IZmlModelRow) element );
+    }
 
-  IZmlTableColumn findActiveColumnByPosition( );
+    return null;
+  }
 
-  IZmlTableCell findActiveCellByPosition( );
-
-  IZmlTableRow findActiveRowByPosition( );
-
-  ViewerCell toViewerCell( IZmlTableCell cell );
 }

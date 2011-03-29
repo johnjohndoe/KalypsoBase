@@ -153,7 +153,7 @@ public class ZmlEditingSupport extends EditingSupport
 
   protected void moveNext( )
   {
-    final IZmlTableCell cell = m_handler.getActiveCell();
+    final IZmlTableCell cell = m_handler.findActiveCellByPosition();
     if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
       return;
 
@@ -163,7 +163,7 @@ public class ZmlEditingSupport extends EditingSupport
 
   protected void movePrevious( )
   {
-    final IZmlTableCell cell = m_handler.getActiveCell();
+    final IZmlTableCell cell = m_handler.findActiveCellByPosition();
     if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
       return;
 

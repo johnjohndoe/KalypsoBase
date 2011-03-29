@@ -38,27 +38,75 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.selection.delegate;
 
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.swt.graphics.Point;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.base.helper.ZmlTables;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.ZmlTableCell;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableSelectionHandler
+public class PositionActiveColumnHandler
 {
-  IZmlTableRow[] getSelectedRows( );
+  private final ZmlTableComposite m_table;
 
-  void setFocusCell( ViewerCell cell );
+  private final Point m_position;
 
-  IZmlTableColumn findActiveColumnByPosition( );
+  public PositionActiveColumnHandler( final ZmlTableComposite table, final Point position )
+  {
+    m_table = table;
+    m_position = position;
+  }
 
-  IZmlTableCell findActiveCellByPosition( );
+  public IZmlTableColumn findActiveColumn( )
+  {
+    final ViewerCell cell = findActiveViewerCell();
+    if( Objects.isNull( cell ) )
+      return null;
 
-  IZmlTableRow findActiveRowByPosition( );
+    return m_table.findColumn( cell.getColumnIndex() );
+  }
 
-  ViewerCell toViewerCell( IZmlTableCell cell );
+  public ViewerCell findActiveViewerCell( )
+  {
+    if( Objects.isNull( m_position ) )
+      return null;
+
+    final ViewerCell viewerCell = m_table.getTableViewer().getCell( m_position );
+    if( Objects.isNull( viewerCell ) )
+      return null;
+
+    return null;
+  }
+
+  public IZmlTableCell findActiveCell( )
+  {
+    final IZmlTableColumn column = findActiveColumn();
+
+    final IZmlTableRow row = findActiveRow();
+    if( column == null || row == null )
+      return null;
+
+    final ZmlTableCell cell = new ZmlTableCell( row, column );
+
+    return cell;
+  }
+
+  public IZmlTableRow findActiveRow( )
+  {
+    final ViewerCell cell = findActiveViewerCell();
+    if( cell == null )
+      return null;
+
+    return ZmlTables.toTableRow( m_table, cell );
+
+  }
+
 }
