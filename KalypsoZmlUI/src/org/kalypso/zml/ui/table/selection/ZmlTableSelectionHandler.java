@@ -158,17 +158,15 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
     final Point eventPoint = new Point( event.x, event.y );
     final Point pt = table.toControl( eventPoint );
-    final boolean header = pt.x > 0;
 
-    int columnIndex = findColumnIndex( pt.x );
-    if( columnIndex == -1 )
-      columnIndex = findColumnIndex( eventPoint.x );
-    if( columnIndex == -1 )
+    IExtendedZmlTableColumn column = findColumn( pt );
+    if( Objects.isNull( column ) )
+      column = findColumn( eventPoint );
+
+    if( Objects.isNull( column ) )
       return;
 
-    final IExtendedZmlTableColumn column = (IExtendedZmlTableColumn) m_table.findColumn( columnIndex );
-
-    if( header )
+    if( pt.x > 0 ) // header
     {
       final ZmlTableHeaderContextMenuProvider menuProvider = new ZmlTableHeaderContextMenuProvider();
       menuProvider.fillMenu( column, m_contextMenuManager );
@@ -180,6 +178,15 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
       menuProvider.fillMenu( column, m_contextMenuManager );
       m_contextMenuManager.update( true );
     }
+  }
+
+  private IExtendedZmlTableColumn findColumn( final Point point )
+  {
+    final int columnIndex = findColumnIndex( point.x );
+    if( columnIndex == -1 )
+      return null;
+
+    return (IExtendedZmlTableColumn) m_table.findColumn( columnIndex );
   }
 
   private int findColumnIndex( final int x )
@@ -216,11 +223,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   @Override
   public IZmlTableColumn findActiveColumnByPosition( )
   {
-    final ViewerCell cell = findActiveViewerCell();
-    if( Objects.isNull( cell ) )
-      return null;
-
-    return m_table.findColumn( cell.getColumnIndex() );
+    return findColumn( m_position );
   }
 
   @Override
