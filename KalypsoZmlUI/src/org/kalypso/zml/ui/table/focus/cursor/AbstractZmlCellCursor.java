@@ -76,7 +76,7 @@ public abstract class AbstractZmlCellCursor extends Canvas
         }
         else if( SWT.MouseMove == event.type )
         {
-// getParent().notifyListeners( SWT.MouseMove, copyEvent( event ) );
+          getParent().notifyListeners( SWT.MouseMove, copyEvent( event ) );
         }
         else if( SWT.FocusIn == event.type )
         {
@@ -89,7 +89,7 @@ public abstract class AbstractZmlCellCursor extends Canvas
     addListener( SWT.KeyDown, listener );
     addListener( SWT.MouseDown, listener );
     addListener( SWT.MouseDoubleClick, listener );
-// addListener( SWT.MouseMove, listener );
+    addListener( SWT.MouseMove, listener );
     addListener( SWT.FocusIn, listener );
 
     final ScrollBar verticalBar = m_viewer.getTable().getVerticalBar();
