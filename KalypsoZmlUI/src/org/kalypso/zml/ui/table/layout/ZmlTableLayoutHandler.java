@@ -40,16 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.layout;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
@@ -71,6 +73,10 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
  */
 public class ZmlTableLayoutHandler
 {
+  private static final Color COLOR_TABLE_DISABLED = new Color( null, new RGB( 0xea, 0xea, 0xea ) );
+
+  private static final Color COLOR_TABLE_ENABLED = new Color( null, new RGB( 0xff, 0xff, 0xff ) );
+
   protected boolean m_firstChange = true;
 
   protected final ZmlTableComposite m_table;
@@ -124,6 +130,7 @@ public class ZmlTableLayoutHandler
 
   protected void updateColumns( )
   {
+
     final ExtendedZmlTableColumn[] columns = m_table.getColumns();
     for( final ExtendedZmlTableColumn column : columns )
     {
@@ -137,6 +144,7 @@ public class ZmlTableLayoutHandler
 
       if( columnType.getType() instanceof DataColumnType )
       {
+
         final IZmlModelColumn modelColumn = column.getModelColumn();
         if( modelColumn == null )
         {
@@ -149,12 +157,11 @@ public class ZmlTableLayoutHandler
         }
         else
         {
+
           final String label = modelColumn.getLabel();
-
           tableColumn.setText( label );
-          final boolean empty = ArrayUtils.isEmpty( column.getCells() );
 
-          pack( tableColumn, columnType, label, empty );
+          pack( tableColumn, columnType, label, modelColumn.getObservation() == null );
         }
       }
       else
@@ -162,12 +169,21 @@ public class ZmlTableLayoutHandler
         final String label = columnType.getLabel();
 
         tableColumn.setText( label );
-        final boolean empty = ArrayUtils.isEmpty( column.getCells() );
 
-        pack( tableColumn, columnType, label, empty );
+        pack( tableColumn, columnType, label, false );
       }
-
     }
+
+    final TableViewer viewer = m_table.getTableViewer();
+    if( m_table.isEmpty() )
+    {
+      viewer.getControl().setBackground( COLOR_TABLE_DISABLED );
+    }
+    else
+    {
+      viewer.getControl().setBackground( COLOR_TABLE_ENABLED );
+    }
+
   }
 
   private void updateHeader( final ExtendedZmlTableColumn column )

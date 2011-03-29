@@ -46,8 +46,9 @@ public class ZmlCursorCellHighlighter extends FocusCellHighlighter
   {
     if( !m_viewer.isCellEditorActive() )
     {
-      m_cursor.setFocusCell( cell );
+// m_cursor.setFocusCell( cell );
       m_cursor.setVisible( cell != null );
+      m_cursor.redraw();
     }
   }
 

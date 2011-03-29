@@ -40,9 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.swt.widgets;
 
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
@@ -109,8 +113,72 @@ public final class ControlUtils
       return;
 
     if( control instanceof Composite )
-      toolkit.adapt( (Composite)control );
+      toolkit.adapt( (Composite) control );
     else
       toolkit.adapt( control, true, true );
   }
+
+  public static Event copyEvent( final Event event )
+  {
+    final Event cEvent = new Event();
+    cEvent.button = event.button;
+    cEvent.character = event.character;
+    cEvent.count = event.count;
+    cEvent.data = event.data;
+    cEvent.detail = event.detail;
+    cEvent.display = event.display;
+    cEvent.doit = event.doit;
+    cEvent.end = event.end;
+    cEvent.gc = event.gc;
+    cEvent.height = event.height;
+    cEvent.index = event.index;
+    cEvent.item = event.item;
+    cEvent.keyCode = event.keyCode;
+    cEvent.keyLocation = event.keyLocation;
+    cEvent.start = event.start;
+    cEvent.stateMask = event.stateMask;
+    cEvent.text = event.text;
+    cEvent.time = event.time;
+    cEvent.type = event.type;
+    cEvent.widget = event.widget;
+    cEvent.width = event.width;
+    cEvent.x = event.x;
+    cEvent.y = event.y;
+
+    return cEvent;
+  }
+
+  public static Event toEvent( final KeyEvent e, final int type )
+  {
+    Assert.isTrue( type == SWT.KeyDown || type == SWT.KeyUp );
+
+    final Event event = new Event();
+
+    event.button = 0;
+    event.character = e.character;
+    event.count = -1;
+    event.data = e.data;
+    event.detail = -1;
+    event.display = e.display;
+    event.doit = e.doit;
+    event.end = -1;
+    event.gc = null;
+    event.height = -1;
+    event.index = -1;
+    event.item = null;
+    event.keyCode = e.keyCode;
+    event.keyLocation = e.keyLocation;
+    event.start = -1;
+    event.stateMask = e.stateMask;
+    event.text = null;
+    event.time = e.time;
+    event.type = type;
+    event.widget = e.widget;
+    event.width = -1;
+    event.x = -1;
+    event.y = -1;
+
+    return event;
+  }
+
 }

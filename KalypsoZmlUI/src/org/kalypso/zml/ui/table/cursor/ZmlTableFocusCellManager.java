@@ -11,22 +11,23 @@ import org.eclipse.jface.viewers.ViewerCell;
  */
 final class ZmlTableFocusCellManager extends TableViewerFocusCellManager
 {
-  private final ZmlTableCursor m_cursor;
-
-  ZmlTableFocusCellManager( final TableViewer viewer, final FocusCellHighlighter focusDrawingDelegate, final CellNavigationStrategy navigationStrategy, final ZmlTableCursor cursor )
+  ZmlTableFocusCellManager( final TableViewer viewer, final FocusCellHighlighter focusDrawingDelegate, final CellNavigationStrategy navigationStrategy )
   {
     super( viewer, focusDrawingDelegate, navigationStrategy );
-    m_cursor = cursor;
   }
 
+  /**
+   * @see org.eclipse.jface.viewers.TableViewerFocusCellManager#getFocusCell()
+   */
   @Override
   public ViewerCell getFocusCell( )
   {
-    /**
-     * FIXME / TODO - SWTFocusCellManager defines it's own focusCell - no chance to change / overwrite / update this
-     * cell from the here!
-     */
-    // super.getFocusCell();
-    return m_cursor.getFocusCell();
+    // TODO Auto-generated method stub
+    return super.getFocusCell();
+  }
+
+  public void setFocusCell2( final ViewerCell cell )
+  {
+
   }
 }

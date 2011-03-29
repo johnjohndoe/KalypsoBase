@@ -49,16 +49,16 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
-import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerEditor;
-import org.eclipse.jface.viewers.TableViewerFocusCellManager;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Event;
@@ -104,6 +104,8 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
   protected ZmlTableCursor m_cursor;
 
+  private ZmlTableFocusCellManager m_cellManager;
+
   public ZmlTableSelectionHandler( final ZmlTableComposite table )
   {
     m_table = table;
@@ -119,6 +121,16 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     viewer.getTable().addListener( SWT.MenuDetect, this );
     viewer.getTable().addListener( SWT.MouseDown, this );
 
+    viewer.getTable().addTraverseListener( new TraverseListener()
+    {
+      @Override
+      public void keyTraversed( final TraverseEvent e )
+      {
+        e.doit = false;
+        // TODO: delegate to navigation strategy
+      }
+    } );
+
     /**
      * context menu
      */
@@ -127,34 +139,16 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     m_table.setMenu( contextMenu );
 
     m_cursor = new ZmlTableCursor( m_table );
-
     final ZmlCursorCellHighlighter highlighter = new ZmlCursorCellHighlighter( viewer, m_cursor );
-    final ZmlCellNavigationStrategy navigationStrategy = new ZmlCellNavigationStrategy( m_cursor );
-    final TableViewerFocusCellManager focusCellManager = new ZmlTableFocusCellManager( viewer, highlighter, navigationStrategy, m_cursor );
 
-    final ColumnViewerEditorActivationStrategy activationSupport = new ColumnViewerEditorActivationStrategy( viewer )
-    {
-      @Override
-      protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event )
-      {
-        if( ColumnViewerEditorActivationEvent.TRAVERSAL == event.eventType )
-          return true;
-        else if( ColumnViewerEditorActivationEvent.MOUSE_DOUBLE_CLICK_SELECTION == event.eventType )
-          return true;
-        else if( ColumnViewerEditorActivationEvent.KEY_PRESSED == event.eventType )
-        {
-          if( SWT.CR == event.keyCode || SWT.F2 == event.keyCode )
-            return true;
-        }
-        else if( ColumnViewerEditorActivationEvent.PROGRAMMATIC == event.eventType )
-          return true;
+    final ZmlCellNavigationStrategy navigationStrategy = new ZmlCellNavigationStrategy();
+    m_cellManager = new ZmlTableFocusCellManager( viewer, highlighter, navigationStrategy );
 
-        return false;
-      }
-    };
+    m_cursor.setCellManager( m_cellManager );
 
-    TableViewerEditor.create( viewer, focusCellManager, activationSupport, ColumnViewerEditor.TABBING_VERTICAL | ColumnViewerEditor.KEYBOARD_ACTIVATION | ColumnViewerEditorActivationEvent.TRAVERSAL
-        | ColumnViewerEditor.TABBING_HORIZONTAL | ColumnViewerEditor.TABBING_MOVE_TO_ROW_NEIGHBOR );
+    final ColumnViewerEditorActivationStrategy activationSupport = new ZmlTableEditorActivationStrategy( this, viewer );
+
+    TableViewerEditor.create( viewer, m_cellManager, activationSupport, ColumnViewerEditor.KEYBOARD_ACTIVATION );
 
     /* selection change listener -> updates selection in chart composite */
     viewer.addSelectionChangedListener( new UpdateChartSelectionListener( this ) );
@@ -335,7 +329,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
         final Rectangle bounds = item.getBounds();
 
         final ViewerCell cell = findCell( column, bounds.y );
-        m_cursor.setFocusCell( cell );
+        m_cellManager.setFocusCell2( cell );
 
         return;
       }
@@ -401,7 +395,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   @Override
   public void setFocusCell( final ViewerCell cell )
   {
-    m_cursor.setFocusCell( cell );
+    m_cellManager.setFocusCell2( cell );
   }
 
   /**

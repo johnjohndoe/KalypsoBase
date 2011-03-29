@@ -180,6 +180,5 @@ public class ZmlTableCursor extends AbstractZmlCellCursor
     gc.drawImage( image, x, imageY );
 
     return imageSize.width;
-
   }
 }
