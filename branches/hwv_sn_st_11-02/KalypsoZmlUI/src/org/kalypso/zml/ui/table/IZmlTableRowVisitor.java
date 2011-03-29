@@ -48,6 +48,6 @@ import org.kalypso.zml.ui.table.model.IZmlTableRow;
 public interface IZmlTableRowVisitor
 {
 
-  void accept( IZmlTableRow row );
+  void visit( IZmlTableRow row );
 
 }

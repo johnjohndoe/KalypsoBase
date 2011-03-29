@@ -70,7 +70,7 @@ public class DateRangeVisitor implements IZmlTableRowVisitor
    * @see org.kalypso.zml.ui.table.IZmlTableRowVisitor#accept(org.kalypso.zml.ui.table.model.IZmlTableRow)
    */
   @Override
-  public void accept( final IZmlTableRow row )
+  public void visit( final IZmlTableRow row )
   {
     final IZmlModelRow modelRow = row.getModelRow();
     final Date index = (Date) modelRow.getIndexValue();

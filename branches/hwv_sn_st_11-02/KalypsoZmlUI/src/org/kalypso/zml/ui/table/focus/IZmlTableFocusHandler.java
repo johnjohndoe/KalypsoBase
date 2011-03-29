@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.table.focus;
 
 import org.eclipse.jface.viewers.ViewerCell;
+import org.kalypso.zml.ui.table.focus.cursor.ITableCursor;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 
 /**
@@ -52,4 +53,5 @@ public interface IZmlTableFocusHandler
 
   ViewerCell getFocusCell( );
 
+  ITableCursor getCursor( );
 }

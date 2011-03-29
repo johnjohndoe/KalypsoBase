@@ -211,37 +211,24 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   private void initToolbar( final ZmlTableType tableType, final Composite composite, final FormToolkit toolkit )
   {
     /** process as job in order to handle toolbar IElementUpdate job actions */
-    // FIXME: this is a sign, that thee is a problem elsewhere: the ui-elements should update as soon as the table is
-// loaded
-    // (maybe fire an source-change event after everything is loaded?)
-    new UIJob( "" )
+    final List<String> toolbarReferences = tableType.getToolbar();
+    if( toolbarReferences == null || toolbarReferences.isEmpty() )
+      return;
+
+    final ToolBarManager toolBarManager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT | SWT.RIGHT );
+
+    final ToolBar control = toolBarManager.createControl( composite );
+    control.setLayoutData( new GridData( SWT.RIGHT, SWT.FILL, true, false ) );
+
+    for( final String reference : toolbarReferences )
     {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        final List<String> toolbarReferences = tableType.getToolbar();
-        if( toolbarReferences == null || toolbarReferences.isEmpty() )
-          return Status.OK_STATUS;
+      ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), toolBarManager, reference );
+    }
 
-        final ToolBarManager toolBarManager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT | SWT.RIGHT );
+    toolBarManager.update( true );
+    toolkit.adapt( control );
 
-        final ToolBar control = toolBarManager.createControl( composite );
-        control.setLayoutData( new GridData( SWT.RIGHT, SWT.FILL, true, false ) );
-
-        for( final String reference : toolbarReferences )
-        {
-          ContributionUtils.populateContributionManager( PlatformUI.getWorkbench(), toolBarManager, reference );
-        }
-
-        toolBarManager.update( true );
-
-        toolkit.adapt( control );
-
-        composite.getParent().layout( true, true );
-
-        return Status.OK_STATUS;
-      }
-    }.schedule();
+    composite.getParent().layout( true, true );
   }
 
   private void addEmptyColumn( )
@@ -259,6 +246,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     if( m_tableViewer.getTable().isDisposed() )
       return;
 
+    final RevealTableWorker reveal = new RevealTableWorker( this );
+
     for( final ExtendedZmlTableColumn column : m_columns )
     {
       column.reset();
@@ -273,6 +262,20 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     m_layout.tableChanged();
 
     fireTableChanged();
+
+    reveal.reveal();
+    new UIJob( "" )
+    {
+
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+// reveal.reveal();
+
+        return Status.OK_STATUS;
+      }
+    }.schedule( 500 );
+
   }
 
   public void fireTableChanged( )
@@ -318,7 +321,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   {
     for( final IZmlTableRow row : getRows() )
     {
-      visitor.accept( row );
+      visitor.visit( row );
     }
   }
 

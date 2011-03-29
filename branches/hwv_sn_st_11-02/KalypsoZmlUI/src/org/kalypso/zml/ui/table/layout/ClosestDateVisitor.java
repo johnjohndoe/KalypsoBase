@@ -71,7 +71,7 @@ public class ClosestDateVisitor implements IZmlTableRowVisitor, IZmlModelRowVisi
    * @see org.kalypso.zml.ui.table.IZmlTableColumnVisitor#accept(org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn)
    */
   @Override
-  public void accept( final IZmlTableRow row )
+  public void visit( final IZmlTableRow row )
   {
     final IZmlModelRow modelRow = row.getModelRow();
     final Date date = (Date) modelRow.getIndexValue();
@@ -82,6 +82,7 @@ public class ClosestDateVisitor implements IZmlTableRowVisitor, IZmlModelRowVisi
     {
       m_diff = diff;
       m_tableRow = row;
+      m_modelRow = row.getModelRow();
       m_date = date;
     }
   }
