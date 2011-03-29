@@ -10,7 +10,7 @@
  *     @author changed / updated by: Dirk Kuch
  ******************************************************************************/
 
-package org.kalypso.zml.ui.table.cursor;
+package org.kalypso.zml.ui.table.focus.cursor;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
+import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellManager;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 
 /**

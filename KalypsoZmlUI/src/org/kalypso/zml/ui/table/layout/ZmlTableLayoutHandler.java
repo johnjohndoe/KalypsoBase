@@ -125,7 +125,7 @@ public class ZmlTableLayoutHandler
     if( m_job.getState() == Job.SLEEPING || m_job.getState() == Job.WAITING || m_job.getState() == Job.RUNNING )
       m_job.cancel();
 
-    m_job.schedule( 250 );
+    m_job.schedule();
   }
 
   protected void updateColumns( )

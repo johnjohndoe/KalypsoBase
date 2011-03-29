@@ -1,4 +1,4 @@
-package org.kalypso.zml.ui.table.cursor;
+package org.kalypso.zml.ui.table.focus;
 
 import org.eclipse.jface.viewers.CellNavigationStrategy;
 import org.eclipse.jface.viewers.FocusCellHighlighter;

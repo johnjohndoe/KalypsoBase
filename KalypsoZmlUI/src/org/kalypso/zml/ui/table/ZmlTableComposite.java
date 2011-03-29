@@ -41,7 +41,6 @@
 package org.kalypso.zml.ui.table;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -70,7 +69,6 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
@@ -82,14 +80,12 @@ import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
-import org.kalypso.zml.ui.table.cursor.ZmlTableFocusCellHandler;
+import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellHandler;
 import org.kalypso.zml.ui.table.layout.ZmlTableLayoutHandler;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
 
 /**
@@ -268,27 +264,14 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     }
 
     final IStructuredSelection selection = (IStructuredSelection) m_tableViewer.getSelection();
-
-    final IZmlTableCell cell = m_focus.getFocusCell();
-    fireTableChanged();
-
     m_tableViewer.refresh( true, true );
 
     if( !selection.isEmpty() )
       m_tableViewer.setSelection( selection );
 
-    if( Objects.isNotNull( cell ) )
-      new UIJob( "" )
-      {
-        @Override
-        public IStatus runInUIThread( final IProgressMonitor monitor )
-        {
-          m_selection.setFocusCell( (Date) cell.getRow().getModelRow().getIndexValue(), cell.getColumn() );
+    m_layout.tableChanged();
 
-          return Status.OK_STATUS;
-        }
-      }.schedule( 400 );
-
+    fireTableChanged();
   }
 
   public void fireTableChanged( )
@@ -298,8 +281,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     {
       listener.eventTableChanged();
     }
-
-    m_layout.tableChanged();
   }
 
   /**
@@ -449,11 +430,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public void add( final ExtendedZmlTableColumn column )
   {
     m_columns.add( column );
-  }
-
-  public void remove( final IExtendedZmlTableColumn column )
-  {
-    m_columns.remove( column );
   }
 
   /**

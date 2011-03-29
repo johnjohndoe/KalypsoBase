@@ -11,7 +11,7 @@
  *     @author changed / updated by: Dirk Kuch
  ******************************************************************************/
 
-package org.kalypso.zml.ui.table.cursor;
+package org.kalypso.zml.ui.table.focus.cursor;
 
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
@@ -27,13 +27,13 @@ public class ZmlCursorCellHighlighter extends FocusCellHighlighter
 {
   private final ColumnViewer m_viewer;
 
-  protected final AbstractZmlCellCursor m_cursor;
+  private final ZmlTableCursor m_cursor;
 
   /**
    * @param viewer
    * @param cursor
    */
-  public ZmlCursorCellHighlighter( final ColumnViewer viewer, final AbstractZmlCellCursor cursor )
+  public ZmlCursorCellHighlighter( final ColumnViewer viewer, final ZmlTableCursor cursor )
   {
     super( viewer );
 
@@ -46,19 +46,9 @@ public class ZmlCursorCellHighlighter extends FocusCellHighlighter
   {
     if( !m_viewer.isCellEditorActive() )
     {
-// m_cursor.setFocusCell( cell );
       m_cursor.setVisible( cell != null );
       m_cursor.redraw();
     }
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.FocusCellHighlighter#getFocusCell()
-   */
-  @Override
-  public ViewerCell getFocusCell( )
-  {
-    return m_cursor.getFocusCell();
   }
 
   @Override
