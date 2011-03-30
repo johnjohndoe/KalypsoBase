@@ -18,6 +18,7 @@ import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.LayerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
@@ -46,7 +47,7 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private String m_description = "";
 
-  private final LayerEventHandler m_handler = new LayerEventHandler();
+  private final LayerEventHandler m_eventHandler = new LayerEventHandler();
 
   private String m_id = "";
 
@@ -71,12 +72,54 @@ public abstract class AbstractChartLayer implements IChartLayer
   public AbstractChartLayer( final ILayerProvider provider )
   {
     m_provider = provider;
+
+    m_layerManager.addListener( new ILayerManagerEventListener()
+    {
+      /**
+       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+       */
+      @Override
+      public void onLayerMoved( final IChartLayer layer )
+      {
+        getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
+      }
+
+      @Override
+      public void onLayerAdded( final IChartLayer layer )
+      {
+        getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
+      }
+
+      @Override
+      public void onLayerRemoved( final IChartLayer layer )
+      {
+        getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
+      }
+
+      @Override
+      public void onLayerVisibilityChanged( final IChartLayer layer )
+      {
+        getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
+      }
+
+      @Override
+      public void onLayerContentChanged( final IChartLayer layer )
+      {
+        getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
+      }
+
+      @Override
+      public void onActivLayerChanged( final IChartLayer layer )
+      {
+        getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
+      }
+    } );
   }
 
   @Override
-  public void addListener( final ILayerEventListener l )
+  public void addListener( final ILayerEventListener listener )
   {
-    m_handler.addListener( l );
+    m_eventHandler.addListener( listener );
   }
 
   public void addMapper( final String role, final IRetinalMapper mapper )
@@ -184,7 +227,7 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   public LayerEventHandler getEventHandler( )
   {
-    return m_handler;
+    return m_eventHandler;
   }
 
   /**
@@ -341,9 +384,9 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @Override
-  public void removeListener( final ILayerEventListener l )
+  public void removeListener( final ILayerEventListener listener )
   {
-    m_handler.removeListener( l );
+    m_eventHandler.removeListener( listener );
   }
 
   /**
@@ -427,7 +470,7 @@ public abstract class AbstractChartLayer implements IChartLayer
     {
       m_isVisible = isVisible;
 
-      m_handler.fireLayerVisibilityChanged( this );
+      m_eventHandler.fireLayerVisibilityChanged( this );
     }
   }
 

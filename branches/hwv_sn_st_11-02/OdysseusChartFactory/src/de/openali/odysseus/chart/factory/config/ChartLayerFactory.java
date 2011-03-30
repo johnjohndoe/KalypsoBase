@@ -290,13 +290,15 @@ public class ChartLayerFactory extends AbstractChartFactory
     layer.setData( CONFIGURATION_TYPE_KEY, layerType );
     layer.init();
 
+    final ILayerManager layerManager = layer.getLayerManager();
+
     final LayersType layers = layerType.getLayers();
     if( layers != null )
     {
       final ReferencableType[] references = (ReferencableType[]) ArrayUtils.add( baseTypes, layerType );
-      final ILayerManager layerManager = layer.getLayerManager();
+      final IChartLayer[] children = build( layers, references );
 
-      layerManager.addLayer( build( layers, references ) );
+      layerManager.addLayer( children );
     }
 
     return layer;
