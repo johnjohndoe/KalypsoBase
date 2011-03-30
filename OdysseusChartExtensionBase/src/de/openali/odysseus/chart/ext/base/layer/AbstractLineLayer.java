@@ -197,11 +197,6 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     return null;
   }
 
-  protected ILineStyle getLineStyle( )
-  {
-    return getPolylineFigure().getStyle();
-  }
-
   // UGLY: was has every layer exactly one PointFigure? Wrong abstraction!
   protected PointFigure getPointFigure( )
   {
@@ -210,6 +205,11 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     return m_pointFigure;
   }
 
+  /**
+   * @deprecated Should not be used, styling is too sepcific for each layer; should not be inside the abstract
+   *             implementation.
+   */
+  @Deprecated
   protected IPointStyle getPointStyle( )
   {
     return getPointFigure().getStyle();
@@ -233,25 +233,5 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     if( m_textFigure == null )
       m_textFigure = new TextFigure();
     return m_textFigure;
-  }
-
-  public ITextStyle getTextStyle( )
-  {
-    return getTextFigure().getStyle();
-  }
-
-  public void setPointFigure( final PointFigure pointFigure )
-  {
-    m_pointFigure = pointFigure;
-  }
-
-  public void setPolylineFigure( final PolylineFigure polylineFigure )
-  {
-    m_polylineFigure = polylineFigure;
-  }
-
-  public void setTextFigure( final TextFigure textFigure )
-  {
-    m_textFigure = textFigure;
   }
 }

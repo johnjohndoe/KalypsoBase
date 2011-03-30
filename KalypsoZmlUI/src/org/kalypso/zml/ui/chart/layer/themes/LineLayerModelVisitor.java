@@ -40,8 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.Point;
@@ -63,18 +64,17 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
  */
 public class LineLayerModelVisitor implements IObservationVisitor
 {
-  private final ZmlLineLayer m_layer;
+  private final Collection<Point> m_path = new ArrayList<Point>();
 
-  private final List<Point> m_path;
+  private final ZmlLineLayer m_layer;
 
   private IAxis m_dateAxis;
 
   private final IChartLayerFilter[] m_filters;
 
-  public LineLayerModelVisitor( final ZmlLineLayer layer, final List<Point> path, final IChartLayerFilter[] filters )
+  public LineLayerModelVisitor( final ZmlLineLayer layer, final IChartLayerFilter[] filters )
   {
     m_layer = layer;
-    m_path = path;
     m_filters = filters;
   }
 
@@ -149,5 +149,10 @@ public class LineLayerModelVisitor implements IObservationVisitor
     }
 
     return false;
+  }
+
+  public Point[] getPoints( )
+  {
+    return m_path.toArray( new Point[m_path.size()] );
   }
 }

@@ -41,10 +41,12 @@
 package org.kalypso.zml.ui.chart.layer.themes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
+import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 
@@ -62,7 +64,6 @@ public class ZmlLineLayerLegendEntry
 
   public ILegendEntry[] createLegendEntries( )
   {
-
     final LegendEntry entry = new LegendEntry( m_layer, m_layer.getTitle() )
     {
       @Override
@@ -71,15 +72,19 @@ public class ZmlLineLayerLegendEntry
         final int sizeX = size.x;
         final int sizeY = size.y;
 
-        final ArrayList<Point> path = new ArrayList<Point>();
+        final List<Point> path = new ArrayList<Point>();
         path.add( new Point( 0, sizeX / 2 ) );
         path.add( new Point( sizeX / 5, sizeY / 2 ) );
         path.add( new Point( sizeX / 5 * 2, sizeY / 4 ) );
         path.add( new Point( sizeX / 5 * 3, sizeY / 4 * 3 ) );
         path.add( new Point( sizeX / 5 * 4, sizeY / 2 ) );
         path.add( new Point( sizeX, sizeY / 2 ) );
+        final Point[] points = path.toArray( new Point[path.size()] );
 
-        m_layer.drawLine( gc, path );
+        final PolylineFigure polylineFigure = new PolylineFigure();
+        polylineFigure.setStyle( m_layer.getLineStyle() );
+        polylineFigure.setPoints( points );
+        polylineFigure.paint( gc );
       }
     };
 
