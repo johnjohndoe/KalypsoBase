@@ -59,7 +59,7 @@ public abstract class AbstractObsProvider implements IObsProvider
 
   private IObservation m_observation;
 
-  private final IObservationListener m_observationListeer = new IObservationListener()
+  private final IObservationListener m_observationListener = new IObservationListener()
   {
     @Override
     public void observationChanged( final IObservation obs, final Object source )
@@ -80,7 +80,7 @@ public abstract class AbstractObsProvider implements IObsProvider
   public void dispose( )
   {
     if( m_observation != null )
-      m_observation.removeListener( m_observationListeer );
+      m_observation.removeListener( m_observationListener );
 
     m_listeners.clear();
   }
@@ -97,12 +97,12 @@ public abstract class AbstractObsProvider implements IObsProvider
   protected final void setObservation( final IObservation obs )
   {
     if( m_observation != null )
-      m_observation.removeListener( m_observationListeer );
+      m_observation.removeListener( m_observationListener );
 
     m_observation = obs;
 
     if( m_observation != null )
-      m_observation.addListener( m_observationListeer );
+      m_observation.addListener( m_observationListener );
 
     fireChanged();
   }
@@ -150,7 +150,6 @@ public abstract class AbstractObsProvider implements IObsProvider
     {
       ((IObsProviderListener) listener).observationChanged( source );
     }
-
   }
 
   /**
