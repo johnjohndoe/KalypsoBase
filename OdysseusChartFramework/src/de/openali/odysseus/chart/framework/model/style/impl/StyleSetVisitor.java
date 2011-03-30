@@ -46,6 +46,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.kalypso.commons.java.lang.Objects;
+
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.IStyleSetRefernceFilter;
@@ -57,9 +59,12 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 public class StyleSetVisitor
 {
   @SuppressWarnings("unchecked")
-  public <T extends IStyle> T visit( final IStyleSet set, final Class<T> clazz, final int index )
+  public <T extends IStyle> T visit( final IStyleSet styleSet, final Class<T> clazz, final int index )
   {
-    final Map<String, IStyle> map = set.getStyles();
+    if( Objects.isNull( styleSet ) )
+      return StyleUtils.getDefaultStyle( clazz );
+
+    final Map<String, IStyle> map = styleSet.getStyles();
     final Collection<IStyle> styles = map.values();
 
     int styleIndex = 0;
@@ -79,13 +84,19 @@ public class StyleSetVisitor
       }
     }
 
+    if( Objects.isNull( lastItem ) )
+      return StyleUtils.getDefaultStyle( clazz );
+
     return (T) lastItem;
   }
 
   @SuppressWarnings("unchecked")
-  public <T extends IStyle> T visit( final IStyleSet set, final Class<T> clazz, final String styleref )
+  public <T extends IStyle> T visit( final IStyleSet styleSet, final Class<T> clazz, final String styleref )
   {
-    final Map<String, IStyle> map = set.getStyles();
+    if( Objects.isNull( styleSet ) )
+      return StyleUtils.getDefaultStyle( clazz );
+
+    final Map<String, IStyle> map = styleSet.getStyles();
 
     final Set<Entry<String, IStyle>> entries = map.entrySet();
     for( final Entry<String, IStyle> entry : entries )
