@@ -74,7 +74,7 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
   @Override
   public final IAxisRenderer getAxisRenderer( )
   {
-    final StyleSetVisitor visitor = new StyleSetVisitor();
+    final StyleSetVisitor visitor = new StyleSetVisitor( true );
     final IStyleSet styleSet = getStyleSet();
 
     final ILineStyle axisLine = visitor.visit( styleSet, ILineStyle.class, ROLE_AXIS_LINE_STYLE );

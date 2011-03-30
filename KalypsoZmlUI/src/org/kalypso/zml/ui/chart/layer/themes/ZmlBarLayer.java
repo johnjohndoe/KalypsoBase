@@ -215,7 +215,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     final IStyleSet styleSet = getStyleSet();
     final int index = ZmlLayerHelper.getLayerIndex( getIdentifier() );
 
-    final StyleSetVisitor visitor = new StyleSetVisitor();
+    final StyleSetVisitor visitor = new StyleSetVisitor( true );
     final IAreaStyle style = visitor.visit( styleSet, IAreaStyle.class, index );
 
     return style;

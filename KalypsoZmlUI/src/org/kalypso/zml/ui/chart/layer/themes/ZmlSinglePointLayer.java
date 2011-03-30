@@ -213,8 +213,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
       }
 
       final IStyleSet styleSet = getStyleSet();
-      final StyleSetVisitor visitor = new StyleSetVisitor();
-
+      final StyleSetVisitor visitor = new StyleSetVisitor( false );
       final IPointStyle pointStyle = visitor.visit( styleSet, IPointStyle.class, 0 );
       final ITextStyle textStyle = visitor.visit( styleSet, ITextStyle.class, 0 );
 

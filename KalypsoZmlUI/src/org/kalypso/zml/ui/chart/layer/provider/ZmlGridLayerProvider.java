@@ -68,7 +68,7 @@ public class ZmlGridLayerProvider extends AbstractLayerProvider implements ILaye
     try
     {
       final IStyleSet styleSet = getStyleSet();
-      final StyleSetVisitor visitor = new StyleSetVisitor();
+      final StyleSetVisitor visitor = new StyleSetVisitor( false );
 
       final ILineStyle lineStyle = visitor.visit( styleSet, ILineStyle.class, 0 );
       final IPointStyle pointStyle = visitor.visit( styleSet, IPointStyle.class, 0 );

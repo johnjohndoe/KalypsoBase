@@ -56,7 +56,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
 
     if( styleSet != null )
     {
-      final StyleSetVisitor visitor = new StyleSetVisitor();
+      final StyleSetVisitor visitor = new StyleSetVisitor( true );
 
       final ILineStyle ls = visitor.visit( styleSet, ILineStyle.class, 0 );
       final IPointStyle ps = visitor.visit( styleSet, IPointStyle.class, 0 );

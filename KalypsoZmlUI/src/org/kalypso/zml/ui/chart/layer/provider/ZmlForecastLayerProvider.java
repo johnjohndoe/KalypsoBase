@@ -68,7 +68,7 @@ public class ZmlForecastLayerProvider extends AbstractLayerProvider implements I
   {
     try
     {
-      final StyleSetVisitor visitor = new StyleSetVisitor();
+      final StyleSetVisitor visitor = new StyleSetVisitor( false );
       final ILineStyle style = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
 
       return new ZmlForecastLayer( this, style );
