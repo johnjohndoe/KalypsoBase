@@ -191,7 +191,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     final Rectangle oldClip = gc.getClipping();
     try
     {
-      // FIXME: possible NPE here, because of the useage of IZmlLayerDataHandler!
+      // FIXME: possible NPE here, because of the usage of IZmlLayerDataHandler!
       // the handler may now have a null-model, as it is changed asynchronously...
       // as we already have the observation, why access the model via the data handler at all?
 
@@ -279,7 +279,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     m_labelDescriptor = labelDescriptor;
   }
 
-  // FIXME: should only be done once (in the constructor), keep the styles in memeber variables
+  // FIXME: should only be done once (in the constructor), keep the styles in member variables
   private void setLineThemeStyles( )
   {
     final IStyleSet styleSet = getStyleSet();

@@ -14,6 +14,10 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+
+import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
@@ -25,6 +29,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.layer.manager.LayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -69,51 +74,73 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private ILayerContainer m_parent;
 
+  final ILayerManagerEventListener m_layerManagerListener = new ILayerManagerEventListener()
+  {
+    @Override
+    public void onLayerMoved( final IChartLayer layer )
+    {
+      getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
+    }
+
+    @Override
+    public void onLayerAdded( final IChartLayer layer )
+    {
+      getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
+    }
+
+    @Override
+    public void onLayerRemoved( final IChartLayer layer )
+    {
+      getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
+    }
+
+    @Override
+    public void onLayerVisibilityChanged( final IChartLayer layer )
+    {
+      getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
+    }
+
+    @Override
+    public void onLayerContentChanged( final IChartLayer layer )
+    {
+      getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
+    }
+
+    @Override
+    public void onActivLayerChanged( final IChartLayer layer )
+    {
+      getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
+    }
+  };
+
   public AbstractChartLayer( final ILayerProvider provider )
   {
     m_provider = provider;
+    m_layerManager.addListener( m_layerManagerListener );
 
-    m_layerManager.addListener( new ILayerManagerEventListener()
+    setFilters();
+  }
+
+  private void setFilters( )
+  {
+    if( Objects.isNull( m_provider ) )
+      return;
+
+    final IParameterContainer container = m_provider.getParameterContainer();
+    if( Objects.isNull( container ) )
+      return;
+
+    final String property = container.getParameterValue( "filter", "" ); //$NON-NLS-1$
+    if( Strings.isNullOrEmpty( property ) )
+      return;
+
+    final Iterable<String> filters = Splitter.on( ";" ).split( property ); //$NON-NLS-1$
+    for( final String reference : filters )
     {
-      /**
-       * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-       */
-      @Override
-      public void onLayerMoved( final IChartLayer layer )
-      {
-        getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
-      }
-
-      @Override
-      public void onLayerAdded( final IChartLayer layer )
-      {
-        getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
-      }
-
-      @Override
-      public void onLayerRemoved( final IChartLayer layer )
-      {
-        getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
-      }
-
-      @Override
-      public void onLayerVisibilityChanged( final IChartLayer layer )
-      {
-        getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
-      }
-
-      @Override
-      public void onLayerContentChanged( final IChartLayer layer )
-      {
-        getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
-      }
-
-      @Override
-      public void onActivLayerChanged( final IChartLayer layer )
-      {
-        getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
-      }
-    } );
+      final IChartLayerFilter filter = OdysseusChartFramework.getDefault().findFilter( reference );
+      if( Objects.isNotNull( filter ) )
+        addFilter( filter );
+    }
   }
 
   @Override
