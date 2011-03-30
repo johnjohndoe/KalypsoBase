@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.legend;
 
-import org.apache.commons.lang.ArrayUtils;
-
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -52,7 +50,7 @@ import de.openali.odysseus.chart.framework.util.img.legend.renderer.CompactChart
  */
 public class ZmlCompactChartLegendRenderer extends CompactChartLegendRenderer
 {
-  public static final String IDENTIFIER = "org.kalypso.zml.ui.chart.legend.renderer.compact";
+  public static final String IDENTIFIER = "org.kalypso.zml.ui.chart.legend.renderer.compact"; //$NON-NLS-1$
 
   /**
    * @see de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer#getIdentifier()
@@ -73,9 +71,6 @@ public class ZmlCompactChartLegendRenderer extends CompactChartLegendRenderer
     final ZmlChartLegendLayersVisitor visitor = new ZmlChartLegendLayersVisitor();
     layerManager.accept( visitor );
 
-    final IChartLayer[] layers = visitor.getLayers();
-    ArrayUtils.reverse( layers );
-
-    return layers;
+    return visitor.getLayers();
   }
 }

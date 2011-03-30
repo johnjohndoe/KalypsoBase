@@ -63,20 +63,6 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
 
   }
 
-  private final Object[] revertLayer( final ILayerManager mngr )
-  {
-    if( mngr == null )
-      return new Object[] {};
-    final IChartLayer[] layers = mngr.getLayers();
-    final IChartLayer[] reverted = new IChartLayer[layers.length];
-    for( int i = 0; i < layers.length; i++ )
-    {
-      reverted[i] = layers[layers.length - 1 - i];
-
-    }
-    return reverted;
-  }
-
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
@@ -90,7 +76,6 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
       final ILayerManager layerManager = container.getLayerManager();
 
       final IChartLayer[] layers = layerManager.getLayers();
-      ArrayUtils.reverse( layers );
 
       return layers;
     }
