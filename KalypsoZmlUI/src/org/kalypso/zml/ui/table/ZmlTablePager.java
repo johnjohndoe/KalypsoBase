@@ -78,7 +78,11 @@ public class ZmlTablePager
 
   private Date getIndex( final TableViewer viewer )
   {
-    final ViewerCell cell = viewer.getCell( new Point( 10, 75 ) );
+    ViewerCell cell = viewer.getCell( new Point( 10, 25 ) );
+    if( Objects.isNull( cell ) )
+      return null;
+
+    cell = viewer.getCell( new Point( 10, 75 ) );
     if( Objects.isNull( cell ) )
       return null;
 
