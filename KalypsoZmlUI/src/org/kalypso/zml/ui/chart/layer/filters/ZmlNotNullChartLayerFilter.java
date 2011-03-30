@@ -42,7 +42,6 @@ package org.kalypso.zml.ui.chart.layer.filters;
 
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
-import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 
 /**
  * @author Dirk Kuch
@@ -68,8 +67,7 @@ public class ZmlNotNullChartLayerFilter extends AbstractZmlChartLayerFilter
   {
     try
     {
-      final ContainerAsValue value = new ContainerAsValue( container );
-      return value.isNullstelle();
+      return new ContainerAsValue( container ).isNullstelle();
     }
     catch( final SensorException e )
     {

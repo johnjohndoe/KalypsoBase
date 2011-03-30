@@ -225,7 +225,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
 
   // UGLY: was has every layer exactly one TextFigure? Wrong abstraction!
   /**
-   * @deprecated Create your TextFigure on deman, and throw it away afterwards.
+   * @deprecated Create your TextFigure on demand, and throw it away afterwards.
    */
   @Deprecated
   public TextFigure getTextFigure( )
