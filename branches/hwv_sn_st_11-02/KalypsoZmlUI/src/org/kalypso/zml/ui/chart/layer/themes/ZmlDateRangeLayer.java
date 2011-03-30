@@ -69,9 +69,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
 {
   private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
 
-  private DateRange m_daterange;
-
-  private IZmlLayerDataHandler m_handler;
+  private IZmlLayerDataHandler m_dataHandler;
 
   public ZmlDateRangeLayer( final ILayerProvider provider )
   {
@@ -102,12 +100,12 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
   @Override
   public IDataRange<Number> getDomainRange( )
   {
-    if( Objects.isNull( m_daterange ) )
+    if( Objects.isNull( getDateRange() ) )
       return null;
 
-    final Date min = m_daterange.getFrom();
-    final Date max = m_daterange.getTo();
-    if( min == null || max == null )
+    final Date min = getDateRange().getFrom();
+    final Date max = getDateRange().getTo();
+    if( Objects.isNull( min, max ) )
       return null;
 
     final IDataRange<Number> numRange = new DataRange<Number>( m_dateDataOperator.logicalToNumeric( min ), m_dateDataOperator.logicalToNumeric( max ) );
@@ -129,8 +127,8 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
   @Override
   public void dispose( )
   {
-    if( Objects.isNotNull( m_handler ) )
-      m_handler.dispose();
+    if( Objects.isNotNull( m_dataHandler ) )
+      m_dataHandler.dispose();
 
     super.dispose();
   }
@@ -150,7 +148,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
   @Override
   public IZmlLayerDataHandler getDataHandler( )
   {
-    return m_handler;
+    return m_dataHandler;
   }
 
   /**
@@ -159,18 +157,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
   @Override
   public void setDataHandler( final IZmlLayerDataHandler handler )
   {
-    m_handler = handler;
-
-    final IParameterContainer parameters = getProvider().getParameterContainer();
-    final IObservation observation = handler.getObservation();
-    if( observation == null )
-      return;
-
-    final MetadataList metadata = observation.getMetadataList();
-    final Date start = LayerProviderUtils.getMetadataDate( parameters, "start", metadata );
-    final Date end = LayerProviderUtils.getMetadataDate( parameters, "end", metadata );
-
-    m_daterange = new DateRange( start, end );
+    m_dataHandler = handler;
   }
 
   /**
@@ -181,4 +168,21 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
   {
     // nothing to do
   }
+
+  private DateRange getDateRange( )
+  {
+    final IZmlLayerDataHandler handler = getDataHandler();
+    final IObservation observation = handler.getObservation();
+    if( Objects.isNull( observation ) )
+      return null;
+
+    final IParameterContainer parameters = getProvider().getParameterContainer();
+
+    final MetadataList metadata = observation.getMetadataList();
+    final Date start = LayerProviderUtils.getMetadataDate( parameters, "start", metadata );
+    final Date end = LayerProviderUtils.getMetadataDate( parameters, "end", metadata );
+
+    return new DateRange( start, end );
+  }
+
 }
