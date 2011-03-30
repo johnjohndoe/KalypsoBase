@@ -68,8 +68,10 @@ public interface ITimeseriesObservation extends IObservation
   String getSource( int row ) throws SensorException;
 
   // TODO: instead: give a list of commands that will be executed inside the transaction... or something similar.
+  // Alternative: run a 'runnable' as transaction, hide start and stop inside the runner
   void startTransaction( ) throws SensorException;
 
+  // Stops the transaction, commits all changed value to the model and fire a change event
   void stopTransaction( ) throws SensorException;
 
   boolean inTransaction( );
