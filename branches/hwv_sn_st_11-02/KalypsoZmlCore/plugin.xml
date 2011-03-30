@@ -36,6 +36,10 @@
            id="org.kalypso.zml.ui.core.rule.forecast.value"
            rule="org.kalypso.zml.core.table.rules.impl.forecast.ZmlRuleForecast">
     </rule>
+    <rule
+          id="org.kalypso.zml.ui.core.rule.info"
+          rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleInfo">
+    </rule>
  </extension> 
  <extension
          point="org.eclipse.wst.xml.core.catalogContributions">

@@ -49,7 +49,7 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private final LayerEventHandler m_eventHandler = new LayerEventHandler();
 
-  private String m_id = "";
+  private String m_identifier = "";
 
   private boolean m_isActive = false;
 
@@ -236,7 +236,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public String getIdentifier( )
   {
-    return m_id;
+    return m_identifier;
   }
 
   @Override
@@ -406,13 +406,6 @@ public abstract class AbstractChartLayer implements IChartLayer
   public void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
   {
     m_coordinateMapper = coordinateMapper;
-
-    // FIXME sure? update coordinate mapper of child layers, too?
-    // Test:kim
-// for( final IChartLayer layer : getLayerManager().getLayers() )
-// {
-// layer.setCoordinateMapper( coordinateMapper );
-// }
   }
 
   /**
@@ -437,9 +430,9 @@ public abstract class AbstractChartLayer implements IChartLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setID(java.lang.String)
    */
   @Override
-  public void setIdentifier( final String id )
+  public void setIdentifier( final String identifier )
   {
-    m_id = id;
+    m_identifier = identifier;
   }
 
   /**
