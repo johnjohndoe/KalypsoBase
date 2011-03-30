@@ -28,13 +28,11 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellManager;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 
 /**
@@ -94,15 +92,18 @@ public abstract class AbstractZmlCellCursor extends Canvas implements ITableCurs
     addListener( SWT.MouseMove, listener );
     addListener( SWT.FocusIn, listener );
 
-    final ScrollBar verticalBar = m_viewer.getTable().getVerticalBar();
-    verticalBar.addSelectionListener( new SelectionAdapter()
+    final SelectionAdapter scrollBarListener = new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
         redraw();
       }
-    } );
+    };
+
+    final Table table = m_viewer.getTable();
+    table.getVerticalBar().addSelectionListener( scrollBarListener );
+    table.getHorizontalBar().addSelectionListener( scrollBarListener );
 
     // triggered from chart layer mouse selection
     viewer.addSelectionChangedListener( new ISelectionChangedListener()
