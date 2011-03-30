@@ -2,6 +2,7 @@ package org.kalypso.commons.databinding.viewers;
 
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
@@ -20,12 +21,24 @@ public class ComboViewerEditingSupport extends ObservableValueEditingSupport
 
   private final IValueProperty m_property;
 
+  private IValueChangeListener m_changeListener;
+
   public ComboViewerEditingSupport( final ColumnViewer viewer, final DataBindingContext dbc, final IValueProperty property, final int style )
   {
     super( viewer, dbc );
 
     m_property = property;
     m_cellEditor = new ComboBoxViewerCellEditor( (Composite) viewer.getControl(), style );
+  }
+
+  /**
+   * @param changeListener
+   *          (Optional) listener. If set to non-<code>null</code>, this listener will be informed about value changes
+   *          comming from this editor.
+   */
+  public void setValueChangeListener( IValueChangeListener changeListener )
+  {
+    m_changeListener = changeListener;
   }
 
   /**
@@ -53,6 +66,9 @@ public class ComboViewerEditingSupport extends ObservableValueEditingSupport
   @Override
   protected IObservableValue doCreateElementObservable( final Object element, final ViewerCell cell )
   {
-    return m_property.observe( element );
+    IObservableValue observe = m_property.observe( element );
+    if( m_changeListener != null )
+      observe.addValueChangeListener( m_changeListener );
+    return observe;
   }
 }

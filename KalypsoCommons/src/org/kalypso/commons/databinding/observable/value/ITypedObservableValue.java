@@ -38,49 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.databinding.validation;
+package org.kalypso.commons.databinding.observable.value;
 
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.eclipse.core.databinding.observable.value.IObservableValue;
 
 /**
- * This validator checks, if a regular expression can be compiled.
- * 
+ * @author Gernot Belger
  * @author Holger Albert
  */
-public class StringRegexValidator extends TypedValidator<String>
+public interface ITypedObservableValue<SOURCE, VALUE> extends IObservableValue
 {
-  /**
-   * The constructor.
-   * 
-   * @param severity
-   *          Severity of IStatus, will be used to create validation failures.
-   * @param message
-   *          Will be used as message for a status, if validation fails.
-   */
-  public StringRegexValidator( int severity, String message )
-  {
-    super( String.class, severity, message );
-  }
+  void doSetValueTyped( SOURCE source, VALUE value );
+
+  VALUE doGetValueTyped( SOURCE source );
 
   /**
-   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
+   * @see org.eclipse.core.databinding.observable.value.IObservableValue#getValueType()
    */
   @Override
-  protected IStatus doValidate( String value )
-  {
-    try
-    {
-      Pattern.compile( value );
-      return Status.OK_STATUS;
-    }
-    catch( PatternSyntaxException ex )
-    {
-      return new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), String.format( "Ungültiger Regulärer Ausdruck: %s", ex.getLocalizedMessage() ), ex );
-    }
-  }
+  Class<VALUE> getValueType( );
 }

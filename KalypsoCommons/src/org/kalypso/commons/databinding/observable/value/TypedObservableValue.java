@@ -38,49 +38,60 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.databinding.validation;
+package org.kalypso.commons.databinding.observable.value;
 
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.core.databinding.observable.Diffs;
+import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
+import org.eclipse.core.databinding.observable.value.ValueDiff;
 
 /**
- * This validator checks, if a regular expression can be compiled.
- * 
+ * @author Gernot Albert
  * @author Holger Albert
  */
-public class StringRegexValidator extends TypedValidator<String>
+public abstract class TypedObservableValue<SOURCE, VALUE> extends AbstractObservableValue implements ITypedObservableValue<SOURCE, VALUE>
 {
-  /**
-   * The constructor.
-   * 
-   * @param severity
-   *          Severity of IStatus, will be used to create validation failures.
-   * @param message
-   *          Will be used as message for a status, if validation fails.
-   */
-  public StringRegexValidator( int severity, String message )
+  private final SOURCE m_source;
+
+  private final Class<VALUE> m_valueType;
+
+  public TypedObservableValue( SOURCE source, Class<VALUE> valueType )
   {
-    super( String.class, severity, message );
+    m_source = source;
+    m_valueType = valueType;
   }
 
   /**
-   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
+   * @see org.eclipse.core.databinding.observable.value.IObservableValue#getValueType()
    */
   @Override
-  protected IStatus doValidate( String value )
+  public Class<VALUE> getValueType( )
   {
-    try
-    {
-      Pattern.compile( value );
-      return Status.OK_STATUS;
-    }
-    catch( PatternSyntaxException ex )
-    {
-      return new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), String.format( "Ungültiger Regulärer Ausdruck: %s", ex.getLocalizedMessage() ), ex );
-    }
+    return m_valueType;
+  }
+
+  /**
+   * @see org.eclipse.core.databinding.observable.value.AbstractObservableValue#doGetValue()
+   */
+  @Override
+  protected VALUE doGetValue( )
+  {
+    return doGetValueTyped( m_source );
+  }
+
+  /**
+   * @see org.eclipse.core.databinding.observable.value.AbstractObservableValue#doSetValue(java.lang.Object)
+   */
+  @Override
+  protected void doSetValue( Object value )
+  {
+    Object currentValue = doGetValue();
+    if( ObjectUtils.equals( value, currentValue ) )
+      return;
+
+    doSetValueTyped( m_source, m_valueType.cast( value ) );
+
+    ValueDiff diff = Diffs.createValueDiff( currentValue, value );
+    fireValueChange( diff );
   }
 }
