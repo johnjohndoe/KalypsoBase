@@ -69,7 +69,7 @@ public class ZmlSelectionLayerProvider extends AbstractLayerProvider implements 
   {
     try
     {
-      final StyleSetVisitor visitor = new StyleSetVisitor();
+      final StyleSetVisitor visitor = new StyleSetVisitor( false );
       final ILineStyle lineStyle = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
       final IAreaStyle areaStyle = visitor.visit( getStyleSet(), IAreaStyle.class, 0 );
 

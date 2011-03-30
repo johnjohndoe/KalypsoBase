@@ -58,11 +58,26 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
  */
 public class StyleSetVisitor
 {
+  private final boolean m_defaultLineStyle;
+
+  @Deprecated
+  public StyleSetVisitor( )
+  {
+    this( false );
+  }
+
+  public StyleSetVisitor( final boolean defaultLineStyle )
+  {
+    m_defaultLineStyle = defaultLineStyle;
+  }
+
   @SuppressWarnings("unchecked")
   public <T extends IStyle> T visit( final IStyleSet styleSet, final Class<T> clazz, final int index )
   {
     if( Objects.isNull( styleSet ) )
-      return StyleUtils.getDefaultStyle( clazz );
+    {
+      return getDefaultStyle( clazz );
+    }
 
     final Map<String, IStyle> map = styleSet.getStyles();
     final Collection<IStyle> styles = map.values();
@@ -85,16 +100,24 @@ public class StyleSetVisitor
     }
 
     if( Objects.isNull( lastItem ) )
-      return StyleUtils.getDefaultStyle( clazz );
+      return getDefaultStyle( clazz );
 
     return (T) lastItem;
+  }
+
+  private <T extends IStyle> T getDefaultStyle( final Class<T> clazz )
+  {
+    if( m_defaultLineStyle )
+      return StyleUtils.getDefaultStyle( clazz );
+
+    return null;
   }
 
   @SuppressWarnings("unchecked")
   public <T extends IStyle> T visit( final IStyleSet styleSet, final Class<T> clazz, final String styleref )
   {
     if( Objects.isNull( styleSet ) )
-      return StyleUtils.getDefaultStyle( clazz );
+      return getDefaultStyle( clazz );
 
     final Map<String, IStyle> map = styleSet.getStyles();
 
@@ -109,7 +132,7 @@ public class StyleSetVisitor
       }
     }
 
-    return StyleUtils.getDefaultStyle( clazz );
+    return getDefaultStyle( clazz );
   }
 
   public String[] findReferences( final IStyleSet set, final Class< ? extends IStyle> clazz )
@@ -147,6 +170,6 @@ public class StyleSetVisitor
       }
     }
 
-    return null;
+    return getDefaultStyle( clazz );
   }
 }

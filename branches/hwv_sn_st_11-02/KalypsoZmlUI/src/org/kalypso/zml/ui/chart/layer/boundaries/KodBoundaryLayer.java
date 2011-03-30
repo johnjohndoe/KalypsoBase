@@ -105,7 +105,7 @@ public class KodBoundaryLayer implements IMetadataLayerBoundary
   @Override
   public ILineStyle getLineStyle( )
   {
-    final StyleSetVisitor visitor = new StyleSetVisitor();
+    final StyleSetVisitor visitor = new StyleSetVisitor( true );
 
     final String[] styles = visitor.findReferences( m_styles, ILineStyle.class );
     if( ArrayUtils.isEmpty( styles ) )
@@ -135,7 +135,7 @@ public class KodBoundaryLayer implements IMetadataLayerBoundary
   @Override
   public ITextStyle getTextStyle( )
   {
-    final StyleSetVisitor visitor = new StyleSetVisitor();
+    final StyleSetVisitor visitor = new StyleSetVisitor( false );
 
     final String[] styles = visitor.findReferences( m_styles, ITextStyle.class );
     if( ArrayUtils.isEmpty( styles ) )

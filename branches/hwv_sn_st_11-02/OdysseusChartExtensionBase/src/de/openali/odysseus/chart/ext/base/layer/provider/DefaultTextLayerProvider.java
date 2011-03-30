@@ -106,7 +106,7 @@ public class DefaultTextLayerProvider extends AbstractLayerProvider implements I
     final ALIGNMENT textAnchorX = ALIGNMENT.valueOf( propertyTextAnchorX );
     final ALIGNMENT textAnchorY = ALIGNMENT.valueOf( propertyTextAnchorY );
 
-    final StyleSetVisitor visitor = new StyleSetVisitor();
+    final StyleSetVisitor visitor = new StyleSetVisitor( true );
 
     final TitleTypeBean bean = new TitleTypeBean( text );
 

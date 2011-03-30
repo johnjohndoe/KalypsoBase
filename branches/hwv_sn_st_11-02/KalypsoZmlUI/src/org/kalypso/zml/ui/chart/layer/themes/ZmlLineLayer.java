@@ -287,7 +287,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     // FIXME: strange! we need better helper classes here...
     final int index = ZmlLayerHelper.getLayerIndex( getIdentifier() );
 
-    final StyleSetVisitor visitor = new StyleSetVisitor();
+    final StyleSetVisitor visitor = new StyleSetVisitor( false );
 
     final IPointStyle pointStyle = visitor.findReferences( styleSet, IPointStyle.class, new IStyleSetRefernceFilter()
     {
@@ -297,6 +297,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
         return !reference.toLowerCase().contains( "single" ); //$NON-NLS-1$
       }
     } );
+
     final ILineStyle lineStyle = visitor.visit( styleSet, ILineStyle.class, index );
     final ITextStyle textStyle = visitor.visit( styleSet, ITextStyle.class, index );
 
