@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -97,7 +98,10 @@ public class ChartPlotPainter
 
   public void paint( final GC gc )
   {
-    for( final IChartLayer layer : getChartLayers() )
+    final IChartLayer[] layers = getChartLayers();
+    ArrayUtils.reverse( layers );
+
+    for( final IChartLayer layer : layers )
     {
       if( layer.isVisible() )
         layer.paint( gc );

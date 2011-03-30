@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img.legend.renderer;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
@@ -153,10 +152,7 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     final LegendChartLayersVisitor visitor = new LegendChartLayersVisitor();
     layerManager.accept( visitor );
 
-    final IChartLayer[] layers = visitor.getLayers();
-    ArrayUtils.reverse( layers );
-
-    return layers;
+    return visitor.getLayers();
   }
 
   private ImageData createLegendItem( final ILegendEntry entry, final IChartLegendConfig config, final Point size )
@@ -244,8 +240,8 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
       return new Point( 1, 1 );
 
     final int legendEntries = calculateLegendEntries( layers );
-    //never return 0 itemsperrow, 
-    final int itemsPerRow = Math.max( 1,config.getMaximumWidth() / maxItemSize.x);
+    // never return 0 itemsperrow,
+    final int itemsPerRow = Math.max( 1, config.getMaximumWidth() / maxItemSize.x );
 
     m_rows = calculateRowNumbers( legendEntries, itemsPerRow );
 
