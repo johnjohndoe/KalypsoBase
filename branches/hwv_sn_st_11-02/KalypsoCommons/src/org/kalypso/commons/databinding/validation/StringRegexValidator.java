@@ -43,7 +43,6 @@ package org.kalypso.commons.databinding.validation;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
@@ -53,24 +52,35 @@ import org.kalypso.commons.KalypsoCommonsPlugin;
  * 
  * @author Holger Albert
  */
-public class StringRegexValidator implements IValidator
+public class StringRegexValidator extends TypedValidator<String>
 {
   /**
-   * @see org.eclipse.core.databinding.validation.IValidator#validate(java.lang.Object)
+   * The constructor.
+   * 
+   * @param severity
+   *          Severity of IStatus, will be used to create validation failures.
+   * @param message
+   *          Will be used as message for a status, if validation fails.
+   */
+  public StringRegexValidator( int severity, String message )
+  {
+    super( String.class, severity, message );
+  }
+
+  /**
+   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
    */
   @Override
-  public IStatus validate( Object value )
+  protected IStatus doValidate( String value )
   {
     try
     {
-      String regex = (String) value;
-      Pattern.compile( regex );
+      Pattern.compile( value );
+      return Status.OK_STATUS;
     }
     catch( PatternSyntaxException ex )
     {
       return new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), String.format( "Ungültiger Regulärer Ausdruck: %s", ex.getLocalizedMessage() ), ex );
     }
-
-    return Status.OK_STATUS;
   }
 }
