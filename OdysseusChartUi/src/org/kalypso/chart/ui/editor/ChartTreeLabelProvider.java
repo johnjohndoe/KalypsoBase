@@ -51,9 +51,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
-import org.kalypso.chart.ui.i18n.Messages;
 
-import de.openali.odysseus.chart.factory.layer.PlainLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 
@@ -105,11 +103,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
   public String getText( final Object element )
   {
     // Falls das Layer nicht erzeugt werden konnte sollte das in der Legende ersichtlich sein
-    if( element instanceof PlainLayer )
-    {
-      return Messages.getString( "org.kalypso.chart.ui.editor.ChartTreeLabelProvider.0" ) + ((IChartLayer) element).getTitle() + "'"; //$NON-NLS-1$ //$NON-NLS-2$
-    }
-    else if( element instanceof IChartLayer )
+    if( element instanceof IChartLayer )
     {
       return ((IChartLayer) element).getTitle();
     }
@@ -118,6 +112,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
     {
       return ((ILegendEntry) element).getDescription();
     }
+
     return super.getText( element );
   }
 
@@ -163,13 +158,13 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
         final int[] path1 = new int[8];
         final int[] path2 = new int[8];
 
-        path1[0] = (int) (((float) width / (float) 10) * 2);
-        path1[1] = (int) (((float) height / (float) 10) * 2);
-        path1[2] = (int) (((float) width / (float) 10) * 7);
+        path1[0] = (int) ((float) width / (float) 10 * 2);
+        path1[1] = (int) ((float) height / (float) 10 * 2);
+        path1[2] = (int) ((float) width / (float) 10 * 7);
         path1[3] = path1[1];
-        path1[4] = (int) (((float) width / (float) 10) * 6);
-        path1[5] = (int) (((float) height / (float) 10) * 7);
-        path1[6] = (int) (((float) width / (float) 10) * 1);
+        path1[4] = (int) ((float) width / (float) 10 * 6);
+        path1[5] = (int) ((float) height / (float) 10 * 7);
+        path1[6] = (int) ((float) width / (float) 10 * 1);
         path1[7] = path1[5];
 
         final int offset = 3;
