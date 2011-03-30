@@ -305,7 +305,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
       @Override
       public boolean accept( final String reference )
       {
-        return !reference.toLowerCase().contains( "single" ); //$NON-NLS-1$
+        return !reference.toLowerCase().contains( "singlepoint" ); //$NON-NLS-1$
       }
     } );
   }
@@ -322,7 +322,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
       @Override
       public boolean accept( final String reference )
       {
-        return reference.toLowerCase().contains( "singlePoint" ); //$NON-NLS-1$
+        return reference.toLowerCase().contains( "singlepoint" ); //$NON-NLS-1$
       }
     } );
   }
