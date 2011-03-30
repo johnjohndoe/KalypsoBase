@@ -899,13 +899,13 @@
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#w_singlePoint_4</StyleReference>
             </Styles>
           </Layer>
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:hauptzahlen#hauptzahlen" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#meldegrenze" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_1" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_2" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_3" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
@@ -936,13 +936,13 @@
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#q_singlePoint_4</StyleReference>
             </Styles>
           </Layer>
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:hauptzahlen#hauptzahlen" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#meldegrenze" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_1" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_2" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_3" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
