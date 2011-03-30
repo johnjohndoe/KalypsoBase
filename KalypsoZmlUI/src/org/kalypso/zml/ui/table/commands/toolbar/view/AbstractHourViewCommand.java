@@ -67,7 +67,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
     final ZmlViewResolutionFilter filter = resolveFilter( table );
     filter.setParameters( resultion, mode );
 
-    table.getTableViewer().refresh();
+    table.refresh();
 
     return Status.OK_STATUS;
   }
