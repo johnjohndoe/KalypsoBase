@@ -232,7 +232,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
   {
     final IObservation observation = provider.getObservation();
 
-    final ZmlSinglePointLayerVisitor visitor = new ZmlSinglePointLayerVisitor( position );
+    final ZmlSinglePointLayerVisitor visitor = new ZmlSinglePointLayerVisitor( position, getFilters() );
     observation.accept( visitor, provider.getRequest() );
 
     return visitor.getValue();

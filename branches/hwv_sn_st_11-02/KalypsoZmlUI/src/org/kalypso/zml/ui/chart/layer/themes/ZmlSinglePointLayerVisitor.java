@@ -52,6 +52,8 @@ import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
+
 /**
  * @author Dirk Kuch
  */
@@ -67,9 +69,12 @@ public class ZmlSinglePointLayerVisitor implements IObservationVisitor
 
   private final Date m_position;
 
-  public ZmlSinglePointLayerVisitor( final Date position )
+  private final IChartLayerFilter[] m_filters;
+
+  public ZmlSinglePointLayerVisitor( final Date position, final IChartLayerFilter[] filters )
   {
     m_position = position;
+    m_filters = filters;
   }
 
   /**
@@ -82,6 +87,9 @@ public class ZmlSinglePointLayerVisitor implements IObservationVisitor
     {
       final Date date = (Date) container.get( getDateAxis( container ) );
       final Number v = (Number) container.get( getValueAxis( container ) );
+
+      if( isFiltered( container ) )
+        return;
 
       final double d = Math.abs( date.getTime() - m_position.getTime() );
       if( d < m_diff )
@@ -101,6 +109,17 @@ public class ZmlSinglePointLayerVisitor implements IObservationVisitor
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
+  }
+
+  private boolean isFiltered( final IObservationValueContainer container )
+  {
+    for( final IChartLayerFilter filter : m_filters )
+    {
+      if( filter.isFiltered( container ) )
+        return true;
+    }
+
+    return false;
   }
 
   private IAxis getValueAxis( final IObservationValueContainer container )
