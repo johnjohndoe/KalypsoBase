@@ -54,6 +54,7 @@ import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 
 /**
  * @author Dirk Kuch
@@ -61,6 +62,17 @@ import org.kalypso.ogc.sensor.provider.IObsProvider;
 public class ZmlTableMemento implements IZmlTableMemento
 {
   private final Map<IPoolableObjectType, ILabeledObsProvider> m_elements = Collections.synchronizedMap( new HashMap<IPoolableObjectType, ILabeledObsProvider>() );
+
+  private final IObsProviderListener m_providerListener;
+
+  /**
+   * @param obsProviderListener
+   *          This listener will be added to all registered obs-provider of this memento.
+   */
+  public ZmlTableMemento( final IObsProviderListener obsProviderListener )
+  {
+    m_providerListener = obsProviderListener;
+  }
 
   /**
    * @see org.kalypso.zml.ui.table.memento.IZmlTableMemento#dispose()
@@ -72,8 +84,14 @@ public class ZmlTableMemento implements IZmlTableMemento
   }
 
   @Override
-  public void register( final IPoolableObjectType poolKey, final ILabeledObsProvider provider )
+  public synchronized void register( final IPoolableObjectType poolKey, final ILabeledObsProvider provider )
   {
+    provider.addListener( m_providerListener );
+
+    final ILabeledObsProvider oldObsProvider = m_elements.get( poolKey );
+    if( oldObsProvider != null )
+      oldObsProvider.dispose();
+
     m_elements.put( poolKey, provider );
   }
 

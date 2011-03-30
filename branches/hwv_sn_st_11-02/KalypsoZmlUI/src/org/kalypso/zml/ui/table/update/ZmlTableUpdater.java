@@ -41,14 +41,9 @@
 package org.kalypso.zml.ui.table.update;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.IClonedColumn;
 import org.kalypso.zml.core.table.binding.TableTypeHelper;
@@ -66,50 +61,14 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
  */
 public class ZmlTableUpdater implements Runnable
 {
-  private final IObsProviderListener m_obsListenber = new IObsProviderListener()
-  {
-    @Override
-    public void observationReplaced( )
-    {
-    }
-
-    @Override
-    public void observationChanged( final Object source )
-    {
-      handleObservationChanged();
-    }
-  };
-
   private final MultipleTsLink[] m_links;
 
   private final IZmlTableLayoutPart m_part;
-
-  private final UIJob m_resetUpdateJob = new UIJob( "Update Reset Button" )
-  {
-    @Override
-    public IStatus runInUIThread( final IProgressMonitor monitor )
-    {
-      updateResetButtons();
-      return Status.OK_STATUS;
-    }
-  };
 
   public ZmlTableUpdater( final IZmlTableLayoutPart part, final MultipleTsLink[] links )
   {
     m_part = part;
     m_links = links;
-  }
-
-
-  protected void handleObservationChanged( )
-  {
-    m_resetUpdateJob.cancel();
-    m_resetUpdateJob.schedule( 100 );
-  }
-
-  protected void updateResetButtons( )
-  {
-    m_part.onObservationChanged();
   }
 
   /**
@@ -120,7 +79,6 @@ public class ZmlTableUpdater implements Runnable
   {
     for( final MultipleTsLink multipleLink : m_links )
     {
-
       if( multipleLink.isIgnoreType( m_part.getIgnoreTypes() ) )
         continue;
 
@@ -144,10 +102,6 @@ public class ZmlTableUpdater implements Runnable
     final IObsProvider clonedProvider = element.getObsProvider().copy();
 
     m_part.getModel().loadColumn( element );
-
-    // REMARK: no need to unregister that listener: the memento will dispose the 'clonedProvider'
-    clonedProvider.addListener( m_obsListenber );
-
 
     final ILabeledObsProvider obsWithLabel = new TsLinkObsProvider( link, clonedProvider );
     final IPoolableObjectType poolKey = element.getPoolKey();
