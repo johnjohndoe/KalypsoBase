@@ -80,6 +80,7 @@ public class LayerManager implements ILayerManager
       if( parentHandler != null )
         parentHandler.fireLayerVisibilityChanged( (IChartLayer) getContainer() );
     }
+
   };
 
   /**
