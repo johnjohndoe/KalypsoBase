@@ -131,6 +131,7 @@ public class StyleSetVisitor
     return styles.toArray( new String[] {} );
   }
 
+  @SuppressWarnings("unchecked")
   public <T extends IStyle> T findReferences( final IStyleSet set, final Class<T> clazz, final IStyleSetRefernceFilter filter )
   {
     final Map<String, IStyle> map = set.getStyles();
