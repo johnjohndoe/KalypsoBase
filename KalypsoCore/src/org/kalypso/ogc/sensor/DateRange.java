@@ -262,12 +262,30 @@ public class DateRange implements Comparable<DateRange>
 
   public boolean intersects( final DateRange other )
   {
+    /**
+     * <pre>
+     *     |--------- this --------|
+     *        |---- other ----|
+     * </pre>
+     */
     if( containsLazyInclusive( other.getFrom() ) )
       return true;
 
     if( containsLazyInclusive( other.getTo() ) )
       return true;
 
-    return other.intersects( this );
+    /**
+     * <pre>
+     *        |---- this ----|
+     *    |--------- other ---------|
+     * </pre>
+     */
+    if( other.containsLazyInclusive( getFrom() ) )
+      return true;
+
+    if( other.containsLazyInclusive( getTo() ) )
+      return true;
+
+    return false;
   }
 }
