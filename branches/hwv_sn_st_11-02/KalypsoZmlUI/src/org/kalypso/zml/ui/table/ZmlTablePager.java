@@ -42,6 +42,7 @@ package org.kalypso.zml.ui.table;
 
 import java.util.Date;
 
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.graphics.Point;
@@ -52,18 +53,21 @@ import org.kalypso.zml.ui.table.layout.ClosestDateVisitor;
 /**
  * @author Dirk Kuch
  */
-public class RevealTableWorker
+public class ZmlTablePager
 {
-
   private final Date m_index;
 
   private final IZmlTable m_table;
 
-  public RevealTableWorker( final IZmlTable table )
+  private final IStructuredSelection m_selection;
+
+  public ZmlTablePager( final IZmlTable table )
   {
     m_table = table;
     final TableViewer viewer = table.getTableViewer();
     m_index = getIndex( viewer );
+
+    m_selection = (IStructuredSelection) viewer.getSelection();
   }
 
   private Date getIndex( final TableViewer viewer )
@@ -82,6 +86,10 @@ public class RevealTableWorker
 
   public void reveal( )
   {
+    final TableViewer viewer = m_table.getTableViewer();
+    if( !m_selection.isEmpty() )
+      viewer.setSelection( m_selection );
+
     if( Objects.isNull( m_index ) )
       return;
 
@@ -92,7 +100,7 @@ public class RevealTableWorker
     if( Objects.isNull( row ) )
       return;
 
-    m_table.getTableViewer().reveal( row );
+    viewer.reveal( row );
 
     // FIXME AbstractCellCursor has to listen to reveal events
     m_table.getFocusHandler().getCursor().redraw();

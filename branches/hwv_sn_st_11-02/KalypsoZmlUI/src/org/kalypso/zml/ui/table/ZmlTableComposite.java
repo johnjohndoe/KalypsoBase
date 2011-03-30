@@ -48,14 +48,10 @@ import java.util.Set;
 import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.window.ToolTip;
@@ -68,7 +64,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
@@ -246,36 +241,18 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     if( m_tableViewer.getTable().isDisposed() )
       return;
 
-    final RevealTableWorker reveal = new RevealTableWorker( this );
+    final ZmlTablePager pager = new ZmlTablePager( this );
 
     for( final ExtendedZmlTableColumn column : m_columns )
     {
       column.reset();
     }
-
-    final IStructuredSelection selection = (IStructuredSelection) m_tableViewer.getSelection();
     m_tableViewer.refresh( true, true );
-
-    if( !selection.isEmpty() )
-      m_tableViewer.setSelection( selection );
-
     m_layout.tableChanged();
 
     fireTableChanged();
 
-    reveal.reveal();
-    new UIJob( "" )
-    {
-
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-// reveal.reveal();
-
-        return Status.OK_STATUS;
-      }
-    }.schedule( 500 );
-
+    pager.reveal();
   }
 
   public void fireTableChanged( )
