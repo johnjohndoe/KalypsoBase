@@ -55,7 +55,7 @@ import org.kalypso.zml.ui.table.layout.ClosestDateVisitor;
  */
 public class ZmlTablePager
 {
-  private final Date m_index;
+  private static Date INDEX;
 
   private final IZmlTable m_table;
 
@@ -65,9 +65,15 @@ public class ZmlTablePager
   {
     m_table = table;
     final TableViewer viewer = table.getTableViewer();
-    m_index = getIndex( viewer );
+    setIndex( getIndex( viewer ) );
 
     m_selection = (IStructuredSelection) viewer.getSelection();
+  }
+
+  private static void setIndex( final Date date )
+  {
+    if( Objects.isNotNull( date ) )
+      INDEX = date;
   }
 
   private Date getIndex( final TableViewer viewer )
@@ -90,10 +96,10 @@ public class ZmlTablePager
     if( !m_selection.isEmpty() )
       viewer.setSelection( m_selection );
 
-    if( Objects.isNull( m_index ) )
+    if( Objects.isNull( INDEX ) )
       return;
 
-    final ClosestDateVisitor visitor = new ClosestDateVisitor( m_index );
+    final ClosestDateVisitor visitor = new ClosestDateVisitor( INDEX );
     m_table.accept( visitor );
 
     final IZmlModelRow row = visitor.getModelRow();
