@@ -172,6 +172,9 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
   private DateRange getDateRange( )
   {
     final IZmlLayerDataHandler handler = getDataHandler();
+    if( Objects.isNull( handler ) )
+      return null;
+
     final IObservation observation = handler.getObservation();
     if( Objects.isNull( observation ) )
       return null;
