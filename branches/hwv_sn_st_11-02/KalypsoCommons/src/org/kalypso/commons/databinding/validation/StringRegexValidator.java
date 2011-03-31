@@ -75,12 +75,15 @@ public class StringRegexValidator extends TypedValidator<String>
   {
     try
     {
+      if( value.isEmpty() )
+        throw new PatternSyntaxException( "Ein leerer regulärer Ausdruck ist nicht erlaubt...", "", -1 );
+
       Pattern.compile( value );
       return Status.OK_STATUS;
     }
     catch( PatternSyntaxException ex )
     {
-      return new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), String.format( "Ungültiger Regulärer Ausdruck: %s", ex.getLocalizedMessage() ), ex );
+      return new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), String.format( "Ungültiger regulärer Ausdruck: %s", ex.getLocalizedMessage() ), ex );
     }
   }
 }
