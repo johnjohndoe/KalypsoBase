@@ -58,7 +58,7 @@ public class DragZoomOutHandler extends AbstractChartDragHandler
 
   public DragZoomOutHandler( final IChartComposite chartComposite )
   {
-    super( chartComposite, 5, SWT.BUTTON_MASK, SWT.CURSOR_CROSS );
+    super( chartComposite, 5, SWT.BUTTON_MASK );
   }
 
   /**
@@ -88,6 +88,8 @@ public class DragZoomOutHandler extends AbstractChartDragHandler
   @Override
   public void doMouseMoveAction( final Point end, final EditInfo editInfo )
   {
+    setCursor( SWT.CURSOR_CROSS );
+
     final Point start = editInfo.getPosition();
     final Point pos = getChart().plotPoint2screen( end );
     getChart().setDragArea( new Rectangle( start.x, start.y, pos.x - start.x, pos.y - start.y ) );

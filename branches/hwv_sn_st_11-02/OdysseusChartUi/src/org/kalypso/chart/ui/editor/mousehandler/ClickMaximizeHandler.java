@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
@@ -53,7 +52,7 @@ public class ClickMaximizeHandler extends AbstractChartHandler
 {
   public ClickMaximizeHandler( final IChartComposite chartComposite )
   {
-    super( chartComposite, SWT.CURSOR_ARROW );
+    super( chartComposite );
   }
 
   /**

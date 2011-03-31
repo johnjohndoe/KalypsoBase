@@ -43,12 +43,12 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
 
   public AbstractChartDragHandler( final IChartComposite chart, final int trashHold )
   {
-    this( chart, trashHold, SWT.BUTTON1 | SWT.BUTTON2 | SWT.BUTTON3, SWT.CURSOR_ARROW );
+    this( chart, trashHold, SWT.BUTTON1 | SWT.BUTTON2 | SWT.BUTTON3 );
   }
 
-  public AbstractChartDragHandler( final IChartComposite chart, final int trashHold, final int observedButtonMask, final int cursor )
+  public AbstractChartDragHandler( final IChartComposite chart, final int trashHold, final int observedButtonMask )
   {
-    super( chart, cursor );
+    super( chart );
 
     m_trashHold = trashHold;
     m_observedButtonMask = observedButtonMask;

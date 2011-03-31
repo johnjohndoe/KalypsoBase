@@ -93,7 +93,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
 
   public ZoomPanMaximizeHandler( final IChartComposite chartComposite, final DIRECTION direction )
   {
-    super( chartComposite, SWT.CURSOR_ARROW );
+    super( chartComposite );
     m_direction = direction;
   }
 
@@ -103,11 +103,22 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
   @Override
   public void mouseDown( final MouseEvent e )
   {
-    final MouseEvent2 event = new MouseEvent2( e );
+    setCursor( cursorFromButton( e ) );
 
-    final Point currentPos = event.getPoint();
+    final Point currentPos = EventUtils.getPoint( e );
     m_startPos = currentPos;
     m_startPlot = getChart().screen2plotPoint( currentPos );
+  }
+
+  private int cursorFromButton( final MouseEvent e )
+  {
+    if( EventUtils.isButton1( e ) )
+      return SWT.CURSOR_CROSS;
+
+    if( EventUtils.isButton2( e ) )
+      return SWT.CURSOR_HAND;
+
+    return -1;
   }
 
   /**
@@ -118,26 +129,24 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
   {
     super.mouseMove( e );
 
-    final MouseEvent2 event = new MouseEvent2( e );
-
     if( m_startPlot == null )
       return;
 
-    final Point currentPos = event.getPoint();
+    final Point currentPos = EventUtils.getPoint( e );
     final Point currentPlot = getChart().screen2plotPoint( currentPos );
 
     final boolean isMoved = isMoved( currentPos );
     if( !isMoved )
       return;
 
-    if( event.isButton1() )
+    if( EventUtils.isStateButton1( e ) )
     {
-      if( event.isControl() )
+      if( EventUtils.isControl( e ) )
         doMouseMoveSelection( m_startPlot, currentPlot );
       else
         doMouseMoveZoom( m_startPlot, currentPlot );
     }
-    else if( event.isButton2() )
+    else if( EventUtils.isStateButton2( e ) )
       doMouseMovePan( m_startPlot, currentPlot );
   }
 
@@ -187,6 +196,8 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     }
     finally
     {
+      setCursor( SWT.CURSOR_ARROW );
+
       m_startPlot = null;
 
       final IChartComposite chart = getChart();
@@ -196,34 +207,33 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
 
   private void doMouseUpAction( final MouseEvent e )
   {
-    final MouseEvent2 event = new MouseEvent2( e );
-
-    final Point currentPos = event.getPoint();
-    final Point currentPosition = getChart().screen2plotPoint( currentPos );
+    final Point currentPos = EventUtils.getPoint( e );
+    final Point currentPlot = getChart().screen2plotPoint( currentPos );
 
     final boolean isMoved = isMoved( currentPos );
     if( !isMoved )
     {
-      fireSelectionChanged( currentPos );
+      if( EventUtils.isStateButton1( e ) )
+        fireSelectionChanged( currentPlot );
       return;
     }
 
-    if( event.isButton1() )
+    if( EventUtils.isStateButton1( e ) )
     {
-      if( Objects.isNotNull( currentPosition ) )
+      if( Objects.isNotNull( currentPlot ) )
       {
-        if( event.isControl() )
-          fireSelectionChanged( m_startPlot, currentPosition );
+        if( EventUtils.isControl( e ) )
+          fireSelectionChanged( m_startPlot, currentPlot );
         else
-          doMouseUpZoom( m_startPlot, currentPosition ); // zoom
+          doMouseUpZoom( m_startPlot, currentPlot ); // zoom
       }
       else
         fireSelectionChanged( m_startPlot );
     }
-    else if( event.isButton2() )
+    else if( EventUtils.isStateButton2( e ) )
     {
-      if( Objects.isNotNull( currentPosition ) )
-        doMouseUpPan( m_startPlot, currentPosition );
+      if( Objects.isNotNull( currentPlot ) )
+        doMouseUpPan( m_startPlot, currentPlot );
     }
   }
 
