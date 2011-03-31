@@ -179,8 +179,8 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
     final IParameterContainer parameters = getProvider().getParameterContainer();
 
     final MetadataList metadata = observation.getMetadataList();
-    final Date start = LayerProviderUtils.getMetadataDate( parameters, "start", metadata );
-    final Date end = LayerProviderUtils.getMetadataDate( parameters, "end", metadata );
+    final Date start = LayerProviderUtils.getMetadataDate( parameters, "start", metadata ); //$NON-NLS-1$
+    final Date end = LayerProviderUtils.getMetadataDate( parameters, "end", metadata ); //$NON-NLS-1$
 
     return new DateRange( start, end );
   }

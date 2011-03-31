@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,14 +57,14 @@ import org.kalypso.zml.core.table.schema.IndexColumnType;
  */
 public class ZmlModelRow implements IZmlModelRow
 {
-  private final Object m_index;
+  private final Date m_index;
 
   /** Map<Reference (id), Reference> */
   Map<String, IZmlValueReference> m_references = new HashMap<String, IZmlValueReference>();
 
   private final IZmlModel m_model;
 
-  protected ZmlModelRow( final IZmlModel model, final Object index )
+  protected ZmlModelRow( final IZmlModel model, final Date index )
   {
     m_model = model;
     m_index = index;
@@ -98,7 +99,7 @@ public class ZmlModelRow implements IZmlModelRow
   }
 
   @Override
-  public Object getIndexValue( )
+  public Date getIndexValue( )
   {
     return m_index;
   }

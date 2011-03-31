@@ -43,37 +43,32 @@ package org.kalypso.zml.core.table.model.interpolation;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
-import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
-import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
+import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 
 /**
  * @author Dirk Kuch
  */
-public class FindStuetzstellenVisitor implements ITupleModelVisitor
+public class FindStuetzstellenVisitor implements IObservationVisitor
 {
   private final Set<Integer> m_references = new LinkedHashSet<Integer>();
 
-  private final DataSourceHandler m_sourceHandler;
+  private IAxis m_sourceAxis;
 
-  private final IAxis m_sourceAxis;
+  private IAxis m_statusAxis;
 
-  private final IAxis m_statusAxis;
+  private DataSourceHandler m_dataSourceHandler;
 
-  public FindStuetzstellenVisitor( final IObservation observation )
+  public FindStuetzstellenVisitor( )
   {
-    final MetadataList metadata = observation.getMetadataList();
-    m_sourceHandler = new DataSourceHandler( metadata );
-    final IAxis[] axes = observation.getAxes();
-    m_sourceAxis = AxisUtils.findDataSourceAxis( axes );
-    m_statusAxis = AxisUtils.findStatusAxis( axes );
+
   }
 
   public Integer[] getStuetzstellen( )
@@ -81,20 +76,52 @@ public class FindStuetzstellenVisitor implements ITupleModelVisitor
     return m_references.toArray( new Integer[] {} );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.visitor.ITupleModelVisitor#visit(org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer)
-   */
+  private IAxis getStatusAxis( final IObservationValueContainer container )
+  {
+    if( Objects.isNull( m_statusAxis ) )
+      m_statusAxis = AxisUtils.findStatusAxis( container.getAxes() );
+
+    return m_statusAxis;
+  }
+
+  private IAxis getSourceAxis( final IObservationValueContainer container )
+  {
+    if( Objects.isNull( m_sourceAxis ) )
+      m_sourceAxis = AxisUtils.findDataSourceAxis( container.getAxes() );
+
+    return m_sourceAxis;
+  }
+
+  private DataSourceHandler getDataSourceHandler( final IObservationValueContainer container )
+  {
+    if( Objects.isNull( m_dataSourceHandler ) )
+      m_dataSourceHandler = new DataSourceHandler( container.getMetaData() );
+
+    return m_dataSourceHandler;
+  }
+
   @Override
-  public void visit( final ITupleModelValueContainer container )
+  public void visit( final IObservationValueContainer container )
   {
     try
     {
-      final Object sourceIndexObject = m_sourceAxis == null ? null : container.get( m_sourceAxis );
-      final Number sourceIndex = sourceIndexObject instanceof Number ? (Number) sourceIndexObject : -1;
-      final String source = m_sourceHandler.getDataSourceIdentifier( sourceIndex.intValue() );
 
-      final Object statusObject = m_statusAxis == null ? null : container.get( m_statusAxis );
-      final Number status = statusObject instanceof Number ? (Number) statusObject : KalypsoStati.BIT_OK;
+      final IAxis sourceAxis = getSourceAxis( container );
+      String source = null;
+      if( Objects.isNotNull( sourceAxis ) )
+      {
+        final Object sourceIndexObject = container.get( sourceAxis );
+        final Number sourceIndex = sourceIndexObject instanceof Number ? (Number) sourceIndexObject : -1;
+        source = getDataSourceHandler( container ).getDataSourceIdentifier( sourceIndex.intValue() );
+      }
+
+      final IAxis statusAxis = getStatusAxis( container );
+      Number status = null;
+      if( Objects.isNotNull( statusAxis ) )
+      {
+        final Object statusObject = container.get( statusAxis );
+        status = statusObject instanceof Number ? (Number) statusObject : KalypsoStati.BIT_OK;
+      }
 
       if( ZmlValues.isStuetzstelle( status, source ) )
         m_references.add( container.getIndex() );
@@ -104,4 +131,5 @@ public class FindStuetzstellenVisitor implements ITupleModelVisitor
       e.printStackTrace();
     }
   }
+
 }

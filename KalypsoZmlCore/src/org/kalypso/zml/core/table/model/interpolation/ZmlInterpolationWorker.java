@@ -75,7 +75,6 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
     m_observation = observation;
   }
 
-
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
@@ -92,8 +91,8 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
       final boolean setLastValidValue = ZmlInterpolation.isSetLastValidValue( m_observation.getMetadataList() );
       final Double defaultValue = ZmlInterpolation.getDefaultValue( m_observation.getMetadataList() );
 
-      final FindStuetzstellenVisitor visitor = new FindStuetzstellenVisitor( m_observation );
-      values.accept( visitor );
+      final FindStuetzstellenVisitor visitor = new FindStuetzstellenVisitor();
+      m_observation.accept( visitor, null );
 
       final Integer[] stuetzstellen = visitor.getStuetzstellen();
       if( ArrayUtils.isEmpty( stuetzstellen ) )

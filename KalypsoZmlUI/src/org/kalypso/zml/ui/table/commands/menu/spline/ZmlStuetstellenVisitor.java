@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,47 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.references;
+package org.kalypso.zml.ui.table.commands.menu.spline;
 
-import org.kalypso.commons.java.lang.Objects;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.ZmlValues;
+import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public final class ZmlValues
+public class ZmlStuetstellenVisitor implements IZmlModelColumnVisitor
 {
-  private ZmlValues( )
+  Set<IZmlValueReference> m_references = new LinkedHashSet<IZmlValueReference>();
+
+  private final DateRange m_dateRange;
+
+  public ZmlStuetstellenVisitor( final IZmlValueReference s1, final IZmlValueReference s2 ) throws SensorException
   {
+    m_dateRange = new DateRange( s1.getIndexValue(), s2.getIndexValue() );
   }
 
-  public static boolean isStuetzstelle( final IZmlValueReference reference ) throws SensorException
+  /**
+   * @see org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor#visit(org.kalypso.zml.core.table.model.references.IZmlValueReference)
+   */
+  @Override
+  public void visit( final IZmlValueReference reference ) throws SensorException
   {
-    return isStuetzstelle( reference.getStatus(), reference.getDataSource() );
+    if( !m_dateRange.containsLazyInclusive( reference.getIndexValue() ) )
+      return;
+
+    if( ZmlValues.isStuetzstelle( reference ) )
+      m_references.add( reference );
   }
 
-  public static boolean isStuetzstelle( final Number status, final String source )
+  public IZmlValueReference[] getStuetzstellen( )
   {
-    if( Objects.allNull( status, source ) )
-      return false;
-    else if( Objects.isNotNull( status ) && (status.intValue() & KalypsoStati.BIT_USER_MODIFIED) != 0 )
-      return true;
-    else if( Objects.isNull( source ) )
-      return true;
-
-    return !source.startsWith( DataSourceHelper.FILTER_SOURCE ); //$NON-NLS-1$
-  }
-
-  public static boolean isNullstelle( final Number value, final Number status, final String source )
-  {
-    if( isStuetzstelle( status, source ) )
-      return false;
-
-    if( value == null )
-      return false;
-
-    return value.doubleValue() == 0.0;
+    return m_references.toArray( new IZmlValueReference[] {} );
   }
 }
