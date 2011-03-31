@@ -68,7 +68,6 @@ public class DragZoomOutHandler extends AbstractChartDragHandler
   @Override
   public void doMouseUpAction( final Point end, final EditInfo editInfo )
   {
-
     try
     {
       final ZoomOutVisitor visitor = new ZoomOutVisitor( getChart().screen2plotPoint( editInfo.getPosition() ), getChart().screen2plotPoint( end ) );

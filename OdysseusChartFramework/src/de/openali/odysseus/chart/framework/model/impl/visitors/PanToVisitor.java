@@ -53,7 +53,6 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
  */
 public class PanToVisitor implements IAxisVisitor
 {
-
   private final Point m_start;
 
   private final Point m_end;
@@ -98,7 +97,5 @@ public class PanToVisitor implements IAxisVisitor
 
     final IDataRange<Number> newRange = new ComparableDataRange<Number>( new Number[] { new Double( newmin ), new Double( newmax ) } );
     axis.setNumericRange( newRange );
-
   }
-
 }

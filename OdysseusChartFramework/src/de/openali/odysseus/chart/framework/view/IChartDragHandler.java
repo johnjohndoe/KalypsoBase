@@ -49,5 +49,4 @@ import org.eclipse.swt.events.MouseMoveListener;
  */
 public interface IChartDragHandler extends MouseListener, MouseMoveListener, KeyListener
 {
-// ?? deprecated ??
 }
