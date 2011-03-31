@@ -38,52 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.databinding.validation;
+package org.kalypso.commons.databinding.conversion;
 
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.eclipse.core.databinding.conversion.Converter;
 
 /**
- * This validator checks, if a regular expression can be compiled.
+ * Implementation of {@link Converter} which uses types.
  * 
  * @author Holger Albert
  */
-public class StringRegexValidator extends TypedValidator<String>
+public abstract class TypedConverter<FROM, TO> extends Converter
 {
   /**
    * The constructor.
    * 
-   * @param severity
-   *          Severity of IStatus, will be used to create validation failures.
-   * @param message
-   *          Will be used as message for a status, if validation fails.
+   * @param fromType
+   *          The from type.
+   * @param toType
+   *          The to type.
    */
-  public StringRegexValidator( int severity, String message )
+  public TypedConverter( Class<FROM> fromType, Class<TO> toType )
   {
-    super( String.class, severity, message );
+    super( fromType, toType );
   }
 
   /**
-   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
+   * @see org.eclipse.core.databinding.conversion.IConverter#convert(java.lang.Object)
    */
+  @SuppressWarnings("unchecked")
   @Override
-  protected IStatus doValidate( String value )
+  public Object convert( Object fromObject )
   {
-    try
-    {
-      if( value.isEmpty() )
-        throw new PatternSyntaxException( "Ein leerer regulärer Ausdruck ist nicht erlaubt...", "", -1 );
-
-      Pattern.compile( value );
-      return Status.OK_STATUS;
-    }
-    catch( PatternSyntaxException ex )
-    {
-      return new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), String.format( "Ungültiger regulärer Ausdruck: %s", ex.getLocalizedMessage() ), ex );
-    }
+    Class<FROM> fromType = (Class<FROM>) getFromType();
+    return doConvert( fromType.cast( fromObject ) );
   }
+
+  /**
+   * This function returns the result of the conversion of the given object.
+   * 
+   * @param fromObject
+   *          The object to convert, of type getFromType().
+   * @return The converted object, of type getToType().
+   */
+  protected abstract TO doConvert( FROM fromObject );
 }
