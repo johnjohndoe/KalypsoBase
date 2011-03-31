@@ -137,6 +137,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
     m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_tableViewer.getTable().setLinesVisible( true );
+    m_tableViewer.setUseHashlookup( true );
 
     m_focus = new ZmlTableFocusCellHandler( this );
     m_selection = new ZmlTableSelectionHandler( this );
