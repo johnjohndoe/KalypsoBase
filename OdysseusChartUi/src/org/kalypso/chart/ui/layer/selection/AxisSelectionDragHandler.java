@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.layer.selection;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Point;
@@ -58,7 +57,7 @@ public class AxisSelectionDragHandler extends AbstractChartHandler implements Mo
 
   public AxisSelectionDragHandler( final IChartComposite chart, final AxisSelectionLayer layer )
   {
-    super( chart, SWT.CURSOR_ARROW );
+    super( chart );
 
     m_layer = layer;
   }

@@ -59,7 +59,7 @@ public class DragPanHandler extends AbstractChartDragHandler
 
   public DragPanHandler( final IChartComposite chartComposite, final int trashold, final int observedButtonMask )
   {
-    super( chartComposite, trashold, observedButtonMask, SWT.CURSOR_HAND );
+    super( chartComposite, trashold, observedButtonMask );
   }
 
   public DragPanHandler( final IChartComposite chartComposite )
@@ -133,6 +133,8 @@ public class DragPanHandler extends AbstractChartDragHandler
   @Override
   public void doMouseMoveAction( final Point start, final EditInfo editInfo )
   {
+    setCursor( SWT.CURSOR_HAND );
+
     getChart().setPanOffset( null, start, editInfo.getPosition() );
   }
 }

@@ -3,7 +3,7 @@ package org.kalypso.chart.ui.editor.mousehandler;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Canvas;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartDragHandler;
@@ -15,24 +15,16 @@ public abstract class AbstractChartHandler implements IChartDragHandler
 {
   private final IChartComposite m_chart;
 
-  private Cursor m_cursor = null;
+  private int m_cursor = -1;
 
-  private final int m_swtCursor;
-
-  public AbstractChartHandler( final IChartComposite chart, final int cursor )
+  public AbstractChartHandler( final IChartComposite chart )
   {
     m_chart = chart;
-    m_swtCursor = cursor;
   }
 
   public IChartComposite getChart( )
   {
     return m_chart;
-  }
-
-  public Cursor getCursor( final MouseEvent e )
-  {
-    return e.display.getSystemCursor( m_swtCursor );
   }
 
   /**
@@ -73,7 +65,6 @@ public abstract class AbstractChartHandler implements IChartDragHandler
   @Override
   public void mouseMove( final MouseEvent e )
   {
-    setCursor( e );
   }
 
   /**
@@ -84,21 +75,15 @@ public abstract class AbstractChartHandler implements IChartDragHandler
   {
   }
 
-  private final void setCursor( final MouseEvent e )
+  protected void setCursor( final int cursor )
   {
-    final Cursor cursor = getCursor( e );
-    if( cursor == null )
+    if( cursor == m_cursor )
       return;
 
-    // FIXME: why not set cursor on m_chart.getPlot() ?
+    m_cursor = cursor;
 
-    if( e.getSource() instanceof Control )
-    {
-      if( cursor == m_cursor )
-        return;
-
-      m_cursor = cursor;
-      ((Control) e.getSource()).setCursor( cursor );
-    }
+    final Canvas plot = getChart().getPlot();
+    final Cursor swtCursor = cursor == -1 ? null : plot.getDisplay().getSystemCursor( cursor );
+    plot.setCursor( swtCursor );
   }
 }
