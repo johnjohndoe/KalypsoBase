@@ -55,8 +55,17 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class DragPanHandler extends AbstractChartDragHandler
 {
-
   private Point m_keyUp = null;
+
+  public DragPanHandler( final IChartComposite chartComposite, final int trashold, final int observedButtonMask )
+  {
+    super( chartComposite, trashold, observedButtonMask, SWT.CURSOR_HAND );
+  }
+
+  public DragPanHandler( final IChartComposite chartComposite )
+  {
+    this( chartComposite, 5, SWT.BUTTON_MASK );
+  }
 
   /**
    * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#keyReleased(org.eclipse.swt.events.KeyEvent)
@@ -97,16 +106,6 @@ public class DragPanHandler extends AbstractChartDragHandler
     }
   }
 
-  public DragPanHandler( final IChartComposite chartComposite, final int trashold, final int observedButtonMask )
-  {
-    super( chartComposite, trashold, observedButtonMask, SWT.CURSOR_HAND );
-  }
-
-  public DragPanHandler( final IChartComposite chartComposite )
-  {
-    this( chartComposite, 5, SWT.BUTTON_MASK );
-  }
-
   /**
    * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#doMouseUpAction(org.eclipse.swt.graphics.Point,
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
@@ -136,5 +135,4 @@ public class DragPanHandler extends AbstractChartDragHandler
   {
     getChart().setPanOffset( null, start, editInfo.getPosition() );
   }
-
 }

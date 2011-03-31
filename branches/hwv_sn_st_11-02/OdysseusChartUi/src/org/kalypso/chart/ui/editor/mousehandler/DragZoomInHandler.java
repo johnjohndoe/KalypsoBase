@@ -59,13 +59,11 @@ public class DragZoomInHandler extends AbstractChartDragHandler
   public DragZoomInHandler( final IChartComposite chartComposite, final int observedButtonMask )
   {
     super( chartComposite, 5, observedButtonMask, SWT.CURSOR_CROSS );
-
   }
 
   public DragZoomInHandler( final IChartComposite chartComposite )
   {
     this( chartComposite, SWT.BUTTON_MASK );
-
   }
 
   /**
