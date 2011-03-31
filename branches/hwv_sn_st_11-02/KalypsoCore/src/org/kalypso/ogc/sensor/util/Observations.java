@@ -107,6 +107,12 @@ public final class Observations
           {
             return observation.getMetadataList();
           }
+
+          @Override
+          public void set( final IAxis axis, final Object value ) throws SensorException
+          {
+            model.set( index, axis, value );
+          }
         } );
       }
       catch( final CancelVisitorException e )

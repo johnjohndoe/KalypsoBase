@@ -43,6 +43,7 @@ package org.kalypso.zml.core.table.model;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -288,8 +289,14 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
       final IZmlValueReference reference = row.get( this );
       if( Objects.isNotNull( reference ) )
       {
-        if( !visitor.visit( reference ) )
+        try
+        {
+          visitor.visit( reference );
+        }
+        catch( final CancelVisitorException e )
+        {
           return;
+        }
       }
     }
   }

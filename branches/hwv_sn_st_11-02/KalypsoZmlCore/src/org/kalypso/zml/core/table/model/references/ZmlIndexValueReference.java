@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.references;
 
+import java.util.Date;
+
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
@@ -87,9 +89,9 @@ public class ZmlIndexValueReference implements IZmlValueReference
    * @see org.kalypso.zml.ui.table.model.references.IZmlModelCell#getValue()
    */
   @Override
-  public Object getValue( )
+  public Number getValue( )
   {
-    return getRow().getIndexValue();
+    return null;
   }
 
   /**
@@ -141,7 +143,7 @@ public class ZmlIndexValueReference implements IZmlValueReference
    * @see org.kalypso.zml.core.table.model.references.IZmlValueReference#getIndexValue()
    */
   @Override
-  public Object getIndexValue( )
+  public Date getIndexValue( )
   {
     return getRow().getIndexValue();
   }

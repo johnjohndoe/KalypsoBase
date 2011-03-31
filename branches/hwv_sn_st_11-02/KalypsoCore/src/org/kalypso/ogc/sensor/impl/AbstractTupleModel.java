@@ -121,6 +121,12 @@ public abstract class AbstractTupleModel implements ITupleModel
         {
           return AbstractTupleModel.this.getAxes();
         }
+
+        @Override
+        public void set( final IAxis axis, final Object value ) throws SensorException
+        {
+          AbstractTupleModel.this.set( index, axis, value );
+        }
       } );
     }
   }

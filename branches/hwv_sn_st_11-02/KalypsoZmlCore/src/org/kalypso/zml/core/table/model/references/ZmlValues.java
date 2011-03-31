@@ -61,10 +61,11 @@ public final class ZmlValues
 
   public static boolean isStuetzstelle( final Number status, final String source )
   {
-    if( Objects.isNotNull( status ) && (status.intValue() & KalypsoStati.BIT_USER_MODIFIED) != 0 )
+    if( Objects.allNull( status, source ) )
+      return false;
+    else if( Objects.isNotNull( status ) && (status.intValue() & KalypsoStati.BIT_USER_MODIFIED) != 0 )
       return true;
-
-    if( Objects.isNull( source ) )
+    else if( Objects.isNull( source ) )
       return true;
 
     return !source.startsWith( DataSourceHelper.FILTER_SOURCE ); //$NON-NLS-1$
