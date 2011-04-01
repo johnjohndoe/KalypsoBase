@@ -169,12 +169,15 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
         final IZmlModelRow row = (IZmlModelRow) element;
         final ZmlRule[] rules = m_column.findActiveRules( row );
-        for( final ZmlRule rule : rules )
+        if( rules != null )
         {
-          final CellStyle style = rule.getPlainStyle();
-          final Image image = style.getImage();
-          if( image != null )
-            iconMerger.addImage( new ZmlTableImage( style.getIdentifier(), image ) );
+          for( final ZmlRule rule : rules )
+          {
+            final CellStyle style = rule.getPlainStyle();
+            final Image image = style.getImage();
+            if( image != null )
+              iconMerger.addImage( new ZmlTableImage( style.getIdentifier(), image ) );
+          }
         }
 
         return iconMerger.createImage( PlatformUI.getWorkbench().getDisplay() );
