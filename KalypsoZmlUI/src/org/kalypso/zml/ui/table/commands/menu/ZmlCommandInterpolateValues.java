@@ -86,7 +86,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
 
       final int baseIndex = intervallStart.getIndex();
       final IZmlValueReference reference = intervallStart.getValueReference();
-      final double baseValue = ((Number) reference.getValue()).doubleValue();
+      final double baseValue = (reference.getValue()).doubleValue();
 
       final IZmlTableCell[] cells = column.getCells();
       for( final IZmlTableCell cell : cells )
@@ -116,8 +116,8 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
     final IZmlValueReference referenceStart = intervallStart.getValueReference();
     final IZmlValueReference referenceEnd = intervallEnd.getValueReference();
 
-    final Number valueStart = (Number) referenceStart.getValue();
-    final Number valueEnd = (Number) referenceEnd.getValue();
+    final Number valueStart = referenceStart.getValue();
+    final Number valueEnd = referenceEnd.getValue();
 
     return valueEnd.doubleValue() - valueStart.doubleValue();
   }

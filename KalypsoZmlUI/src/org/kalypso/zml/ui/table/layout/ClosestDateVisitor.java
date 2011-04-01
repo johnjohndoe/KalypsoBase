@@ -74,7 +74,7 @@ public class ClosestDateVisitor implements IZmlTableRowVisitor, IZmlModelRowVisi
   public void visit( final IZmlTableRow row )
   {
     final IZmlModelRow modelRow = row.getModelRow();
-    final Date date = (Date) modelRow.getIndexValue();
+    final Date date = modelRow.getIndexValue();
     final long time = date.getTime();
 
     final long diff = Math.abs( m_base - time );
@@ -93,7 +93,7 @@ public class ClosestDateVisitor implements IZmlTableRowVisitor, IZmlModelRowVisi
   @Override
   public void visit( final IZmlModelRow row )
   {
-    final Date date = (Date) row.getIndexValue();
+    final Date date = row.getIndexValue();
     final long time = date.getTime();
 
     final long diff = Math.abs( m_base - time );

@@ -68,7 +68,7 @@ public class IndexVisitor implements IZmlModelColumnVisitor
   @Override
   public void visit( final IZmlValueReference reference ) throws SensorException
   {
-    final Date date = (Date) reference.getIndexValue();
+    final Date date = reference.getIndexValue();
 
     if( date.after( m_current ) )
     {

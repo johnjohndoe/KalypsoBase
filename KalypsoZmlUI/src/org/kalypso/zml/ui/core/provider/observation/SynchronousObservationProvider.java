@@ -109,7 +109,6 @@ public class SynchronousObservationProvider extends AbstractObsProvider
     return null;
   }
 
-
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#getArguments()
    */

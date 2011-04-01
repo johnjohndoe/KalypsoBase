@@ -162,7 +162,7 @@ public class UpdateChartSelectionListener implements ISelectionChangedListener
     for( final IZmlTableRow row : rows )
     {
       final IZmlModelRow modelRow = row.getModelRow();
-      dates.add( (Date) modelRow.getIndexValue() );
+      dates.add( modelRow.getIndexValue() );
     }
 
     return dates.toArray( new Date[] {} );
