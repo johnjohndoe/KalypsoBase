@@ -157,16 +157,16 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
       return;
 
     final Point eventPoint = new Point( event.x, event.y );
-    final Point pt = table.toControl( eventPoint );
+    final Point controlPoint = table.toControl( eventPoint );
 
-    IExtendedZmlTableColumn column = findColumn( pt );
+    IExtendedZmlTableColumn column = findColumn( controlPoint );
     if( Objects.isNull( column ) )
       column = findColumn( eventPoint );
 
     if( Objects.isNull( column ) )
       return;
 
-    if( pt.x > 0 ) // header
+    if( controlPoint.x > 0 ) // header
     {
       final ZmlTableHeaderContextMenuProvider menuProvider = new ZmlTableHeaderContextMenuProvider();
       menuProvider.fillMenu( column, m_contextMenuManager );
