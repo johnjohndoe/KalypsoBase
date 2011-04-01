@@ -185,12 +185,33 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     {
       final LineLayerModelVisitor visitor = new LineLayerModelVisitor( this, getFilters() );
       observation.accept( visitor, null );
-      paintPoints( gc, visitor.getPoints() );
+      final Point[] points = visitor.getPoints();
+
+      if( points.length == 1 )
+        paintSinglePoint( gc, points[0] );
+      else if( points.length > 1 )
+        paintPoints( gc, points );
     }
     catch( final SensorException e )
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
+  }
+
+  private void paintSinglePoint( final GC gc, final Point point )
+  {
+    final IPointStyle pointStyle = getSinglePointStyle();
+    if( pointStyle == null )
+      return;
+
+    final Rectangle clip = getClip();
+    if( clip != null && !clip.contains( point ) )
+      return;
+
+    final PointFigure pf = getPointFigure();
+    pf.setStyle( pointStyle );
+    pf.setPoints( new Point[] { point } );
+    pf.paint( gc );
   }
 
   private void paintPoints( final GC gc, final Point[] points )
@@ -203,27 +224,13 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private void paintFigures( final GC gc, final Point[] points )
   {
-    if( points.length == 1 )
+    final ILineStyle lineStyle = getLineStyle();
+    if( lineStyle != null )
     {
-      final IPointStyle pointStyle = getSinglePointStyle();
-      if( pointStyle != null )
-      {
-        final PointFigure pf = getPointFigure();
-        pf.setStyle( pointStyle );
-        pf.setPoints( points );
-        pf.paint( gc );
-      }
-    }
-    else
-    {
-      final ILineStyle lineStyle = getLineStyle();
-      if( lineStyle != null )
-      {
-        final PolylineFigure lf = getPolylineFigure();
-        lf.setStyle( lineStyle );
-        lf.setPoints( points );
-        lf.paint( gc );
-      }
+      final PolylineFigure lf = getPolylineFigure();
+      lf.setStyle( lineStyle );
+      lf.setPoints( points );
+      lf.paint( gc );
     }
 
     final IPointStyle pointStyle = getMyPointStyle();
