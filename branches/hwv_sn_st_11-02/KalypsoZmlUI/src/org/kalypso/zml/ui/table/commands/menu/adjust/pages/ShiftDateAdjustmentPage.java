@@ -144,7 +144,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage implements I
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ShiftDateRunnable( getColumn(), m_offset );
+    return new ShiftDateRunnable( getColumn().getModelColumn(), getColumn().getSelectedCells(), m_offset );
   }
 
   /**
