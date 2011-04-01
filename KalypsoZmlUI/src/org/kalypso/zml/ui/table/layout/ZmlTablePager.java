@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.layout;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -47,6 +48,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.table.model.IZmlModel;
@@ -75,6 +77,26 @@ public class ZmlTablePager
   public void update( )
   {
     final TableViewer viewer = m_table.getTableViewer();
+    setIndex( viewer );
+    setSelection( viewer );
+  }
+
+  private void setSelection( final TableViewer viewer )
+  {
+    final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+    if( Objects.isNull( m_selection ) )
+    {
+      m_selection = selection;
+    }
+    else if( Objects.isNull( selection ) && selection.isEmpty() )
+      return;
+
+    m_selection = selection;
+
+  }
+
+  private void setIndex( final TableViewer viewer )
+  {
 
     Date date = null;
     if( m_firstRun )
@@ -88,14 +110,6 @@ public class ZmlTablePager
     {
       date = getIndex( viewer );
     }
-
-    setIndex( date );
-
-    m_selection = (IStructuredSelection) viewer.getSelection();
-  }
-
-  private void setIndex( final Date date )
-  {
 
     if( Objects.isNotNull( date ) )
       m_index = date;
@@ -113,7 +127,12 @@ public class ZmlTablePager
       return null;
 
     final IZmlModelRow row = (IZmlModelRow) element;
-    return row.getIndexValue();
+    final Date date = row.getIndexValue();
+    final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+    calendar.setTime( date );
+    calendar.add( Calendar.HOUR_OF_DAY, +1 );
+
+    return calendar.getTime();
   }
 
   private ViewerCell findCell( final TableViewer viewer, final Point... points )
