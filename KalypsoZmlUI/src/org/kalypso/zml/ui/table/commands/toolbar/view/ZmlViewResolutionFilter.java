@@ -201,4 +201,9 @@ public class ZmlViewResolutionFilter extends ViewerFilter
   {
     return m_stuetzstellenMode;
   }
+
+  public void resetOffset( final int startHour )
+  {
+    m_offset -= m_offset % startHour - 1;
+  }
 }
