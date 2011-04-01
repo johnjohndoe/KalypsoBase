@@ -84,7 +84,7 @@ public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
   {
     final boolean isDouble = NumberUtils.isDouble( text );
     if( !isDouble )
-      m_lastValidationMsg = "UngÃ¼ltiger Zahlenwert";
+      m_lastValidationMsg = "Ungültiger Zahlenwert";
     else
       m_lastValidationMsg = null;
 

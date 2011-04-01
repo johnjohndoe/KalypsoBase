@@ -101,7 +101,6 @@ public final class Splines
 
   public void apply( final mxSpline spline )
   {
-// m_spline = spline;
     final mxSpline1D splineX = spline.getSplineX();
     final mxSpline1D splineY = spline.getSplineY();
 
@@ -117,19 +116,6 @@ public final class Splines
 
   public Double getValue( final Date date )
   {
-// final mxSpline1D splineX = m_spline.getSplineX();
-// final mxSpline1D splineY = m_spline.getSplineY();
-//
-// final double max = splineX.getValue( 1.0 );
-// final double ptr = convertDate( date );
-//
-// final double v = 1.0 / max * ptr;
-//
-// final double x = splineX.getValue( v );
-// final double y = splineY.getValue( v );
-//
-// final Date computed = convertDate( x );
-
     double diff = Double.MAX_VALUE;
     Date index = null;
     final Set<Date> keys = m_values.keySet();
