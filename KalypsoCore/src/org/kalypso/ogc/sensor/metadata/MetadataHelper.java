@@ -47,6 +47,7 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import org.apache.commons.lang.StringUtils;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
@@ -92,7 +93,7 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
   public static Date getForecastStart( final MetadataList mdl )
   {
     final DateRange dateRange = getForecastDateRange( mdl );
-    if( dateRange == null )
+    if( Objects.isNull( dateRange ) )
       return null;
 
     return dateRange.getFrom();

@@ -78,6 +78,7 @@ import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
 import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellHandler;
 import org.kalypso.zml.ui.table.layout.ZmlTableLayoutHandler;
+import org.kalypso.zml.ui.table.layout.ZmlTablePager;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
@@ -106,6 +107,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   private ZmlTableFocusCellHandler m_focus;
 
   protected ZmlTableSelectionHandler m_selection;
+
+  final ZmlTablePager m_pager = new ZmlTablePager( this );
 
   public ZmlTableComposite( final IZmlModel model, final Composite parent, final FormToolkit toolkit )
   {
@@ -242,18 +245,19 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     if( m_tableViewer.getTable().isDisposed() )
       return;
 
-    final ZmlTablePager pager = new ZmlTablePager( this );
+    m_pager.update();
 
     for( final ExtendedZmlTableColumn column : m_columns )
     {
       column.reset();
     }
+
     m_tableViewer.refresh( true, true );
     m_layout.tableChanged();
 
     fireTableChanged();
 
-    pager.reveal();
+    m_pager.reveal();
   }
 
   public void fireTableChanged( )
@@ -275,7 +279,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       m_updateJob.cancel();
 
     m_updateJob = new ZmlTableUiUpdateJob( this );
-    m_updateJob.schedule( 250 );
+    m_updateJob.schedule( 100 );
 
   }
 
