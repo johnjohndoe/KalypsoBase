@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  DenickestraÃŸe 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,57 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.base.widgets.rules;
+package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
 
-import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
+public interface IAdjustmentPageProvider
 {
-  private String m_lastValidationMsg;
 
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule#getLastValidationMessage()
-   */
-  @Override
-  public String getLastValidationMessage( )
-  {
-    return m_lastValidationMsg;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule#getFormatedString(java.lang.Object)
-   */
-  @Override
-  public String getFormatedString( final Double value )
-  {
-    return String.format( "%.3f", value );
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule#parseValue(java.lang.String)
-   */
-  @Override
-  public Double parseValue( final String text )
-  {
-    return NumberUtils.parseQuietDouble( text );
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule#isValid(java.lang.String)
-   */
-  @Override
-  public boolean isValid( final String text )
-  {
-    final boolean isDouble = NumberUtils.isDouble( text );
-    if( !isDouble )
-      m_lastValidationMsg = "Ungültiger Zahlenwert";
-    else
-      m_lastValidationMsg = null;
-
-    return isDouble;
-  }
+  IZmlTableColumn getColumn( );
 
 }
