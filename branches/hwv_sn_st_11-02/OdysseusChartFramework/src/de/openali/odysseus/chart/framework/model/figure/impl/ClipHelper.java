@@ -40,11 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.figure.impl;
 
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -54,6 +52,9 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Polygon;
 
+import de.openali.odysseus.chart.framework.util.resource.IPair;
+import de.openali.odysseus.chart.framework.util.resource.Pair;
+
 /**
  * @author Gernot Belger
  */
@@ -61,9 +62,9 @@ public class ClipHelper
 {
   private final GeometryFactory m_gf = new GeometryFactory();
 
-  private final Rectangle m_clipRect;
+  private final Rectangle2D m_clipRect;
 
-  public ClipHelper( final Rectangle clipRect )
+  public ClipHelper( final Rectangle2D clipRect )
   {
     m_clipRect = clipRect;
   }
@@ -74,10 +75,11 @@ public class ClipHelper
    * @param Possible
    *          multiple sub-line-strings of the original line string. The whole thing, if no clip was defined.
    */
-  public Point[][] clipAsLine( final Point[] points )
+  @SuppressWarnings("unchecked")
+  public IPair<Number, Number>[][] clipAsLine( final IPair<Number, Number>[] points )
   {
     if( m_clipRect == null || points.length == 0 )
-      return new Point[][] { points };
+      return new IPair[][] { points };
 
     final Polygon clipPolygon = getClipPolygon();
 
@@ -85,29 +87,29 @@ public class ClipHelper
     final Coordinate[] crds = new Coordinate[points.length];
 
     for( int i = 0; i < crds.length; i++ )
-      crds[i] = new Coordinate( points[i].x, points[i].y );
+      crds[i] = new Coordinate( points[i].getDomain().doubleValue(), points[i].getTarget().doubleValue() );
 
     // special case: we got only one single point
     if( crds.length == 1 )
     {
       final com.vividsolutions.jts.geom.Point singlePoint = m_gf.createPoint( crds[0] );
       if( clipPolygon.contains( singlePoint ) )
-        return new Point[][]{ points };
+        return new IPair[][] { points };
       else
-        return new Point[][]{};
+        return new IPair[][] {};
     }
-    
-    final LineString lineString = m_gf.createLineString( crds );
 
+    final LineString lineString = m_gf.createLineString( crds );
 
     final Geometry clippedPoints = lineString.intersection( clipPolygon );
 
-    final Collection<Point[]> collector = new ArrayList<Point[]>();
+    final Collection<IPair<Number, Number>[]> collector = new ArrayList<IPair<Number, Number>[]>();
     drawGeometry( collector, clippedPoints );
-    return collector.toArray( new Point[collector.size()][] );
+    return collector.toArray( new IPair[collector.size()][] );
   }
 
-  private void drawGeometry( final Collection<Point[]> result, final Geometry geom )
+  @SuppressWarnings("unchecked")
+  private void drawGeometry( final Collection<IPair<Number, Number>[]> result, final Geometry geom )
   {
     if( geom instanceof GeometryCollection )
     {
@@ -123,17 +125,17 @@ public class ClipHelper
     {
       final LineString ls = (LineString) geom;
       final Coordinate[] coordinates = ls.getCoordinates();
-      final Point[] points = new Point[coordinates.length];
+      final IPair<Number, Number>[] points = new IPair[coordinates.length];
       for( int i = 0; i < points.length; i++ )
-        points[i] = new Point( (int) coordinates[i].x, (int) coordinates[i].y );
+        points[i] = new Pair<Number, Number>( coordinates[i].x, coordinates[i].y );
 
       result.add( points );
     }
     else if( geom instanceof com.vividsolutions.jts.geom.Point )
     {
       final com.vividsolutions.jts.geom.Point p = (com.vividsolutions.jts.geom.Point) geom;
-      final Point point = new Point( (int) p.getX(), (int) p.getY() );
-      result.add( new Point[] { point } );
+      final IPair<Number, Number> point = new Pair<Number, Number>( p.getX(), p.getY() );
+      result.add( new IPair[] { point } );
     }
     else
     {
@@ -143,11 +145,16 @@ public class ClipHelper
 
   private Polygon getClipPolygon( )
   {
+    final double minX = m_clipRect.getMinX();
+    final double minY = m_clipRect.getMinY();
+    final double maxX = m_clipRect.getMaxX();
+    final double maxY = m_clipRect.getMaxX();
+
     final Coordinate[] clipShellPoints = new Coordinate[5];
-    clipShellPoints[0] = new Coordinate( m_clipRect.x, m_clipRect.y );
-    clipShellPoints[1] = new Coordinate( m_clipRect.x, m_clipRect.y + m_clipRect.height );
-    clipShellPoints[2] = new Coordinate( m_clipRect.x + m_clipRect.width, m_clipRect.y + m_clipRect.height );
-    clipShellPoints[3] = new Coordinate( m_clipRect.x + m_clipRect.width, m_clipRect.y );
+    clipShellPoints[0] = new Coordinate( minX, minY );
+    clipShellPoints[1] = new Coordinate( minX, maxY );
+    clipShellPoints[2] = new Coordinate( maxX, maxY );
+    clipShellPoints[3] = new Coordinate( maxX, minY );
     clipShellPoints[4] = clipShellPoints[0];
     final LinearRing clipShell = m_gf.createLinearRing( clipShellPoints );
     return m_gf.createPolygon( clipShell, null );

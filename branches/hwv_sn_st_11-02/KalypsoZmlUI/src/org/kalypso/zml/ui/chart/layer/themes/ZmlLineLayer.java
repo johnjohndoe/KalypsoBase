@@ -40,11 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.awt.geom.Rectangle2D;
 import java.util.Date;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.DateRange;
@@ -69,6 +69,7 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.IStyleSetRefernceFilter;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
+import de.openali.odysseus.chart.framework.util.resource.IPair;
 
 /**
  * @author Dirk Kuch
@@ -167,8 +168,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     if( observation == null )
       return m_labelDescriptor;
 
-    final String title = ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
-    return title;
+    return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
   }
 
   /**
@@ -177,16 +177,9 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public void paint( final GC gc )
   {
-    final IObservation observation = m_data.getObservation();
-    if( observation == null )
-      return;
-
     try
     {
-      final LineLayerModelVisitor visitor = new LineLayerModelVisitor( this, getFilters() );
-      observation.accept( visitor, null );
-      final Point[] points = visitor.getPoints();
-
+      final IPair<Number, Number>[] points = getFilteredPoints( null );
       if( points.length == 1 )
         paintSinglePoint( gc, points[0] );
       else if( points.length > 1 )
@@ -198,28 +191,46 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     }
   }
 
-  private void paintSinglePoint( final GC gc, final Point point )
+  @SuppressWarnings("unchecked")
+  IPair<Number, Number>[] getFilteredPoints( final IDataRange<Number> domainIntervall ) throws SensorException
+  {
+    final IObservation observation = m_data.getObservation();
+    if( observation == null )
+      return new IPair[0];
+
+    final LineLayerModelVisitor visitor = new LineLayerModelVisitor( this, getFilters(), domainIntervall );
+    observation.accept( visitor, null );
+    return visitor.getPoints();
+  }
+
+  @SuppressWarnings("unchecked")
+  private void paintSinglePoint( final GC gc, final IPair<Number, Number> point )
   {
     final IPointStyle pointStyle = getSinglePointStyle();
     if( pointStyle == null )
       return;
 
-    final Rectangle clip = getClip();
-    if( clip != null && !clip.contains( point ) )
+    final Rectangle2D clip = getClip();
+    if( clip != null && !clip.contains( point.getDomain().doubleValue(), point.getTarget().doubleValue() ) )
       return;
+
+    final Point[] screenPoints = toScreen( point );
 
     final PointFigure pf = getPointFigure();
     pf.setStyle( pointStyle );
-    pf.setPoints( new Point[] { point } );
+    pf.setPoints( screenPoints );
     pf.paint( gc );
   }
 
-  private void paintPoints( final GC gc, final Point[] points )
+  private void paintPoints( final GC gc, final IPair<Number, Number>[] points )
   {
     final ClipHelper helper = new ClipHelper( getClip() );
-    final Point[][] clippedPoints = helper.clipAsLine( points );
-    for( final Point[] subPoints : clippedPoints )
-      paintFigures( gc, subPoints );
+    final IPair<Number, Number>[][] clippedPoints = helper.clipAsLine( points );
+    for( final IPair<Number, Number>[] subPoints : clippedPoints )
+    {
+      final Point[] screenPoints = toScreen( subPoints );
+      paintFigures( gc, screenPoints );
+    }
   }
 
   private void paintFigures( final GC gc, final Point[] points )
@@ -243,31 +254,28 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     }
   }
 
-  private Rectangle getClip( )
+  Rectangle2D getClip( )
   {
     final DateRange range = getRange();
     if( range == null || range.getFrom() == null && range.getTo() == null )
       return null;
 
-    final ICoordinateMapper mapper = getCoordinateMapper();
-    final Point screenSize = mapper.getScreenSize();
-
     final Date from = Objects.isNotNull( range.getFrom() ) ? range.getFrom() : null;
     final Date to = Objects.isNotNull( range.getTo() ) ? range.getTo() : null;
 
-    final int fromScreen = getDomainScreen( from, 0 );
-    final int toScreen = getDomainScreen( to, screenSize.x );
+    final Number fromScreen = getDomainNumeric( from, -Double.MAX_VALUE ).doubleValue();
+    final Number toScreen = getDomainNumeric( to, Double.MAX_VALUE ).doubleValue();
 
-    return new Rectangle( fromScreen, 0, toScreen - fromScreen, screenSize.y );
+    final double width = toScreen.doubleValue() - fromScreen.doubleValue();
+    return new Rectangle2D.Double( fromScreen.doubleValue(), -Double.MAX_VALUE, width, Double.MAX_VALUE );
   }
 
-  private int getDomainScreen( final Date domainValue, final int defaultValue )
+  private Number getDomainNumeric( final Date domainValue, final double defaultValue )
   {
     if( domainValue == null )
       return defaultValue;
 
-    final Point screen = getCoordinateMapper().numericToScreen( getRangeHandler().getDateDataOperator().logicalToNumeric( domainValue ), 0.0 );
-    return screen.x;
+    return getRangeHandler().getDateDataOperator().logicalToNumeric( domainValue );
   }
 
   private DateRange getRange( )
@@ -343,4 +351,14 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     final StyleSetVisitor visitor = new StyleSetVisitor( false );
     return visitor.visit( styleSet, ILineStyle.class, index );
   }
+
+  private Point[] toScreen( final IPair<Number, Number>... points )
+  {
+    final ICoordinateMapper coordinateMapper = getCoordinateMapper();
+    final Point[] screenPoints = new Point[points.length];
+    for( int i = 0; i < screenPoints.length; i++ )
+      screenPoints[i] = coordinateMapper.numericToScreen( points[i].getDomain(), points[i].getTarget() );
+    return screenPoints;
+  }
+
 }
