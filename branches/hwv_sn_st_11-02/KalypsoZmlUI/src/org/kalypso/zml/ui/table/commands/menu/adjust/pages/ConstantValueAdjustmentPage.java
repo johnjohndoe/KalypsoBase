@@ -44,7 +44,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
@@ -55,16 +55,15 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 /**
  * @author Dirk Kuch
  */
-public class ConstantValueAdjustmentPage implements IElementPage, IEnhancedTextBoxListener<Double>
+public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implements IEnhancedTextBoxListener<Double>
 {
-
-  private final IAdjustmentPageProvider m_provider;
-
   private Double m_constantValue;
+
+  private EnhancedTextBox<Double> m_textBox;
 
   public ConstantValueAdjustmentPage( final IAdjustmentPageProvider provider )
   {
-    m_provider = provider;
+    super( provider );
   }
 
   /**
@@ -73,7 +72,7 @@ public class ConstantValueAdjustmentPage implements IElementPage, IEnhancedTextB
   @Override
   public String getLabel( )
   {
-    return "Konstanten Wert setzen";
+    return "Konstanten Wert setzen (=)";
   }
 
   /**
@@ -87,11 +86,11 @@ public class ConstantValueAdjustmentPage implements IElementPage, IEnhancedTextB
     {
       toolkit.createLabel( body, "" );// spacer
 
-      toolkit.createLabel( body, "Konstanter Wert" );
-      final EnhancedTextBox<Double> textBox = new EnhancedTextBox<Double>( body, toolkit, new DoubeValueWidgetRule() );
-      textBox.setText( getConstantValue() );
-      textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      textBox.addListener( this );
+      toolkit.createLabel( body, "Konstanter Wert" ).setFont( HEADING );
+      m_textBox = new EnhancedTextBox<Double>( body, toolkit, new DoubeValueWidgetRule() );
+      m_textBox.setText( getConstantValue() );
+      m_textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+      m_textBox.addListener( this );
     }
     catch( final SensorException e )
     {
@@ -105,11 +104,12 @@ public class ConstantValueAdjustmentPage implements IElementPage, IEnhancedTextB
     if( Objects.isNotNull( m_constantValue ) )
       return m_constantValue;
 
-    final IZmlTableColumn column = m_provider.getColumn();
+    final IZmlTableColumn column = getColumn();
     final IZmlTableCell[] cells = column.getSelectedCells();
     final Number value = cells[0].getValueReference().getValue();
 
-    return value.doubleValue();
+    m_constantValue = value.doubleValue();
+    return m_constantValue;
   }
 
   /**
@@ -129,6 +129,24 @@ public class ConstantValueAdjustmentPage implements IElementPage, IEnhancedTextB
   public void valueChanged( final Double value )
   {
     m_constantValue = value;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#getRunnable()
+   */
+  @Override
+  public ICoreRunnableWithProgress getRunnable( )
+  {
+    return new ConstantValueRunnable( getColumn().getSelectedCells(), m_constantValue );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#isValid()
+   */
+  @Override
+  public boolean isValid( )
+  {
+    return m_textBox.isValid();
   }
 
 }
