@@ -78,11 +78,7 @@ public class ZmlTablePager
 
   private Date getIndex( final TableViewer viewer )
   {
-    ViewerCell cell = viewer.getCell( new Point( 10, 25 ) );
-    if( Objects.isNull( cell ) )
-      return null;
-
-    cell = viewer.getCell( new Point( 10, 75 ) );
+    final ViewerCell cell = findCell( viewer, new Point( 10, 10 ), new Point( 10, 15 ), new Point( 10, 20 ), new Point( 10, 25 ), new Point( 10, 75 ) );
     if( Objects.isNull( cell ) )
       return null;
 
@@ -91,7 +87,19 @@ public class ZmlTablePager
       return null;
 
     final IZmlModelRow row = (IZmlModelRow) element;
-    return (Date) row.getIndexValue();
+    return row.getIndexValue();
+  }
+
+  private ViewerCell findCell( final TableViewer viewer, final Point... points )
+  {
+    for( final Point point : points )
+    {
+      final ViewerCell cell = viewer.getCell( point );
+      if( Objects.isNotNull( cell ) )
+        return cell;
+    }
+
+    return null;
   }
 
   public void reveal( )
