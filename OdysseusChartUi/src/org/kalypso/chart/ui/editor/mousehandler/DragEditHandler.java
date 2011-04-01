@@ -49,11 +49,8 @@ public class DragEditHandler extends AbstractChartDragHandler
 
   private int getCursor( final Point start )
   {
-    if( start != null )
-    {
-      if( canSnap( start ) || m_editInfo != null )
-        return SWT.CURSOR_HAND;
-    }
+    if( start != null && canSnap( start ) || m_editInfo != null )
+      return SWT.CURSOR_HAND;
 
     return SWT.CURSOR_ARROW;
   }
@@ -83,6 +80,7 @@ public class DragEditHandler extends AbstractChartDragHandler
   @Override
   public void doMouseMoveAction( final Point start, final EditInfo editInfo )
   {
+    // TODO: should live in the top-level mouseMove method
     setCursor( getCursor( start ) );
 
     if( m_editInfo == null )
