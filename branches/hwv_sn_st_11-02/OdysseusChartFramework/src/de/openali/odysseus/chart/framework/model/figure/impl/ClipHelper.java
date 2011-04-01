@@ -76,8 +76,10 @@ public class ClipHelper
    */
   public Point[][] clipAsLine( final Point[] points )
   {
-    if( m_clipRect == null )
+    if( m_clipRect == null || points.length == 0 )
       return new Point[][] { points };
+
+    final Polygon clipPolygon = getClipPolygon();
 
     // Using JTS to intersect graphics
     final Coordinate[] crds = new Coordinate[points.length];
@@ -85,9 +87,18 @@ public class ClipHelper
     for( int i = 0; i < crds.length; i++ )
       crds[i] = new Coordinate( points[i].x, points[i].y );
 
+    // special case: we got only one single point
+    if( crds.length == 1 )
+    {
+      final com.vividsolutions.jts.geom.Point singlePoint = m_gf.createPoint( crds[0] );
+      if( clipPolygon.contains( singlePoint ) )
+        return new Point[][]{ points };
+      else
+        return new Point[][]{};
+    }
+    
     final LineString lineString = m_gf.createLineString( crds );
 
-    final Polygon clipPolygon = getClipPolygon();
 
     final Geometry clippedPoints = lineString.intersection( clipPolygon );
 
