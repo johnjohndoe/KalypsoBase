@@ -73,7 +73,7 @@ public class DateRangeVisitor implements IZmlTableRowVisitor
   public void visit( final IZmlTableRow row )
   {
     final IZmlModelRow modelRow = row.getModelRow();
-    final Date index = (Date) modelRow.getIndexValue();
+    final Date index = modelRow.getIndexValue();
 
     if( m_dateRange.containsLazyInclusive( index ) )
       m_rows.put( index, row );

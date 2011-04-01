@@ -45,12 +45,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
-import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -83,32 +80,21 @@ public class MultiplyValueAdjustmentPage implements IElementPage, IEnhancedTextB
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
-    try
-    {
-      toolkit.createLabel( body, "" );// spacer
+    toolkit.createLabel( body, "" );// spacer
 
-      toolkit.createLabel( body, "Wert" );
-      final EnhancedTextBox<Double> textBox = new EnhancedTextBox<Double>( body, toolkit, new DoubeValueWidgetRule() );
-      textBox.setText( getMultiplier() );
-      textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      textBox.addListener( this );
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-    }
+    toolkit.createLabel( body, "Wert" );
+    final EnhancedTextBox<Double> textBox = new EnhancedTextBox<Double>( body, toolkit, new DoubeValueWidgetRule() );
+    textBox.setText( getMultiplier() );
+    textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    textBox.addListener( this );
   }
 
-  private Double getMultiplier( ) throws SensorException
+  private Double getMultiplier( )
   {
     if( Objects.isNotNull( m_multiplier ) )
       return m_multiplier;
 
-    final IZmlTableColumn column = m_provider.getColumn();
-    final IZmlTableCell[] cells = column.getSelectedCells();
-    final Number value = cells[0].getValueReference().getValue();
-
-    return value.doubleValue();
+    return 1.0;
   }
 
   /**
