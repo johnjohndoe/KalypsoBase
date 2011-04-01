@@ -75,7 +75,7 @@ public class StringRegexValidator extends TypedValidator<String>
   {
     try
     {
-      if( value.isEmpty() )
+      if( value == null || value.length() == 0 )
         throw new PatternSyntaxException( "Ein leerer regulärer Ausdruck ist nicht erlaubt...", "", -1 );
 
       Pattern.compile( value );
