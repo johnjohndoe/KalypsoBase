@@ -97,7 +97,8 @@ public final class ZmlTableImageMerger
     ImageData base = new ImageData( 1, 1, 1, new PaletteData( new RGB[] { RGB_WHITE } ) );
     base.transparentPixel = base.palette.getPixel( RGB_WHITE );
 
-    for( int index = 0; index <= m_numberOfIcons; index++ )
+    final int range = getRange();
+    for( int index = 0; index < range; index++ )
     {
       if( index >= images.length )
         break;
@@ -123,7 +124,7 @@ public final class ZmlTableImageMerger
       base = overlay.getImageData();
     }
 
-    if( images.length > m_numberOfIcons + 1 )
+    if( images.length > range )
     {
       final OverlayIcon overlay = new OverlayIcon( ImageDescriptor.createFromImageData( base ), ImageDescriptor.createFromImageData( IMG_ADDITIONAL ), size )
       {
@@ -144,6 +145,14 @@ public final class ZmlTableImageMerger
     IMAGE_REGISTRY.put( imageReference, image );
 
     return image;
+  }
+
+  private int getRange( )
+  {
+    if( m_numberOfIcons < m_images.size() )
+      return m_numberOfIcons + 1;
+    else
+      return m_numberOfIcons;
   }
 
   private String buildImageReference( final ZmlTableImage[] images )
