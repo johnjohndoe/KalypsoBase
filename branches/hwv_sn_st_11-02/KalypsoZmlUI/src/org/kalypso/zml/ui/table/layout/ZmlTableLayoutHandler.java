@@ -74,25 +74,6 @@ public class ZmlTableLayoutHandler
 
       updateColumns();
 
-      if( m_firstChange )
-      {
-        /* execute as separate ui job, otherwise it won't work */
-        new UIJob( "" )
-        {
-
-          @Override
-          public IStatus runInUIThread( final IProgressMonitor mon )
-          {
-            final RevealTableCommand command = new RevealTableCommand( m_table );
-            command.execute( monitor );
-
-            return Status.OK_STATUS;
-          }
-        }.schedule();
-
-        m_firstChange = false;
-      }
-
       return Status.OK_STATUS;
     }
   };

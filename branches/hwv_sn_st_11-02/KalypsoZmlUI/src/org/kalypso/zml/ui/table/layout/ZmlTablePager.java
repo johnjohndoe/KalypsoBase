@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -42,56 +42,112 @@ package org.kalypso.zml.ui.table.layout;
 
 import java.util.Date;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTable;
 
 /**
  * @author Dirk Kuch
  */
-public class RevealTableCommand implements ICoreRunnableWithProgress
+public class ZmlTablePager
 {
+  private Date m_index;
 
-  private final ZmlTableComposite m_table;
+  private final IZmlTable m_table;
 
-  public RevealTableCommand( final ZmlTableComposite table )
+  private IStructuredSelection m_selection;
+
+  private boolean m_firstRun = true;
+
+  public ZmlTablePager( final IZmlTable table )
   {
     m_table = table;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public void update( )
   {
-    final Date forecastStart = findForecastDate();
-    if( forecastStart == null )
-      return Status.CANCEL_STATUS;
+    final TableViewer viewer = m_table.getTableViewer();
 
-    final IZmlModel model = m_table.getDataModel();
-
-    final ClosestDateVisitor visitor = new ClosestDateVisitor( forecastStart );
-    model.accept( visitor );
-
-    final IZmlModelRow row = visitor.getModelRow();
-    if( Objects.isNotNull( row ) )
+    Date date = null;
+    if( m_firstRun )
     {
-      final TableViewer tableViewer = m_table.getTableViewer();
-      tableViewer.setSelection( new StructuredSelection( row ), true );
+      date = findForecastDate();
+      if( Objects.isNotNull( date ) )
+        m_firstRun = false;
     }
 
-    return Status.OK_STATUS;
+    if( Objects.isNull( date ) )
+    {
+      date = getIndex( viewer );
+    }
+
+    setIndex( date );
+
+    m_selection = (IStructuredSelection) viewer.getSelection();
+  }
+
+  private void setIndex( final Date date )
+  {
+
+    if( Objects.isNotNull( date ) )
+      m_index = date;
+  }
+
+  private Date getIndex( final TableViewer viewer )
+  {
+
+    final ViewerCell cell = findCell( viewer, new Point( 10, 10 ), new Point( 10, 15 ), new Point( 10, 20 ), new Point( 10, 25 ), new Point( 10, 75 ) );
+    if( Objects.isNull( cell ) )
+      return null;
+
+    final Object element = cell.getElement();
+    if( !(element instanceof IZmlModelRow) )
+      return null;
+
+    final IZmlModelRow row = (IZmlModelRow) element;
+    return row.getIndexValue();
+  }
+
+  private ViewerCell findCell( final TableViewer viewer, final Point... points )
+  {
+    for( final Point point : points )
+    {
+      final ViewerCell cell = viewer.getCell( point );
+      if( Objects.isNotNull( cell ) )
+        return cell;
+    }
+
+    return null;
+  }
+
+  public void reveal( )
+  {
+    final TableViewer viewer = m_table.getTableViewer();
+    if( !m_selection.isEmpty() )
+      viewer.setSelection( m_selection );
+
+    if( Objects.isNull( m_index ) )
+      return;
+
+    final ClosestDateVisitor visitor = new ClosestDateVisitor( m_index );
+    m_table.accept( visitor );
+
+    final IZmlModelRow row = visitor.getModelRow();
+    if( Objects.isNull( row ) )
+      return;
+
+    viewer.reveal( row );
+
+    // FIXME AbstractCellCursor has to listen to reveal events
+    m_table.getFocusHandler().getCursor().redraw();
   }
 
   private Date findForecastDate( )
@@ -103,7 +159,7 @@ public class RevealTableCommand implements ICoreRunnableWithProgress
       if( column.isMetadataSource() )
       {
         final Date date = findForecastDate( column );
-        if( date != null )
+        if( Objects.isNotNull( date ) )
           return date;
       }
     }
@@ -111,7 +167,7 @@ public class RevealTableCommand implements ICoreRunnableWithProgress
     for( final IZmlModelColumn column : columns )
     {
       final Date date = findForecastDate( column );
-      if( date != null )
+      if( Objects.isNotNull( date ) )
         return date;
     }
 
