@@ -43,7 +43,7 @@ package org.kalypso.zml.ui.chart.layer.provider;
 import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
-import org.kalypso.zml.core.diagram.data.ZmlObservationDataHandler;
+import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlDateRangeLayer;
 import org.kalypso.zml.ui.core.provider.observation.DefaultRequestHandler;
 import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvider;
@@ -68,19 +68,18 @@ public class ZmlDateRangeLayerProvider extends AbstractLayerProvider implements 
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
     final IParameterContainer parameters = getParameterContainer();
+
     final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final ZmlDateRangeLayer layer = new ZmlDateRangeLayer( this );
+    final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, getTargetAxisId() );
+
     if( StringUtils.isNotEmpty( href ) )
     {
       try
       {
         final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, new DefaultRequestHandler() );
-
-        final ZmlObservationDataHandler handler = new ZmlObservationDataHandler( layer, href );
-        handler.setObservation( provider.getObservation() );
-
-        layer.setDataHandler( handler );
+        handler.setObsProvider( provider );
       }
       catch( final Throwable t )
       {
