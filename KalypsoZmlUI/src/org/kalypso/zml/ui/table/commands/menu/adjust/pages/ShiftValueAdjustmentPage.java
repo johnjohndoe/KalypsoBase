@@ -44,7 +44,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
@@ -52,16 +52,15 @@ import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
 /**
  * @author Dirk Kuch
  */
-public class ShiftValueAdjustmentPage implements IElementPage, IEnhancedTextBoxListener<Double>
+public class ShiftValueAdjustmentPage extends AbstractAdjustmentPage implements IEnhancedTextBoxListener<Double>
 {
-
-  private final IAdjustmentPageProvider m_provider;
-
   private Double m_shiftValue;
+
+  private EnhancedTextBox<Double> m_textBox;
 
   public ShiftValueAdjustmentPage( final IAdjustmentPageProvider provider )
   {
-    m_provider = provider;
+    super( provider );
   }
 
   /**
@@ -70,7 +69,7 @@ public class ShiftValueAdjustmentPage implements IElementPage, IEnhancedTextBoxL
   @Override
   public String getLabel( )
   {
-    return "Werte um festen Wert verschieben";
+    return "Werte um festen Wert verschieben (+/-)";
   }
 
   /**
@@ -82,11 +81,11 @@ public class ShiftValueAdjustmentPage implements IElementPage, IEnhancedTextBoxL
   {
     toolkit.createLabel( body, "" );// spacer
 
-    toolkit.createLabel( body, "Wert" );
-    final EnhancedTextBox<Double> textBox = new EnhancedTextBox<Double>( body, toolkit, new DoubeValueWidgetRule() );
-    textBox.setText( getShiftValue() );
-    textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    textBox.addListener( this );
+    toolkit.createLabel( body, "Wert" ).setFont( HEADING );
+    m_textBox = new EnhancedTextBox<Double>( body, toolkit, new DoubeValueWidgetRule() );
+    m_textBox.setText( getShiftValue() );
+    m_textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    m_textBox.addListener( this );
   }
 
   private Double getShiftValue( )
@@ -94,7 +93,8 @@ public class ShiftValueAdjustmentPage implements IElementPage, IEnhancedTextBoxL
     if( Objects.isNotNull( m_shiftValue ) )
       return m_shiftValue;
 
-    return 1.0;
+    m_shiftValue = 1.0;
+    return m_shiftValue;
   }
 
   /**
@@ -114,6 +114,24 @@ public class ShiftValueAdjustmentPage implements IElementPage, IEnhancedTextBoxL
   public void valueChanged( final Double value )
   {
     m_shiftValue = value;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#getRunnable()
+   */
+  @Override
+  public ICoreRunnableWithProgress getRunnable( )
+  {
+    return new ShiftValueRunnable( getColumn().getSelectedCells(), m_shiftValue );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#isValid()
+   */
+  @Override
+  public boolean isValid( )
+  {
+    return m_textBox.isValid();
   }
 
 }

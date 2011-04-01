@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table.commands.menu.adjust;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -54,8 +55,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.pager.ElementsComposite;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.ConstantValueAdjustmentPage;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.IAdjustmentPageProvider;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.MultiplyValueAdjustmentPage;
@@ -73,6 +77,8 @@ public class ZmlAdjustSelectionDialog extends EnhancedTitleAreaDialog implements
   private static final String SCREEN_SIZE = "zml.adjust.selection.dialog.screen.size"; // $NON-NLS-1$
 
   private final IZmlTableColumn m_column;
+
+  private ElementsComposite m_composite;
 
   public ZmlAdjustSelectionDialog( final Shell shell, final IZmlTableColumn column )
   {
@@ -125,8 +131,8 @@ public class ZmlAdjustSelectionDialog extends EnhancedTitleAreaDialog implements
     pages.add( new MultiplyValueAdjustmentPage( this ) );
     pages.add( new ShiftDateAdjustmentPage( this ) );
 
-    final ElementsComposite composite = new ElementsComposite( base, toolkit, pages.toArray( new IElementPage[] {} ) );
-    composite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    m_composite = new ElementsComposite( base, toolkit, pages.toArray( new IElementPage[] {} ) );
+    m_composite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     return super.createDialogArea( parent );
   }
@@ -137,16 +143,21 @@ public class ZmlAdjustSelectionDialog extends EnhancedTitleAreaDialog implements
   @Override
   protected void okPressed( )
   {
-// if( !m_composite.isValid() )
-// {
-// MessageDialog.openError( getParentShell(), "Ungültige Eingabe",
-// "Eine Verarbeitung ist nicht möglich, da Tabelle eine ungültige Eingabe enthält." );
-// return;
-// }
-//
-// saveChanges();
-//
-// super.okPressed();
+    final AbstractAdjustmentPage page = (AbstractAdjustmentPage) m_composite.getSelectedPage();
+    if( !page.isValid() )
+    {
+      setErrorMessage( "Ungültige Werteingabe - bitte Wert korrigieren" );
+
+      return;
+    }
+
+    final ICoreRunnableWithProgress runnable = page.getRunnable();
+    final IStatus status = ProgressUtilities.busyCursorWhile( runnable, "Anpassen fehlgeschlagen" );
+
+    if( status.isOK() )
+      super.okPressed();
+    else
+      setErrorMessage( status.getMessage() );
   }
 
   /**

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  DenickestraÃŸe 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,69 +38,31 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.base.widgets.rules;
+package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
 
-import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
 
 /**
  * @author Dirk Kuch
  */
-public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
+public class MultiplyValueRunnable extends AbstractValueRunnable
 {
-  private String m_lastValidationMsg;
 
-  private final String m_format;
+  private final Double m_multiplier;
 
-  public DoubeValueWidgetRule( )
+  public MultiplyValueRunnable( final IZmlTableCell[] selectedCells, final Double multiplier )
   {
-    this( "%.3f" ); // $NON-NLS-1$
-  }
-
-  public DoubeValueWidgetRule( final String format )
-  {
-    m_format = format;
+    super( selectedCells );
+    m_multiplier = multiplier;
   }
 
   /**
-   * @see org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule#getLastValidationMessage()
+   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractValueRunnable#getValue(java.lang.Number)
    */
   @Override
-  public String getLastValidationMessage( )
+  protected Number getValue( final Number value )
   {
-    return m_lastValidationMsg;
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule#getFormatedString(java.lang.Object)
-   */
-  @Override
-  public String getFormatedString( final Double value )
-  {
-    return String.format( m_format, value );
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule#parseValue(java.lang.String)
-   */
-  @Override
-  public Double parseValue( final String text )
-  {
-    return NumberUtils.parseQuietDouble( text );
-  }
-
-  /**
-   * @see org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule#isValid(java.lang.String)
-   */
-  @Override
-  public boolean isValid( final String text )
-  {
-    final boolean isDouble = NumberUtils.isDouble( text );
-    if( !isDouble )
-      m_lastValidationMsg = "Ungültiger Zahlenwert";
-    else
-      m_lastValidationMsg = null;
-
-    return isDouble;
+    return value.doubleValue() * m_multiplier;
   }
 
 }

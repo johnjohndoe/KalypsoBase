@@ -38,27 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.base.widgets.rules;
+package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule;
 
 /**
  * @author Dirk Kuch
  */
-public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
+public class ShiftDateWidgetRule implements ITextWidgetRule<Integer>
 {
   private String m_lastValidationMsg;
 
   private final String m_format;
 
-  public DoubeValueWidgetRule( )
+  private final int m_base;
+
+  public ShiftDateWidgetRule( final int base )
   {
-    this( "%.3f" ); // $NON-NLS-1$
+    this( "%d", base ); // $NON-NLS-1$
+
   }
 
-  public DoubeValueWidgetRule( final String format )
+  public ShiftDateWidgetRule( final String format, final int base )
   {
     m_format = format;
+    m_base = base;
   }
 
   /**
@@ -74,7 +79,7 @@ public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
    * @see org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule#getFormatedString(java.lang.Object)
    */
   @Override
-  public String getFormatedString( final Double value )
+  public String getFormatedString( final Integer value )
   {
     return String.format( m_format, value );
   }
@@ -83,9 +88,9 @@ public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
    * @see org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule#parseValue(java.lang.String)
    */
   @Override
-  public Double parseValue( final String text )
+  public Integer parseValue( final String text )
   {
-    return NumberUtils.parseQuietDouble( text );
+    return NumberUtils.parseQuietInteger( text );
   }
 
   /**
@@ -94,13 +99,26 @@ public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
   @Override
   public boolean isValid( final String text )
   {
-    final boolean isDouble = NumberUtils.isDouble( text );
-    if( !isDouble )
+    final boolean isInteger = NumberUtils.isInteger( text );
+    if( !isInteger )
+    {
       m_lastValidationMsg = "Ungültiger Zahlenwert";
+
+      return false;
+    }
     else
-      m_lastValidationMsg = null;
-
-    return isDouble;
+    {
+      final Integer value = NumberUtils.parseQuietInteger( text );
+      if( value % m_base != 0 )
+      {
+        m_lastValidationMsg = String.format( "Ungültiger Zeitschritt - Zeitschritt muss Vielfaches von %d sein.", m_base );
+        return false;
+      }
+      else
+      {
+        m_lastValidationMsg = null;
+        return true;
+      }
+    }
   }
-
 }

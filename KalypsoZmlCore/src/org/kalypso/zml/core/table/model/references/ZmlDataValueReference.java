@@ -91,7 +91,7 @@ public class ZmlDataValueReference implements IZmlValueReference
   }
 
   @Override
-  public void update( final Object value, final String source, final Integer status ) throws SensorException
+  public void update( final Number value, final String source, final Integer status ) throws SensorException
   {
     m_column.update( m_tupleModelIndex, value, source, status );
   }

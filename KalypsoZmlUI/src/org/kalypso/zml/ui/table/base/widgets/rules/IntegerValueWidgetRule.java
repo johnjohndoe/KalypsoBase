@@ -45,18 +45,18 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 /**
  * @author Dirk Kuch
  */
-public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
+public class IntegerValueWidgetRule implements ITextWidgetRule<Integer>
 {
   private String m_lastValidationMsg;
 
   private final String m_format;
 
-  public DoubeValueWidgetRule( )
+  public IntegerValueWidgetRule( )
   {
-    this( "%.3f" ); // $NON-NLS-1$
+    this( "%d" ); // $NON-NLS-1$
   }
 
-  public DoubeValueWidgetRule( final String format )
+  public IntegerValueWidgetRule( final String format )
   {
     m_format = format;
   }
@@ -74,7 +74,7 @@ public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
    * @see org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule#getFormatedString(java.lang.Object)
    */
   @Override
-  public String getFormatedString( final Double value )
+  public String getFormatedString( final Integer value )
   {
     return String.format( m_format, value );
   }
@@ -83,9 +83,9 @@ public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
    * @see org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule#parseValue(java.lang.String)
    */
   @Override
-  public Double parseValue( final String text )
+  public Integer parseValue( final String text )
   {
-    return NumberUtils.parseQuietDouble( text );
+    return NumberUtils.parseQuietInteger( text );
   }
 
   /**
@@ -94,13 +94,13 @@ public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
   @Override
   public boolean isValid( final String text )
   {
-    final boolean isDouble = NumberUtils.isDouble( text );
-    if( !isDouble )
+    final boolean isInteger = NumberUtils.isInteger( text );
+    if( !isInteger )
       m_lastValidationMsg = "Ungültiger Zahlenwert";
     else
       m_lastValidationMsg = null;
 
-    return isDouble;
+    return isInteger;
   }
 
 }

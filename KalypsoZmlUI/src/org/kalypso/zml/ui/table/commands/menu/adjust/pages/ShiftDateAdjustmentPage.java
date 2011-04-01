@@ -44,27 +44,28 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
-import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class ShiftDateAdjustmentPage implements IElementPage, IEnhancedTextBoxListener<Double>
+public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage implements IEnhancedTextBoxListener<Integer>
 {
 
-  private final IAdjustmentPageProvider m_provider;
+  private Integer m_offset;
 
-  private Double m_offset;
+  private int m_base;
+
+  private EnhancedTextBox<Integer> m_textBox;
 
   public ShiftDateAdjustmentPage( final IAdjustmentPageProvider provider )
   {
-    m_provider = provider;
+    super( provider );
   }
 
   /**
@@ -73,7 +74,7 @@ public class ShiftDateAdjustmentPage implements IElementPage, IEnhancedTextBoxLi
   @Override
   public String getLabel( )
   {
-    return "Datum verschieben";
+    return "Datum verschieben (->)";
   }
 
   /**
@@ -86,12 +87,14 @@ public class ShiftDateAdjustmentPage implements IElementPage, IEnhancedTextBoxLi
     try
     {
       toolkit.createLabel( body, "" );// spacer
+      final Integer offset = getOffset();
 
-      toolkit.createLabel( body, "Minuten" );
-      final EnhancedTextBox<Double> textBox = new EnhancedTextBox<Double>( body, toolkit, new DoubeValueWidgetRule() );
-      textBox.setText( getOffset() );
-      textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      textBox.addListener( this );
+      toolkit.createLabel( body, "Minuten" ).setFont( HEADING );
+      m_textBox = new EnhancedTextBox<Integer>( body, toolkit, new ShiftDateWidgetRule( m_base ) );
+
+      m_textBox.setText( offset );
+      m_textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+      m_textBox.addListener( this );
     }
     catch( final SensorException e )
     {
@@ -100,18 +103,22 @@ public class ShiftDateAdjustmentPage implements IElementPage, IEnhancedTextBoxLi
 
   }
 
-  private Double getOffset( ) throws SensorException
+  private Integer getOffset( ) throws SensorException
   {
     if( Objects.isNotNull( m_offset ) )
       return m_offset;
 
-    final IZmlTableColumn column = m_provider.getColumn();
+    final IZmlTableColumn column = getColumn();
     final IZmlTableCell[] cells = column.getCells();
 
     final long t1 = cells[0].getValueReference().getIndexValue().getTime();
     final long t2 = cells[1].getValueReference().getIndexValue().getTime();
 
-    return Long.valueOf( t2 - t1 ).doubleValue();
+    final double minutes = Long.valueOf( t2 - t1 ).doubleValue() / 1000 / 60;
+
+    m_base = Double.valueOf( minutes ).intValue();
+    m_offset = m_base;
+    return m_offset;
   }
 
   /**
@@ -120,17 +127,33 @@ public class ShiftDateAdjustmentPage implements IElementPage, IEnhancedTextBoxLi
   @Override
   public void dispose( )
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**
    * @see org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener#valueChanged(java.lang.Object)
    */
   @Override
-  public void valueChanged( final Double value )
+  public void valueChanged( final Integer value )
   {
     m_offset = value;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#getRunnable()
+   */
+  @Override
+  public ICoreRunnableWithProgress getRunnable( )
+  {
+    return new ShiftDateRunnable( getColumn(), m_offset );
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#isValid()
+   */
+  @Override
+  public boolean isValid( )
+  {
+    return m_textBox.isValid();
   }
 
 }

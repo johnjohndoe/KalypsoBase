@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,55 +38,57 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.menu;
+package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.ogc.sensor.SensorException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
-import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlCommandSetAllValues extends AbstractHandler
+public abstract class AbstractValueRunnable implements ICoreRunnableWithProgress
 {
+
+  private final IZmlTableCell[] m_cells;
+
+  public AbstractValueRunnable( final IZmlTableCell[] cells )
+  {
+    m_cells = cells;
+  }
+
   /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public final IStatus execute( final IProgressMonitor monitor )
   {
-    try
+    final List<IStatus> statis = new ArrayList<IStatus>();
+    for( final IZmlTableCell cell : m_cells )
     {
-      final IZmlTable table = ZmlHandlerUtil.getTable( event );
-      final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-      final IZmlTableCell active = selection.findActiveCellByPosition();
-
-      final IZmlValueReference base = active.getValueReference();
-      final Number targetValue = base.getValue();
-
-      final IZmlTableColumn column = active.getColumn();
-      final IZmlTableCell[] visibleCells = column.getCells();
-      for( final IZmlTableCell cell : visibleCells )
+      try
       {
-        final IZmlValueReference ref = cell.getValueReference();
-        ref.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
-      }
+        final IZmlValueReference reference = cell.getValueReference();
 
-      return Status.OK_STATUS;
+        reference.update( getValue( reference.getValue() ), IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+      }
+      catch( final Exception e )
+      {
+        statis.add( StatusUtilities.createExceptionalErrorStatus( "Anpassen eines Wertes fehlgeschlagen", e ) );
+      }
     }
-    catch( final SensorException e )
-    {
-      throw new ExecutionException( "Aktualisieren der Werte fehlgeschlagen.", e );
-    }
+
+    return StatusUtilities.createStatus( statis, "Anpassen" );
   }
+
+  protected abstract Number getValue( final Number value );
+
 }

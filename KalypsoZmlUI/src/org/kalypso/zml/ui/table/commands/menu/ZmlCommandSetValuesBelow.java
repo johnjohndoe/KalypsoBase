@@ -71,7 +71,7 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
       final IZmlTableSelectionHandler selection = table.getSelectionHandler();
       final IZmlTableCell active = selection.findActiveCellByPosition();
       final IZmlValueReference reference = active.getValueReference();
-      final Object targetValue = reference.getValue();
+      final Number targetValue = reference.getValue();
 
       final IZmlTableColumn column = active.getColumn();
       final IZmlTableCell[] cells = column.getCells();
