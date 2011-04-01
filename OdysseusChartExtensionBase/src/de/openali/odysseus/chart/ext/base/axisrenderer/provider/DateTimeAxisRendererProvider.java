@@ -30,12 +30,14 @@ public class DateTimeAxisRendererProvider extends AbstractGenericAxisRendererPro
       final long hour = 60 * min;
       final long day = 24 * hour;
 
-      if( dr < 3 * min )
+      if( dr < 5 * sec )
         return new DateTimeAxisField( DateTimeFieldType.millisOfSecond(), "dd.MM\nHH:mm:ss:SSS", new int[] { 1, 10, 100, 500 }, new int[] {} );//$NON-NLS-1$
+      if( dr < 3 * min )
+        return new DateTimeAxisField( DateTimeFieldType.secondOfMinute(), "dd.MM\nHH:mm:ss", new int[] { 1, 5, 10, 15, 20, 30 }, new int[] { 0, 5, 15, 30 } );//$NON-NLS-1$
       else if( dr < 2 * hour )
-        return new DateTimeAxisField( DateTimeFieldType.minuteOfHour(), "dd.MM\nHH:mm", new int[] { 1, 5, 10, 15, 20, 30 }, new int[] { 5, 15, 30 } );//$NON-NLS-1$
+        return new DateTimeAxisField( DateTimeFieldType.minuteOfHour(), "dd.MM\nHH:mm", new int[] { 1, 5, 10, 15, 20, 30 }, new int[] { 0, 5, 15, 30 } );//$NON-NLS-1$
       else if( dr < 7 * hour )
-        return new DateTimeAxisField( DateTimeFieldType.minuteOfHour(), "dd.MM\nHH:mm", new int[] { 1, 5, 10, 15, 20, 30 }, new int[] { 15, 30, 45 } );//$NON-NLS-1$
+        return new DateTimeAxisField( DateTimeFieldType.minuteOfHour(), "dd.MM\nHH:mm", new int[] { 1, 15, 30 }, new int[] { 0, 15, 30, 45 } );//$NON-NLS-1$
       else if( dr < 3 * day )
         return new DateTimeAxisField( DateTimeFieldType.minuteOfDay(), "dd.MM\nHH:mm", new int[] { 1, 15, 30 }, new int[] {} );//$NON-NLS-1$
       else if( dr < 10 * day )
