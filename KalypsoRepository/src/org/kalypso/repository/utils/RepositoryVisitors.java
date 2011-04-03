@@ -41,7 +41,7 @@
 package org.kalypso.repository.utils;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.IRepositoryItemVisitor;
 import org.kalypso.repository.RepositoryException;
@@ -60,16 +60,22 @@ public final class RepositoryVisitors
     final IRepositoryItem[] children = item.getChildren();
     monitor.beginTask( job, children.length );
 
-    for( final IRepositoryItem child : children )
+    try
     {
-      if( monitor.isCanceled() )
-        return;
+      for( final IRepositoryItem child : children )
+      {
+        if( monitor.isCanceled() )
+          return;
 
-      monitor.subTask( String.format( "Zweig: %s", child.getIdentifier() ) );
-      if( !visitor.visit( child ) )
-        return;
+        monitor.subTask( String.format( "Zweig: %s", child.getIdentifier() ) );
+        visitor.visit( child );
 
-      monitor.worked( 1 );
+        monitor.worked( 1 );
+      }
+    }
+    catch( final CancelVisitorException e )
+    {
+      // ignore
     }
 
     monitor.done();
@@ -77,13 +83,17 @@ public final class RepositoryVisitors
 
   public static void accept( final IRepositoryItem item, final IRepositoryItemVisitor visitor ) throws RepositoryException
   {
-    final IRepositoryItem[] children = item.getChildren();
-    for( final IRepositoryItem child : children )
+    try
     {
-      if( !visitor.visit( child ) )
-        break;
+      final IRepositoryItem[] children = item.getChildren();
+      for( final IRepositoryItem child : children )
+      {
+        visitor.visit( child );
+      }
     }
-
+    catch( final CancelVisitorException e )
+    {
+    }
   }
 
 }

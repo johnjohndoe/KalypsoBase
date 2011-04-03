@@ -43,8 +43,8 @@ package org.kalypso.ogc.sensor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 
 /**

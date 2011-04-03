@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.repository;
 
+import org.kalypso.commons.exception.CancelVisitorException;
+
 /**
  * @author Dirk Kuch
  */
 public interface IRepositoryItemVisitor
 {
-  boolean visit( IRepositoryItem item ) throws RepositoryException;
+  void visit( IRepositoryItem item ) throws RepositoryException, CancelVisitorException;
 }
