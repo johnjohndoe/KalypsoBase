@@ -1031,9 +1031,10 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
     final IResetableWizard resetableWizard = (IResetableWizard) m_wizard;
 
-    Assert.isTrue( resetableWizard.canReset() );
-
-    resetableWizard.performReset();
+    if( !resetableWizard.canReset() )
+      updateButtons();
+    else
+      resetableWizard.performReset();
 
     return true;
   }
