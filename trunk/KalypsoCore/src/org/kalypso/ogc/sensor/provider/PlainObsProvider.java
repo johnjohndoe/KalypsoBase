@@ -56,12 +56,6 @@ public final class PlainObsProvider extends AbstractObsProvider
     setObservation( obs );
   }
 
-  @Override
-  public void dispose( )
-  {
-    // nix zu tun
-  }
-
   /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#copy()
    */

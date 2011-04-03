@@ -40,14 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.metadata;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
+import org.apache.commons.lang.StringUtils;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
@@ -57,11 +57,6 @@ import org.kalypso.ogc.sensor.DateRange;
  */
 public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMetaDataConstants
 {
-  /** default date format used within some of the timeseries dependent properties */
-  /** @deprecated Should not be used any more. We use xs:dateTime format now for printing times into zml files. */
-  @Deprecated
-  private static final DateFormat FORECAST_DF = DateFormat.getDateTimeInstance( DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.GERMANY );
-
   private static SimpleDateFormat SDF = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
 
   public static final transient String WQ_TABLE = "WQ-Tabelle";
@@ -78,18 +73,18 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
     final String propertyFrom = mdl.getProperty( fromTag, "" );
     final String propertyTo = mdl.getProperty( endTag, "" );
 
-    return getDateRange( propertyFrom, propertyTo );
+    return parseDateRange( propertyFrom, propertyTo );
   }
 
-  public static DateRange getDateRange( final String propertyFrom, final String propertyTo )
+  private static DateRange parseDateRange( final String propertyFrom, final String propertyTo )
   {
     Date from = null;
     Date to = null;
 
-    if( propertyFrom != null && !propertyFrom.isEmpty() )
+    if( !StringUtils.isBlank( propertyFrom ) )
       from = DateUtilities.parseDateTime( propertyFrom );
 
-    if( propertyTo != null && !propertyTo.isEmpty() )
+    if( !StringUtils.isBlank( propertyTo ) )
       to = DateUtilities.parseDateTime( propertyTo );
 
     return DateRange.createDateRangeOrNull( from, to );
@@ -98,7 +93,7 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
   public static Date getForecastStart( final MetadataList mdl )
   {
     final DateRange dateRange = getForecastDateRange( mdl );
-    if( dateRange == null )
+    if( Objects.isNull( dateRange ) )
       return null;
 
     return dateRange.getFrom();
@@ -115,12 +110,12 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
 
   public static DateRange getForecastDateRange( final MetadataList mdl )
   {
-    return getDateRange( mdl.getProperty( MD_VORHERSAGE_START ), mdl.getProperty( MD_VORHERSAGE_ENDE ) );
+    return parseDateRange( mdl.getProperty( MD_VORHERSAGE_START ), mdl.getProperty( MD_VORHERSAGE_ENDE ) );
   }
 
   public static DateRange getDateRange( final MetadataList mdl )
   {
-    return getDateRange( mdl.getProperty( MD_DATE_BEGIN ), mdl.getProperty( MD_DATE_END ) );
+    return parseDateRange( mdl.getProperty( MD_DATE_BEGIN ), mdl.getProperty( MD_DATE_END ) );
   }
 
   public static String getCountedHeaderItem( final String item, final int number )

@@ -163,6 +163,11 @@ public class PooledObsProvider extends AbstractObsProvider implements IPoolListe
     {
       return false;
     }
-
   }
+
+  public IPoolableObjectType getPoolKey( )
+  {
+    return m_key;
+  }
+
 }

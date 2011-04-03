@@ -50,6 +50,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.xml.sax.InputSource;
 
@@ -89,10 +90,15 @@ public final class ObservationHelper
 
   public static byte[] flushToByteArray( final IObservation observation ) throws SensorException
   {
+    return flushToByteArray( observation, null );
+  }
+
+  public static byte[] flushToByteArray( final IObservation observation, final IRequest request ) throws SensorException
+  {
     final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     try
     {
-      ZmlFactory.writeToStream( observation, outputStream, null );
+      ZmlFactory.writeToStream( observation, outputStream, request );
 
       return outputStream.toByteArray();
     }
@@ -113,7 +119,6 @@ public final class ObservationHelper
 
   public static IObservation parseFromByteArray( final byte[] buffer ) throws SensorException
   {
-
     final ByteArrayInputStream stream = new ByteArrayInputStream( buffer );
     try
     {
@@ -128,7 +133,13 @@ public final class ObservationHelper
 
   public static IObservation clone( final IObservation observation ) throws SensorException
   {
-    final byte[] byteArray = ObservationHelper.flushToByteArray( observation );
+    return clone( observation, null );
+  }
+
+  public static IObservation clone( final IObservation observation, final IRequest request ) throws SensorException
+  {
+    final byte[] byteArray = ObservationHelper.flushToByteArray( observation, request );
     return ObservationHelper.parseFromByteArray( byteArray );
   }
+
 }

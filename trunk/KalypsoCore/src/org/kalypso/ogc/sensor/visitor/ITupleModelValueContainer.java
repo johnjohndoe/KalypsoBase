@@ -52,6 +52,8 @@ public interface ITupleModelValueContainer
 
   Object get( IAxis axis ) throws SensorException;
 
+  void set( IAxis axis, Object value ) throws SensorException;
+
   boolean hasAxis( String... types );
 
   IAxis[] getAxes( );

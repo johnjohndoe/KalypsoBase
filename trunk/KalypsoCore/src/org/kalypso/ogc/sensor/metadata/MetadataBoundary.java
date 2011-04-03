@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.metadata;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -125,7 +126,7 @@ public final class MetadataBoundary implements IMetadataBoundary
 
   public static String[] findBoundaryKeys( final MetadataList metadata, final String type )
   {
-    final Pattern pattern = new Pattern( BOUNDARY_PREFIX + type + ".*" );
+    final Pattern pattern = new Pattern( BOUNDARY_PREFIX + type + ".*" ); //$NON-NLS-1$
     final List<String> found = new ArrayList<String>();
 
     final String[] keys = findBoundaryKeys( metadata );
@@ -138,22 +139,14 @@ public final class MetadataBoundary implements IMetadataBoundary
     return found.toArray( new String[] {} );
   }
 
-  /**
-   * @param type
-   *          w or q
-   * @param metadataKey
-   *          jregex of meta data key
-   */
-  public static String[] findBoundaryKeys( final MetadataList metadata, final String metadataKey, final String type )
+  public static String[] findBoundaryKeys( final MetadataList metadata, final Pattern pattern )
   {
-    final List<String> found = new ArrayList<String>();
-    final Pattern pattern = new Pattern( metadataKey );
-
-    final String[] keys = findBoundaryKeys( metadata, type );
-    for( final String key : keys )
+    final Set<String> found = new LinkedHashSet<String>();
+    final Set<Object> keys = metadata.keySet();
+    for( final Object key : keys )
     {
-      if( pattern.matches( key ) )
-        found.add( key );
+      if( pattern.matches( (String) key ) )
+        found.add( (String) key );
     }
 
     return found.toArray( new String[] {} );
@@ -204,4 +197,5 @@ public final class MetadataBoundary implements IMetadataBoundary
   {
     return String.format( "%s (%s) - Value: %.2f", m_name, m_parameterType, m_value.doubleValue() );
   }
+
 }

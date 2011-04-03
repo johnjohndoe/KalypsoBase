@@ -118,7 +118,13 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   public void mouseClicked( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
-    if( actualWidget == null )
+    if( actualWidget instanceof MouseListener )
+    {
+      ((MouseListener) actualWidget).mouseClicked( e );
+      if( e.isConsumed() )
+        return;
+    }
+    else if( actualWidget == null )
       return;
 
     if( e.isPopupTrigger() )
@@ -159,7 +165,10 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   public void mouseMoved( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
-    if( actualWidget != null )
+    if( actualWidget instanceof MouseMotionListener )
+      ((MouseMotionListener) actualWidget).mouseMoved( e );
+
+    if( !e.isConsumed() && actualWidget != null )
       actualWidget.moved( e.getPoint() );
 
     m_mapPanel.fireMouseMouveEvent( e.getX(), e.getY() );
@@ -169,13 +178,20 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   @Override
   public void mouseDragged( final MouseEvent e )
   {
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget instanceof MouseMotionListener )
+    {
+      ((MouseMotionListener) actualWidget).mouseDragged( e );
+      if( e.isConsumed() )
+        return;
+    }
+
     if( m_middleDown )
     {
       m_middleWidget.dragged( e.getPoint() );
       return;
     }
 
-    final IWidget actualWidget = getActualWidget();
     if( actualWidget != null )
       actualWidget.dragged( e.getPoint() );
   }
@@ -183,19 +199,30 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   @Override
   public void mouseEntered( final MouseEvent e )
   {
-    //
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget instanceof MouseListener )
+      ((MouseListener) actualWidget).mouseEntered( e );
   }
 
   @Override
   public void mouseExited( final MouseEvent e )
   {
-    //
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget instanceof MouseListener )
+      ((MouseListener) actualWidget).mouseExited( e );
   }
 
   @Override
   public void mousePressed( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
+    if( actualWidget instanceof MouseListener )
+    {
+      ((MouseListener) actualWidget).mousePressed( e );
+      if( e.isConsumed() )
+        return;
+    }
+
     if( e.isPopupTrigger() && actualWidget != null )
       actualWidget.clickPopup( e.getPoint() );
     else
@@ -227,6 +254,13 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   public void mouseReleased( final MouseEvent e )
   {
     final IWidget actualWidget = getActualWidget();
+    if( actualWidget instanceof MouseListener )
+    {
+      ((MouseListener) actualWidget).mouseReleased( e );
+      if( e.isConsumed() )
+        return;
+    }
+
     if( e.isPopupTrigger() && getActualWidget() != null )
       actualWidget.clickPopup( e.getPoint() );
     else
@@ -261,6 +295,14 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   @Override
   public void mouseWheelMoved( final MouseWheelEvent e )
   {
+    final IWidget actualWidget = getActualWidget();
+    if( actualWidget instanceof MouseWheelListener )
+    {
+      ((MouseWheelListener) actualWidget).mouseWheelMoved( e );
+      if( e.isConsumed() )
+        return;
+    }
+
     e.consume();
 
     final int wheelRotation = e.getWheelRotation();

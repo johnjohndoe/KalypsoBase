@@ -141,7 +141,7 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
     int step = SEARCH_BLOCK_HEADER;
     while( (lineIn = reader.readLine()) != null )
     {
-      if( !continueWithErrors && (numberOfErrors > MAX_NO_OF_ERRORS) )
+      if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
         return null;
       switch( step )
       {
@@ -199,9 +199,9 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
                 for( int i = 0; i < 12; i++ )
                 {
                   final String valueString = valueLine.substring( i * 5, 5 * (i + 1) );
-                  final Double value = (new Double( Double.parseDouble( valueString ) )) / m_div;
+                  final Double value = new Double( Double.parseDouble( valueString ) ) / m_div;
                   valueCollector.add( value );
-                  final Date valueDate = new Date( startDate + (i) * m_intervall );
+                  final Date valueDate = new Date( startDate + i * m_intervall );
                   dateCollector.add( valueDate );
                 }
               }
@@ -213,7 +213,7 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
                 for( int i = 0; i < 288; i++ )
                 {
                   valueCollector.add( value );
-                  final Date valueDate = new Date( startDate + (i) * m_intervall );
+                  final Date valueDate = new Date( startDate + i * m_intervall );
                   dateCollector.add( valueDate );
                 }
               }
@@ -224,7 +224,7 @@ public class NativeObservationDWDmdAdapter implements INativeObservationAdapter
                 for( int i = 0; i < 12; i++ )
                 {
                   valueCollector.add( value );
-                  final Date valueDate = new Date( startDate + (i) * m_intervall );
+                  final Date valueDate = new Date( startDate + i * m_intervall );
                   dateCollector.add( valueDate );
                 }
               }
