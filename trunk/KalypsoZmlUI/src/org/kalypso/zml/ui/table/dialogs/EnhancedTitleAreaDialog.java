@@ -64,9 +64,9 @@ public class EnhancedTitleAreaDialog extends TitleAreaDialog
     final IDialogSettings settings = KalypsoZmlUI.getDefault().getDialogSettings();
     final String sizeString = settings.get( parameter );
     if( sizeString == null || sizeString.trim().isEmpty() )
-      return new Point( 1000, 600 );
+      return new Point( 640, 480 );
 
-    final String[] parts = sizeString.split( "," );
+    final String[] parts = sizeString.split( "," ); //$NON-NLS-1$
 
     return new Point( Integer.valueOf( parts[0] ), Integer.valueOf( parts[1] ) );
   }

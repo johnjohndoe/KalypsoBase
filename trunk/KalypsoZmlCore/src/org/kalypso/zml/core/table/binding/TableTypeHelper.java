@@ -51,6 +51,7 @@ import jregex.RETokenizer;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.SWT;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.AlignmentType;
 import org.kalypso.zml.core.table.schema.CellStyleType;
@@ -273,7 +274,7 @@ public final class TableTypeHelper
 
   public static CellStyleType resolveReference( final StyleReferenceType reference )
   {
-    if( reference == null )
+    if( Objects.isNull( reference ) )
       return null;
 
     final Object objReference = reference.getReference();
@@ -281,7 +282,7 @@ public final class TableTypeHelper
       return (CellStyleType) objReference;
 
     final String url = reference.getUrl();
-    if( url != null )
+    if( Objects.isNotNull( url ) )
       throw new NotImplementedException();
 
     return null;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
-  <Chart id="hauptzahlen">
+  <Chart id="hauptzahlenChart">
     <Title>Kalypso Hauptzahlen</Title>
     <Description />
     <Styles>
@@ -8,14 +8,12 @@
         <Width>2</Width>
         <LineColor>000000</LineColor>
       </LineStyle>
-      <PointStyle role="hauptzahlPointStyle" isVisible="false">
-      </PointStyle>
       <TextStyle role="hauptzahlTextStyle">
-        <Size>6</Size>
+        <Size>8</Size>
         <TextColor>000000</TextColor>
         <FontFamily>Arial</FontFamily>
         <!-- <FillColor>000000</FillColor> -->
-        <FontWeight>NORMAL</FontWeight>
+        <FontWeight>BOLD</FontWeight>
         <FontStyle>NORMAL</FontStyle>
       </TextStyle>
     </Styles>
@@ -34,7 +32,6 @@
         <Description />
         <Styles>
           <StyleReference>urn:org:kalypso:zml:ui:diagramm:hauptzahlen#hauptzahlLineStyle</StyleReference>
-          <StyleReference>urn:org:kalypso:zml:ui:diagramm:hauptzahlen#hauptzahlPointStyle</StyleReference>
           <StyleReference>urn:org:kalypso:zml:ui:diagramm:hauptzahlen#hauptzahlTextStyle</StyleReference>
         </Styles>
       </Layer>

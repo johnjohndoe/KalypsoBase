@@ -10,12 +10,17 @@
  *     @author changed / updated by: Dirk Kuch
  ******************************************************************************/
 
-package org.kalypso.zml.ui.table.cursor;
+package org.kalypso.zml.ui.table.focus.cursor;
 
-import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -23,24 +28,27 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
+import org.kalypso.zml.ui.table.focus.ZmlTableFocusCellManager;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
 
 /**
  * @since 3.3
  */
-public abstract class AbstractCellCursor extends Canvas
+public abstract class AbstractZmlCellCursor extends Canvas implements ITableCursor
 {
-  private final ColumnViewer m_viewer;
+  private ZmlTableFocusCellManager m_cellManager;
 
-  private ViewerCell m_focusCell;
+  protected final TableViewer m_viewer;
 
   /**
    * @param viewer
    * @param style
    */
-  public AbstractCellCursor( final TableViewer viewer )
+  public AbstractZmlCellCursor( final TableViewer viewer )
   {
     super( (Composite) viewer.getControl(), SWT.NONE );
     m_viewer = viewer;
@@ -66,28 +74,53 @@ public abstract class AbstractCellCursor extends Canvas
         {
           getParent().notifyListeners( SWT.MouseDoubleClick, copyEvent( event ) );
         }
+        else if( SWT.MouseMove == event.type )
+        {
+          getParent().notifyListeners( SWT.MouseMove, copyEvent( event ) );
+        }
         else if( SWT.FocusIn == event.type )
         {
-          if( isVisible() )
-            forceFocus();
+          m_viewer.getControl().forceFocus();
         }
       }
-
     };
 
     addListener( SWT.Paint, listener );
     addListener( SWT.KeyDown, listener );
     addListener( SWT.MouseDown, listener );
     addListener( SWT.MouseDoubleClick, listener );
+    addListener( SWT.MouseMove, listener );
+    addListener( SWT.FocusIn, listener );
 
-    final Table table = viewer.getTable();
-    final ScrollBar verticalBar = table.getVerticalBar();
-    verticalBar.addSelectionListener( new SelectionAdapter()
+    final SelectionAdapter scrollBarListener = new SelectionAdapter()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        setFocusCell( getFocusCell() );
+        redraw();
+      }
+    };
+
+    final Table table = m_viewer.getTable();
+    table.getVerticalBar().addSelectionListener( scrollBarListener );
+    table.getHorizontalBar().addSelectionListener( scrollBarListener );
+
+    // triggered from chart layer mouse selection
+    viewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        new UIJob( "" )
+        {
+          @Override
+          public IStatus runInUIThread( final IProgressMonitor monitor )
+          {
+            redraw();
+            return Status.OK_STATUS;
+          }
+
+        }.schedule();
       }
     } );
 
@@ -106,52 +139,64 @@ public abstract class AbstractCellCursor extends Canvas
     getParent().notifyListeners( SWT.MouseDown, copyEvent( event ) );
   }
 
-  public void setFocusCell( final ViewerCell cell )
+  /**
+   * @see org.eclipse.swt.widgets.Control#redraw()
+   */
+  @Override
+  public void redraw( )
   {
-    m_focusCell = cell;
+    if( isDisposed() )
+      return;
 
-    if( Objects.isNotNull( m_focusCell ) )
-      setBounds( m_focusCell.getBounds() );
+    try
+    {
+      final ViewerCell focusCell = getFocusCell();
+      if( Objects.isNotNull( focusCell ) && !focusCell.getControl().isDisposed() )
+        setBounds( focusCell.getBounds() );
+    }
+    catch( final SWTException ex )
+    {
+      // ignore
+    }
 
-    redraw();
+    super.redraw();
   }
 
   /**
    * @return the cells who should be highlighted
    */
-  public ViewerCell getFocusCell( )
+  protected IZmlTableCell getFocusTableCell( )
   {
-    return m_focusCell;
+    if( m_cellManager == null )
+      return null;
+
+    return m_cellManager.getFocusTableCell();
+  }
+
+  protected ViewerCell getFocusCell( )
+  {
+    if( Objects.isNull( m_cellManager ) )
+      return null;
+
+    return m_cellManager.getFocusCell();
   }
 
   protected Event copyEvent( final Event event )
   {
-    final Event cEvent = new Event();
-    cEvent.button = event.button;
-    cEvent.character = event.character;
-    cEvent.count = event.count;
-    cEvent.data = event.data;
-    cEvent.detail = event.detail;
-    cEvent.display = event.display;
-    cEvent.doit = event.doit;
-    cEvent.end = event.end;
-    cEvent.gc = event.gc;
-    cEvent.height = event.height;
-    cEvent.index = event.index;
-    cEvent.item = getFocusCell().getControl();
-    cEvent.keyCode = event.keyCode;
-    cEvent.start = event.start;
-    cEvent.stateMask = event.stateMask;
-    cEvent.text = event.text;
-    cEvent.time = event.time;
-    cEvent.type = event.type;
-    cEvent.widget = event.widget;
-    cEvent.width = event.width;
+    final Event cEvent = ControlUtils.copyEvent( event );
+
+    final ViewerCell focusCell = getFocusCell();
+    cEvent.item = focusCell == null ? null : focusCell.getControl();
     final Point p = m_viewer.getControl().toControl( toDisplay( event.x, event.y ) );
     cEvent.x = p.x;
     cEvent.y = p.y;
 
     return cEvent;
+  }
+
+  public void setCellManager( final ZmlTableFocusCellManager cellManager )
+  {
+    m_cellManager = cellManager;
   }
 
   /**

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model;
 
+import java.util.Date;
+
 /**
  * @author Dirk Kuch
  */
@@ -60,7 +62,7 @@ public final class ZmlModelFactory
     return INSTANCE;
   }
 
-  public IZmlModelRow createRow( final ZmlModel model, final Object index )
+  public IZmlModelRow createRow( final ZmlModel model, final Date index )
   {
     final ZmlModelRow row = new ZmlModelRow( model, index );
     model.add( row );

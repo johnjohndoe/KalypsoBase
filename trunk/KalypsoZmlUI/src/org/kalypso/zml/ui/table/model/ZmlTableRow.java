@@ -137,7 +137,7 @@ public class ZmlTableRow extends ZmlTableElement implements IZmlTableRow
   @Override
   public IZmlTableCell getCell( final IZmlTableColumn column )
   {
-    return new ZmlTableCell( column, this );
+    return new ZmlTableCell( this, column );
   }
 
   /**

@@ -38,29 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table.focus;
 
 import org.eclipse.jface.viewers.ViewerCell;
+import org.kalypso.zml.ui.table.focus.cursor.ITableCursor;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.IZmlTableRow;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableSelectionHandler
+public interface IZmlTableFocusHandler
 {
-  ViewerCell findViewerCell( IZmlTableCell cell );
+  IZmlTableCell getFocusTableCell( );
 
-  IZmlTableCell getActiveCell( );
+  ViewerCell getFocusCell( );
 
-  IZmlTableColumn getActiveColumn( );
-
-  IZmlTableRow getActiveRow( );
-
-  IZmlTableRow[] getSelectedRows( );
-
-  void setFocusCell( ViewerCell cell );
-
-  IZmlTableColumn getSetActiveColumn( );
+  ITableCursor getCursor( );
 }

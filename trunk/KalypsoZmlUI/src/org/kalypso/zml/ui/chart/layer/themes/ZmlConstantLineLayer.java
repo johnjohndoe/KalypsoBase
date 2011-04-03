@@ -50,10 +50,10 @@ import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.ICatalog;
+import org.kalypso.contribs.eclipse.utils.ConfigUtils;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.metadata.IMetadataBoundary;
@@ -69,10 +69,13 @@ import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.TextFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 
 /**
  * @author Dirk Kuch
@@ -80,15 +83,13 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
  */
 public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 {
-  private static final String GLOBAL_ALARMSTUFEN_KOD = "urn:org:kalypso:zml:ui:diagramm:alarmstufen";
+// private static final String GLOBAL_ALARMSTUFEN_KOD = "urn:org:kalypso:zml:ui:diagramm:alarmstufen";
 
   private ZmlConstantLineBean[] m_descriptors = new ZmlConstantLineBean[] {};
 
   private boolean m_calculateRange = false;
 
   private IZmlLayerDataHandler m_handler;
-
-  private IObservation m_lastObservation;
 
   private String m_labelDescriptor;
 
@@ -97,6 +98,40 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     super( provider, styleSet );
 
     m_calculateRange = calculateRange;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    if( Objects.isNotNull( m_handler ) )
+      m_handler.dispose();
+
+    super.dispose();
+  }
+
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#onObservationChanged()
+   */
+  @Override
+  public void onObservationChanged( )
+  {
+    try
+    {
+      updateDescriptors();
+    }
+    catch( final XmlException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
+
+    getEventHandler().fireLayerContentChanged( this );
   }
 
   public boolean isCalculateRange( )
@@ -160,12 +195,10 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
   {
     try
     {
-      updateDescriptors();
-
       if( ArrayUtils.isEmpty( m_descriptors ) )
         return;
 
-      final int screenSize = gc.getClipping().width;
+      final Rectangle screenRect = gc.getClipping();
       final int[] screens = getScreenValues();
 
       for( final ZmlConstantLineBean descriptor : m_descriptors )
@@ -175,25 +208,64 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 
         final PolylineFigure polylineFigure = new PolylineFigure();
         polylineFigure.setStyle( lineStyle );
-        polylineFigure.setPoints( new Point[] { new Point( 0, screenValue ), new Point( screenSize, screenValue ) } );
+        polylineFigure.setPoints( new Point[] { new Point( 0, screenValue ), new Point( screenRect.width, screenValue ) } );
         polylineFigure.paint( gc );
 
         if( descriptor.isShowLabel() )
-        {
-          getTextFigure().setStyle( descriptor.getTextStyle() );
-          final String text = descriptor.getLabel();
-          final Point extent = gc.textExtent( text );
-          if( canDrawLabel( screens, screenValue, extent.y ) )
-          {
-            final Point leftTopPoint = new Point( screenSize - extent.x - 1, screenValue - extent.y / 2 - lineStyle.getWidth() );
-            drawText( gc, text, leftTopPoint );
-          }
-        }
+          paintDescriptorLabel( gc, screenRect, screens, descriptor, screenValue, lineStyle );
       }
     }
     catch( final Throwable t )
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+    }
+  }
+
+  private void paintDescriptorLabel( final GC gc, final Rectangle screenRect, final int[] screens, final ZmlConstantLineBean descriptor, final int screenValue, final ILineStyle lineStyle )
+  {
+    final ITextStyle textStyle = descriptor.getTextStyle();
+    final String text = descriptor.getLabel();
+
+    final Point extent = gc.textExtent( text );
+
+    // FIXME: choose text position on line depending on alignment set in text-style
+    if( canDrawLabel( screens, screenValue, extent.y ) )
+    {
+      final TextFigure textFigure = new TextFigure();
+      textFigure.setStyle( textStyle );
+      textFigure.setText( text );
+
+      // final ALIGNMENT alignment = textStyle.getAlignment();
+      // FIXME: textStyle alignment is not correctly implemented and is not an attribute of the corresponding
+      // xml-element
+      final ALIGNMENT alignment = ALIGNMENT.RIGHT;
+      final int left = calculateLeftPosition( extent, screenRect, alignment );
+      final int top = screenValue - extent.y / 2 - lineStyle.getWidth();
+
+      textFigure.setPoints( new Point[] { new Point( left, top ) } );
+      textFigure.paint( gc );
+    }
+
+    System.out.println();
+  }
+
+  private int calculateLeftPosition( final Point extent, final Rectangle screenRect, final ALIGNMENT alignment )
+  {
+    // TODO: we would like to configure some kind of buffer/insets
+
+    switch( alignment )
+    {
+      case LEFT:
+        // FIXME: check if the screen rect is correctly set here -> is the width of the axis an issue?
+        return screenRect.x + 12;
+
+      case CENTER:
+        return screenRect.x + (int) (screenRect.width / 2.0 - extent.x / 2.0);
+
+      case RIGHT:
+        // fall through
+      default:
+        return screenRect.x + screenRect.width - extent.x - 1;
     }
   }
 
@@ -225,8 +297,6 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
       m_descriptors = null;
       return;
     }
-    else if( Objects.equal( m_lastObservation, observation ) )
-      return;
 
     final IMetadataLayerBoundary[] boundaryLayers = buildBoundaries( observation );
 
@@ -239,9 +309,6 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     }
 
     m_descriptors = descriptors.toArray( new ZmlConstantLineBean[] {} );
-    m_lastObservation = observation;
-
-    getEventHandler().fireLayerContentChanged( this );
   }
 
   /**
@@ -259,11 +326,16 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
       return builder.getBoundaries( m_handler.getTargetAxisId() );
     }
 
-    final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-    final String uri = baseCatalog.resolve( GLOBAL_ALARMSTUFEN_KOD, GLOBAL_ALARMSTUFEN_KOD );
+    final URL url = ConfigUtils.findCentralConfigLocation( "layers/grenzwerte/alarmstufen.kod" ); //$NON-NLS-1$
 
-    final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, new URL( uri ) );
+    final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, url, getDataHandler().getTargetAxisId() );
     return provider.getBoundaries();
+
+// final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
+// final String uri = baseCatalog.resolve( GLOBAL_ALARMSTUFEN_KOD, GLOBAL_ALARMSTUFEN_KOD );
+//
+// final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, new URL( uri ) );
+// return provider.getBoundaries();
   }
 
   /**

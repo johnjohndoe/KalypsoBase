@@ -145,7 +145,7 @@ public class ZmlDiagramUpdater implements Runnable
     if( container == null )
       return false;
 
-    final String property = container.getParameterValue( "supportsMultiSelect", "false" );
+    final String property = container.getParameterValue( "supportsMultiSelect", "false" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return Boolean.valueOf( property );
   }
@@ -157,7 +157,7 @@ public class ZmlDiagramUpdater implements Runnable
 
     final ILayerProvider provider = baseLayer.getProvider();
     final IZmlLayer clone = (IZmlLayer) provider.getLayer( provider.getContext() );
-    clone.setId( String.format( IClonedLayer.CLONED_LAYER_POSTFIX_FORMAT, baseLayer.getId(), index ) );
+    clone.setIdentifier( String.format( IClonedLayer.CLONED_LAYER_POSTFIX_FORMAT, baseLayer.getIdentifier(), index ) );
     clone.setDataHandler( new ZmlObsProviderDataHandler( clone, baseLayer.getDataHandler().getTargetAxisId() ) );
 
     final ICoordinateMapper baseMapper = baseLayer.getCoordinateMapper();
@@ -166,6 +166,7 @@ public class ZmlDiagramUpdater implements Runnable
     clone.setVisible( baseLayer.isVisible() );
     clone.setFilter( baseLayer.getFilters() );
     clone.setTitle( baseLayer.getTitle() );
+    clone.setLegend( baseLayer.isLegend() );
 
     final ILayerContainer parent = baseLayer.getParent();
     parent.getLayerManager().addLayer( clone );

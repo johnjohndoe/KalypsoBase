@@ -40,12 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.filters;
 
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
-import org.kalypso.zml.core.table.model.references.ZmlValues;
 
 /**
  * @author Dirk Kuch
@@ -71,18 +67,7 @@ public class ZmlNotNullChartLayerFilter extends AbstractZmlChartLayerFilter
   {
     try
     {
-      if( isStuetzstelle( container ) )
-        return false;
-
-      final IAxis valueAxis = AxisUtils.findValueAxis( container.getAxes() );
-
-      final Object value = container.get( valueAxis );
-      if( !(value instanceof Number) )
-        return false;
-      final Number number = (Number) value;
-
-      return number.doubleValue() == 0.0;
-
+      return new ContainerAsValue( container ).isNullstelle();
     }
     catch( final SensorException e )
     {
@@ -90,29 +75,5 @@ public class ZmlNotNullChartLayerFilter extends AbstractZmlChartLayerFilter
 
       return false;
     }
-  }
-
-  private boolean isStuetzstelle( final IObservationValueContainer container ) throws SensorException
-  {
-    final IAxis[] axes = container.getAxes();
-    final IAxis statusAxis = AxisUtils.findStatusAxis( axes );
-    final IAxis sourceAxis = AxisUtils.findDataSourceAxis( axes );
-
-    final Object objStatus = container.get( statusAxis );
-    final Object objSource = container.get( sourceAxis );
-
-    Number status = null;
-    String source = null;
-
-    if( objStatus instanceof Number )
-      status = (Number) objStatus;
-
-    if( objSource instanceof Number )
-    {
-      final DataSourceHandler handler = new DataSourceHandler( container.getMetaData() );
-      source = handler.getDataSourceIdentifier( ((Number) objSource).intValue() );
-    }
-
-    return ZmlValues.isStuetzstelle( status, source );
   }
 }

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table.focus.cursor;
 
 import org.eclipse.jface.viewers.CellNavigationStrategy;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -47,19 +47,13 @@ import org.eclipse.jface.viewers.ViewerRow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.ui.table.cursor.TableCursor;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlCellNavigationStrategy extends CellNavigationStrategy
 {
-  private final TableCursor m_cursor;
-
-  public ZmlCellNavigationStrategy( final TableCursor cursor )
-  {
-    m_cursor = cursor;
-  }
+  // TODO: see selectionHandler: add as traversal listener and handle Tab
 
   /**
    * @param currentSelectedCell
@@ -70,7 +64,7 @@ public class ZmlCellNavigationStrategy extends CellNavigationStrategy
   @Override
   public ViewerCell findSelectedCell( final ColumnViewer viewer, final ViewerCell currentSelectedCell, final Event event )
   {
-    final ViewerCell current = m_cursor.getFocusCell();
+    final ViewerCell current = currentSelectedCell;
     if( Objects.isNull( current ) )
       return null;
     else if( SWT.ARROW_UP == event.keyCode )
@@ -79,7 +73,7 @@ public class ZmlCellNavigationStrategy extends CellNavigationStrategy
       return findCell( current, ViewerCell.BELOW, false );
     else if( SWT.ARROW_LEFT == event.keyCode )
       return findCell( current, ViewerCell.LEFT, true );
-    else if( SWT.ARROW_RIGHT == event.keyCode )
+    else if( SWT.ARROW_RIGHT == event.keyCode || SWT.TAB == event.keyCode )
       return findCell( current, ViewerCell.RIGHT, true );
 
     return null;
@@ -104,7 +98,6 @@ public class ZmlCellNavigationStrategy extends CellNavigationStrategy
 
       return null;
     }
-
     else if( cell.getBounds().width == 0 )
       return findCell( cell, direction, sameLevel );
 

@@ -40,24 +40,39 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.memento;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.zml.ui.core.element.IZmlDiagramElement;
+import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableMemento implements IZmlTableMemento
 {
-  private final Set<IZmlDiagramElement> m_elements = new HashSet<IZmlDiagramElement>();
+  private final Map<IPoolableObjectType, ILabeledObsProvider> m_elements = Collections.synchronizedMap( new HashMap<IPoolableObjectType, ILabeledObsProvider>() );
+
+  private final IObsProviderListener m_providerListener;
+
+  /**
+   * @param obsProviderListener
+   *          This listener will be added to all registered obs-provider of this memento.
+   */
+  public ZmlTableMemento( final IObsProviderListener obsProviderListener )
+  {
+    m_providerListener = obsProviderListener;
+  }
 
   /**
    * @see org.kalypso.zml.ui.table.memento.IZmlTableMemento#dispose()
@@ -65,47 +80,65 @@ public class ZmlTableMemento implements IZmlTableMemento
   @Override
   public void dispose( )
   {
-    m_elements.clear();
+    cleanup();
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.memento.IZmlTableMemento#register(org.kalypso.zml.ui.core.element.IZmlDiagramElement)
-   */
   @Override
-  public void register( final IZmlDiagramElement element )
+  public synchronized void register( final IPoolableObjectType poolKey, final ILabeledObsProvider provider )
   {
-    m_elements.add( element );
+    provider.addListener( m_providerListener );
+
+    final ILabeledObsProvider oldObsProvider = m_elements.get( poolKey );
+    if( oldObsProvider != null )
+      oldObsProvider.dispose();
+
+    m_elements.put( poolKey, provider );
   }
 
   /**
    * @see org.kalypso.hwv.ui.wizards.calculation.modelpages.layout.ILayoutPart#saveData(boolean)
    */
   @Override
-  public void store( ) throws CoreException
+  public synchronized void store( ) throws CoreException
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-    for( final IZmlDiagramElement element : m_elements )
+    final IObsProvider[] dirtyElements = findDirtyElements();
+    for( final IObsProvider provider : dirtyElements )
     {
-      final IObsProvider provider = element.getObsProvider();
-      try
+      final IObservation observation = provider.getObservation();
+      if( observation != null )
+        pool.saveObject( observation, new NullProgressMonitor() );
+    }
+
+    cleanup();
+  }
+
+  private synchronized void cleanup( )
+  {
+    for( final IObsProvider provider : m_elements.values() )
+      provider.dispose();
+
+    m_elements.clear();
+  }
+
+  @Override
+  public synchronized ILabeledObsProvider[] findDirtyElements( )
+  {
+    final Collection<ILabeledObsProvider> result = new ArrayList<ILabeledObsProvider>();
+
+    final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
+
+    for( final ILabeledObsProvider provider : m_elements.values() )
+    {
+      final IObservation observation = provider.getObservation();
+      if( observation != null )
       {
-        final IObservation observation = provider.getObservation();
-        if( observation != null )
-        {
-          final KeyInfo info = pool.getInfo( observation );
-          if( info.isDirty() )
-          {
-// System.out.println( String.format( "Saving observation: %s", observation.getHref() ) );
-            pool.saveObject( observation, new NullProgressMonitor() );
-          }
-        }
-      }
-      finally
-      {
-        provider.dispose();
+        final KeyInfo info = pool.getInfo( observation );
+        if( info.isDirty() )
+          result.add( provider );
       }
     }
 
-    m_elements.clear();
+    return result.toArray( new ILabeledObsProvider[result.size()] );
   }
 }

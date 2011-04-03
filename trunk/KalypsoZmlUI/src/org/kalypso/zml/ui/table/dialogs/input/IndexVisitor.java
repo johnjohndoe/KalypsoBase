@@ -66,9 +66,9 @@ public class IndexVisitor implements IZmlModelColumnVisitor
    * @see org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor#visit(org.kalypso.zml.core.table.model.references.IZmlValueReference)
    */
   @Override
-  public boolean visit( final IZmlValueReference reference ) throws SensorException
+  public void visit( final IZmlValueReference reference ) throws SensorException
   {
-    final Date date = (Date) reference.getIndexValue();
+    final Date date = reference.getIndexValue();
 
     if( date.after( m_current ) )
     {
@@ -77,8 +77,6 @@ public class IndexVisitor implements IZmlModelColumnVisitor
 
       m_steppings.add( hour );
     }
-
-    return true;
   }
 
   public Integer[] getSteppings( )

@@ -42,7 +42,6 @@ package org.kalypso.zml.ui.chart.layer.themes;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -54,12 +53,15 @@ import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
@@ -67,6 +69,8 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
  */
 public class ZmlForecastLayer extends AbstractChartLayer implements IObsProviderListener
 {
+  private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
+
   private IObsProvider m_provider;
 
   private final ILineStyle m_style;
@@ -119,20 +123,19 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     if( min == null || max == null )
       return;
 
-    final Calendar from = getCalendar( min.longValue() );
-    final Calendar to = getCalendar( max.longValue() );
     final Calendar forecast = getForecast();
     if( forecast == null )
       return;
 
+    final Calendar from = getCalendar( min.longValue() );
     if( !from.before( forecast ) )
       return;
 
+    final Calendar to = getCalendar( max.longValue() );
     if( !to.after( forecast ) )
       return;
 
-    final double logicalX = min.doubleValue() + forecast.getTimeInMillis() - min.doubleValue();
-    final Integer x = Math.abs( domainAxis.numericToScreen( logicalX ) );
+    final Integer x = Math.abs( domainAxis.numericToScreen( forecast.getTimeInMillis() ) );
 
     final Integer y0 = targetAxis.numericToScreen( targetRange.getMin() );
     final Integer y1 = targetAxis.numericToScreen( targetRange.getMax() );
@@ -145,6 +148,9 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
 
   private Calendar getForecast( )
   {
+    if( m_provider == null )
+      return null;
+
     final IObservation observation = m_provider.getObservation();
     if( observation == null )
       return null;
@@ -157,9 +163,9 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     calendar.setTime( forecastStart );
 
-    final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
-    final int timeZoneOffset = timeZone.getRawOffset();
-    calendar.add( Calendar.MILLISECOND, timeZoneOffset );
+// final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
+// final int timeZoneOffset = timeZone.getRawOffset();
+// calendar.add( Calendar.MILLISECOND, timeZoneOffset );
 
     return calendar;
   }
@@ -178,7 +184,25 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
   @Override
   public IDataRange<Number> getDomainRange( )
   {
-    return null;
+    // TODO: all three parameters should eventually be set from outside
+    final boolean shouldAutomax = true;
+    final int bufferField = Calendar.HOUR_OF_DAY;
+    final int bufferAmount = -2;
+
+    if( !shouldAutomax )
+      return null;
+
+    final Calendar forecast = getForecast();
+    if( forecast == null )
+      return null;
+
+    final Calendar from = (Calendar) forecast.clone();
+    final Calendar end = (Calendar) forecast.clone();
+
+    from.add( bufferField, -bufferAmount );
+    end.add( bufferField, bufferAmount );
+
+    return new DataRange<Number>( m_dateDataOperator.logicalToNumeric( from.getTime() ), m_dateDataOperator.logicalToNumeric( end.getTime() ) );
   }
 
   /**
@@ -196,7 +220,8 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
   @Override
   public void dispose( )
   {
-    m_provider.dispose();
+    if( m_provider != null )
+      m_provider.dispose();
   }
 
   /**

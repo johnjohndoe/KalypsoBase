@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.chart.layer.boundaries;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.ogc.sensor.metadata.IMetadataBoundary;
 
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -55,6 +56,10 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
  */
 public class KodBoundaryLayer implements IMetadataLayerBoundary
 {
+  private static final Pattern PATTERN_STYLE_ID = new Pattern( "\\w*_" ); //$NON-NLS-1$
+
+  private static final Pattern PATTERN_BOUNDARY = new Pattern( "\\w*\\s" ); //$NON-NLS-1$
+
   private final String m_label;
 
   private final String m_labelTokenizer;
@@ -100,7 +105,26 @@ public class KodBoundaryLayer implements IMetadataLayerBoundary
   @Override
   public ILineStyle getLineStyle( )
   {
-    final StyleSetVisitor visitor = new StyleSetVisitor();
+    final StyleSetVisitor visitor = new StyleSetVisitor( true );
+
+    final String[] styles = visitor.findReferences( m_styles, ILineStyle.class );
+    if( ArrayUtils.isEmpty( styles ) )
+      return visitor.visit( m_styles, ILineStyle.class, 0 ); // should return default style!
+    else if( styles.length == 1 )
+      return (ILineStyle) m_styles.getStyle( styles[0] );
+
+    // like Alarmstufe 4
+    final String boundary = m_boundary.getName();
+    final String id = boundary.substring( boundary.lastIndexOf( " " ) + 1 ); //$NON-NLS-1$
+
+    for( final String style : styles )
+    {
+      final RETokenizer styleTokenizer = new RETokenizer( PATTERN_STYLE_ID, style );
+      final String token = styleTokenizer.nextToken();
+
+      if( token.equals( id ) )
+        return (ILineStyle) m_styles.getStyle( style );
+    }
 
     return visitor.visit( m_styles, ILineStyle.class, 0 );
   }
@@ -111,9 +135,27 @@ public class KodBoundaryLayer implements IMetadataLayerBoundary
   @Override
   public ITextStyle getTextStyle( )
   {
-    final StyleSetVisitor visitor = new StyleSetVisitor();
+    final StyleSetVisitor visitor = new StyleSetVisitor( false );
+
+    final String[] styles = visitor.findReferences( m_styles, ITextStyle.class );
+    if( ArrayUtils.isEmpty( styles ) )
+      return visitor.visit( m_styles, ITextStyle.class, 0 ); // should return default style!
+    else if( styles.length == 1 )
+      return (ITextStyle) m_styles.getStyle( styles[0] );
+
+    // like Alarmstufe 4
+    final String boundary = m_boundary.getName();
+    final String id = boundary.substring( boundary.lastIndexOf( " " ) + 1 ); //$NON-NLS-1$
+
+    for( final String style : styles )
+    {
+      final RETokenizer styleTokenizer = new RETokenizer( PATTERN_STYLE_ID, style );
+      final String token = styleTokenizer.nextToken();
+
+      if( token.equals( id ) )
+        return (ITextStyle) m_styles.getStyle( style );
+    }
 
     return visitor.visit( m_styles, ITextStyle.class, 0 );
   }
-
 }

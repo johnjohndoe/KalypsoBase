@@ -55,7 +55,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
+import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 
 /**
  * @author Dirk Kuch
@@ -155,7 +155,7 @@ public class ZmlTableColumn extends ZmlTableElement implements IZmlTableColumn
         final IZmlModelRow row = (IZmlModelRow) data;
         final ZmlTableRow zmlRow = new ZmlTableRow( getTable(), row );
 
-        cells.add( new ZmlTableCell( this, zmlRow ) );
+        cells.add( new ZmlTableCell( zmlRow, this ) );
       }
     }
 
@@ -186,7 +186,7 @@ public class ZmlTableColumn extends ZmlTableElement implements IZmlTableColumn
   @Override
   public IZmlTableCell findCell( final IZmlModelRow row )
   {
-    return new ZmlTableCell( this, new ZmlTableRow( getTable(), row ) );
+    return new ZmlTableCell( new ZmlTableRow( getTable(), row ), this );
   }
 
 }

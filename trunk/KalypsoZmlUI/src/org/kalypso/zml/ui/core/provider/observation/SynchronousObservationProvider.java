@@ -110,14 +110,6 @@ public class SynchronousObservationProvider extends AbstractObsProvider
   }
 
   /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-  }
-
-  /**
    * @see org.kalypso.ogc.sensor.template.IObsProvider#getArguments()
    */
   @Override

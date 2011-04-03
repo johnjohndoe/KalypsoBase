@@ -45,7 +45,6 @@ import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
 
 /**
@@ -58,17 +57,12 @@ public class ResetZmlLayerVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public boolean visit( final IChartLayer layer )
+  public void visit( final IChartLayer layer )
   {
     if( layer instanceof IZmlLayer )
-    {
       reset( (IZmlLayer) layer );
-    }
 
-    final ILayerManager manager = layer.getLayerManager();
-    manager.accept( this );
-
-    return true;
+    layer.getLayerManager().accept( this );
   }
 
   private void reset( final IZmlLayer layer )

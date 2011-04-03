@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.legend;
 
-import org.apache.commons.lang.ArrayUtils;
-
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -73,9 +71,6 @@ public class ZmlBlockChartLegendRenderer extends BlockChartLegendRenderer
     final ZmlChartLegendLayersVisitor visitor = new ZmlChartLegendLayersVisitor();
     layerManager.accept( visitor );
 
-    final IChartLayer[] layers = visitor.getLayers();
-    ArrayUtils.reverse( layers );
-
-    return layers;
+    return visitor.getLayers();
   }
 }

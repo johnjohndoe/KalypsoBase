@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.toolbar.view;
 
+import java.util.Date;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IStatus;
@@ -51,6 +53,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.services.IServiceLocator;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 
@@ -65,11 +68,26 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
 
     final ZmlViewResolutionFilter filter = resolveFilter( table );
+    doOffsetAdjustment( table, filter );
+
     filter.setParameters( resultion, mode );
 
-    table.getTableViewer().refresh();
+    table.refresh();
 
     return Status.OK_STATUS;
+  }
+
+  @SuppressWarnings("deprecation")
+  private void doOffsetAdjustment( final IZmlTable table, final ZmlViewResolutionFilter filter )
+  {
+    final IZmlModelRow[] rows = table.getDataModel().getRows();
+    if( ArrayUtils.isEmpty( rows ) )
+      return;
+
+    final IZmlModelRow row = rows[0];
+    final Date value = row.getIndexValue();
+    final int hours = value.getHours();
+    filter.resetOffset( hours );
   }
 
   protected IStatus updateOffset( final ExecutionEvent event, final int number )

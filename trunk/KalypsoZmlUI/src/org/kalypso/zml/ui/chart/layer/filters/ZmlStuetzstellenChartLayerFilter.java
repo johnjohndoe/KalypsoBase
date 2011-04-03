@@ -40,14 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.filters;
 
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
-import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
-import org.kalypso.zml.core.table.model.references.ZmlValues;
 
 /**
  * @author Dirk Kuch
@@ -74,10 +68,8 @@ public class ZmlStuetzstellenChartLayerFilter extends AbstractZmlChartLayerFilte
   {
     try
     {
-      final String dataSource = getDataSource( container );
-      final Number status = getStatus( container );
-
-      return !ZmlValues.isStuetzstelle( status, dataSource );
+      final ContainerAsValue value = new ContainerAsValue( container );
+      return !value.isStuetzstelle();
     }
     catch( final SensorException e )
     {
@@ -86,29 +78,4 @@ public class ZmlStuetzstellenChartLayerFilter extends AbstractZmlChartLayerFilte
       return false;
     }
   }
-
-  private String getDataSource( final IObservationValueContainer container ) throws SensorException
-  {
-    final IAxis axis = AxisUtils.findDataSourceAxis( container.getAxes() );
-    if( Objects.isNull( axis ) )
-      return null;
-
-    final Object object = container.get( axis );
-    if( !(object instanceof Number) )
-      return null;
-
-    final Number source = (Number) object;
-    final DataSourceHandler handler = new DataSourceHandler( container.getMetaData() );
-    return handler.getDataSourceIdentifier( source.intValue() );
-  }
-
-  private Number getStatus( final ITupleModelValueContainer container ) throws SensorException
-  {
-    final IAxis axis = AxisUtils.findStatusAxis( container.getAxes() );
-    if( Objects.isNull( axis ) )
-      return null;
-
-    return (Number) container.get( axis );
-  }
-
 }

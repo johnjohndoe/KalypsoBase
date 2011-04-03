@@ -40,15 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
@@ -56,27 +57,35 @@ import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
-import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
+import de.openali.odysseus.chart.framework.util.resource.IPair;
+import de.openali.odysseus.chart.framework.util.resource.Pair;
 
 /**
  * @author Dirk Kuch
  */
 public class LineLayerModelVisitor implements IObservationVisitor
 {
-  private final ZmlLineLayer m_layer;
+  private final Collection<IPair<Number, Number>> m_path = new ArrayList<IPair<Number, Number>>();
 
-  private final List<Point> m_path;
+  private final ZmlLineLayer m_layer;
 
   private IAxis m_dateAxis;
 
   private final IChartLayerFilter[] m_filters;
 
-  public LineLayerModelVisitor( final ZmlLineLayer layer, final List<Point> path, final IChartLayerFilter[] filters )
+  private final IDataRange<Number> m_domainIntervall;
+
+  private Date m_to;
+
+  private Date m_from;
+
+  public LineLayerModelVisitor( final ZmlLineLayer layer, final IChartLayerFilter[] filters, final IDataRange<Number> domainIntervall )
   {
     m_layer = layer;
-    m_path = path;
     m_filters = filters;
+    m_domainIntervall = domainIntervall;
   }
 
   private IAxis getValueAxis( )
@@ -86,13 +95,16 @@ public class LineLayerModelVisitor implements IObservationVisitor
     return handler.getValueAxis();
   }
 
-  private IAxis getDateAxis( ) throws SensorException
+  private IAxis getDateAxis( )
   {
     if( m_dateAxis == null )
     {
       final IZmlLayerDataHandler handler = m_layer.getDataHandler();
-      final ITupleModel model = handler.getModel();
-      final IAxis[] axes = model.getAxes();
+      final IObservation observation = handler.getObservation();
+      if( Objects.isNull( observation ) )
+        return null;
+
+      final IAxis[] axes = observation.getAxes();
 
       m_dateAxis = AxisUtils.findDateAxis( axes );
     }
@@ -124,16 +136,23 @@ public class LineLayerModelVisitor implements IObservationVisitor
       if( isFiltered( container ) )
         return;
 
-      final Date adjusted = ChartLayerUtils.addTimezoneOffset( (Date) dateObject );
+      final Date domain = (Date) dateObject;
 
-      final Point screen = m_layer.getCoordinateMapper().numericToScreen( m_layer.getRangeHandler().getDateDataOperator().logicalToNumeric( adjusted ), m_layer.getRangeHandler().getNumberDataOperator().logicalToNumeric( (Double) valueObject ) );
-      m_path.add( screen );
+      if( !isPartOfDomainInterval( domain ) )
+        return;
+
+      final Number domainNumeric = m_layer.getRangeHandler().getDateDataOperator().logicalToNumeric( domain );
+      final Number targetNumeric = m_layer.getRangeHandler().getNumberDataOperator().logicalToNumeric( (Double) valueObject );
+
+      final IPair<Number, Number> numeric = new Pair<Number, Number>( domainNumeric, targetNumeric );
+      m_path.add( numeric );
     }
     catch( final SensorException e )
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
   }
+
 
   private boolean isFiltered( final IObservationValueContainer container )
   {
@@ -147,5 +166,49 @@ public class LineLayerModelVisitor implements IObservationVisitor
     }
 
     return false;
+  }
+
+  @SuppressWarnings("unchecked")
+  public IPair<Number, Number>[] getPoints( )
+  {
+    return m_path.toArray( new IPair[m_path.size()] );
+  }
+
+  private boolean isPartOfDomainInterval( final Date date )
+  {
+    if( Objects.isNull( m_domainIntervall ) )
+      return true;
+    final Date from = getFrom();
+    final Date to = getTo();
+
+    final DateRange dateRange = new DateRange( from, to );
+
+    return dateRange.containsLazyInclusive( date );
+  }
+
+  private Date getTo( )
+  {
+    if( Objects.isNotNull( m_to ) )
+      return m_to;
+
+    final Number max = m_domainIntervall.getMax();
+    if( Objects.isNull( max ) )
+      return null;
+
+    m_to = new Date( max.longValue() );
+    return m_to;
+  }
+
+  private Date getFrom( )
+  {
+    if( Objects.isNotNull( m_from ) )
+      return m_from;
+
+    final Number min = m_domainIntervall.getMin();
+    if( Objects.isNull( min ) )
+      return null;
+
+    m_from = new Date( min.longValue() );
+    return m_from;
   }
 }

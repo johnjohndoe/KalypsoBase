@@ -40,21 +40,25 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 
-import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.commons.pair.IKeyValue;
+import org.kalypso.commons.pair.KeyValueFactory;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IAxisRange;
-import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
+import de.openali.odysseus.chart.framework.model.figure.impl.ClipHelper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
+import de.openali.odysseus.chart.framework.util.resource.IPair;
+import de.openali.odysseus.chart.framework.util.resource.Pair;
 
 /**
  * @author Dirk Kuch
@@ -76,19 +80,40 @@ public class ZmlLineLayerRangeHandler
   {
     try
     {
-      final ITupleModel model = m_layer.getDataHandler().getModel();
-      if( model == null )
+      final IPair<Number, Number>[] points = getClippedPoints( null );
+      if( points.length == 0 )
         return null;
 
-      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
-      final IAxisRange range = model.getRange( dateAxis );
-      if( range == null )
+      final IKeyValue<IPair<Number, Number>, IPair<Number, Number>> minMax = calculateMinMax( points );
+      final IPair<Number, Number> min = minMax.getKey();
+      final IPair<Number, Number> max = minMax.getValue();
+
+      final Number minDomain = min.getDomain();
+      final Number maxDomain = max.getDomain();
+
+      return new DataRange<Number>( minDomain, maxDomain );
+    }
+    catch( final SensorException e )
+    {
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+
+      return null;
+    }
+  }
+
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  {
+    try
+    {
+      final IPair<Number, Number>[] points = getClippedPoints( domainIntervall );
+      if( points.length == 0 )
         return null;
 
-      final Date min = (Date) range.getLower();
-      final Date max = (Date) range.getUpper();
+      final IKeyValue<IPair<Number, Number>, IPair<Number, Number>> minMax = calculateMinMax( points );
+      final IPair<Number, Number> min = minMax.getKey();
+      final IPair<Number, Number> max = minMax.getValue();
 
-      return new DataRange<Number>( getDateDataOperator().logicalToNumeric( min ), getDateDataOperator().logicalToNumeric( max ) );
+      return new DataRange<Number>( min.getTarget(), max.getTarget() );
     }
     catch( final SensorException e )
     {
@@ -103,68 +128,61 @@ public class ZmlLineLayerRangeHandler
     return m_dateDataOperator;
   }
 
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
-  {
-    try
-    {
-      final ITupleModel model = m_layer.getDataHandler().getModel();
-      if( model == null )
-        return null;
-
-      final IAxis axis = m_layer.getDataHandler().getValueAxis();
-      if( axis == null )
-        return null;
-
-      if( Objects.isNull( AxisUtils.findAxis( model.getAxes(), axis.getType() ) ) )
-        return null;
-
-      if( domainIntervall == null )
-      {
-        final IAxisRange range = model.getRange( axis );
-        if( range == null )
-          return null;
-
-        final IDataRange<Number> numRange = new DataRange<Number>( getNumberDataOperator().logicalToNumeric( (Number) range.getLower() ), getNumberDataOperator().logicalToNumeric( (Number) range.getUpper() ) );
-
-        return numRange;
-      }
-      else
-      {
-        final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
-
-        Number minValue = null;
-        Number maxValue = null;
-        for( int i = 0; i < model.size(); i++ )
-        {
-
-          final Object domainValue = model.get( i, dateAxis );
-
-          if( domainValue == null )
-            continue;
-          if( minValue == null && ((Date) domainValue).getTime() > domainIntervall.getMin().longValue() )
-          {
-            minValue = (Number) model.get( i - 1, axis );
-          }
-          if( maxValue == null && ((Date) domainValue).getTime() > domainIntervall.getMax().longValue() )
-          {
-            maxValue = (Number) model.get( i, axis );
-          }
-        }
-
-        return new DataRange<Number>( getNumberDataOperator().logicalToNumeric( minValue ), getNumberDataOperator().logicalToNumeric( maxValue ) );
-      }
-    }
-    catch( final SensorException e )
-    {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-
-      return null;
-    }
-  }
-
   public IDataOperator<Number> getNumberDataOperator( )
   {
     return m_numberDataOperator;
   }
 
+  private IKeyValue<IPair<Number, Number>, IPair<Number, Number>> calculateMinMax( final IPair<Number, Number>[] points )
+  {
+    Double minX = Double.POSITIVE_INFINITY;
+    Double minY = Double.POSITIVE_INFINITY;
+    Double maxY = Double.NEGATIVE_INFINITY;
+    Double maxX = Double.NEGATIVE_INFINITY;
+
+    for( final IPair<Number, Number> point : points )
+    {
+      minX = Math.min( point.getDomain().doubleValue(), minX );
+      minY = Math.min( point.getTarget().doubleValue(), minY );
+      maxX = Math.max( point.getDomain().doubleValue(), maxX );
+      maxY = Math.max( point.getTarget().doubleValue(), maxY );
+    }
+
+    minX = Double.isInfinite( minX ) ? null : minX;
+    minY = Double.isInfinite( minY ) ? null : minY;
+    maxX = Double.isInfinite( maxX ) ? null : maxX;
+    maxY = Double.isInfinite( maxY ) ? null : maxY;
+
+    final IPair<Number, Number> min = new Pair<Number, Number>( minX, minY );
+    final IPair<Number, Number> max = new Pair<Number, Number>( maxX, maxY );
+    return KeyValueFactory.createPairEqualsBoth( min, max );
+  }
+
+  @SuppressWarnings("unchecked")
+  private IPair<Number, Number>[] getClippedPoints( final IDataRange<Number> domainIntervall ) throws SensorException
+  {
+    final IPair<Number, Number>[] filteredPoints = m_layer.getFilteredPoints( domainIntervall );
+    final Rectangle2D clip = m_layer.getClip();
+    if( clip == null )
+      return filteredPoints;
+
+    // Special case: one single point
+    if( filteredPoints.length == 1 )
+    {
+      final IPair<Number, Number> singleFiltered = filteredPoints[0];
+      if( clip.contains( singleFiltered.getDomain().doubleValue(), singleFiltered.getTarget().doubleValue() ) )
+        return filteredPoints;
+
+      return new IPair[] {};
+    }
+    else
+    {
+      final ClipHelper helper = new ClipHelper( clip );
+      final IPair<Number, Number>[][] clippedPoints = helper.clipAsLine( filteredPoints );
+      final Collection<IPair<Number, Number>> points = new ArrayList<IPair<Number, Number>>();
+      for( final IPair<Number, Number>[] clipPoints : clippedPoints )
+        points.addAll( Arrays.asList( clipPoints ) );
+      return points.toArray( new IPair[points.size()] );
+    }
+  }
 }

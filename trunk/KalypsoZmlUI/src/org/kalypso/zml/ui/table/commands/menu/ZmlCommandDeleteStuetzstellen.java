@@ -60,10 +60,10 @@ import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
 
 /**
  * @author Dirk Kuch
@@ -80,7 +80,7 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
     {
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-      final IZmlTableColumn column = selection.getSetActiveColumn();
+      final IZmlTableColumn column = selection.findActiveColumnByPosition();
       if( column == null )
         throw new IllegalStateException( "Konnte aktive Spalte nicht ermitteln. Bitte Linkklick in der zu bearbeitenden Spalte ausführen und Aktion erneut versuchen." );
 
@@ -100,7 +100,7 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
           final IZmlValueReference reference = cell.getValueReference();
           if( ZmlValues.isStuetzstelle( reference ) )
           {
-            model.set( reference.getModelIndex(), statusAxis, KalypsoStati.BIT_CHECK );
+            model.set( reference.getModelIndex(), statusAxis, KalypsoStati.BIT_OK );
             model.set( reference.getModelIndex(), dataSourceAxis, dataSourceHandler.addDataSource( src, src ) );
           }
         }

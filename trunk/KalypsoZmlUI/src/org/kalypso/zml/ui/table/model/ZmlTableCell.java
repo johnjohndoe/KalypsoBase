@@ -43,10 +43,12 @@ package org.kalypso.zml.ui.table.model;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 
 import com.google.common.base.Objects;
 
@@ -59,7 +61,7 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
 
   private final IZmlTableRow m_row;
 
-  public ZmlTableCell( final IZmlTableColumn column, final IZmlTableRow row )
+  public ZmlTableCell( final IZmlTableRow row, final IZmlTableColumn column )
   {
     super( column.getTable() );
 
@@ -144,7 +146,7 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     final IZmlTable table = getTable();
     final IZmlTableRow previousRow = table.getRow( index - 1 );
 
-    return new ZmlTableCell( m_column, previousRow );
+    return new ZmlTableCell( previousRow, m_column );
   }
 
   /**
@@ -161,7 +163,7 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
 
     final IZmlTableRow nextRow = table.getRow( index + 1 );
 
-    return new ZmlTableCell( m_column, nextRow );
+    return new ZmlTableCell( nextRow, m_column );
   }
 
   @Override
@@ -181,5 +183,17 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     }
 
     return 2;
+  }
+
+  /**
+   * @see org.kalypso.zml.ui.table.model.IZmlTableCell#getCell()
+   */
+  @Override
+  public ViewerCell getViewerCell( )
+  {
+    final IZmlTable table = m_column.getTable();
+    final IZmlTableSelectionHandler handler = table.getSelectionHandler();
+
+    return handler.toViewerCell( this );
   }
 }

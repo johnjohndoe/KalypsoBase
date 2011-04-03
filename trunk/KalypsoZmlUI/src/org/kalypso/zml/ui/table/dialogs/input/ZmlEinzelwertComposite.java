@@ -353,9 +353,9 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
           {
             final Object object = reference.getValue();
             if( object instanceof Number )
-              m_model.addRow( new ZmlEinzelwert( m_model, (Date) reference.getIndexValue(), ((Number) object).doubleValue() ) );
+              m_model.addRow( new ZmlEinzelwert( m_model, reference.getIndexValue(), ((Number) object).doubleValue() ) );
             else
-              m_model.addRow( new ZmlEinzelwert( m_model, (Date) reference.getIndexValue(), 0.0 ) );
+              m_model.addRow( new ZmlEinzelwert( m_model, reference.getIndexValue(), 0.0 ) );
           }
 
         }

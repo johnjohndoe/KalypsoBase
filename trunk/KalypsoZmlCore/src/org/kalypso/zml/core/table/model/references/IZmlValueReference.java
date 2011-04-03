@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.references;
 
+import java.util.Date;
+
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
@@ -64,10 +66,9 @@ public interface IZmlValueReference
 
   Integer getModelIndex( );
 
-  Object getValue( ) throws SensorException;
+  Number getValue( ) throws SensorException;
 
-  Object getIndexValue( ) throws SensorException;
+  Date getIndexValue( ) throws SensorException;
 
-  void update( final Object value, final String source, final Integer status ) throws SensorException;
-
+  void update( final Number value, final String source, final Integer status ) throws SensorException;
 }

@@ -106,26 +106,33 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     }
   }
 
-  public void cancel( )
+  public synchronized void cancel( )
   {
     m_canceled = true;
+    m_element.dispose();
   }
 
   private void execute( )
   {
-    if( m_canceled )
-      return;
-
     /** base observation will be disposed by NewZmlTableLayoutPart (save table) */
     final IObsProvider base = m_element.getObsProvider();
-    final IObsProvider clone = base.copy();
-    final IObservation observation = clone.getObservation();
-    if( observation == null )
+
+    try
     {
-// base.dispose();
-      clone.dispose();
-      return;
+      if( !m_canceled )
+        doExecute( base );
     }
+    finally
+    {
+      m_element.dispose();
+    }
+  }
+
+  private void doExecute( final IObsProvider base )
+  {
+    final IObservation observation = base.getObservation();
+    if( observation == null )
+      return;
 
     final DataColumnType type = (DataColumnType) TableTypeHelper.findColumnType( m_model.getTableType(), m_element.getIdentifier() );
     final IAxis[] axes = observation.getAxes();
@@ -143,10 +150,9 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
       }
     };
 
+    final IObsProvider clone = base.copy();
     final ZmlModelColumn column = new ZmlModelColumn( m_model, m_element.getIdentifier(), labelProvider, data, new ObsProviderZmlColumnDataHandler( clone ) );
     m_model.add( column );
-
-// base.dispose();
   }
 
   private boolean hasValueAxis( final IAxis[] axes, final DataColumnType type )

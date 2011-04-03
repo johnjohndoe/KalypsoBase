@@ -11,7 +11,7 @@
  *     @author changed / updated by: Dirk Kuch
  ******************************************************************************/
 
-package org.kalypso.zml.ui.table.cursor;
+package org.kalypso.zml.ui.table.focus.cursor;
 
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
@@ -19,22 +19,21 @@ import org.eclipse.jface.viewers.ColumnViewerEditorActivationListener;
 import org.eclipse.jface.viewers.ColumnViewerEditorDeactivationEvent;
 import org.eclipse.jface.viewers.FocusCellHighlighter;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.kalypso.commons.java.lang.Objects;
 
 /**
  * @since 3.3
  */
-public class CursorCellHighlighter extends FocusCellHighlighter
+public class ZmlCursorCellHighlighter extends FocusCellHighlighter
 {
   private final ColumnViewer m_viewer;
 
-  protected final AbstractCellCursor m_cursor;
+  protected final ZmlTableCursor m_cursor;
 
   /**
    * @param viewer
    * @param cursor
    */
-  public CursorCellHighlighter( final ColumnViewer viewer, final AbstractCellCursor cursor )
+  public ZmlCursorCellHighlighter( final ColumnViewer viewer, final ZmlTableCursor cursor )
   {
     super( viewer );
 
@@ -43,25 +42,13 @@ public class CursorCellHighlighter extends FocusCellHighlighter
   }
 
   @Override
-  protected void focusCellChanged( final ViewerCell cell )
+  protected void focusCellChanged( final ViewerCell cell, final ViewerCell oldCell )
   {
-    if( Objects.isNull( cell ) )
-      return;
-
     if( !m_viewer.isCellEditorActive() )
     {
-      m_cursor.setFocusCell( cell );
-      m_cursor.setVisible( true );
+      m_cursor.setVisible( cell != null );
+      m_cursor.redraw();
     }
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.FocusCellHighlighter#getFocusCell()
-   */
-  @Override
-  public ViewerCell getFocusCell( )
-  {
-    return m_cursor.getFocusCell();
   }
 
   @Override
@@ -83,7 +70,7 @@ public class CursorCellHighlighter extends FocusCellHighlighter
       public void afterEditorDeactivated( final ColumnViewerEditorDeactivationEvent event )
       {
         m_cursor.setVisible( true );
-        m_cursor.setFocusCell( getFocusCell() );
+        m_cursor.redraw();
       }
 
       @Override

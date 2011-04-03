@@ -63,14 +63,12 @@ public class UpdateFilterVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public boolean visit( final IChartLayer layer )
+  public void visit( final IChartLayer layer )
   {
     layer.addFilter( m_add );
     layer.removeFilter( m_remove );
 
     layer.getLayerManager().accept( this );
-
-    return true;
   }
 
 }

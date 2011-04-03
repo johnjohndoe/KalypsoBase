@@ -86,7 +86,7 @@ public class ZmlViewResolutionFilter extends ViewerFilter
         return;
 
       final IZmlModelRow base = rows[0];
-      final Date index = (Date) base.getIndexValue();
+      final Date index = base.getIndexValue();
 
       final Calendar calendar = Calendar.getInstance();
       calendar.setTime( index );
@@ -137,7 +137,7 @@ public class ZmlViewResolutionFilter extends ViewerFilter
         return true;
       }
 
-      final Date index = (Date) row.getIndexValue();
+      final Date index = row.getIndexValue();
       final int ticks = ticksInHours( index );
 
       final int base = m_base.getBaseIndex( model );
@@ -200,5 +200,10 @@ public class ZmlViewResolutionFilter extends ViewerFilter
   public boolean isStuetzstellenMode( )
   {
     return m_stuetzstellenMode;
+  }
+
+  public void resetOffset( final int startHour )
+  {
+    m_offset -= m_offset % startHour - 1;
   }
 }
