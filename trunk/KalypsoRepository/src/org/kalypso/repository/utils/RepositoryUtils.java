@@ -99,8 +99,8 @@ public final class RepositoryUtils
 
   public static boolean continueSearch( final String baseIdendifier, final String lookingFor )
   {
-    final String[] baseParts = baseIdendifier.split( "\\." );
-    final String[] lookingForParts = lookingFor.split( "\\." );
+    final String[] baseParts = baseIdendifier.split( "\\." ); //$NON-NLS-1$
+    final String[] lookingForParts = lookingFor.split( "\\." ); //$NON-NLS-1$
 
     int count = lookingForParts.length;
     if( baseParts.length < lookingForParts.length )
@@ -110,7 +110,6 @@ public final class RepositoryUtils
 
     for( int i = 0; i < count; i++ )
     {
-
       if( !baseParts[i].equals( lookingForParts[i] ) )
         return false;
     }
@@ -125,5 +124,4 @@ public final class RepositoryUtils
 
     return repositoryRegistry.getRepository( protocol );
   }
-
 }

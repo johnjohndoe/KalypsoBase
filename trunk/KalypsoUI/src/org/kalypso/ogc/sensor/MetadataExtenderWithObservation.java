@@ -43,8 +43,8 @@ package org.kalypso.ogc.sensor;
 
 import org.apache.commons.configuration.Configuration;
 import org.kalypso.metadoc.configuration.ConfigurationUtils;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 
 /**
