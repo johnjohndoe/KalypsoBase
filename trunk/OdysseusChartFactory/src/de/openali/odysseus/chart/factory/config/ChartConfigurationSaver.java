@@ -223,7 +223,7 @@ public final class ChartConfigurationSaver
         if( title != null )
           lt.setTitle( title );
         // everything else stays as it was
-        layerTypes.put( layer.getId(), lt );
+        layerTypes.put( layer.getIdentifier(), lt );
       }
 
     }

@@ -51,7 +51,9 @@ import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author burtscher1
@@ -72,31 +74,19 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
   @Override
   public final IAxisRenderer getAxisRenderer( )
   {
+    final StyleSetVisitor visitor = new StyleSetVisitor( true );
+    final IStyleSet styleSet = getStyleSet();
 
-    final Insets insetsTick = getTickInsets();
-    final Insets insetsLabel = getLabelInsets();
+    final ILineStyle axisLine = visitor.visit( styleSet, ILineStyle.class, ROLE_AXIS_LINE_STYLE );
 
-    final int tickLength = getTickLength();
-
-    final boolean hideCut = getHideCut();
-
-    final int fixedWidth = getFixedWidth();
-
-    final int gap = getGap();
-
-    final Number minTickInterval = getMinTickInteval();
-
-    final int borderSize = getBorderSize();
-
-    final ILineStyle axisLine = getStyleSet().getStyle( ROLE_AXIS_LINE_STYLE, ILineStyle.class );
-    final ITextStyle labelText = getStyleSet().getStyle( ROLE_AXIS_LABEL_STYLE, ITextStyle.class );
-    final ILineStyle tickLine = getStyleSet().getStyle( ROLE_AXIS_TICK_LINE_STYLE, ILineStyle.class );
-    final ITextStyle tickLabelText = getStyleSet().getStyle( ROLE_AXIS_TICK_LABEL_STYLE, ITextStyle.class );
+    final ITextStyle labelText = visitor.visit( styleSet, ITextStyle.class, ROLE_AXIS_LABEL_STYLE );
+    final ILineStyle tickLine = visitor.visit( styleSet, ILineStyle.class, ROLE_AXIS_TICK_LINE_STYLE );
+    final ITextStyle tickLabelText = visitor.visit( styleSet, ITextStyle.class, ROLE_AXIS_TICK_LABEL_STYLE );
 
     final ITickCalculator tickCalculator = getTickCalculator();
     final ILabelCreator labelCreator = getLabelCreator();
 
-    final IAxisRenderer calendarAxisRenderer = new GenericAxisRenderer( getId(), tickLength, insetsTick, insetsLabel, gap, labelCreator, tickCalculator, minTickInterval, hideCut, fixedWidth, axisLine, labelText, tickLine, tickLabelText, borderSize, ALIGNMENT.TICK_CENTERED );
+    final IAxisRenderer calendarAxisRenderer = new GenericAxisRenderer( getId(), getTickLength(), getTickInsets(), getLabelInsets(), getGap(), labelCreator, tickCalculator, getMinTickInteval(), getHideCut(), getFixedWidth(), axisLine, labelText, tickLine, tickLabelText, getBorderSize(), ALIGNMENT.TICK_CENTERED );
     return calendarAxisRenderer;
   }
 
@@ -128,7 +118,7 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
   {
     final IParameterContainer pc = getParameterContainer();
     final int insetLabel = Integer.parseInt( pc.getParameterValue( "inset_label", "1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    final String insetLabelString = (new Integer( insetLabel )).toString();
+    final String insetLabelString = new Integer( insetLabel ).toString();
     final int insetLabelLeft = Integer.parseInt( pc.getParameterValue( "inset_label_left", insetLabelString ) ); //$NON-NLS-1$
     final int insetLabelRight = Integer.parseInt( pc.getParameterValue( "inset_label_right", insetLabelString ) ); //$NON-NLS-1$
     final int insetLabelBottom = Integer.parseInt( pc.getParameterValue( "inset_label_bottom", insetLabelString ) ); //$NON-NLS-1$
@@ -150,7 +140,7 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
     // werden
     final IParameterContainer pc = getParameterContainer();
     final int insetTick = Integer.parseInt( pc.getParameterValue( "inset_tick", "1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    final String insetTickString = (new Integer( insetTick )).toString();
+    final String insetTickString = new Integer( insetTick ).toString();
     final int insetTickLeft = Integer.parseInt( pc.getParameterValue( "inset_tick_left", insetTickString ) ); //$NON-NLS-1$
     final int insetTickRight = Integer.parseInt( pc.getParameterValue( "inset_tick_right", insetTickString ) ); //$NON-NLS-1$
     final int insetTickBottom = Integer.parseInt( pc.getParameterValue( "inset_tick_bottom", insetTickString ) ); //$NON-NLS-1$

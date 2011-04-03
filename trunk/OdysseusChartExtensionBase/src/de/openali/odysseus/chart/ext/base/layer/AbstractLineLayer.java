@@ -56,7 +56,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
 
     if( styleSet != null )
     {
-      final StyleSetVisitor visitor = new StyleSetVisitor();
+      final StyleSetVisitor visitor = new StyleSetVisitor( true );
 
       final ILineStyle ls = visitor.visit( styleSet, ILineStyle.class, 0 );
       final IPointStyle ps = visitor.visit( styleSet, IPointStyle.class, 0 );
@@ -164,14 +164,6 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     gc.dispose();
   }
 
-  protected void drawText( final GC gc, final String text, final Point leftTopPoint )
-  {
-    final TextFigure tf = getTextFigure();
-    tf.setText( text );
-    tf.setPoints( new Point[] { leftTopPoint } );
-    tf.paint( gc );
-  }
-
   protected void drawLine( final GC gc, final List<Point> path )
   {
     drawLine( gc, path.toArray( new Point[] {} ) );
@@ -205,11 +197,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     return null;
   }
 
-  protected ILineStyle getLineStyle( )
-  {
-    return getPolylineFigure().getStyle();
-  }
-
+  // UGLY: was has every layer exactly one PointFigure? Wrong abstraction!
   protected PointFigure getPointFigure( )
   {
     if( m_pointFigure == null )
@@ -217,12 +205,17 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     return m_pointFigure;
   }
 
+  /**
+   * @deprecated Should not be used, styling is too sepcific for each layer; should not be inside the abstract
+   *             implementation.
+   */
+  @Deprecated
   protected IPointStyle getPointStyle( )
   {
     return getPointFigure().getStyle();
-
   }
 
+  // UGLY: was has every layer exactly one PolylineFigure? Wrong abstraction!
   protected PolylineFigure getPolylineFigure( )
   {
     if( m_polylineFigure == null )
@@ -230,30 +223,15 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     return m_polylineFigure;
   }
 
+  // UGLY: was has every layer exactly one TextFigure? Wrong abstraction!
+  /**
+   * @deprecated Create your TextFigure on demand, and throw it away afterwards.
+   */
+  @Deprecated
   public TextFigure getTextFigure( )
   {
     if( m_textFigure == null )
       m_textFigure = new TextFigure();
     return m_textFigure;
-  }
-
-  public ITextStyle getTextStyle( )
-  {
-    return getTextFigure().getStyle();
-  }
-
-  public void setPointFigure( final PointFigure pointFigure )
-  {
-    m_pointFigure = pointFigure;
-  }
-
-  public void setPolylineFigure( final PolylineFigure polylineFigure )
-  {
-    m_polylineFigure = polylineFigure;
-  }
-
-  public void setTextFigure( final TextFigure textFigure )
-  {
-    m_textFigure = textFigure;
   }
 }

@@ -71,7 +71,7 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
 
     final Set<IChartLayerFilter> filters = new LinkedHashSet<IChartLayerFilter>();
 
-    final String[] parameters = parameter.split( ";" );
+    final String[] parameters = parameter.split( ";" ); //$NON-NLS-1$
     for( final String filterIdentifier : parameters )
     {
       final IChartLayerFilter filter = OdysseusChartFramework.getDefault().findFilter( filterIdentifier );

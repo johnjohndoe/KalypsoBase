@@ -68,7 +68,7 @@ public class DefaultTextLayer extends AbstractChartLayer
 
     m_titleTypeBeans = titleTypeBeans;
     m_labelRenderer = labelRenderer;
-    setId( id );
+    setIdentifier( id );
   }
 
   public DefaultTextLayer( final ILayerProvider provider, final String id, final TitleTypeBean... titleTypeBeans )

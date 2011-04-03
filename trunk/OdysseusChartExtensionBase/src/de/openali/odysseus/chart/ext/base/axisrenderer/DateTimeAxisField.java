@@ -42,8 +42,10 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import org.joda.time.DateTimeFieldType;
 
+
 /**
  * @author kimwerner
+ *
  */
 public class DateTimeAxisField implements IDateTimeAxisField
 {

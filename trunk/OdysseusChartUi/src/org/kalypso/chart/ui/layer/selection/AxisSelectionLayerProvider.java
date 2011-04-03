@@ -60,7 +60,7 @@ public class AxisSelectionLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    final StyleSetVisitor visitor = new StyleSetVisitor();
+    final StyleSetVisitor visitor = new StyleSetVisitor( false );
     final ILineStyle style = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
 
     return new AxisSelectionLayer( this, style );

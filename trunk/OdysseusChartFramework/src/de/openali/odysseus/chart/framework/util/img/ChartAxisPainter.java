@@ -43,6 +43,7 @@ package de.openali.odysseus.chart.framework.util.img;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -58,6 +59,15 @@ public class ChartAxisPainter
   public ChartAxisPainter( final IAxis axis )
   {
     m_axis = axis;
+  }
+
+  public final void paintImage( final GC gc )
+  {
+    final int width = m_axis.getRenderer().getAxisWidth( m_axis );
+    final int height = m_axis.getScreenHeight();
+    if( width < 1 || height < 1 || !m_axis.isVisible() )
+      return;
+    m_axis.getRenderer().paint( gc, m_axis, new Rectangle( 0, 0, width, height ) );
   }
 
   public final Image createImage( )

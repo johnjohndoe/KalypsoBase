@@ -6,6 +6,7 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.impl.utils.ChartModelLayerEventListener;
 import de.openali.odysseus.chart.framework.model.impl.visitors.AutoScaleVisitor;
+import de.openali.odysseus.chart.framework.model.impl.visitors.DisposeLayersVisitor;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.LayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -60,7 +61,7 @@ public class ChartModel implements IChartModel
   @Override
   public void dispose( )
   {
-    // nothing to dispose
+    getLayerManager().accept( new DisposeLayersVisitor() );
   }
 
   @Override

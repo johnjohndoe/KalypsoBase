@@ -41,6 +41,7 @@
 package org.kalypso.chart.ui.layer.selection.utils;
 
 import org.kalypso.chart.ui.layer.selection.AxisSelectionLayer;
+import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
@@ -56,15 +57,13 @@ public class FindSelectionLayerVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public boolean visit( final IChartLayer layer )
+  public void visit( final IChartLayer layer )
   {
     if( layer instanceof AxisSelectionLayer )
       m_layer = (AxisSelectionLayer) layer;
 
-    if( getLayer() == null )
+    if( Objects.isNull( getLayer() ) )
       layer.getLayerManager().accept( this );
-
-    return true;
   }
 
   public AxisSelectionLayer getLayer( )

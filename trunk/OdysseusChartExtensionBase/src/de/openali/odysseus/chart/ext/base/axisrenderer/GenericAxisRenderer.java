@@ -117,12 +117,12 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {
       startX = screen.x;
-      endX = screen.x + screen.width;
+      endX = screen.x + screen.height;
 
       if( axis.getPosition() == POSITION.BOTTOM )
         startY = screen.y + gap + 1;
       else
-        startY = screen.y + screen.height - 1 - gap;
+        startY = screen.y + screen.width - 1 - gap;
       endY = startY;
 
       if( axis.getDirection() == DIRECTION.NEGATIVE )
@@ -163,6 +163,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
       int x = 0;
       int y = 0;
+      int rotation = 0;
 
       final Insets labelInsets = getLabelInsets();
       final int tickLength = getTickLength();
@@ -186,8 +187,6 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
           x = startX;
           y = Math.abs( endY - startY ) / 2 + offset;
 
-          int rotation = 0;
-
           if( axis.getPosition() == POSITION.LEFT )
           {
             rotation = -90;
@@ -200,23 +199,23 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
             x += lineWidth + tickLength + tickLabelExtent.x + labelInsets.bottom + textExtent.y;
             y -= textExtent.x / 2;
           }
-
-          tr.translate( x, y );
-          tr.rotate( rotation );
-          tr.translate( -x, -y );
         }
-        if( tr != null )
-          gc.setTransform( tr );
-
+        gc.getTransform( tr );
+        tr.translate( x, y );
+        tr.rotate( rotation );
+        tr.translate( -x, -y );
+        gc.setTransform( tr );
         getLabelStyle().apply( gc );
         drawText( gc, axis.getLabel(), x, y, getLabelStyle() );
       }
       finally
       {
-        if( tr != null )
-          tr.dispose();
+        tr.translate( -x, -y );
+        tr.rotate( -rotation );
+        tr.translate( x, y );
+        gc.setTransform( tr );
+        tr.dispose();
 
-        gc.setTransform( null );
       }
     }
 
@@ -264,6 +263,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
       final String label = getLabelCreator().getLabel( ticks, i, range );
 
       boolean drawTick = true;
+      boolean drawTickLabel = true;
 
       tickPos = axis.numericToScreen( ticks[i] );
 
@@ -291,8 +291,10 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
           textY = y2 - tickLabelInsets.top - labelSize.y;
         }
         // Nicht zeichnen, wenn 1. Text abgeschnitten & hideCut angegeben oder 2. Tick ausserhalb der AxisRange
-        if( (m_hideCut && ((textX < screenMin) || ((textX + labelSize.x) > screenMax))) || ((x1 < screenMin + offset) || (x1 > screenMax + offset)) )
+        if( x1 < screenMin + offset || x1 > screenMax + offset )
           drawTick = false;
+        if( (m_hideCut||!drawTick) && ((textX < screenMin) || ((textX + labelSize.x) > screenMax)) )
+          drawTickLabel = false;
       }
       // VERTICAL
       else
@@ -316,13 +318,24 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
           textX = x2 + tickLabelInsets.top;
         }
         // Nicht zeichnen, wenn 1. Text abgeschnitten & hideCut angegeben oder 2. Tick ausserhalb der AxisRange
-        if( (m_hideCut && ((textY < screenMin) || ((textY + labelSize.y) > screenMax))) || ((y1 < screenMin + offset) || (y1 > screenMax + offset)) )
+// if( (m_hideCut && ((textY < screenMin) || ((textY + labelSize.y) > screenMax))) || ((y1 < screenMin + offset) || (y1
+// > screenMax + offset)) )
+// drawTick = false;
+        if( y1 < screenMin + offset || y1 > screenMax + offset )
           drawTick = false;
+        if( (m_hideCut||!drawTick) && ((textY < screenMin) || ((textY + labelSize.y) > screenMax)) )
+          drawTickLabel = false;
+
       }
 
-      tickLineStyle.apply( gc );
-      gc.drawLine( x1, y1, x2, y2 );
+// tickLineStyle.apply( gc );
+// gc.drawLine( x1, y1, x2, y2 );
       if( drawTick )
+      {
+        tickLineStyle.apply( gc );
+        gc.drawLine( x1, y1, x2, y2 );
+      }
+      if( drawTickLabel )
       {
         tickLabelStyle.apply( gc );
         drawText( gc, label, textX, textY, tickLabelStyle );

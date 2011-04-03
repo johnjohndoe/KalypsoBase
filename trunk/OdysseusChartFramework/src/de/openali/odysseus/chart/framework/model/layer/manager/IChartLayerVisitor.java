@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.layer.manager;
 
+import org.kalypso.commons.exception.CancelVisitorException;
+
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
@@ -51,5 +53,5 @@ public interface IChartLayerVisitor
   /**
    * @return continue search
    */
-  boolean visit( IChartLayer layer );
+  void visit( IChartLayer layer ) throws CancelVisitorException;
 }

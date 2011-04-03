@@ -34,14 +34,14 @@ public class GenericNumberTickCalculator implements ITickCalculator
 
     // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
     /* minimaler Bildschirmabstand zwischen zwei labels */
-    final int minScreenInterval;
+    final int tickLabelWidth;
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {
-      minScreenInterval = ticklabelSize.x;
+      tickLabelWidth = ticklabelSize.x;
     }
     else
     {
-      minScreenInterval = ticklabelSize.y;
+      tickLabelWidth = ticklabelSize.y;
     }
 
     // Collection für Ticks
@@ -63,8 +63,8 @@ public class GenericNumberTickCalculator implements ITickCalculator
     if( Double.isNaN( numericRange ) )
       return new Number[] {};
 
-    // der minimale logische Abstand; TODO: überprüfen, ob das auch mit negativen Werten geht
-    final double minLogInterval = Math.abs( axis.screenToNumeric( minScreenInterval ).doubleValue() - axis.screenToNumeric( 0 ).doubleValue() );
+    // der minimale logische Abstand anhand des Ticklabels;
+    final double minLogInterval = Math.abs( axis.screenToNumeric( tickLabelWidth ).doubleValue() - axis.screenToNumeric( 0 ).doubleValue() );
 
     // Herausfinden, in welchem 10erPotenz-Bereich sich die Range befinden
     int rangepow = 0;

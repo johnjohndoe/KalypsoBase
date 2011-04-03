@@ -14,16 +14,22 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+
+import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.LayerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.layer.manager.LayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -46,9 +52,9 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private String m_description = "";
 
-  private final LayerEventHandler m_handler = new LayerEventHandler();
+  private final LayerEventHandler m_eventHandler = new LayerEventHandler();
 
-  private String m_id = "";
+  private String m_identifier = "";
 
   private boolean m_isActive = false;
 
@@ -68,15 +74,79 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private ILayerContainer m_parent;
 
+  final ILayerManagerEventListener m_layerManagerListener = new ILayerManagerEventListener()
+  {
+    @Override
+    public void onLayerMoved( final IChartLayer layer )
+    {
+      getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
+    }
+
+    @Override
+    public void onLayerAdded( final IChartLayer layer )
+    {
+      getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
+    }
+
+    @Override
+    public void onLayerRemoved( final IChartLayer layer )
+    {
+      getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
+    }
+
+    @Override
+    public void onLayerVisibilityChanged( final IChartLayer layer )
+    {
+      getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
+    }
+
+    @Override
+    public void onLayerContentChanged( final IChartLayer layer )
+    {
+      getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
+    }
+
+    @Override
+    public void onActivLayerChanged( final IChartLayer layer )
+    {
+      getEventHandler().fireLayerVisibilityChanged( AbstractChartLayer.this );
+    }
+  };
+
   public AbstractChartLayer( final ILayerProvider provider )
   {
     m_provider = provider;
+    m_layerManager.addListener( m_layerManagerListener );
+
+    setFilters();
+  }
+
+  private void setFilters( )
+  {
+    if( Objects.isNull( m_provider ) )
+      return;
+
+    final IParameterContainer container = m_provider.getParameterContainer();
+    if( Objects.isNull( container ) )
+      return;
+
+    final String property = container.getParameterValue( "filter", "" ); //$NON-NLS-1$
+    if( Strings.isNullOrEmpty( property ) )
+      return;
+
+    final Iterable<String> filters = Splitter.on( ";" ).split( property ); //$NON-NLS-1$
+    for( final String reference : filters )
+    {
+      final IChartLayerFilter filter = OdysseusChartFramework.getDefault().findFilter( reference );
+      if( Objects.isNotNull( filter ) )
+        addFilter( filter );
+    }
   }
 
   @Override
-  public void addListener( final ILayerEventListener l )
+  public void addListener( final ILayerEventListener listener )
   {
-    m_handler.addListener( l );
+    m_eventHandler.addListener( listener );
   }
 
   public void addMapper( final String role, final IRetinalMapper mapper )
@@ -184,17 +254,17 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   public LayerEventHandler getEventHandler( )
   {
-    return m_handler;
+    return m_eventHandler;
   }
 
   /**
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getId()
    */
   @Override
-  public String getId( )
+  public String getIdentifier( )
   {
-    return m_id;
-  }
+    return m_identifier;
+  } 
 
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
@@ -341,9 +411,9 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @Override
-  public void removeListener( final ILayerEventListener l )
+  public void removeListener( final ILayerEventListener listener )
   {
-    m_handler.removeListener( l );
+    m_eventHandler.removeListener( listener );
   }
 
   /**
@@ -363,13 +433,6 @@ public abstract class AbstractChartLayer implements IChartLayer
   public void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
   {
     m_coordinateMapper = coordinateMapper;
-
-    // FIXME sure? update coordinate mapper of child layers, too?
-    // Test:kim
-// for( final IChartLayer layer : getLayerManager().getLayers() )
-// {
-// layer.setCoordinateMapper( coordinateMapper );
-// }
   }
 
   /**
@@ -394,9 +457,9 @@ public abstract class AbstractChartLayer implements IChartLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#setID(java.lang.String)
    */
   @Override
-  public void setId( final String id )
+  public void setIdentifier( final String identifier )
   {
-    m_id = id;
+    m_identifier = identifier;
   }
 
   /**
@@ -427,7 +490,7 @@ public abstract class AbstractChartLayer implements IChartLayer
     {
       m_isVisible = isVisible;
 
-      m_handler.fireLayerVisibilityChanged( this );
+      m_eventHandler.fireLayerVisibilityChanged( this );
     }
   }
 
@@ -437,7 +500,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public String toString( )
   {
-    return String.format( "IChartLayer - id: %s, visible: %s", getId(), Boolean.valueOf( isVisible() ).toString() );
+    return String.format( "IChartLayer - id: %s, visible: %s", getIdentifier(), Boolean.valueOf( isVisible() ).toString() );
   }
 
   @Override

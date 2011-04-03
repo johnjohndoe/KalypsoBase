@@ -47,7 +47,11 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public interface ILayerContainer
 {
+  String getIdentifier( );
+
   ILayerManager getLayerManager( );
 
   ILayerContainer getParent( );
+
+  void setIdentifier( String identifier );
 }

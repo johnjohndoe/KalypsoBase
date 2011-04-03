@@ -34,6 +34,10 @@
             id="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericCalendarAxisRendererProvider">
       </provider>
       <provider
+            class="de.openali.odysseus.chart.ext.base.axisrenderer.provider.DateTimeAxisRendererProvider"
+            id="de.openali.odysseus.chart.ext.base.axisrenderer.provider.DateTimeAxisRendererProvider">
+      </provider>
+      <provider
             class="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider"
             id="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
       </provider>

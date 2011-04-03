@@ -52,6 +52,8 @@ import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -87,11 +89,11 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
 {
   protected ICheckStateListener m_checkStateListener = null;
 
-  protected ChartEditorTreeContentProvider m_contentProvider;
+  protected ITreeContentProvider m_contentProvider;
 
   protected ICheckStateProvider m_checkStateProvider = null;
 
-  protected final ChartTreeLabelProvider m_labelProvider;
+  protected final ITableLabelProvider m_labelProvider;
 
   private final ILayerManagerEventListener m_eventListener;
 
@@ -127,7 +129,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
     this( new ChartEditorTreeContentProvider(), new ChartTreeLabelProvider() );
   }
 
-  public ChartEditorTreeOutlinePage( final ChartEditorTreeContentProvider contentProvider, final ChartTreeLabelProvider labelProvider )
+  public ChartEditorTreeOutlinePage( final ITreeContentProvider contentProvider, final ITableLabelProvider labelProvider )
   {
     m_contentProvider = contentProvider;
     m_labelProvider = labelProvider;
@@ -296,7 +298,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
         if( elt instanceof IChartLayer )
         {
           final IChartLayer layer = (IChartLayer) elt;
-          event.data = layer.getId();
+          event.data = layer.getIdentifier();
         }
       }
 

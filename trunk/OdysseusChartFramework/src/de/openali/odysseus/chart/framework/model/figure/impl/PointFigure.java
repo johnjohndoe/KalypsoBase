@@ -11,7 +11,6 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 public class PointFigure extends AbstractFigure<IPointStyle>
 {
-
   private Point[] m_centerPoints;
 
   private Point[] m_leftTopPoints;

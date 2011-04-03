@@ -187,14 +187,6 @@ public class ChartMapperFactory extends AbstractChartFactory
                 final IStyleSet styleSet = StyleFactory.createStyleSet( rendererType.getStyles(), baseTypes, getContext() );
                 final IParameterContainer parameterContainer = createParameterContainer( rendererTypeId, rendererType.getProvider() );
 
-                // // Hack to get rid of older kod-files with this malformed renderer-id
-                // if(
-// "de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider".equals( arpId ) )
-                // arp.init( model,
-// "de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider", rpc,
-                // context, styleSet );
-                // else
-
                 axisRendererProvider.init( getModel(), rendererTypeId, parameterContainer, getContext(), styleSet );
 
                 try
