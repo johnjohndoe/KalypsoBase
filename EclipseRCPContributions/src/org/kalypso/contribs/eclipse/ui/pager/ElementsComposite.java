@@ -74,6 +74,11 @@ public class ElementsComposite extends Composite
     this( parent, toolkit, pages, pages[0] );
   }
 
+  public IElementPage getSelectedPage( )
+  {
+    return m_selectedPage;
+  }
+
   /**
    * @param pages
    *          pages which will be rendered
@@ -93,7 +98,7 @@ public class ElementsComposite extends Composite
     m_selectedPage = selectedPage;
     m_style = style;
 
-    this.setLayout( LayoutHelper.createGridLayout() );
+    setLayout( LayoutHelper.createGridLayout() );
 
     update();
   }
@@ -118,7 +123,7 @@ public class ElementsComposite extends Composite
   @Override
   public final void update( )
   {
-    if( this.isDisposed() )
+    if( isDisposed() )
       return;
 
     if( m_body != null )

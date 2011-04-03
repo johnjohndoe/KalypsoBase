@@ -41,7 +41,6 @@
 package org.kalypso.contribs.eclipse.swt.layout;
 
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Layout;
 
 /**
  * @author Dirk Kuch
