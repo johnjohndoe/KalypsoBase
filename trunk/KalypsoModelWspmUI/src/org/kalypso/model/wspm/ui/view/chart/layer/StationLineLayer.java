@@ -81,9 +81,9 @@ public class StationLineLayer extends ComponentLayer
   }
 
   @Override
-  public String getId( )
+  public String getIdentifier( )
   {
-    return super.getId() + "_STATIONLINE"; //$NON-NLS-1$
+    return super.getIdentifier() + "_STATIONLINE"; //$NON-NLS-1$
   }
 
   @Override
