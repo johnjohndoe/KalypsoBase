@@ -285,7 +285,7 @@ public class GmlLoader extends WorkspaceLoader
   {
     // FIXME: this is not robust enough against problems when saving (data loss possible).
     // Possible solution: always write to temporary file (next to real file); after that rename to real file and refresh
-// local.
+    // local.
     // However we have to check if that works in a robust way.
     final SetContentHelper thread = new SetContentHelper()
     {

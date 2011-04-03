@@ -200,11 +200,8 @@ public class DateRange implements Comparable<DateRange>
       return null;
 
     final Calendar cal = Calendar.getInstance();
-
     final Date d2 = cal.getTime();
-
     cal.add( Calendar.DAY_OF_YEAR, -pastDays );
-
     final Date d1 = cal.getTime();
 
     return new DateRange( d1, d2 );
@@ -261,5 +258,34 @@ public class DateRange implements Comparable<DateRange>
       return false;
 
     return true;
+  }
+
+  public boolean intersects( final DateRange other )
+  {
+    /**
+     * <pre>
+     *     |--------- this --------|
+     *        |---- other ----|
+     * </pre>
+     */
+    if( containsLazyInclusive( other.getFrom() ) )
+      return true;
+
+    if( containsLazyInclusive( other.getTo() ) )
+      return true;
+
+    /**
+     * <pre>
+     *        |---- this ----|
+     *    |--------- other ---------|
+     * </pre>
+     */
+    if( other.containsLazyInclusive( getFrom() ) )
+      return true;
+
+    if( other.containsLazyInclusive( getTo() ) )
+      return true;
+
+    return false;
   }
 }

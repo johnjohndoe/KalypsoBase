@@ -365,9 +365,8 @@ public class FileUtilities
   {
     File newFile = new File( parentDir, prefix + System.currentTimeMillis() );
     while( newFile.exists() )
-    {
       newFile = new File( parentDir, prefix + System.currentTimeMillis() );
-    }
+
     return newFile;
   }
 

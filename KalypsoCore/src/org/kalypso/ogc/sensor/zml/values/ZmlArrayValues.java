@@ -43,7 +43,6 @@ package org.kalypso.ogc.sensor.zml.values;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;

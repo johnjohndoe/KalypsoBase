@@ -67,7 +67,6 @@ import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
  */
 public class IntervalTupleModel extends AbstractTupleModel
 {
-
   private final ITupleModel m_srcModel;
 
   private final MODE m_mode;
@@ -267,6 +266,8 @@ public class IntervalTupleModel extends AbstractTupleModel
     final Calendar srcCalIntervallEnd = (Calendar) stack.lastSrcCalendar.clone();
 
     // FIXME: no! use real source values instead!
+    // REMARK: not really a problem, because this is only used in the case if we are
+    // after the last real source intervall -> interval length is irrelevant in that case
     srcCalIntervallEnd.add( m_calendar.getCalendarField(), m_calendar.getAmount() );
 
     // if we are after the source time series
@@ -287,7 +288,11 @@ public class IntervalTupleModel extends AbstractTupleModel
     stack.srcInterval = null;
 
     if( stack.lastSrcCalendar.after( srcCal ) )
+    {
+      // FIXME: leads to endless loop if timeseries is not correctly ordered
+      // We should at least step srsRow here?!
       return PROCESSING_INSTRUCTION.eNothing;
+    }
 
     /* we need next source interval */
     if( srcCalIntervallEnd.before( firstSrcCal ) )

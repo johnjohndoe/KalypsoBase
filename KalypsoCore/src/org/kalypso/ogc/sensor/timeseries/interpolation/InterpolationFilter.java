@@ -63,7 +63,6 @@ import org.kalypso.ogc.sensor.timeseries.interpolation.worker.IInterpolationFilt
  */
 public class InterpolationFilter extends AbstractObservationFilter implements IInterpolationFilter
 {
-
   public static final String FILTER_ID = "InterpolationFilter"; //$NON-NLS-1$
 
   private final int m_calField;
