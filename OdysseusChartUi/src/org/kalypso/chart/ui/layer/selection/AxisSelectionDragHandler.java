@@ -43,16 +43,15 @@ package org.kalypso.chart.ui.layer.selection;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler;
+import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
 
-import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author kuch
  */
-public class AxisSelectionDragHandler extends AbstractChartDragHandler implements MouseListener
+public class AxisSelectionDragHandler extends AbstractChartHandler implements MouseListener
 {
   private final AxisSelectionLayer m_layer;
 
@@ -61,25 +60,6 @@ public class AxisSelectionDragHandler extends AbstractChartDragHandler implement
     super( chart );
 
     m_layer = layer;
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#doMouseMoveAction(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
-  @Override
-  public void doMouseMoveAction( final Point point, final EditInfo editInfo )
-  {
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#doMouseUpAction(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
-  @Override
-  public void doMouseUpAction( final Point end, final EditInfo editInfo )
-  {
-
   }
 
   /**
@@ -105,5 +85,4 @@ public class AxisSelectionDragHandler extends AbstractChartDragHandler implement
       axis.setSelection( point );
     }
   }
-
 }

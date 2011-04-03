@@ -267,6 +267,7 @@
 
   <complexType name="LayerRefernceType">
     <attribute name="url" type="anyURI" use="required" />
+    <attribute name="title" type="string" use="optional" />
   </complexType>
 
   <complexType name="DerivedLayerType">

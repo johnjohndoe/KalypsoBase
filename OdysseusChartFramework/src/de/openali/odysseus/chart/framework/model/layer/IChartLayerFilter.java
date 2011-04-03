@@ -45,7 +45,7 @@ package de.openali.odysseus.chart.framework.model.layer;
  */
 public interface IChartLayerFilter
 {
-  String EXTENSION_POINT_ID = "de.openali.odysseus.chart.framework.ChartLayerFilter";
+  String EXTENSION_POINT_ID = "de.openali.odysseus.chart.framework.ChartLayerFilter"; // $NON-NLS-1$
 
   boolean isFiltered( Object object );
 

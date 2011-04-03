@@ -2,11 +2,8 @@ package org.kalypso.chart.ui.editor.mousehandler;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Control;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -14,18 +11,18 @@ import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.visitors.EditableChartLayerVisitor;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IChartDragHandler;
 
 /**
+ * FIXME: using the eidt info here in order to save the click-state is dubious. Separate editing and dragging (i.e.
+ * separate this into different helper classes or remove the edit stuff from this class).
+ * 
  * @author kimwerner
  */
-public abstract class AbstractChartDragHandler implements IChartDragHandler
+public abstract class AbstractChartDragHandler extends AbstractChartHandler
 {
-  private final IChartComposite m_chart;
-
   private EditInfo m_editInfo = null;
 
-  private final int m_trashOld;
+  private final int m_trashHold;
 
   private EditInfo m_clickInfo = null;
 
@@ -37,10 +34,6 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
 
   private int m_startY = 0;
 
-  private Cursor m_cursor = null;
-
-  private final int m_SWTCursor;
-
   private final int m_observedButtonMask;
 
   public AbstractChartDragHandler( final IChartComposite chart )
@@ -48,39 +41,29 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
     this( chart, 5 );
   }
 
-  public AbstractChartDragHandler( final IChartComposite chart, final int trashold )
+  public AbstractChartDragHandler( final IChartComposite chart, final int trashHold )
   {
-    this( chart, trashold, SWT.BUTTON1 | SWT.BUTTON2 | SWT.BUTTON3, SWT.CURSOR_ARROW );
+    this( chart, trashHold, SWT.BUTTON1 | SWT.BUTTON2 | SWT.BUTTON3 );
   }
 
-  public AbstractChartDragHandler( final IChartComposite chart, final int trashold, final int observedButtonMask, final int cursor )
+  public AbstractChartDragHandler( final IChartComposite chart, final int trashHold, final int observedButtonMask )
   {
-    m_chart = chart;
-    m_trashOld = trashold;
+    super( chart );
+
+    m_trashHold = trashHold;
     m_observedButtonMask = observedButtonMask;
-    m_SWTCursor = cursor;
   }
 
   protected final int button2Mask( final int button )
   {
-    return 1 << (18 + button);
+    return 1 << 18 + button;
   }
 
-  abstract public void doMouseMoveAction( final Point end, final EditInfo editInfo );
+  protected abstract void doMouseMoveAction( final Point end, final EditInfo editInfo );
 
-  abstract public void doMouseUpAction( final Point end, final EditInfo editInfo );
+  protected abstract void doMouseUpAction( final Point end, final EditInfo editInfo );
 
-  public IChartComposite getChart( )
-  {
-    return m_chart;
-  }
-
-  public Cursor getCursor( final MouseEvent e )
-  {
-    return e.display.getSystemCursor( m_SWTCursor );
-  }
-
-  final protected EditInfo getHover( final Point screen )
+  protected final EditInfo getHover( final Point screen )
   {
     final IChartModel model = getChart().getChartModel();
     if( model == null )
@@ -105,34 +88,6 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
     return null;
   }
 
-  /**
-   * @see org.eclipse.swt.events.KeyListener#keyPressed(org.eclipse.swt.events.KeyEvent)
-   */
-  @Override
-  public void keyPressed( final KeyEvent e )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.eclipse.swt.events.KeyListener#keyReleased(org.eclipse.swt.events.KeyEvent)
-   */
-  @Override
-  public void keyReleased( final KeyEvent e )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
-   */
-  @Override
-  public void mouseDoubleClick( final MouseEvent e )
-  {
-  }
-
   protected void mouseDown( final Point down )
   {
     m_clickInfo = getHover( down );
@@ -155,17 +110,8 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
   {
     if( (button2Mask( e.button ) & m_observedButtonMask) == 0 )
       return;
+
     mouseDown( new Point( e.x, e.y ) );
-
-  }
-
-  protected void mouseMove( final Point move )
-  {
-    if( (m_editInfo == null) && ((Math.abs( move.x - m_startX ) > m_trashOld) || (Math.abs( move.y - m_startY ) > m_trashOld)) )
-      m_editInfo = m_clickInfo.clone();
-
-    final Point plotPoint = getChart().screen2plotPoint( new Point( move.x - m_deltaSnapX, move.y - m_deltaSnapY ) );
-    doMouseMoveAction( plotPoint, m_editInfo == null ? m_clickInfo : m_editInfo );
   }
 
   /**
@@ -174,10 +120,31 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
   @Override
   public void mouseMove( final MouseEvent e )
   {
-    setCursor( e );
+    super.mouseMove( e );
+
     if( m_clickInfo == null )
       return;
+
     mouseMove( new Point( e.x, e.y ) );
+  }
+
+  protected void mouseMove( final Point move )
+  {
+    if( m_editInfo == null && (Math.abs( move.x - m_startX ) > m_trashHold || Math.abs( move.y - m_startY ) > m_trashHold) )
+      m_editInfo = m_clickInfo.clone();
+
+    final Point plotPoint = getChart().screen2plotPoint( new Point( move.x - m_deltaSnapX, move.y - m_deltaSnapY ) );
+    doMouseMoveAction( plotPoint, m_editInfo == null ? m_clickInfo : m_editInfo );
+  }
+
+  /**
+   * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
+   */
+  @Override
+  public void mouseUp( final MouseEvent e )
+  {
+    final Point pos = new Point( e.x, e.y );
+    mouseUp( pos );
   }
 
   protected void mouseUp( final Point up )
@@ -200,32 +167,9 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
     {
       m_clickInfo = null;
       m_editInfo = null;
-      m_chart.setEditInfo( null );
-      m_chart.setDragArea( null );
-    }
-  }
-
-  /**
-   * @see org.eclipse.swt.events.MouseListener#mouseUp(org.eclipse.swt.events.MouseEvent)
-   */
-  @Override
-  public void mouseUp( final MouseEvent e )
-  {
-    mouseUp( new Point( e.x, e.y ) );
-  }
-
-  private final void setCursor( final MouseEvent e )
-  {
-    final Cursor cursor = getCursor( e );
-    if( cursor == null )
-      return;
-    if( e.getSource() instanceof Control )
-    {
-
-      if( cursor == m_cursor )
-        return;
-      m_cursor = cursor;
-      ((Control) e.getSource()).setCursor( cursor );
+      final IChartComposite chart = getChart();
+      chart.setEditInfo( null );
+      chart.setDragArea( null );
     }
   }
 
@@ -234,5 +178,4 @@ public abstract class AbstractChartDragHandler implements IChartDragHandler
     if( editInfo != null && editInfo.getLayer() != null )
       ((IEditableChartLayer) editInfo.getLayer()).commitDrag( editInfo.getPosition(), editInfo );
   }
-
 }

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.chart.visitors;
 
+import org.kalypso.commons.exception.CancelVisitorException;
+
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
@@ -58,17 +60,17 @@ public class VisibilityInitialStatusVisitor extends AbstractParameterVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public boolean visit( final IChartLayer layer )
+  public void visit( final IChartLayer layer ) throws CancelVisitorException
   {
     if( layer.isVisible() )
       if( definesParameter( layer ) )
       {
         m_enabled = true;
-        return false;
+
+        throw new CancelVisitorException();
       }
 
     layer.getLayerManager().accept( this );
-    return true;
   }
 
   public boolean isEnabled( )

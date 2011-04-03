@@ -40,52 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.mousehandler;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.events.MouseEvent;
 
-import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author Gernot Belger
  * @author burtscher1
  */
-public class ClickMaximizeHandler extends AbstractChartDragHandler
+public class ClickMaximizeHandler extends AbstractChartHandler
 {
-
-  public ClickMaximizeHandler( final IChartComposite chartComposite, final int observedButtonMask )
-  {
-    super( chartComposite, 10, observedButtonMask, SWT.CURSOR_ARROW );
-
-  }
-
   public ClickMaximizeHandler( final IChartComposite chartComposite )
   {
-    this( chartComposite, SWT.BUTTON_MASK );
-
+    super( chartComposite );
   }
 
   /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#doMouseUpAction(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler#mouseUp(org.eclipse.swt.events.MouseEvent)
    */
   @Override
-  public void doMouseUpAction( final Point end, final EditInfo editInfo )
+  public void mouseUp( final MouseEvent e )
   {
-
-    if( end != null )
-      return; // do nothing -> dragHandler involved
     getChart().getChartModel().autoscale();
   }
-
-  /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#doMouseMoveAction(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
-  @Override
-  public void doMouseMoveAction( final Point end, final EditInfo editInfo )
-  {
-    // do nothing
-  }
-
 }

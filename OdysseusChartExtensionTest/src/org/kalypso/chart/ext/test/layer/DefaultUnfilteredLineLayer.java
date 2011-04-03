@@ -63,7 +63,7 @@ public class DefaultUnfilteredLineLayer extends DefaultLineLayer
     }
     else
     {
-      Logger.logWarning( Logger.TOPIC_LOG_GENERAL, "Layer " + getId() + " has not yet been opened" );
+      Logger.logWarning( Logger.TOPIC_LOG_GENERAL, "Layer " + getIdentifier() + " has not yet been opened" );
     }
   }
 

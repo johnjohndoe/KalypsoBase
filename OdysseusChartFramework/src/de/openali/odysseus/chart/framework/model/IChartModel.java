@@ -18,13 +18,9 @@ public interface IChartModel extends ILayerContainer
 
   IChartBehaviour getBehaviour( );
 
-  String getIdentifier( );
-
   IMapperRegistry getMapperRegistry( );
 
   IBasicChartSettings getSettings( );
-
-  void setIdentifier( String identifier );
 
   // IChartModelState getState( );
 }

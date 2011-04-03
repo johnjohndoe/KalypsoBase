@@ -45,6 +45,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
@@ -62,50 +63,21 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
 
   }
 
-  private final Object[] revertLayer( final ILayerManager mngr )
-  {
-    if( mngr == null )
-      return new Object[] {};
-    final IChartLayer[] layers = mngr.getLayers();
-    final IChartLayer[] reverted = new IChartLayer[layers.length];
-    for( int i = 0; i < layers.length; i++ )
-    {
-      reverted[i] = layers[layers.length - 1 - i];
-
-    }
-    return reverted;
-  }
-
   /**
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   @Override
   public Object[] getChildren( final Object element )
   {
-    if( element instanceof IChartModel )
+
+    if( element instanceof ILayerContainer )
     {
-      /**
-       * so you see the topmost Layer as first item
-       */
-      return revertLayer( ((IChartModel) element).getLayerManager() );
+      final ILayerContainer container = (ILayerContainer) element;
+      final ILayerManager layerManager = container.getLayerManager();
 
-    }
+      final IChartLayer[] layers = layerManager.getLayers();
 
-    if( element instanceof IChartLayer )
-    {
-      final IChartLayer layer = (IChartLayer) element;
-      revertLayer( layer.getLayerManager() );
-
-      final ILegendEntry[] entries = layer.getLegendEntries();
-      if( entries != null && entries.length > 1 )
-      {
-        return entries;
-      }
-      else
-      {
-        return new Object[0];
-      }
-
+      return layers;
     }
     return new Object[0];
   }
@@ -138,7 +110,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
     {
       final IChartModel model = (IChartModel) element;
 
-      return (model.getLayerManager().getLayers().length > 0);
+      return model.getLayerManager().getLayers().length > 0;
     }
     else if( element instanceof IChartLayer )
     {

@@ -38,36 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.model.layer.manager.visitors;
+package de.openali.odysseus.chart.ext.base.axisrenderer;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
 /**
- * @author Dirk Kuch
+ * @author kimwerner
+ *
  */
-public class TooltipChartLayerVisitor implements IChartLayerVisitor
+public interface IDateTimeAxisFieldProvider
 {
-
-  private final Set<ITooltipChartLayer> m_layers = new LinkedHashSet<ITooltipChartLayer>();
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  @Override
-  public void visit( final IChartLayer layer )
-  {
-    if( layer instanceof ITooltipChartLayer )
-      m_layers.add( (ITooltipChartLayer) layer );
-  }
-
-  public ITooltipChartLayer[] getLayers( )
-  {
-    return m_layers.toArray( new ITooltipChartLayer[] {} );
-  }
-
+  IDateTimeAxisField getDateTimeAxisField( final IDataRange<Number> range );
 }

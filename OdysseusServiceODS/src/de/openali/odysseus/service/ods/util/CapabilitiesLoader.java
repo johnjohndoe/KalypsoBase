@@ -229,7 +229,7 @@ public class CapabilitiesLoader
     for( final IChartLayer layer : model.getLayerManager().getLayers() )
     {
       final LayerOfferingType xmlLayer = xmlLayers.addNewLayer();
-      xmlLayer.setId( layer.getId() );
+      xmlLayer.setId( layer.getIdentifier() );
       xmlLayer.setTitle( layer.getTitle() );
       xmlLayer.setDescription( layer.getDescription() );
       final DomainAxis domAxis = xmlLayer.addNewDomainAxis();
@@ -256,7 +256,7 @@ public class CapabilitiesLoader
 
         // Symbol-Grafiken cachen
         final ImageData symbol = le.getSymbol( size );
-        ODSUtils.writeSymbol( m_env.getTmpDir(), symbol, scene, model.getIdentifier(), layer.getId(), symbolId );
+        ODSUtils.writeSymbol( m_env.getTmpDir(), symbol, scene, model.getIdentifier(), layer.getIdentifier(), symbolId );
       }
     }
 

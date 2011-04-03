@@ -56,7 +56,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
-      if( (m_image != null) && !m_image.isDisposed() )
+      if( m_image != null && !m_image.isDisposed() )
       {
         m_image.dispose();
         m_image = null;
@@ -209,12 +209,11 @@ public class ChartImageComposite extends Canvas implements IChartComposite
           return;
         final GC gc = paintEvent.gc;
         gc.drawImage( m_image, 0, 0 );// -m_panOffset.x, -m_panOffset.y );
-
         final Transform newTransform = new Transform( gc.getDevice() );
+        gc.getTransform( newTransform );
+        newTransform.translate( m_plotRect.x, m_plotRect.y );
         try
         {
-          gc.getTransform( newTransform );
-          newTransform.translate( m_plotRect.x, m_plotRect.y );
           gc.setTransform( newTransform );
 
           paintDragArea( gc );
@@ -295,6 +294,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     return this;
   }
 
+  @Override
   public final Rectangle getPlotRect( )
   {
     return m_plotRect;

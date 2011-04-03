@@ -46,6 +46,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.kalypso.commons.java.lang.Objects;
+
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.IStyleSetRefernceFilter;
@@ -56,10 +58,28 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
  */
 public class StyleSetVisitor
 {
-  @SuppressWarnings("unchecked")
-  public <T extends IStyle> T visit( final IStyleSet set, final Class<T> clazz, final int index )
+  private final boolean m_defaultLineStyle;
+
+  @Deprecated
+  public StyleSetVisitor( )
   {
-    final Map<String, IStyle> map = set.getStyles();
+    this( false );
+  }
+
+  public StyleSetVisitor( final boolean defaultLineStyle )
+  {
+    m_defaultLineStyle = defaultLineStyle;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T extends IStyle> T visit( final IStyleSet styleSet, final Class<T> clazz, final int index )
+  {
+    if( Objects.isNull( styleSet ) )
+    {
+      return getDefaultStyle( clazz );
+    }
+
+    final Map<String, IStyle> map = styleSet.getStyles();
     final Collection<IStyle> styles = map.values();
 
     int styleIndex = 0;
@@ -79,13 +99,27 @@ public class StyleSetVisitor
       }
     }
 
+    if( Objects.isNull( lastItem ) )
+      return getDefaultStyle( clazz );
+
     return (T) lastItem;
   }
 
-  @SuppressWarnings("unchecked")
-  public <T extends IStyle> T visit( final IStyleSet set, final Class<T> clazz, final String styleref )
+  private <T extends IStyle> T getDefaultStyle( final Class<T> clazz )
   {
-    final Map<String, IStyle> map = set.getStyles();
+    if( m_defaultLineStyle )
+      return StyleUtils.getDefaultStyle( clazz );
+
+    return null;
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T extends IStyle> T visit( final IStyleSet styleSet, final Class<T> clazz, final String styleref )
+  {
+    if( Objects.isNull( styleSet ) )
+      return getDefaultStyle( clazz );
+
+    final Map<String, IStyle> map = styleSet.getStyles();
 
     final Set<Entry<String, IStyle>> entries = map.entrySet();
     for( final Entry<String, IStyle> entry : entries )
@@ -98,7 +132,7 @@ public class StyleSetVisitor
       }
     }
 
-    return StyleUtils.getDefaultStyle( clazz );
+    return getDefaultStyle( clazz );
   }
 
   public String[] findReferences( final IStyleSet set, final Class< ? extends IStyle> clazz )
@@ -120,6 +154,7 @@ public class StyleSetVisitor
     return styles.toArray( new String[] {} );
   }
 
+  @SuppressWarnings("unchecked")
   public <T extends IStyle> T findReferences( final IStyleSet set, final Class<T> clazz, final IStyleSetRefernceFilter filter )
   {
     final Map<String, IStyle> map = set.getStyles();
@@ -135,6 +170,6 @@ public class StyleSetVisitor
       }
     }
 
-    return null;
+    return getDefaultStyle( clazz );
   }
 }

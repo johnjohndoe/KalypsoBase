@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.exception.CancelVisitorException;
 
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
@@ -79,6 +80,7 @@ public class LayerManager implements ILayerManager
       if( parentHandler != null )
         parentHandler.fireLayerVisibilityChanged( (IChartLayer) getContainer() );
     }
+
   };
 
   /**
@@ -117,8 +119,15 @@ public class LayerManager implements ILayerManager
   {
     for( final IChartLayer layer : getLayers() )
     {
-      if( !visitor.visit( layer ) )
+      try
+      {
+        visitor.visit( layer );
+      }
+      catch( final CancelVisitorException e )
+      {
         return;
+      }
+
     }
   }
 

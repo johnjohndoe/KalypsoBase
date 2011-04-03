@@ -5,8 +5,8 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
- *  21073 Hamburg, Germany
+ *  Denickestraï¿½e 22
+ *  21073 Hamburg, Germany 
  *  http://www.tuhh.de/wb
  * 
  *  and
@@ -41,12 +41,10 @@
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.kalypso.core.KalypsoCorePlugin;
 
-import de.openali.odysseus.chart.ext.base.axisrenderer.provider.DateTimeAxisFieldProvider;
-import de.openali.odysseus.chart.ext.base.axisrenderer.provider.IDateTimeAxisFieldProvider;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.util.img.GenericChartLabelRenderer;
-import de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer;
 
 /**
  * @author kimwerner
@@ -55,24 +53,9 @@ public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabel
 {
   private final IDateTimeAxisFieldProvider m_dateTimeFieldProvider;
 
-  private final IChartLabelRenderer m_tickRenderer;
-
   public DateTimeLabelCreator( final IDateTimeAxisFieldProvider dateTimeFieldProvider )
   {
-    this( new GenericChartLabelRenderer(), dateTimeFieldProvider );
-
-  }
-
-  public DateTimeLabelCreator( final IChartLabelRenderer tickLabelRenderer, final IDateTimeAxisFieldProvider dateTimeFieldProvider )
-  {
     m_dateTimeFieldProvider = dateTimeFieldProvider;
-    m_tickRenderer = tickLabelRenderer;
-
-  }
-
-  public DateTimeLabelCreator( )
-  {
-    this( new GenericChartLabelRenderer(), new DateTimeAxisFieldProvider() );
   }
 
   /**
@@ -82,8 +65,12 @@ public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabel
   @Override
   public String getLabel( final Number value, final IDataRange<Number> range )
   {
+// ChartLayerUtils.addTimezoneOffset(
     final IDateTimeAxisField axisField = m_dateTimeFieldProvider.getDateTimeAxisField( range );
-    return new DateTime( value.longValue() ).toString( axisField.getFormatString() );
+    final DateTimeZone zone = DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+    final DateTime dateTime = new DateTime( value.longValue(), zone );
+
+    return dateTime.toString( axisField.getFormatString() );
   }
 
   /**

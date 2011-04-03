@@ -86,7 +86,7 @@ public class ChartOutlinePopupDialog extends PopupDialog
       if( !ArrayUtils.isEmpty( title ) )
         setTitleText( title[0].getText() );
       else
-        setTitleText( null );
+        setTitleText( "" );
 
       return da;
     }

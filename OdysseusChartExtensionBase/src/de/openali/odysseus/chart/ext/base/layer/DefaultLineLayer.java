@@ -100,12 +100,12 @@ public class DefaultLineLayer extends AbstractLineLayer
       }
       else
       {
-        Logger.logWarning( Logger.TOPIC_LOG_GENERAL, "Layer " + getId() + " has no data to draw." );
+        Logger.logWarning( Logger.TOPIC_LOG_GENERAL, "Layer " + getIdentifier() + " has no data to draw." );
       }
     }
     else
     {
-      Logger.logWarning( Logger.TOPIC_LOG_GENERAL, "Layer " + getId() + " has not yet been opened" );
+      Logger.logWarning( Logger.TOPIC_LOG_GENERAL, "Layer " + getIdentifier() + " has not yet been opened" );
     }
   }
 

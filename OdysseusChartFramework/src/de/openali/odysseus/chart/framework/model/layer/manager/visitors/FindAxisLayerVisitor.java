@@ -69,7 +69,7 @@ public class FindAxisLayerVisitor implements IChartLayerVisitor
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
    */
   @Override
-  public boolean visit( final IChartLayer layer )
+  public void visit( final IChartLayer layer )
   {
     final ICoordinateMapper coordinateMapper = layer.getCoordinateMapper();
     if( coordinateMapper != null )
@@ -82,8 +82,6 @@ public class FindAxisLayerVisitor implements IChartLayerVisitor
 
     if( m_recursive )
       layer.getLayerManager().accept( this );
-
-    return true;
   }
 
   public IChartLayer[] getLayers( )

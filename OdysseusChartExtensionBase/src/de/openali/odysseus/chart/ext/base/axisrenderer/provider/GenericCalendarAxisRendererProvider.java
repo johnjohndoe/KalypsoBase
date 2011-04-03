@@ -57,6 +57,7 @@ public class GenericCalendarAxisRendererProvider extends AbstractGenericAxisRend
     dateFormat = dateFormat.replaceAll( "\\n", "\n" );
 
     return new DateLabelCreator( dateFormat );
+
   }
 
   /**

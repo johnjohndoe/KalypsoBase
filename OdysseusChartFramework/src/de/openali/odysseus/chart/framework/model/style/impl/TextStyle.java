@@ -189,5 +189,4 @@ public class TextStyle extends AbstractStyle implements ITextStyle
   {
     m_alignment = position;
   }
-
 }
