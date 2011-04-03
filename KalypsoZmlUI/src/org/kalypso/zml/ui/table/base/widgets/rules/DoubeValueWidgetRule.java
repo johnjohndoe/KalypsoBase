@@ -49,6 +49,18 @@ public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
 {
   private String m_lastValidationMsg;
 
+  private final String m_format;
+
+  public DoubeValueWidgetRule( )
+  {
+    this( "%.3f" ); // $NON-NLS-1$
+  }
+
+  public DoubeValueWidgetRule( final String format )
+  {
+    m_format = format;
+  }
+
   /**
    * @see org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule#getLastValidationMessage()
    */
@@ -64,7 +76,7 @@ public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
   @Override
   public String getFormatedString( final Double value )
   {
-    return String.format( "%.3f", value );
+    return String.format( m_format, value );
   }
 
   /**
@@ -84,7 +96,7 @@ public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
   {
     final boolean isDouble = NumberUtils.isDouble( text );
     if( !isDouble )
-      m_lastValidationMsg = "UngÃ¼ltiger Zahlenwert";
+      m_lastValidationMsg = "Ungültiger Zahlenwert";
     else
       m_lastValidationMsg = null;
 

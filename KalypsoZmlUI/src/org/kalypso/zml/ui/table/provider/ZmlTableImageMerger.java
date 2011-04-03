@@ -43,7 +43,6 @@ package org.kalypso.zml.ui.table.provider;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -64,7 +63,7 @@ public final class ZmlTableImageMerger
 
   private static final RGB RGB_WHITE = new RGB( 255, 255, 255 );
 
-  private static final ImageData IMG_ADDITIONAL = new ImageData( ZmlTableImageMerger.class.getResourceAsStream( "icons/additional.png" ) );
+  private static final ImageData IMG_ADDITIONAL = new ImageData( ZmlTableImageMerger.class.getResourceAsStream( "icons/additional.png" ) ); //$NON-NLS-1$
 
   private final Set<ZmlTableImage> m_images = new LinkedHashSet<ZmlTableImage>();
 
@@ -98,7 +97,8 @@ public final class ZmlTableImageMerger
     ImageData base = new ImageData( 1, 1, 1, new PaletteData( new RGB[] { RGB_WHITE } ) );
     base.transparentPixel = base.palette.getPixel( RGB_WHITE );
 
-    for( int index = 0; index < m_numberOfIcons; index++ )
+    final int range = getRange();
+    for( int index = 0; index < range; index++ )
     {
       if( index >= images.length )
         break;
@@ -124,7 +124,7 @@ public final class ZmlTableImageMerger
       base = overlay.getImageData();
     }
 
-    if( images.length > m_numberOfIcons )
+    if( images.length > range )
     {
       final OverlayIcon overlay = new OverlayIcon( ImageDescriptor.createFromImageData( base ), ImageDescriptor.createFromImageData( IMG_ADDITIONAL ), size )
       {
@@ -134,7 +134,7 @@ public final class ZmlTableImageMerger
         @Override
         protected void drawTopRight( final ImageDescriptor ov )
         {
-          drawImage( ov.getImageData(), getX( m_numberOfIcons ) + m_iconSize.x, 0 );
+          drawImage( ov.getImageData(), getX( m_numberOfIcons ), 0 );
         }
       };
 
@@ -147,16 +147,25 @@ public final class ZmlTableImageMerger
     return image;
   }
 
+  private int getRange( )
+  {
+    if( m_numberOfIcons < m_images.size() )
+      return m_numberOfIcons + 1;
+    else
+      return m_numberOfIcons;
+  }
+
   private String buildImageReference( final ZmlTableImage[] images )
   {
     final StringBuffer buffer = new StringBuffer();
     for( final ZmlTableImage image : images )
     {
       buffer.append( image.getHref() );
-      buffer.append( ";" );
+      buffer.append( ";" ); //$NON-NLS-1$
     }
 
-    return StringUtils.chop( buffer.toString() );
+    buffer.append( Integer.valueOf( m_numberOfIcons ).toString() );
+    return buffer.toString();
   }
 
   private Point getSize( )

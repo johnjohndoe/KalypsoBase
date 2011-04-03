@@ -114,7 +114,7 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
       final IZmlModelRow row = element;
       final IZmlValueReference reference = row.get( getColumn().getColumnType().getType() );
 
-      final Object targetValue = getTargetValue( value );
+      final Number targetValue = getTargetValue( value );
       reference.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
 
       final ExtendedZmlTableColumn column = getColumn();

@@ -40,23 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
-import java.util.Date;
-
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
-import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
@@ -71,7 +66,6 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
  */
 public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 {
-
   private IZmlLayerDataHandler m_handler;
 
   private String m_labelDescriptor;
@@ -94,9 +88,19 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   @Override
   public void dispose( )
   {
-    m_handler.dispose();
+    if( Objects.isNotNull( m_handler ) )
+      m_handler.dispose();
 
     super.dispose();
+  }
+
+  /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#onObservationChanged()
+   */
+  @Override
+  public void onObservationChanged( )
+  {
+    getEventHandler().fireLayerContentChanged( this );
   }
 
   @Override
@@ -137,72 +141,26 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   {
     try
     {
-      final ITupleModel model = m_handler.getModel();
-      if( model == null )
+      final IObservation observation = m_handler.getObservation();
+      if( Objects.isNull( observation ) )
         return;
 
-      final org.kalypso.ogc.sensor.IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
-      final PolygonFigure pf = getPolygonFigure();
-      final Point base = getCoordinateMapper().numericToScreen( 0.0, 0.0 );
+      final ZmlBarLayerVisitor visitor = new ZmlBarLayerVisitor( this, m_range );
+      observation.accept( visitor, m_handler.getRequest() );
 
-      Point lastScreen = null;
-      for( int i = 0; i < model.size(); i++ )
+      final PolygonFigure figure = getPolygonFigure();
+      final Point[][] points = visitor.getPoints();
+      for( final Point[] p : points )
       {
-        try
-        {
-          final Object domainValue = model.get( i, dateAxis );
-          final Object targetValue = getTargetValue( model, i );
-          if( Objects.isNull( domainValue, targetValue ) )
-            continue;
-
-          final Number logicalDomain = m_range.getDateDataOperator().logicalToNumeric( ChartLayerUtils.addTimezoneOffset( (Date) domainValue ) );
-          final Number logicalTarget = m_range.getNumberDataOperator().logicalToNumeric( (Number) targetValue );
-          final Point screen = getCoordinateMapper().numericToScreen( logicalDomain, logicalTarget );
-
-          // don't draw empty lines only rectangles
-          if( screen.y != base.y )
-          {
-            final int x = getX( lastScreen, screen );
-            pf.setPoints( new Point[] { new Point( x, base.y ), new Point( x, screen.y ), screen, new Point( screen.x, base.y ) } );
-            pf.paint( gc );
-          }
-
-          lastScreen = screen;
-        }
-        catch( final Throwable t )
-        {
-          KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
-        }
+        figure.setPoints( p );
+        figure.paint( gc );
       }
+
     }
     catch( final SensorException e )
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
-  }
-
-  private int getX( final Point p1, final Point p2 )
-  {
-    if( p1 == null )
-      return p2.x;
-
-    return p1.x;
-  }
-
-  private Object getTargetValue( final ITupleModel model, final int i ) throws SensorException
-  {
-    Object value = model.get( i, m_handler.getValueAxis() );
-
-    /** @hack for polder control */
-    if( value instanceof Boolean )
-    {
-      if( Boolean.valueOf( (Boolean) value ) )
-        value = 1;
-      else
-        value = 0;
-    }
-
-    return value;
   }
 
   /**
@@ -255,9 +213,9 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   protected IAreaStyle getAreaStyle( )
   {
     final IStyleSet styleSet = getStyleSet();
-    final int index = ZmlLayerHelper.getLayerIndex( getId() );
+    final int index = ZmlLayerHelper.getLayerIndex( getIdentifier() );
 
-    final StyleSetVisitor visitor = new StyleSetVisitor();
+    final StyleSetVisitor visitor = new StyleSetVisitor( true );
     final IAreaStyle style = visitor.visit( styleSet, IAreaStyle.class, index );
 
     return style;

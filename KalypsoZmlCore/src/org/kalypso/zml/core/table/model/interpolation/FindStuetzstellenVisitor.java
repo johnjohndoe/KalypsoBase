@@ -43,33 +43,93 @@ package org.kalypso.zml.core.table.model.interpolation;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
-import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class FindStuetzstellenVisitor implements IZmlModelColumnVisitor
+public class FindStuetzstellenVisitor implements IObservationVisitor
 {
-  Set<IZmlValueReference> m_references = new LinkedHashSet<IZmlValueReference>();
+  private final Set<Integer> m_references = new LinkedHashSet<Integer>();
 
-  /**
-   * @see org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor#visit(org.kalypso.zml.core.table.model.references.IZmlValueReference)
-   */
-  @Override
-  public boolean visit( final IZmlValueReference reference ) throws SensorException
+  private IAxis m_sourceAxis;
+
+  private IAxis m_statusAxis;
+
+  private DataSourceHandler m_dataSourceHandler;
+
+  public FindStuetzstellenVisitor( )
   {
-    if( ZmlValues.isStuetzstelle( reference ) )
-      m_references.add( reference );
 
-    return true;
   }
 
-  public IZmlValueReference[] getStuetzstellen( )
+  public Integer[] getStuetzstellen( )
   {
-    return m_references.toArray( new IZmlValueReference[] {} );
+    return m_references.toArray( new Integer[] {} );
+  }
+
+  private IAxis getStatusAxis( final IObservationValueContainer container )
+  {
+    if( Objects.isNull( m_statusAxis ) )
+      m_statusAxis = AxisUtils.findStatusAxis( container.getAxes() );
+
+    return m_statusAxis;
+  }
+
+  private IAxis getSourceAxis( final IObservationValueContainer container )
+  {
+    if( Objects.isNull( m_sourceAxis ) )
+      m_sourceAxis = AxisUtils.findDataSourceAxis( container.getAxes() );
+
+    return m_sourceAxis;
+  }
+
+  private DataSourceHandler getDataSourceHandler( final IObservationValueContainer container )
+  {
+    if( Objects.isNull( m_dataSourceHandler ) )
+      m_dataSourceHandler = new DataSourceHandler( container.getMetaData() );
+
+    return m_dataSourceHandler;
+  }
+
+  @Override
+  public void visit( final IObservationValueContainer container )
+  {
+    try
+    {
+
+      final IAxis sourceAxis = getSourceAxis( container );
+      String source = null;
+      if( Objects.isNotNull( sourceAxis ) )
+      {
+        final Object sourceIndexObject = container.get( sourceAxis );
+        final Number sourceIndex = sourceIndexObject instanceof Number ? (Number) sourceIndexObject : -1;
+        source = getDataSourceHandler( container ).getDataSourceIdentifier( sourceIndex.intValue() );
+      }
+
+      final IAxis statusAxis = getStatusAxis( container );
+      Number status = null;
+      if( Objects.isNotNull( statusAxis ) )
+      {
+        final Object statusObject = container.get( statusAxis );
+        status = statusObject instanceof Number ? (Number) statusObject : KalypsoStati.BIT_OK;
+      }
+
+      if( ZmlValues.isStuetzstelle( status, source ) )
+        m_references.add( container.getIndex() );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+    }
   }
 
 }

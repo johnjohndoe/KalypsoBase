@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.loader;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -94,7 +95,7 @@ public class ZmlModelBuilder implements ICoreRunnableWithProgress
       {
         for( int modelIndex = 0; modelIndex < column.size(); modelIndex++ )
         {
-          final Object indexValue = column.get( modelIndex, indexAxis );
+          final Date indexValue = (Date) column.get( modelIndex, indexAxis );
 
           IZmlModelRow row = rows.get( indexValue );
           if( Objects.isNull( row ) )

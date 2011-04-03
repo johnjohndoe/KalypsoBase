@@ -44,32 +44,21 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.binding.ColumnHeader;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.schema.DataColumnType;
-import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.provider.ZmlTableImage;
-import org.kalypso.zml.ui.table.provider.ZmlTableImageMerger;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableLayoutHandler
 {
+  private static final Color COLOR_TABLE_DISABLED = new Color( null, new RGB( 0xea, 0xea, 0xea ) );
+
+  private static final Color COLOR_TABLE_ENABLED = new Color( null, new RGB( 0xff, 0xff, 0xff ) );
+
   protected boolean m_firstChange = true;
 
   protected final ZmlTableComposite m_table;
@@ -85,25 +74,6 @@ public class ZmlTableLayoutHandler
 
       updateColumns();
 
-      if( m_firstChange )
-      {
-        /* execute as separate ui job, otherwise it won't work */
-        new UIJob( "" )
-        {
-
-          @Override
-          public IStatus runInUIThread( final IProgressMonitor mon )
-          {
-            final RevealTableCommand command = new RevealTableCommand( m_table );
-            command.execute( monitor );
-
-            return Status.OK_STATUS;
-          }
-        }.schedule();
-
-        m_firstChange = false;
-      }
-
       return Status.OK_STATUS;
     }
   };
@@ -115,171 +85,27 @@ public class ZmlTableLayoutHandler
 
   public void tableChanged( )
   {
-    if( m_job.getState() == Job.SLEEPING )
+    if( m_job.getState() == Job.SLEEPING || m_job.getState() == Job.WAITING || m_job.getState() == Job.RUNNING )
       m_job.cancel();
 
-    m_job.schedule( 250 );
+    m_job.schedule();
   }
 
   protected void updateColumns( )
   {
-    final ExtendedZmlTableColumn[] columns = m_table.getColumns();
-    for( final ExtendedZmlTableColumn column : columns )
+    final PackTableColumnVisitor visitor = new PackTableColumnVisitor();
+    m_table.accept( visitor );
+
+    visitor.packIndexColumns();
+
+    final TableViewer viewer = m_table.getTableViewer();
+    if( m_table.isEmpty() )
     {
-      final BaseColumn columnType = column.getColumnType();
-      final TableViewerColumn tableViewerColumn = column.getTableViewerColumn();
-      final TableColumn tableColumn = tableViewerColumn.getColumn();
-
-      updateHeader( column );
-
-      /** only update headers of data column types */
-
-      if( columnType.getType() instanceof DataColumnType )
-      {
-        final IZmlModelColumn modelColumn = column.getModelColumn();
-        if( modelColumn == null )
-        {
-          final String label = columnType.getLabel();
-
-          tableColumn.setWidth( 0 );
-          tableColumn.setText( label );
-          tableColumn.setResizable( false );
-          tableColumn.setMoveable( false );
-        }
-        else
-        {
-          final String label = modelColumn.getLabel();
-
-          tableColumn.setText( label );
-          pack( tableColumn, columnType, label );
-        }
-      }
-      else
-      {
-        final String label = columnType.getLabel();
-
-        tableColumn.setText( label );
-        pack( tableColumn, columnType, label );
-      }
-
-    }
-  }
-
-  private void updateHeader( final ExtendedZmlTableColumn column )
-  {
-    final TableColumn tableColumn = column.getTableViewerColumn().getColumn();
-    final ZmlRule[] applied = column.getAppliedRules();
-
-    final ZmlTableImageMerger provider = new ZmlTableImageMerger( 2 );
-
-    final BaseColumn columnType = column.getColumnType();
-    for( final ColumnHeader header : columnType.getHeaders() )
-    {
-      try
-      {
-        final Image icon = header.getIcon();
-        if( icon != null )
-          provider.addImage( new ZmlTableImage( header.getIdentifier(), icon ) );
-      }
-      catch( final Throwable t )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
-      }
-    }
-
-    for( final ZmlRule rule : applied )
-    {
-      try
-      {
-        if( rule.hasHeaderIcon() )
-        {
-          final CellStyle style = rule.getPlainStyle();
-          final Image image = style.getImage();
-          if( image != null )
-            provider.addImage( new ZmlTableImage( style.getIdentifier(), image ) );
-        }
-      }
-      catch( final Throwable t )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
-      }
-    }
-
-    tableColumn.setImage( provider.createImage( tableColumn.getDisplay() ) );
-  }
-
-  private void pack( final TableColumn column, final BaseColumn base, final String label )
-  {
-    if( base.isAutopack() )
-    {
-      column.pack();
+      viewer.getControl().setBackground( COLOR_TABLE_DISABLED );
     }
     else
     {
-      final Integer width = base.getWidth();
-      if( width == null )
-      {
-        final Integer calculated = calculateSize( column, base, label );
-        if( calculated == null )
-          column.pack();
-        else
-        {
-          /* set biggest value - calculated header with or packed cell width */
-          column.pack();
-          final int packedWith = column.getWidth();
-
-          if( packedWith < calculated )
-            column.setWidth( calculated );
-        }
-
-      }
-      else
-        column.setWidth( width );
-    }
-
-    column.setMoveable( false );
-    column.setResizable( true );
-  }
-
-  /**
-   * @return minimal header size
-   */
-  private Integer calculateSize( final TableColumn table, final BaseColumn base, final String label )
-  {
-    final Device dev = PlatformUI.getWorkbench().getDisplay();
-    final Image image = new Image( dev, 1, 1 );
-    final GC gc = new GC( image );
-
-    try
-    {
-      final int spacer = 10;
-
-      final CellStyle style = base.getDefaultStyle();
-
-      if( style.getFont() != null )
-        gc.setFont( style.getFont() );
-
-      final Point extend = gc.textExtent( label );
-
-      final Image img = table.getImage();
-      if( img != null )
-      {
-        return extend.x + spacer * 2 + img.getImageData().width;
-      }
-
-      return extend.x + spacer;
-    }
-    catch( final Throwable t )
-    {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
-
-      return null;
-    }
-    finally
-    {
-      gc.dispose();
-      image.dispose();
+      viewer.getControl().setBackground( COLOR_TABLE_ENABLED );
     }
   }
-
 }

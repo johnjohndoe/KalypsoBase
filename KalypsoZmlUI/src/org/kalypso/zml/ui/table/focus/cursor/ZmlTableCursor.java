@@ -10,7 +10,7 @@
  *     
  *     @author changed / updated by: Dirk Kuch
  *******************************************************************************/
-package org.kalypso.zml.ui.table.cursor;
+package org.kalypso.zml.ui.table.focus.cursor;
 
 import org.eclipse.jface.util.Util;
 import org.eclipse.jface.viewers.TableViewer;
@@ -27,14 +27,19 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 import com.google.common.base.Strings;
 
-public class TableCursor extends AbstractCellCursor
+public class ZmlTableCursor extends AbstractZmlCellCursor
 {
   private static final Color COLOR_BACKGROUND_SELECTION = new Color( null, new RGB( 0xBA, 0xFF, 0xEC ) );
 
-  public TableCursor( final TableViewer viewer )
+  private static final Color COLOR_BACKGROUND_SELECTION_DISABLED = new Color( null, new RGB( 0xCC, 0xCC, 0xCC ) );
+
+  public ZmlTableCursor( final TableViewer viewer )
   {
     super( viewer );
   }
@@ -53,11 +58,12 @@ public class TableCursor extends AbstractCellCursor
 
       final GC gc = event.gc;
       final Display display = getDisplay();
+      setBackground( display.getSystemColor( SWT.COLOR_WHITE ) );
 
       final Color background = gc.getBackground();
       final Color foreground = gc.getForeground();
 
-      gc.setBackground( COLOR_BACKGROUND_SELECTION );
+      gc.setBackground( getBackground() );
       gc.setForeground( getForeground() );
 
       gc.fillRectangle( event.x, event.y, event.width, event.height );
@@ -68,14 +74,32 @@ public class TableCursor extends AbstractCellCursor
 
       gc.setBackground( background );
       gc.setForeground( foreground );
+
+      setVisible( true );
     }
     catch( final Throwable t )
     {
+      setVisible( false );
       if( t instanceof SWTException )
         return;
 
       t.printStackTrace();
     }
+  }
+
+  /**
+   * @see org.eclipse.swt.widgets.Control#getBackground()
+   */
+  @Override
+  public Color getBackground( )
+  {
+    final IZmlTableCell cell = getFocusTableCell();
+    final IZmlTableColumn column = cell.getColumn();
+    final BaseColumn type = column.getColumnType();
+    if( type.isEditable() )
+      return COLOR_BACKGROUND_SELECTION;
+
+    return COLOR_BACKGROUND_SELECTION_DISABLED;
   }
 
   private void drawFocus( final GC gc, final Display display )
@@ -152,6 +176,5 @@ public class TableCursor extends AbstractCellCursor
     gc.drawImage( image, x, imageY );
 
     return imageSize.width;
-
   }
 }

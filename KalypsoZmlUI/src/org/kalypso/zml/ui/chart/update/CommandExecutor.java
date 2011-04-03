@@ -79,6 +79,9 @@ public class CommandExecutor implements Runnable
   {
     final ICommandService commandService = m_trigger.getCommandService();
     final IEvaluationService evaluationService = m_trigger.getEvaluatonService();
+    // May be null, if view part is closed while chart is being assembled
+    if( evaluationService == null )
+      return;
 
     final IEvaluationContext context = evaluationService.getCurrentState();
 

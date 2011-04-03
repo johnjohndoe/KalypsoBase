@@ -59,7 +59,7 @@ import de.openali.odysseus.chartconfig.x020.LayerType;
 /**
  * @author Dirk Kuch
  */
-public class ZmlLinkDiagramElement extends AbstractTsLinkDiagramElement implements IZmlDiagramElement, IZmlTableElement
+public class ZmlLinkDiagramElement extends AbstractTsLinkDiagramElement implements IZmlTableElement
 {
   public ZmlLinkDiagramElement( final TSLinkWithName link )
   {
@@ -111,9 +111,6 @@ public class ZmlLinkDiagramElement extends AbstractTsLinkDiagramElement implemen
   {
     final String tokenizedName = getLink().getName();
     final IObservation observation = getObsProvider().getObservation();
-    final String name = ObservationTokenHelper.replaceTokens( tokenizedName, observation, axis );
-
-    return name;
+    return ObservationTokenHelper.replaceTokens( tokenizedName, observation, axis );
   }
-
 }

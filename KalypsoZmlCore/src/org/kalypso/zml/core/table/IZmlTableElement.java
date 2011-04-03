@@ -48,6 +48,8 @@ import org.kalypso.ogc.sensor.provider.IObsProvider;
  */
 public interface IZmlTableElement
 {
+  void dispose( );
+
   String getIdentifier( );
 
   IObsProvider getObsProvider( );

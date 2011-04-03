@@ -41,15 +41,15 @@
 package org.kalypso.zml.ui.table.provider.strategy;
 
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.ZmlEditingSupport;
 
 /**
  * @author Dirk Kuch
  */
 public interface IExtendedZmlTableColumn extends IZmlTableColumn
 {
-  ZmlEditingSupport getEditingSupport( );
+  ZmlTableEditingSupport getEditingSupport( );
 
   ZmlRule[] getAppliedRules( );
 

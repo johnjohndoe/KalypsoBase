@@ -49,10 +49,10 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.IZmlTableSelectionHandler;
 
 /**
  * @author Dirk Kuch
@@ -70,10 +70,10 @@ public class ZmlCommandSetSelectedValues extends AbstractHandler
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
 
       final IZmlTableSelectionHandler selection = table.getSelectionHandler();
-      final IZmlTableCell active = selection.getActiveCell();
+      final IZmlTableCell active = selection.findActiveCellByPosition();
       final IZmlTableColumn column = active.getColumn();
       final IZmlValueReference reference = active.getValueReference();
-      final Object targetValue = reference.getValue();
+      final Number targetValue = reference.getValue();
 
       final IZmlTableCell[] selected = column.getSelectedCells();
       for( final IZmlTableCell cell : selected )

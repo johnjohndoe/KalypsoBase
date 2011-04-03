@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
@@ -56,7 +57,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
  */
 public class ZmlThemeBackGroundRaster extends AbstractChartLayer
 {
-  public static final String ID = "org.kalypso.hwv.core.chart.ZmlThemeBackGroundRaster";
+  public static final String ID = "org.kalypso.hwv.core.chart.ZmlThemeBackGroundRaster"; //$NON-NLS-1$
 
   private final IChartModel m_model;
 
@@ -65,8 +66,7 @@ public class ZmlThemeBackGroundRaster extends AbstractChartLayer
     super( provider );
 
     m_model = model;
-
-    setId( ID );
+    setIdentifier( ID );
   }
 
   /**
@@ -103,8 +103,10 @@ public class ZmlThemeBackGroundRaster extends AbstractChartLayer
         layer.paint( gc );
         return;
       }
-
     }
+
+    if( ArrayUtils.isNotEmpty( layers ) )
+      layers[0].paint( gc );
 
   }
 

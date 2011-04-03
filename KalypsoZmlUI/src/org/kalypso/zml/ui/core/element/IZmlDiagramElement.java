@@ -51,6 +51,8 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
  */
 public interface IZmlDiagramElement
 {
+  void dispose( );
+
   IObsProvider getObsProvider( );
 
   IAxis[] getValueAxes( );

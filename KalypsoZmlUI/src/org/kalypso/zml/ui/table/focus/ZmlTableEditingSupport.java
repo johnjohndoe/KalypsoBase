@@ -38,19 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table.focus;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.swt.custom.ValidateCellEditorListener;
@@ -59,6 +59,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 
@@ -67,11 +68,28 @@ import com.google.common.base.Objects;
 /**
  * @author Dirk Kuch
  */
-public class ZmlEditingSupport extends EditingSupport
+public class ZmlTableEditingSupport extends EditingSupport
 {
+  public static final class ZmlTextCellEditor extends TextCellEditor
+  {
+    public ZmlTextCellEditor( final Composite parent, final int style )
+    {
+      super( parent, style );
+    }
+
+    public void stopEditing( )
+    {
+      if( isActivated() )
+      {
+        fireApplyEditorValue();
+        deactivate();
+      }
+    }
+  }
+
   private static final Color COLOR_ERROR = new Color( null, 255, 10, 10 );
 
-  protected final TextCellEditor m_cellEditor;
+  protected final ZmlTextCellEditor m_cellEditor;
 
   private String m_lastEdited;
 
@@ -79,62 +97,44 @@ public class ZmlEditingSupport extends EditingSupport
 
   private final ZmlLabelProvider m_labelProvider;
 
-  public ZmlEditingSupport( final ExtendedZmlTableColumn column, final ZmlLabelProvider labelProvider, final IZmlTableSelectionHandler handler )
+  private final IZmlTableFocusHandler m_handler;
+
+  public ZmlTableEditingSupport( final ExtendedZmlTableColumn column, final ZmlLabelProvider labelProvider, final IZmlTableFocusHandler handler )
   {
     super( column.getTable().getTableViewer() );
     m_column = column;
     m_labelProvider = labelProvider;
+    m_handler = handler;
     final TableViewer viewer = column.getTable().getTableViewer();
 
-    m_cellEditor = new TextCellEditor( (Composite) viewer.getControl(), SWT.NONE );
-    m_cellEditor.getControl().addKeyListener( new KeyAdapter()
+    m_cellEditor = new ZmlTextCellEditor( (Composite) viewer.getControl(), SWT.NONE );
+
+    m_cellEditor.getControl().addTraverseListener( new TraverseListener()
     {
-      /**
-       * @see java.awt.event.KeyAdapter#keyPressed(java.awt.event.KeyEvent)
-       */
       @Override
-      public void keyPressed( final KeyEvent e )
+      public void keyTraversed( final TraverseEvent e )
       {
-        if( SWT.ARROW_UP == e.keyCode )
+        if( e.detail == SWT.TRAVERSE_TAB_PREVIOUS )
         {
-          final IZmlTableCell cell = handler.getActiveCell();
-          if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
-            return;
-
-          final IZmlTableCell previous = cell.findPreviousCell();
-          update( previous );
+          movePrevious();
+          e.doit = false;
         }
-        else if( SWT.ARROW_DOWN == e.keyCode )
+        else if( e.detail == SWT.TRAVERSE_TAB_NEXT )
         {
-          final IZmlTableCell cell = handler.getActiveCell();
-          if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
-            return;
-
-          final IZmlTableCell next = cell.findNextCell();
-          update( next );
+          moveNext();
+          e.doit = false;
         }
-      }
+        else if( e.detail == SWT.TRAVERSE_ARROW_PREVIOUS && e.keyCode == SWT.ARROW_UP )
+        {
+          movePrevious();
+          e.doit = false;
+        }
+        else if( e.detail == SWT.TRAVERSE_ARROW_NEXT && e.keyCode == SWT.ARROW_DOWN )
+        {
+          moveNext();
+          e.doit = false;
+        }
 
-      private void update( final IZmlTableCell cell )
-      {
-        final ViewerCell viewerCell = handler.findViewerCell( cell );
-        if( org.kalypso.commons.java.lang.Objects.isNotNull( viewerCell ) )
-          handler.setFocusCell( viewerCell );
-
-        viewer.getControl().getParent().setFocus();
-        viewer.getControl().setFocus();
-
-// viewer.editElement( cell.getRow().getModelRow(), findIndex( cell ) );
-//
-// new UIJob( "" )
-// {
-// @Override
-// public IStatus runInUIThread( final IProgressMonitor monitor )
-// {
-// m_cellEditor.performSelectAll();
-// return Status.OK_STATUS;
-// }
-// }.schedule();
       }
     } );
 
@@ -146,6 +146,44 @@ public class ZmlEditingSupport extends EditingSupport
         m_cellEditor.dispose();
       }
     } );
+  }
+
+  protected void moveNext( )
+  {
+    final IZmlTableCell cell = m_handler.getFocusTableCell();
+    if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
+      return;
+
+    final IZmlTableCell next = cell.findNextCell();
+    update( next );
+  }
+
+  protected void movePrevious( )
+  {
+    final IZmlTableCell cell = m_handler.getFocusTableCell();
+    if( org.kalypso.commons.java.lang.Objects.isNull( cell ) )
+      return;
+
+    final IZmlTableCell previous = cell.findPreviousCell();
+    update( previous );
+  }
+
+  private void update( final IZmlTableCell cell )
+  {
+    m_cellEditor.stopEditing();
+
+    final Object element = cell.getViewerCell().getElement();
+
+    final StructuredSelection selection = (StructuredSelection) getViewer().getSelection();
+
+    if( !selection.toList().contains( element ) )
+      getViewer().setSelection( new StructuredSelection( element ), true );
+
+    // Set the focus cell after the selection is updated because else
+    // the cell is not scrolled into view
+    // if (focusCellManager != null) {
+    // focusCellManager.setFocusCell(focusCell);
+    // }
   }
 
   private void setValidator( )

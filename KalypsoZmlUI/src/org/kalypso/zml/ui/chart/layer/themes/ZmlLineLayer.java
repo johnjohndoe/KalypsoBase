@@ -40,13 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
-import java.util.ArrayList;
+import java.awt.geom.Rectangle2D;
 import java.util.Date;
-import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.DateRange;
@@ -59,8 +57,10 @@ import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
-import de.openali.odysseus.chart.ext.base.layer.ChartLayerUtils;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.figure.impl.ClipHelper;
+import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -68,8 +68,8 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.IStyleSetRefernceFilter;
-import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
+import de.openali.odysseus.chart.framework.util.resource.IPair;
 
 /**
  * @author Dirk Kuch
@@ -91,18 +91,21 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   /**
+   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#onObservationChanged()
+   */
+  @Override
+  public void onObservationChanged( )
+  {
+    getEventHandler().fireLayerContentChanged( this );
+  }
+
+  /**
    * @see de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer#createLegendEntries()
    */
   @Override
   public ILegendEntry[] createLegendEntries( )
   {
     return m_legend.createLegendEntries();
-  }
-
-  @Override
-  public void drawLine( final GC gc, final List<Point> path )
-  {
-    super.drawLine( gc, path );
   }
 
   /**
@@ -165,8 +168,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     if( observation == null )
       return m_labelDescriptor;
 
-    final String title = ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
-    return title;
+    return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
   }
 
   /**
@@ -175,48 +177,105 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public void paint( final GC gc )
   {
-    final IObservation observation = m_data.getObservation();
-    if( observation == null )
-      return;
-
-    final DateRange range = getRange();
-    final Rectangle oldClip = gc.getClipping();
     try
     {
-      setClip( gc, range );
-      drawLineTheme( gc, observation );
-// drawSelectionTheme();
+      final IPair<Number, Number>[] points = getFilteredPoints( null );
+      if( points.length == 1 )
+        paintSinglePoint( gc, points[0] );
+      else if( points.length > 1 )
+        paintPoints( gc, points );
     }
-    finally
+    catch( final SensorException e )
     {
-      gc.setClipping( oldClip );
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
   }
 
-  private void setClip( final GC gc, final DateRange range )
+  @SuppressWarnings("unchecked")
+  IPair<Number, Number>[] getFilteredPoints( final IDataRange<Number> domainIntervall ) throws SensorException
   {
-    if( range == null || range.getFrom() == null && range.getTo() == null )
+    final IObservation observation = m_data.getObservation();
+    if( observation == null )
+      return new IPair[0];
+
+    final LineLayerModelVisitor visitor = new LineLayerModelVisitor( this, getFilters(), domainIntervall );
+    observation.accept( visitor, null );
+    return visitor.getPoints();
+  }
+
+  @SuppressWarnings("unchecked")
+  private void paintSinglePoint( final GC gc, final IPair<Number, Number> point )
+  {
+    final IPointStyle pointStyle = getSinglePointStyle();
+    if( pointStyle == null )
       return;
 
-    final ICoordinateMapper mapper = getCoordinateMapper();
-    final Point screenSize = mapper.getScreenSize();
+    final Rectangle2D clip = getClip();
+    if( clip != null && !clip.contains( point.getDomain().doubleValue(), point.getTarget().doubleValue() ) )
+      return;
 
-    Date from = Objects.isNotNull( range.getFrom()) ? ChartLayerUtils.addTimezoneOffset(  range.getFrom()) : null;
-    Date to = Objects.isNotNull( range.getTo()) ? ChartLayerUtils.addTimezoneOffset(  range.getTo()) : null;
-    
-    final int fromScreen = getDomainScreen(from , 0 );
-    final int toScreen = getDomainScreen( to, screenSize.x );
+    final Point[] screenPoints = toScreen( point );
 
-    gc.setClipping( fromScreen, 0, toScreen - fromScreen, screenSize.y );
+    final PointFigure pf = getPointFigure();
+    pf.setStyle( pointStyle );
+    pf.setPoints( screenPoints );
+    pf.paint( gc );
   }
 
-  private int getDomainScreen( final Date domainValue, final int defaultValue )
+  private void paintPoints( final GC gc, final IPair<Number, Number>[] points )
+  {
+    final ClipHelper helper = new ClipHelper( getClip() );
+    final IPair<Number, Number>[][] clippedPoints = helper.clipAsLine( points );
+    for( final IPair<Number, Number>[] subPoints : clippedPoints )
+    {
+      final Point[] screenPoints = toScreen( subPoints );
+      paintFigures( gc, screenPoints );
+    }
+  }
+
+  private void paintFigures( final GC gc, final Point[] points )
+  {
+    final ILineStyle lineStyle = getLineStyle();
+    if( lineStyle != null )
+    {
+      final PolylineFigure lf = getPolylineFigure();
+      lf.setStyle( lineStyle );
+      lf.setPoints( points );
+      lf.paint( gc );
+    }
+
+    final IPointStyle pointStyle = getMyPointStyle();
+    if( pointStyle != null )
+    {
+      final PointFigure pf = getPointFigure();
+      pf.setStyle( pointStyle );
+      pf.setPoints( points );
+      pf.paint( gc );
+    }
+  }
+
+  Rectangle2D getClip( )
+  {
+    final DateRange range = getRange();
+    if( range == null || range.getFrom() == null && range.getTo() == null )
+      return null;
+
+    final Date from = Objects.isNotNull( range.getFrom() ) ? range.getFrom() : null;
+    final Date to = Objects.isNotNull( range.getTo() ) ? range.getTo() : null;
+
+    final Number fromScreen = getDomainNumeric( from, -Double.MAX_VALUE ).doubleValue();
+    final Number toScreen = getDomainNumeric( to, Double.MAX_VALUE ).doubleValue();
+
+    final double width = toScreen.doubleValue() - fromScreen.doubleValue();
+    return new Rectangle2D.Double( fromScreen.doubleValue(), -Double.MAX_VALUE, width, Double.MAX_VALUE );
+  }
+
+  private Number getDomainNumeric( final Date domainValue, final double defaultValue )
   {
     if( domainValue == null )
       return defaultValue;
 
-    final Point screen = getCoordinateMapper().numericToScreen( getRangeHandler().getDateDataOperator().logicalToNumeric( domainValue ), 0.0 );
-    return screen.x;
+    return getRangeHandler().getDateDataOperator().logicalToNumeric( domainValue );
   }
 
   private DateRange getRange( )
@@ -227,31 +286,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
     return request.getDateRange();
   }
-
-  private void drawLineTheme( final GC gc, final IObservation observation )
-  {
-    try
-    {
-      setLineThemeStyles();
-
-      final List<Point> path = new ArrayList<Point>();
-      observation.accept( new LineLayerModelVisitor( this, path, getFilters() ), null );
-
-      drawLine( gc, path );
-      drawPoints( gc, path );
-    }
-    catch( final SensorException e )
-    {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-  }
-
-// private void drawSelectionTheme( )
-// {
-// final de.openali.odysseus.chart.framework.model.mapper.IAxis domainAxis = getDomainAxis();
-// if( domainAxis.getSelection() == null )
-// return;
-// }
 
   /**
    * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setDataHandler(org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler)
@@ -274,26 +308,57 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     m_labelDescriptor = labelDescriptor;
   }
 
-  private void setLineThemeStyles( )
+  private IPointStyle getMyPointStyle( )
   {
     final IStyleSet styleSet = getStyleSet();
-    final int index = ZmlLayerHelper.getLayerIndex( getId() );
 
-    final StyleSetVisitor visitor = new StyleSetVisitor();
+    // FIXME: strange! we need better helper classes here...
+    final StyleSetVisitor visitor = new StyleSetVisitor( false );
 
-    final IPointStyle pointStyle = visitor.findReferences( styleSet, IPointStyle.class, new IStyleSetRefernceFilter()
+    return visitor.findReferences( styleSet, IPointStyle.class, new IStyleSetRefernceFilter()
     {
       @Override
       public boolean accept( final String reference )
       {
-        return !reference.toLowerCase().contains( "single" ); //$NON-NLS-1$
+        return !reference.toLowerCase().contains( "singlepoint" ); //$NON-NLS-1$
       }
     } );
-    final ILineStyle lineStyle = visitor.visit( styleSet, ILineStyle.class, index );
-    final ITextStyle textStyle = visitor.visit( styleSet, ITextStyle.class, index );
-
-    getPointFigure().setStyle( pointStyle );
-    getPolylineFigure().setStyle( lineStyle );
-    getTextFigure().setStyle( textStyle );
   }
+
+  private IPointStyle getSinglePointStyle( )
+  {
+    final IStyleSet styleSet = getStyleSet();
+
+    // FIXME: strange! we need better helper classes here...
+    final StyleSetVisitor visitor = new StyleSetVisitor( false );
+
+    return visitor.findReferences( styleSet, IPointStyle.class, new IStyleSetRefernceFilter()
+    {
+      @Override
+      public boolean accept( final String reference )
+      {
+        return reference.toLowerCase().contains( "singlepoint" ); //$NON-NLS-1$
+      }
+    } );
+  }
+
+  ILineStyle getLineStyle( )
+  {
+    final IStyleSet styleSet = getStyleSet();
+
+    // FIXME: strange! we need better helper classes here...
+    final int index = ZmlLayerHelper.getLayerIndex( getIdentifier() );
+    final StyleSetVisitor visitor = new StyleSetVisitor( false );
+    return visitor.visit( styleSet, ILineStyle.class, index );
+  }
+
+  private Point[] toScreen( final IPair<Number, Number>... points )
+  {
+    final ICoordinateMapper coordinateMapper = getCoordinateMapper();
+    final Point[] screenPoints = new Point[points.length];
+    for( int i = 0; i < screenPoints.length; i++ )
+      screenPoints[i] = coordinateMapper.numericToScreen( points[i].getDomain(), points[i].getTarget() );
+    return screenPoints;
+  }
+
 }

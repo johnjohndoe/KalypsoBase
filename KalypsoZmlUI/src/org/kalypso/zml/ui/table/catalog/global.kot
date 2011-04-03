@@ -22,6 +22,12 @@
       </baseStyle>
       <property name="textFormat">%.2f</property>
     </Style>
+    <Style id="wBaseDisabledCellStyle">
+      <baseStyle>
+        <reference>wBaseCellStyle</reference>
+      </baseStyle>
+      <property name="backgroundColor">EDEFF4</property>
+    </Style>
     <!-- base n cell table style -->
     <Style id="nBaseCellStyle">
       <baseStyle>
@@ -34,6 +40,12 @@
         <reference>nBaseCellStyle</reference>
       </baseStyle>
       <property name="textFormat">%.2f</property>
+    </Style>
+    <Style id="nBaseDisabledCellStyle">
+      <baseStyle>
+        <reference>nBaseCellStyle</reference>
+      </baseStyle>
+      <property name="backgroundColor">EDEFF4</property>
     </Style>
     <!-- base q cell table style -->
     <Style id="qBaseCellStyle">
@@ -48,6 +60,12 @@
       </baseStyle>
       <property name="textFormat">%.3f</property>
     </Style>
+    <Style id="qBaseDisabledCellStyle">
+      <baseStyle>
+        <reference>qBaseCellStyle</reference>
+      </baseStyle>
+      <property name="backgroundColor">EDEFF4</property>
+    </Style>
     <!-- derived value style -->
     <Style id="derivedValueCellStyle">
       <property name="backgroundColor">F8F3C0</property>
@@ -59,12 +77,25 @@
       </baseStyle>
       <property name="textFormat">%.3f</property>
     </Style>
+    <Style id="volumneBaseDisabledCellStyle">
+      <baseStyle>
+        <reference>volumeBaseCellStyle</reference>
+      </baseStyle>
+      <property name="backgroundColor">EDEFF4</property>
+    </Style>
+
     <!-- base w [m NN] style, Wasserstand [m NN] z.B. durch Umrechnung aus Volumen in Talsperre -->
     <Style id="wNNBaseCellStyle">
       <baseStyle>
         <reference>defaultCellStyle</reference>
       </baseStyle>
       <property name="textFormat">%.0f</property>
+    </Style>
+    <Style id="wNNDisabledBaseCellStyle">
+      <baseStyle>
+        <reference>wNNBaseCellStyle</reference>
+      </baseStyle>
+      <property name="backgroundColor">EDEFF4</property>
     </Style>
     <!-- base date cell table styles -->
     <Style id="dateCellStyle">
@@ -93,6 +124,10 @@
     <!-- rule - value user modified? -->
     <Style id="userModifiedStyle">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:user:modified</property>
+    </Style>
+    <!--  rule - info value -->
+     <Style id="infoStyle">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:info</property>
     </Style>
     <!-- rule - interpolated value? -->
     <Style id="interpolatedValueStyle">
@@ -194,6 +229,12 @@
     <Rule id="ruleUserModified" ruleReference="org.kalypso.zml.ui.core.rule.user.modified" setHeaderIcon="true">
       <styleReference>
         <reference>userModifiedStyle</reference>
+      </styleReference>
+      <label>Benutzereingabe(n)</label>
+    </Rule>
+    <Rule id="ruleInfo" ruleReference="org.kalypso.zml.ui.core.rule.info" setHeaderIcon="true">
+      <styleReference>
+        <reference>infoStyle</reference>
       </styleReference>
       <label>Benutzereingabe(n)</label>
     </Rule>
