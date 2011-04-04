@@ -94,6 +94,12 @@
    </command>
    <command
          categoryId="org.kalypso.zml.ui.table.commands.category"
+         defaultHandler="org.kalypso.zml.ui.table.commands.menu.adapt.ZmlCommandAdaptSelection"
+         id="org.kalypso.zml.ui.table.commands.value.adapt.selection"
+         name="Anschmiegen">
+   </command>
+   <command
+         categoryId="org.kalypso.zml.ui.table.commands.category"
          defaultHandler="org.kalypso.zml.ui.table.commands.menu.adjust.ZmlCommandAdjustSelection"
          id="org.kalypso.zml.ui.table.commands.value.adjust.selection"
          name="Anpassen">
