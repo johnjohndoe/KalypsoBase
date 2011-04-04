@@ -207,7 +207,7 @@ public class ZmlViewResolutionFilter extends ViewerFilter
   {
     final String type = getType( row );
     if( ITimeseriesConstants.TYPE_RAINFALL.equals( type ) )
-      m_offset = 1;
+      m_offset = 0;
     else
       m_offset -= m_offset % startHour - 1;
   }
