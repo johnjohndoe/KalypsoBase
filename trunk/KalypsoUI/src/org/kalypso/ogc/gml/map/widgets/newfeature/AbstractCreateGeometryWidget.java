@@ -170,10 +170,10 @@ public abstract class AbstractCreateGeometryWidget extends AbstractWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftClicked(java.awt.Point)
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftPressed(java.awt.Point)
    */
   @Override
-  public void leftClicked( final Point p )
+  public void leftPressed( final Point p )
   {
     if( m_builder == null )
       return;
