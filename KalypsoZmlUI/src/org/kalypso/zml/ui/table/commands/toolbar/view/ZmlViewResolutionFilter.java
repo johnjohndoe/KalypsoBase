@@ -47,6 +47,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
@@ -202,8 +203,23 @@ public class ZmlViewResolutionFilter extends ViewerFilter
     return m_stuetzstellenMode;
   }
 
-  public void resetOffset( final int startHour )
+  public void resetOffset( final IZmlModelRow row, final int startHour )
   {
-    m_offset -= m_offset % startHour - 1;
+    final String type = getType( row );
+    if( ITimeseriesConstants.TYPE_RAINFALL.equals( type ) )
+      m_offset = 1;
+    else
+      m_offset -= m_offset % startHour - 1;
+  }
+
+  private String getType( final IZmlModelRow row )
+  {
+    final IZmlValueReference[] references = row.getReferences();
+    for( final IZmlValueReference reference : references )
+    {
+      return reference.getColumn().getValueAxis().getType();
+    }
+
+    return null;
   }
 }
