@@ -263,4 +263,9 @@ public class XmlbeansParameterContainer implements IParameterContainer
 
     return keys.toArray( new String[] {} );
   }
+
+  public String[] keys( )
+  {
+    return m_parameters.keySet().toArray( new String[] {} );
+  }
 }
