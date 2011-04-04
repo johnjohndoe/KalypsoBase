@@ -84,7 +84,7 @@
          categoryId="org.kalypso.zml.ui.table.commands.category"
          defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandInterpolateValues"
          id="org.kalypso.zml.ui.table.commands.value.interpolate"
-         name="Werte interpolieren">
+         name="Lineare Interpolation">
    </command>
    <command
          categoryId="org.kalypso.zml.ui.table.commands.category"
