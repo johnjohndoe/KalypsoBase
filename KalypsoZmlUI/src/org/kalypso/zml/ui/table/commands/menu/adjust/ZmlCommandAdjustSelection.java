@@ -76,7 +76,7 @@ public class ZmlCommandAdjustSelection extends AbstractHandler
     final IZmlTableColumn column = selection.findActiveColumnByPosition();
     final IZmlTableCell[] selected = column.getSelectedCells();
     if( selected.length < 2 )
-      throw new ExecutionException( "Spline-Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
+      throw new ExecutionException( "'Anpassen' fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
     final ZmlAdjustSelectionDialog dialog = new ZmlAdjustSelectionDialog( shell, column );
