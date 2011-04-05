@@ -52,8 +52,6 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.TopologyException;
-import com.vividsolutions.jts.operation.valid.IsValidOp;
-import com.vividsolutions.jts.operation.valid.TopologyValidationError;
 
 import de.openali.odysseus.chart.framework.util.resource.IPair;
 import de.openali.odysseus.chart.framework.util.resource.Pair;
@@ -104,16 +102,18 @@ public class ClipHelper
 
     final LineString lineString = m_gf.createLineString( crds );
 
-    final IsValidOp clipIsValidOp = new IsValidOp( clipPolygon );
-    final IsValidOp lineIsValidOp = new IsValidOp( lineString );
+    // TODO: we still get validation errors here, as the clip-polygon has sometimes 0-width
+    // using a null-clip here does not solve problems however...
 
-    final TopologyValidationError clipError = clipIsValidOp.getValidationError();
-    if( clipError != null )
-      System.out.println( clipError );
-
-    final TopologyValidationError lineError = lineIsValidOp.getValidationError();
-    if( lineError != null )
-      System.out.println( lineError );
+// final IsValidOp clipIsValidOp = new IsValidOp( clipPolygon );
+// final IsValidOp lineIsValidOp = new IsValidOp( lineString );
+// final TopologyValidationError clipError = clipIsValidOp.getValidationError();
+// if( clipError != null )
+// System.out.println( clipError );
+//
+// final TopologyValidationError lineError = lineIsValidOp.getValidationError();
+// if( lineError != null )
+// System.out.println( lineError );
 
     try
     {
