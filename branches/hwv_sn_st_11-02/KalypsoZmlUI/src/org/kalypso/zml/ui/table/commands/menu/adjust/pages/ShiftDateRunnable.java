@@ -60,7 +60,7 @@ public class ShiftDateRunnable implements ICoreRunnableWithProgress
 
   private final IZmlTableCell[] m_cells;
 
-  public ShiftDateRunnable( final IZmlModelColumn column, final IZmlTableCell cells[], final Integer offset )
+  public ShiftDateRunnable( final IZmlModelColumn column, final IZmlTableCell[] cells, final Integer offset )
   {
     m_column = column;
     m_cells = cells;
