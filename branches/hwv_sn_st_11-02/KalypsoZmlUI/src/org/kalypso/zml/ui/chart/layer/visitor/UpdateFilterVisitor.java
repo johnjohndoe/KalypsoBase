@@ -42,12 +42,12 @@ package org.kalypso.zml.ui.chart.layer.visitor;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class UpdateFilterVisitor implements IChartLayerVisitor
+public class UpdateFilterVisitor extends AbstractChartLayerVisitor
 {
   private final IChartLayerFilter[] m_add;
 

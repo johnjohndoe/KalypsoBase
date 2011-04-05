@@ -44,12 +44,12 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class LegendChartLayersVisitor implements IChartLayerVisitor
+public class LegendChartLayersVisitor extends AbstractChartLayerVisitor
 {
   private final Set<IChartLayer> m_layers = new LinkedHashSet<IChartLayer>();
 

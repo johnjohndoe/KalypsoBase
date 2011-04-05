@@ -43,12 +43,12 @@ package org.kalypso.chart.ui.editor.chart.visitors;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractParameterVisitor implements IChartLayerVisitor
+public abstract class AbstractParameterVisitor extends AbstractChartLayerVisitor
 {
   private final String m_parameter;
 

@@ -45,12 +45,12 @@ import java.util.Set;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class EditableChartLayerVisitor implements IChartLayerVisitor
+public class EditableChartLayerVisitor extends AbstractChartLayerVisitor
 {
   private final Set<IEditableChartLayer> m_layers = new LinkedHashSet<IEditableChartLayer>();
 
