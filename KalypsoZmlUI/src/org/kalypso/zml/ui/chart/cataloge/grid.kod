@@ -11,6 +11,7 @@
         <LineJoin>ROUND</LineJoin>
         <MiterLimit>1</MiterLimit>
       </LineStyle>
+      <!-- THIS IS THE STLYE OF THE BORDER... (even if it is a point style) -->
       <PointStyle role="gridPointStyle">
             <Stroke>
               <Width>2</Width>
