@@ -5,6 +5,7 @@ import java.text.Format;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
@@ -127,8 +128,8 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
   protected Point getTextExtent( final GC gc, final String value, final ITextStyle style )
   {
     style.apply( gc );
-    final Point point = gc.textExtent( value == null ? "" : value );
-    return point;
+
+    return gc.textExtent( value == null ? StringUtils.EMPTY : value );
   }
 
   public Insets getTickLabelInsets( )

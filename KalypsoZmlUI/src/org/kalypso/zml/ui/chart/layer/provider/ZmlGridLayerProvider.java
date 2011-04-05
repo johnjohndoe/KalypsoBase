@@ -73,8 +73,7 @@ public class ZmlGridLayerProvider extends AbstractLayerProvider implements ILaye
       final ILineStyle lineStyle = visitor.visit( styleSet, ILineStyle.class, 0 );
       final IPointStyle pointStyle = visitor.visit( styleSet, IPointStyle.class, 0 );
 
-      final DefaultTickRasterLayer tickRasterLayer = new DefaultTickRasterLayer( this, lineStyle, pointStyle );
-      return tickRasterLayer;
+      return new DefaultTickRasterLayer( this, lineStyle, pointStyle );
     }
     catch( final Throwable t )
     {
