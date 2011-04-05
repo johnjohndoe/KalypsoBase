@@ -11,7 +11,6 @@ public class DataRange<T> implements IDataRange<T>
 
   private T m_max;
 
-  @SuppressWarnings({ "cast", "unchecked" })
   public DataRange( final T min, final T max )
   {
     if( min instanceof Number && max instanceof Number )
@@ -27,14 +26,14 @@ public class DataRange<T> implements IDataRange<T>
         // falls != 0 werden einfach 10% addiert oder subtrahiert
         if( doubleValue != 0 )
         {
-          m_min = (T) ((Number) new Double( doubleValue - doubleValue * 0.1 ));
-          m_max = (T) ((Number) new Double( doubleValue + doubleValue * 0.1 ));
+          m_min = (T) new Double( doubleValue - doubleValue * 0.1 );
+          m_max = (T) new Double( doubleValue + doubleValue * 0.1 );
         }
         // falls == 0 wird 1 addiert oder subtrahiert
         else
         {
-          m_min = (T) ((Number) new Double( doubleValue - 1 ));
-          m_max = (T) ((Number) new Double( doubleValue + 1 ));
+          m_min = (T) new Double( doubleValue - 1 );
+          m_max = (T) new Double( doubleValue + 1 );
         }
 
       }
@@ -51,6 +50,7 @@ public class DataRange<T> implements IDataRange<T>
     }
     else if( min instanceof Comparable && max instanceof Comparable && (min.getClass().isInstance( max ) || max.getClass().isInstance( min )) )
     {
+      // FIXME: this is nonsense! REMOVE
       final Comparable<Comparable< ? >> minComp = (Comparable<Comparable< ? >>) min;
       final Comparable< ? > maxComp = (Comparable< ? >) max;
       if( minComp.compareTo( maxComp ) == 0 )
@@ -71,8 +71,8 @@ public class DataRange<T> implements IDataRange<T>
       }
     }
     /*
-     * das wï¿½re dann der ungï¿½nstigste Fall: nicht vergleichbar und nicht numerisch TODO: ï¿½berlegen, ob dieser Fall
-     * ï¿½berhaupt zugelassen werden soll; alternativ sollte eine InvalidRangeIntervalObjectsException
+     * das wäre dann der ungünstigste Fall: nicht vergleichbar und nicht numerisch TODO: überlegen, ob dieser Fall
+     * überhaupt zugelassen werden soll; alternativ sollte eine InvalidRangeIntervalObjectsException
      */
     else
     {
@@ -97,5 +97,14 @@ public class DataRange<T> implements IDataRange<T>
   public T getMax( )
   {
     return m_max;
+  }
+
+  /**
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "[%s,%s]", m_min, m_max );
   }
 }
