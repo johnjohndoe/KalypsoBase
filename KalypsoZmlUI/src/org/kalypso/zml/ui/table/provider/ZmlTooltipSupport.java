@@ -158,13 +158,13 @@ public class ZmlTooltipSupport
 
     try
     {
-      final Object value = reference.getValue();
+      final Number value = reference.getValue();
       final Integer status = reference.getStatus();
       final String source = reference.getDataSource();
 
       final String href = reference.getHref();
 
-      if( value instanceof Number && !aggregated )
+      if( !aggregated )
         buffer.append( buildInfoText( "Wert", value.toString() ) );
 
       if( Objects.isNotNull( status ) && !aggregated )

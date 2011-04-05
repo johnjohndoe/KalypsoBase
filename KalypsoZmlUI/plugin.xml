@@ -272,6 +272,10 @@
           commandId="org.kalypso.zml.ui.table.commands.toolbar.tooltip"
           icon="icons/table/tooltip.png">
     </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.value.delete.stuetzstellen"
+          icon="icons/table/delete_stuetzstelle.png">
+    </image>
  </extension>
  <extension
        point="org.eclipse.core.expressions.propertyTesters">
