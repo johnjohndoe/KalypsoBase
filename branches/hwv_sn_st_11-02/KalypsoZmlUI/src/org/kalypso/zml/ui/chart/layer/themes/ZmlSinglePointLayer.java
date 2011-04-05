@@ -162,6 +162,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
       getPointFigure().setPoints( new Point[] { centerPoint } );
 
       getPointFigure().paint( gc );
+
       if( descriptor.isShowLabel() )
       {
         final TextFigure textFigure = new TextFigure();
@@ -169,7 +170,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
         textFigure.setText( descriptor.getLabel() );
 
         // TODO: getPosition according to center point
-        textFigure.setPoints( new Point[] { centerPoint } );
+        textFigure.setPoint( centerPoint );
         textFigure.paint( gc );
       }
     }
@@ -217,6 +218,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
       final IPointStyle pointStyle = visitor.visit( styleSet, IPointStyle.class, 0 );
       final ITextStyle textStyle = visitor.visit( styleSet, ITextStyle.class, 0 );
 
+      // FIXME: label not implemented (always ""), but why a label at all? We should remove that code.
       final ZmlSinglePointBean bean = new ZmlSinglePointBean( "", new Pair<Number, Number>( position.getTime(), value ), new DateRange( start, end ), pointStyle, textStyle, false );
       m_descriptors = new ZmlSinglePointBean[] { bean };
     }
@@ -245,5 +247,4 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
   {
     // not needed
   }
-
 }

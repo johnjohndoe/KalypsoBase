@@ -147,7 +147,7 @@ public class StyleTest implements PaintListener
 
       ts.setAlpha( alpha );
       tf.setStyle( ts );
-      tf.setPoints( new Point[] { new Point( p.x, p.y + 20 ) } );
+      tf.setPoint( new Point( p.x, p.y + 20 ) );
       tf.setText( "Text " + i );
       tf.paint( gc );
 
