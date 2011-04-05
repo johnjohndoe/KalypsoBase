@@ -51,6 +51,9 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.TopologyException;
+import com.vividsolutions.jts.operation.valid.IsValidOp;
+import com.vividsolutions.jts.operation.valid.TopologyValidationError;
 
 import de.openali.odysseus.chart.framework.util.resource.IPair;
 import de.openali.odysseus.chart.framework.util.resource.Pair;
@@ -101,11 +104,31 @@ public class ClipHelper
 
     final LineString lineString = m_gf.createLineString( crds );
 
-    final Geometry clippedPoints = lineString.intersection( clipPolygon );
+    final IsValidOp clipIsValidOp = new IsValidOp( clipPolygon );
+    final IsValidOp lineIsValidOp = new IsValidOp( lineString );
 
-    final Collection<IPair<Number, Number>[]> collector = new ArrayList<IPair<Number, Number>[]>();
-    drawGeometry( collector, clippedPoints );
-    return collector.toArray( new IPair[collector.size()][] );
+    final TopologyValidationError clipError = clipIsValidOp.getValidationError();
+    if( clipError != null )
+      System.out.println( clipError );
+
+    final TopologyValidationError lineError = lineIsValidOp.getValidationError();
+    if( lineError != null )
+      System.out.println( lineError );
+
+    try
+    {
+      final Geometry clippedPoints = lineString.intersection( clipPolygon );
+
+      final Collection<IPair<Number, Number>[]> collector = new ArrayList<IPair<Number, Number>[]>();
+      drawGeometry( collector, clippedPoints );
+      return collector.toArray( new IPair[collector.size()][] );
+    }
+    catch( final TopologyException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return new IPair[][] { points };
+    }
   }
 
   @SuppressWarnings("unchecked")
@@ -148,7 +171,7 @@ public class ClipHelper
     final double minX = m_clipRect.getMinX();
     final double minY = m_clipRect.getMinY();
     final double maxX = m_clipRect.getMaxX();
-    final double maxY = m_clipRect.getMaxX();
+    final double maxY = m_clipRect.getMaxY();
 
     final Coordinate[] clipShellPoints = new Coordinate[5];
     clipShellPoints[0] = new Coordinate( minX, minY );

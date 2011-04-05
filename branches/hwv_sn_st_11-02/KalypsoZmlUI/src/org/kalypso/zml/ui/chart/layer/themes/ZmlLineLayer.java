@@ -263,14 +263,23 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     final Date from = Objects.isNotNull( range.getFrom() ) ? range.getFrom() : null;
     final Date to = Objects.isNotNull( range.getTo() ) ? range.getTo() : null;
 
-    final Number fromScreen = getDomainNumeric( from, -Double.MAX_VALUE ).doubleValue();
-    final Number toScreen = getDomainNumeric( to, Double.MAX_VALUE ).doubleValue();
+    // REMARK: using Long.MAX_VALUE instead of Double.MAX_VALUE, else we might
+    // get problems with JTS-intersection later
+    final Number defaultDateMin = -Long.MAX_VALUE;
+    final Number defaultDateMax = Long.MAX_VALUE;
+    final double domainMin = getDomainNumeric( from, defaultDateMin ).doubleValue();
+    final double domainMax = getDomainNumeric( to, defaultDateMax ).doubleValue();
 
-    final double width = toScreen.doubleValue() - fromScreen.doubleValue();
-    return new Rectangle2D.Double( fromScreen.doubleValue(), -Double.MAX_VALUE, width, Double.MAX_VALUE );
+    final double targetMin = -Long.MAX_VALUE;
+    final double targetMax = Long.MAX_VALUE;
+
+    final double width = domainMax - domainMin;
+    final double height = targetMax - targetMin;
+
+    return new Rectangle2D.Double( domainMin, targetMin, width, height );
   }
 
-  private Number getDomainNumeric( final Date domainValue, final double defaultValue )
+  private Number getDomainNumeric( final Date domainValue, final Number defaultValue )
   {
     if( domainValue == null )
       return defaultValue;
