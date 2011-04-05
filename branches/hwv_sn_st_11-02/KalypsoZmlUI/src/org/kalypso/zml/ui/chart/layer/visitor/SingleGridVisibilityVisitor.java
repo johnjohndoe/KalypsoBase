@@ -95,9 +95,6 @@ public class SingleGridVisibilityVisitor extends AbstractChartLayerVisitor
     if( zmlLayer == null )
       return false;
 
-    if( !zmlLayer.isVisible() )
-      return false;
-
     final IZmlLayerDataHandler handler = zmlLayer.getDataHandler();
     if( Objects.isNull( handler.getObservation() ) )
       return false;
@@ -110,8 +107,12 @@ public class SingleGridVisibilityVisitor extends AbstractChartLayerVisitor
     final IChartLayer[] layers = plainLayer.getLayerManager().getLayers();
     for( final IChartLayer layer : layers )
     {
+      if( !layer.isVisible() )
+        continue;
+
       if( layer instanceof IZmlLayer )
         return (IZmlLayer) layer;
+
     }
 
     return null;
