@@ -279,7 +279,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       m_updateJob.cancel();
 
     m_updateJob = new ZmlTableUiUpdateJob( this );
-    m_updateJob.schedule( 50 );
+    m_updateJob.schedule( 100 );
 
   }
 
