@@ -41,6 +41,8 @@
 package org.kalypso.zml.ui.chart.layer.commands;
 
 import org.kalypso.chart.ui.editor.commandhandler.ChangeVisibilityCommandHandler;
+import org.kalypso.zml.ui.chart.layer.visitor.ForecastLayerChartModelVisitor;
+import org.kalypso.zml.ui.chart.layer.visitor.NoDataLayerVisibilityVisitor;
 import org.kalypso.zml.ui.chart.layer.visitor.SingleGridVisibilityVisitor;
 
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -58,6 +60,8 @@ public class ZmlChangeVisibilityCommandHandler extends ChangeVisibilityCommandHa
   @Override
   protected void callAdditionalVisitors( final ILayerManager layerManager )
   {
+    layerManager.accept( new ForecastLayerChartModelVisitor() );
     layerManager.accept( new SingleGridVisibilityVisitor() );
+    layerManager.accept( new NoDataLayerVisibilityVisitor() );
   }
 }
