@@ -83,8 +83,6 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
  */
 public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 {
-// private static final String GLOBAL_ALARMSTUFEN_KOD = "urn:org:kalypso:zml:ui:diagramm:alarmstufen";
-
   private ZmlConstantLineBean[] m_descriptors = new ZmlConstantLineBean[] {};
 
   private boolean m_calculateRange = false;
@@ -226,13 +224,16 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     final ITextStyle textStyle = descriptor.getTextStyle();
     final String text = descriptor.getLabel();
 
+    // Needs to apply style here, else the extent is not correctly calculated
+    textStyle.apply( gc );
     final Point extent = gc.textExtent( text );
+
+    final TextFigure textFigure = new TextFigure();
+    textFigure.setStyle( textStyle );
 
     // FIXME: choose text position on line depending on alignment set in text-style
     if( canDrawLabel( screens, screenValue, extent.y ) )
     {
-      final TextFigure textFigure = new TextFigure();
-      textFigure.setStyle( textStyle );
       textFigure.setText( text );
 
       // final ALIGNMENT alignment = textStyle.getAlignment();
@@ -240,24 +241,25 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
       // xml-element
       final ALIGNMENT alignment = ALIGNMENT.RIGHT;
       final int left = calculateLeftPosition( extent, screenRect, alignment );
-      final int top = screenValue - extent.y / 2 - lineStyle.getWidth();
+      final int top = (int) (screenValue - extent.y / 2f - lineStyle.getWidth());
 
-      textFigure.setPoints( new Point[] { new Point( left, top ) } );
+      textFigure.setPoint( new Point( left, top ) );
       textFigure.paint( gc );
     }
-
-    System.out.println();
   }
 
   private int calculateLeftPosition( final Point extent, final Rectangle screenRect, final ALIGNMENT alignment )
   {
     // TODO: we would like to configure some kind of buffer/insets
 
+    // FIXME: get insets from outside for all directions
+    final int insetsRight = 7;
+
     switch( alignment )
     {
       case LEFT:
         // FIXME: check if the screen rect is correctly set here -> is the width of the axis an issue?
-        return screenRect.x + 12;
+        return screenRect.x;
 
       case CENTER:
         return screenRect.x + (int) (screenRect.width / 2.0 - extent.x / 2.0);
@@ -265,7 +267,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
       case RIGHT:
         // fall through
       default:
-        return screenRect.x + screenRect.width - extent.x - 1;
+        return screenRect.x + screenRect.width - extent.x - insetsRight;
     }
   }
 
@@ -330,12 +332,6 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 
     final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, url, getDataHandler().getTargetAxisId() );
     return provider.getBoundaries();
-
-// final ICatalog baseCatalog = KalypsoCorePlugin.getDefault().getCatalogManager().getBaseCatalog();
-// final String uri = baseCatalog.resolve( GLOBAL_ALARMSTUFEN_KOD, GLOBAL_ALARMSTUFEN_KOD );
-//
-// final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, new URL( uri ) );
-// return provider.getBoundaries();
   }
 
   /**

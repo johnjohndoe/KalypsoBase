@@ -48,6 +48,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
@@ -95,29 +96,34 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
   @Override
   public void paint( final GC gc )
   {
-    final IAxis domAxis = getDomainAxis();
-    final IAxis tarAxis = getTargetAxis();
-    if( !domAxis.isVisible() || !tarAxis.isVisible() )
+    final IAxis targetAxis = getTargetAxis();
+    final IAxis domainAxis = getDomainAxis();
+
+    if( !domainAxis.isVisible() || !targetAxis.isVisible() )
       return;
 
-    final Number[] domTicks = domAxis.getRenderer().getTicks( getDomainAxis(), gc );
-    final Number[] valTicks = tarAxis.getRenderer().getTicks( getTargetAxis(), gc );
+    final IAxisRenderer domainRenderer = domainAxis.getRenderer();
+    final IAxisRenderer targetRenderer = targetAxis.getRenderer();
+
+    final Number[] domTicks = domainRenderer.getTicks( domainAxis, gc );
+
+    final Number[] valTicks = targetRenderer.getTicks( targetAxis, gc );
 
     final int width = gc.getClipping().width;
     final int heigth = gc.getClipping().height;
 
     for( final Number domTick : domTicks )
     {
-      final Point p1 = new Point( getDomainAxis().numericToScreen( domTick ), 0 );
-      final Point p2 = new Point( getDomainAxis().numericToScreen( domTick ), heigth );
+      final Point p1 = new Point( domainAxis.numericToScreen( domTick ), 0 );
+      final Point p2 = new Point( domainAxis.numericToScreen( domTick ), heigth );
 
       drawLine( gc, p1, p2 );
     }
 
     for( final Number valTick : valTicks )
     {
-      final Point p1 = new Point( 0, getTargetAxis().numericToScreen( valTick ) );
-      final Point p2 = new Point( width, getTargetAxis().numericToScreen( valTick ) );
+      final Point p1 = new Point( 0, targetAxis.numericToScreen( valTick ) );
+      final Point p2 = new Point( width, targetAxis.numericToScreen( valTick ) );
 
       drawLine( gc, p1, p2 );
     }
