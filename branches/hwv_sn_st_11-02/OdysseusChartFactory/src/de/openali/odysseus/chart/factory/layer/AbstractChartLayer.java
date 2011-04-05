@@ -20,7 +20,6 @@ import com.google.common.base.Strings;
 import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.LayerEventHandler;
@@ -229,27 +228,9 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public IDataRange<Number> getDomainRange( )
   {
-    Double min = null;
-    Double max = null;
-    for( final IChartLayer layer : getLayerManager().getLayers() )
-    {
-
-      final IDataRange<Number> dr = layer.getDomainRange();
-      if( dr != null )
-      {
-        if( max == null )
-          max = dr.getMax().doubleValue();
-        else
-          max = Math.max( max, dr.getMax().doubleValue() );
-        if( min == null )
-          min = dr.getMin().doubleValue();
-        else
-          min = Math.min( min, dr.getMin().doubleValue() );
-      }
-    }
-    if( min == null || max == null )
-      return null;
-    return new DataRange<Number>( min, max );
+    final LayerDomainRangeVisitor rangeVisitor = new LayerDomainRangeVisitor();
+    getLayerManager().accept( rangeVisitor );
+    return rangeVisitor.getRange();
   }
 
   public LayerEventHandler getEventHandler( )
@@ -307,26 +288,9 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange<Number> intervall )
   {
-    Double min = null;
-    Double max = null;
-    for( final IChartLayer layer : getLayerManager().getLayers() )
-    {
-      final IDataRange<Number> dr = layer.getTargetRange( null );
-      if( dr != null )
-      {
-        if( max == null )
-          max = dr.getMax().doubleValue();
-        else
-          max = Math.max( max, dr.getMax().doubleValue() );
-        if( min == null )
-          min = dr.getMin().doubleValue();
-        else
-          min = Math.min( min, dr.getMin().doubleValue() );
-      }
-    }
-    if( min == null || max == null )
-      return null;
-    return new DataRange<Number>( min, max );
+    final LayerTargetRangeVisitor rangeVisitor = new LayerTargetRangeVisitor();
+    getLayerManager().accept( rangeVisitor );
+    return rangeVisitor.getRange();
   }
 
   /**
