@@ -75,7 +75,7 @@ public class EnhancedTextBox<T> extends AbstractEnhancedWidget<T>
   @Override
   protected void initWidget( final FormToolkit toolkit )
   {
-    m_text = toolkit.createText( this, "", SWT.RIGHT | SWT.BORDER );
+    m_text = toolkit.createText( this, "", SWT.RIGHT | SWT.BORDER ); //$NON-NLS-1$
     m_text.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
   }
 

@@ -42,14 +42,12 @@ package org.kalypso.zml.ui.table.commands.menu.adjust;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
@@ -58,14 +56,11 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 public class ZmlCommandAdjustSelection extends AbstractHandler
 {
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
     final IZmlTableSelectionHandler selection = table.getSelectionHandler();
     final IZmlTableColumn column = selection.findActiveColumnByPosition();
-    final IZmlTableCell[] selected = column.getSelectedCells();
-    if( selected.length < 2 )
-      throw new ExecutionException( "'Anpassen' fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
     final ZmlAdjustSelectionDialog dialog = new ZmlAdjustSelectionDialog( shell, column );
