@@ -44,6 +44,7 @@ import java.util.Date;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
@@ -86,11 +87,9 @@ public class ZmlMetadataDaterangeInstruction extends AbstractZmlRuleInstructionT
     if( from == null || to == null )
       return false;
 
-    final Object objDate = reference.getIndexValue();
-    if( !(objDate instanceof Date) )
+    final Date referenceDate = reference.getIndexValue();
+    if( Objects.isNull( referenceDate ) )
       return false;
-
-    final Date referenceDate = (Date) objDate;
 
     final long diffFrom = from.getTime() - referenceDate.getTime();
     if( diffFrom > 0 )
