@@ -122,11 +122,6 @@ public class TextStyle extends AbstractStyle implements ITextStyle
     return new FontData( m_family, m_size, m_style.toSWT() | m_weight.toSWT() );
   }
 
-  @Deprecated
-  public void dispose( )
-  {
-  }
-
   /**
    * @see de.openali.odysseus.chart.framework.model.style.ITextStyle#copy()
    */
