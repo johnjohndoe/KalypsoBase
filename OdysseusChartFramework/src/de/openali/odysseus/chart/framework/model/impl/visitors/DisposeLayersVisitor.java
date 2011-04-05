@@ -41,12 +41,12 @@
 package de.openali.odysseus.chart.framework.model.impl.visitors;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class DisposeLayersVisitor implements IChartLayerVisitor
+public class DisposeLayersVisitor extends AbstractChartLayerVisitor
 {
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)

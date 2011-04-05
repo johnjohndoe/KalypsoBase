@@ -1081,7 +1081,7 @@
             <Parameter name="hideOnMultiSelect" value="false" />
           </Parameters>
         </Provider>
-        <Title>Vorhersagezeitraum</Title>
+        <Title>Selektion</Title>
         <Description />
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />

@@ -115,6 +115,11 @@ public class UpdateChartSelectionListener implements ISelectionChangedListener
 
         layer.getLayerManager().accept( this );
       }
+
+      @Override
+      public void doFinialize( )
+      {
+      }
     } );
 
   }
@@ -134,6 +139,11 @@ public class UpdateChartSelectionListener implements ISelectionChangedListener
 
         layer.getLayerManager().accept( this );
       }
+
+      @Override
+      public void doFinialize( )
+      {
+      }
     } );
   }
 
@@ -151,6 +161,11 @@ public class UpdateChartSelectionListener implements ISelectionChangedListener
         }
 
         layer.getLayerManager().accept( this );
+      }
+
+      @Override
+      public void doFinialize( )
+      {
       }
     } );
   }

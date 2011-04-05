@@ -48,14 +48,14 @@ import de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer;
 import de.openali.odysseus.chart.factory.layer.Layers;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * @author Dirk Kuch
  */
-public class SingleGridVisibilityVisitor implements IChartLayerVisitor
+public class SingleGridVisibilityVisitor extends AbstractChartLayerVisitor
 {
   private boolean m_visibility = true;
 
@@ -93,6 +93,9 @@ public class SingleGridVisibilityVisitor implements IChartLayerVisitor
     final ILayerContainer plainLayer = layer.getParent();
     final IZmlLayer zmlLayer = findZmlLayer( plainLayer );
     if( zmlLayer == null )
+      return false;
+
+    if( !zmlLayer.isVisible() )
       return false;
 
     final IZmlLayerDataHandler handler = zmlLayer.getDataHandler();

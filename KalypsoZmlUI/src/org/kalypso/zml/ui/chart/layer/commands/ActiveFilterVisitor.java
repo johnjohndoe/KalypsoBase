@@ -44,12 +44,12 @@ import org.kalypso.commons.exception.CancelVisitorException;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class ActiveFilterVisitor implements IChartLayerVisitor
+public class ActiveFilterVisitor extends AbstractChartLayerVisitor
 {
 
   private final String m_filterEnabled;
