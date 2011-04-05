@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.IChartModelState;
 import de.openali.odysseus.chart.framework.model.impl.ChartModelState;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
@@ -134,7 +135,8 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
       return;
 
     final IChartModelState state = new ChartModelState();
-    state.storeState( m_model );
+    final IChartModel chartModel = getChartModel();
+    state.storeState( chartModel );
     if( m_profilChartModel != null )
       m_profilChartModel.dispose();
 
