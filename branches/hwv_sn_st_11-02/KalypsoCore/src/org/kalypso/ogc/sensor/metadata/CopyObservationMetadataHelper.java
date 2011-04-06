@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 import org.kalypso.repository.utils.RepositoryItems;
@@ -118,11 +119,11 @@ public class CopyObservationMetadataHelper extends MetadataHelper
   public static DateRange getSourceDateRange( final MetadataList mdl, final String baseItem )
   {
     final Integer index = findCopyObservationIndex( mdl, baseItem );
-    if( index == null )
-    {
-      /** fallback */
+
+    /** fallback */
+    if( Objects.isNull( index ) )
       return getDefaultSourceDateRange( mdl );
-    }
+
     final String from = getCountedHeaderItem( MD_TIME_SERIES_SRC_DATE_RANGE_FROM, index );
     final String to = getCountedHeaderItem( MD_TIME_SERIES_SRC_DATE_RANGE_TO, index );
 

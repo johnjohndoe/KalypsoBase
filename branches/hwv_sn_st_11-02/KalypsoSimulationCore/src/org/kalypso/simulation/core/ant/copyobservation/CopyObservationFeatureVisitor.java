@@ -110,7 +110,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       final URL targetLocation = UrlResolverSingleton.getDefault().resolveURL( m_target.getContext(), targetHref );
       final File targetFile = getTargetFile( targetLocation );
 
-      // FIXME: check if this really works with the metadata + why do we need an extra call to CopyObservationHelper
+      // FIXME: check if this really works with the meta data + why do we need an extra call to CopyObservationHelper
       // later?!
       final MetadataList sourceMetadata = MergedObservation.getMetaData( sources );
       // The MergedObservation than should be responsible to set the sources into this metadata

@@ -181,10 +181,16 @@ public class ZmlDataValueReference implements IZmlValueReference
     final IObservation observation = m_column.getObservation();
     final String href = observation.getHref();
 
-    final IFile resource = ResourceUtilities.findFileFromPath( new Path( href ) );
-    if( resource != null )
-      return resource.getProjectRelativePath().toOSString();
+    try
+    {
+      final IFile resource = ResourceUtilities.findFileFromPath( new Path( href ) );
+      if( resource != null )
+        return resource.getProjectRelativePath().toOSString();
+    }
+    catch( final Throwable t )
+    {
 
+    }
     return href;
   }
 

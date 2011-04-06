@@ -49,6 +49,8 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.impl.DefaultAxis;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 
 /**
@@ -263,5 +265,10 @@ public final class DataSourceHelper
     final IAxis[] axes = model.getAxes();
 
     return AxisUtils.findDataSourceAxis( axes ) != null;
+  }
+
+  public static IAxis createSourceAxis( )
+  {
+    return new DefaultAxis( ITimeseriesConstants.TYPE_DATA_SRC, ITimeseriesConstants.TYPE_DATA_SRC, StringUtils.EMPTY, Integer.class, false );
   }
 }
