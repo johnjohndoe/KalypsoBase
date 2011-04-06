@@ -217,7 +217,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ShiftDateRunnable( getColumn().getModelColumn(), getColumn().getSelectedCells(), m_offset );
+    return new ShiftDateRunnable( getColumn().getModelColumn(), getColumn().getSelectedCells(), getMinutes() );
   }
 
   /**
@@ -226,11 +226,18 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
   @Override
   public boolean isValid( )
   {
+    final int minutes = getMinutes();
+
+    return minutes % m_base == 0;
+  }
+
+  private int getMinutes( )
+  {
     int minutes = m_minutes;
     minutes += m_hours * 60;
     minutes += m_days * 60 * 24;
 
-    return minutes % m_base == 0;
+    return minutes;
   }
 
 }
