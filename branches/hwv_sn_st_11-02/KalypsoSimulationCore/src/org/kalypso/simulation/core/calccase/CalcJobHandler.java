@@ -204,6 +204,10 @@ public class CalcJobHandler
         }
       }
     }
+    catch( final CoreException e )
+    {
+      throw e;
+    }
     catch( final Throwable e )
     {
       e.printStackTrace();
