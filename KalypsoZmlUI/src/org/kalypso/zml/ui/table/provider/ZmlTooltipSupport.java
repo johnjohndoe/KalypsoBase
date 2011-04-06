@@ -171,10 +171,11 @@ public class ZmlTooltipSupport
         buffer.append( buildInfoText( "Status", getStatus( status ) ) );
 
       if( Objects.isNotNull( source ) )
-        buffer.append( buildInfoText( "Modellquelle", source ) );
+        buffer.append( buildInfoText( "Wert-Quelle", source ) );
 
       if( Objects.isNotNull( href ) )
-        buffer.append( buildInfoText( "Lokale Quelle", href ) );
+        buffer.append( buildInfoText( "Daten-Quelle", href ) );
+
     }
     catch( final SensorException e )
     {

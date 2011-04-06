@@ -186,6 +186,9 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
   private IExtendedZmlTableColumn findColumn( final Point point )
   {
+    if( Objects.isNull( point ) )
+      return null;
+
     final int columnIndex = findColumnIndex( point.x );
     if( columnIndex == -1 )
       return null;
