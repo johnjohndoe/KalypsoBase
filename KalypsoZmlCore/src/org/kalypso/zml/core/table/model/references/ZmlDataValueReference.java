@@ -189,8 +189,8 @@ public class ZmlDataValueReference implements IZmlValueReference
     }
     catch( final Throwable t )
     {
-
     }
+
     return href;
   }
 
