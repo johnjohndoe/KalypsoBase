@@ -670,19 +670,20 @@
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <!-- V styles (line and point) -->
+      <!-- erste Farbe umgestellt von einem braun Ton BDAB7A auf echtes Blau 0000FF - wegen Saale -->
       <LineStyle role="v_line_0">
         <Width>2</Width>
-        <LineColor>BDAB7A</LineColor>
+        <LineColor>0000FF</LineColor>
       </LineStyle>
       <PointStyle role="v_singlePoint_0">
         <Width>10</Width>
         <Height>10</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
-          <LineColor>BDAB7A</LineColor>
+          <LineColor>0000FF</LineColor>
         </Stroke>
         <FillColor>
-          <Color>BDAB7A</Color>
+          <Color>0000FF</Color>
         </FillColor>
       </PointStyle>
       <PointStyle role="v_point_0">
@@ -690,10 +691,10 @@
         <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
-          <LineColor>BDAB7A</LineColor>
+          <LineColor>0000FF</LineColor>
         </Stroke>
         <FillColor>
-          <Color>BDAB7A</Color>
+          <Color>0000FF</Color>
         </FillColor>
       </PointStyle>
       <LineStyle role="v_line_1">
@@ -1161,7 +1162,7 @@
         <PreferredAdjustment before="0" range="100" after="0" />
         <RendererRef ref="DateAxisRenderer" />
         <!-- <AxisNumberRangeRestriction minRange="86400000" /> -->
-        <AxisNumberRangeRestriction minRange="1000" /> 
+        <AxisNumberRangeRestriction minRange="1000" />
       </Axis>
       <ScreenAxis id="screenAxisX">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
