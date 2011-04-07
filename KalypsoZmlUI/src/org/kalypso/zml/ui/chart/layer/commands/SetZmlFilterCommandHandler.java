@@ -90,8 +90,6 @@ public class SetZmlFilterCommandHandler extends AbstractHandler implements IElem
     final IChartLayerFilter[] remove = new IChartLayerFilter[] { OdysseusChartFramework.getDefault().findFilter( getFilter( !enabled, event ) ) };
     layerManager.accept( new UpdateFilterVisitor( add, remove ) );
 
-    model.autoscale( new de.openali.odysseus.chart.framework.model.mapper.IAxis[] {} );
-
     return Status.OK_STATUS;
   }
 
