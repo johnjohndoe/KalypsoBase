@@ -41,15 +41,11 @@
 package org.kalypso.ogc.sensor.filter.filters.interval;
 
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter.MODE;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 
 /**
  * @author doemming
@@ -276,20 +272,23 @@ public class Interval
     m_sources = sources.clone();
   }
 
-  public void merge( final Interval other, final MODE mode )
+  public void merge( final Interval sourceInterval, final Interval intersection, final MODE mode )
   {
-    final double factor = calcFactorMerge( other, mode );
-    for( int i = 0; i < other.getValue().length; i++ )
+    final double factor = calcFactorMerge( intersection, mode );
+    for( int i = 0; i < intersection.getValue().length; i++ )
     {
-      m_value[i] += factor * other.getValue()[i];
+      m_value[i] += factor * intersection.getValue()[i];
     }
 
-    for( int i = 0; i < other.getStatus().length; i++ )
+    for( int i = 0; i < intersection.getStatus().length; i++ )
     {
-      m_status[i] |= other.getStatus()[i];
+      m_status[i] |= intersection.getStatus()[i];
     }
 
-    m_sources = mergeSources( other );
+    if( intersection.getStart().equals( intersection.getEnd() ) )
+      return;
+
+    m_sources = mergeSources( sourceInterval );
   }
 
 
@@ -361,31 +360,9 @@ public class Interval
     if( isSame( other ) )
       return otherSources;
 
-    if( other.getStart().equals( other.getEnd() ) )
-      return m_sources;
-
-    final Set<String> merged = new HashSet<String>();
-
-    /** collect merged sources */
-    for( final String source : m_sources )
-    {
-      Collections.addAll( merged, DataSourceHelper.getMergedSources( source ) );
-    }
-    for( final String source : otherSources )
-    {
-      Collections.addAll( merged, DataSourceHelper.getMergedSources( source ) );
-    }
 
     for( int i = 0; i < otherSources.length; i++ )
-    {
-      final String reference = IntervalSourceHandler.mergeSourceReference( m_sources[i], otherSources[i] );
-
-      // append mergedSources references
-      if( !merged.isEmpty() )
-        mergedSources[i] = DataSourceHelper.appendMergedSourcesReference( reference, merged.toArray( new String[] {} ) );
-      else
-        mergedSources[i] = reference;
-    }
+      mergedSources[i] = IntervalSourceHandler.mergeSourceReference( m_sources[i], otherSources[i] );
 
     return mergedSources;
   }

@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters.interval;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
@@ -69,55 +69,26 @@ public final class IntervalSourceHandler
    */
   public static String mergeSourceReference( final String base, final String other )
   {
-    // - wenn undefiniert: quelle kopieren
-    // - wenn schon definiert: "verschmiert": nach ? kombinieren
-    if( IDataSourceItem.SOURCE_UNKNOWN.equalsIgnoreCase( base ) || isInitialValue( base ) )
-      return other;
-    else if( DataSourceHelper.isFiltered( base ) )
+    final String[] baseSources = DataSourceHelper.getSources( base );
+    final String[] otherSources = DataSourceHelper.getSources( other );
+
+    final Set<String> allReferences = new TreeSet<String>();
+    allReferences.addAll( Arrays.asList( baseSources ) );
+    allReferences.addAll( Arrays.asList( otherSources ) );
+    allReferences.remove( SOURCE_INITIAL_VALUE );
+
+    if( allReferences.isEmpty() )
+      return String.format( "%s%s?source_0=%s", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID, SOURCE_EXTENDED ); //$NON-NLS-1$
+    else
     {
-      final Set<String> sources = new LinkedHashSet<String>();
+      final StringBuffer buffer = new StringBuffer();
+      buffer.append( String.format( "%s%s?", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID ) ); //$NON-NLS-1$
 
-      if( !isInitialValue( base ) )
-        Collections.addAll( sources, DataSourceHelper.getSources( base ) );
+      final String[] sourceArray = allReferences.toArray( new String[] {} );
+      for( int i = 0; i < sourceArray.length; i++ )
+        buffer.append( String.format( "source_%d=%s&", i, sourceArray[i] ) ); //$NON-NLS-1$
 
-      if( DataSourceHelper.isFiltered( other ) )
-      {
-        final String[] otherSources = DataSourceHelper.getSources( other );
-        for( final String source : otherSources )
-        {
-          if( SOURCE_INITIAL_VALUE.equalsIgnoreCase( source ) )
-            continue;
-
-          sources.add( source );
-        }
-      }
-      else if( !IDataSourceItem.SOURCE_UNKNOWN.equals( other ) && !isInitialValue( other ) )
-        sources.add( other );
-
-      if( sources.isEmpty() )
-      {
-        return String.format( "%s%s?source_0=%s", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID, SOURCE_EXTENDED ); //$NON-NLS-1$
-      }
-      else
-      {
-        final StringBuffer buffer = new StringBuffer();
-        buffer.append( String.format( "%s%s?", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID ) ); //$NON-NLS-1$
-
-        final String[] sourceArray = sources.toArray( new String[] {} );
-        for( int i = 0; i < sourceArray.length; i++ )
-        {
-          buffer.append( String.format( "source_%d=%s&", i, sourceArray[i] ) ); //$NON-NLS-1$
-        }
-
-        return StringUtils.chop( buffer.toString() );
-      }
+      return StringUtils.chop( buffer.toString() );
     }
-
-    return base;
-  }
-
-  private static boolean isInitialValue( final String base )
-  {
-    return SOURCE_INITIAL_VALUE.equalsIgnoreCase( base );
   }
 }
