@@ -175,7 +175,7 @@ public class IntervalTupleModel extends AbstractTupleModel
     // initialize source
     stack.lastSrcCalendar = stack.lastTargetCalendar;
 
-    // BUGFIX: handle case when source start before from
+    // BUGFIX: handle case when source starts before from
     // Before this fix, this lead to a endless loop
     final Calendar firstSrcCal = getFirstSrcCalendar();
     if( firstSrcCal.before( stack.lastSrcCalendar ) )
@@ -266,6 +266,7 @@ public class IntervalTupleModel extends AbstractTupleModel
     // FIXME: no! use real source values instead!
     // REMARK: not really a problem, because this is only used in the case if we are
     // after the last real source intervall -> interval length is irrelevant in that case
+    // FIXME: no! it is used and produces real errors...!
     srcCalIntervallEnd.add( m_calendar.getCalendarField(), m_calendar.getAmount() );
 
     // if we are after the source time series
