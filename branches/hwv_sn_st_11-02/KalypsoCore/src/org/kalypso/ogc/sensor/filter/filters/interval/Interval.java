@@ -41,10 +41,15 @@
 package org.kalypso.ogc.sensor.filter.filters.interval;
 
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter.MODE;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 
 /**
  * @author doemming
@@ -234,7 +239,6 @@ public class Interval
     result.setStatus( status );
 
     final String[] sources = getSources();
-    IntervalSourceHandler.intersectSources( sources, factor );
     result.setSources( sources );
 
     return result;
@@ -285,8 +289,9 @@ public class Interval
       m_status[i] |= other.getStatus()[i];
     }
 
-    IntervalSourceHandler.mergeSources( m_sources, other.getSources() );
+    m_sources = mergeSources( other );
   }
+
 
   private double calcFactorIntersect( final Interval other, final MODE mode )
   {
@@ -346,5 +351,50 @@ public class Interval
       result.append( "\n" ); //$NON-NLS-1$
     }
     return result.toString();
+  }
+
+  private String[] mergeSources( final Interval other )
+  {
+    final String[] mergedSources = new String[m_sources.length];
+    final String[] otherSources = other.getSources();
+
+    if( isSame( other ) )
+      return otherSources;
+
+    if( other.getStart().equals( other.getEnd() ) )
+      return m_sources;
+
+    final Set<String> merged = new HashSet<String>();
+
+    /** collect merged sources */
+    for( final String source : m_sources )
+    {
+      Collections.addAll( merged, DataSourceHelper.getMergedSources( source ) );
+    }
+    for( final String source : otherSources )
+    {
+      Collections.addAll( merged, DataSourceHelper.getMergedSources( source ) );
+    }
+
+    for( int i = 0; i < otherSources.length; i++ )
+    {
+      final String reference = IntervalSourceHandler.mergeSourceReference( m_sources[i], otherSources[i] );
+
+      // append mergedSources references
+      if( !merged.isEmpty() )
+        mergedSources[i] = DataSourceHelper.appendMergedSourcesReference( reference, merged.toArray( new String[] {} ) );
+      else
+        mergedSources[i] = reference;
+    }
+
+    return mergedSources;
+  }
+
+  private boolean isSame( final Interval other )
+  {
+    final DateRange myRange = new DateRange( getStart().getTime(), getEnd().getTime() );
+    final DateRange otherRange = new DateRange( other.getStart().getTime(), other.getEnd().getTime() );
+
+    return myRange.compareTo( otherRange ) == 0;
   }
 }
