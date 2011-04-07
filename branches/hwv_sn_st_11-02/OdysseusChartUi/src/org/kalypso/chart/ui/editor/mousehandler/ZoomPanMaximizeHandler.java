@@ -248,7 +248,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
 
   private void doMouseUpZoom( final Point start, final Point end )
   {
-    if( Objects.isNull( end ) )
+    if( Objects.isNull( start, end ) )
       return;
 
     if( end.x < start.x )

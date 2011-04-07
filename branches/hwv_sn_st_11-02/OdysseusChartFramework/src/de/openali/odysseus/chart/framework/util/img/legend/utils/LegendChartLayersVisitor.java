@@ -62,7 +62,8 @@ public class LegendChartLayersVisitor extends AbstractChartLayerVisitor
     if( isValid( layer ) )
       m_layers.add( layer );
 
-    layer.getLayerManager().accept( this );
+    if( layer.isVisible() )
+      layer.getLayerManager().accept( this );
   }
 
   private boolean isValid( final IChartLayer layer )
