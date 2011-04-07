@@ -45,6 +45,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 
 /**
@@ -55,9 +56,12 @@ public class RemoveDataSourceObservationHandler
 
   private final IObservation m_observation;
 
-  public RemoveDataSourceObservationHandler( final IObservation observation )
+  private final IRequest m_request;
+
+  public RemoveDataSourceObservationHandler( final IObservation observation, final IRequest request )
   {
     m_observation = observation;
+    m_request = request;
   }
 
   /**
@@ -68,7 +72,7 @@ public class RemoveDataSourceObservationHandler
     if( !hasDataSouceAxis() )
       return m_observation;
 
-    final RemoveDataSourceModelHandler handler = new RemoveDataSourceModelHandler( m_observation.getValues( null ) );
+    final RemoveDataSourceModelHandler handler = new RemoveDataSourceModelHandler( m_observation.getValues( m_request ) );
     final ITupleModel model = handler.remove();
 
     final DataSourceHandler dataSourceHandler = new DataSourceHandler( m_observation.getMetadataList() );
