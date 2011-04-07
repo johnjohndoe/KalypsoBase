@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -136,13 +137,13 @@ public class SimpleObservation implements IObservation
   @Override
   public ITupleModel getValues( final IRequest request ) throws SensorException
   {
-    if( m_model == null )
+    if( Objects.isNull( m_model ) )
       throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.impl.SimpleObservation.6" ) ); //$NON-NLS-1$
 
     // TODO this leads to unsaved changes when a value is set because the underlying
     // (real) model isn't changed, just the copy of it (see setFrom and the calling
     // constructors in SimpleTuppleModel).
-    if( request != null && request.getDateRange() != null )
+    if( Objects.isNotNull( request ) && Objects.isNotNull( request.getDateRange() ) )
       return new SimpleTupleModel( m_model, request.getDateRange() );
 
     return m_model;
