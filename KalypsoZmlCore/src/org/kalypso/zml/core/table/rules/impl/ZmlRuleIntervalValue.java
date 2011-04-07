@@ -55,7 +55,7 @@ import org.kalypso.zml.core.table.model.references.IZmlValueReference;
  */
 public class ZmlRuleIntervalValue extends AbstractZmlTableRule
 {
-  public static final String ID = "org.kalypso.zml.ui.core.rule.value.interval";
+  public static final String ID = "org.kalypso.zml.ui.core.rule.value.interval"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#getIdentifier()

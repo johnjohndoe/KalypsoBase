@@ -41,6 +41,7 @@ package org.kalypso.zml.core.table.rules.impl;
  *   
  *  ---------------------------------------------------------------------------*/
 
+import org.eclipse.swt.graphics.Color;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
@@ -87,4 +88,12 @@ public abstract class AbstractZmlTableRule implements IZmlRuleImplementation
 
   protected abstract boolean doApply( ZmlRule rule, IZmlValueReference reference );
 
+  /**
+   * @see org.kalypso.zml.core.table.rules.IZmlRuleImplementation#getBackground(org.kalypso.zml.core.table.model.references.IZmlValueReference)
+   */
+  @Override
+  public Color getBackground( final IZmlValueReference reference ) throws SensorException
+  {
+    return null;
+  }
 }

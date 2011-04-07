@@ -163,6 +163,11 @@
     </command>
     <command
           categoryId="org.kalypso.zml.ui.table.commands.category"
+          id="org.kalypso.zml.ui.table.commands.toolbar.view.data.sources"
+          name="View Data Sources">
+    </command>
+    <command
+          categoryId="org.kalypso.zml.ui.table.commands.category"
           defaultHandler="org.kalypso.zml.ui.table.commands.menu.ZmlCommandDeleteStuetzstellen"
           id="org.kalypso.zml.ui.table.commands.value.delete.stuetzstellen"
           name="Stützstellen löschen">
@@ -226,6 +231,10 @@
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.boundaries">
     </handler>
     <handler
+          class="org.kalypso.zml.ui.table.commands.toolbar.ZmlCommandViewDataSources"
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.data.sources">
+    </handler>
+    <handler
           class="org.kalypso.zml.ui.table.commands.toolbar.input.dialog.ZmlCommandOpenValueInputDialog"
           commandId="org.kalypso.zml.ui.table.commands.toolbar.value.input.dialog">
     </handler>
@@ -275,6 +284,10 @@
     <image
           commandId="org.kalypso.zml.ui.table.commands.value.delete.stuetzstellen"
           icon="icons/table/delete_stuetzstelle.png">
+    </image>
+    <image
+          commandId="org.kalypso.zml.ui.table.commands.toolbar.view.data.sources"
+          icon="icons/table/data_source.png">
     </image>
  </extension>
  <extension
