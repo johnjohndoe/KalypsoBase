@@ -126,14 +126,14 @@ public class ZmlTooltipSupport
       return null;
 
     final StringBuffer buffer = new StringBuffer();
-    buffer.append( "Aktive Regeln\n" );
+    buffer.append( "Anmerkung(en):\n" );
 
     for( final ZmlRule rule : activeRules )
     {
       buffer.append( String.format( "    - %s\n", rule.getLabel() ) );//$NON-NLS-1$
     }
 
-    return buffer.toString();
+    return StringUtils.chomp( buffer.toString() );
   }
 
   private String getModelTooltip( final DataColumnType column )
