@@ -67,7 +67,7 @@ public abstract class AbstractZmlRuleInstructionType
     return m_type;
   }
 
-  public CellStyle getStyle( ) throws CoreException
+  public CellStyle getStyle( final IZmlValueReference reference ) throws CoreException
   {
     if( m_style != null )
       return m_style;

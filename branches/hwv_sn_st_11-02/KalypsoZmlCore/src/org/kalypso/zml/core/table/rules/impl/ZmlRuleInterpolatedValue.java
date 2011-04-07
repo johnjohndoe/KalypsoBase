@@ -54,7 +54,7 @@ import org.kalypso.zml.core.table.model.references.IZmlValueReference;
  */
 public class ZmlRuleInterpolatedValue extends AbstractZmlTableRule
 {
-  public static final String ID = "org.kalypso.zml.ui.core.rule.value.interpolated";
+  public static final String ID = "org.kalypso.zml.ui.core.rule.value.interpolated"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#getIdentifier()

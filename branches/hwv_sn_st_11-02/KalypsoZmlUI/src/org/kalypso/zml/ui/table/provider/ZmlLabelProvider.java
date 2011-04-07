@@ -48,6 +48,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
@@ -55,6 +56,7 @@ import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
@@ -87,7 +89,13 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     {
       try
       {
-        final CellStyle style = m_column.findStyle( (IZmlModelRow) element );
+        final IZmlModelRow row = (IZmlModelRow) element;
+
+        final Color ruleBackgroundColor = getRuleBackground( row );
+        if( Objects.isNotNull( ruleBackgroundColor ) )
+          return ruleBackgroundColor;
+
+        final CellStyle style = m_column.findStyle( row );
 
         return style.getBackgroundColor();
       }
@@ -98,6 +106,31 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     }
 
     return super.getBackground( element );
+  }
+
+  private Color getRuleBackground( final IZmlModelRow row )
+  {
+    final IZmlValueReference reference = row.get( m_column.getModelColumn() );
+    if( Objects.isNull( reference ) )
+      return null;
+
+    final ZmlRule[] activeRules = m_column.findActiveRules( row );
+    for( final ZmlRule rule : activeRules )
+    {
+      try
+      {
+        final IZmlRuleImplementation implemenation = rule.getImplementation();
+        final Color color = implemenation.getBackground( reference );
+        if( Objects.isNotNull( color ) )
+          return color;
+      }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    return null;
   }
 
   /**

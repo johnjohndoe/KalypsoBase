@@ -5,28 +5,29 @@
 
   <!-- elements -->
   <element name="ZmlTable" type="zmltable:ZmlTableType" />
-  
+
   <!-- columns -->
   <element name="Columns" type="zmltable:ColumnsType" />
   <element name="AbstractColumn" type="zmltable:AbstractColumnType" />
 
   <element name="DataColumn" type="zmltable:DataColumnType" substitutionGroup="zmltable:AbstractColumn" />
   <element name="IndexColumn" type="zmltable:IndexColumnType" substitutionGroup="zmltable:AbstractColumn" />
-  
+
   <!-- styles -->
   <element name="StyleSet" type="zmltable:StyleSetType" />
-  <element name="Style" type="zmltable:CellStyleType" /> 
-  
+  <element name="Style" type="zmltable:CellStyleType" />
+
   <!-- rules -->
   <element name="RuleSet" type="zmltable:RuleSetType" />
   <element name="Rule" type="zmltable:RuleType" />
 
   <element name="RuleInstructions" type="zmltable:RuleInstructionsType" />
-  <element name="AbstractRuleInstruction" type="zmltable:AbstractRuleInstructionType"  />
+  <element name="AbstractRuleInstruction" type="zmltable:AbstractRuleInstructionType" />
 
   <element name="MetadataBoundaryInstruction" type="zmltable:MetadataBoundaryInstructionType" substitutionGroup="zmltable:AbstractRuleInstruction" />
   <element name="MetadataDateRangeInstruction" type="zmltable:MetadataDateRangeInstructionType" substitutionGroup="zmltable:AbstractRuleInstruction" />
-  
+
+
   <!-- types -->
   <complexType name="ZmlTableType">
     <sequence>
@@ -106,8 +107,8 @@
       <enumeration value="RIGHT"></enumeration>
     </restriction>
   </simpleType>
-  
-  
+
+
   <!-- column header entries -->
   <complexType name="HeaderEntriesType">
     <sequence>
@@ -121,8 +122,8 @@
     </sequence>
     <attribute name="id" type="ID" use="required" />
   </complexType>
-  
-  
+
+
   <!-- Styles -->
   <complexType name="StyleSetType">
     <sequence>
@@ -137,9 +138,9 @@
     </sequence>
     <attribute name="id" type="ID" use="required" />
   </complexType>
-  
-  
-   <!-- Rules -->
+
+
+  <!-- Rules -->
   <complexType name="RuleSetType">
     <sequence>
       <choice minOccurs="1" maxOccurs="unbounded">
@@ -164,7 +165,7 @@
   </complexType>
 
 
-  
+
   <!-- rule instruction types -->
   <complexType name="RuleInstructionsType">
     <sequence>
@@ -183,9 +184,9 @@
     <complexContent>
       <extension base="zmltable:AbstractRuleInstructionType">
         <attribute name="propertyFrom" type="string" use="required" />
-        <attribute name="propertyFromInclusive" type="boolean" default="false"/>
+        <attribute name="propertyFromInclusive" type="boolean" default="false" />
         <attribute name="propertyTo" type="string" use="required" />
-        <attribute name="propertyToInclusive" type="boolean" default="false"  />
+        <attribute name="propertyToInclusive" type="boolean" default="false" />
       </extension>
     </complexContent>
   </complexType>
@@ -202,8 +203,6 @@
       </extension>
     </complexContent>
   </complexType>
-
-
 
   <complexType name="ColumnHeaderPropertyType">
     <simpleContent>
