@@ -107,6 +107,11 @@ public class IntervalTupleModel extends AbstractTupleModel
     m_intervallModel = initModell( getAxes() );
   }
 
+  public MetadataList getMetadata( )
+  {
+    return m_metadata;
+  }
+
   private Calendar initFrom( final Date from, final IAxisRange sourceModelRange )
   {
     if( from != null )
