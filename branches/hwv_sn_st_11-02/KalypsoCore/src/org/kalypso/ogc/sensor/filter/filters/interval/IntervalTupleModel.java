@@ -181,12 +181,6 @@ public class IntervalTupleModel extends AbstractTupleModel
     if( firstSrcCal.before( stack.lastSrcCalendar ) )
       stack.lastSrcCalendar = firstSrcCal;
 
-    // fill initial row
-    // final Interval initialIntervall = new Interval( m_from, m_from, defaultStatus, defaultValues );
-    // updateModelfromintervall( m_intervallModel, targetRow, initialIntervall );
-    // targetRow++;
-    // doemming: removed last 3 rows to avoid generating beginning "0" value.
-
     PROCESSING_INSTRUCTION instruction = PROCESSING_INSTRUCTION.eNothing;
     while( !instruction.isFinished() )
     {
@@ -221,13 +215,13 @@ public class IntervalTupleModel extends AbstractTupleModel
 
         case Interval.STATUS_INTERSECTION_START:
         case Interval.STATUS_INTERSECTION_INSIDE:
-          stack.targetInterval.merge( intersection, m_mode );
+          stack.targetInterval.merge( stack.srcInterval, intersection, m_mode );
           instruction = PROCESSING_INSTRUCTION.eGoToNextTarget;
           break;
 
         case Interval.STATUS_INTERSECTION_END:
         case Interval.STATUS_INTERSECTION_ARROUND:
-          stack.targetInterval.merge( intersection, m_mode );
+          stack.targetInterval.merge( stack.srcInterval, intersection, m_mode );
           instruction = PROCESSING_INSTRUCTION.eGoToNextSource;
           break;
 
@@ -387,14 +381,10 @@ public class IntervalTupleModel extends AbstractTupleModel
     final IAxis[] dataSourceAxes = m_axes.getDataSourcesAxes();
 
     for( int i = 0; i < statusAxes.length; i++ )
-    {
       model.set( targetRow, statusAxes[i], Integer.valueOf( status[i] ) );
-    }
 
     for( int i = 0; i < valueAxes.length; i++ )
-    {
       model.set( targetRow, valueAxes[i], new Double( value[i] ) );
-    }
 
     final DataSourceHandler handler = new DataSourceHandler( m_metadata );
     for( int i = 0; i < dataSourceAxes.length; i++ )
