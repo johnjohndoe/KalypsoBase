@@ -164,7 +164,7 @@
     <command
           categoryId="org.kalypso.zml.ui.table.commands.category"
           id="org.kalypso.zml.ui.table.commands.toolbar.view.data.sources"
-          name="View Data Sources">
+          name="Datenquellen einblenden">
     </command>
     <command
           categoryId="org.kalypso.zml.ui.table.commands.category"
