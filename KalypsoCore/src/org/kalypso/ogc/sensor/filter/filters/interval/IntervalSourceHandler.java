@@ -46,7 +46,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
-import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
+import org.kalypso.repository.IDataSourceItem;
 
 /**
  * @author Dirk Kuch
@@ -57,7 +57,7 @@ public final class IntervalSourceHandler
 
   public static final String SOURCE_INITIAL_VALUE = IDataSourceItem.SOURCE_UNKNOWN;
 
-  public static final String SOURCE_INTERVAL_FITLER = DataSourceHelper.FILTER_SOURCE + IntervalFilter.FILTER_ID;
+  public static final String SOURCE_INTERVAL_FITLER = IDataSourceItem.FILTER_SOURCE + IntervalFilter.FILTER_ID;
 
   private IntervalSourceHandler( )
   {
@@ -78,11 +78,11 @@ public final class IntervalSourceHandler
     allReferences.remove( SOURCE_INITIAL_VALUE );
 
     if( allReferences.isEmpty() )
-      return String.format( "%s%s?source_0=%s", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID, SOURCE_EXTENDED ); //$NON-NLS-1$
+      return String.format( "%s%s?source_0=%s", IDataSourceItem.FILTER_SOURCE, IntervalFilter.FILTER_ID, SOURCE_EXTENDED ); //$NON-NLS-1$
     else
     {
       final StringBuffer buffer = new StringBuffer();
-      buffer.append( String.format( "%s%s?", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID ) ); //$NON-NLS-1$
+      buffer.append( String.format( "%s%s?", IDataSourceItem.FILTER_SOURCE, IntervalFilter.FILTER_ID ) ); //$NON-NLS-1$
 
       final String[] sourceArray = allReferences.toArray( new String[] {} );
       for( int i = 0; i < sourceArray.length; i++ )

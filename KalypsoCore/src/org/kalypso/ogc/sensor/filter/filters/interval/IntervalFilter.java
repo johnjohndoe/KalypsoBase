@@ -51,6 +51,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.filters.IntervallFilterType;
@@ -87,6 +88,8 @@ public class IntervalFilter extends AbstractObservationFilter
 
   private final IntervalCalendar m_calendar;
 
+  private MetadataList m_metadata;
+
   public IntervalFilter( final MODE mode, final int defaultStatus, final double defaultValue, final IntervalCalendar calendar )
   {
     m_mode = mode;
@@ -105,7 +108,17 @@ public class IntervalFilter extends AbstractObservationFilter
   public void initFilter( final Object dummy, final IObservation baseObs, final URL context ) throws SensorException
   {
     m_baseobservation = baseObs;
+    m_metadata = MetadataHelper.clone( m_baseobservation.getMetadataList() );
     super.initFilter( dummy, baseObs, context );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getMetadataList()
+   */
+  @Override
+  public MetadataList getMetadataList( )
+  {
+    return m_metadata;
   }
 
   /**
@@ -132,7 +145,7 @@ public class IntervalFilter extends AbstractObservationFilter
     // Maybe there should be one day a mean to determine, which is the right amount.
     final ITupleModel values = ObservationUtilities.requestBuffered( m_baseobservation, dateRange, Calendar.DAY_OF_MONTH, 2 );
 
-    return new IntervalTupleModel( m_mode, m_calendar, m_baseobservation.getMetadataList(), values, from, to, m_defaultValue, m_defaultStatus );
+    return new IntervalTupleModel( m_mode, m_calendar, m_metadata, values, from, to, m_defaultValue, m_defaultStatus );
   }
 
   @Override

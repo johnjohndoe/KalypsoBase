@@ -38,19 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.timeseries.datasource;
+package org.kalypso.repository;
 
 /**
  * @author Dirk Kuch
  */
 public interface IDataSourceItem
 {
+  public static final String FILTER_SOURCE = "filter://";
+
   String MD_DATA_SOURCE_ITEM = "Datenabruf_Quelle";
 
   String MD_DATA_SOURCE_ITEM_REPOSITORY = "Datenabruf_Repository_Quelle";
 
   String SOURCE_PREFIX = "source://";
-  
+
   String SOURCE_UNKNOWN = SOURCE_PREFIX + "unknown";
 
   String SOURCE_MANUAL_CHANGED = SOURCE_PREFIX + "manually.changed";

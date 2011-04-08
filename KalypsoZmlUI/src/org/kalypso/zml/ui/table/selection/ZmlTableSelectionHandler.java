@@ -230,6 +230,9 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   @Override
   public IZmlTableColumn findActiveColumnByPosition( )
   {
+    if( Objects.isNotNull( m_lastColumn ) )
+      return m_lastColumn;
+
     final IExtendedZmlTableColumn found = findColumn( m_position );
     if( Objects.isNotNull( found ) )
       m_lastColumn = found;
@@ -249,7 +252,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     return new ZmlTableCell( row, column );
   }
 
-  public ViewerCell findActiveViewerCell( )
+  private ViewerCell findActiveViewerCell( )
   {
     if( Objects.isNull( m_position ) )
       return null;
