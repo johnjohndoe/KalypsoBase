@@ -47,7 +47,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
@@ -187,14 +187,7 @@ public class ZmlTooltipSupport
 
   private String getStatus( final Integer status )
   {
-    if( KalypsoStati.BIT_OK == status )
-      return "OK";
-    else if( KalypsoStati.BIT_CHECK == status )
-      return "Gewarnt";
-    else if( KalypsoStati.BIT_USER_MODIFIED == status )
-      return "Benutzereingabe";
-
-    return "Unbekannt";
+    return KalypsoStatusUtils.getTooltipFor( status );
   }
 
   private Object buildInfoText( final String label, final String value )
