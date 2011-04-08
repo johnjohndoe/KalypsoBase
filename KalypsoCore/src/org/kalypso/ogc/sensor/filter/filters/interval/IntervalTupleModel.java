@@ -374,7 +374,8 @@ public class IntervalTupleModel extends AbstractTupleModel
     final double[] value = targetInterval.getValue();
     final String[] sources = targetInterval.getSources();
 
-    model.set( targetRow, m_axes.getDateAxis(), cal.getTime() );
+    final Date time = cal.getTime();
+    model.set( targetRow, m_axes.getDateAxis(), time );
 
     final IAxis[] statusAxes = m_axes.getStatusAxes();
     final IAxis[] valueAxes = m_axes.getValueAxes();

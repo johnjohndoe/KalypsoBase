@@ -108,7 +108,7 @@ public class IntervalFilter extends AbstractObservationFilter
   public void initFilter( final Object dummy, final IObservation baseObs, final URL context ) throws SensorException
   {
     m_baseobservation = baseObs;
-    m_metadata = MetadataHelper.clone( m_baseobservation.getMetadataList() );
+
     super.initFilter( dummy, baseObs, context );
   }
 
@@ -118,6 +118,9 @@ public class IntervalFilter extends AbstractObservationFilter
   @Override
   public MetadataList getMetadataList( )
   {
+    if( m_metadata == null )
+      return m_baseobservation.getMetadataList();
+
     return m_metadata;
   }
 
@@ -144,7 +147,7 @@ public class IntervalFilter extends AbstractObservationFilter
     // HACK: we always use DAY, so that work fine only up to time series of DAY-quality.
     // Maybe there should be one day a mean to determine, which is the right amount.
     final ITupleModel values = ObservationUtilities.requestBuffered( m_baseobservation, dateRange, Calendar.DAY_OF_MONTH, 2 );
-
+    m_metadata = MetadataHelper.clone( m_baseobservation.getMetadataList() );
     return new IntervalTupleModel( m_mode, m_calendar, m_metadata, values, from, to, m_defaultValue, m_defaultStatus );
   }
 
