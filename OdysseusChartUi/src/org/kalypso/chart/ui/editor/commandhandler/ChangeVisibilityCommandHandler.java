@@ -10,8 +10,6 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
-import org.eclipse.ui.services.IEvaluationService;
-import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.chart.ui.editor.chart.visitors.ChangeVisibilityVisitor;
 import org.kalypso.chart.ui.editor.chart.visitors.VisibilityInitialStatusVisitor;
 import org.kalypso.chart.ui.editor.commandhandler.utils.CommandHandlerUtils;
@@ -88,7 +86,7 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-    final IChartModel model = getModel( element );
+    final IChartModel model = ChartHandlerUtilities.getModel( element );
     if( Objects.isNull( model ) )
       element.setChecked( false );
     else
@@ -103,15 +101,4 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
     }
   }
 
-  private IChartModel getModel( final UIElement element )
-  {
-    final IServiceLocator locator = element.getServiceLocator();
-    final IEvaluationService service = (IEvaluationService) locator.getService( IEvaluationService.class );
-    final IEvaluationContext context = service.getCurrentState();
-    final IChartComposite chart = ChartHandlerUtilities.getChart( context );
-    if( chart == null )
-      return null;
-
-    return chart.getChartModel();
-  }
 }

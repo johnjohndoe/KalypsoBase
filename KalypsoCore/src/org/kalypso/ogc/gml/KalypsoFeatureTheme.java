@@ -170,6 +170,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     super.dispose();
   }
 
+  private void setDirty( )
+  {
+    fireRepaintRequested( getFullExtent() );
+  }
+
   @Override
   public CommandableWorkspace getWorkspace( )
   {
@@ -308,7 +313,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         {
           // OPTIMIZATION: as List#contains is quite slow, we generally repaint if the number of changed features
           // is too large.
-          fireRepaintRequested( null );
+          setDirty();
         }
         else
         {
@@ -343,17 +348,13 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
             {
               case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD:
                 // fall through
-              case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE:
-                fireRepaintRequested( getFullExtent() );
-                return;
-
               case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE:
-                // We need to repaint all: we do not know where the old feature was deleted
-                fireRepaintRequested( null );
-                return;
-
+                // fall through
+              case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE:
+                setDirty();
+                break;
               default:
-                fireRepaintRequested( getFullExtent() );
+                setDirty();
             }
           }
         }
@@ -362,7 +363,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     else
     {
       // unknown event, set dirty
-      fireRepaintRequested( getFullExtent() );
+      setDirty();
     }
   }
 
@@ -510,7 +511,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public void styleChanged( )
   {
-    fireRepaintRequested( getFullExtent() );
+    setDirty();
     fireStatusChanged( this );
   }
 

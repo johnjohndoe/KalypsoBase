@@ -432,7 +432,6 @@ public final class ZmlFactory
       }
 
       final IAxis axis = new DefaultAxis( tmpAxis.getName(), tmpAxis.getType(), tmpAxis.getUnit(), parser.getObjectClass(), tmpAxis.isKey() );
-
       valuesMap.put( axis, values );
     }
 

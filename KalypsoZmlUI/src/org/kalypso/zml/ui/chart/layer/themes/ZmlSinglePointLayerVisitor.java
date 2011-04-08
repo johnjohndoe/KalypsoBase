@@ -140,6 +140,9 @@ public class ZmlSinglePointLayerVisitor implements IObservationVisitor
 
   public Double getValue( )
   {
+    if( m_value == null )
+      return null;
+
     return m_value.doubleValue();
   }
 }

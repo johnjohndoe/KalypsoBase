@@ -45,8 +45,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
+import org.kalypso.zml.ui.table.base.widgets.EnhancedSpinner;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
@@ -54,14 +55,17 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 /**
  * @author Dirk Kuch
  */
-public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage implements IEnhancedTextBoxListener<Integer>
+public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
 {
+  protected int m_days;
+
+  protected int m_hours;
+
+  protected int m_minutes;
 
   private Integer m_offset;
 
   private int m_base;
-
-  private EnhancedTextBox<Integer> m_textBox;
 
   public ShiftDateAdjustmentPage( final IAdjustmentPageProvider provider )
   {
@@ -86,21 +90,99 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage implements I
   {
     try
     {
-      toolkit.createLabel( body, "" );// spacer
+      toolkit.createLabel( body, "" ); // spacer
       final Integer offset = getOffset();
 
-      toolkit.createLabel( body, "Minuten" ).setFont( HEADING );
-      m_textBox = new EnhancedTextBox<Integer>( body, toolkit, new ShiftDateWidgetRule( m_base ) );
+      toolkit.createLabel( body, "Verschieben, um:" ).setFont( HEADING );
 
-      m_textBox.setText( offset );
-      m_textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      m_textBox.addListener( this );
+      final Composite control = toolkit.createComposite( body );
+      control.setLayout( LayoutHelper.createGridLayout( 3 ) );
+      control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+
+      if( offset < 60 )
+        renderMinutedBased( control, toolkit );
+      else
+        renderHourBased( control, toolkit );
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
     }
 
+  }
+
+  private void renderHourBased( final Composite control, final FormToolkit toolkit )
+  {
+    addDaySpinner( control, toolkit );
+    final EnhancedSpinner hourSpinner = addHourSpinner( control, toolkit );
+
+    hourSpinner.setSelection( 1 );
+    m_hours = 1;
+
+  }
+
+  private void renderMinutedBased( final Composite control, final FormToolkit toolkit ) throws SensorException
+  {
+    addDaySpinner( control, toolkit );
+    addHourSpinner( control, toolkit );
+
+    final Integer offset = getOffset();
+    final EnhancedSpinner spinnerMinutes = addSpinner( control, toolkit, "Minuten", 60, offset );
+    spinnerMinutes.addListener( new IEnhancedTextBoxListener<Integer>()
+    {
+      @Override
+      public void valueChanged( final Integer value )
+      {
+        m_minutes = value;
+      }
+    } );
+
+    spinnerMinutes.setSelection( offset );
+    m_minutes = offset;
+  }
+
+  private EnhancedSpinner addHourSpinner( final Composite control, final FormToolkit toolkit )
+  {
+    final EnhancedSpinner spinnerHour = addSpinner( control, toolkit, "Stunden", 24, 1 );
+    spinnerHour.addListener( new IEnhancedTextBoxListener<Integer>()
+    {
+      @Override
+      public void valueChanged( final Integer value )
+      {
+        m_hours = value;
+      }
+    } );
+
+    return spinnerHour;
+  }
+
+  private EnhancedSpinner addDaySpinner( final Composite control, final FormToolkit toolkit )
+  {
+    final EnhancedSpinner spinnerDay = addSpinner( control, toolkit, "Tage", 30, 1 );
+    spinnerDay.addListener( new IEnhancedTextBoxListener<Integer>()
+    {
+      @Override
+      public void valueChanged( final Integer value )
+      {
+        m_days = value;
+      }
+    } );
+
+    return spinnerDay;
+  }
+
+  private EnhancedSpinner addSpinner( final Composite body, final FormToolkit toolkit, final String text, final int maximum, final int increment )
+  {
+    toolkit.createLabel( body, text );
+    toolkit.createLabel( body, "   " ); // spacer
+
+    final EnhancedSpinner spinner = new EnhancedSpinner( body, toolkit, new ShiftDateWidgetRule( m_base ) );
+    spinner.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    spinner.setMin( -maximum );
+    spinner.setMax( maximum );
+    spinner.setIncrement( increment );
+
+    return spinner;
   }
 
   private Integer getOffset( ) throws SensorException
@@ -130,21 +212,12 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage implements I
   }
 
   /**
-   * @see org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener#valueChanged(java.lang.Object)
-   */
-  @Override
-  public void valueChanged( final Integer value )
-  {
-    m_offset = value;
-  }
-
-  /**
    * @see org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage#getRunnable()
    */
   @Override
   public ICoreRunnableWithProgress getRunnable( )
   {
-    return new ShiftDateRunnable( getColumn().getModelColumn(), getColumn().getSelectedCells(), m_offset );
+    return new ShiftDateRunnable( getColumn().getModelColumn(), getColumn().getSelectedCells(), getMinutes() );
   }
 
   /**
@@ -153,7 +226,18 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage implements I
   @Override
   public boolean isValid( )
   {
-    return m_textBox.isValid();
+    final int minutes = getMinutes();
+
+    return minutes % m_base == 0;
+  }
+
+  private int getMinutes( )
+  {
+    int minutes = m_minutes;
+    minutes += m_hours * 60;
+    minutes += m_days * 60 * 24;
+
+    return minutes;
   }
 
 }

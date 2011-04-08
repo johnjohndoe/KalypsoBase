@@ -38,52 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.ext.base.axis;
+package de.openali.odysseus.chart.factory.layer;
 
-import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
- * @author kimwerner
+ * @author Gernot Belger
+ *
  */
-public class DateTimeAxis extends GenericLinearAxis
+public class LayerDomainRangeVisitor extends AbstractLayerRangeVisitor
 {
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#setNumericRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
-   */
   @Override
-  public void setNumericRange( final IDataRange<Number> range )
+  protected IDataRange<Number> getLayerRange( final IChartLayer layer )
   {
-
-    super.setNumericRange( range );
-// ((DateTimeAxisRenderer) getRenderer()).updateFormatter( getNumericRange() );
+    return layer.getDomainRange();
   }
-
-  public DateTimeAxis( final String id, final POSITION pos )
-  {
-    super( id, pos );
-    // TODO Auto-generated constructor stub
-  }
-
-  public DateTimeAxis( final String id, final POSITION pos, final AxisRendererConfig config )
-  {
-    super( id, pos, config );
-    // TODO Auto-generated constructor stub
-  }
-
-  public DateTimeAxis( final String id, final POSITION pos, final Class< ? > clazz )
-  {
-    super( id, pos, clazz );
-    // TODO Auto-generated constructor stub
-  }
-
-  public DateTimeAxis( final String id, final POSITION pos, final Class< ? > clazz, final IAxisRenderer renderer )
-  {
-    super( id, pos, clazz, renderer );
-    // TODO Auto-generated constructor stub
-  }
-
 }

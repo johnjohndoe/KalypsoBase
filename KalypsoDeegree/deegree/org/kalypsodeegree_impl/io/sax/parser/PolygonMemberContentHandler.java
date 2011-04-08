@@ -44,11 +44,9 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-
 
 /**
  * A content handler that parses a gml:pointMember property.<br>
@@ -57,7 +55,7 @@ import org.xml.sax.XMLReader;
  */
 public class PolygonMemberContentHandler extends GMLElementContentHandler implements ISurfaceHandler<GM_Polygon>
 {
-  public static final String ELEMENT_POLYGON_MEMBER = GMLConstants.QN_POLYGON_MEMBER.getLocalPart();
+  public static final String ELEMENT_POLYGON_MEMBER = "polygonMember";
 
   private final ISurfaceHandler<GM_Polygon> m_surfaceHandler;
 

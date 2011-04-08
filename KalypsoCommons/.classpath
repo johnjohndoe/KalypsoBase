@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/guava/guava-r09.jar" sourcepath="lib/guava/guava-src-r09.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jgraph/jgraphx_1_5_1_11.jar" sourcepath="lib/jgraph/jpgrahpx_1_5_1_11-src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/guava/guava-r09-rc2.jar" sourcepath="lib/guava/guava-src-r09-rc2.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/apache/lang/commons-lang-2.6.jar" sourcepath="lib/apache/lang/commons-lang-2.6-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/pdf-renderer/PDFRenderer.jar" sourcepath="lib/pdf-renderer/PDFRenderer-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/itext-5.0.5/iText-5.0.5.jar" sourcepath="lib/itext-5.0.5/iText-src-5.0.5.zip"/>

@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.wms.loader;
 
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
@@ -83,8 +82,6 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
   }
 
   /**
-   * TODO: should go into the constructor.
-   * 
    * @see org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader#init(java.net.URL)
    */
   @Override
@@ -109,7 +106,7 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
       monitor.subTask( Messages.getString("org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.1") ); //$NON-NLS-1$
 
       /* Create the capabilities URL. */
-      final URL capabilitiesURL = getCapabilitiesURL();
+      final URL capabilitiesURL = KalypsoWMSUtilities.createCapabilitiesRequest( m_baseURL );
 
       monitor.worked( 25 );
       monitor.subTask( Messages.getString("org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.2") ); //$NON-NLS-1$
@@ -142,11 +139,5 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
     {
       monitor.done();
     }
-  }
-
-  @Override
-  public URL getCapabilitiesURL( ) throws MalformedURLException
-  {
-    return KalypsoWMSUtilities.createCapabilitiesRequest( m_baseURL );
   }
 }

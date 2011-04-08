@@ -83,8 +83,8 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
   {
     super( inputGrid );
 
-    File fileFromUrl = ResourceUtilities.findJavaFileFromURL( pUrl );
     /* Tries to find a file from the given url. */
+    File fileFromUrl = ResourceUtilities.findJavaFileFromURL( pUrl );
     if( fileFromUrl == null )
       fileFromUrl = FileUtils.toFile( pUrl );
 
@@ -192,6 +192,9 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
 
     final BigDecimal decimal = new BigDecimal( BigInteger.valueOf( z ), m_scale );
     final double value = decimal.doubleValue();
+
+    if( value <= 0.0 )
+      return Double.NaN;
 
     return value;
   }

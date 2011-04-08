@@ -53,9 +53,13 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.menus.UIElement;
+import org.eclipse.ui.services.IEvaluationService;
+import org.eclipse.ui.services.IServiceLocator;
 import org.eclipse.ui.services.IServiceScopes;
 import org.kalypso.chart.ui.IChartPart;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
@@ -168,4 +172,15 @@ public class ChartHandlerUtilities
     }
   }
 
+  public static IChartModel getModel( final UIElement element )
+  {
+    final IServiceLocator locator = element.getServiceLocator();
+    final IEvaluationService service = (IEvaluationService) locator.getService( IEvaluationService.class );
+    final IEvaluationContext context = service.getCurrentState();
+    final IChartComposite chart = ChartHandlerUtilities.getChart( context );
+    if( chart == null )
+      return null;
+
+    return chart.getChartModel();
+  }
 }

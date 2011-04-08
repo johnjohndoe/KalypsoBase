@@ -237,10 +237,6 @@ public class TupleResultLineLayer extends AbstractLineLayer
   {
     if( !isVisible() )
       return null;
-
-    if( m_data == null )
-      return null;
-
     final Object[] domainValues = m_data.getDomainValues();
     final Object[] targetValues = m_data.getTargetValues();
     final IDataOperator targetDataOp = m_dataOpertatorHelper.getDataOperator( getTargetAxis().getDataClass() );

@@ -48,6 +48,7 @@ import jregex.RETokenizer;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 
@@ -264,6 +265,9 @@ public final class RepositoryItems
 
   public static boolean isPlainId( final String identifier )
   {
+    if( identifier.startsWith( IDataSourceItem.FILTER_SOURCE ) )
+      return true;
+
     return !identifier.contains( "://" ); //$NON-NLS-1$
   }
 

@@ -46,7 +46,9 @@ import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
  * @author Dirk Kuch
+ * @deprecated Use {@link org.kalypso.core.projecthandle.local.ILocalProjectHandle} instead.
  */
+@Deprecated
 public interface ILocalProject extends IProjectHandler
 {
   void dispose( );

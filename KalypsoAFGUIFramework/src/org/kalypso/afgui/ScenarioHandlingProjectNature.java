@@ -91,7 +91,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<ISc
    * @see de.renew.workflow.connector.context.CaseHandlingProjectNature#createCaseManager(org.eclipse.core.resources.IProject)
    */
   @Override
-  public IScenarioManager createCaseManager( final IProject project )
+  public IScenarioManager createCaseManager( final IProject project ) throws CoreException
   {
     return new ScenarioManager( project );
   }
@@ -100,7 +100,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<ISc
    * @see de.renew.workflow.connector.context.CaseHandlingProjectNature#getCaseManager()
    */
   @Override
-  public IScenarioManager getCaseManager( )
+  public IScenarioManager getCaseManager( ) throws CoreException
   {
     return (IScenarioManager) super.getCaseManager();
   }

@@ -5,8 +5,8 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
- *  21073 Hamburg, Germany 
+ *  Denickestraße 22
+ *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
  *  and

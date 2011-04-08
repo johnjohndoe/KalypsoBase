@@ -76,11 +76,6 @@ public class MultiPointContentHandler extends GMLElementContentHandler implement
   private Integer m_srsDimension;
 
   private String m_activeSrs;
-  
-  public MultiPointContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContenthandler, final String defaultSrs )
-  {
-    this( reader, null, resultEater, parentContenthandler, defaultSrs );
-  }
 
   public MultiPointContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContenthandler )
   {

@@ -44,14 +44,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * @author Dirk Kuch
  */
-public class FindAxisLayerVisitor implements IChartLayerVisitor
+public class FindAxisLayerVisitor extends AbstractChartLayerVisitor
 {
   Set<IChartLayer> m_layers = new HashSet<IChartLayer>();
 

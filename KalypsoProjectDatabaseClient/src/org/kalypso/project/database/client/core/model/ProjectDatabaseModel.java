@@ -114,8 +114,6 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 
   synchronized private void buildProjectList( )
   {
-    m_projects.clear();
-
     final ILocalProject[] localProjects = m_local.getProjects();
     IRemoteProject[] remoteProjects = new IRemoteProject[] {};
 
@@ -138,9 +136,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
       if( remote != null )
       {
         remoteProjects = (IRemoteProject[]) ArrayUtils.removeElement( remoteProjects, remote );
-        final TranscendenceProjectHandler project = new TranscendenceProjectHandler( handler, remote );
-
-        m_projects.add( project );
+        m_projects.add( new TranscendenceProjectHandler( handler, remote ) );
       }
       else
       {

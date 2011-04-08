@@ -93,6 +93,8 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
   private final ZmlTableComposite m_table;
 
+  private IExtendedZmlTableColumn m_lastColumn;
+
   public ZmlTableSelectionHandler( final ZmlTableComposite table )
   {
     m_table = table;
@@ -166,6 +168,8 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     if( Objects.isNull( column ) )
       return;
 
+    m_lastColumn = column;
+
     if( controlPoint.x > 0 ) // header
     {
       final ZmlTableHeaderContextMenuProvider menuProvider = new ZmlTableHeaderContextMenuProvider();
@@ -182,6 +186,9 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
   private IExtendedZmlTableColumn findColumn( final Point point )
   {
+    if( Objects.isNull( point ) )
+      return null;
+
     final int columnIndex = findColumnIndex( point.x );
     if( columnIndex == -1 )
       return null;
@@ -223,7 +230,14 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   @Override
   public IZmlTableColumn findActiveColumnByPosition( )
   {
-    return findColumn( m_position );
+    if( Objects.isNotNull( m_lastColumn ) )
+      return m_lastColumn;
+
+    final IExtendedZmlTableColumn found = findColumn( m_position );
+    if( Objects.isNotNull( found ) )
+      m_lastColumn = found;
+
+    return m_lastColumn;
   }
 
   @Override
@@ -238,7 +252,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     return new ZmlTableCell( row, column );
   }
 
-  public ViewerCell findActiveViewerCell( )
+  private ViewerCell findActiveViewerCell( )
   {
     if( Objects.isNull( m_position ) )
       return null;

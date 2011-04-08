@@ -154,18 +154,7 @@ public class CaseHandler implements ICase
       final ICase other = (ICase) obj;
 
       final EqualsBuilder builder = new EqualsBuilder();
-
-      final Case caze = getCase();
-      final Case otherCase = other.getCase();
-
-      if( caze != null && otherCase != null )
-      {
-        builder.append( caze.getName(), otherCase.getName() );
-        builder.append( caze.getURI(), otherCase.getURI() );
-      }
-      else
-        builder.append( caze, otherCase );
-
+      builder.append( getCase(), other.getCase() );
       builder.append( getProject(), other.getProject() );
 
       return builder.isEquals();
@@ -182,15 +171,7 @@ public class CaseHandler implements ICase
   {
     final HashCodeBuilder builder = new HashCodeBuilder();
 
-    final Case caze = getCase();
-    if( caze == null )
-      builder.append( caze );
-    else
-    {
-      builder.append( caze.getName() );
-      builder.append( caze.getURI() );
-    }
-
+    builder.append( getCase() );
     builder.append( getProject() );
 
     return builder.toHashCode();

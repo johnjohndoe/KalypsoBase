@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,49 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.rules.impl.forecast;
+package de.openali.odysseus.chart.factory.layer;
 
-import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.metadata.MetadataHelper;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.zml.core.table.binding.DataColumn;
-import org.kalypso.zml.core.table.model.IZmlModel;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
+ *
  */
-public abstract class AbstractForecastRule extends AbstractZmlTableRule
+public abstract class AbstractLayerRangeVisitor extends AbstractChartLayerVisitor
 {
-  private DateRange m_dateRange;
+  private Double m_min = null;
 
-  private MetadataList m_metadata;
+  private Double m_max = null;
 
-  protected DateRange getDateRange( final IZmlValueReference reference, final String keyFrom, final String keyTo )
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
+   */
+  @Override
+  public final void visit( final IChartLayer layer )
   {
-    final MetadataList metadata = findMetadata( reference );
-    if( m_metadata != metadata )
-    {
-      m_dateRange = MetadataHelper.getDateRange( metadata, keyFrom, keyTo );
-      m_metadata = metadata;
-    }
+    if( !layer.isVisible() )
+      return;
 
-    return m_dateRange;
+    final IDataRange<Number> dr = getLayerRange( layer );
+    if( dr != null )
+    {
+      if( m_max == null )
+        m_max = dr.getMax().doubleValue();
+      else
+        m_max = Math.max( m_max, dr.getMax().doubleValue() );
+
+      if( m_min == null )
+        m_min = dr.getMin().doubleValue();
+      else
+        m_min = Math.min( m_min, dr.getMin().doubleValue() );
+    }
   }
 
-  private MetadataList findMetadata( final IZmlValueReference reference )
-  {
-    final IZmlModel model = reference.getModel();
-    final IZmlModelColumn[] columns = model.getColumns();
-    for( final IZmlModelColumn column : columns )
-    {
-      final DataColumn dataColumn = column.getDataColumn();
-      if( dataColumn.isMetadataSource() )
-        return column.getMetadata();
-    }
+  protected abstract IDataRange<Number> getLayerRange( final IChartLayer layer );
 
-    return null;
+  public final IDataRange<Number> getRange( )
+  {
+    if( m_min == null || m_max == null )
+      return null;
+
+    return new DataRange<Number>( m_min, m_max );
   }
 }

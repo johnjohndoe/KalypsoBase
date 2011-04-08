@@ -38,15 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.ext.base.axisrenderer.provider;
-
-import de.openali.odysseus.chart.ext.base.axisrenderer.IDateTimeAxisField;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
+package org.kalypso.repository;
 
 /**
- * @author kimwerner
+ * @author Dirk Kuch
  */
-public interface IDateTimeAxisFieldProvider
+public interface IDataSourceItem
 {
-  IDateTimeAxisField getDateTimeAxisField( final IDataRange<Number> range );
+  public static final String FILTER_SOURCE = "filter://";
+
+  String MD_DATA_SOURCE_ITEM = "Datenabruf_Quelle";
+
+  String MD_DATA_SOURCE_ITEM_REPOSITORY = "Datenabruf_Repository_Quelle";
+
+  String SOURCE_PREFIX = "source://";
+
+  String SOURCE_UNKNOWN = SOURCE_PREFIX + "unknown";
+
+  String SOURCE_MANUAL_CHANGED = SOURCE_PREFIX + "manually.changed";
 }

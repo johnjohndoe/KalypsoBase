@@ -54,4 +54,6 @@ public interface IChartLayerVisitor
    * @return continue search
    */
   void visit( IChartLayer layer ) throws CancelVisitorException;
+
+  void doFinialize( );
 }

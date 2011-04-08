@@ -54,13 +54,15 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
- * A content handler for gml:MultiLineString NOTE: Deprecated with GML 3.0 and included for backwards compatibility with
- * GML 2. Use the "MultiCurve" element instead
+ * A content handler for gml:MultiLineString
+ * 
+ * NOTE: Deprecated with GML 3.0 and included for backwards compatibility with GML 2. Use the "MultiCurve" element instead
  * 
  * @author Felipe Maximino
+ *
  */
 public class MultiLineStringContentHandler extends GMLElementContentHandler implements ICurveHandler
-{
+{  
   private static final String ELEMENT_MULTI_LINE_STRING = "MultiLineString";
 
   private final UnmarshallResultEater m_resultEater;
@@ -71,24 +73,18 @@ public class MultiLineStringContentHandler extends GMLElementContentHandler impl
 
   private GM_MultiCurve m_multiLineString;
 
-  public MultiLineStringContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContenthandler, final String defaultSrs )
+  public MultiLineStringContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContenthandler )
   {
-    super( reader, NS.GML3, ELEMENT_MULTI_LINE_STRING, defaultSrs, parentContenthandler );
+    super( reader, NS.GML3, ELEMENT_MULTI_LINE_STRING, parentContenthandler );
 
     m_resultEater = resultEater;
 
     m_lineStrings = new ArrayList<GM_Curve>();
     m_multiLineString = null;
-  }
-
-  public MultiLineStringContentHandler( final XMLReader reader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContenthandler )
-  {
-    this( reader, resultEater, parentContenthandler, null );
-  }
+  }  
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String,
-   *      java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
   protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
@@ -102,8 +98,7 @@ public class MultiLineStringContentHandler extends GMLElementContentHandler impl
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String,
-   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
@@ -114,8 +109,7 @@ public class MultiLineStringContentHandler extends GMLElementContentHandler impl
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedStartElement(java.lang.String,
-   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   public void handleUnexpectedStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXException
@@ -134,8 +128,7 @@ public class MultiLineStringContentHandler extends GMLElementContentHandler impl
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String,
-   *      java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
   public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
@@ -158,7 +151,7 @@ public class MultiLineStringContentHandler extends GMLElementContentHandler impl
   @Override
   public void handle( final GM_Curve element )
   {
-    m_lineStrings.add( element );
+    m_lineStrings.add( element );    
   }
 
   private GM_MultiCurve endMultiLineString( )

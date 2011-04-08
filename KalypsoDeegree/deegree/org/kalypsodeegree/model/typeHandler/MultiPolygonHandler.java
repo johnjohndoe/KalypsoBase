@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -47,7 +47,6 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.io.sax.marshaller.MultiPolygonMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.MultiPolygonContentHandler;
@@ -57,20 +56,19 @@ import org.xml.sax.XMLReader;
 
 /**
  * @author Felipe Maximino
+ *
  */
 public class MultiPolygonHandler implements IMarshallingTypeHandler2
 {
   private static final QName QNAME_TYPE = GMLConstants.QN_MULTI_POLYGON;
 
   /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler2#createContentHandler(org.xml.sax.XMLReader,
-   *      org.xml.sax.ContentHandler, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String,
-   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler2#createContentHandler(org.xml.sax.XMLReader, org.xml.sax.ContentHandler, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {
-    return new MultiPolygonContentHandler( reader, resultEater, parentContentHandler, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    return new MultiPolygonContentHandler( reader, resultEater, parentContentHandler );
   }
 
   /**
@@ -93,8 +91,7 @@ public class MultiPolygonHandler implements IMarshallingTypeHandler2
   }
 
   /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader,
-   *      java.net.URL, java.lang.String)
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#marshal(java.lang.Object, org.xml.sax.XMLReader, java.net.URL, java.lang.String)
    */
   @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
@@ -112,8 +109,7 @@ public class MultiPolygonHandler implements IMarshallingTypeHandler2
   }
 
   /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader, java.net.URL,
-   *      org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String)
+   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#unmarshal(org.xml.sax.XMLReader, java.net.URL, org.kalypso.gmlschema.types.UnmarshallResultEater, java.lang.String)
    */
   @Override
   public void unmarshal( final XMLReader reader, final URL context, final UnmarshallResultEater marshalResultEater, final String gmlVersion )

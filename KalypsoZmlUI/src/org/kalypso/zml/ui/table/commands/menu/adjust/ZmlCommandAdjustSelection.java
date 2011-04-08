@@ -40,26 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu.adjust;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
-import org.kalypso.zml.ui.table.commands.menu.spline.Splines;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-
-import com.mxgraph.util.mxPoint;
 
 /**
  * @author Dirk Kuch
@@ -67,87 +56,18 @@ import com.mxgraph.util.mxPoint;
 public class ZmlCommandAdjustSelection extends AbstractHandler
 {
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
-// try
-// {
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
     final IZmlTableSelectionHandler selection = table.getSelectionHandler();
     final IZmlTableColumn column = selection.findActiveColumnByPosition();
-    final IZmlTableCell[] selected = column.getSelectedCells();
-    if( selected.length < 2 )
-      throw new ExecutionException( "Spline-Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
     final ZmlAdjustSelectionDialog dialog = new ZmlAdjustSelectionDialog( shell, column );
     dialog.open();
 
-// final IElementPage[] resultPages = new IElementPage[] { m_page };
-//
-// final ElementsComposite resultElements = new ElementsComposite( m_body, toolkit, resultPages );
-// resultElements.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-
-// final IZmlValueReference[] intervall = findIntervall( selected );
-// final IZmlValueReference s1 = intervall[0];
-// final IZmlValueReference s2 = intervall[1];
-//
-// final ZmlStuetstellenVisitor visitor = new ZmlStuetstellenVisitor( s1, s2 );
-// model.accept( visitor );
-//
-// final IZmlValueReference[] stuetzstellen = visitor.getStuetzstellen();
-//
-// final List<mxPoint> mxPoints = new ArrayList<mxPoint>();
-//
-// final Splines splines = new Splines( new DateRange( s1.getIndexValue(), s2.getIndexValue() ) );
-//
-// Collections.addAll( mxPoints, getPoints( splines, s1 ) );
-// Collections.addAll( mxPoints, getPoints( splines, stuetzstellen ) );
-// Collections.addAll( mxPoints, getPoints( splines, s2 ) );
-//
-// final mxSpline mxSpline = new mxSpline( mxPoints );
-// splines.apply( mxSpline );
-//
-// model.accept( new ApplySplineValuesVisior( splines, s1, s2 ) );
-// }
-// catch( final SensorException e )
-// {
-// throw new ExecutionException( "Spline-Interpolation fehlgeschlagen.", e );
-// }
-
     return Status.OK_STATUS;
 
   }
 
-  private mxPoint[] getPoints( final Splines splines, final IZmlValueReference... references ) throws SensorException
-  {
-    final List<mxPoint> points = new ArrayList<mxPoint>();
-
-    for( final IZmlValueReference reference : references )
-    {
-      final Date date = reference.getIndexValue();
-      final Number value = reference.getValue();
-
-      points.add( new mxPoint( splines.convertDate( date ), value.doubleValue() ) );
-    }
-
-    return points.toArray( new mxPoint[] {} );
-  }
-
-  private IZmlValueReference[] findIntervall( final IZmlTableCell[] cells )
-  {
-    IZmlTableCell start = cells[0];
-    IZmlTableCell end = cells[0];
-
-    for( final IZmlTableCell cell : cells )
-    {
-      if( cell.getIndex() < start.getIndex() )
-        start = cell;
-
-      if( cell.getIndex() > end.getIndex() )
-        end = cell;
-    }
-
-    return new IZmlValueReference[] { start.getValueReference(), end.getValueReference() };
-
-  }
 }

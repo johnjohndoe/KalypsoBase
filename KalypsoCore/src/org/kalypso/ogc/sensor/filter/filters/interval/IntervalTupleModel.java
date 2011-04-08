@@ -58,8 +58,6 @@ import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
-import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 
 /**
  * @author doemming
@@ -106,6 +104,11 @@ public class IntervalTupleModel extends AbstractTupleModel
     m_to = initTo( to, sourceModelRange );
 
     m_intervallModel = initModell( getAxes() );
+  }
+
+  public MetadataList getMetadata( )
+  {
+    return m_metadata;
   }
 
   private Calendar initFrom( final Date from, final IAxisRange sourceModelRange )
@@ -171,17 +174,11 @@ public class IntervalTupleModel extends AbstractTupleModel
     // initialize source
     stack.lastSrcCalendar = stack.lastTargetCalendar;
 
-    // BUGFIX: handle case when source start before from
+    // BUGFIX: handle case when source starts before from
     // Before this fix, this lead to a endless loop
     final Calendar firstSrcCal = getFirstSrcCalendar();
     if( firstSrcCal.before( stack.lastSrcCalendar ) )
       stack.lastSrcCalendar = firstSrcCal;
-
-    // fill initial row
-    // final Interval initialIntervall = new Interval( m_from, m_from, defaultStatus, defaultValues );
-    // updateModelfromintervall( m_intervallModel, targetRow, initialIntervall );
-    // targetRow++;
-    // doemming: removed last 3 rows to avoid generating beginning "0" value.
 
     PROCESSING_INSTRUCTION instruction = PROCESSING_INSTRUCTION.eNothing;
     while( !instruction.isFinished() )
@@ -217,13 +214,13 @@ public class IntervalTupleModel extends AbstractTupleModel
 
         case Interval.STATUS_INTERSECTION_START:
         case Interval.STATUS_INTERSECTION_INSIDE:
-          stack.targetInterval.merge( intersection, m_mode );
+          stack.targetInterval.merge( stack.srcInterval, intersection, m_mode );
           instruction = PROCESSING_INSTRUCTION.eGoToNextTarget;
           break;
 
         case Interval.STATUS_INTERSECTION_END:
         case Interval.STATUS_INTERSECTION_ARROUND:
-          stack.targetInterval.merge( intersection, m_mode );
+          stack.targetInterval.merge( stack.srcInterval, intersection, m_mode );
           instruction = PROCESSING_INSTRUCTION.eGoToNextSource;
           break;
 
@@ -268,6 +265,7 @@ public class IntervalTupleModel extends AbstractTupleModel
     // FIXME: no! use real source values instead!
     // REMARK: not really a problem, because this is only used in the case if we are
     // after the last real source intervall -> interval length is irrelevant in that case
+    // FIXME: no! it is used and produces real errors...!
     srcCalIntervallEnd.add( m_calendar.getCalendarField(), m_calendar.getAmount() );
 
     // if we are after the source time series
@@ -326,9 +324,7 @@ public class IntervalTupleModel extends AbstractTupleModel
   {
     final DataSourceHandler handler = new DataSourceHandler( m_metadata );
 
-    final IAxis[] dataSourcesAxes = m_axes.getDataSourcesAxes();
-
-    final Object[] srcDataSourceObjects = ObservationUtilities.getElements( m_srcModel, index, dataSourcesAxes );
+    final Object[] srcDataSourceObjects = ObservationUtilities.getElements( m_srcModel, index, m_axes.getDataSourcesAxes() );
     final String[] srcDataSources = new String[srcDataSourceObjects.length];
 
     for( int i = 0; i < srcDataSourceObjects.length; i++ )
@@ -336,10 +332,7 @@ public class IntervalTupleModel extends AbstractTupleModel
       final Number srcIndex = (Number) srcDataSourceObjects[i];
       final String dataSourceIdentifier = handler.getDataSourceIdentifier( srcIndex.intValue() );
 
-      if( dataSourceIdentifier == null )
-        srcDataSources[i] = IDataSourceItem.SOURCE_UNKNOWN;
-      else
-        srcDataSources[i] = dataSourceIdentifier;
+      srcDataSources[i] = dataSourceIdentifier;
     }
 
     return srcDataSources;
@@ -381,26 +374,23 @@ public class IntervalTupleModel extends AbstractTupleModel
     final double[] value = targetInterval.getValue();
     final String[] sources = targetInterval.getSources();
 
-    model.set( targetRow, m_axes.getDateAxis(), cal.getTime() );
+    final Date time = cal.getTime();
+    model.set( targetRow, m_axes.getDateAxis(), time );
 
     final IAxis[] statusAxes = m_axes.getStatusAxes();
     final IAxis[] valueAxes = m_axes.getValueAxes();
     final IAxis[] dataSourceAxes = m_axes.getDataSourcesAxes();
 
     for( int i = 0; i < statusAxes.length; i++ )
-    {
       model.set( targetRow, statusAxes[i], Integer.valueOf( status[i] ) );
-    }
 
     for( int i = 0; i < valueAxes.length; i++ )
-    {
       model.set( targetRow, valueAxes[i], new Double( value[i] ) );
-    }
 
     final DataSourceHandler handler = new DataSourceHandler( m_metadata );
     for( int i = 0; i < dataSourceAxes.length; i++ )
     {
-      final int dataSource = handler.addDataSource( sources[i], String.format( "%s%s", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID ) );
+      final int dataSource = handler.addDataSource( sources[i], sources[i] );
       model.set( targetRow, dataSourceAxes[i], Integer.valueOf( dataSource ) );
     }
   }

@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.filter.filters.interval;
 import java.util.Calendar;
 
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter.MODE;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 
@@ -234,7 +235,6 @@ public class Interval
     result.setStatus( status );
 
     final String[] sources = getSources();
-    IntervalSourceHandler.intersectSources( sources, factor );
     result.setSources( sources );
 
     return result;
@@ -272,21 +272,25 @@ public class Interval
     m_sources = sources.clone();
   }
 
-  public void merge( final Interval other, final MODE mode )
+  public void merge( final Interval sourceInterval, final Interval intersection, final MODE mode )
   {
-    final double factor = calcFactorMerge( other, mode );
-    for( int i = 0; i < other.getValue().length; i++ )
+    final double factor = calcFactorMerge( intersection, mode );
+    for( int i = 0; i < intersection.getValue().length; i++ )
     {
-      m_value[i] += factor * other.getValue()[i];
+      m_value[i] += factor * intersection.getValue()[i];
     }
 
-    for( int i = 0; i < other.getStatus().length; i++ )
+    for( int i = 0; i < intersection.getStatus().length; i++ )
     {
-      m_status[i] |= other.getStatus()[i];
+      m_status[i] |= intersection.getStatus()[i];
     }
 
-    IntervalSourceHandler.mergeSources( m_sources, other.getSources() );
+    if( intersection.getStart().equals( intersection.getEnd() ) )
+      return;
+
+    m_sources = mergeSources( sourceInterval );
   }
+
 
   private double calcFactorIntersect( final Interval other, final MODE mode )
   {
@@ -346,5 +350,28 @@ public class Interval
       result.append( "\n" ); //$NON-NLS-1$
     }
     return result.toString();
+  }
+
+  private String[] mergeSources( final Interval other )
+  {
+    final String[] mergedSources = new String[m_sources.length];
+    final String[] otherSources = other.getSources();
+
+    if( isSame( other ) )
+      return otherSources;
+
+
+    for( int i = 0; i < otherSources.length; i++ )
+      mergedSources[i] = IntervalSourceHandler.mergeSourceReference( m_sources[i], otherSources[i] );
+
+    return mergedSources;
+  }
+
+  private boolean isSame( final Interval other )
+  {
+    final DateRange myRange = new DateRange( getStart().getTime(), getEnd().getTime() );
+    final DateRange otherRange = new DateRange( other.getStart().getTime(), other.getEnd().getTime() );
+
+    return myRange.compareTo( otherRange ) == 0;
   }
 }
