@@ -57,7 +57,7 @@ Bundle-ClassPath: lib/apache/lang/commons-lang-2.6.jar,
  lib/itext-5.0.5/iText-5.0.5.jar,
  lib/pdf-renderer/PDFRenderer.jar,
  lib/jgraph/jgraphx_1_5_1_11.jar,
- lib/guava/guava-r09-rc3.jar,
+ lib/guava/guava-r09.jar,
  .
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
