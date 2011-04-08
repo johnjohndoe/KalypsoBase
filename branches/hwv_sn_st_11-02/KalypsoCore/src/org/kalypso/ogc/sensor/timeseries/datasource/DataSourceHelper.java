@@ -49,6 +49,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.repository.IDataSourceItem;
 
 /**
  * Helper code for multiple data source references - lke: filter://smeFilterClass?source_1=blub&source_2=blub2&...
@@ -58,8 +59,6 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 public final class DataSourceHelper
 {
   private static final String PREFIX_SOURCE = "source_";
-
-  public static final String FILTER_SOURCE = "filter://";
 
   private DataSourceHelper( )
   {
@@ -94,7 +93,7 @@ public final class DataSourceHelper
 
   public static boolean isFiltered( final String reference )
   {
-    return reference.startsWith( FILTER_SOURCE );
+    return reference.startsWith( IDataSourceItem.FILTER_SOURCE );
   }
 
   public static boolean hasDataSources( final ITupleModel model )
@@ -107,5 +106,10 @@ public final class DataSourceHelper
   public static IAxis createSourceAxis( )
   {
     return new DefaultAxis( ITimeseriesConstants.TYPE_DATA_SRC, ITimeseriesConstants.TYPE_DATA_SRC, StringUtils.EMPTY, Integer.class, false );
+  }
+
+  public static boolean isUnknown( final String identifier )
+  {
+    return IDataSourceItem.SOURCE_UNKNOWN.equals( identifier );
   }
 }

@@ -47,6 +47,7 @@ import java.util.TreeMap;
 
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.utils.RepositoryItems;
 

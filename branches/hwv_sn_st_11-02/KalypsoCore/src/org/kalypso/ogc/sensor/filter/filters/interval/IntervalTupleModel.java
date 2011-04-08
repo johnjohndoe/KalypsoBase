@@ -58,7 +58,6 @@ import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 
 /**
  * @author doemming
@@ -390,7 +389,7 @@ public class IntervalTupleModel extends AbstractTupleModel
     final DataSourceHandler handler = new DataSourceHandler( m_metadata );
     for( int i = 0; i < dataSourceAxes.length; i++ )
     {
-      final int dataSource = handler.addDataSource( sources[i], String.format( "%s%s", DataSourceHelper.FILTER_SOURCE, IntervalFilter.FILTER_ID ) );
+      final int dataSource = handler.addDataSource( sources[i], sources[i] );
       model.set( targetRow, dataSourceAxes[i], Integer.valueOf( dataSource ) );
     }
   }
