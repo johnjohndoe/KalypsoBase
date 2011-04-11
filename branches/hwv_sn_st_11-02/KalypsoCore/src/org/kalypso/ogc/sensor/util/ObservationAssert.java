@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.filter.filters.interval.test;
+package org.kalypso.ogc.sensor.util;
 
 import junit.framework.Assert;
 
@@ -48,6 +48,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 
 /**
  * Helper that compares {@link IObservation}'s.
@@ -176,8 +177,13 @@ public class ObservationAssert extends Assert
     final IAxis[] expectedAxes = m_expected.getAxes();
     final IAxis[] actualAxes = m_actual.getAxes();
 
+    final IAxis keyAxis = AxisUtils.findDateAxis( expectedAxes );
+
     for( int i = 0; i < expectedSize; i++ )
     {
+      final Object key = expectedValues.get( i, keyAxis );
+      final String msg = String.format( "Values different at index %d (%s)", i, key );
+
       for( final IAxis expectedAxis : expectedAxes )
       {
         /* Find actualAxis by name, we cannot assume they are in the same order */
@@ -187,8 +193,8 @@ public class ObservationAssert extends Assert
         final Object expectedValue = expectedValues.get( i, expectedAxis );
         final Object actualValue = actualValues.get( i, actualAxis );
 
-        final String msg = String.format( "Value different at index %d (Axis %s)", i, expectedAxis );
-        assertEquals( msg, expectedValue, actualValue );
+        final String axisMsg = String.format( " (Axis %s)", expectedAxis );
+        assertEquals( msg + axisMsg, expectedValue, actualValue );
       }
     }
   }

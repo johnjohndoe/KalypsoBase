@@ -83,13 +83,13 @@ public class IntervalData
     return m_source;
   }
 
-  public IntervalData plus( final IntervalData sourceData, final double factor )
+  public IntervalData plus( final IntervalData sourceData )
   {
     final double[] sourceValues = sourceData.getValues();
     final double[] newValues = new double[sourceValues.length];
 
     for( int i = 0; i < newValues.length; i++ )
-      newValues[i] = m_values[i] + factor * sourceValues[i];
+      newValues[i] = m_values[i] + sourceValues[i];
 
     final int[] sourceStati = sourceData.getStati();
     final int[] newStati = new int[sourceStati.length];

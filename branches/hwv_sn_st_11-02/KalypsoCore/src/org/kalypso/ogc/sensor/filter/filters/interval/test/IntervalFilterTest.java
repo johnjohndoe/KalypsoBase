@@ -66,6 +66,7 @@ import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilterOperation;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.util.ObservationAssert;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.xml.sax.InputSource;
 
@@ -78,7 +79,7 @@ public class IntervalFilterTest extends Assert
 {
   private final DateFormat m_df = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
 
-  private final boolean m_useOldFilter = true;
+  private final boolean m_useOldFilter = false;
 
   @Before
   public void init( )
@@ -96,7 +97,13 @@ public class IntervalFilterTest extends Assert
 
     final IntervalDefinition intervalDefinition = new IntervalDefinition( Calendar.HOUR_OF_DAY, 1, Double.NaN, KalypsoStati.BIT_CHECK );
     // FIXME: expected result is actually not correct; but we know the filter i buggy at the moment
-    doTestFilter( "days.zml", "expectedSourceTooSmallBUGGY.zml", start, end, intervalDefinition );
+    final String expectedZml;
+    if( m_useOldFilter )
+      expectedZml = "expectedSourceTooSmallBUGGY.zml";
+    else
+      expectedZml = "expectedSourceTooSmall.zml";
+
+    doTestFilter( "days.zml", expectedZml, start, end, intervalDefinition );
   }
 
   @Test
@@ -126,7 +133,14 @@ public class IntervalFilterTest extends Assert
     final Date end = m_df.parse( "01.03.2011 00:00" );
 
     final IntervalDefinition intervalDefinition = new IntervalDefinition( Calendar.HOUR_OF_DAY, 24, Double.NaN, KalypsoStati.BIT_CHECK );
-    doTestFilter( "dresden-klotsche1h_777Tage.zml", "expectedFromDresden777Tage.zml", start, end, intervalDefinition );
+
+    final String expectedZml;
+    if( m_useOldFilter )
+      expectedZml = "expectedFromDresden777TageBUGGY.zml";
+    else
+      expectedZml = "expectedFromDresden777Tage.zml";
+
+    doTestFilter( "dresden-klotsche1h_777Tage.zml", expectedZml, start, end, intervalDefinition );
   }
 
   @Test
@@ -147,7 +161,13 @@ public class IntervalFilterTest extends Assert
 
     final IntervalDefinition intervalDefinition = new IntervalDefinition( Calendar.HOUR_OF_DAY, 1, Double.NaN, KalypsoStati.BIT_CHECK );
     // FIXME: expected result is actually not correct; but we know the filter i buggy at the moment
-    doTestFilter( "hasHoles24h.zml", "expectedHasHoles24BUGGY.zml", start, end, intervalDefinition );
+    String expectedZml;
+    if( m_useOldFilter )
+      expectedZml = "expectedHasHoles24BUGGY.zml";
+    else
+      expectedZml = "expectedHasHoles24.zml";
+
+    doTestFilter( "hasHoles24h.zml", expectedZml, start, end, intervalDefinition );
   }
 
   @Test
@@ -240,7 +260,7 @@ public class IntervalFilterTest extends Assert
 
   private IObservation readZml( final String resource ) throws SensorException, MalformedURLException
   {
-    final URL location = resource == null ? new URL( "file://LEER" ) : getClass().getResource( resource );
+    final URL location = resource == null ? new URL( "file://LEER" ) : getClass().getResource( "resources/" + resource );
 
     assertNotNull( location );
 
