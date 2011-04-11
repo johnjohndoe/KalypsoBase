@@ -40,40 +40,64 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters.interval;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.joda.time.Interval;
 
 /**
- * @author Dirk Kuch
+ * @author doemming
  */
-public class IntervalModelAxes
+public class IntervalData
 {
+  private final Interval m_interval;
 
-  private final IAxis[] m_axes;
+  private final double[] m_values;
 
-  public IntervalModelAxes( final IAxis[] axes )
+  private final int[] m_stati;
+
+  private final String m_source;
+
+  public IntervalData( final Interval interval, final double[] values, final int[] stati, final String source )
   {
-    m_axes = axes;
+    m_interval = interval;
+    m_values = values;
+    m_stati = stati;
+    m_source = source;
   }
 
-  public IAxis getDateAxis( )
+  public Interval getInterval( )
   {
-    return AxisUtils.findDateAxis( m_axes );
+    return m_interval;
   }
 
-  public IAxis[] getValueAxes( )
+  public double[] getValues( )
   {
-    return AxisUtils.findValueAxes( m_axes );
+    return m_values;
   }
 
-  public IAxis[] getStatusAxes( )
+  public int[] getStati( )
   {
-    return AxisUtils.findStatusAxes( m_axes );
+    return m_stati;
   }
 
-  public IAxis[] getDataSourcesAxes( )
+  public String getSource( )
   {
-    return AxisUtils.findDataSourceAxes( m_axes );
+    return m_source;
   }
 
+  public IntervalData plus( final IntervalData sourceData, final double factor )
+  {
+    final double[] sourceValues = sourceData.getValues();
+    final double[] newValues = new double[sourceValues.length];
+
+    for( int i = 0; i < newValues.length; i++ )
+      newValues[i] = m_values[i] + factor * sourceValues[i];
+
+    final int[] sourceStati = sourceData.getStati();
+    final int[] newStati = new int[sourceStati.length];
+    for( int i = 0; i < newStati.length; i++ )
+      newStati[i] = m_stati[i] | sourceStati[i];
+
+    final String newSource = IntervalSourceHandler.mergeSourceReference( m_source, sourceData.getSource() );
+
+    return new IntervalData( m_interval, newValues, newStati, newSource );
+  }
 }
