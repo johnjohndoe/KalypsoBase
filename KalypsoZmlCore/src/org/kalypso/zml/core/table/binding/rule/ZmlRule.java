@@ -117,7 +117,7 @@ public class ZmlRule
       {
         if( instruction.matches( reference ) )
         {
-          final CellStyle style = instruction.getStyle();
+          final CellStyle style = instruction.getStyle( reference );
           if( style != null )
             base = CellStyle.merge( base, style.getType() );
         }

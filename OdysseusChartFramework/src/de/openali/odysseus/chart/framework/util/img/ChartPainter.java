@@ -42,6 +42,7 @@ package de.openali.odysseus.chart.framework.util.img;
 
 import java.awt.Insets;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -55,6 +56,7 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.util.img.legend.ChartLegendCanvas;
 import de.openali.odysseus.chart.framework.util.img.legend.config.DefaultChartLegendConfig;
@@ -96,10 +98,15 @@ public class ChartPainter
   {
     if( m_size.width == 0 || m_size.height == 0 )
       return null;
+
     setAxesHeight( getPlotInsets(), m_size );
+
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, m_size.width, m_size.height );
     final GC gc = new GC( image );
+    gc.setAntialias( SWT.OFF );
+    gc.setAdvanced( true );
+
     final Transform transform = new Transform( dev );
 
     m_titlePainter.paint( gc, new Rectangle( 0, 0, m_size.width, m_titlePainter.getSize().y ) );
@@ -116,19 +123,22 @@ public class ChartPainter
     // paint left Axes
     resetTransform( gc, transform );
     gc.setClipping( new Rectangle( 0, m_titlePainter.getSize().y, plotInsets.left, m_size.height - m_titlePainter.getSize().y - m_legendPainter.getSize().y ) );
-    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ), gc, transform, new Point( 0, plotInsets.top ) );
+
+    final IMapperRegistry mapperRegistry = m_model.getMapperRegistry();
+
+    paintAxes( mapperRegistry.getAxesAt( POSITION.LEFT ), gc, transform, new Point( 0, plotInsets.top ) );
     // paint right Axes
     resetTransform( gc, transform );
     gc.setClipping( new Rectangle( m_size.width - plotInsets.right, m_titlePainter.getSize().y, plotInsets.right, m_size.height - m_titlePainter.getSize().y - m_legendPainter.getSize().y ) );
-    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ), gc, transform, new Point( m_size.width - plotInsets.right, plotInsets.top ) );
+    paintAxes( mapperRegistry.getAxesAt( POSITION.RIGHT ), gc, transform, new Point( m_size.width - plotInsets.right, plotInsets.top ) );
     // paint top Axes
     resetTransform( gc, transform );
     gc.setClipping( new Rectangle( 0, m_titlePainter.getSize().y, m_size.width, plotInsets.top - m_titlePainter.getSize().y ) );
-    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ), gc, transform, new Point( plotInsets.left, 0 ) );
+    paintAxes( mapperRegistry.getAxesAt( POSITION.TOP ), gc, transform, new Point( plotInsets.left, 0 ) );
     // paint bottom Axes
     resetTransform( gc, transform );
     gc.setClipping( new Rectangle( 0, m_size.height - plotInsets.bottom, m_size.width, plotInsets.bottom - m_legendPainter.getSize().y ) );
-    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ), gc, transform, new Point( plotInsets.left, m_size.height - plotInsets.bottom ) );
+    paintAxes( mapperRegistry.getAxesAt( POSITION.BOTTOM ), gc, transform, new Point( plotInsets.left, m_size.height - plotInsets.bottom ) );
 
     resetTransform( gc, transform );
     gc.setClipping( m_size );
@@ -141,6 +151,7 @@ public class ChartPainter
     {
       if( legendImage != null )
         legendImage.dispose();
+
       transform.dispose();
       gc.dispose();
     }

@@ -52,8 +52,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
+import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
@@ -89,7 +89,7 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
 
       final IAxis statusAxis = AxisUtils.findStatusAxis( model.getAxes() );
       final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( model.getAxes() );
-      final String src = String.format( "%s%s", DataSourceHelper.FILTER_SOURCE, InterpolationFilter.FILTER_ID ); //$NON-NLS-1$
+      final String src = String.format( "%s%s", IDataSourceItem.FILTER_SOURCE, InterpolationFilter.FILTER_ID ); //$NON-NLS-1$
       final DataSourceHandler dataSourceHandler = new DataSourceHandler( modelColumn.getMetadata() );
 
       final IZmlTableCell[] cells = column.getSelectedCells();

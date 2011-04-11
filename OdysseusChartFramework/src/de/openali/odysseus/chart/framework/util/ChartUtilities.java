@@ -87,7 +87,8 @@ public final class ChartUtilities
       }
       catch( final ClassCastException e )
       {
-        System.out.println();
+        e.printStackTrace();
+        // System.out.println();
       }
     }
 

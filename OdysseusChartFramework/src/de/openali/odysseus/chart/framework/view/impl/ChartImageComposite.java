@@ -7,8 +7,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
@@ -56,45 +56,23 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
-      if( m_image != null && !m_image.isDisposed() )
-      {
-        m_image.dispose();
-        m_image = null;
-      }
-
-      if( isDisposed() )
-        return Status.OK_STATUS;
-
-      final IChartModel model = getChartModel();
-
-      final IMapperRegistry mapperRegistry = model == null ? null : model.getMapperRegistry();
-      if( mapperRegistry == null )
-        return Status.OK_STATUS;
-
-      final Rectangle panel = getClientArea();
-      final ChartPainter chartPainter = new ChartPainter( model, panel );
-      m_plotRect = inflateRect( panel, chartPainter.getPlotInsets() );
-      m_image = chartPainter.createImage( m_panOffset );
-
-      redraw();
-
-      return Status.OK_STATUS;
+      return doInvalidateChart();
     }
   }
 
-  protected IChartModel m_model;
+  private IChartModel m_model;
 
-  protected Image m_image = null;
+  private Image m_image = null;
 
-  protected Rectangle m_plotRect = null;
+  private Rectangle m_plotRect = null;
 
   private Rectangle m_dragArea = null;
 
-  protected Point m_panOffset = new Point( 0, 0 );
+  private Point m_panOffset = new Point( 0, 0 );
 
-  protected EditInfo m_editInfo = null;
+  private EditInfo m_editInfo = null;
 
-  protected EditInfo m_tooltipInfo = null;
+  private EditInfo m_tooltipInfo = null;
 
   private final ChartTooltipPainter m_tooltipPainter = new ChartTooltipPainter();
 
@@ -173,9 +151,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     @Override
     public void onMapperChanged( final IMapper mapper )
     {
-
       invalidate();
-
     }
 
     /**
@@ -205,33 +181,12 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       @Override
       public void paintControl( final PaintEvent paintEvent )
       {
-        if( m_image == null )
-          return;
-        final GC gc = paintEvent.gc;
-        gc.drawImage( m_image, 0, 0 );// -m_panOffset.x, -m_panOffset.y );
-        final Transform newTransform = new Transform( gc.getDevice() );
-        gc.getTransform( newTransform );
-        newTransform.translate( m_plotRect.x, m_plotRect.y );
-        try
-        {
-          gc.setTransform( newTransform );
-
-          paintDragArea( gc );
-          paintEditInfo( gc );
-          paintTooltipInfo( gc );
-        }
-        finally
-        {
-          newTransform.translate( -m_plotRect.x, -m_plotRect.y );
-          gc.setTransform( newTransform );
-          newTransform.dispose();
-        }
+        handlePaint( paintEvent );
       }
     } );
 
     addDisposeListener( new DisposeListener()
     {
-
       @Override
       public void widgetDisposed( final DisposeEvent e )
       {
@@ -239,22 +194,15 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       }
     } );
 
-    addControlListener( new ControlListener()
+    addControlListener( new ControlAdapter()
     {
-
-      @Override
-      public void controlMoved( final ControlEvent arg0 )
-      {
-        // na und?
-      }
-
       @Override
       public void controlResized( final ControlEvent arg0 )
       {
         invalidate();
-
       }
     } );
+
     setBackground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
     setChartModel( model );
   }
@@ -306,7 +254,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     return m_tooltipInfo;
   }
 
-  protected final Rectangle inflateRect( final Rectangle rect, final Insets insets )
+  // FIXME: move into helper class
+  protected static final Rectangle inflateRect( final Rectangle rect, final Insets insets )
   {
     return new Rectangle( rect.x + insets.left, rect.y + insets.top, rect.width - insets.left - insets.right, rect.height - insets.bottom - insets.top );
   }
@@ -317,12 +266,64 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     if( isDisposed() )
       return;
 
+    // FIXME: why this check? Why not cancel in WAITING state?
     if( m_invalidateChartJob.getState() == Job.SLEEPING )
-    {
       m_invalidateChartJob.cancel();
-    }
 
     m_invalidateChartJob.schedule( 50 );
+  }
+
+  protected IStatus doInvalidateChart( )
+  {
+    if( m_image != null && !m_image.isDisposed() )
+    {
+      m_image.dispose();
+      m_image = null;
+    }
+
+    if( isDisposed() )
+      return Status.OK_STATUS;
+
+    final IChartModel model = getChartModel();
+
+    final IMapperRegistry mapperRegistry = model == null ? null : model.getMapperRegistry();
+    if( mapperRegistry == null )
+      return Status.OK_STATUS;
+
+    final Rectangle panel = getClientArea();
+    final ChartPainter chartPainter = new ChartPainter( model, panel );
+    m_plotRect = inflateRect( panel, chartPainter.getPlotInsets() );
+    m_image = chartPainter.createImage( m_panOffset );
+
+    redraw();
+
+    return Status.OK_STATUS;
+  }
+
+  protected void handlePaint( final PaintEvent paintEvent )
+  {
+    if( m_image == null )
+      return;
+
+    final GC gc = paintEvent.gc;
+    gc.drawImage( m_image, 0, 0 );// -m_panOffset.x, -m_panOffset.y );
+    final Transform newTransform = new Transform( gc.getDevice() );
+    gc.getTransform( newTransform );
+    newTransform.translate( m_plotRect.x, m_plotRect.y );
+    try
+    {
+      gc.setTransform( newTransform );
+
+      paintDragArea( gc );
+      paintEditInfo( gc );
+      paintTooltipInfo( gc );
+    }
+    finally
+    {
+      newTransform.translate( -m_plotRect.x, -m_plotRect.y );
+      gc.setTransform( newTransform );
+      newTransform.dispose();
+    }
   }
 
   protected void paintDragArea( final GC gcw )

@@ -53,7 +53,7 @@ import org.kalypso.zml.core.table.model.references.IZmlValueReference;
  */
 public class ZmlRuleWQRelationConflict extends AbstractZmlTableRule
 {
-  public static final String ID = "org.kalypso.zml.ui.core.rule.wq.conflict";
+  public static final String ID = "org.kalypso.zml.ui.core.rule.wq.conflict"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#getIdentifier()

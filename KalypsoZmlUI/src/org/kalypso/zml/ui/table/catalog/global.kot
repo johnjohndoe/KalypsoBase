@@ -125,8 +125,8 @@
     <Style id="userModifiedStyle">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:user:modified</property>
     </Style>
-    <!--  rule - info value -->
-     <Style id="infoStyle">
+    <!-- rule - info value -->
+    <Style id="infoStyle">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:info</property>
     </Style>
     <!-- rule - interpolated value? -->
@@ -315,6 +315,9 @@
         <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_HW" label="&gt;H   ${text}" />
       </RuleInstructions>
       <label>Hauptzahl(en) W</label>
+    </Rule>
+    <Rule id="ruleDataSource" ruleReference="org.kalypso.zml.ui.core.rule.data.source" setHeaderIcon="false" enabled="false">
+      <label>Datenquelle</label>
     </Rule>
   </RuleSet>
 </ZmlTable>

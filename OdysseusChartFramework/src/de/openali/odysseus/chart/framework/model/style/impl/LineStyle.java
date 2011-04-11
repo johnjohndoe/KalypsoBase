@@ -49,44 +49,24 @@ public class LineStyle extends AbstractStyle implements ILineStyle
     return lineStyle;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see
-   * de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setLineJoin(de.openali.odysseus.chart.framework
-   * .impl.model.style.StyleConstants.LINEJOIN)
-   */
   @Override
   public void setLineJoin( final LINEJOIN join )
   {
     m_lineJoin = join;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see
-   * de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setLineCap(de.openali.odysseus.chart.framework.
-   * impl.model.style.StyleConstants.LINECAP)
-   */
   @Override
   public void setLineCap( final LINECAP cap )
   {
     m_lineCap = cap;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setColor(org.eclipse.swt.graphics.RGB)
-   */
   @Override
   public void setColor( final RGB rgb )
   {
     m_rgb = rgb;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setDash(int, int[])
-   */
   @Override
   public void setDash( final float dashOffset, final float[] dashArray )
   {
@@ -100,30 +80,18 @@ public class LineStyle extends AbstractStyle implements ILineStyle
       m_dashArray = dashArray;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setWidth(int)
-   */
   @Override
   public void setWidth( final int width )
   {
     m_width = width;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#setMiterLimit(int)
-   */
   @Override
   public void setMiterLimit( final int miterLimit )
   {
     m_miterLimit = miterLimit;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#apply(org.eclipse.swt.graphics.GC)
-   */
   @Override
   public void apply( final GC gc )
   {
@@ -137,15 +105,6 @@ public class LineStyle extends AbstractStyle implements ILineStyle
     final int lineJoin = m_lineJoin.toSWT();
     final LineAttributes la = new LineAttributes( m_width, lineCap, lineJoin, SWT.LINE_CUSTOM, m_dashArray, m_dashOffset, m_miterLimit );
     gc.setLineAttributes( la );
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see de.openali.odysseus.chart.framework.impl.model.style.ILineStyle#dispose()
-   */
-  public void dispose( )
-  {
-
   }
 
   @Override

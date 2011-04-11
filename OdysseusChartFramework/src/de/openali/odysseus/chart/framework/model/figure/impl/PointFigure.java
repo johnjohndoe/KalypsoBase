@@ -42,14 +42,21 @@ public class PointFigure extends AbstractFigure<IPointStyle>
         }
       }
 
+      // FIXME: was already aplied by super.paint; why again?
       style.apply( gc );
+
       IMarker marker = style.getMarker();
       if( marker == null )
         marker = IDefaultStyles.DEFAULT_MARKER;
-      for( final Point p : m_leftTopPoints )
-        marker.paint( gc, p, getStyle().getWidth(), getStyle().getHeight(), getStyle().getStroke().isVisible(), getStyle().isFillVisible() );
-    }
 
+      final boolean fillVisible = style.isFillVisible();
+      final int width = style.getWidth();
+      final int height = style.getHeight();
+      final boolean strokeVisible = style.getStroke().isVisible();
+
+      for( final Point p : m_leftTopPoints )
+        marker.paint( gc, p, width, height, strokeVisible, fillVisible );
+    }
   }
 
   /**

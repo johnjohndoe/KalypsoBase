@@ -47,12 +47,12 @@ import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class ParameterTypeLayerVisitor implements IChartLayerVisitor
+public class ParameterTypeLayerVisitor extends AbstractChartLayerVisitor
 {
   Set<IZmlLayer> m_layers = new HashSet<IZmlLayer>();
 

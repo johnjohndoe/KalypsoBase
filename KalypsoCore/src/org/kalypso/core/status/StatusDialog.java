@@ -83,6 +83,11 @@ public class StatusDialog extends AbstractStatusDialog
     super( parentShell, status, dialogTitle, dialogButtonLabels, defaultIndex );
   }
 
+  public void setShowTimeTime( final boolean showTime )
+  {
+    m_showTime = showTime;
+  }
+
   /**
    * Set to <code>true</code>, if the dialog should show the status elements in a tree viewer. Else they are shown in a
    * table viewer (default).

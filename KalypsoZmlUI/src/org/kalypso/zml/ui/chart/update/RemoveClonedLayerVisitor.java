@@ -43,12 +43,12 @@ package org.kalypso.zml.ui.chart.update;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class RemoveClonedLayerVisitor implements IChartLayerVisitor
+public class RemoveClonedLayerVisitor extends AbstractChartLayerVisitor
 {
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)

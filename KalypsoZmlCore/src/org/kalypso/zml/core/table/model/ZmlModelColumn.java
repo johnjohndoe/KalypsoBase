@@ -50,9 +50,11 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener;
@@ -162,18 +164,28 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     {
       if( AxisUtils.isDataSrcAxis( axis ) )
       {
-        // FIXME - user modified triggerd interpolated state?!?
+        // FIXME - user modified triggered interpolated state?!?
         final DataSourceHandler handler = new DataSourceHandler( getMetadata() );
-        final int sourceIndex = handler.addDataSource( source, source );
+        final int sourceIndex;
+        if( Objects.isNull( source ) )
+          sourceIndex = handler.addDataSource( IDataSourceItem.SOURCE_UNKNOWN, IDataSourceItem.SOURCE_UNKNOWN );
+        else
+          sourceIndex = handler.addDataSource( source, source );
 
         model.set( index, axis, sourceIndex );
       }
       else if( AxisUtils.isStatusAxis( axis ) )
       {
+        if( Objects.isNull( status ) )
+          model.set( index, axis, KalypsoStati.BIT_OK );
+
         model.set( index, axis, status );
       }
       else if( isTargetAxis( axis ) )
       {
+        if( Objects.isNull( value ) )
+          model.set( index, axis, Double.NaN );
+
         model.set( index, axis, value );
       }
     }

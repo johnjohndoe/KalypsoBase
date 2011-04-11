@@ -98,6 +98,7 @@ public class RuleMapper
   public void reset( )
   {
     m_applied.clear();
+    m_lastReference = null;
   }
 
   public ZmlRule[] getAppliedRules( )

@@ -47,7 +47,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
@@ -126,14 +126,14 @@ public class ZmlTooltipSupport
       return null;
 
     final StringBuffer buffer = new StringBuffer();
-    buffer.append( "Aktive Regeln\n" );
+    buffer.append( "Anmerkung(en):\n" );
 
     for( final ZmlRule rule : activeRules )
     {
       buffer.append( String.format( "    - %s\n", rule.getLabel() ) );//$NON-NLS-1$
     }
 
-    return buffer.toString();
+    return StringUtils.chomp( buffer.toString() );
   }
 
   private String getModelTooltip( final DataColumnType column )
@@ -158,23 +158,24 @@ public class ZmlTooltipSupport
 
     try
     {
-      final Object value = reference.getValue();
+      final Number value = reference.getValue();
       final Integer status = reference.getStatus();
       final String source = reference.getDataSource();
 
       final String href = reference.getHref();
 
-      if( value instanceof Number && !aggregated )
+      if( !aggregated )
         buffer.append( buildInfoText( "Wert", value.toString() ) );
 
       if( Objects.isNotNull( status ) && !aggregated )
         buffer.append( buildInfoText( "Status", getStatus( status ) ) );
 
       if( Objects.isNotNull( source ) )
-        buffer.append( buildInfoText( "Modellquelle", source ) );
+        buffer.append( buildInfoText( "Wert-Quelle", source ) );
 
       if( Objects.isNotNull( href ) )
-        buffer.append( buildInfoText( "Lokale Quelle", href ) );
+        buffer.append( buildInfoText( "Daten-Quelle", href ) );
+
     }
     catch( final SensorException e )
     {
@@ -186,14 +187,7 @@ public class ZmlTooltipSupport
 
   private String getStatus( final Integer status )
   {
-    if( KalypsoStati.BIT_OK == status )
-      return "OK";
-    else if( KalypsoStati.BIT_CHECK == status )
-      return "Gewarnt";
-    else if( KalypsoStati.BIT_USER_MODIFIED == status )
-      return "Benutzereingabe";
-
-    return "Unbekannt";
+    return KalypsoStatusUtils.getTooltipFor( status );
   }
 
   private Object buildInfoText( final String label, final String value )

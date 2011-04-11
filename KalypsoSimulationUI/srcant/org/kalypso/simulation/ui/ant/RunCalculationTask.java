@@ -61,6 +61,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.simulation.core.simspec.Modeldata;
 import org.kalypso.simulation.ui.calccase.simulation.SimulationFactory;
 
@@ -176,7 +177,9 @@ public class RunCalculationTask extends Task
       @Override
       public void run( )
       {
-        ErrorDialog.openError( shell, "Modellrechnung", "Modellrechnung wurde durchgeführt", status, IStatus.ERROR | IStatus.WARNING | IStatus.INFO | IStatus.CANCEL | IStatus.OK );
+        final StatusDialog dlg = new StatusDialog( shell, status, "Modellrechnung" );
+        dlg.setShowTimeTime( false );
+        dlg.open();
       }
     } );
   }
