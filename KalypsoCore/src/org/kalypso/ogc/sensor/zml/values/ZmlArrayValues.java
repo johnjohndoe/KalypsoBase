@@ -78,7 +78,7 @@ public class ZmlArrayValues implements IZmlValues
     // FIXME: should never happen, but does
     if( index < 0 || index > m_values.size() - 1 )
       return null;
-    
+
     return m_values.get( index );
   }
 

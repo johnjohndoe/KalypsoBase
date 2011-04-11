@@ -2,7 +2,6 @@ package org.kalypso.ogc.sensor.diagview.grafik;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +14,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.io.CSV;
-import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
@@ -25,7 +23,6 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.zml.Observation;
 import org.xml.sax.InputSource;
 
 /**
@@ -159,18 +156,8 @@ final class RememberForSync
       }
 
       obs.setValues( values );
-      final Observation xml = ZmlFactory.createXML( obs, null );
 
-      final SetContentHelper helper = new SetContentHelper()
-      {
-        @Override
-        protected void write( final OutputStreamWriter writer ) throws Throwable
-        {
-          ZmlFactory.getMarshaller().marshal( xml, writer );
-        }
-      };
-
-      helper.setFileContents( m_zmlFile, true, false, new NullProgressMonitor(), m_zmlFile.getCharset() );
+      ZmlFactory.writeToFile( obs, m_zmlFile );
     }
     finally
     {
