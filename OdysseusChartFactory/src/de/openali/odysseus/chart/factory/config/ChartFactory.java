@@ -69,9 +69,11 @@ public final class ChartFactory
       try
       {
         final AbstractStyleType styleType = chartTypeResolver.findStyleType( type.getStyleref(), context );
-        final ITextStyle style = StyleFactory.createTextStyle( (TextStyleType) styleType );
-
-        title.setTextStyle( style );
+        if (styleType != null)
+        {
+          final ITextStyle style = StyleFactory.createTextStyle( (TextStyleType) styleType );
+          title.setTextStyle( style );  
+        }
       }
       catch( final Throwable t )
       {

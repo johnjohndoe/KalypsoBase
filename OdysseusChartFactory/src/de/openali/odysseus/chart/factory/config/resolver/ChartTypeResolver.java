@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.MapMaker;
 
 import de.openali.odysseus.chart.factory.OdysseusChartFactory;
@@ -127,7 +128,6 @@ public final class ChartTypeResolver implements IReferenceResolver
   {
     try
     {
-
       final String plainUrl = getUrl( reference, context );
       final String identifier = getAnchor( reference );
 
@@ -279,6 +279,9 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private String getUrl( final String url, final URL context )
   {
+    if (Strings.isNullOrEmpty( url ))
+      return context.toString();
+    
     if( url.contains( "#" ) ) // $NON-NLS-1$
     {
       final Pattern pattern = new Pattern( "#.*" ); // $NON-NLS-1$
@@ -295,6 +298,9 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private String getAnchor( final String url )
   {
+    if (Strings.isNullOrEmpty( url ))
+      return null;
+    
     final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), url ); //$NON-NLS-1$
 
     return StringUtils.chomp( tokenizer.nextToken() );
