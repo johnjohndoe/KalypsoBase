@@ -82,26 +82,19 @@ public class IntervalFilter extends AbstractObservationFilter
 
   private final MODE m_mode;
 
-  private final double m_defaultValue;
-
-  private final int m_defaultStatus;
-
-  private final IntervalCalendar m_calendar;
+  private final IntervalDefinition m_definition;
 
   private MetadataList m_metadata;
 
-  public IntervalFilter( final MODE mode, final int defaultStatus, final double defaultValue, final IntervalCalendar calendar )
+  public IntervalFilter( final MODE mode, final IntervalDefinition calendar )
   {
     m_mode = mode;
-    m_defaultStatus = defaultStatus;
-    m_defaultValue = defaultValue;
-
-    m_calendar = calendar;
+    m_definition = calendar;
   }
 
   public IntervalFilter( final IntervallFilterType filter )
   {
-    this( MODE.getMode( filter ), filter.getDefaultStatus(), filter.getDefaultValue(), new IntervalCalendar( filter ) );
+    this( MODE.getMode( filter ), new IntervalDefinition( filter ) );
   }
 
   @Override
@@ -148,7 +141,7 @@ public class IntervalFilter extends AbstractObservationFilter
     // Maybe there should be one day a mean to determine, which is the right amount.
     final ITupleModel values = ObservationUtilities.requestBuffered( m_baseobservation, dateRange, Calendar.DAY_OF_MONTH, 2 );
     m_metadata = MetadataHelper.clone( m_baseobservation.getMetadataList() );
-    return new IntervalTupleModel( m_mode, m_calendar, m_metadata, values, from, to, m_defaultValue, m_defaultStatus );
+    return new IntervalTupleModel( m_mode, m_definition, m_metadata, values, from, to );
   }
 
   @Override

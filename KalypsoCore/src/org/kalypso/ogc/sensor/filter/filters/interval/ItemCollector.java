@@ -40,52 +40,33 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters.interval;
 
-import org.kalypso.contribs.java.util.CalendarUtilities;
-import org.kalypso.zml.filters.IntervallFilterType;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.eclipse.core.runtime.Assert;
+
+import com.vividsolutions.jts.index.ItemVisitor;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public class IntervalCalendar
+public class ItemCollector implements ItemVisitor
 {
-  private final int m_calendarField;
+  private final Collection<IntervalData> m_items = new ArrayList<IntervalData>();
 
-  private final int m_amount;
-
-  private final String m_startCalendarField;
-
-  private final int m_startCalendarValue;
-
-  public IntervalCalendar( final int calendarField, final int amount, final String startCalendarField, final int startCalendarValue )
+  /**
+   * @see com.vividsolutions.jts.index.ItemVisitor#visitItem(java.lang.Object)
+   */
+  @Override
+  public void visitItem( final Object item )
   {
-    m_calendarField = calendarField;
-    m_amount = amount;
-    m_startCalendarField = startCalendarField;
-    m_startCalendarValue = startCalendarValue;
+    Assert.isTrue( item instanceof IntervalData );
+
+    m_items.add( (IntervalData) item );
   }
 
-  public IntervalCalendar( final IntervallFilterType filter )
+  public IntervalData[] getItems( )
   {
-    this( CalendarUtilities.getCalendarField( filter.getCalendarField() ), filter.getAmount(), filter.getStartCalendarfield(), filter.getStartCalendarvalue() );
-  }
-
-  public String getStartCalendarField( )
-  {
-    return m_startCalendarField;
-  }
-
-  public int getStartCalendarValue( )
-  {
-    return m_startCalendarValue;
-  }
-
-  public int getCalendarField( )
-  {
-    return m_calendarField;
-  }
-
-  public int getAmount( )
-  {
-    return m_amount;
+    return m_items.toArray( new IntervalData[m_items.size()] );
   }
 }

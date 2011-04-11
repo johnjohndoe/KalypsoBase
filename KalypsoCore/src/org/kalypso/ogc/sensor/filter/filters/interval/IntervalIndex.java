@@ -40,45 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters.interval;
 
-import java.util.Calendar;
+import org.joda.time.Interval;
+
+import com.vividsolutions.jts.index.intervalrtree.SortedPackedIntervalRTree;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public class IntervalCalculationStack
+public class IntervalIndex
 {
-  protected enum PROCESSING_INSTRUCTION
+  private final SortedPackedIntervalRTree m_sourceTree = new SortedPackedIntervalRTree();
+
+  private int m_itemCount = 0;
+
+  public void insert( final IntervalData sourceData )
   {
-    eNothing,
-    eGoToNextTarget,
-    eGoToNextSource,
-    eFinished;
-
-    public boolean isGoToNextSource( )
-    {
-      return PROCESSING_INSTRUCTION.eGoToNextSource == this;
-    }
-
-    public boolean isGoToNextTarget( )
-    {
-      return PROCESSING_INSTRUCTION.eGoToNextTarget == this;
-    }
-
-    public boolean isFinished( )
-    {
-      return PROCESSING_INSTRUCTION.eFinished == this;
-    }
+    final Interval interval = sourceData.getInterval();
+    m_sourceTree.insert( interval.getStartMillis(), interval.getEndMillis(), sourceData );
+    m_itemCount++;
   }
 
-  public Calendar lastTargetCalendar = null;
+  public IntervalData[] query( final Interval targetInterval )
+  {
+    // BUGFIX: SortedPackedIntervalRTree runs into endless loop if queried when empty
+    if( m_itemCount == 0 )
+      return new IntervalData[0];
 
-  public Calendar lastSrcCalendar = null;
-
-  public Interval targetInterval = null;
-
-  public int targetRow = 0;
-
-  public Interval srcInterval = null;
-
-  public int srcRow = 0;
+    final ItemCollector visitor = new ItemCollector();
+    m_sourceTree.query( targetInterval.getStartMillis(), targetInterval.getEndMillis(), visitor );
+    return visitor.getItems();
+  }
 }

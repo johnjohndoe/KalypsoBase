@@ -360,7 +360,6 @@ public class Interval
     if( isSame( other ) )
       return otherSources;
 
-
     for( int i = 0; i < otherSources.length; i++ )
       mergedSources[i] = IntervalSourceHandler.mergeSourceReference( m_sources[i], otherSources[i] );
 
