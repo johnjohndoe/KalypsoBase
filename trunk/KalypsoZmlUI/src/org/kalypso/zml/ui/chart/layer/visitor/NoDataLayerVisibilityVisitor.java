@@ -40,11 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.visitor;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.ext.base.layer.DefaultTextLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -57,11 +58,13 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
 {
   public static final String NO_DATA_LAYER = "noData";
 
-  private final IObsProvider[] m_providers;
+  boolean m_visible = true;
 
-  public NoDataLayerVisibilityVisitor( final IObsProvider[] providers )
+  IChartLayer m_noDataLayer;
+
+  public NoDataLayerVisibilityVisitor( )
   {
-    m_providers = providers;
+
   }
 
   // <Parameter name="hideOnMultiSelect" value="true" />
@@ -76,41 +79,57 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
     {
       if( NO_DATA_LAYER.equals( layer.getIdentifier() ) )
       {
-        layer.setVisible( isVisible() );
+        m_noDataLayer = layer;
       }
     }
+    else if( layer instanceof IZmlLayer )
+    {
+      final boolean visible = isVisible( (IZmlLayer) layer );
+      if( visible )
+      {
+        m_visible = false;
+        return;
+      }
+    }
+
+    layer.getLayerManager().accept( this );
   }
 
   /**
    * @return no_data_layer is visible
    */
-  private boolean isVisible( )
+  private boolean isVisible( final IZmlLayer layer )
   {
-    if( ArrayUtils.isEmpty( m_providers ) )
-      return true;
+    if( !layer.isVisible() )
+      return false;
 
-    // TODO instead provider.isLoaded() -> provider.isValid()
-    for( final IObsProvider provider : m_providers )
+    final IZmlLayerDataHandler handler = layer.getDataHandler();
+    final IObservation observation = handler.getObservation();
+    if( Objects.isNull( observation ) )
+      return false;
+
+    try
     {
-      if( provider.isValid() )
-      {
-        try
-        {
-          final IObservation observation = provider.getObservation();
-          if( Objects.isNull( observation ) )
-            continue;
-
-          final ITupleModel model = observation.getValues( null );
-          if( model.size() > 0 )
-            return false;
-        }
-        catch( final Throwable t )
-        {
-          t.printStackTrace();
-        }
-      }
+      final ITupleModel model = observation.getValues( null );
+      return !model.isEmpty();
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
     }
 
-    return true;
+    return false;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#doFinialize()
+   */
+  @Override
+  public void doFinialize( )
+  {
+    if( Objects.isNull( m_noDataLayer ) )
+      return;
+
+    m_noDataLayer.setVisible( m_visible );
   }
 }

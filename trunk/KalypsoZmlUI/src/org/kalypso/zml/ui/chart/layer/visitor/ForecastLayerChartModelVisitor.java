@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.visitor;
 
-import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.provider.PlainObsProvider;
+import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlForecastLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -52,12 +55,9 @@ import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisito
 public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
 {
 
-  private final IObsProvider[] m_providers;
+  private ZmlForecastLayer m_foreCastLayer;
 
-  public ForecastLayerChartModelVisitor( final IObsProvider[] providers )
-  {
-    m_providers = providers;
-  }
+  private IZmlLayerDataHandler m_handler;
 
   /**
    * @see org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor#accept(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
@@ -65,23 +65,41 @@ public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
   @Override
   public void visit( final IChartLayer layer )
   {
+
     if( layer instanceof ZmlForecastLayer )
     {
-      final ZmlForecastLayer forecastLayer = (ZmlForecastLayer) layer;
-      forecastLayer.setObsProvider( getProvider() );
+      m_foreCastLayer = (ZmlForecastLayer) layer;
+    }
+    else if( layer instanceof IZmlLayer && layer.isVisible() )
+    {
+      final IZmlLayer zml = (IZmlLayer) layer;
+      final IZmlLayerDataHandler handler = zml.getDataHandler();
+
+      if( Objects.isNotNull( handler.getObservation() ) )
+        m_handler = handler;
     }
 
     layer.getLayerManager().accept( this );
   }
 
-  private IObsProvider getProvider( )
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#doFinialize()
+   */
+  @Override
+  public void doFinialize( )
   {
-    for( final IObsProvider provider : m_providers )
-    {
-      if( provider.isLoaded() )
-        return provider;
-    }
+    if( Objects.isNull( m_foreCastLayer ) )
+      return;
 
-    return null;
+    if( Objects.isNull( m_handler ) )
+    {
+      m_foreCastLayer.setVisible( false );
+      m_foreCastLayer.setObsProvider( null );
+    }
+    else
+    {
+      m_foreCastLayer.setObsProvider( new PlainObsProvider( m_handler.getObservation(), m_handler.getRequest() ) );
+      m_foreCastLayer.setVisible( true );
+    }
   }
 }

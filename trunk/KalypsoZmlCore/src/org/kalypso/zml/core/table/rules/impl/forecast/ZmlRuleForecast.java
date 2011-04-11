@@ -47,11 +47,12 @@ import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.binding.rule.instructions.AbstractZmlRuleInstructionType;
 import org.kalypso.zml.core.table.binding.rule.instructions.ZmlMetadataDaterangeInstruction;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleForecast extends AbstractForecastRule
+public class ZmlRuleForecast extends AbstractZmlTableRule
 {
 
   /**

@@ -57,10 +57,10 @@ import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
-import org.kalypso.ogc.sensor.timeseries.datasource.IDataSourceItem;
 import org.kalypso.ogc.sensor.timeseries.merged.MergedObservation;
 import org.kalypso.ogc.sensor.timeseries.merged.ObservationSource;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.simulation.core.ant.AbstractMonitoredFeatureVisitor;
 import org.kalypso.simulation.core.ant.copyobservation.target.ICopyObservationTarget;
 import org.kalypso.simulation.core.i18n.Messages;
@@ -110,7 +110,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       final URL targetLocation = UrlResolverSingleton.getDefault().resolveURL( m_target.getContext(), targetHref );
       final File targetFile = getTargetFile( targetLocation );
 
-      // FIXME: check if this really works with the metadata + why do we need an extra call to CopyObservationHelper
+      // FIXME: check if this really works with the meta data + why do we need an extra call to CopyObservationHelper
       // later?!
       final MetadataList sourceMetadata = MergedObservation.getMetaData( sources );
       // The MergedObservation than should be responsible to set the sources into this metadata

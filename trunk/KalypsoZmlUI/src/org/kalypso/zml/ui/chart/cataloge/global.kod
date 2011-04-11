@@ -48,8 +48,8 @@
         </FillColor>
       </PointStyle>
       <PointStyle role="w_point_0">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>8FADDF</LineColor>
@@ -63,8 +63,8 @@
         <LineColor>8FADDF</LineColor>
       </LineStyle>
       <PointStyle role="w_active_point_0">
-        <Width>5</Width>
-        <Height>5</Height>
+        <Width>6</Width>
+        <Height>6</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>8FADDF</LineColor>
@@ -110,8 +110,8 @@
         </FillColor>
       </PointStyle>
       <PointStyle role="w_point_1">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>3460A9</LineColor>
@@ -125,8 +125,8 @@
         <LineColor>3460A9</LineColor>
       </LineStyle>
       <PointStyle role="w_active_point_1">
-        <Width>5</Width>
-        <Height>5</Height>
+        <Width>6</Width>
+        <Height>6</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>3460A9</LineColor>
@@ -172,8 +172,8 @@
         </FillColor>
       </PointStyle>
       <PointStyle role="w_point_2">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>BDD3F6</LineColor>
@@ -187,8 +187,8 @@
         <LineColor>BDD3F6</LineColor>
       </LineStyle>
       <PointStyle role="w_active_point_2">
-        <Width>5</Width>
-        <Height>5</Height>
+        <Width>6</Width>
+        <Height>6</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>BDD3F6</LineColor>
@@ -234,8 +234,8 @@
         </FillColor>
       </PointStyle>
       <PointStyle role="w_point_3">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>093689</LineColor>
@@ -249,8 +249,8 @@
         <LineColor>093689</LineColor>
       </LineStyle>
       <PointStyle role="w_active_point_3">
-        <Width>5</Width>
-        <Height>5</Height>
+        <Width>6</Width>
+        <Height>6</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>093689</LineColor>
@@ -296,8 +296,8 @@
         </FillColor>
       </PointStyle>
       <PointStyle role="w_point_4">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>6186C3</LineColor>
@@ -311,8 +311,8 @@
         <LineColor>6186C3</LineColor>
       </LineStyle>
       <PointStyle role="w_active_point_4">
-        <Width>5</Width>
-        <Height>5</Height>
+        <Width>6</Width>
+        <Height>6</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>6186C3</LineColor>
@@ -348,8 +348,8 @@
         <LineColor>000080</LineColor>
       </LineStyle>
       <PointStyle role="w_nn_point_0">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>000080</LineColor>
@@ -375,8 +375,8 @@
         </FillColor>
       </PointStyle>
       <PointStyle role="q_point_0">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>ABB985</LineColor>
@@ -390,8 +390,8 @@
         <LineColor>ABB985</LineColor>
       </LineStyle>
       <PointStyle role="q_active_point_0">
-        <Width>5</Width>
-        <Height>5</Height>
+        <Width>6</Width>
+        <Height>6</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>ABB985</LineColor>
@@ -437,8 +437,8 @@
         </FillColor>
       </PointStyle>
       <PointStyle role="q_point_1">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>65782F</LineColor>
@@ -452,8 +452,8 @@
         <LineColor>65782F</LineColor>
       </LineStyle>
       <PointStyle role="q_active_point_1">
-        <Width>5</Width>
-        <Height>5</Height>
+        <Width>6</Width>
+        <Height>6</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>65782F</LineColor>
@@ -499,8 +499,8 @@
         </FillColor>
       </PointStyle>
       <PointStyle role="q_point_2">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>CFDAB2</LineColor>
@@ -514,8 +514,8 @@
         <LineColor>CFDAB2</LineColor>
       </LineStyle>
       <PointStyle role="q_active_point_2">
-        <Width>5</Width>
-        <Height>5</Height>
+        <Width>6</Width>
+        <Height>6</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>CFDAB2</LineColor>
@@ -561,8 +561,8 @@
         </FillColor>
       </PointStyle>
       <PointStyle role="q_point_3">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>3D5208</LineColor>
@@ -576,8 +576,8 @@
         <LineColor>3D5208</LineColor>
       </LineStyle>
       <PointStyle role="q_active_point_3">
-        <Width>5</Width>
-        <Height>5</Height>
+        <Width>6</Width>
+        <Height>6</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>3D5208</LineColor>
@@ -623,8 +623,8 @@
         </FillColor>
       </PointStyle>
       <PointStyle role="q_point_4">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>879859</LineColor>
@@ -638,8 +638,8 @@
         <LineColor>879859</LineColor>
       </LineStyle>
       <PointStyle role="q_active_point_4">
-        <Width>5</Width>
-        <Height>5</Height>
+        <Width>6</Width>
+        <Height>6</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>879859</LineColor>
@@ -670,30 +670,31 @@
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
       <!-- V styles (line and point) -->
+      <!-- erste Farbe umgestellt von einem braun Ton BDAB7A auf echtes Blau 0000FF - wegen Saale -->
       <LineStyle role="v_line_0">
         <Width>2</Width>
-        <LineColor>BDAB7A</LineColor>
+        <LineColor>0000FF</LineColor>
       </LineStyle>
       <PointStyle role="v_singlePoint_0">
         <Width>10</Width>
         <Height>10</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
-          <LineColor>BDAB7A</LineColor>
+          <LineColor>0000FF</LineColor>
         </Stroke>
         <FillColor>
-          <Color>BDAB7A</Color>
+          <Color>0000FF</Color>
         </FillColor>
       </PointStyle>
       <PointStyle role="v_point_0">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
-          <LineColor>BDAB7A</LineColor>
+          <LineColor>0000FF</LineColor>
         </Stroke>
         <FillColor>
-          <Color>BDAB7A</Color>
+          <Color>0000FF</Color>
         </FillColor>
       </PointStyle>
       <LineStyle role="v_line_1">
@@ -712,8 +713,8 @@
         </FillColor>
       </PointStyle>
       <PointStyle role="v_point_1">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>769844</LineColor>
@@ -738,8 +739,8 @@
         </FillColor>
       </PointStyle>
       <PointStyle role="v_point_2">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>DFD0A7</LineColor>
@@ -764,8 +765,8 @@
         </FillColor>
       </PointStyle>
       <PointStyle role="v_point_3">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>4D3907</LineColor>
@@ -790,8 +791,8 @@
         </FillColor>
       </PointStyle>
       <PointStyle role="v_point_4">
-        <Width>4</Width>
-        <Height>4</Height>
+        <Width>5</Width>
+        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>998652</LineColor>
@@ -1081,7 +1082,7 @@
             <Parameter name="hideOnMultiSelect" value="false" />
           </Parameters>
         </Provider>
-        <Title>Vorhersagezeitraum</Title>
+        <Title>Selektion</Title>
         <Description />
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
@@ -1161,7 +1162,7 @@
         <PreferredAdjustment before="0" range="100" after="0" />
         <RendererRef ref="DateAxisRenderer" />
         <!-- <AxisNumberRangeRestriction minRange="86400000" /> -->
-        <AxisNumberRangeRestriction minRange="1000" /> 
+        <AxisNumberRangeRestriction minRange="1000" />
       </Axis>
       <ScreenAxis id="screenAxisX">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />

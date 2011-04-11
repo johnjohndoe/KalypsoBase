@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.exception.CancelVisitorException;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
@@ -117,17 +118,26 @@ public class LayerManager implements ILayerManager
   @Override
   public void accept( final IChartLayerVisitor visitor )
   {
-    for( final IChartLayer layer : getLayers() )
+    try
     {
-      try
+      for( final IChartLayer layer : getLayers() )
       {
-        visitor.visit( layer );
-      }
-      catch( final CancelVisitorException e )
-      {
-        return;
-      }
+        try
+        {
+          visitor.visit( layer );
+        }
+        catch( final CancelVisitorException e )
+        {
+          return;
+        }
 
+      }
+    }
+    finally
+    {
+      // only finalise chart model visitors (recursion!)
+      if( m_container instanceof IChartModel )
+        visitor.doFinialize();
     }
   }
 

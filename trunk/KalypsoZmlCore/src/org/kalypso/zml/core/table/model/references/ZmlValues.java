@@ -43,7 +43,7 @@ package org.kalypso.zml.core.table.model.references;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
+import org.kalypso.repository.IDataSourceItem;
 
 /**
  * @author Dirk Kuch
@@ -68,7 +68,7 @@ public final class ZmlValues
     else if( Objects.isNull( source ) )
       return true;
 
-    return !source.startsWith( DataSourceHelper.FILTER_SOURCE ); //$NON-NLS-1$
+    return !source.startsWith( IDataSourceItem.FILTER_SOURCE ); //$NON-NLS-1$
   }
 
   public static boolean isNullstelle( final Number value, final Number status, final String source )

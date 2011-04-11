@@ -40,6 +40,10 @@
           id="org.kalypso.zml.ui.core.rule.info"
           rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleInfo">
     </rule>
+    <rule
+          id="org.kalypso.zml.ui.core.rule.data.source"
+          rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleDataSource">
+    </rule>
  </extension> 
  <extension
          point="org.eclipse.wst.xml.core.catalogContributions">

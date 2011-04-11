@@ -87,7 +87,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
     final IZmlModelRow row = rows[0];
     final Date value = row.getIndexValue();
     final int hours = value.getHours();
-    filter.resetOffset( hours );
+    filter.resetOffset( row,hours );
   }
 
   protected IStatus updateOffset( final ExecutionEvent event, final int number )

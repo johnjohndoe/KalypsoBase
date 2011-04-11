@@ -45,12 +45,12 @@ import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class FindLayerVisitor implements IChartLayerVisitor
+public class FindLayerVisitor extends AbstractChartLayerVisitor
 {
   private final String m_identifier;
 

@@ -40,12 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.commands;
 
+import java.util.Map;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.commands.IElementUpdater;
+import org.eclipse.ui.menus.UIElement;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.chart.ui.editor.commandhandler.utils.CommandHandlerUtils;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.ui.chart.layer.visitor.UpdateFilterVisitor;
 
 import de.openali.odysseus.chart.framework.OdysseusChartFramework;
@@ -57,8 +62,12 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 /**
  * @author Dirk Kuch
  */
-public class SetZmlFilterCommandHandler extends AbstractHandler
+public class SetZmlFilterCommandHandler extends AbstractHandler implements IElementUpdater
 {
+  private static final String DISABLE_COMMAND = "disableCommand"; // $NON-NLS-1$
+
+  private static final String ENABLE_COMMAND = "enableCommand"; // $NON-NLS-1$
+
   public static final String ID = "org.kalypso.chart.ui.commands.change.visibility"; // $NON-NLS-1$
 
   /**
@@ -81,16 +90,38 @@ public class SetZmlFilterCommandHandler extends AbstractHandler
     final IChartLayerFilter[] remove = new IChartLayerFilter[] { OdysseusChartFramework.getDefault().findFilter( getFilter( !enabled, event ) ) };
     layerManager.accept( new UpdateFilterVisitor( add, remove ) );
 
-    model.autoscale( new de.openali.odysseus.chart.framework.model.mapper.IAxis[] {} );
-
     return Status.OK_STATUS;
   }
 
   private String getFilter( final boolean enabled, final ExecutionEvent event )
   {
     if( enabled )
-      return event.getParameter( "enableCommand" ); // $NON-NLS-1$
+      return event.getParameter( ENABLE_COMMAND );
 
-    return event.getParameter( "disableCommand" ); // $NON-NLS-1$
+    return event.getParameter( DISABLE_COMMAND );
+  }
+
+  /**
+   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
+   */
+  @Override
+  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
+  {
+    final IChartModel model = ChartHandlerUtilities.getModel( element );
+    if( Objects.isNull( model ) )
+      element.setChecked( false );
+    else
+    {
+
+      final String filterEnabled = (String) parameters.get( ENABLE_COMMAND );
+      final String filterDisabled = (String) parameters.get( DISABLE_COMMAND );
+
+      final ILayerManager layerManager = model.getLayerManager();
+
+      final ActiveFilterVisitor visitor = new ActiveFilterVisitor( filterEnabled, filterDisabled );
+      layerManager.accept( visitor );
+
+      element.setChecked( visitor.isEnabled() );
+    }
   }
 }

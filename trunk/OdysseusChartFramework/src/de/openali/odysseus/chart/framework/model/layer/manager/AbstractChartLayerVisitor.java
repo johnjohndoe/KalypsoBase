@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,13 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package de.openali.odysseus.chart.framework.model.layer.manager;
 
 /**
  * @author Dirk Kuch
  */
-public enum VALUE_STATUS
+public abstract class AbstractChartLayerVisitor implements IChartLayerVisitor
 {
-  eInterpolated,
-  eManual;
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#doFinialize()
+   */
+  @Override
+  public void doFinialize( )
+  {
+    // nothing to do
+  }
+
 }

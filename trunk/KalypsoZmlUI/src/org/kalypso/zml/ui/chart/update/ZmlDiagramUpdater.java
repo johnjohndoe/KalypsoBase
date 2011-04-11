@@ -40,11 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.update;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
@@ -66,8 +62,6 @@ import de.openali.odysseus.chart.framework.model.mapper.impl.CoordinateMapper;
  */
 public class ZmlDiagramUpdater implements Runnable
 {
-  private final Set<IObsProvider> m_providers = new LinkedHashSet<IObsProvider>();
-
   private final ILayerManager m_manager;
 
   private final MultipleTsLink[] m_links;
@@ -104,7 +98,6 @@ public class ZmlDiagramUpdater implements Runnable
       {
         final TSLinkWithName link = links[index];
         final AsynchronousObservationProvider provider = new AsynchronousObservationProvider( link, multiple.getType() );
-        m_providers.add( provider );
 
         update( layers, provider, index, link.getName() );
       }
@@ -172,10 +165,5 @@ public class ZmlDiagramUpdater implements Runnable
     parent.getLayerManager().addLayer( clone );
 
     return clone;
-  }
-
-  public IObsProvider[] getProviders( )
-  {
-    return m_providers.toArray( new IObsProvider[] {} );
   }
 }

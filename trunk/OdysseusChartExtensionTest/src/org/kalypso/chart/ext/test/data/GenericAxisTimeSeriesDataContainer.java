@@ -66,12 +66,12 @@ public class GenericAxisTimeSeriesDataContainer implements IListDataContainer<Ca
   private final ComparableDataRange<Calendar> m_domainRange;
 
   @SuppressWarnings("cast")
-  public GenericAxisTimeSeriesDataContainer( int size, double targetRange )
+  public GenericAxisTimeSeriesDataContainer( final int size, final double targetRange )
   {
     m_targetData = new ArrayList<Number>();
     m_domainData = new ArrayList<Calendar>();
 
-    Calendar startCal = Calendar.getInstance();
+    final Calendar startCal = Calendar.getInstance();
     startCal.setTimeZone( new SimpleTimeZone( 0, "" ) );
     startCal.set( Calendar.YEAR, 2007 );
     startCal.set( Calendar.MONTH, 0 );
@@ -83,7 +83,7 @@ public class GenericAxisTimeSeriesDataContainer implements IListDataContainer<Ca
 
     for( int i = 0; i < size; i++ )
     {
-      Calendar curCal = (Calendar) startCal.clone();
+      final Calendar curCal = (Calendar) startCal.clone();
       curCal.setTimeZone( new SimpleTimeZone( 0, "" ) );
       m_domainData.add( curCal );
       m_targetData.add( Math.random() * targetRange );
@@ -93,8 +93,6 @@ public class GenericAxisTimeSeriesDataContainer implements IListDataContainer<Ca
 
     m_targetRange = new ComparableDataRange<Number>( (Number[]) m_targetData.toArray( new Number[] {} ) );
     m_domainRange = new ComparableDataRange<Calendar>( (Calendar[]) m_domainData.toArray( new Calendar[] {} ) );
-
-    System.out.println();
   }
 
   /**

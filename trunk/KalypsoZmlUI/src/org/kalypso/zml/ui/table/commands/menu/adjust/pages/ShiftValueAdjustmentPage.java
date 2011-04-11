@@ -103,8 +103,6 @@ public class ShiftValueAdjustmentPage extends AbstractAdjustmentPage implements 
   @Override
   public void dispose( )
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**

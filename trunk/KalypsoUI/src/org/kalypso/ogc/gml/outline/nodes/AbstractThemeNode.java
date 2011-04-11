@@ -513,5 +513,4 @@ abstract class AbstractThemeNode<T> implements IThemeNode
   {
     return true;
   }
-
 }

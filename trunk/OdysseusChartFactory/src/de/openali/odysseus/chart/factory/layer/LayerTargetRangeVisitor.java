@@ -38,20 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.timeseries.datasource;
+package de.openali.odysseus.chart.factory.layer;
+
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
+ *
  */
-public interface IDataSourceItem
+public class LayerTargetRangeVisitor extends AbstractLayerRangeVisitor
 {
-  String MD_DATA_SOURCE_ITEM = "Datenabruf_Quelle";
-
-  String MD_DATA_SOURCE_ITEM_REPOSITORY = "Datenabruf_Repository_Quelle";
-
-  String SOURCE_PREFIX = "source://";
-  
-  String SOURCE_UNKNOWN = SOURCE_PREFIX + "unknown";
-
-  String SOURCE_MANUAL_CHANGED = SOURCE_PREFIX + "manually.changed";
+  @Override
+  protected IDataRange<Number> getLayerRange( final IChartLayer layer )
+  {
+    return layer.getTargetRange( null );
+  }
 }

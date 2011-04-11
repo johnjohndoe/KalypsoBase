@@ -44,12 +44,12 @@ import org.kalypso.chart.ui.layer.selection.AxisSelectionLayer;
 import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class FindSelectionLayerVisitor implements IChartLayerVisitor
+public class FindSelectionLayerVisitor extends AbstractChartLayerVisitor
 {
   private AxisSelectionLayer m_layer;
 

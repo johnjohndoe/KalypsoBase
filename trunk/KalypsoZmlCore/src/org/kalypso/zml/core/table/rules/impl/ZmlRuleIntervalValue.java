@@ -44,7 +44,7 @@ package org.kalypso.zml.core.table.rules.impl;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
+import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
@@ -55,7 +55,7 @@ import org.kalypso.zml.core.table.model.references.IZmlValueReference;
  */
 public class ZmlRuleIntervalValue extends AbstractZmlTableRule
 {
-  public static final String ID = "org.kalypso.zml.ui.core.rule.value.interval";
+  public static final String ID = "org.kalypso.zml.ui.core.rule.value.interval"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#getIdentifier()
@@ -82,7 +82,7 @@ public class ZmlRuleIntervalValue extends AbstractZmlTableRule
       if( dataSource == null )
         return false;
 
-      if( dataSource.startsWith( DataSourceHelper.FILTER_SOURCE ) )
+      if( dataSource.startsWith( IDataSourceItem.FILTER_SOURCE ) )
         return dataSource.contains( IntervalFilter.FILTER_ID );
     }
     catch( final SensorException e )

@@ -42,8 +42,8 @@ package org.kalypso.ogc.sensor.timeseries.interpolation.worker;
 
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
+import org.kalypso.repository.IDataSourceItem;
 
 /**
  * @author Dirk Kuch
@@ -54,7 +54,7 @@ public interface IInterpolationFilter
 
   String SETTING_DEFAULT_VALUE = "IInterpolationFilter.setting.defaultValue"; //$NON-NLS-1$
 
-  String DATA_SOURCE = DataSourceHelper.FILTER_SOURCE + InterpolationFilter.FILTER_ID;
+  String DATA_SOURCE = IDataSourceItem.FILTER_SOURCE + InterpolationFilter.FILTER_ID;
 
   IObservation getObservation( );
 

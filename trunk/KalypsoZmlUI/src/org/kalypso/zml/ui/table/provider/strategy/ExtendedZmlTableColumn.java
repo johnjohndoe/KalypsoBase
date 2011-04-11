@@ -145,7 +145,8 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
       CellStyleType baseType = getColumnType().getDefaultStyle().getType();
       for( final ZmlRule rule : rules )
       {
-        baseType = CellStyle.merge( baseType, rule.getStyle( row, getColumnType() ).getType() );
+        final CellStyle style = rule.getStyle( row, getColumnType() );
+        baseType = CellStyle.merge( baseType, style.getType() );
       }
 
       m_lastCellStyle = new CellStyle( baseType );
