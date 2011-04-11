@@ -48,18 +48,19 @@ import java.util.Date;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.Period;
+import org.kalypso.commons.pair.IKeyValue;
+import org.kalypso.commons.pair.KeyValueFactory;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 
@@ -104,16 +105,20 @@ public class IntervalFilterOperation
 
   private void buildSourceIndex( final DateRange range ) throws SensorException
   {
-    final IRequest request = new ObservationRequest( range );
-    final ITupleModel sourceModel = m_input.getValues( request );
+    // BUGIFX: fixes the problem with the first value:
+    // the first value was always ignored, because the interval
+    // filter cannot handle the first value of the source observation
+    // FIX: we just make the request a big bigger in order to get a new first value
+    // HACK: we always use DAY, so that work fine only up to time series of DAY-quality.
+    // Maybe there should be one day a mean to determine, which is the right amount.
+    final ITupleModel sourceModel = ObservationUtilities.requestBuffered( m_input, range, Calendar.DAY_OF_MONTH, 2 );
 
     final IAxis[] axes = sourceModel.getAxes();
     final IAxis dateAxis = AxisUtils.findDateAxis( axes );
 
-    // FIXME: get from metadata
-    final int stepAmount = 1;
-    final int stepField = Calendar.HOUR_OF_DAY;
-    final Period step = PeriodUtils.getPeriod( stepField, stepAmount );
+    final Period step = MetadataHelper.getTimestep( m_input.getMetadataList() );
+    if( step == null )
+      throw new SensorException( String.format( "Quellzeitreihe muss Metadatum '%s' definieren.", MetadataHelper.MD_TIMESTEP ) );
 
     for( int i = 0; i < sourceModel.size(); i++ )
     {
@@ -130,13 +135,18 @@ public class IntervalFilterOperation
 
   private void buildValues( final SimpleTupleModel model, final DateRange range ) throws SensorException
   {
-    final IntervalIterator targetIterator = createTargetIterator( range );
+    final int amount = m_definition.getAmount();
+    final int calendarField = m_definition.getCalendarField();
+    /* Directly update metadata with that timestep */
+    MetadataHelper.setTimestep( m_metadata, calendarField, amount );
+
+    final IntervalIterator targetIterator = createTargetIterator( range, calendarField, amount );
 
     for( final Interval targetInterval : targetIterator )
     {
       final IntervalData targetData = m_axes.createDefaultData( targetInterval );
 
-      final IntervalData[] matchingSourceIntervals = findSourceIntervals( targetInterval );
+      final IKeyValue<IntervalData, IntervalData>[] matchingSourceIntervals = findSourceIntervals( targetInterval );
 
       final IntervalData mergedTargetData = merge( targetData, matchingSourceIntervals );
 
@@ -145,40 +155,51 @@ public class IntervalFilterOperation
     }
   }
 
-  private IntervalData[] findSourceIntervals( final Interval targetInterval )
+  private IKeyValue<IntervalData, IntervalData>[] findSourceIntervals( final Interval targetInterval )
   {
     final IntervalData[] items = m_sourceIndex.query( targetInterval );
     return findOverlappingSourceIntervals( targetInterval, items );
   }
 
-  private IntervalData[] findOverlappingSourceIntervals( final Interval targetInterval, final IntervalData[] sourceIntervals )
+  @SuppressWarnings("unchecked")
+  private IKeyValue<IntervalData, IntervalData>[] findOverlappingSourceIntervals( final Interval targetInterval, final IntervalData[] sourceIntervals )
   {
-    final Collection<IntervalData> intervals = new ArrayList<IntervalData>();
+    final Collection<IKeyValue<IntervalData, IntervalData>> intervals = new ArrayList<IKeyValue<IntervalData, IntervalData>>();
 
     for( final IntervalData sourceData : sourceIntervals )
     {
-      final Interval sourceInterval = sourceData.getInterval();
-      final Interval sourcePart = targetInterval.overlap( sourceInterval );
-      if( sourcePart != null )
-      {
-        final double sourceDuration = sourcePart.toDurationMillis();
-        // TODO: duration check needed?
-        if( sourceDuration > 0 )
-        {
-          final IntervalData partData = new IntervalData( sourcePart, sourceData.getValues(), sourceData.getStati(), sourceData.getSource() );
-          intervals.add( partData );
-        }
-        else
-        {
-          System.out.println();
-        }
-      }
+      final IntervalData overlappingPart = overlapSourcePart( targetInterval, sourceData );
+      if( overlappingPart != null )
+        intervals.add( KeyValueFactory.createPairEqualsBoth( sourceData, overlappingPart ) );
     }
 
-    return intervals.toArray( new IntervalData[intervals.size()] );
+    return intervals.toArray( new IKeyValue[intervals.size()] );
   }
 
-  private IntervalData merge( final IntervalData targetData, final IntervalData[] sourceIntervals )
+  private IntervalData overlapSourcePart( final Interval targetInterval, final IntervalData sourceData )
+  {
+    final Interval sourceInterval = sourceData.getInterval();
+    final long sourceDuration = sourceInterval.toDurationMillis();
+    final Interval sourcePart = targetInterval.overlap( sourceInterval );
+    if( sourcePart == null )
+      return null;
+
+    final double sourcePartDuration = sourcePart.toDurationMillis();
+
+    /*
+     * The partial source interval gets only a part of the original value, depending on how much it covers the original
+     * source interval
+     */
+    final double factor = sourcePartDuration / sourceDuration;
+    final double[] values = sourceData.getValues();
+    final double[] partValues = new double[values.length];
+    for( int i = 0; i < partValues.length; i++ )
+      partValues[i] = values[i] * factor;
+
+    return new IntervalData( sourcePart, partValues, sourceData.getStati(), sourceData.getSource() );
+  }
+
+  private IntervalData merge( final IntervalData targetData, final IKeyValue<IntervalData, IntervalData>[] matchingSourceIntervals )
   {
     final Interval targetInterval = targetData.getInterval();
     final double targetDuration = targetInterval.toDurationMillis();
@@ -189,35 +210,30 @@ public class IntervalFilterOperation
       return targetData;
 
     /* No match: return default target */
-    if( sourceIntervals.length == 0 )
+    if( matchingSourceIntervals.length == 0 )
       return targetData;
 
     /* Special case: if we have only one exact match, return it to keep the original source */
-    if( sourceIntervals.length == 1 )
+    if( matchingSourceIntervals.length == 1 )
     {
-      if( sourceIntervals[0].getInterval().equals( targetInterval ) )
-        return sourceIntervals[0];
+      final IntervalData sourceData = matchingSourceIntervals[0].getKey();
+      if( sourceData.getInterval().equals( targetInterval ) )
+        return sourceData;
     }
 
     /* Really merge: start with plain data (containing 0.0 values) */
     IntervalData mergedData = m_axes.createPlainData( targetInterval );
-    for( final IntervalData sourceData : sourceIntervals )
+    for( final IKeyValue<IntervalData, IntervalData> sourcePair : matchingSourceIntervals )
     {
-      final Interval sourceInterval = sourceData.getInterval();
-      final double sourceDuration = sourceInterval.toDurationMillis();
-      final double factor = sourceDuration / targetDuration;
-
-      mergedData = mergedData.plus( sourceData, factor );
+      final IntervalData sourcePart = sourcePair.getValue();
+      mergedData = mergedData.plus( sourcePart );
     }
 
     return mergedData;
   }
 
-  protected IntervalIterator createTargetIterator( final DateRange range )
+  protected IntervalIterator createTargetIterator( final DateRange range, final int calendarField, final int amount )
   {
-    final int amount = m_definition.getAmount();
-    final int calendarField = m_definition.getCalendarField();
-
     final DateTime fromTime = new DateTime( range.getFrom() );
     final DateTime toTime = new DateTime( range.getTo() );
 

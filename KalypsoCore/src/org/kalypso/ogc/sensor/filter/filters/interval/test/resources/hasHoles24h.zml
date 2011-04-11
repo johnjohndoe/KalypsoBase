@@ -7,7 +7,7 @@
     <metadata value="Wiski" name="Quell_Repository"/>
     <metadata value="wiski://HVZ_Modelle_Saale.Saale_Prio_1.43451.N" name="Quell_Zeitreihe"/>
     <metadata value="GMT+01:00" name="Zeitzone"/>
-    <metadata value="HOURS_OF_DAY#24" name="Zeitschritt"/>
+    <metadata value="HOUR_OF_DAY#24" name="Zeitschritt"/>
   </metadataList>
   <axis datatype="TYPE=integer" key="false" unit="" type="DATA_SRC" name="DATA_SRC">
     <valueArray separator=";">0;0;0;0</valueArray>
