@@ -56,7 +56,6 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.util.img.legend.ChartLegendCanvas;
 import de.openali.odysseus.chart.framework.util.img.legend.config.DefaultChartLegendConfig;
@@ -98,49 +97,32 @@ public class ChartPainter
   {
     if( m_size.width == 0 || m_size.height == 0 )
       return null;
-
     setAxesHeight( getPlotInsets(), m_size );
-
     final Device dev = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( dev, m_size.width, m_size.height );
     final GC gc = new GC( image );
     gc.setAntialias( SWT.OFF );
     gc.setAdvanced( true );
 
-    final Transform transform = new Transform( dev );
-
-    m_titlePainter.paint( gc, new Rectangle( 0, 0, m_size.width, m_titlePainter.getSize().y ) );
+    m_titlePainter.paint( gc, new Rectangle(0,0, m_size.width, m_titlePainter.getSize().y ) );
     final Image legendImage = m_legendPainter.createImage();
     final Insets plotInsets = getPlotInsets();
 
     // paint plot
-    final Rectangle plotRect = new Rectangle( plotInsets.left, plotInsets.top, m_size.width - plotInsets.left - plotInsets.right, m_size.height - plotInsets.top - plotInsets.bottom );
-    gc.setClipping( plotRect );
-    transform.translate( plotInsets.left - panOffset.x, plotInsets.top - panOffset.y );
-    gc.setTransform( transform );
-    getPlotPainter().paint( gc );
+
+    getPlotPainter().paint( gc, new Insets(plotInsets.top-panOffset.y,plotInsets.left-panOffset.x,plotInsets.bottom+panOffset.y,plotInsets.right+panOffset.x) );
 
     // paint left Axes
-    resetTransform( gc, transform );
-    gc.setClipping( new Rectangle( 0, m_titlePainter.getSize().y, plotInsets.left, m_size.height - m_titlePainter.getSize().y - m_legendPainter.getSize().y ) );
-
-    final IMapperRegistry mapperRegistry = m_model.getMapperRegistry();
-
-    paintAxes( mapperRegistry.getAxesAt( POSITION.LEFT ), gc, transform, new Point( 0, plotInsets.top ) );
+    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ), gc, plotInsets.left, plotInsets.top, m_size.height - m_plotInsets.bottom - m_plotInsets.top, 90, false, false );
     // paint right Axes
-    resetTransform( gc, transform );
-    gc.setClipping( new Rectangle( m_size.width - plotInsets.right, m_titlePainter.getSize().y, plotInsets.right, m_size.height - m_titlePainter.getSize().y - m_legendPainter.getSize().y ) );
-    paintAxes( mapperRegistry.getAxesAt( POSITION.RIGHT ), gc, transform, new Point( m_size.width - plotInsets.right, plotInsets.top ) );
+    // paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ), gc, m_size.width - plotInsets.right,
+// m_size.height - plotInsets.bottom, m_size.height - m_plotInsets.bottom - plotInsets.top, -90, true, false );
+    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ), gc, m_size.width - plotInsets.right, plotInsets.top, m_size.height - m_plotInsets.bottom - plotInsets.top, 90, false, true );
     // paint top Axes
-    resetTransform( gc, transform );
-    gc.setClipping( new Rectangle( 0, m_titlePainter.getSize().y, m_size.width, plotInsets.top - m_titlePainter.getSize().y ) );
-    paintAxes( mapperRegistry.getAxesAt( POSITION.TOP ), gc, transform, new Point( plotInsets.left, 0 ) );
+    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ), gc, plotInsets.left, plotInsets.top, m_size.width - plotInsets.left - plotInsets.right, 0, false, true );
     // paint bottom Axes
-    resetTransform( gc, transform );
-    gc.setClipping( new Rectangle( 0, m_size.height - plotInsets.bottom, m_size.width, plotInsets.bottom - m_legendPainter.getSize().y ) );
-    paintAxes( mapperRegistry.getAxesAt( POSITION.BOTTOM ), gc, transform, new Point( plotInsets.left, m_size.height - plotInsets.bottom ) );
+    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ), gc, plotInsets.left, m_size.height - plotInsets.bottom, m_size.width - plotInsets.left - plotInsets.right, 0, false, false );
 
-    resetTransform( gc, transform );
     gc.setClipping( m_size );
     try
     {
@@ -151,8 +133,6 @@ public class ChartPainter
     {
       if( legendImage != null )
         legendImage.dispose();
-
-      transform.dispose();
       gc.dispose();
     }
     return image;
@@ -211,29 +191,48 @@ public class ChartPainter
     return m_plotPainter;
   }
 
-  private void paintAxes( final IAxis[] axes, final GC gc, final Transform transform, final Point offset )
+  private void paintAxes( final IAxis[] axes, final GC gc, final int anchorX, final int anchorY, final int axisWidth, final int rotation, final boolean invertHorizontal, final boolean invertVertical )
   {
-    transform.translate( offset.x, offset.y );
-    gc.setTransform( transform );
-    for( final IAxis axis : axes )
-    {
-      if( !axis.isVisible() )
-        continue;
-      final ChartAxisPainter axisPainter = new ChartAxisPainter( axis );
-      axisPainter.paintImage( gc );
-      final int width = axis.getRenderer().getAxisWidth( axis );
-      if( axis.getPosition().getOrientation() == ORIENTATION.VERTICAL )
-        transform.translate( width, 0 );
-      else
-        transform.translate( 0, width );
-      gc.setTransform( transform );
-    }
-  }
-
-  private void resetTransform( final GC gc, final Transform transform )
-  {
-    gc.setTransform( null );
+    final Transform transform = new Transform( gc.getDevice() );
     gc.getTransform( transform );
+    transform.translate( anchorX, anchorY );
+    transform.rotate( rotation );
+    gc.setTransform( transform );
+    int offset = 0;
+    try
+    {
+      for( final IAxis axis : axes )
+      {
+        if( !axis.isVisible() )
+          continue;
+        transform.translate( axisWidth / 2, offset );
+        transform.scale( axis.isInverted() ^ invertHorizontal ? -1 : 1, invertVertical ? -1 : 1 );
+        transform.translate( -axisWidth / 2, -offset );
+        gc.setTransform( transform );
+        int height = 0;
+        try
+        {
+          final IAxisRenderer renderer = axis.getRenderer();
+          height = renderer.getAxisWidth( axis );
+          renderer.paint( gc, axis, new Rectangle( 0, offset, axisWidth, height ) );
+        }
+        finally
+        {
+          transform.translate( axisWidth / 2, offset );
+          transform.scale( axis.isInverted() ^ invertHorizontal ? -1 : 1, invertVertical ? -1 : 1 );
+          transform.translate( -axisWidth / 2, -offset );
+          gc.setTransform( transform );
+          offset += height;
+        }
+      }
+    }
+    finally
+    {
+      transform.rotate( -rotation );
+      transform.translate( -anchorX, -anchorY );
+      gc.setTransform( transform );
+      transform.dispose();
+    }
   }
 
   private void setAxesHeight( final Insets plotInsets, final Rectangle size )

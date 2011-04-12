@@ -40,11 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img;
 
+import java.awt.Insets;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Transform;
 import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -75,7 +78,7 @@ public class ChartPlotPainter
     final GC gc = new GC( image );
     try
     {
-      paint( gc );
+      paint( gc,new Insets(0,0,0,0) );
     }
     finally
     {
@@ -96,15 +99,27 @@ public class ChartPlotPainter
     return m_size;
   }
 
-  public void paint( final GC gc )
+  public void paint( final GC gc,final Insets plotInsets )
   {
     final IChartLayer[] layers = getChartLayers();
     ArrayUtils.reverse( layers );
-
-    for( final IChartLayer layer : layers )
+    final Transform transform = new Transform( gc.getDevice() );
+    gc.getTransform( transform );
+    transform.translate(  plotInsets.left, plotInsets.top); 
+    gc.setTransform( transform );
+    try
     {
-      if( layer.isVisible() )
-        layer.paint( gc );
+      for( final IChartLayer layer : layers )
+      {
+        if( layer.isVisible() )
+          layer.paint( gc );
+      }
+    }
+    finally
+    {
+     transform.translate( -plotInsets.left, -plotInsets.top); 
+     gc.setTransform( transform );
+     transform.dispose();
     }
   }
 
