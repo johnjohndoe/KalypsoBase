@@ -1,6 +1,7 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
+import de.openali.odysseus.chart.ext.base.axisrenderer.ExtendedAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
@@ -19,17 +20,17 @@ public class GenericLinearAxis extends AbstractAxis
 
   public GenericLinearAxis( final String id, final POSITION pos )
   {
-    super( id, pos, Number.class, new GenericAxisRenderer( id + "_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), new AxisRendererConfig() ) );//$NON-NLS-1$ //$NON-NLS-2$
+    super( id, pos, Number.class, new ExtendedAxisRenderer( id + "_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), new AxisRendererConfig() ) );//$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public GenericLinearAxis( final String id, final POSITION pos, final AxisRendererConfig config )
   {
-    super( id, pos, Number.class, new GenericAxisRenderer( id + "_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), config ) );//$NON-NLS-1$ //$NON-NLS-2$
+    super( id, pos, Number.class, new ExtendedAxisRenderer( id + "_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), config ) );//$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public GenericLinearAxis( final String id, final POSITION pos, final Class< ? > clazz )
   {
-    super( id, pos, clazz, new GenericAxisRenderer( id + "_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), new AxisRendererConfig() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( id, pos, clazz, new ExtendedAxisRenderer( id + "_RENDERER", new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), new AxisRendererConfig() ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public GenericLinearAxis( final String id, final POSITION pos, final Class< ? > clazz, final IAxisRenderer renderer )
