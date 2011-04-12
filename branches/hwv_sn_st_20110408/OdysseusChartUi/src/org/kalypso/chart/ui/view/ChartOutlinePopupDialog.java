@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
@@ -66,7 +67,7 @@ public class ChartOutlinePopupDialog extends PopupDialog
   public ChartOutlinePopupDialog( final Shell parentShell, final IChartPart chartPart )
   {
     super( parentShell, SWT.RESIZE, true, true, true, false, false, "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_chartPart = chartPart;
+    this.m_chartPart = chartPart;
   }
 
   /**
@@ -75,22 +76,32 @@ public class ChartOutlinePopupDialog extends PopupDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    if( m_chartPart != null && m_chartPart.getChartComposite() != null )
+    if( this.m_chartPart != null && this.m_chartPart.getChartComposite() != null )
     {
       final Composite da = (Composite) super.createDialogArea( parent );
       da.setLayout( new GridLayout( 1, true ) );
-      final ChartEditorTreeOutlinePage cop = (ChartEditorTreeOutlinePage) m_chartPart.getOutlinePage();
+      final ChartEditorTreeOutlinePage cop = (ChartEditorTreeOutlinePage) this.m_chartPart.getOutlinePage();
       cop.createControl( da );
 
-      final TitleTypeBean[] title = m_chartPart.getChartComposite().getChartModel().getSettings().getTitles();
-      if( !ArrayUtils.isEmpty( title ) )
-        setTitleText( title[0].getText() );
-      else
-        setTitleText( "" );
+      final TitleTypeBean[] titles = this.m_chartPart.getChartComposite().getChartModel().getSettings().getTitles();
+      setTitleText( getTitle( titles ) );
 
       return da;
     }
     return new Composite( parent, SWT.NONE );
+  }
+
+  private String getTitle( final TitleTypeBean[] titles )
+  {
+    if( ArrayUtils.isEmpty( titles ) )
+      return "";
+
+    final TitleTypeBean bean = titles[0];
+    final String text = bean.getText();
+    if( Strings.isEmpty( text ) )
+      return "";
+
+    return text;
   }
 
   /**
