@@ -35,8 +35,14 @@ public interface IAxisRenderer
   /**
    * method to store arbitrary data objects;
    */
+  /**
+   * @deprecated
+   */
   void setData( String identifier, Object data );
 
+  /**
+   * @deprecated
+   */
   Object getData( String identifier );
 
   /**
