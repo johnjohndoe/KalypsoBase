@@ -6,10 +6,10 @@ import java.util.ResourceBundle;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.contribs.eclipse.jobs.CronJobMutexCache;
 import org.kalypso.contribs.eclipse.jobs.CronJobUtilities;
 import org.osgi.framework.BundleContext;
@@ -17,17 +17,17 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class EclipseRCPContributionsPlugin extends Plugin
+public class EclipseRCPContributionsPlugin extends AbstractUIPlugin
 {
   /**
    * The plug-in id.
    */
-  public static final String ID = "org.kalypso.contribs.eclipsercp";
+  public static final String ID = "org.kalypso.contribs.eclipsercp"; //$NON-NLS-1$
 
   /**
    * The shared instance.
    */
-  private static EclipseRCPContributionsPlugin plugin;
+  private static EclipseRCPContributionsPlugin PLUGIN;
 
   /**
    * Resource bundle.
@@ -64,7 +64,7 @@ public class EclipseRCPContributionsPlugin extends Plugin
    */
   public static EclipseRCPContributionsPlugin getDefault( )
   {
-    return plugin;
+    return PLUGIN;
   }
 
   /**
@@ -78,7 +78,7 @@ public class EclipseRCPContributionsPlugin extends Plugin
 
     try
     {
-      return (bundle != null) ? bundle.getString( key ) : key;
+      return bundle != null ? bundle.getString( key ) : key;
     }
     catch( final MissingResourceException e )
     {
@@ -94,7 +94,7 @@ public class EclipseRCPContributionsPlugin extends Plugin
   {
     super.start( context );
 
-    plugin = this;
+    PLUGIN = this;
 
     try
     {
@@ -143,7 +143,7 @@ public class EclipseRCPContributionsPlugin extends Plugin
     m_cronJobMutexCache = null;
 
     m_resourceBundle = null;
-    plugin = null;
+    PLUGIN = null;
 
     super.stop( context );
   }
