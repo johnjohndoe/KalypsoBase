@@ -66,15 +66,21 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
 {
   private static final String SCREEN_SIZE = "compare.profiles.dialog"; // $NON-NLS-1$
 
+  protected final String m_screen_setting;
+
   private final ICompareProfileProvider m_provider;
+
+  public CompareProfilesDialog( final Shell shell, final ICompareProfileProvider provider, final String screenSetting )
+  {
+    super( shell );
+    setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
+    m_provider = provider;
+    m_screen_setting = screenSetting;
+  }
 
   public CompareProfilesDialog( final Shell shell, final ICompareProfileProvider provider )
   {
-    super( shell );
-
-    setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
-
-    m_provider = provider;
+    this( shell, provider, SCREEN_SIZE );
   }
 
   /**
@@ -93,7 +99,7 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
     final Composite base = toolkit.createComposite( parent, SWT.NULL );
     base.setLayout( new GridLayout() );
 
-    final Point screen = getScreenSize( SCREEN_SIZE );
+    final Point screen = getScreenSize( m_screen_setting );
 
     final GridData data = new GridData( GridData.FILL, GridData.FILL, true, true );
     data.widthHint = screen.x;
@@ -115,7 +121,7 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
       @Override
       public void controlResized( final ControlEvent e )
       {
-        setScreenSize( SCREEN_SIZE, base.getSize() );
+        setScreenSize( m_screen_setting, base.getSize() );
       }
     } );
 
