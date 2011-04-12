@@ -99,9 +99,7 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
       monitor.worked( 1 );
 
       if( !status.isOK() )
-      {
         throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.5" ) ) ); //$NON-NLS-1$
-      }
 
       final FileSystemManager manager = VFSUtilities.getManager();
       final FileObject source = manager.resolveFile( src.getAbsolutePath() );
@@ -120,10 +118,9 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
 
       monitor.subTask( Messages.getString( "org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.7" ) ); //$NON-NLS-1$
 
-  
       final FileObject destination = manager.resolveFile( urlDestination );
       VFSUtilities.copy( source, destination );
-      
+
       final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
       final KalypsoProjectBean bean = service.udpateProject( m_handler.getBean(), new URL( urlDestination ) );
       preferences.setVersion( bean.getProjectVersion() );
@@ -137,8 +134,15 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
     }
     finally
     {
-      // add local project lock
-      preferences.setEditTicket( ticket );
+      try
+      {
+        // add local project lock
+        preferences.setEditTicket( ticket );
+      }
+      catch( final Throwable t ) 
+      {
+        t.printStackTrace();
+      }
       src.delete();
 
       monitor.done();
