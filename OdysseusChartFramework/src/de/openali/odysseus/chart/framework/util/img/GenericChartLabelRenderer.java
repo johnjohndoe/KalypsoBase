@@ -461,7 +461,8 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       else
       // draw Text
       {
-        final int borderWidth = getBorderStyle().getStroke() == null ? 0 : getBorderStyle().getStroke().getWidth();
+        
+        final int borderWidth = getBorderStyle() == null ? 0 : getBorderStyle().getStroke().getWidth();
         if( isDrawBorder() )
         {
           final Rectangle borderLineCentered = inflateRect( titleRect, (borderWidth + 1) / 2 );

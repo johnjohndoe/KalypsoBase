@@ -151,6 +151,8 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   public Insets getTickLabelInsets( )
   {
+    if( getTickLabelRenderer() == null )
+      return getAxisConfig().tickLabelInsets;
     return getTickLabelRenderer().getTitleTypeBean().getInsets();
   }
 
@@ -161,6 +163,8 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
 
   public ITextStyle getTickLabelStyle( )
   {
+    if( getTickLabelRenderer() == null )
+      return StyleUtils.getDefaultTextStyle();
     return getTickLabelRenderer().getTitleTypeBean().getTextStyle();
   }
 

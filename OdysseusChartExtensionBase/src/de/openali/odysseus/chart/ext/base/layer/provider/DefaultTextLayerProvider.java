@@ -96,10 +96,10 @@ public class DefaultTextLayerProvider extends AbstractLayerProvider implements I
 
     final String text = container.getParameterValue( PROPERTY_TEXT, "" );
 
-    final String propertyAlignmentHorizontal = container.getParameterValue( PROPERTY_ALIGNMENT_HORIZONTAL, "CENTERED_HORIZONTAL" );
-    final String propertyAlignmentVertical = container.getParameterValue( PROPERTY_ALIGNMENT_VERTICAL, "CENTERED_VERTICAL" );
-    final String propertyTextAnchorX = container.getParameterValue( PROPERTY_TEXT_ANCHOR_X, "CENTERED_HORIZONTAL" );
-    final String propertyTextAnchorY = container.getParameterValue( PROPERTY_TEXT_ANCHOR_Y, "CENTERED_VERTICAL" );
+    final String propertyAlignmentHorizontal = container.getParameterValue( PROPERTY_ALIGNMENT_HORIZONTAL, "CENTER" );
+    final String propertyAlignmentVertical = container.getParameterValue( PROPERTY_ALIGNMENT_VERTICAL, "CENTER" );
+    final String propertyTextAnchorX = container.getParameterValue( PROPERTY_TEXT_ANCHOR_X, "CENTER" );
+    final String propertyTextAnchorY = container.getParameterValue( PROPERTY_TEXT_ANCHOR_Y, "CENTER" );
 
     final ALIGNMENT alignmentHorizontal = ALIGNMENT.valueOf( propertyAlignmentHorizontal );
     final ALIGNMENT alignmentVertical = ALIGNMENT.valueOf( propertyAlignmentVertical );

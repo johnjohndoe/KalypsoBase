@@ -21,12 +21,36 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.InsetsHelper;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author burtscher
  */
 public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 {
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.AbstractGenericAxisRenderer#getLabelInsets()
+   */
+  @Override
+  public Insets getLabelInsets( )
+  {
+
+    if( super.getLabelInsets() == null )
+      return getAxisConfig().labelInsets;
+    return super.getLabelInsets();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.AbstractGenericAxisRenderer#getTickLabelInsets()
+   */
+  @Override
+  public Insets getTickLabelInsets( )
+  {
+    if( super.getTickLabelInsets() == null )
+      return getAxisConfig().tickLabelInsets;
+    return super.getTickLabelInsets();
+  }
 
   private ITickCalculator m_tickCalculator;
 
@@ -48,6 +72,30 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final ILabelCreator labelCreator, final ITickCalculator tickCalculator, final Number minTickInterval, final boolean hideCut, final int fixedWidth, final ILineStyle axisLineStyle, final ITextStyle labelStyle, final ILineStyle tickLineStyle, final ITextStyle tickLabelStyle, final ALIGNMENT labelPosition )
   {
     this( id, tickLength, tickLabelInsets, labelInsets, gap, labelCreator, tickCalculator, minTickInterval, hideCut, fixedWidth, axisLineStyle, labelStyle, tickLineStyle, tickLabelStyle, 0, labelPosition );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.AbstractGenericAxisRenderer#getLineStyle()
+   */
+  @Override
+  public ILineStyle getLineStyle( )
+  {
+    final ILineStyle lineStyle = super.getLineStyle();
+    if( lineStyle != null )
+      return lineStyle;
+    return StyleUtils.getDefaultLineStyle();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.AbstractGenericAxisRenderer#getTickLineStyle()
+   */
+  @Override
+  public ILineStyle getTickLineStyle( )
+  {
+    final ILineStyle lineStyle = super.getTickLineStyle();
+    if( lineStyle != null )
+      return lineStyle;
+    return StyleUtils.getDefaultLineStyle();
   }
 
   /**
@@ -79,6 +127,28 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     setHideCut( hideCut );
     setFixedWidth( fixedWidth );
     setLabelPosition( labelPosition );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.AbstractGenericAxisRenderer#getLabelStyle()
+   */
+  @Override
+  public ITextStyle getLabelStyle( )
+  {
+    final ITextStyle textStyle = super.getLabelStyle();
+    if( textStyle != null )
+      return textStyle;
+    return StyleUtils.getDefaultTextStyle();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.AbstractGenericAxisRenderer#getTickLabelStyle()
+   */
+  @Override
+  public ITextStyle getTickLabelStyle( )
+  {
+    // TODO Auto-generated method stub
+    return super.getTickLabelStyle();
   }
 
   public Point calcTickLabelSize( final GC gc, final IAxis axis )
@@ -277,7 +347,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         x2 = x1;
         y1 = startY;
         // textX = tickPos- labelSize.x / 2 + offset;
-        textX = (int) (tickPos - Math.round( labelSize.x* m_labelPosition.doubleValue())  + offset);
+        textX = (int) (tickPos - Math.round( labelSize.x * m_labelPosition.doubleValue() ) + offset);
         // BOTTOM
         if( axis.getPosition() == POSITION.BOTTOM )
         {
@@ -303,7 +373,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         y1 = tickPos + offset;
         y2 = y1;
         // textY = tickPos - labelSize.y / 2 + offset;
-        textY = (int) (y1 -  Math.round( labelSize.y* m_labelPosition.doubleValue())) ;
+        textY = (int) (y1 - Math.round( labelSize.y * m_labelPosition.doubleValue() ));
 
         // LEFT
         if( axis.getPosition() == POSITION.LEFT )
@@ -434,23 +504,23 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     return m_labelPosition;
   }
 
-//  final int getLabelPosition( final int labelWidth, final ALIGNMENT labelPosition )
-//  {
-//    switch( labelPosition )
-//    {
-//      case LEFT:
-//        return labelWidth;
-//      case RIGHT:
-//        return 0;
-//      case TOP:
-//        return 0;
-//      case BOTTOM:
-//        return labelWidth;
-//      case CENTER:
-//        return labelWidth / 2;
-//    }
-//    throw new IllegalArgumentException( labelPosition.name() );
-//  }
+// final int getLabelPosition( final int labelWidth, final ALIGNMENT labelPosition )
+// {
+// switch( labelPosition )
+// {
+// case LEFT:
+// return labelWidth;
+// case RIGHT:
+// return 0;
+// case TOP:
+// return 0;
+// case BOTTOM:
+// return labelWidth;
+// case CENTER:
+// return labelWidth / 2;
+// }
+// throw new IllegalArgumentException( labelPosition.name() );
+// }
 
   public Number getMinTickInterval( )
   {

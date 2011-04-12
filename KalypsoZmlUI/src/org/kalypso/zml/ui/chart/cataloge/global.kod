@@ -1055,10 +1055,10 @@
         <Provider epid="de.openali.odysseus.chart.ext.base.layer.provider.DefaultTextLayerProvider">
           <Parameters>
             <Parameter name="text" value="Keine Daten vorhanden" />
-            <Parameter name="alignment.horizontal" value="CENTERED_HORIZONTAL" />
-            <Parameter name="alignment.vertical" value="CENTERED_VERTICAL" />
-            <Parameter name="text.anchor.x" value="CENTERED_HORIZONTAL" />
-            <Parameter name="text.anchor.y" value="CENTERED_VERTICAL" />
+            <Parameter name="alignment.horizontal" value="CENTER" />
+            <Parameter name="alignment.vertical" value="CENTER" />
+            <Parameter name="text.anchor.x" value="CENTER" />
+            <Parameter name="text.anchor.y" value="CENTER" />
           </Parameters>
         </Provider>
         <Title>Keine Daten vorhanden</Title>
@@ -1217,7 +1217,7 @@
             <Parameter name="hide_cut" value="false" />
             <Parameter name="gap" value="0" />
             <!-- <Parameter name="date-format" value="dd.MM.&#10;HH:mm" /> -->
-            <Parameter name="label_position" value="INTERVALL_CENTERED" />
+            <Parameter name="label_position" value="CENTER" />
           </Parameters>
         </Provider>
         <Styles>
