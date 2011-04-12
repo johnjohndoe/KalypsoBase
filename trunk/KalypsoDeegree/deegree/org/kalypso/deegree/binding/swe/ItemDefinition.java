@@ -52,10 +52,12 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
  */
 public class ItemDefinition extends Definition
 {
-  public static final QName QNAME_ItemDefinition = new QName( NS.SWE, "ItemDefinition" );
+  public static final QName QN_ITEM_DEFINITION = new QName( NS.SWE, "ItemDefinition" ); //$NON-NLS-1$
 
   public ItemDefinition( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
+
+
 }
