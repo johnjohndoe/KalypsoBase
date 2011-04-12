@@ -45,7 +45,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 /**
  * @author alibu
  */
-public abstract class AbstractLabelCreator implements ILabelCreator
+public abstract class GenericLabelCreator implements ILabelCreator
 {
 
   /**

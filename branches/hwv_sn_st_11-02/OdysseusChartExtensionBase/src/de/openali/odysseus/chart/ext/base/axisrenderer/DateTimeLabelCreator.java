@@ -49,7 +49,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 /**
  * @author kimwerner
  */
-public class DateTimeLabelCreator extends AbstractLabelCreator implements ILabelCreator
+public class DateTimeLabelCreator  implements ILabelCreator
 {
   private final IDateTimeAxisFieldProvider m_dateTimeFieldProvider;
 
