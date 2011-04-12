@@ -70,12 +70,14 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.outline.handler.ToggleCompactOutlineHandler;
+import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
@@ -413,4 +415,18 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
     commandService.refreshElements( ToggleCompactOutlineHandler.CMD_ID, filter );
   }
 
+  /**
+   * This function searches the content of the viewer for a node, which contains the given theme.
+   * 
+   * @param theme
+   *          The theme.
+   * @return The node or null.
+   */
+  public IThemeNode findNode( IKalypsoTheme theme )
+  {
+    if( m_outlineViewer == null || m_outlineViewer.getControl().isDisposed() )
+      return null;
+
+    return m_outlineViewer.findNode( theme );
+  }
 }
