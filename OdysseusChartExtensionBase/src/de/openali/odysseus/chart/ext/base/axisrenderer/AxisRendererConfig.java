@@ -70,6 +70,11 @@ public class AxisRendererConfig
   public Insets labelInsets = new Insets( 1, 1, 1, 1 );
 
   /**
+   * insets around axis
+   */
+  public Insets axisInsets = new Insets( 0, 0, 0, 0 );
+
+  /**
    * gap between plot and axis line
    */
   public int gap = 0;
@@ -113,7 +118,7 @@ public class AxisRendererConfig
 
   public int borderSize = 0;
 
-  public ALIGNMENT labelPosition = ALIGNMENT.TICK_CENTERED;
+  public ALIGNMENT labelPosition = ALIGNMENT.CENTER;
 
   public AxisRendererConfig( )
   {

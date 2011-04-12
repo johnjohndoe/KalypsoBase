@@ -50,7 +50,7 @@ import de.openali.odysseus.chart.framework.model.data.impl.CalendarFormat;
 /**
  * @author alibu
  */
-public class DateLabelCreator extends AbstractLabelCreator implements ILabelCreator
+public class DateLabelCreator  implements ILabelCreator
 {
 
   CalendarFormat m_format;

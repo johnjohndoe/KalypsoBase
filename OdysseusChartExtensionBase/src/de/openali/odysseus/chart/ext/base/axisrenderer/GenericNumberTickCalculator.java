@@ -34,15 +34,15 @@ public class GenericNumberTickCalculator implements ITickCalculator
 
     // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
     /* minimaler Bildschirmabstand zwischen zwei labels */
-    final int tickLabelWidth;
-    if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-    {
-      tickLabelWidth = ticklabelSize.x;
-    }
-    else
-    {
-      tickLabelWidth = ticklabelSize.y;
-    }
+//    final int tickLabelWidth;
+//    if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+//    {
+//      tickLabelWidth = ticklabelSize.x;
+//    }
+//    else
+//    {
+//      tickLabelWidth = ticklabelSize.y;
+//    }
 
     // Collection für Ticks
     // final TreeMap<Integer, SortedSet<Double>> ticks = new TreeMap<Integer, SortedSet<Double>>();
@@ -64,7 +64,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
       return new Number[] {};
 
     // der minimale logische Abstand anhand des Ticklabels;
-    final double minLogInterval = Math.abs( axis.screenToNumeric( tickLabelWidth ).doubleValue() - axis.screenToNumeric( 0 ).doubleValue() );
+    final double minLogInterval = Math.abs( axis.screenToNumeric( ticklabelSize.x ).doubleValue() - axis.screenToNumeric( 0 ).doubleValue() );
 
     // Herausfinden, in welchem 10erPotenz-Bereich sich die Range befinden
     int rangepow = 0;

@@ -277,7 +277,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         x2 = x1;
         y1 = startY;
         // textX = tickPos- labelSize.x / 2 + offset;
-        textX = tickPos - getLabelPosition( labelSize.x, tickScreenDistance, m_labelPosition ) + offset;
+        textX = (int) (tickPos - Math.round( labelSize.x* m_labelPosition.doubleValue())  + offset);
         // BOTTOM
         if( axis.getPosition() == POSITION.BOTTOM )
         {
@@ -293,7 +293,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         // Nicht zeichnen, wenn 1. Text abgeschnitten & hideCut angegeben oder 2. Tick ausserhalb der AxisRange
         if( x1 < screenMin + offset || x1 > screenMax + offset )
           drawTick = false;
-        if( (m_hideCut||!drawTick) && ((textX < screenMin) || ((textX + labelSize.x) > screenMax)) )
+        if( (m_hideCut || !drawTick) && ((textX < screenMin) || ((textX + labelSize.x) > screenMax)) )
           drawTickLabel = false;
       }
       // VERTICAL
@@ -303,7 +303,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         y1 = tickPos + offset;
         y2 = y1;
         // textY = tickPos - labelSize.y / 2 + offset;
-        textY = y1 - getLabelPosition( labelSize.y, tickScreenDistance, m_labelPosition );
+        textY = (int) (y1 -  Math.round( labelSize.y* m_labelPosition.doubleValue())) ;
 
         // LEFT
         if( axis.getPosition() == POSITION.LEFT )
@@ -323,7 +323,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 // drawTick = false;
         if( y1 < screenMin + offset || y1 > screenMax + offset )
           drawTick = false;
-        if( (m_hideCut||!drawTick) && ((textY < screenMin) || ((textY + labelSize.y) > screenMax)) )
+        if( (m_hideCut || !drawTick) && ((textY < screenMin) || ((textY + labelSize.y) > screenMax)) )
           drawTickLabel = false;
 
       }
@@ -434,23 +434,23 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     return m_labelPosition;
   }
 
-  final int getLabelPosition( final int labelWidth, final int tickScreenDistance, final ALIGNMENT labelPosition )
-  {
-    switch( labelPosition )
-    {
-      case LEFT:
-        return labelWidth;
-      case RIGHT:
-        return 0;
-      case CENTERED_HORIZONTAL:
-        return labelWidth / 2;
-      case INTERVALL_CENTERED:
-        return (labelWidth - tickScreenDistance) / 2;
-      case TICK_CENTERED:
-        return labelWidth / 2;
-    }
-    throw new IllegalArgumentException( labelPosition.name() );
-  }
+//  final int getLabelPosition( final int labelWidth, final ALIGNMENT labelPosition )
+//  {
+//    switch( labelPosition )
+//    {
+//      case LEFT:
+//        return labelWidth;
+//      case RIGHT:
+//        return 0;
+//      case TOP:
+//        return 0;
+//      case BOTTOM:
+//        return labelWidth;
+//      case CENTER:
+//        return labelWidth / 2;
+//    }
+//    throw new IllegalArgumentException( labelPosition.name() );
+//  }
 
   public Number getMinTickInterval( )
   {
