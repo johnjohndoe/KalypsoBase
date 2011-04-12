@@ -159,9 +159,11 @@ public class GMLSchemaLoaderWithLocalCache
     // the main schema is the schema defining the root elements namespace
     // REMARK: schemaLocationHint only used for main schema
     final GMLSchema gmlSchema = loadSchema( uri, null, schemaLocationString, locationHint, context );
-    final String version = gmlSchema == null ? null : gmlSchema.getGMLVersion();
+    m_version = gmlSchema == null ? null : gmlSchema.getGMLVersion();
     if( gmlSchema != null )
+    {
       m_localSchemaCache.put( uri, gmlSchema );
+    }
 
     // Also force all dependent schemas (i.e. for which xmlns entries exist) as dependency into
     // the main schema.
@@ -179,10 +181,10 @@ public class GMLSchemaLoaderWithLocalCache
       {
         final String xmlnsUri = atts.getValue( i );
         // HM: are there any other possible namespaces we do NOT want to load?
-        if( !xmlnsUri.equals( NS.XSD ) )
+        if( !xmlnsUri.equals( uri ) && !xmlnsUri.equals( NS.XSD ) )
         {
           // make sure that all dependent schemas are loaded
-          final GMLSchema additionalSchema = loadSchema( xmlnsUri, version, schemaLocationString, locationHint, context );
+          final GMLSchema additionalSchema = loadSchema( xmlnsUri, m_version, schemaLocationString, locationHint, context );
           if( gmlSchema != null )
           {
             gmlSchema.addAdditionalSchema( additionalSchema );
@@ -268,6 +270,8 @@ public class GMLSchemaLoaderWithLocalCache
   public void setSchemaLocation( final Map<String, URL> schemaLocations )
   {
     if( schemaLocations != null )
+    {
       m_schemaLocations.putAll( schemaLocations );
+    }
   }
 }

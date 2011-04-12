@@ -132,7 +132,7 @@ public final class ChartTypeResolver implements IReferenceResolver
       final String identifier = getAnchor( reference );
 
       AbstractStyleType type;
-      if( plainUrl.startsWith( "urn:" ) )
+      if( plainUrl.startsWith( "urn:" ) ) // $NON-NLS-1$
         type = findUrnStyleType( context, plainUrl, identifier );
       else
         type = findUrlStyleType( context, plainUrl, identifier );
