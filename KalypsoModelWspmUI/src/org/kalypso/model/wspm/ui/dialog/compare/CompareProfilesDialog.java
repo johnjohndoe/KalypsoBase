@@ -44,8 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -54,22 +54,22 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTitleAreaDialog;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
  * @author Dirk Kuch
  */
-public class CompareProfilesDialog extends TitleAreaDialog
+public class CompareProfilesDialog extends EnhancedTitleAreaDialog
 {
-  private static final int SCREEN_WIDTH = 800;
-
-  private static final int SCREEN_HEIGHT = 600;
+  private static final String SCREEN_SIZE = "compare.profiles.dialog"; // $NON-NLS-1$
 
   private final ICompareProfileProvider m_provider;
 
   public CompareProfilesDialog( final Shell shell, final ICompareProfileProvider provider )
   {
     super( shell );
+
     m_provider = provider;
   }
 
@@ -86,15 +86,14 @@ public class CompareProfilesDialog extends TitleAreaDialog
 
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
 
-    final Composite base = toolkit.createComposite( parent );
+    final Composite base = toolkit.createComposite( parent, SWT.NULL );
+    base.setLayout( new GridLayout() );
 
-    final GridLayout baseLayout = new GridLayout();
-    baseLayout.marginHeight = baseLayout.marginWidth = 0;
-    base.setLayout( baseLayout );
+    final Point screen = getScreenSize( SCREEN_SIZE );
 
     final GridData data = new GridData( GridData.FILL, GridData.FILL, true, true );
-    data.widthHint = SCREEN_WIDTH;
-    data.heightHint = SCREEN_HEIGHT;
+    data.widthHint = screen.x;
+    data.heightHint = screen.y;
     base.setLayoutData( data );
 
     final ScrolledForm form = toolkit.createScrolledForm( base );
