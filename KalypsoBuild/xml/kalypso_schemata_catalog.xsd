@@ -13,4 +13,5 @@
   <nextCatalog catalog="platform:/resource/KalypsoModelNA/src/org/kalypso/convert/namodel/schema/catalog.xml" />
   <nextCatalog catalog="platform:/resource/KalypsoZmlCore/etc/schemas/catalog.xmlcatalog" />
   <nextCatalog catalog="platform:/resource/KalypsoMapServer/etc/mapfile/catalog.xml" />
+  <nextCatalog catalog="platform:/resource/KalypsoPlanerClientBase/catalog.xmlcatalog" />
 </catalog>
