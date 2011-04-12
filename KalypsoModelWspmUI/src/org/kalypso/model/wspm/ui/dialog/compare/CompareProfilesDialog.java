@@ -45,6 +45,8 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -69,6 +71,8 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
   public CompareProfilesDialog( final Shell shell, final ICompareProfileProvider provider )
   {
     super( shell );
+
+    setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
 
     m_provider = provider;
   }
@@ -102,6 +106,18 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
     final GridLayout bodyLayout = new GridLayout();
     bodyLayout.marginHeight = bodyLayout.marginWidth = 0;
     body.setLayout( bodyLayout );
+
+    base.addControlListener( new ControlAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
+       */
+      @Override
+      public void controlResized( final ControlEvent e )
+      {
+        setScreenSize( SCREEN_SIZE, base.getSize() );
+      }
+    } );
 
     final CompareProfileWrapper baseWrapper = m_provider.getBaseProfile();
 

@@ -50,32 +50,32 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 public interface IFeatureWrapper2
 {
   /** Returns the id of the bound feature. */
-  public String getGmlID( );
+  String getGmlID( );
 
   /** Returns the gml:name property of the bound feature. */
-  public String getName( );
+  String getName( );
 
   /** Sets the gml:name property */
-  public void setName( final String name );
+  void setName( final String name );
 
   /** Returns the gml:description property of the bound feature. */
-  public String getDescription( );
+  String getDescription( );
 
   /** Sets the gml_description property */
-  public void setDescription( final String desc );
+  void setDescription( final String desc );
 
   /**
    * Return the gml:location property of the bound feature.<br>
    * REMARK: gml:location is deprecated in the GML3-Schema.
    */
-  public GM_Object getLocation( );
+  GM_Object getLocation( );
 
   /**
    * Sets the gml:location property to the bound feature.<br>
    * REMARK: gml:location is deprecated in the GML3-Schema.
    */
-  public void setLocation( final GM_Object location );
+  void setLocation( final GM_Object location );
 
   /** Returns the bound feature, which this wrapper class is representing. */
-  public Feature getFeature( );
+  Feature getFeature( );
 }
