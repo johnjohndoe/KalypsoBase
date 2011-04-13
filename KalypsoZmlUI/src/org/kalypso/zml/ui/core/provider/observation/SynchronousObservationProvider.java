@@ -59,7 +59,10 @@ import org.kalypso.zml.core.diagram.data.IRequestHandler;
 
 /**
  * @author Dirk Kuch
+ * @deprecated NO! ALL(!) observation MUST be loaded via the pool. Else, we will not be notified about files changes,
+ *             but this is necessary.
  */
+@Deprecated
 public class SynchronousObservationProvider extends AbstractObsProvider
 {
   private final IRequestHandler m_handler;
@@ -79,6 +82,7 @@ public class SynchronousObservationProvider extends AbstractObsProvider
     }
     catch( final Throwable t )
     {
+      // FIXME: arrg! if this happens, the url is bad! Should be fixed elsewhere!
       load( new URL( context.toURI().toString() + "/" + href ) );
       // FIXME: the observation provider should never throw an exception?!
     }
@@ -86,6 +90,8 @@ public class SynchronousObservationProvider extends AbstractObsProvider
 
   private synchronized void load( final URL url ) throws SensorException
   {
+    // FIXME: NO, FORBIDDEN!
+    // We must load all observations via the pool!
     final IObservation observation = ZmlFactory.parseXML( url );
     setObservation( observation );
   }
