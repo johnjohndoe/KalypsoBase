@@ -112,6 +112,8 @@ public class RoughnessFilter extends AbstractFilter
 
   public Rule getLastRule( )
   {
+    if( m_lastRule == null )
+      m_lastRule = m_rulesSet.entrySet().iterator().next().getValue();
     return m_lastRule;
   }
 
