@@ -43,7 +43,6 @@ package org.kalypso.ogc.sensor.tableview.rules;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -90,7 +89,7 @@ public class Rules implements ITableViewRules
    * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#findRules(int)
    */
   @Override
-  public RenderingRule[] findRules( int mask )
+  public RenderingRule[] findRules( final int mask )
   {
     return findRules( new Integer( mask ) );
   }
@@ -106,13 +105,12 @@ public class Rules implements ITableViewRules
     if( r != null )
       return r;
 
+    final int intMask = mask.intValue();
+
     final List<RenderingRule> lrules = new ArrayList<RenderingRule>();
-
-    for( Iterator it = m_rules.iterator(); it.hasNext(); )
+    for( final RenderingRule rule : m_rules )
     {
-      final RenderingRule rule = (RenderingRule) it.next();
-
-      if( rule.contains( mask.intValue() ) )
+      if( rule.contains( intMask ) )
         lrules.add( rule );
     }
 
@@ -135,7 +133,7 @@ public class Rules implements ITableViewRules
    * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#getRules()
    */
   @Override
-  public List getRules( )
+  public List<RenderingRule> getRules( )
   {
     return m_rules;
   }
@@ -162,13 +160,13 @@ public class Rules implements ITableViewRules
    * @see org.kalypso.ogc.sensor.tableview.rules.ITableViewRules#cloneRules()
    */
   @Override
-  public ITableViewRules cloneRules()
+  public ITableViewRules cloneRules( )
   {
     final Rules rules = new Rules();
 
-    for( Iterator iter = m_rules.iterator(); iter.hasNext(); )
+    for( final Object element : m_rules )
     {
-      final RenderingRule rule = (RenderingRule)iter.next();
+      final RenderingRule rule = (RenderingRule) element;
       rules.addRule( rule.cloneRule() );
     }
 
