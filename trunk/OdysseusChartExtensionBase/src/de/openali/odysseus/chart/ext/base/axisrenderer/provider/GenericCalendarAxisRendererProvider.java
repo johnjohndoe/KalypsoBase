@@ -54,7 +54,7 @@ public class GenericCalendarAxisRendererProvider extends AbstractGenericAxisRend
   {
     String dateFormat = getParameterContainer().getParameterValue( "date-format", "dd.MM.yy\nHH:mm:ss" );
 
-    dateFormat = dateFormat.replaceAll( "\\n", "\n" );
+    dateFormat = dateFormat.replaceAll( "\\\\n", "\n" );
 
     return new DateLabelCreator( dateFormat );
 
