@@ -78,13 +78,18 @@ public class ZmlLineLayerProvider extends AbstractLayerProvider implements ILaye
       final ZmlLayerFactory factory = ZmlLayerFactory.getInstance();
 
       final ZmlLineLayer layer = factory.createLineLayer( this, styleSet );
+      // FIXME: ugly: set the IObservationProvider to the layer; the handler is implementation detail of the layer
       final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, targetAxisId );
 
       final IParameterContainer parameters = getParameterContainer();
       final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
       if( !StringUtils.isEmpty( href ) )
       {
+        // FIXME: we need some factory for the provider in order to decide if to load snychronous (e.g. for report)
+        // or asynchronous (ALL other cases)
+
         final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, getRequestHandler() );
+        // FIXME: set the obs provider to the handler, and dispose the handler later!
         handler.setObsProvider( provider );
       }
 
