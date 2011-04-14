@@ -276,8 +276,13 @@ public class ProfileWrapper
   {
     if( obj instanceof ProfileWrapper )
     {
+      final ProfileWrapper other = (ProfileWrapper) obj;
+
+      final String station = String.format( "%.3f", getStation() );
+      final String otherStation = String.format( "%.3f", other.getStation() );
+
       final EqualsBuilder builder = new EqualsBuilder();
-      builder.append( String.format( "%.3f", getStation() ), String.format( "%.3f", ((ProfileWrapper) obj).getStation() ) );
+      builder.append( station, otherStation );
 
       return builder.isEquals();
     }
@@ -291,9 +296,10 @@ public class ProfileWrapper
   @Override
   public int hashCode( )
   {
+    final String station = String.format( "%.3f", getStation() );
+
     final HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append( getClass().getName() );
-    builder.append( String.format( "%.3f", getStation() ) );
+    builder.append( station );
 
     return builder.toHashCode();
   }
