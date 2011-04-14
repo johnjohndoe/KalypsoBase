@@ -230,7 +230,7 @@ public class ProfileWrapper
   @Override
   public String toString( )
   {
-    return String.format( Messages.getString("ProfileWrapper_0"), m_profile.getStation() ); //$NON-NLS-1$
+    return String.format( Messages.getString( "ProfileWrapper_0" ), m_profile.getStation() ); //$NON-NLS-1$
   }
 
   public ProfilePointWrapper getFirstPoint( )
@@ -277,7 +277,7 @@ public class ProfileWrapper
     if( obj instanceof ProfileWrapper )
     {
       final EqualsBuilder builder = new EqualsBuilder();
-      builder.append( getStation(), ((ProfileWrapper) obj).getStation() );
+      builder.append( String.format( "%.3f", getStation() ), String.format( "%.3f", ((ProfileWrapper) obj).getStation() ) );
 
       return builder.isEquals();
     }
@@ -293,7 +293,7 @@ public class ProfileWrapper
   {
     final HashCodeBuilder builder = new HashCodeBuilder();
     builder.append( getClass().getName() );
-    builder.append( getStation() );
+    builder.append( String.format( "%.3f", getStation() ) );
 
     return builder.toHashCode();
   }
