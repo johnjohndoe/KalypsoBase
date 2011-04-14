@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.calculation.chain.i18n.Messages;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationJobSpecification;
@@ -131,11 +132,7 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
     }
     catch( final Exception e )
     {
-      System.out.println( "ERROR: " + e.getLocalizedMessage() ); //$NON-NLS-1$
-      e.printStackTrace();
-      // ErrorDialog.openError(shell, "Error",
-      // e.getLocalizedMessage(), Status.CANCEL_STATUS);
-      status = Status.CANCEL_STATUS;
+      status = StatusUtilities.statusFromThrowable( e );
     }
     m_chainStatus = CHAIN_STATUS.FINISHED;
     return status;
