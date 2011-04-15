@@ -104,24 +104,24 @@ public class ChartPainter
     gc.setAntialias( SWT.OFF );
     gc.setAdvanced( true );
 
-    m_titlePainter.paint( gc, new Rectangle(0,0, m_size.width, m_titlePainter.getSize().y ) );
+    m_titlePainter.paint( gc, new Rectangle( 0, 0, m_size.width, m_titlePainter.getSize().y ) );
     final Image legendImage = m_legendPainter.createImage();
     final Insets plotInsets = getPlotInsets();
 
     // paint plot
 
-    getPlotPainter().paint( gc, new Insets(plotInsets.top-panOffset.y,plotInsets.left-panOffset.x,plotInsets.bottom+panOffset.y,plotInsets.right+panOffset.x) );
+    getPlotPainter().paint( gc, new Insets( plotInsets.top - panOffset.y, plotInsets.left - panOffset.x, plotInsets.bottom + panOffset.y, plotInsets.right + panOffset.x ) );
 
     // paint left Axes
-    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ), gc, plotInsets.left, plotInsets.top, m_size.height - m_plotInsets.bottom - m_plotInsets.top, 90, false, false );
+    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ), gc, plotInsets.left, plotInsets.top, m_size.height - m_plotInsets.bottom - m_plotInsets.top, 90,false );
     // paint right Axes
     // paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ), gc, m_size.width - plotInsets.right,
 // m_size.height - plotInsets.bottom, m_size.height - m_plotInsets.bottom - plotInsets.top, -90, true, false );
-    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ), gc, m_size.width - plotInsets.right, plotInsets.top, m_size.height - m_plotInsets.bottom - plotInsets.top, 90, false, true );
+    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ), gc, m_size.width - plotInsets.right, plotInsets.top, m_size.height - m_plotInsets.bottom - plotInsets.top, 90, true );
     // paint top Axes
-    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ), gc, plotInsets.left, plotInsets.top, m_size.width - plotInsets.left - plotInsets.right, 0, false, true );
+    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ), gc, plotInsets.left, plotInsets.top, m_size.width - plotInsets.left - plotInsets.right, 0, true );
     // paint bottom Axes
-    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ), gc, plotInsets.left, m_size.height - plotInsets.bottom, m_size.width - plotInsets.left - plotInsets.right, 0, false, false );
+    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ), gc, plotInsets.left, m_size.height - plotInsets.bottom, m_size.width - plotInsets.left - plotInsets.right, 0, false );
 
     gc.setClipping( m_size );
     try
@@ -191,7 +191,7 @@ public class ChartPainter
     return m_plotPainter;
   }
 
-  private void paintAxes( final IAxis[] axes, final GC gc, final int anchorX, final int anchorY, final int axisWidth, final int rotation, final boolean invertHorizontal, final boolean invertVertical )
+  private void paintAxes( final IAxis[] axes, final GC gc, final int anchorX, final int anchorY, final int axisWidth, final int rotation, final boolean invertVertical )
   {
     final Transform transform = new Transform( gc.getDevice() );
     gc.getTransform( transform );
@@ -199,6 +199,7 @@ public class ChartPainter
     transform.rotate( rotation );
     gc.setTransform( transform );
     int offset = 0;
+    int invertInt = invertVertical ? -1 : 1;
     try
     {
       for( final IAxis axis : axes )
@@ -206,7 +207,7 @@ public class ChartPainter
         if( !axis.isVisible() )
           continue;
         transform.translate( axisWidth / 2, offset );
-        transform.scale( axis.isInverted() ^ invertHorizontal ? -1 : 1, invertVertical ? -1 : 1 );
+        transform.scale(  1, invertInt );
         transform.translate( -axisWidth / 2, -offset );
         gc.setTransform( transform );
         int height = 0;
@@ -219,10 +220,10 @@ public class ChartPainter
         finally
         {
           transform.translate( axisWidth / 2, offset );
-          transform.scale( axis.isInverted() ^ invertHorizontal ? -1 : 1, invertVertical ? -1 : 1 );
+          transform.scale( 1, invertInt );
           transform.translate( -axisWidth / 2, -offset );
           gc.setTransform( transform );
-          offset += height;
+          offset += height*invertInt;
         }
       }
     }

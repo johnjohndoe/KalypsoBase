@@ -1,5 +1,6 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
+import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.util.img.ChartLabelRendererFactory;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
 /**
@@ -24,7 +26,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
 {
   private final Class< ? > m_dataClass;
 
-  private DIRECTION m_dir = DIRECTION.POSITIVE;
+  private DIRECTION m_dir;
 
   private int m_height = 1;
 
@@ -56,6 +58,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     super( id );
     m_id = id;
     m_pos = pos;
+    m_dir = pos.getOrientation() == ORIENTATION.VERTICAL ? DIRECTION.NEGATIVE : DIRECTION.POSITIVE;
     m_dataClass = dataClass;
     setRenderer( renderer );
   }
@@ -85,13 +88,25 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     return m_dataClass;
   }
 
+  private DIRECTION switchDirection( final DIRECTION direction )
+  {
+    if( getPosition().getOrientation() == ORIENTATION.VERTICAL )
+    {
+      if( direction == DIRECTION.POSITIVE )
+        return DIRECTION.NEGATIVE;
+      return DIRECTION.POSITIVE;
+    }
+    else
+      return direction;
+  }
+
   /**
    * @see org.kalypso.chart.framework.axis.IAxis#getDirection()
    */
   @Override
   public DIRECTION getDirection( )
   {
-    return m_dir;
+    return switchDirection( m_dir );
   }
 
   /**
@@ -187,7 +202,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   @Override
   public boolean isInverted( )
   {
-    return getDirection() == DIRECTION.NEGATIVE;
+    return m_dir == DIRECTION.NEGATIVE;
   }
 
   @Override
@@ -199,7 +214,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   @Override
   public void setDirection( final DIRECTION dir )
   {
-    m_dir = dir;
+    m_dir = switchDirection( dir );
   }
 
   @Override
@@ -208,7 +223,8 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     if( !getLabel().equals( label ) )
     {
       m_axisLabels.clear();
-      m_axisLabels.add( new TitleTypeBean( label ) );
+      m_axisLabels.add( ChartLabelRendererFactory.getAxisLabelType( getPosition(), label, new Insets( 1, 1, 1, 1 ), null ) );// new
+// TitleTypeBean( label ) );
       fireMapperChanged( this );
     }
   }

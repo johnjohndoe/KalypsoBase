@@ -70,12 +70,13 @@ public class ScreenCoordinateAxis extends AbstractAxis implements IScreenAxis
   @Override
   public int normalizedToScreen( final double normValue )
   {
-    double myNormValue = normValue;
+    // double myNormValue = normValue;
     final int range = getScreenHeight();
-    if( ChartUtilities.isInverseScreenCoords( this ) )
-      myNormValue = 1 - myNormValue;
-    final int screenValue = (int) (range * myNormValue);
-    return screenValue;
+// if( ChartUtilities.isInverseScreenCoords( this ) )
+// myNormValue = 1 - myNormValue;
+// final int screenValue = (int) (range * myNormValue);
+// return screenValue;
+    return (int) (range * normValue);
   }
 
   /**
@@ -89,10 +90,11 @@ public class ScreenCoordinateAxis extends AbstractAxis implements IScreenAxis
     final int range = getScreenHeight();
     if( range == 0 )
       return 0;
-    final double normValue = (double) screenValue / range;
-    if( ChartUtilities.isInverseScreenCoords( this ) )
-      return 1 - normValue;
-
-    return normValue;
+// final double normValue = (double) screenValue / range;
+// if( ChartUtilities.isInverseScreenCoords( this ) )
+// return 1 - normValue;
+//
+// return normValue;
+    return (double) screenValue / range;
   }
 }

@@ -66,7 +66,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
   public GenericAxisRenderer( final String id, final ILabelCreator labelCreator, final ITickCalculator tickCalculator, final AxisRendererConfig config )
   {
-    this( id, config.tickLength, config.tickLabelInsets, config.labelInsets, config.gap, labelCreator, tickCalculator, config.minTickInterval, config.hideCut, config.fixedWidth, config.axisLineStyle, config.labelStyle, config.tickLineStyle, config.tickLabelStyle, config.labelPosition );
+    this( id, config.tickLength, config.tickLabelInsets, config.labelInsets, config.axisInsets.top, labelCreator, tickCalculator, config.minTickInterval, config.hideCut, config.fixedWidth, config.axisLineStyle, config.labelStyle, config.tickLineStyle, config.tickLabelStyle, config.labelPosition );
   }
 
   public GenericAxisRenderer( final String id, final int tickLength, final Insets tickLabelInsets, final Insets labelInsets, final int gap, final ILabelCreator labelCreator, final ITickCalculator tickCalculator, final Number minTickInterval, final boolean hideCut, final int fixedWidth, final ILineStyle axisLineStyle, final ITextStyle labelStyle, final ILineStyle tickLineStyle, final ITextStyle tickLabelStyle, final ALIGNMENT labelPosition )

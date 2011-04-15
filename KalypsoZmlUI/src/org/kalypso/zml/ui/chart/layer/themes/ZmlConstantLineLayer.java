@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.awt.Insets;
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedHashSet;
@@ -69,13 +70,13 @@ import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
-import de.openali.odysseus.chart.framework.model.figure.impl.TextFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
-import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.util.img.GenericChartLabelRenderer;
+import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
 /**
  * @author Dirk Kuch
@@ -196,99 +197,32 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
       if( ArrayUtils.isEmpty( m_descriptors ) )
         return;
 
-      final Rectangle screenRect = gc.getClipping();
-      final int[] screens = getScreenValues();
-
       for( final ZmlConstantLineBean descriptor : m_descriptors )
       {
         final int screenValue = getTargetAxis().numericToScreen( descriptor.getValue() );
-        final ILineStyle lineStyle = descriptor.getLineStyle();
-
         final PolylineFigure polylineFigure = new PolylineFigure();
-        polylineFigure.setStyle( lineStyle );
-        polylineFigure.setPoints( new Point[] { new Point( 0, screenValue ), new Point( screenRect.width, screenValue ) } );
+        polylineFigure.setStyle( descriptor.getLineStyle() );
+        polylineFigure.setPoints( new Point[] { new Point( 0, screenValue ), new Point( getDomainAxis().getScreenHeight(), screenValue ) } );
         polylineFigure.paint( gc );
 
         if( descriptor.isShowLabel() )
-          paintDescriptorLabel( gc, screenRect, screens, descriptor, screenValue, lineStyle );
+        {
+          final TitleTypeBean titleType = new TitleTypeBean( null );
+          titleType.setLabel( descriptor.getLabel() );
+          titleType.setTextStyle( descriptor.getTextStyle() );
+          titleType.setPositionHorizontal( ALIGNMENT.RIGHT );
+          titleType.setInsets( new Insets( 0, 0, 0, 10 ) );
+          titleType.setTextAnchorX( ALIGNMENT.RIGHT );
+          titleType.setTextAnchorY( ALIGNMENT.BOTTOM );
+          final GenericChartLabelRenderer labelRenderer = new GenericChartLabelRenderer( titleType );
+          labelRenderer.paint( gc, new Rectangle( 0, screenValue, getDomainAxis().getScreenHeight(), -1 ) );
+        }
       }
     }
     catch( final Throwable t )
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
     }
-  }
-
-  private void paintDescriptorLabel( final GC gc, final Rectangle screenRect, final int[] screens, final ZmlConstantLineBean descriptor, final int screenValue, final ILineStyle lineStyle )
-  {
-    final ITextStyle textStyle = descriptor.getTextStyle();
-    final String text = descriptor.getLabel();
-
-    // Needs to apply style here, else the extent is not correctly calculated
-    textStyle.apply( gc );
-    final Point extent = gc.textExtent( text );
-
-    final TextFigure textFigure = new TextFigure();
-    textFigure.setStyle( textStyle );
-
-    // FIXME: choose text position on line depending on alignment set in text-style
-    if( canDrawLabel( screens, screenValue, extent.y ) )
-    {
-      textFigure.setText( text );
-
-      // final ALIGNMENT alignment = textStyle.getAlignment();
-      // FIXME: textStyle alignment is not correctly implemented and is not an attribute of the corresponding
-      // xml-element
-      final ALIGNMENT alignment = ALIGNMENT.RIGHT;
-      final int left = calculateLeftPosition( extent, screenRect, alignment );
-      final int top = (int) (screenValue - extent.y / 2f - lineStyle.getWidth());
-
-      textFigure.setPoint( new Point( left, top ) );
-      textFigure.paint( gc );
-    }
-  }
-
-  private int calculateLeftPosition( final Point extent, final Rectangle screenRect, final ALIGNMENT alignment )
-  {
-    // TODO: we would like to configure some kind of buffer/insets
-
-    // FIXME: get insets from outside for all directions
-    final int insetsRight = 7;
-
-    switch( alignment )
-    {
-      case LEFT:
-        // FIXME: check if the screen rect is correctly set here -> is the width of the axis an issue?
-        return screenRect.x;
-
-      case CENTER:
-        return screenRect.x + (int) (screenRect.width / 2.0 - extent.x / 2.0);
-
-      case RIGHT:
-        // fall through
-      default:
-        return screenRect.x + screenRect.width - extent.x - insetsRight;
-    }
-  }
-
-  private boolean canDrawLabel( final int[] screens, final int value, final int size )
-  {
-    for( final int x : screens )
-    {
-      if( x > value && x < value + size )
-        return false;
-    }
-    return true;
-  }
-
-  private int[] getScreenValues( )
-  {
-    final int[] screens = new int[m_descriptors.length];
-    for( int i = 0; i < m_descriptors.length; i++ )
-    {
-      screens[i] = getTargetAxis().numericToScreen( m_descriptors[i].getValue() );
-    }
-    return screens;
   }
 
   private void updateDescriptors( ) throws XmlException, IOException
