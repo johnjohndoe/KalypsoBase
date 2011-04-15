@@ -43,6 +43,7 @@ package de.openali.odysseus.chart.framework.util.img;
 import java.awt.Insets;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
@@ -52,133 +53,70 @@ import de.openali.odysseus.chart.framework.model.style.ITextStyle;
  */
 public class ChartLabelRendererFactory
 {
-
-  static public IChartLabelRenderer getTickLabelRenderer( final POSITION axisPosition, final Insets tickInsets, final ITextStyle tickLabelStyle, final IAreaStyle tickFrameStyle )
+  static public TitleTypeBean getTickLabelType( final POSITION axisPosition, final Insets tickInsets, final ITextStyle tickLabelStyle, final IAreaStyle tickFrameStyle )
   {
-
     final TitleTypeBean titleType = new TitleTypeBean( null );
     titleType.setInsets( tickInsets );
     titleType.setTextStyle( tickLabelStyle );
-    if( axisPosition == POSITION.LEFT )
+    if( axisPosition.getOrientation() == ORIENTATION.VERTICAL )
     {
-      titleType.setRotation( -90 );
-      titleType.setTextAnchorX( ALIGNMENT.RIGHT );
+      titleType.setTextAnchorX( ALIGNMENT.LEFT );
       titleType.setTextAnchorY( ALIGNMENT.CENTER );
-    }
-    else if( axisPosition == POSITION.RIGHT )
-    {
-      titleType.setRotation( 270 );
-      titleType.setTextAnchorX( ALIGNMENT.RIGHT );
-      titleType.setTextAnchorY( ALIGNMENT.CENTER );
-      titleType.setMirrorHorizontal( true );
-    }
-    else if( axisPosition == POSITION.BOTTOM )
-    {
-      titleType.setTextAnchorX( ALIGNMENT.CENTER );
-      titleType.setTextAnchorY( ALIGNMENT.TOP );
-      titleType.setPositionHorizontal( ALIGNMENT.CENTER );
-      titleType.setPositionVertical( ALIGNMENT.TOP );
-      titleType.getTextStyle().setAlignment( ALIGNMENT.CENTER );
-    }
-    else if( axisPosition == POSITION.TOP )
-    {
-      titleType.setTextAnchorX( ALIGNMENT.CENTER );
-      titleType.setTextAnchorY( ALIGNMENT.TOP );
+      titleType.setRotation( 90 );
       titleType.setMirrorVertical( true );
-      titleType.getTextStyle().setAlignment( ALIGNMENT.CENTER );
+      if( axisPosition == POSITION.LEFT )
+        titleType.setMirrorHorizontal( true );
     }
-    final IChartLabelRenderer labelRenderer = new GenericChartLabelRenderer( titleType );
+    else
+    {
+      titleType.setTextAnchorX( ALIGNMENT.CENTER );
+      titleType.setTextAnchorY( ALIGNMENT.TOP );
+      if( axisPosition == POSITION.TOP )
+        titleType.setMirrorVertical( true );
+    }
+    return titleType;
+  }
+
+  static public IChartLabelRenderer getTickLabelRenderer( final POSITION axisPosition, final Insets tickInsets, final ITextStyle tickLabelStyle, final IAreaStyle tickFrameStyle )
+  {
+    final IChartLabelRenderer labelRenderer = new GenericChartLabelRenderer( getTickLabelType( axisPosition, tickInsets, tickLabelStyle, tickFrameStyle ) );
     labelRenderer.setBorderStyle( tickFrameStyle );
     return labelRenderer;
   }
 
   static public IChartLabelRenderer getAxisLabelRenderer( final POSITION axisPosition, final Insets axisLabelInsets, final ITextStyle axisLabelStyle, final IAreaStyle labelFrameStyle )
   {
-
-    final TitleTypeBean titleType = new TitleTypeBean( null, ALIGNMENT.CENTER, ALIGNMENT.CENTER, axisLabelStyle, axisLabelInsets );
-
-    if( axisPosition == POSITION.LEFT )
-    {
-      titleType.setRotation( 180 );
-      titleType.setPositionHorizontal( ALIGNMENT.CENTER );
-      titleType.setPositionVertical( ALIGNMENT.BOTTOM );
-      titleType.setTextAnchorX( ALIGNMENT.CENTER );
-      titleType.setTextAnchorY( ALIGNMENT.TOP );
-      titleType.getTextStyle().setAlignment( ALIGNMENT.CENTER );
-    }
-    else if( axisPosition == POSITION.RIGHT )
-    {
-      titleType.setTextAnchorX( ALIGNMENT.CENTER );
-      titleType.setTextAnchorY( ALIGNMENT.BOTTOM );
-      titleType.setPositionHorizontal( ALIGNMENT.CENTER );
-      titleType.setPositionVertical( ALIGNMENT.BOTTOM );
-      titleType.getTextStyle().setAlignment( ALIGNMENT.CENTER );
-      titleType.setMirrorHorizontal( true );
-      titleType.setMirrorVertical( true );
-    }
-    else if( axisPosition == POSITION.BOTTOM )
-    {
-      titleType.setTextAnchorX( ALIGNMENT.CENTER );
-      titleType.setTextAnchorY( ALIGNMENT.BOTTOM );
-      titleType.setPositionHorizontal( ALIGNMENT.CENTER );
-      titleType.setPositionVertical( ALIGNMENT.BOTTOM );
-      titleType.getTextStyle().setAlignment( ALIGNMENT.CENTER );
-    }
-    else if( axisPosition == POSITION.TOP )
-    {
-      titleType.setTextAnchorX( ALIGNMENT.CENTER );
-      titleType.setTextAnchorY( ALIGNMENT.BOTTOM );
-      titleType.setPositionHorizontal( ALIGNMENT.CENTER );
-      titleType.setPositionVertical( ALIGNMENT.BOTTOM );
-      titleType.getTextStyle().setAlignment( ALIGNMENT.CENTER );
-      titleType.setMirrorVertical( true );
-    }
-    final IChartLabelRenderer labelRenderer = new GenericChartLabelRenderer( titleType );
+    final IChartLabelRenderer labelRenderer = new GenericChartLabelRenderer( getAxisLabelType( axisPosition, null, axisLabelInsets, axisLabelStyle ) );
     labelRenderer.setBorderStyle( labelFrameStyle );
     return labelRenderer;
   }
 
   public static TitleTypeBean getAxisLabelType( final POSITION axisPosition, final String label, final Insets axisLabelInsets, final ITextStyle axisLabelStyle )
   {
-
-    final TitleTypeBean titleType = new TitleTypeBean( label, ALIGNMENT.CENTER, ALIGNMENT.CENTER, axisLabelStyle, axisLabelInsets );
-
+    final TitleTypeBean titleType = new TitleTypeBean( label, ALIGNMENT.CENTER, ALIGNMENT.BOTTOM, axisLabelStyle, axisLabelInsets );
+    titleType.setTextAnchorX( ALIGNMENT.CENTER );
+    titleType.setTextAnchorY( ALIGNMENT.BOTTOM );
     if( axisPosition == POSITION.LEFT )
     {
-      titleType.setRotation( 180 );
-      titleType.setPositionHorizontal( ALIGNMENT.CENTER );
-      titleType.setPositionVertical( ALIGNMENT.BOTTOM );
-      titleType.setTextAnchorX( ALIGNMENT.CENTER );
-      titleType.setTextAnchorY( ALIGNMENT.TOP );
-      titleType.getTextStyle().setAlignment( ALIGNMENT.CENTER );
+      titleType.setMirrorHorizontal( true );
+      titleType.setMirrorVertical( true );
     }
     else if( axisPosition == POSITION.RIGHT )
     {
-      titleType.setTextAnchorX( ALIGNMENT.CENTER );
-      titleType.setTextAnchorY( ALIGNMENT.BOTTOM );
-      titleType.setPositionHorizontal( ALIGNMENT.CENTER );
-      titleType.setPositionVertical( ALIGNMENT.BOTTOM );
-      titleType.getTextStyle().setAlignment( ALIGNMENT.CENTER );
-      titleType.setMirrorHorizontal( true );
+      titleType.setMirrorHorizontal( false );
       titleType.setMirrorVertical( true );
     }
     else if( axisPosition == POSITION.TOP )
     {
-      titleType.setTextAnchorX( ALIGNMENT.CENTER );
-      titleType.setTextAnchorY( ALIGNMENT.BOTTOM );
-      titleType.setPositionHorizontal( ALIGNMENT.CENTER );
-      titleType.setPositionVertical( ALIGNMENT.BOTTOM );
-      titleType.getTextStyle().setAlignment( ALIGNMENT.CENTER );
+      titleType.setMirrorHorizontal( false );
       titleType.setMirrorVertical( true );
     }
     else if( axisPosition == POSITION.BOTTOM )
     {
-      titleType.setTextAnchorX( ALIGNMENT.CENTER );
-      titleType.setTextAnchorY( ALIGNMENT.BOTTOM );
-      titleType.setPositionHorizontal( ALIGNMENT.CENTER );
-      titleType.setPositionVertical( ALIGNMENT.BOTTOM );
-      titleType.getTextStyle().setAlignment( ALIGNMENT.CENTER );
+      titleType.setMirrorHorizontal( false );
+      titleType.setMirrorVertical( false );
     }
+
     return titleType;
   }
 }

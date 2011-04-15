@@ -305,7 +305,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       }
       case CENTER:
       {
-        left = (lineWidth - width) / 2;
+        left = (width - lineWidth) / 2;
         break;
       }
 
@@ -461,7 +461,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       else
       // draw Text
       {
-        
+
         final int borderWidth = getBorderStyle() == null ? 0 : getBorderStyle().getStroke().getWidth();
         if( isDrawBorder() )
         {
@@ -479,8 +479,9 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
         m_titleBean.getTextStyle().apply( gc );
         for( String line : lines )
         {
-          final Point lineSize = gc.textExtent( line, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
-          final String fitLine = fitToFixedWidth( gc, line, textRect.width );
+
+          final String fitLine = fitToFixedWidth( gc, line, inflateRect( boundsRect, getTitleTypeBean().getInsets() ).width - 2 * borderWidth );
+          final Point lineSize = gc.textExtent( fitLine, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
           final int lineInset = getLineInset( m_titleBean.getTextStyle().getAlignment(), lineSize.x, textRect.width );
           gc.drawText( fitLine, textRect.x + lineInset, top, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
           top += lineHeight;
