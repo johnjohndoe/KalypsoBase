@@ -40,29 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.figure.impl;
 
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.TopologyException;
-
 import de.openali.odysseus.chart.framework.util.resource.IPair;
-import de.openali.odysseus.chart.framework.util.resource.Pair;
 
 /**
  * @author Gernot Belger
  */
 public class ClipHelper
 {
-  private final GeometryFactory m_gf = new GeometryFactory();
-
   private final Rectangle2D m_clipRect;
 
   public ClipHelper( final Rectangle2D clipRect )
@@ -82,104 +71,15 @@ public class ClipHelper
     if( m_clipRect == null || points.length == 0 )
       return new IPair[][] { points };
 
-    final Polygon clipPolygon = getClipPolygon();
+    final Collection<IPair<Number, Number>> result = new ArrayList<IPair<Number, Number>>();
 
-    // Using JTS to intersect graphics
-    final Coordinate[] crds = new Coordinate[points.length];
-
-    for( int i = 0; i < crds.length; i++ )
-      crds[i] = new Coordinate( points[i].getDomain().doubleValue(), points[i].getTarget().doubleValue() );
-
-    // special case: we got only one single point
-    if( crds.length == 1 )
+    for( final IPair<Number, Number> point : points )
     {
-      final com.vividsolutions.jts.geom.Point singlePoint = m_gf.createPoint( crds[0] );
-      if( clipPolygon.contains( singlePoint ) )
-        return new IPair[][] { points };
-      else
-        return new IPair[][] {};
+      final Point2D point2D = new Point2D.Double( point.getDomain().doubleValue(), point.getTarget().doubleValue() );
+      if( m_clipRect.contains( point2D ) )
+        result.add( point );
     }
 
-    final LineString lineString = m_gf.createLineString( crds );
-
-    // TODO: we still get validation errors here, as the clip-polygon has sometimes 0-width
-    // using a null-clip here does not solve problems however...
-
-// final IsValidOp clipIsValidOp = new IsValidOp( clipPolygon );
-// final IsValidOp lineIsValidOp = new IsValidOp( lineString );
-// final TopologyValidationError clipError = clipIsValidOp.getValidationError();
-// if( clipError != null )
-// System.out.println( clipError );
-//
-// final TopologyValidationError lineError = lineIsValidOp.getValidationError();
-// if( lineError != null )
-// System.out.println( lineError );
-
-    try
-    {
-      final Geometry clippedPoints = lineString.intersection( clipPolygon );
-
-      final Collection<IPair<Number, Number>[]> collector = new ArrayList<IPair<Number, Number>[]>();
-      drawGeometry( collector, clippedPoints );
-      return collector.toArray( new IPair[collector.size()][] );
-    }
-    catch( final TopologyException e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-      return new IPair[][] { points };
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  private void drawGeometry( final Collection<IPair<Number, Number>[]> result, final Geometry geom )
-  {
-    if( geom instanceof GeometryCollection )
-    {
-      final GeometryCollection collection = (GeometryCollection) geom;
-      final int numGeometries = collection.getNumGeometries();
-      for( int i = 0; i < numGeometries; i++ )
-      {
-        final Geometry geometryN = collection.getGeometryN( i );
-        drawGeometry( result, geometryN );
-      }
-    }
-    else if( geom instanceof LineString )
-    {
-      final LineString ls = (LineString) geom;
-      final Coordinate[] coordinates = ls.getCoordinates();
-      final IPair<Number, Number>[] points = new IPair[coordinates.length];
-      for( int i = 0; i < points.length; i++ )
-        points[i] = new Pair<Number, Number>( coordinates[i].x, coordinates[i].y );
-
-      result.add( points );
-    }
-    else if( geom instanceof com.vividsolutions.jts.geom.Point )
-    {
-      final com.vividsolutions.jts.geom.Point p = (com.vividsolutions.jts.geom.Point) geom;
-      final IPair<Number, Number> point = new Pair<Number, Number>( p.getX(), p.getY() );
-      result.add( new IPair[] { point } );
-    }
-    else
-    {
-      System.out.println( "Unknwon: " + geom );
-    }
-  }
-
-  private Polygon getClipPolygon( )
-  {
-    final double minX = m_clipRect.getMinX();
-    final double minY = m_clipRect.getMinY();
-    final double maxX = m_clipRect.getMaxX();
-    final double maxY = m_clipRect.getMaxY();
-
-    final Coordinate[] clipShellPoints = new Coordinate[5];
-    clipShellPoints[0] = new Coordinate( minX, minY );
-    clipShellPoints[1] = new Coordinate( minX, maxY );
-    clipShellPoints[2] = new Coordinate( maxX, maxY );
-    clipShellPoints[3] = new Coordinate( maxX, minY );
-    clipShellPoints[4] = clipShellPoints[0];
-    final LinearRing clipShell = m_gf.createLinearRing( clipShellPoints );
-    return m_gf.createPolygon( clipShell, null );
+    return new IPair[][] { result.toArray( new IPair[result.size()] ) };
   }
 }
