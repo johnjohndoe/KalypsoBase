@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.dialog;
 
@@ -85,7 +85,8 @@ public class PointFeatureDialog implements IFeatureDialog
 
     final String kalypsoCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     final String dlgCrs = point == null ? kalypsoCrs : point.getCoordinateSystem();
-    final PointDialog dialog = new PointDialog( shell, point.getAsArray(), dlgCrs );
+    final double[] crds = point == null ? new double[] { 0.0, 0.0 } : point.getAsArray();
+    final PointDialog dialog = new PointDialog( shell, crds, dlgCrs );
 
     final int open = dialog.open();
 
