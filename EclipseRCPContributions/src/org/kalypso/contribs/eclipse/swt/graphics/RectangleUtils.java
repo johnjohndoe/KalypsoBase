@@ -1,5 +1,7 @@
 package org.kalypso.contribs.eclipse.swt.graphics;
 
+import java.awt.Insets;
+
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -32,6 +34,18 @@ public final class RectangleUtils
     return new Rectangle( x, y, w, h );
   }
 
+  public static final Rectangle inflateRect( final Rectangle rect, final Insets insets )
+  {
+    if( rect == null )
+      return null;
+    return new Rectangle( rect.x + insets.left, rect.y + insets.top, rect.width - insets.left - insets.right, rect.height - insets.bottom - insets.top );
+  }
+
+  public static final Rectangle inflateRect( final Rectangle rect, final int inset )
+  {
+    return inflateRect( rect, new Insets( inset, inset, inset, inset ) );
+  }
+
   public static final Point getCenterPoint( final Rectangle r )
   {
     final int x = Math.min( r.x, r.x + r.width );
@@ -44,7 +58,7 @@ public final class RectangleUtils
 
   public final static Rectangle buffer( final Point p )
   {
-    if (p==null)
+    if( p == null )
       return null;
     return new Rectangle( p.x - 5, p.y - 5, 10, 10 );
   }

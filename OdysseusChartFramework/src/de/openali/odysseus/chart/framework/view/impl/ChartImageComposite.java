@@ -254,12 +254,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     return m_tooltipInfo;
   }
 
-  // FIXME: move into helper class
-  protected static final Rectangle inflateRect( final Rectangle rect, final Insets insets )
-  {
-    return new Rectangle( rect.x + insets.left, rect.y + insets.top, rect.width - insets.left - insets.right, rect.height - insets.bottom - insets.top );
-  }
-
   @Override
   public void invalidate( )
   {
@@ -292,7 +286,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
     final Rectangle panel = getClientArea();
     final ChartPainter chartPainter = new ChartPainter( model, panel );
-    m_plotRect = inflateRect( panel, chartPainter.getPlotInsets() );
+    m_plotRect = RectangleUtils.inflateRect( panel, chartPainter.getPlotInsets() );
     m_image = chartPainter.createImage( m_panOffset );
 
     redraw();

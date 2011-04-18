@@ -95,14 +95,13 @@ public class LineStyle extends AbstractStyle implements ILineStyle
   @Override
   public void apply( final GC gc )
   {
-
     gc.setForeground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( gc.getDevice(), m_rgb ) );
 
     gc.setAlpha( getAlpha() );
 
     final int lineCap = m_lineCap.toSWT();
-
     final int lineJoin = m_lineJoin.toSWT();
+    
     final LineAttributes la = new LineAttributes( m_width, lineCap, lineJoin, SWT.LINE_CUSTOM, m_dashArray, m_dashOffset, m_miterLimit );
     gc.setLineAttributes( la );
   }

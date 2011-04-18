@@ -72,6 +72,8 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
   private IAreaStyle m_borderStyle = null;
 
+  private final int m_drawTransparent = 0;// SWT.DRAW_TRANSPARENT
+
   public GenericChartLabelRenderer( )
   {
     m_titleBean = new TitleTypeBean( null );
@@ -118,7 +120,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       return getImageSize( text );
 
     m_titleBean.getTextStyle().apply( gc );
-    final Point textSize = gc.textExtent( text, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+    final Point textSize = gc.textExtent( text, m_drawTransparent | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
     return textSize;
 
   }
@@ -404,16 +406,8 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     if( m_titleBean == null || StringUtils.isEmpty( m_titleBean.getText() ) || boundsRect == null )
       return;
     // if no size given, fit Rectangle to TextSize
-    // final Rectangle fixedRect = new Rectangle( boundsRect.x, boundsRect.y, boundsRect.width, boundsRect.height );
+
     final Point overAllTextSize = calcSize( gc, 0 );
-// if( boundsRect.width < 0 )
-// {
-// fixedRect.width = overAllTextSize.x;
-// }
-// if( boundsRect.height < 0 )
-// {
-// fixedRect.height = overAllTextSize.y;
-// }
 
     // save GC
     final Font oldFont = gc.getFont();
@@ -423,6 +417,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     final int oldAlpha = gc.getAlpha();
     // create Transform
     final Device device = gc.getDevice();
+    final Transform oldTransform = new Transform( device );
     final Transform newTransform = new Transform( device );
     final Point rendererAnchor = getRendererAnchor( m_titleBean.getPositionHorizontal(), m_titleBean.getPositionVertical(), boundsRect );
     final Rectangle titleRect = getTextRect( m_titleBean.getTextAnchorX(), m_titleBean.getTextAnchorY(), overAllTextSize );
@@ -430,6 +425,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     try
     {
       // get transform from gc
+      gc.getTransform( oldTransform );
       gc.getTransform( newTransform );
       // move to renderer AnchorPoint
       newTransform.translate( rendererAnchor.x, rendererAnchor.y );
@@ -476,14 +472,16 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
         final String[] lines = StringUtils.split( m_titleBean.getText(), "\n" );// TODO: maybe other split strategy
         final int lineHeight = textRect.height / lines.length;
         int top = textRect.y;
+        final int flags = m_drawTransparent | SWT.DRAW_DELIMITER | SWT.DRAW_TAB;
+
         m_titleBean.getTextStyle().apply( gc );
         for( String line : lines )
         {
-
           final String fitLine = fitToFixedWidth( gc, line, inflateRect( boundsRect, getTitleTypeBean().getInsets() ).width - 2 * borderWidth );
-          final Point lineSize = gc.textExtent( fitLine, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+
+          final Point lineSize = gc.textExtent( fitLine, flags );
           final int lineInset = getLineInset( m_titleBean.getTextStyle().getAlignment(), lineSize.x, textRect.width );
-          gc.drawText( fitLine, textRect.x + lineInset, top, SWT.DRAW_TRANSPARENT | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+          gc.drawText( fitLine, textRect.x + lineInset, top, flags );
           top += lineHeight;
         }
       }
@@ -497,12 +495,9 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       gc.setForeground( oldTextCol );
       gc.setAlpha( oldAlpha );
       // restore gc
-      newTransform.translate( titleRect.x + titleRect.width / 2, titleRect.y + titleRect.height / 2 );
-      newTransform.scale( m_titleBean.isMirrorHorizontal() ? -1 : 1, m_titleBean.isMirrorVertical() ? -1 : 1 );
-      newTransform.translate( -(titleRect.x + titleRect.width / 2), -(titleRect.y + titleRect.height / 2) );
-      newTransform.rotate( -m_titleBean.getRotation() );
-      newTransform.translate( -rendererAnchor.x, -rendererAnchor.y );
-      gc.setTransform( newTransform );
+
+      gc.setTransform( oldTransform );
+      oldTransform.dispose();
       newTransform.dispose();
     }
 
