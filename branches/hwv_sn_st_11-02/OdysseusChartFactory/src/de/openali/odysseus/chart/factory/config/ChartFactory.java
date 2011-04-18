@@ -80,7 +80,8 @@ public final class ChartFactory
 
       title.setPositionHorizontal( StyleHelper.getAlignment( type.getHorizontalPosition() ) );
       title.setPositionVertical( StyleHelper.getAlignment( type.getVerticalPosition() ) );
-      title.getTextStyle().setAlignment( StyleHelper.getAlignment( type.getHorizontalAlignment() ) );
+      // textSytle configure this alignment itself
+      // title.getTextStyle().setAlignment( StyleHelper.getAlignment( type.getHorizontalAlignment() ) );
       title.setTextAnchorX( StyleHelper.getAlignment( type.getHorizontalTextAnchor() ) );
       title.setTextAnchorY( StyleHelper.getAlignment( type.getVerticalTextAnchor() ) );
 

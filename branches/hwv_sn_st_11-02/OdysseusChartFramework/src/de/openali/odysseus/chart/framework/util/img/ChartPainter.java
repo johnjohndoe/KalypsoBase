@@ -113,7 +113,7 @@ public class ChartPainter
     getPlotPainter().paint( gc, new Insets( plotInsets.top - panOffset.y, plotInsets.left - panOffset.x, plotInsets.bottom + panOffset.y, plotInsets.right + panOffset.x ) );
 
     // paint left Axes
-    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ), gc, plotInsets.left, plotInsets.top, m_size.height - m_plotInsets.bottom - m_plotInsets.top, 90,false );
+    paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ), gc, plotInsets.left, plotInsets.top, m_size.height - m_plotInsets.bottom - m_plotInsets.top, 90, false );
     // paint right Axes
     // paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ), gc, m_size.width - plotInsets.right,
 // m_size.height - plotInsets.bottom, m_size.height - m_plotInsets.bottom - plotInsets.top, -90, true, false );
@@ -193,11 +193,13 @@ public class ChartPainter
 
   private void paintAxes( final IAxis[] axes, final GC gc, final int anchorX, final int anchorY, final int axisWidth, final int rotation, final boolean invertVertical )
   {
-    final Transform transform = new Transform( gc.getDevice() );
-    gc.getTransform( transform );
-    transform.translate( anchorX, anchorY );
-    transform.rotate( rotation );
-    gc.setTransform( transform );
+    final Transform oldTransform = new Transform( gc.getDevice() );
+    final Transform newTransform = new Transform( gc.getDevice() );
+    gc.getTransform( oldTransform );
+    gc.getTransform( newTransform );
+    newTransform.translate( anchorX, anchorY );
+    newTransform.rotate( rotation );
+    gc.setTransform( newTransform );
     int offset = 0;
     int invertInt = invertVertical ? -1 : 1;
     try
@@ -206,10 +208,10 @@ public class ChartPainter
       {
         if( !axis.isVisible() )
           continue;
-        transform.translate( axisWidth / 2, offset );
-        transform.scale(  1, invertInt );
-        transform.translate( -axisWidth / 2, -offset );
-        gc.setTransform( transform );
+        newTransform.translate( axisWidth / 2, offset );
+        newTransform.scale( 1, invertInt );
+        newTransform.translate( -axisWidth / 2, -offset );
+        gc.setTransform( newTransform );
         int height = 0;
         try
         {
@@ -219,20 +221,19 @@ public class ChartPainter
         }
         finally
         {
-          transform.translate( axisWidth / 2, offset );
-          transform.scale( 1, invertInt );
-          transform.translate( -axisWidth / 2, -offset );
-          gc.setTransform( transform );
-          offset += height*invertInt;
+          newTransform.translate( axisWidth / 2, offset );
+          newTransform.scale( 1, invertInt );
+          newTransform.translate( -axisWidth / 2, -offset );
+          gc.setTransform( newTransform );
+          offset += height * invertInt;
         }
       }
     }
     finally
     {
-      transform.rotate( -rotation );
-      transform.translate( -anchorX, -anchorY );
-      gc.setTransform( transform );
-      transform.dispose();
+      gc.setTransform( oldTransform );
+      newTransform.dispose();
+      oldTransform.dispose();
     }
   }
 

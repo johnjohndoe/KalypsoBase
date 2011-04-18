@@ -57,11 +57,6 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
 
   }
 
-  protected void drawAxisLine( final GC gc, final int x1, final int y1, final int x2, final int y2 )
-  {
-    getLineStyle().apply( gc );
-    gc.drawLine( x1, y1, x2, y2 );
-  }
 
   /**
    * draws the Axis ticks into the given GC
@@ -85,7 +80,7 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
       if( drawTick )
       {
         getTickLineStyle().apply( gc );
-        gc.drawLine( tickPos, getLineStyle().getWidth() + getGap() + offset, tickPos, getLineStyle().getWidth() + getGap() + offset + getTickLength() );
+        gc.drawLine( tickPos, getTickLineStyle().getWidth() + getGap() + offset, tickPos, getTickLineStyle().getWidth() + getGap() + offset + getTickLength() );
       }
       if( drawTickLabel )
       {
@@ -192,6 +187,7 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
   {
     if( (screen.width > 0) && (screen.height > 0) && axis.isVisible() )
     {
+
       getLineStyle().apply( gc );
       gc.drawLine( screen.x, getGap() + screen.y, axis.getScreenHeight(), getGap() + screen.y );
       drawTicks( gc, screen.y, axis, getTicks( axis, gc ) );
