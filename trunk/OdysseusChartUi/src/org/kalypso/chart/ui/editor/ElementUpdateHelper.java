@@ -70,7 +70,7 @@ public class ElementUpdateHelper
     if( chart == null )
       return;
 
-    final IPlotHandler plotDragHandler = chart.getPlotHandler();
+    final IPlotHandler plotDragHandler = chart == null ? null : chart.getPlotHandler();
     if( Objects.isNotNull( plotDragHandler ) )
     {
       final IChartDragHandler[] handlers = plotDragHandler.getActiveHandlers();
