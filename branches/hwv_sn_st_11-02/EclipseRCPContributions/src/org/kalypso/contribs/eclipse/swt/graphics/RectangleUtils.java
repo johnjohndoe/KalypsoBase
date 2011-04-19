@@ -41,6 +41,18 @@ public final class RectangleUtils
     return new Rectangle( rect.x + insets.left, rect.y + insets.top, rect.width - insets.left - insets.right, rect.height - insets.bottom - insets.top );
   }
 
+  public static final Rectangle bufferRect( final Rectangle rect, final Insets insets )
+  {
+    if( rect == null )
+      return null;
+    return new Rectangle( rect.x - insets.left, rect.y - insets.top, rect.width + insets.left + insets.right, rect.height + insets.bottom + insets.top );
+  }
+
+  public static final Rectangle bufferRect( final Rectangle rect, final int inset )
+  {
+    return bufferRect( rect, new Insets( inset, inset, inset, inset ) );
+  }
+
   public static final Rectangle inflateRect( final Rectangle rect, final int inset )
   {
     return inflateRect( rect, new Insets( inset, inset, inset, inset ) );

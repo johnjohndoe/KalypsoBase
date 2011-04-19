@@ -5,9 +5,10 @@ import de.openali.odysseus.chart.ext.base.axisrenderer.ExtendedAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
  * logical and numerical range are identical;
@@ -16,7 +17,7 @@ import de.openali.odysseus.chart.framework.util.ChartUtilities;
  */
 public class GenericLinearAxis extends AbstractAxis
 {
-  
+
   public GenericLinearAxis( final String id, final POSITION pos )
   {
     super( id, pos, Number.class, new ExtendedAxisRenderer( id + "_RENDERER", pos, new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), new AxisRendererConfig() ) );//$NON-NLS-1$ //$NON-NLS-2$
@@ -50,7 +51,7 @@ public class GenericLinearAxis extends AbstractAxis
     return logical;
   }
 
-  /**
+   /**
    * Uses the widgets' complete extension to calculate the screen value in correspondence to a normalized value
    * 
    * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#normalizedToScreen(double)
@@ -58,12 +59,7 @@ public class GenericLinearAxis extends AbstractAxis
   @Override
   public int normalizedToScreen( final double normValue )
   {
-// double myNormValue = normValue;
     final int range = getScreenHeight();
-// if( ChartUtilities.isInverseScreenCoords( this ) )
-// myNormValue = 1 - myNormValue;
-// final int screenValue = (int) (range * myNormValue);
-// return screenValue;
     return (int) (range * (isInverted() ? 1 - normValue : normValue));
   }
 
@@ -98,10 +94,6 @@ public class GenericLinearAxis extends AbstractAxis
     if( range == 0 )
       return 0;
     final double normValue = (double) screenValue / range;
-// if( ChartUtilities.isInverseScreenCoords( this ) )
-// return 1 - normValue;
-//
-// return normValue;
     return isInverted() ? 1 - normValue : normValue;
   }
 

@@ -46,6 +46,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -96,13 +97,13 @@ public class CompactChartLegendRenderer implements IChartLegendRenderer
   public Image createImage( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
     final IChartLayer[] layers = getLayers( canvas.getModel() );
-    final Point size = getSize( layers, config );
-    final int rowHeight = m_numRows < 2 ? size.y : size.y / m_numRows;
-    if( size.x <= 0 || size.y <= 0 )
+    final Rectangle rect = getSize( layers, config );
+    final int rowHeight = m_numRows < 2 ? rect.height : rect.height / m_numRows;
+    if( rect.width <= 0 || rect.height <= 0 )
       return null;
 
     final Device dev = PlatformUI.getWorkbench().getDisplay();
-    final Image img = new Image( dev, size.x, size.y );
+    final Image img = new Image( dev, rect.width, rect.height );
     final GC gc = new GC( img );
 
     final ITextStyle style = config.getTextStyle();
@@ -124,7 +125,7 @@ public class CompactChartLegendRenderer implements IChartLegendRenderer
             continue;
 
           final ImageData imageData = createLegendItem( config, entry, rowHeight );
-          if( x + imageData.width > config.getMaximumWidth() )
+          if( x + imageData.width > config.getMaximumWidth().width )
           {
             x = 0;
             y += imageData.height;
@@ -229,12 +230,12 @@ public class CompactChartLegendRenderer implements IChartLegendRenderer
    * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#getSize(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
    */
   @Override
-  public Point calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config )
+  public Rectangle calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
     return getSize( getLayers( canvas.getModel() ), config );
   }
 
-  private Point getSize( final IChartLayer[] layers, final IChartLegendConfig config )
+  private Rectangle getSize( final IChartLayer[] layers, final IChartLegendConfig config )
   {
     int heigth = 0;
     int row = 0;
@@ -256,7 +257,7 @@ public class CompactChartLegendRenderer implements IChartLegendRenderer
 
         final Point size = getItemSize( config, entry );
 
-        if( row + size.x > config.getMaximumWidth() )
+        if( row + size.x > config.getMaximumWidth().width )
         {
           maxRowWidth = Math.max( maxRowWidth, size.x );
           maxRowHeight = size.y;
@@ -282,7 +283,7 @@ public class CompactChartLegendRenderer implements IChartLegendRenderer
       }
     }
 
-    return new Point( maxRowWidth, heigth );
+    return new Rectangle( config.getMaximumWidth().x, config.getMaximumWidth().y, maxRowWidth, heigth );
   }
 
   private Point getTextAnchor( final IChartLegendConfig config, final int iconWidth, final int rowHeight, final Point textSize )

@@ -80,7 +80,7 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
       if( drawTick )
       {
         getTickLineStyle().apply( gc );
-        gc.drawLine( tickPos, getTickLineStyle().getWidth() + getGap() + offset, tickPos, getTickLineStyle().getWidth() + getGap() + offset + getTickLength() );
+        gc.drawLine( tickPos, getLineStyle().getWidth() + getGap() + offset, tickPos, getLineStyle().getWidth() + getGap() + offset + getTickLength() );
       }
       if( drawTickLabel )
       {
@@ -190,6 +190,10 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
 
       getLineStyle().apply( gc );
       gc.drawLine( screen.x, getGap() + screen.y, axis.getScreenHeight(), getGap() + screen.y );
+      getTickLineStyle().apply( gc );
+      gc.drawLine( screen.x, getGap() + screen.y, axis.getScreenHeight(), getGap() + screen.y );
+      gc.drawPoint( screen.x, getGap() + screen.y+2);
+      gc.drawPoint( axis.getScreenHeight(), getGap() + screen.y+2);
       drawTicks( gc, screen.y, axis, getTicks( axis, gc ) );
       final IChartLabelRenderer labelRenderer = getAxisLabelRenderer();
       for( final TitleTypeBean title : axis.getLabels() )

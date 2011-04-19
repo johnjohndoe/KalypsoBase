@@ -4,8 +4,6 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.swt.graphics.Point;
-
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
@@ -26,7 +24,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
 {
   private final Class< ? > m_dataClass;
 
-  private DIRECTION m_dir;
+  private DIRECTION m_dir = DIRECTION.POSITIVE;
 
   private int m_height = 1;
 
@@ -46,8 +44,6 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
 
   private boolean m_visible = true;
 
-  private Object m_selection;
-
   public AbstractAxis( final String id, final POSITION pos, final Class< ? > dataClass )
   {
     this( id, pos, dataClass, null );
@@ -58,7 +54,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     super( id );
     m_id = id;
     m_pos = pos;
-    m_dir = pos.getOrientation() == ORIENTATION.VERTICAL ? DIRECTION.NEGATIVE : DIRECTION.POSITIVE;
+  //  m_dir = pos.getOrientation() == ORIENTATION.VERTICAL ? DIRECTION.NEGATIVE : DIRECTION.POSITIVE;
     m_dataClass = dataClass;
     setRenderer( renderer );
   }
@@ -88,25 +84,13 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     return m_dataClass;
   }
 
-  private DIRECTION switchDirection( final DIRECTION direction )
-  {
-    if( getPosition().getOrientation() == ORIENTATION.VERTICAL )
-    {
-      if( direction == DIRECTION.POSITIVE )
-        return DIRECTION.NEGATIVE;
-      return DIRECTION.POSITIVE;
-    }
-    else
-      return direction;
-  }
-
   /**
    * @see org.kalypso.chart.framework.axis.IAxis#getDirection()
    */
   @Override
   public DIRECTION getDirection( )
   {
-    return switchDirection( m_dir );
+    return m_dir;
   }
 
   /**
@@ -178,13 +162,11 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     return m_height;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getSelection()
-   */
-  @Override
-  public Object getSelection( )
+  protected boolean isInverted( )
   {
-    return m_selection;
+    if( getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+      return getDirection() == DIRECTION.NEGATIVE;
+    return getDirection() == DIRECTION.POSITIVE;
   }
 
   private boolean hasNullValues( final IDataRange<Number> range, final DataRangeRestriction<Number> restriction )
@@ -196,15 +178,6 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     return false;
   }
 
-  /**
-   * @see org.kalypso.chart.framework.axis.IAxis#isInverted()
-   */
-  @Override
-  public boolean isInverted( )
-  {
-    return m_dir == DIRECTION.NEGATIVE;
-  }
-
   @Override
   public boolean isVisible( )
   {
@@ -214,7 +187,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   @Override
   public void setDirection( final DIRECTION dir )
   {
-    m_dir = switchDirection( dir );
+    m_dir = dir;
   }
 
   @Override
@@ -279,21 +252,6 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     if( m_height == height )
       return;
     m_height = height;
-
-    fireMapperChanged( this );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setSelection(java.lang.Object)
-   */
-  @Override
-  public void setSelection( final Point screen )
-  {
-    if( screen == null )
-      m_selection = null;
-
-    final int screenValue = getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screen.x : screen.y;
-    m_selection = screenToNumeric( screenValue );
 
     fireMapperChanged( this );
   }
