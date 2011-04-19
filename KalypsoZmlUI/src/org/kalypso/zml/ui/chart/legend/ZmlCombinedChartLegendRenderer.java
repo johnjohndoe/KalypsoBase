@@ -42,6 +42,7 @@ package org.kalypso.zml.ui.chart.legend;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.util.img.legend.IChartLegendCanvas;
 import de.openali.odysseus.chart.framework.util.img.legend.config.IChartLegendConfig;
@@ -73,12 +74,12 @@ public class ZmlCombinedChartLegendRenderer implements IChartLegendRenderer
    *      de.openali.odysseus.chart.framework.util.img.legend.config.IChartLegendConfig)
    */
   @Override
-  public Point calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config )
+  public Rectangle calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
     m_lastRenderer = new ZmlCompactChartLegendRenderer();
-    final Point size = m_lastRenderer.calculateSize( canvas, config );
+    final Rectangle rect = m_lastRenderer.calculateSize( canvas, config );
     if( m_lastRenderer.rowSize() == 1 )
-      return size;
+      return rect;
 
     m_lastRenderer = new ZmlBlockChartLegendRenderer();
     return m_lastRenderer.calculateSize( canvas, config );
