@@ -48,6 +48,7 @@ import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -71,6 +72,7 @@ import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.utils.log.GeoStatusLog;
 
 /**
  * This class dumps a repository kompletely into the filesystem.
@@ -118,7 +120,13 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
       /* Update monitor. */
       monitor.worked( 800 );
 
-      return m_stati.asMultiStatusOrOK( "Export mit Fehlern abgeschlossen", "Export erfolgreich abgeschlossen" );
+      /* Create the result status. */
+      IStatus status = m_stati.asMultiStatusOrOK( "Export mit Fehlern abgeschlossen", "Export erfolgreich abgeschlossen" );
+
+      /* Writes the log. */
+      writeLogQuietly( status );
+
+      return status;
     }
     catch( final InterruptedException e )
     {
@@ -132,6 +140,22 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
     {
       IOUtils.closeQuietly( structureWriter );
       monitor.done();
+    }
+  }
+
+  private void writeLogQuietly( IStatus status )
+  {
+    try
+    {
+      /* Log the status, if possible. */
+      GeoStatusLog log = new GeoStatusLog( new File( m_directory, "export.log" ) );
+      log.log( status );
+      log.serialize();
+    }
+    catch( Exception ex )
+    {
+      /* Ignore. */
+      ex.printStackTrace();
     }
   }
 
@@ -194,7 +218,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
    */
   private void dumpExtendedRecursive( final Writer structureWriter, final File directory, final IRepositoryItem item, final IProgressMonitor monitor ) throws InterruptedException, RepositoryException, IOException
   {
-    /* If the user cancled the operation, abort. */
+    /* If the user canceled the operation, abort. */
     if( monitor.isCanceled() )
       throw new InterruptedException();
 
@@ -223,6 +247,13 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
 
       monitor.worked( 1 );
     }
+    catch( NoSuchElementException ex )
+    {
+      ex.printStackTrace();
+
+      final String msg = String.format( "Fehler beim Abruf der Kinder von Element: %s", item.getName() );
+      m_stati.add( IStatus.ERROR, msg, ex );
+    }
     finally
     {
       monitor.worked( 1 );
@@ -244,17 +275,17 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
       {
         e.printStackTrace();
 
-        final String msg = String.format( "Fehler beim Schreiben von Zeitreihe: %s", item.getName() );
+        final String msg = String.format( "Fehler beim Schreiben von Zeitreihe: %s", item.getIdentifier() );
         m_stati.add( IStatus.ERROR, msg, e );
         /* Not twice! */
         return;
       }
-      catch( final SensorException e )
+      catch( final Throwable e )
       {
         e.printStackTrace();
 
         final int severity = i == 0 ? IStatus.WARNING : IStatus.ERROR;
-        final String msg = String.format( "Fehler beim Abruf (%d. Versuch) einer Zeitreihe: %s", i + 1, item.getName() );
+        final String msg = String.format( "Fehler beim Abruf (%d. Versuch) einer Zeitreihe: %s", i + 1, item.getIdentifier() );
         m_stati.add( severity, msg, e );
       }
     }
