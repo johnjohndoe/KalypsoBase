@@ -15,5 +15,6 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.gml.ui,
  org.kalypso.gml.ui.commands.exportshape,
+ org.kalypso.gml.ui.commands.importshape,
  org.kalypso.gml.ui.jface,
  org.kalypso.gml.ui.map
