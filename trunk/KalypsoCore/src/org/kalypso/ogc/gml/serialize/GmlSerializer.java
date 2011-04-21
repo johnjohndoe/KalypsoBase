@@ -118,6 +118,8 @@ import org.xml.sax.XMLReader;
  */
 public final class GmlSerializer
 {
+  private static TransformerFactory m_tFac = TransformerFactory.newInstance();
+  
   public static final IFeatureProviderFactory DEFAULT_FACTORY = new GmlSerializerFeatureProviderFactory();
 
   public static final String[] GZ_EXTENSIONS = new String[] { "gz", "gmlz" }; //$NON-NLS-1$ //$NON-NLS-2$
@@ -209,8 +211,7 @@ public final class GmlSerializer
 
       final Source source = new SAXSource( reader, inputSource );
 
-      final TransformerFactory tFac = TransformerFactory.newInstance();
-      final Transformer transformer = tFac.newTransformer();
+      final Transformer transformer = m_tFac.newTransformer();
       transformer.setOutputProperty( OutputKeys.ENCODING, charsetEncoding );
       transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
       transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "1" ); //$NON-NLS-1$ //$NON-NLS-2$
