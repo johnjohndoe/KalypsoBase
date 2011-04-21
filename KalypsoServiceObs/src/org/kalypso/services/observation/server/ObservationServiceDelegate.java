@@ -457,7 +457,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       return m_mapBeanId2Item.get( id );
 
     // try with repository id
-    final String repId = RepositoryUtils.getRepositoryId( id );
+    final String repId = RepositoryItems.getProtocol( id );
     if( m_mapRepId2Rep.containsKey( repId ) )
     {
       final IRepository rep = m_mapRepId2Rep.get( repId );
