@@ -496,7 +496,7 @@ public class ImportWfsWizardPage extends WizardPage
       final IFeatureType ft = schema.getFeatureType( new QName( namespace, name.getLocalName() ) );
 
       final String[] supportedOperations = m_wfsClient.getAllFilterCapabilitesOperations();
-      final FilterDialog dialog = new FilterDialog( getShell(), ft, null, oldFilter, null, supportedOperations, false );
+      final FilterDialog dialog = new FilterDialog( getShell(), null, oldFilter, null, supportedOperations, false );
       final int open = dialog.open();
       if( open == Window.OK )
         m_filter.put( wfsFT, dialog.getFilter() );
