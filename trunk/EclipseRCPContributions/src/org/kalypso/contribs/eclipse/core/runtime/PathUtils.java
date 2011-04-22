@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.core.runtime;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
@@ -48,7 +50,7 @@ import org.eclipse.core.runtime.Path;
  *
  * @author Gernot Belger
  */
-public class PathUtils
+public final class PathUtils
 {
   private PathUtils( )
   {
@@ -73,6 +75,16 @@ public class PathUtils
       return new Path( ".." ).append( relativUp );
 
     return null;
+  }
+
+  /**
+   * Converts an absolute path to a file.
+   */
+  public static IFile toFile( final IPath absolutePath )
+  {
+    if( absolutePath == null )
+      return null;
+    return ResourcesPlugin.getWorkspace().getRoot().getFile( absolutePath );
   }
 
 }
