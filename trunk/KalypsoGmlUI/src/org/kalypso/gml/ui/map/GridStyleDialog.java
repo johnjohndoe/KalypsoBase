@@ -73,12 +73,11 @@ public class GridStyleDialog extends TitleAreaDialog
   public GridStyleDialog( final Shell shell, final ColorMapEntry[] colorMap, final BigDecimal min, final BigDecimal max )
   {
     super( shell );
+
     m_colorMap = colorMap;
 
     m_globalMin = min;
     m_globalMax = max;
-
-    setTitle( Messages.getString("org.kalypso.gml.ui.map.GridStyleDialog.0") ); //$NON-NLS-1$
   }
 
   /**
@@ -87,6 +86,7 @@ public class GridStyleDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
+    setTitle( Messages.getString( "org.kalypso.gml.ui.map.GridStyleDialog.0" ) ); //$NON-NLS-1$
     setMessage( Messages.getString("org.kalypso.gml.ui.map.GridStyleDialog.1") ); //$NON-NLS-1$
 
     parent.getShell().setText( Messages.getString("org.kalypso.gml.ui.map.GridStyleDialog.2") ); //$NON-NLS-1$
