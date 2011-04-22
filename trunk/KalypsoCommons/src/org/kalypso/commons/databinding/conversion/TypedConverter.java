@@ -57,7 +57,7 @@ public abstract class TypedConverter<FROM, TO> extends Converter
    * @param toType
    *          The to type.
    */
-  public TypedConverter( Class<FROM> fromType, Class<TO> toType )
+  public TypedConverter( final Class<FROM> fromType, final Class<TO> toType )
   {
     super( fromType, toType );
   }
@@ -65,11 +65,11 @@ public abstract class TypedConverter<FROM, TO> extends Converter
   /**
    * @see org.eclipse.core.databinding.conversion.IConverter#convert(java.lang.Object)
    */
-  @SuppressWarnings("unchecked")
   @Override
-  public Object convert( Object fromObject )
+  public Object convert( final Object fromObject )
   {
-    Class<FROM> fromType = (Class<FROM>) getFromType();
+    @SuppressWarnings("unchecked")
+    final Class<FROM> fromType = (Class<FROM>) getFromType();
     return doConvert( fromType.cast( fromObject ) );
   }
 
