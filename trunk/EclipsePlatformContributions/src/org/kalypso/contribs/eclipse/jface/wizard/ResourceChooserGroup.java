@@ -93,7 +93,7 @@ public class ResourceChooserGroup
   {
     m_dialogSettings = dialogSettings;
   }
-  
+
   public void setSelectionDialog( final SelectionDialog dialog )
   {
     m_dialog = dialog;
@@ -114,8 +114,8 @@ public class ResourceChooserGroup
     text.setEditable( false );
 
     final Button button = new Button( group, SWT.NONE );
-    button.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.ResourceChooserGroup.1") ); //$NON-NLS-1$
-    button.setToolTipText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.ResourceChooserGroup.2") ); //$NON-NLS-1$
+    button.setText( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.ResourceChooserGroup.1" ) ); //$NON-NLS-1$
+    button.setToolTipText( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.ResourceChooserGroup.2" ) ); //$NON-NLS-1$
     button.addSelectionListener( new SelectionAdapter()
     {
       /**

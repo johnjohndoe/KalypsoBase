@@ -51,7 +51,7 @@ import org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin;
 /**
  * @author belger
  */
-public class FolderUtilities
+public final class FolderUtilities
 {
   /** Do not instantiate */
   private FolderUtilities( )

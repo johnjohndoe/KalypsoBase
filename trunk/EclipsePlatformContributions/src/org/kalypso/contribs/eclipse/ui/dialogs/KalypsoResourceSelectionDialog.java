@@ -37,13 +37,13 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
 
   private final boolean m_allowNewResourceName = false;
 
-  protected Label statusMessage;
+  protected Label m_statusMessage;
 
   protected ISelectionValidator m_validator;
 
   private boolean m_showClosedProjects = true;
 
-  ResourceSelectionGroup group;
+  ResourceSelectionGroup m_group;
 
   private final IContainer m_inputContainer;
 
@@ -80,20 +80,20 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
       @Override
       public void handleEvent( final Event event )
       {
-        final IResource selectedResource = group.getSelectedResource();
+        final IResource selectedResource = m_group.getSelectedResource();
         getOkButton().setEnabled( false );
 
         if( m_validator != null && selectedResource != null )
         {
           final String errorMsg = m_validator.isValid( selectedResource );
-          if( errorMsg == null || errorMsg.equals( "" ) ) { //$NON-NLS-1$
-            statusMessage.setText( "" ); //$NON-NLS-1$
+          if( errorMsg == null || "".equals( errorMsg ) ) { //$NON-NLS-1$
+            m_statusMessage.setText( "" ); //$NON-NLS-1$
             getOkButton().setEnabled( true );
           }
           else
           {
-            statusMessage.setForeground( JFaceColors.getErrorText( statusMessage.getDisplay() ) );
-            statusMessage.setText( errorMsg );
+            m_statusMessage.setForeground( JFaceColors.getErrorText( m_statusMessage.getDisplay() ) );
+            m_statusMessage.setText( errorMsg );
             getOkButton().setEnabled( false );
           }
           if( event.type == SWT.MouseDoubleClick )
@@ -102,7 +102,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
               okPressed();
             else
             {
-              statusMessage.setText( errorMsg );
+              m_statusMessage.setText( errorMsg );
               getOkButton().setEnabled( false );
             }
           }
@@ -110,14 +110,14 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
       }
     };
 
-    statusMessage = new Label( parent, SWT.NONE );
-    statusMessage.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
-    statusMessage.setFont( parent.getFont() );
+    m_statusMessage = new Label( parent, SWT.NONE );
+    m_statusMessage.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    m_statusMessage.setFont( parent.getFont() );
 
     // container selection group
-    group = new ResourceSelectionGroup( area, listener, m_allowNewResourceName, getMessage(), m_showClosedProjects, m_allowedResourceExtensions, m_inputContainer );
+    m_group = new ResourceSelectionGroup( area, listener, m_allowNewResourceName, getMessage(), m_showClosedProjects, m_allowedResourceExtensions, m_inputContainer );
     if( m_filter != null )
-      group.addViewerFilter( m_filter );
+      m_group.addViewerFilter( m_filter );
 
     return dialogArea;
   }
@@ -147,7 +147,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
 
     // Change: set selected resource
     if( m_initialSelection != null )
-      group.setSelectedResource( m_initialSelection );
+      m_group.setSelectedResource( m_initialSelection );
 
     return composite;
   }
@@ -160,7 +160,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   protected void okPressed( )
   {
     final List<IPath> chosenResourcePathList = new ArrayList<IPath>();
-    final IPath returnValue = group.getResourceFullPath();
+    final IPath returnValue = m_group.getResourceFullPath();
     if( returnValue != null )
       chosenResourcePathList.add( returnValue );
     setResult( chosenResourcePathList );

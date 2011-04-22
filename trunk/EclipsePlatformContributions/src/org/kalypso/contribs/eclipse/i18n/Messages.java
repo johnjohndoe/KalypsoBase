@@ -47,7 +47,7 @@ import java.util.ResourceBundle;
 /**
  * @author Nico Schrage
  */
-public class Messages
+public final class Messages
 {
   private static final String BUNDLE_NAME = "org.kalypso.contribs.eclipse.i18n.messages"; //$NON-NLS-1$
 

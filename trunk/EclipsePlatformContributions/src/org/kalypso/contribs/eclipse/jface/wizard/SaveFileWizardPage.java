@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard;
 
@@ -85,7 +85,7 @@ public class SaveFileWizardPage extends WizardPage
 {
   private static final String STORE_DESTINATION_FORMAT_ID = "SaveFileWizardPage.STORE_DESTINATION_FORMAT_ID"; //$NON-NLS-1$
 
-  private final static String STORE_DESTINATION_NAMES_ID = "SaveFileWizardPage.STORE_DESTINATION_NAMES_ID"; //$NON-NLS-1$
+  private static final String STORE_DESTINATION_NAMES_ID = "SaveFileWizardPage.STORE_DESTINATION_NAMES_ID"; //$NON-NLS-1$
 
   protected static final int SIZING_TEXT_FIELD_WIDTH = 250;
 
@@ -100,10 +100,10 @@ public class SaveFileWizardPage extends WizardPage
   private StructuredViewer m_formatViewer;
 
   /**
-   * @param formats format objects -> file extension
+   * @param formats
+   *          format objects -> file extension
    */
-  public SaveFileWizardPage( final String pageName, final String title,
-      final ImageDescriptor titleImage, final String groupname, final Map<Object, String> formats )
+  public SaveFileWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final String groupname, final Map<Object, String> formats )
   {
     super( pageName, title, titleImage );
 
@@ -132,9 +132,9 @@ public class SaveFileWizardPage extends WizardPage
     updatePageCompletion();
   }
 
-  protected void updatePageCompletion()
+  protected void updatePageCompletion( )
   {
-    boolean pageComplete = determinePageCompletion();
+    final boolean pageComplete = determinePageCompletion();
 
     setPageComplete( pageComplete );
     if( pageComplete )
@@ -144,19 +144,19 @@ public class SaveFileWizardPage extends WizardPage
     }
   }
 
-  private boolean determinePageCompletion()
+  private boolean determinePageCompletion( )
   {
     final String destinationValue = getDestinationValue();
     if( destinationValue.length() == 0 )
     {
-      setMessage( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.0") ); //$NON-NLS-1$
+      setMessage( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.0" ) ); //$NON-NLS-1$
       setErrorMessage( null );
       return false;
     }
 
     if( isContainerConflicting( destinationValue ) )
     {
-      setErrorMessage( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.1") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.1" ) ); //$NON-NLS-1$
       m_destinationNameField.setFocus();
       return false;
     }
@@ -170,32 +170,32 @@ public class SaveFileWizardPage extends WizardPage
    * @param value
    *          java.lang.String
    */
-  protected void addDestinationItem( String value )
+  protected void addDestinationItem( final String value )
   {
     m_destinationNameField.add( value );
   }
 
   /**
-   * Returns the name of a container with a location that encompasses
-   * targetDirectory. Returns null if there is no conflict.
+   * Returns the name of a container with a location that encompasses targetDirectory. Returns null if there is no
+   * conflict.
    * 
    * @param targetDirectory
    *          the path of the directory to check.
    * @return the conflicting container name or <code>null</code>
    */
-  protected boolean isContainerConflicting( String targetDirectory )
+  protected boolean isContainerConflicting( final String targetDirectory )
   {
-    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-    IPath testPath = new Path( targetDirectory );
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IPath testPath = new Path( targetDirectory );
 
     if( root.getLocation().isPrefixOf( testPath ) )
       return true;
 
-    IProject[] projects = root.getProjects();
+    final IProject[] projects = root.getProjects();
 
-    for( int i = 0; i < projects.length; i++ )
+    for( final IProject project : projects )
     {
-      if( projects[i].getLocation().isPrefixOf( testPath ) )
+      if( project.getLocation().isPrefixOf( testPath ) )
         return true;
     }
 
@@ -215,7 +215,7 @@ public class SaveFileWizardPage extends WizardPage
     targetGroup.setText( m_groupname );
 
     final Label filenameLabel = new Label( targetGroup, SWT.NONE );
-    filenameLabel.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.2") ); //$NON-NLS-1$
+    filenameLabel.setText( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.2" ) ); //$NON-NLS-1$
 
     // destination name entry field
     m_destinationNameField = new Combo( targetGroup, SWT.BORDER );
@@ -235,14 +235,14 @@ public class SaveFileWizardPage extends WizardPage
 
     // destination browse button
     final Button destinationBrowseButton = new Button( targetGroup, SWT.PUSH );
-    destinationBrowseButton.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.3") ); //$NON-NLS-1$
+    destinationBrowseButton.setText( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.3" ) ); //$NON-NLS-1$
     destinationBrowseButton.addSelectionListener( new SelectionAdapter()
     {
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         handleDestinationBrowseButtonPressed();
       }
@@ -252,16 +252,16 @@ public class SaveFileWizardPage extends WizardPage
     // destinationBrowseButton.setVisible( true );
 
     final Label label = new Label( targetGroup, SWT.NONE );
-    label.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.4") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.4" ) ); //$NON-NLS-1$
 
     m_formatViewer = new ComboViewer( targetGroup, SWT.BORDER | SWT.READ_ONLY | SWT.DROP_DOWN );
     m_formatViewer.setContentProvider( new ArrayContentProvider() );
     m_formatViewer.setLabelProvider( new LabelProvider() );
     m_formatViewer.setInput( m_formats.keySet() );
-    ( (ComboViewer)m_formatViewer ).getCombo().addSelectionListener( new SelectionAdapter()
+    ((ComboViewer) m_formatViewer).getCombo().addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         handleComboSelected();
       }
@@ -270,11 +270,11 @@ public class SaveFileWizardPage extends WizardPage
       m_formatViewer.setSelection( new StructuredSelection( m_formats.keySet().iterator().next() ) );
   }
 
-  protected void handleComboSelected()
+  protected void handleComboSelected( )
   {
     final Object format = getDestinationFormat();
     final String ext = m_formats.get( format ).toString();
-    
+
     final String destinationValue = getDestinationValue();
     final int index = destinationValue.lastIndexOf( '.' );
     if( index == -1 )
@@ -283,47 +283,47 @@ public class SaveFileWizardPage extends WizardPage
       setDestinationValue( destinationValue.substring( 0, index ) + "." + ext ); //$NON-NLS-1$
   }
 
-  void handleDestinationBrowseButtonPressed()
+  void handleDestinationBrowseButtonPressed( )
   {
     final FileDialog dialog = new FileDialog( getContainer().getShell(), SWT.SAVE );
 
     final String[] filterExts = new String[m_formats.size() + 1];
     final String[] filterNames = new String[m_formats.size() + 1];
     filterExts[0] = "*"; //$NON-NLS-1$
-    filterNames[0] = Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.8"); //$NON-NLS-1$
+    filterNames[0] = Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.8" ); //$NON-NLS-1$
     int count = 1;
     for( final Entry<Object, String> entry : m_formats.entrySet() )
     {
       filterNames[count] = entry.getKey().toString();
       filterExts[count] = "*." + entry.getValue().toString(); //$NON-NLS-1$
-      
+
       count++;
     }
-    
+
     dialog.setFilterExtensions( filterExts );
     dialog.setFilterNames( filterNames );
-    
-    dialog.setText( Messages.getString("org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.10") ); //$NON-NLS-1$
+
+    dialog.setText( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage.10" ) ); //$NON-NLS-1$
     final String currentSourceString = getDestinationValue();
-    int lastSeparatorIndex = currentSourceString.lastIndexOf( File.separator );
+    final int lastSeparatorIndex = currentSourceString.lastIndexOf( File.separator );
     if( lastSeparatorIndex != -1 )
     {
       dialog.setFilterPath( currentSourceString.substring( 0, lastSeparatorIndex ) );
       dialog.setFileName( currentSourceString.substring( lastSeparatorIndex + 1 ) );
     }
-    
+
     final String selectedFileName = dialog.open();
 
     if( selectedFileName != null )
     {
       setErrorMessage( null );
-      
+
       final String newFileName;
       if( selectedFileName.indexOf( '.' ) == -1 )
         newFileName = selectedFileName + "." + m_formats.get( getDestinationFormat() ); //$NON-NLS-1$
       else
         newFileName = selectedFileName;
-      
+
       setDestinationValue( newFileName );
     }
   }
@@ -332,9 +332,9 @@ public class SaveFileWizardPage extends WizardPage
   {
     if( m_destinationNameField.getText().equals( selectedFileName ) )
       return;
-    
+
     m_destinationNameField.setText( selectedFileName );
-    
+
     final int index = selectedFileName.lastIndexOf( '.' );
     if( index != -1 )
     {
@@ -347,16 +347,15 @@ public class SaveFileWizardPage extends WizardPage
     }
   }
 
-  public String getDestinationValue()
+  public String getDestinationValue( )
   {
     return m_destinationNameField.getText().trim();
   }
 
   /**
-   * Hook method for restoring widget values to the values that they held last
-   * time this wizard was used to completion.
+   * Hook method for restoring widget values to the values that they held last time this wizard was used to completion.
    */
-  protected void restoreWidgetValues()
+  protected void restoreWidgetValues( )
   {
     final IDialogSettings settings = getDialogSettings();
     if( settings != null )
@@ -367,8 +366,8 @@ public class SaveFileWizardPage extends WizardPage
 
       // destination
       setDestinationValue( directoryNames[0] );
-      for( int i = 0; i < directoryNames.length; i++ )
-        addDestinationItem( directoryNames[i] );
+      for( final String directoryName : directoryNames )
+        addDestinationItem( directoryName );
 
       final String format = settings.get( STORE_DESTINATION_FORMAT_ID );
       setDestinationFormat( format );
@@ -387,7 +386,7 @@ public class SaveFileWizardPage extends WizardPage
     }
   }
 
-  public void saveWidgetValues()
+  public void saveWidgetValues( )
   {
     // update directory names history
     final IDialogSettings settings = getDialogSettings();
@@ -402,14 +401,13 @@ public class SaveFileWizardPage extends WizardPage
       if( history.size() > COMBO_HISTORY_LENGTH )
         history.remove( COMBO_HISTORY_LENGTH );
 
-      settings.put( STORE_DESTINATION_NAMES_ID, history.toArray( new String[history
-          .size()] ) );
+      settings.put( STORE_DESTINATION_NAMES_ID, history.toArray( new String[history.size()] ) );
     }
   }
 
-  public Object getDestinationFormat()
+  public Object getDestinationFormat( )
   {
-    final IStructuredSelection sel = (IStructuredSelection)m_formatViewer.getSelection();
+    final IStructuredSelection sel = (IStructuredSelection) m_formatViewer.getSelection();
     return sel.getFirstElement();
   }
 

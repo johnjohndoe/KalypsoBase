@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.views.contentoutline;
 
@@ -61,9 +61,9 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
  */
 public abstract class ContentOutlinePage2 extends Page implements IContentOutlinePage, ISelectionChangedListener
 {
-  private ListenerList selectionChangedListeners = new ListenerList( ListenerList.IDENTITY );
+  private final ListenerList m_selectionChangedListeners = new ListenerList( ListenerList.IDENTITY );
 
-  protected TreeViewer treeViewer;
+  protected TreeViewer m_treeViewer;
 
   /**
    * Create a new content outline page.
@@ -77,9 +77,9 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
    * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
   @Override
-  public void addSelectionChangedListener( ISelectionChangedListener listener )
+  public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
-    selectionChangedListeners.add( listener );
+    m_selectionChangedListeners.add( listener );
   }
 
   /**
@@ -95,8 +95,8 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   @Override
   public void createControl( final Composite parent )
   {
-    treeViewer = createTreeViewer( parent );
-    treeViewer.addSelectionChangedListener( this );
+    m_treeViewer = createTreeViewer( parent );
+    m_treeViewer.addSelectionChangedListener( this );
   }
 
   /**
@@ -117,13 +117,13 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
    * @param selection
    *          the new selection
    */
-  protected void fireSelectionChanged( ISelection selection )
+  protected void fireSelectionChanged( final ISelection selection )
   {
     // create an event
     final SelectionChangedEvent event = new SelectionChangedEvent( this, selection );
 
     // fire the event
-    Object[] listeners = selectionChangedListeners.getListeners();
+    final Object[] listeners = m_selectionChangedListeners.getListeners();
     for( int i = 0; i < listeners.length; ++i )
     {
       final ISelectionChangedListener l = (ISelectionChangedListener) listeners[i];
@@ -144,9 +144,9 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   @Override
   public Control getControl( )
   {
-    if( treeViewer == null )
+    if( m_treeViewer == null )
       return null;
-    return treeViewer.getControl();
+    return m_treeViewer.getControl();
   }
 
   /**
@@ -155,9 +155,9 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   @Override
   public ISelection getSelection( )
   {
-    if( treeViewer == null )
+    if( m_treeViewer == null )
       return StructuredSelection.EMPTY;
-    return treeViewer.getSelection();
+    return m_treeViewer.getSelection();
   }
 
   /**
@@ -167,14 +167,14 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
    */
   protected TreeViewer getTreeViewer( )
   {
-    return treeViewer;
+    return m_treeViewer;
   }
 
   /**
    * @see org.eclipse.ui.part.IPageBookViewPage#init(org.eclipse.ui.part.IPageSite)
    */
   @Override
-  public void init( IPageSite pageSite )
+  public void init( final IPageSite pageSite )
   {
     super.init( pageSite );
     pageSite.setSelectionProvider( this );
@@ -184,16 +184,16 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
    * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
    */
   @Override
-  public void removeSelectionChangedListener( ISelectionChangedListener listener )
+  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
-    selectionChangedListeners.remove( listener );
+    m_selectionChangedListeners.remove( listener );
   }
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
   @Override
-  public void selectionChanged( SelectionChangedEvent event )
+  public void selectionChanged( final SelectionChangedEvent event )
   {
     fireSelectionChanged( event.getSelection() );
   }
@@ -204,16 +204,16 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   @Override
   public void setFocus( )
   {
-    treeViewer.getControl().setFocus();
+    m_treeViewer.getControl().setFocus();
   }
 
   /**
    * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
-    if( treeViewer != null )
-      treeViewer.setSelection( selection );
+    if( m_treeViewer != null )
+      m_treeViewer.setSelection( selection );
   }
 }

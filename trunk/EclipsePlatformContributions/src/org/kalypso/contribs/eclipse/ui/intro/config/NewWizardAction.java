@@ -44,6 +44,7 @@ import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.ui.IWorkbench;
@@ -56,7 +57,6 @@ import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.i18n.Messages;
 
 /**
@@ -85,7 +85,10 @@ public class NewWizardAction implements IIntroAction
       /* Get perspective id */
       final String wizardId = params.getProperty( "wizardId", null ); //$NON-NLS-1$
       if( wizardId == null )
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction.1") ) ); //$NON-NLS-1$
+      {
+        final IStatus status = new Status( IStatus.ERROR, EclipsePlatformContributionsPlugin.getID(), Messages.getString( "org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction.1" ) ); //$NON-NLS-1$
+        throw new CoreException( status );
+      }
 
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
@@ -98,7 +101,10 @@ public class NewWizardAction implements IIntroAction
       final IWizardDescriptor wizardDesc = WorkbenchPlugin.getDefault().getNewWizardRegistry().findWizard( wizardId );
 
       if( wizardDesc == null )
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction.2") + wizardId ) ); //$NON-NLS-1$
+      {
+        final IStatus status = new Status( IStatus.ERROR, EclipsePlatformContributionsPlugin.getID(), Messages.getString( "org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction.2" ) + wizardId ); //$NON-NLS-1$
+        throw new CoreException( status );
+      }
 
       final IAction action = new NewWizardShortcutAction( workbenchWindow, wizardDesc );
       action.run();
@@ -106,7 +112,7 @@ public class NewWizardAction implements IIntroAction
     catch( final CoreException e )
     {
       final IStatus status = e.getStatus();
-      ErrorDialog.openError( site.getShell(), Messages.getString("org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction.3"), Messages.getString("org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction.4"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( site.getShell(), Messages.getString( "org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction.3" ), Messages.getString( "org.kalypso.contribs.eclipse.ui.intro.config.NewWizardAction.4" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
       EclipsePlatformContributionsPlugin.getDefault().getLog().log( status );
     }
   }

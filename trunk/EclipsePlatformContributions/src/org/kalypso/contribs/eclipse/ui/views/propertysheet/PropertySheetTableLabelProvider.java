@@ -63,7 +63,7 @@ public class PropertySheetTableLabelProvider implements ITableLabelProvider
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
    */
   @Override
-  public Image getColumnImage( Object element, int columnIndex )
+  public Image getColumnImage( final Object element, final int columnIndex )
   {
     return null;
   }
@@ -72,7 +72,7 @@ public class PropertySheetTableLabelProvider implements ITableLabelProvider
    * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
    */
   @Override
-  public String getColumnText( Object element, int columnIndex )
+  public String getColumnText( final Object element, final int columnIndex )
   {
     final PropertyDescriptor pd = (PropertyDescriptor) element;
 
@@ -91,7 +91,7 @@ public class PropertySheetTableLabelProvider implements ITableLabelProvider
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
   @Override
-  public void addListener( ILabelProviderListener listener )
+  public void addListener( final ILabelProviderListener listener )
   {
     // nothing?
   }
@@ -109,16 +109,16 @@ public class PropertySheetTableLabelProvider implements ITableLabelProvider
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
    */
   @Override
-  public boolean isLabelProperty( Object element, String property )
+  public boolean isLabelProperty( final Object element, final String property )
   {
-    return property.equals( "property" ); //$NON-NLS-1$
+    return "property".equals( property ); //$NON-NLS-1$
   }
 
   /**
    * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
    */
   @Override
-  public void removeListener( ILabelProviderListener listener )
+  public void removeListener( final ILabelProviderListener listener )
   {
     // nothing?
   }

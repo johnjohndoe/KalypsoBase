@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.core.resources;
 
@@ -65,7 +65,7 @@ import org.eclipse.ui.PlatformUI;
  * 
  * @author Gernot Belger
  */
-public class ProjectUtilities
+public final class ProjectUtilities
 {
   private ProjectUtilities( )
   {
@@ -122,7 +122,7 @@ public class ProjectUtilities
    * Adds a nature to a project.<br>
    * Does nothing if the project is already of the requested nature.
    */
-  public static final void addNature( final IProject project, final String natureId, final IProgressMonitor monitor ) throws CoreException
+  public static void addNature( final IProject project, final String natureId, final IProgressMonitor monitor ) throws CoreException
   {
     if( project.hasNature( natureId ) )
       return;
