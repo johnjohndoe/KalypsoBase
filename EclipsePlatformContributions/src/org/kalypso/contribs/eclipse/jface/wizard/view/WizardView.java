@@ -159,9 +159,9 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   private RGB m_defaultTitleForeground;
 
-  private final String m_foregroundRGB_ID = "" + this + ".title.foreground"; //$NON-NLS-1$ //$NON-NLS-2$
+  private final String m_foregroundRgbId = "" + this + ".title.foreground"; //$NON-NLS-1$ //$NON-NLS-2$
 
-  private final String m_backgroundRGB_ID = "" + this + ".title.background"; //$NON-NLS-1$ //$NON-NLS-2$
+  private final String m_backgroundRgbId = "" + this + ".title.background"; //$NON-NLS-1$ //$NON-NLS-2$
 
   private final List<IWizardContainerListener> m_listeners = new ArrayList<IWizardContainerListener>( 5 );
 
@@ -171,7 +171,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   private Composite m_pageContainer;
 
-  private static final StackLayout m_stackLayout = new StackLayout();
+  private final StackLayout m_stackLayout = new StackLayout();
 
   /** Alles ausser title */
   private Composite m_workArea;
@@ -274,7 +274,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     {
       // HACK: only set the message, if at least one message was set. Else we may destroy the background color
       // of the message label
-      if( normalMsgAreaBackground != null )
+      if( m_normalMsgAreaBackground != null )
         setErrorMessage( Messages.getString( "org.kalypso.contribs.eclipse.jface.wizard.view.WizardView0" ) ); //$NON-NLS-1$
     }
     else
@@ -1075,34 +1075,34 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   // Space between an image and a label
   private static final int H_GAP_IMAGE = 5;
 
-  private Label titleLabel;
+  private Label m_titleLabel;
 
-  private Label titleImage;
+  private Label m_titleImage;
 
-  private Label bottomFillerLabel;
+  private Label m_bottomFillerLabel;
 
-  private Label leftFillerLabel;
+  private Label m_leftFillerLabel;
 
   // private RGB titleAreaRGB;
-  private String message = ""; //$NON-NLS-1$
+  private String m_message = ""; //$NON-NLS-1$
 
-  private String errorMessage;
+  private String m_errorMessage;
 
-  private Text messageLabel;
+  private Text m_messageLabel;
 
-  private Label messageImageLabel;
+  private Label m_messageImageLabel;
 
-  private Image messageImage;
+  private Image m_messageImage;
 
-  private Color normalMsgAreaBackground;
+  private Color m_normalMsgAreaBackground;
 
-  private Color errorMsgAreaBackground;
+  private Color m_errorMsgAreaBackground;
 
-  private Image errorMsgImage;
+  private Image m_errorMsgImage;
 
-  private boolean showingError = false;
+  private boolean m_showingError = false;
 
-  private boolean titleImageLargest = true;
+  private boolean m_titleImageLargest = true;
 
   private Composite m_parent;
 
@@ -1127,8 +1127,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     final int horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
 
     // Dialog image @ right
-    titleImage = new Label( parent, SWT.CENTER );
-    titleImage.setImage( JFaceResources.getImage( TitleAreaDialog.DLG_IMG_TITLE_BANNER ) );
+    m_titleImage = new Label( parent, SWT.CENTER );
+    m_titleImage.setImage( JFaceResources.getImage( TitleAreaDialog.DLG_IMG_TITLE_BANNER ) );
     final FormData imageData = new FormData();
     imageData.top = new FormAttachment( 0, verticalSpacing );
     // Note: do not use horizontalSpacing on the right as that would be a
@@ -1137,31 +1137,31 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     // flush to the right
     // hand side. see reopened comments in 41172
     imageData.right = new FormAttachment( 100, 0 ); // horizontalSpacing
-    titleImage.setLayoutData( imageData );
+    m_titleImage.setLayoutData( imageData );
     // Title label @ top, left
-    titleLabel = new Label( parent, SWT.LEFT );
-    titleLabel.setFont( JFaceResources.getBannerFont() );
-    titleLabel.setText( " " );//$NON-NLS-1$
+    m_titleLabel = new Label( parent, SWT.LEFT );
+    m_titleLabel.setFont( JFaceResources.getBannerFont() );
+    m_titleLabel.setText( " " );//$NON-NLS-1$
     final FormData titleData = new FormData();
     titleData.top = new FormAttachment( 0, verticalSpacing );
-    titleData.right = new FormAttachment( titleImage );
+    titleData.right = new FormAttachment( m_titleImage );
     titleData.left = new FormAttachment( 0, horizontalSpacing );
-    titleLabel.setLayoutData( titleData );
+    m_titleLabel.setLayoutData( titleData );
     // Message image @ bottom, left
-    messageImageLabel = new Label( parent, SWT.CENTER );
+    m_messageImageLabel = new Label( parent, SWT.CENTER );
     // Message label @ bottom, center
-    messageLabel = new Text( parent, SWT.WRAP | SWT.READ_ONLY );
-    messageLabel.setText( " \n " ); // two lines//$NON-NLS-1$
-    messageLabel.setFont( JFaceResources.getDialogFont() );
+    m_messageLabel = new Text( parent, SWT.WRAP | SWT.READ_ONLY );
+    m_messageLabel.setText( " \n " ); // two lines//$NON-NLS-1$
+    m_messageLabel.setFont( JFaceResources.getDialogFont() );
 
     // Filler labels
-    leftFillerLabel = new Label( parent, SWT.CENTER );
-    bottomFillerLabel = new Label( parent, SWT.CENTER );
+    m_leftFillerLabel = new Label( parent, SWT.CENTER );
+    m_bottomFillerLabel = new Label( parent, SWT.CENTER );
     setLayoutsForNormalMessage( verticalSpacing, horizontalSpacing );
     determineTitleImageLargest();
-    if( titleImageLargest )
-      return titleImage;
-    return messageLabel;
+    if( m_titleImageLargest )
+      return m_titleImage;
+    return m_messageLabel;
   }
 
   /**
@@ -1169,12 +1169,12 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    */
   private void determineTitleImageLargest( )
   {
-    final int titleY = titleImage.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
-    int labelY = titleLabel.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
-    labelY += messageLabel.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
-    final FontData[] data = messageLabel.getFont().getFontData();
+    final int titleY = m_titleImage.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
+    int labelY = m_titleLabel.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
+    labelY += m_messageLabel.computeSize( SWT.DEFAULT, SWT.DEFAULT ).y;
+    final FontData[] data = m_messageLabel.getFont().getFontData();
     labelY += data[0].getHeight();
-    titleImageLargest = titleY > labelY;
+    m_titleImageLargest = titleY > labelY;
   }
 
   /**
@@ -1189,27 +1189,27 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   private void setLayoutsForNormalMessage( final int verticalSpacing, final int horizontalSpacing )
   {
     final FormData messageImageData = new FormData();
-    messageImageData.top = new FormAttachment( titleLabel, verticalSpacing );
+    messageImageData.top = new FormAttachment( m_titleLabel, verticalSpacing );
     messageImageData.left = new FormAttachment( 0, H_GAP_IMAGE );
-    messageImageLabel.setLayoutData( messageImageData );
+    m_messageImageLabel.setLayoutData( messageImageData );
     final FormData messageLabelData = new FormData();
-    messageLabelData.top = new FormAttachment( titleLabel, verticalSpacing );
-    messageLabelData.right = new FormAttachment( titleImage );
-    messageLabelData.left = new FormAttachment( messageImageLabel, horizontalSpacing );
-    if( titleImageLargest )
-      messageLabelData.bottom = new FormAttachment( titleImage, 0, SWT.BOTTOM );
-    messageLabel.setLayoutData( messageLabelData );
+    messageLabelData.top = new FormAttachment( m_titleLabel, verticalSpacing );
+    messageLabelData.right = new FormAttachment( m_titleImage );
+    messageLabelData.left = new FormAttachment( m_messageImageLabel, horizontalSpacing );
+    if( m_titleImageLargest )
+      messageLabelData.bottom = new FormAttachment( m_titleImage, 0, SWT.BOTTOM );
+    m_messageLabel.setLayoutData( messageLabelData );
     final FormData fillerData = new FormData();
     fillerData.left = new FormAttachment( 0, horizontalSpacing );
-    fillerData.top = new FormAttachment( messageImageLabel, 0 );
-    fillerData.bottom = new FormAttachment( messageLabel, 0, SWT.BOTTOM );
-    bottomFillerLabel.setLayoutData( fillerData );
+    fillerData.top = new FormAttachment( m_messageImageLabel, 0 );
+    fillerData.bottom = new FormAttachment( m_messageLabel, 0, SWT.BOTTOM );
+    m_bottomFillerLabel.setLayoutData( fillerData );
     final FormData data = new FormData();
-    data.top = new FormAttachment( messageImageLabel, 0, SWT.TOP );
+    data.top = new FormAttachment( m_messageImageLabel, 0, SWT.TOP );
     data.left = new FormAttachment( 0, 0 );
-    data.bottom = new FormAttachment( messageImageLabel, 0, SWT.BOTTOM );
-    data.right = new FormAttachment( messageImageLabel, 0 );
-    leftFillerLabel.setLayoutData( data );
+    data.bottom = new FormAttachment( m_messageImageLabel, 0, SWT.BOTTOM );
+    data.right = new FormAttachment( m_messageImageLabel, 0 );
+    m_leftFillerLabel.setLayoutData( data );
   }
 
   // /**
@@ -1246,7 +1246,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    */
   protected Label getTitleImageLabel( )
   {
-    return titleImage;
+    return m_titleImage;
   }
 
   /**
@@ -1259,57 +1259,57 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   public void setErrorMessage( final String newErrorMessage )
   {
     // Any change?
-    if( errorMessage == null ? newErrorMessage == null : errorMessage.equals( newErrorMessage ) )
+    if( m_errorMessage == null ? newErrorMessage == null : m_errorMessage.equals( newErrorMessage ) )
       return;
-    errorMessage = newErrorMessage;
+    m_errorMessage = newErrorMessage;
 
-    if( messageLabel.isDisposed() )
+    if( m_messageLabel.isDisposed() )
       return;
 
-    if( errorMessage == null )
+    if( m_errorMessage == null )
     {
-      if( showingError )
+      if( m_showingError )
       {
         // we were previously showing an error
-        showingError = false;
+        m_showingError = false;
         setMessageBackgrounds( false );
       }
       // show the message
       // avoid calling setMessage in case it is overridden to call
       // setErrorMessage,
       // which would result in a recursive infinite loop
-      if( message == null ) // this should probably never happen since
+      if( m_message == null ) // this should probably never happen since
         // setMessage does this conversion....
-        message = ""; //$NON-NLS-1$
+        m_message = ""; //$NON-NLS-1$
 
-      updateMessage( message );
-      messageImageLabel.setImage( messageImage );
-      setImageLabelVisible( messageImage != null );
-      messageLabel.setToolTipText( message );
+      updateMessage( m_message );
+      m_messageImageLabel.setImage( m_messageImage );
+      setImageLabelVisible( m_messageImage != null );
+      m_messageLabel.setToolTipText( m_message );
     }
     else
     {
       // Add in a space for layout purposes but do not
       // change the instance variable
-      final String displayedErrorMessage = " " + errorMessage; //$NON-NLS-1$
+      final String displayedErrorMessage = " " + m_errorMessage; //$NON-NLS-1$
       updateMessage( displayedErrorMessage );
-      messageLabel.setToolTipText( errorMessage );
-      if( !showingError )
+      m_messageLabel.setToolTipText( m_errorMessage );
+      if( !m_showingError )
       {
         // we were not previously showing an error
-        showingError = true;
+        m_showingError = true;
         // lazy initialize the error background color and image
-        if( errorMsgAreaBackground == null )
+        if( m_errorMsgAreaBackground == null )
         {
-          errorMsgAreaBackground = JFaceColors.getErrorBackground( messageLabel.getDisplay() );
-          errorMsgImage = JFaceResources.getImage( TitleAreaDialog.DLG_IMG_TITLE_ERROR );
+          m_errorMsgAreaBackground = JFaceColors.getErrorBackground( m_messageLabel.getDisplay() );
+          m_errorMsgImage = JFaceResources.getImage( TitleAreaDialog.DLG_IMG_TITLE_ERROR );
         }
         // show the error
-        normalMsgAreaBackground = messageLabel.getBackground();
+        m_normalMsgAreaBackground = m_messageLabel.getBackground();
 
         setMessageBackgrounds( !m_useNormalBackground );
 
-        messageImageLabel.setImage( errorMsgImage );
+        m_messageImageLabel.setImage( m_errorMsgImage );
         setImageLabelVisible( true );
       }
     }
@@ -1324,16 +1324,16 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     final int verticalSpacing = convertVerticalDLUsToPixels( IDialogConstants.VERTICAL_SPACING );
     final int horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
     // If there are no images then layout as normal
-    if( errorMessage == null && messageImage == null )
+    if( m_errorMessage == null && m_messageImage == null )
     {
       setImageLabelVisible( false );
       setLayoutsForNormalMessage( verticalSpacing, horizontalSpacing );
     }
     else
     {
-      messageImageLabel.setVisible( true );
-      bottomFillerLabel.setVisible( true );
-      leftFillerLabel.setVisible( true );
+      m_messageImageLabel.setVisible( true );
+      m_bottomFillerLabel.setVisible( true );
+      m_leftFillerLabel.setVisible( true );
       /**
        * Note that we do not use horizontalSpacing here as when the background of the messages changes there will be
        * gaps between the icon label and the message that are the background color of the shell. We add a leading space
@@ -1341,27 +1341,27 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
        */
       FormData data = new FormData();
       data.left = new FormAttachment( 0, H_GAP_IMAGE );
-      data.top = new FormAttachment( titleLabel, verticalSpacing );
-      messageImageLabel.setLayoutData( data );
+      data.top = new FormAttachment( m_titleLabel, verticalSpacing );
+      m_messageImageLabel.setLayoutData( data );
       data = new FormData();
-      data.top = new FormAttachment( messageImageLabel, 0 );
+      data.top = new FormAttachment( m_messageImageLabel, 0 );
       data.left = new FormAttachment( 0, 0 );
-      data.bottom = new FormAttachment( messageLabel, 0, SWT.BOTTOM );
-      data.right = new FormAttachment( messageImageLabel, 0, SWT.RIGHT );
-      bottomFillerLabel.setLayoutData( data );
+      data.bottom = new FormAttachment( m_messageLabel, 0, SWT.BOTTOM );
+      data.right = new FormAttachment( m_messageImageLabel, 0, SWT.RIGHT );
+      m_bottomFillerLabel.setLayoutData( data );
       data = new FormData();
-      data.top = new FormAttachment( messageImageLabel, 0, SWT.TOP );
+      data.top = new FormAttachment( m_messageImageLabel, 0, SWT.TOP );
       data.left = new FormAttachment( 0, 0 );
-      data.bottom = new FormAttachment( messageImageLabel, 0, SWT.BOTTOM );
-      data.right = new FormAttachment( messageImageLabel, 0 );
-      leftFillerLabel.setLayoutData( data );
+      data.bottom = new FormAttachment( m_messageImageLabel, 0, SWT.BOTTOM );
+      data.right = new FormAttachment( m_messageImageLabel, 0 );
+      m_leftFillerLabel.setLayoutData( data );
       final FormData messageLabelData = new FormData();
-      messageLabelData.top = new FormAttachment( titleLabel, verticalSpacing );
-      messageLabelData.right = new FormAttachment( titleImage );
-      messageLabelData.left = new FormAttachment( messageImageLabel, 0 );
-      if( titleImageLargest )
-        messageLabelData.bottom = new FormAttachment( titleImage, 0, SWT.BOTTOM );
-      messageLabel.setLayoutData( messageLabelData );
+      messageLabelData.top = new FormAttachment( m_titleLabel, verticalSpacing );
+      messageLabelData.right = new FormAttachment( m_titleImage );
+      messageLabelData.left = new FormAttachment( m_messageImageLabel, 0 );
+      if( m_titleImageLargest )
+        messageLabelData.bottom = new FormAttachment( m_titleImage, 0, SWT.BOTTOM );
+      m_messageLabel.setLayoutData( messageLabelData );
     }
     // Do not layout before the dialog area has been created
     // to avoid incomplete calculations.
@@ -1435,22 +1435,22 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   private void showMessage( final String newMessage, final Image newImage )
   {
     // Any change?
-    if( message.equals( newMessage ) && messageImage == newImage )
+    if( m_message.equals( newMessage ) && m_messageImage == newImage )
       return;
-    message = newMessage;
-    if( message == null )
-      message = "";//$NON-NLS-1$
+    m_message = newMessage;
+    if( m_message == null )
+      m_message = "";//$NON-NLS-1$
     // Message string to be shown - if there is an image then add in
     // a space to the message for layout purposes
-    final String shownMessage = (newImage == null) ? message : " " + message; //$NON-NLS-1$
-    messageImage = newImage;
-    if( !showingError )
+    final String shownMessage = (newImage == null) ? m_message : " " + m_message; //$NON-NLS-1$
+    m_messageImage = newImage;
+    if( !m_showingError )
     {
       // we are not showing an error
       updateMessage( shownMessage );
-      messageImageLabel.setImage( messageImage );
-      setImageLabelVisible( messageImage != null );
-      messageLabel.setToolTipText( message );
+      m_messageImageLabel.setImage( m_messageImage );
+      setImageLabelVisible( m_messageImage != null );
+      m_messageLabel.setToolTipText( m_message );
       layoutForNewMessage();
     }
   }
@@ -1461,14 +1461,17 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * @param newMessage
    *          the message to use
    */
-  private void updateMessage( String newMessage )
+  private void updateMessage( final String newMessage )
   {
     // Be sure there are always 2 lines for layout purposes
+    final String messageToSet;
     if( newMessage != null && newMessage.indexOf( '\n' ) == -1 )
-      newMessage = newMessage + "\n "; //$NON-NLS-1$
+      messageToSet = newMessage + "\n "; //$NON-NLS-1$
+    else
+      messageToSet = newMessage;
 
-    if( !messageLabel.isDisposed() )
-      messageLabel.setText( newMessage );
+    if( !m_messageLabel.isDisposed() )
+      m_messageLabel.setText( messageToSet );
   }
 
   /**
@@ -1479,13 +1482,13 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    */
   public void setWizardTitle( final String newTitle )
   {
-    if( titleLabel == null )
+    if( m_titleLabel == null )
       return;
     String title = newTitle;
     if( title == null )
       title = "";//$NON-NLS-1$
 // if( titleLabel.isDisposed() )
-    titleLabel.setText( title );
+    m_titleLabel.setText( title );
   }
 
   /**
@@ -1496,19 +1499,19 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    */
   public void setWizardTitleImage( final Image newTitleImage )
   {
-    if( titleImage == null || titleImage.isDisposed() )
+    if( m_titleImage == null || m_titleImage.isDisposed() )
       return;
 
-    titleImage.setImage( newTitleImage );
-    titleImage.setVisible( newTitleImage != null );
+    m_titleImage.setImage( newTitleImage );
+    m_titleImage.setVisible( newTitleImage != null );
     if( newTitleImage != null )
     {
       determineTitleImageLargest();
       Control top;
-      if( titleImageLargest )
-        top = titleImage;
+      if( m_titleImageLargest )
+        top = m_titleImage;
       else
-        top = messageLabel;
+        top = m_messageLabel;
       resetWorkAreaAttachments( top );
     }
   }
@@ -1521,9 +1524,9 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    */
   private void setImageLabelVisible( final boolean visible )
   {
-    messageImageLabel.setVisible( visible );
-    bottomFillerLabel.setVisible( visible );
-    leftFillerLabel.setVisible( visible );
+    m_messageImageLabel.setVisible( visible );
+    m_bottomFillerLabel.setVisible( visible );
+    m_leftFillerLabel.setVisible( visible );
   }
 
   /**
@@ -1536,13 +1539,13 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   {
     Color color;
     if( showingErr )
-      color = errorMsgAreaBackground;
+      color = m_errorMsgAreaBackground;
     else
-      color = normalMsgAreaBackground;
-    messageLabel.setBackground( color );
-    messageImageLabel.setBackground( color );
-    bottomFillerLabel.setBackground( color );
-    leftFillerLabel.setBackground( color );
+      color = m_normalMsgAreaBackground;
+    m_messageLabel.setBackground( color );
+    m_messageImageLabel.setBackground( color );
+    m_bottomFillerLabel.setBackground( color );
+    m_leftFillerLabel.setBackground( color );
   }
 
   /**
@@ -1565,11 +1568,11 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   // ////////////////
 
   // The current page message and description
-  private String pageMessage;
+  private String m_pageMessage;
 
-  private int pageMessageType = IMessageProvider.NONE;
+  private int m_pageMessageType = IMessageProvider.NONE;
 
-  private String pageDescription;
+  private String m_pageDescription;
 
   private final DisposeHelper m_disposeHelper = new DisposeHelper();
 
@@ -1582,15 +1585,15 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     if( m_currentPage == null )
       return;
 
-    pageMessage = m_currentPage.getMessage();
-    if( pageMessage != null && m_currentPage instanceof IMessageProvider )
-      pageMessageType = ((IMessageProvider) m_currentPage).getMessageType();
+    m_pageMessage = m_currentPage.getMessage();
+    if( m_pageMessage != null && m_currentPage instanceof IMessageProvider )
+      m_pageMessageType = ((IMessageProvider) m_currentPage).getMessageType();
     else
-      pageMessageType = IMessageProvider.NONE;
-    if( pageMessage == null )
-      setMessage( pageDescription );
+      m_pageMessageType = IMessageProvider.NONE;
+    if( m_pageMessage == null )
+      setMessage( m_pageDescription );
     else
-      setMessage( pageMessage, pageMessageType );
+      setMessage( m_pageMessage, m_pageMessageType );
     setErrorMessage( m_currentPage.getErrorMessage() );
   }
 
@@ -1609,26 +1612,26 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       backgroundRGB = m_defaultTitleBackground;
 
     final ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
-    colorRegistry.put( m_backgroundRGB_ID, backgroundRGB );
-    colorRegistry.put( m_foregroundRGB_ID, foregroundRGB );
+    colorRegistry.put( m_backgroundRgbId, backgroundRGB );
+    colorRegistry.put( m_foregroundRgbId, foregroundRGB );
 
-    final Color background = colorRegistry.get( m_backgroundRGB_ID );
-    final Color foreground = colorRegistry.get( m_foregroundRGB_ID );
+    final Color background = colorRegistry.get( m_backgroundRgbId );
+    final Color foreground = colorRegistry.get( m_foregroundRgbId );
 
     if( m_parent != null && !m_parent.isDisposed() )
       m_parent.setBackground( background );
-    if( titleImage != null && !titleImage.isDisposed() )
-      titleImage.setBackground( background );
-    if( titleLabel != null && !titleLabel.isDisposed() )
-      JFaceColors.setColors( titleLabel, foreground, background );
-    if( messageImageLabel != null && !messageImageLabel.isDisposed() )
-      messageImageLabel.setBackground( background );
-    if( messageLabel != null && !messageLabel.isDisposed() )
-      JFaceColors.setColors( messageLabel, foreground, background );
-    if( leftFillerLabel != null && !leftFillerLabel.isDisposed() )
-      leftFillerLabel.setBackground( background );
-    if( bottomFillerLabel != null && !bottomFillerLabel.isDisposed() )
-      bottomFillerLabel.setBackground( background );
+    if( m_titleImage != null && !m_titleImage.isDisposed() )
+      m_titleImage.setBackground( background );
+    if( m_titleLabel != null && !m_titleLabel.isDisposed() )
+      JFaceColors.setColors( m_titleLabel, foreground, background );
+    if( m_messageImageLabel != null && !m_messageImageLabel.isDisposed() )
+      m_messageImageLabel.setBackground( background );
+    if( m_messageLabel != null && !m_messageLabel.isDisposed() )
+      JFaceColors.setColors( m_messageLabel, foreground, background );
+    if( m_leftFillerLabel != null && !m_leftFillerLabel.isDisposed() )
+      m_leftFillerLabel.setBackground( background );
+    if( m_bottomFillerLabel != null && !m_bottomFillerLabel.isDisposed() )
+      m_bottomFillerLabel.setBackground( background );
 
     String s = null;
     if( m_currentPage != null )
@@ -1669,8 +1672,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     if( m_currentPage == null )
       return;
 
-    pageDescription = m_currentPage.getDescription();
-    if( pageMessage == null )
+    m_pageDescription = m_currentPage.getDescription();
+    if( m_pageMessage == null )
       setMessage( m_currentPage.getDescription() );
   }
 

@@ -66,7 +66,7 @@ public class CollectFilesWithExtensionVisitor implements IResourceVisitor
   {
     if( resource.getType() == IResource.FILE )
     {
-      IFile file = (IFile) resource;
+      final IFile file = (IFile) resource;
       if( m_extension != null )
       {
         if( file.getFileExtension().equals( m_extension ) )
@@ -95,7 +95,7 @@ public class CollectFilesWithExtensionVisitor implements IResourceVisitor
     return m_files.toArray( new IFile[m_files.size()] );
   }
 
-  public void setExtension( String extension )
+  public void setExtension( final String extension )
   {
     m_extension = extension;
   }

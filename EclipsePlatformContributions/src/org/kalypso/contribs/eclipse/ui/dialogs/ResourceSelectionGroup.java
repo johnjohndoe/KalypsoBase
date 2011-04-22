@@ -37,6 +37,7 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.DrillDownComposite;
 
+@SuppressWarnings("restriction")
 public class ResourceSelectionGroup extends Composite
 {
   private final Listener m_listener;
@@ -53,11 +54,11 @@ public class ResourceSelectionGroup extends Composite
 
   private static final int SIZING_SELECTION_PANE_HEIGHT = 300;
 
-  private Text resourceNameField;
+  private Text m_resourceNameField;
 
-  TreeViewer treeViewer;
+  TreeViewer m_treeViewer;
 
-  private IResource selectedResource;
+  private IResource m_selectedResource;
 
   private final String[] m_allowedResourceExtensions;
 
@@ -89,19 +90,19 @@ public class ResourceSelectionGroup extends Composite
 
   public void addViewerFilter( final ViewerFilter filter )
   {
-    treeViewer.addFilter( filter );
+    m_treeViewer.addFilter( filter );
   }
 
   public void resourceSelectionChanged( final IResource resource )
   {
-    selectedResource = resource;
+    m_selectedResource = resource;
 
     if( m_allowNewResourceName )
     {
       if( resource == null )
-        resourceNameField.setText( "" );//$NON-NLS-1$
+        m_resourceNameField.setText( "" );//$NON-NLS-1$
       else
-        resourceNameField.setText( resource.getFullPath().makeRelative().toString() );
+        m_resourceNameField.setText( resource.getFullPath().makeRelative().toString() );
     }
 
     // fire an event so the parent can update its controls
@@ -146,11 +147,11 @@ public class ResourceSelectionGroup extends Composite
 
     if( m_allowNewResourceName )
     {
-      resourceNameField = new Text( this, SWT.SINGLE | SWT.BORDER );
-      resourceNameField.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+      m_resourceNameField = new Text( this, SWT.SINGLE | SWT.BORDER );
+      m_resourceNameField.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
       // TODO: add listener to control user input
       // resourceNameField.addListener( SWT.DefaultSelection, m_listener );
-      resourceNameField.setFont( this.getFont() );
+      m_resourceNameField.setFont( this.getFont() );
     }
     else
     {
@@ -172,14 +173,14 @@ public class ResourceSelectionGroup extends Composite
     drillDown.setLayoutData( spec );
 
     // Create tree viewer inside drill down.
-    treeViewer = new TreeViewer( drillDown, SWT.NONE );
-    drillDown.setChildTree( treeViewer );
+    m_treeViewer = new TreeViewer( drillDown, SWT.NONE );
+    drillDown.setChildTree( m_treeViewer );
     final ResourceContentProvider cp = new ResourceContentProvider( m_allowedResourceExtensions );
     cp.showClosedProjects( m_showClosedProjects );
-    treeViewer.setContentProvider( cp );
-    treeViewer.setLabelProvider( WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider() );
-    treeViewer.setSorter( new ViewerSorter() );
-    treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    m_treeViewer.setContentProvider( cp );
+    m_treeViewer.setLabelProvider( WorkbenchLabelProvider.getDecoratingWorkbenchLabelProvider() );
+    m_treeViewer.setSorter( new ViewerSorter() );
+    m_treeViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
@@ -189,7 +190,7 @@ public class ResourceSelectionGroup extends Composite
         // null
       }
     } );
-    treeViewer.addDoubleClickListener( new IDoubleClickListener()
+    m_treeViewer.addDoubleClickListener( new IDoubleClickListener()
     {
       @Override
       public void doubleClick( final DoubleClickEvent event )
@@ -198,10 +199,10 @@ public class ResourceSelectionGroup extends Composite
         if( selection instanceof IStructuredSelection )
         {
           final Object item = ((IStructuredSelection) selection).getFirstElement();
-          if( treeViewer.getExpandedState( item ) )
-            treeViewer.collapseToLevel( item, 1 );
+          if( m_treeViewer.getExpandedState( item ) )
+            m_treeViewer.collapseToLevel( item, 1 );
           else
-            treeViewer.expandToLevel( item, 1 );
+            m_treeViewer.expandToLevel( item, 1 );
         }
         fireEvent( SWT.MouseDoubleClick );
       }
@@ -209,7 +210,7 @@ public class ResourceSelectionGroup extends Composite
 
     // This has to be done after the viewer has been laid out
     // treeViewer.setInput( ResourcesPlugin.getWorkspace() );
-    treeViewer.setInput( m_inputContainer );
+    m_treeViewer.setInput( m_inputContainer );
   }
 
   public IPath getResourceFullPath( )
@@ -217,7 +218,7 @@ public class ResourceSelectionGroup extends Composite
     IPath resourcePath = null;
     if( m_allowNewResourceName )
     {
-      final String pathName = resourceNameField.getText();
+      final String pathName = m_resourceNameField.getText();
       if( pathName == null || pathName.length() < 1 )
       {
         // nothing
@@ -230,12 +231,12 @@ public class ResourceSelectionGroup extends Composite
     }
     else
     {
-      if( selectedResource == null )
+      if( m_selectedResource == null )
       {
         // nothing
       }
       else
-        resourcePath = selectedResource.getFullPath();
+        resourcePath = m_selectedResource.getFullPath();
     }
     return resourcePath;
   }
@@ -246,9 +247,9 @@ public class ResourceSelectionGroup extends Composite
   public void setInitialFocus( )
   {
     if( m_allowNewResourceName )
-      resourceNameField.setFocus();
+      m_resourceNameField.setFocus();
     else
-      treeViewer.getTree().setFocus();
+      m_treeViewer.getTree().setFocus();
   }
 
   /**
@@ -256,7 +257,7 @@ public class ResourceSelectionGroup extends Composite
    */
   public void setSelectedResource( final IResource resource )
   {
-    selectedResource = resource;
+    m_selectedResource = resource;
 
     // expand to and select the specified container
     final List<IContainer> itemsToExpand = new ArrayList<IContainer>();
@@ -266,13 +267,13 @@ public class ResourceSelectionGroup extends Composite
       itemsToExpand.add( 0, parent );
       parent = parent.getParent();
     }
-    treeViewer.setExpandedElements( itemsToExpand.toArray() );
-    treeViewer.setSelection( new StructuredSelection( resource ), true );
+    m_treeViewer.setExpandedElements( itemsToExpand.toArray() );
+    m_treeViewer.setSelection( new StructuredSelection( resource ), true );
   }
 
   public IResource getSelectedResource( )
   {
-    return selectedResource;
+    return m_selectedResource;
   }
 
 }

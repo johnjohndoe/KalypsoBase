@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class FocusCellOwnerDrawHighlighter extends FocusCellHighlighter
 {
-  private ViewerCell oldCell;
+  private ViewerCell m_oldCell;
 
   /**
    * @param viewer
@@ -92,7 +92,7 @@ public class FocusCellOwnerDrawHighlighter extends FocusCellHighlighter
   @Override
   protected void focusCellChanged( final ViewerCell cell, final ViewerCell oldCell2 )
   {
-    super.focusCellChanged( cell, oldCell );
+    super.focusCellChanged( cell, m_oldCell );
 
     // Redraw new area
     if( cell != null )
@@ -104,15 +104,15 @@ public class FocusCellOwnerDrawHighlighter extends FocusCellHighlighter
       cell.getControl().redraw( x, rect.y - 1, width, rect.height + 1, true );
     }
 
-    if( oldCell != null )
+    if( m_oldCell != null )
     {
-      final Rectangle rect = oldCell.getBounds();
-      final int x = oldCell.getColumnIndex() == 0 ? 0 : rect.x;
-      final int width = oldCell.getColumnIndex() == 0 ? rect.x + rect.width : rect.width;
+      final Rectangle rect = m_oldCell.getBounds();
+      final int x = m_oldCell.getColumnIndex() == 0 ? 0 : rect.x;
+      final int width = m_oldCell.getColumnIndex() == 0 ? rect.x + rect.width : rect.width;
       // 1 is a fix for Linux-GTK
-      oldCell.getControl().redraw( x, rect.y - 1, width, rect.height + 1, true );
+      m_oldCell.getControl().redraw( x, rect.y - 1, width, rect.height + 1, true );
     }
 
-    this.oldCell = cell;
+    this.m_oldCell = cell;
   }
 }

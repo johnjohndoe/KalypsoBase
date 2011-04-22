@@ -44,10 +44,10 @@ public class BaseResourceContentProvider implements ITreeContentProvider
         return allProjects;
 
       final ArrayList<IProject> accessibleProjects = new ArrayList<IProject>();
-      for( int i = 0; i < allProjects.length; i++ )
+      for( final IProject allProject : allProjects )
       {
-        if( allProjects[i].isOpen() )
-          accessibleProjects.add( allProjects[i] );
+        if( allProject.isOpen() )
+          accessibleProjects.add( allProject );
       }
       return accessibleProjects.toArray();
     }
@@ -60,16 +60,16 @@ public class BaseResourceContentProvider implements ITreeContentProvider
         {
           final List<IResource> children = new ArrayList<IResource>();
           final IResource[] members = container.members();
-          for( int i = 0; i < members.length; i++ )
+          for( final IResource member : members )
           {
-            if( members[i].getType() == IResource.FILE )
+            if( member.getType() == IResource.FILE )
             {
-              if( checkExtension( ((IFile) members[i]).getFileExtension() ) )
-                children.add( members[i] );
+              if( checkExtension( ((IFile) member).getFileExtension() ) )
+                children.add( member );
             }
             else
             {
-              children.add( members[i] );
+              children.add( member );
             }
           }
           return children.toArray();

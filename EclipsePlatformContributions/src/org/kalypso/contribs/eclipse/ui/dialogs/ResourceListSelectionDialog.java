@@ -44,10 +44,13 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 /**
  * Copy of the original {@link org.eclipse.ui.dialogs.ResourceListSelectionDialog} because that class is not public.
- * 
  * TODO: copy it again from the 3.1 sources
+ * 
+ * @deprecated {@link org.eclipse.ui.dialogs.ResourceListSelectionDialog} is now public, we should use it instead. Need
+ *             to check imcompabilities however.
  */
 @SuppressWarnings("restriction")
+@Deprecated
 public final class ResourceListSelectionDialog extends SelectionDialog
 {
   Text pattern;
@@ -87,7 +90,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
     boolean resourcesSorted = true;
 
     @Override
-    public int compareTo( Object o )
+    public int compareTo( final Object o )
     {
       return collator.compare( label, ( (ResourceDescriptor)o ).label );
     }
@@ -104,7 +107,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
     @Override
     public void run()
     {
-      Display display = resourceNames.getDisplay();
+      final Display display = resourceNames.getDisplay();
       final int itemIndex[] =
       { 0 };
       final int itemCount[] =
@@ -158,7 +161,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
             {
               Thread.sleep( 10 );
             }
-            catch( InterruptedException e )
+            catch( final InterruptedException e )
             {}
           }
           if( stop || resourceNames.isDisposed() )
@@ -192,7 +195,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
             {
               Thread.sleep( 10 );
             }
-            catch( InterruptedException e )
+            catch( final InterruptedException e )
             {}
           }
           if( stop || resourceNames.isDisposed() )
@@ -265,7 +268,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
     @Override
     public void run()
     {
-      Display display = resourceNames.getDisplay();
+      final Display display = resourceNames.getDisplay();
       final int itemIndex[] =
       { 0 };
       final int itemCount[] =
@@ -304,7 +307,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
             {
               Thread.sleep( 10 );
             }
-            catch( InterruptedException e )
+            catch( final InterruptedException e )
             {}
           }
           if( stop || resourceNames.isDisposed() )
@@ -337,7 +340,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
             {
               Thread.sleep( 10 );
             }
-            catch( InterruptedException e )
+            catch( final InterruptedException e )
             {}
           }
           if( stop || resourceNames.isDisposed() )
@@ -402,7 +405,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
    * @param resources
    *          resources to display in the dialog
    */
-  public ResourceListSelectionDialog( Shell parentShell, IResource[] resources )
+  public ResourceListSelectionDialog( final Shell parentShell, final IResource[] resources )
   {
     super( parentShell );
     setShellStyle( getShellStyle() | SWT.RESIZE );
@@ -424,7 +427,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
    * @param tmask
    *          mask containing IResource types to be considered
    */
-  public ResourceListSelectionDialog( Shell parentShell, IContainer cont, int tmask )
+  public ResourceListSelectionDialog( final Shell parentShell, final IContainer cont, final int tmask )
   {
     super( parentShell );
     this.container = cont;
@@ -435,7 +438,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
   /**
    * doemming
    */
-  public ResourceListSelectionDialog( Shell shell, IContainer parent, int file, String pat )
+  public ResourceListSelectionDialog( final Shell shell, final IContainer parent, final int file, final String pat )
   {
     // -------------------------
     this( shell, parent, file );
@@ -478,7 +481,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
   @Override
   public boolean close()
   {
-    boolean result = super.close();
+    final boolean result = super.close();
     labelProvider.dispose();
     return result;
   }
@@ -502,9 +505,9 @@ public final class ResourceListSelectionDialog extends SelectionDialog
    *          parent to create the dialog widgets in
    */
   @Override
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
-    Composite dialogArea2 = (Composite)super.createDialogArea( parent );
+    final Composite dialogArea2 = (Composite)super.createDialogArea( parent );
     Label l = new Label( dialogArea2, SWT.NONE );
     l.setText( IDEWorkbenchMessages.ResourceSelectionDialog_label );
     GridData data = new GridData( GridData.FILL_HORIZONTAL );
@@ -557,7 +560,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
     pattern.addKeyListener( new KeyAdapter()
     {
       @Override
-      public void keyReleased( KeyEvent e )
+      public void keyReleased( final KeyEvent e )
       {
         if( e.keyCode == SWT.ARROW_DOWN )
           resourceNames.setFocus();
@@ -567,7 +570,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
     pattern.addModifyListener( new ModifyListener()
     {
       @Override
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         textChanged();
       }
@@ -576,13 +579,13 @@ public final class ResourceListSelectionDialog extends SelectionDialog
     resourceNames.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         updateFolders( (ResourceDescriptor)e.item.getData() );
       }
 
       @Override
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void widgetDefaultSelected( final SelectionEvent e )
       {
         okPressed();
       }
@@ -591,7 +594,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
     folderNames.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void widgetDefaultSelected( final SelectionEvent e )
       {
         okPressed();
       }
@@ -610,14 +613,14 @@ public final class ResourceListSelectionDialog extends SelectionDialog
    */
   private void filterResources()
   {
-    String oldPattern = patternString;
+    final String oldPattern = patternString;
     patternString = adjustPattern();
     if( patternString.equals( oldPattern ) )
       return;
 
     updateFilterThread.stop = true;
     stringMatcher = new StringMatcher( patternString, true, false );
-    UpdateFilterThread oldThread = updateFilterThread;
+    final UpdateFilterThread oldThread = updateFilterThread;
     updateFilterThread = new UpdateFilterThread();
     if( patternString.equals( "" ) ) { //$NON-NLS-1$
       updateFilterThread.firstMatch = 0;
@@ -628,7 +631,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
 
     if( oldPattern != null && ( oldPattern.length() != 0 )
         && oldPattern.endsWith( "*" ) && patternString.endsWith( "*" ) ) { //$NON-NLS-1$ //$NON-NLS-2$
-      int matchLength = oldPattern.length() - 1;
+      final int matchLength = oldPattern.length() - 1;
       if( patternString.regionMatches( 0, oldPattern, 0, matchLength ) )
       {
         // filter the previous list of items, this is done when the
@@ -655,12 +658,12 @@ public final class ResourceListSelectionDialog extends SelectionDialog
     int high = descriptorsSize;
     int low = -1;
     boolean match = false;
-    ResourceDescriptor desc = new ResourceDescriptor();
+    final ResourceDescriptor desc = new ResourceDescriptor();
     desc.label = patternString.substring( 0, patternString.length() - 1 );
     while( high - low > 1 )
     {
-      int index = ( high + low ) / 2;
-      String label = descriptors[index].label;
+      final int index = ( high + low ) / 2;
+      final String label = descriptors[index].label;
       if( match( label ) )
       {
         high = index;
@@ -668,7 +671,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
       }
       else
       {
-        int compare = descriptors[index].compareTo( desc );
+        final int compare = descriptors[index].compareTo( desc );
         if( compare == -1 )
         {
           low = index;
@@ -689,7 +692,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
    */
   private void gatherResources()
   {
-    String oldPattern = patternString;
+    final String oldPattern = patternString;
     patternString = adjustPattern();
     if( patternString.equals( oldPattern ) )
       return;
@@ -706,7 +709,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
     if( oldPattern != null && ( oldPattern.length() != 0 )
         && oldPattern.endsWith( "*" ) && patternString.endsWith( "*" ) ) { //$NON-NLS-1$ //$NON-NLS-2$
       // see if the new pattern is a derivative of the old pattern
-      int matchLength = oldPattern.length() - 1;
+      final int matchLength = oldPattern.length() - 1;
       if( patternString.regionMatches( 0, oldPattern, 0, matchLength ) )
       {
         updateGatherThread.refilter = true;
@@ -724,7 +727,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
       public void run()
       {
         getMatchingResources( resources );
-        IResource resourcesArray[] = new IResource[resources.size()];
+        final IResource resourcesArray[] = new IResource[resources.size()];
         resources.toArray( resourcesArray );
         initDescriptors( resourcesArray );
       }
@@ -742,9 +745,9 @@ public final class ResourceListSelectionDialog extends SelectionDialog
    *          resource descriptor to return image for
    * @return an image for a resource descriptor.
    */
-  private Image getImage( ResourceDescriptor desc )
+  private Image getImage( final ResourceDescriptor desc )
   {
-    IResource r = desc.resources.get( 0 );
+    final IResource r = desc.resources.get( 0 );
     return labelProvider.getImage( r );
   }
 
@@ -757,12 +760,12 @@ public final class ResourceListSelectionDialog extends SelectionDialog
     int high = descriptorsSize;
     int low = -1;
     boolean match = false;
-    ResourceDescriptor desc = new ResourceDescriptor();
+    final ResourceDescriptor desc = new ResourceDescriptor();
     desc.label = patternString.substring( 0, patternString.length() - 1 );
     while( high - low > 1 )
     {
-      int index = ( high + low ) / 2;
-      String label = descriptors[index].label;
+      final int index = ( high + low ) / 2;
+      final String label = descriptors[index].label;
       if( match( label ) )
       {
         low = index;
@@ -770,7 +773,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
       }
       else
       {
-        int compare = descriptors[index].compareTo( desc );
+        final int compare = descriptors[index].compareTo( desc );
         if( compare == -1 )
         {
           low = index;
@@ -801,14 +804,14 @@ public final class ResourceListSelectionDialog extends SelectionDialog
       container.accept( new IResourceProxyVisitor()
       {
         @Override
-        public boolean visit( IResourceProxy proxy )
+        public boolean visit( final IResourceProxy proxy )
         {
-          int type = proxy.getType();
+          final int type = proxy.getType();
           if( ( typeMask & type ) != 0 )
           {
             if( match( proxy.getName() ) )
             {
-              IResource res = proxy.requestResource();
+              final IResource res = proxy.requestResource();
               if( select() )
               {
                 resources.add( res );
@@ -824,19 +827,19 @@ public final class ResourceListSelectionDialog extends SelectionDialog
         }
       }, IResource.NONE );
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {}
   }
 
-  protected Image getParentImage( IResource resource )
+  protected Image getParentImage( final IResource resource )
   {
-    IResource parent = resource.getParent();
+    final IResource parent = resource.getParent();
     return labelProvider.getImage( parent );
   }
 
-  protected String getParentLabel( IResource resource )
+  protected String getParentLabel( final IResource resource )
   {
-    IResource parent = resource.getParent();
+    final IResource parent = resource.getParent();
     String text;
     if( parent.getType() == IResource.ROOT )
     {
@@ -867,8 +870,8 @@ public final class ResourceListSelectionDialog extends SelectionDialog
         descriptors = new ResourceDescriptor[resources.length];
         for( int i = 0; i < resources.length; i++ )
         {
-          IResource r = resources[i];
-          ResourceDescriptor d = new ResourceDescriptor();
+          final IResource r = resources[i];
+          final ResourceDescriptor d = new ResourceDescriptor();
           //TDB: Should use the label provider and compare performance.
           d.label = r.getName();
           d.resources.add( r );
@@ -885,8 +888,8 @@ public final class ResourceListSelectionDialog extends SelectionDialog
         IResource currentResource = current.resources.get( 0 );
         for( int i = 1; i < descriptorsSize; i++ )
         {
-          ResourceDescriptor next = descriptors[i];
-          IResource nextResource = next.resources.get( 0 );
+          final ResourceDescriptor next = descriptors[i];
+          final IResource nextResource = next.resources.get( 0 );
           if( nextResource.getType() == currentResource.getType() && next.label.equals( current.label ) )
           {
             current.resources.add( nextResource );
@@ -915,7 +918,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
    *          label to match with the current pattern
    * @return true if the label matches the chosen pattern. false otherwise.
    */
-  protected boolean match( String label )
+  protected boolean match( final String label )
   {
     if( ( patternString == null ) || ( patternString.equals( "" ) ) || ( patternString.equals( "*" ) ) )//$NON-NLS-2$//$NON-NLS-1$
       return true;
@@ -928,7 +931,7 @@ public final class ResourceListSelectionDialog extends SelectionDialog
   @Override
   protected void okPressed()
   {
-    TableItem items[] = folderNames.getSelection();
+    final TableItem items[] = folderNames.getSelection();
     if( items.length == 1 )
     {
       final ArrayList<Object> result = new ArrayList<Object>();
@@ -979,22 +982,22 @@ public final class ResourceListSelectionDialog extends SelectionDialog
         {
           // sort the folder names
           Collections.sort( desc.resources, new Comparator<IResource>()
-          {
+              {
             @Override
-            public int compare( IResource o1, IResource o2 )
+            public int compare( final IResource o1, final IResource o2 )
             {
-              String s1 = getParentLabel( o1 );
-              String s2 = getParentLabel( o2 );
+              final String s1 = getParentLabel( o1 );
+              final String s2 = getParentLabel( o2 );
               return collator.compare( s1, s2 );
             }
-          } );
+              } );
           desc.resourcesSorted = true;
         }
         folderNames.removeAll();
         for( int i = 0; i < desc.resources.size(); i++ )
         {
-          TableItem newItem = new TableItem( folderNames, SWT.NONE );
-          IResource r = desc.resources.get( i );
+          final TableItem newItem = new TableItem( folderNames, SWT.NONE );
+          final IResource r = desc.resources.get( i );
           newItem.setText( getParentLabel( r ) );
           newItem.setImage( getParentImage( r ) );
           newItem.setData( r );
@@ -1015,9 +1018,9 @@ public final class ResourceListSelectionDialog extends SelectionDialog
    * @param itemCount
    *          number of items in the resources table widget
    */
-  protected void updateItem( int index, int itemPos, int itemCount )
+  protected void updateItem( final int index, final int itemPos, final int itemCount )
   {
-    ResourceDescriptor desc = descriptors[index];
+    final ResourceDescriptor desc = descriptors[index];
     TableItem item;
     if( itemPos < itemCount )
     {

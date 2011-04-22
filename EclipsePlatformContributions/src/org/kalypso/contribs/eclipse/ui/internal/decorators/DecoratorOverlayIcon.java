@@ -28,13 +28,13 @@ import org.eclipse.swt.graphics.Point;
 public class DecoratorOverlayIcon extends CompositeImageDescriptor
 {
   // the base image
-  private Image base;
+  private final Image m_base;
 
   // the overlay images
-  private ImageDescriptor[] overlays;
+  private final ImageDescriptor[] m_overlays;
 
   // the size
-  private Point size;
+  private final Point m_size;
 
   /**
    * OverlayIcon constructor.
@@ -46,21 +46,21 @@ public class DecoratorOverlayIcon extends CompositeImageDescriptor
    * @param sizeValue
    *          the size
    */
-  public DecoratorOverlayIcon( Image baseImage, ImageDescriptor[] overlaysArray, Point sizeValue )
+  public DecoratorOverlayIcon( final Image baseImage, final ImageDescriptor[] overlaysArray, final Point sizeValue )
   {
-    this.base = baseImage;
-    this.overlays = overlaysArray;
-    this.size = sizeValue;
+    this.m_base = baseImage;
+    this.m_overlays = overlaysArray;
+    this.m_size = sizeValue;
   }
 
   /**
    * Draw the overlays for the reciever.
    */
-  protected void drawOverlays( ImageDescriptor[] overlaysArray )
+  protected void drawOverlays( final ImageDescriptor[] overlaysArray )
   {
-    for( int i = 0; i < overlays.length; i++ )
+    for( int i = 0; i < m_overlays.length; i++ )
     {
-      ImageDescriptor overlay = overlaysArray[i];
+      final ImageDescriptor overlay = overlaysArray[i];
       if( overlay == null )
         continue;
       ImageData overlayData = overlay.getImageData();
@@ -73,52 +73,52 @@ public class DecoratorOverlayIcon extends CompositeImageDescriptor
           drawImage( overlayData, 0, 0 );
           break;
         case 1:
-          drawImage( overlayData, size.x - overlayData.width, 0 );
+          drawImage( overlayData, m_size.x - overlayData.width, 0 );
           break;
         case 2:
-          drawImage( overlayData, 0, size.y - overlayData.height );
+          drawImage( overlayData, 0, m_size.y - overlayData.height );
           break;
         case 3:
-          drawImage( overlayData, size.x - overlayData.width, size.y - overlayData.height );
+          drawImage( overlayData, m_size.x - overlayData.width, m_size.y - overlayData.height );
           break;
       }
     }
   }
 
   @Override
-  public boolean equals( Object o )
+  public boolean equals( final Object o )
   {
     if( !(o instanceof DecoratorOverlayIcon) )
       return false;
-    DecoratorOverlayIcon other = (DecoratorOverlayIcon) o;
-    return base.equals( other.base ) && Arrays.equals( overlays, other.overlays );
+    final DecoratorOverlayIcon other = (DecoratorOverlayIcon) o;
+    return m_base.equals( other.m_base ) && Arrays.equals( m_overlays, other.m_overlays );
   }
 
   @Override
   public int hashCode( )
   {
-    int code = base.hashCode();
-    for( int i = 0; i < overlays.length; i++ )
+    int code = m_base.hashCode();
+    for( final ImageDescriptor overlay : m_overlays )
     {
-      if( overlays[i] != null )
-        code ^= overlays[i].hashCode();
+      if( overlay != null )
+        code ^= overlay.hashCode();
     }
     return code;
   }
 
   @Override
-  protected void drawCompositeImage( int width, int height )
+  protected void drawCompositeImage( final int width, final int height )
   {
-    ImageDescriptor underlay = overlays[4];
+    final ImageDescriptor underlay = m_overlays[4];
     if( underlay != null )
       drawImage( underlay.getImageData(), 0, 0 );
-    drawImage( base.getImageData(), 0, 0 );
-    drawOverlays( overlays );
+    drawImage( m_base.getImageData(), 0, 0 );
+    drawOverlays( m_overlays );
   }
 
   @Override
   protected Point getSize( )
   {
-    return size;
+    return m_size;
   }
 }
