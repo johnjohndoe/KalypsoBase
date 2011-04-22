@@ -43,6 +43,8 @@ package org.kalypso.contribs.eclipse.swt.widgets;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -118,6 +120,24 @@ public final class ControlUtils
       toolkit.adapt( control, true, true );
   }
 
+  /**
+   * Adds a dispose listener to the given control that will call the control's dispose method if it is disposed.
+   */
+  public static void addDisposeListener( final Control control )
+  {
+    if( control == null || control.isDisposed() )
+      return;
+
+    control.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        control.dispose();
+      }
+    } );
+  }
+  
   public static Event copyEvent( final Event event )
   {
     final Event cEvent = new Event();
@@ -180,5 +200,5 @@ public final class ControlUtils
 
     return event;
   }
-
+  
 }
