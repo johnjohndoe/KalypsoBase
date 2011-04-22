@@ -1,5 +1,3 @@
-package de.openali.odysseus.chart.factory.config.resolver;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -40,6 +38,8 @@ package de.openali.odysseus.chart.factory.config.resolver;
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
+
+package de.openali.odysseus.chart.factory.config.resolver;
 
 import java.io.IOException;
 import java.net.URL;
@@ -279,9 +279,9 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private String getUrl( final String url, final URL context )
   {
-    if (Strings.isNullOrEmpty( url ))
+    if( StringUtils.isBlank( url ) )
       return context.toString();
-    
+
     if( url.contains( "#" ) ) // $NON-NLS-1$
     {
       final Pattern pattern = new Pattern( "#.*" ); // $NON-NLS-1$
@@ -300,7 +300,7 @@ public final class ChartTypeResolver implements IReferenceResolver
   {
     if (Strings.isNullOrEmpty( url ))
       return null;
-    
+
     final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), url ); //$NON-NLS-1$
 
     return StringUtils.chomp( tokenizer.nextToken() );
