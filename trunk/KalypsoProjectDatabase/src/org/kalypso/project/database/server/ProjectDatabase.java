@@ -88,7 +88,7 @@ public class ProjectDatabase implements IProjectDatabase
   {
     try
     {
-
+    	// FIXME: better error handling needed if factory cannot be created -> lots of NPE later
       final String property = System.getProperty( IProjectDataBaseServerConstant.HIBERNATE_CONFIG_FILE );
       if( property != null && !"".equals( property.trim() ) ) //$NON-NLS-1$
       {
@@ -184,13 +184,13 @@ public class ProjectDatabase implements IProjectDatabase
 
         // TODO check needed? - order by clauses
         Arrays.sort( values, new Comparator<KalypsoProjectBean>()
-        {
+            {
           @Override
           public int compare( final KalypsoProjectBean o1, final KalypsoProjectBean o2 )
           {
             return o1.getProjectVersion().compareTo( o2.getProjectVersion() );
           }
-        } );
+            } );
 
         head.setChildren( values );
         projectBeans.add( head );
@@ -369,6 +369,9 @@ public class ProjectDatabase implements IProjectDatabase
   @Override
   public String[] getProjectTypes( )
   {
+    if( m_factory == null )
+      return new String[] {};
+
     /** Getting the Session Factory and session */
     final Session session = m_factory.getCurrentSession();
 
