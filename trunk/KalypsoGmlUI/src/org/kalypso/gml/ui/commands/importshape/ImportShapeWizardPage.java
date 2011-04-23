@@ -31,7 +31,7 @@ import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
-import org.kalypso.shape.dbf.DBFField;
+import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.ui.ImageProvider;
 
@@ -130,7 +130,7 @@ public class ImportShapeWizardPage extends WizardPage
         public void selectionChanged( final SelectionChangedEvent event )
         {
           final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-          final DBFField field = (DBFField) selection.getFirstElement();
+          final IDBFField field = (IDBFField) selection.getFirstElement();
           control.setData( DATA_PROPERTY, field.getName() );
           validatePage();
         }
@@ -148,14 +148,14 @@ public class ImportShapeWizardPage extends WizardPage
 
     // FIXME: introduce '<none selected>' entry; page is only complete, if all entries have been selected
 
-    final DBFField[] fields;
+    final IDBFField[] fields;
     if( file != null && file.exists() )
     {
       fields = readFields( file );
     }
     else
     {
-      fields = new DBFField[0];
+      fields = new IDBFField[0];
     }
 
     for( final ComboViewer viewer : m_propertyViewers.values() )
@@ -168,7 +168,7 @@ public class ImportShapeWizardPage extends WizardPage
     }
   }
 
-  private DBFField[] readFields( final File file )
+  private IDBFField[] readFields( final File file )
   {
     ShapeFile shape = null;
     try
@@ -178,7 +178,7 @@ public class ImportShapeWizardPage extends WizardPage
 
       final String shapeBase = FilenameUtils.removeExtension( file.getAbsolutePath() );
       shape = new ShapeFile( shapeBase, ShapeSerializer.getShapeDefaultCharset(), FileMode.READ );
-      final DBFField[] fields = shape.getFields();
+      final IDBFField[] fields = shape.getFields();
       shape.close();
       return fields;
     }

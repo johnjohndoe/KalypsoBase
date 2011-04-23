@@ -105,7 +105,7 @@ public class DBaseFileTest extends Assert
   {
     try
     {
-      final DBFField field = new DBFField( name, type, length, precision );
+      final IDBFField field = new DBFField( name, type, length, precision );
       fail( "Field with wrong arguments was created: " + field );
     }
     catch( final DBaseException e )
@@ -118,7 +118,7 @@ public class DBaseFileTest extends Assert
   {
     final File dbfFile = m_tmpFiles.create( "dbaseTest-writeEmpty", ".dbf" );
 
-    final DBFField[] fields = createAllFields();
+    final IDBFField[] fields = createAllFields();
 
     final Charset charset = Charset.forName( "ISO-8859-1" );
 
@@ -130,13 +130,13 @@ public class DBaseFileTest extends Assert
     final int recordNum = dBaseFile.getNumRecords();
     assertEquals( 0, recordNum );
 
-    final DBFField[] readFields = dBaseFile.getFields();
+    final IDBFField[] readFields = dBaseFile.getFields();
     assertEquals( fields.length, readFields.length );
 
     for( int i = 0; i < readFields.length; i++ )
     {
-      final DBFField orgField = fields[i];
-      final DBFField readField = readFields[i];
+      final IDBFField orgField = fields[i];
+      final IDBFField readField = readFields[i];
 
       assertEquals( orgField.getName(), readField.getName() );
       assertEquals( orgField.getLength(), readField.getLength() );
@@ -145,9 +145,9 @@ public class DBaseFileTest extends Assert
     }
   }
 
-  private DBFField[] createAllFields( ) throws DBaseException
+  private IDBFField[] createAllFields( ) throws DBaseException
   {
-    final DBFField[] fields = new DBFField[7];
+    final IDBFField[] fields = new IDBFField[7];
 
     fields[0] = new DBFField( "shortString", FieldType.C, (byte) 10, (byte) 0 );
     fields[1] = new DBFField( "longString", FieldType.C, (byte) 100, (byte) 0 );
@@ -168,7 +168,7 @@ public class DBaseFileTest extends Assert
   public void writeReadData( ) throws DBaseException, IOException
   {
     final File dbfFile = m_tmpFiles.create( "dbaseTest-writeData", ".dbf" );
-    final DBFField[] fields = createAllFields();
+    final IDBFField[] fields = createAllFields();
 
     final Charset charset = Charset.forName( "UTF-8" );
     final DBaseFile dBaseFile = DBaseFile.create( dbfFile, fields, charset );

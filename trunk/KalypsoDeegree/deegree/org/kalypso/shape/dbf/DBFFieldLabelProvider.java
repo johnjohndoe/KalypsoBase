@@ -62,8 +62,8 @@ public class DBFFieldLabelProvider extends LabelProvider
   @Override
   public String getText( Object element )
   {
-    if( element instanceof DBFField )
-      return ((DBFField) element).getName();
+    if( element instanceof IDBFField )
+      return ((IDBFField) element).getName();
 
     return super.getText( element );
   }

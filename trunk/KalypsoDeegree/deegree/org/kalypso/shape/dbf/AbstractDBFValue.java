@@ -45,11 +45,11 @@ package org.kalypso.shape.dbf;
  */
 public abstract class AbstractDBFValue implements IDBFValue
 {
-  private final DBFField m_field;
+  private final IDBFField m_field;
 
   private final String m_label;
 
-  public AbstractDBFValue( final String label, final DBFField field )
+  public AbstractDBFValue( final String label, final IDBFField field )
   {
     m_field = field;
     m_label = label;
@@ -59,7 +59,7 @@ public abstract class AbstractDBFValue implements IDBFValue
    * @see org.kalypso.model.wspm.tuhh.ui.export.shape.IDBFValue#getField()
    */
   @Override
-  public DBFField getField( )
+  public IDBFField getField( )
   {
     return m_field;
   }

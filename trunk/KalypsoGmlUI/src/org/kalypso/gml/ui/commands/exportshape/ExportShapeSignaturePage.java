@@ -60,7 +60,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.ShapeType;
+import org.kalypso.shape.dbf.IDBFField;
+import org.kalypso.shape.dbf.IDBFValue;
 
 /**
  * @author Gernot Belger
@@ -155,21 +158,40 @@ public class ExportShapeSignaturePage extends WizardPage
 
     final TableViewerColumn nameColumn = new TableViewerColumn( tableViewer, SWT.LEFT );
 
-    nameColumn.setLabelProvider( new FieldNameLabelProvider() );
+    final IFieldProvider fieldProvider = new IFieldProvider()
+    {
+      @Override
+      public IDBFField getField( final Object element )
+      {
+        try
+        {
+          if( element instanceof IDBFValue )
+            return ((IDBFValue) element).getField();
+        }
+        catch( final ShapeDataException e )
+        {
+          e.printStackTrace();
+        }
+
+        return null;
+      }
+    };
+
+    nameColumn.setLabelProvider( new FieldNameLabelProvider( fieldProvider ) );
     nameColumn.getColumn().setText( "Field Name" );
     nameColumn.getColumn().setWidth( 100 );
     nameColumn.setEditingSupport( new FieldNameEditingSupport( tableViewer ) );
 
     final TableViewerColumn typeColumn = new TableViewerColumn( tableViewer, SWT.LEFT );
-    typeColumn.setLabelProvider( new FieldTypeLabelProvider() );
+    typeColumn.setLabelProvider( new FieldTypeLabelProvider( fieldProvider ) );
     typeColumn.getColumn().setText( "Field Type" );
 
     final TableViewerColumn lengthColumn = new TableViewerColumn( tableViewer, SWT.LEFT );
-    lengthColumn.setLabelProvider( new FieldLengthLabelProvider() );
+    lengthColumn.setLabelProvider( new FieldLengthLabelProvider( fieldProvider ) );
     lengthColumn.getColumn().setText( "Field Length" );
 
     final TableViewerColumn decimalColumn = new TableViewerColumn( tableViewer, SWT.LEFT );
-    decimalColumn.setLabelProvider( new FieldDecimalsLabelProvider() );
+    decimalColumn.setLabelProvider( new FieldDecimalsLabelProvider( fieldProvider ) );
     decimalColumn.getColumn().setText( "Field Decimals" );
 
     final TableViewerColumn sourceColumn = new TableViewerColumn( tableViewer, SWT.LEFT );

@@ -48,8 +48,8 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.shp.SHPException;
@@ -82,7 +82,7 @@ public class ShapeWriter
     final Charset charset = m_data.getCharset();
     final ShapeType shapeType = m_data.getShapeType();
     final IDBFValue[] fields = m_data.getFields();
-    final DBFField[] dbfFields = new DBFField[fields.length];
+    final IDBFField[] dbfFields = new IDBFField[fields.length];
     for( int i = 0; i < fields.length; i++ )
       dbfFields[i] = fields[i].getField();
 

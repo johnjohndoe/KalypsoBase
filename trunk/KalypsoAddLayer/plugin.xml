@@ -143,5 +143,14 @@
 			<command commandId="org.kalypso.ui.map.outline.command.AddTheme" style="push"/>
 		</menuContribution>
 	</extension>
+ <extension
+       point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension
+          targetID="org.kalypso.ui.perspectives.ModelerPerspectiveFactory">
+       <newWizardShortcut
+             id="org.kalypso.ui.createGisMapView.CreateGisMapViewWizard">
+       </newWizardShortcut>
+    </perspectiveExtension>
+ </extension>
    
 </plugin>

@@ -247,5 +247,34 @@
              </with>
           </definition>
     </extension>
+    <extension
+          point="org.eclipse.ui.newWizards">
+       <wizard
+             canFinishEarly="false"
+             category="org.kalypso.ui.newwizards.kalypso"
+             class="org.kalypso.gml.ui.internal.shape.ShapeFileNewWizard"
+             hasPages="true"
+             icon="icons/obj16/file_shp.gif"
+             id="org.kalypso.gml.ui.shape.ShapeFileNewWizard"
+             name="Shape File">
+            <description>Creates a new shape file</description>
+            <selection class="org.eclipse.core.resources.IResource" />
+       </wizard>
+    </extension>
+    <extension
+          point="org.eclipse.ui.perspectiveExtensions">
+       <perspectiveExtension
+             targetID="org.kalypso.ui.perspectives.ModelerPerspectiveFactory">
+          <newWizardShortcut
+                id="org.kalypso.gml.ui.shape.ShapeFileNewWizard">
+          </newWizardShortcut>
+       </perspectiveExtension>
+       <perspectiveExtension
+             targetID="org.kalypso.model.wspm.ui.product.WspmPerspectiveFactory">
+          <newWizardShortcut
+                id="org.kalypso.gml.ui.shape.ShapeFileNewWizard">
+          </newWizardShortcut>
+       </perspectiveExtension>
+    </extension>
 
 </plugin>

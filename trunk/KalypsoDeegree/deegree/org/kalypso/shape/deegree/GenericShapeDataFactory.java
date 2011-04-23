@@ -60,6 +60,7 @@ import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
+import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -102,7 +103,7 @@ public class GenericShapeDataFactory
     {
       try
       {
-        final DBFField field = findField( element );
+        final IDBFField field = findField( element );
         if( field != null )
         {
           final QName qName = element.getQName();
@@ -120,7 +121,7 @@ public class GenericShapeDataFactory
     return fields.toArray( new IDBFValue[fields.size()] );
   }
 
-  private static DBFField findField( final IPropertyType property ) throws DBaseException
+  private static IDBFField findField( final IPropertyType property ) throws DBaseException
   {
     if( !(property instanceof IValuePropertyType) )
       return null;
