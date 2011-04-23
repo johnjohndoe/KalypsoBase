@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.dbf;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
  * Supported data types of the dbase file.
@@ -99,7 +98,7 @@ public enum FieldType
   @Override
   public String toString( )
   {
-    return ToStringBuilder.reflectionToString( this );
+    return getDescription();
   }
 
   public boolean isSupportDecimal( )
