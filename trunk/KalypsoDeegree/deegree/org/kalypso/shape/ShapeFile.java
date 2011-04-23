@@ -64,6 +64,12 @@ import org.kalypso.shape.shx.SHXRecord;
  */
 public class ShapeFile
 {
+  public static final String EXTENSION_DBF = ".dbf";
+
+  public static final String EXTENSION_SHX = ".shx";
+
+  public static final String EXTENSION_SHP = ".shp";
+
   private final String m_filePath;
 
   private final DBaseFile m_dbf;
@@ -82,9 +88,9 @@ public class ShapeFile
    */
   public static ShapeFile create( final String basePath, final ShapeType shapeType, final Charset charset, final DBFField[] fields ) throws IOException, DBaseException
   {
-    SHPFile.create( new File( basePath + ".shp" ), shapeType ).close();
-    SHXFile.create( new File( basePath + ".shx" ), shapeType ).close();
-    DBaseFile.create( new File( basePath + ".dbf" ), fields, charset ).close();
+    SHPFile.create( new File( basePath + EXTENSION_SHP ), shapeType ).close();
+    SHXFile.create( new File( basePath + EXTENSION_SHX ), shapeType ).close();
+    DBaseFile.create( new File( basePath + EXTENSION_DBF ), fields, charset ).close();
 
     return new ShapeFile( basePath, charset, FileMode.WRITE );
   }
@@ -99,9 +105,9 @@ public class ShapeFile
   {
     m_filePath = filePath;
 
-    m_shp = new SHPFile( new File( filePath + ".shp" ), mode );
-    m_shx = new SHXFile( new File( filePath + ".shx" ), mode );
-    m_dbf = new DBaseFile( new File( filePath + ".dbf" ), mode, charset );
+    m_shp = new SHPFile( new File( filePath + EXTENSION_SHP ), mode );
+    m_shx = new SHXFile( new File( filePath + EXTENSION_SHX ), mode );
+    m_dbf = new DBaseFile( new File( filePath + EXTENSION_DBF ), mode, charset );
 // m_rti = initRTreeFile( filePath + ".rti" );
   }
 
