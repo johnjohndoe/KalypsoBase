@@ -39,9 +39,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.DBaseFile;
+import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.SHPEnvelope;
 import org.kalypso.shape.shp.SHPException;
@@ -86,7 +86,7 @@ public class ShapeFile
   /**
    * Create a new shape file and opens it for writing.<br>
    */
-  public static ShapeFile create( final String basePath, final ShapeType shapeType, final Charset charset, final DBFField[] fields ) throws IOException, DBaseException
+  public static ShapeFile create( final String basePath, final ShapeType shapeType, final Charset charset, final IDBFField[] fields ) throws IOException, DBaseException
   {
     SHPFile.create( new File( basePath + EXTENSION_SHP ), shapeType ).close();
     SHXFile.create( new File( basePath + EXTENSION_SHX ), shapeType ).close();
@@ -197,7 +197,7 @@ public class ShapeFile
     return m_dbf.getRecord( rowNo );
   }
 
-  public DBFField[] getFields( )
+  public IDBFField[] getFields( )
   {
     return m_dbf.getFields();
   }
