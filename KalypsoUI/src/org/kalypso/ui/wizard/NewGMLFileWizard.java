@@ -76,7 +76,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class NewGMLFileWizard extends Wizard implements INewWizard
 {
-  public static final String WIZARD_ID = "org.kalypso.ui.wizard.NewGMLFileWizard";
+  public static final String WIZARD_ID = "org.kalypso.ui.wizard.NewGMLFileWizard"; //$NON-NLS-1$
 
   private GMLSchemaSelectionPage m_schemaSelectionPage;
 
