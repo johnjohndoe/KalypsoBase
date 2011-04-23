@@ -4,31 +4,24 @@ import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.property.value.IValueProperty;
-import org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
+import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Gernot Belger
  */
-public class ComboViewerEditingSupport extends ObservableValueEditingSupport
+public class ComboViewerEditingSupport extends ObservableValidatingEditingSupport
 {
-  private final ComboBoxViewerCellEditor m_cellEditor;
-
-  private final IValueProperty m_property;
-
   private IValueChangeListener m_changeListener;
 
   public ComboViewerEditingSupport( final ColumnViewer viewer, final DataBindingContext dbc, final IValueProperty property, final int style )
   {
-    super( viewer, dbc );
-
-    m_property = property;
-    m_cellEditor = new ComboBoxViewerCellEditor( (Composite) viewer.getControl(), style );
+    super( viewer, dbc, property, new ComboBoxViewerCellEditor( (Composite) viewer.getControl(), style ) );
   }
 
   /**
@@ -36,18 +29,9 @@ public class ComboViewerEditingSupport extends ObservableValueEditingSupport
    *          (Optional) listener. If set to non-<code>null</code>, this listener will be informed about value changes
    *          comming from this editor.
    */
-  public void setValueChangeListener( IValueChangeListener changeListener )
+  public void setValueChangeListener( final IValueChangeListener changeListener )
   {
     m_changeListener = changeListener;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
-   */
-  @Override
-  public ComboBoxViewerCellEditor getCellEditor( final Object element )
-  {
-    return m_cellEditor;
   }
 
   /**
@@ -56,7 +40,7 @@ public class ComboViewerEditingSupport extends ObservableValueEditingSupport
   @Override
   protected IObservableValue doCreateCellEditorObservable( final CellEditor cellEditor )
   {
-    return ViewerProperties.singleSelection().observe( m_cellEditor.getViewer() );
+    return ViewerProperties.singleSelection().observe( ((ComboBoxViewerCellEditor) cellEditor).getViewer() );
   }
 
   /**
@@ -66,9 +50,14 @@ public class ComboViewerEditingSupport extends ObservableValueEditingSupport
   @Override
   protected IObservableValue doCreateElementObservable( final Object element, final ViewerCell cell )
   {
-    IObservableValue observe = m_property.observe( element );
+    final IObservableValue observe = super.doCreateElementObservable( element, cell );
     if( m_changeListener != null )
       observe.addValueChangeListener( m_changeListener );
     return observe;
+  }
+
+  public ComboViewer getComboViewer( )
+  {
+    return ((ComboBoxViewerCellEditor) getCellEditor( null )).getViewer();
   }
 }
