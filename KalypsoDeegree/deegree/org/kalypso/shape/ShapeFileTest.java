@@ -52,6 +52,7 @@ import org.junit.Test;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
+import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.SHPNullShape;
 import org.kalypso.shape.geometry.SHPPoint;
@@ -74,7 +75,7 @@ public class ShapeFileTest extends Assert
     final String basePath = file.getAbsolutePath();
 
     final Charset charset = Charset.forName( "UTF-8" );
-    final DBFField[] fields = createFields();
+    final IDBFField[] fields = createFields();
     final ShapeFile shapeFile = ShapeFile.create( basePath, ShapeType.POLYGON, charset, fields );
     shapeFile.close();
 
@@ -96,9 +97,9 @@ public class ShapeFileTest extends Assert
     return files;
   }
 
-  private DBFField[] createFields( ) throws DBaseException
+  private IDBFField[] createFields( ) throws DBaseException
   {
-    final DBFField[] fields = new DBFField[2];
+    final IDBFField[] fields = new IDBFField[2];
     fields[0] = new DBFField( "text", FieldType.C, (byte) 10, (byte) 0 );
     fields[1] = new DBFField( "number", FieldType.N, (byte) 5, (byte) 0 );
     return fields;
@@ -111,7 +112,7 @@ public class ShapeFileTest extends Assert
     final String basePath = file.getAbsolutePath();
 
     final Charset charset = Charset.forName( "UTF-8" );
-    final DBFField[] fields = createFields();
+    final IDBFField[] fields = createFields();
     final ShapeFile shapeFile = ShapeFile.create( basePath, ShapeType.POLYLINE, charset, fields );
 
     final File[] shpFiles = createFiles( basePath );

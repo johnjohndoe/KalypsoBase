@@ -38,41 +38,43 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.commands.exportshape;
+package org.kalypso.gml.ui.internal.shape;
 
-import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.IDBFValue;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.databinding.validation.TypedValidator;
 
 /**
- * @author Gernot
+ * @author Gernot Belger
  */
-public class FieldTypeLabelProvider extends FieldLabelProvider
+public class PathIsProjectValidator extends TypedValidator<IPath>
 {
-  public FieldTypeLabelProvider( )
+  private static final String DEFAULT_MESSAGE = "Path too short";
+
+  public PathIsProjectValidator( final int severity )
   {
+    this( severity, DEFAULT_MESSAGE );
   }
 
-  public FieldTypeLabelProvider( final IFieldProvider provider )
+  public PathIsProjectValidator( final int severity, final String message )
   {
-    super( provider );
+    super( IPath.class, severity, message );
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+   * @see org.kalypso.gml.ui.internal.shape.TypedValidator#doValidate(java.lang.Object)
    */
   @Override
-  public String getText( final Object element )
+  protected IStatus doValidate( final IPath value ) throws CoreException
   {
-    try
-    {
-      final IDBFValue value = (IDBFValue) element;
-      return value.getField().getType().getDescription();
-    }
-    catch( final ShapeDataException e )
-    {
-      e.printStackTrace();
-      return e.getLocalizedMessage();
-    }
-  }
+    if( value == null )
+      return Status.OK_STATUS;
 
+    if( value.segmentCount() < 2 )
+      fail();
+
+    return Status.OK_STATUS;
+  }
 }

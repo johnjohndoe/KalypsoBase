@@ -78,7 +78,7 @@ public class DBaseFile
 //
 // private long m_cachePosition = 0;
 
-  public static DBaseFile create( final File file, final DBFField[] fields, final Charset charset ) throws IOException, DBaseException
+  public static DBaseFile create( final File file, final IDBFField[] fields, final Charset charset ) throws IOException, DBaseException
   {
     if( file.isFile() && file.exists() )
       file.delete();
@@ -123,7 +123,7 @@ public class DBaseFile
     return m_numRecords;
   }
 
-  public DBFField[] getFields( )
+  public IDBFField[] getFields( )
   {
     return m_header.getFields().getFields();
   }
@@ -154,10 +154,10 @@ public class DBaseFile
 
   public int getIndex( String field )
   {
-    DBFField[] fields = getFields();
+    IDBFField[] fields = getFields();
     for( int i = 0; i < fields.length; i++ )
     {
-      DBFField dbfField = fields[i];
+      IDBFField dbfField = fields[i];
       if( dbfField.getName().equalsIgnoreCase( field ) )
         return i;
     }
@@ -263,7 +263,7 @@ public class DBaseFile
    */
   public int findFieldIndex( final String fieldName )
   {
-    final DBFField[] fields = getFields();
+    final IDBFField[] fields = getFields();
     for( int i = 0; i < fields.length; i++ )
     {
       if( fieldName.equals( fields[i].getName() ) )

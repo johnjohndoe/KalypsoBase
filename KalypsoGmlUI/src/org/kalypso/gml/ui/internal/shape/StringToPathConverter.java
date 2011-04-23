@@ -38,41 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.commands.exportshape;
+package org.kalypso.gml.ui.internal.shape;
 
-import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.IDBFValue;
+import org.eclipse.core.databinding.conversion.IConverter;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 /**
- * @author Gernot
+ * @author Gernot Belger
  */
-public class FieldTypeLabelProvider extends FieldLabelProvider
+public class StringToPathConverter implements IConverter
 {
-  public FieldTypeLabelProvider( )
+  /**
+   * @see org.eclipse.core.databinding.conversion.IConverter#getFromType()
+   */
+  @Override
+  public Object getFromType( )
   {
-  }
-
-  public FieldTypeLabelProvider( final IFieldProvider provider )
-  {
-    super( provider );
+    return String.class;
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+   * @see org.eclipse.core.databinding.conversion.IConverter#getToType()
    */
   @Override
-  public String getText( final Object element )
+  public Object getToType( )
   {
-    try
-    {
-      final IDBFValue value = (IDBFValue) element;
-      return value.getField().getType().getDescription();
-    }
-    catch( final ShapeDataException e )
-    {
-      e.printStackTrace();
-      return e.getLocalizedMessage();
-    }
+    return IPath.class;
   }
 
+  /**
+   * @see org.eclipse.core.databinding.conversion.IConverter#convert(java.lang.Object)
+   */
+  @Override
+  public Object convert( final Object fromObject )
+  {
+    if( fromObject instanceof String )
+      return new Path( (String) fromObject );
+
+    return null;
+  }
 }

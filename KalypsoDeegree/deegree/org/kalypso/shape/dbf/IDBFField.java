@@ -38,41 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.commands.exportshape;
+package org.kalypso.shape.dbf;
 
-import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.IDBFValue;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
- * @author Gernot
+ * @author Gernot Belger
  */
-public class FieldTypeLabelProvider extends FieldLabelProvider
+public interface IDBFField
 {
-  public FieldTypeLabelProvider( )
-  {
-  }
+  String getName( );
 
-  public FieldTypeLabelProvider( final IFieldProvider provider )
-  {
-    super( provider );
-  }
+  short getLength( );
 
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-   */
-  @Override
-  public String getText( final Object element )
-  {
-    try
-    {
-      final IDBFValue value = (IDBFValue) element;
-      return value.getField().getType().getDescription();
-    }
-    catch( final ShapeDataException e )
-    {
-      e.printStackTrace();
-      return e.getLocalizedMessage();
-    }
-  }
+  FieldType getType( );
 
+  short getDecimalCount( );
+
+  byte[] writeValue( final DataOutput output, final Object value, final Charset charset ) throws DBaseException, IOException;
+
+  Object readValue( final DataInput input, final Charset charset ) throws IOException, DBaseException;
+
+  void write( final DataOutput output, final Charset charset ) throws IOException;
 }

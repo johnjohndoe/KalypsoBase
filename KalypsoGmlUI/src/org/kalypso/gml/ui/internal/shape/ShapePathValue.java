@@ -38,49 +38,67 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.io.shpapi.dataprovider;
+package org.kalypso.gml.ui.internal.shape;
 
-import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.IDBFField;
-import org.kalypso.shape.dbf.IDBFValue;
-import org.kalypsodeegree.model.feature.Feature;
+import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.core.databinding.observable.Diffs;
+import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
+import org.eclipse.core.databinding.observable.value.ValueDiff;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
+import org.kalypso.commons.resources.FileUtilities;
 
-public class TinValue implements IDBFValue
+/**
+ * @author Gernot Belger
+ *
+ */
+public class ShapePathValue extends AbstractObservableValue
 {
-  private final IDBFValue m_delegate;
+  private final ShapeFileNewData m_input;
 
-  public TinValue( final IDBFValue delegate )
+  public ShapePathValue( final ShapeFileNewData input )
   {
-    m_delegate = delegate;
+    m_input = input;
   }
 
   /**
-   * @see org.kalypso.shape.dbf.IDBFValue#getField()
+   * @see org.eclipse.core.databinding.observable.value.IObservableValue#getValueType()
    */
   @Override
-  public IDBFField getField( ) throws ShapeDataException
+  public Object getValueType( )
   {
-    return m_delegate.getField();
+    return IPath.class;
   }
 
   /**
-   * @see org.kalypso.shape.dbf.IDBFValue#getValue(java.lang.Object)
+   * @see org.eclipse.core.databinding.observable.value.AbstractObservableValue#doSetValue(java.lang.Object)
    */
   @Override
-  public Object getValue( final Object element ) throws ShapeDataException
+  protected void doSetValue( final Object value )
   {
-    final TinPointer pointer = (TinPointer) element;
-    final Feature feature = pointer.getFeature();
-    return m_delegate.getValue( feature );
+    final IPath currentValue = doGetValue();
+    final IPath path = (IPath) value;
+
+    if( ObjectUtils.equals( path, currentValue ) )
+      return;
+
+    final IFile toFile = FileUtilities.toFile( path );
+    m_input.setShapeFile( toFile );
+
+    final ValueDiff diff = Diffs.createValueDiff( currentValue, path );
+    fireValueChange( diff );
   }
 
   /**
-   * @see org.kalypso.shape.dbf.IDBFValue#getLabel()
+   * @see org.eclipse.core.databinding.observable.value.AbstractObservableValue#doGetValue()
    */
   @Override
-  public String getLabel( )
+  protected IPath doGetValue( )
   {
-    return m_delegate.getLabel();
-  }
+    final IFile shpFile = m_input.getShpFile();
+    if( shpFile == null )
+      return null;
 
+    return shpFile.getFullPath();
+  }
 }

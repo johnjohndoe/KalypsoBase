@@ -38,41 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.commands.exportshape;
+package org.kalypso.gml.ui;
 
-import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.IDBFValue;
+import org.kalypso.gml.ui.internal.shape.ShapeFileNewWizard;
 
 /**
- * @author Gernot
+ * @author Gernot Belger
  */
-public class FieldTypeLabelProvider extends FieldLabelProvider
+public interface KalypsoGmlUIConsts
 {
-  public FieldTypeLabelProvider( )
-  {
-  }
-
-  public FieldTypeLabelProvider( final IFieldProvider provider )
-  {
-    super( provider );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-   */
-  @Override
-  public String getText( final Object element )
-  {
-    try
-    {
-      final IDBFValue value = (IDBFValue) element;
-      return value.getField().getType().getDescription();
-    }
-    catch( final ShapeDataException e )
-    {
-      e.printStackTrace();
-      return e.getLocalizedMessage();
-    }
-  }
-
+  String SHAPE_FILE_NEW_WIZARD = ShapeFileNewWizard.WIZARD_ID;
 }

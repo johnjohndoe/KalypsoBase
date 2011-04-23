@@ -41,7 +41,7 @@
 package org.kalypso.shape.deegree;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.shape.dbf.DBFField;
+import org.kalypso.shape.dbf.IDBFField;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
@@ -50,7 +50,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  */
 public class FeatureNameValue extends FeatureValue
 {
-  public FeatureNameValue( final IFeatureType type, final DBFField field )
+  public FeatureNameValue( final IFeatureType type, final IDBFField field )
   {
     super( type, field, new GMLXPath( Feature.QN_NAME ) );
   }

@@ -38,40 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.commands.exportshape;
+package org.kalypso.gml.ui.internal.shape;
 
-import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.IDBFValue;
+import org.eclipse.core.databinding.observable.list.IObservableList;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
+import org.kalypso.gml.ui.KalypsoGmlUiImages;
+import org.kalypso.shape.dbf.DBFField;
+import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.dbf.FieldType;
 
 /**
- * @author Gernot
+ * @author Gernot Belger
+ *
  */
-public class FieldTypeLabelProvider extends FieldLabelProvider
+public class AddFieldAction extends Action
 {
-  public FieldTypeLabelProvider( )
-  {
-  }
+  private final IObservableList m_fieldList;
 
-  public FieldTypeLabelProvider( final IFieldProvider provider )
+  public AddFieldAction( final IObservableList fieldList )
   {
-    super( provider );
+    super( "Add Attribute" );
+
+    final ImageDescriptor image = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.SHAPE_FILE_NEW_ADD_FIELD );
+    setImageDescriptor( image );
+
+    setToolTipText( "Adds a new attribute to the shape file." );
+
+    m_fieldList = fieldList;
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+   * @see org.eclipse.jface.action.Action#run()
    */
   @Override
-  public String getText( final Object element )
+  public void run( )
   {
     try
     {
-      final IDBFValue value = (IDBFValue) element;
-      return value.getField().getType().getDescription();
+      m_fieldList.add( new DBFFieldBean( new DBFField( "Value" + m_fieldList.size(), FieldType.N, (short) 20, (short) 10 ) ) );
     }
-    catch( final ShapeDataException e )
+    catch( final DBaseException e )
     {
       e.printStackTrace();
-      return e.getLocalizedMessage();
     }
   }
 

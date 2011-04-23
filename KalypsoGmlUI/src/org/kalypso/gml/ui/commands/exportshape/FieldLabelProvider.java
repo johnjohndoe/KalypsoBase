@@ -40,39 +40,41 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.commands.exportshape;
 
-import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.IDBFValue;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.kalypso.shape.dbf.IDBFField;
 
 /**
- * @author Gernot
+ * @author Gernot Belger
+ *
  */
-public class FieldTypeLabelProvider extends FieldLabelProvider
+public class FieldLabelProvider extends ColumnLabelProvider
 {
-  public FieldTypeLabelProvider( )
+  static final IFieldProvider DEFAULT_PROVIDER = new IFieldProvider()
   {
-  }
-
-  public FieldTypeLabelProvider( final IFieldProvider provider )
-  {
-    super( provider );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-   */
-  @Override
-  public String getText( final Object element )
-  {
-    try
+    @Override
+    public IDBFField getField( final Object element )
     {
-      final IDBFValue value = (IDBFValue) element;
-      return value.getField().getType().getDescription();
+      if( element instanceof IDBFField )
+        return (IDBFField) element;
+
+      return null;
     }
-    catch( final ShapeDataException e )
-    {
-      e.printStackTrace();
-      return e.getLocalizedMessage();
-    }
+  };
+
+  private final IFieldProvider m_provider;
+
+  public FieldLabelProvider( )
+  {
+    this( DEFAULT_PROVIDER );
   }
 
+  public FieldLabelProvider( final IFieldProvider provider )
+  {
+    m_provider = provider;
+  }
+
+  protected IDBFField getField( final Object element )
+  {
+    return m_provider.getField( element );
+  }
 }

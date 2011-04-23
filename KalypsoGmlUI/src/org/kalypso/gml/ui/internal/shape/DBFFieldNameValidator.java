@@ -38,41 +38,39 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.commands.exportshape;
+package org.kalypso.gml.ui.internal.shape;
 
-import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.IDBFValue;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.shape.dbf.DBaseException;
 
 /**
- * @author Gernot
+ * @author Gernot Belger
  */
-public class FieldTypeLabelProvider extends FieldLabelProvider
+public class DBFFieldNameValidator implements IValidator
 {
-  public FieldTypeLabelProvider( )
+  private final DBFFieldBean m_field;
+
+  public DBFFieldNameValidator( final DBFFieldBean field )
   {
+    m_field = field.copy();
   }
 
-  public FieldTypeLabelProvider( final IFieldProvider provider )
-  {
-    super( provider );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-   */
   @Override
-  public String getText( final Object element )
+  public IStatus validate( final Object value )
   {
+    if( !(value instanceof String) )
+      return ValidationStatus.error( "'Name' must be a string" );
+
     try
     {
-      final IDBFValue value = (IDBFValue) element;
-      return value.getField().getType().getDescription();
+      m_field.setName( (String) value );
+      return ValidationStatus.ok();
     }
-    catch( final ShapeDataException e )
+    catch( final DBaseException e )
     {
-      e.printStackTrace();
-      return e.getLocalizedMessage();
+      return ValidationStatus.error( e.getLocalizedMessage(), e );
     }
   }
-
 }

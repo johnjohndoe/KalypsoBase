@@ -38,41 +38,42 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.commands.exportshape;
+package org.kalypso.gml.ui.internal.shape;
 
-import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.IDBFValue;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.databinding.swt.WidgetValueProperty;
 
 /**
- * @author Gernot
+ * @author Gernot Belger
  */
-public class FieldTypeLabelProvider extends FieldLabelProvider
+public class PathButtonProperty extends WidgetValueProperty
 {
-  public FieldTypeLabelProvider( )
+  /**
+   * @see org.eclipse.core.databinding.property.value.IValueProperty#getValueType()
+   */
+  @Override
+  public Object getValueType( )
   {
-  }
-
-  public FieldTypeLabelProvider( final IFieldProvider provider )
-  {
-    super( provider );
+    return IPath.class;
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+   * @see org.eclipse.core.databinding.property.value.SimpleValueProperty#doGetValue(java.lang.Object)
    */
   @Override
-  public String getText( final Object element )
+  protected Object doGetValue( final Object source )
   {
-    try
-    {
-      final IDBFValue value = (IDBFValue) element;
-      return value.getField().getType().getDescription();
-    }
-    catch( final ShapeDataException e )
-    {
-      e.printStackTrace();
-      return e.getLocalizedMessage();
-    }
+    return null;
+  }
+
+  /**
+   * @see org.eclipse.core.databinding.property.value.SimpleValueProperty#doSetValue(java.lang.Object, java.lang.Object)
+   */
+  @Override
+  protected void doSetValue( final Object source, final Object value )
+  {
+    // TODO Auto-generated method stub
+
   }
 
 }

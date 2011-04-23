@@ -47,7 +47,7 @@ import org.kalypso.shape.ShapeDataException;
  */
 public interface IDBFValue
 {
-  DBFField getField( ) throws ShapeDataException;
+  IDBFField getField( ) throws ShapeDataException;
 
   Object getValue( Object element ) throws ShapeDataException;
 

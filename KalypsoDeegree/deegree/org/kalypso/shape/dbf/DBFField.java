@@ -42,13 +42,14 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.shape.tools.DataUtils;
 
 /**
  * Class representing a field descriptor of a dBase III/IV file <br>
  * Original Author: Andreas Poth
  */
-public class DBFField
+public class DBFField implements IDBFField
 {
   private static final int MAX_COLUMN_NAME_LENGTH = 11;
 
@@ -74,26 +75,53 @@ public class DBFField
     m_decimalCount = decimalCount;
     m_formatter = createFormatter( type, fieldLength, decimalCount );
 
+    checkParameters();
+  }
+
+  private void checkParameters( ) throws DBaseException
+  {
+    checkName();
+    checkFieldLength();
+    checkDecimalCount();
+    checkDependencies();
+  }
+
+  private void checkName( ) throws DBaseException
+  {
+    if( StringUtils.isBlank( m_name ) )
+      throw new DBaseException( "'Name' must not be blank." );
+
+    if( StringUtils.length( m_name ) > 11 )
+      throw new DBaseException( "'Name' must not be longer than 11 characters." );
+  }
+
+  private void checkFieldLength( ) throws DBaseException
+  {
+    if( m_fieldLength < 0 || m_fieldLength > 255 )
+    {
+      final String msg = String.format( "Field length must not exceed 255 (is %d)", m_fieldLength );
+      throw new DBaseException( msg );
+    }
+  }
+
+  private void checkDecimalCount( ) throws DBaseException
+  {
+    // FIXME: somethings wrong here....
     if( m_decimalCount > 15 )
-      throw new DBaseException( "Deicmal count must be smaller than 16" );
-
-    /* Validate arguments */
-    if( fieldLength < 0 || fieldLength > 255 )
+      throw new DBaseException( "Decimal count must be smaller than 16" );
+    if( m_decimalCount < 0 || m_decimalCount > 255 )
     {
-      final String msg = String.format( "Field length must not exceed 255 (is %d)", fieldLength );
+      final String msg = String.format( "Decimal count  must not exceed 255 (is %d)", m_decimalCount );
       throw new DBaseException( msg );
     }
+  }
 
-    if( decimalCount < 0 || decimalCount > 255 )
-    {
-      final String msg = String.format( "Decimal count  must not exceed 255 (is %d)", decimalCount );
-      throw new DBaseException( msg );
-    }
-
-    final int fixedLength = type.getFixedLength();
-    final char typeName = type.getName();
-    final boolean supportsDecimal = type.isSupportDecimal();
-    if( fixedLength != -1 && fieldLength != fixedLength )
+  private void checkDependencies( ) throws DBaseException
+  {
+    final int fixedLength = m_type.getFixedLength();
+    final char typeName = m_type.getName();
+    final boolean supportsDecimal = m_type.isSupportDecimal();
+    if( fixedLength != -1 && m_fieldLength != fixedLength )
     {
       final String msg = String.format( "Datatype '%s' must have fieldLength = %d", typeName, fixedLength );
       throw new DBaseException( msg );
@@ -101,10 +129,10 @@ public class DBFField
 
     if( supportsDecimal )
     {
-      if( fieldLength - decimalCount < 2 )
+      if( m_fieldLength - m_decimalCount < 2 )
         throw new DBaseException( "Invalid fieldlength and/or decimalcount" );
     }
-    else if( decimalCount > 0 )
+    else if( m_decimalCount > 0 )
     {
       final String msg = String.format( "Datatype '%s' does not support decimals", typeName );
       throw new DBaseException( msg );
@@ -133,26 +161,87 @@ public class DBFField
     throw new IllegalArgumentException( "Unknow field: " + type );
   }
 
+  @Override
   public String getName( )
   {
     return m_name;
   }
 
+  /**
+   * Creates a new {@link DBFField} with the given name and all other parameters taken from the current instance.
+   */
+  public DBFField withName( final String name ) throws DBaseException
+  {
+    return new DBFField( name, m_type, m_fieldLength, m_decimalCount );
+  }
+
+  @Override
   public short getLength( )
   {
     return m_fieldLength;
   }
 
+  /**
+   * Creates a new {@link DBFField} with the given length and all other parameters taken from the current instance.
+   */
+  public DBFField withLength( final short length ) throws DBaseException
+  {
+    return new DBFField( m_name, m_type, length, m_decimalCount );
+  }
+
+  @Override
   public FieldType getType( )
   {
     return m_type;
   }
 
+  /**
+   * Creates a new {@link DBFField} with the given type and all other parameters taken from the current instance.<br/>
+   * Automatically changes length and decimal count if necessary.
+   */
+  public DBFField withType( final FieldType type ) throws DBaseException
+  {
+    switch( type )
+    {
+      case C:
+        return new DBFField( m_name, type, m_fieldLength, (short) 0 );
+
+      case D:
+        return new DBFField( m_name, type, (short) 8, (short) 0 );
+
+      case F:
+        return new DBFField( m_name, type, m_fieldLength, m_decimalCount );
+
+      case L:
+        return new DBFField( m_name, type, (short) 1, (short) 0 );
+
+      case M:
+        return new DBFField( m_name, type, (short) 10, (short) 0 );
+
+      case N:
+        return new DBFField( m_name, type, m_fieldLength, m_decimalCount );
+    }
+
+    // never reached
+    throw new IllegalArgumentException();
+  }
+
+  @Override
   public short getDecimalCount( )
   {
     return m_decimalCount;
   }
 
+  /**
+   * Creates a new {@link DBFField} with the given decimal count and all other parameters taken from the current
+   * instance.
+   */
+  public DBFField withDecimalCount( final short count ) throws DBaseException
+  {
+    return new DBFField( m_name, m_type, m_fieldLength, count );
+  }
+
+  @Override
   public byte[] writeValue( final DataOutput output, final Object value, final Charset charset ) throws DBaseException, IOException
   {
     final byte[] bytes = m_formatter.toBytes( value, charset );
@@ -167,6 +256,7 @@ public class DBFField
     return bytes;
   }
 
+  @Override
   public Object readValue( final DataInput input, final Charset charset ) throws IOException, DBaseException
   {
     final byte[] value = new byte[m_fieldLength];
@@ -176,7 +266,7 @@ public class DBFField
     return m_formatter.fromString( asString );
   }
 
-  public static DBFField read( final DataInput input, final Charset charset ) throws IOException, DBaseException
+  public static IDBFField read( final DataInput input, final Charset charset ) throws IOException, DBaseException
   {
     final byte[] columnNameBytes = new byte[MAX_COLUMN_NAME_LENGTH];
     input.readFully( columnNameBytes );
@@ -211,6 +301,7 @@ public class DBFField
     return MAX_COLUMN_NAME_LENGTH;
   }
 
+  @Override
   public void write( final DataOutput output, final Charset charset ) throws IOException
   {
     final byte[] bytes = new byte[32];

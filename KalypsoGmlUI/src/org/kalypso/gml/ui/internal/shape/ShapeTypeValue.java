@@ -38,41 +38,59 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.commands.exportshape;
+package org.kalypso.gml.ui.internal.shape;
 
-import org.kalypso.shape.ShapeDataException;
-import org.kalypso.shape.dbf.IDBFValue;
+import org.eclipse.core.databinding.observable.Diffs;
+import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
+import org.eclipse.core.databinding.observable.value.ValueDiff;
+import org.kalypso.shape.ShapeType;
 
 /**
- * @author Gernot
+ * @author Gernot Belger
+ *
  */
-public class FieldTypeLabelProvider extends FieldLabelProvider
+public class ShapeTypeValue extends AbstractObservableValue
 {
-  public FieldTypeLabelProvider( )
-  {
-  }
+  private final ShapeFileNewData m_input;
 
-  public FieldTypeLabelProvider( final IFieldProvider provider )
+  public ShapeTypeValue( final ShapeFileNewData input )
   {
-    super( provider );
+    m_input = input;
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+   * @see org.eclipse.core.databinding.observable.value.IObservableValue#getValueType()
    */
   @Override
-  public String getText( final Object element )
+  public Object getValueType( )
   {
-    try
-    {
-      final IDBFValue value = (IDBFValue) element;
-      return value.getField().getType().getDescription();
-    }
-    catch( final ShapeDataException e )
-    {
-      e.printStackTrace();
-      return e.getLocalizedMessage();
-    }
+    return ShapeType.class;
   }
 
+  /**
+   * @see org.eclipse.core.databinding.observable.value.AbstractObservableValue#doGetValue()
+   */
+  @Override
+  protected ShapeType doGetValue( )
+  {
+    return m_input.getType();
+  }
+
+  /**
+   * @see org.eclipse.core.databinding.observable.value.AbstractObservableValue#doSetValue(java.lang.Object)
+   */
+  @Override
+  protected void doSetValue( final Object value )
+  {
+    final ShapeType currentValue = doGetValue();
+    final ShapeType type = (ShapeType) value;
+
+    if( type == currentValue )
+      return;
+
+    m_input.setType( type );
+
+    final ValueDiff diff = Diffs.createValueDiff( currentValue, type );
+    fireValueChange( diff );
+  }
 }

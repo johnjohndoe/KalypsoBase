@@ -46,7 +46,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.dbf.AbstractDBFValue;
-import org.kalypso.shape.dbf.DBFField;
+import org.kalypso.shape.dbf.IDBFField;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
@@ -59,7 +59,7 @@ public class FeatureValue extends AbstractDBFValue
 {
   private final GMLXPath m_path;
 
-  public FeatureValue( final IFeatureType type, final DBFField field, final GMLXPath path )
+  public FeatureValue( final IFeatureType type, final IDBFField field, final GMLXPath path )
   {
     super( labelFromType( type, path ), field );
 
