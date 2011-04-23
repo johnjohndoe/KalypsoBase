@@ -99,7 +99,6 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   @Override
   public void dispose( )
   {
-
     if( m_profilChartModel != null )
       m_profilChartModel.dispose();
     super.dispose();
