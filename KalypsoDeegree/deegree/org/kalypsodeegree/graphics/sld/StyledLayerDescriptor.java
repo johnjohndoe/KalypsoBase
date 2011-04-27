@@ -49,6 +49,7 @@ import org.kalypsodeegree.xml.Marshallable;
  */
 public interface StyledLayerDescriptor extends Marshallable
 {
+  String ELEMENT_STYLEDLAYERDESCRIPTOR = "StyledLayerDescriptor"; //$NON-NLS-1$
 
   /**
    * @return the Layers as Array
