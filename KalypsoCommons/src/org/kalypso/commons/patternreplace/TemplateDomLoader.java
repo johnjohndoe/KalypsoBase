@@ -47,6 +47,7 @@ import java.net.URL;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
+import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Assert;
@@ -73,9 +74,9 @@ public class TemplateDomLoader
 {
   private static final String PROP_TEMPLATE_URI = "templateUri";
 
-  private final Properties m_properties = new Properties();
+  private final Properties m_templateProperties = new Properties();
 
-  private final TemplateInputReplacer m_replacer = new TemplateInputReplacer( m_properties );
+  private final TemplateInputReplacer m_replacer = new TemplateInputReplacer( m_templateProperties );
 
   private IFile m_templateFile = null;
 
@@ -85,7 +86,6 @@ public class TemplateDomLoader
   private URL m_realTemplateLocation;
 
   private String m_templateCharset;
-
 
   public TemplateDomLoader( final IFile templateFile )
   {
@@ -172,7 +172,14 @@ public class TemplateDomLoader
     {
       m_realTemplateLocation = asUrl();
       final IFile templateFile = ResourceUtilities.findFileFromURL( m_realTemplateLocation );
-      m_templateCharset = templateFile.getCharset();
+      if( templateFile == null )
+      {
+        // FIXME: Read charset from stream and push-back using PushbackReader
+        m_templateCharset = CharEncoding.UTF_8;
+      }
+      else
+        m_templateCharset = templateFile.getCharset();
+
       return UrlUtilities.toString( m_realTemplateLocation, m_templateCharset );
     }
     catch( final Exception e )
@@ -197,18 +204,18 @@ public class TemplateDomLoader
     try
     {
       inputStream = openStream();
-      m_properties.loadFromXML( inputStream );
+      m_templateProperties.loadFromXML( inputStream );
 
       // OK, it WAS a properties file -> load the real .kod and search/replace all tokens
 
       /* Resolve url and read file into string */
-      final String templateUriProp = m_properties.getProperty( PROP_TEMPLATE_URI );
+      final String templateUriProp = m_templateProperties.getProperty( PROP_TEMPLATE_URI );
       final URL context = asUrl();
 
       m_realTemplateLocation = new URL( context, templateUriProp );
-      final IFile kodFile = ResourceUtilities.findFileFromURL( m_realTemplateLocation );
-      m_templateCharset = kodFile.getCharset();
-      return FileUtilities.toString( kodFile );
+      final IFile realFile = ResourceUtilities.findFileFromURL( m_realTemplateLocation );
+      m_templateCharset = realFile.getCharset();
+      return FileUtilities.toString( realFile );
     }
     catch( final InvalidPropertiesFormatException e )
     {
@@ -228,9 +235,9 @@ public class TemplateDomLoader
     }
   }
 
-  public String patternReplace( final String kodContent )
+  public String patternReplace( final String content )
   {
-    return m_replacer.replaceTokens( kodContent, null );
+    return m_replacer.replaceTokens( content, null );
   }
 
   /**

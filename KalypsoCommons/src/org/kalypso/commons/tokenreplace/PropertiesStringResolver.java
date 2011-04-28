@@ -38,40 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.patternreplace;
+package org.kalypso.commons.tokenreplace;
 
 import java.util.Properties;
+
+import org.apache.commons.lang.text.StrSubstitutor;
 
 /**
  * @author Gernot Belger
  */
-public class TemplateInputReplacer extends PatternInputReplacer<Object>
+public class PropertiesStringResolver implements IStringResolver
 {
-  private final Properties m_commonProperties;
+  private final StrSubstitutor m_substitutor;
 
-  public TemplateInputReplacer( final Properties commonProperties )
+  public PropertiesStringResolver( final Properties properties, final String prefix, final String suffix )
   {
-    super( "${", "}" );
-
-    m_commonProperties = commonProperties;
+    m_substitutor = new StrSubstitutor( properties, prefix, suffix );
   }
 
   /**
-   * @see org.kalypso.commons.patternreplace.PatternInputReplacer#getReplacer(java.lang.String)
+   * @see org.kalypso.commons.tokenreplace.IStringResolver#resolve(java.lang.String)
    */
   @Override
-  protected IPatternInput<Object> getReplacer( final String token )
+  public String resolve( final String input )
   {
-    final IPatternInput<Object> replacer = super.getReplacer( token );
-    if( replacer != null )
-      return replacer;
-
-    // If unknown property: directly look-up replacement in our properties-object.
-    final String value = m_commonProperties.getProperty( token, null );
-    if( value == null )
-      return null;
-
-    return new ConstantReplacer( value );
+    return m_substitutor.replace( input );
   }
-
 }

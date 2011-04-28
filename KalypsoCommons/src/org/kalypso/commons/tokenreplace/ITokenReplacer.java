@@ -43,7 +43,7 @@ package org.kalypso.commons.tokenreplace;
 /**
  * Replacement of Kind: ${token:argument}
  * 
- * @author belger
+ * @author Gernot Belger
  */
 public interface ITokenReplacer
 {

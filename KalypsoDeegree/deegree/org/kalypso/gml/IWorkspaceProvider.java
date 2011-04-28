@@ -44,7 +44,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Felipe Maximino
- *
  */
 public interface IWorkspaceProvider
 {
