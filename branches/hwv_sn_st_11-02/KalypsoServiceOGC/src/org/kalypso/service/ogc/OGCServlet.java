@@ -65,18 +65,11 @@ public class OGCServlet extends HttpServlet implements Servlet
     final ResponseBean responseBean = new ResponseBean( response );
     try
     {
-      final Map<String, IOGCService> services;
-      try
-      {
-        /* Call all interceptors for request */
-        intercept( request );
-        /* Get all registered services. */
-        services = OGCServiceExtensions.createServices();
-      }
-      catch( final CoreException e )
-      {
-        throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" ); //$NON-NLS-1$
-      }
+      /* Call all interceptors for request */
+      intercept( request );
+
+      /* Get all registered services. */
+      Map<String, IOGCService> services = OGCServiceExtensions.createServices();
 
       /* Ask everyone, if he could handle the request. The first which says yes, is taken. */
       final RequestBean requestBean = new RequestBean( requestType, request );
@@ -87,11 +80,10 @@ public class OGCServlet extends HttpServlet implements Servlet
       {
         final String key = itr.next();
         final IOGCService service = services.get( key );
-        System.out.println( "Asking service " + key + " ..." ); //$NON-NLS-1$ //$NON-NLS-2$
+
         if( service.responsibleFor( requestBean ) )
         {
           /* Found a service. */
-          System.out.println( "Service " + key + " answered positivly." ); //$NON-NLS-1$ //$NON-NLS-2$
           foundKey = key;
           foundService = service;
           break;
@@ -102,33 +94,23 @@ public class OGCServlet extends HttpServlet implements Servlet
       if( foundService == null || foundKey == null )
         throw new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, "No service found, which can handle this request.", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-      /* Check, if all required parameters are there. But only, if the request was send via the get method. */
-      if( !requestBean.isPost() )
-      {
-        System.out.println( "GET detected: Checking if all mandatory parameters are available ..." ); //$NON-NLS-1$
+      /* Check, if all required parameters are there. */
+      /* But only, if the request was send via the get method. */
+      /* Or, if the request was send via the post method without body. */
+      if( !requestBean.isPost() || (requestBean.isPost() && (requestBean.getBody() == null || requestBean.getBody().isEmpty())) )
         checkMandadoryParameter( requestBean, foundKey );
-      }
-      else if( requestBean.isPost() && requestBean.getBody() == null || requestBean.getBody().isEmpty() )
-      {
-        System.out.println( "POST without body detected: Checking if all mandatory parameters are available ..." ); //$NON-NLS-1$
-        checkMandadoryParameter( requestBean, foundKey );
-      }
-      else
-      {
-        /* The service itself should check his parameters in the XML. */
-        System.out.println( "POST detected: Let the service check if all mandatory parameters are available ..." ); //$NON-NLS-1$
-      }
 
       /* Execute the operation. */
+      System.out.println( String.format( "Execute operation of '%s' service...", foundKey ) );
       foundService.executeOperation( requestBean, responseBean );
     }
     catch( final OWSException e )
     {
-      final OutputStream os = responseBean.getOutputStream();
-      final OutputStreamWriter osw = new OutputStreamWriter( os );
-      osw.write( e.toXMLString() );
-      osw.close();
-      os.close();
+      sendToClient( responseBean, e );
+    }
+    catch( final Exception e )
+    {
+      sendToClient( responseBean, new OWSException( OWSException.ExceptionCode.NO_APPLICABLE_CODE, e.getMessage(), "" ) ); //$NON-NLS-1$
     }
   }
 
@@ -149,5 +131,14 @@ public class OGCServlet extends HttpServlet implements Servlet
       if( request.getParameterValue( parameterName ) == null )
         throw new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Parameter '" + parameterName + "' is mandatory", parameterName ); //$NON-NLS-1$ //$NON-NLS-2$
     }
+  }
+
+  private void sendToClient( final ResponseBean responseBean, final OWSException e ) throws IOException
+  {
+    final OutputStream os = responseBean.getOutputStream();
+    final OutputStreamWriter osw = new OutputStreamWriter( os );
+    osw.write( e.toXMLString() );
+    osw.close();
+    os.close();
   }
 }
