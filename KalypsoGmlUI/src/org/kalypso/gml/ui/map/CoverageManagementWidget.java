@@ -708,8 +708,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    */
   protected void updateStylePanel( )
   {
+    if( m_colorMapViewer == null )
+      return;
+
     final RasterSymbolizer symb = findRasterSymbolizer();
-    if( m_colorMapViewer != null )
+    if( symb != null )
       m_colorMapViewer.setInput( symb.getColorMap().values().toArray( new ColorMapEntry[] {} ) );
   }
 

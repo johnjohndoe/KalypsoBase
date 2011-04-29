@@ -40,25 +40,37 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.colorMapEntryTable;
 
+import java.util.Arrays;
+
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 /**
- * This class implements an ICellModifier. An ICellModifier is called when the user modifes a cell in the tableViewer
+ * This class implements an ICellModifier. An ICellModifier is called when the user modifes a cell in the table viewer.
+ * 
+ * @author Holger Albert
  */
-
 public class ColorMapEntryCellModifier implements ICellModifier
 {
-  private ColorMapEntryTable m_colorMapEntryTable;
+  /**
+   * The color map entry table.
+   */
+  private ColorMapEntryTable m_table;
 
-  public ColorMapEntryCellModifier( ColorMapEntryTable colorMapEntryTable )
+  /**
+   * The constructor.
+   * 
+   * @param table
+   *          The color map entry table.
+   */
+  public ColorMapEntryCellModifier( ColorMapEntryTable table )
   {
-    super();
-    m_colorMapEntryTable = colorMapEntryTable;
+    m_table = table;
   }
 
   /**
@@ -76,35 +88,28 @@ public class ColorMapEntryCellModifier implements ICellModifier
   @Override
   public Object getValue( Object element, String property )
   {
+    /* Find the index of the column. */
+    int columnIndex = Arrays.asList( ColorMapEntryTable.COLUMN_NAMES ).indexOf( property );
 
-    // Find the index of the column
-    int columnIndex = m_colorMapEntryTable.getColumnNames().indexOf( property );
-
-    Object result = null;
-    ColorMapEntry colorMapEntry = (ColorMapEntry)element;
+    /* Cast. */
+    ColorMapEntry entry = (ColorMapEntry) element;
 
     switch( columnIndex )
     {
-    case 0: // LABEL
-      result = colorMapEntry.getLabel();
-      break;
-    case 1: // Quantity
-      result = Double.toString( colorMapEntry.getQuantity() );
-      //result = "test_"+colorMapEntry.getQuantity();
-      //result = new Double(colorMapEntry.getQuantity());
-      break;
-    case 2: // COLOR
-      java.awt.Color color = colorMapEntry.getColor();
-      result = ( new Color( ColorMapEntryTable.table.getDisplay(), color.getRed(), color.getGreen(), color.getBlue() ) )
-          .getRGB();
-      break;
-    case 3: // OPACITY
-      result = colorMapEntry.getOpacity() + ""; //$NON-NLS-1$
-      break;
-    default:
-      result = ""; //$NON-NLS-1$
+      case 0: // LABEL
+        return entry.getLabel();
+      case 1: // QUANTITY
+        return String.format( "%.1f", entry.getQuantity() ); //$NON-NLS-1$
+      case 2: // COLOR
+        java.awt.Color color = entry.getColor();
+        return new RGB( color.getRed(), color.getGreen(), color.getBlue() );
+      case 3: // OPACITY
+        return String.format( "%.1f", entry.getOpacity() ); //$NON-NLS-1$
+      default:
+        break;
     }
-    return result;
+
+    return ""; //$NON-NLS-1$
   }
 
   /**
@@ -113,47 +118,37 @@ public class ColorMapEntryCellModifier implements ICellModifier
   @Override
   public void modify( Object element, String property, Object value )
   {
+    /* Find the index of the column. */
+    int columnIndex = Arrays.asList( ColorMapEntryTable.COLUMN_NAMES ).indexOf( property );
 
-    // Find the index of the column
-    int columnIndex = m_colorMapEntryTable.getColumnNames().indexOf( property );
+    /* Cast. */
+    TableItem item = (TableItem) element;
 
-    TableItem item = (TableItem)element;
-    ColorMapEntry colorMapEntry = (ColorMapEntry)item.getData();
-    String valueString;
+    /* Get the data. */
+    ColorMapEntry entry = (ColorMapEntry) item.getData();
 
     switch( columnIndex )
     {
-    case 0: // LABEL
-      valueString = ( (String)value ).trim();
-      colorMapEntry.setLabel( valueString );
-      break;
-    case 1: // VALUE
-      valueString = ( (String)value ).trim();
-      if( valueString.length() == 0 )
-        valueString = "0"; //$NON-NLS-1$
-      colorMapEntry.setQuantity( Double.parseDouble( valueString ) );
-      break;
-    case 2: // COLOR
-      colorMapEntry.setColor( ( new java.awt.Color( ( (RGB)value ).red, ( (RGB)value ).green, ( (RGB)value ).blue ) ) );
-      break;
-    case 3: // OPACITY
-      valueString = ( (String)value ).trim();
-      if( valueString.length() == 0 )
-        valueString = "0"; //$NON-NLS-1$
-      double opacity = Double.parseDouble( valueString );
-      if( opacity <= 1 && opacity >= 0 )
-      {
-        item.setBackground( 3, ColorMapEntryTable.table.getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
-        colorMapEntry.setOpacity( Double.parseDouble( valueString ) );
-      }
-      else
-      {
-        item.setBackground( 3, ColorMapEntryTable.table.getDisplay().getSystemColor( SWT.COLOR_RED ) );
-        colorMapEntry.setOpacity( Double.parseDouble( valueString ) );
-      }
-      break;
-    default:
+      case 0: // LABEL
+        entry.setLabel( ((String) value).trim() );
+        break;
+      case 1: // VALUE
+        entry.setQuantity( NumberUtils.parseQuietDouble( ((String) value).trim() ) );
+        break;
+      case 2: // COLOR
+        entry.setColor( (new java.awt.Color( ((RGB) value).red, ((RGB) value).green, ((RGB) value).blue )) );
+        break;
+      case 3: // OPACITY
+        double opacity = NumberUtils.parseQuietDouble( ((String) value).trim() );
+        if( opacity <= 1 && opacity >= 0 )
+          item.setBackground( 3, PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
+        else
+          item.setBackground( 3, PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_RED ) );
+        entry.setOpacity( opacity );
+        break;
+      default:
     }
-    m_colorMapEntryTable.getColorMapEntryList().colorMapEntryChanged( colorMapEntry );
+
+    m_table.getColorMapEntryList().colorMapEntryChanged( entry );
   }
 }
