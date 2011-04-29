@@ -125,7 +125,6 @@ public abstract class ColorMapLabelProvider extends LabelProvider implements ITa
         event.detail &= ~SWT.HOT;
         event.detail &= ~(SWT.BACKGROUND);
       }
-
     } );
   }
 
@@ -182,5 +181,4 @@ public abstract class ColorMapLabelProvider extends LabelProvider implements ITa
     m_colorRegistry.put( symbolicName, rgb );
     return m_colorRegistry.get( symbolicName );
   }
-
 }

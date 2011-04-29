@@ -38,13 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.sldEditor;
+package org.kalypso.ui.editor.styleeditor.viewer;
 
 import java.awt.Color;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.contribs.java.awt.ColorUtilities;
+import org.kalypso.ui.editor.sldEditor.ColorMapLabelProvider;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 /**
@@ -75,15 +76,12 @@ public class RasterColorMapLabelProvider extends ColorMapLabelProvider
   {
     final ColorMapEntry entry = (ColorMapEntry) element;
 
-    final RasterColorMapContentProvider.PROPS prop = RasterColorMapContentProvider.PROPS.values()[columnIndex];
-
-    switch( prop )
+    switch( columnIndex )
     {
-      case quantity:
-        // TODO: fixed scale is not so nice... maybe calculate scale automatically from existing values
+      case 0:
         return String.format( "%.2f", entry.getQuantity() ); //$NON-NLS-1$
 
-      case label:
+      case 1:
         return entry.getLabel();
 
       default:
@@ -97,16 +95,10 @@ public class RasterColorMapLabelProvider extends ColorMapLabelProvider
   @Override
   public boolean isLabelProperty( final Object element, final String property )
   {
-    try
-    {
-      RasterColorMapContentProvider.PROPS.valueOf( property );
+    if( "label".equals( property ) || "quantity".equals( property ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return true;
-    }
-    catch( final RuntimeException e )
-    {
-      e.printStackTrace();
-      return false;
-    }
+
+    return false;
   }
 
   /**
@@ -120,5 +112,4 @@ public class RasterColorMapLabelProvider extends ColorMapLabelProvider
     double opacity = entry.getOpacity();
     return ColorUtilities.createTransparent( stroke, opacity );
   }
-
 }

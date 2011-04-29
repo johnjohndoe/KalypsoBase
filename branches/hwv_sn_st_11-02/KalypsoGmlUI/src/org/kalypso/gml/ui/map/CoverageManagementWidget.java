@@ -81,7 +81,6 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -93,7 +92,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -139,8 +137,7 @@ import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
-import org.kalypso.ui.editor.sldEditor.RasterColorMapContentProvider;
-import org.kalypso.ui.editor.sldEditor.RasterColorMapLabelProvider;
+import org.kalypso.ui.editor.styleeditor.viewer.ColorMapViewer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
@@ -258,7 +255,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private IKalypsoFeatureTheme m_theme;
 
-  private TableViewer m_colorMapTableViewer;
+  private ColorMapViewer m_colorMapViewer;
 
   private ComboViewer m_themeCombo;
 
@@ -313,6 +310,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    *          The name of the widget.
    * @param tooltip
    *          The tooltip of the widget.
+   * @param customActions
+   *          Additional actions to be added to the toolbar of this widget. CustomActions may implement
+   *          {@link CoverageManagementAction} in order to get informed about selection changes.
    */
   public CoverageManagementWidget( final String name, final String tooltip, final Action[] customActions )
   {
@@ -326,7 +326,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    *          The tooltip of the widget.
    * @param customActions
    *          Additional actions to be added to the toolbar of this widget. CustomActions may implement
-   *          {@link CoverageManagementAction} in order to get inrformed about selection changes.
+   *          {@link CoverageManagementAction} in order to get informed about selection changes.
+   * @param partName
+   *          The name of the part.
    */
   public CoverageManagementWidget( final String name, final String tooltip, final Action[] customActions, final String partName )
   {
@@ -432,28 +434,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
-// final ScrolledComposite sc = new ScrolledComposite( parent, SWT.V_SCROLL | SWT.H_SCROLL );
-// sc.setMinWidth( 200 );
-// sc.setExpandVertical( true );
-// sc.setExpandHorizontal( true );
-
     final Composite panel = toolkit.createComposite( parent, SWT.NONE );
     panel.setLayout( new GridLayout() );
-
-// sc.setContent( panel );
-// parent.addControlListener( new ControlAdapter()
-// {
-// /**
-// * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-// */
-// @Override
-// public void controlResized( final ControlEvent e )
-// {
-// final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-// panel.setSize( size );
-// sc.setMinHeight( size.y );
-// }
-// } );
 
     /* Theme selection combo */
     final Composite themeSelectionPanel = toolkit.createComposite( panel, SWT.NONE );
@@ -530,24 +512,26 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     colormapPanel.setVisible( m_showStyle );
     colormapPanel.setLayoutData( colormapPanelData );
 
-    m_colorMapTableViewer = new TableViewer( colormapPanel, SWT.FULL_SELECTION | SWT.BORDER | SWT.H_SCROLL );
-    final GridData colormapTableData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    /* Create the color map viewer. */
+    m_colorMapViewer = new ColorMapViewer( colormapPanel, SWT.NONE, toolkit );
+    m_colorMapViewer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_colorMapTableViewer.getControl().setLayoutData( colormapTableData );
-    toolkit.adapt( m_colorMapTableViewer.getControl(), true, true );
-
-    final ToolBar colormapToolbar = new ToolBar( colormapPanel, SWT.VERTICAL | SWT.FLAT );
+    /* Create the color map toolbar. */
+    ToolBar colormapToolbar = new ToolBar( colormapPanel, SWT.VERTICAL | SWT.FLAT );
     toolkit.adapt( colormapToolbar );
     colormapToolbar.setLayoutData( new GridData( SWT.CENTER, SWT.BEGINNING, false, true ) );
 
-    // Fill contents
+    /* Initialize the coverage viewer. */
     initalizeCoverageViewer( m_coverageViewer );
-    final ToolBarManager coverageToolbarManager = new ToolBarManager( coverageToolbar );
-    initalizeCoverageActions( coverageToolbarManager, m_customActions );
 
-    initializeColorMapTableViewer( m_colorMapTableViewer );
-    final ToolBarManager colormapToolbarManager = new ToolBarManager( colormapToolbar );
-    initalizeColorMapActions( colormapToolbarManager );
+    /* Initialize the coverage toolbar. */
+    initalizeCoverageActions( new ToolBarManager( coverageToolbar ), m_customActions );
+
+    /* Initialize the color map viewer. */
+    updateStylePanel();
+
+    /* Initialize the color map toolbar. */
+    initalizeColorMapActions( new ToolBarManager( colormapToolbar ) );
 
     /* Hook Events */
     m_coverageViewer.addSelectionChangedListener( new ISelectionChangedListener()
@@ -576,7 +560,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
     panel.setSize( size );
-// sc.setMinHeight( size.y );
 
     updateButtons();
 
@@ -693,9 +676,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       parent.layout( true, true );
     }
 
-// final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-// panel.setSize( size );
-// sc.setMinHeight( size.y );
+    // final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
+    // panel.setSize( size );
+    // sc.setMinHeight( size.y );
 
     getMapPanel().repaintMap();
     updateButtons();
@@ -726,8 +709,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   protected void updateStylePanel( )
   {
     final RasterSymbolizer symb = findRasterSymbolizer();
-    if( m_colorMapTableViewer != null && !m_colorMapTableViewer.getControl().isDisposed() )
-      m_colorMapTableViewer.setInput( symb );
+    if( m_colorMapViewer != null )
+      m_colorMapViewer.setInput( symb.getColorMap().values().toArray( new ColorMapEntry[] {} ) );
   }
 
   /**
@@ -862,7 +845,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     };
 
     final IStatus result = ProgressUtilities.busyCursorWhile( operation );
-    final Shell shell = m_colorMapTableViewer.getControl().getShell();
+    final Shell shell = m_themeCombo.getControl().getShell();
     ErrorDialog.openError( shell, Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.7" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.8" ), result ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
@@ -889,28 +872,14 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     }
     catch( final Exception e )
     {
-      MessageDialog.openError( m_colorMapTableViewer.getControl().getShell(), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.9" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openError( m_themeCombo.getControl().getShell(), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.9" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     symb.setColorMap( new_colorMap );
 
     saveStyle();
 
-    m_colorMapTableViewer.refresh();
-    m_colorMapTableViewer.getControl().getParent().getParent().layout( true, true );
-  }
-
-  private void initializeColorMapTableViewer( final TableViewer viewer )
-  {
-    viewer.setContentProvider( new RasterColorMapContentProvider() );
-    viewer.setLabelProvider( new RasterColorMapLabelProvider( viewer ) );
-
-    final Table viewerTable = viewer.getTable();
-    viewerTable.setLinesVisible( true );
-    viewerTable.setHeaderVisible( true );
-    viewerTable.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
-    updateStylePanel();
+    m_colorMapViewer.refresh();
   }
 
   private void initalizeCoverageActions( final IToolBarManager manager, final IAction[] customActions )
