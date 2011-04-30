@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,13 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 12.09.2004
  *  
  */
-package org.kalypso.ui.editor.styleeditor.rulePattern;
+package org.kalypso.ui.editor.styleeditor.style;
 
 import java.util.ArrayList;
 
@@ -63,17 +63,17 @@ public class RuleCollection
     m_rules.add( rule );
   }
 
-  public static RuleCollection getInstance( Rule rule )
+  public static RuleCollection getInstance( final Rule rule )
   {
     return new RuleCollection( rule );
   }
 
-  public void addRule( Rule rule )
+  public void addRule( final Rule rule )
   {
     m_rules.add( rule );
   }
 
-  public void removeRule( Rule rule )
+  public void removeRule( final Rule rule )
   {
     m_rules.remove( rule );
   }

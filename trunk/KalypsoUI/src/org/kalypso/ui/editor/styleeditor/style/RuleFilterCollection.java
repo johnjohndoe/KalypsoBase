@@ -42,7 +42,7 @@
  * Created on 12.09.2004
  *
  */
-package org.kalypso.ui.editor.styleeditor.rulePattern;
+package org.kalypso.ui.editor.styleeditor.style;
 
 import java.util.ArrayList;
 import java.util.HashMap;

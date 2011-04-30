@@ -332,14 +332,14 @@ public class RuleTabItem
         Filter clone = null;
         if( oldFilter != null )
           try
-          {
+        {
             clone = oldFilter.clone();
-          }
-          catch( final CloneNotSupportedException ex )
-          {
-            ex.printStackTrace();
-          }
-        final FilterDialog dialog = new FilterDialog( composite.getShell(), m_featureType, getUserStyle(), m_rule.getFilter(), null, null, false );
+        }
+        catch( final CloneNotSupportedException ex )
+        {
+          ex.printStackTrace();
+        }
+        final FilterDialog dialog = new FilterDialog( composite.getShell(), null, m_rule.getFilter(), null, null, false );
         final int open = dialog.open();
         if( open == Window.OK )
         {
