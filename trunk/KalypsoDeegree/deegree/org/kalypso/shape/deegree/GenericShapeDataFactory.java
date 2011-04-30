@@ -70,14 +70,19 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * A {@link org.kalypso.shape.IShapeDataProvider} that simulates the old ShapeSerializer behaviour.
  * 
  * @author Gernot Belger
  */
-public class GenericShapeDataFactory
+public final class GenericShapeDataFactory
 {
+  private GenericShapeDataFactory( )
+  {
+  }
+
   public static IShapeData createDefaultData( final List<Feature> features, final Charset charset, final String coordinateSystem )
   {
     if( features.isEmpty() )
@@ -218,6 +223,33 @@ public class GenericShapeDataFactory
       return ShapeType.POLYGON;
 
     return ShapeType.NULL;
+  }
+
+  public static QName findGeometryType( final ShapeType type )
+  {
+    switch( type )
+    {
+      case NULL:
+        return GMLConstants.QN_GEOMETRY;
+
+      case POINT:
+      case POINTZ:
+        return GMLConstants.QN_POINT;
+
+      case MULTIPOINT:
+      case MULTIPOINTZ:
+        return GMLConstants.QN_MULTI_POINT;
+
+      case POLYLINE:
+      case POLYLINEZ:
+        return GMLConstants.QN_CURVE;
+
+      case POLYGON:
+      case POLYGONZ:
+        return GMLConstants.QN_SURFACE;
+    }
+
+    return GMLConstants.QN_GEOMETRY;
   }
 
   public static IFeatureType findLeastCommonType( final Feature[] features )
