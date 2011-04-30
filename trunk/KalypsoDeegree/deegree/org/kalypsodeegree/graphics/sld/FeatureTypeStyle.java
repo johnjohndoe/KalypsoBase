@@ -56,6 +56,8 @@ import org.kalypsodeegree.xml.Marshallable;
  */
 public interface FeatureTypeStyle extends Marshallable
 {
+  String ELEMENT_FEATURETYPESTYLE = "FeatureTypeStyle";
+
   /**
    * The Name element does not have an explicit use at present, though it conceivably might be used to reference a
    * feature style in some feature-style library.
