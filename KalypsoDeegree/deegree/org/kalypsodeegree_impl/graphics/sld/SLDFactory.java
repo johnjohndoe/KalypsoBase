@@ -697,6 +697,32 @@ public class SLDFactory
   /**
    * Creates a <tt>StyledLayerDescriptor</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'StyledLayerDescriptor'- <tt>Element</tt>.
+   * 
+   * @param context
+   *          Used as context to resolve any links contained in the document.
+   * @param element
+   *          the 'StyledLayerDescriptor'- <tt>Element</tt>
+   * @throws XMLParsingException
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
+   * @return the constructed <tt>StyledLayerDescriptor</tt> -instance
+   */
+  public static StyledLayerDescriptor createStyledLayerDescriptor( final URL context, final Element element ) throws XMLParsingException
+  {
+    final IUrlResolver2 urlResolver = new IUrlResolver2()
+    {
+      @Override
+      public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
+      {
+        return new URL( context, relativeOrAbsolute );
+      }
+    };
+
+    return createStyledLayerDescriptor( urlResolver, element );
+  }
+
+  /**
+   * Creates a <tt>StyledLayerDescriptor</tt> -instance according to the contents of the DOM-subtree starting at the
+   * given 'StyledLayerDescriptor'- <tt>Element</tt>.
    * <p>
    * 
    * @param element

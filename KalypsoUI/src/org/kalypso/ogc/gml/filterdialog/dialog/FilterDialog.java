@@ -184,7 +184,8 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     {
       if( buttonId == ID_BUTTON_APPLY )
       {
-        m_context.fireStyleChanged();
+        if( m_context != null )
+          m_context.fireStyleChanged();
         setReturnCode( APPLY_FILTER );
       }
 
@@ -620,6 +621,9 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
   protected IFeatureType getFeatureType( )
   {
+    if( m_context == null )
+      return null;
+
     return m_context.getFeatureType();
   }
 }
