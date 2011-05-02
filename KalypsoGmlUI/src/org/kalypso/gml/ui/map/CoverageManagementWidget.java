@@ -231,7 +231,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   private final Runnable m_refreshCoverageViewerRunnable = new Runnable()
   {
     @Override
-    @SuppressWarnings("synthetic-access")
     public void run( )
     {
       ViewerUtilities.refresh( m_coverageViewer, true );
@@ -251,9 +250,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    */
   private boolean m_allowUserChangeGridFolder = true;
 
-  private ListViewer m_coverageViewer;
+  protected ListViewer m_coverageViewer;
 
-  private IKalypsoFeatureTheme m_theme;
+  protected IKalypsoFeatureTheme m_theme;
 
   private ColorMapViewer m_colorMapViewer;
 
@@ -484,7 +483,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     featureComposite.addChangeListener( new IFeatureChangeListener()
     {
       @Override
-      @SuppressWarnings("synthetic-access")
       public void featureChanged( final ICommand changeCommand )
       {
         m_theme.postCommand( changeCommand, null );
@@ -684,7 +682,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     updateButtons();
   }
 
-  private void updateButtons( )
+  protected void updateButtons( )
   {
     /* Let actions update themselves */
     IFeatureBindingCollection<ICoverage> coverages = m_coverages == null ? null : m_coverages.getCoverages();
@@ -781,6 +779,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         handleGenerateColorMap( event );
       }
 
+      /**
+       * @see org.kalypso.gml.ui.map.CoverageManagementAction#update(org.kalypsodeegree_impl.gml.binding.commons.ICoverage[],
+       *      org.kalypsodeegree_impl.gml.binding.commons.ICoverage[])
+       */
       @Override
       public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
       {

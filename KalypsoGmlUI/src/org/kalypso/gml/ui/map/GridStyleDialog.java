@@ -57,7 +57,7 @@ import org.kalypsodeegree.graphics.sld.ColorMapEntry;
  * {@link ColorMapEntry} and an end {@link ColorMapEntry}. This could be done via a
  * {@link RasterColorMapEditorComposite}. In this composite the user can specify the colors, values and opacities for
  * each of these two ColorMapEntries. The classes inbetween get interpolated.
- *
+ * 
  * @author Thomas jung
  */
 public class GridStyleDialog extends TitleAreaDialog
@@ -73,12 +73,12 @@ public class GridStyleDialog extends TitleAreaDialog
   public GridStyleDialog( final Shell shell, final ColorMapEntry[] colorMap, final BigDecimal min, final BigDecimal max )
   {
     super( shell );
-    m_colorMap = colorMap;
 
+    m_colorMap = colorMap;
     m_globalMin = min;
     m_globalMax = max;
 
-    setTitle( Messages.getString("org.kalypso.gml.ui.map.GridStyleDialog.0") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.gml.ui.map.GridStyleDialog.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -87,13 +87,13 @@ public class GridStyleDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    setMessage( Messages.getString("org.kalypso.gml.ui.map.GridStyleDialog.1") ); //$NON-NLS-1$
+    setMessage( Messages.getString( "org.kalypso.gml.ui.map.GridStyleDialog.1" ) ); //$NON-NLS-1$
 
-    parent.getShell().setText( Messages.getString("org.kalypso.gml.ui.map.GridStyleDialog.2") ); //$NON-NLS-1$
+    parent.getShell().setText( Messages.getString( "org.kalypso.gml.ui.map.GridStyleDialog.2" ) ); //$NON-NLS-1$
 
     final Composite panel = (Composite) super.createDialogArea( parent );
 
-    m_rasterComponent = new RasterColorMapEditorComposite( panel, SWT.NONE, m_colorMap, m_globalMin, m_globalMax )
+    m_rasterComponent = new RasterColorMapEditorComposite( panel, SWT.NONE, m_colorMap, m_globalMin, m_globalMax, true )
     {
       @Override
       protected void colorMapChanged( )

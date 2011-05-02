@@ -195,6 +195,8 @@ public class ImageProvider
 
   public static final ImageDescriptor IMAGE_STYLEEDITOR_GET_SCALE = ImageProvider.id( "icons/map/redo_edit.gif" ); //$NON-NLS-1$
 
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_EDIT_COLOR_RANGE = ImageProvider.id( "icons/map/edit_color_range.gif" ); //$NON-NLS-1$
+
   public static final ImageDescriptor IMAGE_FILTERDIALOG_ADD_FILTER = ImageProvider.id( "icons/filterdialog/filter_ps.gif" ); //$NON-NLS-1$
 
   public static final ImageDescriptor IMAGE_FILTERDIALOG_ERROR = ImageProvider.id( "icons/filterdialog/error_obj.gif" ); //$NON-NLS-1$
