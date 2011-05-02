@@ -52,6 +52,7 @@ import org.eclipse.jface.viewers.ColorCellEditor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -183,7 +184,7 @@ public class ColorMapEntryTable
     /* Create a composite to hold the children. */
     Composite main = new Composite( parent, SWT.NONE );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    main.setLayout( new GridLayout( 3, false ) );
+    main.setLayout( new GridLayout( 4, false ) );
 
     /* Create the table viewer. */
     m_tableViewer = createTableViewer( main, m_entryList );
@@ -208,7 +209,7 @@ public class ColorMapEntryTable
   {
     /* Create the table viewer. */
     TableViewer viewer = new TableViewer( parent, SWT.SINGLE | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION );
-    viewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true, 3, 1 ) );
+    viewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, false, true, 4, 1 ) );
     viewer.getTable().setLinesVisible( true );
     viewer.getTable().setHeaderVisible( true );
     viewer.setUseHashlookup( true );
@@ -341,13 +342,29 @@ public class ColorMapEntryTable
   }
 
   /**
-   * This functions creates the "Add", "Delete" and "Refresh" buttons.
+   * This functions creates the "Generate Range", "Add", "Delete" and "Refresh" buttons.
    * 
    * @param parent
    *          The parent composite.
    */
   private void createButtons( Composite parent )
   {
+    /* Create the generate range button. */
+    Button generateRangeButton = new Button( parent, SWT.PUSH | SWT.CENTER );
+    generateRangeButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_EDIT_COLOR_RANGE.createImage() );
+    generateRangeButton.setLayoutData( new GridData( SWT.BEGINNING, SWT.TOP, false, false ) );
+    generateRangeButton.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        generateColorRange();
+      }
+    } );
+
     /* Create the add button. */
     Button add = new Button( parent, SWT.PUSH | SWT.CENTER );
     add.setImage( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE.createImage() );
@@ -387,7 +404,7 @@ public class ColorMapEntryTable
     {
       /* Create the refresh button. */
       Button refresh = new Button( parent, SWT.PUSH | SWT.CENTER );
-      refresh.setText( "&Aktualisieren" ); //$NON-NLS-1$
+      refresh.setText( "&Aktualisieren" );
       refresh.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
       refresh.addSelectionListener( new SelectionAdapter()
       {
@@ -408,6 +425,31 @@ public class ColorMapEntryTable
       emptyLabel.setText( "" );
       emptyLabel.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
     }
+  }
+
+  /**
+   * This function opens a dialog for generating a color range.
+   */
+  protected void generateColorRange( )
+  {
+    if( m_tableViewer == null || m_tableViewer.getTable().isDisposed() )
+      return;
+
+    /* Create the dialog. */
+    GenerateColorRangeDialog dialog = new GenerateColorRangeDialog( m_tableViewer.getTable().getDisplay().getActiveShell(), m_entryList.getColorMapEntries().toArray( new ColorMapEntry[] {} ) );
+
+    /* Open the dialog. */
+    int open = dialog.open();
+    if( open == Window.CANCEL )
+      return;
+
+    /* Clear old entries. */
+    m_entryList.getColorMapEntries().clear();
+
+    /* Add all new ones. */
+    ColorMapEntry[] entries = dialog.getEntries();
+    for( ColorMapEntry entry : entries )
+      m_entryList.addColorMapEntry( entry );
   }
 
   /**
