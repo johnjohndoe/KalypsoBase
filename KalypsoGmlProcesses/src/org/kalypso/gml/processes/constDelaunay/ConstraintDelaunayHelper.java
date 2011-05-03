@@ -52,17 +52,25 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.java.io.FileUtilities;
+import org.eclipse.osgi.service.datalocation.Location;
+import org.kalypso.commons.KalypsoCommonsExtensions;
+import org.kalypso.commons.process.IProcess;
+import org.kalypso.commons.process.IProcessFactory;
 import org.kalypso.contribs.java.io.StreamGobbler;
+import org.kalypso.contribs.java.lang.ICancelable;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
 import org.kalypso.gml.processes.constDelaunay.DelaunayImpl.QuadraticAlgorithm;
 import org.kalypso.gml.processes.constDelaunay.DelaunayImpl.TriangulationDT;
@@ -402,23 +410,13 @@ public class ConstraintDelaunayHelper
     return points;
   }
 
-  public static StringBuffer createTriangleCommand( final File polyfile )
+  private static File findTriangleExe( )
   {
-    final StringBuffer cmd = new StringBuffer( "cmd /c triangle.exe -c -p" ); //$NON-NLS-1$
-
-    final Double qualityMinAngle = 5.00;
-
-    if( qualityMinAngle != null )
-    {
-      // at this point no quality meshing because it produces interpolation errors end zero-value points
-
-      // cmd.append( "-q" );
-      // cmd.append( qualityMinAngle.doubleValue() );
-    }
-
-    cmd.append( ' ' );
-    cmd.append( polyfile.getName() );
-    return cmd;
+    final Location installLocation = Platform.getInstallLocation();
+    final File installDir = FileUtils.toFile( installLocation.getURL() );
+    final File exeDir = new File( installDir, "bin" ); //$NON-NLS-1$
+    final File exeFile = new File( exeDir, "triangle.exe" ); //$NON-NLS-1$
+    return exeFile;
   }
 
   public static void execTriangle( final PrintStream pwSimuLog, final File tempDir, final StringBuffer cmd ) throws IOException, CoreException, InterruptedException
@@ -465,21 +463,16 @@ public class ConstraintDelaunayHelper
     }
   }
 
-  public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, final String crs ) throws GM_Exception
-  {
-    return convertToTriangles( polygonSurface, crs, true );
-  }
-
   public static GM_Triangle[] convertToTriangles( final GM_Position[] positions, final String crs ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
-    triangleList.addAll( Arrays.asList( createGM_Triangles( positions, null, crs, false ) ) );
+    triangleList.addAll( Arrays.asList( createGM_Triangles( positions, null, crs ) ) );
 
     return triangleList.toArray( new GM_Triangle[triangleList.size()] );
   }
 
   @SuppressWarnings("unchecked")
-  public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, final String crs, final boolean pBoolWriteFiles ) throws GM_Exception
+  public static GM_Triangle[] convertToTriangles( final GM_MultiSurface polygonSurface, final String crs ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
 
@@ -489,7 +482,7 @@ public class ConstraintDelaunayHelper
       if( object instanceof GM_Surface )
       {
         final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) object;
-        final GM_Triangle[] triangles = convertToTriangles( surface, crs, pBoolWriteFiles );
+        final GM_Triangle[] triangles = convertToTriangles( surface, crs );
         for( final GM_Triangle triangle : triangles )
         {
           triangleList.add( triangle );
@@ -501,10 +494,10 @@ public class ConstraintDelaunayHelper
 
   public static GM_Triangle[] convertToTriangles( final GM_Surface<GM_SurfacePatch> surface, final String crs ) throws GM_Exception
   {
-    return convertToTriangles( surface, crs, true );
+    return convertToTriangles( surface, crs, new String[0] );
   }
 
-  public static GM_Triangle[] convertToTriangles( final GM_Surface<GM_SurfacePatch> pSurface, final String crs, final boolean pBoolWriteFiles ) throws GM_Exception
+  public static GM_Triangle[] convertToTriangles( final GM_Surface<GM_SurfacePatch> pSurface, final String crs, final String... triangleArgs ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
     final boolean lBoolConvex = pSurface.getConvexHull().difference( pSurface ) == null;
@@ -513,7 +506,7 @@ public class ConstraintDelaunayHelper
       final GM_Position[] exterior = surfacePatch.getExteriorRing();
       final GM_Position[][] interior = surfacePatch.getInteriorRings();
       final GM_Triangle[] lArrTriangles;
-      lArrTriangles = createGM_Triangles( exterior, interior, crs, pBoolWriteFiles );
+      lArrTriangles = createGM_Triangles( exterior, interior, crs, triangleArgs );
 
       if( lArrTriangles != null )
       {
@@ -546,7 +539,7 @@ public class ConstraintDelaunayHelper
    * converts an array of {@link GM_Position} into a list of {@link GM_Triangle}. If there are more than 3 positions in
    * the array the positions gets triangulated by Triangle.exe The positions must build a closed polygon.
    */
-  private static GM_Triangle[] createGM_Triangles( final GM_Position[] exterior, final GM_Position[][] interior, final String crs, final boolean pBoolWriteFiles ) throws GM_Exception
+  private static GM_Triangle[] createGM_Triangles( final GM_Position[] exterior, final GM_Position[][] interior, final String crs, final String... triangleArgs ) throws GM_Exception
   {
     // check if pos arrays are closed polygons
 
@@ -559,7 +552,7 @@ public class ConstraintDelaunayHelper
     // if there are more than 3 corner positions triangulate the pos array.
     if( exterior.length > 4 )
     {
-      return triangulatePolygon( exterior, interiorPolygons, crs, pBoolWriteFiles );
+      return triangulatePolygon( exterior, interiorPolygons, crs, triangleArgs );
     }
     else
     {
@@ -613,10 +606,10 @@ public class ConstraintDelaunayHelper
 
   public static GM_Triangle[] triangulatePolygon( final GM_Position[] exterior, final GM_Position[][] interiorPolygons, final String crs )
   {
-    return triangulatePolygon( exterior, interiorPolygons, crs, true );
+    return triangulatePolygon( exterior, interiorPolygons, crs );
   }
 
-  public static GM_Triangle[] triangulatePolygon( final GM_Position[] exterior, @SuppressWarnings("unused") final GM_Position[][] interiorPolygons, final String crs, final boolean pBoolWriteFiles )
+  public static GM_Triangle[] triangulatePolygon( final GM_Position[] exterior, @SuppressWarnings("unused") final GM_Position[][] interiorPolygons, final String crs, final String... triangleArgs )
   {
     BufferedReader nodeReader = null;
     BufferedReader eleReader = null;
@@ -630,7 +623,7 @@ public class ConstraintDelaunayHelper
     // handle the points
     for( final GM_Position pos : exterior )
     {
-      final TriangleVertex vertex = new TriangleVertex( pos, true, pos.getZ() );
+      final TriangleVertex vertex = new TriangleVertex( pos, true, 0 );
       nodeList.add( vertex );
     }
 
@@ -641,8 +634,10 @@ public class ConstraintDelaunayHelper
       segmentList.add( segment );
     }
 
+    final File cmd = findTriangleExe();
+
     // triangulate without triangle.exe
-    if( !pBoolWriteFiles )
+    if( !cmd.exists() )
     {
       final List<GM_Triangle> lListAllResults = new ArrayList<GM_Triangle>();
 
@@ -659,32 +654,48 @@ public class ConstraintDelaunayHelper
     // collect the data
     final TrianglePolyFileData trianglePolyFileData = new TrianglePolyFileData( nodeList, segmentList, null );
 
+    File tempDir = null;
     try
     {
       pwSimuLog = System.out;
 
-      final File tempDir = FileUtilities.createNewTempDir( "Triangle" ); //$NON-NLS-1$
-      final File polyfile = new File( tempDir, "input.poly" ); //$NON-NLS-1$
+      final String polyFileName = "input.poly"; //$NON-NLS-1$
+
+      final String[] args = Arrays.copyOf( triangleArgs, triangleArgs.length + 2 );
+      args[triangleArgs.length] = "-p"; //$NON-NLS-1$
+      args[triangleArgs.length + 1] = polyFileName;
+      final IProcess process = KalypsoCommonsExtensions.createProcess( IProcessFactory.DEFAULT_PROCESS_FACTORY_ID, "Triangle", cmd.getName(), args );//$NON-NLS-1$ 
+
+      tempDir = new File( new URL( process.getSandboxDirectory() ).getFile() );
+      FileUtils.copyFileToDirectory( cmd, tempDir );
+
+      final File polyfile = new File( tempDir, polyFileName );
 
       BufferedOutputStream strmPolyInput = null;
       strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
 
+      // prepare the polygon for output
       final IStatus writeStatus = writePolyFile( strmPolyInput, trianglePolyFileData );
-// IStatus writeStatus = writePolyFileForPolygon( strmPolyInput, exterior );
       strmPolyInput.close();
 
       if( writeStatus != Status.OK_STATUS )
         return null;
 
-      // create command
-      final StringBuffer cmd = createTriangleCommand( polyfile );
-
       // start Triangle
-      execTriangle( pwSimuLog, tempDir, cmd );
+      process.startProcess( pwSimuLog, System.err, System.in, new ICancelable()
+      {
 
-      // prepare the polygon for output
+        @Override
+        public boolean isCanceled( )
+        {
+          return false;
+        }
 
-      // start triangulation
+        @Override
+        public void cancel( )
+        {
+        }
+      } );
 
       // get the triangle list
       final File nodeFile = new File( tempDir, "input.1.node" ); //$NON-NLS-1$
@@ -719,6 +730,20 @@ public class ConstraintDelaunayHelper
     {
       e.printStackTrace();
       return null;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( nodeReader );
+      IOUtils.closeQuietly( eleReader );
+      if( tempDir != null && tempDir.exists() )
+        try
+        {
+          FileUtils.deleteDirectory( tempDir );
+        }
+        catch( final IOException e )
+        {
+          e.printStackTrace();
+        }
     }
   }
 
