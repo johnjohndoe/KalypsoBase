@@ -57,21 +57,14 @@ import org.kalypso.ogc.sensor.DateRange;
  */
 public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMetaDataConstants
 {
-  private static SimpleDateFormat SDF = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" );
-
-  public static final transient String WQ_TABLE = "WQ-Tabelle";
-
-  public static final transient String LAST_UPDATE = "Letzte_Aktualisierung";
-
   protected MetadataHelper( )
   {
-
   }
 
   public static DateRange getDateRange( final MetadataList mdl, final String fromTag, final String endTag )
   {
-    final String propertyFrom = mdl.getProperty( fromTag, "" );
-    final String propertyTo = mdl.getProperty( endTag, "" );
+    final String propertyFrom = mdl.getProperty( fromTag, "" ); //$NON-NLS-1$
+    final String propertyTo = mdl.getProperty( endTag, "" ); //$NON-NLS-1$
 
     return parseDateRange( propertyFrom, propertyTo );
   }
@@ -120,27 +113,30 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
 
   public static String getCountedHeaderItem( final String item, final int number )
   {
-    if( item.endsWith( "_" ) )
+    if( item.endsWith( "_" ) )//$NON-NLS-1$
       return item + Integer.valueOf( number ).toString();
 
-    return item + "_" + Integer.valueOf( number ).toString();
+    return item + "_" + Integer.valueOf( number ).toString();//$NON-NLS-1$
   }
 
   public static Integer getCount( final String parameter )
   {
-    final String[] parts = parameter.split( "_" );
+    final String[] parts = parameter.split( "_" );//$NON-NLS-1$
     if( parts.length < 2 )
       return -1;
 
     return Integer.valueOf( parts[parts.length - 1] );
   }
 
-  public static final void setLastUpdated( final MetadataList mdl )
+  public static void setLastUpdated( final MetadataList mdl )
   {
     final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
     final Calendar calendar = Calendar.getInstance( timeZone );
 
-    mdl.put( LAST_UPDATE, SDF.format( calendar.getTime() ) );
+    final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" ); //$NON-NLS-1$
+    sdf.setTimeZone( timeZone );
+
+    mdl.put( LAST_UPDATE, sdf.format( calendar.getTime() ) );
   }
 
   public static MetadataList clone( final MetadataList mdl )

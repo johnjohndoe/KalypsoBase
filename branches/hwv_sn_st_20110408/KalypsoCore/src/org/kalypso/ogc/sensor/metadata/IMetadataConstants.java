@@ -45,11 +45,15 @@ package org.kalypso.ogc.sensor.metadata;
  */
 public interface IMetadataConstants
 {
-  String BOUNDARY_PREFIX = "Grenzwert_";
+  String BOUNDARY_PREFIX = "Grenzwert_";//$NON-NLS-1$
 
-  String BOUNDARY_FORMAT = BOUNDARY_PREFIX + "%s: %s";
+  String BOUNDARY_FORMAT = BOUNDARY_PREFIX + "%s: %s";//$NON-NLS-1$
 
-  String AUSGABE_ZEITPUNKT = "Zeitreihe_Ausgabezeitpunkt";
+  String AUSGABE_ZEITPUNKT = "Zeitreihe_Ausgabezeitpunkt";//$NON-NLS-1$
+
+  String LAST_UPDATE = "Letzte_Aktualisierung";//$NON-NLS-1$
+
+  String WQ_TABLE = "WQ-Tabelle";//$NON-NLS-1$
 
   /** Name of the observation */
   String MD_NAME = "Name"; //$NON-NLS-1$
