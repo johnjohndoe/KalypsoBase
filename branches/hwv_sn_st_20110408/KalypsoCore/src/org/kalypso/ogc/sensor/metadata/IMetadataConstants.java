@@ -51,6 +51,8 @@ public interface IMetadataConstants
 
   String AUSGABE_ZEITPUNKT = "Zeitreihe_Ausgabezeitpunkt";//$NON-NLS-1$
 
+  String BEREITSTELLUNGS_ZEITPUNKT = "Zeitreihe_Bereitstellungszeitpunkt";//$NON-NLS-1$
+
   String LAST_UPDATE = "Letzte_Aktualisierung";//$NON-NLS-1$
 
   String WQ_TABLE = "WQ-Tabelle";//$NON-NLS-1$
