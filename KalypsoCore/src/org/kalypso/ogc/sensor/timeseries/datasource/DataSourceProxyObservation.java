@@ -64,16 +64,6 @@ public class DataSourceProxyObservation implements IObservation
 {
   private final IObservation m_observation;
 
-  /**
-   * cached request arguments
-   */
-  private IRequest m_args;
-
-  /**
-   * cached model
-   */
-  private ITupleModel m_model;
-
   private final String m_itemIdentifier;
 
   private final String m_repositoryId;
@@ -122,24 +112,17 @@ public class DataSourceProxyObservation implements IObservation
   @Override
   public ITupleModel getValues( final IRequest args ) throws SensorException
   {
-    if( args == null || args != m_args || m_model == null )
+    final ITupleModel model = m_observation.getValues( args );
+    if( !DataSourceHelper.hasDataSources( model ) )
     {
-      final ITupleModel model = m_observation.getValues( args );
-      if( !DataSourceHelper.hasDataSources( model ) )
-      {
-        // to assert a valid source reference!
-        getMetadataList();
+      // to assert a valid source reference!
+      getMetadataList();
 
-        final AddDataSourceModelHandler handler = new AddDataSourceModelHandler( model );
-        m_model = handler.extend();
-      }
-      else
-        m_model = model;
-
-      m_args = args;
+      final AddDataSourceModelHandler handler = new AddDataSourceModelHandler( model );
+      return handler.extend();
     }
 
-    return m_model;
+    return model;
   }
 
   /**
@@ -148,15 +131,7 @@ public class DataSourceProxyObservation implements IObservation
   @Override
   public void setValues( final ITupleModel values ) throws SensorException
   {
-    try
-    {
-      m_observation.setValues( values );
-    }
-    finally
-    {
-      m_model = null;
-      m_args = null;
-    }
+    m_observation.setValues( values );
   }
 
   /**
