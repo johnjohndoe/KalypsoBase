@@ -81,6 +81,7 @@ public class AddDataSourceObservationHandler
 
     // proxy
     return new DataSourceProxyObservation( m_observation, m_itemIdentifier, m_repositoryId );
+
 // final AddDataSourceModelHandler handler = new AddDataSourceModelHandler( m_observation.getValues( null ) );
 // final ITupleModel model = handler.extend();
 //

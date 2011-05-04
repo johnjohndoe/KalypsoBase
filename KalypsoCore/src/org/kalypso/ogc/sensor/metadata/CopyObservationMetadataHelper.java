@@ -82,7 +82,7 @@ public class CopyObservationMetadataHelper extends MetadataHelper
 
         if( plainBaseIdentifier.equals( reference ) )
         {
-          final String index = key.substring( key.lastIndexOf( "_" ) + 1 );
+          final String index = key.substring( key.lastIndexOf( "_" ) + 1 );//$NON-NLS-1$
 
           return Integer.valueOf( index );
         }
