@@ -52,11 +52,15 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.TopologyException;
+import com.vividsolutions.jts.operation.valid.IsValidOp;
+import com.vividsolutions.jts.operation.valid.TopologyValidationError;
 
 import de.openali.odysseus.chart.framework.util.resource.IPair;
 import de.openali.odysseus.chart.framework.util.resource.Pair;
 
 /**
+ * FIXME: move to ZmlLineLayer, it does not belong here anymore.
+ * 
  * @author Gernot Belger
  */
 public class ClipHelper
@@ -79,20 +83,18 @@ public class ClipHelper
   @SuppressWarnings("unchecked")
   public IPair<Number, Number>[][] clipAsLine( final IPair<Number, Number>[] points )
   {
-    if( m_clipRect == null || points.length == 0 )
+    if( m_clipRect == null )
+      return new IPair[][] { points };
+
+    if( points.length == 0 )
       return new IPair[][] { points };
 
     final Polygon clipPolygon = getClipPolygon();
 
-    // Using JTS to intersect graphics
-    final Coordinate[] crds = new Coordinate[points.length];
-
-    for( int i = 0; i < crds.length; i++ )
-      crds[i] = new Coordinate( points[i].getDomain().doubleValue(), points[i].getTarget().doubleValue() );
-
-    // special case: we got only one single point
+    final Coordinate[] crds = asCoordinates( points );
     if( crds.length == 1 )
     {
+      // special case: we got only one single point
       final com.vividsolutions.jts.geom.Point singlePoint = m_gf.createPoint( crds[0] );
       if( clipPolygon.contains( singlePoint ) )
         return new IPair[][] { points };
@@ -100,20 +102,20 @@ public class ClipHelper
         return new IPair[][] {};
     }
 
+    if( m_clipRect.getWidth() == 0.0 || m_clipRect.getHeight() == 0.0 )
+      return new IPair[][] {};
+
     final LineString lineString = m_gf.createLineString( crds );
 
-    // TODO: we still get validation errors here, as the clip-polygon has sometimes 0-width
-    // using a null-clip here does not solve problems however...
+    final IsValidOp clipIsValidOp = new IsValidOp( clipPolygon );
+    final IsValidOp lineIsValidOp = new IsValidOp( lineString );
+    final TopologyValidationError clipError = clipIsValidOp.getValidationError();
+    if( clipError != null )
+      System.out.println( clipError );
 
-// final IsValidOp clipIsValidOp = new IsValidOp( clipPolygon );
-// final IsValidOp lineIsValidOp = new IsValidOp( lineString );
-// final TopologyValidationError clipError = clipIsValidOp.getValidationError();
-// if( clipError != null )
-// System.out.println( clipError );
-//
-// final TopologyValidationError lineError = lineIsValidOp.getValidationError();
-// if( lineError != null )
-// System.out.println( lineError );
+    final TopologyValidationError lineError = lineIsValidOp.getValidationError();
+    if( lineError != null )
+      System.out.println( lineError );
 
     try
     {
@@ -125,10 +127,17 @@ public class ClipHelper
     }
     catch( final TopologyException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
       return new IPair[][] { points };
     }
+  }
+
+  protected Coordinate[] asCoordinates( final IPair<Number, Number>[] points )
+  {
+    final Coordinate[] crds = new Coordinate[points.length];
+    for( int i = 0; i < crds.length; i++ )
+      crds[i] = new Coordinate( points[i].getDomain().doubleValue(), points[i].getTarget().doubleValue() );
+    return crds;
   }
 
   @SuppressWarnings("unchecked")

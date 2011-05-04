@@ -75,8 +75,8 @@ public class EnhancedTextBox<T> extends AbstractEnhancedWidget<T>
   @Override
   protected void initWidget( final FormToolkit toolkit )
   {
-    m_text = toolkit.createText( this, "", SWT.RIGHT | SWT.BORDER ); //$NON-NLS-1$
-    m_text.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    this.m_text = toolkit.createText( this, "", SWT.RIGHT | SWT.BORDER ); //$NON-NLS-1$
+    this.m_text.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
   }
 
   /**
@@ -90,20 +90,22 @@ public class EnhancedTextBox<T> extends AbstractEnhancedWidget<T>
 
   public void setText( final T value )
   {
-    m_text.addModifyListener( new TextModifyListener( getValidationIcon(), getRule(), m_text, getValidationIcon() ) );
-    m_text.setText( getRule().getFormatedString( value ) );
-    m_text.addModifyListener( new ModifyListener()
+    this.m_value = value;
+
+    this.m_text.addModifyListener( new TextModifyListener( getValidationIcon(), getRule(), this.m_text, getValidationIcon() ) );
+    this.m_text.setText( getRule().getFormatedString( value ) );
+    this.m_text.addModifyListener( new ModifyListener()
     {
       @Override
       public void modifyText( final ModifyEvent e )
       {
-        m_value = getRule().parseValue( m_text.getText() );
+        EnhancedTextBox.this.m_value = getRule().parseValue( EnhancedTextBox.this.m_text.getText() );
 
         fireWidgetChanged();
       }
     } );
 
-    m_text.addFocusListener( new FocusAdapter()
+    this.m_text.addFocusListener( new FocusAdapter()
     {
       /**
        * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
@@ -118,13 +120,13 @@ public class EnhancedTextBox<T> extends AbstractEnhancedWidget<T>
 
   public T getValue( )
   {
-    return m_value;
+    return this.m_value;
   }
 
   protected void fireValueChanged( )
   {
     @SuppressWarnings("unchecked")
-    final IEnhancedTextBoxListener<T>[] listeners = m_listeners.toArray( new IEnhancedTextBoxListener[] {} );
+    final IEnhancedTextBoxListener<T>[] listeners = this.m_listeners.toArray( new IEnhancedTextBoxListener[] {} );
     for( final IEnhancedTextBoxListener<T> listener : listeners )
     {
       listener.valueChanged( getValue() );
@@ -133,6 +135,6 @@ public class EnhancedTextBox<T> extends AbstractEnhancedWidget<T>
 
   public void addListener( final IEnhancedTextBoxListener<T> listener )
   {
-    m_listeners.add( listener );
+    this.m_listeners.add( listener );
   }
 }

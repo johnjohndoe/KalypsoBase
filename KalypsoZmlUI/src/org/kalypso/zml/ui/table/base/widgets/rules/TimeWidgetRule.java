@@ -43,6 +43,8 @@ package org.kalypso.zml.ui.table.base.widgets.rules;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.kalypso.core.KalypsoCorePlugin;
+
 /**
  * @author Dirk Kuch
  */
@@ -55,7 +57,8 @@ public class TimeWidgetRule implements IWidgetRule<Date>
   public String getFormatedString( final Date value )
   {
     final SimpleDateFormat sdf = new SimpleDateFormat( "HH:mm" );
-
+    sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+    
     return sdf.format( value );
   }
 }
