@@ -93,6 +93,7 @@ import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
+import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
@@ -438,7 +439,6 @@ public final class GisTemplateHelper
     if( theme instanceof CascadingLayerKalypsoTheme )
     {
       final CascadingLayer cascadingLayer = OF_GISMAPVIEW.createCascadingLayer();
-
       final CascadingLayerKalypsoTheme cascadingKalypsoTheme = ((CascadingLayerKalypsoTheme) theme);
       cascadingKalypsoTheme.fillLayerType( cascadingLayer, id, theme.isVisible(), srsName, monitor ); //$NON-NLS-1$
       return TemplateUtilities.OF_GISMAPVIEW.createCascadingLayer( cascadingLayer );
@@ -464,13 +464,31 @@ public final class GisTemplateHelper
       layer.setType( "simple" ); //$NON-NLS-1$
 
       final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
-      final AbstractKalypsoTheme abstractKalypsoTheme = ((AbstractKalypsoTheme) theme);
+      final KalypsoWMSTheme wmsTheme = (KalypsoWMSTheme) theme;
 
-      final String legendIcon = abstractKalypsoTheme.getLegendIcon();
+      final String legendIcon = wmsTheme.getLegendIcon();
       if( legendIcon != null )
         layer.setLegendicon( extentFac.createStyledLayerTypeLegendicon( legendIcon ) );
 
-      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( abstractKalypsoTheme.shouldShowLegendChildren() ) );
+      layer.setShowChildren( extentFac.createStyledLayerTypeShowChildren( wmsTheme.shouldShowLegendChildren() ) );
+
+      final Style[] oldStyles = wmsTheme.getStyles();
+      for( final Style oldStyle : oldStyles )
+      {
+        final Style newStyle = extentFac.createStyledLayerTypeStyle();
+        newStyle.setActuate( oldStyle.getActuate() );
+        newStyle.setArcrole( oldStyle.getArcrole() );
+        newStyle.setHref( oldStyle.getHref() );
+        newStyle.setLinktype( oldStyle.getLinktype() );
+        newStyle.setRole( oldStyle.getRole() );
+        newStyle.setShow( oldStyle.getShow() );
+        newStyle.setStyle( oldStyle.getStyle() );
+        newStyle.setTitle( oldStyle.getTitle() );
+        newStyle.setType( oldStyle.getType() );
+
+        layer.getStyle().add( newStyle );
+      }
+
       return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
     }
     else if( theme instanceof KalypsoPictureTheme )
@@ -493,7 +511,6 @@ public final class GisTemplateHelper
       layer.setVisible( theme.isVisible() );
       layer.setId( id );
       layer.setHref( "" ); //$NON-NLS-1$
-
       layer.setLinktype( "legend" ); //$NON-NLS-1$
 
       final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
@@ -625,5 +642,4 @@ public final class GisTemplateHelper
 
     bis.close();
   }
-
 }

@@ -87,22 +87,24 @@ public class KalypsoWMSUtilities
    *          The ID of the image provider.
    * @param localSRS
    *          The client coordinate system. Will be used to initialize the image provider.
+   * @param sldBody
+   *          This is the content of a SLD, if we want the server to render the image with a specific style.
    * @return An image provider. Should never be null.
    */
-  public static IKalypsoImageProvider getImageProvider( final String themeName, final String[] layers, final String[] styles, final String service, final String providerID )
+  public static IKalypsoImageProvider getImageProvider( final String themeName, final String[] layers, final String[] styles, final String service, final String providerID, final String sldBody )
   {
     final String localSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
     /* If it is missing or null, return the default provider. */
     if( providerID == null )
-      return getDefaultImageProvider( themeName, layers, styles, service, localSRS );
+      return getDefaultImageProvider( themeName, layers, styles, service, localSRS, sldBody );
 
     /* Get the extension registry. */
     final IExtensionRegistry er = Platform.getExtensionRegistry();
 
     /* The registry must exist. */
     if( er == null )
-      return getDefaultImageProvider( themeName, layers, styles, service, localSRS );
+      return getDefaultImageProvider( themeName, layers, styles, service, localSRS, sldBody );
 
     final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( "org.kalypso.ui.addlayer.WMSImageProvider" ); //$NON-NLS-1$
     for( final IConfigurationElement element : configurationElementsFor )
@@ -115,48 +117,50 @@ public class KalypsoWMSUtilities
         {
           /* This is the wanted provider. */
           final IKalypsoImageProvider provider = (IKalypsoImageProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
-          provider.init( themeName, layers, styles, service, localSRS );
+          provider.init( themeName, layers, styles, service, localSRS, sldBody );
           return provider;
         }
         catch( final CoreException e )
         {
           KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
 
-          return getDefaultImageProvider( themeName, layers, styles, service, localSRS );
+          return getDefaultImageProvider( themeName, layers, styles, service, localSRS, sldBody );
         }
         catch( final Throwable t )
         {
           // protect against bad extensions
-          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString("org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities.3") + id, t ); //$NON-NLS-1$
+          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities.3" ) + id, t ); //$NON-NLS-1$
           KalypsoGisPlugin.getDefault().getLog().log( status );
 
-          return getDefaultImageProvider( themeName, layers, styles, service, localSRS );
+          return getDefaultImageProvider( themeName, layers, styles, service, localSRS, sldBody );
         }
       }
     }
 
-    return getDefaultImageProvider( themeName, layers, styles, service, localSRS );
+    return getDefaultImageProvider( themeName, layers, styles, service, localSRS, sldBody );
   }
 
   /**
    * This function returns the default wms image provider. It initializes it, too.
    * 
    * @param themeName
-   *            The name of the theme.
+   *          The name of the theme.
    * @param layers
-   *            The layers.
+   *          The layers.
    * @param styles
-   *            The styles.
+   *          The styles.
    * @param service
-   *            The service.
+   *          The service.
    * @param localSRS
-   *            The client coordinate system.
+   *          The client coordinate system.
+   * @param sldBody
+   *          This is the content of a SLD, if we want the server to render the image with a specific style.
    * @return The default wms image provider.
    */
-  public static IKalypsoImageProvider getDefaultImageProvider( final String themeName, final String[] layers, final String[] styles, final String service, final String localSRS )
+  public static IKalypsoImageProvider getDefaultImageProvider( final String themeName, final String[] layers, final String[] styles, final String service, final String localSRS, final String sldBody )
   {
     final AbstractDeegreeImageProvider provider = new WMSImageProvider();
-    provider.init( themeName, layers, styles, service, localSRS );
+    provider.init( themeName, layers, styles, service, localSRS, sldBody );
 
     return provider;
   }
@@ -165,7 +169,7 @@ public class KalypsoWMSUtilities
    * This function creates an URL for a get capabilities request from the given base URL.
    * 
    * @param baseURL
-   *            The base URL.
+   *          The base URL.
    * @return The get capabilities request URL.
    */
   public static URL createCapabilitiesRequest( final URL baseURL ) throws MalformedURLException

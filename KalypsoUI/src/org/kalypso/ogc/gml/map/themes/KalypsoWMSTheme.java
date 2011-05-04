@@ -60,6 +60,9 @@ import org.kalypso.ogc.gml.outline.nodes.ILegendProvider;
 import org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader;
 import org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
+import org.kalypso.template.types.LayerType;
+import org.kalypso.template.types.StyledLayerType;
+import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -77,6 +80,11 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * The source string. Do not remove this, because it is needed, when the template is saved.
    */
   private String m_source;
+
+  /**
+   * The layer.
+   */
+  private LayerType m_layer;
 
   /**
    * This variable stores the image provider.
@@ -114,11 +122,12 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * @param mapModel
    *          The map modell.
    */
-  public KalypsoWMSTheme( final String source, final String linktype, final I10nString themeName, final IKalypsoImageProvider imageProvider, final IMapModell mapModel )
+  public KalypsoWMSTheme( final String source, final String linktype, final I10nString themeName, final LayerType layerType, final IKalypsoImageProvider imageProvider, final IMapModell mapModel )
   {
     super( themeName, linktype.toUpperCase(), mapModel );
 
     m_source = source;
+    m_layer = layerType;
     m_provider = imageProvider;
     m_legend = null;
   }
@@ -324,5 +333,17 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     }
 
     return m_legend;
+  }
+
+  public Style[] getStyles( )
+  {
+    if( m_layer == null )
+      return new Style[] {};
+
+    if( !(m_layer instanceof StyledLayerType) )
+      return new Style[] {};
+
+    StyledLayerType styledLayer = (StyledLayerType) m_layer;
+    return styledLayer.getStyle().toArray( new Style[] {} );
   }
 }

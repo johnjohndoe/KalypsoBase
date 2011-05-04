@@ -86,8 +86,10 @@ public interface IKalypsoImageProvider
    *          The service.
    * @param localSRS
    *          The client coordinate system.
+   * @param sldBody
+   *          This is the content of a SLD, if we want the server to render the image with a specific style.
    */
-  public void init( String themeName, String[] layers, String[] styles, String service, String localSRS );
+  public void init( String themeName, String[] layers, String[] styles, String service, String localSRS, String sldBody );
 
   /**
    * This function will create the image and return it.
