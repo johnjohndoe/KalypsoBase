@@ -112,6 +112,11 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   private String m_localSRS;
 
   /**
+   * This is the content of a SLD, if we want the server to render the image with a specific style.
+   */
+  private String m_sldBody;
+
+  /**
    * This variable stores the loader for the capabilities.
    */
   private final ICapabilitiesLoader m_loader;
@@ -146,6 +151,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     m_styles = null;
     m_service = null;
     m_localSRS = null;
+    m_sldBody = null;
 
     m_loader = loader;
     m_wms = null;
@@ -156,16 +162,17 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   /**
    * @see org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider#init(java.lang.String, java.lang.String[],
-   *      java.lang.String[], java.lang.String, java.lang.String)
+   *      java.lang.String[], java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  public void init( final String themeName, final String[] layers, final String[] styles, final String service, final String localSRS )
+  public void init( final String themeName, final String[] layers, final String[] styles, final String service, final String localSRS, final String sldBody )
   {
     m_themeName = themeName;
     m_layers = layers;
     m_styles = styles;
     m_service = service;
     m_localSRS = localSRS;
+    m_sldBody = sldBody;
 
     m_wms = null;
     m_negotiatedSRS = null;
@@ -381,7 +388,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
         return null;
 
       /* Create the GetMap request. */
-      final GetMap request = DeegreeWMSUtilities.createGetMapRequest( (WMSCapabilities) remoteWMS.getCapabilities(), getNegotiatedSRS(), getThemeName(), m_layers, m_styles, width, height, bbox, getLocalSRS() );
+      final GetMap request = DeegreeWMSUtilities.createGetMapRequest( (WMSCapabilities) remoteWMS.getCapabilities(), getNegotiatedSRS(), getThemeName(), m_layers, m_styles, width, height, bbox, getLocalSRS(), m_sldBody );
 
       /* Store the request, before actually asking the WMS for a response. */
       m_lastRequest = URLDecoder.decode( String.format( "%s%s", m_getMapUrl, request.toString() ), "UTF-8" );

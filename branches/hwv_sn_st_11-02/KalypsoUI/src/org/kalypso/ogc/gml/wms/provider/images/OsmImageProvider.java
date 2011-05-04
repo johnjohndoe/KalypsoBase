@@ -62,13 +62,12 @@ public class OsmImageProvider implements IKalypsoImageProvider
 
   /**
    * @see org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider#init(java.lang.String, java.lang.String[],
-   *      java.lang.String[], java.lang.String, java.lang.String)
+   *      java.lang.String[], java.lang.String, java.lang.String, java.lang.String)
    */
   @Override
-  public void init( final String themeName, final String[] layers, final String[] styles, final String service, final String localSRS )
+  public void init( final String themeName, final String[] layers, final String[] styles, final String service, final String localSRS, final String sldBody )
   {
     // TODO Auto-generated method stub
-
   }
 
   /**
