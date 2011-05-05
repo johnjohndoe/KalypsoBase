@@ -57,7 +57,10 @@ public class Refinement
       {
         for( final GM_Surface< ? > gm_SurfacePatch : multiSurface.getAllSurfaces() )
         {
-          remainingSurface = remainingSurface.difference( gm_SurfacePatch );
+          if( remainingSurface != null )
+          {
+            remainingSurface = remainingSurface.difference( gm_SurfacePatch );
+          }
         }
       }
       if( remainingSurface instanceof GM_MultiSurface )
@@ -86,7 +89,6 @@ public class Refinement
           for( final GM_SurfacePatch surfacePatch : surface )
           {
             final GM_Object preIntersection = inputCurve.intersection( surface );
-
             if( preIntersection instanceof GM_Point )
               continue;
 
