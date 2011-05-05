@@ -55,6 +55,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -386,6 +387,8 @@ public class ConstraintDelaunayHelper
     final String firstLine = nodeReader.readLine();
     final StringTokenizer firstTokenizer = new StringTokenizer( firstLine );
     final int pointCount = Integer.parseInt( firstTokenizer.nextToken() );
+    final int coordCount = Integer.parseInt( firstTokenizer.nextToken() );
+    final int attCount = Integer.parseInt( firstTokenizer.nextToken() );
 
     final GM_Position[] points = new GM_Position[pointCount + 1];
 
@@ -402,7 +405,7 @@ public class ConstraintDelaunayHelper
       final int id = Integer.parseInt( tokenizer.nextToken() );
       final double x = Double.parseDouble( tokenizer.nextToken() );
       final double y = Double.parseDouble( tokenizer.nextToken() );
-      final double z = Double.parseDouble( tokenizer.nextToken() );
+      final double z = attCount > 0 ? Double.parseDouble( tokenizer.nextToken() ) : Double.NaN;
 
       final GM_Position position = GeometryFactory.createGM_Position( x, y, z );
       points[id] = position;
@@ -609,6 +612,7 @@ public class ConstraintDelaunayHelper
     return triangulatePolygon( exterior, interiorPolygons, crs );
   }
 
+  @SuppressWarnings("unchecked")
   public static GM_Triangle[] triangulatePolygon( final GM_Position[] exterior, @SuppressWarnings("unused") final GM_Position[][] interiorPolygons, final String crs, final String... triangleArgs )
   {
     BufferedReader nodeReader = null;
@@ -623,7 +627,7 @@ public class ConstraintDelaunayHelper
     // handle the points
     for( final GM_Position pos : exterior )
     {
-      final TriangleVertex vertex = new TriangleVertex( pos, true, 0 );
+      final TriangleVertex vertex = new TriangleVertex( pos, true, Collections.EMPTY_LIST );
       nodeList.add( vertex );
     }
 

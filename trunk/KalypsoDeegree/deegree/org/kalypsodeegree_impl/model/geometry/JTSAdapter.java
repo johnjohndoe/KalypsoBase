@@ -501,7 +501,7 @@ public class JTSAdapter
     final GM_MultiPrimitive multi = new GM_MultiPrimitive_Impl( crs );
     for( int i = 0; i < collection.getNumGeometries(); i++ )
     {
-      multi.setObjectAt( wrap( collection.getGeometryN( i ) ), i );
+      multi.add( wrap( collection.getGeometryN( i ) ) );
     }
     return multi;
   }
