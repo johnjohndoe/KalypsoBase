@@ -45,6 +45,7 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.java.util.CalendarIterator;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
@@ -396,7 +397,7 @@ public class IntervalTupleModel extends AbstractTupleModel
 
   private static Calendar createCalendar( final Date date )
   {
-    final Calendar result = Calendar.getInstance();
+    final Calendar result = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     result.setTime( date );
     return result;
   }
