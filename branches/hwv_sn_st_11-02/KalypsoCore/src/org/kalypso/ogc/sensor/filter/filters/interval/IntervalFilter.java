@@ -42,7 +42,6 @@ package org.kalypso.ogc.sensor.filter.filters.interval;
 
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Date;
 
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
@@ -130,9 +129,6 @@ public class IntervalFilter extends AbstractObservationFilter
   {
     final DateRange dateRange = request == null ? null : request.getDateRange();
 
-    final Date from = dateRange == null ? null : dateRange.getFrom();
-    final Date to = dateRange == null ? null : dateRange.getTo();
-
     // BUGIFX: fixes the problem with the first value:
     // the first value was always ignored, because the interval
     // filter cannot handle the first value of the source observation
@@ -140,8 +136,16 @@ public class IntervalFilter extends AbstractObservationFilter
     // HACK: we always use DAY, so that work fine only up to time series of DAY-quality.
     // Maybe there should be one day a mean to determine, which is the right amount.
     final ITupleModel values = ObservationUtilities.requestBuffered( m_baseobservation, dateRange, Calendar.DAY_OF_MONTH, 2 );
+
     m_metadata = MetadataHelper.clone( m_baseobservation.getMetadataList() );
-    return new IntervalTupleModel( m_mode, m_definition, m_metadata, values, from, to );
+
+    final IntervalValuesOperation valuesOperation = new IntervalValuesOperation( values, m_metadata, m_definition );
+    valuesOperation.execute( dateRange );
+    return valuesOperation.getModel();
+
+// final Date from = dateRange == null ? null : dateRange.getFrom();
+// final Date to = dateRange == null ? null : dateRange.getTo();
+// return new IntervalTupleModel( m_mode, m_definition, m_metadata, values, from, to );
   }
 
   @Override
