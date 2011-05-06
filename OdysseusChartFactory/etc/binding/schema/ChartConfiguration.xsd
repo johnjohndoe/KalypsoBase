@@ -4,7 +4,7 @@
 
   <element name="ChartConfiguration" type="ods:ChartConfigurationType">
 
-	<!-- Achsen Keys -->
+    <!-- Achsen Keys -->
     <key name="axisKey" id="axisKey.key">
       <selector xpath="ods:Axis">
       </selector>
@@ -33,7 +33,7 @@
     </keyref>
 
 
-	<!-- Mapper Keys -->
+    <!-- Mapper Keys -->
     <key name="mapperKey" id="mapperKey.key">
       <selector xpath="ods:Mapper">
       </selector>
@@ -44,7 +44,7 @@
       <field xpath="@ref" />
     </keyref>
 
-	<!-- Layer Keys -->
+    <!-- Layer Keys -->
     <key name="layerKey" id="layerKey.key">
       <selector xpath="ods:Layer">
       </selector>
@@ -55,7 +55,7 @@
       <field xpath="@ref" />
     </keyref>
 
-	<!-- AxisRenderer Keys -->
+    <!-- AxisRenderer Keys -->
     <key name="axisRendererKey" id="axisRendererKey.key">
       <selector xpath="ods:AxisRenderer">
       </selector>
@@ -66,7 +66,7 @@
       <field xpath="@ref" />
     </keyref>
 
-	<!-- LineStyleKeys -->
+    <!-- LineStyleKeys -->
     <key name="lineStyleKey" id="lineStyleKey.key">
       <selector xpath="ods:LineStyle">
       </selector>
@@ -77,7 +77,7 @@
       <field xpath="@ref" />
     </keyref>
 
-	<!-- PointStyleKeys -->
+    <!-- PointStyleKeys -->
     <key name="pointStyleKey" id="pointStyleKey.key">
       <selector xpath="ods:PointStyle">
       </selector>
@@ -88,7 +88,7 @@
       <field xpath="@ref" />
     </keyref>
 
-	<!-- AreaStyleKeys -->
+    <!-- AreaStyleKeys -->
     <key name="areaStyleKey" id="areaStyleKey.key">
       <selector xpath="ods:AreaStyle">
       </selector>
@@ -99,7 +99,7 @@
       <field xpath="@ref" />
     </keyref>
 
-	<!-- TextStyleKeys -->
+    <!-- TextStyleKeys -->
     <key name="textStyleKey" id="textStyleKey.key">
       <selector xpath="ods:TextStyle">
       </selector>
@@ -110,40 +110,23 @@
       <field xpath="@ref" />
     </keyref>
 
-		<!-- identische Mapper nur einmal pro layer -->
-		<!-- <unique name="mapperPerLayer"> <selector xpath="ods:Layer/ods:Mappers/*"/>
-			<field xpath="@ref"/> </unique> -->
+    <!-- identische Mapper nur einmal pro layer -->
+    <!-- <unique name="mapperPerLayer"> <selector xpath="ods:Layer/ods:Mappers/*"/> <field xpath="@ref"/> </unique> -->
 
-		<!-- identische MapperRoles nur einmal pro layer -->
-		<!-- <unique name="mapperRolePerLayer"> <selector xpath="ods:Layer/ods:Mappers/*"/>
-			<field xpath="@role"/> </unique> -->
+    <!-- identische MapperRoles nur einmal pro layer -->
+    <!-- <unique name="mapperRolePerLayer"> <selector xpath="ods:Layer/ods:Mappers/*"/> <field xpath="@role"/> </unique> -->
 
-		<!-- identische Styles nur einmal pro layer -->
-		<!-- <unique name="stylePerLayer"> <selector xpath="ods:Layer/ods:Styles/*"/>
-			<field xpath="@ref"/> </unique> -->
+    <!-- identische Styles nur einmal pro layer -->
+    <!-- <unique name="stylePerLayer"> <selector xpath="ods:Layer/ods:Styles/*"/> <field xpath="@ref"/> </unique> -->
 
-		<!-- identische StyleRoles nur einmal pro layer -->
-		<!-- <unique name="styleRolePerLayer"> <selector xpath="ods:Layer/ods:Styles/*"/>
-			<field xpath="@role"/> </unique> -->
+    <!-- identische StyleRoles nur einmal pro layer -->
+    <!-- <unique name="styleRolePerLayer"> <selector xpath="ods:Layer/ods:Styles/*"/> <field xpath="@role"/> </unique> -->
 
-		<!-- identische Layer nur einmal pro chart -->
-		<!-- <unique name="layerPerChart"> <selector xpath="ods:Chart/ods:Layers/ods:LayerRef"/>
-			<field xpath="@ref"/> </unique> -->
+    <!-- identische Layer nur einmal pro chart -->
+    <!-- <unique name="layerPerChart"> <selector xpath="ods:Chart/ods:Layers/ods:LayerRef"/> <field xpath="@ref"/> </unique> -->
 
-		<!-- identischer Parametername nur einmal pro Provider; muss dummerweise
-			für jedes Element individuell aufgeführt werden, da * auf alle Elemente wirkt
-			und ein Parametername global nur einmal auftauchen dürfte Funktioniert leider
-			nicht - müsste auch noch individuell für Parameter, ParameterList und ParameterMap
-			aufgeführt werden. ISt aber nicht schlimm, weil dadurch keine essntiellen
-			Fehler entstehen - bei mehrfach aufgerführten ParameterNamen werden halt
-			vorherige von nachfolgenden überschrieben <unique name="parameterNamePerLayerProvider">
-			<selector xpath="ods:Layer/ods:Provider/ods:Parameters/*"/> <field xpath="@name"/>
-			</unique> <unique name="parameterNamePerAxisProvider"> <selector xpath="ods:Axis/ods:Provider/ods:Parameters/*"/>
-			<field xpath="@name"/> </unique> <unique name="parameterNamePerMapperProvider">
-			<selector xpath="ods:Mapper/ods:Provider/ods:Parameters/*"/> <field xpath="@name"/>
-			</unique> <unique name="parameterNamePerAxisRendererProvider"> <selector
-			xpath="ods:AxisRenderer/ods:Provider/ods:Parameters/*"/> <field xpath="@name"/>
-			</unique> -->
+    <!-- identischer Parametername nur einmal pro Provider; muss dummerweise für jedes Element individuell aufgeführt werden, da * auf alle Elemente wirkt und ein Parametername global nur einmal auftauchen dürfte Funktioniert leider nicht - müsste auch noch individuell für Parameter, ParameterList und ParameterMap aufgeführt werden. ISt aber nicht schlimm, weil dadurch keine essntiellen Fehler entstehen - bei mehrfach aufgerführten ParameterNamen werden halt vorherige von nachfolgenden überschrieben <unique name="parameterNamePerLayerProvider"> <selector xpath="ods:Layer/ods:Provider/ods:Parameters/*"/> <field xpath="@name"/> </unique> <unique name="parameterNamePerAxisProvider"> <selector xpath="ods:Axis/ods:Provider/ods:Parameters/*"/> <field xpath="@name"/> </unique> <unique name="parameterNamePerMapperProvider"> <selector xpath="ods:Mapper/ods:Provider/ods:Parameters/*"/> <field xpath="@name"/> </unique> <unique name="parameterNamePerAxisRendererProvider"> <selector xpath="ods:AxisRenderer/ods:Provider/ods:Parameters/*"/> 
+      <field xpath="@name"/> </unique> -->
 
   </element>
 
@@ -223,9 +206,18 @@
         </sequence>
         <attribute name="legend" type="boolean" use="optional" default="true" />
         <attribute name="legendRenderer" type="string" use="optional" default="de.openali.odysseus.chart.legend.render.combined" />
+        <attribute name="loader" type="ods:DataLoadingStrategy" default="asynchrone" />
       </extension>
     </complexContent>
   </complexType>
+
+
+  <simpleType name="DataLoadingStrategy">
+    <restriction base="string">
+      <enumeration value="synchrone" />
+      <enumeration value="asynchrone" />
+    </restriction>
+  </simpleType>
 
   <complexType name="LayersType">
     <sequence>
@@ -417,18 +409,12 @@
   <element name="NumberRange" type="ods:AxisNumberRangeType"></element>
 
   <complexType name="AxisNumberRangeRestrictionType">
-    <attribute name="absoluteMinValue" type="decimal" use="optional" /><!--
-			Grenze beim verschieben -->
-    <attribute name="absoluteMaxValue" type="decimal" use="optional" /><!--
-			Grenze beim verschieben -->
-    <attribute name="minRange" type="decimal" use="optional" /><!--
-			Grenze beim verkleinern -->
-    <attribute name="maxRange" type="decimal" use="optional" /><!--
-			Grenze beim vergrößern -->
-    <attribute name="fixMinValue" type="boolean" use="optional" /><!--
-			fixiere absoluteMinValue -->
-    <attribute name="fixMaxValue" type="boolean" use="optional" /><!--
-			fixiere absoluteMaxValue -->
+    <attribute name="absoluteMinValue" type="decimal" use="optional" /><!-- Grenze beim verschieben -->
+    <attribute name="absoluteMaxValue" type="decimal" use="optional" /><!-- Grenze beim verschieben -->
+    <attribute name="minRange" type="decimal" use="optional" /><!-- Grenze beim verkleinern -->
+    <attribute name="maxRange" type="decimal" use="optional" /><!-- Grenze beim vergrößern -->
+    <attribute name="fixMinValue" type="boolean" use="optional" /><!-- fixiere absoluteMinValue -->
+    <attribute name="fixMaxValue" type="boolean" use="optional" /><!-- fixiere absoluteMaxValue -->
   </complexType>
 
   <element name="AxisNumberRangeRestriction" type="ods:AxisNumberRangeRestrictionType"></element>
@@ -560,10 +546,7 @@
     </simpleContent>
   </complexType>
 
-	<!-- <complexType name="StylesType"> <choice maxOccurs="unbounded"> <element
-		name="LineStyleRef" type="ods:RoleReferencingType"/> <element name="PointStyleRef"
-		type="ods:RoleReferencingType"/> <element name="AreaStyleRef" type="ods:RoleReferencingType"/>
-		<element name="TextStyleRef" type="ods:RoleReferencingType"/> </choice> </complexType> -->
+  <!-- <complexType name="StylesType"> <choice maxOccurs="unbounded"> <element name="LineStyleRef" type="ods:RoleReferencingType"/> <element name="PointStyleRef" type="ods:RoleReferencingType"/> <element name="AreaStyleRef" type="ods:RoleReferencingType"/> <element name="TextStyleRef" type="ods:RoleReferencingType"/> </choice> </complexType> -->
 
 </schema>
 
