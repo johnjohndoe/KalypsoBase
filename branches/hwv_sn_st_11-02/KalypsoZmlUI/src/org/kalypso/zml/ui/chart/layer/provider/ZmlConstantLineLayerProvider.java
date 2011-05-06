@@ -39,7 +39,7 @@
  *   
  *  ---------------------------------------------------------------------------*/
 
-package org.kalypso.zml.ui.chart.layer.boundaries;
+package org.kalypso.zml.ui.chart.layer.provider;
 
 import java.net.URL;
 
@@ -53,13 +53,12 @@ import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvid
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlConstantLineLayerProvider extends AbstractLayerProvider implements ILayerProvider
+public class ZmlConstantLineLayerProvider extends AbstractLayerProvider
 {
   public static final String ID = "org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider";
 

@@ -53,16 +53,15 @@ import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvid
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlBarLayerProvider extends AbstractLayerProvider implements ILayerProvider
+public class ZmlBarLayerProvider extends AbstractLayerProvider
 {
-  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider";
+  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider"; //$NON-NLS-1$
 
   /**
    * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
@@ -81,7 +80,7 @@ public class ZmlBarLayerProvider extends AbstractLayerProvider implements ILayer
       final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, targetAxisId );
 
       final IParameterContainer parameters = getParameterContainer();
-      final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
       if( !StringUtils.isEmpty( href ) )
       {
         final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, getRequestHandler() );

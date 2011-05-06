@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.net.URL;
+
 import org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider;
 import org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider;
 
@@ -65,11 +67,14 @@ public final class ZmlLayerFactory
     return INSTANCE;
   }
 
+  public ZmlLineLayer createLineLayer( final ZmlLineLayerProvider provider, final IStyleSet styleSet, final URL context )
+  {
+    return new ZmlLineLayer( provider, styleSet, context );
+  }
+
   public ZmlLineLayer createLineLayer( final ZmlLineLayerProvider provider, final IStyleSet styleSet )
   {
-    final ZmlLineLayer layer = new ZmlLineLayer( provider, styleSet );
-
-    return layer;
+    return createLineLayer( provider, styleSet, null );
   }
 
   public ZmlLineLayer createLineLayer( final IStyleSet styleSet )

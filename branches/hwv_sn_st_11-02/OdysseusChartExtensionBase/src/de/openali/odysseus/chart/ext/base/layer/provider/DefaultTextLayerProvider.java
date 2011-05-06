@@ -47,7 +47,6 @@ import de.openali.odysseus.chart.ext.base.layer.DefaultTextLayer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
@@ -57,7 +56,7 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 /**
  * @author Dirk Kuch
  */
-public class DefaultTextLayerProvider extends AbstractLayerProvider implements ILayerProvider
+public class DefaultTextLayerProvider extends AbstractLayerProvider
 {
   public static final String ID = "de.openali.odysseus.chart.ext.base.layer.provider.DefaultTextLayerProvider";
 

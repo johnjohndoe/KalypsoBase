@@ -42,25 +42,18 @@ package org.kalypso.zml.ui.chart.layer.provider;
 
 import java.net.URL;
 
-import org.apache.commons.lang.StringUtils;
 import org.kalypso.zml.core.diagram.data.IRequestHandler;
 import org.kalypso.zml.core.diagram.data.MetadataRequestHandler;
-import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlLayerFactory;
-import org.kalypso.zml.ui.chart.layer.themes.ZmlLineLayer;
-import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvider;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
-import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlLineLayerProvider extends AbstractLayerProvider implements ILayerProvider
+public class ZmlLineLayerProvider extends AbstractLayerProvider
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider"; //$NON-NLS-1$
 
@@ -72,28 +65,8 @@ public class ZmlLineLayerProvider extends AbstractLayerProvider implements ILaye
   {
     try
     {
-      final IStyleSet styleSet = getStyleSet();
-      final String targetAxisId = getTargetAxisId();
-
       final ZmlLayerFactory factory = ZmlLayerFactory.getInstance();
-
-      final ZmlLineLayer layer = factory.createLineLayer( this, styleSet );
-      // FIXME: ugly: set the IObservationProvider to the layer; the handler is implementation detail of the layer
-      final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, targetAxisId );
-
-      final IParameterContainer parameters = getParameterContainer();
-      final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
-      if( !StringUtils.isEmpty( href ) )
-      {
-        // FIXME: we need some factory for the provider in order to decide if to load snychronous (e.g. for report)
-        // or asynchronous (ALL other cases)
-
-        final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, getRequestHandler() );
-        // FIXME: set the obs provider to the handler, and dispose the handler later!
-        handler.setObsProvider( provider );
-      }
-
-      return layer;
+      return factory.createLineLayer( this, getStyleSet(), context );
     }
     catch( final Throwable t )
     {
@@ -101,7 +74,7 @@ public class ZmlLineLayerProvider extends AbstractLayerProvider implements ILaye
     }
   }
 
-  protected IRequestHandler getRequestHandler( )
+  public IRequestHandler getRequestHandler( )
   {
     return new MetadataRequestHandler( getParameterContainer() );
   }

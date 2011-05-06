@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.model.impl;
+package de.openali.odysseus.chart.framework.model.impl.settings;
 
 import java.awt.Insets;
 
@@ -52,7 +52,6 @@ import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegend
  */
 public interface IBasicChartSettings
 {
-
   String getDescription( );
 
   TitleTypeBean[] getTitles( );
@@ -69,4 +68,7 @@ public interface IBasicChartSettings
 
   IChartLegendRenderer getLegendRenderer( );
 
+  void setDataLoaderStrategy( CHART_DATA_LOADER_STRATEGY convert );
+
+  CHART_DATA_LOADER_STRATEGY getDataLoaderStrategy( );
 }

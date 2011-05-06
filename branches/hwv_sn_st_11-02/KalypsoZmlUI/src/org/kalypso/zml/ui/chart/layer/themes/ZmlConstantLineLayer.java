@@ -73,7 +73,6 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.util.img.GenericChartLabelRenderer;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
@@ -227,6 +226,9 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private void updateDescriptors( ) throws XmlException, IOException
   {
+    if( Objects.isNull( m_handler ) )
+      return;
+
     final IObservation observation = m_handler.getObservation();
     if( Objects.isNull( observation ) )
     {

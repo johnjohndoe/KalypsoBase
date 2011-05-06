@@ -75,7 +75,7 @@ public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
       final IZmlLayer zml = (IZmlLayer) layer;
       final IZmlLayerDataHandler handler = zml.getDataHandler();
 
-      if( Objects.isNotNull( handler.getObservation() ) )
+      if( Objects.isNotNull( handler ) && Objects.isNotNull( handler.getObservation() ) )
         m_handler = handler;
     }
 

@@ -55,7 +55,7 @@ import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 /**
  * @author Dirk Kuch
- * @deprecated Do not use, all observations should be provided by an IObservationPRovider -> do only use the other
+ * @deprecated Do not use, all observations should be provided by an IObservationProvider -> do only use the other
  *             implementation, even if loading synchronously
  */
 @Deprecated

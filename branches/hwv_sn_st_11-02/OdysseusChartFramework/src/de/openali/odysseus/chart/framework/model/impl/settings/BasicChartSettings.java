@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.model.impl;
+package de.openali.odysseus.chart.framework.model.impl.settings;
 
 import java.awt.Insets;
 import java.util.ArrayList;
@@ -67,6 +67,8 @@ public class BasicChartSettings implements IBasicChartSettings
   private ITextStyle m_textStyle = null;
 
   private final List<TitleTypeBean> m_title = new ArrayList<TitleTypeBean>();
+
+  private CHART_DATA_LOADER_STRATEGY m_strategy = CHART_DATA_LOADER_STRATEGY.eAsynchrone;
 
   /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#setTitle(java.lang.String)
@@ -149,5 +151,23 @@ public class BasicChartSettings implements IBasicChartSettings
   {
     m_title.clear();
     m_title.add( new TitleTypeBean( title, position, ALIGNMENT.CENTER, textStyle, insets ) );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.impl.IBasicChartSettings#setDataLoaderStrategy(de.openali.odysseus.chart.framework.model.impl.CHART_DATA_LOADER_STRATEGY)
+   */
+  @Override
+  public void setDataLoaderStrategy( final CHART_DATA_LOADER_STRATEGY strategy )
+  {
+    m_strategy = strategy;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.impl.IBasicChartSettings#getDataLoaderStrategy()
+   */
+  @Override
+  public CHART_DATA_LOADER_STRATEGY getDataLoaderStrategy( )
+  {
+    return m_strategy;
   }
 }

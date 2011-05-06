@@ -86,8 +86,6 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   {
     m_layer = layer;
     m_targetAxisId = targetAxisId;
-
-    m_layer.setDataHandler( this );
   }
 
   public void setObsProvider( final IObsProvider provider )
