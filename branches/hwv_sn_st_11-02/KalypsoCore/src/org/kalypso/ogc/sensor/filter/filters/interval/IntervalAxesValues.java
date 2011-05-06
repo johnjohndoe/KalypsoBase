@@ -83,8 +83,8 @@ public class IntervalAxesValues
     m_axes = axes;
     m_defaultValue = defaultValue;
     m_defaultStatus = defaultStatus;
-    m_valueAxes = AxisUtils.findValueAxes( m_axes );
-    m_statusAxes = AxisUtils.findStatusAxes( m_axes );
+    m_valueAxes = AxisUtils.findValueAxes( axes );
+    m_statusAxes = AxisUtils.findStatusAxes( axes );
     m_sourceAxis = AxisUtils.findDataSourceAxis( axes );
     m_dateAxis = AxisUtils.findDateAxis( axes );
 
