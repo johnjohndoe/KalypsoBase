@@ -61,15 +61,13 @@ public class ChartLabelRendererFactory
     final TitleTypeBean titleType = new TitleTypeBean( null );
     titleType.setInsets( tickInsets );
     titleType.setTextStyle( tickLabelStyle );
-  //  testStyles( titleType.getTextStyle() );
 
     if( axisPosition.getOrientation() == ORIENTATION.VERTICAL )
     {
-      titleType.setTextAnchorX( ALIGNMENT.LEFT );
+      titleType.setTextAnchorX( ALIGNMENT.RIGHT );
       titleType.setTextAnchorY( ALIGNMENT.CENTER );
-      titleType.setRotation( 90 );
-      titleType.setMirrorVertical( true );
-      if( axisPosition == POSITION.LEFT )
+      titleType.setRotation( -90 );
+      if( axisPosition == POSITION.RIGHT )
         titleType.setMirrorHorizontal( true );
     }
     else
@@ -80,12 +78,6 @@ public class ChartLabelRendererFactory
         titleType.setMirrorVertical( true );
     }
     return titleType;
-  }
-
-  private static void testStyles( final ITextStyle textStyle )
-  {
-    textStyle.setFillColor( new RGB( 255, 0, 0 ) );
-    textStyle.setHeight( 33 );
   }
 
   static public IChartLabelRenderer getTickLabelRenderer( final POSITION axisPosition, final Insets tickInsets, final ITextStyle tickLabelStyle, final IAreaStyle tickFrameStyle )
@@ -104,28 +96,20 @@ public class ChartLabelRendererFactory
 
   public static TitleTypeBean getAxisLabelType( final POSITION axisPosition, final String label, final Insets axisLabelInsets, final ITextStyle axisLabelStyle )
   {
-    final TitleTypeBean titleType = new TitleTypeBean( label, ALIGNMENT.CENTER, ALIGNMENT.BOTTOM, axisLabelStyle, axisLabelInsets );
+    final TitleTypeBean titleType = new TitleTypeBean( label, ALIGNMENT.CENTER, ALIGNMENT.CENTER, axisLabelStyle, axisLabelInsets );
     titleType.setTextAnchorX( ALIGNMENT.CENTER );
-    titleType.setTextAnchorY( ALIGNMENT.BOTTOM );
+    titleType.setTextAnchorY( ALIGNMENT.CENTER );
     if( axisPosition == POSITION.LEFT )
     {
-      titleType.setMirrorHorizontal( true );
-      titleType.setMirrorVertical( true );
+      titleType.setRotation( 180 );
     }
     else if( axisPosition == POSITION.RIGHT )
     {
-      titleType.setMirrorHorizontal( false );
       titleType.setMirrorVertical( true );
     }
     else if( axisPosition == POSITION.TOP )
     {
       titleType.setMirrorHorizontal( false );
-      titleType.setMirrorVertical( true );
-    }
-    else if( axisPosition == POSITION.BOTTOM )
-    {
-      titleType.setMirrorHorizontal( false );
-      titleType.setMirrorVertical( false );
     }
 
     return titleType;

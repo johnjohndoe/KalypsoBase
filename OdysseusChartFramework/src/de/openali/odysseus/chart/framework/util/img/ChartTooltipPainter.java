@@ -83,7 +83,8 @@ public class ChartTooltipPainter
 
     m_labelRenderer = new GenericChartLabelRenderer( titleType );
     final IAreaStyle borderStyle = StyleUtils.getDefaultAreaStyle();
-    borderStyle.getStroke().setColor( rgbText );
+    borderStyle.getStroke().setColor( new RGB( 0, 0, 0 ) );
+    borderStyle.getStroke().setWidth( 1 );
     borderStyle.setFill( new ColorFill( rgbFill ) );
     m_labelRenderer.setBorderStyle( borderStyle );
   }
@@ -100,8 +101,8 @@ public class ChartTooltipPainter
   public void paint( final GC gcw, final Point mousePos )
   {
 
-    final Point toolsize = getLabelRenderer().getSize();
-    if( toolsize.x == 0 || toolsize.y == 0 )
+    final Rectangle toolsize = getLabelRenderer().getSize();
+    if( toolsize.width == 0 || toolsize.height == 0 )
       return;
 
     final Rectangle clippRect = gcw.getClipping();
@@ -115,8 +116,8 @@ public class ChartTooltipPainter
     int offsetX = 3/* Pixel */;
     int offsetY = -3/* Pixel */;
 
-    final boolean mirrorX = toolsize.x + offsetX + mousePos.x > clippRect.x + clippRect.width;
-    final boolean mirrorY = toolsize.y - offsetY - mousePos.y > clippRect.y;
+    final boolean mirrorX = toolsize.width + offsetX + mousePos.x > clippRect.x + clippRect.width;
+    final boolean mirrorY = toolsize.height - offsetY - mousePos.y > clippRect.y;
     if( mirrorX )
     {
       posX = ALIGNMENT.RIGHT;
@@ -126,7 +127,7 @@ public class ChartTooltipPainter
     {
       posY = ALIGNMENT.TOP;
       offsetY = 3;
-      if(toolsize.x < offsetX + mousePos.x )
+      if( toolsize.width < offsetX + mousePos.x )
       {
         posX = ALIGNMENT.RIGHT;
         offsetX = -3;

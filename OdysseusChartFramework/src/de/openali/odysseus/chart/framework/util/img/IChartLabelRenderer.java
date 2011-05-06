@@ -66,6 +66,6 @@ public interface IChartLabelRenderer
 
   void setTitleTypeBean( final TitleTypeBean titleTypeBean );
 
-  Point getSize( );
+  Rectangle getSize( );
 
 }
