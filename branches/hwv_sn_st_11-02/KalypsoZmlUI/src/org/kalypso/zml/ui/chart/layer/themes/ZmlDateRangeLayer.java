@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.net.URL;
 import java.util.Date;
 
 import org.eclipse.swt.graphics.GC;
@@ -49,6 +50,8 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.diagram.base.LayerProviderUtils;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
+import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
@@ -71,9 +74,26 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
 
   private IZmlLayerDataHandler m_dataHandler;
 
-  public ZmlDateRangeLayer( final ILayerProvider provider )
+  public ZmlDateRangeLayer( final ILayerProvider provider, final URL context )
   {
     super( provider );
+    setup( context );
+  }
+
+  private void setup( final URL context )
+  {
+    final IZmlLayerProvider provider = (IZmlLayerProvider) getProvider();
+    final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
+    try
+    {
+      handler.load( provider, context );
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
+    }
+
+    setDataHandler( handler );
   }
 
   /**

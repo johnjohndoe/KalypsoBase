@@ -43,53 +43,36 @@ package org.kalypso.zml.ui.chart.layer.provider;
 
 import java.net.URL;
 
-import org.apache.commons.lang.StringUtils;
-import org.kalypso.zml.core.diagram.base.provider.observation.SynchronousObservationProvider;
-import org.kalypso.zml.core.diagram.data.MetadataRequestHandler;
-import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
+import org.kalypso.zml.core.diagram.base.provider.observation.DefaultRequestHandler;
+import org.kalypso.zml.core.diagram.data.IRequestHandler;
+import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlConstantLineLayer;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlConstantLineLayerProvider extends AbstractLayerProvider
+public class ZmlConstantLineLayerProvider extends AbstractLayerProvider implements IZmlLayerProvider
 {
-  public static final String ID = "org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider";
+  public static final String ID = "org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider"; //$NON-NLS-1$
 
   /**
    * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
-  public IChartLayer getLayer( final URL context ) throws ConfigurationException
+  public IChartLayer getLayer( final URL context )
   {
-    try
-    {
-      final IParameterContainer parameters = getParameterContainer();
+    return new ZmlConstantLineLayer( this, getStyleSet(), false, context );
+  }
 
-      final ZmlConstantLineLayer layer = new ZmlConstantLineLayer( this, getStyleSet(), false );
-      final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, getTargetAxisId() );
-
-      // BAD; the layer should handle the observation, especially, thew layer should still load even if observation does
-      // not exist!
-      final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
-      if( StringUtils.isNotEmpty( href ) )
-      {
-        final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, new MetadataRequestHandler( parameters ) );
-        handler.setObsProvider( provider );
-        // FIXME: throwing an exception here causes the layer (and also the whole diagram not to load) -> we got a
-        // problem!
-      }
-
-      return layer;
-    }
-    catch( final Throwable t )
-    {
-      throw new ConfigurationException( "Configuration of .kod line layer theme failed.", t );
-    }
+  /**
+   * @see org.kalypso.zml.core.diagram.data.IZmlLayerProvider#getRequestHandler()
+   */
+  @Override
+  public IRequestHandler getRequestHandler( )
+  {
+    return new DefaultRequestHandler();
   }
 }
