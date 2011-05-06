@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,45 +38,22 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.provider;
-
-import java.net.URL;
-
-import org.kalypso.zml.core.diagram.data.IRequestHandler;
-import org.kalypso.zml.core.diagram.data.MetadataRequestHandler;
-import org.kalypso.zml.ui.chart.layer.themes.ZmlLayerFactory;
-
-import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+package de.openali.odysseus.chart.framework.model.impl.settings;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlLineLayerProvider extends AbstractLayerProvider
+public enum CHART_DATA_LOADER_STRATEGY
 {
-  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider"; //$NON-NLS-1$
+  eSynchrone,
+  eAsynchrone;
 
-  /**
-   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
-   */
-  @Override
-  public IChartLayer getLayer( final URL context ) throws ConfigurationException
+  public static CHART_DATA_LOADER_STRATEGY convert( final String strategy )
   {
-    try
-    {
-      final ZmlLayerFactory factory = ZmlLayerFactory.getInstance();
-      return factory.createLineLayer( this, getStyleSet(), context );
-    }
-    catch( final Throwable t )
-    {
-      throw new ConfigurationException( "Configuring of .kod line layer theme failed.", t );
-    }
-  }
+    if( "synchrone".equalsIgnoreCase( strategy ) )
+      return eSynchrone;
 
-  public IRequestHandler getRequestHandler( )
-  {
-    return new MetadataRequestHandler( getParameterContainer() );
+    // default strategy
+    return eAsynchrone;
   }
-
 }

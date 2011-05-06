@@ -51,13 +51,12 @@ import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvid
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlDateRangeLayerProvider extends AbstractLayerProvider implements ILayerProvider
+public class ZmlDateRangeLayerProvider extends AbstractLayerProvider
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlDateRangeLayerProvider"; //$NON-NLS-1$
 

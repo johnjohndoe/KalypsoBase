@@ -49,7 +49,6 @@ import org.kalypso.zml.ui.chart.layer.themes.ZmlSelectionLayer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
@@ -57,7 +56,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 /**
  * @author Dirk Kuch
  */
-public class ZmlSelectionLayerProvider extends AbstractLayerProvider implements ILayerProvider
+public class ZmlSelectionLayerProvider extends AbstractLayerProvider
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlSelectionLayerProvider";
 

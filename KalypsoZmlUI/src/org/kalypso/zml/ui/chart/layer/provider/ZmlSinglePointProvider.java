@@ -50,13 +50,12 @@ import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvid
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlSinglePointProvider extends AbstractLayerProvider implements ILayerProvider
+public class ZmlSinglePointProvider extends AbstractLayerProvider
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlSinglePointProvider"; //$NON-NLS-1$
 

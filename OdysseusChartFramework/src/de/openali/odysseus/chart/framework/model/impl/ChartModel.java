@@ -4,6 +4,8 @@ import org.kalypso.commons.java.lang.Arrays;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
+import de.openali.odysseus.chart.framework.model.impl.settings.BasicChartSettings;
+import de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings;
 import de.openali.odysseus.chart.framework.model.impl.utils.ChartModelLayerEventListener;
 import de.openali.odysseus.chart.framework.model.impl.visitors.AutoScaleVisitor;
 import de.openali.odysseus.chart.framework.model.impl.visitors.DisposeLayersVisitor;
