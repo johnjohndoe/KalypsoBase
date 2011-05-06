@@ -41,8 +41,6 @@
 package org.kalypso.zml.ui.chart.layer.themes;
 
 import java.awt.geom.Rectangle2D;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 
@@ -90,26 +88,24 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private final ZmlLineLayerLegendEntry m_legend = new ZmlLineLayerLegendEntry( this );
 
-  protected ZmlLineLayer( final ILayerProvider provider, final IStyleSet styleSet, final URL context )
+  public ZmlLineLayer( final ILayerProvider provider, final IStyleSet styleSet, final URL context )
   {
     super( provider, styleSet );
+    setup( context );
+  }
 
+  private void setup( final URL context )
+  {
+    final ZmlLineLayerProvider provider = (ZmlLineLayerProvider) getProvider();
+    final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
     try
     {
-      setupDataHandler( context );
+      handler.load( provider, context );
     }
     catch( final Throwable t )
     {
       t.printStackTrace();
     }
-
-  }
-
-  private void setupDataHandler( final URL context ) throws MalformedURLException, SensorException, URISyntaxException
-  {
-    final ZmlLineLayerProvider provider = (ZmlLineLayerProvider) getProvider();
-    final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
-    handler.load( provider, context );
 
     setDataHandler( handler );
   }

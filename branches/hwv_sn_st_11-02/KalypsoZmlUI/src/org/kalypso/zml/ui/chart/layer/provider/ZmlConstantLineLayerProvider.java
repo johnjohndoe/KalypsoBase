@@ -48,7 +48,6 @@ import org.kalypso.zml.core.diagram.base.provider.observation.SynchronousObserva
 import org.kalypso.zml.core.diagram.data.MetadataRequestHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlConstantLineLayer;
-import org.kalypso.zml.ui.chart.layer.themes.ZmlLayerFactory;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
@@ -72,9 +71,7 @@ public class ZmlConstantLineLayerProvider extends AbstractLayerProvider
     {
       final IParameterContainer parameters = getParameterContainer();
 
-      final ZmlLayerFactory factory = ZmlLayerFactory.getInstance();
-
-      final ZmlConstantLineLayer layer = factory.createConstantLineLayer( this, getStyleSet(), false );
+      final ZmlConstantLineLayer layer = new ZmlConstantLineLayer( this, getStyleSet(), false );
       final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, getTargetAxisId() );
 
       // BAD; the layer should handle the observation, especially, thew layer should still load even if observation does
