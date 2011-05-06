@@ -16,24 +16,24 @@ public class ArrayContentAxis extends AbstractAxis
 {
  
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#getNumericRange()
-   */
-  @Override
-  public IDataRange<Number> getNumericRange( )
-  {
-    // TODO Auto-generated method stub
-    return super.getNumericRange();
-  }
+//  /**
+//   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#getNumericRange()
+//   */
+//  @Override
+//  public IDataRange<Number> getNumericRange( )
+//  {
+//    // TODO Auto-generated method stub
+//    return super.getNumericRange();
+//  }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#setNumericRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
-   */
-  @Override
-  public void setNumericRange( IDataRange<Number> range )
-  {
-     super.setNumericRange( range );
-  }
+//  /**
+//   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#setNumericRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
+//   */
+//  @Override
+//  public void setNumericRange( IDataRange<Number> range )
+//  {
+//     super.setNumericRange( range );
+//  }
 
   // TODO more positions,only POSITION.BOTTOM supported
   public ArrayContentAxis( final String id, final AxisRendererConfig config )

@@ -57,7 +57,7 @@ public class ScreenCoordinateAxis extends AbstractAxis implements IScreenAxis
    * @see org.kalypso.chart.framework.model.mapper.IAxis#setNumericRange(org.kalypso.chart.framework.model.data.IDataRange)
    */
   @Override
-  public void setNumericRange( final IDataRange<Number> range )
+  public void setNumericRange( final IDataRange range )
   {
     // do nothing, fixed Range
   }
