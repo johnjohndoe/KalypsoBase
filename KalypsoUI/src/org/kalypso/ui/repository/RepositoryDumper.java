@@ -54,6 +54,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -121,7 +122,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
       monitor.worked( 800 );
 
       /* Create the result status. */
-      IStatus status = m_stati.asMultiStatusOrOK( "Export mit Fehlern abgeschlossen", "Export erfolgreich abgeschlossen" );
+      final IStatus status = m_stati.asMultiStatusOrOK( "Export mit Fehlern abgeschlossen", "Export erfolgreich abgeschlossen" );
 
       /* Writes the log. */
       writeLogQuietly( status );
@@ -143,23 +144,23 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
     }
   }
 
-  private void writeLogQuietly( IStatus status )
+  private void writeLogQuietly( final IStatus status )
   {
     try
     {
       /* Log the status, if possible. */
-      GeoStatusLog log = new GeoStatusLog( new File( m_directory, "export.log" ) );
+      final GeoStatusLog log = new GeoStatusLog( new File( m_directory, "export.log" ) );
       log.log( status );
       log.serialize();
     }
-    catch( Exception ex )
+    catch( final CoreException ex )
     {
       /* Ignore. */
       ex.printStackTrace();
     }
   }
 
-  private File dumpUpwards( final Writer structureWriter ) throws RepositoryException, IOException, InterruptedException
+  private File dumpUpwards( final Writer structureWriter ) throws RepositoryException, IOException
   {
     final IRepositoryItem[] parentChain = findParentChain( m_root );
     ArrayUtils.reverse( parentChain );
@@ -247,7 +248,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
 
       monitor.worked( 1 );
     }
-    catch( NoSuchElementException ex )
+    catch( final NoSuchElementException ex )
     {
       ex.printStackTrace();
 
@@ -260,7 +261,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
     }
   }
 
-  public void dumpItem( final Writer structureWriter, final File zmlFile, final IRepositoryItem item ) throws InterruptedException
+  public void dumpItem( final Writer structureWriter, final File zmlFile, final IRepositoryItem item )
   {
     for( int i = 0; i < 2; i++ )
     {
