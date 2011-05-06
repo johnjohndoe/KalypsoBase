@@ -43,10 +43,10 @@ package org.kalypso.zml.ui.chart.layer.provider;
 import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
+import org.kalypso.zml.core.diagram.base.provider.observation.DefaultRequestHandler;
+import org.kalypso.zml.core.diagram.base.provider.observation.SynchronousObservationProvider;
 import org.kalypso.zml.core.diagram.data.ZmlObservationDataHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlSinglePointLayer;
-import org.kalypso.zml.ui.core.provider.observation.DefaultRequestHandler;
-import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvider;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;

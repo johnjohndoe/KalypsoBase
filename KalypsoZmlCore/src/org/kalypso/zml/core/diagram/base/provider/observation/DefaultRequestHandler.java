@@ -38,47 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.provider;
+package org.kalypso.zml.core.diagram.base.provider.observation;
 
-import java.net.URL;
-
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.core.diagram.data.IRequestHandler;
-import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
-import org.kalypso.zml.core.diagram.data.MetadataRequestHandler;
-import org.kalypso.zml.ui.chart.layer.themes.ZmlLayerFactory;
-
-import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlLineLayerProvider extends AbstractLayerProvider implements IZmlLayerProvider
+public class DefaultRequestHandler implements IRequestHandler
 {
-  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider"; //$NON-NLS-1$
 
   /**
-   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
+   * @see org.kalypso.hwv.core.chart.provider.observation.IRequestHandler#getArguments(org.kalypso.ogc.sensor.IObservation)
    */
   @Override
-  public IChartLayer getLayer( final URL context ) throws ConfigurationException
+  public IRequest getArguments( final MetadataList metadata )
   {
-    try
-    {
-      final ZmlLayerFactory factory = ZmlLayerFactory.getInstance();
-      return factory.createLineLayer( this, getStyleSet(), context );
-    }
-    catch( final Throwable t )
-    {
-      throw new ConfigurationException( "Configuring of .kod line layer theme failed.", t );
-    }
-  }
-
-  @Override
-  public IRequestHandler getRequestHandler( )
-  {
-    return new MetadataRequestHandler( getParameterContainer() );
+    return null;
   }
 
 }

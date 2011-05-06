@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.core.provider.observation;
+package org.kalypso.zml.core.diagram.base.provider.observation;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.util.pool.PoolableObjectType;
@@ -46,7 +46,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.zml.ui.core.zml.TSLinkWithName;
+import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 
 /**
  * @author Dirk Kuch

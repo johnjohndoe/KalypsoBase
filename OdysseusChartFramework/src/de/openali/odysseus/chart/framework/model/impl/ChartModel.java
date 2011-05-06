@@ -147,4 +147,13 @@ public class ChartModel implements IChartModel
     m_identifier = identifier;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.ILayerContainer#getModel()
+   */
+  @Override
+  public IChartModel getModel( )
+  {
+    return this;
+  }
+
 }
