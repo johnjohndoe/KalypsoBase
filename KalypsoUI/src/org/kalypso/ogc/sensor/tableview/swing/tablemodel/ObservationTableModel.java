@@ -189,7 +189,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
         // tableColumn.setPreferredWidth( col.getWidth() );
       }
 
-      final ITupleModel tupModel = obs.getValues( col.getArguments() );
+      final ITupleModel tupModel = col.getValues();
 
       // fill shared column values
       for( int r = 0; r < tupModel.size(); r++ )
@@ -325,7 +325,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
         try
         {
           final TableViewColumn col = m_columns.get( columnIndex - 1 );
-          final ITupleModel values = col.getObservation().getValues( col.getArguments() );
+          final ITupleModel values = col.getValues();
           final int ix = values.indexOf( key, col.getKeyAxis() );
           if( ix != -1 )
             return values.get( ix, col.getValueAxis() );
@@ -518,9 +518,8 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
 
       final TableViewColumn col = m_columns.get( column );
       try
-      {// FIXME: this will reload the timeserie on every step....!
-        // FIXME: col.getTupleModel()!
-        final ITupleModel values = col.getObservation().getValues( col.getArguments() );
+      {
+        final ITupleModel values = col.getValues();
         final Object key = m_sharedModel.toArray()[row];
         final int ix = values.indexOf( key, col.getKeyAxis() );
         if( ix != -1 )
