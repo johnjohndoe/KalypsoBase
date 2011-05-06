@@ -59,6 +59,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.ui.PlatformUI;
+import org.w3c.dom.css.Rect;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
@@ -72,7 +73,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
   private IAreaStyle m_borderStyle = null;
 
-  private final int m_drawTransparent = 0;// SWT.DRAW_TRANSPARENT
+  private final int m_drawTransparent = SWT.DRAW_TRANSPARENT;
 
   public GenericChartLabelRenderer( )
   {
@@ -95,21 +96,24 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     m_borderStyle = borderStyle;
   }
 
-  private Point calcSize( final GC gc, final int degree )
+  private Rectangle calcSize( final GC gc, final int degree )
   {
     if( m_titleBean == null )
-      return new Point( 0, 0 );
+      return new Rectangle( 0, 0, 0, 0 );
     final Point textSize = calcTextSize( gc, m_titleBean.getText() );
     final int border = isDrawBorder() ? m_borderStyle.getStroke().getWidth() : 0;
     final Point overAllSize = new Point( textSize.x + border * 2 + m_titleBean.getInsets().left + m_titleBean.getInsets().right, textSize.y + border * 2 + m_titleBean.getInsets().top
         + m_titleBean.getInsets().bottom );
+    final Rectangle textRect = getTextRect( m_titleBean.getTextAnchorX(), m_titleBean.getTextAnchorY(), overAllSize );
     final double radian = Math.toRadians( -degree );
     final double cosi = Math.cos( radian );
     final double sinu = Math.sin( radian );
-    final double rotX = Math.abs( cosi * overAllSize.x ) + Math.abs( sinu * overAllSize.y );
-    final double rotY = Math.abs( sinu * overAllSize.x ) + Math.abs( cosi * overAllSize.y );
+    final double rotX = cosi * textRect.x + sinu * textRect.y;
+    final double rotY = sinu * textRect.x + cosi * textRect.y;
+    final double rotWidth = Math.abs( cosi * textRect.width ) + Math.abs( sinu * textRect.height );
+    final double rotHeight = Math.abs( sinu * textRect.width ) + Math.abs( cosi * textRect.height );
 
-    return new Point( (int) Math.round( rotX ), (int) Math.round( rotY ) );
+    return new Rectangle( (int) Math.round( rotX ), (int) Math.round( rotY ), (int) Math.round( rotWidth ), (int) Math.round( rotHeight ) );
   }
 
   private Point calcTextSize( final GC gc, final String text )
@@ -129,13 +133,14 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   {
     if( width < 1 )
       return line;
-    final Point letterSize = calcTextSize( gc, StringUtils.substring( line, 0, 5 ) + StringUtils.substring( line, line.length() - 5 ) );
-    final int charAnz = width * 10 / letterSize.x;
-    if( charAnz < 6 )
+    final int lineWidth = calcTextSize( gc, line ).x;
+    final int charWidth = lineWidth / line.length();
+    if( lineWidth <= width )
+      return line;
+    final int maxChar = width / charWidth;
+    if( maxChar < 6 )
       return (StringUtils.abbreviate( line, 5 ));
-    if( charAnz < line.length() )
-      return StringUtils.abbreviateMiddle( line, "...", charAnz );
-    return line;
+    return StringUtils.abbreviateMiddle( line, "...", maxChar );
 
   }
 
@@ -161,7 +166,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
    * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getSize()
    */
   @Override
-  public Point getSize( )
+  public Rectangle getSize( )
   {
     final Device device = PlatformUI.getWorkbench().getDisplay();
     final Image image = new Image( device, 1, 1 );
@@ -169,8 +174,8 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     try
     {
       m_titleBean.getTextStyle().apply( gc );
-      final Point textSize = calcSize( gc, m_titleBean.getRotation() );
-      return textSize;
+      final Rectangle textRectangle = calcSize( gc, m_titleBean.getRotation() );
+      return textRectangle;
     }
     finally
     {
@@ -407,7 +412,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       return;
     // if no size given, fit Rectangle to TextSize
 
-    final Point overAllTextSize = calcSize( gc, 0 );
+    // final Point overAllTextSize = calcSize( gc, 0 );
 
     // save GC
     final Font oldFont = gc.getFont();
@@ -420,7 +425,8 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     final Transform oldTransform = new Transform( device );
     final Transform newTransform = new Transform( device );
     final Point rendererAnchor = getRendererAnchor( m_titleBean.getPositionHorizontal(), m_titleBean.getPositionVertical(), boundsRect );
-    final Rectangle titleRect = getTextRect( m_titleBean.getTextAnchorX(), m_titleBean.getTextAnchorY(), overAllTextSize );
+    final Rectangle titleRect = calcSize( gc, 0 );// getTextRect( m_titleBean.getTextAnchorX(),
+// m_titleBean.getTextAnchorY(), overAllTextSize );
 
     try
     {

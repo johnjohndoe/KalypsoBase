@@ -79,7 +79,7 @@ public class ChartPainter
 
   private ChartPlotPainter m_plotPainter = null;
 
-  private final Insets m_chartInsets;;
+  private final Insets m_chartInsets;
 
   public ChartPainter( final IChartModel model, final Rectangle size )
   {
@@ -114,7 +114,8 @@ public class ChartPainter
     final Image legendImage = m_legendPainter.createImage();
     try
     {
-      gc.setAntialias( SWT.OFF );
+      gc.setAntialias( SWT.ON );
+      gc.setTextAntialias( SWT.ON );
       gc.setAdvanced( true );
 
       m_titlePainter.paint( gc, new Rectangle( clientRect.x, clientRect.y, clientRect.width, m_titlePainter.getSize().y ) );
@@ -205,17 +206,18 @@ public class ChartPainter
     newTransform.rotate( rotation );
     gc.setTransform( newTransform );
     int offset = 0;
-    final int invertInt = invertVertical ? -1 : 1;
+
     try
     {
       for( final IAxis axis : axes )
       {
         if( !axis.isVisible() )
           continue;
-        newTransform.translate( axisWidth / 2, offset );
-        newTransform.scale( 1, invertInt );
-        newTransform.translate( -axisWidth / 2, -offset );
-        gc.setTransform( newTransform );
+        if( invertVertical )
+        {
+          newTransform.scale( 1, -1 );
+          gc.setTransform( newTransform );
+        }
         int height = 0;
         try
         {
@@ -225,11 +227,14 @@ public class ChartPainter
         }
         finally
         {
-          newTransform.translate( axisWidth / 2, offset );
-          newTransform.scale( 1, invertInt );
-          newTransform.translate( -axisWidth / 2, -offset );
-          gc.setTransform( newTransform );
-          offset += height * invertInt;
+          if( invertVertical )
+          {
+            newTransform.scale( 1, -1 );
+            gc.setTransform( newTransform );
+            offset += height;
+          }
+          else
+            offset += height;
         }
       }
     }
