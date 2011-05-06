@@ -45,10 +45,9 @@ import java.net.URL;
 import org.kalypso.zml.core.diagram.data.IRequestHandler;
 import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.MetadataRequestHandler;
-import org.kalypso.zml.ui.chart.layer.themes.ZmlLayerFactory;
+import org.kalypso.zml.ui.chart.layer.themes.ZmlLineLayer;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
@@ -62,17 +61,9 @@ public class ZmlLineLayerProvider extends AbstractLayerProvider implements IZmlL
    * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
-  public IChartLayer getLayer( final URL context ) throws ConfigurationException
+  public IChartLayer getLayer( final URL context )
   {
-    try
-    {
-      final ZmlLayerFactory factory = ZmlLayerFactory.getInstance();
-      return factory.createLineLayer( this, getStyleSet(), context );
-    }
-    catch( final Throwable t )
-    {
-      throw new ConfigurationException( "Configuring of .kod line layer theme failed.", t );
-    }
+    return new ZmlLineLayer( this, getStyleSet(), context );
   }
 
   @Override

@@ -91,7 +91,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private String m_labelDescriptor;
 
-  protected ZmlConstantLineLayer( final ILayerProvider provider, final IStyleSet styleSet, final boolean calculateRange )
+  public ZmlConstantLineLayer( final ILayerProvider provider, final IStyleSet styleSet, final boolean calculateRange )
   {
     super( provider, styleSet );
 
