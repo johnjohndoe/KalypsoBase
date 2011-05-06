@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.chart.layer.provider;
 import java.net.URL;
 
 import org.kalypso.zml.core.diagram.data.IRequestHandler;
+import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.MetadataRequestHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlBarLayer;
 
@@ -52,7 +53,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 /**
  * @author Dirk Kuch
  */
-public class ZmlBarLayerProvider extends AbstractLayerProvider
+public class ZmlBarLayerProvider extends AbstractLayerProvider implements IZmlLayerProvider
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider"; //$NON-NLS-1$
 
@@ -65,9 +66,9 @@ public class ZmlBarLayerProvider extends AbstractLayerProvider
     return new ZmlBarLayer( this, getStyleSet(), context );
   }
 
-  protected IRequestHandler getRequestHandler( )
+  @Override
+  public IRequestHandler getRequestHandler( )
   {
     return new MetadataRequestHandler( getParameterContainer() );
   }
-
 }
