@@ -1,6 +1,6 @@
 package de.openali.odysseus.chart.framework.model.impl;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.java.lang.Arrays;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
@@ -38,8 +38,8 @@ public class ChartModel implements IChartModel
   {
     final AutoScaleVisitor visitor = new AutoScaleVisitor( this, true );
 
-    // TODO ?!? auto scaled axes will be updated when?!? strange behavior
-    final IAxis[] autoscaledAxes = ArrayUtils.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes;
+    // TODO ?!? auto scaled axes will be updated when?!? strange behaviour
+    final IAxis[] autoscaledAxes = Arrays.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes;
     for( final IAxis axis : autoscaledAxes )
     {
       visitor.visit( axis );
