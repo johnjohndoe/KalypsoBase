@@ -54,10 +54,10 @@ import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -96,7 +96,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private void setup( final URL context )
   {
-    final ZmlLineLayerProvider provider = (ZmlLineLayerProvider) getProvider();
+    final IZmlLayerProvider provider = (IZmlLayerProvider) getProvider();
     final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
     try
     {

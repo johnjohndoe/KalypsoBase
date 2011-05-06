@@ -42,21 +42,18 @@ package org.kalypso.zml.ui.chart.layer.provider;
 
 import java.net.URL;
 
-import org.apache.commons.lang.StringUtils;
 import org.kalypso.zml.core.diagram.base.provider.observation.DefaultRequestHandler;
-import org.kalypso.zml.core.diagram.base.provider.observation.SynchronousObservationProvider;
-import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
+import org.kalypso.zml.core.diagram.data.IRequestHandler;
+import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlDateRangeLayer;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlDateRangeLayerProvider extends AbstractLayerProvider
+public class ZmlDateRangeLayerProvider extends AbstractLayerProvider implements IZmlLayerProvider
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlDateRangeLayerProvider"; //$NON-NLS-1$
 
@@ -64,28 +61,17 @@ public class ZmlDateRangeLayerProvider extends AbstractLayerProvider
    * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
-  public IChartLayer getLayer( final URL context ) throws ConfigurationException
+  public IChartLayer getLayer( final URL context )
   {
-    final IParameterContainer parameters = getParameterContainer();
+    return new ZmlDateRangeLayer( this, context );
+  }
 
-    final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final ZmlDateRangeLayer layer = new ZmlDateRangeLayer( this );
-    final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( layer, getTargetAxisId() );
-
-    if( StringUtils.isNotEmpty( href ) )
-    {
-      try
-      {
-        final SynchronousObservationProvider provider = new SynchronousObservationProvider( context, href, new DefaultRequestHandler() );
-        handler.setObsProvider( provider );
-      }
-      catch( final Throwable t )
-      {
-        throw new ConfigurationException( "Configuring of .kod line layer theme failed.", t );
-      }
-    }
-
-    return layer;
+  /**
+   * @see org.kalypso.zml.core.diagram.data.IZmlLayerProvider#getRequestHandler()
+   */
+  @Override
+  public IRequestHandler getRequestHandler( )
+  {
+    return new DefaultRequestHandler();
   }
 }

@@ -60,6 +60,8 @@ import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.metadata.IMetadataBoundary;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
+import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.chart.layer.boundaries.IMetadataLayerBoundary;
@@ -91,11 +93,29 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private String m_labelDescriptor;
 
-  public ZmlConstantLineLayer( final ILayerProvider provider, final IStyleSet styleSet, final boolean calculateRange )
+  public ZmlConstantLineLayer( final ILayerProvider provider, final IStyleSet styleSet, final boolean calculateRange, final URL context )
   {
     super( provider, styleSet );
-
     m_calculateRange = calculateRange;
+
+    setup( context );
+  }
+
+  private void setup( final URL context )
+  {
+    final IZmlLayerProvider provider = (IZmlLayerProvider) getProvider();
+    final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
+    try
+    {
+      handler.load( provider, context );
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
+    }
+
+    setDataHandler( handler );
+
   }
 
   /**
