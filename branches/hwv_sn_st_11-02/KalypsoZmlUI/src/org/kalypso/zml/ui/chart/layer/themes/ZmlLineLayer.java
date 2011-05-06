@@ -46,36 +46,28 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider;
-import org.kalypso.zml.ui.core.provider.observation.SynchronousObservationProvider;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
-import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.ClipHelper;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
-import de.openali.odysseus.chart.framework.model.impl.settings.CHART_DATA_LOADER_STRATEGY;
-import de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
-import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -116,27 +108,10 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   private void setupDataHandler( final URL context ) throws MalformedURLException, SensorException, URISyntaxException
   {
     final ZmlLineLayerProvider provider = (ZmlLineLayerProvider) getProvider();
-    final IChartModel model = provider.getModel();
-
-    final IBasicChartSettings settings = model.getSettings();
-
     final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
-    setDataHandler( handler );
+    handler.load( provider, context );
 
-    final IParameterContainer parameters = provider.getParameterContainer();
-    final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
-    if( !StringUtils.isEmpty( href ) )
-    {
-      final CHART_DATA_LOADER_STRATEGY strategy = settings.getDataLoaderStrategy();
-      if( CHART_DATA_LOADER_STRATEGY.eSynchrone.equals( strategy ) )
-      {
-        handler.setObsProvider( new SynchronousObservationProvider( context, href, provider.getRequestHandler() ) );
-      }
-      else
-      {
-        handler.setObsProvider( new PooledObsProvider( new PoolableObjectType( "zml", href, context, true ) ) );
-      }
-    }
+    setDataHandler( handler );
   }
 
   /**
@@ -418,5 +393,4 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
       screenPoints[i] = coordinateMapper.numericToScreen( points[i].getDomain(), points[i].getTarget() );
     return screenPoints;
   }
-
 }

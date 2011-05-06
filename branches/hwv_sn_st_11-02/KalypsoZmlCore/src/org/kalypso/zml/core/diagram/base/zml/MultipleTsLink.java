@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.core.zml;
+package org.kalypso.zml.core.diagram.base.zml;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

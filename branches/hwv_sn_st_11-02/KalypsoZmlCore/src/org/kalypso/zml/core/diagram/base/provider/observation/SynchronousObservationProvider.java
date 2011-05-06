@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.core.provider.observation;
+package org.kalypso.zml.core.diagram.base.provider.observation;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;

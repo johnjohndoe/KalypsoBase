@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,25 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.core.provider.observation;
+package org.kalypso.zml.core.diagram.data;
 
-import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.zml.core.diagram.data.IRequestHandler;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 
 /**
  * @author Dirk Kuch
  */
-public class DefaultRequestHandler implements IRequestHandler
+public interface IZmlLayerProvider extends ILayerProvider
 {
 
-  /**
-   * @see org.kalypso.hwv.core.chart.provider.observation.IRequestHandler#getArguments(org.kalypso.ogc.sensor.IObservation)
-   */
-  @Override
-  public IRequest getArguments( final MetadataList metadata )
-  {
-    return null;
-  }
+  IRequestHandler getRequestHandler( );
 
 }

@@ -41,13 +41,13 @@
 package org.kalypso.zml.ui.chart.update;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.zml.core.diagram.base.provider.observation.AsynchronousObservationProvider;
+import org.kalypso.zml.core.diagram.base.zml.MultipleTsLink;
+import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.core.provider.observation.AsynchronousObservationProvider;
-import org.kalypso.zml.ui.core.zml.MultipleTsLink;
-import org.kalypso.zml.ui.core.zml.TSLinkWithName;
 
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
