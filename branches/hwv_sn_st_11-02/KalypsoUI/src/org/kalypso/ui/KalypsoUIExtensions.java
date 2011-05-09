@@ -280,7 +280,7 @@ public class KalypsoUIExtensions
    * 
    * @return The {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}s.
    */
-  public static IMovieImageProvider[] createKalypsoMovieThemeStrategies( ) throws CoreException
+  public static IMovieImageProvider[] createMovieImageProviders( ) throws CoreException
   {
     /* Memory for the results. */
     List<IMovieImageProvider> result = new ArrayList<IMovieImageProvider>();
@@ -313,7 +313,7 @@ public class KalypsoUIExtensions
    *          The id of the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}.
    * @return The {@link org.kalypso.ogc.gml.movie.IMovieImageProvider} or null, if it cannot be found.
    */
-  public static IMovieImageProvider createKalypsoMovieThemeStrategy( String id ) throws CoreException
+  public static IMovieImageProvider createMovieImageProvider( String id ) throws CoreException
   {
     /* Get the extension registry. */
     IExtensionRegistry registry = Platform.getExtensionRegistry();
