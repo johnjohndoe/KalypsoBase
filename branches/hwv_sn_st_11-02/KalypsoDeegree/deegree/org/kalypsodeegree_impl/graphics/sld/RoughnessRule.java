@@ -98,7 +98,7 @@ public class RoughnessRule implements Rule
   public double getMaxScaleDenominator( )
   {
 // System.out.println(" **** RoughnessRule, non implemented method: getMaxScaleDenominator");
-    return 0;
+    return Double.MAX_VALUE;
   }
 
   /**
@@ -109,6 +109,12 @@ public class RoughnessRule implements Rule
   {
 // System.out.println(" **** RoughnessRule, non implemented method: getMinScaleDenominator");
     return 0;
+  }
+
+  @Override
+  public boolean doesScaleConstraintApply( final double scale )
+  {
+    return getMinScaleDenominator() <= scale && getMaxScaleDenominator() > scale;
   }
 
   /**

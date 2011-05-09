@@ -56,16 +56,14 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface LinePlacement
 {
-
-  final static int TYPE_ABSOLUTE = 0;
-
-  final static int TYPE_ABOVE = 1;
-
-  final static int TYPE_BELOW = 2;
-
-  final static int TYPE_CENTER = 3;
-
-  final static int TYPE_AUTO = 4;
+  public enum PlacementType
+  {
+    absolute,
+    above,
+    below,
+    center,
+    auto;
+  }
 
   /**
    * The PerpendicularOffset element of a LinePlacement gives the perpendicular distance away from a line to draw a
@@ -96,7 +94,7 @@ public interface LinePlacement
    * <p>
    * @throws FilterEvaluationException
    */
-  int getPlacementType( Feature feature ) throws FilterEvaluationException;
+  PlacementType getPlacementType( Feature feature ) throws FilterEvaluationException;
 
   /**
    * Sets the placement type (one of the constants defined in <tt>LinePlacement</tt>).
@@ -104,7 +102,7 @@ public interface LinePlacement
    * 
    * @param placementType
    */
-  void setPlacementType( int placementType );
+  void setPlacementType( PlacementType placementType );
 
   /**
    * Provides the thickness of the styled line (needed as information for the correct positioning of labels above and

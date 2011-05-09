@@ -53,39 +53,6 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
  */
 public interface Symbolizer extends Marshallable
 {
-
-  /**
-   * The ScaleDenominator-information is optional and determines whether a rule (and thus a Symbolizer) is a to be
-   * applied at a certain scale.
-   * 
-   * @return the MinScaleDenominator
-   */
-  double getMinScaleDenominator( );
-
-  /**
-   * Sets the MinScaleDenominator
-   * 
-   * @param minScaleDenominator
-   *            the MinScaleDenominator
-   */
-  void setMinScaleDenominator( double minScaleDenominator );
-
-  /**
-   * The ScaleDenominator-information is optional and determines whether a rule (and thus a Symbolizer) is a to be
-   * applied at a certain scale.
-   * 
-   * @return the MaxScaleDenominator
-   */
-  double getMaxScaleDenominator( );
-
-  /**
-   * Sets the MaxScaleDenominator
-   * 
-   * @param maxScaleDenominator
-   *            the MaxScaleDenominator
-   */
-  void setMaxScaleDenominator( double maxScaleDenominator );
-
   /**
    * The Geometry element is optional and if it is absent then the default geometry property of the feature type that is
    * used in the containing FeatureStyleType is used. The precise meaning of default geometry property is
@@ -103,10 +70,10 @@ public interface Symbolizer extends Marshallable
    */
   void setGeometry( Geometry geometry );
 
-  public void setUom( final UOM uom );
+  void setUom( final UOM uom );
 
-  public UOM getUom( );
+  UOM getUom( );
 
   /** Paints this symbolizer suitable for a legend. */
-  public void paint( final GC gc, final Feature feature ) throws FilterEvaluationException;
+  void paint( GC gc, Feature feature ) throws FilterEvaluationException;
 }

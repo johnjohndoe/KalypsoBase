@@ -93,22 +93,6 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
   }
 
   /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#doesScaleConstraintApply(double)
-   */
-  @Override
-  public boolean doesScaleConstraintApply( final double scale )
-  {
-    if( m_decorated != null )
-    {
-      return m_decorated.doesScaleConstraintApply( scale );
-    }
-    else
-    {
-      return true;
-    }
-  }
-
-  /**
    * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#getFeature()
    */
   @Override

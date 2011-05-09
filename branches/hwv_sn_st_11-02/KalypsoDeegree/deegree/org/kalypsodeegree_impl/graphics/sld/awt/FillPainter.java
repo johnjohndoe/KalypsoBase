@@ -94,5 +94,4 @@ public class FillPainter
       g2.setPaint( new TexturePaint( m_texture, anchor ) );
     }
   }
-
 }

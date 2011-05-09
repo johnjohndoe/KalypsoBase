@@ -126,7 +126,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
       final Feature[] features = m_dataProvider.query( getSurface( point ), mode );
       if( features.length > 0 )
         highlightUnderlyingGeometries( features, g, mode );
-      
+
     }
     catch( final GM_Exception e )
     {
@@ -153,7 +153,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
     try
     {
       final Document document = getDocument( mode );
-      final Symbolizer symbolizer = SLDFactory.createSymbolizer( null, document.getDocumentElement(), 0.0, Double.MAX_VALUE );
+      final Symbolizer symbolizer = SLDFactory.createSymbolizer( null, document.getDocumentElement() );
       final GeoTransform projection = getWidget().getIMapPanel().getProjection();
 
       for( final Feature feature : features )

@@ -130,7 +130,7 @@ public class Halo_Impl implements Halo, Marshallable
   @Override
   public void setRadius( final ParameterValueType radius )
   {
-    this.m_radius = radius;
+    m_radius = radius;
   }
 
   /**
@@ -174,12 +174,13 @@ public class Halo_Impl implements Halo, Marshallable
   @Override
   public void setRadius( final double radius )
   {
-    ParameterValueType pvt = null;
     if( radius > 0 )
     {
-      pvt = StyleFactory.createParameterValueType( "" + radius );
-      this.m_radius = pvt;
+      final ParameterValueType pvt = StyleFactory.createParameterValueType( "" + radius );
+      m_radius = pvt;
     }
+    else
+      m_radius = StyleFactory.createParameterValueType( "" + 1.0 );
   }
 
   /**
@@ -204,7 +205,7 @@ public class Halo_Impl implements Halo, Marshallable
   @Override
   public void setStroke( final Stroke stroke )
   {
-    this.m_stroke = stroke;
+    m_stroke = stroke;
   }
 
   /**

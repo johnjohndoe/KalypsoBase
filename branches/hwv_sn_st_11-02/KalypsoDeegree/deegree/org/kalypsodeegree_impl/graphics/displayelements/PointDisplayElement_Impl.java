@@ -109,19 +109,11 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
   {
     try
     {
+      final GM_Point[] points = (GM_Point[]) getGeometry();
       final PointSymbolizer symbolizer = (PointSymbolizer) getSymbolizer();
-
-      final UOM uom = symbolizer.getUom();
-      final Graphic graphic = symbolizer.getGraphic();
       final Feature feature = getFeature();
 
-      final double rotation = graphic.getRotation( feature );
-
-      final Graphics2D g2D = (Graphics2D) g;
-
-      final GM_Point[] points = (GM_Point[]) getGeometry();
-      for( final GM_Point point : points )
-        drawPoint( g2D, point, projection, graphic, rotation, uom );
+      drawPoints( g, projection, symbolizer, feature, points );
     }
     catch( final FilterEvaluationException e )
     {
@@ -129,17 +121,32 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
     }
   }
 
+  protected static void drawPoints( final Graphics g, final GeoTransform projection, final PointSymbolizer symbolizer, final Feature feature, final GM_Point[] points ) throws FilterEvaluationException
+  {
+    final UOM uom = symbolizer.getUom();
+    final Graphic graphic = symbolizer.getGraphic();
+    /* No graphic -> no paint... maybe we should paint some default? */
+    if( graphic == null )
+      return;
+
+    final double rotation = graphic.getRotation( feature );
+
+    final Graphics2D g2D = (Graphics2D) g;
+
+    for( final GM_Point point : points )
+      drawPoint( g2D, point, projection, feature, graphic, rotation, uom );
+  }
+
   /**
    * Renders one point to the submitted graphic context considering the given projection.
    */
-  private void drawPoint( final Graphics2D g, final GM_Point point, final GeoTransform projection, final Graphic graphic, final double rotation, final UOM uom ) throws FilterEvaluationException
+  private static void drawPoint( final Graphics2D g, final GM_Point point, final GeoTransform projection, final Feature feature, final Graphic graphic, final double rotation, final UOM uom ) throws FilterEvaluationException
   {
-    final Feature feature = getFeature();
-
     final GM_Position source = point.getPosition();
     // why plus 0.5?
-    final int x = (int) (projection.getDestX( source.getX() ) + 0.5);
-    final int y = (int) (projection.getDestY( source.getY() ) + 0.5);
+    final int x = (int) Math.ceil( projection.getDestX( source.getX() ) );
+    final int y = (int) Math.ceil( projection.getDestY( source.getY() ) );
+
 
     final int size = graphic == null ? defaultImg.getWidth( null ) : graphic.getNormalizedSize( feature, uom, projection );
 

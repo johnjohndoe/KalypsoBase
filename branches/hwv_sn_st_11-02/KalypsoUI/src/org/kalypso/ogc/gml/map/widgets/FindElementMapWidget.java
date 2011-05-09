@@ -103,6 +103,7 @@ import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.model.feature.Feature;
@@ -673,7 +674,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
         geometryObjectToShow = geometryObjectValue.getBuffer( scaledFactor );
         final PolygonSymbolizer symb = new PolygonSymbolizer_Impl();
 
-        final Stroke stroke = new Stroke_Impl( new HashMap<Object, Object>(), null, null );
+        final Stroke stroke = new Stroke_Impl( new HashMap<String, CssParameter>(), null, null );
         stroke.setWidth( 5 );
         stroke.setStroke( new Color( 255, 0, 0 ) );
         symb.setStroke( stroke );

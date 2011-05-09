@@ -70,19 +70,17 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
   {
     super();
 
-    final Stroke stroke = new Stroke_Impl();
-    setStroke( stroke );
+    setStroke( new Stroke_Impl() );
   }
 
   /**
    * constructor initializing the class with the <LineSymbolizer>
    */
-  LineSymbolizer_Impl( final Stroke stroke, final Geometry geometry, final double min, final double max, final UOM uom )
+  LineSymbolizer_Impl( final Stroke stroke, final Geometry geometry, final UOM uom )
   {
     super( geometry, uom );
+
     setStroke( stroke );
-    setMinScaleDenominator( min );
-    setMaxScaleDenominator( max );
   }
 
   /**

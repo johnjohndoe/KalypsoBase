@@ -98,9 +98,9 @@ public class Graphic_Impl implements Graphic, Marshallable
   protected Graphic_Impl( final Object[] marksAndExtGraphics, final ParameterValueType opacity, final ParameterValueType size, final ParameterValueType rotation )
   {
     setMarksAndExtGraphics( marksAndExtGraphics );
-    this.m_opacity = opacity;
-    this.m_size = size;
-    this.m_rotation = rotation;
+    m_opacity = opacity;
+    m_size = size;
+    m_rotation = rotation;
   }
 
   /**
@@ -116,20 +116,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    */
   protected Graphic_Impl( final ParameterValueType opacity, final ParameterValueType size, final ParameterValueType rotation )
   {
-    final Mark[] marks = new Mark[1];
-    marks[0] = new Mark_Impl( "square", null, null );
-    setMarksAndExtGraphics( marks );
-    this.m_opacity = opacity;
-    this.m_size = size;
-    this.m_rotation = rotation;
-  }
-
-  /**
-   * Creates a new <tt>Graphic_Impl</tt> instance based on the default <tt>Mark</tt>: a square.
-   */
-  protected Graphic_Impl( )
-  {
-    this( null, null, null );
+    this( new Mark[] { StyleFactory.createMark( "square" ) }, opacity, size, rotation ); //$NON-NLS-1$
   }
 
   /**
@@ -277,6 +264,8 @@ public class Graphic_Impl implements Graphic, Marshallable
       if( sizeVal <= 0.0 )
         throw new FilterEvaluationException( "Value for parameter 'size' (given: '" + value + "') must be greater than 0!" );
     }
+    else
+      return SIZE_DEFAULT;
 
     return sizeVal;
   }
@@ -367,15 +356,13 @@ public class Graphic_Impl implements Graphic, Marshallable
   @Override
   public double getRotation( final Feature feature ) throws FilterEvaluationException
   {
-    double rotVal = ROTATION_DEFAULT;
-
     if( m_rotation != null )
     {
       final String value = m_rotation.evaluate( feature );
 
       try
       {
-        rotVal = Double.parseDouble( value );
+        return Double.parseDouble( value );
       }
       catch( final NumberFormatException e )
       {
@@ -383,7 +370,7 @@ public class Graphic_Impl implements Graphic, Marshallable
       }
     }
 
-    return rotVal;
+    return ROTATION_DEFAULT;
   }
 
   /**
@@ -394,8 +381,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   @Override
   public void setRotation( final double rotation )
   {
-    final ParameterValueType pvt = StyleFactory.createParameterValueType( "" + rotation );
-    m_rotation = pvt;
+    m_rotation = StyleFactory.createParameterValueType( "" + rotation );
   }
 
   /**
@@ -450,6 +436,8 @@ public class Graphic_Impl implements Graphic, Marshallable
       return;
     }
 
+    // TODO: this is not according to SLD specification: only the first resp. best mark and/or graphics element should
+// be painted
     for( int i = 0; i < m_marksAndExtGraphics.size(); i++ )
     {
       final Object o = m_marksAndExtGraphics.get( i );

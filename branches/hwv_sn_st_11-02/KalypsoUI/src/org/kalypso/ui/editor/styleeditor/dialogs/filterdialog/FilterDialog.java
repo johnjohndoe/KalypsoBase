@@ -118,7 +118,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 public class FilterDialog extends Dialog implements ISelectionChangedListener
 {
-
   private TableTreeViewer m_viewer;
 
   private FilterDialogTreeNode mRoot = null;
