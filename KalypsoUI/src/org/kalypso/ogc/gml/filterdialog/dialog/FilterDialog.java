@@ -83,7 +83,6 @@ import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.filterdialog.model.FilterReader;
 import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
@@ -93,6 +92,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
+import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
@@ -116,8 +116,6 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
   private static final String FILTER_KEY = "filter"; //$NON-NLS-1$
 
-  protected final IFeatureType m_ft;
-
   protected FilterRootElement m_root;
 
   protected Group m_propGroup;
@@ -138,21 +136,20 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
   private Composite m_top;
 
-  final private IKalypsoStyle m_style;
-
   private final boolean RESTOREABLE;
 
   final String[] m_supportedOperations;
+
+  private final IStyleContext m_context;
 
   /**
    * Der Benutzer kann mit Hilfe dieses Dialogs ein Filter-Query (OGC-Filter-Specs. Version 1.1.1) auf eine Feature
    * Selektion anwenden oder einen Filter für einen SLD (Styled-Layer-Discribtor) erzeugen.
    */
-  public FilterDialog( final Shell parent, final IFeatureType ftToSelectFrom, final IKalypsoStyle style, final Filter filter, final Feature spatialOperator, final String[] supportedOperations, final boolean restorable )
+  public FilterDialog( final Shell parent, final IStyleContext style, final Filter filter, final Feature spatialOperator, final String[] supportedOperations, final boolean restorable )
   {
     super( parent );
-    m_style = style;
-    m_ft = ftToSelectFrom;
+    m_context = style;
     m_supportedOperations = supportedOperations;
     m_spatialOperator = spatialOperator;
     RESTOREABLE = restorable;
@@ -171,7 +168,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
   {
     final Control control = super.createContents( parent );
     createButton( (Composite) getButtonBar(), FilterDialog.ID_BUTTON_APPLY, FilterDialog.LABEL_BUTTON_APPLY, true );
-    if( m_style == null )
+    if( m_context == null )
       getButton( ID_BUTTON_APPLY ).setEnabled( false );
     return control;
   }
@@ -187,7 +184,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     {
       if( buttonId == ID_BUTTON_APPLY )
       {
-        m_style.fireStyleChanged();
+        m_context.fireStyleChanged();
         setReturnCode( APPLY_FILTER );
       }
 
@@ -307,7 +304,8 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
               if( !m_newOpsComposite.isDisposed() )
                 m_newOpsComposite.dispose();
             }
-            m_newOpsComposite = FilterCompositeFactory.createFilterElementComposite( m_propGroup, FilterDialog.this, (Operation) firstElement, m_supportedOperations, m_ft, m_spatialOperator );
+            final IFeatureType ft = getFeatureType();
+            m_newOpsComposite = FilterCompositeFactory.createFilterElementComposite( m_propGroup, FilterDialog.this, (Operation) firstElement, m_supportedOperations, ft, m_spatialOperator );
             if( m_newOpsComposite != null )
             {
               m_newOpsComposite.setFilterDialog( FilterDialog.this );
@@ -618,5 +616,13 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
   public void refresh( )
   {
     m_viewer.refresh();
+  }
+
+  protected IFeatureType getFeatureType( )
+  {
+    if( m_context == null )
+      return null;
+
+    return m_context.getFeatureType();
   }
 }

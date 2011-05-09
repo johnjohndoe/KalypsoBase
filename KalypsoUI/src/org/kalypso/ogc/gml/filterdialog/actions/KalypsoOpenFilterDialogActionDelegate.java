@@ -61,7 +61,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
 
     final WidgetActionPart part = getPart();
     final Shell shell = part == null ? null : part.getSite().getShell();
-    final FilterDialog dialog = new FilterDialog( shell, ft, null, null, fGeom, null, true );
+    final FilterDialog dialog = new FilterDialog( shell, null, null, fGeom, null, true );
     int open = -1;
     if( ft != null )
       open = dialog.open();

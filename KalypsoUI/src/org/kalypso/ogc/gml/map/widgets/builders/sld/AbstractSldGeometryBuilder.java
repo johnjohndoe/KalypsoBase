@@ -117,7 +117,7 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
         final Document document = XMLTools.parse( inputStream );
         inputStream.close();
 
-        final Symbolizer symbolizer = SLDFactory.createSymbolizer( null, document.getDocumentElement(), 0.0, Double.MAX_VALUE );
+        final Symbolizer symbolizer = SLDFactory.createSymbolizer( null, document.getDocumentElement() );
         m_symbolizers.add( symbolizer );
       }
       catch( final Exception e )

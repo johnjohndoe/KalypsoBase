@@ -70,8 +70,8 @@ public interface Halo
   void setFill( Fill fill );
 
   /**
+   * FIXME: not part of sld-schema: check!<br/>
    * Returns the underlying <tt>Stroke</tt> -instance used to draw the boundary of the halo.
-   * <p>
    * 
    * @return the underlying <tt>Stroke</tt> -object, or null
    */

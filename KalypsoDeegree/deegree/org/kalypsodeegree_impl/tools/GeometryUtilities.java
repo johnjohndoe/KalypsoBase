@@ -386,6 +386,15 @@ public class GeometryUtilities
    * @param ftp
    * @return <code>true</code> if feature property type equals this type of geometry
    */
+  public static boolean isCurveGeometry( final IValuePropertyType ftp )
+  {
+    return ftp.getValueClass().equals( getCurveClass() );
+  }
+
+  /**
+   * @param ftp
+   * @return <code>true</code> if feature property type equals this type of geometry
+   */
   public static boolean isLineStringGeometry( final IValuePropertyType ftp )
   {
     return ftp.getValueClass().equals( getLineStringClass() );
@@ -408,6 +417,15 @@ public class GeometryUtilities
   public static boolean isMultiLineStringGeometry( final IValuePropertyType ftp )
   {
     return ftp.getValueClass().equals( getMultiLineStringClass() );
+  }
+
+  /**
+   * @param ftp
+   * @return <code>true</code> if feature property type equals this type of geometry
+   */
+  public static boolean isSurfaceGeometry( final IValuePropertyType ftp )
+  {
+    return getSurfaceClass().isAssignableFrom( ftp.getValueClass() );
   }
 
   /**
@@ -490,6 +508,29 @@ public class GeometryUtilities
   }
 
   /**
+   * Classifies the property as a geometry.
+   * 
+   * @return <code>null</code>, if the property is not a geometry property.
+   */
+  public static GeometryType classifyGeometry( final IPropertyType pt )
+  {
+    if( !isGeometry( pt ) )
+      return null;
+
+    final IValuePropertyType vpt = (IValuePropertyType) pt;
+    if( isPointGeometry( vpt ) )
+      return GeometryType.POINT;
+
+    if( isCurveGeometry( vpt ) )
+      return GeometryType.CURVE;
+
+    if( isSurfaceGeometry( vpt ) )
+      return GeometryType.SURFACE;
+
+    return GeometryType.UNKNOWN;
+  }
+
+  /**
    * @param o
    * @return <code>true</code> if object type equals this type of geometry
    */
@@ -512,39 +553,49 @@ public class GeometryUtilities
   }
 
   public static Class< ? extends GM_Object> getPointClass( )
-  {
+      {
     return GM_Point.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getMultiPointClass( )
-  {
+      {
     return GM_MultiPoint.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getLineStringClass( )
-  {
+      {
     return GM_Curve.class;
-  }
+      }
+
+  public static Class< ? extends GM_Object> getCurveClass( )
+      {
+    return GM_Curve.class;
+      }
 
   public static Class< ? extends GM_Object> getMultiLineStringClass( )
-  {
+      {
     return GM_MultiCurve.class;
-  }
+      }
+
+  public static Class< ? extends GM_Object> getSurfaceClass( )
+      {
+    return GM_Surface.class;
+      }
 
   public static Class< ? extends GM_Object> getPolygonClass( )
-  {
+      {
     return GM_Surface.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getMultiPolygonClass( )
-  {
+      {
     return GM_MultiSurface.class;
-  }
+      }
 
   public static Class< ? extends GM_Object> getUndefinedGeometryClass( )
-  {
+      {
     return GM_Object.class;
-  }
+      }
 
   public static boolean isGeometry( final Object o )
   {
@@ -606,10 +657,10 @@ public class GeometryUtilities
       final GM_Position b = positions[i];
       final GM_Position c = positions[i + 1];
       area += (b.getY() - a.getY()) * (a.getX() - c.getX()) // bounding rectangle
-          - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
-              + (b.getX() - c.getX()) * (b.getY() - c.getY())//
+      - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
+          + (b.getX() - c.getX()) * (b.getY() - c.getY())//
           + (a.getX() - c.getX()) * (c.getY() - a.getY())//
-          ) / 2d;
+      ) / 2d;
     }
     return area;
   }
@@ -763,7 +814,7 @@ public class GeometryUtilities
     return nearest;
   }
 
-/**
+  /**
    * Same as
    * {@link #findNearestFeature(GM_Point, double, FeatureList, QName, QName[]), but with an array of Featurelists.
    *
@@ -1233,17 +1284,17 @@ public class GeometryUtilities
     }
     try
     {
-      List<GM_Position> lListPositionWithValues = new ArrayList<GM_Position>();
-      Set<GM_Point> lSetKeys = mapPositionsValues.keySet();
+      final List<GM_Position> lListPositionWithValues = new ArrayList<GM_Position>();
+      final Set<GM_Point> lSetKeys = mapPositionsValues.keySet();
       GM_Point gmPoint = null;
-      for( Iterator<GM_Point> iterator = lSetKeys.iterator(); iterator.hasNext(); )
+      for( final Iterator<GM_Point> iterator = lSetKeys.iterator(); iterator.hasNext(); )
       {
         gmPoint = iterator.next();
         lListPositionWithValues.add( GeometryFactory.createGM_Position( gmPoint.getX(), gmPoint.getY(), mapPositionsValues.get( gmPoint ) ) );
       }
       return GeometryFactory.createGM_Triangle( lListPositionWithValues.get( 0 ), lListPositionWithValues.get( 1 ), lListPositionWithValues.get( 2 ), gmPoint.getCoordinateSystem() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return null;
     }

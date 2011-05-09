@@ -35,6 +35,8 @@
  */
 package org.kalypsodeegree.graphics.sld;
 
+import org.kalypsodeegree.xml.Marshallable;
+
 /**
  * The GraphicFill element both indicates that a stipple-fill repeated graphic will be used and specifies the fill
  * graphic.
@@ -50,9 +52,8 @@ package org.kalypsodeegree.graphics.sld;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-public interface GraphicFill
+public interface GraphicFill extends Marshallable
 {
-
   /**
    * A Graphic is a graphic symbol with an inherent shape, color(s), and possibly size. A graphic can be very informally
    * defined as a little picture and can be of either a raster or vector-graphic source type. The term graphic is used
@@ -61,11 +62,4 @@ public interface GraphicFill
    * @return graphic
    */
   Graphic getGraphic();
-
-  /**
-   * Sets the Graphic.
-   * 
-   * @param graphic
-   */
-  void setGraphic( Graphic graphic );
 }

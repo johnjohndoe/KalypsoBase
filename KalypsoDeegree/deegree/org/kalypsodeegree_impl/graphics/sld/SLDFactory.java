@@ -62,10 +62,12 @@ import ogc2.www.opengis.net.sld.ObjectFactory;
 
 import org.apache.commons.io.IOUtils;
 import org.deegree.ogcbase.CommonNamespaces;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.bind.JaxbUtilities;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -141,15 +143,15 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-public class SLDFactory
+public final class SLDFactory
 {
   public static final String SLDNS_EXT = "http://www.opengis.net/sldExt";//$NON-NLS-1$
 
-  public static final String sldNS = "http://www.opengis.net/sld";//$NON-NLS-1$
+  public static final String NS_SLD = "http://www.opengis.net/sld";//$NON-NLS-1$
 
-  private static String ogcNS = "http://www.opengis.net/ogc";//$NON-NLS-1$
+  private static String NS_OGC = "http://www.opengis.net/ogc";//$NON-NLS-1$
 
-  private static String xlnNS = "http://www.w3.org/1999/xlink";//$NON-NLS-1$
+  private static String NS_XLINK = "http://www.w3.org/1999/xlink";//$NON-NLS-1$
 
   /**
    * Creates a <tt>StyledLayerDescriptor</tt> -instance from the given XML-representation.
@@ -200,6 +202,29 @@ public class SLDFactory
     }
 
     return sld;
+  }
+
+  /**
+   * Creates a <tt>StyledLayerDescriptor</tt> -instance from the given file.
+   * 
+   * @param styleFile
+   *          The file to read the style from
+   * @throws XMLParsingException
+   *           if a syntactic or semantic error in the XML document is encountered
+   * @return the constructed <tt>StyledLayerDescriptor</tt> -instance
+   */
+  public static StyledLayerDescriptor createSLD( final IFile styleFile ) throws XMLParsingException
+  {
+    try
+    {
+      final URL context = ResourceUtilities.createURL( styleFile );
+      final Document doc = XMLTools.parse( styleFile );
+      return SLDFactory.createStyledLayerDescriptor( context, doc.getDocumentElement() );
+    }
+    catch( final Exception e )
+    {
+      throw new XMLParsingException( "Failed to load SLD-Document: " + e.getMessage(), e );
+    }
   }
 
   /**
@@ -297,8 +322,8 @@ public class SLDFactory
       final Element element = doc.getDocumentElement();
 
       final String namespaceURI = element.getNamespaceURI();
-      if( !sldNS.equals( namespaceURI ) )
-        throw new XMLParsingException( String.format( "Root-Element must be of namespace '%s'", sldNS ) );
+      if( !NS_SLD.equals( namespaceURI ) )
+        throw new XMLParsingException( String.format( "Root-Element must be of namespace '%s'", NS_SLD ) );
 
       final String localName = element.getLocalName();
 
@@ -329,9 +354,9 @@ public class SLDFactory
     }
   }
 
-  public static StyledLayerDescriptor createStyledLayerDescriptor( final String name, final String title, final String abstract_, final Layer[] layers )
+  public static StyledLayerDescriptor createStyledLayerDescriptor( final String name, final String title, final String description, final Layer[] layers )
   {
-    return new StyledLayerDescriptor_Impl( name, title, abstract_, layers );
+    return new StyledLayerDescriptor_Impl( name, title, description, layers );
   }
 
   public static StyledLayerDescriptor createStyledLayerDescriptor( final Layer[] layers )
@@ -354,7 +379,7 @@ public class SLDFactory
    *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>TextSymbolizer</tt> -instance
    */
-  private static TextSymbolizer createTextSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
+  private static TextSymbolizer createTextSymbolizer( final IUrlResolver2 urlResolver, final Element element, final UOM uom ) throws XMLParsingException
   {
 
     // optional: <Geometry>
@@ -405,7 +430,7 @@ public class SLDFactory
     // optional: <Fill>
     final Fill fill = null;
 
-    return new TextSymbolizer_Impl( geometry, label, font, labelPlacement, halo, fill, min, max, uom );
+    return new TextSymbolizer_Impl( geometry, label, font, labelPlacement, halo, fill, uom );
   }
 
   /**
@@ -484,11 +509,11 @@ public class SLDFactory
 
         final String childName = child.getLocalName();
 
-        if( childName.equals( "PointPlacement" ) )//$NON-NLS-1$
+        if( "PointPlacement".equals( childName ) )//$NON-NLS-1$
         {
           pPlacement = SLDFactory.createPointPlacement( child );
         }
-        else if( childName.equals( "LinePlacement" ) )//$NON-NLS-1$
+        else if( "LinePlacement".equals( childName ) )//$NON-NLS-1$
         {
           lPlacement = SLDFactory.createLinePlacement( child );
         }
@@ -523,13 +548,8 @@ public class SLDFactory
   {
 
     // optional: auto-Attribute (this is deegree-specific)
-    boolean auto = false;
     final String autoStr = XMLTools.getAttrValue( element, "auto" );//$NON-NLS-1$
-
-    if( (autoStr != null) && autoStr.equals( "true" ) )
-    {
-      auto = true;
-    }
+    final boolean auto = Boolean.parseBoolean( autoStr );
 
     // optional: <AnchorPoint>
     ParameterValueType[] anchorPoint = null;
@@ -697,6 +717,32 @@ public class SLDFactory
   /**
    * Creates a <tt>StyledLayerDescriptor</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'StyledLayerDescriptor'- <tt>Element</tt>.
+   * 
+   * @param context
+   *          Used as context to resolve any links contained in the document.
+   * @param element
+   *          the 'StyledLayerDescriptor'- <tt>Element</tt>
+   * @throws XMLParsingException
+   *           if a syntactic or semantic error in the DOM-subtree is encountered
+   * @return the constructed <tt>StyledLayerDescriptor</tt> -instance
+   */
+  public static StyledLayerDescriptor createStyledLayerDescriptor( final URL context, final Element element ) throws XMLParsingException
+  {
+    final IUrlResolver2 urlResolver = new IUrlResolver2()
+    {
+      @Override
+      public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
+      {
+        return new URL( context, relativeOrAbsolute );
+      }
+    };
+
+    return createStyledLayerDescriptor( urlResolver, element );
+  }
+
+  /**
+   * Creates a <tt>StyledLayerDescriptor</tt> -instance according to the contents of the DOM-subtree starting at the
+   * given 'StyledLayerDescriptor'- <tt>Element</tt>.
    * <p>
    * 
    * @param element
@@ -713,7 +759,7 @@ public class SLDFactory
     // optional: <Title>
     final String title = XMLTools.getStringValue( "Title", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
     // optional: <Abstract>
-    final String abstract_ = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
+    final String description = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
     // required: version-Attribute
     // final String version = XMLTools.getRequiredAttrValue( "version", element );
     // TODO: check for correct version here...; must be "1.0.0", but i have seen many wrong .sld's
@@ -736,11 +782,11 @@ public class SLDFactory
 
         final String childName = child.getLocalName();
 
-        if( childName.equals( "NamedLayer" ) )//$NON-NLS-1$
+        if( "NamedLayer".equals( childName ) )//$NON-NLS-1$
         {
           layerList.add( SLDFactory.createNamedLayer( urlResolver, child ) );
         }
-        else if( childName.equals( "UserLayer" ) )//$NON-NLS-1$
+        else if( "UserLayer".equals( childName ) )//$NON-NLS-1$
         {
           layerList.add( SLDFactory.createUserLayer( urlResolver, child ) );
         }
@@ -766,7 +812,7 @@ public class SLDFactory
 // e.printStackTrace();
 // }
 
-    return new StyledLayerDescriptor_Impl( name, title, abstract_, layers );
+    return new StyledLayerDescriptor_Impl( name, title, description, layers );
   }
 
   /**
@@ -812,7 +858,7 @@ public class SLDFactory
     // required: <Service>
     final String service = XMLTools.getRequiredStringValue( "Service", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
 
-    if( !(service.equals( "WFS" ) || service.equals( "WCS" )) )//$NON-NLS-1$//$NON-NLS-2$
+    if( !("WFS".equals( service ) || "WCS".equals( service )) )//$NON-NLS-1$//$NON-NLS-2$
       throw new XMLParsingException( "Value ('" + service + "') of element 'service' is invalid. " + "Allowed values are: 'WFS' and 'WCS'." );
 
     // required: <OnlineResource>
@@ -874,11 +920,11 @@ public class SLDFactory
 
         final String childName = child.getLocalName();
 
-        if( childName.equals( "NamedStyle" ) )
+        if( "NamedStyle".equals( childName ) )
         {
           styleList.add( SLDFactory.createNamedStyle( child ) );
         }
-        else if( childName.equals( "UserStyle" ) )
+        else if( "UserStyle".equals( childName ) )
         {
           styleList.add( SLDFactory.createUserStyle( urlResolver, child ) );
         }
@@ -957,7 +1003,7 @@ public class SLDFactory
 
     // optional: <Filter>
     Filter filter = null;
-    final Element filterElement = XMLTools.getChildByName( "Filter", SLDFactory.ogcNS, element );//$NON-NLS-1$
+    final Element filterElement = XMLTools.getChildByName( "Filter", SLDFactory.NS_OGC, element );//$NON-NLS-1$
 
     if( filterElement != null )
     {
@@ -1040,14 +1086,14 @@ public class SLDFactory
     // optional: <Title>
     final String title = XMLTools.getStringValue( "Title", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
     // optional: <Abstract>
-    final String abstract_ = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
+    final String description = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
 
     // optional: <IsDefault>
     final String defaultString = XMLTools.getStringValue( "IsDefault", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
     boolean isDefault = false;
 
     if( defaultString != null )
-      if( defaultString.equals( "1" ) )
+      if( "1".equals( defaultString ) )
       {
         isDefault = true;
       }
@@ -1064,7 +1110,7 @@ public class SLDFactory
       styles[i] = SLDFactory.createFeatureTypeStyle( urlResolver, nl.item( i ) );
     }
 
-    return StyleFactory.createUserStyle( name, title, abstract_, isDefault, styles );
+    return StyleFactory.createUserStyle( name, title, description, isDefault, styles );
   }
 
   public static FeatureTypeStyle createFeatureTypeStyle( final IUrlResolver2 urlResolver2, final File sldFile ) throws IOException, XMLParsingException, SAXException
@@ -1126,7 +1172,7 @@ public class SLDFactory
     // optional: <Title>
     final String title = XMLTools.getStringValue( "Title", CommonNamespaces.SLDNS.toString(), element, null );
     // optional: <Abstract>
-    final String abstract_ = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS.toString(), element, null );
+    final String description = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS.toString(), element, null );
     // optional: <FeatureTypeName>
     final QName featureTypeQName = XMLTools.getQNameValue( "FeatureTypeName", CommonNamespaces.SLDNS.toString(), element );
     // final String featureTypeName = XMLTools.getStringValue( "FeatureTypeName", CommonNamespaces.SLDNS.toString(),
@@ -1160,7 +1206,7 @@ public class SLDFactory
 
         final String childName = child.getLocalName();
 
-        if( childName.equals( "Rule" ) )
+        if( "Rule".equals( childName ) )
         {
           final Rule rule = SLDFactory.createRule( urlResolver, child );
           if( rule.hasElseFilter() )
@@ -1173,7 +1219,7 @@ public class SLDFactory
           }
           ruleList.add( rule );
         }
-        else if( childName.equals( "SemanticTypeIdentifier" ) )//$NON-NLS-1$
+        else if( "SemanticTypeIdentifier".equals( childName ) )//$NON-NLS-1$
         {
           typeIdentifierList.add( XMLTools.getStringValue( child ) );
         }
@@ -1214,7 +1260,7 @@ public class SLDFactory
 
     final Rule[] rules = ruleList.toArray( new Rule[ruleList.size()] );
     final String[] typeIdentifiers = typeIdentifierList.toArray( new String[typeIdentifierList.size()] );
-    return StyleFactory.createFeatureTypeStyle( name, title, abstract_, featureTypeQName, typeIdentifiers, rules );
+    return StyleFactory.createFeatureTypeStyle( name, title, description, featureTypeQName, typeIdentifiers, rules );
   }
 
   /**
@@ -1235,7 +1281,7 @@ public class SLDFactory
     // optional: <Title>
     final String title = XMLTools.getStringValue( "Title", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
     // optional: <Abstract>
-    final String abstract_ = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
+    final String description = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
 
     // optional: <LegendGraphic>
     LegendGraphic legendGraphic = null;
@@ -1249,7 +1295,7 @@ public class SLDFactory
     // optional: <Filter>
     boolean isAnElseFilter = false;
     Filter filter = null;
-    final Element filterElement = XMLTools.getChildByName( "Filter", SLDFactory.ogcNS, element );//$NON-NLS-1$
+    final Element filterElement = XMLTools.getChildByName( "Filter", SLDFactory.NS_OGC, element );//$NON-NLS-1$
     if( filterElement != null )
     {
       filter = AbstractFilter.buildFromDOM( filterElement );
@@ -1279,14 +1325,14 @@ public class SLDFactory
       final Node item = symbolizerNL.item( i );
       if( item instanceof Element )
       {
-        final Symbolizer symbolizer = createSymbolizer( urlResolver, (Element) item, min, max );
+        final Symbolizer symbolizer = createSymbolizer( urlResolver, (Element) item );
         if( symbolizer != null )
           symbolizerList.add( symbolizer );
       }
     }
 
     final Symbolizer[] symbolizers = symbolizerList.toArray( new Symbolizer[symbolizerList.size()] );
-    return StyleFactory.createRule( symbolizers, name, title, abstract_, legendGraphic, filter, isAnElseFilter, min, max );
+    return StyleFactory.createRule( symbolizers, name, title, description, legendGraphic, filter, isAnElseFilter, min, max );
   }
 
   /**
@@ -1311,7 +1357,7 @@ public class SLDFactory
         }
       };
 
-      return SLDFactory.createSymbolizer( resolver, document.getDocumentElement(), 0.0, Double.MAX_VALUE );
+      return SLDFactory.createSymbolizer( resolver, document.getDocumentElement() );
     }
     catch( final Exception e )
     {
@@ -1324,7 +1370,7 @@ public class SLDFactory
     }
   }
 
-  public static Symbolizer createSymbolizer( final IUrlResolver2 urlResolver, final Element symbolizerElement, final double min, final double max ) throws XMLParsingException
+  public static Symbolizer createSymbolizer( final IUrlResolver2 urlResolver, final Element symbolizerElement ) throws XMLParsingException
   {
     final String namespace = symbolizerElement.getNamespaceURI();
 
@@ -1343,26 +1389,26 @@ public class SLDFactory
 
     final String symbolizerName = symbolizerElement.getLocalName();
 
-    if( symbolizerName.equals( "LineSymbolizer" ) )//$NON-NLS-1$
-      return SLDFactory.createLineSymbolizer( urlResolver, symbolizerElement, min, max, uom );
+    if( "LineSymbolizer".equals( symbolizerName ) )//$NON-NLS-1$
+      return SLDFactory.createLineSymbolizer( urlResolver, symbolizerElement, uom );
 
-    if( symbolizerName.equals( "PointSymbolizer" ) )//$NON-NLS-1$
-      return SLDFactory.createPointSymbolizer( urlResolver, symbolizerElement, min, max, uom );
+    if( "PointSymbolizer".equals( symbolizerName ) )//$NON-NLS-1$
+      return SLDFactory.createPointSymbolizer( urlResolver, symbolizerElement, uom );
 
-    if( symbolizerName.equals( "PolygonSymbolizer" ) )//$NON-NLS-1$
-      return SLDFactory.createPolygonSymbolizer( urlResolver, symbolizerElement, min, max, uom );
+    if( "PolygonSymbolizer".equals( symbolizerName ) )//$NON-NLS-1$
+      return SLDFactory.createPolygonSymbolizer( urlResolver, symbolizerElement, uom );
 
-    if( symbolizerName.equals( "TextSymbolizer" ) )//$NON-NLS-1$
-      return SLDFactory.createTextSymbolizer( urlResolver, symbolizerElement, min, max, uom );
+    if( "TextSymbolizer".equals( symbolizerName ) )//$NON-NLS-1$
+      return SLDFactory.createTextSymbolizer( urlResolver, symbolizerElement, uom );
 
-    if( symbolizerName.equals( "RasterSymbolizer" ) )//$NON-NLS-1$
-      return SLDFactory.createRasterSymbolizer( urlResolver, symbolizerElement, min, max, uom );
+    if( "RasterSymbolizer".equals( symbolizerName ) )//$NON-NLS-1$
+      return SLDFactory.createRasterSymbolizer( urlResolver, symbolizerElement, uom );
 
-    if( symbolizerName.equals( "SurfaceLineSymbolizer" ) )//$NON-NLS-1$
-      return SLDFactory.createSurfaceLineSymbolizer( urlResolver, symbolizerElement, min, max, uom );
+    if( "SurfaceLineSymbolizer".equals( symbolizerName ) )//$NON-NLS-1$
+      return SLDFactory.createSurfaceLineSymbolizer( urlResolver, symbolizerElement, uom );
 
-    if( symbolizerName.equals( "SurfacePolygonSymbolizer" ) ) //$NON-NLS-1$
-      return SLDFactory.createSurfacePolygonSymbolizer( urlResolver, symbolizerElement, min, max, uom );
+    if( "SurfacePolygonSymbolizer".equals( symbolizerName ) ) //$NON-NLS-1$
+      return SLDFactory.createSurfacePolygonSymbolizer( urlResolver, symbolizerElement, uom );
 
     return null;
   }
@@ -1382,7 +1428,7 @@ public class SLDFactory
    *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>PointSymbolizer</tt> -instance
    */
-  private static PointSymbolizer createPointSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
+  private static PointSymbolizer createPointSymbolizer( final IUrlResolver2 urlResolver, final Element element, final UOM uom ) throws XMLParsingException
   {
     // optional: <Geometry>
     Geometry geometry = null;
@@ -1402,7 +1448,7 @@ public class SLDFactory
       graphic = SLDFactory.createGraphic( urlResolver, graphicElement );
     }
 
-    return new PointSymbolizer_Impl( graphic, geometry, min, max, uom );
+    return new PointSymbolizer_Impl( graphic, geometry, uom );
   }
 
   /**
@@ -1420,7 +1466,7 @@ public class SLDFactory
    *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>LineSymbolizer</tt> -instance
    */
-  private static LineSymbolizer createLineSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
+  private static LineSymbolizer createLineSymbolizer( final IUrlResolver2 urlResolver, final Element element, final UOM uom ) throws XMLParsingException
   {
     // optional: <Geometry>
     Geometry geometry = null;
@@ -1440,7 +1486,7 @@ public class SLDFactory
       stroke = SLDFactory.createStroke( urlResolver, strokeElement );
     }
 
-    return new LineSymbolizer_Impl( stroke, geometry, min, max, uom );
+    return new LineSymbolizer_Impl( stroke, geometry, uom );
   }
 
   /**
@@ -1458,7 +1504,7 @@ public class SLDFactory
    *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>PolygonSymbolizer</tt> -instance
    */
-  private static PolygonSymbolizer createPolygonSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
+  private static PolygonSymbolizer createPolygonSymbolizer( final IUrlResolver2 urlResolver, final Element element, final UOM uom ) throws XMLParsingException
   {
     // optional: <Geometry>
     Geometry geometry = null;
@@ -1487,7 +1533,7 @@ public class SLDFactory
       stroke = SLDFactory.createStroke( urlResolver, strokeElement );
     }
 
-    return new PolygonSymbolizer_Impl( fill, stroke, geometry, min, max, uom );
+    return new PolygonSymbolizer_Impl( fill, stroke, geometry, uom );
   }
 
   /**
@@ -1505,7 +1551,7 @@ public class SLDFactory
    *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>SurfaceLineSymbolizer</tt> -instance
    */
-  private static SurfaceLineSymbolizer createSurfaceLineSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
+  private static SurfaceLineSymbolizer createSurfaceLineSymbolizer( final IUrlResolver2 urlResolver, final Element element, final UOM uom ) throws XMLParsingException
   {
     // optional: <Geometry>
     Geometry geometry = null;
@@ -1523,7 +1569,7 @@ public class SLDFactory
 
     final LineColorMap colorMap = createLineColorMap( urlResolver, colorMapElement );
 
-    return new SurfaceLineSymbolizer_Impl( colorMap, geometry, min, max, uom );
+    return new SurfaceLineSymbolizer_Impl( colorMap, geometry, uom );
   }
 
   /**
@@ -1541,7 +1587,7 @@ public class SLDFactory
    *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>SurfacePolygonSymbolizer</tt> -instance
    */
-  private static SurfacePolygonSymbolizer createSurfacePolygonSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
+  private static SurfacePolygonSymbolizer createSurfacePolygonSymbolizer( final IUrlResolver2 urlResolver, final Element element, final UOM uom ) throws XMLParsingException
   {
     // optional: <Geometry>
     Geometry geometry = null;
@@ -1559,7 +1605,7 @@ public class SLDFactory
 
     final PolygonColorMap colorMap = createPolygonColorMap( urlResolver, colorMapElement );
 
-    return new SurfacePolygonSymbolizer_Impl( colorMap, geometry, min, max, uom );
+    return new SurfacePolygonSymbolizer_Impl( colorMap, geometry, uom );
   }
 
   private static PolygonColorMap createPolygonColorMap( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
@@ -1686,7 +1732,7 @@ public class SLDFactory
    */
   private static Geometry createGeometry( final Element element ) throws XMLParsingException
   {
-    final Element propertyNameElement = XMLTools.getRequiredChildByName( "PropertyName", SLDFactory.ogcNS, element );
+    final Element propertyNameElement = XMLTools.getRequiredChildByName( "PropertyName", SLDFactory.NS_OGC, element );
     final PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( propertyNameElement );
     return new Geometry_Impl( propertyName );
   }
@@ -1737,7 +1783,7 @@ public class SLDFactory
    *           if a syntactic or semantic error in the DOM-subtree is encountered
    * @return the constructed <tt>Graphic</tt> -instance
    */
-  private static LegendGraphic createLegendGraphic( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
+  public static LegendGraphic createLegendGraphic( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
     // required: <Graphic>
     final Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS.toString(), element );
@@ -1763,7 +1809,7 @@ public class SLDFactory
     final Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource", CommonNamespaces.SLDNS.toString(), element );
 
     // required: href-Attribute (in <OnlineResource>)
-    final String href = XMLTools.getRequiredAttrValue( "href", SLDFactory.xlnNS, onlineResourceElement );
+    final String href = XMLTools.getRequiredAttrValue( "href", SLDFactory.NS_XLINK, onlineResourceElement );
     // URL url = null;
     //
     // try
@@ -1918,7 +1964,6 @@ public class SLDFactory
    */
   private static Graphic createGraphic( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
-
     // optional: <Opacity>
     ParameterValueType opacity = null;
     // optional: <Size>
@@ -1941,15 +1986,15 @@ public class SLDFactory
           continue;
 
         final String childName = child.getLocalName();
-        if( childName.equals( "ExternalGraphic" ) )
+        if( "ExternalGraphic".equals( childName ) )
           marksAndExtGraphicsList.add( SLDFactory.createExternalGraphic( urlResolver, child ) );
-        else if( childName.equals( "Mark" ) )
+        else if( "Mark".equals( childName ) )
           marksAndExtGraphicsList.add( SLDFactory.createMark( urlResolver, child ) );
-        else if( childName.equals( "Opacity" ) )
+        else if( "Opacity".equals( childName ) )
           opacity = SLDFactory.createParameterValueType( child );
-        else if( childName.equals( "Size" ) )
+        else if( "Size".equals( childName ) )
           size = SLDFactory.createParameterValueType( child );
-        else if( childName.equals( "Rotation" ) )
+        else if( "Rotation".equals( childName ) )
           rotation = SLDFactory.createParameterValueType( child );
       }
     }
@@ -1979,7 +2024,7 @@ public class SLDFactory
     return (new CssParameter_Impl( name, pvt ));
   }
 
-  private static RasterSymbolizer createRasterSymbolizer( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom )
+  private static RasterSymbolizer createRasterSymbolizer( final IUrlResolver2 urlResolver, final Element element, final UOM uom )
   {
     try
     {
@@ -1987,7 +2032,7 @@ public class SLDFactory
       final SortedMap<Double, ColorMapEntry> colorMap = createColorMap( colorMapElement );
 
       final Element imageOutlineElement = XMLTools.getChildByName( "ImageOutline", CommonNamespaces.SLDNS.toString(), element );
-      final Symbolizer imageOutline = createImageOutline( urlResolver, imageOutlineElement, min, max, uom );
+      final Symbolizer imageOutline = createImageOutline( urlResolver, imageOutlineElement, uom );
 
       final Element shadedReliefElement = XMLTools.getChildByName( "ShadedRelief", CommonNamespaces.SLDNS.toString(), element );
       final ShadedRelief shadedRelief = createShadedRelief( shadedReliefElement );
@@ -2052,18 +2097,18 @@ public class SLDFactory
     return new ShadedRelief( brightnessOnly, reliefFactor );
   }
 
-  private static Symbolizer createImageOutline( final IUrlResolver2 urlResolver, final Element element, final double min, final double max, final UOM uom ) throws XMLParsingException
+  private static Symbolizer createImageOutline( final IUrlResolver2 urlResolver, final Element element, final UOM uom ) throws XMLParsingException
   {
     if( element == null )
       return null;
 
     final Element lineSymbolizerElement = XMLTools.getChildByName( "LineSymbolizer", CommonNamespaces.SLDNS.toString(), element );
     if( lineSymbolizerElement != null )
-      return createLineSymbolizer( urlResolver, lineSymbolizerElement, min, max, uom );
+      return createLineSymbolizer( urlResolver, lineSymbolizerElement, uom );
 
     final Element polygonSymbolizerElement = XMLTools.getChildByName( "PolygonSymbolizer", CommonNamespaces.SLDNS.toString(), element );
     if( polygonSymbolizerElement != null )
-      return createPolygonSymbolizer( urlResolver, polygonSymbolizerElement, min, max, uom );
+      return createPolygonSymbolizer( urlResolver, polygonSymbolizerElement, uom );
 
     return null;
   }

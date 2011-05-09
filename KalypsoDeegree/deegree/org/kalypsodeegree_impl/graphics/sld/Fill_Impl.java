@@ -37,7 +37,7 @@ package org.kalypsodeegree_impl.graphics.sld;
 
 import java.awt.Color;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map;
 
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -47,7 +47,6 @@ import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.GraphicFill;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.Debug;
 
 /**
  * A Fill allows area geometries to be filled. There are two types of fills: solid-color and repeated GraphicFill. In
@@ -59,24 +58,22 @@ import org.kalypsodeegree_impl.tools.Debug;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-@SuppressWarnings("unchecked")
 public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
 {
-
   /**
    * Constructs a new <tt>Fill_Impl</tt>.
    */
   protected Fill_Impl()
   {
-    super( new HashMap(), null );
+    super( new HashMap<String, CssParameter>(), null );
   }
 
   /**
    * Constructs a new <tt>Fill_Impl</tt>.
    */
-  public Fill_Impl( HashMap pCssParams, GraphicFill pGraphicFill )
+  public Fill_Impl( final Map<String, CssParameter> params, final GraphicFill gaphicFill )
   {
-    super( pCssParams, pGraphicFill );
+    super( params, gaphicFill );
   }
 
   /**
@@ -90,11 +87,11 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
    *           if the evaluation fails or the value is invalid
    */
   @Override
-  public Color getFill( Feature feature ) throws FilterEvaluationException
+  public Color getFill( final Feature feature ) throws FilterEvaluationException
   {
     Color awtColor = FILL_DEFAULT;
 
-    CssParameter cssParam = (CssParameter)cssParams.get( "fill" );
+    final CssParameter cssParam = getParameter( "fill" );
 
     if( cssParam != null )
     {
@@ -108,10 +105,10 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
           s = s.substring( 1 );
         awtColor =  Color.decode( s );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         KalypsoCommonsPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e, "Given value ('" + s + "') for CSS-Parameter 'fill' "
-          + "does not denote a valid color!" ) );
+            + "does not denote a valid color!" ) );
         return awtColor;
 //        throw new FilterEvaluationException( "Given value ('" + s + "') for CSS-Parameter 'fill' "
 //            + "does not denote a valid color!" );
@@ -120,7 +117,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
 
     return awtColor;
   }
-  
+
 
   /**
    * sets the value of the fill's CssParameter 'fill' as a simple color
@@ -129,13 +126,13 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
    *          color to be set
    */
   @Override
-  public void setFill( Color color )
+  public void setFill( final Color color )
   {
 
-    String s = StyleFactory.getColorAsHex( color );
-    CssParameter fill = StyleFactory.createCssParameter( "fill", s );
+    final String s = StyleFactory.getColorAsHex( color );
+    final CssParameter fill = StyleFactory.createCssParameter( "fill", s );
 
-    cssParams.put( "fill", fill );
+    addCssParameter( "fill", fill );
   }
 
   /**
@@ -149,21 +146,21 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
    *           if the evaluation fails or the value is invalid
    */
   @Override
-  public double getOpacity( Feature feature ) throws FilterEvaluationException
+  public double getOpacity( final Feature feature ) throws FilterEvaluationException
   {
     double opacity = OPACITY_DEFAULT;
 
-    CssParameter cssParam = (CssParameter)cssParams.get( "fill-opacity" );
+    final CssParameter cssParam = getParameter( "fill-opacity" );
 
     if( cssParam != null )
     {
-      String value = cssParam.getValue( feature );
+      final String value = cssParam.getValue( feature );
 
       try
       {
         opacity = Double.parseDouble( value );
       }
-      catch( NumberFormatException e )
+      catch( final NumberFormatException e )
       {
         throw new FilterEvaluationException( "Given value for parameter 'fill-opacity' ('" + value
             + "') has invalid format!" );
@@ -189,7 +186,6 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
   @Override
   public void setOpacity( double opacity )
   {
-
     if( opacity > 1 )
     {
       opacity = 1;
@@ -199,8 +195,8 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
       opacity = 0;
     }
 
-    CssParameter fillOp = StyleFactory.createCssParameter( "fill-opacity", "" + opacity );
-    cssParams.put( "fill-opacity", fillOp );
+    final CssParameter fillOp = StyleFactory.createCssParameter( "fill-opacity", "" + opacity );
+    addCssParameter( "fill-opacity", fillOp );
   }
 
   /**
@@ -211,23 +207,18 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
   @Override
   public String exportAsXML()
   {
-    Debug.debugMethodBegin();
+    final StringBuffer sb = new StringBuffer( "<Fill>" );
 
-    StringBuffer sb = new StringBuffer( "<Fill>" );
-
+    final GraphicFill graphicFill = getGraphicFill();
     if( graphicFill != null )
-    {
-      sb.append( ( (Marshallable)graphicFill ).exportAsXML() );
-    }
-    Iterator iterator = cssParams.values().iterator();
-    while( iterator.hasNext() )
-    {
-      sb.append( ( (Marshallable)iterator.next() ).exportAsXML() );
-    }
+      sb.append( graphicFill.exportAsXML() );
+
+    final Map<String, CssParameter> cssParameters = getCssParameters();
+    for( final CssParameter param : cssParameters.values() )
+      sb.append( param.exportAsXML() );
 
     sb.append( "</Fill>" );
 
-    Debug.debugMethodEnd();
     return sb.toString();
   }
 
