@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.core.element;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -91,6 +92,8 @@ public class ZmlLinkDiagramElement extends AbstractTsLinkDiagramElement implemen
       {
         final KodRegistry registy = KodRegistry.getInstance();
         final LayerType layer = registy.getLayer( type );
+        if( Objects.isNull( layer ) )
+          return null;
 
         return StyleFactory.createStyleSet( layer.getStyles() );
       }
