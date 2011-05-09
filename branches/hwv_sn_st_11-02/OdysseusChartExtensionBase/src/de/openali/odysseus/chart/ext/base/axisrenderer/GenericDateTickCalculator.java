@@ -42,6 +42,8 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -168,7 +170,8 @@ public class GenericDateTickCalculator implements ITickCalculator
       oldi = i;
     }
 
-    final LinkedList<Number> realticks = new LinkedList<Number>();
+   // final LinkedList<Number> realticks = new LinkedList<Number>();
+    final SortedSet<Number> realticks = new TreeSet<Number>();
     for( final Long tick : ticks )
     {
       final long ticklv = tick.longValue();

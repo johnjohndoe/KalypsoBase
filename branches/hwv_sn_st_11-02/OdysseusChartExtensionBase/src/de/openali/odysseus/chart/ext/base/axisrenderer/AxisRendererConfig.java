@@ -78,7 +78,7 @@ public class AxisRendererConfig
   /**
    * gap between plot and axis line
    */
- // public int gap = 0;
+  // public int gap = 0;
 
   /**
    * smallest intervall for tick label values
@@ -117,12 +117,14 @@ public class AxisRendererConfig
    */
   public ITextStyle tickLabelStyle = StyleUtils.getDefaultTextStyle();
 
-  //public int borderSize = 0;
+  // public int borderSize = 0;
 
   public ALIGNMENT labelPosition = ALIGNMENT.CENTER;
 
+  public boolean intervallLabeledTick = false;
+
   public IAreaStyle textBorderStyle = null;
-  
+
   public AxisRendererConfig( )
   {
     // nothing to do
