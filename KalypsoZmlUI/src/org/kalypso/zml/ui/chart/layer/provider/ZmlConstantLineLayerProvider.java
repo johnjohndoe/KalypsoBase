@@ -43,13 +43,15 @@ package org.kalypso.zml.ui.chart.layer.provider;
 
 import java.net.URL;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.diagram.base.provider.observation.DefaultRequestHandler;
 import org.kalypso.zml.core.diagram.data.IRequestHandler;
 import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
+import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlConstantLineLayer;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch
@@ -62,7 +64,7 @@ public class ZmlConstantLineLayerProvider extends AbstractLayerProvider implemen
    * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
    */
   @Override
-  public IChartLayer getLayer( final URL context )
+  public IZmlLayer getLayer( final URL context )
   {
     return new ZmlConstantLineLayer( this, getStyleSet(), false, context );
   }
@@ -73,6 +75,10 @@ public class ZmlConstantLineLayerProvider extends AbstractLayerProvider implemen
   @Override
   public IRequestHandler getRequestHandler( )
   {
+    final IParameterContainer container = getParameterContainer();
+    if( Objects.isNull( container ) )
+      return new DefaultRequestHandler();
+
     return new DefaultRequestHandler();
   }
 }

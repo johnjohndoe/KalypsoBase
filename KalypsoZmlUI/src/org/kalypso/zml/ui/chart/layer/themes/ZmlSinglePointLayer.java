@@ -60,7 +60,6 @@ import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.TextFigure;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -78,15 +77,24 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
 
   private IZmlLayerDataHandler m_handler;
 
-  public ZmlSinglePointLayer( final ILayerProvider provider, final IStyleSet styleset, final URL context )
+  public ZmlSinglePointLayer( final IZmlLayerProvider provider, final IStyleSet styleset, final URL context )
   {
     super( provider, styleset );
     setup( context );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getProvider()
+   */
+  @Override
+  public IZmlLayerProvider getProvider( )
+  {
+    return (IZmlLayerProvider) super.getProvider();
+  }
+
   private void setup( final URL context )
   {
-    final IZmlLayerProvider provider = (IZmlLayerProvider) getProvider();
+    final IZmlLayerProvider provider = getProvider();
     final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
     try
     {

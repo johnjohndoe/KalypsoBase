@@ -72,7 +72,6 @@ import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -93,7 +92,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private String m_labelDescriptor;
 
-  public ZmlConstantLineLayer( final ILayerProvider provider, final IStyleSet styleSet, final boolean calculateRange, final URL context )
+  public ZmlConstantLineLayer( final IZmlLayerProvider provider, final IStyleSet styleSet, final boolean calculateRange, final URL context )
   {
     super( provider, styleSet );
     m_calculateRange = calculateRange;
@@ -101,9 +100,18 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     setup( context );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getProvider()
+   */
+  @Override
+  public IZmlLayerProvider getProvider( )
+  {
+    return (IZmlLayerProvider) super.getProvider();
+  }
+
   private void setup( final URL context )
   {
-    final IZmlLayerProvider provider = (IZmlLayerProvider) getProvider();
+    final IZmlLayerProvider provider = getProvider();
     final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
     try
     {

@@ -61,7 +61,6 @@ import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.impl.settings.CHART_DATA_LOADER_STRATEGY;
 import de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
@@ -157,13 +156,13 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
     if( Objects.isNull( m_provider ) )
       return null;
 
-    final ILayerProvider layerProvider = m_layer.getProvider();
-    if( layerProvider == null )
+    final IZmlLayerProvider layerProvider = m_layer.getProvider();
+    if( Objects.isNull( layerProvider ) )
       return m_provider.getArguments();
 
-    final MetadataRequestHandler handler = new MetadataRequestHandler( layerProvider.getParameterContainer() );
+    final IRequestHandler handler = layerProvider.getRequestHandler();
     final IObservation observation = getObservation();
-    if( observation == null )
+    if( Objects.isNull( observation ) )
       return m_provider.getArguments();
 
     return handler.getArguments( observation.getMetadataList() );
@@ -193,6 +192,9 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   public void load( final IZmlLayerProvider provider, final URL context ) throws MalformedURLException, SensorException, URISyntaxException
   {
     final IParameterContainer parameters = provider.getParameterContainer();
+    if( Objects.isNull( parameters ) )
+      return;
+
     final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
 
     if( !StringUtils.isEmpty( href ) )
