@@ -61,11 +61,11 @@ import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
  * @author F.Lindemann
- *
+ * @deprecated Use actions instead
  */
+@Deprecated
 public class EditSymbolizerPanel
 {
-
   private Composite composite = null;
 
   private final EventListenerList listenerList = new EventListenerList();
@@ -139,7 +139,7 @@ public class EditSymbolizerPanel
       @Override
       public void mouseUp( final MouseEvent e )
       {
-      // nothing
+        // nothing
       }
 
     } );
@@ -173,7 +173,7 @@ public class EditSymbolizerPanel
       @Override
       public void mouseUp( final MouseEvent e )
       {
-      // nothing
+        // nothing
       }
 
     } );
@@ -207,7 +207,7 @@ public class EditSymbolizerPanel
       @Override
       public void mouseUp( final MouseEvent e )
       {
-      // nothing
+        // nothing
       }
 
     } );

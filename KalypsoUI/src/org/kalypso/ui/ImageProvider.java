@@ -74,7 +74,9 @@ public class ImageProvider
     IMAGE_THEME_TEXT("icons/full/obj16/textTheme.gif"), //$NON-NLS-1$
 
     STATUS_LINE_SHOW_MAP_COORDS("icons/map/statusbarPosition.gif"), //$NON-NLS-1$
-    STATUS_LINE_SHOW_CRS_INFO("icons/map/statusbarShowCRSInfo.gif"); //$NON-NLS-1$
+    STATUS_LINE_SHOW_CRS_INFO("icons/map/statusbarShowCRSInfo.gif"), //$NON-NLS-1$
+
+    SLD_RULE_TAB_ADD("icons/sldeditor/ruleTabAdd.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 

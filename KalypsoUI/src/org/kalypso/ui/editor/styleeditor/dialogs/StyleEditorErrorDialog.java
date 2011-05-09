@@ -52,14 +52,13 @@ import org.kalypso.ui.editor.styleeditor.MessageBundle;
  */
 public class StyleEditorErrorDialog
 {
-
   private IStatus status = null;
 
   private String message = null;
 
   private Shell shell = null;
 
-  public StyleEditorErrorDialog( Shell m_shell, String m_message, String reason )
+  public StyleEditorErrorDialog( final Shell m_shell, final String m_message, final String reason )
   {
     this.message = m_message;
     status = new Status( IStatus.ERROR, MessageBundle.STYLE_EDITOR_PLUGIN_ID, 0, reason, null );

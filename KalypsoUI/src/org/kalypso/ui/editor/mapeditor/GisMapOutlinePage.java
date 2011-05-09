@@ -53,10 +53,12 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
@@ -261,6 +263,8 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
 
     setMapPanel( null );
 
+    setStyleSelection( null );
+
     super.dispose();
   }
 
@@ -282,13 +286,21 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
   @Override
   public void setFocus( )
   {
+    setStyleSelection( m_outlineViewer );
+  }
+
+  protected void setStyleSelection( final ISelectionProvider selectionProvider )
+  {
     // bei jedem Focus, überprüfe ob outline beim StyleEditor registriert ist.
     // TODO: remove, style editor must pull information instead
     final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    final StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().findView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" ); //$NON-NLS-1$
+    final IWorkbenchPage activePage = window.getActivePage();
+    if( activePage == null )
+      return;
 
+    final StyleEditorViewPart part = (StyleEditorViewPart) activePage.findView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" ); //$NON-NLS-1$
     if( part != null )
-      part.setSelectionChangedProvider( m_outlineViewer );
+      part.setSelectionChangedProvider( selectionProvider );
   }
 
   /**

@@ -45,7 +45,7 @@
 		<view name="%org.kalypso.ui.repository.view.RepositoryExplorerPart" icon="icons/repository/repository.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.repository.view.RepositoryExplorerPart" id="org.kalypso.ui.repository.view.RepositoryExplorerPart"/>
 		<view name="%org.kalypso.ogc.sensor.view.DiagramViewPart" icon="icons/kalypso_odt.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.sensor.view.DiagramViewPart" id="org.kalypso.ogc.sensor.view.DiagramViewPart"/>
 		<view name="%org.kalypso.ogc.sensor.view.TableViewPart" icon="icons/kalypso_ott.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.sensor.view.TableViewPart" id="org.kalypso.ogc.sensor.view.TableViewPart"/>
-		<view name="%org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart" icon="icons/full/elcl16/kde_filter.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart" id="org.kalypso.ui.editor.mapeditor.views.styleeditor"/>
+		<view name="%org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart" icon="icons/sldeditor/styleEditor.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart" id="org.kalypso.ui.editor.mapeditor.views.styleeditor"/>
 		<view allowMultiple="false" icon="icons/kalypso16.gif" class="org.kalypso.ui.editor.mapeditor.views.MapWidgetView" category="org.kalypso.ui.kalypso" name="%org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" />
 		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.om.table.ObservationTableView" icon="icons/kalypso_ott.gif" id="org.kalypso.ogc.gml.om.table.ObservationTableView" name="%org.kalypso.ogc.gml.om.table.ObservationTableView" />
 		<view allowMultiple="true" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.views.map.MapView" icon="icons/kalypso_gmt.gif" id="org.kalypso.ui.views.mapView" name="%view.name.0" saveMapOnClose="true" reloadMapOnOpen="false" />
@@ -670,7 +670,7 @@
 		<image commandId="org.kalypso.ui.map.outline.command.MoveThemeDown" icon="icons/full/elcl16/next_nav.gif" />
 		<image commandId="org.kalypso.ui.map.outline.command.MoveThemeUp" icon="icons/full/elcl16/prev_nav.gif" />
 		<image commandId="org.kalypso.ui.map.outline.command.RemoveTheme" icon="icons/full/elcl16/remove.gif" />
-		<image commandId="org.kalypso.ui.map.outline.command.OpenStyleDialog" icon="icons/util/update.gif" />
+		<image commandId="org.kalypso.ui.map.outline.command.OpenStyleDialog" icon="icons/sldeditor/styleEditor.gif" />
 		<image commandId="org.kalypso.ui.map.outline.command.NodeProperties" icon="icons/full/elcl16/nodeProperties.gif" />
 
 		<image commandId="org.kalypso.ui.map.outline.command.AddNode" icon="icons/full/elcl16/nodeAdd.gif" />

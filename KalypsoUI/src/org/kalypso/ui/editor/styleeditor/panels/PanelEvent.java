@@ -46,26 +46,13 @@ package org.kalypso.ui.editor.styleeditor.panels;
 
 import java.util.EventObject;
 
-import org.kalypso.ui.editor.styleeditor.RuleTabItemBuilder.EventType;
-
 /**
  * @author F. Lindemann
  */
-@SuppressWarnings("hiding")
 public class PanelEvent extends EventObject
 {
-  public final EventType eventType;
-  public final Object param;
-
-  public PanelEvent( final Object source )
+  public PanelEvent( final Object eventSource )
   {
-    this( source, null, null );
-  }
-
-  public PanelEvent( final Object source, final EventType eventType, final Object param )
-  {
-    super( source );
-    this.eventType = eventType;
-    this.param = param;
+    super( eventSource );
   }
 }

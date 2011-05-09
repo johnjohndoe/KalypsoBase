@@ -67,7 +67,9 @@ import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
  * @author F.Lindemann
+ * @deprecated
  */
+@Deprecated
 public class TextInputPanel
 {
   private final Composite m_parent;
