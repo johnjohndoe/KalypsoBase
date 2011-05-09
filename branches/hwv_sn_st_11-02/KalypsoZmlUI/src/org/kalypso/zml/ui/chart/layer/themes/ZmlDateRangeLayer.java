@@ -58,7 +58,6 @@ import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
@@ -74,15 +73,24 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
 
   private IZmlLayerDataHandler m_dataHandler;
 
-  public ZmlDateRangeLayer( final ILayerProvider provider, final URL context )
+  public ZmlDateRangeLayer( final IZmlLayerProvider provider, final URL context )
   {
     super( provider );
     setup( context );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getProvider()
+   */
+  @Override
+  public IZmlLayerProvider getProvider( )
+  {
+    return (IZmlLayerProvider) super.getProvider();
+  }
+
   private void setup( final URL context )
   {
-    final IZmlLayerProvider provider = (IZmlLayerProvider) getProvider();
+    final IZmlLayerProvider provider = getProvider();
     final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
     try
     {

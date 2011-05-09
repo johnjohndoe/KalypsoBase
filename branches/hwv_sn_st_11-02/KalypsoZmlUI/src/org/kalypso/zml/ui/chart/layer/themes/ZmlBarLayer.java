@@ -58,7 +58,6 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -80,7 +79,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
   private final IStyleSet m_styleSet;
 
-  public ZmlBarLayer( final ILayerProvider layerProvider, final IStyleSet styleSet, final URL context )
+  public ZmlBarLayer( final IZmlLayerProvider layerProvider, final IStyleSet styleSet, final URL context )
   {
     super( layerProvider, null );
     m_styleSet = styleSet;
@@ -88,9 +87,18 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     setup( context );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getProvider()
+   */
+  @Override
+  public IZmlLayerProvider getProvider( )
+  {
+    return (IZmlLayerProvider) super.getProvider();
+  }
+
   private void setup( final URL context )
   {
-    final IZmlLayerProvider provider = (IZmlLayerProvider) getProvider();
+    final IZmlLayerProvider provider = getProvider();
     final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
     try
     {

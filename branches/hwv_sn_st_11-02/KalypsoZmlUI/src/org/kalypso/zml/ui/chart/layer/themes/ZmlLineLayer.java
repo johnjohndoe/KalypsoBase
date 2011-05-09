@@ -64,7 +64,6 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.ClipHelper;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -88,15 +87,24 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private final ZmlLineLayerLegendEntry m_legend = new ZmlLineLayerLegendEntry( this );
 
-  public ZmlLineLayer( final ILayerProvider provider, final IStyleSet styleSet, final URL context )
+  public ZmlLineLayer( final IZmlLayerProvider provider, final IStyleSet styleSet, final URL context )
   {
     super( provider, styleSet );
     setup( context );
   }
 
+  /**
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getProvider()
+   */
+  @Override
+  public IZmlLayerProvider getProvider( )
+  {
+    return (IZmlLayerProvider) super.getProvider();
+  }
+
   private void setup( final URL context )
   {
-    final IZmlLayerProvider provider = (IZmlLayerProvider) getProvider();
+    final IZmlLayerProvider provider = getProvider();
     final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
     try
     {
