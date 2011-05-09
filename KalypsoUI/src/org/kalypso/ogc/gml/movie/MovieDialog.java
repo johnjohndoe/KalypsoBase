@@ -69,6 +69,11 @@ public class MovieDialog extends Dialog
   private AbstractCascadingLayerTheme m_movieTheme;
 
   /**
+   * The movie image provider.
+   */
+  private IMovieImageProvider m_imageProvider;
+
+  /**
    * Creates a dialog instance. Note that the window will have no visual representation (no widgets) until it is told to
    * open. By default, open blocks for dialogs.
    * 
@@ -85,6 +90,7 @@ public class MovieDialog extends Dialog
 
     m_mapModel = mapModel;
     m_movieTheme = movieTheme;
+    m_imageProvider = MovieUtilities.initImageProvider( movieTheme );
   }
 
   /**
@@ -103,6 +109,7 @@ public class MovieDialog extends Dialog
 
     m_mapModel = mapModel;
     m_movieTheme = movieTheme;
+    m_imageProvider = MovieUtilities.initImageProvider( movieTheme );
   }
 
   /**
