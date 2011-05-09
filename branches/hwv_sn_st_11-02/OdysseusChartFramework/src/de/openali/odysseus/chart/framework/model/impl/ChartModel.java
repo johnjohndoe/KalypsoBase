@@ -39,10 +39,8 @@ public class ChartModel implements IChartModel
   public void autoscale( final IAxis... axes )
   {
     final AutoScaleVisitor visitor = new AutoScaleVisitor( this, true );
-
-    // TODO ?!? auto scaled axes will be updated when?!? strange behaviour
-    final IAxis[] autoscaledAxes = Arrays.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes;
-    for( final IAxis axis : autoscaledAxes )
+    // axes==null means all Axes
+    for( final IAxis axis : Arrays.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes )
     {
       visitor.visit( axis );
     }

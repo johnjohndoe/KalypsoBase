@@ -59,6 +59,8 @@ public class ChartLabelRendererFactory
   static public TitleTypeBean getTickLabelType( final POSITION axisPosition, final Insets tickInsets, final ITextStyle tickLabelStyle )
   {
     final TitleTypeBean titleType = new TitleTypeBean( null );
+    titleType.setPositionVertical( ALIGNMENT.CENTER );
+    titleType.setPositionHorizontal( ALIGNMENT.CENTER );
     titleType.setInsets( tickInsets );
     titleType.setTextStyle( tickLabelStyle );
 
