@@ -54,7 +54,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.ITypeHandlerFactory;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
@@ -62,6 +62,7 @@ import org.kalypso.ogc.gml.featureview.IFeatureModifierExtension;
 import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory;
 import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory2;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
+import org.kalypso.ogc.gml.movie.IMovieImageProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
 /**
@@ -73,10 +74,9 @@ public class KalypsoUIExtensions
 {
   private KalypsoUIExtensions( )
   {
-    // do not instantiate
   }
 
-  /* extension-point typeHandlers */
+  /* extension-point 'typeHandlers' */
   private static final String TYPE_HANDLERS_EXTENSION_POINT = "org.kalypso.ui.typeHandlers"; //$NON-NLS-1$
 
   private static final String TYPE_HANDLER_ELEMENT_NAME = "typeHandler"; //$NON-NLS-1$
@@ -96,6 +96,16 @@ public class KalypsoUIExtensions
 
   private static Map<String, IConfigurationElement> OBSERVATION_TABLE_HEADER_POPUP_MENUS = null;
 
+  /* extension-point 'kalypsoMovieThemeStrategy' */
+
+  private static final String MOVIE_IMAGE_PROVIDER_EXTENSION_POINT = "org.kalypso.ui.movieImageProvider"; //$NON-NLS-1$
+
+  private static final String MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_ELEMENT = "imageProvider"; //$NON-NLS-1$
+
+  private static final String MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_ID = "id"; //$NON-NLS-1$
+
+  private static final String MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_CLASS = "class"; //$NON-NLS-1$
+
   public static IExtensionsFeatureControlFactory2 getFeatureviewControlFactory( final String id ) throws CoreException
   {
     final Map<String, IConfigurationElement> map = getFeatureviewControlMap();
@@ -104,11 +114,11 @@ public class KalypsoUIExtensions
 
     final IConfigurationElement factoryElement = map.get( id );
     if( factoryElement == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( "No feature-control-factory found with id: " + id ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "No feature-control-factory found with id: " + id ) ); //$NON-NLS-1$
 
     final Object factory = factoryElement.createExecutableExtension( "class" ); //$NON-NLS-1$;
-    if( factory instanceof IExtensionsFeatureControlFactory)
-      return new ExtensionFeatureControl2Wrapper( (IExtensionsFeatureControlFactory)factory );
+    if( factory instanceof IExtensionsFeatureControlFactory )
+      return new ExtensionFeatureControl2Wrapper( (IExtensionsFeatureControlFactory) factory );
 
     return (IExtensionsFeatureControlFactory2) factory;
   }
@@ -196,7 +206,7 @@ public class KalypsoUIExtensions
       }
     }
 
-    final IStatus status = StatusUtilities.createErrorStatus( "No componenUiHandlerProvider found with id: " + componentUiHandlerProviderId ); //$NON-NLS-1$
+    final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "No componenUiHandlerProvider found with id: " + componentUiHandlerProviderId ); //$NON-NLS-1$
     KalypsoGisPlugin.getDefault().getLog().log( status );
 
     return null;
@@ -263,5 +273,70 @@ public class KalypsoUIExtensions
     }
 
     return THE_FEATURE_MODIFIERS_MAP.get( modifierId );
+  }
+
+  /**
+   * This function creates and returns the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}s.
+   * 
+   * @return The {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}s.
+   */
+  public static IMovieImageProvider[] createKalypsoMovieThemeStrategies( ) throws CoreException
+  {
+    /* Memory for the results. */
+    List<IMovieImageProvider> result = new ArrayList<IMovieImageProvider>();
+
+    /* Get the extension registry. */
+    IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    /* Get the extension point. */
+    IExtensionPoint extensionPoint = registry.getExtensionPoint( MOVIE_IMAGE_PROVIDER_EXTENSION_POINT );
+
+    /* Get all configuration elements. */
+    IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+    for( IConfigurationElement element : configurationElements )
+    {
+      /* If the configuration element is not the strategy element, continue. */
+      if( !MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_ELEMENT.equals( element.getName() ) )
+        continue;
+
+      /* Add the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}. */
+      result.add( (IMovieImageProvider) element.createExecutableExtension( MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_CLASS ) );
+    }
+
+    return result.toArray( new IMovieImageProvider[] {} );
+  }
+
+  /**
+   * This function creates and returns the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}.
+   * 
+   * @param id
+   *          The id of the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}.
+   * @return The {@link org.kalypso.ogc.gml.movie.IMovieImageProvider} or null, if it cannot be found.
+   */
+  public static IMovieImageProvider createKalypsoMovieThemeStrategy( String id ) throws CoreException
+  {
+    /* Get the extension registry. */
+    IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    /* Get the extension point. */
+    IExtensionPoint extensionPoint = registry.getExtensionPoint( MOVIE_IMAGE_PROVIDER_EXTENSION_POINT );
+
+    /* Get all configuration elements. */
+    IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+    for( IConfigurationElement element : configurationElements )
+    {
+      /* If the configuration element is not the strategy element, continue. */
+      if( !MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_ELEMENT.equals( element.getName() ) )
+        continue;
+
+      /* If the configuration element is not the one with the correct id, continue. */
+      if( !MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_ID.equals( id ) )
+        continue;
+
+      /* Return the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}. */
+      return (IMovieImageProvider) element.createExecutableExtension( MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_CLASS );
+    }
+
+    return null;
   }
 }
