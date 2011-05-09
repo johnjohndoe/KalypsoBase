@@ -61,7 +61,9 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author F.Lindemann
+ * @deprecated
  */
+@Deprecated
 public class LegendLabel
 {
   private final Label m_label;

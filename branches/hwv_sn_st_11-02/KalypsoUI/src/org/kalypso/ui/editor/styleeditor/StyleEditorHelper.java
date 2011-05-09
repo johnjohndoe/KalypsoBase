@@ -40,16 +40,59 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor;
 
+import org.eclipse.swt.widgets.Control;
+import org.kalypso.commons.eclipse.jface.viewers.ITypedTabList;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.ogc.gml.IKalypsoStyleListener;
+import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 public class StyleEditorHelper
 {
+// TODO: move to SLD stuff and rename to SLD-helper
   public static IPropertyType getFeatureTypeProperty( final IFeatureType ft, final PropertyName propName )
   {
-    // HACK: we assume that we have a simple PropertyName here, but this is not allways the case
-    final String path = propName.getValue();
-    return ft.getProperty( path );
+    try
+    {
+      final GMLXPath path = propName.getPath();
+      final Object object = GMLXPathUtilities.query( path, ft );
+      if( object instanceof IPropertyType )
+        return (IPropertyType) object;
+    }
+    catch( final GMLXPathException e )
+    {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
+
+  public static <DATA> void addListInputRefresher( final Control control, final IStyleInput<DATA> input, final ITypedTabList<DATA> listInput )
+  {
+    final Runnable runnable = new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        if( !control.isDisposed() )
+        {
+          listInput.refresh();
+        }
+      }
+    };
+
+    input.addStyleListener( new IKalypsoStyleListener()
+    {
+      @Override
+      public void styleChanged( )
+      {
+        ControlUtils.exec( control, runnable );
+      }
+    } );
   }
 }

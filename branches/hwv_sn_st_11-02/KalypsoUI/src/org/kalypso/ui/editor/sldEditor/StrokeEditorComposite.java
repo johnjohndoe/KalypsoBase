@@ -88,7 +88,9 @@ import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
  * Composite, which gives the most important editing tools for a given stroke.
  * 
  * @author Thomas Jung
+ * @deprecated Use {@link StrokeComposite} instead.
  */
+@Deprecated
 public class StrokeEditorComposite extends Composite
 {
   private final Set<IStrokeModifyListener> m_listeners = new HashSet<IStrokeModifyListener>();

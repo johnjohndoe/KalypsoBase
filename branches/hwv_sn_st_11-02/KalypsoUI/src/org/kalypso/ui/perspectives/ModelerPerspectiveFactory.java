@@ -78,6 +78,7 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
     layout.addNewWizardShortcut( BasicNewFolderResourceWizard.WIZARD_ID );
     layout.addNewWizardShortcut( BasicNewFileResourceWizard.WIZARD_ID );
     layout.addNewWizardShortcut( NewGMLFileWizard.WIZARD_ID );
+// layout.addNewWizardShortcut( CreateGisMapViewWizard.WIZARD_ID );
 
     // Add "show views".
     layout.addShowViewShortcut( IPageLayout.ID_RES_NAV );
