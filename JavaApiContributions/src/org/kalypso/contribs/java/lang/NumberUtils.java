@@ -241,4 +241,9 @@ public final class NumberUtils
 
     return integer.intValue();
   }
+
+  public static float parseFloat( final String string )
+  {
+    return Float.parseFloat( string.replace( ',', '.' ) );
+  }
 }

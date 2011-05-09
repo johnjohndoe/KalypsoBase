@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -53,6 +55,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
@@ -352,6 +355,25 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     if( isUsedForSelection() )
       styleType.setSelection( true );
     stylesList.add( styleType );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoStyle#getContext()
+   */
+  @Override
+  public URL getContext( )
+  {
+    try
+    {
+      final URL context = m_styleKey.getContext();
+      final String location = m_styleKey.getLocation();
+      return UrlResolverSingleton.resolveUrl( context, location );
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   abstract protected String getStyleName( );

@@ -58,12 +58,21 @@ public final class MessageUtilitites
   public static class StatusMessage implements IMessage
   {
     private final IStatus m_status;
+
     private final Object m_key;
+
+    private final Control m_control;
 
     public StatusMessage( final Object key, final IStatus status )
     {
+      this( key, status, null );
+    }
+
+    public StatusMessage( final Object key, final IStatus status, final Control control )
+    {
       m_key = key;
       m_status = status;
+      m_control = control;
     }
 
     /**
@@ -72,7 +81,7 @@ public final class MessageUtilitites
     @Override
     public Control getControl( )
     {
-      return null;
+      return m_control;
     }
 
     /**
@@ -151,7 +160,7 @@ public final class MessageUtilitites
     return msgs;
   }
 
-  private static IMessage convertStatus( final IStatus status )
+  public static IMessage convertStatus( final IStatus status )
   {
     return new StatusMessage( status, status );
   }
@@ -180,8 +189,5 @@ public final class MessageUtilitites
       default:
         throw new IllegalArgumentException( "Unknown status severity: " + severity ); //$NON-NLS-1$
     }
-
   }
-
-
 }
