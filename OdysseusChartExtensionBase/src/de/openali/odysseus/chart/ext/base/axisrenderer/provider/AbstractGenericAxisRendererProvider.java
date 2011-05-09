@@ -75,14 +75,19 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
    * @see de.openali.odysseus.chart.factory.provider.IAxisRendererProvider#getAxisRenderer()
    */
   @Override
-  public final IAxisRenderer getAxisRenderer(final POSITION position )
+  public IAxisRenderer getAxisRenderer( final POSITION position )
   {
+    return getAxisRenderer( position, false );
+  }
 
+  protected final IAxisRenderer getAxisRenderer( final POSITION position, final boolean intervallLabeledTick )
+  {
     final ITickCalculator tickCalculator = getTickCalculator();
     final ILabelCreator labelCreator = getLabelCreator();
     final AxisRendererConfig rendererConfig = getRendererConfig();
-
-    final IAxisRenderer calendarAxisRenderer = new ExtendedAxisRenderer( getId(),position, labelCreator, tickCalculator, rendererConfig );
+    // TODO remove intervallstuff from axisrenderer, move this to ticklabelrenderer
+    rendererConfig.intervallLabeledTick = intervallLabeledTick;
+    final IAxisRenderer calendarAxisRenderer = new ExtendedAxisRenderer( getId(), position, labelCreator, tickCalculator, rendererConfig );
     return calendarAxisRenderer;
   }
 
@@ -106,7 +111,7 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
     config.fixedWidth = getFixedWidth();
     config.axisLineStyle = axisLine;
     config.tickLineStyle = tickLine;
-    config.axisInsets = new Insets(getGap(),0,getBorderSize(),0);
+    config.axisInsets = new Insets( getGap(), 0, getBorderSize(), 0 );
     config.tickLabelStyle = tickLabelText;
     config.labelStyle = labelText;
     config.labelPosition = ALIGNMENT.CENTER;

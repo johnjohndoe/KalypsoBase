@@ -26,6 +26,13 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
 
   private ILabelCreator m_labelCreator;
 
+  private final boolean m_intervallLabeledTick;
+
+  private boolean isIntervallLabeledTick( )
+  {
+    return m_intervallLabeledTick;
+  }
+
   public ExtendedAxisRenderer( final String id, final ILabelCreator labelCreator, final IChartLabelRenderer axisLabelRenderer, final IChartLabelRenderer tickLabelRenderer, final ITickCalculator tickCalculator, final AxisRendererConfig config )
   {
     super( id, axisLabelRenderer, tickLabelRenderer, config );
@@ -34,6 +41,7 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
     setMinTickInterval( config.minTickInterval );
     setHideCut( config.hideCut );
     setFixedWidth( config.fixedWidth );
+    m_intervallLabeledTick = config.intervallLabeledTick;
   }
 
   public ExtendedAxisRenderer( final String id, final POSITION position, final ILabelCreator labelCreator, final ITickCalculator tickCalculator, final AxisRendererConfig config )
@@ -69,18 +77,27 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
       return;
     getTickLineStyle().apply( gc );
     final IChartLabelRenderer labelRenderer = getTickLabelRenderer();
+    int tickDistance = -1;
+    // TODO hideCut is not exactly calculated
+    // TODO axisrenderer don't render labels, move isIntervallLabeledTick to labelRenderer
+    if( isIntervallLabeledTick() && ticks.length > 1 )
+    {
+      tickDistance = Math.abs( axis.numericToScreen( ticks[1] ) - axis.numericToScreen( ticks[0] ) );
+    }
     for( int i = 0; i < ticks.length; i++ )
     {
       final int tickPos = axis.numericToScreen( ticks[i] );
+
       if( tickPos < 0 || tickPos > axis.getScreenHeight() )
         continue;
-      gc.drawLine( tickPos, getLineStyle().getWidth() + getGap() + offset, tickPos, getLineStyle().getWidth() + getGap() + offset + getTickLength() );
+      gc.drawLine( tickPos,  getGap() + offset, tickPos,  getGap() + offset + getTickLength() );
       // draw Ticklabel
       labelRenderer.getTitleTypeBean().setLabel( getLabelCreator().getLabel( ticks, i, axis.getNumericRange() ) );
       final Rectangle textSize = labelRenderer.getSize();
       // hide cut
       if( !isHideCut() || (tickPos + textSize.x > 0 && tickPos + textSize.x + textSize.width < axis.getScreenHeight()) )
-        labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() + offset), -1, -1 ) );
+        labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() + offset), tickDistance, -1 ) );
+
     }
   }
 
