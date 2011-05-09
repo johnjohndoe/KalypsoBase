@@ -46,15 +46,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
- * This validator checks, if a string was provided and is not empty.
+ * This validator checks, if a string was provided and is not blank.
  * 
- * @author Holger Albert
+ * @author Gernot Belger
  */
-public class StringEmptyValidator extends TypedValidator<String>
+public class StringBlankValidator extends TypedValidator<String>
 {
-  public String DEFAULT_WARNING_MESSAGE = "Field should not be empty";
+  public static String DEFAULT_WARNING_MESSAGE = "Field should not be empty";
 
-  public String DEFAULT_ERROR_MESSAGE = "Field must not be empty";
+  public static String DEFAULT_ERROR_MESSAGE = "Field must not be empty";
 
   /**
    * @param severity
@@ -62,7 +62,7 @@ public class StringEmptyValidator extends TypedValidator<String>
    * @param message
    *          Will be used as message for a status, if validation fails.
    */
-  public StringEmptyValidator( final int severity, final String message )
+  public StringBlankValidator( final int severity, final String message )
   {
     super( String.class, severity, message );
   }
@@ -73,7 +73,7 @@ public class StringEmptyValidator extends TypedValidator<String>
   @Override
   protected IStatus doValidate( final String value ) throws CoreException
   {
-    if( StringUtils.isBlank( value ) )
+    if( StringUtils.isEmpty( value ) )
       fail();
 
     return Status.OK_STATUS;

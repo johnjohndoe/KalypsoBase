@@ -38,44 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.databinding.validation;
+package org.kalypso.commons.databinding.conversion;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.IMessage;
+import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 
 /**
- * This validator checks, if a string was provided and is not empty.
- * 
- * @author Holger Albert
+ * @author Gernot Belger
+ *
  */
-public class StringEmptyValidator extends TypedValidator<String>
+public class StatusToMessageConverter extends TypedConverter<IStatus, IMessage[]>
 {
-  public String DEFAULT_WARNING_MESSAGE = "Field should not be empty";
+  private final Control m_control;
 
-  public String DEFAULT_ERROR_MESSAGE = "Field must not be empty";
-
-  /**
-   * @param severity
-   *          Severity of IStatus, will be used to create validation failures.
-   * @param message
-   *          Will be used as message for a status, if validation fails.
-   */
-  public StringEmptyValidator( final int severity, final String message )
+  public StatusToMessageConverter( final Control control )
   {
-    super( String.class, severity, message );
+    super( IStatus.class, IMessage[].class );
+
+    m_control = control;
   }
 
-  /**
-   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
-   */
   @Override
-  protected IStatus doValidate( final String value ) throws CoreException
+  public IMessage[] convertTyped( final IStatus fromObject )
   {
-    if( StringUtils.isBlank( value ) )
-      fail();
-
-    return Status.OK_STATUS;
+    final IMessage message = new MessageUtilitites.StatusMessage( fromObject, fromObject, m_control );
+    return new IMessage[] { message };
   }
 }

@@ -38,44 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.databinding.validation;
+package org.kalypso.commons.databinding.conversion;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.swt.graphics.RGB;
 
 /**
- * This validator checks, if a string was provided and is not empty.
- * 
- * @author Holger Albert
+ * @author Gernot Belger
  */
-public class StringEmptyValidator extends TypedValidator<String>
+public class AwtToSwtColorConverter extends TypedConverter<java.awt.Color, org.eclipse.swt.graphics.Color>
 {
-  public String DEFAULT_WARNING_MESSAGE = "Field should not be empty";
+  private final ColorRegistry m_registry;
 
-  public String DEFAULT_ERROR_MESSAGE = "Field must not be empty";
+  private final String m_colorKey;
 
-  /**
-   * @param severity
-   *          Severity of IStatus, will be used to create validation failures.
-   * @param message
-   *          Will be used as message for a status, if validation fails.
-   */
-  public StringEmptyValidator( final int severity, final String message )
+  public AwtToSwtColorConverter( final ColorRegistry registry, final String colorKey )
   {
-    super( String.class, severity, message );
+    super( java.awt.Color.class, org.eclipse.swt.graphics.Color.class );
+
+    m_registry = registry;
+    m_colorKey = colorKey;
   }
 
-  /**
-   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
-   */
   @Override
-  protected IStatus doValidate( final String value ) throws CoreException
+  public org.eclipse.swt.graphics.Color convertTyped( final java.awt.Color from )
   {
-    if( StringUtils.isBlank( value ) )
-      fail();
-
-    return Status.OK_STATUS;
+    m_registry.put( m_colorKey, new RGB( from.getRed(), from.getGreen(), from.getBlue() ) );
+    return m_registry.get( m_colorKey );
   }
 }

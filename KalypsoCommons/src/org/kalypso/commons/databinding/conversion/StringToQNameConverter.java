@@ -38,44 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.databinding.validation;
+package org.kalypso.commons.databinding.conversion;
+
+import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 
 /**
- * This validator checks, if a string was provided and is not empty.
- * 
- * @author Holger Albert
+ * @author Gernot Belger
  */
-public class StringEmptyValidator extends TypedValidator<String>
+public class StringToQNameConverter extends TypedConverter<String, QName>
 {
-  public String DEFAULT_WARNING_MESSAGE = "Field should not be empty";
-
-  public String DEFAULT_ERROR_MESSAGE = "Field must not be empty";
-
-  /**
-   * @param severity
-   *          Severity of IStatus, will be used to create validation failures.
-   * @param message
-   *          Will be used as message for a status, if validation fails.
-   */
-  public StringEmptyValidator( final int severity, final String message )
+  public StringToQNameConverter( )
   {
-    super( String.class, severity, message );
+    super( String.class, QName.class );
   }
 
-  /**
-   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
-   */
   @Override
-  protected IStatus doValidate( final String value ) throws CoreException
+  public QName convertTyped( final String fromObject )
   {
-    if( StringUtils.isBlank( value ) )
-      fail();
+    if( StringUtils.isBlank( fromObject ) )
+      return null;
 
-    return Status.OK_STATUS;
+    return QName.valueOf( fromObject );
   }
 }

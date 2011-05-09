@@ -38,44 +38,53 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.databinding.validation;
+package org.kalypso.commons.databinding.forms;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.IMessage;
+import org.eclipse.ui.forms.IMessageManager;
+import org.kalypso.commons.databinding.observable.value.TypedObservableValue;
 
 /**
- * This validator checks, if a string was provided and is not empty.
- * 
- * @author Holger Albert
+ * @author Gernot Belger
  */
-public class StringEmptyValidator extends TypedValidator<String>
+public class FormControlDecoratorValue extends TypedObservableValue<IMessageManager, IMessage[]>
 {
-  public String DEFAULT_WARNING_MESSAGE = "Field should not be empty";
-
-  public String DEFAULT_ERROR_MESSAGE = "Field must not be empty";
-
-  /**
-   * @param severity
-   *          Severity of IStatus, will be used to create validation failures.
-   * @param message
-   *          Will be used as message for a status, if validation fails.
-   */
-  public StringEmptyValidator( final int severity, final String message )
+  public FormControlDecoratorValue( final IMessageManager source )
   {
-    super( String.class, severity, message );
+    super( source, IMessage[].class );
   }
 
-  /**
-   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
-   */
   @Override
-  protected IStatus doValidate( final String value ) throws CoreException
+  public void doSetValueTyped( final IMessageManager source, final IMessage[] value )
   {
-    if( StringUtils.isBlank( value ) )
-      fail();
+    source.setAutoUpdate( false );
 
-    return Status.OK_STATUS;
+    for( final IMessage message : value )
+    {
+      final Control control = message.getControl();
+      if( control != null )
+        source.removeMessages( control );
+    }
+
+    for( final IMessage message : value )
+    {
+      final Object key = message.getKey();
+      final String text = message.getMessage();
+      final int type = message.getMessageType();
+      final Object data = message.getData();
+      final Control control = message.getControl();
+      if( type != IMessageProvider.NONE )
+        source.addMessage( key, text, data, type, control );
+    }
+
+    source.setAutoUpdate( true );
+  }
+
+  @Override
+  public IMessage[] doGetValueTyped( final IMessageManager source )
+  {
+    return null;
   }
 }

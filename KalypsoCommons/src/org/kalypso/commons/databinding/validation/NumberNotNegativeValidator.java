@@ -40,21 +40,29 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.validation;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
- * This validator checks, if a string was provided and is not empty.
+ * This validator checks, if a number was provided.
  * 
  * @author Holger Albert
  */
-public class StringEmptyValidator extends TypedValidator<String>
+public class NumberNotNegativeValidator extends TypedValidator<Number>
 {
-  public String DEFAULT_WARNING_MESSAGE = "Field should not be empty";
+  private static final String DEFAULT_MESSAGE = "Value should not be negative.";
 
-  public String DEFAULT_ERROR_MESSAGE = "Field must not be empty";
+  /**
+   * Same as {@link #NumberNotNegativeValidator(int, String)}, but uses a default message.
+   * 
+   * @param severity
+   *          Severity of IStatus, will be used to create validation failures.
+   */
+  public NumberNotNegativeValidator( final int severity )
+  {
+    this( severity, DEFAULT_MESSAGE );
+  }
 
   /**
    * @param severity
@@ -62,18 +70,18 @@ public class StringEmptyValidator extends TypedValidator<String>
    * @param message
    *          Will be used as message for a status, if validation fails.
    */
-  public StringEmptyValidator( final int severity, final String message )
+  public NumberNotNegativeValidator( final int severity, final String message )
   {
-    super( String.class, severity, message );
+    super( Number.class, severity, message );
   }
 
   /**
    * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
    */
   @Override
-  protected IStatus doValidate( final String value ) throws CoreException
+  protected IStatus doValidate( final Number value ) throws CoreException
   {
-    if( StringUtils.isBlank( value ) )
+    if( value != null && value.doubleValue() < 0.0 )
       fail();
 
     return Status.OK_STATUS;

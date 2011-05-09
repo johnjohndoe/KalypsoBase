@@ -38,44 +38,35 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.databinding.validation;
+package org.kalypso.commons.databinding.conversion;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 
 /**
- * This validator checks, if a string was provided and is not empty.
- * 
- * @author Holger Albert
+ * @author Gernot Belger
  */
-public class StringEmptyValidator extends TypedValidator<String>
+public class FloatArrayToStringConverter extends TypedConverter<float[], String>
 {
-  public String DEFAULT_WARNING_MESSAGE = "Field should not be empty";
+  private final String m_format;
 
-  public String DEFAULT_ERROR_MESSAGE = "Field must not be empty";
-
-  /**
-   * @param severity
-   *          Severity of IStatus, will be used to create validation failures.
-   * @param message
-   *          Will be used as message for a status, if validation fails.
-   */
-  public StringEmptyValidator( final int severity, final String message )
+  public FloatArrayToStringConverter( final String format )
   {
-    super( String.class, severity, message );
+    super( float[].class, String.class );
+
+    m_format = format;
   }
 
-  /**
-   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
-   */
   @Override
-  protected IStatus doValidate( final String value ) throws CoreException
+  public String convertTyped( final float[] floats )
   {
-    if( StringUtils.isBlank( value ) )
-      fail();
+    if( floats == null )
+      return StringUtils.EMPTY;
 
-    return Status.OK_STATUS;
+    final String[] format = new String[floats.length];
+    for( int i = 0; i < format.length; i++ )
+      format[i] = String.format( m_format, floats[i] );
+
+    return StringUtils.join( format, ' ' );
   }
+
 }

@@ -38,44 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.databinding.validation;
-
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+package org.kalypso.commons.databinding.conversion;
 
 /**
- * This validator checks, if a string was provided and is not empty.
- * 
- * @author Holger Albert
+ * @author Gernot Belger
  */
-public class StringEmptyValidator extends TypedValidator<String>
+public class SwrToAwtColorConverter extends TypedConverter<org.eclipse.swt.graphics.Color, java.awt.Color>
 {
-  public String DEFAULT_WARNING_MESSAGE = "Field should not be empty";
-
-  public String DEFAULT_ERROR_MESSAGE = "Field must not be empty";
-
-  /**
-   * @param severity
-   *          Severity of IStatus, will be used to create validation failures.
-   * @param message
-   *          Will be used as message for a status, if validation fails.
-   */
-  public StringEmptyValidator( final int severity, final String message )
+  public SwrToAwtColorConverter( )
   {
-    super( String.class, severity, message );
+    super( org.eclipse.swt.graphics.Color.class, java.awt.Color.class );
   }
 
-  /**
-   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
-   */
   @Override
-  protected IStatus doValidate( final String value ) throws CoreException
+  public java.awt.Color convertTyped( final org.eclipse.swt.graphics.Color from )
   {
-    if( StringUtils.isBlank( value ) )
-      fail();
-
-    return Status.OK_STATUS;
+    return new java.awt.Color( from.getRed(), from.getGreen(), from.getBlue() );
   }
 }

@@ -44,6 +44,7 @@ import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.databinding.observable.Diffs;
 import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
 import org.eclipse.core.databinding.observable.value.ValueDiff;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * @author Gernot Albert
@@ -55,10 +56,18 @@ public abstract class TypedObservableValue<SOURCE, VALUE> extends AbstractObserv
 
   private final Class<VALUE> m_valueType;
 
-  public TypedObservableValue( SOURCE source, Class<VALUE> valueType )
+  public TypedObservableValue( final SOURCE source, final Class<VALUE> valueType )
   {
+    Assert.isNotNull( source );
+    Assert.isNotNull( valueType );
+
     m_source = source;
     m_valueType = valueType;
+  }
+
+  protected SOURCE getSource( )
+  {
+    return m_source;
   }
 
   /**
@@ -74,7 +83,7 @@ public abstract class TypedObservableValue<SOURCE, VALUE> extends AbstractObserv
    * @see org.eclipse.core.databinding.observable.value.AbstractObservableValue#doGetValue()
    */
   @Override
-  protected VALUE doGetValue( )
+  protected final VALUE doGetValue( )
   {
     return doGetValueTyped( m_source );
   }
@@ -83,15 +92,21 @@ public abstract class TypedObservableValue<SOURCE, VALUE> extends AbstractObserv
    * @see org.eclipse.core.databinding.observable.value.AbstractObservableValue#doSetValue(java.lang.Object)
    */
   @Override
-  protected void doSetValue( Object value )
+  protected final void doSetValue( final Object value )
   {
-    Object currentValue = doGetValue();
-    if( ObjectUtils.equals( value, currentValue ) )
+    final VALUE typedValue = m_valueType.cast( value );
+    final VALUE currentValue = doGetValue();
+    if( valueEquals( typedValue, currentValue ) )
       return;
 
-    doSetValueTyped( m_source, m_valueType.cast( value ) );
+    doSetValueTyped( m_source, typedValue );
 
-    ValueDiff diff = Diffs.createValueDiff( currentValue, value );
+    final ValueDiff diff = Diffs.createValueDiff( currentValue, value );
     fireValueChange( diff );
+  }
+
+  protected boolean valueEquals( final VALUE value1, final VALUE value2 )
+  {
+    return ObjectUtils.equals( value1, value2 );
   }
 }
