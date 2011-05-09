@@ -52,6 +52,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -601,6 +603,23 @@ public final class XMLTools
     }
 
     return null;
+  }
+
+  public static Document parse( final IFile file ) throws IOException, SAXException, CoreException
+  {
+    InputStream stream = null;
+
+    try
+    {
+      stream = new BufferedInputStream( file.getContents() );
+      final Document doc = parse( stream );
+      stream.close();
+      return doc;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( stream );
+    }
   }
 
   /**

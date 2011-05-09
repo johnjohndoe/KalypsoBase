@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.net.URL;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -72,4 +73,6 @@ public interface IKalypsoStyle extends INamedStyleElement
   void fillStyleType( List<Style> stylesList, Style styleType );
 
   boolean isLoaded( );
+
+  URL getContext( );
 }

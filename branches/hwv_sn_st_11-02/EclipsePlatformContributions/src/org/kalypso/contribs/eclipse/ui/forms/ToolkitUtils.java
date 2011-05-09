@@ -41,13 +41,17 @@
 package org.kalypso.contribs.eclipse.ui.forms;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 /**
  * Helper class for {@link org.eclipse.ui.forms.widgets.FormToolkit} related stuff.
@@ -101,5 +105,20 @@ public final class ToolkitUtils
     } );
 
     return toolkit;
+  }
+
+  /**
+   * Same as {@link FormToolkit#createScrolledForm(Composite)}, butt allow to specify which style to use.<br/>
+   * {@link ScrolledForm#setExpandXXXX} is called depending on which style bits are set.
+   */
+  public static ScrolledForm createScrolledForm( final FormToolkit toolkit, final Composite parent, final int style )
+  {
+    final ScrolledForm form = new ScrolledForm( parent, SWT.V_SCROLL | SWT.H_SCROLL | toolkit.getOrientation() );
+    form.setExpandHorizontal( (style & SWT.H_SCROLL) != 0 );
+    form.setExpandVertical( (style & SWT.V_SCROLL) != 0 );
+    form.setBackground( toolkit.getColors().getBackground() );
+    form.setForeground( toolkit.getColors().getColor( IFormColors.TITLE ) );
+    form.setFont( JFaceResources.getHeaderFont() );
+    return form;
   }
 }
