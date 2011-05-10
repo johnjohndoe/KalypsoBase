@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.movie;
+package org.kalypso.ogc.gml.movie.utils;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
@@ -46,6 +46,8 @@ import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.ogc.gml.movie.IMovieImageProvider;
+import org.kalypso.ogc.gml.movie.standard.DefaultMovieImageProvider;
 import org.kalypso.ui.IKalypsoUIConstants;
 import org.kalypso.ui.KalypsoUIExtensions;
 

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.movie;
 
-import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.Action;
 
 /**
  * The movie controls.
@@ -50,9 +50,9 @@ import org.eclipse.jface.action.IContributionItem;
 public interface IMovieControls
 {
   /**
-   * This function returns the contribution items.
+   * This function returns the actions.
    * 
-   * @return The contribution items.
+   * @return The actions.
    */
-  public IContributionItem[] getContributionItems( );
+  public Action[] getActions( );
 }

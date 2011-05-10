@@ -38,40 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.movie;
+package org.kalypso.ogc.gml.movie.actions;
 
-import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.eclipse.jface.action.Action;
 
 /**
- * The default movie image provider.
+ * The play action.
  * 
  * @author Holger Albert
  */
-public class DefaultMovieImageProvider implements IMovieImageProvider
+public class EcjectAction extends Action
 {
   /**
    * The constructor.
    */
-  public DefaultMovieImageProvider( )
+  public EcjectAction( )
   {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.movie.IMovieImageProvider#getMovieControls()
-   */
-  @Override
-  public IMovieControls getMovieControls( )
-  {
-    return new DefaultMovieControls();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.movie.IMovieImageProvider#getKalypsoThemes()
-   */
-  @Override
-  public IKalypsoTheme[] getKalypsoThemes( )
-  {
-    // TODO
-    return null;
   }
 }
