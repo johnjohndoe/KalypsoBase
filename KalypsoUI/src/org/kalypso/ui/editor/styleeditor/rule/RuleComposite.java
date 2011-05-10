@@ -47,17 +47,13 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
-import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
-import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.graphics.sld.Rule;
@@ -117,15 +113,8 @@ public class RuleComposite extends Composite
     section.setText( "Rule Properties" );
     section.setDescription( "This section allows to edit general properties of the rule." );
 
-    final ScrolledForm form = toolkit.createScrolledForm( section );
-    section.setClient( form );
-
-    final IDataBinding binding = new DatabindingForm( form, toolkit );
-
-    final Composite body = form.getBody();
-    body.setLayout( new FillLayout() );
-
-    m_rulePropertiesComposite = new RulePropertiesComposite( binding, body, m_input );
+    m_rulePropertiesComposite = new RulePropertiesComposite( toolkit, section, m_input );
+    section.setClient( m_rulePropertiesComposite );
 
     return section;
   }
@@ -255,6 +244,7 @@ public class RuleComposite extends Composite
    */
   public void updateControl( )
   {
+
     m_rulePropertiesComposite.updateControl();
 
     m_symbolizerTabViewer.refresh();

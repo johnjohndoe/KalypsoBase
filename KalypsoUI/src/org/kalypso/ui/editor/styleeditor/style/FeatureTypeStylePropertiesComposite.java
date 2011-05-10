@@ -185,6 +185,9 @@ public class FeatureTypeStylePropertiesComposite extends Composite
 
   public void updateControl( )
   {
+    if( isDisposed() )
+      return;
+
     m_binding.getBindingContext().updateTargets();
 
     m_form.reflow( true );

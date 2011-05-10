@@ -318,7 +318,7 @@ public class StrokeComposite extends Composite
   private void createGraphicControl( final FormToolkit toolkit, final Composite parent )
   {
     m_strokeSection = new GraphicStrokeSection( toolkit, parent, m_input );
-    m_strokeSection.getSection().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 3, 1 ) );
+    m_strokeSection.getSection().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 3, 1 ) );
   }
 
   private boolean shouldExpand( )

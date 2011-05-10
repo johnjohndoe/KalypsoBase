@@ -59,7 +59,13 @@ public class GraphicElementsTabViewer extends AbstractManagedTabViewer<Graphic>
 {
   public GraphicElementsTabViewer( final FormToolkit toolkit, final Composite parent, final IStyleInput<Graphic> input )
   {
-    super( toolkit, parent, new GraphicElementsTabList( input ) );
+    super( toolkit, parent, new GraphicElementsTabList( input ), canChange() );
+  }
+
+  private static boolean canChange( )
+  {
+    // return input.getConfig().isRuleTabViewerAllowChange();
+    return true;
   }
 
   @Override

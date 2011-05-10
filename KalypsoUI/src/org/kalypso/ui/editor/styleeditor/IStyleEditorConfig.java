@@ -38,25 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.styleeditor.binding;
-
-import java.net.URL;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ui.editor.styleeditor.IStyleEditorConfig;
+package org.kalypso.ui.editor.styleeditor;
 
 /**
+ * Gives hints to the style editor components, how to render their contents.
+ * 
  * @author Gernot Belger
  */
-public interface IStyleInput<DATA>
+public interface IStyleEditorConfig
 {
-  DATA getData( );
+  /**
+   * If this is <code>false</code>, the properties section of the
+   * {@link org.kalypso.ui.editor.styleeditor.style.FeatureTypeStyleComposite} will be hidden.
+   */
+  boolean isFeatureTypeStyleCompositeShowProperties( );
 
-  void fireStyleChanged( );
+  /**
+   * If this is <code>true</code>, rules can be added/(re)moved by the tab viewer.
+   */
+  boolean isRuleTabViewerAllowChange( );
 
-  IFeatureType getFeatureType( );
+  /**
+   * If this is <code>false</code>, the graphic section of the stroke is hidden for the
+   * {@link org.kalypso.ui.editor.styleeditor.symbolizer.LineSymbolizerComposite}.
+   */
+  boolean isLineSymbolizerShowGraphic( );
 
-  IStyleEditorConfig getConfig( );
-
-  URL getContext( );
+  /**
+   * If this is <code>true</code>, symbolizers can be added/(re)moved by the tab viewer.
+   */
+  boolean isSymbolizerTabViewerAllowChange( );
 }

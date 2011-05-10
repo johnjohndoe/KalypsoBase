@@ -87,8 +87,15 @@ class LineSymbolizerStrokeSection extends AbstractStyleElementSection<LineSymbol
   protected StrokeComposite createItemControl( final Composite parent, final Stroke item )
   {
     final FormToolkit toolkit = getToolkit();
-    final IStyleInput<Stroke> input = new StyleInput<Stroke>( item, getInput() );
-    return new StrokeComposite( toolkit, parent, input, SWT.NONE );
+
+    final IStyleInput<LineSymbolizer> input = getInput();
+
+    final IStyleInput<Stroke> strokeInput = new StyleInput<Stroke>( item, input );
+
+    final boolean showGraphic = input.getConfig().isLineSymbolizerShowGraphic();
+    final int sldStyle = showGraphic ? SWT.NONE : StrokeComposite.HIDE_GRAPHIC;
+
+    return new StrokeComposite( toolkit, parent, strokeInput, sldStyle );
   }
 
   @Override

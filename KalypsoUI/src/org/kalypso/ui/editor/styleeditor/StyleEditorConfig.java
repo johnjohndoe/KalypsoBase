@@ -38,81 +38,65 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.styleeditor.binding;
-
-import java.net.URL;
-
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ui.editor.styleeditor.IStyleEditorConfig;
+package org.kalypso.ui.editor.styleeditor;
 
 /**
+ * Standard implementation of {@link IStyleEditorConfig}, which defaults to the usual default values.
+ * 
  * @author Gernot Belger
  */
-public class StyleInput<DATA> implements IStyleInput<DATA>
+public class StyleEditorConfig implements IStyleEditorConfig
 {
-  private final DATA m_data;
+  private boolean m_featureTypeStyleCompositeShowProperties = true;
 
-  private final IStyleInput< ? > m_delegate;
+  private boolean m_ruleTabViewerAllowChange = true;
 
-  public StyleInput( final DATA data, final IStyleInput< ? > delegate )
+  private boolean m_lineSymbolizerShowGraphic = true;
+
+  private boolean m_symbolizerTabViewerAllowChange = true;
+
+  @Override
+  public boolean isFeatureTypeStyleCompositeShowProperties( )
   {
-    m_data = data;
-    m_delegate = delegate;
+    return m_featureTypeStyleCompositeShowProperties;
+  }
+
+  public void setFeatureTypeStyleCompositeShowProperties( final boolean featureTypeStyleShowProperties )
+  {
+    m_featureTypeStyleCompositeShowProperties = featureTypeStyleShowProperties;
   }
 
   @Override
-  public final DATA getData( )
+  public boolean isRuleTabViewerAllowChange( )
   {
-    return m_data;
+    return m_ruleTabViewerAllowChange;
+  }
+
+  public void setRuleTabViewerAllowChange( final boolean ruleTabViewerAllowChange )
+  {
+    m_ruleTabViewerAllowChange = ruleTabViewerAllowChange;
   }
 
   @Override
-  public int hashCode( )
+  public boolean isLineSymbolizerShowGraphic( )
   {
-    return getData().hashCode();
+    return m_lineSymbolizerShowGraphic;
+  }
+
+  public void setLineSymbolizerShowGraphic( final boolean lineSymbolizerShowGraphic )
+  {
+    m_lineSymbolizerShowGraphic = lineSymbolizerShowGraphic;
   }
 
   @Override
-  public boolean equals( final Object obj )
+  public boolean isSymbolizerTabViewerAllowChange( )
   {
-    if( obj == null )
-      return false;
-    if( obj == this )
-      return true;
-    if( obj.getClass() != getClass() )
-      return false;
-
-    final StyleInput< ? > other = (StyleInput< ? >) obj;
-
-    return new EqualsBuilder().append( getData(), other.getData() ).isEquals();
+    return m_symbolizerTabViewerAllowChange;
   }
 
-  @Override
-  public void fireStyleChanged( )
+  public void setSymbolizerTabViewerAllowChange( final boolean symbolizerTabViewerAllowChange )
   {
-    if( m_delegate != null )
-      m_delegate.fireStyleChanged();
+    m_symbolizerTabViewerAllowChange = symbolizerTabViewerAllowChange;
   }
 
-  @Override
-  public IFeatureType getFeatureType( )
-  {
-    if( m_delegate != null )
-      return m_delegate.getFeatureType();
-
-    return null;
-  }
-
-  @Override
-  public URL getContext( )
-  {
-    return m_delegate.getContext();
-  }
-
-  @Override
-  public IStyleEditorConfig getConfig( )
-  {
-    return m_delegate.getConfig();
-  }
 }

@@ -62,7 +62,7 @@ public abstract class AbstractManagedTabViewer<DATA>
 {
   private final TabViewer m_tabViewer;
 
-  public AbstractManagedTabViewer( final FormToolkit toolkit, final Composite parent, final ITabList input )
+  public AbstractManagedTabViewer( final FormToolkit toolkit, final Composite parent, final ITabList input, final boolean allowChanges )
   {
     final CTabFolder folder = new CTabFolder( parent, SWT.BORDER );
     toolkit.adapt( folder );
@@ -85,6 +85,8 @@ public abstract class AbstractManagedTabViewer<DATA>
     m_tabViewer.setMinLabelLength( 8 );
     m_tabViewer.setMaxLabelLength( 15 );
 
+    final int itemStyle = allowChanges ? SWT.CLOSE : SWT.NONE;
+
     m_tabViewer.setContentProvider( new TabListContentProvider()
     {
       @Override
@@ -94,7 +96,7 @@ public abstract class AbstractManagedTabViewer<DATA>
         return MessageDialog.openConfirm( shell, "Style Editor", message );
       }
     } );
-    m_tabViewer.setLabelProvider( new TabItemLabelProvider( toolkit ) );
+    m_tabViewer.setLabelProvider( new TabItemLabelProvider( toolkit, itemStyle ) );
 
     m_tabViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -113,7 +115,8 @@ public abstract class AbstractManagedTabViewer<DATA>
 
     /* Tool-Bar */
     final ToolBarManager manager = m_tabViewer.getToolbar();
-    createTabActions( manager );
+    if( allowChanges )
+      createTabActions( manager );
     toolkit.adapt( manager.getControl() );
     m_tabViewer.updateToolbar();
 

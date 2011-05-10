@@ -54,18 +54,13 @@ import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
  */
 public class FeatureTypeStyleComposite extends Composite
 {
-  /**
-   * If this style is used, the properties section will be hidden.
-   */
-  public static final int HIDE_PROPERTIES = 1 << 1;
-
   private final IFeatureTypeStyleInput m_input;
 
   private RuleTabViewer m_ruleTabViewer;
 
   private FeatureTypeStylePropertiesComposite m_propertiesComposite;
 
-  public FeatureTypeStyleComposite( final FormToolkit toolkit, final Composite parent, final IFeatureTypeStyleInput input, final int sldStyle )
+  public FeatureTypeStyleComposite( final FormToolkit toolkit, final Composite parent, final IFeatureTypeStyleInput input )
   {
     super( parent, SWT.NONE );
 
@@ -74,7 +69,7 @@ public class FeatureTypeStyleComposite extends Composite
     setLayout( LayoutHelper.createGridLayout() );
     toolkit.adapt( this );
 
-    if( (sldStyle & HIDE_PROPERTIES) == 0 )
+    if( input.getConfig().isFeatureTypeStyleCompositeShowProperties() )
     {
       final Control propertiesControl = createPropertiesComposite( toolkit );
       propertiesControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
@@ -119,7 +114,8 @@ public class FeatureTypeStyleComposite extends Composite
    */
   public void updateControl( )
   {
-    m_propertiesComposite.updateControl();
+    if( m_propertiesComposite != null )
+      m_propertiesComposite.updateControl();
 
     m_ruleTabViewer.refresh();
   }
