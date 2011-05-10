@@ -38,21 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.movie;
+package org.kalypso.ogc.gml.movie.standard;
 
 import org.eclipse.jface.action.Action;
+import org.kalypso.ogc.gml.movie.IMovieControls;
 
 /**
- * The movie controls.
+ * The default movie controls.
  * 
  * @author Holger Albert
  */
-public interface IMovieControls
+public class DefaultMovieControls implements IMovieControls
 {
   /**
-   * This function returns the actions.
-   * 
-   * @return The actions.
+   * The constructor.
    */
-  public Action[] getActions( );
+  public DefaultMovieControls( )
+  {
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.movie.IMovieControls#getActions()
+   */
+  @Override
+  public Action[] getActions( )
+  {
+    // TODO
+    return null;
+  }
 }

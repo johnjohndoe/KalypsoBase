@@ -38,31 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.movie;
-
-import org.eclipse.jface.action.IContributionItem;
+package org.kalypso.ogc.gml.movie.utils;
 
 /**
- * The default movie controls.
+ * There are two runtime states at the moment. Playing and stopped. It is possible to implement more states if they are
+ * needed. Another runtime state would be "reverse playing" for example.
  * 
  * @author Holger Albert
  */
-public class DefaultMovieControls implements IMovieControls
+public enum MovieRuntimeState
 {
-  /**
-   * The constructor.
-   */
-  public DefaultMovieControls( )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.movie.IMovieControls#getContributionItems()
-   */
-  @Override
-  public IContributionItem[] getContributionItems( )
-  {
-    // TODO
-    return null;
-  }
+  PLAYING,
+  STOPPED;
 }

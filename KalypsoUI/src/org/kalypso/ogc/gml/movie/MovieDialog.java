@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.movie.utils.MovieUtilities;
 
 /**
  * The movie dialog.

@@ -38,21 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.movie;
+package org.kalypso.ogc.gml.movie.actions;
 
 import org.eclipse.jface.action.Action;
 
 /**
- * The movie controls.
+ * The stop action.
  * 
  * @author Holger Albert
  */
-public interface IMovieControls
+public class StopAction extends Action
 {
   /**
-   * This function returns the actions.
-   * 
-   * @return The actions.
+   * The constructor.
    */
-  public Action[] getActions( );
+  public StopAction( )
+  {
+  }
 }
