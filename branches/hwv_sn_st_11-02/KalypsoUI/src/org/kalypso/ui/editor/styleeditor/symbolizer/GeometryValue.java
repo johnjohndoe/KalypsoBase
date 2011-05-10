@@ -50,7 +50,6 @@ import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.StyleEditorHelper;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
@@ -84,7 +83,7 @@ public class GeometryValue<S extends Symbolizer> extends InputWithContextObserva
       return ELEMENT_NOT_SET;
 
     final IStyleInput<S> input = getSource();
-    final IFeatureType ft = input.getContext().getFeatureType();
+    final IFeatureType ft = input.getFeatureType();
     final IPropertyType pt = StyleEditorHelper.getFeatureTypeProperty( ft, propertyName );
     if( pt == null )
       return ELEMENT_NOT_SET;
@@ -120,7 +119,7 @@ public class GeometryValue<S extends Symbolizer> extends InputWithContextObserva
 
         if( element instanceof QName )
         {
-          final IFeatureType ft = input.getContext().getFeatureType();
+          final IFeatureType ft = input.getFeatureType();
           final IPropertyType pt = ft.getProperty( (QName) element );
           return AnnotationUtilities.getAnnotation( pt.getAnnotation(), null, IAnnotation.ANNO_LABEL );
         }
@@ -137,11 +136,7 @@ public class GeometryValue<S extends Symbolizer> extends InputWithContextObserva
     // TODO: we should also descend into sub-features and show their geometry properties as well
     // Maybe instead, we should provide a more suited ui instead of a Combo
 
-    final IStyleContext context = input.getContext();
-    if( context == null )
-      return null;
-
-    final IFeatureType featureType = context.getFeatureType();
+    final IFeatureType featureType = input.getFeatureType();
     if( featureType == null )
       return null;
 

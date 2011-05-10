@@ -42,16 +42,13 @@ package org.kalypso.ui.editor.styleeditor.rule;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.eclipse.jface.viewers.AbstractManagedTabViewer;
-import org.kalypso.commons.eclipse.jface.viewers.ITypedTabList;
 import org.kalypso.commons.eclipse.jface.viewers.TabItemMoveBackwardsAction;
 import org.kalypso.commons.eclipse.jface.viewers.TabItemMoveForwardAction;
 import org.kalypso.commons.eclipse.jface.viewers.TabViewer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
-import org.kalypso.ui.editor.styleeditor.StyleEditorHelper;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.graphics.sld.Rule;
 
@@ -63,10 +60,6 @@ public class SymbolizerTabViewer extends AbstractManagedTabViewer<Rule>
   public SymbolizerTabViewer( final FormToolkit toolkit, final Composite parent, final IStyleInput<Rule> input )
   {
     super( toolkit, parent, new SymbolizerTabList( input ) );
-
-    final Control control = getViewer().getControl();
-    final ITypedTabList<Rule> listInput = getListInput();
-    StyleEditorHelper.addListInputRefresher( control, input, listInput );
   }
 
   @Override

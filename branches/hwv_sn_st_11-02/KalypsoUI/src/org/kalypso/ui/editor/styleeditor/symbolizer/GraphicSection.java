@@ -105,7 +105,7 @@ public class GraphicSection extends AbstractStyleElementSection<PointSymbolizer,
       toolkit.createLabel( parent, "No Graphic set" );
     else
     {
-      final IStyleInput<Graphic> input = new StyleInput<Graphic>( item, getContext() );
+      final IStyleInput<Graphic> input = new StyleInput<Graphic>( item, getInput() );
       new GraphicComposite( toolkit, parent, input );
     }
   }

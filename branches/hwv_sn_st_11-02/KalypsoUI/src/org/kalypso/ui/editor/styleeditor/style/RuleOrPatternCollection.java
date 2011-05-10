@@ -54,7 +54,7 @@ import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.eclipse.jface.viewers.ITabItem;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
+import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypso.ui.editor.styleeditor.tabs.AbstractTabList;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
@@ -131,13 +131,11 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
 
   private ITabItem createItem( final Rule rule )
   {
-    final IStyleContext context = getContext();
-
     // the name of a rule serves as key for the hashMap
     final String key = rule.getName();
     // it it is a pattern, add to ruleCollection
     if( key == null || !key.startsWith( "-name-" ) )
-      return new RuleTabItem( rule, context );
+      return new RuleTabItem( new StyleInput<Rule>( rule, getInput() ) );
 
     // 1. check whether there is already a rule collection with this rule
     if( m_patterns.containsKey( key ) )
@@ -150,7 +148,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
     {
       final RuleCollection ruleCollection = new RuleCollection( rule );
       m_patterns.put( key, ruleCollection );
-      return new RulePatternTabItem( context, ruleCollection );
+      return new RulePatternTabItem( new StyleInput<RuleCollection>( ruleCollection, getInput() ) );
     }
   }
 
@@ -163,7 +161,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
     final Rule rule = StyleFactory.createRule( (Symbolizer[]) null );
     style.addRule( rule );
 
-    fireInputChanged();
+    getInput().fireStyleChanged();
 
     final ITabItem[] items = getItems();
     return items[items.length - 1];
@@ -192,7 +190,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
     final Rule rule = item.getRule();
     style.removeRule( rule );
 
-    fireInputChanged();
+    getInput().fireStyleChanged();
 
     // FIXME
     // the title of a rule serves as key for the hashMap
@@ -229,7 +227,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
 
     // FIXME: remove all rules of this collection from the style
     // m_fts.removeRule( rule );
-    fireInputChanged();
+    getInput().fireStyleChanged();
   }
 
   @Override
@@ -248,7 +246,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
     newRules[index - 1] = rules[index];
     style.setRules( newRules );
 
-    fireInputChanged();
+    getInput().fireStyleChanged();
   }
 
   @Override

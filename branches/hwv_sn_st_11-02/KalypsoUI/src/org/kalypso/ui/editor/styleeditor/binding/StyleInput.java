@@ -40,43 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.binding;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.net.URL;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.kalypso.ogc.gml.IKalypsoStyle;
-import org.kalypso.ogc.gml.IKalypsoStyleListener;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
+import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
  * @author Gernot Belger
  */
-// FIXME: remove all these one-constructor implementation by one generic implementation
 public class StyleInput<DATA> implements IStyleInput<DATA>
 {
-  private final IKalypsoStyleListener m_styleListener = new IKalypsoStyleListener()
-  {
-    @Override
-    public void styleChanged( )
-    {
-      handleStyleChanged();
-    }
-  };
-
-  private final Collection<IKalypsoStyleListener> m_listener = new HashSet<IKalypsoStyleListener>();
-
-  private final IStyleContext m_context;
-
   private final DATA m_data;
 
-  public StyleInput( final DATA data, final IStyleContext context )
+  private final IStyleInput< ? > m_delegate;
+
+  public StyleInput( final DATA data, final IStyleInput< ? > delegate )
   {
     m_data = data;
-    m_context = context;
-    final IKalypsoStyle style = m_context == null ? null : m_context.getKalypsoStyle();
-    if( style != null )
-      style.addStyleListener( m_styleListener );
+    m_delegate = delegate;
   }
 
   /**
@@ -88,65 +69,13 @@ public class StyleInput<DATA> implements IStyleInput<DATA>
     return m_data;
   }
 
-  protected void handleStyleChanged( )
-  {
-    final IKalypsoStyleListener[] listener = m_listener.toArray( new IKalypsoStyleListener[m_listener.size()] );
-    for( final IKalypsoStyleListener l : listener )
-      l.styleChanged();
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.forms.IFormInputWithContext#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    final IKalypsoStyle style = m_context.getKalypsoStyle();
-    if( style != null )
-      style.removeStyleListener( m_styleListener );
-  }
-
-  /**
-   * @see org.kalypso.commons.field.IFieldInput#fireInputChanged()
-   */
-  @Override
-  public final void fireInputChanged( )
-  {
-    if( m_context != null )
-      m_context.fireStyleChanged();
-  }
-
-  @Override
-  public final IStyleContext getContext( )
-  {
-    return m_context;
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.forms.IFormInputWithContext#addStyleListener(org.kalypso.ogc.gml.IKalypsoStyleListener)
-   */
-  @Override
-  public void addStyleListener( final IKalypsoStyleListener listener )
-  {
-    m_listener.add( listener );
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.forms.IFormInputWithContext#removeStyleListener(org.kalypso.ogc.gml.IKalypsoStyleListener)
-   */
-  @Override
-  public void removeStyleListener( final IKalypsoStyleListener listener )
-  {
-    m_listener.remove( listener );
-  }
-
   /**
    * @see java.lang.Object#hashCode()
    */
   @Override
   public int hashCode( )
   {
-    return new HashCodeBuilder().append( getData() ).append( getContext() ).toHashCode();
+    return getData().hashCode();
   }
 
   /**
@@ -164,6 +93,37 @@ public class StyleInput<DATA> implements IStyleInput<DATA>
 
     final StyleInput< ? > other = (StyleInput< ? >) obj;
 
-    return new EqualsBuilder().append( getData(), other.getData() ).append( getContext(), other.getContext() ).isEquals();
+    return new EqualsBuilder().append( getData(), other.getData() ).isEquals();
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.binding.IStyleInput#fireStyleChanged()
+   */
+  @Override
+  public void fireStyleChanged( )
+  {
+    if( m_delegate != null )
+      m_delegate.fireStyleChanged();
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.binding.IStyleInput#getFeatureType()
+   */
+  @Override
+  public IFeatureType getFeatureType( )
+  {
+    if( m_delegate != null )
+      return m_delegate.getFeatureType();
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.binding.IStyleInput#getContext()
+   */
+  @Override
+  public URL getContext( )
+  {
+    return m_delegate.getContext();
   }
 }

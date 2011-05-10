@@ -65,7 +65,7 @@ public abstract class InputWithContextObservableValue<DATA, VALUE> extends Typed
   public final void doSetValueTyped( final IStyleInput<DATA> source, final VALUE value )
   {
     setValueToInput( source.getData(), value );
-    source.fireInputChanged();
+    source.fireStyleChanged();
   }
 
   protected abstract VALUE getValueFromData( DATA data );

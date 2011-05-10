@@ -99,7 +99,7 @@ public class GraphicFillSection extends AbstractStyleElementSection<Fill, Graphi
       toolkit.createLabel( parent, "No Graphic Fill set" );
     else
     {
-      final IStyleInput<Graphic> input = new StyleInput<Graphic>( item, getContext() );
+      final IStyleInput<Graphic> input = new StyleInput<Graphic>( item, getInput() );
       new GraphicComposite( toolkit, parent, input );
     }
   }

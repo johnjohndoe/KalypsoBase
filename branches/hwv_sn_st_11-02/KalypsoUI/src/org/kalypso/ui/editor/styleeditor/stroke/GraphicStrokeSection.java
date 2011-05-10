@@ -108,7 +108,7 @@ public class GraphicStrokeSection extends AbstractStyleElementSection<Stroke, Gr
       toolkit.createLabel( parent, "No Graphic Stroke set" );
     else
     {
-      final IStyleInput<Graphic> input = new StyleInput<Graphic>( item, getContext() );
+      final IStyleInput<Graphic> input = new StyleInput<Graphic>( item, getInput() );
       new GraphicComposite( toolkit, parent, input );
     }
   }

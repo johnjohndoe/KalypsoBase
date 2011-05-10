@@ -40,23 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.style;
 
+import java.net.URL;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
-import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.ogc.gml.IKalypsoStyle;
+import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 
 /**
  * @author Gernot Belger
  */
-public class FeatureTypeStyleInput extends StyleInput<FeatureTypeStyle>
+public class FeatureTypeStyleInput implements IStyleInput<FeatureTypeStyle>
 {
   private final int m_styleToSelect;
 
-  public FeatureTypeStyleInput( final IStyleContext context, final int styleToSelect )
-  {
-    super( context == null ? null : context.getStyle(), context );
+  private final FeatureTypeStyle m_fts;
 
+  private final IKalypsoStyle m_style;
+
+  private final IFeatureType m_featureType;
+
+  public FeatureTypeStyleInput( final FeatureTypeStyle fts, final IKalypsoStyle style, final int styleToSelect, final IFeatureType featureType )
+  {
+    m_fts = fts;
+    m_style = style;
     m_styleToSelect = styleToSelect;
+    m_featureType = featureType;
   }
 
   public int getStyleToSelect( )
@@ -64,25 +75,63 @@ public class FeatureTypeStyleInput extends StyleInput<FeatureTypeStyle>
     return m_styleToSelect;
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.forms.AbstractFormInputWithContext#hashCode()
-   */
   @Override
   public int hashCode( )
   {
-    return new HashCodeBuilder().appendSuper( super.hashCode() ).append( m_styleToSelect ).toHashCode();
+    return new HashCodeBuilder().append( m_fts ).append( m_styleToSelect ).toHashCode();
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.forms.AbstractFormInputWithContext#equals(java.lang.Object)
-   */
   @Override
   public boolean equals( final Object obj )
   {
-    final boolean superEquals = super.equals( obj );
-    if( !superEquals )
+    if( obj == null )
+      return false;
+    if( obj == this )
+      return true;
+    if( obj.getClass() != getClass() )
       return false;
 
-    return m_styleToSelect == ((FeatureTypeStyleInput) obj).m_styleToSelect;
+    final FeatureTypeStyleInput other = (FeatureTypeStyleInput) obj;
+    return new EqualsBuilder().append( m_fts, other.m_fts ).append( m_styleToSelect, other.m_styleToSelect ).isEquals();
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.binding.IStyleInput#getData()
+   */
+  @Override
+  public FeatureTypeStyle getData( )
+  {
+    return m_fts;
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.binding.IStyleInput#fireStyleChanged()
+   */
+  @Override
+  public void fireStyleChanged( )
+  {
+    if( m_style != null )
+      m_style.fireStyleChanged();
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.binding.IStyleInput#getFeatureType()
+   */
+  @Override
+  public IFeatureType getFeatureType( )
+  {
+    return m_featureType;
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.binding.IStyleInput#getContext()
+   */
+  @Override
+  public URL getContext( )
+  {
+    if( m_style != null )
+      return m_style.getContext();
+
+    return null;
   }
 }

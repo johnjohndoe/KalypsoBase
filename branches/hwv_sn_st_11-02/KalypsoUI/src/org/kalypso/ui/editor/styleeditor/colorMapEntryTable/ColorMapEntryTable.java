@@ -67,9 +67,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
@@ -102,36 +102,13 @@ public class ColorMapEntryTable
 
   private static final String[] COLUMN_LABLES = new String[] { "Bezeichnung", "Obere Grenze", "Farbe", "Transparenz" };
 
-  private final IKalypsoStyle m_style;
-
-  private final RasterSymbolizer m_rasterSymbolizer;
-
   protected TableViewer m_tableViewer;
 
   protected ColorMapEntryList m_entryList;
 
-  /**
-   * The constructor (testing).
-   * 
-   * @param parent
-   *          The parent composite.
-   */
-  public ColorMapEntryTable( final Composite parent )
-  {
-    m_style = null;
-    m_rasterSymbolizer = null;
-    m_tableViewer = null;
-    m_entryList = new ColorMapEntryList();
-
-    for( int i = 0; i < 10; i++ )
-      m_entryList.addColorMapEntry( new ColorMapEntry_Impl( Color.CYAN, i * 0.1, i, "Label " + i ) );
-
-    createControls( parent );
-  }
+  private final IStyleInput<RasterSymbolizer> m_input;
 
   /**
-   * The constructor.
-   * 
    * @param parent
    *          The parent composite.
    * @param style
@@ -139,22 +116,21 @@ public class ColorMapEntryTable
    * @param rasterSymbolizer
    *          The raster symbolizer.
    */
-  public ColorMapEntryTable( final Composite parent, final IKalypsoStyle style, final RasterSymbolizer rasterSymbolizer )
+  public ColorMapEntryTable( final Composite parent, final IStyleInput<RasterSymbolizer> input )
   {
-    m_style = style;
-    m_rasterSymbolizer = rasterSymbolizer;
+    m_input = input;
     m_tableViewer = null;
     m_entryList = new ColorMapEntryList();
 
-    for( final ColorMapEntry entry : rasterSymbolizer.getColorMap().values() )
+    final RasterSymbolizer data = input.getData();
+    // Dubious: we should work on the original list
+    for( final ColorMapEntry entry : data.getColorMap().values() )
       m_entryList.addColorMapEntry( entry.clone() );
 
     createControls( parent );
   }
 
   /**
-   * The constructor.
-   * 
    * @param parent
    *          The parent composite.
    * @param entries
@@ -162,8 +138,7 @@ public class ColorMapEntryTable
    */
   public ColorMapEntryTable( final Composite parent, final ColorMapEntry[] entries )
   {
-    m_style = null;
-    m_rasterSymbolizer = null;
+    m_input = null;
     m_tableViewer = null;
     m_entryList = new ColorMapEntryList();
 
@@ -399,8 +374,8 @@ public class ColorMapEntryTable
       }
     } );
 
-    /* Without a raster symbolizer, a refresh is not possible. */
-    if( m_rasterSymbolizer != null && m_style != null )
+    /* Without a style context, a refresh is not possible. */
+    if( m_input != null )
     {
       /* Create the refresh button. */
       final Button refresh = new Button( parent, SWT.PUSH | SWT.CENTER );
@@ -457,7 +432,7 @@ public class ColorMapEntryTable
    */
   protected void updateRasterSymbolizer( )
   {
-    if( m_rasterSymbolizer == null || m_style == null )
+    if( m_input == null )
       return;
 
     try
@@ -475,8 +450,9 @@ public class ColorMapEntryTable
         colorMap.put( new Double( entry.getQuantity() ), entry.clone() );
       }
 
-      m_rasterSymbolizer.setColorMap( colorMap );
-      m_style.fireStyleChanged();
+      final RasterSymbolizer rasterSymbolizer = m_input.getData();
+      rasterSymbolizer.setColorMap( colorMap );
+      m_input.fireStyleChanged();
     }
     catch( final Exception ex )
     {

@@ -74,7 +74,7 @@ public abstract class StyleElementAction<ELEMENT> extends Action implements IUpd
     final ELEMENT element = m_input.getData();
     changeElement( element );
 
-    m_input.fireInputChanged();
+    m_input.fireStyleChanged();
   }
 
   protected abstract void changeElement( ELEMENT data );

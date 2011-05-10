@@ -95,7 +95,7 @@ class FillSection extends AbstractStyleElementSection<PolygonSymbolizer, Fill>
       toolkit.createLabel( parent, "No Fill set" );
     else
     {
-      final IStyleInput<Fill> input = new StyleInput<Fill>( item, getContext() );
+      final IStyleInput<Fill> input = new StyleInput<Fill>( item, getInput() );
       new FillComposite( toolkit, parent, input, SWT.NONE );
     }
   }

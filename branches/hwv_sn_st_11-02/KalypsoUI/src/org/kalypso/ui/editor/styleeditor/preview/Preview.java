@@ -57,9 +57,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
-import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoStyleListener;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -69,25 +67,6 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public abstract class Preview<DATA> extends Canvas
 {
-  final Runnable m_redrawRunnable = new Runnable()
-  {
-    @Override
-    public void run( )
-    {
-      if( !isDisposed() )
-        redraw();
-    }
-  };
-
-  private final IKalypsoStyleListener m_styleListener = new IKalypsoStyleListener()
-  {
-    @Override
-    public void styleChanged( )
-    {
-      ControlUtils.exec( Preview.this, m_redrawRunnable );
-    }
-  };
-
   private final Point m_size;
 
   private final IStyleInput<DATA> m_input;
@@ -112,10 +91,6 @@ public abstract class Preview<DATA> extends Canvas
         handlePaint( e );
       }
     } );
-
-    ControlUtils.addDisposeListener( this );
-
-    m_input.addStyleListener( m_styleListener );
   }
 
   private GM_Object createGeometry( )
@@ -129,17 +104,6 @@ public abstract class Preview<DATA> extends Canvas
       e.printStackTrace();
       return null;
     }
-  }
-
-  /**
-   * @see org.eclipse.swt.widgets.Widget#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    m_input.removeStyleListener( m_styleListener );
-
-    super.dispose();
   }
 
   /**
@@ -222,6 +186,14 @@ public abstract class Preview<DATA> extends Canvas
 
     final ImageData convertToSWT = ImageConverter.convertToSWT( bufferedImage );
     return new Image( getDisplay(), convertToSWT );
+  }
+
+  /**
+   * Call, if style has changed.
+   */
+  public void updateControl( )
+  {
+    redraw();
   }
 
   protected abstract void doPaintData( Graphics2D g2d, int width, int height, GM_Object geom );

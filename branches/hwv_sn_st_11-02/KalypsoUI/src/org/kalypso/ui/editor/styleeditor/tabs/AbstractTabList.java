@@ -49,7 +49,6 @@ import org.kalypso.commons.eclipse.jface.viewers.ITabItem;
 import org.kalypso.commons.eclipse.jface.viewers.ITabListListener;
 import org.kalypso.commons.eclipse.jface.viewers.ITypedTabList;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 
 /**
@@ -141,29 +140,21 @@ public abstract class AbstractTabList<DATA> implements ITypedTabList<DATA>
     return m_input.getData();
   }
 
-  protected final void fireInputChanged( )
+  protected final void fireStylseChanged( )
   {
     if( m_input == null )
       return;
 
-    m_input.fireInputChanged();
+    m_input.fireStyleChanged();
   }
 
   public final IFeatureType getFeatureType( )
   {
-    final IStyleContext context = getContext();
-    if( context == null )
+    final IStyleInput<DATA> input = getInput();
+    if( input == null )
       return null;
 
-    return context.getFeatureType();
-  }
-
-  protected final IStyleContext getContext( )
-  {
-    if( m_input == null )
-      return null;
-
-    return m_input.getContext();
+    return input.getFeatureType();
   }
 
   protected void internalClear( )

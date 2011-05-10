@@ -102,7 +102,7 @@ public class LabelPlacementSection extends AbstractStyleElementSection<TextSymbo
   @Override
   protected void createItemControl( final Composite parent, final LabelPlacement item )
   {
-    final IStyleInput<LabelPlacement> input = new StyleInput<LabelPlacement>( item, getContext() );
+    final IStyleInput<LabelPlacement> input = new StyleInput<LabelPlacement>( item, getInput() );
     new LabelPlacementComposite( getToolkit(), parent, input );
   }
 }

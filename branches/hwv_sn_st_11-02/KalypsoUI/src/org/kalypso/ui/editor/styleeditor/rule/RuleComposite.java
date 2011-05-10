@@ -56,7 +56,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
 import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
@@ -78,6 +77,10 @@ public class RuleComposite extends Composite
   // private GraphicComposite m_graphicComposite;
 
   private final IStyleInput<Rule> m_input;
+
+  private RulePropertiesComposite m_rulePropertiesComposite;
+
+  private SymbolizerTabViewer m_symbolizerTabViewer;
 
   public RuleComposite( final FormToolkit toolkit, final Composite parent, final IStyleInput<Rule> input )
   {
@@ -125,7 +128,7 @@ public class RuleComposite extends Composite
     final Composite body = form.getBody();
     body.setLayout( new FillLayout() );
 
-    new RulePropertiesComposite( binding, body, m_input );
+    m_rulePropertiesComposite = new RulePropertiesComposite( binding, body, m_input );
 
     return section;
   }
@@ -137,9 +140,9 @@ public class RuleComposite extends Composite
     tabsSection.setText( "Symbolizers" );
     tabsSection.setDescription( "Add, remove or edit the symbolizers of the rule." );
 
-    final SymbolizerTabViewer tabViewer = new SymbolizerTabViewer( toolkit, tabsSection, m_input );
+    m_symbolizerTabViewer = new SymbolizerTabViewer( toolkit, tabsSection, m_input );
 
-    final CTabFolder ruleTabFolder = tabViewer.getControl();
+    final CTabFolder ruleTabFolder = m_symbolizerTabViewer.getControl();
     tabsSection.setClient( ruleTabFolder );
 
     return tabsSection;
@@ -177,7 +180,7 @@ public class RuleComposite extends Composite
     final Filter oldFilter = getRule().getFilter();
     final Filter clone = cloneFilter( oldFilter );
 
-    final FilterDialog dialog = new FilterDialog( shell, getContext(), getRule().getFilter(), null, null, false );
+    final FilterDialog dialog = new FilterDialog( shell, m_input, getRule().getFilter(), null, null, false );
     final int open = dialog.open();
     if( open == Window.OK )
     {
@@ -191,11 +194,6 @@ public class RuleComposite extends Composite
       getRule().setFilter( clone );
       fireStyleChanged();
     }
-  }
-
-  private IStyleContext getContext( )
-  {
-    return m_input.getContext();
   }
 
   private Filter cloneFilter( final Filter oldFilter )
@@ -219,7 +217,7 @@ public class RuleComposite extends Composite
    */
   void fireStyleChanged( )
   {
-    getContext().fireStyleChanged();
+    m_input.fireStyleChanged();
   }
 
   /**
@@ -253,5 +251,15 @@ public class RuleComposite extends Composite
     final EqualsBuilder builder = new EqualsBuilder();
     builder.append( getRule(), rhs.getRule() );
     return builder.isEquals();
+  }
+
+  /**
+   * Call, if style has changed.
+   */
+  public void updateControl( )
+  {
+    m_rulePropertiesComposite.updateControl();
+
+    m_symbolizerTabViewer.refresh();
   }
 }

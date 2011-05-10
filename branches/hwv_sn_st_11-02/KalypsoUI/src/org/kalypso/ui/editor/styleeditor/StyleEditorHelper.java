@@ -40,13 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor;
 
-import org.eclipse.swt.widgets.Control;
-import org.kalypso.commons.eclipse.jface.viewers.ITypedTabList;
-import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.IKalypsoStyleListener;
-import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
@@ -70,29 +65,5 @@ public class StyleEditorHelper
     }
 
     return null;
-  }
-
-  public static <DATA> void addListInputRefresher( final Control control, final IStyleInput<DATA> input, final ITypedTabList<DATA> listInput )
-  {
-    final Runnable runnable = new Runnable()
-    {
-      @Override
-      public void run( )
-      {
-        if( !control.isDisposed() )
-        {
-          listInput.refresh();
-        }
-      }
-    };
-
-    input.addStyleListener( new IKalypsoStyleListener()
-    {
-      @Override
-      public void styleChanged( )
-      {
-        ControlUtils.exec( control, runnable );
-      }
-    } );
   }
 }

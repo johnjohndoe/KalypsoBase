@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
+import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypso.ui.editor.styleeditor.colorMapEntryTable.ColorMapEntryTable;
 import org.kalypso.ui.editor.styleeditor.panels.ModeSelectionComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
@@ -86,7 +87,8 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerComposite<RasterSy
 
     // ***** Table
     final Composite tableComposite = new Composite( panel, SWT.NULL );
-    new ColorMapEntryTable( tableComposite, getContext().getKalypsoStyle(), rasterSymbolizer );
+    final StyleInput<RasterSymbolizer> input = new StyleInput<RasterSymbolizer>( rasterSymbolizer, getInput() );
+    new ColorMapEntryTable( tableComposite, input );
 
     return panel;
   }

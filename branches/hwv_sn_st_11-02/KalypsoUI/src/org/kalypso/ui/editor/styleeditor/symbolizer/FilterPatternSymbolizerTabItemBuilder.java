@@ -49,8 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
-import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
+import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.style.RuleCollection;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
@@ -62,26 +61,27 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
  */
 public class FilterPatternSymbolizerTabItemBuilder
 {
-  public FilterPatternSymbolizerTabItemBuilder( final FormToolkit toolkit, final TabFolder tabFolder, final Symbolizer symbolizer, final IStyleContext context, final RuleCollection ruleCollection, final int symbolizerIndex )
+  public FilterPatternSymbolizerTabItemBuilder( final FormToolkit toolkit, final TabFolder tabFolder, final IStyleInput<Symbolizer> input, final RuleCollection ruleCollection, final int symbolizerIndex )
   {
     final TabItem tabItem = new TabItem( tabFolder, SWT.NULL );
 
-    final ISymbolizerComposite< ? > symbolizerLayout = createLayout( toolkit, tabFolder, symbolizer, context, ruleCollection, symbolizerIndex );
+    final ISymbolizerComposite< ? > symbolizerLayout = createLayout( toolkit, tabFolder, input, ruleCollection, symbolizerIndex );
     // tabItem.setText( symbolizerLayout.getItemLabel() );
     tabItem.setControl( symbolizerLayout.getControl() );
   }
 
-  private ISymbolizerComposite< ? > createLayout( final FormToolkit toolkit, final Composite parent, final Symbolizer symbolizer, final IStyleContext context, final RuleCollection ruleCollection, final int symbolizerIndex )
+  private ISymbolizerComposite< ? > createLayout( final FormToolkit toolkit, final Composite parent, final IStyleInput< ? extends Symbolizer> input, final RuleCollection ruleCollection, final int symbolizerIndex )
   {
+    final Symbolizer symbolizer = input.getData();
     if( symbolizer instanceof PolygonSymbolizer )
-      return new FilterPatternPolygonSymbolizerLayout( toolkit, parent, new StyleInput<PolygonSymbolizer>( (PolygonSymbolizer) symbolizer, context ), ruleCollection, symbolizerIndex );
+      return new FilterPatternPolygonSymbolizerLayout( toolkit, parent, (IStyleInput<PolygonSymbolizer>) input, ruleCollection, symbolizerIndex );
 
     if( symbolizer instanceof PointSymbolizer )
-      return new FilterPatternPointSymbolizerLayout( toolkit, parent, new StyleInput<PointSymbolizer>( (PointSymbolizer) symbolizer, context ), ruleCollection, symbolizerIndex );
+      return new FilterPatternPointSymbolizerLayout( toolkit, parent, (IStyleInput<PointSymbolizer>) input, ruleCollection, symbolizerIndex );
 
     if( symbolizer instanceof LineSymbolizer )
-      return new FilterPatternLineSymbolizerLayout( toolkit, parent, new StyleInput<LineSymbolizer>( (LineSymbolizer) symbolizer, context ), ruleCollection, symbolizerIndex );
+      return new FilterPatternLineSymbolizerLayout( toolkit, parent, (IStyleInput<LineSymbolizer>) input, ruleCollection, symbolizerIndex );
 
-    return new SymbolizerComposite( toolkit, parent, new StyleInput<Symbolizer>( symbolizer, context ) );
+    return new SymbolizerComposite( toolkit, parent, (IStyleInput<Symbolizer>) input );
   }
 }
