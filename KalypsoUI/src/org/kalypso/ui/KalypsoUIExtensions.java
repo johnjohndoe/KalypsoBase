@@ -330,7 +330,7 @@ public class KalypsoUIExtensions
         continue;
 
       /* If the configuration element is not the one with the correct id, continue. */
-      if( !MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_ID.equals( id ) )
+      if( !element.getAttribute( MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_ID ).equals( id ) )
         continue;
 
       /* Return the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}. */

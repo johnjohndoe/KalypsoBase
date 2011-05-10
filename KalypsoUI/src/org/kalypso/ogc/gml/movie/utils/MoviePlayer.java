@@ -40,18 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.movie.utils;
 
+import java.awt.Frame;
+import java.awt.image.RenderedImage;
+
+import javax.media.jai.widget.ImageCanvas;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.awt.SWT_AWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.ProgressBar;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.movie.IMovieControls;
 import org.kalypso.ogc.gml.movie.IMovieImageProvider;
 
@@ -60,37 +69,23 @@ import org.kalypso.ogc.gml.movie.IMovieImageProvider;
  * 
  * @author Holger Albert
  */
+@SuppressWarnings("deprecation")
 public class MoviePlayer
 {
-  /**
-   * The gis template map model.
-   */
-  private GisTemplateMapModell m_mapModel;
-
-  /**
-   * The theme, marked as movie theme.
-   */
-  private AbstractCascadingLayerTheme m_movieTheme;
-
   /**
    * The movie image provider.
    */
   private IMovieImageProvider m_imageProvider;
 
   /**
-   * May be {@link MovieRuntimeState#PLAYING}, {@link MovieRuntimeState#STOPPED}.
+   * The image canvas.
    */
-  private MovieRuntimeState m_runtimeState;
+  private ImageCanvas m_imageCanvas;
 
   /**
-   * The current theme.
+   * The progress bar.
    */
-  private IKalypsoTheme m_currentTheme;
-
-  /**
-   * The next theme.
-   */
-  private IKalypsoTheme m_nextTheme;
+  private ProgressBar m_progressBar;
 
   /**
    * The constructor.
@@ -102,14 +97,18 @@ public class MoviePlayer
    */
   public MoviePlayer( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme )
   {
-    m_mapModel = mapModel;
-    m_movieTheme = movieTheme;
-    m_imageProvider = MovieUtilities.initImageProvider( movieTheme );
-    m_runtimeState = MovieRuntimeState.STOPPED;
-    m_currentTheme = null;
-    m_nextTheme = null;
+    m_imageProvider = MovieUtilities.getImageProvider( mapModel, movieTheme );
+    m_imageCanvas = null;
+    m_progressBar = null;
   }
 
+  /**
+   * This function creates the screen controls.
+   * 
+   * @param parent
+   *          The parent composite.
+   * @return The screen controls.
+   */
   public Composite createScreenControls( Composite parent )
   {
     /* Create a composite. */
@@ -119,11 +118,30 @@ public class MoviePlayer
     layout.marginWidth = 0;
     composite.setLayout( layout );
 
-    // TODO
+    /* Create the image composite. */
+    Composite imageComposite = new Composite( composite, SWT.EMBEDDED | SWT.NO_BACKGROUND );
+    imageComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_imageCanvas = new ImageCanvas( null );
+    Frame virtualFrame = SWT_AWT.new_Frame( imageComposite );
+    virtualFrame.add( m_imageCanvas );
+
+    /* Create a progress bar. */
+    m_progressBar = new ProgressBar( composite, SWT.NONE );
+    m_progressBar.setMinimum( 0 );
+    m_progressBar.setMaximum( m_imageProvider.getEndStep() );
+    m_progressBar.setSelection( m_imageProvider.getCurrentStep() );
+    m_progressBar.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false ) );
 
     return composite;
   }
 
+  /**
+   * This function creates the button controls.
+   * 
+   * @param parent
+   *          The parent composite.
+   * @return The button controls.
+   */
   public Composite createButtonControls( Composite parent )
   {
     /* Get the movie controls. */
@@ -134,10 +152,7 @@ public class MoviePlayer
 
     /* Create a composite. */
     Composite composite = new Composite( parent, SWT.NONE );
-    GridLayout layout = new GridLayout( actions.length, false );
-    layout.marginHeight = 0;
-    layout.marginWidth = 0;
-    composite.setLayout( layout );
+    composite.setLayout( new GridLayout( actions.length, false ) );
 
     /* Create the buttons. */
     for( int i = 0; i < actions.length; i++ )
@@ -145,24 +160,13 @@ public class MoviePlayer
       /* Get the action. */
       final Action action = actions[i];
 
-      /* Define the layout data properties. */
-      int horizontalAlignment = SWT.CENTER;
-      boolean grabExcessHorizontalSpace = false;
-      if( i == 0 )
-      {
-        horizontalAlignment = SWT.END;
-        grabExcessHorizontalSpace = true;
-      }
-      if( i == actions.length - 1 )
-      {
-        horizontalAlignment = SWT.BEGINNING;
-        grabExcessHorizontalSpace = true;
-      }
+      /* Create the image. */
+      final Image image = action.getImageDescriptor().createImage();
 
       /* Create a button for the action. */
-      Button actionButton = new Button( parent, SWT.PUSH );
-      actionButton.setImage( action.getImageDescriptor().createImage() );
-      actionButton.setLayoutData( new GridData( horizontalAlignment, SWT.CENTER, grabExcessHorizontalSpace, false ) );
+      Button actionButton = new Button( composite, SWT.PUSH );
+      actionButton.setImage( image );
+      actionButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
       actionButton.setText( action.getText() );
       actionButton.setToolTipText( action.getText() );
       actionButton.addSelectionListener( new SelectionAdapter()
@@ -186,25 +190,87 @@ public class MoviePlayer
           action.runWithEvent( event );
         }
       } );
+
+      actionButton.addDisposeListener( new DisposeListener()
+      {
+        /**
+         * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
+         */
+        @Override
+        public void widgetDisposed( DisposeEvent e )
+        {
+          image.dispose();
+        }
+      } );
     }
 
     return composite;
   }
 
   /**
-   * This function updates the runtime state.
+   * This function updates the controls.
    * 
-   * @see {@link MovieRuntimeState#PLAYING} and {@link MovieRuntimeState#STOPPED}
-   * @param runtimeState
-   *          May be {@link MovieRuntimeState#PLAYING}, {@link MovieRuntimeState#STOPPED} or null, if it should not be
-   *          changed.
-   * @param nextTheme
-   *          The next theme, if playing would be resumed. May be null. In this case, the actual theme will not be
-   *          changed.
+   * @param width
+   *          The width.
+   * @param height
+   *          The height.
    */
-  public void updateRuntimeState( MovieRuntimeState runtimeState, IKalypsoTheme nextTheme )
+  public void updateControls( int width, int height )
   {
-    m_runtimeState = runtimeState;
-    m_nextTheme = nextTheme;
+    updateImageCanvas( width, height );
+    updateProgressBar();
+  }
+
+  /**
+   * This function updates the image canvas.
+   * 
+   * @param width
+   *          The width.
+   * @param height
+   *          The height.
+   */
+  private void updateImageCanvas( int width, int height )
+  {
+    /* Is the control disposed? */
+    if( m_imageCanvas == null )
+      return;
+
+    /* Get the current image. */
+    IMovieFrame currentFrame = m_imageProvider.getCurrentFrame();
+    RenderedImage image = currentFrame.getImage( width, height );
+
+    /* Set the current image. */
+    m_imageCanvas.set( image );
+  }
+
+  /**
+   * This function updates the progress bar.
+   */
+  private void updateProgressBar( )
+  {
+    /* Is the control disposed? */
+    if( m_progressBar == null || m_progressBar.isDisposed() )
+      return;
+
+    /* Get the current step. */
+    int currentStep = m_imageProvider.getCurrentStep();
+
+    /* Set the current step. */
+    m_progressBar.setSelection( currentStep );
+  }
+
+  public void stepTo( int step )
+  {
+    m_imageProvider.stepTo( step );
+  }
+
+  public int getCurrentStep( )
+  {
+    return m_imageProvider.getCurrentStep();
+  }
+
+  public int getEndStep( )
+  {
+    return m_imageProvider.getEndStep();
   }
 }

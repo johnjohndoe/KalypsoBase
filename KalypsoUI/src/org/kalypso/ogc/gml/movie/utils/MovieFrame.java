@@ -38,21 +38,54 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.movie.standard;
+package org.kalypso.ogc.gml.movie.utils;
 
-import org.kalypso.ogc.gml.movie.AbstractMovieImageProvider;
+import java.awt.image.RenderedImage;
+
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
- * The default movie image provider.
+ * A movie frame contains a theme, a file of an image and a label.
  * 
  * @author Holger Albert
  */
-public class DefaultMovieImageProvider extends AbstractMovieImageProvider
+public class MovieFrame implements IMovieFrame
 {
+  /**
+   * The map model.-
+   */
+  private IMapModell m_mapModel;
+
+  /**
+   * The label.
+   */
+  private String m_label;
+
   /**
    * The constructor.
    */
-  public DefaultMovieImageProvider( )
+  public MovieFrame( IMapModell mapModel, String label )
   {
+    m_mapModel = mapModel;
+    m_label = label;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.movie.utils.IMovieFrame#getImage(int, int)
+   */
+  @Override
+  public RenderedImage getImage( int width, int height )
+  {
+    // TODO
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.movie.utils.IMovieFrame#getLabel()
+   */
+  @Override
+  public String getLabel( )
+  {
+    return m_label;
   }
 }

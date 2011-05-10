@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.movie;
 
-import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.movie.utils.IMovieFrame;
 
 /**
  * The movie image provider.
@@ -57,9 +60,43 @@ public interface IMovieImageProvider
   public IMovieControls getMovieControls( );
 
   /**
-   * This function returns all kalypso themes.
+   * This function initializes the movie image provider.
    * 
-   * @return All kalypso themes.
+   * @param mapModel
+   *          The gis template map model.
+   * @param movieTheme
+   *          The theme, marked as movie theme.
+   * @param monitor
+   *          A progress monitor.
    */
-  public IKalypsoTheme[] getKalypsoThemes( );
+  public void initialize( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, IProgressMonitor monitor );
+
+  /**
+   * This function returns the frame of the current theme.
+   * 
+   * @return The frame of the current theme.
+   */
+  public IMovieFrame getCurrentFrame( );
+
+  /**
+   * This function steps the number of steps. If the end of the movie is reached, it will stop there.
+   * 
+   * @param step
+   *          The steps to go.
+   */
+  public void stepTo( int step );
+
+  /**
+   * This function returns the current step.
+   * 
+   * @return The current step.
+   */
+  public int getCurrentStep( );
+
+  /**
+   * This function returns the highest step.
+   * 
+   * @return The highest step.
+   */
+  public int getEndStep( );
 }

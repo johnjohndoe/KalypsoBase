@@ -38,21 +38,65 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.movie.standard;
+package org.kalypso.ogc.gml.movie.actions;
 
-import org.kalypso.ogc.gml.movie.AbstractMovieImageProvider;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Event;
+import org.kalypso.ogc.gml.movie.utils.MoviePlayer;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * The default movie image provider.
+ * The end action.
  * 
  * @author Holger Albert
  */
-public class DefaultMovieImageProvider extends AbstractMovieImageProvider
+public class EndAction extends Action
 {
   /**
-   * The constructor.
+   * The movie player.
    */
-  public DefaultMovieImageProvider( )
+  private MoviePlayer m_player;
+
+  /**
+   * The constructor.
+   * 
+   * @param player
+   *          The movie player.
+   */
+  public EndAction( MoviePlayer player )
   {
+    m_player = player;
+  }
+
+  /**
+   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+   */
+  @Override
+  public void runWithEvent( Event event )
+  {
+    int endStep = m_player.getEndStep();
+    m_player.stepTo( endStep );
+    // TODO
+    m_player.updateControls( 640, 480 );
+  }
+
+  /**
+   * @see org.eclipse.jface.action.Action#getText()
+   */
+  @Override
+  public String getText( )
+  {
+    return "Ende";
+  }
+
+  /**
+   * @see org.eclipse.jface.action.Action#getImageDescriptor()
+   */
+  @Override
+  public ImageDescriptor getImageDescriptor( )
+  {
+    return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.MOVIE_PLAYER_END );
   }
 }

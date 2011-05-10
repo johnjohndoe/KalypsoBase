@@ -79,8 +79,12 @@ public class ImageProvider
     SLD_RULE_TAB_ADD("icons/sldeditor/ruleTabAdd.gif"),
 
     MOVIE_PLAYER_STOP("icons/movie/player_stop.png"), //$NON-NLS-1$
+    MOVIE_PLAYER_START("icons/movie/player_start.png"), //$NON-NLS-1$
+    MOVIE_PLAYER_REW("icons/movie/player_rew.png"), //$NON-NLS-1$
     MOVIE_PLAYER_PAUSE("icons/movie/player_pause.png"), //$NON-NLS-1$
     MOVIE_PLAYER_PLAY("icons/movie/player_play.png"), //$NON-NLS-1$
+    MOVIE_PLAYER_FWD("icons/movie/player_fwd.png"), //$NON-NLS-1$
+    MOVIE_PLAYER_END("icons/movie/player_end.png"), //$NON-NLS-1$
     MOVIE_PLAYER_EJECT("icons/movie/player_eject.png"); //$NON-NLS-1$
 
     private final String m_imagePath;

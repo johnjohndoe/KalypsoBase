@@ -38,21 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.movie.standard;
+package org.kalypso.ogc.gml.movie.utils;
 
-import org.kalypso.ogc.gml.movie.AbstractMovieImageProvider;
+import java.awt.image.RenderedImage;
 
 /**
- * The default movie image provider.
+ * A movie frame.
  * 
  * @author Holger Albert
  */
-public class DefaultMovieImageProvider extends AbstractMovieImageProvider
+public interface IMovieFrame
 {
   /**
-   * The constructor.
+   * This function returns the label.
+   * 
+   * @return The label.
    */
-  public DefaultMovieImageProvider( )
-  {
-  }
+  public String getLabel( );
+
+  /**
+   * The function returns the image.
+   * 
+   * @param width
+   *          The width.
+   * @param height
+   *          The height.
+   * @return The image.
+   */
+  public RenderedImage getImage( int width, int height );
 }
