@@ -172,7 +172,7 @@ public class SLDComposite extends Composite
     ControlUtils.disposeChildren( body );
 
     if( m_input != null )
-      m_styleComposite = new FeatureTypeStyleComposite( m_toolkit, body, m_input );
+      m_styleComposite = new FeatureTypeStyleComposite( m_toolkit, body, m_input, SWT.NONE );
 
     updateControl();
   }

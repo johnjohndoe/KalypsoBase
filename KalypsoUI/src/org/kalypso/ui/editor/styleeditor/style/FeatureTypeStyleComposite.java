@@ -41,33 +41,31 @@
 package org.kalypso.ui.editor.styleeditor.style;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
-import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
-import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
-import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
 
 /**
  * @author Gernot Belger
  */
 public class FeatureTypeStyleComposite extends Composite
 {
+  /**
+   * If this style is used, the properties section will be hidden.
+   */
+  public static final int HIDE_PROPERTIES = 1 << 1;
+
   private final IFeatureTypeStyleInput m_input;
 
   private RuleTabViewer m_ruleTabViewer;
 
-  private IDataBinding m_binding;
+  private FeatureTypeStylePropertiesComposite m_propertiesComposite;
 
-  private ScrolledForm m_propertiesForm;
-
-  public FeatureTypeStyleComposite( final FormToolkit toolkit, final Composite parent, final IFeatureTypeStyleInput input )
+  public FeatureTypeStyleComposite( final FormToolkit toolkit, final Composite parent, final IFeatureTypeStyleInput input, final int sldStyle )
   {
     super( parent, SWT.NONE );
 
@@ -76,8 +74,11 @@ public class FeatureTypeStyleComposite extends Composite
     setLayout( LayoutHelper.createGridLayout() );
     toolkit.adapt( this );
 
-    final Control propertiesControl = createPropertiesComposite( toolkit );
-    propertiesControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    if( (sldStyle & HIDE_PROPERTIES) == 0 )
+    {
+      final Control propertiesControl = createPropertiesComposite( toolkit );
+      propertiesControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    }
 
     final Control ruleTabsControl = createRuleTabViewer( toolkit );
     ruleTabsControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -89,16 +90,8 @@ public class FeatureTypeStyleComposite extends Composite
     section.setText( "Style Properties" );
     section.setDescription( "This section allows to edit general properties of the style." );
 
-    m_propertiesForm = ToolkitUtils.createScrolledForm( toolkit, section, SWT.H_SCROLL );
-    section.setClient( m_propertiesForm );
-
-    final Composite body = m_propertiesForm.getBody();
-    toolkit.adapt( body );
-    body.setLayout( new FillLayout() );
-
-    m_binding = new DatabindingForm( m_propertiesForm, toolkit );
-
-    new FeatureTypeStylePropertiesComposite( m_binding, body, m_input );
+    m_propertiesComposite = new FeatureTypeStylePropertiesComposite( toolkit, section, m_input );
+    section.setClient( m_propertiesComposite );
 
     return section;
   }
@@ -126,7 +119,7 @@ public class FeatureTypeStyleComposite extends Composite
    */
   public void updateControl( )
   {
-    m_binding.getBindingContext().updateTargets();
+    m_propertiesComposite.updateControl();
 
     m_ruleTabViewer.refresh();
   }
