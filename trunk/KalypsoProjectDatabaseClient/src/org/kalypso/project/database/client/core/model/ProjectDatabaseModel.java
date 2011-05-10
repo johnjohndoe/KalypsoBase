@@ -48,6 +48,7 @@ import java.util.TreeSet;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
@@ -337,5 +338,11 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     }
 
     return null;
+  }
+
+  public void stop( )
+  {
+    if( Objects.isNotNull( m_remote ) )
+      m_remote.stop();
   }
 }

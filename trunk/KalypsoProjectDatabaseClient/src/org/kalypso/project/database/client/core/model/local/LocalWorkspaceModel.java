@@ -182,4 +182,5 @@ public class LocalWorkspaceModel implements ILocalWorkspaceModel
 
     return resolveProject( projects, projectReference );
   }
+
 }

@@ -93,7 +93,9 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
+    PROJECT_DATABASE_MODEL.stop();
     plugin = null;
+
     super.stop( context );
   }
 

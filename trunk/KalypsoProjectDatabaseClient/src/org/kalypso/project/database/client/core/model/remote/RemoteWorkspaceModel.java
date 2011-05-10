@@ -350,4 +350,9 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
   {
     return m_connectionState.isOK();
   }
+
+  public void stop( )
+  {
+    UPDATE_JOB.cancel();
+  }
 }
