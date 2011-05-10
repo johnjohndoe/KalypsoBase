@@ -54,6 +54,8 @@ public class MarkTabItem implements IGraphicElementItem
 {
   private final IStyleInput<Mark> m_input;
 
+  private MarkComposite m_markComposite;
+
   public MarkTabItem( final IStyleInput<Mark> input )
   {
     m_input = input;
@@ -83,7 +85,8 @@ public class MarkTabItem implements IGraphicElementItem
   @Override
   public Control createItemControl( final FormToolkit toolkit, final Composite parent )
   {
-    return new MarkComposite( toolkit, parent, m_input );
+    m_markComposite = new MarkComposite( toolkit, parent, m_input );
+    return m_markComposite;
   }
 
   /**
@@ -92,6 +95,7 @@ public class MarkTabItem implements IGraphicElementItem
   @Override
   public void updateItemControl( )
   {
+    m_markComposite.updateControl();
   }
 
   /**

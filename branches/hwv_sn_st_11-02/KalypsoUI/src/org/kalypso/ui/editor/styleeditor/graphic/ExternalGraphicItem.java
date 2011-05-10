@@ -54,6 +54,8 @@ public class ExternalGraphicItem implements IGraphicElementItem
 {
   private final IStyleInput<ExternalGraphic> m_input;
 
+  private ExternalGraphicComposite m_composite;
+
   public ExternalGraphicItem( final IStyleInput<ExternalGraphic> input )
   {
     m_input = input;
@@ -74,12 +76,14 @@ public class ExternalGraphicItem implements IGraphicElementItem
   @Override
   public Control createItemControl( final FormToolkit toolkit, final Composite parent )
   {
-    return new ExternalGraphicComposite( toolkit, parent, m_input );
+    m_composite = new ExternalGraphicComposite( toolkit, parent, m_input );
+    return m_composite;
   }
 
   @Override
   public void updateItemControl( )
   {
+    m_composite.updateControl();
   }
 
   @Override

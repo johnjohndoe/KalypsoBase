@@ -63,6 +63,8 @@ public class PolygonSymbolizerComposite extends AbstractSymbolizerComposite<Poly
 {
   private PolygonSymbolizerStrokeSection m_strokeSection;
 
+  private FillSection m_fillSection;
+
   public PolygonSymbolizerComposite( final FormToolkit toolkit, final Composite parent, final IStyleInput<PolygonSymbolizer> input )
   {
     super( toolkit, parent, input );
@@ -72,7 +74,7 @@ public class PolygonSymbolizerComposite extends AbstractSymbolizerComposite<Poly
   protected Control createContent( final FormToolkit toolkit, final Composite parent )
   {
     final Composite panel = toolkit.createComposite( parent );
-    GridLayoutFactory.fillDefaults().numColumns( 2 ).equalWidth( true ).applyTo( panel );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).equalWidth( true ).spacing( 0, 0 ).applyTo( panel );
 
     createStrokeControl( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createFillControl( panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -88,7 +90,8 @@ public class PolygonSymbolizerComposite extends AbstractSymbolizerComposite<Poly
 
   private Control createFillControl( final Composite parent )
   {
-    return new FillSection( getToolkit(), parent, getInput() ).getSection();
+    m_fillSection = new FillSection( getToolkit(), parent, getInput() );
+    return m_fillSection.getSection();
   }
 
   @Override
@@ -101,5 +104,6 @@ public class PolygonSymbolizerComposite extends AbstractSymbolizerComposite<Poly
   public void doUpdateControl( )
   {
     m_strokeSection.updateControl();
+    m_fillSection.updateControl();
   }
 }

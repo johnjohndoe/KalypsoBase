@@ -55,6 +55,10 @@ public class StyleEditorConfig implements IStyleEditorConfig
 
   private boolean m_symbolizerTabViewerAllowChange = true;
 
+  private boolean m_symbolizerEditGeometry = true;
+
+  private boolean m_polygonSymbolizerShowGraphic = true;
+
   @Override
   public boolean isFeatureTypeStyleCompositeShowProperties( )
   {
@@ -99,4 +103,25 @@ public class StyleEditorConfig implements IStyleEditorConfig
     m_symbolizerTabViewerAllowChange = symbolizerTabViewerAllowChange;
   }
 
+  @Override
+  public boolean isSymbolizerEditGeometry( )
+  {
+    return m_symbolizerEditGeometry;
+  }
+
+  public void setSymbolizerEditGeometry( final boolean symbolizerEditGeometry )
+  {
+    m_symbolizerEditGeometry = symbolizerEditGeometry;
+  }
+
+  @Override
+  public boolean isPolygonSymbolizerShowGraphic( )
+  {
+    return m_polygonSymbolizerShowGraphic;
+  }
+
+  public void setPolygonSymbolizerShowGraphic( final boolean polygonSymbolizerShowGraphic )
+  {
+    m_polygonSymbolizerShowGraphic = polygonSymbolizerShowGraphic;
+  }
 }
