@@ -44,6 +44,7 @@ import java.net.URL;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.ui.editor.styleeditor.IStyleEditorConfig;
 
 /**
  * @author Gernot Belger
@@ -60,27 +61,18 @@ public class StyleInput<DATA> implements IStyleInput<DATA>
     m_delegate = delegate;
   }
 
-  /**
-   * @see org.kalypso.commons.field.IFieldInput#getInput()
-   */
   @Override
   public final DATA getData( )
   {
     return m_data;
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {
     return getData().hashCode();
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals( final Object obj )
   {
@@ -96,9 +88,6 @@ public class StyleInput<DATA> implements IStyleInput<DATA>
     return new EqualsBuilder().append( getData(), other.getData() ).isEquals();
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.binding.IStyleInput#fireStyleChanged()
-   */
   @Override
   public void fireStyleChanged( )
   {
@@ -106,9 +95,6 @@ public class StyleInput<DATA> implements IStyleInput<DATA>
       m_delegate.fireStyleChanged();
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.binding.IStyleInput#getFeatureType()
-   */
   @Override
   public IFeatureType getFeatureType( )
   {
@@ -118,12 +104,15 @@ public class StyleInput<DATA> implements IStyleInput<DATA>
     return null;
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.binding.IStyleInput#getContext()
-   */
   @Override
   public URL getContext( )
   {
     return m_delegate.getContext();
+  }
+
+  @Override
+  public IStyleEditorConfig getConfig( )
+  {
+    return m_delegate.getConfig();
   }
 }

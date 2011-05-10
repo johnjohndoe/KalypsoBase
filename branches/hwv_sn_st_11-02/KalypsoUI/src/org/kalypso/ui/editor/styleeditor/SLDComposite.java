@@ -172,7 +172,7 @@ public class SLDComposite extends Composite
     ControlUtils.disposeChildren( body );
 
     if( m_input != null )
-      m_styleComposite = new FeatureTypeStyleComposite( m_toolkit, body, m_input, SWT.NONE );
+      m_styleComposite = new FeatureTypeStyleComposite( m_toolkit, body, m_input );
 
     updateControl();
   }
@@ -182,8 +182,11 @@ public class SLDComposite extends Composite
     if( style == null )
       return null;
 
+    /* Use config with default values */
+    final IStyleEditorConfig config = new StyleEditorConfig();
+
     final FeatureTypeStyle fts = findFeatureTypeStyle( style, styleToSelect );
-    return new FeatureTypeStyleInput( fts, style, styleToSelect, featureType );
+    return new FeatureTypeStyleInput( fts, style, styleToSelect, featureType, config );
   }
 
   private FeatureTypeStyle findFeatureTypeStyle( final IKalypsoStyle style, final int styleToSelect )

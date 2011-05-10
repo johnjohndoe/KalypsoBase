@@ -40,15 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.rule;
 
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.services.IEvaluationService;
+import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
@@ -58,12 +59,36 @@ public class SetCurrentDenomAction extends Action
 {
   private final Text m_denomField;
 
+  private final IMapPanel m_mapPanel;
+
   public SetCurrentDenomAction( final Text denomField )
   {
     m_denomField = denomField;
 
     setImageDescriptor( ImageProvider.IMAGE_STYLEEDITOR_GET_SCALE );
     setToolTipText( MessageBundle.STYLE_EDITOR_SCALE );
+
+    m_mapPanel = findPanel();
+    setEnabled( m_mapPanel != null );
+  }
+
+  private static IMapPanel findPanel( )
+  {
+    final IEvaluationService service = (IEvaluationService) PlatformUI.getWorkbench().getService( IEvaluationService.class );
+    final IEvaluationContext state = service.getCurrentState();
+    return MapHandlerUtils.getMapPanel( state );
+
+// final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+// final IEditorPart editor = window.getActivePage().getActiveEditor();
+// if( editor instanceof GisMapEditor )
+// {
+// // TODO: get from current context instead!
+// final GisMapEditor gisMapEditor = (GisMapEditor) editor;
+// return gisMapEditor.getMapPanel().getCurrentScale();
+// }
+//
+// // TODO Auto-generated method stub
+// return null;
   }
 
   /**
@@ -87,16 +112,9 @@ public class SetCurrentDenomAction extends Action
 
   public Double getCurrentScale( )
   {
-    final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    final IEditorPart editor = window.getActivePage().getActiveEditor();
-    if( editor instanceof GisMapEditor )
-    {
-      // TODO: get from current context instead!
-      final GisMapEditor gisMapEditor = (GisMapEditor) editor;
-      return gisMapEditor.getMapPanel().getCurrentScale();
-    }
+    if( m_mapPanel == null )
+      return null;
 
-    return null;
+    return m_mapPanel.getCurrentScale();
   }
-
 }

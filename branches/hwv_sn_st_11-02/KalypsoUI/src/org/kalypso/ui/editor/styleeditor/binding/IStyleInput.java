@@ -43,6 +43,7 @@ package org.kalypso.ui.editor.styleeditor.binding;
 import java.net.URL;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.ui.editor.styleeditor.IStyleEditorConfig;
 
 /**
  * @author Gernot Belger
@@ -55,9 +56,7 @@ public interface IStyleInput<DATA>
 
   IFeatureType getFeatureType( );
 
+  IStyleEditorConfig getConfig( );
+
   URL getContext( );
-
-// FeatureTypeStyle getStyle( );
-
-// IKalypsoStyle getKalypsoStyle( );
 }

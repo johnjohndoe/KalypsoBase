@@ -98,10 +98,6 @@ public class RuleTabItem implements ITabItem
     return null;
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.IRuleTabItem#createItemControl(org.eclipse.ui.forms.widgets.FormToolkit,
-   *      org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public Control createItemControl( final FormToolkit toolkit, final Composite parent )
   {

@@ -41,7 +41,6 @@
 package org.kalypso.commons.eclipse.jface.viewers;
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -54,9 +53,12 @@ public class TabItemLabelProvider extends LabelProvider implements ITabControlPr
 {
   private final FormToolkit m_toolkit;
 
-  public TabItemLabelProvider( final FormToolkit toolkit )
+  private final int m_itemStyle;
+
+  public TabItemLabelProvider( final FormToolkit toolkit, final int itemStyle )
   {
     m_toolkit = toolkit;
+    m_itemStyle = itemStyle;
   }
 
   /**
@@ -71,9 +73,6 @@ public class TabItemLabelProvider extends LabelProvider implements ITabControlPr
     return super.getText( element );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
-   */
   @Override
   public Image getImage( final Object element )
   {
@@ -83,19 +82,12 @@ public class TabItemLabelProvider extends LabelProvider implements ITabControlPr
     return super.getImage( element );
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.tab.ITabControlProvider#getItemStyle(java.lang.Object)
-   */
   @Override
   public int getItemStyle( final Object element )
   {
-    return SWT.CLOSE;
+    return m_itemStyle;
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.tab.ITabControlProvider#createControl(org.eclipse.swt.widgets.Composite,
-   *      java.lang.Object)
-   */
   @Override
   public Control createControl( final Composite parent, final Object element )
   {
@@ -105,15 +97,10 @@ public class TabItemLabelProvider extends LabelProvider implements ITabControlPr
     return null;
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.tab.ITabControlProvider#updateControl(java.lang.Object)
-   */
   @Override
   public void updateControl( final Object element )
   {
     if( element instanceof ITabItem )
       ((ITabItem) element).updateItemControl();
   }
-
 }
-

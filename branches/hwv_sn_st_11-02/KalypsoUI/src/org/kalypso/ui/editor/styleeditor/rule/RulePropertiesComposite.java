@@ -46,15 +46,18 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.commons.databinding.validation.NumberNotNegativeValidator;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
+import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
 import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
@@ -69,24 +72,30 @@ public class RulePropertiesComposite extends Composite
 
   private final IStyleInput<Rule> m_input;
 
-  public RulePropertiesComposite( final IDataBinding binding, final Composite parent, final IStyleInput<Rule> input )
+  private final ScrolledForm m_form;
+
+  public RulePropertiesComposite( final FormToolkit toolkit, final Composite parent, final IStyleInput<Rule> input )
   {
     super( parent, SWT.NONE );
 
-    m_binding = binding;
     m_input = input;
 
-    final FormToolkit toolkit = binding.getToolkit();
-
-    setLayout( new GridLayout( 3, false ) );
+    setLayout( new FillLayout() );
     toolkit.adapt( this );
 
+    m_form = toolkit.createScrolledForm( this );
+
+    m_binding = new DatabindingForm( m_form, toolkit );
+
+    final Composite body = m_form.getBody();
+    body.setLayout( new GridLayout( 3, false ) );
+
     /* Text Panel for Rule-Titel */
-    createNameControl( toolkit, this );
-    createTitleControl( toolkit, this );
-    createAbstractControl( toolkit, this );
-    createMinDenomControl( toolkit, this );
-    createMaxDenomControl( toolkit, this );
+    createNameControl( toolkit, body );
+    createTitleControl( toolkit, body );
+    createAbstractControl( toolkit, body );
+    createMinDenomControl( toolkit, body );
+    createMaxDenomControl( toolkit, body );
   }
 
   private void createNameControl( final FormToolkit toolkit, final Composite parent )
@@ -167,5 +176,7 @@ public class RulePropertiesComposite extends Composite
   public void updateControl( )
   {
     m_binding.getBindingContext().updateTargets();
+
+    m_form.reflow( true );
   }
 }

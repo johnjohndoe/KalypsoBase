@@ -59,7 +59,12 @@ public class SymbolizerTabViewer extends AbstractManagedTabViewer<Rule>
 {
   public SymbolizerTabViewer( final FormToolkit toolkit, final Composite parent, final IStyleInput<Rule> input )
   {
-    super( toolkit, parent, new SymbolizerTabList( input ) );
+    super( toolkit, parent, new SymbolizerTabList( input ), canChange( input ) );
+  }
+
+  private static boolean canChange( final IStyleInput<Rule> input )
+  {
+    return input.getConfig().isSymbolizerTabViewerAllowChange();
   }
 
   @Override

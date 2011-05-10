@@ -61,7 +61,12 @@ public class RuleTabViewer extends AbstractManagedTabViewer<FeatureTypeStyle>
 
   public RuleTabViewer( final FormToolkit toolkit, final Composite parent, final IFeatureTypeStyleInput input )
   {
-    super( toolkit, parent, new RuleOrPatternCollection( input ) );
+    super( toolkit, parent, new RuleOrPatternCollection( input ), canChange( input ) );
+  }
+
+  private static boolean canChange( final IFeatureTypeStyleInput input )
+  {
+    return input.getConfig().isRuleTabViewerAllowChange();
   }
 
   @Override

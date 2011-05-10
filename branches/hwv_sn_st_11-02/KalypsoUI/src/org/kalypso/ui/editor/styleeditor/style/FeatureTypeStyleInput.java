@@ -46,6 +46,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.IKalypsoStyle;
+import org.kalypso.ui.editor.styleeditor.IStyleEditorConfig;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 
 /**
@@ -61,12 +62,15 @@ public class FeatureTypeStyleInput implements IFeatureTypeStyleInput
 
   private final IFeatureType m_featureType;
 
-  public FeatureTypeStyleInput( final FeatureTypeStyle fts, final IKalypsoStyle style, final int styleToSelect, final IFeatureType featureType )
+  private final IStyleEditorConfig m_config;
+
+  public FeatureTypeStyleInput( final FeatureTypeStyle fts, final IKalypsoStyle style, final int styleToSelect, final IFeatureType featureType, final IStyleEditorConfig config )
   {
     m_fts = fts;
     m_style = style;
     m_styleToSelect = styleToSelect;
     m_featureType = featureType;
+    m_config = config;
   }
 
   @Override
@@ -133,5 +137,14 @@ public class FeatureTypeStyleInput implements IFeatureTypeStyleInput
       return m_style.getContext();
 
     return null;
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.binding.IStyleInput#getConfig()
+   */
+  @Override
+  public IStyleEditorConfig getConfig( )
+  {
+    return m_config;
   }
 }
