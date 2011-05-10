@@ -49,8 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.movie.utils.MovieRuntimeState;
+import org.kalypso.ogc.gml.movie.utils.MoviePlayer;
 
 /**
  * The movie composite.
@@ -59,6 +58,11 @@ import org.kalypso.ogc.gml.movie.utils.MovieRuntimeState;
  */
 public class MovieComposite extends Composite
 {
+  /**
+   * The movie player.
+   */
+  private MoviePlayer m_player;
+
   /**
    * The form.
    */
@@ -76,13 +80,15 @@ public class MovieComposite extends Composite
    *          A widget which will be the parent of the new instance (cannot be null).
    * @param style
    *          The style of widget to construct.
+   * @param moviePlayer
+   *          The movie player
    */
-  public MovieComposite( Composite parent, int style )
+  public MovieComposite( Composite parent, int style, MoviePlayer player )
   {
     super( parent, style );
 
     /* Initialize with parameters. */
-    // TODO
+    m_player = player;
 
     /* Initialize. */
     m_form = null;
@@ -191,55 +197,29 @@ public class MovieComposite extends Composite
     Composite contentInternalComposite = new Composite( parent, SWT.NONE );
     contentInternalComposite.setLayout( new GridLayout( 2, false ) );
 
-    // TODO
+    /* Create the default screen. */
+    Composite screenComposite = m_player.createScreenControls( contentInternalComposite );
+    screenComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     return contentInternalComposite;
   }
 
   /**
-   * This function updates the composite.
+   * This function updates the status.
    * 
    * @param status
    *          A status, containing a message, which should be displayed in the upper area of the view. May be null.
    */
-  protected void update( IStatus status )
+  protected void updateStatus( IStatus status )
   {
-    /* Update nothing, when no form or no content is defined. */
-    /* In this case the composite was never correct initialized. */
-    if( m_form == null || m_content == null )
+    if( m_form == null || m_form.isDisposed() || m_content == null || m_content.isDisposed() )
       return;
 
-    /* Update the message. */
     if( status != null && !status.isOK() )
       m_form.setMessage( status.getMessage(), MessageUtilitites.convertStatusSeverity( status.getSeverity() ) );
     else
       m_form.setMessage( null, IMessageProvider.NONE );
 
-    /* Dispose the content of the composite. */
-    if( !m_content.isDisposed() )
-      m_content.dispose();
-
-    /* Redraw the content of the composite. */
-    m_content = createContentComposite( m_form.getBody() );
-    m_content.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
-    /* Do a reflow. */
     m_form.layout( true, true );
-  }
-
-  /**
-   * This function updates the runtime state.
-   * 
-   * @see {@link MovieRuntimeState#PLAYING} and {@link MovieRuntimeState#STOPPED}
-   * @param runtimeState
-   *          May be {@link MovieRuntimeState#PLAYING}, {@link MovieRuntimeState#STOPPED} or null, if it should not be
-   *          changed.
-   * @param nextTheme
-   *          The next theme, if playing would be resumed. May be null. In this case, the actual theme will not be
-   *          changed.
-   */
-  public void updateRuntimeState( MovieRuntimeState runtimeState, IKalypsoTheme nextTheme )
-  {
-    // TODO
   }
 }
