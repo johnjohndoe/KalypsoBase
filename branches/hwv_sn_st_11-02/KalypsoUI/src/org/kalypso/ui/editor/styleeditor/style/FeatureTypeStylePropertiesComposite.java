@@ -51,17 +51,21 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.commons.databinding.conversion.StringToQNameConverter;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
+import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
+import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
 import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
@@ -76,23 +80,28 @@ public class FeatureTypeStylePropertiesComposite extends Composite
 
   private final IDataBinding m_binding;
 
-  public FeatureTypeStylePropertiesComposite( final IDataBinding binding, final Composite parent, final IStyleInput<FeatureTypeStyle> input )
+  private final ScrolledForm m_form;
+
+  public FeatureTypeStylePropertiesComposite( final FormToolkit toolkit, final Composite parent, final IStyleInput<FeatureTypeStyle> input )
   {
     super( parent, SWT.NONE );
 
-    m_binding = binding;
-
     m_input = input;
 
-    setLayout( new GridLayout( 2, false ) );
-
-    final FormToolkit toolkit = binding.getToolkit();
     toolkit.adapt( this );
+    setLayout( new FillLayout() );
 
-    createNameField( toolkit, this );
-    createTitleField( toolkit, this );
-    createAbstractField( toolkit, this );
-    createFeatureTypeField( toolkit, this );
+    m_form = ToolkitUtils.createScrolledForm( toolkit, this, SWT.H_SCROLL );
+    final Composite body = m_form.getBody();
+    toolkit.adapt( body );
+    body.setLayout( new GridLayout( 2, false ) );
+
+    m_binding = new DatabindingForm( m_form, toolkit );
+
+    createNameField( toolkit, body );
+    createTitleField( toolkit, body );
+    createAbstractField( toolkit, body );
+    createFeatureTypeField( toolkit, body );
     // createSemanticTypeIdentifierTypeField( toolkit, body );
   }
 
@@ -172,5 +181,12 @@ public class FeatureTypeStylePropertiesComposite extends Composite
       qnames[i] = possibleTypes[i].getQName().toString();
 
     return qnames;
+  }
+
+  public void updateControl( )
+  {
+    m_binding.getBindingContext().updateTargets();
+
+    m_form.reflow( true );
   }
 }
