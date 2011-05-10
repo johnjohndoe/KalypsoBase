@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.movie;
 
 import org.eclipse.jface.action.Action;
+import org.kalypso.ogc.gml.movie.utils.MoviePlayer;
 
 /**
  * The movie controls.
@@ -52,7 +53,9 @@ public interface IMovieControls
   /**
    * This function returns the actions.
    * 
+   * @param player
+   *          The movie player, which should be controlled by the action.
    * @return The actions.
    */
-  public Action[] getActions( );
+  public Action[] getActions( MoviePlayer player );
 }

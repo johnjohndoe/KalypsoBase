@@ -50,7 +50,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.movie.utils.MovieUtilities;
+import org.kalypso.ogc.gml.movie.controls.MovieComposite;
+import org.kalypso.ogc.gml.movie.utils.MoviePlayer;
 
 /**
  * The movie dialog.
@@ -60,19 +61,14 @@ import org.kalypso.ogc.gml.movie.utils.MovieUtilities;
 public class MovieDialog extends Dialog
 {
   /**
-   * The gis template map model.
+   * The movie player.
    */
-  private GisTemplateMapModell m_mapModel;
+  private MoviePlayer m_moviePlayer;
 
   /**
-   * The theme, marked as movie theme.
+   * The movie composite.
    */
-  private AbstractCascadingLayerTheme m_movieTheme;
-
-  /**
-   * The movie image provider.
-   */
-  private IMovieImageProvider m_imageProvider;
+  private MovieComposite m_movieComposite;
 
   /**
    * Creates a dialog instance. Note that the window will have no visual representation (no widgets) until it is told to
@@ -89,9 +85,8 @@ public class MovieDialog extends Dialog
   {
     super( parentShell );
 
-    m_mapModel = mapModel;
-    m_movieTheme = movieTheme;
-    m_imageProvider = MovieUtilities.initImageProvider( movieTheme );
+    m_moviePlayer = new MoviePlayer( mapModel, movieTheme );
+    m_movieComposite = null;
   }
 
   /**
@@ -108,9 +103,8 @@ public class MovieDialog extends Dialog
   {
     super( parentShell );
 
-    m_mapModel = mapModel;
-    m_movieTheme = movieTheme;
-    m_imageProvider = MovieUtilities.initImageProvider( movieTheme );
+    m_moviePlayer = new MoviePlayer( mapModel, movieTheme );
+    m_movieComposite = null;
   }
 
   /**
@@ -129,9 +123,20 @@ public class MovieDialog extends Dialog
     mainData.widthHint = 400;
     main.setLayoutData( mainData );
 
-    // TODO
+    /* Create the movie composite. */
+    m_movieComposite = new MovieComposite( main, SWT.NONE, m_moviePlayer );
+    m_movieComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     return main;
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#createButtonBar(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  protected Control createButtonBar( Composite parent )
+  {
+    return m_moviePlayer.createButtonControls( parent );
   }
 
   /**
