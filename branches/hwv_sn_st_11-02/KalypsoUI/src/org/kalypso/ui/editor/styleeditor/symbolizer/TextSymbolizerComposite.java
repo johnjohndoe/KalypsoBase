@@ -60,7 +60,6 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.databinding.conversion.ITypedConverter;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
-import org.kalypso.ui.editor.styleeditor.halo.HaloComposite;
 import org.kalypso.ui.editor.styleeditor.preview.SymbolizerPreview;
 import org.kalypso.ui.editor.styleeditor.preview.TextPreview;
 import org.kalypso.ui.editor.styleeditor.util.IValueReceiver;
@@ -73,11 +72,13 @@ import org.kalypsodeegree.graphics.sld.TextSymbolizer;
  */
 public class TextSymbolizerComposite extends AbstractSymbolizerComposite<TextSymbolizer>
 {
-  private HaloComposite m_haloComposite;
-
   private FontComposite m_fontChooserPanel;
 
   private ScrolledForm m_commonForm;
+
+  private HaloSection m_haloSection;
+
+  private LabelPlacementSection m_placementSection;
 
   public TextSymbolizerComposite( final FormToolkit toolkit, final Composite parent, final IStyleInput<TextSymbolizer> input )
   {
@@ -99,10 +100,10 @@ public class TextSymbolizerComposite extends AbstractSymbolizerComposite<TextSym
     final Control upperPanel = createCommonAndPlacementSections( toolkit, panel );
     upperPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
-    final Control haloSection = new HaloSection( toolkit, panel, getInput() ).getSection();
-    haloSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_haloSection = new HaloSection( toolkit, panel, getInput() );
+    m_haloSection.getSection().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    // FIXME: there is another fill-element at any TextSymbolizer; it is not used by Kalypso however; what is it
+    // TODO: there is another fill-element at any TextSymbolizer; it is not used by Kalypso however; what is it
     // supposed to do?
 
     return panel;
@@ -140,7 +141,8 @@ public class TextSymbolizerComposite extends AbstractSymbolizerComposite<TextSym
 
   private Control createPlacementSection( final FormToolkit toolkit, final Composite parent )
   {
-    return new LabelPlacementSection( toolkit, parent, getInput() ).getSection();
+    m_placementSection = new LabelPlacementSection( toolkit, parent, getInput() );
+    return m_placementSection.getSection();
   }
 
   private void createLabelControl( final FormToolkit toolkit, final Composite parent )
@@ -160,7 +162,6 @@ public class TextSymbolizerComposite extends AbstractSymbolizerComposite<TextSym
     model.configureViewer( labelViewer );
 
     final IObservableValue target = SWTObservables.observeText( combo );
-// final IViewerObservableValue target = ViewerProperties.singleSelection().observe( labelViewer );
 
     getBinding().bindValue( target, model, new StringToParameterValueTypeConverter(), converter );
 
@@ -178,9 +179,9 @@ public class TextSymbolizerComposite extends AbstractSymbolizerComposite<TextSym
       }
     };
 
-    // FIXME:
+    // TODO:
     // - as font css-parameters may contain property-references, we need a different font control
-    // - we should allow for font removal/addition similar to other eleemtns (halo/placement)
+    // - we should allow for font removal/addition similar to other elements (halo/placement)
     // - font editor should allow to edit single properties (not via FontDialog)
     m_fontChooserPanel = new FontComposite( toolkit, panel, fontReceiver );
     m_fontChooserPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
@@ -197,13 +198,18 @@ public class TextSymbolizerComposite extends AbstractSymbolizerComposite<TextSym
   @Override
   public void doUpdateControl( )
   {
-    if( m_fontChooserPanel == null || m_haloComposite == null )
-      return;
+    // Binding already updated in super
 
-    final TextSymbolizer symbolizer = getSymbolizer();
+    if( m_fontChooserPanel != null )
+    {
+      final TextSymbolizer symbolizer = getSymbolizer();
+      final Font font = symbolizer.getFont();
+      m_fontChooserPanel.setFont( font );
+    }
 
-    final Font font = symbolizer.getFont();
-    m_fontChooserPanel.setFont( font );
+    m_placementSection.updateControl();
+
+    m_haloSection.updateControl();
 
     m_commonForm.reflow( true );
   }

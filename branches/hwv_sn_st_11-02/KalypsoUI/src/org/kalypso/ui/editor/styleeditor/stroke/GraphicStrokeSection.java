@@ -54,7 +54,7 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 /**
  * @author Gernot Belger
  */
-public class GraphicStrokeSection extends AbstractStyleElementSection<Stroke, Graphic>
+public class GraphicStrokeSection extends AbstractStyleElementSection<Stroke, Graphic, GraphicComposite>
 {
   public GraphicStrokeSection( final FormToolkit toolkit, final Composite parent, final IStyleInput<Stroke> input )
   {
@@ -96,20 +96,20 @@ public class GraphicStrokeSection extends AbstractStyleElementSection<Stroke, Gr
     return graphicStroke.getGraphic();
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.util.AbstractStyleElementSection#createItemControl(org.eclipse.swt.widgets.Composite,
-   *      java.lang.Object)
-   */
   @Override
-  protected void createItemControl( final Composite parent, final Graphic item )
+  protected GraphicComposite createItemControl( final Composite parent, final Graphic item )
   {
     final FormToolkit toolkit = getToolkit();
-    if( item == null )
-      toolkit.createLabel( parent, "No Graphic Stroke set" );
-    else
-    {
-      final IStyleInput<Graphic> input = new StyleInput<Graphic>( item, getInput() );
-      new GraphicComposite( toolkit, parent, input );
-    }
+    final IStyleInput<Graphic> input = new StyleInput<Graphic>( item, getInput() );
+    return new GraphicComposite( toolkit, parent, input );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.util.AbstractStyleElementSection#updateItemControl(java.lang.Object)
+   */
+  @Override
+  protected void updateItemControl( final GraphicComposite itemControl )
+  {
+    itemControl.updateControl();
   }
 }

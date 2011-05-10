@@ -61,7 +61,7 @@ import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
  * 
  * @author Gernot Belger
  */
-public abstract class AbstractStyleElementSection<ELEMENT, ITEM>
+public abstract class AbstractStyleElementSection<ELEMENT, ITEM, ITEMCONTROL>
 {
   private final IUpdateable[] m_actions;
 
@@ -76,6 +76,8 @@ public abstract class AbstractStyleElementSection<ELEMENT, ITEM>
   private final Composite m_contentPanel;
 
   private ITEM m_item;
+
+  private ITEMCONTROL m_itemControl;
 
   protected AbstractStyleElementSection( final FormToolkit toolkit, final Composite parent, final IStyleInput<ELEMENT> input )
   {
@@ -162,6 +164,8 @@ public abstract class AbstractStyleElementSection<ELEMENT, ITEM>
     if( ObjectUtils.equals( item, m_item ) )
     {
       updateToolbar();
+      if( m_itemControl != null )
+        updateItemControl( m_itemControl );
       return;
     }
 
@@ -169,14 +173,22 @@ public abstract class AbstractStyleElementSection<ELEMENT, ITEM>
 
     ControlUtils.disposeChildren( m_contentPanel );
 
-    createItemControl( m_contentPanel, item );
+    if( item == null )
+    {
+      m_itemControl = null;
+      getToolkit().createLabel( m_contentPanel, String.format( "'%s' not set", getTitle() ) );
+    }
+    else
+      m_itemControl = createItemControl( m_contentPanel, item );
 
     m_contentPanel.layout( true, true );
 
     updateToolbar();
   }
 
-  protected abstract void createItemControl( Composite parent, ITEM item );
+  protected abstract ITEMCONTROL createItemControl( Composite parent, ITEM item );
+
+  protected abstract void updateItemControl( ITEMCONTROL itemControl );
 
   private void updateToolbar( )
   {

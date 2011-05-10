@@ -46,13 +46,12 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.IKalypsoStyle;
-import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 
 /**
  * @author Gernot Belger
  */
-public class FeatureTypeStyleInput implements IStyleInput<FeatureTypeStyle>
+public class FeatureTypeStyleInput implements IFeatureTypeStyleInput
 {
   private final int m_styleToSelect;
 
@@ -70,6 +69,7 @@ public class FeatureTypeStyleInput implements IStyleInput<FeatureTypeStyle>
     m_featureType = featureType;
   }
 
+  @Override
   public int getStyleToSelect( )
   {
     return m_styleToSelect;
@@ -88,11 +88,11 @@ public class FeatureTypeStyleInput implements IStyleInput<FeatureTypeStyle>
       return false;
     if( obj == this )
       return true;
-    if( obj.getClass() != getClass() )
+    if( !(obj instanceof IFeatureTypeStyleInput) )
       return false;
 
-    final FeatureTypeStyleInput other = (FeatureTypeStyleInput) obj;
-    return new EqualsBuilder().append( m_fts, other.m_fts ).append( m_styleToSelect, other.m_styleToSelect ).isEquals();
+    final IFeatureTypeStyleInput other = (IFeatureTypeStyleInput) obj;
+    return new EqualsBuilder().append( m_fts, other.getData() ).append( m_styleToSelect, other.getStyleToSelect() ).isEquals();
   }
 
   /**

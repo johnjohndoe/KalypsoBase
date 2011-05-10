@@ -80,7 +80,7 @@ public class ExternalGraphicComposite extends Composite
 
     createUrlControl( toolkit, body, input );
 
-    // FIXME: format ignored by ExternalGraphics implementation
+    // TODO: format ignored by ExternalGraphics implementation
     // createFormatControl( toolkit, body, input );
   }
 

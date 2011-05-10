@@ -96,6 +96,8 @@ public class FillComposite extends Composite
 
   private final IDataBinding m_binding;
 
+  private GraphicFillSection m_fillSection;
+
   public FillComposite( final FormToolkit toolkit, final Composite parent, final IStyleInput<Fill> input, final int sldStyle )
   {
     super( parent, SWT.NONE );
@@ -170,8 +172,8 @@ public class FillComposite extends Composite
 
   private void createGraphicControl( final FormToolkit toolkit, final Composite parent )
   {
-    final GraphicFillSection section = new GraphicFillSection( toolkit, parent, m_input );
-    section.getSection().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );
+    m_fillSection = new GraphicFillSection( toolkit, parent, m_input );
+    m_fillSection.getSection().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );
   }
 
   private void createPreviewControl( final FormToolkit toolkit, final Composite parent )
@@ -188,5 +190,16 @@ public class FillComposite extends Composite
     final Point size = new Point( SWT.DEFAULT, 32 );
     m_previewComp = new FillPreview( m_previewGroup, size, m_input );
     m_previewComp.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+  }
+
+  public void updateControl( )
+  {
+    m_binding.getBindingContext().updateTargets();
+
+    if( m_fillSection != null )
+      m_fillSection.updateControl();
+
+    if( m_previewComp != null )
+      m_previewComp.updateControl();
   }
 }

@@ -54,6 +54,8 @@ import org.kalypsodeegree.graphics.sld.PointSymbolizer;
  */
 public class PointSymbolizerComposite extends AbstractSymbolizerComposite<PointSymbolizer>
 {
+  private GraphicSection m_graphicSection;
+
   public PointSymbolizerComposite( final FormToolkit toolkit, final Composite parent, final IStyleInput<PointSymbolizer> input )
   {
     super( toolkit, parent, input );
@@ -62,8 +64,8 @@ public class PointSymbolizerComposite extends AbstractSymbolizerComposite<PointS
   @Override
   protected Control createContent( final FormToolkit toolkit, final Composite parent )
   {
-    final GraphicSection section = new GraphicSection( toolkit, parent, getInput() );
-    return section.getSection();
+    m_graphicSection = new GraphicSection( toolkit, parent, getInput() );
+    return m_graphicSection.getSection();
   }
 
   @Override
@@ -75,5 +77,6 @@ public class PointSymbolizerComposite extends AbstractSymbolizerComposite<PointS
   @Override
   public void doUpdateControl( )
   {
+    m_graphicSection.updateControl();
   }
 }

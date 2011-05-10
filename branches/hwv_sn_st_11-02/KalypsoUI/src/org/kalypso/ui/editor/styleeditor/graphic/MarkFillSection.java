@@ -54,7 +54,7 @@ import org.kalypsodeegree.graphics.sld.Mark;
 /**
  * @author Gernot Belger
  */
-class MarkFillSection extends AbstractStyleElementSection<Mark, Fill>
+class MarkFillSection extends AbstractStyleElementSection<Mark, Fill, FillComposite>
 {
   protected MarkFillSection( final FormToolkit toolkit, final Composite parent, final IStyleInput<Mark> input )
   {
@@ -87,15 +87,16 @@ class MarkFillSection extends AbstractStyleElementSection<Mark, Fill>
   }
 
   @Override
-  protected void createItemControl( final Composite parent, final Fill item )
+  protected FillComposite createItemControl( final Composite parent, final Fill item )
   {
     final FormToolkit toolkit = getToolkit();
-    if( item == null )
-      toolkit.createLabel( parent, "No Fill set" );
-    else
-    {
-      final IStyleInput<Fill> input = new StyleInput<Fill>( item, getInput() );
-      new FillComposite( toolkit, parent, input, FillComposite.HIDE_GRAPHIC );
-    }
+    final IStyleInput<Fill> input = new StyleInput<Fill>( item, getInput() );
+    return new FillComposite( toolkit, parent, input, FillComposite.HIDE_GRAPHIC );
+  }
+
+  @Override
+  protected void updateItemControl( final FillComposite itemControl )
+  {
+    itemControl.updateControl();
   }
 }

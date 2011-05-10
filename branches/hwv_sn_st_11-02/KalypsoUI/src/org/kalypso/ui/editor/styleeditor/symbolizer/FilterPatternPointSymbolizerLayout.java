@@ -223,7 +223,6 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerCompos
     }
     catch( final FilterEvaluationException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 

@@ -59,7 +59,7 @@ public class RuleTabViewer extends AbstractManagedTabViewer<FeatureTypeStyle>
 {
   private AddRuleItemAction m_addAction;
 
-  public RuleTabViewer( final FormToolkit toolkit, final Composite parent, final FeatureTypeStyleInput input )
+  public RuleTabViewer( final FormToolkit toolkit, final Composite parent, final IFeatureTypeStyleInput input )
   {
     super( toolkit, parent, new RuleOrPatternCollection( input ) );
   }
@@ -81,8 +81,8 @@ public class RuleTabViewer extends AbstractManagedTabViewer<FeatureTypeStyle>
 
     m_addAction = new AddRuleItemAction( tabViewer );
     manager.add( m_addAction );
-    // FIXME: add pattern via a wizard that creates multiple normal rules
-// manager.add( new RuleTabAddPatternAction( m_tabViewer ) );
+    // TODO: add pattern via a wizard that creates multiple normal rules
+    // manager.add( new RuleTabAddPatternAction( m_tabViewer ) );
     manager.add( moveBackwardsAction );
     manager.add( moveForwardAction );
   }

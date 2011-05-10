@@ -102,6 +102,6 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerComposite<RasterSy
   @Override
   protected void doUpdateControl( )
   {
-
+    // FIXME
   }
 }

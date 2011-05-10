@@ -51,4 +51,6 @@ public interface ISymbolizerComposite<S extends Symbolizer>
   S getSymbolizer( );
 
   Control getControl( );
+
+  void updateControl( );
 }

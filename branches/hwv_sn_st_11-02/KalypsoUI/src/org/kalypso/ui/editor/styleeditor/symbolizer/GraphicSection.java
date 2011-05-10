@@ -53,7 +53,7 @@ import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 /**
  * @author Gernot Belger
  */
-public class GraphicSection extends AbstractStyleElementSection<PointSymbolizer, Graphic>
+public class GraphicSection extends AbstractStyleElementSection<PointSymbolizer, Graphic, GraphicComposite>
 {
   protected GraphicSection( final FormToolkit toolkit, final Composite parent, final IStyleInput<PointSymbolizer> input )
   {
@@ -98,15 +98,19 @@ public class GraphicSection extends AbstractStyleElementSection<PointSymbolizer,
   }
 
   @Override
-  protected void createItemControl( final Composite parent, final Graphic item )
+  protected GraphicComposite createItemControl( final Composite parent, final Graphic item )
   {
     final FormToolkit toolkit = getToolkit();
-    if( item == null )
-      toolkit.createLabel( parent, "No Graphic set" );
-    else
-    {
-      final IStyleInput<Graphic> input = new StyleInput<Graphic>( item, getInput() );
-      new GraphicComposite( toolkit, parent, input );
-    }
+    final IStyleInput<Graphic> input = new StyleInput<Graphic>( item, getInput() );
+    return new GraphicComposite( toolkit, parent, input );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.util.AbstractStyleElementSection#updateItemControl(java.lang.Object)
+   */
+  @Override
+  protected void updateItemControl( final GraphicComposite itemControl )
+  {
+    itemControl.updateControl();
   }
 }

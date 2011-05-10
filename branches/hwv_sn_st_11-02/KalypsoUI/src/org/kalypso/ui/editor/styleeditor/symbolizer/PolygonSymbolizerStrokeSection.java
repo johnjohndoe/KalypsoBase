@@ -55,7 +55,7 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 /**
  * @author Gernot Belger
  */
-class PolygonSymbolizerStrokeSection extends AbstractStyleElementSection<PolygonSymbolizer, Stroke>
+class PolygonSymbolizerStrokeSection extends AbstractStyleElementSection<PolygonSymbolizer, Stroke, StrokeComposite>
 {
   PolygonSymbolizerStrokeSection( final FormToolkit toolkit, final Composite parent, final IStyleInput<PolygonSymbolizer> input )
   {
@@ -85,15 +85,16 @@ class PolygonSymbolizerStrokeSection extends AbstractStyleElementSection<Polygon
   }
 
   @Override
-  protected void createItemControl( final Composite parent, final Stroke item )
+  protected StrokeComposite createItemControl( final Composite parent, final Stroke item )
   {
     final FormToolkit toolkit = getToolkit();
-    if( item == null )
-      toolkit.createLabel( parent, "No Stroke set" );
-    else
-    {
-      final IStyleInput<Stroke> input = new StyleInput<Stroke>( item, getInput() );
-      new StrokeComposite( toolkit, parent, input, SWT.NONE );
-    }
+    final IStyleInput<Stroke> input = new StyleInput<Stroke>( item, getInput() );
+    return new StrokeComposite( toolkit, parent, input, SWT.NONE );
+  }
+
+  @Override
+  protected void updateItemControl( final StrokeComposite itemControl )
+  {
+    itemControl.updateControl();
   }
 }

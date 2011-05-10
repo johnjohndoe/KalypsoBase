@@ -54,7 +54,7 @@ import org.kalypsodeegree.graphics.sld.GraphicFill;
 /**
  * @author Gernot Belger
  */
-public class GraphicFillSection extends AbstractStyleElementSection<Fill, Graphic>
+public class GraphicFillSection extends AbstractStyleElementSection<Fill, Graphic, GraphicComposite>
 {
   public GraphicFillSection( final FormToolkit toolkit, final Composite parent, final IStyleInput<Fill> input )
   {
@@ -87,20 +87,17 @@ public class GraphicFillSection extends AbstractStyleElementSection<Fill, Graphi
     return graphicFill.getGraphic();
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.util.AbstractStyleElementSection#createItemControl(org.eclipse.swt.widgets.Composite,
-   *      java.lang.Object)
-   */
   @Override
-  protected void createItemControl( final Composite parent, final Graphic item )
+  protected GraphicComposite createItemControl( final Composite parent, final Graphic item )
   {
     final FormToolkit toolkit = getToolkit();
-    if( item == null )
-      toolkit.createLabel( parent, "No Graphic Fill set" );
-    else
-    {
-      final IStyleInput<Graphic> input = new StyleInput<Graphic>( item, getInput() );
-      new GraphicComposite( toolkit, parent, input );
-    }
+    final IStyleInput<Graphic> input = new StyleInput<Graphic>( item, getInput() );
+    return new GraphicComposite( toolkit, parent, input );
+  }
+
+  @Override
+  protected void updateItemControl( final GraphicComposite itemControl )
+  {
+    itemControl.updateControl();
   }
 }

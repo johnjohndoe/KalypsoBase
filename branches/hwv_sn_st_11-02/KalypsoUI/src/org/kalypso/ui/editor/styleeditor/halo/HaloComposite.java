@@ -72,6 +72,10 @@ public class HaloComposite extends Composite
 
   private final IDataBinding m_binding;
 
+  private HaloStrokeSection m_strokeSection;
+
+  private HaloFillSection m_fillSection;
+
   public HaloComposite( final FormToolkit toolkit, final Composite parent, final IStyleInput<Halo> input )
   {
     super( parent, SWT.NONE );
@@ -113,12 +117,14 @@ public class HaloComposite extends Composite
 
   private Control createStrokeControl( final FormToolkit toolkit, final Composite parent )
   {
-    return new HaloStrokeSection( toolkit, parent, m_input ).getSection();
+    m_strokeSection = new HaloStrokeSection( toolkit, parent, m_input );
+    return m_strokeSection.getSection();
   }
 
   private Control createFillControl( final FormToolkit toolkit, final Composite parent )
   {
-    return new HaloFillSection( toolkit, parent, m_input ).getSection();
+    m_fillSection = new HaloFillSection( toolkit, parent, m_input );
+    return m_fillSection.getSection();
   }
 
   protected void handleStrokeChanged( final Stroke stroke )
@@ -133,5 +139,13 @@ public class HaloComposite extends Composite
   {
     if( m_context != null )
       m_context.fireStyleChanged();
+  }
+
+  public void updateControl( )
+  {
+    m_binding.getBindingContext().updateTargets();
+
+    m_strokeSection.updateControl();
+    m_fillSection.updateControl();
   }
 }

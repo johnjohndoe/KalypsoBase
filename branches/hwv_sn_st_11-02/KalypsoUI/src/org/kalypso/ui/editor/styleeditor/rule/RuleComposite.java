@@ -66,16 +66,13 @@ import org.kalypsodeegree.graphics.sld.Rule;
  * TODO:
  * <ul>
  * <li>Tooltips + Messages for all fields</li>
- * <li></li>
+ * <li>Implement LegendGraphic</li>
  * </ul>
  * 
  * @author F.Lindemann
  */
 public class RuleComposite extends Composite
 {
-  // FIXME: implement
-  // private GraphicComposite m_graphicComposite;
-
   private final IStyleInput<Rule> m_input;
 
   private RulePropertiesComposite m_rulePropertiesComposite;
@@ -105,8 +102,8 @@ public class RuleComposite extends Composite
     final Control rulePropertiesControl = createPropertiesControl( toolkit, parent );
     rulePropertiesControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
-    // FIXME: the legend graphic is nowhere supported in Kalypso, so we ommit it here
-    // FIXME: if we show it, we should show it inside a ExpandableSection or in a popup dialog, its just too big
+    // TODO: the legend graphic is nowhere supported in Kalypso, so we ommit it here
+    // if we show it, we should show it inside a ExpandableSection or in a popup dialog, its just too big
     // createLegendGraphicControl( toolkit, parent );
 
     final Control symbolizerTabsControl = createSymbolizerTabs( toolkit, parent );

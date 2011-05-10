@@ -76,7 +76,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
 {
   private final Map<String, RuleCollection> m_patterns = new HashMap<String, RuleCollection>();
 
-  public RuleOrPatternCollection( final FeatureTypeStyleInput input )
+  public RuleOrPatternCollection( final IFeatureTypeStyleInput input )
   {
     super( input );
 
@@ -192,7 +192,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
 
     getInput().fireStyleChanged();
 
-    // FIXME
+    // TODO
     // the title of a rule serves as key for the hashMap
 // final String key = rule.getName();
     // // it it is a pattern, add to ruleCollection
@@ -225,7 +225,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
 
     m_patterns.remove( ruleCollection.getId() );
 
-    // FIXME: remove all rules of this collection from the style
+    // TODO: remove all rules of this collection from the style
     // m_fts.removeRule( rule );
     getInput().fireStyleChanged();
   }

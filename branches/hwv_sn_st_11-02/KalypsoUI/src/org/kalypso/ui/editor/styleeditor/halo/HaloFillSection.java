@@ -54,7 +54,7 @@ import org.kalypsodeegree.graphics.sld.Halo;
 /**
  * @author Gernot Belger
  */
-class HaloFillSection extends AbstractStyleElementSection<Halo, Fill>
+class HaloFillSection extends AbstractStyleElementSection<Halo, Fill, FillComposite>
 {
   protected HaloFillSection( final FormToolkit toolkit, final Composite parent, final IStyleInput<Halo> input )
   {
@@ -87,15 +87,19 @@ class HaloFillSection extends AbstractStyleElementSection<Halo, Fill>
   }
 
   @Override
-  protected void createItemControl( final Composite parent, final Fill item )
+  protected FillComposite createItemControl( final Composite parent, final Fill item )
   {
     final FormToolkit toolkit = getToolkit();
-    if( item == null )
-      toolkit.createLabel( parent, "No Fill set" );
-    else
-    {
-      final IStyleInput<Fill> input = new StyleInput<Fill>( item, getInput() );
-      new FillComposite( toolkit, parent, input, FillComposite.HIDE_GRAPHIC );
-    }
+    final IStyleInput<Fill> input = new StyleInput<Fill>( item, getInput() );
+    return new FillComposite( toolkit, parent, input, FillComposite.HIDE_GRAPHIC );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.util.AbstractStyleElementSection#updateItemControl(java.lang.Object)
+   */
+  @Override
+  protected void updateItemControl( final FillComposite itemControl )
+  {
+    itemControl.updateControl();
   }
 }

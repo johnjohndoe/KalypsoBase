@@ -54,7 +54,7 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 /**
  * @author Gernot Belger
  */
-class MarkStrokeSection extends AbstractStyleElementSection<Mark, Stroke>
+class MarkStrokeSection extends AbstractStyleElementSection<Mark, Stroke, StrokeComposite>
 {
   MarkStrokeSection( final FormToolkit toolkit, final Composite parent, final IStyleInput<Mark> input )
   {
@@ -84,16 +84,19 @@ class MarkStrokeSection extends AbstractStyleElementSection<Mark, Stroke>
   }
 
   @Override
-  protected void createItemControl( final Composite parent, final Stroke item )
+  protected StrokeComposite createItemControl( final Composite parent, final Stroke item )
   {
     final FormToolkit toolkit = getToolkit();
-    if( item == null )
-      toolkit.createLabel( parent, "No Stroke set" );
-    else
-    {
-      final IStyleInput<Stroke> input = new StyleInput<Stroke>( item, getInput() );
-      // REMARK: hide grafik stroke, too deep nesting does not make sense, even if it is allowed by SLD
-      new StrokeComposite( getToolkit(), parent, input, StrokeComposite.HIDE_GRAPHIC );
-    }
+    final IStyleInput<Stroke> input = new StyleInput<Stroke>( item, getInput() );
+    return new StrokeComposite( toolkit, parent, input, StrokeComposite.HIDE_GRAPHIC );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.util.AbstractStyleElementSection#updateItemControl(java.lang.Object)
+   */
+  @Override
+  protected void updateItemControl( final StrokeComposite itemControl )
+  {
+    itemControl.updateControl();
   }
 }

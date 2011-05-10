@@ -57,14 +57,12 @@ import org.kalypso.ui.editor.styleeditor.preview.SymbolizerPreview;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 
 /**
- * TODO: we should not show two individual previews for fill and stroke but one combined preview for an example polygon<br/>
- * TODO: fill / stroke should be allowed to be null -> present 'add' action in that case<br/>
- * TODO: it should be possible to remove (set to null) a stroke or fill
- * 
  * @author F.Lindemann
  */
 public class PolygonSymbolizerComposite extends AbstractSymbolizerComposite<PolygonSymbolizer>
 {
+  private PolygonSymbolizerStrokeSection m_strokeSection;
+
   public PolygonSymbolizerComposite( final FormToolkit toolkit, final Composite parent, final IStyleInput<PolygonSymbolizer> input )
   {
     super( toolkit, parent, input );
@@ -84,7 +82,8 @@ public class PolygonSymbolizerComposite extends AbstractSymbolizerComposite<Poly
 
   private Control createStrokeControl( final Composite panel )
   {
-    return new PolygonSymbolizerStrokeSection( getToolkit(), panel, getInput() ).getSection();
+    m_strokeSection = new PolygonSymbolizerStrokeSection( getToolkit(), panel, getInput() );
+    return m_strokeSection.getSection();
   }
 
   private Control createFillControl( final Composite parent )
@@ -101,5 +100,6 @@ public class PolygonSymbolizerComposite extends AbstractSymbolizerComposite<Poly
   @Override
   public void doUpdateControl( )
   {
+    m_strokeSection.updateControl();
   }
 }

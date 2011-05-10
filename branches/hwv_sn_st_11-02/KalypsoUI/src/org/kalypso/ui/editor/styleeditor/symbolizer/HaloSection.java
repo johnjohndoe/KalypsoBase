@@ -56,7 +56,7 @@ import org.kalypsodeegree.graphics.sld.TextSymbolizer;
  * 
  * @author Gernot Belger
  */
-public class HaloSection extends AbstractStyleElementSection<TextSymbolizer, Halo>
+public class HaloSection extends AbstractStyleElementSection<TextSymbolizer, Halo, HaloComposite>
 {
   protected HaloSection( final FormToolkit toolkit, final Composite parent, final IStyleInput<TextSymbolizer> input )
   {
@@ -86,15 +86,16 @@ public class HaloSection extends AbstractStyleElementSection<TextSymbolizer, Hal
   }
 
   @Override
-  protected void createItemControl( final Composite parent, final Halo item )
+  protected HaloComposite createItemControl( final Composite parent, final Halo item )
   {
     final FormToolkit toolkit = getToolkit();
-    if( item == null )
-      toolkit.createLabel( parent, "No Halo set" );
-    else
-    {
-      final IStyleInput<Halo> input = new StyleInput<Halo>( item, getInput() );
-      new HaloComposite( toolkit, parent, input );
-    }
+    final IStyleInput<Halo> input = new StyleInput<Halo>( item, getInput() );
+    return new HaloComposite( toolkit, parent, input );
+  }
+
+  @Override
+  protected void updateItemControl( final HaloComposite itemControl )
+  {
+    itemControl.updateControl();
   }
 }

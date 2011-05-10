@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
+import org.kalypso.ui.editor.styleeditor.symbolizer.ISymbolizerComposite;
 import org.kalypso.ui.editor.styleeditor.symbolizer.LineSymbolizerComposite;
 import org.kalypso.ui.editor.styleeditor.symbolizer.PointSymbolizerComposite;
 import org.kalypso.ui.editor.styleeditor.symbolizer.PolygonSymbolizerComposite;
@@ -65,23 +66,19 @@ public final class SymbolizerTabItem<S extends Symbolizer> implements ISymbolize
 {
   private final IStyleInput<S> m_input;
 
+  private ISymbolizerComposite< ? > m_symbolizerComposite;
+
   public SymbolizerTabItem( final IStyleInput<S> input )
   {
     m_input = input;
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.rule.ISymbolizerTabItem#getSymbolizer()
-   */
   @Override
   public Symbolizer getSymbolizer( )
   {
     return m_input.getData();
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.tab.ITabItem#getItemLabel()
-   */
   @Override
   public String getItemLabel( )
   {
@@ -104,22 +101,20 @@ public final class SymbolizerTabItem<S extends Symbolizer> implements ISymbolize
     return "<None>";
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.tab.ITabItem#getItemImage()
-   */
   @Override
   public Image getItemImage( )
   {
     return null;
   }
 
-  /**
-   * @see org.kalypso.commons.eclipse.jface.viewers.ITabItem#createItemControl(org.eclipse.ui.forms.widgets.FormToolkit,
-   *      org.eclipse.swt.widgets.Composite)
-   */
-  @SuppressWarnings("unchecked")
   @Override
   public Control createItemControl( final FormToolkit toolkit, final Composite parent )
+  {
+    m_symbolizerComposite = createSymbolizerComposite( toolkit, parent );
+    return m_symbolizerComposite.getControl();
+  }
+
+  private ISymbolizerComposite< ? > createSymbolizerComposite( final FormToolkit toolkit, final Composite parent )
   {
     final S symbolizer = m_input.getData();
     if( symbolizer instanceof PointSymbolizer )
@@ -140,11 +135,9 @@ public final class SymbolizerTabItem<S extends Symbolizer> implements ISymbolize
     return new SymbolizerComposite( toolkit, parent, (IStyleInput<Symbolizer>) m_input );
   }
 
-  /**
-   * @see org.kalypso.commons.eclipse.jface.viewers.ITabItem#updateItemControl()
-   */
   @Override
   public void updateItemControl( )
   {
+    m_symbolizerComposite.updateControl();
   }
 }

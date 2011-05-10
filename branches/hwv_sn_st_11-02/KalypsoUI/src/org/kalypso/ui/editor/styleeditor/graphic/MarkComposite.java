@@ -55,7 +55,6 @@ import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
 import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.graphics.sld.Mark;
-import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author Gernot Belger
@@ -84,28 +83,9 @@ public class MarkComposite extends Composite
     final Composite body = form.getBody();
     GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( true ).applyTo( body );
 
-    initMark();
-
     createWellKnownName( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     createStroke( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createFill( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-  }
-
-  // FIXME: instead: create/remove stroke/fill on user demand
-  private void initMark( )
-  {
-    final Mark mark = getMark();
-
-    if( mark.getFill() == null )
-      mark.setFill( StyleFactory.createFill() );
-
-    if( mark.getStroke() == null )
-      mark.setStroke( StyleFactory.createStroke() );
-  }
-
-  private Mark getMark( )
-  {
-    return m_input.getData();
   }
 
   private Control createWellKnownName( final FormToolkit toolkit, final Composite parent )

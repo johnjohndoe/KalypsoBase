@@ -555,7 +555,6 @@ public class RulePatternTabItem implements ITabItem
   @Override
   public void updateItemControl( )
   {
-    // TODO Auto-generated method stub
   }
 
   private String[] getNumericFeatureTypePropertylist( )
@@ -630,7 +629,7 @@ public class RulePatternTabItem implements ITabItem
 
   void removeRule( final Rule rule )
   {
-    // FIXME
+    // TODO
 // final FeatureTypeStyle style = .getStyle();
 // style.removeRule( rule );
   }

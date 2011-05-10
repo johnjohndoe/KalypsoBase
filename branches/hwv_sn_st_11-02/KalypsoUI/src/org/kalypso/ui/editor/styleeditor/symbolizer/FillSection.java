@@ -55,7 +55,7 @@ import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 /**
  * @author Gernot Belger
  */
-class FillSection extends AbstractStyleElementSection<PolygonSymbolizer, Fill>
+class FillSection extends AbstractStyleElementSection<PolygonSymbolizer, Fill, FillComposite>
 {
   protected FillSection( final FormToolkit toolkit, final Composite parent, final IStyleInput<PolygonSymbolizer> input )
   {
@@ -88,15 +88,16 @@ class FillSection extends AbstractStyleElementSection<PolygonSymbolizer, Fill>
   }
 
   @Override
-  protected void createItemControl( final Composite parent, final Fill item )
+  protected FillComposite createItemControl( final Composite parent, final Fill item )
   {
     final FormToolkit toolkit = getToolkit();
-    if( item == null )
-      toolkit.createLabel( parent, "No Fill set" );
-    else
-    {
-      final IStyleInput<Fill> input = new StyleInput<Fill>( item, getInput() );
-      new FillComposite( toolkit, parent, input, SWT.NONE );
-    }
+    final IStyleInput<Fill> input = new StyleInput<Fill>( item, getInput() );
+    return new FillComposite( toolkit, parent, input, SWT.NONE );
+  }
+
+  @Override
+  protected void updateItemControl( final FillComposite itemControl )
+  {
+    itemControl.updateControl();
   }
 }
