@@ -93,7 +93,7 @@ public class HaloSection extends AbstractStyleElementSection<TextSymbolizer, Hal
       toolkit.createLabel( parent, "No Halo set" );
     else
     {
-      final IStyleInput<Halo> input = new StyleInput<Halo>( item, getContext() );
+      final IStyleInput<Halo> input = new StyleInput<Halo>( item, getInput() );
       new HaloComposite( toolkit, parent, input );
     }
   }

@@ -56,8 +56,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.eclipse.jface.viewers.ITabItem;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
+import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
+import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.panels.AddFilterPropertyPanel;
 import org.kalypso.ui.editor.styleeditor.panels.EditSymbolizerPanel;
@@ -71,7 +72,6 @@ import org.kalypso.ui.editor.styleeditor.rule.SymbolizerType;
 import org.kalypso.ui.editor.styleeditor.symbolizer.FilterPatternSymbolizerTabItemBuilder;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.Operation;
-import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
@@ -90,8 +90,6 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
  */
 public class RulePatternTabItem implements ITabItem
 {
-  private final IStyleContext m_context;
-
   private int m_focusedRuleItem = -1;
 
   private int m_focusedSymbolizerItem = -1;
@@ -102,17 +100,16 @@ public class RulePatternTabItem implements ITabItem
 
   double step = -1;
 
-  private final RuleCollection m_ruleCollection;
+  private final IStyleInput<RuleCollection> m_input;
 
-  public RulePatternTabItem( final IStyleContext context, final RuleCollection ruleCollection )
+  public RulePatternTabItem( final IStyleInput<RuleCollection> input )
   {
-    m_context = context;
-    m_ruleCollection = ruleCollection;
+    m_input = input;
   }
 
   public RuleCollection getRuleCollection( )
   {
-    return m_ruleCollection;
+    return m_input.getData();
   }
 
   /**
@@ -121,10 +118,10 @@ public class RulePatternTabItem implements ITabItem
   @Override
   public String getItemLabel( )
   {
-    if( m_ruleCollection.size() == 0 )
+    if( getRuleCollection().size() == 0 )
       return null;
 
-    final Rule tmpRule = m_ruleCollection.get( 0 );
+    final Rule tmpRule = getRuleCollection().get( 0 );
     // PatternRule only possible for PropertyIsBetweenOperation
     if( tmpRule.getFilter() == null || !((((ComplexFilter) tmpRule.getFilter()).getOperation()) instanceof PropertyIsBetweenOperation) )
       return null;
@@ -153,10 +150,10 @@ public class RulePatternTabItem implements ITabItem
   @Override
   public Control createItemControl( final FormToolkit toolkit, final Composite parent )
   {
-    if( m_ruleCollection.size() == 0 )
+    if( getRuleCollection().size() == 0 )
       return null;
 
-    final Rule tmpRule = m_ruleCollection.get( 0 );
+    final Rule tmpRule = getRuleCollection().get( 0 );
     // PatternRule only possible for PropertyIsBetweenOperation
     if( tmpRule.getFilter() == null || !((((ComplexFilter) tmpRule.getFilter()).getOperation()) instanceof PropertyIsBetweenOperation) )
       return null;
@@ -200,9 +197,9 @@ public class RulePatternTabItem implements ITabItem
         }
         else
         {
-          for( int counter6 = 0; counter6 < m_ruleCollection.size(); counter6++ )
+          for( int counter6 = 0; counter6 < getRuleCollection().size(); counter6++ )
           {
-            m_ruleCollection.get( counter6 ).setTitle( newValue );
+            getRuleCollection().get( counter6 ).setTitle( newValue );
           }
           fireStyleChanged();
         }
@@ -228,8 +225,8 @@ public class RulePatternTabItem implements ITabItem
           return "" + tmpRule.getMinScaleDenominator(); //$NON-NLS-1$
         }
 
-        for( int i = 0; i < m_ruleCollection.size(); i++ )
-          m_ruleCollection.get( i ).setMinScaleDenominator( min );
+        for( int i = 0; i < getRuleCollection().size(); i++ )
+          getRuleCollection().get( i ).setMinScaleDenominator( min );
         fireStyleChanged();
         return null;
       }
@@ -262,8 +259,8 @@ public class RulePatternTabItem implements ITabItem
         // to keep the current view -> otherwise the rule would automatically
         // exculde this configuration
         max += 0.01;
-        for( int counter8 = 0; counter8 < m_ruleCollection.size(); counter8++ )
-          m_ruleCollection.get( counter8 ).setMaxScaleDenominator( max );
+        for( int counter8 = 0; counter8 < getRuleCollection().size(); counter8++ )
+          getRuleCollection().get( counter8 ).setMaxScaleDenominator( max );
         fireStyleChanged();
         return null;
       }
@@ -280,18 +277,18 @@ public class RulePatternTabItem implements ITabItem
       public void valueChanged( final PanelEvent event )
       {
         final String filterPropertyName = addFilterPropertyPanel.getSelection();
-        for( int i = 0; i < m_ruleCollection.size(); i++ )
+        for( int i = 0; i < getRuleCollection().size(); i++ )
         {
-          final ComplexFilter filter = (ComplexFilter) m_ruleCollection.get( i ).getFilter();
+          final ComplexFilter filter = (ComplexFilter) getRuleCollection().get( i ).getFilter();
           final PropertyIsBetweenOperation oldOperation = (PropertyIsBetweenOperation) filter.getOperation();
           final PropertyIsBetweenOperation operation = new PropertyIsBetweenOperation( new PropertyName( filterPropertyName ), oldOperation.getLowerBoundary(), oldOperation.getUpperBoundary() );
-          m_ruleCollection.get( i ).setFilter( new ComplexFilter( operation ) );
+          getRuleCollection().get( i ).setFilter( new ComplexFilter( operation ) );
         }
         fireStyleChanged();
       }
     } );
 
-    final IFeatureType featureType = m_context.getFeatureType();
+    final IFeatureType featureType = m_input.getFeatureType();
 // final AddSymbolizerPanel addSymbolizerPanel = new AddSymbolizerPanel( toolkit, composite,
 // MessageBundle.STYLE_EDITOR_SYMBOLIZER, featureType, false );
 
@@ -307,13 +304,13 @@ public class RulePatternTabItem implements ITabItem
       {
         // find out the settings of the filter - min, max and step values
 
-        for( int j = 0; j < m_ruleCollection.size(); j++ )
+        for( int j = 0; j < getRuleCollection().size(); j++ )
         {
           // verify again that it is a complexFilter and of type PropertyIs
           // Between for every rule
-          if( m_ruleCollection.get( j ).getFilter() instanceof ComplexFilter )
+          if( getRuleCollection().get( j ).getFilter() instanceof ComplexFilter )
           {
-            final Operation ruleOperation = ((ComplexFilter) m_ruleCollection.get( j ).getFilter()).getOperation();
+            final Operation ruleOperation = ((ComplexFilter) getRuleCollection().get( j ).getFilter()).getOperation();
             if( ruleOperation.getOperatorId() == OperationDefines.PROPERTYISBETWEEN )
             {
               final PropertyIsBetweenOperation isBetweenOperation = (PropertyIsBetweenOperation) ruleOperation;
@@ -396,7 +393,7 @@ public class RulePatternTabItem implements ITabItem
           final Symbolizer[] symbolizer = tmpRule.getSymbolizers();
 
           // first add those that are existing and are to be kept
-          final int currentSize = m_ruleCollection.size();
+          final int currentSize = getRuleCollection().size();
 
           if( patternRuleNumber <= currentSize )
           {
@@ -408,8 +405,8 @@ public class RulePatternTabItem implements ITabItem
               else
                 upperBoundary = new BoundaryExpression( "" + (minValue + ((i + 1) * step)) ); //$NON-NLS-1$
               operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
-              m_ruleCollection.get( i ).setFilter( new ComplexFilter( operation ) );
-              ruleList.add( m_ruleCollection.get( i ) );
+              getRuleCollection().get( i ).setFilter( new ComplexFilter( operation ) );
+              ruleList.add( getRuleCollection().get( i ) );
             }
           }
           else if( patternRuleNumber > currentSize )
@@ -422,8 +419,8 @@ public class RulePatternTabItem implements ITabItem
               else
                 upperBoundary = new BoundaryExpression( "" + (minValue + ((i + 1) * step)) ); //$NON-NLS-1$
               operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
-              m_ruleCollection.get( i ).setFilter( new ComplexFilter( operation ) );
-              ruleList.add( m_ruleCollection.get( i ) );
+              getRuleCollection().get( i ).setFilter( new ComplexFilter( operation ) );
+              ruleList.add( getRuleCollection().get( i ) );
             }
             for( int i = currentSize; i < patternRuleNumber; i++ )
             {
@@ -438,10 +435,10 @@ public class RulePatternTabItem implements ITabItem
           }
 
           // then remove old ones
-          final int collSize = m_ruleCollection.size() - 1;
+          final int collSize = getRuleCollection().size() - 1;
           for( int i = collSize; i >= 0; i-- )
           {
-            removeRule( m_ruleCollection.get( i ) );
+            removeRule( getRuleCollection().get( i ) );
             // FIXME
 // getRulePatternCollection().removeRule( m_ruleCollection.get( i ) );
           }
@@ -451,11 +448,11 @@ public class RulePatternTabItem implements ITabItem
           {
             // FIXME
 // getRulePatternCollection().addRule( ruleList.get( j ) );
-            final FeatureTypeStyle style = m_context.getStyle();
-            style.addRule( ruleList.get( j ) );
+// final FeatureTypeStyle style = m_input.getStyle();
+// style.addRule( ruleList.get( j ) );
           }
           // update
-          drawSymbolizerTabItems( toolkit, tmpRule, symbolizerTabFolder, m_ruleCollection );
+          drawSymbolizerTabItems( toolkit, tmpRule, symbolizerTabFolder, getRuleCollection() );
           fireStyleChanged();
         }
       } );
@@ -472,46 +469,46 @@ public class RulePatternTabItem implements ITabItem
           final int index1 = symbolizerTabFolder.getSelectionIndex();
           if( index1 >= 0 )
           {
-            for( int i = 0; i < m_ruleCollection.size(); i++ )
+            for( int i = 0; i < getRuleCollection().size(); i++ )
             {
-              final Symbolizer s[] = m_ruleCollection.get( i ).getSymbolizers();
-              m_ruleCollection.get( i ).removeSymbolizer( s[index1] );
+              final Symbolizer s[] = getRuleCollection().get( i ).getSymbolizers();
+              getRuleCollection().get( i ).removeSymbolizer( s[index1] );
             }
             symbolizerTabFolder.getItem( index1 ).dispose();
             setFocusedSymbolizerItem( index1 );
 // setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
             fireStyleChanged();
           }
-          drawSymbolizerTabItems( toolkit, m_ruleCollection.get( 0 ), symbolizerTabFolder, m_ruleCollection );
+          drawSymbolizerTabItems( toolkit, getRuleCollection().get( 0 ), symbolizerTabFolder, getRuleCollection() );
           symbolizerTabFolder.setSelection( index1 - 1 );
         }
         else if( action == EditSymbolizerPanel.FOR_SYMB )
         {
           final int index1 = symbolizerTabFolder.getSelectionIndex();
-          if( index1 == (m_ruleCollection.get( 0 ).getSymbolizers().length - 1) || index1 < 0 )
+          if( index1 == (getRuleCollection().get( 0 ).getSymbolizers().length - 1) || index1 < 0 )
           {
             // nothing
           }
           else
           {
-            for( int i = 0; i < m_ruleCollection.size(); i++ )
+            for( int i = 0; i < getRuleCollection().size(); i++ )
             {
-              final Symbolizer newOrderedObjects[] = new Symbolizer[m_ruleCollection.get( i ).getSymbolizers().length];
-              for( int counter4 = 0; counter4 < m_ruleCollection.get( i ).getSymbolizers().length; counter4++ )
+              final Symbolizer newOrderedObjects[] = new Symbolizer[getRuleCollection().get( i ).getSymbolizers().length];
+              for( int counter4 = 0; counter4 < getRuleCollection().get( i ).getSymbolizers().length; counter4++ )
               {
                 if( counter4 == index1 )
-                  newOrderedObjects[counter4] = m_ruleCollection.get( i ).getSymbolizers()[counter4 + 1];
+                  newOrderedObjects[counter4] = getRuleCollection().get( i ).getSymbolizers()[counter4 + 1];
                 else if( counter4 == (index1 + 1) )
-                  newOrderedObjects[counter4] = m_ruleCollection.get( i ).getSymbolizers()[counter4 - 1];
+                  newOrderedObjects[counter4] = getRuleCollection().get( i ).getSymbolizers()[counter4 - 1];
                 else
-                  newOrderedObjects[counter4] = m_ruleCollection.get( i ).getSymbolizers()[counter4];
+                  newOrderedObjects[counter4] = getRuleCollection().get( i ).getSymbolizers()[counter4];
               }
-              m_ruleCollection.get( i ).setSymbolizers( newOrderedObjects );
+              getRuleCollection().get( i ).setSymbolizers( newOrderedObjects );
             }
             setFocusedSymbolizerItem( index1 + 1 );
 // setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
             fireStyleChanged();
-            drawSymbolizerTabItems( toolkit, m_ruleCollection.get( 0 ), symbolizerTabFolder, m_ruleCollection );
+            drawSymbolizerTabItems( toolkit, getRuleCollection().get( 0 ), symbolizerTabFolder, getRuleCollection() );
             symbolizerTabFolder.setSelection( index1 + 1 );
           }
         }
@@ -520,24 +517,24 @@ public class RulePatternTabItem implements ITabItem
           final int index1 = symbolizerTabFolder.getSelectionIndex();
           if( index1 > 0 )
           {
-            for( int i = 0; i < m_ruleCollection.size(); i++ )
+            for( int i = 0; i < getRuleCollection().size(); i++ )
             {
-              final Symbolizer newOrderedObjects[] = new Symbolizer[m_ruleCollection.get( i ).getSymbolizers().length];
-              for( int counter5 = 0; counter5 < m_ruleCollection.get( i ).getSymbolizers().length; counter5++ )
+              final Symbolizer newOrderedObjects[] = new Symbolizer[getRuleCollection().get( i ).getSymbolizers().length];
+              for( int counter5 = 0; counter5 < getRuleCollection().get( i ).getSymbolizers().length; counter5++ )
               {
                 if( counter5 == index1 )
-                  newOrderedObjects[counter5] = m_ruleCollection.get( i ).getSymbolizers()[counter5 - 1];
+                  newOrderedObjects[counter5] = getRuleCollection().get( i ).getSymbolizers()[counter5 - 1];
                 else if( counter5 == (index1 - 1) )
-                  newOrderedObjects[counter5] = m_ruleCollection.get( i ).getSymbolizers()[counter5 + 1];
+                  newOrderedObjects[counter5] = getRuleCollection().get( i ).getSymbolizers()[counter5 + 1];
                 else
-                  newOrderedObjects[counter5] = m_ruleCollection.get( i ).getSymbolizers()[counter5];
+                  newOrderedObjects[counter5] = getRuleCollection().get( i ).getSymbolizers()[counter5];
               }
-              m_ruleCollection.get( i ).setSymbolizers( newOrderedObjects );
+              getRuleCollection().get( i ).setSymbolizers( newOrderedObjects );
             }
             setFocusedSymbolizerItem( index1 - 1 );
 // setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
             fireStyleChanged();
-            drawSymbolizerTabItems( toolkit, m_ruleCollection.get( 0 ), symbolizerTabFolder, m_ruleCollection );
+            drawSymbolizerTabItems( toolkit, getRuleCollection().get( 0 ), symbolizerTabFolder, getRuleCollection() );
             symbolizerTabFolder.setSelection( index1 - 1 );
           }
         }
@@ -545,7 +542,7 @@ public class RulePatternTabItem implements ITabItem
     } );
 
     // ******* DISPLAY ALL symbolizers
-    drawSymbolizerTabItems( toolkit, tmpRule, symbolizerTabFolder, m_ruleCollection );
+    drawSymbolizerTabItems( toolkit, tmpRule, symbolizerTabFolder, getRuleCollection() );
 
 // m_focusedRuleItem = index;
 // composite.pack( true );
@@ -563,7 +560,7 @@ public class RulePatternTabItem implements ITabItem
 
   private String[] getNumericFeatureTypePropertylist( )
   {
-    final IFeatureType featureType = m_context.getFeatureType();
+    final IFeatureType featureType = m_input.getFeatureType();
     final IPropertyType[] numericFeatureTypePropertylist = RuleTabUtils.getNumericProperties( featureType );
     final String[] tmpList = new String[numericFeatureTypePropertylist.length];
     for( int i = 0; i < numericFeatureTypePropertylist.length; i++ )
@@ -584,14 +581,15 @@ public class RulePatternTabItem implements ITabItem
     if( rule.getSymbolizers().length == 0 )
     {
       // add dummy invisilbe placeholder
-      new FilterPatternSymbolizerTabItemBuilder( toolkit, symbolizerTabFolder, null, m_context, ruleCollection, -1 );
+      new FilterPatternSymbolizerTabItemBuilder( toolkit, symbolizerTabFolder, null, ruleCollection, -1 );
       symbolizerTabFolder.setVisible( false );
     }
     else
     {
       for( int j = 0; j < rule.getSymbolizers().length; j++ )
       {
-        new FilterPatternSymbolizerTabItemBuilder( toolkit, symbolizerTabFolder, rule.getSymbolizers()[j], m_context, ruleCollection, j );
+        final IStyleInput<Symbolizer> input = new StyleInput<Symbolizer>( rule.getSymbolizers()[j], m_input );
+        new FilterPatternSymbolizerTabItemBuilder( toolkit, symbolizerTabFolder, input, ruleCollection, j );
       }
       symbolizerTabFolder.pack();
       symbolizerTabFolder.setSize( 224, 259 );
@@ -601,7 +599,7 @@ public class RulePatternTabItem implements ITabItem
 
   Symbolizer[] cloneSymbolizer( final Symbolizer[] symbolizers )
   {
-    final IFeatureType featureType = m_context.getFeatureType();
+    final IFeatureType featureType = m_input.getFeatureType();
     final Symbolizer[] returnArray = new Symbolizer[symbolizers.length];
     for( int i = 0; i < symbolizers.length; i++ )
     {
@@ -632,8 +630,9 @@ public class RulePatternTabItem implements ITabItem
 
   void removeRule( final Rule rule )
   {
-    final FeatureTypeStyle style = m_context.getStyle();
-    style.removeRule( rule );
+    // FIXME
+// final FeatureTypeStyle style = .getStyle();
+// style.removeRule( rule );
   }
 
   public int getFocusedRuleItem( )
@@ -658,7 +657,7 @@ public class RulePatternTabItem implements ITabItem
 
   private void fireStyleChanged( )
   {
-    m_context.fireStyleChanged();
+    m_input.fireStyleChanged();
   }
 
   /**

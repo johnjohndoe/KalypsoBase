@@ -45,8 +45,8 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.eclipse.jface.viewers.ITabItem;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
+import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypso.ui.editor.styleeditor.tabs.AbstractTabList;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
@@ -77,7 +77,6 @@ public class SymbolizerTabList extends AbstractTabList<Rule>
     internalClear();
 
     final Rule rule = getData();
-    final IStyleContext context = getContext();
 
     final Symbolizer[] symbolizers = rule == null ? new Symbolizer[0] : rule.getSymbolizers();
     for( final Symbolizer element : symbolizers )
@@ -85,7 +84,7 @@ public class SymbolizerTabList extends AbstractTabList<Rule>
       if( oldItems.containsKey( element ) )
         internalAddItem( oldItems.get( element ) );
       else
-        internalAddItem( new SymbolizerTabItem<Symbolizer>( element, context ) );
+        internalAddItem( new SymbolizerTabItem<Symbolizer>( new StyleInput<Symbolizer>( element, getInput() ) ) );
     }
 
     fireChanged();
@@ -102,7 +101,7 @@ public class SymbolizerTabList extends AbstractTabList<Rule>
     final Rule rule = getData();
     rule.addSymbolizer( symbolizer );
 
-    fireInputChanged();
+    getInput().fireStyleChanged();
 
     final ITabItem[] items = getItems();
     return items[items.length - 1];
@@ -121,7 +120,7 @@ public class SymbolizerTabList extends AbstractTabList<Rule>
     final Rule rule = getData();
     rule.removeSymbolizer( symbolizer );
 
-    fireInputChanged();
+    getInput().fireStyleChanged();
   }
 
   /**
@@ -141,7 +140,7 @@ public class SymbolizerTabList extends AbstractTabList<Rule>
 
     rule.setSymbolizers( newSymbolizer );
 
-    fireInputChanged();
+    getInput().fireStyleChanged();
   }
 
   /**

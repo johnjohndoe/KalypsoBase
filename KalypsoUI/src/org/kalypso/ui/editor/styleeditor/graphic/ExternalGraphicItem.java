@@ -44,9 +44,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
-import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypsodeegree.graphics.sld.ExternalGraphic;
 
 /**
@@ -56,9 +54,9 @@ public class ExternalGraphicItem implements IGraphicElementItem
 {
   private final IStyleInput<ExternalGraphic> m_input;
 
-  public ExternalGraphicItem( final ExternalGraphic externalGraphic, final IStyleContext context )
+  public ExternalGraphicItem( final IStyleInput<ExternalGraphic> input )
   {
-    m_input = new StyleInput<ExternalGraphic>( externalGraphic, context );
+    m_input = input;
   }
 
   @Override

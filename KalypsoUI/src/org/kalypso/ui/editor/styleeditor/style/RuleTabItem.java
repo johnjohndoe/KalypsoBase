@@ -43,16 +43,12 @@ package org.kalypso.ui.editor.styleeditor.style;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.eclipse.jface.viewers.ITabItem;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
-import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypso.ui.editor.styleeditor.rule.RuleComposite;
 import org.kalypsodeegree.graphics.sld.Rule;
 
@@ -63,19 +59,17 @@ public class RuleTabItem implements ITabItem
 {
   private RuleComposite m_ruleComposite;
 
-  private final Rule m_rule;
+  private final IStyleInput<Rule> m_input;
 
-  private final IStyleContext m_context;
 
-  public RuleTabItem( final Rule rule, final IStyleContext context )
+  public RuleTabItem( final IStyleInput<Rule> input )
   {
-    m_rule = rule;
-    m_context = context;
+    m_input = input;
   }
 
   public Rule getRule( )
   {
-    return m_rule;
+    return m_input.getData();
   }
 
   /**
@@ -84,11 +78,11 @@ public class RuleTabItem implements ITabItem
   @Override
   public String getItemLabel( )
   {
-    final String title = m_rule.getTitle();
+    final String title = getRule().getTitle();
     if( title != null )
       return title;
 
-    final String name = m_rule.getName();
+    final String name = getRule().getName();
     if( name != null )
       return name;
 
@@ -111,19 +105,7 @@ public class RuleTabItem implements ITabItem
   @Override
   public Control createItemControl( final FormToolkit toolkit, final Composite parent )
   {
-    final IStyleInput<Rule> input = new StyleInput<Rule>( m_rule, m_context );
-
-    m_ruleComposite = new RuleComposite( toolkit, parent, input );
-
-    m_ruleComposite.addDisposeListener( new DisposeListener()
-    {
-      @Override
-      public void widgetDisposed( final DisposeEvent e )
-      {
-        input.dispose();
-      }
-    } );
-
+    m_ruleComposite = new RuleComposite( toolkit, parent, m_input );
     return m_ruleComposite;
   }
 
@@ -133,6 +115,7 @@ public class RuleTabItem implements ITabItem
   @Override
   public void updateItemControl( )
   {
+    m_ruleComposite.updateControl();
   }
 
   /**
@@ -151,7 +134,7 @@ public class RuleTabItem implements ITabItem
   public int hashCode( )
   {
     final HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append( m_rule );
+    builder.append( getRule() );
     return builder.toHashCode();
   }
 
@@ -173,7 +156,7 @@ public class RuleTabItem implements ITabItem
     final RuleTabItem rhs = (RuleTabItem) obj;
 
     final EqualsBuilder builder = new EqualsBuilder();
-    builder.append( m_rule, rhs.m_rule );
+    builder.append( getRule(), rhs.getRule() );
     return builder.isEquals();
   }
 }

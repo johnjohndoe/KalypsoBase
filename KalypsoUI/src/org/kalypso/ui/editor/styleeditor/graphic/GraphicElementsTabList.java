@@ -51,8 +51,8 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.eclipse.jface.viewers.ITabItem;
 import org.kalypso.contribs.java.net.IUrlResolver2;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
+import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypso.ui.editor.styleeditor.tabs.AbstractTabList;
 import org.kalypsodeegree.graphics.sld.ExternalGraphic;
 import org.kalypsodeegree.graphics.sld.Graphic;
@@ -103,10 +103,10 @@ public class GraphicElementsTabList extends AbstractTabList<Graphic>
   private IGraphicElementItem createItem( final Object element )
   {
     if( element instanceof Mark )
-      return new MarkTabItem( (Mark) element, getContext() );
+      return new MarkTabItem( new StyleInput<Mark>( (Mark) element, getInput() ) );
 
     if( element instanceof ExternalGraphic )
-      return new ExternalGraphicItem( (ExternalGraphic) element, getContext() );
+      return new ExternalGraphicItem( new StyleInput<ExternalGraphic>( (ExternalGraphic) element, getInput() ) );
 
     throw new NotImplementedException();
   }
@@ -124,7 +124,7 @@ public class GraphicElementsTabList extends AbstractTabList<Graphic>
     final Graphic graphic = getData();
     graphic.removeMarksAndExtGraphic( element );
 
-    fireInputChanged();
+    getInput().fireStyleChanged();
   }
 
   /**
@@ -144,7 +144,7 @@ public class GraphicElementsTabList extends AbstractTabList<Graphic>
 
     graphic.setMarksAndExtGraphics( newElements );
 
-    fireInputChanged();
+    getInput().fireStyleChanged();
   }
 
   /**
@@ -168,8 +168,7 @@ public class GraphicElementsTabList extends AbstractTabList<Graphic>
   public ITabItem addNewExternalGraphic( )
   {
     final IStyleInput<Graphic> input = getInput();
-    final IStyleContext context = input.getContext();
-    final URL styleContext = context.getKalypsoStyle().getContext();
+    final URL styleContext = input.getContext();
     final IUrlResolver2 resolver = new IUrlResolver2()
     {
       @Override
@@ -194,7 +193,7 @@ public class GraphicElementsTabList extends AbstractTabList<Graphic>
 
     graphic.addMarksAndExtGraphic( element );
 
-    fireInputChanged();
+    getInput().fireStyleChanged();
 
     final ITabItem[] items = getItems();
     return items[items.length - 1];

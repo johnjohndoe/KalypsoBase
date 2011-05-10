@@ -58,8 +58,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ogc.gml.IKalypsoStyleListener;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
 import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
@@ -71,25 +69,6 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
  */
 public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends Composite implements ISymbolizerComposite<S>
 {
-  protected Runnable m_updateRunnable = new Runnable()
-  {
-    @Override
-    public void run( )
-    {
-      if( !isDisposed() )
-        updateControl();
-    }
-  };
-
-  private final IKalypsoStyleListener m_styleListener = new IKalypsoStyleListener()
-  {
-    @Override
-    public void styleChanged( )
-    {
-      ControlUtils.exec( AbstractSymbolizerComposite.this, m_updateRunnable );
-    }
-  };
-
   private final IStyleInput<S> m_input;
 
   private SymbolizerPreview<S> m_preview;
@@ -99,7 +78,6 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
   private final Form m_form;
 
   private final FormToolkit m_toolkit;
-
 
   protected AbstractSymbolizerComposite( final FormToolkit toolkit, final Composite parent, final IStyleInput<S> input )
   {
@@ -122,21 +100,6 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
     createGeometryControl( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     createContent( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createPreviewControl( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-
-    input.addStyleListener( m_styleListener );
-
-    updateControl();
-  }
-
-  /**
-   * @see org.eclipse.swt.widgets.Widget#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    m_input.removeStyleListener( m_styleListener );
-
-    super.dispose();
   }
 
   protected IDataBinding getBinding( )
@@ -174,7 +137,7 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
 
   protected void fireStyleChanged( )
   {
-    m_input.fireInputChanged();
+    m_input.fireStyleChanged();
   }
 
   private Control createGeometryControl( final FormToolkit toolkit, final Composite parent )
@@ -216,14 +179,18 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
 
   protected final void updateControl( )
   {
+    m_binding.getBindingContext().updateTargets();
+
     doUpdateControl();
+
+    m_preview.updateControl();
   }
 
   protected abstract void doUpdateControl( );
 
   protected IFeatureType getFeatureType( )
   {
-    return getContext().getFeatureType();
+    return getInput().getFeatureType();
   }
 
   /**
@@ -251,10 +218,5 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
     final ISymbolizerComposite< ? > rhs = (ISymbolizerComposite< ? >) obj;
 
     return new EqualsBuilder().appendSuper( super.equals( obj ) ).append( getSymbolizer(), rhs.getSymbolizer() ).isEquals();
-  }
-
-  protected IStyleContext getContext( )
-  {
-    return m_input.getContext();
   }
 }

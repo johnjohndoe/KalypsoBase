@@ -52,8 +52,6 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
-import org.kalypso.ogc.gml.IKalypsoStyleListener;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 
 /**
@@ -65,25 +63,6 @@ import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
  */
 public abstract class AbstractStyleElementSection<ELEMENT, ITEM>
 {
-  Runnable m_updateOperation = new Runnable()
-  {
-    @Override
-    public void run( )
-    {
-      updateControl();
-    }
-  };
-
-  private final IKalypsoStyleListener m_styleListener = new IKalypsoStyleListener()
-  {
-
-    @Override
-    public void styleChanged( )
-    {
-      ControlUtils.exec( getSection(), m_updateOperation );
-    }
-  };
-
   private final IUpdateable[] m_actions;
 
   private final Section m_section;
@@ -132,8 +111,6 @@ public abstract class AbstractStyleElementSection<ELEMENT, ITEM>
     m_actions = createActions( input );
     m_toolbar = createToolbar();
 
-    m_input.addStyleListener( m_styleListener );
-
     updateControl();
   }
 
@@ -159,14 +136,7 @@ public abstract class AbstractStyleElementSection<ELEMENT, ITEM>
 
   void dispose( )
   {
-    m_input.removeStyleListener( m_styleListener );
-
     m_toolbar.dispose();
-  }
-
-  protected IStyleContext getContext( )
-  {
-    return m_input.getContext();
   }
 
   public Section getSection( )
@@ -179,7 +149,12 @@ public abstract class AbstractStyleElementSection<ELEMENT, ITEM>
     return m_toolkit;
   }
 
-  protected void updateControl( )
+  protected IStyleInput<ELEMENT> getInput( )
+  {
+    return m_input;
+  }
+
+  public void updateControl( )
   {
     final ELEMENT data = m_input.getData();
     final ITEM item = getItem(data);

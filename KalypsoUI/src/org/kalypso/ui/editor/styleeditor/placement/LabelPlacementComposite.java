@@ -50,8 +50,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
-import org.kalypso.ogc.gml.IKalypsoStyleListener;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
@@ -64,15 +62,6 @@ import org.kalypsodeegree.graphics.sld.PointPlacement;
  */
 public class LabelPlacementComposite extends Composite
 {
-  private final IKalypsoStyleListener m_styleListener = new IKalypsoStyleListener()
-  {
-    @Override
-    public void styleChanged( )
-    {
-      updateControl();
-    }
-  };
-
   private final DatabindingForm m_binding;
 
   private LinePlacement m_linePlacement;
@@ -106,21 +95,6 @@ public class LabelPlacementComposite extends Composite
     m_binding = new DatabindingForm( m_form.getForm(), toolkit );
 
     updateControl();
-
-    ControlUtils.addDisposeListener( this );
-
-    m_input.addStyleListener( m_styleListener );
-  }
-
-  /**
-   * @see org.eclipse.swt.widgets.Widget#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    m_input.removeStyleListener( m_styleListener );
-
-    super.dispose();
   }
 
   private FormToolkit getToolkit( )
@@ -128,7 +102,10 @@ public class LabelPlacementComposite extends Composite
     return m_binding.getToolkit();
   }
 
-  void updateControl( )
+  /**
+   * Call, if style has changed
+   */
+  public void updateControl( )
   {
     /* check if constellation changed */
     final LabelPlacement data = m_input.getData();
@@ -155,18 +132,16 @@ public class LabelPlacementComposite extends Composite
   {
     ControlUtils.disposeChildren( m_contentGroup );
 
-    final IStyleContext context = m_input.getContext();
-
     if( m_pointPlacement != null )
     {
-      final IStyleInput<PointPlacement> placementInput = new StyleInput<PointPlacement>( m_pointPlacement, context );
+      final IStyleInput<PointPlacement> placementInput = new StyleInput<PointPlacement>( m_pointPlacement, m_input );
       new PointPlacementComposite( m_binding, m_contentGroup, placementInput );
       return "Point Placement";
     }
 
     if( m_linePlacement != null )
     {
-      final IStyleInput<LinePlacement> placementInput = new StyleInput<LinePlacement>( m_linePlacement, context );
+      final IStyleInput<LinePlacement> placementInput = new StyleInput<LinePlacement>( m_linePlacement, m_input );
       new LinePlacementComposite( m_binding, m_contentGroup, placementInput );
       return "Line Placement";
     }

@@ -160,4 +160,12 @@ public class RulePropertiesComposite extends Composite
     final ISWTObservableValue targetValue = SWTObservables.observeText( maxDenomField, SLDBinding.TEXT_DEFAULT_EVENTS );
     m_binding.bindValue( targetValue, new RuleMaxDenomValue( m_input ), minMaxValidator, notNegativeValidator );
   }
+
+  /**
+   * Call, if style has changed.
+   */
+  public void updateControl( )
+  {
+    m_binding.getBindingContext().updateTargets();
+  }
 }

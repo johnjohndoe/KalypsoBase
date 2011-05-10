@@ -91,7 +91,7 @@ class MarkStrokeSection extends AbstractStyleElementSection<Mark, Stroke>
       toolkit.createLabel( parent, "No Stroke set" );
     else
     {
-      final IStyleInput<Stroke> input = new StyleInput<Stroke>( item, getContext() );
+      final IStyleInput<Stroke> input = new StyleInput<Stroke>( item, getInput() );
       // REMARK: hide grafik stroke, too deep nesting does not make sense, even if it is allowed by SLD
       new StrokeComposite( getToolkit(), parent, input, StrokeComposite.HIDE_GRAPHIC );
     }

@@ -106,7 +106,7 @@ public class TextSymbolizerLabelField extends InputWithContextObservableValue<Te
 
   private Object createInput( final IStyleInput<TextSymbolizer> input )
   {
-    final IFeatureType featureType = input.getContext().getFeatureType();
+    final IFeatureType featureType = input.getFeatureType();
 
     final Collection<String> patterns = new ArrayList<String>();
 

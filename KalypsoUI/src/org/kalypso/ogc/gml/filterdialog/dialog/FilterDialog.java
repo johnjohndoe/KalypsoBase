@@ -92,8 +92,8 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
+import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.Operation;
@@ -140,24 +140,25 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
   final String[] m_supportedOperations;
 
-  private final IStyleContext m_context;
+  private final IStyleInput< ? > m_input;
 
   /**
    * Der Benutzer kann mit Hilfe dieses Dialogs ein Filter-Query (OGC-Filter-Specs. Version 1.1.1) auf eine Feature
    * Selektion anwenden oder einen Filter für einen SLD (Styled-Layer-Discribtor) erzeugen.
    */
-  public FilterDialog( final Shell parent, final IStyleContext style, final Filter filter, final Feature spatialOperator, final String[] supportedOperations, final boolean restorable )
+  public FilterDialog( final Shell parent, final IStyleInput< ? > input, final Filter filter, final Feature spatialOperator, final String[] supportedOperations, final boolean restorable )
   {
     super( parent );
-    m_context = style;
+
+    m_input = input;
     m_supportedOperations = supportedOperations;
     m_spatialOperator = spatialOperator;
     RESTOREABLE = restorable;
     m_root = new FilterRootElement();
     if( filter != null )
       m_root.addChild( filter );
-    setShellStyle( getShellStyle() | SWT.MAX );
 
+    setShellStyle( getShellStyle() | SWT.MAX );
   }
 
   /**
@@ -168,7 +169,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
   {
     final Control control = super.createContents( parent );
     createButton( (Composite) getButtonBar(), FilterDialog.ID_BUTTON_APPLY, FilterDialog.LABEL_BUTTON_APPLY, true );
-    if( m_context == null )
+    if( m_input == null )
       getButton( ID_BUTTON_APPLY ).setEnabled( false );
     return control;
   }
@@ -184,7 +185,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     {
       if( buttonId == ID_BUTTON_APPLY )
       {
-        m_context.fireStyleChanged();
+        m_input.fireStyleChanged();
         setReturnCode( APPLY_FILTER );
       }
 
@@ -620,9 +621,9 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
 
   protected IFeatureType getFeatureType( )
   {
-    if( m_context == null )
+    if( m_input == null )
       return null;
 
-    return m_context.getFeatureType();
+    return m_input.getFeatureType();
   }
 }

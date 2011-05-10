@@ -92,7 +92,7 @@ class PolygonSymbolizerStrokeSection extends AbstractStyleElementSection<Polygon
       toolkit.createLabel( parent, "No Stroke set" );
     else
     {
-      final IStyleInput<Stroke> input = new StyleInput<Stroke>( item, getContext() );
+      final IStyleInput<Stroke> input = new StyleInput<Stroke>( item, getInput() );
       new StrokeComposite( toolkit, parent, input, SWT.NONE );
     }
   }

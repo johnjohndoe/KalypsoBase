@@ -162,7 +162,7 @@ public class FeatureTypeStylePropertiesComposite extends Composite
 
   private String[] findTypes( )
   {
-    final IFeatureType featureType = m_input.getContext().getFeatureType();
+    final IFeatureType featureType = m_input.getFeatureType();
     if( featureType == null )
       return new String[] {};
 

@@ -40,15 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.rule;
 
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
-import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypso.ui.editor.styleeditor.symbolizer.LineSymbolizerComposite;
 import org.kalypso.ui.editor.styleeditor.symbolizer.PointSymbolizerComposite;
 import org.kalypso.ui.editor.styleeditor.symbolizer.PolygonSymbolizerComposite;
@@ -67,20 +63,20 @@ import org.kalypsodeegree.graphics.sld.TextSymbolizer;
  */
 public final class SymbolizerTabItem<S extends Symbolizer> implements ISymbolizerTabItem
 {
-  private final S m_symbolizer;
+  private final IStyleInput<S> m_input;
 
-  private final IStyleContext m_context;
-
-  public SymbolizerTabItem( final S symbolizer, final IStyleContext context )
+  public SymbolizerTabItem( final IStyleInput<S> input )
   {
-    m_symbolizer = symbolizer;
-    m_context = context;
+    m_input = input;
   }
 
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.rule.ISymbolizerTabItem#getSymbolizer()
+   */
   @Override
-  public S getSymbolizer( )
+  public Symbolizer getSymbolizer( )
   {
-    return m_symbolizer;
+    return m_input.getData();
   }
 
   /**
@@ -89,7 +85,7 @@ public final class SymbolizerTabItem<S extends Symbolizer> implements ISymbolize
   @Override
   public String getItemLabel( )
   {
-    final S symbolizer = getSymbolizer();
+    final S symbolizer = m_input.getData();
     if( symbolizer instanceof PointSymbolizer )
       return "Point";
 
@@ -121,42 +117,27 @@ public final class SymbolizerTabItem<S extends Symbolizer> implements ISymbolize
    * @see org.kalypso.commons.eclipse.jface.viewers.ITabItem#createItemControl(org.eclipse.ui.forms.widgets.FormToolkit,
    *      org.eclipse.swt.widgets.Composite)
    */
+  @SuppressWarnings("unchecked")
   @Override
   public Control createItemControl( final FormToolkit toolkit, final Composite parent )
   {
-    final IStyleInput<S> input = new StyleInput<S>( m_symbolizer, m_context );
-    final Control itemControl = createSymbolizerComposite( toolkit, parent, input );
-    itemControl.addDisposeListener( new DisposeListener()
-    {
-      @Override
-      public void widgetDisposed( final DisposeEvent e )
-      {
-        input.dispose();
-      }
-    } );
+    final S symbolizer = m_input.getData();
+    if( symbolizer instanceof PointSymbolizer )
+      return new PointSymbolizerComposite( toolkit, parent, (IStyleInput<PointSymbolizer>) m_input );
 
-    return itemControl;
-  }
+    if( symbolizer instanceof LineSymbolizer )
+      return new LineSymbolizerComposite( toolkit, parent, (IStyleInput<LineSymbolizer>) m_input );
 
-  @SuppressWarnings("unchecked")
-  private Control createSymbolizerComposite( final FormToolkit toolkit, final Composite parent, final IStyleInput<S> input )
-  {
-    if( m_symbolizer instanceof PointSymbolizer )
-      return new PointSymbolizerComposite( toolkit, parent, (IStyleInput<PointSymbolizer>) input );
+    if( symbolizer instanceof PolygonSymbolizer )
+      return new PolygonSymbolizerComposite( toolkit, parent, (IStyleInput<PolygonSymbolizer>) m_input );
 
-    if( m_symbolizer instanceof LineSymbolizer )
-      return new LineSymbolizerComposite( toolkit, parent, (IStyleInput<LineSymbolizer>) input );
+    if( symbolizer instanceof RasterSymbolizer )
+      return new RasterSymbolizerLayout( toolkit, parent, (IStyleInput<RasterSymbolizer>) m_input );
 
-    if( m_symbolizer instanceof PolygonSymbolizer )
-      return new PolygonSymbolizerComposite( toolkit, parent, (IStyleInput<PolygonSymbolizer>) input );
+    if( symbolizer instanceof TextSymbolizer )
+      return new TextSymbolizerComposite( toolkit, parent, (IStyleInput<TextSymbolizer>) m_input );
 
-    if( m_symbolizer instanceof RasterSymbolizer )
-      return new RasterSymbolizerLayout( toolkit, parent, (IStyleInput<RasterSymbolizer>) input );
-
-    if( m_symbolizer instanceof TextSymbolizer )
-      return new TextSymbolizerComposite( toolkit, parent, (IStyleInput<TextSymbolizer>) input );
-
-    return new SymbolizerComposite( toolkit, parent, (IStyleInput<Symbolizer>) input );
+    return new SymbolizerComposite( toolkit, parent, (IStyleInput<Symbolizer>) m_input );
   }
 
   /**

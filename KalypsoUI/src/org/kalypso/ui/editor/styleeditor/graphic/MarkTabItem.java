@@ -44,9 +44,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
-import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypsodeegree.graphics.sld.Mark;
 
 /**
@@ -56,9 +54,9 @@ public class MarkTabItem implements IGraphicElementItem
 {
   private final IStyleInput<Mark> m_input;
 
-  public MarkTabItem( final Mark mark, final IStyleContext context )
+  public MarkTabItem( final IStyleInput<Mark> input )
   {
-    m_input = new StyleInput<Mark>( mark, context );
+    m_input = input;
   }
 
   /**

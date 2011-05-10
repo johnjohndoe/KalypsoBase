@@ -55,6 +55,8 @@ import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.IKalypsoStyleListener;
 import org.kalypso.ui.editor.styleeditor.style.FeatureTypeStyleComposite;
 import org.kalypso.ui.editor.styleeditor.style.FeatureTypeStyleInput;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.UserStyle;
 
 /**
  * @author F.Lindemann
@@ -89,6 +91,8 @@ public class SLDComposite extends Composite
 
   private FeatureTypeStyleComposite m_styleComposite;
 
+  private IKalypsoStyle m_style;
+
   public SLDComposite( final Composite parent )
   {
     super( parent, SWT.NONE );
@@ -111,22 +115,21 @@ public class SLDComposite extends Composite
     setKalypsoStyle( null, null, -1 );
   }
 
-  public IKalypsoStyle getKalypsoStyle( )
-  {
-    if( m_input == null )
-      return null;
-
-    final IStyleContext context = m_input.getContext();
-    return context.getKalypsoStyle();
-  }
+// public IKalypsoStyle getKalypsoStyle( )
+// {
+// if( m_input == null )
+// return null;
+//
+// final IStyleContext context = m_input.getContext();
+// return context.getKalypsoStyle();
+// }
 
   public IFeatureType getFeatureType( )
   {
     if( m_input == null )
       return null;
 
-    final IStyleContext context = m_input.getContext();
-    return context.getFeatureType();
+    return m_input.getFeatureType();
   }
 
   public int getSelectedStyle( )
@@ -142,14 +145,6 @@ public class SLDComposite extends Composite
     setKalypsoStyle( style, featureType, -1 );
   }
 
-  protected void updateStyle( )
-  {
-    getKalypsoStyle();
-
-    // TODO Auto-generated method stub
-
-  }
-
   public void setKalypsoStyle( final IKalypsoStyle style, final IFeatureType featureType, final int styleToSelect )
   {
     final FeatureTypeStyleInput input = createInput( style, featureType, styleToSelect );
@@ -160,15 +155,14 @@ public class SLDComposite extends Composite
       return;
     }
 
-    if( m_input != null )
-      m_input.removeStyleListener( m_styleListener );
+    if( m_style != null )
+      m_style.removeStyleListener( m_styleListener );
 
-    if( m_input != null )
-      m_input.dispose();
     m_input = input;
+    m_style = style;
 
-    if( m_input != null )
-      m_input.addStyleListener( m_styleListener );
+    if( style != null )
+      m_style.addStyleListener( m_styleListener );
 
     /* Update form */
     if( m_form.isDisposed() )
@@ -188,22 +182,41 @@ public class SLDComposite extends Composite
     if( style == null )
       return null;
 
-    final StyleContext context = new StyleContext( style, featureType );
-    return new FeatureTypeStyleInput( context, styleToSelect );
+
+    final FeatureTypeStyle fts = findFeatureTypeStyle( style, styleToSelect );
+    return new FeatureTypeStyleInput( fts, style, styleToSelect, featureType );
+  }
+
+  private FeatureTypeStyle findFeatureTypeStyle( final IKalypsoStyle style, final int styleToSelect )
+  {
+    if( style instanceof FeatureTypeStyle )
+      return (FeatureTypeStyle) style;
+
+    if( style instanceof UserStyle )
+      return ((UserStyle) style).getFeatureTypeStyles()[styleToSelect];
+
+    return null;
   }
 
   protected void updateControl( )
   {
     m_saveAction.update();
 
-    final IKalypsoStyle style = getKalypsoStyle();
-    final String formTitle = style == null ? MessageBundle.STYLE_EDITOR_NO_STYLE_FOR_EDITOR : style.getTitle();
+    final String formTitle = m_style == null ? MessageBundle.STYLE_EDITOR_NO_STYLE_FOR_EDITOR : m_style.getTitle();
     m_form.setText( formTitle );
+
+    if( m_styleComposite != null )
+      m_styleComposite.updateControl();
   }
 
   @Override
   public void dispose( )
   {
     setKalypsoStyle( null, null );
+  }
+
+  public IKalypsoStyle getKalypsoStyle( )
+  {
+    return m_style;
   }
 }

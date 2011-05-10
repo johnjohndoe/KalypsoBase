@@ -120,4 +120,14 @@ public class FeatureTypeStyleComposite extends Composite
   {
     return m_ruleTabViewer.getControl().getSelectionIndex();
   }
+
+  /**
+   * Call, if style has changed.
+   */
+  public void updateControl( )
+  {
+    m_binding.getBindingContext().updateTargets();
+
+    m_ruleTabViewer.refresh();
+  }
 }

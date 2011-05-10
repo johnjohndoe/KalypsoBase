@@ -40,23 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.binding;
 
-import org.kalypso.ogc.gml.IKalypsoStyleListener;
-import org.kalypso.ui.editor.styleeditor.IStyleContext;
+import java.net.URL;
+
+import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
  * @author Gernot Belger
  */
 public interface IStyleInput<DATA>
 {
-  public void dispose( );
-
   DATA getData( );
 
-  void fireInputChanged( );
+  void fireStyleChanged( );
 
-  IStyleContext getContext( );
+  IFeatureType getFeatureType( );
 
-  void addStyleListener( IKalypsoStyleListener listener );
+  URL getContext( );
 
-  void removeStyleListener( IKalypsoStyleListener listener );
+// FeatureTypeStyle getStyle( );
+
+// IKalypsoStyle getKalypsoStyle( );
 }
