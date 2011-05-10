@@ -95,6 +95,11 @@ public class ExternalGraphicComposite extends Composite
     m_binding.bindValue( target, new OnlineResourceValue( input ), new OnlineResourceValidator( input ) );
   }
 
+  public void updateControl( )
+  {
+    m_binding.getBindingContext().updateTargets();
+  }
+
 // private void createFormatControl( final FormToolkit toolkit, final Composite parent, final ExternalGraphicInput input
 // )
 // {

@@ -67,6 +67,10 @@ public class MarkComposite extends Composite
 
   private final IDataBinding m_binding;
 
+  private MarkFillSection m_fillSection;
+
+  private MarkStrokeSection m_strokeSection;
+
   public MarkComposite( final FormToolkit toolkit, final Composite parent, final IStyleInput<Mark> input )
   {
     super( parent, SWT.NONE );
@@ -84,6 +88,7 @@ public class MarkComposite extends Composite
     GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( true ).applyTo( body );
 
     createWellKnownName( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+
     createStroke( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createFill( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
   }
@@ -112,11 +117,21 @@ public class MarkComposite extends Composite
 
   private Control createFill( final FormToolkit toolkit, final Composite parent )
   {
-    return new MarkFillSection( toolkit, parent, m_input ).getSection();
+    m_fillSection = new MarkFillSection( toolkit, parent, m_input );
+    return m_fillSection.getSection();
   }
 
   private Control createStroke( final FormToolkit toolkit, final Composite parent )
   {
-    return new MarkStrokeSection( toolkit, parent, m_input ).getSection();
+    m_strokeSection = new MarkStrokeSection( toolkit, parent, m_input );
+    return m_strokeSection.getSection();
+  }
+
+  public void updateControl( )
+  {
+    m_binding.getBindingContext().updateTargets();
+
+    m_strokeSection.updateControl();
+    m_fillSection.updateControl();
   }
 }

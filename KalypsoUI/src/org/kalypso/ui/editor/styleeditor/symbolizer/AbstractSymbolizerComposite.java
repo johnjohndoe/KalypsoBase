@@ -58,6 +58,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.ui.editor.styleeditor.IStyleEditorConfig;
 import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
 import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
@@ -97,7 +98,11 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
 
     m_binding = new DatabindingForm( m_form, toolkit );
 
-    createGeometryControl( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    final IStyleEditorConfig config = input.getConfig();
+
+    if( config.isSymbolizerEditGeometry() )
+      createGeometryControl( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
     createContent( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createPreviewControl( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
   }

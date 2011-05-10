@@ -95,7 +95,7 @@ public class TextSymbolizerComposite extends AbstractSymbolizerComposite<TextSym
   protected Control createContent( final FormToolkit toolkit, final Composite parent )
   {
     final Composite panel = toolkit.createComposite( parent );
-    GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( panel );
+    GridLayoutFactory.fillDefaults().applyTo( panel );
 
     final Control upperPanel = createCommonAndPlacementSections( toolkit, panel );
     upperPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
@@ -112,7 +112,7 @@ public class TextSymbolizerComposite extends AbstractSymbolizerComposite<TextSym
   private Control createCommonAndPlacementSections( final FormToolkit toolkit, final Composite parent )
   {
     final Composite panel = toolkit.createComposite( parent );
-    GridLayoutFactory.swtDefaults().numColumns( 2 ).equalWidth( true ).applyTo( panel );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).equalWidth( true ).spacing( 0, 0 ).applyTo( panel );
 
     createFontAndLabelSection( toolkit, panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     createPlacementSection( toolkit, panel ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );

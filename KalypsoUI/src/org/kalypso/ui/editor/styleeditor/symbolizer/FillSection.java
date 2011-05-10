@@ -47,6 +47,7 @@ import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypso.ui.editor.styleeditor.fill.FillComposite;
+import org.kalypso.ui.editor.styleeditor.stroke.StrokeComposite;
 import org.kalypso.ui.editor.styleeditor.util.AbstractStyleElementSection;
 import org.kalypso.ui.editor.styleeditor.util.StyleElementAction;
 import org.kalypsodeegree.graphics.sld.Fill;
@@ -92,7 +93,11 @@ class FillSection extends AbstractStyleElementSection<PolygonSymbolizer, Fill, F
   {
     final FormToolkit toolkit = getToolkit();
     final IStyleInput<Fill> input = new StyleInput<Fill>( item, getInput() );
-    return new FillComposite( toolkit, parent, input, SWT.NONE );
+
+    final boolean showGraphics = input.getConfig().isPolygonSymbolizerShowGraphic();
+    final int sldStyle = showGraphics ? SWT.NONE : StrokeComposite.HIDE_GRAPHIC;
+
+    return new FillComposite( toolkit, parent, input, sldStyle );
   }
 
   @Override

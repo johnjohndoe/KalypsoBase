@@ -65,7 +65,19 @@ public interface IStyleEditorConfig
   boolean isLineSymbolizerShowGraphic( );
 
   /**
+   * If this is <code>false</code>, the graphic sections of the stroke and fill are hidden for the
+   * {@link org.kalypso.ui.editor.styleeditor.symbolizer.PolygonSymbolizerComposite}.
+   */
+  boolean isPolygonSymbolizerShowGraphic( );
+
+  /**
    * If this is <code>true</code>, symbolizers can be added/(re)moved by the tab viewer.
    */
   boolean isSymbolizerTabViewerAllowChange( );
+
+  /**
+   * If this is <code>false</code>, the geometry chooser of the symbolizer composite is hidden.
+   */
+  boolean isSymbolizerEditGeometry( );
+
 }
