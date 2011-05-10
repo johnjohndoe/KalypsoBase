@@ -483,7 +483,10 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     if( srsName == null )
       return defaultCS;
 
-    return srsName;
+    // BUGFIX/REMARK: preserve memory by intern'ing the srs strings. Especially for bigger gml's this can have a major
+    // effect, as every srs string was being kept separately in memory.
+
+    return srsName.intern();
   }
 
   /**
