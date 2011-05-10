@@ -1,11 +1,11 @@
 package org.kalypso.gmlschema;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlCatalog;
@@ -140,8 +140,11 @@ public final class GMLSchemaCatalog
       // vielleicht ist der namespace ja noch im file-cache
       return m_cache.getSchema( namespace, version, resolvedUrl );
     }
-    catch( final MalformedURLException e )
+    catch( final Throwable e )
     {
+      if( Objects.isNotNull( namespace ) )
+        System.out.println( String.format( "Failed to resolve namespace: %s", namespace ) );
+
       throw new GMLSchemaException( e );
     }
   }
