@@ -38,19 +38,15 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.styleeditor.symbolizer;
+package org.kalypso.ui.editor.styleeditor.style;
 
-import org.eclipse.swt.widgets.Control;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
+import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 
 /**
  * @author Gernot Belger
  */
-public interface ISymbolizerComposite<S extends Symbolizer>
+public interface IFeatureTypeStyleInput extends IStyleInput<FeatureTypeStyle>
 {
-  S getSymbolizer( );
-
-  Control getControl( );
-
-  void updateControl( );
+  int getStyleToSelect( );
 }

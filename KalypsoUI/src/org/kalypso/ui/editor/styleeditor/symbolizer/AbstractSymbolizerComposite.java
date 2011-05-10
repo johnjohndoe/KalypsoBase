@@ -177,7 +177,8 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
 
   protected abstract SymbolizerPreview<S> createPreview( Composite parent, Point size, IStyleInput<S> input );
 
-  protected final void updateControl( )
+  @Override
+  public final void updateControl( )
   {
     m_binding.getBindingContext().updateTargets();
 

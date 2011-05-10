@@ -44,7 +44,10 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -66,11 +69,23 @@ public class FullExtentHandler extends AbstractHandler
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
     final IMapModell modell = mapPanel.getMapModell();
+    if( modell == null )
+    {
+      // FIXME: we should put that into one common helper code
+      // we could use the MapHandlerUtils, but if there is no ExecutionHandler
+      // we will not get an error message here
+
+      final Shell shell = HandlerUtil.getActiveShell( event );
+      final String title = HandlerUtils.getCommandName( event );
+      MessageDialog.openWarning( shell, title, "Keine Karte vorhanden" );
+      return null;
+    }
+
     final GM_Envelope fullExtent = modell.getFullExtentBoundingBox();
     final ChangeExtentCommand command = new ChangeExtentCommand( mapPanel, fullExtent );
 
     MapHandlerUtils.postMapCommandChecked( mapPanel, command, null );
 
-    return Status.OK_STATUS;
+    return null;
   }
 }

@@ -161,4 +161,11 @@ public class GraphicComposite extends Composite
 
     return composite;
   }
+
+  public void updateControl( )
+  {
+    m_binding.getBindingContext().updateTargets();
+
+    m_graphicTabViewer.refresh();
+  }
 }

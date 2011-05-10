@@ -139,7 +139,6 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerComp
     }
     catch( final FilterEvaluationException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
@@ -155,7 +154,6 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerComp
   @Override
   protected void doUpdateControl( )
   {
-
   }
 
   public int getSelectionIndex( )

@@ -116,6 +116,8 @@ public class StrokeComposite extends Composite
 
   private final IDataBinding m_binding;
 
+  private GraphicStrokeSection m_strokeSection;
+
   public StrokeComposite( final FormToolkit toolkit, final Composite parent, final IStyleInput<Stroke> input, final int sldStyle )
   {
     super( parent, SWT.NONE );
@@ -315,8 +317,8 @@ public class StrokeComposite extends Composite
 
   private void createGraphicControl( final FormToolkit toolkit, final Composite parent )
   {
-    final GraphicStrokeSection section = new GraphicStrokeSection( toolkit, parent, m_input );
-    section.getSection().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 3, 1 ) );
+    m_strokeSection = new GraphicStrokeSection( toolkit, parent, m_input );
+    m_strokeSection.getSection().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 3, 1 ) );
   }
 
   private boolean shouldExpand( )
@@ -328,5 +330,16 @@ public class StrokeComposite extends Composite
     final boolean hasLineCap = DrawingUtils.isCssParameterSet( stroke, Stroke.CSS_LINECAP );
     final boolean hasLineJoin = DrawingUtils.isCssParameterSet( stroke, Stroke.CSS_LINEJOIN );
     return hasDashArray | hasDashOffset | hasLineCap | hasLineJoin;
+  }
+
+  public void updateControl( )
+  {
+    m_binding.getBindingContext().updateTargets();
+
+    if( m_strokeSection != null )
+      m_strokeSection.updateControl();
+
+    if( m_previewComp != null )
+      m_previewComp.updateControl();
   }
 }

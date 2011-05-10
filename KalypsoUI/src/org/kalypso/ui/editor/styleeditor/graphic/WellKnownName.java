@@ -1,7 +1,7 @@
 package org.kalypso.ui.editor.styleeditor.graphic;
 
 /**
- * FIXME: move into separate class, or Mark
+ * TODO: move into separate class, or Mark
  */
 public enum WellKnownName
 {

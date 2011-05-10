@@ -288,7 +288,7 @@ public class AddSymbolizerComposite extends Composite
         return new SymbolizerType[] { SymbolizerType.POINT, SymbolizerType.LINE, SymbolizerType.POLYGON, SymbolizerType.TEXT };
     }
 
-    // FIXME: NOT SIMPLE CASE: for pattern; used anymore?
+    // TODO: NOT SIMPLE CASE: for pattern; used anymore?
 // if( featureTypeGeometryType == TextSymbolizerComposite.GM_POINT || featureTypeGeometryType ==
 // TextSymbolizerComposite.GM_MULTIPOINT )
 // return new SymbolizerType[] { SymbolizerType.POINT };

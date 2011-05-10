@@ -182,7 +182,6 @@ public class SLDComposite extends Composite
     if( style == null )
       return null;
 
-
     final FeatureTypeStyle fts = findFeatureTypeStyle( style, styleToSelect );
     return new FeatureTypeStyleInput( fts, style, styleToSelect, featureType );
   }
@@ -193,7 +192,16 @@ public class SLDComposite extends Composite
       return (FeatureTypeStyle) style;
 
     if( style instanceof UserStyle )
-      return ((UserStyle) style).getFeatureTypeStyles()[styleToSelect];
+    {
+      final FeatureTypeStyle[] styles = ((UserStyle) style).getFeatureTypeStyles();
+      if( styles.length == 0 )
+        return null;
+
+      if( styleToSelect == -1 )
+        return styles[0];
+      else
+        return styles[styleToSelect];
+    }
 
     return null;
   }

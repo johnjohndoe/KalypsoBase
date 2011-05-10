@@ -54,6 +54,8 @@ import org.kalypsodeegree.graphics.sld.LineSymbolizer;
  */
 public class LineSymbolizerComposite extends AbstractSymbolizerComposite<LineSymbolizer>
 {
+  private LineSymbolizerStrokeSection m_strokeSection;
+
   public LineSymbolizerComposite( final FormToolkit toolkit, final Composite parent, final IStyleInput<LineSymbolizer> input )
   {
     super( toolkit, parent, input );
@@ -62,7 +64,8 @@ public class LineSymbolizerComposite extends AbstractSymbolizerComposite<LineSym
   @Override
   protected Control createContent( final FormToolkit toolkit, final Composite parent )
   {
-    return new LineSymbolizerStrokeSection( toolkit, parent, getInput() ).getSection();
+    m_strokeSection = new LineSymbolizerStrokeSection( toolkit, parent, getInput() );
+    return m_strokeSection.getSection();
   }
 
   @Override
@@ -74,5 +77,6 @@ public class LineSymbolizerComposite extends AbstractSymbolizerComposite<LineSym
   @Override
   public void doUpdateControl( )
   {
+    m_strokeSection.updateControl();
   }
 }

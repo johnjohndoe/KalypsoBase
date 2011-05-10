@@ -59,7 +59,7 @@ import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
  */
 public class FeatureTypeStyleComposite extends Composite
 {
-  private final FeatureTypeStyleInput m_input;
+  private final IFeatureTypeStyleInput m_input;
 
   private RuleTabViewer m_ruleTabViewer;
 
@@ -67,7 +67,7 @@ public class FeatureTypeStyleComposite extends Composite
 
   private ScrolledForm m_propertiesForm;
 
-  public FeatureTypeStyleComposite( final FormToolkit toolkit, final Composite parent, final FeatureTypeStyleInput input )
+  public FeatureTypeStyleComposite( final FormToolkit toolkit, final Composite parent, final IFeatureTypeStyleInput input )
   {
     super( parent, SWT.NONE );
 

@@ -210,7 +210,6 @@ public class FontComposite extends Composite
     }
     catch( final FilterEvaluationException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }

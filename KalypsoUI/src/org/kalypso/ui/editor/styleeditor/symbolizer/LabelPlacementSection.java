@@ -59,7 +59,7 @@ import org.kalypsodeegree.graphics.sld.TextSymbolizer;
  * 
  * @author Gernot Belger
  */
-public class LabelPlacementSection extends AbstractStyleElementSection<TextSymbolizer, LabelPlacement>
+public class LabelPlacementSection extends AbstractStyleElementSection<TextSymbolizer, LabelPlacement, LabelPlacementComposite>
 {
   protected LabelPlacementSection( final FormToolkit toolkit, final Composite parent, final IStyleInput<TextSymbolizer> input )
   {
@@ -95,14 +95,19 @@ public class LabelPlacementSection extends AbstractStyleElementSection<TextSymbo
     return data.getLabelPlacement();
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.util.AbstractStyleElementSection#createItemControl(org.eclipse.swt.widgets.Composite,
-   *      java.lang.Object)
-   */
   @Override
-  protected void createItemControl( final Composite parent, final LabelPlacement item )
+  protected LabelPlacementComposite createItemControl( final Composite parent, final LabelPlacement item )
   {
     final IStyleInput<LabelPlacement> input = new StyleInput<LabelPlacement>( item, getInput() );
-    new LabelPlacementComposite( getToolkit(), parent, input );
+    return new LabelPlacementComposite( getToolkit(), parent, input );
+  }
+
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.util.AbstractStyleElementSection#updateItemControl(java.lang.Object)
+   */
+  @Override
+  protected void updateItemControl( final LabelPlacementComposite itemControl )
+  {
+    itemControl.updateControl();
   }
 }
