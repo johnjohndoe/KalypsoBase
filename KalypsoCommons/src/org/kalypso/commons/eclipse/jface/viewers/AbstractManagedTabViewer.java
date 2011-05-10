@@ -54,12 +54,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.eclipse.jface.viewers.ITabItem;
-import org.kalypso.commons.eclipse.jface.viewers.ITabList;
-import org.kalypso.commons.eclipse.jface.viewers.TabActionUtils;
-import org.kalypso.commons.eclipse.jface.viewers.TabItemLabelProvider;
-import org.kalypso.commons.eclipse.jface.viewers.TabListContentProvider;
-import org.kalypso.commons.eclipse.jface.viewers.TabViewer;
 
 /**
  * @author Gernot Belger
@@ -165,5 +159,10 @@ public abstract class AbstractManagedTabViewer<DATA>
       return null;
 
     return listInput.getData();
+  }
+
+  public void refresh( )
+  {
+    getListInput().refresh();
   }
 }
