@@ -69,7 +69,13 @@ public final class ContentHandlerUtils
   /** Get srs from attributes, fallback to default crs */
   public static String parseSrsFromAttributes( final Attributes attributes, final String defaultSrs )
   {
-    return parseStringFromAttributes( attributes, "srsName", defaultSrs );
+    final String srs = parseStringFromAttributes( attributes, "srsName", defaultSrs );
+    if( srs == null )
+      return null;
+
+    // BUGFIX/REMARK: preserve memory by intern'ing the srs strings. Especially for bigger gml's this can have a major
+    // effect, as every srs string was being kept separately in memory.
+    return srs.intern();
   }
 
   public static String parseCsFromAttributes( final Attributes attributes, final String defaultCs )
@@ -99,8 +105,8 @@ public final class ContentHandlerUtils
 
   public static double[] parseDoublesString( final String text )
   {
-    String[] split = StringUtils.split( text );
-    double[] result = new double[split.length];
+    final String[] split = StringUtils.split( text );
+    final double[] result = new double[split.length];
     for( int i = 0; i < result.length; i++ )
       result[i] = Double.valueOf( split[i] );
     return result;
