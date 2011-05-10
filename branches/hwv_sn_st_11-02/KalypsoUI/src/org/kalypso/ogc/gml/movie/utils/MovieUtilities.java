@@ -40,16 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.movie.utils;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
+import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.movie.IMovieImageProvider;
 import org.kalypso.ogc.gml.movie.standard.DefaultMovieImageProvider;
+import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
+import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.IKalypsoUIConstants;
 import org.kalypso.ui.KalypsoUIExtensions;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Helper class for the movie functionality.
@@ -74,7 +86,6 @@ public class MovieUtilities
    */
   public static AbstractCascadingLayerTheme findMovieTheme( GisTemplateMapModell mapModel ) throws Exception
   {
-    /* Find the movie theme. */
     IKalypsoTheme[] themes = MapModellHelper.findThemeByProperty( mapModel, IKalypsoUIConstants.MOVIE_THEME_PROPERTY, IKalypsoThemeVisitor.DEPTH_ZERO );
     if( themes == null || themes.length == 0 )
       throw new Exception( "Es wurde kein Filmthema in der aktiven Karte gefunden..." );
@@ -89,30 +100,111 @@ public class MovieUtilities
   /**
    * This function returns the configured movie image provider of the theme, marked as movie theme.
    * 
+   * @param mapModel
+   *          The gis template map model.
    * @param movieTheme
    *          The theme, marked as movie theme.
    * @return The configured image provider. A default one, if none is configured, the id is wrong or if an error has
    *         occured.
    */
-  public static IMovieImageProvider initImageProvider( AbstractCascadingLayerTheme movieTheme )
+  public static IMovieImageProvider getImageProvider( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme )
   {
     try
     {
       String id = movieTheme.getProperty( IKalypsoUIConstants.MOVIE_THEME_PROPERTY, null );
 
       if( id == null || id.length() == 0 )
-        return new DefaultMovieImageProvider();
+        return getDefaultImageProvider( mapModel, movieTheme );
 
       IMovieImageProvider imageProvider = KalypsoUIExtensions.createMovieImageProvider( id );
       if( imageProvider != null )
+      {
+        imageProvider.initialize( mapModel, movieTheme, new NullProgressMonitor() );
         return imageProvider;
+      }
 
-      return new DefaultMovieImageProvider();
+      return getDefaultImageProvider( mapModel, movieTheme );
     }
     catch( CoreException ex )
     {
       ex.printStackTrace();
-      return new DefaultMovieImageProvider();
+      return getDefaultImageProvider( mapModel, movieTheme );
+    }
+  }
+
+  /**
+   * This function returns the default image provider.
+   * 
+   * @param mapModel
+   *          The gis template map model.
+   * @param movieTheme
+   *          The theme, marked as movie theme.
+   * @return The default image provider.
+   */
+  public static DefaultMovieImageProvider getDefaultImageProvider( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme )
+  {
+    DefaultMovieImageProvider imageProvider = new DefaultMovieImageProvider();
+    imageProvider.initialize( mapModel, movieTheme, new NullProgressMonitor() );
+
+    return imageProvider;
+  }
+
+  /**
+   * This function clones the map model.
+   * 
+   * @param mapModel
+   *          The map model.
+   * @param boundingBox
+   *          The bounding box.
+   * @return The cloned map model.
+   */
+  public static GisTemplateMapModell cloneMapModel( GisTemplateMapModell mapModel, GM_Envelope boundingBox ) throws IOException
+  {
+    /* The output stream. */
+    BufferedOutputStream outputStream = null;
+
+    /* The temporary file. */
+    File tmpFile = null;
+
+    try
+    {
+      /* Create a gis map view. */
+      Gismapview gisview = mapModel.createGismapTemplate( boundingBox, mapModel.getCoordinatesSystem(), new NullProgressMonitor() );
+
+      /* Create the temporary file. */
+      tmpFile = FileUtilities.createNewUniqueFile( "mov", FileUtilities.TMP_DIR );
+
+      /* Create the output stream. */
+      outputStream = new BufferedOutputStream( new FileOutputStream( tmpFile ) );
+
+      /* Save the gis map view. */
+      GisTemplateHelper.saveGisMapView( gisview, outputStream, "UTF-8" );
+
+      /* Close the output stream. */
+      IOUtils.closeQuietly( outputStream );
+
+      /* And load it again, to pratically clone it. */
+      Gismapview newGisview = GisTemplateHelper.loadGisMapView( tmpFile );
+
+      /* Create the new gis template map model. */
+      // GM_Envelope env = GisTemplateHelper.getBoundingBox( newGisview );
+      GisTemplateMapModell newGisModel = new GisTemplateMapModell( mapModel.getContext(), mapModel.getCoordinatesSystem(), mapModel.getProject(), new FeatureSelectionManager2() );
+      newGisModel.createFromTemplate( newGisview );
+
+      return newGisModel;
+    }
+    catch( Exception ex )
+    {
+      throw new IOException( "Konnte die Karte nicht duplizieren...", ex );
+    }
+    finally
+    {
+      /* Close the output stream. */
+      IOUtils.closeQuietly( outputStream );
+
+      /* Delete the temporary file. */
+      if( tmpFile != null )
+        FileUtilities.deleteQuitly( tmpFile );
     }
   }
 }

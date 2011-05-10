@@ -136,7 +136,10 @@ public class MovieDialog extends Dialog
   @Override
   protected Control createButtonBar( Composite parent )
   {
-    return m_moviePlayer.createButtonControls( parent );
+    Composite buttonComposite = m_moviePlayer.createButtonControls( parent );
+    buttonComposite.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, false ) );
+
+    return buttonComposite;
   }
 
   /**

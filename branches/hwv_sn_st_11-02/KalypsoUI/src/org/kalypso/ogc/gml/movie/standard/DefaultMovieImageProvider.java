@@ -40,40 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.movie.standard;
 
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.movie.IMovieControls;
-import org.kalypso.ogc.gml.movie.IMovieImageProvider;
+import org.kalypso.ogc.gml.movie.AbstractMovieImageProvider;
 
 /**
  * The default movie image provider.
  * 
  * @author Holger Albert
  */
-public class DefaultMovieImageProvider implements IMovieImageProvider
+public class DefaultMovieImageProvider extends AbstractMovieImageProvider
 {
   /**
    * The constructor.
    */
   public DefaultMovieImageProvider( )
   {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.movie.IMovieImageProvider#getMovieControls()
-   */
-  @Override
-  public IMovieControls getMovieControls( )
-  {
-    return new DefaultMovieControls();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.movie.IMovieImageProvider#getKalypsoThemes()
-   */
-  @Override
-  public IKalypsoTheme[] getKalypsoThemes( )
-  {
-    // TODO
-    return null;
   }
 }
