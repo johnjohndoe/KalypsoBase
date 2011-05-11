@@ -60,6 +60,8 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public interface IKalypsoTheme extends IAdaptable
 {
+  String PROPERTY_CUSTOM_THEME_ID = "customID";
+
   /**
    * Name of the property which determines if the user is allowed to deleted this theme.
    */
