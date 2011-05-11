@@ -94,13 +94,14 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
 
   /**
    * @see org.kalypso.ogc.gml.movie.IMovieImageProvider#initialize(org.kalypso.ogc.gml.GisTemplateMapModell,
-   *      org.kalypso.ogc.gml.AbstractCascadingLayerTheme, org.eclipse.core.runtime.IProgressMonitor)
+   *      org.kalypso.ogc.gml.AbstractCascadingLayerTheme, org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void initialize( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, IProgressMonitor monitor )
+  public void initialize( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox, IProgressMonitor monitor )
   {
     /* Determine some needed information. */
-    m_frames = preProcess( mapModel, movieTheme, monitor );
+    m_frames = preProcess( mapModel, movieTheme, boundingBox, monitor );
     if( m_frames.length > 0 )
       m_currentFrame = 0;
   }
@@ -111,7 +112,7 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
   @Override
   public IMovieFrame getCurrentFrame( )
   {
-    if( m_currentFrame < 0 )
+    if( m_currentFrame < 0 || m_currentFrame <= m_frames.length )
       return null;
 
     return m_frames[m_currentFrame];
@@ -156,7 +157,7 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
     return m_frames.length - 1;
   }
 
-  private IMovieFrame[] preProcess( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, IProgressMonitor monitor )
+  private IMovieFrame[] preProcess( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox, IProgressMonitor monitor )
   {
     /* Monitor. */
     if( monitor == null )
@@ -164,9 +165,6 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
 
     /* Memory for the results. */
     List<IMovieFrame> results = new ArrayList<IMovieFrame>();
-
-    // TODO
-    GM_Envelope boundingBox = null;
 
     try
     {
@@ -193,7 +191,7 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
 
         /* Find the movie theme. */
         AbstractCascadingLayerTheme newMovieTheme = MovieUtilities.findMovieTheme( newMapModel );
-        if( newMovieTheme.getId() != movieTheme.getId() )
+        if( !newMovieTheme.getId().equals( movieTheme.getId() ) )
           throw new Exception( "Zuordnung des Filmthemes ist fehlerhaft..." );
 
         /* Deactivate all themes except the movie theme. */

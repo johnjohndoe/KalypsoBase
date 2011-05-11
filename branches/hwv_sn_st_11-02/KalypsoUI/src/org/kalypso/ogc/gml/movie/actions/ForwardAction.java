@@ -78,8 +78,7 @@ public class ForwardAction extends Action
   {
     int currentStep = m_player.getCurrentStep();
     m_player.stepTo( currentStep + 1 );
-    // TODO
-    m_player.updateControls( 640, 480 );
+    m_player.updateControls();
   }
 
   /**

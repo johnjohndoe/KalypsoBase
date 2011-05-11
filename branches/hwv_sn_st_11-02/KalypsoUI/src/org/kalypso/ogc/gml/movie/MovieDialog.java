@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.movie.controls.MovieComposite;
-import org.kalypso.ogc.gml.movie.utils.MoviePlayer;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * The movie dialog.
@@ -61,9 +61,19 @@ import org.kalypso.ogc.gml.movie.utils.MoviePlayer;
 public class MovieDialog extends Dialog
 {
   /**
-   * The movie player.
+   * The gis template map model.
    */
-  private MoviePlayer m_moviePlayer;
+  private GisTemplateMapModell m_mapModel;
+
+  /**
+   * The theme, marked as movie theme.
+   */
+  private AbstractCascadingLayerTheme m_movieTheme;
+
+  /**
+   * The bounding box.
+   */
+  private GM_Envelope m_boundingBox;
 
   /**
    * The movie composite.
@@ -80,12 +90,16 @@ public class MovieDialog extends Dialog
    *          The gis template map model.
    * @param movieTheme
    *          The theme, marked as movie theme.
+   * @param boundingBox
+   *          The bounding box.
    */
-  public MovieDialog( Shell parentShell, GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme )
+  public MovieDialog( Shell parentShell, GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox )
   {
     super( parentShell );
 
-    m_moviePlayer = new MoviePlayer( mapModel, movieTheme );
+    m_mapModel = mapModel;
+    m_movieTheme = movieTheme;
+    m_boundingBox = boundingBox;
     m_movieComposite = null;
   }
 
@@ -98,12 +112,16 @@ public class MovieDialog extends Dialog
    *          The gis template map model.
    * @param movieTheme
    *          The theme, marked as movie theme.
+   * @param boundingBox
+   *          The bounding box.
    */
-  public MovieDialog( IShellProvider parentShell, GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme )
+  public MovieDialog( IShellProvider parentShell, GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox )
   {
     super( parentShell );
 
-    m_moviePlayer = new MoviePlayer( mapModel, movieTheme );
+    m_mapModel = mapModel;
+    m_movieTheme = movieTheme;
+    m_boundingBox = boundingBox;
     m_movieComposite = null;
   }
 
@@ -124,7 +142,7 @@ public class MovieDialog extends Dialog
     main.setLayoutData( mainData );
 
     /* Create the movie composite. */
-    m_movieComposite = new MovieComposite( main, SWT.NONE, m_moviePlayer );
+    m_movieComposite = new MovieComposite( main, SWT.NONE, m_mapModel, m_movieTheme, m_boundingBox );
     m_movieComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     return main;
@@ -136,7 +154,7 @@ public class MovieDialog extends Dialog
   @Override
   protected Control createButtonBar( Composite parent )
   {
-    Composite buttonComposite = m_moviePlayer.createButtonControls( parent );
+    Composite buttonComposite = m_movieComposite.createButtonControls( parent );
     buttonComposite.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, false ) );
 
     return buttonComposite;
