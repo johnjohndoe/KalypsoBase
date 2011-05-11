@@ -12,18 +12,18 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 
 /**
  * WQTable
- *
+ * 
  * @author schlienger
  */
 public class WQTable
 {
+  private static final WQException CANNOT_INTERPOLATE_EXCEPTION = new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.0" ) ); //$NON-NLS-1$
+
   private final TreeSet<WQPair> m_qSortedPairs;
 
   private final TreeSet<WQPair> m_wSortedPairs;
 
-  private final static WQException CANNOT_INTERPOLATE_EXCEPTION = new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.0") ); //$NON-NLS-1$
-
-  private final LinearEquation EQ = new LinearEquation();
+  private final LinearEquation m_eq = new LinearEquation();
 
   private final Date m_validity;
 
@@ -31,7 +31,7 @@ public class WQTable
 
   /**
    * Creates a WQTable with a default offset of 0
-   *
+   * 
    * @param validity
    *          date up from which this table is valid
    */
@@ -42,7 +42,7 @@ public class WQTable
 
   /**
    * Creates a WQTable
-   *
+   * 
    * @param validity
    *          date up from which this table is valid
    * @param offset
@@ -55,55 +55,55 @@ public class WQTable
 
   /**
    * Creates a WQTable with a default offset of 0
-   *
+   * 
    * @param validity
    *          date up from which this table is valid
    */
-  public WQTable( final Date validity, final double[] W, final double[] Q )
+  public WQTable( final Date validity, final double[] w, final double[] q )
   {
-    this( validity, 0, W, Q );
+    this( validity, 0, w, q );
   }
 
   /**
    * Creates a WQTable
-   *
+   * 
    * @param validity
    *          date up from which this table is valid
    * @param offset
    *          offset used for W, before conversion W = W + offset
    */
-  public WQTable( final Date validity, final int offset, final double[] W, final double[] Q )
+  public WQTable( final Date validity, final int offset, final double[] w, final double[] q )
   {
-    this( validity, offset, WQPair.convert2pairs( W, Q ) );
+    this( validity, offset, WQPair.convert2pairs( w, q ) );
   }
 
   /**
    * Creates a WQTable with a default offset of 0
-   *
+   * 
    * @param validity
    *          date up from which this table is valid
    */
-  public WQTable( final Date validity, final Number[] W, final Number[] Q )
+  public WQTable( final Date validity, final Number[] w, final Number[] q )
   {
-    this( validity, 0, W, Q );
+    this( validity, 0, w, q );
   }
 
   /**
    * Creates a WQTable
-   *
+   * 
    * @param validity
    *          date up from which this table is valid
    * @param offset
    *          offset used for W, before conversion W = W + offset
    */
-  public WQTable( final Date validity, final int offset, final Number[] W, final Number[] Q )
+  public WQTable( final Date validity, final int offset, final Number[] w, final Number[] q )
   {
-    this( validity, offset, WQPair.convert2pairs( W, Q ) );
+    this( validity, offset, WQPair.convert2pairs( w, q ) );
   }
 
   /**
    * Creates a WQTable
-   *
+   * 
    * @param validity
    *          date up from which this table is valid
    * @param offset
@@ -138,14 +138,14 @@ public class WQTable
 
     try
     {
-      EQ.setPoints( p1.getW(), p1.getQ(), p2.getW(), p2.getQ() );
+      m_eq.setPoints( p1.getW(), p1.getQ(), p2.getW(), p2.getQ() );
     }
     catch( final SameXValuesException e )
     {
-      throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.1") + q, e ); //$NON-NLS-1$
+      throw new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.1" ) + q, e ); //$NON-NLS-1$
     }
 
-    return EQ.computeX( q );
+    return m_eq.computeX( q );
   }
 
   public double getQFor( final double w ) throws WQException
@@ -162,22 +162,22 @@ public class WQTable
 
     try
     {
-      EQ.setPoints( p1.getW(), p1.getQ(), p2.getW(), p2.getQ() );
+      m_eq.setPoints( p1.getW(), p1.getQ(), p2.getW(), p2.getQ() );
     }
     catch( final SameXValuesException e )
     {
-      throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.2") + w, e ); //$NON-NLS-1$
+      throw new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.2" ) + w, e ); //$NON-NLS-1$
     }
 
-    return EQ.computeY( w );
+    return m_eq.computeY( w );
   }
 
-  public Date getValidity()
+  public Date getValidity( )
   {
     return m_validity;
   }
 
-  public int getOffset()
+  public int getOffset( )
   {
     return m_offset;
   }
@@ -187,22 +187,14 @@ public class WQTable
     m_offset = offset;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
-  public String toString()
+  public String toString( )
   {
-    final StringBuffer sb = new StringBuffer();
-
     final DateFormat df = DateFormat.getDateTimeInstance();
-    sb.append( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.3") ).append( df.format( m_validity ) ).append( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.4") ).append( m_offset );//.append( "\n" ).append( //$NON-NLS-1$ //$NON-NLS-2$
-    //    m_wSortedPairs ).append( "\n" );
-
-    return sb.toString();
+    return Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.3", df.format( m_validity ), m_offset );
   }
 
-  public WQPair[] getPairs()
+  public WQPair[] getPairs( )
   {
     return m_wSortedPairs.toArray( new WQPair[m_wSortedPairs.size()] );
   }

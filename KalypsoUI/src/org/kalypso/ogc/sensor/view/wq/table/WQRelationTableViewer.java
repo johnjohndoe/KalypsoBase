@@ -47,17 +47,20 @@ import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
-import org.eclipse.compare.internal.AbstractViewer;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.java.swing.table.NumberTableCellRenderer;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
@@ -65,81 +68,65 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 /**
  * @author schlienger
  */
-public class WQRelationTableViewer extends AbstractViewer
+public class WQRelationTableViewer extends Composite
 {
-  private Composite m_composite;
-
-  private Combo m_combo;
-
   private WQTable[] m_tables;
 
-  private JTable m_table;
+  private final JTable m_table;
 
   private String m_fromType;
 
   private String m_toType;
 
+  private final ComboViewer m_tableCombo;
+
   public WQRelationTableViewer( final Composite parent )
   {
-    createControl( parent );
-  }
+    super( parent, SWT.NONE );
 
-  private final void createControl( final Composite parent )
-  {
-    m_composite = new Composite( parent, SWT.NONE );
-    final GridLayout layout = new GridLayout();
-    layout.marginHeight = 0;
-    layout.marginWidth = 0;
-    m_composite.setLayout( layout );
-    m_composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
+    GridLayoutFactory.fillDefaults().applyTo( this );
 
-    final Combo combo = new Combo( m_composite, SWT.DROP_DOWN | SWT.READ_ONLY );
-    m_combo = combo;
-    m_combo.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    m_tableCombo = new ComboViewer( this, SWT.DROP_DOWN | SWT.READ_ONLY );
+    m_tableCombo.setContentProvider( new ArrayContentProvider() );
+    m_tableCombo.setLabelProvider( new LabelProvider() );
 
-    m_combo.addSelectionListener( new SelectionListener()
-    {
-      @Override
-      public void widgetSelected( final SelectionEvent e )
-      {
-        comboSelected( combo );
-      }
-
-      @Override
-      public void widgetDefaultSelected( final SelectionEvent e )
-      {
-        // empty
-      }
-    } );
+    m_tableCombo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     // SWT-AWT Brücke für die Darstellung von JTable
-    final Composite embCmp = new Composite( m_composite, SWT.RIGHT | SWT.EMBEDDED | SWT.BORDER );
-    final GridData embCompData = new GridData( SWT.FILL, SWT.FILL, true, true );
-    embCmp.setLayoutData( embCompData );
+    final Composite embCmp = new Composite( this, SWT.RIGHT | SWT.EMBEDDED | SWT.BORDER );
+    embCmp.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     final Frame vFrame = SWT_AWT.new_Frame( embCmp );
 
     m_table = new JTable();
     vFrame.setVisible( true );
     m_table.setVisible( true );
     m_table.setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
-    m_table.setDefaultRenderer( Number.class, new NumberTableCellRenderer( 3 ) );
-    m_table.getTableHeader().setReorderingAllowed( false );
+
+    m_table.setDefaultRenderer( Number.class, new NumberTableCellRenderer( "%.3g" ) );
+
+    final JTableHeader header = m_table.getTableHeader();
+    header.setReorderingAllowed( false );
+    header.setEnabled( false );
 
     final JScrollPane pane = new JScrollPane( m_table );
     pane.setBorder( BorderFactory.createEmptyBorder() );
     vFrame.add( pane );
+
+    m_tableCombo.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      @Override
+      public void selectionChanged( final SelectionChangedEvent event )
+      {
+        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        comboSelected( selection.getFirstElement() );
+      }
+    });
   }
 
-  protected void comboSelected( final Combo combo )
+  protected void comboSelected( final Object element )
   {
-    final WQTable table = m_tables[combo.getSelectionIndex()];
+    final WQTable table = (WQTable) element;
     m_table.setModel( WQRelationFactory.createTableModel( m_fromType, m_toType, table ) );
-  }
-
-  @Override
-  public Control getControl( )
-  {
-    return m_composite;
   }
 
   public void setInput( final WQTableSet wqs )
@@ -153,14 +140,9 @@ public class WQRelationTableViewer extends AbstractViewer
     m_toType = wqs.getToType();
 
     m_tables = wqs.getTables();
-    for( final WQTable m_table2 : m_tables )
-      m_combo.add( m_table2.toString() );
+    m_tableCombo.setInput( m_tables );
 
     if( m_tables.length > 0 )
-    {
-      m_combo.select( 0 );
-
-      m_table.setModel( WQRelationFactory.createTableModel( m_fromType, m_toType, m_tables[0] ) );
-    }
+      m_tableCombo.setSelection( new StructuredSelection( m_tables[0] ) );
   }
 }
