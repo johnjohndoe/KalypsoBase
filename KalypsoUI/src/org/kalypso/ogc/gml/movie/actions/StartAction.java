@@ -77,8 +77,7 @@ public class StartAction extends Action
   public void runWithEvent( Event event )
   {
     m_player.stepTo( 0 );
-    // TODO
-    m_player.updateControls( 640, 480 );
+    m_player.updateControls();
   }
 
   /**

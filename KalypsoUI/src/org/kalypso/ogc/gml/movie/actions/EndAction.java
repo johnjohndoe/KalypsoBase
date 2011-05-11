@@ -78,8 +78,7 @@ public class EndAction extends Action
   {
     int endStep = m_player.getEndStep();
     m_player.stepTo( endStep );
-    // TODO
-    m_player.updateControls( 640, 480 );
+    m_player.updateControls();
   }
 
   /**

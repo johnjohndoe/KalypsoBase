@@ -104,31 +104,32 @@ public class MovieUtilities
    *          The gis template map model.
    * @param movieTheme
    *          The theme, marked as movie theme.
+   * @param boundingBox
+   *          The bounding box.
    * @return The configured image provider. A default one, if none is configured, the id is wrong or if an error has
    *         occured.
    */
-  public static IMovieImageProvider getImageProvider( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme )
+  public static IMovieImageProvider getImageProvider( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox )
   {
     try
     {
       String id = movieTheme.getProperty( IKalypsoUIConstants.MOVIE_THEME_PROPERTY, null );
-
       if( id == null || id.length() == 0 )
-        return getDefaultImageProvider( mapModel, movieTheme );
+        return getDefaultImageProvider( mapModel, movieTheme, boundingBox );
 
       IMovieImageProvider imageProvider = KalypsoUIExtensions.createMovieImageProvider( id );
       if( imageProvider != null )
       {
-        imageProvider.initialize( mapModel, movieTheme, new NullProgressMonitor() );
+        imageProvider.initialize( mapModel, movieTheme, boundingBox, new NullProgressMonitor() );
         return imageProvider;
       }
 
-      return getDefaultImageProvider( mapModel, movieTheme );
+      return getDefaultImageProvider( mapModel, movieTheme, boundingBox );
     }
     catch( CoreException ex )
     {
       ex.printStackTrace();
-      return getDefaultImageProvider( mapModel, movieTheme );
+      return getDefaultImageProvider( mapModel, movieTheme, boundingBox );
     }
   }
 
@@ -139,12 +140,14 @@ public class MovieUtilities
    *          The gis template map model.
    * @param movieTheme
    *          The theme, marked as movie theme.
+   * @param boundingBox
+   *          The bounding box.
    * @return The default image provider.
    */
-  public static DefaultMovieImageProvider getDefaultImageProvider( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme )
+  public static DefaultMovieImageProvider getDefaultImageProvider( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox )
   {
     DefaultMovieImageProvider imageProvider = new DefaultMovieImageProvider();
-    imageProvider.initialize( mapModel, movieTheme, new NullProgressMonitor() );
+    imageProvider.initialize( mapModel, movieTheme, boundingBox, new NullProgressMonitor() );
 
     return imageProvider;
   }
