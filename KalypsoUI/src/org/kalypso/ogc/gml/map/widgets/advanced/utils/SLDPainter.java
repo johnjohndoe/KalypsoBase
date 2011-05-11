@@ -97,7 +97,7 @@ public class SLDPainter
       catch( final Exception e )
       {
         final String msg = String.format( "Painting coordinate (x=%.2f, y=%.2f) failed", coordinate.x, coordinate.y );
-        StatusUtilities.createErrorStatus( msg, e );
+        StatusUtilities.createExceptionalErrorStatus( msg, e );
       }
     }
 
@@ -111,6 +111,14 @@ public class SLDPainter
     paint( g, sld, point );
   }
 
+  public void paint( final Graphics g, final URL sld, final Geometry[] geometries ) throws CoreException
+  {
+    for( final Geometry geometry : geometries )
+    {
+      paint( g, sld, geometry );
+    }
+  }
+
   public void paint( final Graphics g, final URL sld, final Geometry geometry ) throws CoreException
   {
     try
@@ -120,7 +128,15 @@ public class SLDPainter
     }
     catch( final GM_Exception e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( PAINTING_SLD_FAILED, e ) );
+      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( PAINTING_SLD_FAILED, e ) );
+    }
+  }
+
+  public void paint( final Graphics g, final URL sld, final GM_Object[] geometries ) throws CoreException
+  {
+    for( final GM_Object geometry : geometries )
+    {
+      paint( g, sld, geometry );
     }
   }
 
@@ -136,7 +152,7 @@ public class SLDPainter
       }
       catch( final CoreException e )
       {
-        throw new CoreException( StatusUtilities.createErrorStatus( PAINTING_SLD_FAILED, e ) );
+        throw new CoreException( StatusUtilities.createExceptionalErrorStatus( PAINTING_SLD_FAILED, e ) );
       }
     }
 
@@ -152,7 +168,7 @@ public class SLDPainter
     }
     catch( final Exception e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( PAINTING_SLD_FAILED, e ) );
+      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( PAINTING_SLD_FAILED, e ) );
     }
   }
 
@@ -165,7 +181,7 @@ public class SLDPainter
     }
     catch( final IncompatibleGeometryTypeException e )
     {
-      throw new CoreException( StatusUtilities.createErrorStatus( PAINTING_SLD_FAILED, e ) );
+      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( PAINTING_SLD_FAILED, e ) );
     }
   }
 
