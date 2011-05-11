@@ -38,61 +38,56 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.movie.actions;
-
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Event;
-import org.kalypso.ogc.gml.movie.utils.MoviePlayer;
-import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
+package org.kalypso.ogc.gml.movie.utils;
 
 /**
- * The play action.
+ * A movie resolution.
  * 
  * @author Holger Albert
  */
-public class EjectAction extends Action
+public class MovieResolution
 {
   /**
-   * The movie player.
+   * The width.
    */
-  private MoviePlayer m_player;
+  private int m_width;
+
+  /**
+   * The height.
+   */
+  private int m_height;
 
   /**
    * The constructor.
    * 
-   * @param player
-   *          The movie player.
+   * @param width
+   *          The width.
+   * @param height
+   *          The height.
    */
-  public EjectAction( MoviePlayer player )
+  public MovieResolution( int width, int height )
   {
-    m_player = player;
+    m_width = width;
+    m_height = height;
   }
 
   /**
-   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+   * This function returns the width.
+   * 
+   * @return The width.
    */
-  @Override
-  public void runWithEvent( Event event )
+  public int getWidth( )
   {
+    return m_width;
   }
 
   /**
-   * @see org.eclipse.jface.action.Action#getText()
+   * This function returns the height.
+   * 
+   * @return The height.
    */
-  @Override
-  public String getText( )
+  public int getHeight( )
   {
-    return "Eject";
-  }
-
-  /**
-   * @see org.eclipse.jface.action.Action#getImageDescriptor()
-   */
-  @Override
-  public ImageDescriptor getImageDescriptor( )
-  {
-    return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.MOVIE_PLAYER_EJECT );
+    return m_height;
   }
 }

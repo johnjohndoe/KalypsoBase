@@ -40,13 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.movie;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -98,7 +101,7 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void initialize( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox, IProgressMonitor monitor )
+  public void initialize( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
   {
     /* Determine some needed information. */
     m_frames = preProcess( mapModel, movieTheme, boundingBox, monitor );
@@ -112,7 +115,7 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
   @Override
   public IMovieFrame getCurrentFrame( )
   {
-    if( m_currentFrame < 0 || m_currentFrame <= m_frames.length )
+    if( m_currentFrame < 0 || m_currentFrame >= m_frames.length )
       return null;
 
     return m_frames[m_currentFrame];
@@ -157,7 +160,25 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
     return m_frames.length - 1;
   }
 
-  private IMovieFrame[] preProcess( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox, IProgressMonitor monitor )
+  /**
+   * @see org.kalypso.ogc.gml.movie.IMovieImageProvider#stepAndWait(int, int, int)
+   */
+  @Override
+  public void stepAndWait( int step, int width, int height )
+  {
+    /* Step to step. */
+    stepTo( step );
+
+    /* Get the current frame. */
+    IMovieFrame currentFrame = getCurrentFrame();
+    if( currentFrame == null )
+      return;
+
+    /* Calling this function loads the image. */
+    currentFrame.getImage( width, height );
+  }
+
+  private IMovieFrame[] preProcess( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
   {
     /* Monitor. */
     if( monitor == null )
@@ -168,6 +189,9 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
 
     try
     {
+      /* Create a temporary directory. */
+      File tmpDirectory = FileUtilities.createNewTempDir( "mov" );
+
       /* For each of these themes we need a map model to create a movie frame with it. */
       IKalypsoTheme[] themes = movieTheme.getAllThemes();
 
@@ -178,6 +202,8 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
       {
         /* Monitor. */
         monitor.subTask( "Erzeuge detailgetreue Kopie der Karte..." );
+        if( monitor.isCanceled() )
+          throw new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), "Der Film wurde abgebrochen..." ) );
 
         /* Get the theme. */
         IKalypsoTheme theme = themes[i];
@@ -205,7 +231,7 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
         }
 
         /* Create the frame. */
-        IMovieFrame frame = new MovieFrame( newMapModel, theme.getLabel() );
+        IMovieFrame frame = new MovieFrame( newMapModel, theme.getLabel(), boundingBox, tmpDirectory );
 
         /* Add the frame. */
         results.add( frame );
@@ -215,11 +241,6 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
       }
 
       return results.toArray( new IMovieFrame[] {} );
-    }
-    catch( Exception ex )
-    {
-      KalypsoGisPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) );
-      return new IMovieFrame[] {};
     }
     finally
     {

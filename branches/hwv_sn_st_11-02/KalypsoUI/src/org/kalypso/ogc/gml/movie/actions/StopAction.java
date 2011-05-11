@@ -76,6 +76,9 @@ public class StopAction extends Action
   @Override
   public void runWithEvent( Event event )
   {
+    m_player.stop();
+    m_player.stepTo( 0 );
+    m_player.updateControls();
   }
 
   /**
