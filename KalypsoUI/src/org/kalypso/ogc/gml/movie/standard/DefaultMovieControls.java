@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.movie.standard;
 
 import org.eclipse.jface.action.Action;
 import org.kalypso.ogc.gml.movie.IMovieControls;
-import org.kalypso.ogc.gml.movie.actions.EjectAction;
 import org.kalypso.ogc.gml.movie.actions.PauseAction;
 import org.kalypso.ogc.gml.movie.actions.PlayAction;
 import org.kalypso.ogc.gml.movie.actions.StopAction;
@@ -68,6 +67,6 @@ public class DefaultMovieControls implements IMovieControls
   @Override
   public Action[] getActions( MoviePlayer player )
   {
-    return new Action[] { new StopAction( player ), new PauseAction( player ), new PlayAction( player ), new EjectAction( player ) };
+    return new Action[] { new StopAction( player ), new PauseAction( player ), new PlayAction( player ) };
   }
 }

@@ -40,9 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.movie.utils;
 
+import java.awt.Insets;
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
+import java.io.File;
+
+import javax.media.jai.JAI;
 
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * A movie frame contains a theme, a file of an image and a label.
@@ -62,12 +69,24 @@ public class MovieFrame implements IMovieFrame
   private String m_label;
 
   /**
+   * The bounding box.
+   */
+  private GM_Envelope m_boundingBox;
+
+  /**
+   * The temp directory for that movie.
+   */
+  private File m_tmpDirectory;
+
+  /**
    * The constructor.
    */
-  public MovieFrame( IMapModell mapModel, String label )
+  public MovieFrame( IMapModell mapModel, String label, GM_Envelope boundingBox, File tmpDirectory )
   {
     m_mapModel = mapModel;
     m_label = label;
+    m_boundingBox = boundingBox;
+    m_tmpDirectory = tmpDirectory;
   }
 
   /**
@@ -76,8 +95,22 @@ public class MovieFrame implements IMovieFrame
   @Override
   public RenderedImage getImage( int width, int height )
   {
-    // TODO
-    return null;
+    /* Get the directory of the images for this size. */
+    /* It will be created, if it does not already exist. */
+    File imageDirectory = getImageDirectory( width, height );
+
+    /* The image file. */
+    File imageFile = new File( imageDirectory, m_label + ".PNG" );
+    if( imageFile.exists() )
+      return JAI.create( "fileload", imageFile.getAbsolutePath() );
+
+    /* Create the image. */
+    BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapModel, width, height, new Insets( 1, 1, 1, 1 ), 0, m_boundingBox );
+
+    /* Save the image. */
+    JAI.create( "filestore", image, imageFile.getAbsolutePath(), "PNG" );
+
+    return image;
   }
 
   /**
@@ -87,5 +120,24 @@ public class MovieFrame implements IMovieFrame
   public String getLabel( )
   {
     return m_label;
+  }
+
+  /**
+   * This function returns the directory, which contains the images of this size. If it does not exist, it will be
+   * created.
+   * 
+   * @return The directory, which contains the images of this size.
+   */
+  private File getImageDirectory( int width, int height )
+  {
+    if( !m_tmpDirectory.exists() )
+      m_tmpDirectory.mkdirs();
+
+    String sizeName = String.format( "%d_x_%d", width, height );
+    File sizeDirectory = new File( m_tmpDirectory, sizeName );
+    if( !sizeDirectory.exists() )
+      sizeDirectory.mkdirs();
+
+    return sizeDirectory;
   }
 }

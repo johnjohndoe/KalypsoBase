@@ -46,7 +46,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
@@ -106,31 +106,25 @@ public class MovieUtilities
    *          The theme, marked as movie theme.
    * @param boundingBox
    *          The bounding box.
+   * @param monitor
+   *          A progress monitor.
    * @return The configured image provider. A default one, if none is configured, the id is wrong or if an error has
    *         occured.
    */
-  public static IMovieImageProvider getImageProvider( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox )
+  public static IMovieImageProvider getImageProvider( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
   {
-    try
-    {
-      String id = movieTheme.getProperty( IKalypsoUIConstants.MOVIE_THEME_PROPERTY, null );
-      if( id == null || id.length() == 0 )
-        return getDefaultImageProvider( mapModel, movieTheme, boundingBox );
+    String id = movieTheme.getProperty( IKalypsoUIConstants.MOVIE_THEME_PROPERTY, null );
+    if( id == null || id.length() == 0 )
+      return getDefaultImageProvider( mapModel, movieTheme, boundingBox, monitor );
 
-      IMovieImageProvider imageProvider = KalypsoUIExtensions.createMovieImageProvider( id );
-      if( imageProvider != null )
-      {
-        imageProvider.initialize( mapModel, movieTheme, boundingBox, new NullProgressMonitor() );
-        return imageProvider;
-      }
-
-      return getDefaultImageProvider( mapModel, movieTheme, boundingBox );
-    }
-    catch( CoreException ex )
+    IMovieImageProvider imageProvider = KalypsoUIExtensions.createMovieImageProvider( id );
+    if( imageProvider != null )
     {
-      ex.printStackTrace();
-      return getDefaultImageProvider( mapModel, movieTheme, boundingBox );
+      imageProvider.initialize( mapModel, movieTheme, boundingBox, monitor );
+      return imageProvider;
     }
+
+    return getDefaultImageProvider( mapModel, movieTheme, boundingBox, monitor );
   }
 
   /**
@@ -142,12 +136,14 @@ public class MovieUtilities
    *          The theme, marked as movie theme.
    * @param boundingBox
    *          The bounding box.
+   * @param monitor
+   *          A progress monitor.
    * @return The default image provider.
    */
-  public static DefaultMovieImageProvider getDefaultImageProvider( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox )
+  public static DefaultMovieImageProvider getDefaultImageProvider( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
   {
     DefaultMovieImageProvider imageProvider = new DefaultMovieImageProvider();
-    imageProvider.initialize( mapModel, movieTheme, boundingBox, new NullProgressMonitor() );
+    imageProvider.initialize( mapModel, movieTheme, boundingBox, monitor );
 
     return imageProvider;
   }

@@ -41,6 +41,9 @@
 package org.kalypso.ogc.gml.movie.controls;
 
 import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.DataBuffer;
@@ -49,11 +52,15 @@ import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
 import java.awt.image.WritableRaster;
 
-import javax.media.jai.widget.ImageCanvas;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -65,36 +72,40 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.Form;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.movie.IMovieControls;
 import org.kalypso.ogc.gml.movie.IMovieImageProvider;
 import org.kalypso.ogc.gml.movie.utils.IMovieFrame;
 import org.kalypso.ogc.gml.movie.utils.MoviePlayer;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypso.ogc.gml.movie.utils.MovieResolution;
+import org.kalypso.ogc.gml.movie.utils.ResolutionLabelProvider;
+
+import com.sun.media.jai.widget.DisplayJAI;
 
 /**
  * The movie composite.
  * 
  * @author Holger Albert
  */
-@SuppressWarnings("deprecation")
 public class MovieComposite extends Composite
 {
   /**
    * The movie player.
    */
-  private MoviePlayer m_player;
+  protected MoviePlayer m_player;
 
   /**
    * The form.
    */
-  private Form m_form;
+  protected Form m_form;
 
   /**
    * The content, which the form contains.
@@ -102,9 +113,9 @@ public class MovieComposite extends Composite
   private Composite m_content;
 
   /**
-   * The image canvas.
+   * An AWT control for displaying the image.
    */
-  private ImageCanvas m_imageCanvas;
+  protected DisplayJAI m_displayJAI;
 
   /**
    * The progress bar.
@@ -112,14 +123,14 @@ public class MovieComposite extends Composite
   private ProgressBar m_progressBar;
 
   /**
-   * The width.
+   * The progress label.
    */
-  private int m_width;
+  private Label m_progressLabel;
 
   /**
-   * The height.
+   * The selected resolution.
    */
-  private int m_height;
+  protected MovieResolution m_resolution;
 
   /**
    * The constructor.
@@ -128,30 +139,28 @@ public class MovieComposite extends Composite
    *          A widget which will be the parent of the new instance (cannot be null).
    * @param style
    *          The style of widget to construct.
-   * @param mapModel
-   *          The gis template map model.
-   * @param movieTheme
-   *          The theme, marked as movie theme.
-   * @param boundingBox
-   *          The bounding box.
+   * @param player
+   *          The movie player.
    */
-  public MovieComposite( Composite parent, int style, GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox )
+  public MovieComposite( Composite parent, int style, MoviePlayer player )
   {
     super( parent, style );
 
     /* Initialize with parameters. */
-    m_player = new MoviePlayer( this, mapModel, movieTheme, boundingBox );
+    m_player = player;
+    m_player.initialize( this );
 
     /* Initialize. */
     m_form = null;
     m_content = null;
-    m_imageCanvas = null;
+    m_displayJAI = null;
     m_progressBar = null;
-    m_width = 640;
-    m_height = 480;
+    m_progressLabel = null;
+    m_resolution = new MovieResolution( 800, 600 );
 
     /* Create the controls. */
     createControls();
+    ControlUtils.addDisposeListener( this );
   }
 
   /**
@@ -169,11 +178,16 @@ public class MovieComposite extends Composite
   @Override
   public void dispose( )
   {
+    /* Stop the player. */
+    m_player.stop();
+
     /* Discard the references. */
+    m_player = null;
     m_form = null;
     m_content = null;
-    m_imageCanvas = null;
+    m_displayJAI = null;
     m_progressBar = null;
+    m_progressLabel = null;
 
     super.dispose();
   }
@@ -200,7 +214,6 @@ public class MovieComposite extends Composite
     /* A form. */
     m_form = new Form( content, SWT.NONE );
     m_form.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    m_form.setMessage( "Daten werden abgerufen...", IMessageProvider.INFORMATION );
 
     /* Get the body of the form. */
     Composite body = m_form.getBody();
@@ -273,29 +286,94 @@ public class MovieComposite extends Composite
   {
     /* Create a composite. */
     Composite composite = new Composite( parent, SWT.NONE );
-    GridLayout layout = new GridLayout( 1, false );
+    GridLayout layout = new GridLayout( 3, false );
     layout.marginHeight = 0;
     layout.marginWidth = 0;
     composite.setLayout( layout );
 
     /* Create the image composite. */
-    Composite imageComposite = new Composite( composite, SWT.EMBEDDED | SWT.NO_BACKGROUND );
-    imageComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
-    /* Create the start image. */
-    BufferedImage startImage = createEmptyImage( m_width, m_height );
+    final Composite imageComposite = new Composite( composite, SWT.EMBEDDED | SWT.NO_BACKGROUND );
+    GridData imageData = new GridData( SWT.FILL, SWT.FILL, true, true, 3, 1 );
+    imageData.widthHint = m_resolution.getWidth();
+    imageData.heightHint = m_resolution.getHeight();
+    imageComposite.setLayoutData( imageData );
 
     /* Create the image canvas. */
-    m_imageCanvas = new ImageCanvas( startImage );
     Frame virtualFrame = SWT_AWT.new_Frame( imageComposite );
-    virtualFrame.add( m_imageCanvas );
+    virtualFrame.setLayout( new GridBagLayout() );
+    m_displayJAI = new DisplayJAI( createEmptyImage( m_resolution.getWidth(), m_resolution.getHeight() ) );
+    virtualFrame.add( m_displayJAI, new GridBagConstraints( 0, 0, 1, 1, 100, 100, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
     /* Create a progress bar. */
     m_progressBar = new ProgressBar( composite, SWT.NONE );
     m_progressBar.setMinimum( 0 );
     m_progressBar.setMaximum( m_player.getEndStep() );
     m_progressBar.setSelection( m_player.getCurrentStep() );
-    m_progressBar.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false ) );
+    m_progressBar.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false, 3, 1 ) );
+
+    /* Create the progress label. */
+    m_progressLabel = new Label( composite, SWT.NONE );
+    m_progressLabel.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false ) );
+    m_progressLabel.setText( "" );
+
+    /* Create a combo box. */
+    ComboViewer resolutionViewer = new ComboViewer( composite, SWT.READ_ONLY );
+    resolutionViewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.TOP, false, false ) );
+    resolutionViewer.setContentProvider( new ArrayContentProvider() );
+    resolutionViewer.setLabelProvider( new ResolutionLabelProvider() );
+    MovieResolution[] input = new MovieResolution[] { new MovieResolution( 640, 480 ), new MovieResolution( 800, 600 ), new MovieResolution( 1024, 768 ), new MovieResolution( 1280, 1024 ),
+        new MovieResolution( 1280, 720 ), new MovieResolution( 1920, 1080 ) };
+    resolutionViewer.setInput( input );
+    resolutionViewer.setSelection( new StructuredSelection( input[1] ) );
+    resolutionViewer.addSelectionChangedListener( new ISelectionChangedListener()
+    {
+      /**
+       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+       */
+      @Override
+      public void selectionChanged( SelectionChangedEvent event )
+      {
+        ISelection selection = event.getSelection();
+        Object firstElement = ((StructuredSelection) selection).getFirstElement();
+        m_resolution = (MovieResolution) firstElement;
+
+        GridData layoutData = new GridData( SWT.FILL, SWT.FILL, true, true, 3, 1 );
+        layoutData.widthHint = m_resolution.getWidth();
+        layoutData.heightHint = m_resolution.getHeight();
+        imageComposite.setLayoutData( layoutData );
+        imageComposite.setSize( m_resolution.getWidth(), m_resolution.getHeight() );
+
+        m_displayJAI.set( createEmptyImage( m_resolution.getWidth(), m_resolution.getHeight() ) );
+
+        MovieComposite.this.pack();
+      }
+    } );
+
+    /* Create a spinner. */
+    Spinner spinner = new Spinner( composite, SWT.BORDER );
+    spinner.setLayoutData( new GridData( SWT.FILL, SWT.TOP, false, false ) );
+    spinner.setMinimum( 100 );
+    spinner.setIncrement( 50 );
+    spinner.setMaximum( 1000 );
+    spinner.setSelection( 250 );
+    spinner.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        /* Spinner. */
+        Spinner source = (Spinner) e.getSource();
+
+        /* Get the selection. */
+        int selection = source.getSelection();
+
+        /* Update the frame relay. */
+        m_player.updateFrameDelay( selection );
+      }
+    } );
 
     return composite;
   }
@@ -309,7 +387,7 @@ public class MovieComposite extends Composite
    *          The height of the image.
    * @return The empty image.
    */
-  private BufferedImage createEmptyImage( int width, int height )
+  protected BufferedImage createEmptyImage( int width, int height )
   {
     /* Create an empty image. */
     byte[] byteArray = new byte[] { -1, 0 };
@@ -328,10 +406,10 @@ public class MovieComposite extends Composite
    * @param height
    *          The height.
    */
-  private void updateImageCanvas( int width, int height )
+  protected void updateImageCanvas( int width, int height )
   {
     /* Is the control disposed? */
-    if( m_imageCanvas == null )
+    if( m_displayJAI == null )
       return;
 
     /* Get the current frame. */
@@ -342,7 +420,7 @@ public class MovieComposite extends Composite
       BufferedImage startImage = createEmptyImage( width, height );
 
       /* Set the start image. */
-      m_imageCanvas.set( startImage );
+      m_displayJAI.set( startImage );
 
       return;
     }
@@ -351,13 +429,13 @@ public class MovieComposite extends Composite
     RenderedImage currentImage = currentFrame.getImage( width, height );
 
     /* Set the current image. */
-    m_imageCanvas.set( currentImage );
+    m_displayJAI.set( currentImage );
   }
 
   /**
    * This function updates the progress bar.
    */
-  private void updateProgressBar( )
+  protected void updateProgressBar( )
   {
     /* Is the control disposed? */
     if( m_progressBar == null || m_progressBar.isDisposed() )
@@ -366,8 +444,14 @@ public class MovieComposite extends Composite
     /* Get the current step. */
     int currentStep = m_player.getCurrentStep();
 
+    /* Get the current frame. */
+    IMovieFrame currentFrame = m_player.getCurrentFrame();
+    if( currentFrame == null )
+      return;
+
     /* Set the current step. */
     m_progressBar.setSelection( currentStep );
+    m_progressLabel.setText( currentFrame.getLabel() );
   }
 
   /**
@@ -446,6 +530,16 @@ public class MovieComposite extends Composite
   }
 
   /**
+   * This function returns the selected resolution.
+   * 
+   * @return The selected resolution.
+   */
+  public MovieResolution getResolution( )
+  {
+    return m_resolution;
+  }
+
+  /**
    * This function updates the controls.
    * 
    * @param width
@@ -455,9 +549,20 @@ public class MovieComposite extends Composite
    */
   public void updateControls( )
   {
-    updateImageCanvas( m_width, m_height );
-    updateProgressBar();
-    updateStatus( null );
+    Display display = getDisplay();
+    display.asyncExec( new Runnable()
+    {
+      /**
+       * @see java.lang.Runnable#run()
+       */
+      @Override
+      public void run( )
+      {
+        updateImageCanvas( m_resolution.getWidth(), m_resolution.getHeight() );
+        updateProgressBar();
+        updateStatus( null );
+      }
+    } );
   }
 
   /**
@@ -477,15 +582,5 @@ public class MovieComposite extends Composite
       m_form.setMessage( null, IMessageProvider.NONE );
 
     m_form.layout( true, true );
-  }
-
-  /**
-   * This function returns the movie player.
-   * 
-   * @return The movie player.
-   */
-  public MoviePlayer getPlayer( )
-  {
-    return m_player;
   }
 }

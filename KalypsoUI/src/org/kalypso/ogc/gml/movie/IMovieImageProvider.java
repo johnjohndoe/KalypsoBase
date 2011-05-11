@@ -72,7 +72,7 @@ public interface IMovieImageProvider
    * @param monitor
    *          A progress monitor.
    */
-  public void initialize( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox, IProgressMonitor monitor );
+  public void initialize( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception;
 
   /**
    * This function returns the frame of the current theme.
@@ -82,12 +82,24 @@ public interface IMovieImageProvider
   public IMovieFrame getCurrentFrame( );
 
   /**
-   * This function steps the number of steps. If the end of the movie is reached, it will stop there.
+   * This function steps to the frame at the given step.
    * 
    * @param step
-   *          The steps to go.
+   *          The steps to step to.
    */
   public void stepTo( int step );
+
+  /**
+   * This function steps to the frame at the given step and returns if the frame finished initializing.
+   * 
+   * @param step
+   *          The steps to step to.
+   * @param width
+   *          The width.
+   * @param height
+   *          The height.
+   */
+  public void stepAndWait( int step, int width, int height );
 
   /**
    * This function returns the current step.

@@ -43,15 +43,18 @@ package org.kalypso.ogc.gml.movie;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.movie.controls.MovieComposite;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypso.ogc.gml.movie.utils.MoviePlayer;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * The movie dialog.
@@ -61,24 +64,14 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public class MovieDialog extends Dialog
 {
   /**
-   * The gis template map model.
+   * The movie player.
    */
-  private GisTemplateMapModell m_mapModel;
-
-  /**
-   * The theme, marked as movie theme.
-   */
-  private AbstractCascadingLayerTheme m_movieTheme;
-
-  /**
-   * The bounding box.
-   */
-  private GM_Envelope m_boundingBox;
+  private MoviePlayer m_player;
 
   /**
    * The movie composite.
    */
-  private MovieComposite m_movieComposite;
+  protected MovieComposite m_movieComposite;
 
   /**
    * Creates a dialog instance. Note that the window will have no visual representation (no widgets) until it is told to
@@ -86,20 +79,14 @@ public class MovieDialog extends Dialog
    * 
    * @param parentShell
    *          The parent shell, or null to create a top-level shell.
-   * @param mapModel
-   *          The gis template map model.
-   * @param movieTheme
-   *          The theme, marked as movie theme.
-   * @param boundingBox
-   *          The bounding box.
+   * @param player
+   *          The movie player.
    */
-  public MovieDialog( Shell parentShell, GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox )
+  public MovieDialog( Shell parentShell, MoviePlayer player )
   {
     super( parentShell );
 
-    m_mapModel = mapModel;
-    m_movieTheme = movieTheme;
-    m_boundingBox = boundingBox;
+    m_player = player;
     m_movieComposite = null;
   }
 
@@ -108,20 +95,14 @@ public class MovieDialog extends Dialog
    * 
    * @param parentShell
    *          Object that returns the current parent shell.
-   * @param mapModel
-   *          The gis template map model.
-   * @param movieTheme
-   *          The theme, marked as movie theme.
-   * @param boundingBox
-   *          The bounding box.
+   * @param player
+   *          The movie player.
    */
-  public MovieDialog( IShellProvider parentShell, GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox )
+  public MovieDialog( IShellProvider parentShell, MoviePlayer player )
   {
     super( parentShell );
 
-    m_mapModel = mapModel;
-    m_movieTheme = movieTheme;
-    m_boundingBox = boundingBox;
+    m_player = player;
     m_movieComposite = null;
   }
 
@@ -137,15 +118,35 @@ public class MovieDialog extends Dialog
     /* Create the main composite. */
     Composite main = (Composite) super.createDialogArea( parent );
     main.setLayout( new GridLayout( 1, false ) );
-    GridData mainData = new GridData( SWT.FILL, SWT.FILL, true, true );
-    mainData.widthHint = 400;
-    main.setLayoutData( mainData );
+    main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the movie composite. */
-    m_movieComposite = new MovieComposite( main, SWT.NONE, m_mapModel, m_movieTheme, m_boundingBox );
+    m_movieComposite = new MovieComposite( main, SWT.NONE, m_player );
     m_movieComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_movieComposite.addControlListener( new ControlAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
+       */
+      @Override
+      public void controlResized( ControlEvent e )
+      {
+        m_movieComposite.pack();
+        MovieDialog.this.getContents().pack();
+        MovieDialog.this.getShell().pack();
+      }
+    } );
 
     return main;
+  }
+
+  /**
+   * @see org.eclipse.jface.window.Window#getContents()
+   */
+  @Override
+  protected Control getContents( )
+  {
+    return super.getContents();
   }
 
   /**
@@ -157,6 +158,10 @@ public class MovieDialog extends Dialog
     Composite buttonComposite = m_movieComposite.createButtonControls( parent );
     buttonComposite.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, false ) );
 
+    Button cancelButton = createButton( buttonComposite, CANCEL, "Ecject", true );
+    cancelButton.setImage( KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.MOVIE_PLAYER_EJECT ).createImage() );
+    cancelButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+
     return buttonComposite;
   }
 
@@ -166,6 +171,6 @@ public class MovieDialog extends Dialog
   @Override
   protected boolean isResizable( )
   {
-    return true;
+    return false;
   }
 }

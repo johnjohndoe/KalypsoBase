@@ -40,11 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.movie.utils;
 
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
-import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.ogc.gml.movie.IMovieImageProvider;
 import org.kalypso.ogc.gml.movie.controls.MovieComposite;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * The movie player.
@@ -54,31 +52,48 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public class MoviePlayer
 {
   /**
-   * The parent movie composite.
-   */
-  private MovieComposite m_parent;
-
-  /**
    * The movie image provider.
    */
-  private IMovieImageProvider m_imageProvider;
+  protected IMovieImageProvider m_imageProvider;
+
+  /**
+   * The parent movie composite.
+   */
+  protected MovieComposite m_parent;
+
+  /**
+   * The movie player job.
+   */
+  protected MoviePlayerJob m_job;
+
+  /**
+   * The frame delay.
+   */
+  private int m_frameDelay;
 
   /**
    * The constructor.
    * 
+   * @param imageProvider
+   *          The movie image provider.
+   */
+  public MoviePlayer( IMovieImageProvider imageProvider )
+  {
+    m_imageProvider = imageProvider;
+    m_parent = null;
+    m_job = null;
+    m_frameDelay = 250;
+  }
+
+  /**
+   * This function initializes the player.
+   * 
    * @param parent
    *          The parent movie composite.
-   * @param mapModel
-   *          The gis template map model.
-   * @param movieTheme
-   *          The theme, marked as movie theme.
-   * @param boundingBox
-   *          The bounding box.
    */
-  public MoviePlayer( MovieComposite parent, GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox )
+  public void initialize( MovieComposite parent )
   {
     m_parent = parent;
-    m_imageProvider = MovieUtilities.getImageProvider( mapModel, movieTheme, boundingBox );
   }
 
   public void updateControls( )
@@ -87,6 +102,27 @@ public class MoviePlayer
       return;
 
     m_parent.updateControls();
+  }
+
+  public synchronized void start( )
+  {
+    if( m_job != null )
+      return;
+
+    m_job = new MoviePlayerJob( this );
+    m_job.setSystem( false );
+    m_job.setUser( false );
+    m_job.setPriority( Job.LONG );
+    m_job.schedule();
+  }
+
+  public synchronized void stop( )
+  {
+    if( m_job == null )
+      return;
+
+    m_job.cancel();
+    m_job = null;
   }
 
   public IMovieImageProvider getImageProvider( )
@@ -104,6 +140,12 @@ public class MoviePlayer
     m_imageProvider.stepTo( step );
   }
 
+  public void stepAndWait( final int step )
+  {
+    MovieResolution resolution = m_parent.getResolution();
+    m_imageProvider.stepAndWait( step, resolution.getWidth(), resolution.getHeight() );
+  }
+
   public int getCurrentStep( )
   {
     return m_imageProvider.getCurrentStep();
@@ -112,5 +154,15 @@ public class MoviePlayer
   public int getEndStep( )
   {
     return m_imageProvider.getEndStep();
+  }
+
+  public void updateFrameDelay( int frameDelay )
+  {
+    m_frameDelay = frameDelay;
+  }
+
+  public int getFrameDelay( )
+  {
+    return m_frameDelay;
   }
 }

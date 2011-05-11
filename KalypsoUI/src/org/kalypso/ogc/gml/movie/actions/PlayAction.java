@@ -76,6 +76,8 @@ public class PlayAction extends Action
   @Override
   public void runWithEvent( Event event )
   {
+    m_player.start();
+    m_player.updateControls();
   }
 
   /**

@@ -38,21 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.movie.actions;
+package org.kalypso.ogc.gml.movie.utils;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Event;
-import org.kalypso.ogc.gml.movie.utils.MoviePlayer;
-import org.kalypso.ui.ImageProvider;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * The stop action.
+ * This jobs plays the movie.
  * 
  * @author Holger Albert
  */
-public class StopAction extends Action
+public class MoviePlayerJob extends Job
 {
   /**
    * The movie player.
@@ -65,37 +64,43 @@ public class StopAction extends Action
    * @param player
    *          The movie player.
    */
-  public StopAction( MoviePlayer player )
+  public MoviePlayerJob( MoviePlayer player )
   {
+    super( "MoviePlayer" );
+
     m_player = player;
   }
 
   /**
-   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+   * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void runWithEvent( Event event )
+  protected IStatus run( IProgressMonitor monitor )
   {
-    m_player.stop();
-    m_player.stepTo( 0 );
-    m_player.updateControls();
-  }
+    try
+    {
+      while( true )
+      {
+        /* Monitor. */
+        if( monitor.isCanceled() )
+          return new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), "Abbruch..." );
 
-  /**
-   * @see org.eclipse.jface.action.Action#getText()
-   */
-  @Override
-  public String getText( )
-  {
-    return "Stop";
-  }
+        /* Get the current step. */
+        int currentStep = m_player.getCurrentStep();
 
-  /**
-   * @see org.eclipse.jface.action.Action#getImageDescriptor()
-   */
-  @Override
-  public ImageDescriptor getImageDescriptor( )
-  {
-    return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.MOVIE_PLAYER_STOP );
+        /* Step and wait. */
+        m_player.stepAndWait( currentStep + 1 );
+
+        /* Update the controls. */
+        m_player.updateControls();
+
+        /* Wait a bit. */
+        Thread.sleep( m_player.getFrameDelay() );
+      }
+    }
+    catch( Exception ex )
+    {
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex );
+    }
   }
 }
