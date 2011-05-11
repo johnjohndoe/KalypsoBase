@@ -140,7 +140,7 @@ public class SLDPainter
     }
   }
 
-  private void paint( final Graphics g, final URL sld, final GM_Object gmo ) throws CoreException
+  public void paint( final Graphics g, final URL sld, final GM_Object gmo ) throws CoreException
   {
     Symbolizer symbolizer = m_symbolizerMap.get( sld );
     if( symbolizer == null )
