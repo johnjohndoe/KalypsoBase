@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.kalypso.i18n.Messages;
+import org.kalypso.deegree.i18n.Messages;
 import org.kalypso.transformation.ui.AvailableCRSPanel;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.transformation.ui.listener.IAvailableCRSPanelListener;
@@ -98,7 +98,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
     init();
   }
 
-  public KalypsoDeegreePreferencePage( String title )
+  public KalypsoDeegreePreferencePage( final String title )
   {
     super( title );
 
@@ -106,7 +106,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
     init();
   }
 
-  public KalypsoDeegreePreferencePage( String title, ImageDescriptor image )
+  public KalypsoDeegreePreferencePage( final String title, final ImageDescriptor image )
   {
     super( title, image );
 
@@ -133,10 +133,10 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
    * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createContents( Composite parent )
+  protected Control createContents( final Composite parent )
   {
     /* Create the main container. */
-    Composite main = new Composite( parent, SWT.NONE );
+    final Composite main = new Composite( parent, SWT.NONE );
     main.setLayout( new GridLayout( 1, false ) );
 
     /* Create the panel for the coordinate system. */
@@ -151,7 +151,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
        */
       @Override
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
         /* Store the coordinate system. */
         m_coordinateSystem = m_crsPanel.getSelectedCRS();
@@ -176,7 +176,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
        * @see org.kalypso.transformation.ui.IAvailableCRSPanelListener#coordinateSystemsInitialized(java.lang.String[])
        */
       @Override
-      public void coordinateSystemsInitialized( String[] codes )
+      public void coordinateSystemsInitialized( final String[] codes )
       {
         /* Store the available coordinate systems. */
         storeCoordinateSystems();
@@ -186,7 +186,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
        * @see org.kalypso.transformation.ui.IAvailableCRSPanelListener#coordinateSystemAdded(java.lang.String)
        */
       @Override
-      public void coordinateSystemAdded( String code )
+      public void coordinateSystemAdded( final String code )
       {
         /* Store the available coordinate systems. */
         storeCoordinateSystems();
@@ -196,7 +196,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
        * @see org.kalypso.transformation.ui.IAvailableCRSPanelListener#coordinateSystemRemoved(java.lang.String)
        */
       @Override
-      public void coordinateSystemRemoved( String code )
+      public void coordinateSystemRemoved( final String code )
       {
         /* Store the available coordinate systems. */
         storeCoordinateSystems();
@@ -259,8 +259,8 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
   public boolean performOk( )
   {
     /* Get the preferences. */
-    InstanceScope instanceScope = new InstanceScope();
-    IEclipsePreferences instanceNode = instanceScope.getNode( KalypsoDeegreePlugin.getID() );
+    final InstanceScope instanceScope = new InstanceScope();
+    final IEclipsePreferences instanceNode = instanceScope.getNode( KalypsoDeegreePlugin.getID() );
 
     /* Set the new values. */
     instanceNode.put( IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, m_coordinateSystem );
@@ -271,7 +271,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
       /* Save the preferences. */
       instanceNode.flush();
     }
-    catch( BackingStoreException ex )
+    catch( final BackingStoreException ex )
     {
       ex.printStackTrace();
     }
@@ -286,8 +286,8 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
   protected void performDefaults( )
   {
     /* Get the default preferences. */
-    DefaultScope defaultScope = new DefaultScope();
-    IEclipsePreferences defaultNode = defaultScope.getNode( KalypsoDeegreePlugin.getID() );
+    final DefaultScope defaultScope = new DefaultScope();
+    final IEclipsePreferences defaultNode = defaultScope.getNode( KalypsoDeegreePlugin.getID() );
 
     /* Must be set before, because the coordinate system in the combo will be checked against this ones. */
     if( m_availableCRSPanel != null && !m_availableCRSPanel.isDisposed() )
@@ -303,7 +303,7 @@ public class KalypsoDeegreePreferencePage extends PreferencePage implements IWor
    * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
    */
   @Override
-  public void init( IWorkbench workbench )
+  public void init( final IWorkbench workbench )
   {
   }
 }

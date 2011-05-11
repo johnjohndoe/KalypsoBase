@@ -50,7 +50,7 @@ import java.util.regex.Pattern;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.kalypsodeegree.graphics.i18n.Messages;
+import org.kalypso.deegree.i18n.Messages;
 import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 
 /**
