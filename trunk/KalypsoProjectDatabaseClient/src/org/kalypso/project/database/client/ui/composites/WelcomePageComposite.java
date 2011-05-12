@@ -52,9 +52,8 @@ import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.IKalypsoModuleWelcomePageFrame;
 import org.kalypso.module.ModuleExtensions;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.extension.pages.welcome.IKalypsoWelcomePage;
-import org.kalypso.project.database.client.ui.MyColors;
-import org.kalypso.project.database.client.ui.MyFonts;
 
 /**
  * @author Dirk Kuch
@@ -117,7 +116,7 @@ public class WelcomePageComposite extends Composite
       content.setImage( handler.getIcon() );
       content.setHoverImage( handler.getHoverIcon() );
 
-      content.setText( handler.getLabel(), MyFonts.WELCOME_PAGE_MODULE, MyColors.COLOR_WELCOME_PAGE_HEADING, SWT.RIGHT );
+      content.setText( handler.getLabel(), KalypsoProjectDatabaseClient.WELCOME_PAGE_MODULE, KalypsoProjectDatabaseClient.COLOR_WELCOME_PAGE_HEADING, SWT.RIGHT );
       content.setTooltip( handler.getTooltip() );
       content.setMouseListener( new MouseAdapter()
       {

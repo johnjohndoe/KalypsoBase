@@ -2,6 +2,10 @@ package org.kalypso.project.database.client;
 
 import javax.xml.ws.WebServiceException;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
@@ -15,6 +19,14 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
 {
+  public static final Color COLOR_WELCOME_PAGE_HEADING = new Color( null, 0x99, 0xB4, 0xCE );
+
+  static public final Font WELCOME_PAGE_HEADING = new Font( Display.getDefault(), "Tahoma", 28, SWT.BOLD ); //$NON-NLS-1$
+
+  static public final Font WELCOME_PAGE_MODULE = new Font( Display.getDefault(), "Tahoma", 14, SWT.BOLD ); //$NON-NLS-1$
+
+  static public final Font HEADING = new Font( Display.getDefault(), "Tahoma", 8, SWT.BOLD ); //$NON-NLS-1$
+
   private ProjectDatabaseModel PROJECT_DATABASE_MODEL = null;
 
   private static IProjectDatabase m_service = null;
