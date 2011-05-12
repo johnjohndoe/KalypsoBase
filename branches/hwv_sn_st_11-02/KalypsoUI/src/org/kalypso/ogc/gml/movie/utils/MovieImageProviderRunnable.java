@@ -46,7 +46,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.movie.IMovieImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -65,11 +64,6 @@ public class MovieImageProviderRunnable implements ICoreRunnableWithProgress
   private GisTemplateMapModell m_mapModel;
 
   /**
-   * The theme, marked as movie theme.
-   */
-  private AbstractCascadingLayerTheme m_movieTheme;
-
-  /**
    * The bounding box.
    */
   private GM_Envelope m_envelope;
@@ -84,15 +78,12 @@ public class MovieImageProviderRunnable implements ICoreRunnableWithProgress
    * 
    * @param mapModel
    *          The gis template map model.
-   * @param movieTheme
-   *          The theme, marked as movie theme.
    * @param boundingBox
    *          The bounding box.
    */
-  public MovieImageProviderRunnable( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope envelope )
+  public MovieImageProviderRunnable( GisTemplateMapModell mapModel, GM_Envelope envelope )
   {
     m_mapModel = mapModel;
-    m_movieTheme = movieTheme;
     m_envelope = envelope;
     m_imageProvider = null;
   }
@@ -114,7 +105,7 @@ public class MovieImageProviderRunnable implements ICoreRunnableWithProgress
       monitor.subTask( "Initialisiere den Film..." );
 
       /* Create the image provider. */
-      m_imageProvider = MovieUtilities.getImageProvider( m_mapModel, m_movieTheme, m_envelope, new SubProgressMonitor( monitor, 1000 ) );
+      m_imageProvider = MovieUtilities.getImageProvider( m_mapModel, m_envelope, new SubProgressMonitor( monitor, 1000 ) );
 
       return new Status( IStatus.OK, KalypsoGisPlugin.getId(), "OK" );
     }

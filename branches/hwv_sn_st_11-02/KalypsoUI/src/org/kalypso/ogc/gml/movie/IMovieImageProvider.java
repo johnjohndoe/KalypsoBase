@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.movie;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.movie.utils.IMovieFrame;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -65,14 +64,12 @@ public interface IMovieImageProvider
    * 
    * @param mapModel
    *          The gis template map model.
-   * @param movieTheme
-   *          The theme, marked as movie theme.
    * @param boundingBox
    *          The bounding box.
    * @param monitor
    *          A progress monitor.
    */
-  public void initialize( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception;
+  public void initialize( GisTemplateMapModell mapModel, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception;
 
   /**
    * This function returns the frame of the current theme.

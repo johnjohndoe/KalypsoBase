@@ -45,6 +45,9 @@ import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -159,8 +162,20 @@ public class MovieDialog extends Dialog
     buttonComposite.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, false ) );
 
     Button cancelButton = createButton( buttonComposite, CANCEL, "Ecject", true );
-    cancelButton.setImage( KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.MOVIE_PLAYER_EJECT ).createImage() );
+    final Image cancelImage = KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.MOVIE_PLAYER_EJECT ).createImage();
+    cancelButton.setImage( cancelImage );
     cancelButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+    cancelButton.addDisposeListener( new DisposeListener()
+    {
+      /**
+       * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
+       */
+      @Override
+      public void widgetDisposed( DisposeEvent e )
+      {
+        cancelImage.dispose();
+      }
+    } );
 
     return buttonComposite;
   }

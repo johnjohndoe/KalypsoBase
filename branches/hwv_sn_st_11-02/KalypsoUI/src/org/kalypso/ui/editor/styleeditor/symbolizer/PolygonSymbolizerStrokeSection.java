@@ -88,12 +88,25 @@ class PolygonSymbolizerStrokeSection extends AbstractStyleElementSection<Polygon
   protected StrokeComposite createItemControl( final Composite parent, final Stroke item )
   {
     final FormToolkit toolkit = getToolkit();
-    final IStyleInput<Stroke> input = new StyleInput<Stroke>( item, getInput() );
+    IStyleInput<PolygonSymbolizer> input = getInput();
+    final IStyleInput<Stroke> strokeInput = new StyleInput<Stroke>( item, input );
 
-    final boolean showGraphics = input.getConfig().isPolygonSymbolizerShowGraphic();
-    final int sldStyle = showGraphics ? SWT.NONE : StrokeComposite.HIDE_GRAPHIC;
+    int sldStyle = findSldStyle( input );
 
-    return new StrokeComposite( toolkit, parent, input, sldStyle );
+    return new StrokeComposite( toolkit, parent, strokeInput, sldStyle );
+  }
+
+  private int findSldStyle( final IStyleInput<PolygonSymbolizer> input )
+  {
+    int style = SWT.NONE;
+
+    if( !input.getConfig().isPolygonSymbolizerStrokeLineDetails() )
+      style |= StrokeComposite.HIDE_LINE_DETAILS;
+
+    if( !input.getConfig().isPolygonSymbolizerShowGraphic() )
+      style |= StrokeComposite.HIDE_GRAPHIC;
+
+    return style;
   }
 
   @Override

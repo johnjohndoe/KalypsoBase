@@ -97,14 +97,13 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
 
   /**
    * @see org.kalypso.ogc.gml.movie.IMovieImageProvider#initialize(org.kalypso.ogc.gml.GisTemplateMapModell,
-   *      org.kalypso.ogc.gml.AbstractCascadingLayerTheme, org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   *      org.kalypsodeegree.model.geometry.GM_Envelope, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void initialize( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
+  public void initialize( GisTemplateMapModell mapModel, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
   {
     /* Determine some needed information. */
-    m_frames = preProcess( mapModel, movieTheme, boundingBox, monitor );
+    m_frames = preProcess( mapModel, boundingBox, monitor );
     if( m_frames.length > 0 )
       m_currentFrame = 0;
   }
@@ -178,7 +177,7 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
     currentFrame.getImage( width, height );
   }
 
-  private IMovieFrame[] preProcess( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
+  private IMovieFrame[] preProcess( GisTemplateMapModell mapModel, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
   {
     /* Monitor. */
     if( monitor == null )
@@ -192,24 +191,35 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
       /* Create a temporary directory. */
       File tmpDirectory = FileUtilities.createNewTempDir( "mov" );
 
+      /* Deactivate all themes. */
+      mapModel.activateTheme( null );
+
+      /* Find the movie theme. */
+      AbstractCascadingLayerTheme movieTheme = MovieUtilities.findMovieTheme( mapModel );
+
       /* For each of these themes we need a map model to create a movie frame with it. */
       IKalypsoTheme[] themes = movieTheme.getAllThemes();
+      for( IKalypsoTheme theme : themes )
+        theme.setVisible( false );
 
       /* Monitor. */
       monitor.beginTask( "Bereite Kartenthemen vor...", 200 * themes.length );
 
+      /* Clone the map model. */
+      GisTemplateMapModell[] newMapModels = MovieUtilities.duplicateMapModel( mapModel, boundingBox, themes.length );
+
       for( int i = 0; i < themes.length; i++ )
       {
         /* Monitor. */
-        monitor.subTask( "Erzeuge detailgetreue Kopie der Karte..." );
+        monitor.subTask( "Bereite das Filmbild vor..." );
         if( monitor.isCanceled() )
           throw new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), "Der Film wurde abgebrochen..." ) );
 
         /* Get the theme. */
         IKalypsoTheme theme = themes[i];
 
-        /* Clone the map model. */
-        GisTemplateMapModell newMapModel = MovieUtilities.cloneMapModel( mapModel, boundingBox );
+        /* Get the new map model. */
+        GisTemplateMapModell newMapModel = newMapModels[i];
 
         /* Monitor. */
         monitor.worked( 100 );
@@ -218,16 +228,18 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
         /* Find the movie theme. */
         AbstractCascadingLayerTheme newMovieTheme = MovieUtilities.findMovieTheme( newMapModel );
         if( !newMovieTheme.getId().equals( movieTheme.getId() ) )
-          throw new Exception( "Zuordnung des Filmthemes ist fehlerhaft..." );
+          throw new Exception( "Zuordnung des Filmthemas ist fehlerhaft..." );
 
         /* Deactivate all themes except the movie theme. */
         IKalypsoTheme[] allThemes = newMovieTheme.getAllThemes();
         for( IKalypsoTheme oneTheme : allThemes )
         {
+          /* All themes should already be set invisible. */
           if( oneTheme.getId().equals( theme.getId() ) )
+          {
             oneTheme.setVisible( true );
-          else
-            oneTheme.setVisible( false );
+            break;
+          }
         }
 
         /* Create the frame. */

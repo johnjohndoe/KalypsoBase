@@ -86,6 +86,7 @@ import org.kalypso.ogc.gml.movie.IMovieImageProvider;
 import org.kalypso.ogc.gml.movie.utils.IMovieFrame;
 import org.kalypso.ogc.gml.movie.utils.MoviePlayer;
 import org.kalypso.ogc.gml.movie.utils.MovieResolution;
+import org.kalypso.ogc.gml.movie.utils.MovieUtilities;
 import org.kalypso.ogc.gml.movie.utils.ResolutionLabelProvider;
 
 import com.sun.media.jai.widget.DisplayJAI;
@@ -156,7 +157,7 @@ public class MovieComposite extends Composite
     m_displayJAI = null;
     m_progressBar = null;
     m_progressLabel = null;
-    m_resolution = new MovieResolution( 800, 600 );
+    m_resolution = new MovieResolution( "default", 800, 600 );
 
     /* Create the controls. */
     createControls();
@@ -321,8 +322,7 @@ public class MovieComposite extends Composite
     resolutionViewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.TOP, false, false ) );
     resolutionViewer.setContentProvider( new ArrayContentProvider() );
     resolutionViewer.setLabelProvider( new ResolutionLabelProvider() );
-    MovieResolution[] input = new MovieResolution[] { new MovieResolution( 640, 480 ), new MovieResolution( 800, 600 ), new MovieResolution( 1024, 768 ), new MovieResolution( 1280, 1024 ),
-        new MovieResolution( 1280, 720 ), new MovieResolution( 1920, 1080 ) };
+    MovieResolution[] input = MovieUtilities.getResolutions();
     resolutionViewer.setInput( input );
     resolutionViewer.setSelection( new StructuredSelection( input[1] ) );
     resolutionViewer.addSelectionChangedListener( new ISelectionChangedListener()

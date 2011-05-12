@@ -62,6 +62,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -106,11 +107,16 @@ public class StrokeComposite extends Composite
    */
   public static final int HIDE_GRAPHIC = 1 << 2;
 
+  /**
+   * If this style is used, the line details will be hidden.
+   */
+  public static final int HIDE_LINE_DETAILS = 1 << 3;
+
   private StrokePreview m_previewComp;
 
   private Group m_previewGroup;
 
-  private final Section m_lineDetailsSection;
+  private Section m_lineDetailsSection;
 
   private final IStyleInput<Stroke> m_input;
 
@@ -140,6 +146,18 @@ public class StrokeComposite extends Composite
     createOpacityControl( toolkit, body );
     createWidthControl( toolkit, body );
 
+    if( (sldStyle & HIDE_LINE_DETAILS) == 0 )
+      createDetailsPanel( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 3, 1 ) );
+
+    if( (sldStyle & HIDE_GRAPHIC) == 0 )
+      createGraphicControl( toolkit, body );
+
+    if( (sldStyle & PREVIEW) != 0 )
+      createPreviewControl( toolkit, body );
+  }
+
+  private Control createDetailsPanel( FormToolkit toolkit, Composite body )
+  {
     m_lineDetailsSection = toolkit.createSection( body, Section.TITLE_BAR | Section.TWISTIE );
     m_lineDetailsSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 3, 1 ) );
 
@@ -154,11 +172,7 @@ public class StrokeComposite extends Composite
     createDashArrayControl( toolkit, detailsPanel );
     createDashOffsetControl( toolkit, detailsPanel );
 
-    if( (sldStyle & HIDE_GRAPHIC) == 0 )
-      createGraphicControl( toolkit, body );
-
-    if( (sldStyle & PREVIEW) != 0 )
-      createPreviewControl( toolkit, body );
+    return m_lineDetailsSection;
   }
 
   private void createColorControl( final FormToolkit toolkit, final Composite parent )
@@ -252,7 +266,7 @@ public class StrokeComposite extends Composite
   private void createDashArrayControl( final FormToolkit toolkit, final Composite parent )
   {
     final String tooltip = "A list of values representing the dashing pattern.\n"
-      + "Alternate entries in the array represent the user space lengths of the opaque and transparent segments of the dashes.";
+        + "Alternate entries in the array represent the user space lengths of the opaque and transparent segments of the dashes.";
 
     final Label label = toolkit.createLabel( parent, Messages.getString( "org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.2" ) ); //$NON-NLS-1$
     label.setToolTipText( tooltip );

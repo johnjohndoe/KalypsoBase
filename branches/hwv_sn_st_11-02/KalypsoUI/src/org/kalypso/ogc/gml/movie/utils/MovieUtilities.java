@@ -40,10 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.movie.utils;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -62,6 +68,7 @@ import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.IKalypsoUIConstants;
 import org.kalypso.ui.KalypsoUIExtensions;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.xml.sax.InputSource;
 
 /**
  * Helper class for the movie functionality.
@@ -102,8 +109,6 @@ public class MovieUtilities
    * 
    * @param mapModel
    *          The gis template map model.
-   * @param movieTheme
-   *          The theme, marked as movie theme.
    * @param boundingBox
    *          The bounding box.
    * @param monitor
@@ -111,20 +116,21 @@ public class MovieUtilities
    * @return The configured image provider. A default one, if none is configured, the id is wrong or if an error has
    *         occured.
    */
-  public static IMovieImageProvider getImageProvider( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
+  public static IMovieImageProvider getImageProvider( GisTemplateMapModell mapModel, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
   {
+    AbstractCascadingLayerTheme movieTheme = MovieUtilities.findMovieTheme( mapModel );
     String id = movieTheme.getProperty( IKalypsoUIConstants.MOVIE_THEME_PROPERTY, null );
     if( id == null || id.length() == 0 )
-      return getDefaultImageProvider( mapModel, movieTheme, boundingBox, monitor );
+      return getDefaultImageProvider( mapModel, boundingBox, monitor );
 
     IMovieImageProvider imageProvider = KalypsoUIExtensions.createMovieImageProvider( id );
     if( imageProvider != null )
     {
-      imageProvider.initialize( mapModel, movieTheme, boundingBox, monitor );
+      imageProvider.initialize( mapModel, boundingBox, monitor );
       return imageProvider;
     }
 
-    return getDefaultImageProvider( mapModel, movieTheme, boundingBox, monitor );
+    return getDefaultImageProvider( mapModel, boundingBox, monitor );
   }
 
   /**
@@ -132,18 +138,16 @@ public class MovieUtilities
    * 
    * @param mapModel
    *          The gis template map model.
-   * @param movieTheme
-   *          The theme, marked as movie theme.
    * @param boundingBox
    *          The bounding box.
    * @param monitor
    *          A progress monitor.
    * @return The default image provider.
    */
-  public static DefaultMovieImageProvider getDefaultImageProvider( GisTemplateMapModell mapModel, AbstractCascadingLayerTheme movieTheme, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
+  public static DefaultMovieImageProvider getDefaultImageProvider( GisTemplateMapModell mapModel, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
   {
     DefaultMovieImageProvider imageProvider = new DefaultMovieImageProvider();
-    imageProvider.initialize( mapModel, movieTheme, boundingBox, monitor );
+    imageProvider.initialize( mapModel, boundingBox, monitor );
 
     return imageProvider;
   }
@@ -186,7 +190,6 @@ public class MovieUtilities
       Gismapview newGisview = GisTemplateHelper.loadGisMapView( tmpFile );
 
       /* Create the new gis template map model. */
-      // GM_Envelope env = GisTemplateHelper.getBoundingBox( newGisview );
       GisTemplateMapModell newGisModel = new GisTemplateMapModell( mapModel.getContext(), mapModel.getCoordinatesSystem(), mapModel.getProject(), new FeatureSelectionManager2() );
       newGisModel.createFromTemplate( newGisview );
 
@@ -194,7 +197,7 @@ public class MovieUtilities
     }
     catch( Exception ex )
     {
-      throw new IOException( "Konnte die Karte nicht duplizieren...", ex );
+      throw new IOException( "Konnte die Karte nicht kopieren...", ex );
     }
     finally
     {
@@ -205,5 +208,118 @@ public class MovieUtilities
       if( tmpFile != null )
         FileUtilities.deleteQuitly( tmpFile );
     }
+  }
+
+  /**
+   * This function duplicates the map model n times.
+   * 
+   * @param mapModel
+   *          The map model.
+   * @param boundingBox
+   *          The bounding box.
+   * @return The duplicated map models.
+   */
+  public static GisTemplateMapModell[] duplicateMapModel( GisTemplateMapModell mapModel, GM_Envelope boundingBox, int amount ) throws IOException
+  {
+    /* The output stream. */
+    ByteArrayOutputStream outputStream = null;
+
+    try
+    {
+      /* Create a gis map view. */
+      Gismapview gisview = mapModel.createGismapTemplate( boundingBox, mapModel.getCoordinatesSystem(), new NullProgressMonitor() );
+
+      /* Create the output stream. */
+      outputStream = new ByteArrayOutputStream();
+
+      /* Save the gis map view. */
+      GisTemplateHelper.saveGisMapView( gisview, outputStream, "UTF-8" );
+
+      /* Flush. */
+      outputStream.flush();
+
+      /* Get as byte array. */
+      byte[] bytes = outputStream.toByteArray();
+
+      /* Close the output stream. */
+      IOUtils.closeQuietly( outputStream );
+
+      /* Memory for the results. */
+      List<GisTemplateMapModell> newGisModels = new ArrayList<GisTemplateMapModell>();
+
+      /* And load it n times, to pratically duplicate it. */
+      for( int i = 0; i < amount; i++ )
+      {
+        /* Create the byte stream. */
+        ByteArrayInputStream byteStream = new ByteArrayInputStream( bytes );
+
+        /* And load it again, to pratically duplicate it. */
+        InputSource is = new InputSource( byteStream );
+        is.setEncoding( "UTF-8" );
+        Gismapview newGisview = GisTemplateHelper.loadGisMapView( is );
+
+        /* Create the new gis template map model. */
+        GisTemplateMapModell newGisModel = new GisTemplateMapModell( mapModel.getContext(), mapModel.getCoordinatesSystem(), mapModel.getProject(), new FeatureSelectionManager2() );
+        newGisModel.createFromTemplate( newGisview );
+
+        /* Store the new gis template map model. */
+        newGisModels.add( newGisModel );
+
+        /* Close the byte stream. */
+        IOUtils.closeQuietly( byteStream );
+      }
+
+      return newGisModels.toArray( new GisTemplateMapModell[] {} );
+    }
+    catch( Exception ex )
+    {
+      throw new IOException( "Konnte die Karte nicht duplizieren...", ex );
+    }
+    finally
+    {
+      /* Close the output stream. */
+      IOUtils.closeQuietly( outputStream );
+    }
+  }
+
+  /**
+   * This function returns possible resolutions for the current screen size.
+   * 
+   * @return The possible resolutions.
+   */
+  public static MovieResolution[] getResolutions( )
+  {
+    /* All available resolutions. */
+    List<MovieResolution> resolutions = new ArrayList<MovieResolution>();
+    resolutions.add( new MovieResolution( null, 640, 480 ) );
+    resolutions.add( new MovieResolution( null, 800, 600 ) );
+    resolutions.add( new MovieResolution( null, 1024, 768 ) );
+    resolutions.add( new MovieResolution( null, 1280, 1024 ) );
+    resolutions.add( new MovieResolution( "720p", 1280, 720 ) );
+    resolutions.add( new MovieResolution( "1080p", 1920, 1080 ) );
+
+    /* The screen resolution. */
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    MovieResolution screenResolution = new MovieResolution( "Bildschirm", screenSize.width, screenSize.height );
+
+    /* Memory for the results. */
+    List<MovieResolution> results = new ArrayList<MovieResolution>();
+
+    /* Collect all resolutions until the screen resolution. */
+    for( MovieResolution resolution : resolutions )
+    {
+      if( resolution.getWidth() > screenResolution.getWidth() )
+        break;
+
+      if( resolution.getHeight() > screenResolution.getHeight() )
+        break;
+
+      results.add( resolution );
+    }
+
+    /* The screen resolution is always the maximum. */
+    resolutions.add( screenResolution );
+
+    return resolutions.toArray( new MovieResolution[] {} );
   }
 }

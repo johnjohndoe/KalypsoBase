@@ -59,6 +59,10 @@ public class StyleEditorConfig implements IStyleEditorConfig
 
   private boolean m_polygonSymbolizerShowGraphic = true;
 
+  private boolean m_lineSymbolizerStrokeLineDetails;
+
+  private boolean m_polygonSymbolizerStrokeLineDetails;
+
   @Override
   public boolean isFeatureTypeStyleCompositeShowProperties( )
   {
@@ -123,5 +127,27 @@ public class StyleEditorConfig implements IStyleEditorConfig
   public void setPolygonSymbolizerShowGraphic( final boolean polygonSymbolizerShowGraphic )
   {
     m_polygonSymbolizerShowGraphic = polygonSymbolizerShowGraphic;
+  }
+
+  @Override
+  public boolean isLineSymbolizerStrokeLineDetails( )
+  {
+    return m_lineSymbolizerStrokeLineDetails;
+  }
+
+  public void setLineSymbolizerStrokeLineDetails( boolean lineSymbolizerStrokeLineDetails )
+  {
+    m_lineSymbolizerStrokeLineDetails = lineSymbolizerStrokeLineDetails;
+  }
+
+  @Override
+  public boolean isPolygonSymbolizerStrokeLineDetails( )
+  {
+    return m_polygonSymbolizerStrokeLineDetails;
+  }
+
+  public void setPolygonSymbolizerStrokeLineDetails( boolean polygonSymbolizerStrokeLineDetails )
+  {
+    m_polygonSymbolizerStrokeLineDetails = polygonSymbolizerStrokeLineDetails;
   }
 }
