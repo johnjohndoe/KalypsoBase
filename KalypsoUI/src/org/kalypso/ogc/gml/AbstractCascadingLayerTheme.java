@@ -91,7 +91,11 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
       // else map loading with wms themes that are not accessible cannot be used at the moment...
 
       if( isVisible() )
+      {
+        // FIXME: we should fire a 'themeAdded' event for our listeners instead; explicitely
+        // fireing a repaint may cause trouble for headless mode
         doFireRepaintRequested( null/* theme.getFullExtent() */);
+      }
 
       handleThemeStatusChanged( AbstractCascadingLayerTheme.this );
     }
@@ -112,6 +116,8 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     @Override
     public void themeOrderChanged( final IMapModell source )
     {
+      // FIXME: we should fire a 'themeOrder' event for our listeners instead; explicitely
+      // fireing a repaint may cause trouble for headless mode
       doFireRepaintRequested( getFullExtent() );
       handleThemeStatusChanged( AbstractCascadingLayerTheme.this );
     }
@@ -124,7 +130,11 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
     {
       if( lastVisibility )
+      {
+        // FIXME: we should fire a 'themeRemoved' event for our listeners instead; explicitely
+        // fireing a repaint may cause trouble for headless mode
         doFireRepaintRequested( theme.getFullExtent() );
+      }
 
       handleThemeStatusChanged( AbstractCascadingLayerTheme.this );
     }
@@ -146,13 +156,29 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
     @Override
     public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility )
     {
-      doFireRepaintRequested( theme.getFullExtent() );
+      fireVisibilityChanged( theme, theme.isVisible() );
+// doFireRepaintRequested( theme.getFullExtent() );
     }
   };
 
   public AbstractCascadingLayerTheme( final I10nString name, final String linktype, final IMapModell mapModel )
   {
     super( name, linktype, mapModel );
+  }
+
+  protected void fireVisibilityChanged( final IKalypsoTheme theme, final boolean visible )
+  {
+    acceptListenersRunnable( new IListenerRunnable()
+    {
+      @Override
+      public void visit( final IKalypsoThemeListener l )
+      {
+        if( l == null )
+          return;
+
+        l.visibilityChanged( theme, visible );
+      }
+    } );
   }
 
   protected void doFireRepaintRequested( final GM_Envelope bbox )

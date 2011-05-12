@@ -73,7 +73,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme
 {
-  private static interface IListenerRunnable
+  protected static interface IListenerRunnable
   {
     void visit( final IKalypsoThemeListener l );
   }
@@ -153,7 +153,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * Runns the given runnable on every listener in a safe way.
    */
-  private void acceptListenersRunnable( final IListenerRunnable r )
+  protected void acceptListenersRunnable( final IListenerRunnable r )
   {
     final IKalypsoThemeListener[] listeners = m_listeners.toArray( new IKalypsoThemeListener[m_listeners.size()] );
     for( final IKalypsoThemeListener l : listeners )

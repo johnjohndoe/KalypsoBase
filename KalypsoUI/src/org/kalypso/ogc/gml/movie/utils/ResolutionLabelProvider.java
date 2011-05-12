@@ -65,7 +65,13 @@ public class ResolutionLabelProvider extends LabelProvider
     if( element instanceof MovieResolution )
     {
       MovieResolution resolution = (MovieResolution) element;
-      return String.format( "%d x %d", resolution.getWidth(), resolution.getHeight() );
+      String displayText = resolution.getDisplayText();
+      int width = resolution.getWidth();
+      int height = resolution.getHeight();
+      if( displayText == null || displayText.length() == 0 )
+        return String.format( "%d x %d", width, height );
+
+      return String.format( "%d x %d (%s)", width, height, displayText );
     }
 
     return super.getText( element );

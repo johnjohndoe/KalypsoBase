@@ -48,6 +48,11 @@ package org.kalypso.ogc.gml.movie.utils;
 public class MovieResolution
 {
   /**
+   * The text, which can be displayed in an UI.
+   */
+  private String m_displayText;
+
+  /**
    * The width.
    */
   private int m_width;
@@ -60,15 +65,28 @@ public class MovieResolution
   /**
    * The constructor.
    * 
+   * @param displayText
+   *          The text, which can be displayed in an UI.
    * @param width
    *          The width.
    * @param height
    *          The height.
    */
-  public MovieResolution( int width, int height )
+  public MovieResolution( String displayText, int width, int height )
   {
+    m_displayText = displayText;
     m_width = width;
     m_height = height;
+  }
+
+  /**
+   * This function returns the text, which can be displayed in an UI.
+   * 
+   * @return The text, which can be displayed in an UI.
+   */
+  public String getDisplayText( )
+  {
+    return m_displayText;
   }
 
   /**

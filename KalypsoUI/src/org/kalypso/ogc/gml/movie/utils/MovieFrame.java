@@ -107,6 +107,8 @@ public class MovieFrame implements IMovieFrame
     /* Create the image. */
     BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapModel, width, height, new Insets( 1, 1, 1, 1 ), 0, m_boundingBox );
 
+    // TODO Catch exception delete old files, so the next time it is created anew.
+
     /* Save the image. */
     JAI.create( "filestore", image, imageFile.getAbsolutePath(), "PNG" );
 

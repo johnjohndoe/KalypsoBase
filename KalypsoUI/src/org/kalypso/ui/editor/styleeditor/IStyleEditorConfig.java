@@ -80,4 +80,15 @@ public interface IStyleEditorConfig
    */
   boolean isSymbolizerEditGeometry( );
 
+  /**
+   * If this is <code>false</code>, the line details of the {@link org.kalypsodeegree.graphics.sld.LineSymbolizer} are
+   * hidden.
+   */
+  boolean isLineSymbolizerStrokeLineDetails( );
+
+  /**
+   * If this is <code>false</code>, the line details of the {@link org.kalypsodeegree.graphics.sld.LineSymbolizer} are
+   * hidden.
+   */
+  boolean isPolygonSymbolizerStrokeLineDetails( );
 }

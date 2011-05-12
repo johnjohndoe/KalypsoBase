@@ -134,7 +134,7 @@ public class WmsThemeFactory implements IKalypsoThemeFactory
         sldBody = descriptor.exportAsXML();
       }
 
-      final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName.getValue(), layers, styles, service, providerID, sldBody );
+      final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( layerName.getKey(), layers, styles, service, providerID, sldBody );
 
       return new KalypsoWMSTheme( source, linktype, layerName, layerType, imageProvider, mapModell );
     }
