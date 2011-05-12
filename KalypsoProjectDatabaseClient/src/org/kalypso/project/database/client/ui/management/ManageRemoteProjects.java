@@ -61,8 +61,6 @@ import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspac
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
 import org.kalypso.project.database.client.i18n.Messages;
-import org.kalypso.project.database.client.ui.MyColors;
-import org.kalypso.project.database.client.ui.MyFonts;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -139,8 +137,8 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
       link.setText( head.getName() );
       link.setImage( IMG_REMOTE_PROJECT );
       link.setEnabled( false );
-      link.setForeground( MyColors.COLOR_BLACK );
-      link.setFont( MyFonts.HEADING );
+      link.setForeground( link.getDisplay().getSystemColor( SWT.COLOR_BLACK ) );
+      link.setFont( KalypsoProjectDatabaseClient.HEADING );
       link.setUnderlined( false );
 
       // project locked in database?!?

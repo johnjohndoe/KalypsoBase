@@ -51,8 +51,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.canvas.DefaultContentArea;
 import org.kalypso.contribs.eclipse.swt.canvas.ImageCanvas2;
 import org.kalypso.module.IKalypsoModule;
-import org.kalypso.project.database.client.ui.MyColors;
-import org.kalypso.project.database.client.ui.MyFonts;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 
 /**
  * FIXME: this does not belong into KalypsoBase.<br/>
@@ -106,7 +105,7 @@ public class ModulePageComposite extends Composite
       }
     };
 
-    headerContent.setText( m_module.getHeader(), MyFonts.WELCOME_PAGE_HEADING, MyColors.COLOR_WELCOME_PAGE_HEADING, SWT.RIGHT );
+    headerContent.setText( m_module.getHeader(), KalypsoProjectDatabaseClient.WELCOME_PAGE_HEADING, KalypsoProjectDatabaseClient.COLOR_WELCOME_PAGE_HEADING, SWT.RIGHT );
     headerCanvas.addContentArea( headerContent );
 
     /* left pane */
