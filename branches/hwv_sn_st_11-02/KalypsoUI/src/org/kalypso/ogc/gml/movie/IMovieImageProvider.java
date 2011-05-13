@@ -111,4 +111,9 @@ public interface IMovieImageProvider
    * @return The highest step.
    */
   public int getEndStep( );
+
+  /**
+   * This function disposes the movie image provider.
+   */
+  public void dispose( );
 }

@@ -47,8 +47,11 @@ import java.io.File;
 
 import javax.media.jai.JAI;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -90,38 +93,56 @@ public class MovieFrame implements IMovieFrame
   }
 
   /**
-   * @see org.kalypso.ogc.gml.movie.utils.IMovieFrame#getImage(int, int)
-   */
-  @Override
-  public RenderedImage getImage( int width, int height )
-  {
-    /* Get the directory of the images for this size. */
-    /* It will be created, if it does not already exist. */
-    File imageDirectory = getImageDirectory( width, height );
-
-    /* The image file. */
-    File imageFile = new File( imageDirectory, m_label + ".PNG" );
-    if( imageFile.exists() )
-      return JAI.create( "fileload", imageFile.getAbsolutePath() );
-
-    /* Create the image. */
-    BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapModel, width, height, new Insets( 1, 1, 1, 1 ), 0, m_boundingBox );
-
-    // TODO Catch exception delete old files, so the next time it is created anew.
-
-    /* Save the image. */
-    JAI.create( "filestore", image, imageFile.getAbsolutePath(), "PNG" );
-
-    return image;
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.movie.utils.IMovieFrame#getLabel()
    */
   @Override
   public String getLabel( )
   {
     return m_label;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.movie.utils.IMovieFrame#getImage(int, int)
+   */
+  @Override
+  public RenderedImage getImage( int width, int height )
+  {
+    try
+    {
+      /* Get the directory of the images for this size. */
+      /* It will be created, if it does not already exist. */
+      File imageDirectory = getImageDirectory( width, height );
+
+      /* The image file. */
+      File imageFile = new File( imageDirectory, m_label + ".PNG" );
+      if( imageFile.exists() )
+        return JAI.create( "fileload", imageFile.getAbsolutePath() );
+
+      /* Create the image. */
+      BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapModel, width, height, new Insets( 1, 1, 1, 1 ), 0, m_boundingBox );
+
+      /* Save the image. */
+      JAI.create( "filestore", image, imageFile.getAbsolutePath(), "PNG" );
+
+      return image;
+    }
+    catch( Exception ex )
+    {
+      KalypsoGisPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) );
+      return null;
+    }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.movie.utils.IMovieFrame#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    m_mapModel = null;
+    m_label = null;
+    m_boundingBox = null;
+    m_tmpDirectory = null;
   }
 
   /**

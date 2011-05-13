@@ -180,7 +180,7 @@ public class MovieComposite extends Composite
   public void dispose( )
   {
     /* Stop the player. */
-    m_player.stop();
+    m_player.dispose();
 
     /* Discard the references. */
     m_player = null;
@@ -414,22 +414,22 @@ public class MovieComposite extends Composite
 
     /* Get the current frame. */
     IMovieFrame currentFrame = m_player.getCurrentFrame();
-    if( currentFrame == null )
+    if( currentFrame != null )
     {
-      /* Create the start image. */
-      BufferedImage startImage = createEmptyImage( width, height );
-
-      /* Set the start image. */
-      m_displayJAI.set( startImage );
-
-      return;
+      /* Get the current image. */
+      RenderedImage currentImage = currentFrame.getImage( width, height );
+      if( currentImage != null )
+      {
+        m_displayJAI.set( currentImage );
+        return;
+      }
     }
 
-    /* Get the current image. */
-    RenderedImage currentImage = currentFrame.getImage( width, height );
+    /* Create the start image. */
+    BufferedImage startImage = createEmptyImage( width, height );
 
-    /* Set the current image. */
-    m_displayJAI.set( currentImage );
+    /* Set the start image. */
+    m_displayJAI.set( startImage );
   }
 
   /**

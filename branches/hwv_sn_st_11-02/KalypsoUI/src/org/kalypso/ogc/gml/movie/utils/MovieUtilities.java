@@ -206,7 +206,7 @@ public class MovieUtilities
 
       /* Delete the temporary file. */
       if( tmpFile != null )
-        FileUtilities.deleteQuitly( tmpFile );
+        FileUtilities.deleteQuietly( tmpFile );
     }
   }
 

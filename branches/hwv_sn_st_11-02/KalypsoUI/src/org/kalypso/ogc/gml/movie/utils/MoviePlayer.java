@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.movie.utils;
 
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.kalypso.ogc.gml.movie.IMovieImageProvider;
 import org.kalypso.ogc.gml.movie.controls.MovieComposite;
 
@@ -114,6 +116,17 @@ public class MoviePlayer
     m_job.setUser( false );
     m_job.setPriority( Job.LONG );
     m_job.schedule();
+    m_job.addJobChangeListener( new JobChangeAdapter()
+    {
+      /**
+       * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+       */
+      @Override
+      public void done( IJobChangeEvent event )
+      {
+        handleJobStopped();
+      }
+    } );
   }
 
   public synchronized void stop( )
@@ -122,6 +135,10 @@ public class MoviePlayer
       return;
 
     m_job.cancel();
+  }
+
+  protected synchronized void handleJobStopped( )
+  {
     m_job = null;
   }
 
@@ -154,6 +171,20 @@ public class MoviePlayer
   public int getEndStep( )
   {
     return m_imageProvider.getEndStep();
+  }
+
+  public void dispose( )
+  {
+    if( m_job != null )
+      stop();
+
+    if( m_imageProvider != null )
+      m_imageProvider.dispose();
+
+    m_imageProvider = null;
+    m_parent = null;
+    m_job = null;
+    m_frameDelay = 250;
   }
 
   public void updateFrameDelay( int frameDelay )
