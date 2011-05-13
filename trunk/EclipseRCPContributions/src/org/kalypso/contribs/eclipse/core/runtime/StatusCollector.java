@@ -70,22 +70,24 @@ public class StatusCollector implements IStatusCollector
   }
 
   @Override
-  public void add( final int severity, final String msg )
+  public IStatus add( final int severity, final String msg )
   {
-    add( severity, msg, null );
+    return add( severity, msg, null );
   }
 
   @Override
-  public void add( final int severity, final String msgFormat, final Throwable exception, final Object... formatParameters )
+  public IStatus add( final int severity, final String msgFormat, final Throwable exception, final Object... formatParameters )
   {
     final String msg = String.format( msgFormat, formatParameters );
-    m_stati.add( new Status( severity, m_pluginID, msg, exception ) );
+    final Status status = new Status( severity, m_pluginID, msg, exception );
+    m_stati.add( status );
+    return status;
   }
 
   @Override
-  public void add( final int severity, final String msg, final Throwable exception )
+  public IStatus add( final int severity, final String msg, final Throwable exception )
   {
-    add( severity, msg, exception, new Object[0] );
+    return add( severity, msg, exception, new Object[0] );
   }
 
   /**

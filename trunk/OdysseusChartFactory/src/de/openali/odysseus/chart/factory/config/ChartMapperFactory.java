@@ -159,49 +159,36 @@ public class ChartMapperFactory extends AbstractChartFactory
 
             mapperRegistry.addMapper( axis );
 
-            /**
-             * Renderer nur erzeugen, wenn es noch keinen für die Achse gibt
-             */
             final ReferencingType rendererRef = axisType.getRendererRef();
-            IAxisRenderer axisRenderer = findRenderer( mapperRegistry.getAxes(), AxisUtils.getIdentifier( rendererRef ) );
+            final AxisRendererType rendererType = (AxisRendererType) getResolver().resolveReference( AxisUtils.getIdentifier( rendererRef ) );
+            if( rendererType != null )
+            {
+              final String providerId = rendererType.getProvider().getEpid();
+              final IAxisRendererProvider axisRendererProvider;
+              // Hack due older kod-files with this malformed renderer-id still exists
+              if( "de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider".equals( providerId ) ) //$NON-NLS-1$
+                axisRendererProvider = getLoader().getExtension( IAxisRendererProvider.class, "de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider" ); //$NON-NLS-1$
+              else
+                axisRendererProvider = getLoader().getExtension( IAxisRendererProvider.class, providerId );
+              final String rendererTypeId = rendererType.getId();
+              // TODO global style set
+              final IStyleSet styleSet = StyleFactory.createStyleSet( rendererType.getStyles(), baseTypes, getContext() );
+              final IParameterContainer parameterContainer = createParameterContainer( rendererTypeId, rendererType.getProvider() );
 
-            if( axisRenderer != null )
-            {
-              /** exists? so assign axis renderer */
-              axis.setRenderer( axisRenderer );
-            }
-            else
-            {
-              final AxisRendererType rendererType = (AxisRendererType) getResolver().resolveReference( AxisUtils.getIdentifier( rendererRef ) );
-              if( rendererType != null )
+              axisRendererProvider.init( getModel(), rendererTypeId, parameterContainer, getContext(), styleSet );
+
+              try
               {
-                final String providerId = rendererType.getProvider().getEpid();
-                final IAxisRendererProvider axisRendererProvider;
-                // Hack due older kod-files with this malformed renderer-id still exists
-                if( "de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider".equals( providerId ) ) //$NON-NLS-1$
-                  axisRendererProvider = getLoader().getExtension( IAxisRendererProvider.class, "de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider" ); //$NON-NLS-1$
-                else
-                  axisRendererProvider = getLoader().getExtension( IAxisRendererProvider.class, providerId );
-                final String rendererTypeId = rendererType.getId();
-                // TODO global style set
-                final IStyleSet styleSet = StyleFactory.createStyleSet( rendererType.getStyles(), baseTypes, getContext() );
-                final IParameterContainer parameterContainer = createParameterContainer( rendererTypeId, rendererType.getProvider() );
+                IAxisRenderer axisRenderer = axisRendererProvider.getAxisRenderer( axis.getPosition() );
+                axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, axisRendererProvider );
+                // save configuration type so it can be used for saving to chart file
+                axisRenderer.setData( CONFIGURATION_TYPE_KEY, rendererType );
 
-                axisRendererProvider.init( getModel(), rendererTypeId, parameterContainer, getContext(), styleSet );
-
-                try
-                {
-                  axisRenderer = axisRendererProvider.getAxisRenderer();
-                  axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, axisRendererProvider );
-                  // save configuration type so it can be used for saving to chart file
-                  axisRenderer.setData( CONFIGURATION_TYPE_KEY, rendererType );
-
-                  axis.setRenderer( axisRenderer );
-                }
-                catch( final ConfigurationException e )
-                {
-                  e.printStackTrace();
-                }
+                axis.setRenderer( axisRenderer );
+              }
+              catch( final ConfigurationException e )
+              {
+                e.printStackTrace();
               }
             }
 
@@ -272,7 +259,8 @@ public class ChartMapperFactory extends AbstractChartFactory
     {
       final PreferredAdjustment pa = at.getPreferredAdjustment();
 
-      aa = new AxisAdjustment( pa.getBefore(), pa.getRange(), pa.getAfter(),pa.getFixMinRange()==null?0.0:pa.getFixMinRange(),pa.getFixMaxRange()==null?Double.MAX_VALUE: pa.getFixMaxRange());
+      aa = new AxisAdjustment( pa.getBefore(), pa.getRange(), pa.getAfter(), pa.getFixMinRange() == null ? 0.0 : pa.getFixMinRange(), pa.getFixMaxRange() == null ? Double.MAX_VALUE
+          : pa.getFixMaxRange() );
     }
     else
       aa = new AxisAdjustment( 0, 1, 0 );
@@ -377,16 +365,16 @@ public class ChartMapperFactory extends AbstractChartFactory
       return Number.class;
   }
 
-  private IAxisRenderer findRenderer( final IAxis[] axes, final String rendererID )
-  {
-    for( final IAxis axis : axes )
-    {
-      final IAxisRenderer renderer = axis.getRenderer();
-      if( renderer != null && renderer.getId().equals( rendererID ) )
-        return renderer;
-    }
-    return null;
-  }
+// private IAxisRenderer findRenderer( final IAxis[] axes, final String rendererID )
+// {
+// for( final IAxis axis : axes )
+// {
+// final IAxisRenderer renderer = axis.getRenderer();
+// if( renderer != null && renderer.getId().equals( rendererID ))
+// return renderer;
+// }
+// return null;
+// }
 
   public void addMapper( final MapperType type, final ReferencableType... baseTypes )
   {

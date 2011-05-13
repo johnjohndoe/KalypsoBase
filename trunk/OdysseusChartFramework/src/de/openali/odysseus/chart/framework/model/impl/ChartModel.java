@@ -1,9 +1,11 @@
 package de.openali.odysseus.chart.framework.model.impl;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.java.lang.Arrays;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
+import de.openali.odysseus.chart.framework.model.impl.settings.BasicChartSettings;
+import de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings;
 import de.openali.odysseus.chart.framework.model.impl.utils.ChartModelLayerEventListener;
 import de.openali.odysseus.chart.framework.model.impl.visitors.AutoScaleVisitor;
 import de.openali.odysseus.chart.framework.model.impl.visitors.DisposeLayersVisitor;
@@ -37,10 +39,8 @@ public class ChartModel implements IChartModel
   public void autoscale( final IAxis... axes )
   {
     final AutoScaleVisitor visitor = new AutoScaleVisitor( this, true );
-
-    // TODO ?!? auto scaled axes will be updated when?!? strange behavior
-    final IAxis[] autoscaledAxes = ArrayUtils.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes;
-    for( final IAxis axis : autoscaledAxes )
+    // axes==null means all Axes
+    for( final IAxis axis : Arrays.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes )
     {
       visitor.visit( axis );
     }
@@ -143,6 +143,15 @@ public class ChartModel implements IChartModel
   public void setIdentifier( final String identifier )
   {
     m_identifier = identifier;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.ILayerContainer#getModel()
+   */
+  @Override
+  public IChartModel getModel( )
+  {
+    return this;
   }
 
 }

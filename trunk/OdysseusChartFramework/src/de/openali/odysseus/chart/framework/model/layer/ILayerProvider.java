@@ -22,4 +22,8 @@ public interface ILayerProvider extends IChartComponentProvider
   IChartLayer getLayer( final URL context ) throws ConfigurationException;
 
   void init( ILayerProviderSource source );
+
+  String getTargetAxisId( );
+
+  String getDomainAxisId( );
 }

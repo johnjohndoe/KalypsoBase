@@ -259,13 +259,16 @@ public class AdapterBindingToValue_GML2x implements AdapterBindingToValue
     if( srsName == null )
       return defaultCS;
 
+    // BUGFIX/REMARK: preserve memory by intern'ing the srs strings. Especially for bigger gml's this can have a major
+    // effect, as every srs string was being kept separately in memory.
+
     if( srsName.startsWith( "http://www.opengis.net/gml/srs/epsg.xml#" ) )
     {
       final String[] split = srsName.split( "#" );
-      return "EPSG:" + split[1];
+      return ("EPSG:" + split[1]).intern();
     }
     else
-      return srsName;
+      return srsName.intern();
   }
 
   /**

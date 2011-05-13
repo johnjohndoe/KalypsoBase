@@ -42,6 +42,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -52,6 +53,7 @@ import org.kalypsodeegree.graphics.displayelements.LabelDisplayElement;
 import org.kalypsodeegree.graphics.sld.Halo;
 import org.kalypsodeegree.graphics.sld.LabelPlacement;
 import org.kalypsodeegree.graphics.sld.LinePlacement;
+import org.kalypsodeegree.graphics.sld.LinePlacement.PlacementType;
 import org.kalypsodeegree.graphics.sld.PointPlacement;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
@@ -81,22 +83,11 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class LabelFactory
 {
-
-  public static Label createLabel( final String caption, final Font font, final Color color, final LineMetrics metrics, final Feature feature, final Halo halo, final int x, final int y, final int w, final int h, final double rotation, final double anchorPointX, final double anchorPointY, final double displacementX, final double displacementY )
-  {
-    if( rotation == 0.0 )
-    {
-      return new HorizontalLabel( caption, font, color, metrics, feature, halo, x, y, w, h, new double[] { anchorPointX, anchorPointY }, new double[] { displacementX, displacementY } );
-    }
-    return new RotatedLabel( caption, font, color, metrics, feature, halo, x, y, w, h, rotation, new double[] { anchorPointX, anchorPointY }, new double[] { displacementX, displacementY } );
-  }
-
   public static Label createLabel( final String caption, final Font font, final Color color, final LineMetrics metrics, final Feature feature, final Halo halo, final int x, final int y, final int w, final int h, final double rotation, final double[] anchorPoint, final double[] displacement )
   {
     if( rotation == 0.0 )
-    {
       return new HorizontalLabel( caption, font, color, metrics, feature, halo, x, y, w, h, anchorPoint, displacement );
-    }
+
     return new RotatedLabel( caption, font, color, metrics, feature, halo, x, y, w, h, rotation, anchorPoint, displacement );
   }
 
@@ -108,7 +99,6 @@ public class LabelFactory
    */
   public static Label[] createLabels( final LabelDisplayElement element, final GeoTransform projection, final Graphics2D g ) throws Exception
   {
-    Label[] labels = new Label[0];
     final Feature feature = element.getFeature();
 
     String caption = null;
@@ -119,12 +109,12 @@ public class LabelFactory
     catch( final FilterEvaluationException e )
     {
       // if properties are unknown to features, this should be ignored!
-      return labels;
+      return new Label[0];
     }
     // sanity check: empty labels are ignored
     if( caption == null || caption.trim().equals( "" ) )
     {
-      return labels;
+      return new Label[0];
     }
 
     final TextSymbolizer symbolizer = (TextSymbolizer) element.getSymbolizer();
@@ -155,16 +145,19 @@ public class LabelFactory
     // int descent = (int) metrics.getDescent ();
 
     final GM_Object[] geometries = element.getGeometry();
+    final List<Label> allLabels = new ArrayList<Label>();
     for( final GM_Object geometry : geometries )
-      labels = createabels( element, projection, g, labels, feature, caption, geometry, symbolizer, sldFont, font, metrics, w, h );
-    return labels;
+    {
+      final Label[] labels = createLabels( element, projection, g, feature, caption, geometry, symbolizer, sldFont, font, metrics, w, h );
+      allLabels.addAll( Arrays.asList( labels ) );
+    }
+    return allLabels.toArray( new Label[allLabels.size()] );
   }
 
-  private static Label[] createabels( final LabelDisplayElement element, final GeoTransform projection, final Graphics2D g, Label[] labels, final Feature feature, final String caption, final GM_Object geometry, final TextSymbolizer symbolizer, final org.kalypsodeegree.graphics.sld.Font sldFont, final java.awt.Font font, final LineMetrics metrics, final int w, final int h ) throws FilterEvaluationException, GM_Exception, Exception
+  private static Label[] createLabels( final LabelDisplayElement element, final GeoTransform projection, final Graphics2D g, final Feature feature, final String caption, final GM_Object geometry, final TextSymbolizer symbolizer, final org.kalypsodeegree.graphics.sld.Font sldFont, final java.awt.Font font, final LineMetrics metrics, final int w, final int h ) throws FilterEvaluationException, GM_Exception, Exception
   {
     if( geometry instanceof GM_Point )
     {
-
       // get screen coordinates
       final int[] coords = calcScreenCoordinates( projection, geometry );
       final int x = coords[0];
@@ -186,11 +179,10 @@ public class LabelFactory
         rotation = pPlacement.getRotation( feature );
       }
 
-      labels = new Label[] { createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, anchorPoint, displacement ) };
+      return new Label[] { createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer.getHalo(), x, y, w, h, Math.toRadians( rotation ), anchorPoint, displacement ) };
     }
     else if( geometry instanceof GM_Surface || geometry instanceof GM_MultiSurface )
     {
-
       // get screen coordinates
       final int[] coords = calcScreenCoordinates( projection, geometry );
       int x = coords[0];
@@ -204,7 +196,7 @@ public class LabelFactory
       // use placement information from SLD
       final LabelPlacement lPlacement = symbolizer.getLabelPlacement();
 
-      if( lPlacement != null )
+      if( lPlacement != null && lPlacement.getPointPlacement() != null )
       {
         final PointPlacement pPlacement = lPlacement.getPointPlacement();
 
@@ -226,9 +218,7 @@ public class LabelFactory
         rotation = pPlacement.getRotation( feature );
       }
 
-      labels = new Label[] { createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer.getHalo(), x, y, w, h, rotation * Math.PI, anchorPoint, displacement )
-
-      };
+      return new Label[] { createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer.getHalo(), x, y, w, h, Math.toRadians( rotation ), anchorPoint, displacement ) };
     }
     else if( geometry instanceof GM_Curve || geometry instanceof GM_MultiCurve )
     {
@@ -236,25 +226,23 @@ public class LabelFactory
       final GM_Object intersection = screenSurface.intersection( geometry );
       if( intersection != null )
       {
-        List<Label> list = null;
         if( intersection instanceof GM_Curve )
-          list = createLabels( (GM_Curve) intersection, element, g, projection );
+          return createLabels( (GM_Curve) intersection, element, g, projection );
         else if( intersection instanceof GM_MultiCurve )
-          list = createLabels( (GM_MultiCurve) intersection, element, g, projection );
-        if( list != null )
-          labels = list.toArray( new Label[list.size()] );
+          return createLabels( (GM_MultiCurve) intersection, element, g, projection );
       }
     }
     else
     {
       throw new Exception( "LabelFactory does not implement generation " + "of Labels from geometries of type: '" + geometry.getClass().getName() + "'!" );
     }
-    return labels;
+
+    return new Label[0];
   }
 
   /**
-   * Determines positions on the given <tt>GM_MultiCurve</tt> where a caption could be drawn. For each of this
-   * positons, three candidates are produced; one on the line, one above of it and one below.
+   * Determines positions on the given <tt>GM_MultiCurve</tt> where a caption could be drawn. For each of this positons,
+   * three candidates are produced; one on the line, one above of it and one below.
    * <p>
    * 
    * @param multiCurve
@@ -264,16 +252,17 @@ public class LabelFactory
    * @return ArrayList containing Arrays of Label-objects
    * @throws FilterEvaluationException
    */
-  public static List<Label> createLabels( final GM_MultiCurve multiCurve, final LabelDisplayElement element, final Graphics2D g, final GeoTransform projection ) throws FilterEvaluationException
+  public static Label[] createLabels( final GM_MultiCurve multiCurve, final LabelDisplayElement element, final Graphics2D g, final GeoTransform projection ) throws FilterEvaluationException
   {
-
     final List<Label> placements = Collections.synchronizedList( new ArrayList<Label>() );
     for( int i = 0; i < multiCurve.getSize(); i++ )
     {
       final GM_Curve curve = multiCurve.getCurveAt( i );
-      placements.addAll( createLabels( curve, element, g, projection ) );
+      final Label[] labels = createLabels( curve, element, g, projection );
+      placements.addAll( Arrays.asList( labels ) );
     }
-    return placements;
+
+    return placements.toArray( new Label[placements.size()] );
   }
 
   /**
@@ -288,13 +277,13 @@ public class LabelFactory
    * @return ArrayList containing Arrays of Label-objects
    * @throws FilterEvaluationException
    */
-  public static List<Label> createLabels( final GM_Curve curve, final LabelDisplayElement element, final Graphics2D g, final GeoTransform projection ) throws FilterEvaluationException
+  public static Label[] createLabels( final GM_Curve curve, final LabelDisplayElement element, final Graphics2D g, final GeoTransform projection ) throws FilterEvaluationException
   {
     final Feature feature = element.getFeature();
 
     // determine the placement type and parameters from the TextSymbolizer
     double perpendicularOffset = 0.0;
-    int placementType = LinePlacement.TYPE_ABSOLUTE;
+    PlacementType placementType = PlacementType.absolute;
     double lineWidth = 3.0;
     int gap = 6;
     final TextSymbolizer symbolizer = ((TextSymbolizer) element.getSymbolizer());
@@ -330,7 +319,7 @@ public class LabelFactory
     catch( final GM_Exception e )
     {
       e.printStackTrace();
-      return new ArrayList<Label>();
+      return new Label[0];
     }
 
     // ideal distance from the line
@@ -385,35 +374,12 @@ public class LabelFactory
         final double rotation = getRotation( boxStartX, boxStartY, x, y );
         final double[] deviation = calcDeviation( new int[] { boxStartX, boxStartY }, new int[] { boxEndX, boxEndY }, eCandidates );
 
-        Label label = null;
 
-        switch( placementType )
-        {
-          case LinePlacement.TYPE_ABSOLUTE:
-          {
-            label = createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer.getHalo(), boxStartX, boxStartY, (int) width, (int) height, rotation, 0.0, 0.5, (w - width) / 2, perpendicularOffset );
-            break;
-          }
-          case LinePlacement.TYPE_ABOVE:
-          {
-            label = createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer.getHalo(), boxStartX, boxStartY, (int) width, (int) height, rotation, 0.0, 0.5, (w - width) / 2, delta
-                + deviation[0] );
-            break;
-          }
-          case LinePlacement.TYPE_BELOW:
-          case LinePlacement.TYPE_AUTO:
-          {
-            label = createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer.getHalo(), boxStartX, boxStartY, (int) width, (int) height, rotation, 0.0, 0.5, (w - width) / 2, -delta
-                - deviation[1] );
-            break;
-          }
-          case LinePlacement.TYPE_CENTER:
-          {
-            label = createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer.getHalo(), boxStartX, boxStartY, (int) width, (int) height, rotation, 0.0, 0.5, (w - width) / 2, 0.0 );
-            break;
-          }
-          default:
-        }
+        final double ww = (w - width) / 2;
+        final double[] displacement = calculateDisplacement( placementType, ww, perpendicularOffset, delta, deviation );
+        final double[] anchorPoint = new double[] { 0.0, 0.5 };
+        final Label label = createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer.getHalo(), boxStartX, boxStartY, (int) width, (int) height, rotation, anchorPoint, displacement );
+
         labels.add( label );
         boxStartX = lastX;
         boxStartY = lastY;
@@ -432,14 +398,32 @@ public class LabelFactory
     final List<Label> pick = new ArrayList<Label>( 100 );
     final int n = labels.size();
     for( int j = n / 2; j < labels.size(); j += (gap + 1) )
-    {
       pick.add( labels.get( j ) );
-    }
+
     for( int j = n / 2 - (gap + 1); j > 0; j -= (gap + 1) )
-    {
       pick.add( labels.get( j ) );
+
+    return pick.toArray( new Label[pick.size()] );
+  }
+
+  private static double[] calculateDisplacement( final PlacementType placementType, final double ww, final double perpendicularOffset, final double delta, final double[] deviation )
+  {
+    switch( placementType )
+    {
+      case absolute:
+        return new double[] { ww, perpendicularOffset };
+
+      case above:
+        return new double[]{ ww, delta + deviation[0] };
+
+      case below:
+      case auto:
+        return new double[]{ ww, -delta - deviation[1] };
+
+      case center:
+      default:
+        return new double[]{ ww, 0.0 };
     }
-    return pick;
   }
 
   /**
@@ -451,11 +435,11 @@ public class LabelFactory
    * <p>
    * 
    * @param start
-   *            starting point of the linestring
+   *          starting point of the linestring
    * @param end
-   *            end point of the linestring
+   *          end point of the linestring
    * @param points
-   *            points in between
+   *          points in between
    */
   public static double[] calcDeviation( int[] start, int[] end, final List<int[]> points )
   {
@@ -556,13 +540,13 @@ public class LabelFactory
    * <p>
    * 
    * @param p0
-   *            point that is used as reference point for the distance
+   *          point that is used as reference point for the distance
    * @param p1
-   *            starting point of the line
+   *          starting point of the line
    * @param p2
-   *            end point of the line
+   *          end point of the line
    * @param d
-   *            distance
+   *          distance
    */
   public static int[] findPointWithDistance( final int[] p0, final int[] p1, final int[] p2, final int d )
   {

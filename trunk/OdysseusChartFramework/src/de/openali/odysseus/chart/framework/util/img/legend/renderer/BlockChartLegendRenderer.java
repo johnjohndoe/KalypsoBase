@@ -46,6 +46,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -96,13 +97,13 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
   public Image createImage( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
     final IChartLayer[] layers = getLayers( canvas.getModel() );
-    final Point canvasSize = calculateSize( layers, config );
+    final Rectangle canvasRect = calculateSize( layers, config );
     final Point itemSize = calculateItemSize( layers, config );
-    if( canvasSize.x <= 0 || canvasSize.y <= 0 )
+    if( canvasRect.width <= 0 || canvasRect.height <= 0 )
       return null;
 
     final Device dev = PlatformUI.getWorkbench().getDisplay();
-    final Image image = new Image( dev, canvasSize.x, canvasSize.y );
+    final Image image = new Image( dev, canvasRect.width, canvasRect.height );
     final GC gc = new GC( image );
 
     final ITextStyle style = config.getTextStyle();
@@ -123,7 +124,7 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
             continue;
 
           final ImageData imageData = createLegendItem( entry, config, itemSize );
-          if( x + imageData.width > config.getMaximumWidth() )
+          if( x + imageData.width > config.getMaximumWidth().width )
           {
             x = 0;
             y += imageData.height;
@@ -226,26 +227,26 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
    * @see de.openali.odysseus.chart.framework.util.img.ILegendStrategy#getSize(de.openali.odysseus.chart.framework.util.img.LegendImageCreator)
    */
   @Override
-  public Point calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config )
+  public Rectangle calculateSize( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
     final IChartLayer[] layers = getLayers( canvas.getModel() );
 
     return calculateSize( layers, config );
   }
 
-  private Point calculateSize( final IChartLayer[] layers, final IChartLegendConfig config )
+  private Rectangle calculateSize( final IChartLayer[] layers, final IChartLegendConfig config )
   {
     final Point maxItemSize = calculateItemSize( layers, config );
     if( maxItemSize == null || maxItemSize.x == 0 || maxItemSize.y == 0 )
-      return new Point( 1, 1 );
+      return new Rectangle(config.getMaximumWidth().x,config.getMaximumWidth().y, 1, 1 );
 
     final int legendEntries = calculateLegendEntries( layers );
     // never return 0 itemsperrow,
-    final int itemsPerRow = Math.max( 1, config.getMaximumWidth() / maxItemSize.x );
+    final int itemsPerRow = Math.max( 1, config.getMaximumWidth().width / maxItemSize.x );
 
     m_rows = calculateRowNumbers( legendEntries, itemsPerRow );
 
-    return new Point( config.getMaximumWidth(), Double.valueOf( m_rows ).intValue() * maxItemSize.y );
+    return new Rectangle(config.getMaximumWidth().x,config.getMaximumWidth().y, config.getMaximumWidth().width, Double.valueOf( m_rows ).intValue() * maxItemSize.y );
   }
 
   private int calculateRowNumbers( final int legendEntries, final int itemsPerRow )

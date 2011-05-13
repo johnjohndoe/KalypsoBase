@@ -102,8 +102,6 @@ class RulePainter implements IStylePainter
   {
     final SubMonitor progress = SubMonitor.convert( monitor, STRING_PAINTING_FEATURES, 100 ); //$NON-NLS-1$
 
-    final Double scale = paintable.getScale();
-
     /* Check for selection */
     try
     {
@@ -117,10 +115,7 @@ class RulePainter implements IStylePainter
           final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
           // TODO: should'nt there be at least some debug output if this happens?
           if( displayElement != null )
-          {
-            if( scale == null || displayElement.doesScaleConstraintApply( scale ) )
-              paintable.paint( displayElement, progress.newChild( 100 ) );
-          }
+            paintable.paint( displayElement, progress.newChild( 100 ) );
         }
       }
     }

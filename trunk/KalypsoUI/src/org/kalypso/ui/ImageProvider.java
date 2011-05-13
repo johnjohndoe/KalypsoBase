@@ -74,7 +74,18 @@ public class ImageProvider
     IMAGE_THEME_TEXT("icons/full/obj16/textTheme.gif"), //$NON-NLS-1$
 
     STATUS_LINE_SHOW_MAP_COORDS("icons/map/statusbarPosition.gif"), //$NON-NLS-1$
-    STATUS_LINE_SHOW_CRS_INFO("icons/map/statusbarShowCRSInfo.gif"); //$NON-NLS-1$
+    STATUS_LINE_SHOW_CRS_INFO("icons/map/statusbarShowCRSInfo.gif"), //$NON-NLS-1$
+
+    SLD_RULE_TAB_ADD("icons/sldeditor/ruleTabAdd.gif"),
+
+    MOVIE_PLAYER_STOP("icons/movie/player_stop.png"), //$NON-NLS-1$
+    MOVIE_PLAYER_START("icons/movie/player_start.png"), //$NON-NLS-1$
+    MOVIE_PLAYER_REW("icons/movie/player_rew.png"), //$NON-NLS-1$
+    MOVIE_PLAYER_PAUSE("icons/movie/player_pause.png"), //$NON-NLS-1$
+    MOVIE_PLAYER_PLAY("icons/movie/player_play.png"), //$NON-NLS-1$
+    MOVIE_PLAYER_FWD("icons/movie/player_fwd.png"), //$NON-NLS-1$
+    MOVIE_PLAYER_END("icons/movie/player_end.png"), //$NON-NLS-1$
+    MOVIE_PLAYER_EJECT("icons/movie/player_eject.png"); //$NON-NLS-1$
 
     private final String m_imagePath;
 
@@ -194,6 +205,8 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_STYLEEDITOR_OK = ImageProvider.id( "icons/util/ok.gif" ); //$NON-NLS-1$
 
   public static final ImageDescriptor IMAGE_STYLEEDITOR_GET_SCALE = ImageProvider.id( "icons/map/redo_edit.gif" ); //$NON-NLS-1$
+
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_EDIT_COLOR_RANGE = ImageProvider.id( "icons/map/edit_color_range.gif" ); //$NON-NLS-1$
 
   public static final ImageDescriptor IMAGE_FILTERDIALOG_ADD_FILTER = ImageProvider.id( "icons/filterdialog/filter_ps.gif" ); //$NON-NLS-1$
 

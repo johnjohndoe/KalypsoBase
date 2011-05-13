@@ -104,6 +104,9 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
       return false;
 
     final IZmlLayerDataHandler handler = layer.getDataHandler();
+    if( Objects.isNull( handler ) )
+      return false;
+
     final IObservation observation = handler.getObservation();
     if( Objects.isNull( observation ) )
       return false;

@@ -68,10 +68,10 @@ public final class KodRegistry
 
   private KodRegistry( ) throws IOException
   {
-    final URL url = ConfigUtils.findCentralConfigLocation( "layers/default" );
+    final URL url = ConfigUtils.findCentralConfigLocation( "layers/default" ); //$NON-NLS-1$
 
     final File directory = new File( url.getFile() );
-    final String[] kodFiles = directory.list( new WildcardFilter( "*.kod" ) );
+    final String[] kodFiles = directory.list( new WildcardFilter( "*.kod" ) ); //$NON-NLS-1$
 
     for( final String kod : kodFiles )
     {

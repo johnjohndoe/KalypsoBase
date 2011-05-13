@@ -45,7 +45,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypsodeegree.graphics.displayelements.Label;
 import org.kalypsodeegree.graphics.displayelements.LabelDisplayElement;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -152,16 +151,6 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
     }
     // mark the labels as unset (for the next paint-call)
     m_labels = null;
-  }
-
-  /**
-   * Returns whether the <tt>DisplayElement</tt> should be painted at the current scale or not.
-   */
-  @Override
-  public boolean doesScaleConstraintApply( final double scale )
-  {
-    final Symbolizer symbolizer = getSymbolizer();
-    return (symbolizer.getMinScaleDenominator() <= scale) && (symbolizer.getMaxScaleDenominator() > scale);
   }
 
   /**

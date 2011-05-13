@@ -43,13 +43,27 @@ package org.kalypso.ui.editor.styleeditor;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 public class StyleEditorHelper
 {
+// TODO: move to SLD stuff and rename to SLD-helper
   public static IPropertyType getFeatureTypeProperty( final IFeatureType ft, final PropertyName propName )
   {
-    // HACK: we assume that we have a simple PropertyName here, but this is not allways the case
-    final String path = propName.getValue();
-    return ft.getProperty( path );
+    try
+    {
+      final GMLXPath path = propName.getPath();
+      final Object object = GMLXPathUtilities.query( path, ft );
+      if( object instanceof IPropertyType )
+        return (IPropertyType) object;
+    }
+    catch( final GMLXPathException e )
+    {
+      e.printStackTrace();
+    }
+
+    return null;
   }
 }

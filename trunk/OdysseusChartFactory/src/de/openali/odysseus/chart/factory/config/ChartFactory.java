@@ -9,6 +9,7 @@ import de.openali.odysseus.chart.factory.config.resolver.ExtendedReferenceResolv
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
+import de.openali.odysseus.chart.framework.model.impl.settings.CHART_DATA_LOADER_STRATEGY;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
@@ -82,7 +83,8 @@ public final class ChartFactory
 
       title.setPositionHorizontal( StyleHelper.getAlignment( type.getHorizontalPosition() ) );
       title.setPositionVertical( StyleHelper.getAlignment( type.getVerticalPosition() ) );
-      title.getTextStyle().setAlignment( StyleHelper.getAlignment( type.getHorizontalAlignment() ) );
+      // textSytle configure this alignment itself
+      // title.getTextStyle().setAlignment( StyleHelper.getAlignment( type.getHorizontalAlignment() ) );
       title.setTextAnchorX( StyleHelper.getAlignment( type.getHorizontalTextAnchor() ) );
       title.setTextAnchorY( StyleHelper.getAlignment( type.getVerticalTextAnchor() ) );
 
@@ -96,6 +98,8 @@ public final class ChartFactory
 
     model.getBehaviour().setHideLegend( !chartType.getLegend() );
     model.getSettings().setLegendRenderer( chartType.getLegendRenderer() );
+
+    model.getSettings().setDataLoaderStrategy( CHART_DATA_LOADER_STRATEGY.convert( chartType.getLoader().toString() ) );
 
     final ExtendedReferenceResolver extendedResolver = new ExtendedReferenceResolver( resolver );
     final ChartMapperFactory mapperFactory = new ChartMapperFactory( model, extendedResolver, extLoader, context );

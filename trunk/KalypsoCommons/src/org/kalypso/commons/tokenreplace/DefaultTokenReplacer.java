@@ -45,7 +45,6 @@ package org.kalypso.commons.tokenreplace;
  */
 public class DefaultTokenReplacer implements ITokenReplacer
 {
-
   private final String m_token;
 
   private final String m_replaceString;
@@ -60,7 +59,7 @@ public class DefaultTokenReplacer implements ITokenReplacer
    * @see org.kalypso.commons.tokenreplace.ITokenReplacer#replaceToken(java.lang.Object, java.lang.String)
    */
   @Override
-  public String replaceToken( Object value, String argument )
+  public String replaceToken( final Object value, final String argument )
   {
     return m_replaceString;
   }

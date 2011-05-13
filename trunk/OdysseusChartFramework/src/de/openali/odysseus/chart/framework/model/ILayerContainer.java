@@ -54,4 +54,6 @@ public interface ILayerContainer
   ILayerContainer getParent( );
 
   void setIdentifier( String identifier );
+
+  IChartModel getModel( );
 }

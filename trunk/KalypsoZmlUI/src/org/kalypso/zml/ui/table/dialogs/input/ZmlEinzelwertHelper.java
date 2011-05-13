@@ -44,6 +44,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
+import org.kalypso.core.KalypsoCorePlugin;
 
 /**
  * @author Dirk Kuch
@@ -57,12 +58,14 @@ public final class ZmlEinzelwertHelper
   public static boolean compareDayAnchor( final Date d1, final Date d2 )
   {
     if( d1 == null || d2 == null )
+    {
       return false;
+    }
 
-    final Calendar c1 = Calendar.getInstance();
+    final Calendar c1 = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     c1.setTime( d1 );
 
-    final Calendar c2 = Calendar.getInstance();
+    final Calendar c2 = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
     c2.setTime( d2 );
 
     final EqualsBuilder builder = new EqualsBuilder();

@@ -43,13 +43,10 @@ package org.kalypso.ogc.sensor.view.wq.diagram;
 
 import java.awt.Frame;
 
-import org.eclipse.compare.internal.AbstractViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -67,29 +64,18 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 /**
  * @author schlienger
  */
-public class WQRelationDiagramViewer extends AbstractViewer implements DisposeListener
+public class WQRelationDiagramViewer extends Composite
 {
   private ObservationChart m_chart;
 
   private final DiagView m_diagView = new DiagView( true );
 
-  private Composite m_control = null;
-
   public WQRelationDiagramViewer( final Composite parent )
   {
-    createControl( parent );
-  }
+    super( parent, SWT.RIGHT | SWT.EMBEDDED | SWT.BORDER );
 
-  private void dispose()
-  {
-    m_diagView.dispose();
+    ControlUtils.addDisposeListener( this );
 
-    if( m_chart != null )
-      m_chart.dispose();
-  }
-
-  private final void createControl( final Composite parent )
-  {
     try
     {
       m_chart = new ObservationChart( m_diagView );
@@ -100,20 +86,24 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
       return;
     }
 
-    // SWT-AWT Brücke für die Darstellung von JFreeChart
-    m_control = new Composite( parent, SWT.RIGHT | SWT.EMBEDDED | SWT.BORDER );
-
-    final Frame vFrame = SWT_AWT.new_Frame( m_control );
+    final Frame vFrame = SWT_AWT.new_Frame( this );
     vFrame.add( ChartFactory.createChartPanel( m_chart ) );
     vFrame.setVisible( true );
-    
-    m_control.addDisposeListener( this );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    m_diagView.dispose();
+
+    if( m_chart != null )
+      m_chart.dispose();
   }
 
   public void setInput( final WQTableSet wqs ) throws SensorException
   {
     m_chart.clearChart();
-    
+
     if( wqs == null )
       return;
 
@@ -127,7 +117,7 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
     final DiagramAxis diagramAxisTo = new DiagramAxis( toType, "double", toType, toUnit, DiagramAxis.DIRECTION_HORIZONTAL, DiagramAxis.POSITION_BOTTOM, false ); //$NON-NLS-1$
     m_diagView.addAxis( diagramAxisFrom );
     m_diagView.addAxis( diagramAxisTo );
-    
+
     final WQTable[] tables = wqs.getTables();
     for( final WQTable table : tables )
     {
@@ -142,23 +132,5 @@ public class WQRelationDiagramViewer extends AbstractViewer implements DisposeLi
 
       m_chart.getObservationPlot().addCurve( curve );
     }
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.Viewer#getControl()
-   */
-  @Override
-  public Control getControl()
-  {
-    return m_control;
-  }
-
-  /**
-   * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
-   */
-  @Override
-  public void widgetDisposed( final DisposeEvent e )
-  {
-    dispose();
   }
 }

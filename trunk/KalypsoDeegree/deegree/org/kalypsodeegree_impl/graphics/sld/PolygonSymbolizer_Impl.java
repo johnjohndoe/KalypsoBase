@@ -72,22 +72,20 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
   public PolygonSymbolizer_Impl( )
   {
     super( null, UOM.pixel );
-    setFill( new Fill_Impl() );
 
-    final Stroke stroke = new Stroke_Impl();
-    setStroke( stroke );
+    setFill( new Fill_Impl() );
+    setStroke( new Stroke_Impl() );
   }
 
   /**
    * constructor initializing the class with the <PolygonSymbolizer>
    */
-  public PolygonSymbolizer_Impl( final Fill fill, final Stroke stroke, final Geometry geometry, final double min, final double max, final UOM uom )
+  public PolygonSymbolizer_Impl( final Fill fill, final Stroke stroke, final Geometry geometry, final UOM uom )
   {
     super( geometry, uom );
+
     setFill( fill );
     setStroke( stroke );
-    setMinScaleDenominator( min );
-    setMaxScaleDenominator( max );
   }
 
   /**
@@ -138,7 +136,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
   @Override
   public void setStroke( final Stroke stroke )
   {
-    this.m_stroke = stroke;
+    m_stroke = stroke;
   }
 
   /**
@@ -150,7 +148,6 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
   public String toString( )
   {
     final StringBuffer sb = new StringBuffer();
-    sb.append( "scale constraint:  >=" + getMinScaleDenominator() + " AND <" + getMaxScaleDenominator() + "\n" );
     sb.append( "<PolygonSymbolizer>\n" );
 
     if( getGeometry() != null )

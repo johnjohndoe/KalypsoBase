@@ -186,10 +186,6 @@
             class="org.kalypso.chart.ui.editor.commandhandler.ChangeVisibilityCommandHandler"
             commandId="org.kalypso.chart.ui.commands.change.visibility">
       </handler>
-      <handler
-            class="org.kalypso.chart.ui.layer.selection.AxisSelectionCommandHandler"
-            commandId="org.kalypso.chart.ui.command.axis.selection">
-      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">

@@ -55,8 +55,8 @@ public class PropertyIsLikeOperation extends ComparisonOperation
   private PropertyName m_propertyName;
 
   private Literal m_literal;
-  
-  private String m_strLiteral; 
+
+  private String m_strLiteral;
 
   // attributes of <PropertyIsLike>
   private char m_wildCard;
@@ -107,8 +107,8 @@ public class PropertyIsLikeOperation extends ComparisonOperation
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
-   * methods to validate the structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM
+   * () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
@@ -222,28 +222,36 @@ public class PropertyIsLikeOperation extends ComparisonOperation
    *   <li>wildcard characters (like * in most shells)</li>
    *   <li>singlechar characters (like ? in most shells)</li>
    * </ul>
-   * @param pattern the pattern to compare to
-   * @param buffer the <tt>String</tt> to test
+   * 
+   * @param pattern
+   *          the pattern to compare to
+   * @param buffer
+   *          the <tt>String</tt> to test
    * @return true, if the <tt>String</tt> matches the pattern
    */
-  public boolean matches( String pattern, String buffer )
+  private boolean matches( String pattern, String buffer )
   {
     // match was successful if both the pattern and the buffer are empty
     if( pattern.length() == 0 && buffer.length() == 0 )
       return true;
 
-    if( buffer == null || buffer.length() == 0 ){
+    if( buffer == null || buffer.length() == 0 )
+    {
       return false;
     }
 
-    
-    if( !pattern.contains( "" + m_wildCard ) && pattern.hashCode() != buffer.hashCode() ){
-      return false;
+    if( pattern.indexOf( m_wildCard ) == -1 )
+    {
+      if( pattern.hashCode() != buffer.hashCode() )
+        return false;
+
+      return pattern.equals( buffer );
     }
-//    System.out.println( "Pattern: " + pattern + "; buffer: " + buffer );
+
+// System.out.println( "Pattern: " + pattern + "; buffer: " + buffer );
     // build the prefix that has to match the beginning of the buffer
     // prefix ends at the first (unescaped!) wildcard / singlechar character
-//    StringBuffer sb = new StringBuffer();
+// StringBuffer sb = new StringBuffer();
     StringBuilder sb = new StringBuilder();
     boolean escapeMode = false;
     int length = pattern.length();

@@ -51,7 +51,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 /**
  * @author alibu
  */
-public class NumberLabelCreator extends AbstractLabelCreator implements ILabelCreator
+public class NumberLabelCreator  implements ILabelCreator
 {
 
   private final String m_formatString;

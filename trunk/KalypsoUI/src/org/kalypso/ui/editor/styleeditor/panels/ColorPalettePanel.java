@@ -56,7 +56,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
-import org.kalypso.ui.editor.styleeditor.rulePattern.RuleCollection;
+import org.kalypso.ui.editor.styleeditor.style.RuleCollection;
 
 /**
  * @author Administrator

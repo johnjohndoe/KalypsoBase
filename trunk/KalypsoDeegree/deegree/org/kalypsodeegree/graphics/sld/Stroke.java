@@ -72,29 +72,42 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface Stroke extends Drawing
 {
+  String CSS_DASHOFFSET = "stroke-dashoffset";
 
-  public static final int LJ_MITRE = java.awt.BasicStroke.JOIN_MITER;
+  String CSS_DASHARRAY = "stroke-dasharray";
 
-  public static final int LJ_ROUND = java.awt.BasicStroke.JOIN_ROUND;
+  String CSS_LINECAP = "stroke-linecap";
 
-  public static final int LJ_BEVEL = java.awt.BasicStroke.JOIN_BEVEL;
+  String CSS_LINEJOIN = "stroke-linejoin";
 
-  public static final int LC_BUTT = java.awt.BasicStroke.CAP_BUTT;
+  String CSS_WIDTH = "stroke-width";
 
-  public static final int LC_ROUND = java.awt.BasicStroke.CAP_ROUND;
+  String CSS_OPACITY = "stroke-opacity";
 
-  public static final int LC_SQUARE = java.awt.BasicStroke.CAP_SQUARE;
+  String CSS_STROKE = "stroke";
+
+  int LJ_MITRE = java.awt.BasicStroke.JOIN_MITER;
+
+  int LJ_ROUND = java.awt.BasicStroke.JOIN_ROUND;
+
+  int LJ_BEVEL = java.awt.BasicStroke.JOIN_BEVEL;
+
+  int LC_BUTT = java.awt.BasicStroke.CAP_BUTT;
+
+  int LC_ROUND = java.awt.BasicStroke.CAP_ROUND;
+
+  int LC_SQUARE = java.awt.BasicStroke.CAP_SQUARE;
 
   // default values
-  public static final Color COLOR_DEFAULT = Color.decode( "#000000" );
+  Color COLOR_DEFAULT = Color.decode( "#000000" );
 
-  public static final double OPACITY_DEFAULT = 1.0;
+  double OPACITY_DEFAULT = 1.0;
 
-  public static final double WIDTH_DEFAULT = 1.0;
+  double WIDTH_DEFAULT = 1.0;
 
-  public static final int LJ_DEFAULT = LJ_MITRE;
+  int LJ_DEFAULT = LJ_MITRE;
 
-  public static final int LC_DEFAULT = LC_BUTT;
+  int LC_DEFAULT = LC_BUTT;
 
   /**
    * The GraphicStroke element both indicates that a repeated-linear-graphic stroke type will be used.

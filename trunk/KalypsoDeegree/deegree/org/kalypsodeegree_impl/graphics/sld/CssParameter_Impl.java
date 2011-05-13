@@ -94,7 +94,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
   /**
    * constructor initializing the class with the <CssParameter>
    */
-  CssParameter_Impl( String name, ParameterValueType pvt )
+  CssParameter_Impl( final String name, final ParameterValueType pvt )
   {
     this.m_name = name;
     this.m_pvt = pvt;
@@ -120,7 +120,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
    *          the value of the name attribute of the CssParameter
    */
   @Override
-  public void setName( String name )
+  public void setName( final String name )
   {
     this.m_name = name;
   }
@@ -145,7 +145,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
    *          the mixed content of the element
    */
   @Override
-  public void setValue( ParameterValueType value )
+  public void setValue( final ParameterValueType value )
   {
     this.m_pvt = value;
   }
@@ -161,7 +161,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
    *           if the evaluations fails
    */
   @Override
-  public String getValue( Feature feature ) throws FilterEvaluationException
+  public String getValue( final Feature feature ) throws FilterEvaluationException
   {
     return m_pvt.evaluate( feature );
   }
@@ -174,7 +174,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
    *          CssParameter-Value to be set
    */
   @Override
-  public void setValue( String value )
+  public void setValue( final String value )
   {
     ParameterValueType pvt = null;
     pvt = StyleFactory.createParameterValueType( "" + value );
@@ -191,7 +191,7 @@ class CssParameter_Impl implements CssParameter, Marshallable
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( "<CssParameter name=" );
+    final StringBuffer sb = new StringBuffer( "<CssParameter name=" );
     sb.append( "'" + m_name + "'>" );
     sb.append( ( (Marshallable)m_pvt ).exportAsXML() );
     sb.append( "</CssParameter>" );

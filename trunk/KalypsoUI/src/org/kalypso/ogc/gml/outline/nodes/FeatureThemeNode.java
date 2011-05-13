@@ -199,7 +199,8 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
       else if( object instanceof FeatureTypeStyleNode )
       {
         final FeatureTypeStyleNode fts = ((FeatureTypeStyleNode) object);
-        if( fts.getStyle().getName().equals( styleName ) )
+        final String ftsName = fts.getStyle().getName();
+        if( ftsName != null && ftsName.equals( styleName ) )
           return fts;
       }
     }

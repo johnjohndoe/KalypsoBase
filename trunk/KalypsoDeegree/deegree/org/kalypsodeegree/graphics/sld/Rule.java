@@ -61,7 +61,6 @@ import org.kalypsodeegree.filterencoding.Filter;
  */
 public interface Rule
 {
-
   /**
    * returns the name of the rule. this for machine interpreting.
    * 
@@ -104,10 +103,10 @@ public interface Rule
   /**
    * Sets the abstract attribute's value of the Rule.
    * 
-   * @param abstract_
+   * @param description
    *            the abstract of the rule
    */
-  void setAbstract( String abstract_ );
+  void setAbstract( String description );
 
   /**
    * The LegendGraphic element gives an optional explicit Graphic symbol to be displayed in a legend for this rule.
@@ -154,7 +153,7 @@ public interface Rule
    * @param elseFilter
    *            an elseFilter
    */
-  public void setElseFilter( boolean elseFilter );
+  void setElseFilter( boolean elseFilter );
 
   /**
    * The MinScaleDenominator and MaxScaleDenominator elements of a Rule define the range of map-rendering scales for
@@ -166,10 +165,11 @@ public interface Rule
   double getMinScaleDenominator( );
 
   /**
-   * Sets the MinScaleDenominator.
+   * Sets the MinScaleDenominator. <br/>
+   * TODO: allow for null value, as the schema does<br/>
    * 
    * @param minScaleDenominator
-   *            the MinScaleDenominator for the rule
+   *          the MinScaleDenominator for the rule
    */
   void setMinScaleDenominator( double minScaleDenominator );
 
@@ -183,12 +183,18 @@ public interface Rule
   double getMaxScaleDenominator( );
 
   /**
-   * Sets the MaxScaleDenominator.
+   * Sets the MaxScaleDenominator. <br/>
+   * TODO: allow for null value, as the schema does<br/>
    * 
    * @param maxScaleDenominator
-   *            the MaxScaleDenominator for the rule
+   *          the MaxScaleDenominator for the rule
    */
   void setMaxScaleDenominator( double maxScaleDenominator );
+
+  /**
+   * Returns if this <tt>Rule</tt> should be painted at the current scale or not.
+   */
+  boolean doesScaleConstraintApply( double scale );
 
   /**
    * Embedded inside of Rules, which group conditions for styling features, are Symbolizers. A symbolizer describes how

@@ -124,13 +124,4 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   {
     return m_highlighted;
   }
-
-  /**
-   * Returns if the <tt>DisplayElement</tt> should be painted at the current scale or not.
-   */
-  @Override
-  public boolean doesScaleConstraintApply( final double scale )
-  {
-    return true;
-  }
 }

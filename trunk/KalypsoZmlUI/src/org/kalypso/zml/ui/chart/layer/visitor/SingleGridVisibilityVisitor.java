@@ -96,6 +96,9 @@ public class SingleGridVisibilityVisitor extends AbstractChartLayerVisitor
       return false;
 
     final IZmlLayerDataHandler handler = zmlLayer.getDataHandler();
+    if( Objects.isNull( handler ) )
+      return false;
+
     if( Objects.isNull( handler.getObservation() ) )
       return false;
 

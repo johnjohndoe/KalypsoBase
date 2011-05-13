@@ -78,27 +78,25 @@ class RotatedLabel implements Label
 
   private final Font m_font;
 
-  private final int descent, ascent;
+  private final int m_descent, m_ascent;
 
   private final Halo m_halo;
 
   private final Feature m_feature;
 
-  RotatedLabel( final String caption, final Font font, final Color color, final LineMetrics metrics, final Feature feature, final Halo halo, final int x, final int y,
-      final int w, final int h, final double rotation, final double anchorPoint[], final double[] displacement )
-      {
+  RotatedLabel( final String caption, final Font font, final Color color, final LineMetrics metrics, final Feature feature, final Halo halo, final int x, final int y, final int w, final int h, final double rotation, final double anchorPoint[], final double[] displacement )
+  {
+    m_caption = caption;
+    m_font = font;
+    m_color = color;
+    m_descent = (int) metrics.getDescent();
+    m_ascent = (int) metrics.getAscent();
+    m_feature = feature;
+    m_halo = halo;
+    m_rotation = rotation;
 
-    this.m_caption = caption;
-    this.m_font = font;
-    this.m_color = color;
-    this.descent = (int)metrics.getDescent();
-    this.ascent = (int)metrics.getAscent();
-    this.m_feature = feature;
-    this.m_halo = halo;
-    this.m_rotation = rotation;
-
-    this.m_width = w;
-    this.m_height = h;
+    m_width = w;
+    m_height = h;
 
     // vertices of label boundary
     final int[] xpoints = new int[4];
@@ -121,19 +119,18 @@ class RotatedLabel implements Label
     // transform all vertices of the boundary
     for( int i = 0; i < 4; i++ )
     {
-      final int[] point = transformPoint( xpoints[i], ypoints[i], tx, ty, rotation, anchorPoint[0], anchorPoint[1], w, h,
-          displacement[0], displacement[1] );
+      final int[] point = transformPoint( xpoints[i], ypoints[i], tx, ty, rotation, anchorPoint[0], anchorPoint[1], w, h, displacement[0], displacement[1] );
       this.m_xpoints[i] = point[0];
       this.m_ypoints[i] = point[1];
     }
-      }
+  }
 
-  public String getCaption()
+  public String getCaption( )
   {
     return m_caption;
   }
 
-  public double getRotation()
+  public double getRotation( )
   {
     return m_rotation;
   }
@@ -154,7 +151,7 @@ class RotatedLabel implements Label
     // render the text
     transform.rotate( m_rotation, m_xpoints[0], m_ypoints[0] );
     g.setTransform( transform );
-    //g.drawString( caption, xpoints [0], ypoints [0] - descent);
+    // g.drawString( caption, xpoints [0], ypoints [0] - descent);
 
     // restore original transform
     g.setTransform( saveAT );
@@ -184,7 +181,7 @@ class RotatedLabel implements Label
     {
       try
       {
-        paintHalo( g, m_halo, m_xpoints[0], m_ypoints[0] - descent );
+        paintHalo( g, m_halo, m_xpoints[0], m_ypoints[0] - m_descent );
       }
       catch( final FilterEvaluationException e )
       {
@@ -195,7 +192,7 @@ class RotatedLabel implements Label
     // render the text
     setColor( g, m_color, 1.0 );
     g.setFont( m_font );
-    g.drawString( m_caption, m_xpoints[0], m_ypoints[0] - descent );
+    g.drawString( m_caption, m_xpoints[0], m_ypoints[0] - m_descent );
 
     // restore original transform
     g.setTransform( saveAT );
@@ -213,7 +210,6 @@ class RotatedLabel implements Label
    *          x-coordinate of the label
    * @param y
    *          y-coordinate of the label
-   * 
    * @throws FilterEvaluationException
    *           if the evaluation of a <tt>ParameterValueType</tt> fails
    */
@@ -246,7 +242,7 @@ class RotatedLabel implements Label
       g.setColor( Color.white );
     }
 
-    g.fillRect( x - radius, y - ascent - radius, m_width + 2 * radius, m_height + 2 * radius );
+    g.fillRect( x - radius, y - m_ascent - radius, m_width + 2 * radius, m_height + 2 * radius );
 
     // only stroke outline, if Stroke-Element is given
     final org.kalypsodeegree.graphics.sld.Stroke stroke = halo.getStroke();
@@ -258,7 +254,7 @@ class RotatedLabel implements Label
       if( opacity > 0.01 )
       {
         Color color = stroke.getStroke( m_feature );
-        final int alpha = (int)Math.round( opacity * 255 );
+        final int alpha = (int) Math.round( opacity * 255 );
         final int red = color.getRed();
         final int green = color.getGreen();
         final int blue = color.getBlue();
@@ -271,56 +267,55 @@ class RotatedLabel implements Label
         BasicStroke bs = null;
         final float strokeWidth = (float) stroke.getWidth( m_feature );
 
-        if( ( dash == null ) || ( dash.length < 2 ) )
+        if( (dash == null) || (dash.length < 2) )
         {
           bs = new BasicStroke( strokeWidth );
         }
         else
         {
           bs = new BasicStroke( strokeWidth, stroke.getLineCap( m_feature ), stroke.getLineJoin( m_feature ), 10.0f, dash, stroke.getDashOffset( m_feature ) );
-          bs = new BasicStroke( strokeWidth, stroke.getLineCap( m_feature ), stroke.getLineJoin( m_feature ), 1.0f, dash,
-              1.0f );
+          bs = new BasicStroke( strokeWidth, stroke.getLineCap( m_feature ), stroke.getLineJoin( m_feature ), 1.0f, dash, 1.0f );
         }
 
         g.setStroke( bs );
 
-        g.drawRect( x - radius, y - ascent - radius, m_width + 2 * radius, m_height + 2 * radius );
+        g.drawRect( x - radius, y - m_ascent - radius, m_width + 2 * radius, m_height + 2 * radius );
       }
     }
   }
 
   @Override
-  public int getX()
+  public int getX( )
   {
     return m_xpoints[0];
   }
 
   @Override
-  public int getY()
+  public int getY( )
   {
     return m_ypoints[0];
   }
 
   @Override
-  public int getMaxX()
+  public int getMaxX( )
   {
     return m_xpoints[1];
   }
 
   @Override
-  public int getMaxY()
+  public int getMaxY( )
   {
     return m_ypoints[1];
   }
 
   @Override
-  public int getMinX()
+  public int getMinX( )
   {
     return m_xpoints[3];
   }
 
   @Override
-  public int getMinY()
+  public int getMinY( )
   {
     return m_ypoints[3];
   }
@@ -340,14 +335,13 @@ class RotatedLabel implements Label
     return false;
   }
 
-  private int[] transformPoint( final int x, final int y, final int tx, final int ty, final double rotation, final double anchorPointX,
-      final double anchorPointY, final int w, final int h, final double displacementX, final double displacementY )
+  private int[] transformPoint( final int x, final int y, final int tx, final int ty, final double rotation, final double anchorPointX, final double anchorPointY, final int w, final int h, final double displacementX, final double displacementY )
   {
 
     final double cos = Math.cos( rotation );
     final double sin = Math.sin( rotation );
     final double dx = -anchorPointX * w;
-    //		double dy = anchorPointY * h;
+    // double dy = anchorPointY * h;
     final double dy = anchorPointY * h - displacementY;
 
     final double m00 = cos;
@@ -359,9 +353,9 @@ class RotatedLabel implements Label
 
     final int[] point2 = new int[2];
 
-    point2[0] = (int)( m00 * x + m01 * y + m02 + 0.5 + displacementX );
-    point2[1] = (int)( m10 * x + m11 * y + m12 + 0.5 );
-    //		point2 [1] = (int) (m10 * x + m11 * y + m12 + 0.5 - displacementY);
+    point2[0] = (int) (m00 * x + m01 * y + m02 + 0.5 + displacementX);
+    point2[1] = (int) (m10 * x + m11 * y + m12 + 0.5);
+    // point2 [1] = (int) (m10 * x + m11 * y + m12 + 0.5 - displacementY);
     return point2;
   }
 
@@ -369,7 +363,7 @@ class RotatedLabel implements Label
   {
     if( opacity < 0.999 )
     {
-      final int alpha = (int)Math.round( opacity * 255 );
+      final int alpha = (int) Math.round( opacity * 255 );
       final int red = color.getRed();
       final int green = color.getGreen();
       final int blue = color.getBlue();
@@ -381,7 +375,7 @@ class RotatedLabel implements Label
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     return m_caption;
   }

@@ -45,6 +45,9 @@ import jregex.RETokenizer;
 
 import org.apache.commons.lang.StringUtils;
 
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chartconfig.x020.ReferencingType;
 
 /**
@@ -70,4 +73,5 @@ public final class AxisUtils
 
     return StringUtils.chomp( tokenizer.nextToken() );
   }
+
 }

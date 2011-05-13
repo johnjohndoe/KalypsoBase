@@ -58,7 +58,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface Font
 {
-
   public static final int STYLE_NORMAL = java.awt.Font.PLAIN;
 
   public static final int STYLE_ITALIC = java.awt.Font.ITALIC;

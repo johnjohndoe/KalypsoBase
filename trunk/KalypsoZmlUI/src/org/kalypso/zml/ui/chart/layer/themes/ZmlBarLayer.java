@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.net.URL;
+
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
@@ -48,13 +50,14 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
+import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -76,10 +79,37 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
   private final IStyleSet m_styleSet;
 
-  protected ZmlBarLayer( final ILayerProvider layerProvider, final IStyleSet styleSet )
+  public ZmlBarLayer( final IZmlLayerProvider layerProvider, final IStyleSet styleSet, final URL context )
   {
     super( layerProvider, null );
     m_styleSet = styleSet;
+
+    setup( context );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getProvider()
+   */
+  @Override
+  public IZmlLayerProvider getProvider( )
+  {
+    return (IZmlLayerProvider) super.getProvider();
+  }
+
+  private void setup( final URL context )
+  {
+    final IZmlLayerProvider provider = getProvider();
+    final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
+    try
+    {
+      handler.load( provider, context );
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
+    }
+
+    setDataHandler( handler );
   }
 
   /**

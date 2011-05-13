@@ -86,7 +86,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   private double m_minScaleDenominator = 0;
 
-   /**
+  /**
    * constructor initializing the class with the <Rule>
    */
   public Rule_Impl( final Symbolizer[] symbolizers, final String name, final String title, final String abstract_, final LegendGraphic legendGraphic, final Filter filter, final boolean elseFilter, final double minScaleDenominator, final double maxScaleDenominator )
@@ -254,6 +254,12 @@ public class Rule_Impl implements Rule, Marshallable
   public double getMinScaleDenominator( )
   {
     return m_minScaleDenominator;
+  }
+
+  @Override
+  public boolean doesScaleConstraintApply( final double scale )
+  {
+    return getMinScaleDenominator() <= scale && getMaxScaleDenominator() > scale;
   }
 
   /**

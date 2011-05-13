@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
@@ -82,15 +83,27 @@ public class ChartOutlinePopupDialog extends PopupDialog
       final ChartEditorTreeOutlinePage cop = (ChartEditorTreeOutlinePage) m_chartPart.getOutlinePage();
       cop.createControl( da );
 
-      final TitleTypeBean[] title = m_chartPart.getChartComposite().getChartModel().getSettings().getTitles();
-      if( !ArrayUtils.isEmpty( title ) )
-        setTitleText( title[0].getText() );
-      else
-        setTitleText( "" );
+      final TitleTypeBean[] titles = m_chartPart.getChartComposite().getChartModel().getSettings().getTitles();
+      final String title = getTitle( titles );
+
+      setTitleText( title );
 
       return da;
     }
     return new Composite( parent, SWT.NONE );
+  }
+
+  private String getTitle( final TitleTypeBean[] titles )
+  {
+    if( ArrayUtils.isEmpty( titles ) )
+      return "";
+
+    final TitleTypeBean bean = titles[0];
+    final String text = bean.getText();
+    if( Strings.isEmpty( text ) )
+      return "";
+
+    return text;
   }
 
   /**

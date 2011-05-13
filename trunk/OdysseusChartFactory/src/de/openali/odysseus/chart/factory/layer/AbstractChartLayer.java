@@ -18,6 +18,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 
 import de.openali.odysseus.chart.framework.OdysseusChartFramework;
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
@@ -534,5 +535,14 @@ public abstract class AbstractChartLayer implements IChartLayer
     }
 
     getEventHandler().fireLayerContentChanged( this );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.ILayerContainer#getModel()
+   */
+  @Override
+  public IChartModel getModel( )
+  {
+    return getParent().getModel();
   }
 }

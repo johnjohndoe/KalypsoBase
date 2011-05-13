@@ -61,18 +61,17 @@ public class SurfacePolygonSymbolizer_Impl extends Symbolizer_Impl implements Su
    */
   public SurfacePolygonSymbolizer_Impl( )
   {
-    this( new PolygonColorMap_Impl(), null, 0, 99E9, UOM.pixel );
+    this( new PolygonColorMap_Impl(), null, UOM.pixel );
   }
 
   /**
    * constructor initializing the class with the <PolygonSymbolizer>
    */
-  public SurfacePolygonSymbolizer_Impl( final PolygonColorMap colorMap, final Geometry geometry, final double min, final double max, final UOM uom )
+  public SurfacePolygonSymbolizer_Impl( final PolygonColorMap colorMap, final Geometry geometry, final UOM uom )
   {
     super( geometry, uom );
+
     setColorMap( colorMap );
-    setMinScaleDenominator( min );
-    setMaxScaleDenominator( max );
   }
 
   /**
@@ -151,7 +150,6 @@ public class SurfacePolygonSymbolizer_Impl extends Symbolizer_Impl implements Su
   public String toString( )
   {
     final StringBuffer sb = new StringBuffer();
-    sb.append( "scale constraint:  >=" + getMinScaleDenominator() + " AND <" + getMaxScaleDenominator() + "\n" );
     sb.append( "<sldExt:SurfacePolygonSymbolizer xmlns:sldExt=\"" + SLDFactory.SLDNS_EXT + "\"" );
 
     final UOM uom = getUom();

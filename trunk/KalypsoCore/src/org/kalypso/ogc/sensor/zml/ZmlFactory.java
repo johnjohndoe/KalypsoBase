@@ -514,10 +514,8 @@ public final class ZmlFactory
    * Create an XML-Observation ready for marshalling.
    * 
    * @param timezone
-   *          the time zone into which dates should be converted before serialized
-   * @deprecated Use one of the writeXXX methods.
+   *          the time zone into which dates should be converted before serialised
    */
-  @Deprecated
   public static Observation createXML( final IObservation obs, final IRequest args ) throws FactoryException
   {
     try
@@ -559,7 +557,7 @@ public final class ZmlFactory
 
       final TimeZone timezone = KalypsoCorePlugin.getDefault().getTimeZone();
 
-      // write timezone info into metadata
+      // write time zone info into meta data
       final MetadataType mdType = OF.createMetadataType();
       mdType.setName( ITimeseriesConstants.MD_TIMEZONE );
       mdType.setValue( timezone.getID() );
@@ -572,8 +570,8 @@ public final class ZmlFactory
       metadataList.add( mdType );
 
       final List<AxisType> axisList = obsType.getAxis();
-      // sort axes, this is not needed from a xml view, but very usefull when comparing marshalled files (e.g.
-      // Junit-Test)
+      // sort axes, this is not needed from a XML view, but very useful when comparing marshaled files (e.g.
+      // JUnit-Test)
       final TreeSet<IAxis> sortedAxis = new TreeSet<IAxis>( new Comparator<IAxis>()
       {
         @Override
@@ -701,13 +699,7 @@ public final class ZmlFactory
     return StringUtils.chop( buffer.toString() );
   }
 
-  /**
-   * @deprecated Do not use any more, except from this class.<br>
-   *             Introduce and use helper methods in this class instead (for streams, files, etc.). We should especially
-   *             use an {@link javax.xml.stream.XMLStreamWriter} configured with standard namespaces to write zml.
-   */
-  @Deprecated
-  public static Marshaller getMarshaller( ) throws JAXBException
+  private static Marshaller getMarshaller( ) throws JAXBException
   {
     return JaxbUtilities.createMarshaller( JC, true, null, ZML_PREFIX_MAPPER );
   }

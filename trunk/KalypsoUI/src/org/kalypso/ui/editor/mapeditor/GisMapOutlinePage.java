@@ -53,10 +53,12 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
@@ -70,12 +72,14 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.GisMapOutlineViewer;
 import org.kalypso.ogc.gml.outline.handler.ToggleCompactOutlineHandler;
+import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
@@ -259,6 +263,8 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
 
     setMapPanel( null );
 
+    setStyleSelection( null );
+
     super.dispose();
   }
 
@@ -280,13 +286,21 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
   @Override
   public void setFocus( )
   {
+    setStyleSelection( m_outlineViewer );
+  }
+
+  protected void setStyleSelection( final ISelectionProvider selectionProvider )
+  {
     // bei jedem Focus, überprüfe ob outline beim StyleEditor registriert ist.
     // TODO: remove, style editor must pull information instead
     final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    final StyleEditorViewPart part = (StyleEditorViewPart) window.getActivePage().findView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" ); //$NON-NLS-1$
+    final IWorkbenchPage activePage = window.getActivePage();
+    if( activePage == null )
+      return;
 
+    final StyleEditorViewPart part = (StyleEditorViewPart) activePage.findView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" ); //$NON-NLS-1$
     if( part != null )
-      part.setSelectionChangedProvider( m_outlineViewer );
+      part.setSelectionChangedProvider( selectionProvider );
   }
 
   /**
@@ -413,4 +427,18 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
     commandService.refreshElements( ToggleCompactOutlineHandler.CMD_ID, filter );
   }
 
+  /**
+   * This function searches the content of the viewer for a node, which contains the given theme.
+   * 
+   * @param theme
+   *          The theme.
+   * @return The node or null.
+   */
+  public IThemeNode findNode( IKalypsoTheme theme )
+  {
+    if( m_outlineViewer == null || m_outlineViewer.getControl().isDisposed() )
+      return null;
+
+    return m_outlineViewer.findNode( theme );
+  }
 }

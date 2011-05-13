@@ -54,18 +54,18 @@ import org.kalypsodeegree_impl.tools.Debug;
  */
 public class PointPlacement_Impl implements PointPlacement, Marshallable
 {
-  private ParameterValueType rotation = null;
+  private ParameterValueType m_rotation = null;
 
-  private ParameterValueType[] anchorPoint = null;
+  private ParameterValueType[] m_anchorPoint = null;
 
-  private ParameterValueType[] displacement = null;
+  private ParameterValueType[] m_displacement = null;
 
   // should the placement be optimized?
-  private boolean auto = false;
+  private boolean m_auto = false;
 
   PointPlacement_Impl()
   {
-  // default
+    // default
   }
 
   /**
@@ -75,13 +75,13 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    * @param displacement
    * @param rotation
    */
-  public PointPlacement_Impl( ParameterValueType[] anchorPoint, ParameterValueType[] displacement,
-      ParameterValueType rotation, boolean auto )
+  public PointPlacement_Impl( final ParameterValueType[] anchorPoint, final ParameterValueType[] displacement,
+      final ParameterValueType rotation, final boolean auto )
   {
-    this.anchorPoint = anchorPoint;
-    this.displacement = displacement;
-    this.rotation = rotation;
-    this.auto = auto;
+    this.m_anchorPoint = anchorPoint;
+    this.m_displacement = displacement;
+    this.m_rotation = rotation;
+    this.m_auto = auto;
   }
 
   /**
@@ -103,17 +103,17 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    *           if the evaluation fails
    */
   @Override
-  public double[] getAnchorPoint( Feature feature ) throws FilterEvaluationException
+  public double[] getAnchorPoint( final Feature feature ) throws FilterEvaluationException
   {
-    double[] anchorPointVal =
+    final double[] anchorPointVal =
     {
         0.0,
         0.5 };
 
-    if( anchorPoint != null )
+    if( m_anchorPoint != null )
     {
-      anchorPointVal[0] = Double.parseDouble( anchorPoint[0].evaluate( feature ) );
-      anchorPointVal[1] = Double.parseDouble( anchorPoint[1].evaluate( feature ) );
+      anchorPointVal[0] = Double.parseDouble( m_anchorPoint[0].evaluate( feature ) );
+      anchorPointVal[1] = Double.parseDouble( m_anchorPoint[1].evaluate( feature ) );
     }
 
     return anchorPointVal;
@@ -126,16 +126,16 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    *          anchorPoint for the PointPlacement
    */
   @Override
-  public void setAnchorPoint( double[] anchorPoint )
+  public void setAnchorPoint( final double[] anchorPoint )
   {
     ParameterValueType pvt = null;
-    ParameterValueType[] pvtArray = new ParameterValueType[anchorPoint.length];
+    final ParameterValueType[] pvtArray = new ParameterValueType[anchorPoint.length];
     for( int i = 0; i < anchorPoint.length; i++ )
     {
       pvt = StyleFactory.createParameterValueType( "" + anchorPoint[i] );
       pvtArray[i] = pvt;
     }
-    this.anchorPoint = pvtArray;
+    this.m_anchorPoint = pvtArray;
   }
 
   /**
@@ -155,17 +155,17 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    *           if the evaluation fails*
    */
   @Override
-  public double[] getDisplacement( Feature feature ) throws FilterEvaluationException
+  public double[] getDisplacement( final Feature feature ) throws FilterEvaluationException
   {
-    double[] displacementVal =
+    final double[] displacementVal =
     {
         0.0,
         0.0 };
 
-    if( displacement != null )
+    if( m_displacement != null )
     {
-      displacementVal[0] = Double.parseDouble( displacement[0].evaluate( feature ) );
-      displacementVal[1] = Double.parseDouble( displacement[1].evaluate( feature ) );
+      displacementVal[0] = Double.parseDouble( m_displacement[0].evaluate( feature ) );
+      displacementVal[1] = Double.parseDouble( m_displacement[1].evaluate( feature ) );
     }
 
     return displacementVal;
@@ -177,16 +177,16 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    * @param displacement
    */
   @Override
-  public void setDisplacement( double[] displacement )
+  public void setDisplacement( final double[] displacement )
   {
     ParameterValueType pvt = null;
-    ParameterValueType[] pvtArray = new ParameterValueType[displacement.length];
+    final ParameterValueType[] pvtArray = new ParameterValueType[displacement.length];
     for( int i = 0; i < displacement.length; i++ )
     {
       pvt = StyleFactory.createParameterValueType( "" + displacement[i] );
       pvtArray[i] = pvt;
     }
-    this.displacement = pvtArray;
+    this.m_displacement = pvtArray;
   }
 
   /**
@@ -201,16 +201,12 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    *           if the evaluation fails*
    */
   @Override
-  public double getRotation( Feature feature ) throws FilterEvaluationException
+  public double getRotation( final Feature feature ) throws FilterEvaluationException
   {
-    double rot = 0.0;
+    if( m_rotation != null )
+      return Double.parseDouble( m_rotation.evaluate( feature ) );
 
-    if( rotation != null )
-    {
-      rot = Double.parseDouble( rotation.evaluate( feature ) );
-    }
-
-    return rot;
+    return 0.0;
   }
 
   /**
@@ -219,11 +215,11 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    *          the rotation to be set for the PointPlacement
    */
   @Override
-  public void setRotation( double rotation )
+  public void setRotation( final double rotation )
   {
     ParameterValueType pvt = null;
     pvt = StyleFactory.createParameterValueType( "" + rotation );
-    this.rotation = pvt;
+    this.m_rotation = pvt;
   }
 
   /**
@@ -235,7 +231,7 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
   @Override
   public boolean isAuto()
   {
-    return auto;
+    return m_auto;
   }
 
   /**
@@ -245,9 +241,9 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
    * @param auto
    */
   @Override
-  public void setAuto( boolean auto )
+  public void setAuto( final boolean auto )
   {
-    this.auto = auto;
+    this.m_auto = auto;
   }
 
   /**
@@ -260,39 +256,39 @@ public class PointPlacement_Impl implements PointPlacement, Marshallable
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<PointPlacement" );
-    if( auto )
+    if( m_auto )
     {
       sb.append( " auto='true'" );
     }
     sb.append( ">" );
-    if( anchorPoint != null && anchorPoint.length > 1 )
+    if( m_anchorPoint != null && m_anchorPoint.length > 1 )
     {
       sb.append( "<AnchorPoint>" ).append( "<AnchorPointX>" );
-      sb.append( ( (Marshallable)anchorPoint[0] ).exportAsXML() );
+      sb.append( ((Marshallable) m_anchorPoint[0]).exportAsXML() );
       sb.append( "</AnchorPointX>" ).append( "<AnchorPointY>" );
-      sb.append( ( (Marshallable)anchorPoint[1] ).exportAsXML() );
+      sb.append( ((Marshallable) m_anchorPoint[1]).exportAsXML() );
       sb.append( "</AnchorPointY>" ).append( "</AnchorPoint>" );
     }
-    if( displacement != null && displacement.length > 1 )
+    if( m_displacement != null && m_displacement.length > 1 )
     {
       sb.append( "<Displacement>" ).append( "<DisplacementX>" );
-      if( anchorPoint == null || anchorPoint[0] == null )
+      if( m_anchorPoint == null || m_anchorPoint[0] == null )
         sb.append( 0.0 );
       else
-        sb.append( ( (Marshallable)anchorPoint[0] ).exportAsXML() );
+        sb.append( ((Marshallable) m_anchorPoint[0]).exportAsXML() );
       sb.append( "</DisplacementX>" ).append( "<DisplacementY>" );
-      if( anchorPoint == null || anchorPoint[1] == null )
+      if( m_anchorPoint == null || m_anchorPoint[1] == null )
         sb.append( 0.5 );
       else
-        sb.append( ( (Marshallable)anchorPoint[1] ).exportAsXML() );
+        sb.append( ((Marshallable) m_anchorPoint[1]).exportAsXML() );
       sb.append( "</DisplacementY>" ).append( "</Displacement>" );
     }
-    if( rotation != null )
+    if( m_rotation != null )
     {
       sb.append( "<Rotation>" );
-      sb.append( ( (Marshallable)rotation ).exportAsXML() );
+      sb.append( ((Marshallable) m_rotation).exportAsXML() );
       sb.append( "</Rotation>" );
     }
 
