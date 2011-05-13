@@ -224,6 +224,7 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
       AbstractCascadingLayerTheme movieTheme = MovieUtilities.findMovieTheme( mapModel );
 
       /* For each of these themes we need a map model to create a movie frame with it. */
+      movieTheme.setVisible( true );
       IKalypsoTheme[] themes = movieTheme.getAllThemes();
       for( IKalypsoTheme theme : themes )
         theme.setVisible( false );
