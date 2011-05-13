@@ -54,15 +54,11 @@ import org.kalypso.commons.databinding.validation.MultiValidator;
  */
 public class DatabindingWizardPage extends AbstractDatabinding
 {
-
   private final WizardPageSupport m_support;
-
-  private final WizardPage m_page;
 
   public DatabindingWizardPage( final WizardPage page, final FormToolkit toolkit )
   {
     super( toolkit );
-    m_page = page;
 
     m_support = WizardPageSupport.create( page, getBindingContext() );
   }
