@@ -847,7 +847,7 @@ public class FileUtilities
     return files;
   }
 
-  public static void deleteQuitly( final File file )
+  public static void deleteQuietly( final File file )
   {
     try
     {

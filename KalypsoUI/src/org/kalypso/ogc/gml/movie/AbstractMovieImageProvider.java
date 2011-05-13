@@ -68,6 +68,11 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public abstract class AbstractMovieImageProvider implements IMovieImageProvider
 {
   /**
+   * The temporary directory.
+   */
+  private File m_tmpDirectory;
+
+  /**
    * The frames.
    */
   private IMovieFrame[] m_frames;
@@ -82,6 +87,7 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
    */
   public AbstractMovieImageProvider( )
   {
+    m_tmpDirectory = null;
     m_frames = null;
     m_currentFrame = -1;
   }
@@ -102,6 +108,9 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
   @Override
   public void initialize( GisTemplateMapModell mapModel, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
   {
+    /* Create a temporary directory. */
+    m_tmpDirectory = FileUtilities.createNewTempDir( "mov" );
+
     /* Determine some needed information. */
     m_frames = preProcess( mapModel, boundingBox, monitor );
     if( m_frames.length > 0 )
@@ -142,6 +151,24 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
   }
 
   /**
+   * @see org.kalypso.ogc.gml.movie.IMovieImageProvider#stepAndWait(int, int, int)
+   */
+  @Override
+  public void stepAndWait( int step, int width, int height )
+  {
+    /* Step to step. */
+    stepTo( step );
+
+    /* Get the current frame. */
+    IMovieFrame currentFrame = getCurrentFrame();
+    if( currentFrame == null )
+      return;
+
+    /* Calling this function loads the image. */
+    currentFrame.getImage( width, height );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.movie.IMovieImageProvider#getCurrentStep()
    */
   @Override
@@ -160,21 +187,23 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
   }
 
   /**
-   * @see org.kalypso.ogc.gml.movie.IMovieImageProvider#stepAndWait(int, int, int)
+   * @see org.kalypso.ogc.gml.movie.IMovieImageProvider#dispose()
    */
   @Override
-  public void stepAndWait( int step, int width, int height )
+  public void dispose( )
   {
-    /* Step to step. */
-    stepTo( step );
+    if( m_tmpDirectory != null )
+      FileUtilities.deleteQuietly( m_tmpDirectory );
 
-    /* Get the current frame. */
-    IMovieFrame currentFrame = getCurrentFrame();
-    if( currentFrame == null )
-      return;
+    if( m_frames != null )
+    {
+      for( IMovieFrame frame : m_frames )
+        frame.dispose();
+    }
 
-    /* Calling this function loads the image. */
-    currentFrame.getImage( width, height );
+    m_tmpDirectory = null;
+    m_frames = null;
+    m_currentFrame = -1;
   }
 
   private IMovieFrame[] preProcess( GisTemplateMapModell mapModel, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
@@ -188,9 +217,6 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
 
     try
     {
-      /* Create a temporary directory. */
-      File tmpDirectory = FileUtilities.createNewTempDir( "mov" );
-
       /* Deactivate all themes. */
       mapModel.activateTheme( null );
 
@@ -243,7 +269,7 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
         }
 
         /* Create the frame. */
-        IMovieFrame frame = new MovieFrame( newMapModel, theme.getLabel(), boundingBox, tmpDirectory );
+        IMovieFrame frame = new MovieFrame( newMapModel, theme.getLabel(), boundingBox, m_tmpDirectory );
 
         /* Add the frame. */
         results.add( frame );
