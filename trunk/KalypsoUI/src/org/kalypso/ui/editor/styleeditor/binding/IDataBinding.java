@@ -60,4 +60,6 @@ public interface IDataBinding
   DataBindingContext getBindingContext( );
 
   FormToolkit getToolkit( );
+
+  void dispose( );
 }

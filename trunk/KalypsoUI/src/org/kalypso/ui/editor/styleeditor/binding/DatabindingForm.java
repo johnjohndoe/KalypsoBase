@@ -41,7 +41,6 @@
 package org.kalypso.ui.editor.styleeditor.binding;
 
 import org.eclipse.core.databinding.Binding;
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -58,17 +57,14 @@ import org.kalypso.commons.databinding.conversion.StatusToMessageConverter;
 import org.kalypso.commons.databinding.forms.FormControlDecoratorValue;
 import org.kalypso.commons.databinding.forms.FormSupport;
 import org.kalypso.commons.databinding.validation.MultiValidator;
+import org.kalypso.commons.java.lang.Objects;
 
 /**
  * @author Gernot Belger
  */
-public class DatabindingForm implements IDataBinding
+public class DatabindingForm extends AbstractDatabinding
 {
-  private final DataBindingContext m_bindingContext = new DataBindingContext();
-
   private final Form m_form;
-
-  private final FormToolkit m_toolkit;
 
   private FormSupport m_support;
 
@@ -84,9 +80,9 @@ public class DatabindingForm implements IDataBinding
 
   private DatabindingForm( final ScrolledForm scrolledForm, final Form form, final FormToolkit toolkit )
   {
-    m_form = form;
-    m_toolkit = toolkit;
+    super( toolkit );
 
+    m_form = form;
     form.addDisposeListener( new DisposeListener()
     {
       @Override
@@ -96,43 +92,19 @@ public class DatabindingForm implements IDataBinding
       }
     } );
 
-
-    if( scrolledForm == null )
-      m_support = FormSupport.create( form, m_bindingContext );
+    if( Objects.isNull( scrolledForm ) )
+      m_support = FormSupport.create( form, getBindingContext() );
     else
-      m_support = FormSupport.create( scrolledForm, m_bindingContext );
+      m_support = FormSupport.create( scrolledForm, getBindingContext() );
   }
 
-  protected void dispose( )
+  @Override
+  public void dispose( )
   {
+    super.dispose();
+
     // REMARK: must be disposed before binding context is disposed, else we get problems
     m_support.dispose();
-
-    m_bindingContext.dispose();
-  }
-
-  @Override
-  public FormToolkit getToolkit( )
-  {
-    return m_toolkit;
-  }
-
-  @Override
-  public DataBindingContext getBindingContext( )
-  {
-    return m_bindingContext;
-  }
-
-  @Override
-  public void bindValue( final IObservableValue targetValue, final IObservableValue modelValue, final IValidator... validators )
-  {
-    bindValue( targetValue, modelValue, null, validators );
-  }
-
-  @Override
-  public void bindValue( final IObservableValue targetValue, final IObservableValue modelValue, final IConverter converter, final IValidator... validators )
-  {
-    bindValue( targetValue, modelValue, converter, null, validators );
   }
 
   @Override
@@ -153,7 +125,7 @@ public class DatabindingForm implements IDataBinding
     if( modelToTargetConverter != null )
       modelToTarget.setConverter( modelToTargetConverter );
 
-    final Binding binding = m_bindingContext.bindValue( targetValue, modelValue, targetToModel, modelToTarget );
+    final Binding binding = getBindingContext().bindValue( targetValue, modelValue, targetToModel, modelToTarget );
     final IObservableValue validationStatus = binding.getValidationStatus();
 
     final Control control = findControl( targetValue );
@@ -162,7 +134,7 @@ public class DatabindingForm implements IDataBinding
     final UpdateValueStrategy decoratorUpdater = new UpdateValueStrategy();
     decoratorUpdater.setConverter( new StatusToMessageConverter( control ) );
 
-    m_bindingContext.bindValue( decoratorValue, validationStatus, null, decoratorUpdater );
+    getBindingContext().bindValue( decoratorValue, validationStatus, null, decoratorUpdater );
   }
 
   private Control findControl( final IObservableValue targetValue )
