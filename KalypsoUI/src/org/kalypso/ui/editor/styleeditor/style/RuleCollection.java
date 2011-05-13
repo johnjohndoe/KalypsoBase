@@ -45,6 +45,7 @@
 package org.kalypso.ui.editor.styleeditor.style;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.kalypsodeegree.graphics.sld.Rule;
 
@@ -53,19 +54,14 @@ import org.kalypsodeegree.graphics.sld.Rule;
  */
 public class RuleCollection
 {
-  private final ArrayList<Rule> m_rules = new ArrayList<Rule>();
+  private final List<Rule> m_rules = new ArrayList<Rule>();
 
   private final String m_id;
 
-  private RuleCollection( final Rule rule )
+  public RuleCollection( final Rule rule )
   {
     m_id = rule.getTitle();
     m_rules.add( rule );
-  }
-
-  public static RuleCollection getInstance( final Rule rule )
-  {
-    return new RuleCollection( rule );
   }
 
   public void addRule( final Rule rule )

@@ -40,15 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.mapserver.utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URL;
+import java.util.List;
+import java.util.Locale;
 
+import javax.measure.unit.NonSI;
+import javax.measure.unit.SI;
+import javax.measure.unit.Unit;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -60,10 +69,35 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.swt.graphics.RGB;
+import org.geotools.referencing.CRS;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.bind.JaxbUtilities;
+import org.kalypso.mapserver.utils.exceptions.MapServerException;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.tools.GMLConstants;
+import org.mapserver.mapserver.BooleanEnum;
+import org.mapserver.mapserver.Class;
+import org.mapserver.mapserver.ExpressionType;
+import org.mapserver.mapserver.ItemType;
+import org.mapserver.mapserver.ItemType.Item;
+import org.mapserver.mapserver.Label;
+import org.mapserver.mapserver.Layer;
+import org.mapserver.mapserver.Legend;
 import org.mapserver.mapserver.Map;
 import org.mapserver.mapserver.ObjectFactory;
+import org.mapserver.mapserver.PositionEnum;
+import org.mapserver.mapserver.RgbColorType;
+import org.mapserver.mapserver.SizeType;
+import org.mapserver.mapserver.StateEnum;
+import org.mapserver.mapserver.Style;
+import org.mapserver.mapserver.Web;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.cs.CoordinateSystem;
+import org.opengis.referencing.cs.CoordinateSystemAxis;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -195,5 +229,274 @@ public class MapFileUtilities
       /* Close the input stream. */
       IOUtils.closeQuietly( inputStream );
     }
+  }
+
+  /**
+   * This function creates the contents of the map file without any layers.
+   * 
+   * @param wmsURL
+   * @param mapFile
+   * @param width
+   * @param height
+   * @param mapName
+   * @param envelope
+   * @param sourceCRS
+   * @param otherCRSs
+   * @return The contents of the map file.
+   */
+  public static Map createMap( String wmsURL, File mapFile, int width, int height, String mapName, GM_Envelope envelope, String sourceCRS, String[] otherCRSs ) throws NoSuchAuthorityCodeException, FactoryException
+  {
+    /* Create the root element of the XML map file. */
+    Map map = OF.createMap();
+    map.setName( mapName );
+    map.setStatus( StateEnum.ON );
+
+    /* Create the size element. */
+    if( width > 0 && height > 0 )
+    {
+      SizeType size = OF.createSizeType();
+      size.setX( BigInteger.valueOf( width ) );
+      size.setY( BigInteger.valueOf( height ) );
+      map.setSize( size );
+    }
+
+    /* Fill the extent element. */
+    map.getExtent().add( envelope.getMinX() );
+    map.getExtent().add( envelope.getMinY() );
+    map.getExtent().add( envelope.getMaxX() );
+    map.getExtent().add( envelope.getMaxY() );
+
+    /* Detrermine the units. */
+    CoordinateReferenceSystem referenceSystem = CRS.decode( sourceCRS );
+    CoordinateSystem coordinateSystem = referenceSystem.getCoordinateSystem();
+    CoordinateSystemAxis axis = coordinateSystem.getAxis( 0 );
+    Unit< ? > unit = axis.getUnit();
+    String units = null;
+    if( SI.KILOMETER.equals( unit ) )
+      units = "kilometers";
+    else if( SI.METER.equals( unit ) )
+      units = "meters";
+    else if( NonSI.DEGREE_ANGLE.equals( unit ) )
+      units = "dd";
+
+    if( units != null && units.length() > 0 )
+      map.setUnits( units );
+
+    /* Create the rgb color element. */
+    RgbColorType rgbColor = OF.createRgbColorType();
+    rgbColor.setRed( 255 );
+    rgbColor.setGreen( 255 );
+    rgbColor.setBlue( 255 );
+    map.setImageColor( rgbColor );
+
+    /* Fill the projection element. */
+    map.getProjection().add( "init=" + sourceCRS );
+
+    /* Create the item element. */
+    String resource = String.format( "%s?map=%s&", wmsURL, mapFile.getAbsolutePath().replace( "\\", "/" ) );
+    ItemType item = OF.createItemType();
+    item.getItem().add( createItem( "wms_title", mapName ) );
+    item.getItem().add( createItem( "wms_onlineresource", resource ) );
+    item.getItem().add( createItem( "wms_srs", String.format( "%s %s", sourceCRS, StringUtils.join( otherCRSs, " " ) ) ) );
+
+    /* Create the map element. */
+    Web web = OF.createWeb();
+    web.setMetadata( item );
+
+    /* Fill the web element. */
+    map.getWeb().add( web );
+
+    /* Create a label element. */
+    Label label = OF.createLabel();
+    label.setAntialias( BooleanEnum.TRUE );
+    label.setType( "bitmap" );
+    label.setSize( "medium" );
+    label.setPosition( "AUTO" );
+    label.setPartials( BooleanEnum.FALSE );
+
+    /* Create the outline color element. */
+    RgbColorType outlineColor = OF.createRgbColorType();
+    outlineColor.setRed( 0 );
+    outlineColor.setGreen( 0 );
+    outlineColor.setBlue( 0 );
+
+    /* Create the legend element. */
+    Legend legend = OF.createLegend();
+    legend.setStatus( "on" );
+    legend.setPosition( PositionEnum.LR );
+    legend.setLabel( label );
+    legend.setOutlineColor( outlineColor );
+    map.setLegend( legend );
+
+    return map;
+  }
+
+  /**
+   * This function creates the contents of the item.
+   * 
+   * @param name
+   * @param value
+   * @return The contents of the item.
+   */
+  public static Item createItem( String name, String value )
+  {
+    Item item = OF.createItemTypeItem();
+    item.setName( name );
+    item.setValue( value );
+
+    return item;
+  }
+
+  /**
+   * This function creates the contents of the layer.
+   * 
+   * @param wmsURL
+   * @param mapFile
+   * @param layerName
+   *          Used for naming the layer and the wms layer.
+   * @paramd data
+   * @param geoemtryType
+   * @param envelope
+   * @param sourceCRS
+   * @param otherCRSs
+   * @return The contents of the layer.
+   */
+  public static Layer createLayerForShape( String wmsURL, File mapFile, String layerName, String data, QName geoemtryType, GM_Envelope envelope, String sourceCRS, String[] otherCRSs ) throws MapServerException
+  {
+    String shapeType = "POLYGON";
+    if( GMLConstants.QN_POINT.equals( geoemtryType ) || GMLConstants.QN_MULTI_POINT.equals( geoemtryType ) )
+      shapeType = "POINT";
+    else if( GMLConstants.QN_CURVE.equals( geoemtryType ) || GMLConstants.QN_MULTI_CURVE.equals( geoemtryType ) )
+      shapeType = "LINE";
+    else if( GMLConstants.QN_POLYGON.equals( geoemtryType ) || GMLConstants.QN_MULTI_POLYGON.equals( geoemtryType ) )
+      shapeType = "POLYGON";
+
+    /* Create the layer element. */
+    Layer layer = OF.createLayer();
+    layer.setName( layerName );
+    layer.setType( shapeType );
+    layer.setStatus( "ON" );
+    layer.setData( data );
+
+    /* Fill the projection element. */
+    layer.getProjection().add( "init=" + sourceCRS );
+
+    /* Create the item element. */
+    String resource = String.format( "%s?map=%s&", wmsURL, mapFile.getAbsolutePath().replace( "\\", "/" ) );
+    ItemType item = OF.createItemType();
+    item.getItem().add( createItem( "wms_title", layerName ) );
+    item.getItem().add( createItem( "wms_onlineresource", resource ) );
+    item.getItem().add( createItem( "wms_srs", String.format( "%s %s", sourceCRS, StringUtils.join( otherCRSs, " " ) ) ) );
+    item.getItem().add( createItem( "wms_extent", String.format( Locale.PRC, "%f %f %f %f", envelope.getMinX(), envelope.getMinY(), envelope.getMaxX(), envelope.getMaxY() ) ) );
+    layer.setMetadata( item );
+
+    /* Create the class element. */
+    Class clazz = createClass( "Standard", null, null, 255, new RGB( 0, 0, 0 ) );
+
+    /* Fill the class element. */
+    layer.getClazz().add( clazz );
+
+    return layer;
+  }
+
+  /**
+   * This function creates the contents of the layer without any classes.
+   * 
+   * @param wmsURL
+   * @param mapFile
+   * @param layerName
+   *          Used for naming the layer and the wms layer.
+   * @param data
+   * @param bigMin
+   * @param bigMax
+   * @param envelope
+   * @param sourceCRS
+   * @param otherCRSs
+   * @return The contents of the layer.
+   */
+  public static Layer createLayerForRaster( String wmsURL, File mapFile, String layerName, String data, BigDecimal bigMin, BigDecimal bigMax, GM_Envelope envelope, String sourceCRS, String[] otherCRSs )
+  {
+    /* Create the layer element. */
+    Layer layer = OF.createLayer();
+    layer.setName( layerName );
+    layer.setType( "RASTER" );
+    layer.setStatus( "ON" );
+    layer.setData( data );
+
+    /* Fill the processing element. */
+    double min = -Double.MAX_VALUE;
+    if( bigMin != null )
+      min = bigMin.doubleValue();
+
+    double max = Double.MAX_VALUE;
+    if( bigMax != null )
+      max = bigMax.doubleValue();
+
+    double buckets = Math.floor( (max - min) / 0.05 );
+    if( buckets < 2.0 )
+      buckets = 2.0;
+
+    List<String> processing = layer.getProcessing();
+    processing.add( String.format( Locale.PRC, "SCALE=%.2f %.2f", min, max ) );
+    processing.add( String.format( Locale.PRC, "SCALE_BUCKETS=%d", (int) buckets ) );
+    processing.add( "RESAMPLE=BILINEAR" );
+
+    /* Fill the projection element. */
+    layer.getProjection().add( "init=" + sourceCRS );
+
+    /* Create the item element. */
+    String resource = String.format( "%s?map=%s&", wmsURL, mapFile.getAbsolutePath().replace( "\\", "/" ) );
+    ItemType item = OF.createItemType();
+    item.getItem().add( createItem( "wms_title", layerName ) );
+    item.getItem().add( createItem( "wms_onlineresource", resource ) );
+    item.getItem().add( createItem( "wms_srs", String.format( "%s %s", sourceCRS, StringUtils.join( otherCRSs, " " ) ) ) );
+    item.getItem().add( createItem( "wms_extent", String.format( Locale.PRC, "%f %f %f %f", envelope.getMinX(), envelope.getMinY(), envelope.getMaxX(), envelope.getMaxY() ) ) );
+    layer.setMetadata( item );
+
+    return layer;
+  }
+
+  /**
+   * This function creates the content of the class.
+   * 
+   * @param label
+   * @param expressionValue
+   *          Used to evaluate specific criteria. May be null.
+   * @param expressionType
+   *          Must be set, if a expressionValue is set. Otherwise it may be null.
+   * @param rgb
+   * @return The contents of the class.
+   */
+  public static Class createClass( String label, String expressionValue, String expressionType, int opacity, RGB rgb ) throws MapServerException
+  {
+    /* Create the class element. */
+    Class clazz = OF.createClass();
+    clazz.setName( label );
+
+    /* Create the expression element. */
+    if( expressionValue != null && expressionValue.length() > 0 )
+    {
+      if( expressionType == null || expressionType.length() == 0 )
+        throw new MapServerException( "Expression value without expression type set..." );
+
+      ExpressionType expression = OF.createExpressionType();
+      expression.setValue( expressionValue );
+      expression.setType( expressionType );
+      clazz.setExpression( expression );
+    }
+
+    /* Create the rgb color element. */
+    RgbColorType rgbColor = OF.createRgbColorType();
+    rgbColor.setRed( rgb.red );
+    rgbColor.setGreen( rgb.green );
+    rgbColor.setBlue( rgb.blue );
+
+    /* Create the style element. */
+    Style style = OF.createStyle();
+    style.setOpacity( BigInteger.valueOf( opacity ) );
+    style.setColor( rgbColor );
+    clazz.getStyle().add( style );
+
+    return clazz;
   }
 }

@@ -47,6 +47,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.IObservationListener;
@@ -72,18 +73,18 @@ import org.xml.sax.InputSource;
  */
 public class ServiceRepositoryObservation implements IObservation
 {
-  private final IObservationService m_srv;
+  private final IObservationService m_service;
 
-  private final ObservationBean m_ob;
+  private final ObservationBean m_bean;
 
-  private IObservation m_obs = null;
+  private IObservation m_observation = null;
 
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
 
-  public ServiceRepositoryObservation( final IObservationService srv, final ObservationBean ob )
+  public ServiceRepositoryObservation( final IObservationService service, final ObservationBean bean )
   {
-    m_srv = srv;
-    m_ob = ob;
+    m_service = service;
+    m_bean = bean;
   }
 
   /**
@@ -93,12 +94,12 @@ public class ServiceRepositoryObservation implements IObservation
    */
   private IObservation getRemote( final IRequest args ) throws SensorException
   {
-    if( args == null && m_obs != null )
-      return m_obs;
+    if( args == null && m_observation != null )
+      return m_observation;
 
-    m_obs = loadFromServer( args );
+    m_observation = loadFromServer( args );
 
-    return m_obs;
+    return m_observation;
   }
 
   /**
@@ -108,7 +109,7 @@ public class ServiceRepositoryObservation implements IObservation
    */
   private IObservation loadFromServer( final IRequest args ) throws SensorException
   {
-    String href = m_ob.getId();
+    String href = m_bean.getId();
     if( args != null )
       href = org.kalypso.ogc.sensor.zml.ZmlURL.insertRequest( href, args );
 
@@ -116,13 +117,13 @@ public class ServiceRepositoryObservation implements IObservation
 
     try
     {
-      final DataBean db = m_srv.readData( href );
+      final DataBean db = m_service.readData( href );
 
       ins = new BufferedInputStream( db.getDataHandler().getInputStream() );
       final IObservation obs = ZmlFactory.parseXML( new InputSource( ins ), null ); //$NON-NLS-1$
       ins.close();
 
-      m_srv.clearTempData( db.getId() );
+      m_service.clearTempData( db.getId() );
 
       return obs;
     }
@@ -139,7 +140,7 @@ public class ServiceRepositoryObservation implements IObservation
   @Override
   public final String getName( )
   {
-    return m_ob.getName();
+    return m_bean.getName();
   }
 
   /**
@@ -148,16 +149,16 @@ public class ServiceRepositoryObservation implements IObservation
   @Override
   public final MetadataList getMetadataList( )
   {
-    if( m_obs != null )
-      return m_obs.getMetadataList();
+    if( Objects.isNotNull( m_observation ) )
+      return m_observation.getMetadataList();
 
-    final MetadataList md = new MetadataList();
+    final MetadataList metadata = new MetadataList();
 
-    final Map<Object, Object> omdl = m_ob.getMetadataList();
-    for( final Entry<Object, Object> entry : omdl.entrySet() )
-      md.put( entry.getKey(), entry.getValue() );
+    final Map<Object, Object> entries = m_bean.getMetadataList();
+    for( final Entry<Object, Object> entry : entries.entrySet() )
+      metadata.put( entry.getKey(), entry.getValue() );
 
-    return md;
+    return metadata;
   }
 
   /**
@@ -168,6 +169,9 @@ public class ServiceRepositoryObservation implements IObservation
   {
     try
     {
+      if( Objects.isNotNull( m_observation ) )
+        return m_observation.getAxes();
+
       return getRemote( null ).getAxes();
     }
     catch( final SensorException e )
@@ -185,10 +189,9 @@ public class ServiceRepositoryObservation implements IObservation
   {
     ITupleModel values = ObservationCache.getInstance().getValues( this );
 
-    if( values == null )
+    if( Objects.isNull( values ) )
     {
       values = getRemote( args ).getValues( null );
-
       ObservationCache.getInstance().addValues( this, values );
     }
 
@@ -227,7 +230,7 @@ public class ServiceRepositoryObservation implements IObservation
   @Override
   public final String getHref( )
   {
-    return ObservationServiceUtils.addServerSideId( m_ob.getId() );
+    return ObservationServiceUtils.addServerSideId( m_bean.getId() );
   }
 
   /**

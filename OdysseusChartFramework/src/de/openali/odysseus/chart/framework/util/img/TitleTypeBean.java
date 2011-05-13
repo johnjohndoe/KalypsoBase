@@ -53,19 +53,23 @@ public class TitleTypeBean
 {
   private String m_text = "";
 
-  private ALIGNMENT m_positionHorizontal = ALIGNMENT.CENTER;
+  private ALIGNMENT m_positionHorizontal = ALIGNMENT.LEFT;
 
-  private ALIGNMENT m_positionVertical = ALIGNMENT.CENTER;
+  private ALIGNMENT m_positionVertical = ALIGNMENT.TOP;
 
   private ALIGNMENT m_textAnchorX = ALIGNMENT.LEFT;
 
   private ALIGNMENT m_textAnchorY = ALIGNMENT.TOP;
 
-  private ITextStyle m_textStyle;
+  private ITextStyle m_textStyle = null;
 
   private int m_rotation;
 
   private Insets m_insets = new Insets( 0, 0, 0, 0 );
+
+  private boolean m_mirrorHorizontal = false;
+
+  private boolean m_mirrorVertical = false;
 
   public TitleTypeBean()
   {
@@ -129,6 +133,16 @@ public class TitleTypeBean
     return m_textStyle;
   }
 
+  public boolean isMirrorHorizontal( )
+  {
+    return m_mirrorHorizontal;
+  }
+
+  public boolean isMirrorVertical( )
+  {
+    return m_mirrorVertical;
+  }
+
   public void setInsets( final Insets insets )
   {
     m_insets = insets;
@@ -137,6 +151,16 @@ public class TitleTypeBean
   public void setLabel( final String text )
   {
     m_text = text;
+  }
+
+  public void setMirrorHorizontal( boolean mirrorX )
+  {
+    m_mirrorHorizontal = mirrorX;
+  }
+
+  public void setMirrorVertical( boolean mirrorY )
+  {
+    m_mirrorVertical = mirrorY;
   }
 
   public void setPositionHorizontal( final ALIGNMENT positionHorizontal )

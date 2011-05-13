@@ -42,6 +42,8 @@ package de.openali.odysseus.chart.ext.base.axisrenderer.provider;
 
 import java.awt.Insets;
 
+import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
+import de.openali.odysseus.chart.ext.base.axisrenderer.ExtendedAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.ITickCalculator;
@@ -49,6 +51,7 @@ import de.openali.odysseus.chart.factory.config.parameters.impl.BooleanParser;
 import de.openali.odysseus.chart.factory.provider.AbstractAxisRendererProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -72,8 +75,25 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
    * @see de.openali.odysseus.chart.factory.provider.IAxisRendererProvider#getAxisRenderer()
    */
   @Override
-  public final IAxisRenderer getAxisRenderer( )
+  public IAxisRenderer getAxisRenderer( final POSITION position )
   {
+    return getAxisRenderer( position, false );
+  }
+
+  protected final IAxisRenderer getAxisRenderer( final POSITION position, final boolean intervallLabeledTick )
+  {
+    final ITickCalculator tickCalculator = getTickCalculator();
+    final ILabelCreator labelCreator = getLabelCreator();
+    final AxisRendererConfig rendererConfig = getRendererConfig();
+    // TODO remove intervallstuff from axisrenderer, move this to ticklabelrenderer
+    rendererConfig.intervallLabeledTick = intervallLabeledTick;
+    final IAxisRenderer calendarAxisRenderer = new ExtendedAxisRenderer( getId(), position, labelCreator, tickCalculator, rendererConfig );
+    return calendarAxisRenderer;
+  }
+
+  private final AxisRendererConfig getRendererConfig( )
+  {
+    final AxisRendererConfig config = new AxisRendererConfig();
     final StyleSetVisitor visitor = new StyleSetVisitor( true );
     final IStyleSet styleSet = getStyleSet();
 
@@ -83,11 +103,19 @@ public abstract class AbstractGenericAxisRendererProvider extends AbstractAxisRe
     final ILineStyle tickLine = visitor.visit( styleSet, ILineStyle.class, ROLE_AXIS_TICK_LINE_STYLE );
     final ITextStyle tickLabelText = visitor.visit( styleSet, ITextStyle.class, ROLE_AXIS_TICK_LABEL_STYLE );
 
-    final ITickCalculator tickCalculator = getTickCalculator();
-    final ILabelCreator labelCreator = getLabelCreator();
-
-    final IAxisRenderer calendarAxisRenderer = new GenericAxisRenderer( getId(), getTickLength(), getTickInsets(), getLabelInsets(), getGap(), labelCreator, tickCalculator, getMinTickInteval(), getHideCut(), getFixedWidth(), axisLine, labelText, tickLine, tickLabelText, getBorderSize(), ALIGNMENT.TICK_CENTERED );
-    return calendarAxisRenderer;
+    config.tickLength = getTickLength();
+    config.tickLabelInsets = getTickInsets();
+    config.labelInsets = getLabelInsets();
+    config.minTickInterval = getMinTickInteval();
+    config.hideCut = getHideCut();
+    config.fixedWidth = getFixedWidth();
+    config.axisLineStyle = axisLine;
+    config.tickLineStyle = tickLine;
+    config.axisInsets = new Insets( getGap(), 0, getBorderSize(), 0 );
+    config.tickLabelStyle = tickLabelText;
+    config.labelStyle = labelText;
+    config.labelPosition = ALIGNMENT.CENTER;
+    return config;
   }
 
   private int getFixedWidth( )

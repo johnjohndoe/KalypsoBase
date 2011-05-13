@@ -52,6 +52,8 @@ import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -179,16 +181,22 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
     try
     {
       final URL url = getOnlineResourceURL();
+      if( url == null )
+        return;
+
       final String file = url.getFile();
+      // FIXME: ???
       final int idx = file.indexOf( "$" );
       if( idx == -1 )
       {
         retrieveImage( url );
       }
     }
-    catch( final MalformedURLException e )
+    catch( final Throwable e )
     {
-      KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      final String msg = String.format( "Failed to load resource: %s", onlineResource );
+      final IStatus status = new Status( IStatus.WARNING, KalypsoDeegreePlugin.getID(), msg, e );
+      KalypsoDeegreePlugin.getDefault().getLog().log( status );
     }
   }
 
@@ -197,7 +205,6 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    */
   private void retrieveImage( final URL onlineResource )
   {
-
     try
     {
       final String t = onlineResource.toExternalForm();
@@ -293,7 +300,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
     /* Make sure buffered image is created */
     getAsImage( targetSizeX, targetSizeY );
 
-    // Is there a better way? Is it possible to render a Jai-Image directly into an awt-graphics?
+    // Is there a better way? Isn't it possible to render a Jai-Image directly into an awt-graphics?
     if( m_image != null )
     {
       g.drawImage( m_image, 0, 0, m_image.getWidth(), m_image.getHeight(), null );
@@ -325,12 +332,13 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
   }
 
   /**
-   * implementation taken from http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg10712.html
+   * implementation taken from http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg10712.html<br/>
+   * FIXME: move into helper
    */
   private static Image makeSWTImage( final Display display, final java.awt.Image ai ) throws Exception
   {
     // TODO transparent pixel (ATM transparent pixels are converted into black pixels)
-    
+
     final int width = ai.getWidth( null );
     final int height = ai.getHeight( null );
 
@@ -372,4 +380,12 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
     return sb.toString();
   }
 
+  /**
+   * @see org.kalypsodeegree.graphics.sld.ExternalGraphic#getResolver()
+   */
+  @Override
+  public IUrlResolver2 getResolver( )
+  {
+    return m_resolver;
+  }
 }

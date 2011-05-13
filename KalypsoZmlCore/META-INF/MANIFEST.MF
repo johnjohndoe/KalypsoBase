@@ -11,7 +11,9 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.zml.core,
  org.kalypso.zml.core.diagram.base,
+ org.kalypso.zml.core.diagram.base.provider.observation,
  org.kalypso.zml.core.diagram.base.visitors,
+ org.kalypso.zml.core.diagram.base.zml,
  org.kalypso.zml.core.diagram.data,
  org.kalypso.zml.core.diagram.layer,
  org.kalypso.zml.core.table,

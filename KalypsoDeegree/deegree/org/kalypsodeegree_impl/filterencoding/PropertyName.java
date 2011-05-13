@@ -198,4 +198,9 @@ public class PropertyName extends Expression_Impl
   {
     return getValue();
   }
+
+  public GMLXPath getPath( )
+  {
+    return m_path;
+  }
 }

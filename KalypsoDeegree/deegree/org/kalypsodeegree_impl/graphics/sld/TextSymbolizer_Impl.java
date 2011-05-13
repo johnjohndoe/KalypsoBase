@@ -74,7 +74,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
   /**
    * constructor initializing the class with the <TextSymbolizer>
    */
-  TextSymbolizer_Impl( final Geometry geometry, final ParameterValueType label, final Font font, final LabelPlacement labelPlacement, final Halo halo, final Fill fill, final double min, final double max, final UOM uom )
+  TextSymbolizer_Impl( final Geometry geometry, final ParameterValueType label, final Font font, final LabelPlacement labelPlacement, final Halo halo, final Fill fill, final UOM uom )
   {
     super( geometry, uom );
     setLabel( label );
@@ -82,8 +82,6 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
     setLabelPlacement( labelPlacement );
     setHalo( halo );
     setFill( fill );
-    setMinScaleDenominator( min );
-    setMaxScaleDenominator( max );
   }
 
   /**

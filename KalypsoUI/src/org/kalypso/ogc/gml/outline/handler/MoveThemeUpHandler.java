@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -40,11 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.handler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -52,6 +58,9 @@ import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.MoveThemeUpCommand;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.outline.ChangeSelectionRunnable;
+import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
+import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 
 /**
  * @author Gernot Belger
@@ -65,7 +74,10 @@ public class MoveThemeUpHandler extends AbstractHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final Display display = shell == null ? null : shell.getDisplay();
     final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
+    final GisMapOutlinePage mapOutline = MapHandlerUtils.getMapOutline( context );
 
     /* Order the selection as the themes are ordered in the outline. */
     final IKalypsoTheme[] selectedThemesInOrder = MapHandlerUtils.getSelectedThemesInOrder( selection );
@@ -76,7 +88,7 @@ public class MoveThemeUpHandler extends AbstractHandler
     if( selectedThemesInOrder[0].getMapModell().getAllThemes()[0] == selectedThemesInOrder[0] )
       return null;
 
-    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("org.kalypso.ogc.gml.outline.handler.MoveThemeUpHandler.0") ); //$NON-NLS-1$
+    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.ogc.gml.outline.handler.MoveThemeUpHandler.0" ) ); //$NON-NLS-1$
     for( final IKalypsoTheme kalypsoTheme : selectedThemesInOrder )
     {
       final IMapModell themeMapModell = kalypsoTheme.getMapModell();
@@ -84,7 +96,16 @@ public class MoveThemeUpHandler extends AbstractHandler
     }
 
     /* (Re-)select moved themes */
-    MapHandlerUtils.postCommandChecked( context, compositeCommand, null );
+    final List<IThemeNode> selectedNodesInOrder = new ArrayList<IThemeNode>();
+    for( final IKalypsoTheme theme : selectedThemesInOrder )
+    {
+      final IThemeNode node = mapOutline.findNode( theme );
+      if( node != null )
+        selectedNodesInOrder.add( node );
+    }
+
+    final StructuredSelection newSelection = new StructuredSelection( selectedNodesInOrder );
+    MapHandlerUtils.postCommandChecked( context, compositeCommand, new ChangeSelectionRunnable( mapOutline, newSelection, display ) );
 
     return null;
   }

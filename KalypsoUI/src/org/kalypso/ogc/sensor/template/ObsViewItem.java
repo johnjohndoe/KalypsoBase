@@ -44,6 +44,8 @@ import java.util.Set;
 
 import org.kalypso.contribs.eclipse.ui.IViewable;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -62,6 +64,8 @@ public abstract class ObsViewItem implements IObsProviderListener, IViewable
   private boolean m_shown = true;
 
   private String m_name = ""; //$NON-NLS-1$
+
+  private ITupleModel m_model = null;
 
   public ObsViewItem( final ObsView view, final IObsProvider obsProvider, final String name )
   {
@@ -122,6 +126,8 @@ public abstract class ObsViewItem implements IObsProviderListener, IViewable
   @Override
   public void observationReplaced( )
   {
+    m_model = null;
+
     observationChanged( null );
   }
 
@@ -142,12 +148,23 @@ public abstract class ObsViewItem implements IObsProviderListener, IViewable
     return m_obsProvider.getObservation();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProvider#getArguments()
-   */
-  public IRequest getArguments( )
+  public ITupleModel getValues( ) throws SensorException
   {
-    return m_obsProvider.getArguments();
+    m_model = loadModel();
+    return m_model;
+  }
+
+  private ITupleModel loadModel( ) throws SensorException
+  {
+    if( m_model != null )
+      return m_model;
+
+    final IObservation observation = getObservation();
+    if( observation == null )
+      return null;
+
+    final IRequest request = m_obsProvider.getArguments();
+    return observation.getValues( request );
   }
 
   /**

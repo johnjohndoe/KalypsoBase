@@ -347,6 +347,8 @@ public class Mark_Impl implements Mark, Marshallable
    */
   public void drawCircle( final Graphics2D g2D, final int size, final StrokePainter strokePainter, final FillPainter fillPainter )
   {
+    final int corr = size % 2;
+
     if( fillPainter.isVisible() )
     {
       fillPainter.prepareGraphics( g2D );
@@ -356,7 +358,7 @@ public class Mark_Impl implements Mark, Marshallable
     if( strokePainter.isVisible() )
     {
       strokePainter.prepareGraphics( g2D );
-      g2D.drawOval( 0, 0, size, size );
+      g2D.drawOval( 0, 0, size - corr, size - corr );
     }
   }
 
@@ -368,8 +370,10 @@ public class Mark_Impl implements Mark, Marshallable
    */
   public void drawCircle( final GC gc, final int size )
   {
+    final int corr = size % 2;
+
     gc.fillOval( 0, 0, size, size );
-    gc.drawOval( 0, 0, size, size );
+    gc.drawOval( 0, 0, size - corr, size - corr );
   }
 
   /**
@@ -384,6 +388,8 @@ public class Mark_Impl implements Mark, Marshallable
    */
   public void drawSquare( final Graphics2D g2D, final int size, final StrokePainter strokePainter, final FillPainter fillPainter )
   {
+    final int corr = size % 2;
+
     if( fillPainter.isVisible() )
     {
       fillPainter.prepareGraphics( g2D );
@@ -393,7 +399,7 @@ public class Mark_Impl implements Mark, Marshallable
     if( strokePainter.isVisible() )
     {
       strokePainter.prepareGraphics( g2D );
-      g2D.drawRect( 0, 0, size, size );
+      g2D.drawRect( 0, 0, size - corr, size - corr );
     }
   }
 
@@ -405,8 +411,10 @@ public class Mark_Impl implements Mark, Marshallable
    */
   public void drawSquare( final GC gc, final int size )
   {
+    final int corr = size % 2;
+
     gc.fillRectangle( 0, 0, size, size );
-    gc.drawRectangle( 0, 0, size, size );
+    gc.drawRectangle( 0, 0, size - corr, size - corr );
   }
 
   /**

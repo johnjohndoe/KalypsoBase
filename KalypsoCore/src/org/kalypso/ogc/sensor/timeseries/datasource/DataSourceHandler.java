@@ -41,8 +41,6 @@
 package org.kalypso.ogc.sensor.timeseries.datasource;
 
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
@@ -84,28 +82,21 @@ public class DataSourceHandler
    */
   public synchronized int getDataSourceIndex( final String identifier )
   {
-    final String plainIdentifier = getPlainId( identifier );
+    final String plainIdentifier = RepositoryItems.getPlainId( identifier );
 
-    final Map<Integer, String> dataSourceIndex = getDataSources();
-    final Set<Entry<Integer, String>> entries = dataSourceIndex.entrySet();
-
-    for( final Entry<Integer, String> entry : entries )
+    for( final Object key : m_metadata.keySet() )
     {
-      final String plainSource = RepositoryItems.getPlainId( entry.getValue() );
-
-      if( plainIdentifier.equalsIgnoreCase( plainSource ) )
-        return entry.getKey();
+      final String header = (String) key;
+      if( header.startsWith( IDataSourceItem.MD_DATA_SOURCE_ITEM ) )
+      {
+        final String value = m_metadata.getProperty( header );
+        final String plainSource = RepositoryItems.getPlainId( value );
+        if( plainIdentifier.equalsIgnoreCase( plainSource ) )
+          return MetadataHelper.getCount( header );
+      }
     }
 
     return -1;
-  }
-
-  protected String getPlainId( final String identifier )
-  {
-    if( DataSourceHelper.isFiltered( identifier ) )
-      return identifier;
-
-    return RepositoryItems.getPlainId( identifier );
   }
 
   /**

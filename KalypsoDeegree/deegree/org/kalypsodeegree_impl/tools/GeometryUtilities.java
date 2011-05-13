@@ -79,7 +79,7 @@ import com.vividsolutions.jts.simplify.DouglasPeuckerLineSimplifier;
 /**
  * @author doemming
  */
-public class GeometryUtilities
+public final class GeometryUtilities
 {
   private GeometryUtilities( )
   {
@@ -98,7 +98,7 @@ public class GeometryUtilities
       return (GM_Position) basePoint.clone();
     final double[] p2 = directionPoint.getAsArray();
     final double factor = distanceFromBasePoint / distance;
-    final double newPos[] = new double[p1.length];
+    final double[] newPos = new double[p1.length];
     // for( int i = 0; i < newPos.length; i++ )
     for( int i = 0; i < 2; i++ )
       newPos[i] = p1[i] + (p2[i] - p1[i]) * factor;
@@ -386,6 +386,15 @@ public class GeometryUtilities
    * @param ftp
    * @return <code>true</code> if feature property type equals this type of geometry
    */
+  public static boolean isCurveGeometry( final IValuePropertyType ftp )
+  {
+    return ftp.getValueClass().equals( getCurveClass() );
+  }
+
+  /**
+   * @param ftp
+   * @return <code>true</code> if feature property type equals this type of geometry
+   */
   public static boolean isLineStringGeometry( final IValuePropertyType ftp )
   {
     return ftp.getValueClass().equals( getLineStringClass() );
@@ -408,6 +417,15 @@ public class GeometryUtilities
   public static boolean isMultiLineStringGeometry( final IValuePropertyType ftp )
   {
     return ftp.getValueClass().equals( getMultiLineStringClass() );
+  }
+
+  /**
+   * @param ftp
+   * @return <code>true</code> if feature property type equals this type of geometry
+   */
+  public static boolean isSurfaceGeometry( final IValuePropertyType ftp )
+  {
+    return getSurfaceClass().isAssignableFrom( ftp.getValueClass() );
   }
 
   /**
@@ -490,6 +508,29 @@ public class GeometryUtilities
   }
 
   /**
+   * Classifies the property as a geometry.
+   * 
+   * @return <code>null</code>, if the property is not a geometry property.
+   */
+  public static GeometryType classifyGeometry( final IPropertyType pt )
+  {
+    if( !isGeometry( pt ) )
+      return null;
+
+    final IValuePropertyType vpt = (IValuePropertyType) pt;
+    if( isPointGeometry( vpt ) )
+      return GeometryType.POINT;
+
+    if( isCurveGeometry( vpt ) )
+      return GeometryType.CURVE;
+
+    if( isSurfaceGeometry( vpt ) )
+      return GeometryType.SURFACE;
+
+    return GeometryType.UNKNOWN;
+  }
+
+  /**
    * @param o
    * @return <code>true</code> if object type equals this type of geometry
    */
@@ -512,39 +553,49 @@ public class GeometryUtilities
   }
 
   public static Class< ? extends GM_Object> getPointClass( )
-      {
+  {
     return GM_Point.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getMultiPointClass( )
-      {
+  {
     return GM_MultiPoint.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getLineStringClass( )
-      {
+  {
     return GM_Curve.class;
-      }
+  }
+
+  public static Class< ? extends GM_Object> getCurveClass( )
+  {
+    return GM_Curve.class;
+  }
 
   public static Class< ? extends GM_Object> getMultiLineStringClass( )
-      {
+  {
     return GM_MultiCurve.class;
-      }
+  }
+
+  public static Class< ? extends GM_Object> getSurfaceClass( )
+  {
+    return GM_Surface.class;
+  }
 
   public static Class< ? extends GM_Object> getPolygonClass( )
-      {
+  {
     return GM_Surface.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getMultiPolygonClass( )
-      {
+  {
     return GM_MultiSurface.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getUndefinedGeometryClass( )
-      {
+  {
     return GM_Object.class;
-      }
+  }
 
   public static boolean isGeometry( final Object o )
   {
@@ -606,10 +657,10 @@ public class GeometryUtilities
       final GM_Position b = positions[i];
       final GM_Position c = positions[i + 1];
       area += (b.getY() - a.getY()) * (a.getX() - c.getX()) // bounding rectangle
-      - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
-          + (b.getX() - c.getX()) * (b.getY() - c.getY())//
+          - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
+              + (b.getX() - c.getX()) * (b.getY() - c.getY())//
           + (a.getX() - c.getX()) * (c.getY() - a.getY())//
-      ) / 2d;
+          ) / 2d;
     }
     return area;
   }
@@ -678,7 +729,7 @@ public class GeometryUtilities
     return thinnedCurve;
   }
 
-  public static final GM_Envelope grabEnvelopeFromDistance( final GM_Point position, final double grabDistance )
+  public static GM_Envelope grabEnvelopeFromDistance( final GM_Point position, final double grabDistance )
   {
     final double posX = position.getX();
     final double posY = position.getY();
@@ -790,7 +841,7 @@ public class GeometryUtilities
     return result;
   }
 
-  /**
+/**
    * Same as
    * {@link #findNearestFeature(GM_Point, double, FeatureList, QName, QName[]), but with an array of Featurelists.
    *
@@ -944,7 +995,7 @@ public class GeometryUtilities
   /**
    * Convert the given bounding box into a {@link GM_Curve}
    */
-  public static final GM_Curve toGM_Curve( final GM_Envelope bBox, final String crs )
+  public static GM_Curve toGM_Curve( final GM_Envelope bBox, final String crs )
   {
     try
     {
@@ -991,7 +1042,7 @@ public class GeometryUtilities
     /* - add second curve's positions to positions list */
     final GM_Position[] positions2 = curves[0].getAsLineString().getPositions();
 
-    if( selfIntersected != true )
+    if( !selfIntersected )
     {
       // not twisted: curves are oriented in the same direction, so we add the second curve's positions in the
       // opposite direction in order to get a non-self-intersected polygon.
@@ -1224,10 +1275,10 @@ public class GeometryUtilities
       final double y1 = ring[i].getY() - transY;
       final double x2 = ring[j].getX() - transX;
       final double y2 = ring[j].getY() - transY;
-      ai = (x1 * y2) - (x2 * y1);
+      ai = x1 * y2 - x2 * y1;
       atmp += ai;
-      xtmp += ((x2 + x1) * ai);
-      ytmp += ((y2 + y1) * ai);
+      xtmp += (x2 + x1) * ai;
+      ytmp += (y2 + y1) * ai;
     }
 
     if( atmp != 0 )

@@ -74,7 +74,7 @@ public class DateRangeInputWizardPage extends WizardPage
   }
 
   @Override
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     try
     {
@@ -84,7 +84,7 @@ public class DateRangeInputWizardPage extends WizardPage
 
       setControl( m_control );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       throw new IllegalStateException( e.getLocalizedMessage() );

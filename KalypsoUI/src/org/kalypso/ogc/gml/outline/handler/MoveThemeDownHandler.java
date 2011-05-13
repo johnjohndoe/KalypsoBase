@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -40,11 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.handler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -53,6 +59,8 @@ import org.kalypso.ogc.gml.command.MoveThemeDownCommand;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.ChangeSelectionRunnable;
+import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
+import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 
 /**
  * @author Gernot Belger
@@ -66,7 +74,10 @@ public class MoveThemeDownHandler extends AbstractHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final Display display = shell == null ? null : shell.getDisplay();
     final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
+    final GisMapOutlinePage mapOutline = MapHandlerUtils.getMapOutline( context );
 
     /* Order the selection as the themes are ordered in the outline. */
     final IKalypsoTheme[] selectedThemesInOrder = MapHandlerUtils.getSelectedThemesInOrder( selection );
@@ -81,7 +92,7 @@ public class MoveThemeDownHandler extends AbstractHandler
       return null;
 
     /* Move down in reverse order, else it wont happen. */
-    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("org.kalypso.ogc.gml.outline.handler.MoveThemeDownHandler.0") ); //$NON-NLS-1$
+    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.ogc.gml.outline.handler.MoveThemeDownHandler.0" ) ); //$NON-NLS-1$
     for( int i = selectedThemesInOrder.length; i > 0; i-- )
     {
       final IKalypsoTheme kalypsoTheme = selectedThemesInOrder[i - 1];
@@ -90,8 +101,16 @@ public class MoveThemeDownHandler extends AbstractHandler
     }
 
     /* (Re-)select moved themes */
-    final ChangeSelectionRunnable runnnable = null; // new ChangeSelectionRunnable( mapOutline, newSelection, display );
-    MapHandlerUtils.postCommandChecked( context, compositeCommand, runnnable );
+    final List<IThemeNode> selectedNodesInOrder = new ArrayList<IThemeNode>();
+    for( final IKalypsoTheme theme : selectedThemesInOrder )
+    {
+      final IThemeNode node = mapOutline.findNode( theme );
+      if( node != null )
+        selectedNodesInOrder.add( node );
+    }
+
+    final StructuredSelection newSelection = new StructuredSelection( selectedNodesInOrder );
+    MapHandlerUtils.postCommandChecked( context, compositeCommand, new ChangeSelectionRunnable( mapOutline, newSelection, display ) );
 
     return null;
   }

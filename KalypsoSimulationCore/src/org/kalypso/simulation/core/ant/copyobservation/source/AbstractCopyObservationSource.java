@@ -46,8 +46,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.util.StringUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -114,7 +115,7 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
       return null;
 
     final String hrefWithFilter = ZmlURL.insertQueryPart( sourceHref, source.getFilter() );
-
+    
     // filter variable might also contain request spec
     String hrefWithFilterAndRange = ZmlURL.insertRequest( hrefWithFilter, new ObservationRequest( source.getDateRange() ) );
 
@@ -140,7 +141,8 @@ public abstract class AbstractCopyObservationSource implements ICopyObservationS
 
       // observation could not be created, use the request now
       final String message = String.format( "Abruf von '%s' fehlgeschlagen. Erzeuge synthetische Zeitreihe.", sourceHref );
-      KalypsoSimulationCorePlugin.getDefault().getLog().log( StatusUtilities.createWarningStatus( message ) );
+      KalypsoSimulationCorePlugin plugin = KalypsoSimulationCorePlugin.getDefault();
+      plugin.getLog().log( new Status( IStatus.WARNING, KalypsoSimulationCorePlugin.getID(), message ) );
       final SimpleObservation synteticObservation = RequestFactory.createDefaultObservation( requestType );
       synteticObservation.setHref( sourceHref );
 

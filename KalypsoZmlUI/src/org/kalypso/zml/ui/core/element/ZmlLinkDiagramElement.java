@@ -40,16 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.core.element;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.template.ObsView;
+import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.core.provider.style.ZmlStyleSet;
 import org.kalypso.zml.ui.core.registry.KodRegistry;
-import org.kalypso.zml.ui.core.zml.TSLinkWithName;
 
 import de.openali.odysseus.chart.factory.config.StyleFactory;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -91,6 +92,8 @@ public class ZmlLinkDiagramElement extends AbstractTsLinkDiagramElement implemen
       {
         final KodRegistry registy = KodRegistry.getInstance();
         final LayerType layer = registy.getLayer( type );
+        if( Objects.isNull( layer ) )
+          return null;
 
         return StyleFactory.createStyleSet( layer.getStyles() );
       }

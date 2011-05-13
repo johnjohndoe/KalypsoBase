@@ -33,6 +33,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.util.img.ChartPainter;
 import de.openali.odysseus.chart.framework.util.img.ChartTooltipPainter;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
@@ -254,12 +255,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     return m_tooltipInfo;
   }
 
-  // FIXME: move into helper class
-  protected static final Rectangle inflateRect( final Rectangle rect, final Insets insets )
-  {
-    return new Rectangle( rect.x + insets.left, rect.y + insets.top, rect.width - insets.left - insets.right, rect.height - insets.bottom - insets.top );
-  }
-
   @Override
   public void invalidate( )
   {
@@ -291,8 +286,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       return Status.OK_STATUS;
 
     final Rectangle panel = getClientArea();
-    final ChartPainter chartPainter = new ChartPainter( model, panel );
-    m_plotRect = inflateRect( panel, chartPainter.getPlotInsets() );
+    final ChartPainter chartPainter = new ChartPainter( model, panel );//,new Insets(25,25,25,25));
+    m_plotRect = RectangleUtils.inflateRect( panel, chartPainter.getPlotInsets() );
     m_image = chartPainter.createImage( m_panOffset );
 
     redraw();

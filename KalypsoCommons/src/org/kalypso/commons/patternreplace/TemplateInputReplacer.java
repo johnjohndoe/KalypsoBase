@@ -44,7 +44,6 @@ import java.util.Properties;
 
 /**
  * @author Gernot Belger
- *
  */
 public class TemplateInputReplacer extends PatternInputReplacer<Object>
 {

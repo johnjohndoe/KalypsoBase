@@ -462,7 +462,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       return m_mapBeanId2Item.get( id );
 
     // try with repository id
-    final String repId = RepositoryUtils.getRepositoryId( id );
+    final String repId = RepositoryItems.getProtocol( id );
     if( m_mapRepId2Rep.containsKey( repId ) )
     {
       final IRepository rep = m_mapRepId2Rep.get( repId );
@@ -500,17 +500,17 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     if( parent == null )
       return m_repositories.size() > 0;
 
-      try
-      {
-        final IRepositoryItem item = itemFromBean( parent );
+    try
+    {
+      final IRepositoryItem item = itemFromBean( parent );
 
-        return item.hasChildren();
-      }
-      catch( final RepositoryException e )
-      {
-        m_logger.throwing( getClass().getName(), "hasChildren", e ); //$NON-NLS-1$
-        throw e;
-      }
+      return item.hasChildren();
+    }
+    catch( final RepositoryException e )
+    {
+      m_logger.throwing( getClass().getName(), "hasChildren", e ); //$NON-NLS-1$
+      throw e;
+    }
   }
 
   /**
@@ -653,14 +653,14 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
         item = rep;
       else
         try
-      {
+        {
           item = rep.findItem( id );
-      }
-      catch( final RepositoryException e )
-      {
-        m_logger.throwing( getClass().getName(), "findItem", e ); //$NON-NLS-1$
-        throw e;
-      }
+        }
+        catch( final RepositoryException e )
+        {
+          m_logger.throwing( getClass().getName(), "findItem", e ); //$NON-NLS-1$
+          throw e;
+        }
 
       if( item == null )
         continue;

@@ -126,7 +126,7 @@ public class OrdinalAxisRenderer implements IAxisRenderer
     int endX;
     int endY;
 
-    final int gap = m_config.gap;
+    final int gap = m_config.axisInsets.top;
 
     if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
     {

@@ -75,7 +75,6 @@ public class AutoScaleVisitor implements IAxisVisitor
   public void visit( final IAxis axis )
   {
     final IChartLayer[] layers = m_model.getLayerManager().getLayers( axis, m_recursive );
-
     final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>( layers.length );
 
     for( final IChartLayer layer : layers )
@@ -120,13 +119,13 @@ public class AutoScaleVisitor implements IAxisVisitor
       final double rangeMax;
       if( mergedRange < minMergedRange )
       {
-        final double delta = (minMergedRange-mergedRange ) / 2.0;
+        final double delta = (minMergedRange - mergedRange) / 2.0;
         rangeMin = mergedDataRange.getMin().doubleValue() - delta;
         rangeMax = mergedDataRange.getMax().doubleValue() + delta;
       }
       else if( mergedRange > maxMergedRange )
       {
-        final double delta = (mergedRange-maxMergedRange ) / 2.0;
+        final double delta = (mergedRange - maxMergedRange) / 2.0;
         rangeMin = mergedDataRange.getMin().doubleValue() + delta;
         rangeMax = mergedDataRange.getMax().doubleValue() - delta;
       }
@@ -137,8 +136,8 @@ public class AutoScaleVisitor implements IAxisVisitor
       }
       // computing preferred adjustment failed if rangesize==0.0, so we set a range minimum depends on adjustment
       final double rangeSize = mergedRange == 0.0 ? 1.0 : mergedRange;
-      final double newMin = rangeMin - rangeSize * (adjBefore / adjRange);
-      final double newMax = rangeMax + rangeSize * (adjAfter / adjRange);
+      final double newMin = rangeMin - rangeSize * adjBefore / adjRange;
+      final double newMax = rangeMax + rangeSize * adjAfter / adjRange;
 
       axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { newMin, newMax } ) );
     }

@@ -48,15 +48,18 @@ import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
@@ -69,6 +72,8 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.utils.log.GeoStatusLog;
 
 /**
  * This class dumps a repository kompletely into the filesystem.
@@ -77,6 +82,8 @@ import org.kalypso.repository.RepositoryException;
  */
 public class RepositoryDumper implements ICoreRunnableWithProgress
 {
+  private final IStatusCollector m_stati = new StatusCollector( KalypsoGisPlugin.getId() );
+
   private final File m_directory;
 
   private final IRepositoryItem m_root;
@@ -104,6 +111,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
 
       /* Dump upwards */
       final File baseDirectory = dumpUpwards( structureWriter );
+      FileUtils.forceMkdir( baseDirectory );
 
       /* Do the dump into the filesystem. */
       dumpExtendedRecursive( structureWriter, baseDirectory, m_root, monitor );
@@ -113,7 +121,13 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
       /* Update monitor. */
       monitor.worked( 800 );
 
-      return Status.OK_STATUS;
+      /* Create the result status. */
+      final IStatus status = m_stati.asMultiStatusOrOK( "Export mit Fehlern abgeschlossen", "Export erfolgreich abgeschlossen" );
+
+      /* Writes the log. */
+      writeLogQuietly( status );
+
+      return status;
     }
     catch( final InterruptedException e )
     {
@@ -130,7 +144,23 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
     }
   }
 
-  private File dumpUpwards( final Writer structureWriter ) throws IOException, SensorException, RepositoryException
+  private void writeLogQuietly( final IStatus status )
+  {
+    try
+    {
+      /* Log the status, if possible. */
+      final GeoStatusLog log = new GeoStatusLog( new File( m_directory, "export.log" ) );
+      log.log( status );
+      log.serialize();
+    }
+    catch( final CoreException ex )
+    {
+      /* Ignore. */
+      ex.printStackTrace();
+    }
+  }
+
+  private File dumpUpwards( final Writer structureWriter ) throws RepositoryException, IOException
   {
     final IRepositoryItem[] parentChain = findParentChain( m_root );
     ArrayUtils.reverse( parentChain );
@@ -138,7 +168,17 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
     File currentDir = m_directory;
 
     for( final IRepositoryItem parentItem : parentChain )
-      currentDir = dumpItem( structureWriter, currentDir, parentItem );
+    {
+      /* The name will be used as filename. */
+      final String name = FileUtilities.resolveValidFileName( parentItem.getName() );
+      final File zmlFile = new File( currentDir, name + ".zml" ); //$NON-NLS-1$
+
+      dumpItem( structureWriter, zmlFile, parentItem );
+
+      /* This is the directory, where the children are placed. */
+      currentDir = new File( currentDir, name );
+      FileUtils.forceMkdir( currentDir );
+    }
 
     return currentDir;
   }
@@ -177,9 +217,9 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
    * @throws InterruptedException
    * @throws RepositoryException
    */
-  private void dumpExtendedRecursive( final Writer structureWriter, final File directory, final IRepositoryItem item, final IProgressMonitor monitor ) throws InterruptedException, RepositoryException
+  private void dumpExtendedRecursive( final Writer structureWriter, final File directory, final IRepositoryItem item, final IProgressMonitor monitor ) throws InterruptedException, RepositoryException, IOException
   {
-    /* If the user cancled the operation, abort. */
+    /* If the user canceled the operation, abort. */
     if( monitor.isCanceled() )
       throw new InterruptedException();
 
@@ -189,7 +229,15 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
       final String identifier = item.getIdentifier();
       monitor.subTask( identifier );
 
-      final File newDirectory = dumpItem( structureWriter, directory, item );
+      /* The name will be used as filename. */
+      final String name = FileUtilities.resolveValidFileName( item.getName() );
+      final File zmlFile = new File( directory, name + ".zml" ); //$NON-NLS-1$
+
+      dumpItem( structureWriter, zmlFile, item );
+
+      /* This is the directory, where the children are placed. */
+      final File newDirectory = new File( directory, name );
+      FileUtils.forceMkdir( newDirectory );
 
       final IRepositoryItem[] items = item.getChildren();
       if( items != null )
@@ -200,13 +248,12 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
 
       monitor.worked( 1 );
     }
-    catch( final IOException e )
+    catch( final NoSuchElementException ex )
     {
-      throw new RepositoryException( e );
-    }
-    catch( final SensorException e )
-    {
-      throw new RepositoryException( e );
+      ex.printStackTrace();
+
+      final String msg = String.format( "Fehler beim Abruf der Kinder von Element: %s", item.getName() );
+      m_stati.add( IStatus.ERROR, msg, ex );
     }
     finally
     {
@@ -214,14 +261,40 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
     }
   }
 
-  public File dumpItem( final Writer structureWriter, final File directory, final IRepositoryItem item ) throws IOException, SensorException
+  public void dumpItem( final Writer structureWriter, final File zmlFile, final IRepositoryItem item )
   {
-    FileUtils.forceMkdir( directory );
+    for( int i = 0; i < 2; i++ )
+    {
+      try
+      {
+        Thread.sleep( 100 );
+        doDump( structureWriter, zmlFile, item );
+        /* Return on first success */
+        return;
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
 
+        final String msg = String.format( "Fehler beim Schreiben von Zeitreihe: %s", item.getIdentifier() );
+        m_stati.add( IStatus.ERROR, msg, e );
+        /* Not twice! */
+        return;
+      }
+      catch( final Throwable e )
+      {
+        e.printStackTrace();
+
+        final int severity = i == 0 ? IStatus.WARNING : IStatus.ERROR;
+        final String msg = String.format( "Fehler beim Abruf (%d. Versuch) einer Zeitreihe: %s", i + 1, item.getIdentifier() );
+        m_stati.add( severity, msg, e );
+      }
+    }
+  }
+
+  private void doDump( final Writer structureWriter, final File zmlFile, final IRepositoryItem item ) throws IOException, SensorException
+  {
     final String structIdentifier = buildStructIdentifier( item );
-
-    /* The name will be used as filename. */
-    final String name = FileUtilities.resolveValidFileName( item.getName() );
 
     structureWriter.write( structIdentifier );
     structureWriter.write( ';' );
@@ -229,8 +302,6 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
     final IObservation observation = ObservationCache.getInstance().getObservationFor( item );
     if( observation != null )
     {
-      final File zmlFile = new File( directory, name + ".zml" ); //$NON-NLS-1$
-
       final String relativePathTo = FileUtilities.getRelativePathTo( m_directory, zmlFile );
       /*
        * We write a unix style path here, as this is more generally recognized. Also, we can directly use the
@@ -249,9 +320,6 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
     }
 
     structureWriter.write( "\n" ); //$NON-NLS-1$
-
-    /* This is the directory, where the children are placed. */
-    return new File( directory, name );
   }
 
   /**

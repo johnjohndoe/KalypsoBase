@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.validation;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -51,15 +52,17 @@ import org.eclipse.core.runtime.Status;
  */
 public class StringEmptyValidator extends TypedValidator<String>
 {
+  public String DEFAULT_WARNING_MESSAGE = "Field should not be empty";
+
+  public String DEFAULT_ERROR_MESSAGE = "Field must not be empty";
+
   /**
-   * The constructor.
-   * 
    * @param severity
    *          Severity of IStatus, will be used to create validation failures.
    * @param message
    *          Will be used as message for a status, if validation fails.
    */
-  public StringEmptyValidator( int severity, String message )
+  public StringEmptyValidator( final int severity, final String message )
   {
     super( String.class, severity, message );
   }
@@ -68,9 +71,9 @@ public class StringEmptyValidator extends TypedValidator<String>
    * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
    */
   @Override
-  protected IStatus doValidate( String value ) throws CoreException
+  protected IStatus doValidate( final String value ) throws CoreException
   {
-    if( value == null || value.length() == 0 )
+    if( StringUtils.isBlank( value ) )
       fail();
 
     return Status.OK_STATUS;

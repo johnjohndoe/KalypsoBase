@@ -851,11 +851,14 @@ public class FileUtilities
   {
     try
     {
+      if( !file.exists() )
+        return;
+
       FileUtils.forceDelete( file );
     }
     catch( final IOException e )
     {
-      KalypsoCommonsPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), e.getLocalizedMessage(), e ) );
     }
   }
 

@@ -47,6 +47,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
@@ -203,9 +204,11 @@ public class DeegreeWMSUtilities
    *          The requested envelope in the local coordinate system.
    * @param localSRS
    *          The local coordinate system.
+   * @param sldBody
+   *          This is the content of a SLD, if we want the server to render the image with a specific style.
    * @return The get map request.
    */
-  public static GetMap createGetMapRequest( final WMSCapabilities capabilities, final String negotiatedSRS, final String themeName, final String[] layers, final String[] styles, final int width, final int height, final GM_Envelope requestedEnvLocalSRS, final String localSRS ) throws CoreException
+  public static GetMap createGetMapRequest( final WMSCapabilities capabilities, final String negotiatedSRS, final String themeName, final String[] layers, final String[] styles, final int width, final int height, final GM_Envelope requestedEnvLocalSRS, final String localSRS, final String sldBody ) throws CoreException
   {
     try
     {
@@ -246,8 +249,15 @@ public class DeegreeWMSUtilities
 
       /* Create the GetMap request. */
       final GetMap request = GetMap.create( wmsParameter );
+      if( sldBody == null || sldBody.length() == 0 )
+        return request;
 
-      return request;
+      /* HACK: Recreate the request, using vendor specific parameters. */
+      /* HACK: SLD_BODY is not handled correctly in deegree2. */
+      final Map<String, String> vendorSpecificParameter = new HashMap<String, String>();
+      vendorSpecificParameter.put( "SLD_BODY", sldBody );
+
+      return GetMap.create( request.getVersion(), request.getId(), request.getLayers(), request.getElevation(), request.getSampleDimension(), request.getFormat(), request.getWidth(), request.getHeight(), request.getSrs(), request.getBoundingBox(), request.getTransparency(), request.getBGColor(), request.getExceptions(), request.getTime(), request.getSLD_URL(), request.getStyledLayerDescriptor(), vendorSpecificParameter );
     }
     catch( final Exception ex )
     {

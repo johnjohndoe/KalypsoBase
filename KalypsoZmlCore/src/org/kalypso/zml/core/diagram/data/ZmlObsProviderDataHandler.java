@@ -40,16 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.diagram.data;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.IObsProviderListener;
+import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.zml.core.diagram.base.LayerProviderUtils;
+import org.kalypso.zml.core.diagram.base.provider.observation.SynchronousObservationProvider;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.impl.settings.CHART_DATA_LOADER_STRATEGY;
+import de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author Dirk Kuch
@@ -86,8 +98,6 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   {
     m_layer = layer;
     m_targetAxisId = targetAxisId;
-
-    m_layer.setDataHandler( this );
   }
 
   public void setObsProvider( final IObsProvider provider )
@@ -146,13 +156,13 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
     if( Objects.isNull( m_provider ) )
       return null;
 
-    final ILayerProvider layerProvider = m_layer.getProvider();
-    if( layerProvider == null )
+    final IZmlLayerProvider layerProvider = m_layer.getProvider();
+    if( Objects.isNull( layerProvider ) )
       return m_provider.getArguments();
 
-    final MetadataRequestHandler handler = new MetadataRequestHandler( layerProvider.getParameterContainer() );
+    final IRequestHandler handler = layerProvider.getRequestHandler();
     final IObservation observation = getObservation();
-    if( observation == null )
+    if( Objects.isNull( observation ) )
       return m_provider.getArguments();
 
     return handler.getArguments( observation.getMetadataList() );
@@ -178,4 +188,31 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
 
     return m_provider.getObservation();
   }
+
+  public void load( final IZmlLayerProvider provider, final URL context ) throws MalformedURLException, SensorException, URISyntaxException
+  {
+    final IParameterContainer parameters = provider.getParameterContainer();
+    if( Objects.isNull( parameters ) )
+      return;
+
+    final String href = parameters.getParameterValue( "href", "" ); //$NON-NLS-1$
+
+    if( !StringUtils.isEmpty( href ) )
+    {
+      final IChartModel model = m_layer.getModel();
+      final IBasicChartSettings settings = model.getSettings();
+
+      final CHART_DATA_LOADER_STRATEGY strategy = settings.getDataLoaderStrategy();
+      if( CHART_DATA_LOADER_STRATEGY.eSynchrone.equals( strategy ) )
+      {
+        setObsProvider( new SynchronousObservationProvider( context, href, provider.getRequestHandler() ) );
+      }
+      else
+      {
+        setObsProvider( new PooledObsProvider( new PoolableObjectType( "zml", href, context, true ) ) ); //$NON-NLS-1$
+      }
+    }
+
+  }
+
 }

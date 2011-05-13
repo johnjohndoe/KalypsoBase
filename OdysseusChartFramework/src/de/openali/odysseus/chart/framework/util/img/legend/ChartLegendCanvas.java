@@ -61,7 +61,7 @@ public class ChartLegendCanvas implements IChartLegendCanvas
 
   public ChartLegendCanvas( final IChartModel model, final Rectangle size )
   {
-    this( model, new DefaultChartLegendConfig( size.width ) );
+    this( model, new DefaultChartLegendConfig( size ) );
   }
 
   public ChartLegendCanvas( final IChartModel model, final IChartLegendConfig config )
@@ -71,17 +71,17 @@ public class ChartLegendCanvas implements IChartLegendCanvas
     m_config = config;
   }
 
-  public Point getSize( )
+  public Rectangle getSize( )
   {
     if( m_model == null )
-      return new Point( 0, 0 );
+      return new Rectangle( 0, 0, 0, 0 );
 
     if( m_model.getBehaviour().isHideLegend() )
-      return new Point( 0, 0 );
+      return new Rectangle( 0, 0, 0, 0 );
 
     final IChartLegendRenderer legendRenderer = m_model.getSettings().getLegendRenderer();
     if( legendRenderer == null )
-      return new Point( 0, 0 );
+      return new Rectangle( 0, 0, 0, 0 );
 
     return legendRenderer.calculateSize( this, m_config );
   }

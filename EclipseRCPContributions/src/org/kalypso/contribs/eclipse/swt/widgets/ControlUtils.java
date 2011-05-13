@@ -42,6 +42,8 @@ package org.kalypso.contribs.eclipse.swt.widgets;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -61,6 +63,23 @@ public final class ControlUtils
   private ControlUtils( )
   {
     throw new UnsupportedOperationException( "Helper class, do not instantiate." );
+  }
+
+  public static void exec( final Control control, final Runnable runnable )
+  {
+    if( control == null || control.isDisposed() )
+      return;
+
+    final Display display = control.getDisplay();
+    if( isCurrent( display ) )
+      runnable.run();
+    else
+      display.asyncExec( runnable );
+  }
+
+  private static boolean isCurrent( final Display display )
+  {
+    return Display.getCurrent() == display;
   }
 
   public static void asyncExec( final Control control, final Runnable operation )

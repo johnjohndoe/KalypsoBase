@@ -134,22 +134,23 @@ public final class RepositoryItems
     return tokenizer.nextToken();
   }
 
-  private static final Pattern PATTERN_PLAIN_ID_TOKENIZER = new Pattern( ".*\\://" ); //$NON-NLS-1$
+//  private static final Pattern PATTERN_PLAIN_ID_TOKENIZER = new Pattern( ".*\\://" ); //$NON-NLS-1$
 
   /**
    * @return "plain" item id without "protocol" (the original source, like zml-proxy://, datastore://)
    */
   public static String getPlainId( final String identifier )
   {
-    if( isPlainId( identifier ) )
+    int indexOf = identifier.indexOf( "://" );
+    if( indexOf == -1 )
       return identifier;
 
-    if( PATTERN_PLAIN_ID_TOKENIZER.matches( identifier ) )
-      return ""; // "plain id" of an IRepository
+    final String protocol = identifier.substring( 0, indexOf + 3 );
 
-    final RETokenizer tokenizer = new RETokenizer( PATTERN_PLAIN_ID_TOKENIZER, identifier );
+    if( IDataSourceItem.FILTER_SOURCE.equals( protocol ) )
+      return identifier;
 
-    return tokenizer.nextToken();
+    return identifier.substring( indexOf + 3 );
   }
 
   /**

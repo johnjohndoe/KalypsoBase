@@ -67,4 +67,9 @@ public interface IKalypsoUIConstants
    * </p>
    */
   public static final String CONFIG_INI_DO_ASK_FOR_POOL_SAVE = "kalypso.ask_for_pool_save"; //$NON-NLS-1$
+
+  /**
+   * The property, which marks a theme as movie theme.
+   */
+  public static final String MOVIE_THEME_PROPERTY = "movieTheme"; //$NON-NLS-1$
 }

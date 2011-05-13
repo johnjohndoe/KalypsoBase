@@ -47,7 +47,6 @@ import java.util.Map;
  */
 public interface Drawing
 {
-
   /**
    * The GraphicFill element both indicates that a stipple-fill repeated graphic will be used and specifies the fill
    * graphic.
@@ -56,14 +55,7 @@ public interface Drawing
    */
   GraphicFill getGraphicFill( );
 
-  /**
-   * The GraphicFill element both indicates that a stipple-fill repeated graphic will be used and specifies the fill
-   * graphic.
-   * 
-   * @param graphicFill
-   *            the GraphicFill-Element
-   */
-  void setGraphicFill( GraphicFill graphicFill );
+  void setGraphicFill( final GraphicFill graphicFill );
 
   /**
    * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
@@ -72,19 +64,13 @@ public interface Drawing
    * This method is for technical use. The user should access the specialized methods of the derived classes.
    * 
    * @return the CssParameters
-   */
-  Map getCssParameters( );
-
-  /**
-   * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
-   * <p>
-   * </p>
-   * This method sets CssParameters.
    * 
-   * @param cssParameters
-   *            the CssParameters
+   * @deprecated Use {#getParameter} instead 
    */
-  void setCssParameters( Map cssParameters );
+  @Deprecated
+  Map<String, CssParameter> getCssParameters( );
+
+  CssParameter getParameter( final String key );
 
   /**
    * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
@@ -98,7 +84,7 @@ public interface Drawing
    * @param value
    *            the value of the object to insert
    */
-  void addCssParameter( Object key, Object value );
+  void addCssParameter( String key, CssParameter value );
 
   /**
    * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
@@ -106,8 +92,8 @@ public interface Drawing
    * </p>
    * This method removes a CssParameter from a given set of CssParameters.
    * 
-   * @param value
-   *            the key of the object to remove
+   * @param key
+   *          the key of the object to remove
    */
-  void removeCssParameter( Object value );
+  void removeCssParameter( String key );
 }

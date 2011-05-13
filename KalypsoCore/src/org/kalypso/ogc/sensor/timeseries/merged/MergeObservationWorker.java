@@ -255,6 +255,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
     return srcValue;
   }
 
+  // TODO: probably a performance bottle neck... access to the data source is expensive...
   private Object getDestDataSource( final IObservation srcObservation, final ITupleModel srcModel, final IAxis srcAxis, final int index, final DataSourceHandler srcMetaDataHandler, final DataSourceHandler destMetaDataHandler ) throws SensorException
   {
     final Number srcIndex = (Number) srcModel.get( index, srcAxis );

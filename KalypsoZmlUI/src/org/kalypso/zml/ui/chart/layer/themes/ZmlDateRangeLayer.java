@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.net.URL;
 import java.util.Date;
 
 import org.eclipse.swt.graphics.GC;
@@ -49,13 +50,14 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.diagram.base.LayerProviderUtils;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.core.diagram.data.IZmlLayerProvider;
+import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
-import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
@@ -71,9 +73,35 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
 
   private IZmlLayerDataHandler m_dataHandler;
 
-  public ZmlDateRangeLayer( final ILayerProvider provider )
+  public ZmlDateRangeLayer( final IZmlLayerProvider provider, final URL context )
   {
     super( provider );
+    setup( context );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getProvider()
+   */
+  @Override
+  public IZmlLayerProvider getProvider( )
+  {
+    return (IZmlLayerProvider) super.getProvider();
+  }
+
+  private void setup( final URL context )
+  {
+    final IZmlLayerProvider provider = getProvider();
+    final ZmlObsProviderDataHandler handler = new ZmlObsProviderDataHandler( this, provider.getTargetAxisId() );
+    try
+    {
+      handler.load( provider, context );
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
+    }
+
+    setDataHandler( handler );
   }
 
   /**

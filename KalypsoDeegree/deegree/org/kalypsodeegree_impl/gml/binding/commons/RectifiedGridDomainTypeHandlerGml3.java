@@ -78,7 +78,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
    * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
    */
   @Override
-  public Class getValueClass( )
+  public Class< ? > getValueClass( )
   {
     return RectifiedGridDomain.class;
   }

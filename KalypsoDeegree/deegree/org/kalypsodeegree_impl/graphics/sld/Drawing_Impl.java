@@ -37,6 +37,7 @@ package org.kalypsodeegree_impl.graphics.sld;
 
 import java.util.Map;
 
+import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.Drawing;
 import org.kalypsodeegree.graphics.sld.GraphicFill;
 
@@ -51,17 +52,17 @@ import org.kalypsodeegree.graphics.sld.GraphicFill;
  */
 public class Drawing_Impl implements Drawing
 {
-  protected GraphicFill graphicFill = null;
+  private GraphicFill m_graphicFill;
 
-  protected Map cssParams = null;
+  private final Map<String, CssParameter> m_cssParams;
 
   /**
    * Constructs a new instance of <tt>Drawing_Impl</tt>.
    */
-  Drawing_Impl( final Map cssParams, final GraphicFill graphicFill )
+  Drawing_Impl( final Map<String, CssParameter> cssParams, final GraphicFill graphicFill )
   {
-    this.cssParams = cssParams;
-    this.graphicFill = graphicFill;
+    m_cssParams = cssParams;
+    m_graphicFill = graphicFill;
   }
 
   /**
@@ -73,20 +74,13 @@ public class Drawing_Impl implements Drawing
   @Override
   public GraphicFill getGraphicFill( )
   {
-    return graphicFill;
+    return m_graphicFill;
   }
 
-  /**
-   * The GraphicFill element both indicates that a stipple-fill repeated graphic will be used and specifies the fill
-   * graphic.
-   * 
-   * @param graphicFill
-   *            the GraphicFill-Element
-   */
   @Override
   public void setGraphicFill( final GraphicFill graphicFill )
   {
-    this.graphicFill = graphicFill;
+    m_graphicFill = graphicFill;
   }
 
   /**
@@ -98,24 +92,15 @@ public class Drawing_Impl implements Drawing
    * @return the CssParameters
    */
   @Override
-  public Map getCssParameters( )
+  public Map<String, CssParameter> getCssParameters( )
   {
-    return cssParams;
+    return m_cssParams;
   }
 
-  /**
-   * A simple SVG/CSS2 styling parameters are given with the CssParameter element.
-   * <p>
-   * </p>
-   * This method sets CssParameters.
-   * 
-   * @param cssParameters
-   *            the CssParameters
-   */
   @Override
-  public void setCssParameters( final Map cssParameters )
+  public CssParameter getParameter( final String key )
   {
-    this.cssParams = cssParameters;
+    return m_cssParams.get( key );
   }
 
   /**
@@ -129,9 +114,9 @@ public class Drawing_Impl implements Drawing
    *            the value of the object to insert
    */
   @Override
-  public void addCssParameter( final Object key, final Object value )
+  public void addCssParameter( final String key, final CssParameter value )
   {
-    cssParams.put( key, value );
+    m_cssParams.put( key, value );
   }
 
   /**
@@ -143,9 +128,9 @@ public class Drawing_Impl implements Drawing
    *            the key of the object to remove
    */
   @Override
-  public void removeCssParameter( final Object key )
+  public void removeCssParameter( final String key )
   {
-    cssParams.remove( key );
+    m_cssParams.remove( key );
   }
 
 }

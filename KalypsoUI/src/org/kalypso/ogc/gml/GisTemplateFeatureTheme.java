@@ -63,6 +63,7 @@ import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogSLD;
+import org.kalypso.core.catalog.CatalogSLDUtils;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyComparator;
@@ -533,7 +534,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         return null;
 
       // we could not find a definition for this feature type. So we use a global default style
-      String styleType = "default"; //$NON-NLS-1$
       final IValuePropertyType defaultGeometryProperty = featureType.getDefaultGeometryProperty();
       if( defaultGeometryProperty == null )
       {
@@ -543,15 +543,10 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
       // if we have a default geometry (which will be used by the display element)
       // we try to use a geometry-specific default-style
-      final String localPart = defaultGeometryProperty.getValueQName().getLocalPart().toLowerCase();
-      if( localPart.endsWith( "point" ) ) //$NON-NLS-1$
-        styleType = "point"; //$NON-NLS-1$
-      else if( localPart.endsWith( "curve" ) || localPart.endsWith( "linestring" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-        styleType = "curve"; //$NON-NLS-1$
-      else if( localPart.endsWith( "surface" ) || localPart.endsWith( "polygon" ) ) //$NON-NLS-1$ //$NON-NLS-2$
-        styleType = "surface"; //$NON-NLS-1$
-      final String styleName = usedForSelection ? CatalogSLD.DEFAULT_STYLE_SELECTED : CatalogSLD.DEFAULT_STYLE_DEFAULT;
-      ftsURN = String.format( styleName, styleType );
+      if( usedForSelection )
+        ftsURN = CatalogSLDUtils.getDefaultSelectionStyleURN( defaultGeometryProperty.getValueQName() );
+      else
+        ftsURN = CatalogSLDUtils.getDefaultStyleURN( defaultGeometryProperty.getValueQName() );
     }
 
     final PoolableObjectType sldPoolableObjectType = new PoolableObjectType( "sld", ftsURN, context ); //$NON-NLS-1$
@@ -567,7 +562,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     if( KeyComparator.getInstance().compare( key, m_layerKey ) == 0 )
     {
       // clear the theme
-      setStatus( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.2" ) ) ); //$NON-NLS-1$
+      setStatus( new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.2" ) ) ); //$NON-NLS-1$
       m_theme.dispose();
       m_theme = null;
     }
@@ -936,9 +931,9 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
         startLoading();
     }
     else // HM: this will probably cause problems, as the theme is not really loaded
-    // But else, the stuff waiting for the map to load will wait forever...
-    if( !checkPoolListener )
-      m_loaded = true;
+      // But else, the stuff waiting for the map to load will wait forever...
+      if( !checkPoolListener )
+        m_loaded = true;
 
     super.setVisible( visible );
   }

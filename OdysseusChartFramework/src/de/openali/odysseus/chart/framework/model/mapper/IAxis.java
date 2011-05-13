@@ -7,6 +7,7 @@ import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
 /**
  * An axis is a mapper which maps a number to a position. Axes use a logical and a numerical data range; the numerical
@@ -33,6 +34,8 @@ public interface IAxis extends IMapper
 
   /**
    * @return axis label
+   * @use getLabels() instead
+   * @deprecated
    */
   String getLabel( );
 
@@ -66,9 +69,6 @@ public interface IAxis extends IMapper
 
   int getScreenHeight( );
 
-  /** Same as getDirection() == NEGATIVE */
-  boolean isInverted( );
-
   /**
    * @return true if this axis is used by Layers
    */
@@ -96,6 +96,9 @@ public interface IAxis extends IMapper
 
   void setDirection( DIRECTION dir );
 
+  /**
+   * @deprecated * @use addLabel(title) instead
+   */
   void setLabel( String label );
 
   /**
@@ -104,6 +107,12 @@ public interface IAxis extends IMapper
   void setNumericRange( IDataRange<Number> range );
 
   void setPreferredAdjustment( IAxisAdjustment adj );
+
+  TitleTypeBean[] getLabels( );
+
+  void addLabel( final TitleTypeBean title );
+
+  void clearLabels( );
 
   /**
    * sets the internally used absolute Min-Max-Value
@@ -115,8 +124,4 @@ public interface IAxis extends IMapper
   void setScreenHeight( int height );
 
   void setVisible( final boolean visible );
-
-  void setSelection( Point screenPoint );
-
-  Object getSelection( );
 }

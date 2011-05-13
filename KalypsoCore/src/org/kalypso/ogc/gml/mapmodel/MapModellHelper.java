@@ -128,6 +128,34 @@ public final class MapModellHelper
    */
   public static BufferedImage createWellFormedImageFromModel( IMapPanel panel, int width, int height, Insets insets, int borderWidth )
   {
+    /* Get the map model. */
+    IMapModell mapModel = panel.getMapModell();
+
+    /* Get the bounding box. */
+    GM_Envelope boundingBox = panel.getBoundingBox();
+
+    return createWellFormedImageFromModel( mapModel, width, height, insets, borderWidth, boundingBox );
+  }
+
+  /**
+   * This function creates an image of a map model and keeps aspect ratio of the displayed map and its extend.
+   * 
+   * @param mapModel
+   *          The map model.
+   * @param width
+   *          The width of the new image.
+   * @param height
+   *          The height of the new image.
+   * @param insets
+   *          The insets of the image define a print border, which is kept empty.
+   * @param borderWidth
+   *          If >0 and <=25 a border will be drawn around the map.
+   * @param boundingBox
+   *          The original bounding box.
+   * @return The image showing the map.
+   */
+  public static BufferedImage createWellFormedImageFromModel( IMapModell mapModel, int width, int height, Insets insets, int borderWidth, GM_Envelope boundingBox )
+  {
     /* The remaining dimensions for the map considering the insets. */
     int mapWidth = width;
     int mapHeight = height;
@@ -145,12 +173,6 @@ public final class MapModellHelper
       mapWidth = mapWidth - borderWidth;
       mapHeight = mapHeight - borderWidth;
     }
-
-    /* Get the map model. */
-    IMapModell mapModel = panel.getMapModell();
-
-    /* Get the bounding box. */
-    GM_Envelope boundingBox = panel.getBoundingBox();
 
     /* Calculate the ratio of the width and height of the available to the map. */
     double ratio = (double) mapHeight / (double) mapWidth;

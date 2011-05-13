@@ -84,6 +84,7 @@ public class WQRelationDialog extends ResizableDialog
     final SashForm form = new SashForm( composite, SWT.HORIZONTAL );
     form.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
+    // FIXME: no connection between selection of tables in table-viewer and the chart
     final WQRelationDiagramViewer diagViewer = new WQRelationDiagramViewer( form );
     final WQRelationTableViewer tableViewer = new WQRelationTableViewer( form );
 

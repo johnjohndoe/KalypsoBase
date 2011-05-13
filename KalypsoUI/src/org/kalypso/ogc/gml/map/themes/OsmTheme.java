@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.map.themes;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
+import org.kalypso.template.types.LayerType;
 
 /**
  * Theme showing maps from Open-StreetMap.<br>
@@ -52,8 +53,8 @@ import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
  */
 public class OsmTheme extends KalypsoWMSTheme
 {
-  public OsmTheme( final String source, final String linktype, final I10nString themeName, final IKalypsoImageProvider imageProvider, final IMapModell mapModel )
+  public OsmTheme( final String source, final String linktype, final I10nString themeName, LayerType layerType, final IKalypsoImageProvider imageProvider, final IMapModell mapModel )
   {
-    super( source, linktype, themeName, imageProvider, mapModel );
+    super( source, linktype, themeName, layerType, imageProvider, mapModel );
   }
 }

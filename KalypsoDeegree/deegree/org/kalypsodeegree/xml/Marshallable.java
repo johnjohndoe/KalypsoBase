@@ -44,12 +44,11 @@ package org.kalypsodeegree.xml;
  */
 public interface Marshallable
 {
-
   /**
    * Produces an XML-representation of this object.
    * <p>
    * 
    * @return XML-representation of this object
    */
-  public String exportAsXML();
+  String exportAsXML( );
 }

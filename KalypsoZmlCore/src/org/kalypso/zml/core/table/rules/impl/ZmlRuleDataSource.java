@@ -165,6 +165,8 @@ public class ZmlRuleDataSource extends AbstractZmlTableRule
     final int generated = random.nextInt( Double.valueOf( 2048 / size ).intValue() );
 
     final int color = findColor( generated % 360 );
+    if( color < 0 || color > 360 )
+      return new RGB( 128, 0.3f, 0.7f );
 
     return new RGB( color, 0.3f, 0.7f );
   }

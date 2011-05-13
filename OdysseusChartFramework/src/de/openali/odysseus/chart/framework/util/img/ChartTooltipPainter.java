@@ -52,8 +52,10 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTWEIGHT;
+import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 import de.openali.odysseus.chart.framework.model.style.impl.TextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
@@ -80,7 +82,11 @@ public class ChartTooltipPainter
     titleType.setTextStyle( new TextStyle( fontData.getHeight(), fontData.getName(), rgbText, rgbFill, FONTSTYLE.NORMAL, FONTWEIGHT.NORMAL, ALIGNMENT.LEFT, 255, true ) );
 
     m_labelRenderer = new GenericChartLabelRenderer( titleType );
-    m_labelRenderer.setBorderLine( StyleUtils.getDefaultLineStyle() );
+    final IAreaStyle borderStyle = StyleUtils.getDefaultAreaStyle();
+    borderStyle.getStroke().setColor( new RGB( 0, 0, 0 ) );
+    borderStyle.getStroke().setWidth( 1 );
+    borderStyle.setFill( new ColorFill( rgbFill ) );
+    m_labelRenderer.setBorderStyle( borderStyle );
   }
 
   public IChartLabelRenderer getLabelRenderer( )
@@ -95,8 +101,8 @@ public class ChartTooltipPainter
   public void paint( final GC gcw, final Point mousePos )
   {
 
-    final Point toolsize = getLabelRenderer().getSize();
-    if( toolsize.x == 0 || toolsize.y == 0 )
+    final Rectangle toolsize = getLabelRenderer().getSize();
+    if( toolsize.width == 0 || toolsize.height == 0 )
       return;
 
     final Rectangle clippRect = gcw.getClipping();
@@ -110,15 +116,22 @@ public class ChartTooltipPainter
     int offsetX = 3/* Pixel */;
     int offsetY = -3/* Pixel */;
 
-    if( toolsize.x + offsetX + mousePos.x > clippRect.x + clippRect.width )
+    final boolean mirrorX = toolsize.width + offsetX + mousePos.x > clippRect.x + clippRect.width;
+    final boolean mirrorY = toolsize.height - offsetY - mousePos.y > clippRect.y;
+    if( mirrorX )
     {
       posX = ALIGNMENT.RIGHT;
       offsetX = -3;
     }
-    if( toolsize.y - offsetY - mousePos.y > clippRect.y )
+    if( mirrorY )
     {
       posY = ALIGNMENT.TOP;
       offsetY = 3;
+      if( toolsize.width < offsetX + mousePos.x )
+      {
+        posX = ALIGNMENT.RIGHT;
+        offsetX = -3;
+      }
     }
 
     getLabelRenderer().getTitleTypeBean().setTextAnchorX( posX );

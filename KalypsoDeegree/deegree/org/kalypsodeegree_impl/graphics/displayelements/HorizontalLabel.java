@@ -61,68 +61,70 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
  */
 class HorizontalLabel implements Label
 {
-  private final String caption;
+  private final String m_caption;
 
-  private final int[] xpoints = new int[4];
+  private final int[] m_xpoints = new int[4];
 
-  private final int[] ypoints = new int[4];
+  private final int[] m_ypoints = new int[4];
 
   // width and height of the caption
-  private final int w, h;
+  private final int m_w;
+
+  private final int m_h;
 
   private final Color m_color;
 
-  private final Font font;
+  private final Font m_font;
 
-  private final int descent, ascent;
+  private final int m_descent;
+
+  private final int m_ascent;
 
   private final Halo m_halo;
 
-  private final Feature feature;
+  private final Feature m_feature;
 
-  HorizontalLabel( final String caption, final Font font, final Color color, final LineMetrics metrics, final Feature feature, final Halo halo, final int x,
-      final int y, final int w, final int h, final double anchorPoint[], final double[] displacement )
-      {
+  HorizontalLabel( final String caption, final Font font, final Color color, final LineMetrics metrics, final Feature feature, final Halo halo, final int x, final int y, final int w, final int h, final double anchorPoint[], final double[] displacement )
+  {
+    m_caption = caption;
+    m_font = font;
+    m_color = color;
+    m_descent = (int) metrics.getDescent();
+    m_ascent = (int) metrics.getAscent();
+    m_feature = feature;
+    m_halo = halo;
 
-    this.caption = caption;
-    this.font = font;
-    this.m_color = color;
-    this.descent = (int)metrics.getDescent();
-    this.ascent = (int)metrics.getAscent();
-    this.feature = feature;
-    this.m_halo = halo;
+    m_w = w;
+    m_h = h;
 
-    this.w = w;
-    this.h = h;
-
-    final int dx = (int)( -anchorPoint[0] * w + displacement[0] + 0.5 );
-    final int dy = (int)( anchorPoint[1] * h - displacement[1] + 0.5 );
+    final int dx = (int) (-anchorPoint[0] * w + displacement[0] + 0.5);
+    final int dy = (int) (anchorPoint[1] * h - displacement[1] + 0.5);
 
     // vertices of label boundary
-    xpoints[0] = x + dx;
-    ypoints[0] = y + dy;
-    xpoints[1] = x + w + dx;
-    ypoints[1] = y + dy;
-    xpoints[2] = x + w + dx;
-    ypoints[2] = y - h + dy;
-    xpoints[3] = x + dx;
-    ypoints[3] = y - h + dy;
-      }
+    m_xpoints[0] = x + dx;
+    m_ypoints[0] = y + dy;
+    m_xpoints[1] = x + w + dx;
+    m_ypoints[1] = y + dy;
+    m_xpoints[2] = x + w + dx;
+    m_ypoints[2] = y - h + dy;
+    m_xpoints[3] = x + dx;
+    m_ypoints[3] = y - h + dy;
+  }
 
-  public String getCaption()
+  public String getCaption( )
   {
-    return caption;
+    return m_caption;
   }
 
   @Override
   public void paintBoundaries( final Graphics2D g )
   {
     setColor( g, new Color( 0x888888 ), 0.5 );
-    g.fillPolygon( xpoints, ypoints, xpoints.length );
+    g.fillPolygon( m_xpoints, m_ypoints, m_xpoints.length );
     g.setColor( Color.BLACK );
 
     // render the text
-    //g.drawString( caption, xpoints [0], ypoints [0] - descent);
+    // g.drawString( caption, xpoints [0], ypoints [0] - descent);
   }
 
   /**
@@ -140,7 +142,7 @@ class HorizontalLabel implements Label
     {
       try
       {
-        paintHalo( g, m_halo, xpoints[0], ypoints[0] - descent );
+        paintHalo( g, m_halo, m_xpoints[0], m_ypoints[0] - m_descent );
       }
       catch( final FilterEvaluationException e )
       {
@@ -150,8 +152,8 @@ class HorizontalLabel implements Label
 
     // render the text
     setColor( g, m_color, 1.0 );
-    g.setFont( font );
-    g.drawString( caption, xpoints[0] + 0.5f, (ypoints[0] - descent) );
+    g.setFont( m_font );
+    g.drawString( m_caption, m_xpoints[0] + 0.5f, (m_ypoints[0] - m_descent) );
   }
 
   /**
@@ -166,13 +168,12 @@ class HorizontalLabel implements Label
    *          x-coordinate of the label
    * @param y
    *          y-coordinate of the label
-   * 
    * @throws FilterEvaluationException
    *           if the evaluation of a <tt>ParameterValueType</tt> fails
    */
   private void paintHalo( final Graphics2D g, final Halo halo, final int x, final int y ) throws FilterEvaluationException
   {
-    final int radius = (int)halo.getRadius( feature );
+    final int radius = (int) halo.getRadius( m_feature );
 
     // only draw filled rectangle or circle, if Fill-Element is given
     final Fill fill = halo.getFill();
@@ -183,14 +184,14 @@ class HorizontalLabel implements Label
 
       if( gFill != null )
       {
-        final BufferedImage texture = gFill.getGraphic().getAsImage( feature, UOM.pixel, null );
+        final BufferedImage texture = gFill.getGraphic().getAsImage( m_feature, UOM.pixel, null );
         final Rectangle anchor = new Rectangle( 0, 0, texture.getWidth( null ), texture.getHeight( null ) );
         g.setPaint( new TexturePaint( texture, anchor ) );
       }
       else
       {
-        final double opacity = fill.getOpacity( feature );
-        final Color color = fill.getFill( feature );
+        final double opacity = fill.getOpacity( m_feature );
+        final Color color = fill.getFill( m_feature );
         setColor( g, color, opacity );
       }
     }
@@ -202,83 +203,81 @@ class HorizontalLabel implements Label
     // FIXME: the whole halo is not painted according to the SLD spec;
     // The normal meaning is to add a lining to the edge of text.
 
-    g.fillRect( x - radius, y - ascent - radius, w + (radius * 2), h + (radius * 2) );
+    g.fillRect( x - radius, y - m_ascent - radius, m_w + (radius * 2), m_h + (radius * 2) );
 
     // only stroke outline, if Stroke-Element is given
     final org.kalypsodeegree.graphics.sld.Stroke stroke = halo.getStroke();
 
     if( stroke != null )
     {
-      final double opacity = stroke.getOpacity( feature );
+      final double opacity = stroke.getOpacity( m_feature );
 
       if( opacity > 0.01 )
       {
-        Color color = stroke.getStroke( feature );
-        final int alpha = (int)Math.round( opacity * 255 );
+        Color color = stroke.getStroke( m_feature );
+        final int alpha = (int) Math.round( opacity * 255 );
         final int red = color.getRed();
         final int green = color.getGreen();
         final int blue = color.getBlue();
         color = new Color( red, green, blue, alpha );
         g.setColor( color );
 
-        final float[] dash = stroke.getDashArray( feature );
+        final float[] dash = stroke.getDashArray( m_feature );
 
         // use a simple Stroke if dash == null or dash length < 2
         BasicStroke bs = null;
-        final float strokeWidth = (float)stroke.getWidth( feature );
+        final float strokeWidth = (float) stroke.getWidth( m_feature );
 
-        if( ( dash == null ) || ( dash.length < 2 ) )
+        if( (dash == null) || (dash.length < 2) )
         {
           bs = new BasicStroke( strokeWidth );
         }
         else
         {
-          bs = new BasicStroke( strokeWidth, stroke.getLineCap( feature ), stroke.getLineJoin( feature ), 10.0f, dash,
-              stroke.getDashOffset( feature ) );
-          bs = new BasicStroke( strokeWidth, stroke.getLineCap( feature ), stroke.getLineJoin( feature ), 1.0f, dash,
-              1.0f );
+          bs = new BasicStroke( strokeWidth, stroke.getLineCap( m_feature ), stroke.getLineJoin( m_feature ), 10.0f, dash, stroke.getDashOffset( m_feature ) );
+          bs = new BasicStroke( strokeWidth, stroke.getLineCap( m_feature ), stroke.getLineJoin( m_feature ), 1.0f, dash, 1.0f );
         }
         g.setStroke( bs );
 
-        g.drawRect( x - radius, y - ascent - radius, w + 2 * radius, h + 2 * radius );
+        g.drawRect( x - radius, y - m_ascent - radius, m_w + 2 * radius, m_h + 2 * radius );
       }
     }
   }
 
   @Override
-  public int getX()
+  public int getX( )
   {
-    return xpoints[0];
+    return m_xpoints[0];
   }
 
   @Override
-  public int getY()
+  public int getY( )
   {
-    return ypoints[0];
+    return m_ypoints[0];
   }
 
   @Override
-  public int getMaxX()
+  public int getMaxX( )
   {
-    return xpoints[1];
+    return m_xpoints[1];
   }
 
   @Override
-  public int getMaxY()
+  public int getMaxY( )
   {
-    return ypoints[1];
+    return m_ypoints[1];
   }
 
   @Override
-  public int getMinX()
+  public int getMinX( )
   {
-    return xpoints[3];
+    return m_xpoints[3];
   }
 
   @Override
-  public int getMinY()
+  public int getMinY( )
   {
-    return ypoints[3];
+    return m_ypoints[3];
   }
 
   /**
@@ -292,7 +291,7 @@ class HorizontalLabel implements Label
   @Override
   public boolean intersects( final Label that )
   {
-    if( !( that instanceof HorizontalLabel ) )
+    if( !(that instanceof HorizontalLabel) )
     {
       System.out.println( "Intersection test for rotated labels is " + "not implemented yet!" );
       return false;
@@ -305,17 +304,17 @@ class HorizontalLabel implements Label
     final double north1 = getMaxY();
 
     // coordinates of the other GM_Envelope's BBOX
-    final double west2 = ( (HorizontalLabel)that ).getMinX();
-    final double south2 = ( (HorizontalLabel)that ).getMinY();
-    final double east2 = ( (HorizontalLabel)that ).getMaxX();
-    final double north2 = ( (HorizontalLabel)that ).getMaxY();
+    final double west2 = ((HorizontalLabel) that).getMinX();
+    final double south2 = ((HorizontalLabel) that).getMinY();
+    final double east2 = ((HorizontalLabel) that).getMaxX();
+    final double north2 = ((HorizontalLabel) that).getMaxY();
 
     // special cases: one box lays completly inside the other one
-    if( ( west1 <= west2 ) && ( south1 <= south2 ) && ( east1 >= east2 ) && ( north1 >= north2 ) )
+    if( (west1 <= west2) && (south1 <= south2) && (east1 >= east2) && (north1 >= north2) )
     {
       return true;
     }
-    if( ( west1 >= west2 ) && ( south1 >= south2 ) && ( east1 <= east2 ) && ( north1 <= north2 ) )
+    if( (west1 >= west2) && (south1 >= south2) && (east1 <= east2) && (north1 <= north2) )
     {
       return true;
     }
@@ -323,56 +322,56 @@ class HorizontalLabel implements Label
     // to cross a line of the other BBOX
     // check western boundary of box 1
     // "touching" boxes must not intersect
-    if( ( west1 >= west2 ) && ( west1 < east2 ) )
+    if( (west1 >= west2) && (west1 < east2) )
     {
-      if( ( south1 <= south2 ) && ( north1 > south2 ) )
+      if( (south1 <= south2) && (north1 > south2) )
       {
         return true;
       }
 
-      if( ( south1 < north2 ) && ( north1 >= north2 ) )
+      if( (south1 < north2) && (north1 >= north2) )
       {
         return true;
       }
     }
     // check eastern boundary of box 1
     // "touching" boxes must not intersect
-    if( ( east1 > west2 ) && ( east1 <= east2 ) )
+    if( (east1 > west2) && (east1 <= east2) )
     {
-      if( ( south1 <= south2 ) && ( north1 > south2 ) )
+      if( (south1 <= south2) && (north1 > south2) )
       {
         return true;
       }
 
-      if( ( south1 < north2 ) && ( north1 >= north2 ) )
+      if( (south1 < north2) && (north1 >= north2) )
       {
         return true;
       }
     }
     // check southern boundary of box 1
     // "touching" boxes must not intersect
-    if( ( south1 >= south2 ) && ( south1 < north2 ) )
+    if( (south1 >= south2) && (south1 < north2) )
     {
-      if( ( west1 <= west2 ) && ( east1 > west2 ) )
+      if( (west1 <= west2) && (east1 > west2) )
       {
         return true;
       }
 
-      if( ( west1 < east2 ) && ( east1 >= east2 ) )
+      if( (west1 < east2) && (east1 >= east2) )
       {
         return true;
       }
     }
     // check northern boundary of box 1
     // "touching" boxes must not intersect
-    if( ( north1 > south2 ) && ( north1 <= north2 ) )
+    if( (north1 > south2) && (north1 <= north2) )
     {
-      if( ( west1 <= west2 ) && ( east1 > west2 ) )
+      if( (west1 <= west2) && (east1 > west2) )
       {
         return true;
       }
 
-      if( ( west1 < east2 ) && ( east1 >= east2 ) )
+      if( (west1 < east2) && (east1 >= east2) )
       {
         return true;
       }
@@ -384,7 +383,7 @@ class HorizontalLabel implements Label
   {
     if( opacity < 0.999 )
     {
-      final int alpha = (int)Math.round( opacity * 255 );
+      final int alpha = (int) Math.round( opacity * 255 );
       final int red = color.getRed();
       final int green = color.getGreen();
       final int blue = color.getBlue();
@@ -396,8 +395,8 @@ class HorizontalLabel implements Label
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
-    return caption;
+    return m_caption;
   }
 }

@@ -47,9 +47,9 @@ import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.zml.core.diagram.base.provider.observation.AsynchronousObservationProvider;
+import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.core.provider.observation.AsynchronousObservationProvider;
-import org.kalypso.zml.ui.core.zml.TSLinkWithName;
 import org.kalypso.zml.ui.core.zml.ZmlAxisUtils;
 
 /**
