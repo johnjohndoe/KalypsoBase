@@ -38,28 +38,53 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.styleeditor.binding;
+package org.kalypso.commons.databinding.validation;
 
-import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.java.lang.Objects;
 
 /**
- * @author Gernot Belger
+ * This validator checks, if a number was provided.
+ * 
+ * @author Holger Albert
  */
-public interface IDataBinding
+public class NumberNotNullValidator extends TypedValidator<Number>
 {
-  void bindValue( IObservableValue targetValue, IObservableValue modelValue, IValidator... validators );
+  public static final String DEFAULT_MESSAGE = "Value should not be negative.";
 
-  void bindValue( IObservableValue targetValue, IObservableValue modelValue, IConverter targetToModel, IValidator... validators );
+  /**
+   * Same as {@link #NumberNotNegativeValidator(int, String)}, but uses a default message.
+   * 
+   * @param severity
+   *          Severity of IStatus, will be used to create validation failures.
+   */
+  public NumberNotNullValidator( final int severity )
+  {
+    this( severity, DEFAULT_MESSAGE );
+  }
 
-  void bindValue( IObservableValue target, IObservableValue model, IConverter targetToModel, IConverter modelToTarget, IValidator... validators );
+  /**
+   * @param severity
+   *          Severity of IStatus, will be used to create validation failures.
+   * @param message
+   *          Will be used as message for a status, if validation fails.
+   */
+  public NumberNotNullValidator( final int severity, final String message )
+  {
+    super( Number.class, severity, message );
+  }
 
-  DataBindingContext getBindingContext( );
+  /**
+   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
+   */
+  @Override
+  protected IStatus doValidate( final Number value ) throws CoreException
+  {
+    if( Objects.isNull( value ) )
+      fail();
 
-  FormToolkit getToolkit( );
-
-  void dispose( );
+    return Status.OK_STATUS;
+  }
 }

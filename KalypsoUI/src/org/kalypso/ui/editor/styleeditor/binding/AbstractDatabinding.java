@@ -47,19 +47,45 @@ import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public interface IDataBinding
+public abstract class AbstractDatabinding implements IDataBinding
 {
-  void bindValue( IObservableValue targetValue, IObservableValue modelValue, IValidator... validators );
+  private final DataBindingContext m_bindingContext = new DataBindingContext();
 
-  void bindValue( IObservableValue targetValue, IObservableValue modelValue, IConverter targetToModel, IValidator... validators );
+  private final FormToolkit m_toolkit;
 
-  void bindValue( IObservableValue target, IObservableValue model, IConverter targetToModel, IConverter modelToTarget, IValidator... validators );
+  public AbstractDatabinding( final FormToolkit toolkit )
+  {
+    m_toolkit = toolkit;
+  }
 
-  DataBindingContext getBindingContext( );
+  @Override
+  public DataBindingContext getBindingContext( )
+  {
+    return m_bindingContext;
+  }
 
-  FormToolkit getToolkit( );
+  @Override
+  public FormToolkit getToolkit( )
+  {
+    return m_toolkit;
+  }
 
-  void dispose( );
+  public void dispose( )
+  {
+    m_bindingContext.dispose();
+  }
+
+  @Override
+  public void bindValue( final IObservableValue targetValue, final IObservableValue modelValue, final IValidator... validators )
+  {
+    bindValue( targetValue, modelValue, null, validators );
+  }
+
+  @Override
+  public void bindValue( final IObservableValue targetValue, final IObservableValue modelValue, final IConverter converter, final IValidator... validators )
+  {
+    bindValue( targetValue, modelValue, converter, null, validators );
+  }
 }

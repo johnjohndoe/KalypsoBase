@@ -40,73 +40,50 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.binding;
 
-import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.jface.databinding.swt.ISWTObservable;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Widget;
-import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.jface.databinding.wizard.WizardPageSupport;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.kalypso.commons.databinding.conversion.StatusToMessageConverter;
-import org.kalypso.commons.databinding.forms.FormControlDecoratorValue;
-import org.kalypso.commons.databinding.forms.FormSupport;
 import org.kalypso.commons.databinding.validation.MultiValidator;
-import org.kalypso.commons.java.lang.Objects;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public class DatabindingForm extends AbstractDatabinding
+public class DatabindingWizardPage extends AbstractDatabinding
 {
-  private final Form m_form;
 
-  private FormSupport m_support;
+  private final WizardPageSupport m_support;
 
-  public DatabindingForm( final ScrolledForm form, final FormToolkit toolkit )
-  {
-    this( form, form.getForm(), toolkit );
-  }
+  private final WizardPage m_page;
 
-  public DatabindingForm( final Form form, final FormToolkit toolkit )
-  {
-    this( null, form, toolkit );
-  }
-
-  private DatabindingForm( final ScrolledForm scrolledForm, final Form form, final FormToolkit toolkit )
+  public DatabindingWizardPage( final WizardPage page, final FormToolkit toolkit )
   {
     super( toolkit );
+    m_page = page;
 
-    m_form = form;
-    form.addDisposeListener( new DisposeListener()
-    {
-      @Override
-      public void widgetDisposed( final DisposeEvent e )
-      {
-        dispose();
-      }
-    } );
-
-    if( Objects.isNull( scrolledForm ) )
-      m_support = FormSupport.create( form, getBindingContext() );
-    else
-      m_support = FormSupport.create( scrolledForm, getBindingContext() );
+    m_support = WizardPageSupport.create( page, getBindingContext() );
   }
 
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.binding.AbstractDatabinding#dispose()
+   */
   @Override
   public void dispose( )
   {
     super.dispose();
 
-    // REMARK: must be disposed before binding context is disposed, else we get problems
     m_support.dispose();
   }
 
+  /**
+   * @see org.kalypso.ui.editor.styleeditor.binding.IDataBinding#bindValue(org.eclipse.core.databinding.observable.value.IObservableValue,
+   *      org.eclipse.core.databinding.observable.value.IObservableValue,
+   *      org.eclipse.core.databinding.conversion.IConverter, org.eclipse.core.databinding.conversion.IConverter,
+   *      org.eclipse.core.databinding.validation.IValidator[])
+   */
   @Override
   public void bindValue( final IObservableValue targetValue, final IObservableValue modelValue, final IConverter targetToModelConverter, final IConverter modelToTargetConverter, final IValidator... validators )
   {
@@ -125,27 +102,6 @@ public class DatabindingForm extends AbstractDatabinding
     if( modelToTargetConverter != null )
       modelToTarget.setConverter( modelToTargetConverter );
 
-    final Binding binding = getBindingContext().bindValue( targetValue, modelValue, targetToModel, modelToTarget );
-    final IObservableValue validationStatus = binding.getValidationStatus();
-
-    final Control control = findControl( targetValue );
-    final IObservableValue decoratorValue = new FormControlDecoratorValue( m_form.getMessageManager() );
-
-    final UpdateValueStrategy decoratorUpdater = new UpdateValueStrategy();
-    decoratorUpdater.setConverter( new StatusToMessageConverter( control ) );
-
-    getBindingContext().bindValue( decoratorValue, validationStatus, null, decoratorUpdater );
-  }
-
-  private Control findControl( final IObservableValue targetValue )
-  {
-    if( targetValue instanceof ISWTObservable )
-    {
-      final Widget widget = ((ISWTObservable) targetValue).getWidget();
-      if( widget instanceof Control )
-        return (Control) widget;
-    }
-
-    return null;
+    getBindingContext().bindValue( targetValue, modelValue, targetToModel, modelToTarget );
   }
 }
