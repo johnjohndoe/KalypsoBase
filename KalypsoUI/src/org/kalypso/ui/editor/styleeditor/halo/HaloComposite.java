@@ -52,9 +52,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.commons.databinding.forms.DatabindingForm;
+import org.kalypso.commons.databinding.forms.IDataBindingForm;
 import org.kalypso.ui.editor.styleeditor.IStyleContext;
-import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
-import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.graphics.sld.Halo;
 import org.kalypsodeegree.graphics.sld.Stroke;
@@ -70,7 +70,7 @@ public class HaloComposite extends Composite
 
   private final IStyleInput<Halo> m_input;
 
-  private final IDataBinding m_binding;
+  private final IDataBindingForm m_binding;
 
   private HaloStrokeSection m_strokeSection;
 

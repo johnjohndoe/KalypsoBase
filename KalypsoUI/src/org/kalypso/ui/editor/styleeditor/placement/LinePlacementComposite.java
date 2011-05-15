@@ -52,7 +52,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
+import org.kalypso.commons.databinding.forms.IDataBindingForm;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
 import org.kalypso.ui.editor.styleeditor.symbolizer.LinePlacementPerpendicularOffsetValue;
@@ -63,11 +63,11 @@ import org.kalypsodeegree.graphics.sld.LinePlacement;
  */
 public class LinePlacementComposite extends Composite
 {
-  private final IDataBinding m_binding;
+  private final IDataBindingForm m_binding;
 
   private final IStyleInput<LinePlacement> m_input;
 
-  public LinePlacementComposite( final IDataBinding binding, final Composite parent, final IStyleInput<LinePlacement> input )
+  public LinePlacementComposite( final IDataBindingForm binding, final Composite parent, final IStyleInput<LinePlacement> input )
   {
     super( parent, SWT.NONE );
 
