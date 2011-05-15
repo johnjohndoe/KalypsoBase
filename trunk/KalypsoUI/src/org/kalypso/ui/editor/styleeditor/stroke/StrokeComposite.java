@@ -74,14 +74,14 @@ import org.kalypso.commons.databinding.conversion.AwtToSwtColorConverter;
 import org.kalypso.commons.databinding.conversion.FloatArrayToStringConverter;
 import org.kalypso.commons.databinding.conversion.StringToFloatArrayConverter;
 import org.kalypso.commons.databinding.conversion.SwrToAwtColorConverter;
+import org.kalypso.commons.databinding.forms.DatabindingForm;
+import org.kalypso.commons.databinding.forms.IDataBindingForm;
 import org.kalypso.commons.databinding.validation.NumberNotNegativeValidator;
 import org.kalypso.contribs.eclipse.swt.ColorUtilities;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.swt.widgets.MenuButton;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
-import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
 import org.kalypso.ui.editor.styleeditor.preview.StrokePreview;
@@ -114,7 +114,7 @@ public class StrokeComposite extends Composite
 
   private final IStyleInput<Stroke> m_input;
 
-  private final IDataBinding m_binding;
+  private final IDataBindingForm m_binding;
 
   private GraphicStrokeSection m_strokeSection;
 

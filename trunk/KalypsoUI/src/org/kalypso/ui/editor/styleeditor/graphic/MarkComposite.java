@@ -51,8 +51,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
-import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
+import org.kalypso.commons.databinding.forms.DatabindingForm;
+import org.kalypso.commons.databinding.forms.IDataBindingForm;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.graphics.sld.Mark;
 
@@ -65,7 +65,7 @@ public class MarkComposite extends Composite
 
   private final IStyleInput<Mark> m_input;
 
-  private final IDataBinding m_binding;
+  private final IDataBindingForm m_binding;
 
   private MarkFillSection m_fillSection;
 

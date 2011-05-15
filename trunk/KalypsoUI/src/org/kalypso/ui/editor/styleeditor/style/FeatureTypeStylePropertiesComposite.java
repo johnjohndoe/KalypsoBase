@@ -60,13 +60,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.commons.databinding.conversion.StringToQNameConverter;
+import org.kalypso.commons.databinding.forms.DatabindingForm;
+import org.kalypso.commons.databinding.forms.IDataBindingForm;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
-import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
-import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
@@ -78,7 +78,7 @@ public class FeatureTypeStylePropertiesComposite extends Composite
 {
   private final IStyleInput<FeatureTypeStyle> m_input;
 
-  private final IDataBinding m_binding;
+  private final IDataBindingForm m_binding;
 
   private final ScrolledForm m_form;
 

@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
+import org.kalypso.commons.databinding.forms.IDataBindingForm;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.graphics.sld.PointPlacement;
 
@@ -62,9 +62,9 @@ public class PointPlacementComposite extends Composite
 
   private final IStyleInput<PointPlacement> m_input;
 
-  private final IDataBinding m_binding;
+  private final IDataBindingForm m_binding;
 
-  public PointPlacementComposite( final IDataBinding binding, final Composite parent, final IStyleInput<PointPlacement> input )
+  public PointPlacementComposite( final IDataBindingForm binding, final Composite parent, final IStyleInput<PointPlacement> input )
   {
     super( parent, SWT.NONE );
 

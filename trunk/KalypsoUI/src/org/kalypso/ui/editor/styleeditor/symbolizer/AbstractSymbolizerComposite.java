@@ -56,11 +56,11 @@ import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.commons.databinding.forms.DatabindingForm;
+import org.kalypso.commons.databinding.forms.IDataBindingForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ui.editor.styleeditor.IStyleEditorConfig;
-import org.kalypso.ui.editor.styleeditor.binding.DatabindingForm;
-import org.kalypso.ui.editor.styleeditor.binding.IDataBinding;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.preview.SymbolizerPreview;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
@@ -74,7 +74,7 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
 
   private SymbolizerPreview<S> m_preview;
 
-  private final IDataBinding m_binding;
+  private final IDataBindingForm m_binding;
 
   private final Form m_form;
 
@@ -107,7 +107,7 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
     createPreviewControl( toolkit, body ).setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
   }
 
-  protected IDataBinding getBinding( )
+  protected IDataBindingForm getBinding( )
   {
     return m_binding;
   }
