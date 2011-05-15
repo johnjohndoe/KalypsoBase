@@ -41,6 +41,7 @@
 package org.kalypso.core.status;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.SWT;
@@ -374,6 +375,27 @@ public class StatusComposite extends Composite
 
       case IStatus.INFO:
         return getInfoImage();
+
+      default:
+        return null;
+    }
+  }
+
+  public static ImageDescriptor getStatusImageDescriptor( final int severity )
+  {
+    switch( severity )
+    {
+      case IStatus.OK:
+        return KalypsoCorePlugin.getImageProvider().getImageDescriptor( KalypsoCoreImages.DESCRIPTORS.STATUS_IMAGE_OK );
+
+      case IStatus.ERROR:
+        return IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH );
+
+      case IStatus.WARNING:
+        return IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH );
+
+      case IStatus.INFO:
+        return IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH );
 
       default:
         return null;
