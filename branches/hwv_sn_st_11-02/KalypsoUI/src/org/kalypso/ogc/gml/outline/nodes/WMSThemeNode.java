@@ -68,11 +68,11 @@ public class WMSThemeNode extends KalypsoThemeNode<KalypsoWMSTheme>
   }
 
   /**
-   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getLegendGraphic(java.lang.String[],
+   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getLegendGraphic(java.lang.String[], boolean,
    *      org.eclipse.swt.graphics.Font)
    */
   @Override
-  public Image getLegendGraphic( String[] whiteList, Font font ) throws CoreException
+  public Image getLegendGraphic( String[] whiteList, boolean onlyVisible, Font font ) throws CoreException
   {
     /* Check, if this theme is allowed. */
     if( !checkWhiteList( whiteList ) )
@@ -88,6 +88,6 @@ public class WMSThemeNode extends KalypsoThemeNode<KalypsoWMSTheme>
     if( legendGraphic != null )
       return new Image( font.getDevice(), legendGraphic, SWT.IMAGE_COPY );
 
-    return super.getLegendGraphic( whiteList, font );
+    return super.getLegendGraphic( whiteList, onlyVisible, font );
   }
 }

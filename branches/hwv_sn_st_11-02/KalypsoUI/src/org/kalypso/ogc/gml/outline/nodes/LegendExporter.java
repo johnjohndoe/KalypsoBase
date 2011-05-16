@@ -194,7 +194,7 @@ public class LegendExporter
           continue;
 
         /* Get the legend. */
-        Image legend = themeNode.getLegendGraphic( whiteList, font );
+        Image legend = themeNode.getLegendGraphic( whiteList, onlyVisible, font );
         if( legend != null )
           legends.add( legend );
       }

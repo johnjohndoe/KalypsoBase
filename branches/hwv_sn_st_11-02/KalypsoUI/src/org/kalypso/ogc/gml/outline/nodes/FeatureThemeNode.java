@@ -209,11 +209,11 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
   }
 
   /**
-   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getLegendGraphic(java.lang.String[],
+   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getLegendGraphic(java.lang.String[], boolean,
    *      org.eclipse.swt.graphics.Font)
    */
   @Override
-  public Image getLegendGraphic( final String[] whiteList, final Font font )
+  public Image getLegendGraphic( final String[] whiteList, final boolean onlyVisible, final Font font )
   {
     /* Check, if this theme is allowed. */
     if( !checkWhiteList( whiteList ) )
