@@ -140,6 +140,9 @@ public class MovieDialog extends Dialog
       }
     } );
 
+    /* Start the movie. */
+    m_player.start();
+
     return main;
   }
 

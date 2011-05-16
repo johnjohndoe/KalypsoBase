@@ -115,7 +115,6 @@ public class MoviePlayer
     m_job.setSystem( false );
     m_job.setUser( false );
     m_job.setPriority( Job.LONG );
-    m_job.schedule();
     m_job.addJobChangeListener( new JobChangeAdapter()
     {
       /**
@@ -127,6 +126,8 @@ public class MoviePlayer
         handleJobStopped();
       }
     } );
+
+    m_job.schedule();
   }
 
   public synchronized void stop( )
