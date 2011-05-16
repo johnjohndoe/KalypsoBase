@@ -42,12 +42,17 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.joda.time.DateTimeField;
+import org.joda.time.DateTimeZone;
 import org.joda.time.DurationField;
 import org.joda.time.chrono.GregorianChronology;
+import org.joda.time.tz.DateTimeZoneBuilder;
+import org.joda.time.tz.FixedDateTimeZone;
+import org.kalypso.core.KalypsoCorePlugin;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -67,7 +72,8 @@ public class DateTimeTickCalculator implements ITickCalculator
 
   private long getFirstRollValue( final IDateTimeAxisField axisField, final long start, final long end )
   {
-    final DateTimeField field = axisField.getFieldType().getField( GregorianChronology.getInstance() );
+    final DateTimeZone jodaTZ = DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+    final DateTimeField field = axisField.getFieldType().getField( GregorianChronology.getInstance( jodaTZ ) );
     final long firstRoll = field.roundFloor( start );
     if( firstRoll + end - start <= start )
       // out of range, precision too small so we return without adjustment
@@ -108,7 +114,11 @@ public class DateTimeTickCalculator implements ITickCalculator
 
     final IDateTimeAxisField axisField = m_fieldTypeProvider.getDateTimeAxisField( numRange );
 
-    final DurationField field = axisField.getFieldType().getDurationType().getField( GregorianChronology.getInstance() );
+    // final TimeZone kalypsoTZ = KalypsoCorePlugin.getDefault().getTimeZone();
+    // final FixedDateTimeZone jodaTZ = new FixedDateTimeZone( kalypsoTZ.getID(), null, kalypsoTZ.getOffset( end ),
+// kalypsoTZ.getOffset( end ) );
+    final DateTimeZone jodaTZ = DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+    final DurationField field = axisField.getFieldType().getDurationType().getField( GregorianChronology.getInstance( jodaTZ ) );
     final int tickCount = Math.max( 1, field.getDifference( end, start ) );
     final int maximumTickCount = axis.getScreenHeight() / (ticklabelSize.x + 2/* Pixel */);
     int rollOver = 1;

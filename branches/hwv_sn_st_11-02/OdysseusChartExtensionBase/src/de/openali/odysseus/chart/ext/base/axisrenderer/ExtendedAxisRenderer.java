@@ -1,11 +1,10 @@
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
+import java.awt.Insets;
 import java.text.Format;
 
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -70,9 +69,9 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
   /**
    * draws the Axis ticks into the given GC
    */
-  private void drawTicks( final GC gc, final int offset, final IAxis axis, final Number[] ticks )
+  private void drawTicks( final GC gc, final Rectangle screen, final IAxis axis, final Number[] ticks )
   {
-
+    final Insets inset = new Insets( screen.y, screen.x, 0, screen.width - screen.x - axis.getScreenHeight() );
     if( (gc == null) || (axis == null) || (ticks == null) || ticks.length < 1 )
       return;
     getTickLineStyle().apply( gc );
@@ -90,13 +89,21 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
 
       if( tickPos < 0 || tickPos > axis.getScreenHeight() )
         continue;
-      gc.drawLine( tickPos,  getGap() + offset, tickPos,  getGap() + offset + getTickLength() );
+      gc.drawLine( tickPos, getGap() + inset.top, tickPos, getGap() + inset.top + getTickLength() );
       // draw Ticklabel
       labelRenderer.getTitleTypeBean().setLabel( getLabelCreator().getLabel( ticks, i, axis.getNumericRange() ) );
       final Rectangle textSize = labelRenderer.getSize();
       // hide cut
-      if( !isHideCut() || (tickPos + textSize.x > 0 && tickPos + textSize.x + textSize.width < axis.getScreenHeight()) )
-        labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() + offset), tickDistance, -1 ) );
+      if( isHideCut() )
+      {
+        if( tickPos + textSize.x > 0 && tickPos + textSize.x + textSize.width < axis.getScreenHeight() )
+          labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() + inset.top), tickDistance, -1 ) );
+      }
+      else
+      {
+        if( tickPos + textSize.x > -inset.left && tickPos + textSize.x + textSize.width < axis.getScreenHeight() + inset.right )
+          labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() + inset.top), tickDistance, -1 ) );
+      }
 
     }
   }
@@ -198,14 +205,15 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
     if( (screen.width > 0) && (screen.height > 0) && axis.isVisible() )
     {
       getLineStyle().apply( gc );
-      gc.drawLine( screen.x, getGap() + screen.y, screen.width, getGap() + screen.y );
-      drawTicks( gc, screen.y, axis, getTicks( axis, gc ) );
+      // gc.drawLine( screen.x, getGap() + screen.y, screen.width, getGap() + screen.y );
+      gc.drawLine( 0, getGap() + screen.y, axis.getScreenHeight(), getGap() + screen.y );
+      drawTicks( gc, screen, axis, getTicks( axis, gc ) );
       final IChartLabelRenderer labelRenderer = getAxisLabelRenderer();
       for( final TitleTypeBean title : axis.getLabels() )
       {
         labelRenderer.setTitleTypeBean( title );
         final Rectangle textsize = labelRenderer.getSize();
-        labelRenderer.paint( gc, new Rectangle( screen.x, screen.y + screen.height - textsize.height, screen.width, textsize.height ) );
+        labelRenderer.paint( gc, new Rectangle( 0, screen.y + screen.height - textsize.height, axis.getScreenHeight(), textsize.height ) );
       }
     }
 
