@@ -57,9 +57,11 @@ public interface ILegendProvider
    * @param whiteList
    *          The ids of the nodes (themes), which are to be shown. May be empty or null. In these cases, all nodes
    *          (themes) will be shown.
+   * @param onlyVisible
+   *          True, if only visible theme nodes should be asked.
    * @param font
    *          This font will be used for the self created text of the legend.
    * @return An legend graphic or null.
    */
-  public Image getLegendGraphic( String[] whiteList, Font font ) throws CoreException;
+  public Image getLegendGraphic( String[] whiteList, boolean onlyVisible, Font font ) throws CoreException;
 }
