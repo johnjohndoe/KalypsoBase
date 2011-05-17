@@ -98,12 +98,12 @@ public final class ColumnViewerUtil
       column.pack();
   }
 
-  public static ViewerColumn createViewerColumn( final ColumnViewer viewer, final int style )
+  public static ViewerColumn createViewerColumn( final ColumnViewer viewer, final int center )
   {
     if( viewer instanceof TreeViewer )
-      return new TreeViewerColumn( (TreeViewer) viewer, style );
+      return new TreeViewerColumn( (TreeViewer) viewer, center );
     if( viewer instanceof TableViewer )
-      return new TableViewerColumn( (TableViewer) viewer, style );
+      return new TableViewerColumn( (TableViewer) viewer, center );
 
     throw new IllegalArgumentException();
   }

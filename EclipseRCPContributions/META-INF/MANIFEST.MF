@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: EclipseRCPContribution Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.eclipsercp; singleton:=true
-Bundle-Version: 10.10.2.qualifier
+Bundle-Version: 10.10.1.qualifier
 Bundle-Activator: org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
@@ -49,7 +49,7 @@ Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.eclipse.ui,
- org.eclipse.ui.forms;visibility:=reexport,
+ org.eclipse.ui.forms,
  org.junit;resolution:=optional,
  org.kalypso.contribs.java;visibility:=reexport
 Bundle-ActivationPolicy: lazy

@@ -48,7 +48,7 @@ import org.eclipse.jface.dialogs.DialogPage;
  * 
  * @author Gernot Belger
  */
-public final class DialogPageUtilitites
+public class DialogPageUtilitites
 {
   /** Translate the {@link IStatus}-severity codes to {@link org.eclipse.jface.dialogs.DialogPage}-message-codes. */
   public static int severityToMessagecode( final IStatus status )
