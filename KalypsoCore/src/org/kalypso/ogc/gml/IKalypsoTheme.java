@@ -175,7 +175,7 @@ public interface IKalypsoTheme extends IAdaptable
    * 
    * @return The ID of this theme.
    */
-  public String getId( );
+  String getId( );
 
   /**
    * This function sets the id of this theme.
@@ -183,15 +183,14 @@ public interface IKalypsoTheme extends IAdaptable
    * @param id
    *          The id of this theme.
    */
-  public void setId( String id );
+  void setId( String id );
 
   /**
    * Set active envelope
    * 
    * @param boundingBox
-   *          defines the shown envelope for the theme, 
-   *          if the envelope is not set in this way it, 
-   *          it will be calculated by  the theme self
+   *          defines the shown envelope for the theme, if the envelope is not set in this way it, it will be calculated
+   *          by the theme self
    */
   void setActiveEnvelope( final GM_Envelope boundingBox );
 
