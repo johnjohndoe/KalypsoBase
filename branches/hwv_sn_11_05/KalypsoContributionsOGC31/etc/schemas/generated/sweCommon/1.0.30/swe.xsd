@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.opengis.net/swe" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="1.0">
+<xs:annotation>
+		<xs:documentation>Stub schema for swe</xs:documentation>
+
+		<xs:appinfo>
+			<kapp:gmlVersion xmlns:kapp="org.kalypso.appinfo">3.1.1</kapp:gmlVersion>
+		</xs:appinfo>
+	</xs:annotation>
+<xs:include schemaLocation="./positionData.xsd"/>
+<xs:include schemaLocation="./data.xsd"/>
+<xs:include schemaLocation="./recordSchema.xsd"/>
+<xs:include schemaLocation="./record.xsd"/>
+<xs:include schemaLocation="./temporalAggregates.xsd"/>
+</xs:schema>
