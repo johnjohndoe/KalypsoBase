@@ -89,6 +89,11 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   private final IMapModell m_mapModel;
 
   /**
+   * Externally set envelope for performance reasons
+   */
+  protected GM_Envelope m_activeEnvelope = null;
+
+  /**
    * Stores the relative URL or an URN for an icon, which can be used for the layer in a legend. May be null.
    */
   private String m_externIconUrn = null;
@@ -562,5 +567,14 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   public String getId( )
   {
     return m_id;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#setEnvelope(org.kalypsodeegree.model.geometry.GM_Envelope)
+   */
+  @Override
+  public void setActiveEnvelope( final GM_Envelope boundingBox )
+  {
+    m_activeEnvelope = boundingBox;
   }
 }

@@ -1046,6 +1046,12 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
           final IMapLayer layer = getLayer( theme );
           result.add( layer );
 
+          /**
+           * set here visible envelope for each visible theme
+           * to prevent the calculation of this envelope on each 
+           * refresh/repaint/invalidate in the theme.
+           * */
+          theme.setActiveEnvelope( m_boundingBox );
           if( theme instanceof IKalypsoFeatureTheme )
             visibleFestureThemes.add( (IKalypsoFeatureTheme) theme );
 
