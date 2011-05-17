@@ -105,6 +105,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private final String m_featurePath;
 
+
   /**
    * (Crude) hack: remember that we only have a (syntetic) list of only one feature.<br>
    * Fixes the problem, that single features do not correctly get updated.
@@ -372,12 +373,16 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public GM_Envelope getFullExtent( )
   {
+    if( m_activeEnvelope != null )
+      return m_activeEnvelope;
+    
     // TODO: Very slow on large themes. We should cache the extent.
     final FeatureList visibleFeatures = getFeatureListVisible( null );
     if( visibleFeatures == null )
       return null;
 
-    return visibleFeatures.getBoundingBox();
+    m_activeEnvelope = visibleFeatures.getBoundingBox();
+    return m_activeEnvelope;
   }
 
   @Override
