@@ -44,6 +44,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -97,20 +98,17 @@ public class StatusDialog extends AbstractStatusDialog
     m_showAsTree = showAsTree;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createCustomArea( final Composite parent )
   {
     final Composite composite = new Composite( parent, SWT.NONE );
     composite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    composite.setLayout( new GridLayout() );
+    GridLayoutFactory.fillDefaults().applyTo( composite );
 
     final IStatus status = getStatus();
-    createExceptionControl( parent, status );
+    createExceptionControl( composite, status );
 
-    createStatusControl( parent, status );
+    createStatusControl( composite, status );
 
     return composite;
   }
