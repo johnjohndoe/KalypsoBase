@@ -44,6 +44,7 @@ import java.util.ListIterator;
 
 import javax.xml.namespace.QName;
 
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -51,6 +52,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -62,7 +64,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
  * @author Gernot Belger
  * @author Dirk Kuch
  */
-@SuppressWarnings( { "unchecked" })
+@SuppressWarnings({ "unchecked" })
 public class FeatureBindingCollection<FWCls extends Feature> implements IFeatureBindingCollection<FWCls>
 {
   /**
@@ -346,7 +348,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   public int lastIndexOf( final Object o )
   {
     if( o instanceof Feature )
-      return getFeatureList().lastIndexOf( (o) );
+      return getFeatureList().lastIndexOf( o );
 
     return -1;
   }
@@ -440,10 +442,10 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   {
     if( o instanceof Feature )
     {
-      boolean removed = getFeatureList().remove( (o) );
+      boolean removed = getFeatureList().remove( o );
       if( !removed )
       {
-        removed = getFeatureList().remove( (o) );
+        removed = getFeatureList().remove( o );
       }
       return removed;
     }
@@ -721,4 +723,24 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   {
     return m_parentFeature;
   }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeatureBindingCollection#accept(org.kalypsodeegree.model.feature.IFeatureBindingCollectionVisitor)
+   */
+  @Override
+  public void accept( final IFeatureBindingCollectionVisitor<FWCls> visitor )
+  {
+    for( final FWCls element : this )
+    {
+      try
+      {
+        visitor.visit( element );
+      }
+      catch( final CancelVisitorException e )
+      {
+        return;
+      }
+    }
+  }
+
 }
