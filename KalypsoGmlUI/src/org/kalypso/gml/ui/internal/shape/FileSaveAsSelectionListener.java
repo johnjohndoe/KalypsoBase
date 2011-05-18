@@ -55,7 +55,6 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 
 /**
  * @author Gernot Belger
- *
  */
 public class FileSaveAsSelectionListener implements SelectionListener
 {
@@ -71,9 +70,6 @@ public class FileSaveAsSelectionListener implements SelectionListener
     m_dialogTitle = dialogTitle;
   }
 
-  /**
-   * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-   */
   @Override
   public void widgetSelected( final SelectionEvent e )
   {
