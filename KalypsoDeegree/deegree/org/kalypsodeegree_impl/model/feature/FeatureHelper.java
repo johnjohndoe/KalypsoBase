@@ -107,7 +107,7 @@ public final class FeatureHelper
     @Override
     public String getToken( )
     {
-      return "id";
+      return "id"; //$NON-NLS-1$
     }
   };
 
@@ -118,7 +118,7 @@ public final class FeatureHelper
     {
       final Feature feature = (Feature) value;
 
-      final String[] strings = argument.split( ";" );
+      final String[] strings = argument.split( ";" ); //$NON-NLS-1$
       if( strings.length == 0 )
         return "No argument for property. Must be _qname_;[null-value];[format-string]";
 
@@ -130,12 +130,12 @@ public final class FeatureHelper
       final Object property = FeatureHelper.getPropertyLax( feature, qname );
 
       if( property == null )
-        return "" + nullValue;
+        return "" + nullValue; //$NON-NLS-1$
 
       if( formatString != null )
         return String.format( formatString, property );
 
-      return "" + property;
+      return "" + property; //$NON-NLS-1$
     }
 
     @Override
@@ -152,7 +152,7 @@ public final class FeatureHelper
     {
       final Feature feature = (Feature) value;
 
-      final String[] strings = argument.split( ";" );
+      final String[] strings = argument.split( ";" ); //$NON-NLS-1$
       if( strings.length < 2 )
         return "Wrong argument for listProperty. Must be _qname_;listindex;[null-Value]";
 
@@ -163,19 +163,19 @@ public final class FeatureHelper
       final List< ? > list = (List< ? >) FeatureHelper.getPropertyLax( feature, qname );
 
       if( listindex >= list.size() )
-        return "" + nullValue;
+        return "" + nullValue; //$NON-NLS-1$
 
       final Object propertyValue = list.get( listindex );
       if( propertyValue == null )
-        return "" + nullValue;
+        return "" + nullValue; //$NON-NLS-1$
 
-      return "" + propertyValue;
+      return "" + propertyValue; //$NON-NLS-1$
     }
 
     @Override
     public String getToken( )
     {
-      return "listProperty";
+      return "listProperty"; //$NON-NLS-1$
     }
   };
 
@@ -206,7 +206,7 @@ public final class FeatureHelper
   public static boolean booleanIsTrue( final Feature feature, final String propName, final boolean defaultStatus )
   {
     final Object property = feature.getProperty( propName );
-    if( (property != null) && (property instanceof Boolean) )
+    if( property != null && property instanceof Boolean )
       return ((Boolean) property).booleanValue();
     return defaultStatus;
   }
@@ -214,7 +214,7 @@ public final class FeatureHelper
   public static boolean booleanIsTrue( final Feature feature, final QName propQName, final boolean defaultStatus )
   {
     final Object property = feature.getProperty( propQName );
-    if( (property != null) && (property instanceof Boolean) )
+    if( property != null && property instanceof Boolean )
       return ((Boolean) property).booleanValue();
     return defaultStatus;
   }
@@ -493,7 +493,7 @@ public final class FeatureHelper
       {
         final Object cloneData = FeatureHelper.cloneData( sourceFeature, targetFeature, pt, listElement, version );
         // TODO: this is not nice! Better: d not add feature to list within the cloneFeature Method
-        if( (cloneData instanceof XLinkedFeature_Impl) || !(cloneData instanceof Feature) )
+        if( cloneData instanceof XLinkedFeature_Impl || !(cloneData instanceof Feature) )
         {
           targetList.add( cloneData );
         }
@@ -588,7 +588,7 @@ public final class FeatureHelper
    */
   public static int getPositionOfAssoziation( final Feature srcFE, final IRelationType linkProp, final Feature destFE )
   {
-    if( !(linkProp.isList()) )
+    if( !linkProp.isList() )
       return 0;
 
     final List list = (List) srcFE.getProperty( linkProp );
@@ -855,7 +855,7 @@ public final class FeatureHelper
       newFeatureType = workspace.getGMLSchema().getFeatureType( newFeatureName );
     }
 
-    if( (newFeatureName != null) && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
+    if( newFeatureName != null && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
       throw new GMLSchemaException( "Type of new feature (" + newFeatureName + ") does not substitutes target feature type of the list: " + targetFeatureType.getQName() );
 
     final Feature newFeature = workspace.createFeature( parentFeature, parentFeatureTypeProperty, newFeatureType, depth );
@@ -880,11 +880,11 @@ public final class FeatureHelper
    */
   public static Feature addFeature( final Feature feature, final QName listProperty, final QName newFeatureName, final Object[] featureProperties, final QName[] featurePropQNames ) throws GMLSchemaException, IllegalArgumentException
   {
-    if( ((featureProperties == null) & (featurePropQNames == null)) )
+    if( featureProperties == null & featurePropQNames == null )
     {
       // okay
     }
-    else if( (featureProperties != null) && (featurePropQNames != null) )
+    else if( featureProperties != null && featurePropQNames != null )
     {
       if( featureProperties.length != featurePropQNames.length )
         throw new IllegalArgumentException( "featurePropQName and featureProperties must have the same length" );
@@ -910,7 +910,7 @@ public final class FeatureHelper
       newFeatureType = workspace.getGMLSchema().getFeatureType( newFeatureName );
     }
 
-    if( (newFeatureName != null) && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
+    if( newFeatureName != null && !GMLSchemaUtilities.substitutes( newFeatureType, targetFeatureType.getQName() ) )
       throw new GMLSchemaException( "Type of new feature (" + newFeatureName + ") does not substitutes target feature type of the list: " + targetFeatureType.getQName() );
 
     final Feature newFeature = workspace.createFeature( parentFeature, parentFeatureTypeProperty, newFeatureType );
@@ -964,7 +964,7 @@ public final class FeatureHelper
     {
       /* Its a local link inside a xlinked-feature */
       final XLinkedFeature_Impl xlinkedFeature = (XLinkedFeature_Impl) feature;
-      final String href = xlinkedFeature.getUri() + "#" + value;
+      final String href = xlinkedFeature.getUri() + "#" + value; //$NON-NLS-1$
       return new XLinkedFeature_Impl( feature, property, property.getTargetFeatureType(), href, "", "", "", "", "" );
     }
 
@@ -988,9 +988,9 @@ public final class FeatureHelper
    * @return an adapter if the link feature or null if no linked feature is found or if the linked feature is not
    *         adaptable to the specified class
    */
-  public static final <T> T resolveLink( final Feature feature, final QName propertyQName, final Class<T> adapterTargetClass )
+  public static <T> T resolveLink( final Feature feature, final QName propertyQName, final Class<T> adapterTargetClass )
   {
-    if( (feature == null) || (propertyQName == null) || (adapterTargetClass == null) )
+    if( feature == null || propertyQName == null || adapterTargetClass == null )
     {
       final String message = String.format( "Arguments must not be null : \n\tfeature = %s " + "\n\tpropertyQName = %s \n\tadapterTargetClass = %s\n\t", feature, propertyQName, adapterTargetClass );
       throw new IllegalArgumentException( message );
@@ -1010,9 +1010,9 @@ public final class FeatureHelper
     }
   }
 
-  public static final <T> T resolveLink( final IFeatureWrapper2 featureWrapper, final QName propertyQName, final Class<T> adapterTargetClass )
+  public static <T> T resolveLink( final IFeatureWrapper2 featureWrapper, final QName propertyQName, final Class<T> adapterTargetClass )
   {
-    if( (featureWrapper == null) || (propertyQName == null) || (adapterTargetClass == null) )
+    if( featureWrapper == null || propertyQName == null || adapterTargetClass == null )
     {
       final String message = String.format( "All argument must not be null:" + "\n\tfeatureWrapper=%s" + "\n\tpropertyQname = %s" + "\n\tadapterTargetClass = %s", featureWrapper, propertyQName, adapterTargetClass );
       throw new IllegalArgumentException( message );
@@ -1298,7 +1298,7 @@ public final class FeatureHelper
         throw new IllegalArgumentException( String.format( "Unable to set a link to property %s. Workspace of target feature has no context.", property ) );
 
       final String uri = targetContext.toExternalForm();
-      final String href = String.format( "%s#%s", uri, targetID );
+      final String href = String.format( "%s#%s", uri, targetID ); //$NON-NLS-1$
       final Feature link = new XLinkedFeature_Impl( sourceFeature, sourceRelation, targetFeatureType, href );
       sourceFeature.setProperty( propertyType, link );
     }
@@ -1309,7 +1309,7 @@ public final class FeatureHelper
     if( id == null )
       return null;
 
-    if( id.startsWith( "#" ) )
+    if( id.startsWith( "#" ) ) //$NON-NLS-1$
       return id;
 
     return new XLinkedFeature_Impl( parentFeature, parentRelation, ft, id, "", "", "", "", "" );
@@ -1339,7 +1339,7 @@ public final class FeatureHelper
    */
   public static boolean isParentOrEquals( final Feature parent, final Feature child )
   {
-    if( (parent == null) || (child == null) )
+    if( parent == null || child == null )
       return false;
     if( parent.equals( child ) )
       return true;
@@ -1400,7 +1400,7 @@ public final class FeatureHelper
    */
   public static boolean isParent( final Feature parent, final Feature child )
   {
-    if( (parent == null) || (child == null) )
+    if( parent == null || child == null )
       return false;
     else if( child.getParentRelation() != null )
     {
@@ -1474,11 +1474,11 @@ public final class FeatureHelper
     return newFeature;
   }
 
-  public static final Feature createFeatureWithId( final QName newFeatureQName, final Feature parentFeature, final QName propQName, final String gmlID ) throws IllegalArgumentException
+  public static Feature createFeatureWithId( final QName newFeatureQName, final Feature parentFeature, final QName propQName, final String gmlID ) throws IllegalArgumentException
   {
-    Assert.isNotNull( parentFeature, "parentFeature" );
-    Assert.isNotNull( propQName, "propQName" );
-    Assert.isNotNull( newFeatureQName, "newFeatureQName" );
+    Assert.isNotNull( parentFeature, "parentFeature" ); //$NON-NLS-1$
+    Assert.isNotNull( propQName, "propQName" ); //$NON-NLS-1$
+    Assert.isNotNull( newFeatureQName, "newFeatureQName" ); //$NON-NLS-1$
     Assert.isNotNull( gmlID );
 
     final GMLWorkspace workspace = parentFeature.getWorkspace();
@@ -1526,7 +1526,7 @@ public final class FeatureHelper
   /**
    * Converts a list of {@link IFeatureWrapper2}s to a list of features.
    */
-  public static final List<Feature> toFeatureList( final Collection< ? extends IFeatureWrapper2> c )
+  public static List<Feature> toFeatureList( final Collection< ? extends IFeatureWrapper2> c )
   {
     final List<Feature> fl = new ArrayList<Feature>();
     if( c != null )
