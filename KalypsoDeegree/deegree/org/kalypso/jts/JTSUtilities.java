@@ -55,9 +55,11 @@ import java.util.TreeSet;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -734,8 +736,8 @@ public final class JTSUtilities
   public static LineString addPointsToLine( final LineString line, final List<Point> originalPoints )
   {
     /* Clone the whole list. */
-    List<Point> clonedPoints = new ArrayList<Point>();
-    for( Point originalPoint : originalPoints )
+    final List<Point> clonedPoints = new ArrayList<Point>();
+    for( final Point originalPoint : originalPoints )
       clonedPoints.add( (Point) originalPoint.clone() );
 
     /* Check for intersection. */
@@ -789,8 +791,8 @@ public final class JTSUtilities
       }
 
       /* Add all points. */
-      List<CoordinatePair> coordinatePairs = getCoordinatePairs( startCoord, toAdd );
-      for( CoordinatePair coordinatePair : coordinatePairs )
+      final List<CoordinatePair> coordinatePairs = getCoordinatePairs( startCoord, toAdd );
+      for( final CoordinatePair coordinatePair : coordinatePairs )
         newCoordinates.add( coordinatePair.getSecondCoordinate() );
 
       /* Remove all added points. */
@@ -1350,7 +1352,7 @@ public final class JTSUtilities
       final Double distance = distances.get( i );
 
       /* Calculate the factor. */
-      final double factor = (distance.doubleValue() / sumDistances);
+      final double factor = distance.doubleValue() / sumDistances;
 
       /* Add it to the list of factors. */
       factors.add( new Double( factor ) );
@@ -1370,7 +1372,7 @@ public final class JTSUtilities
       final Double factor = factors.get( i );
 
       /* Calculate the new z coordinate. */
-      newZ = newZ + (coordinatePair.getSecondCoordinate().z * factor.doubleValue());
+      newZ = newZ + coordinatePair.getSecondCoordinate().z * factor.doubleValue();
     }
 
     /* Set the new z coordinate. */
@@ -1427,7 +1429,7 @@ public final class JTSUtilities
    *          {@value #TOLERANCE}) will be used.
    * @return The point, if one could be found or null.
    */
-  public static Point findPointInLine( LineString line, Point point, double distance )
+  public static Point findPointInLine( final LineString line, final Point point, double distance )
   {
     /* Check for intersection. */
     if( point.distance( line ) >= TOLERANCE )
@@ -1438,14 +1440,14 @@ public final class JTSUtilities
       distance = TOLERANCE;
 
     /* Find the line segment, this point is in. */
-    LineSegment segment = findLineSegment( line, point );
+    final LineSegment segment = findLineSegment( line, point );
     if( segment == null )
       return null;
 
     /* Check the distance to the reference point. */
-    Coordinate referenceCoordinate = point.getCoordinate();
-    double distance0 = segment.getCoordinate( 0 ).distance( referenceCoordinate );
-    double distance1 = segment.getCoordinate( 1 ).distance( referenceCoordinate );
+    final Coordinate referenceCoordinate = point.getCoordinate();
+    final double distance0 = segment.getCoordinate( 0 ).distance( referenceCoordinate );
+    final double distance1 = segment.getCoordinate( 1 ).distance( referenceCoordinate );
     Coordinate closestCoordinate = null;
     if( distance0 <= distance1 )
       closestCoordinate = segment.getCoordinate( 0 );
@@ -1454,10 +1456,44 @@ public final class JTSUtilities
 
     if( closestCoordinate.distance( referenceCoordinate ) <= distance )
     {
-      GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
+      final GeometryFactory factory = new GeometryFactory( line.getPrecisionModel(), line.getSRID() );
       return factory.createPoint( closestCoordinate );
     }
 
     return null;
+  }
+
+  /**
+   * This function finds the points via the NEAREST rule. Method was copied from InformDSS class AbstractGeoMeasure
+   * 
+   * @return The list of affected points. Always with size = 2.
+   */
+  public static Point findNearestProjectionPoints( final Polygon polygone, final Point point ) throws GM_Exception
+  {
+    final Coordinate base = point.getCoordinate();
+
+    double distance = Double.MAX_VALUE;
+    Coordinate ptr = null;
+
+    /* Get the exterior ring. */
+    final LineString ring = polygone.getExteriorRing();
+
+    final Coordinate[] coordinates = ring.getCoordinates();
+
+    for( final Coordinate coordinate : coordinates )
+    {
+      final double d = coordinate.distance( base );
+      if( d < distance )
+      {
+        ptr = coordinate;
+        distance = d;
+      }
+    }
+
+    if( Objects.isNull( ptr ) )
+      return null;
+
+    final GeometryFactory factory = new GeometryFactory( point.getPrecisionModel(), point.getSRID() );
+    return factory.createPoint( ptr );
   }
 }
