@@ -109,6 +109,8 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    */
   boolean addRef( FWCls toAdd ) throws IllegalArgumentException;
 
+  void accept( IFeatureBindingCollectionVisitor<FWCls> visitor );
+
   /**
    * Answer all feature wrappers overlapping the selected zone
    * 
