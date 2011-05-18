@@ -70,18 +70,12 @@ public abstract class TypedObservableValue<SOURCE, VALUE> extends AbstractObserv
     return m_source;
   }
 
-  /**
-   * @see org.eclipse.core.databinding.observable.value.IObservableValue#getValueType()
-   */
   @Override
   public Class<VALUE> getValueType( )
   {
     return m_valueType;
   }
 
-  /**
-   * @see org.eclipse.core.databinding.observable.value.AbstractObservableValue#doGetValue()
-   */
   @Override
   protected final VALUE doGetValue( )
   {
