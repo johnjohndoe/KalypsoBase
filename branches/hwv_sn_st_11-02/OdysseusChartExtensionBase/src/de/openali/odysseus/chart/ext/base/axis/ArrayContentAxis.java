@@ -14,26 +14,26 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
  */
 public class ArrayContentAxis extends AbstractAxis
 {
- 
 
-//  /**
-//   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#getNumericRange()
-//   */
-//  @Override
-//  public IDataRange<Number> getNumericRange( )
-//  {
-//    // TODO Auto-generated method stub
-//    return super.getNumericRange();
-//  }
+// /**
+// * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#getNumericRange()
+// */
+// @Override
+// public IDataRange<Number> getNumericRange( )
+// {
+// // TODO Auto-generated method stub
+// return super.getNumericRange();
+// }
 
-//  /**
-//   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#setNumericRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
-//   */
-//  @Override
-//  public void setNumericRange( IDataRange<Number> range )
-//  {
-//     super.setNumericRange( range );
-//  }
+// /**
+// * @see
+// de.openali.odysseus.chart.ext.base.axis.AbstractAxis#setNumericRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
+// */
+// @Override
+// public void setNumericRange( IDataRange<Number> range )
+// {
+// super.setNumericRange( range );
+// }
 
   // TODO more positions,only POSITION.BOTTOM supported
   public ArrayContentAxis( final String id, final AxisRendererConfig config )
@@ -43,7 +43,7 @@ public class ArrayContentAxis extends AbstractAxis
 
   public ArrayContentAxis( final String id, final AxisRendererConfig config, final IAxisContentProvider contentProvider )
   {
-    super( id, POSITION.BOTTOM, Integer.class, new OrdinalAxisRenderer( id, config, null, contentProvider ) );
+    super( id, POSITION.BOTTOM, Integer.class, null );
   }
 
   /**
@@ -101,7 +101,7 @@ public class ArrayContentAxis extends AbstractAxis
       return 0;
     final int tickdist = ticks[1].intValue() - ticks[0].intValue();
     if( value < ticks[0].intValue() )
-      return  (value - ticks[0].intValue()) / tickdist;
+      return (value - ticks[0].intValue()) / tickdist;
     if( value > ticks[ticks.length - 1].intValue() )
       return (ticks.length - 1) + (value - ticks[ticks.length - 1].intValue()) / tickdist;
 

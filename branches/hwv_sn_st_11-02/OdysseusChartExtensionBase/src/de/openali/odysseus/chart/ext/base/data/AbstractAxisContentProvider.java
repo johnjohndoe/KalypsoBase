@@ -43,11 +43,35 @@ package de.openali.odysseus.chart.ext.base.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+
 /**
  * @author kimwerner
  */
 public abstract class AbstractAxisContentProvider implements IAxisContentProvider
 {
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator#getLabel(java.lang.Number[], int,
+   *      de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
+  @Override
+  public String getLabel( Number[] ticks, int i, IDataRange<Number> range )
+  {
+    // TODO Auto-generated method stub
+    return getLabel( i );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator#getLabel(java.lang.Number,
+   *      de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
+  @Override
+  public String getLabel( Number value, IDataRange<Number> range )
+  {
+    // TODO Auto-generated method stub
+    return getLabel( value.intValue() );
+  }
 
   private final List<Object> m_content = new ArrayList<Object>();
 
