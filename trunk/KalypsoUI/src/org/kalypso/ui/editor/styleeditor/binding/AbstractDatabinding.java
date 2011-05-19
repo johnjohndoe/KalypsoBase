@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.binding;
 
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -72,20 +73,41 @@ public abstract class AbstractDatabinding implements IDataBinding
     return m_toolkit;
   }
 
+  @Override
   public void dispose( )
   {
     m_bindingContext.dispose();
   }
 
   @Override
-  public void bindValue( final IObservableValue targetValue, final IObservableValue modelValue, final IValidator... validators )
+  public Binding bindValue( final IObservableValue targetValue, final IObservableValue modelValue, final IValidator... validators )
   {
-    bindValue( targetValue, modelValue, null, validators );
+    return bindValue( targetValue, modelValue, null, validators );
   }
 
   @Override
-  public void bindValue( final IObservableValue targetValue, final IObservableValue modelValue, final IConverter converter, final IValidator... validators )
+  public Binding bindValue( final IObservableValue targetValue, final IObservableValue modelValue, final IConverter converter, final IValidator... validators )
   {
-    bindValue( targetValue, modelValue, converter, null, validators );
+    return bindValue( targetValue, modelValue, converter, null, validators );
+  }
+
+  @Override
+  public Binding bindValue( final IObservableValue targetValue, final IObservableValue modelValue, final IConverter targetToModelConverter, final IConverter modelToTargetConverter, final IValidator... validators )
+  {
+    final DataBinder binder = new DataBinder( targetValue, modelValue );
+
+    binder.setTargetToModelConverter( targetToModelConverter );
+    binder.setModelToTargetConverter( modelToTargetConverter );
+
+    for( final IValidator validator : validators )
+      binder.addTargetAfterConvertValidator( validator );
+
+    return bindValue( binder );
+  }
+
+  @Override
+  public Binding bindValue( final DataBinder binder )
+  {
+    return binder.apply( m_bindingContext );
   }
 }

@@ -40,14 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.binding;
 
-import org.eclipse.core.databinding.UpdateValueStrategy;
-import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.databinding.validation.MultiValidator;
 
 /**
  * @author Dirk Kuch
@@ -72,32 +67,5 @@ public class DatabindingWizardPage extends AbstractDatabinding
     super.dispose();
 
     m_support.dispose();
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.binding.IDataBinding#bindValue(org.eclipse.core.databinding.observable.value.IObservableValue,
-   *      org.eclipse.core.databinding.observable.value.IObservableValue,
-   *      org.eclipse.core.databinding.conversion.IConverter, org.eclipse.core.databinding.conversion.IConverter,
-   *      org.eclipse.core.databinding.validation.IValidator[])
-   */
-  @Override
-  public void bindValue( final IObservableValue targetValue, final IObservableValue modelValue, final IConverter targetToModelConverter, final IConverter modelToTargetConverter, final IValidator... validators )
-  {
-    final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-    final UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
-
-    if( validators.length > 0 )
-    {
-      final IValidator validator = new MultiValidator( validators );
-      targetToModel.setAfterConvertValidator( validator );
-    }
-
-    if( targetToModelConverter != null )
-      targetToModel.setConverter( targetToModelConverter );
-
-    if( modelToTargetConverter != null )
-      modelToTarget.setConverter( modelToTargetConverter );
-
-    getBindingContext().bindValue( targetValue, modelValue, targetToModel, modelToTarget );
   }
 }
