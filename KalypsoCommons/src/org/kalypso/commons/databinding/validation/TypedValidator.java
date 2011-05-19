@@ -95,13 +95,23 @@ public abstract class TypedValidator<T> implements IValidator
 
   /**
    * Helper to simply fail the validation.<br/>
-   * Creates a status from the severity, message given in the construcotr of this class.
+   * Creates a status from the severity, message given in the constructor of this class.
    */
   protected final void fail( ) throws CoreException
   {
-    final Status status = new Status( m_severity, KalypsoCommonsPlugin.getID(), m_message );
+    fail( m_message );
+  }
+
+  /**
+   * Helper to simply fail the validation.<br/>
+   * Creates a status from the severity but uses a specific message.
+   */
+  protected void fail( final String message ) throws CoreException
+  {
+    final Status status = new Status( m_severity, KalypsoCommonsPlugin.getID(), message );
     throw new CoreException( status );
   }
+
 
   /**
    * Validate the given value.<br/>
