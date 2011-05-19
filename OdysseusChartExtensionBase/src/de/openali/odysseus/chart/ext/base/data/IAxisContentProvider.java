@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.ext.base.data;
 
+import de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator;
+
 /**
  * @author kimwerner
  */
-public interface IAxisContentProvider
+public interface IAxisContentProvider extends ILabelCreator
 {
   Object getContent( final int index );
 
