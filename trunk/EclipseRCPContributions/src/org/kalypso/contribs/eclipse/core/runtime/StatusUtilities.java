@@ -483,13 +483,20 @@ public final class StatusUtilities
   }
 
   /**
-   * Returns an (internationalized) string corresponding to the severity of the given status.
-   * <p>
-   * TODO: internationalize it
+   * Returns an (internationalized) string corresponding to the severity of the given status.<br/>
    */
   public static String getLocalizedSeverity( final IStatus status )
   {
-    switch( status.getSeverity() )
+    return getLocalizedSeverity( status.getSeverity() );
+  }
+
+  /**
+   * Returns an (internationalized) string corresponding to the severity of the given status.<br/>
+   * TODO: translate
+   */
+  public static String getLocalizedSeverity( final int severity )
+  {
+    switch( severity )
     {
       case IStatus.OK:
         return "OK";
