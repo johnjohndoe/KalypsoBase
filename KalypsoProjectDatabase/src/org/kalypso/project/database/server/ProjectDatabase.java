@@ -81,7 +81,7 @@ import org.kalypso.project.database.server.trigger.TriggerHelper;
 /**
  * @author Dirk Kuch
  */
-@WebService(endpointInterface = "org.kalypso.project.database.sei.IProjectDatabase")
+@WebService(endpointInterface = "org.kalypso.project.database.sei.IProjectDatabase")//$NON-NLS-1$
 public class ProjectDatabase implements IProjectDatabase
 {
   private static SessionFactory FACTORY = null;
@@ -90,7 +90,6 @@ public class ProjectDatabase implements IProjectDatabase
   {
     if( Objects.isNull( FACTORY ) )
       init();
-
   }
 
   private void init( )
