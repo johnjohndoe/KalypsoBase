@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.binding;
 
+import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -51,11 +52,13 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public interface IDataBinding
 {
-  void bindValue( IObservableValue targetValue, IObservableValue modelValue, IValidator... validators );
+  Binding bindValue( IObservableValue targetValue, IObservableValue modelValue, IValidator... validators );
 
-  void bindValue( IObservableValue targetValue, IObservableValue modelValue, IConverter targetToModel, IValidator... validators );
+  Binding bindValue( IObservableValue targetValue, IObservableValue modelValue, IConverter targetToModel, IValidator... validators );
 
-  void bindValue( IObservableValue target, IObservableValue model, IConverter targetToModel, IConverter modelToTarget, IValidator... validators );
+  Binding bindValue( IObservableValue target, IObservableValue model, IConverter targetToModel, IConverter modelToTarget, IValidator... validators );
+
+  Binding bindValue( final DataBinder binder );
 
   DataBindingContext getBindingContext( );
 

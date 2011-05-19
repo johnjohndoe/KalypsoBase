@@ -56,7 +56,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.commons.databinding.conversion.StatusToMessageConverter;
 import org.kalypso.commons.databinding.forms.FormControlDecoratorValue;
 import org.kalypso.commons.databinding.forms.FormSupport;
-import org.kalypso.commons.databinding.validation.MultiValidator;
 import org.kalypso.commons.java.lang.Objects;
 
 /**
@@ -108,24 +107,10 @@ public class DatabindingForm extends AbstractDatabinding
   }
 
   @Override
-  public void bindValue( final IObservableValue targetValue, final IObservableValue modelValue, final IConverter targetToModelConverter, final IConverter modelToTargetConverter, final IValidator... validators )
+  public Binding bindValue( final IObservableValue targetValue, final IObservableValue modelValue, final IConverter targetToModelConverter, final IConverter modelToTargetConverter, final IValidator... validators )
   {
-    final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-    final UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
+    final Binding binding = super.bindValue( targetValue, modelValue, targetToModelConverter, modelToTargetConverter, validators );
 
-    if( validators.length > 0 )
-    {
-      final IValidator validator = new MultiValidator( validators );
-      targetToModel.setAfterConvertValidator( validator );
-    }
-
-    if( targetToModelConverter != null )
-      targetToModel.setConverter( targetToModelConverter );
-
-    if( modelToTargetConverter != null )
-      modelToTarget.setConverter( modelToTargetConverter );
-
-    final Binding binding = getBindingContext().bindValue( targetValue, modelValue, targetToModel, modelToTarget );
     final IObservableValue validationStatus = binding.getValidationStatus();
 
     final Control control = findControl( targetValue );
@@ -135,6 +120,8 @@ public class DatabindingForm extends AbstractDatabinding
     decoratorUpdater.setConverter( new StatusToMessageConverter( control ) );
 
     getBindingContext().bindValue( decoratorValue, validationStatus, null, decoratorUpdater );
+
+    return binding;
   }
 
   private Control findControl( final IObservableValue targetValue )
