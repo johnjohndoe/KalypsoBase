@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry exported="true" kind="lib" path="lib/drivers/oracle/ojdbc6.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/drivers/postgis/postgis-jdbc-1.1.6.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jts/jts-1.11.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate-core/lib/optional/c3p0/c3p0-0.9.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate-core/lib/optional/infinispan/infinispan-core-4.2.1.CR1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate-core/lib/optional/jbosscache/jbosscache-core-3.2.1.GA.jar"/>
