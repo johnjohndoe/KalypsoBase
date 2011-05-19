@@ -51,16 +51,16 @@ import org.eclipse.core.runtime.Status;
  * 
  * @author Gernot Belger
  */
-public class FileExistsValidator extends TypedValidator<File>
+public class FileIsFileValidator extends TypedValidator<File>
 {
   private static final String DEFAULT_MESSAGE = "The file does not exist.";
 
-  public FileExistsValidator( final int severity )
+  public FileIsFileValidator( final int severity )
   {
     this( severity, DEFAULT_MESSAGE );
   }
 
-  public FileExistsValidator( final int severity, final String message )
+  public FileIsFileValidator( final int severity, final String message )
   {
     super( File.class, severity, message );
   }
@@ -73,6 +73,9 @@ public class FileExistsValidator extends TypedValidator<File>
 
     if( !value.exists() )
       fail();
+
+    if( !value.isFile() )
+      fail( "This is not a file" );
 
     return Status.OK_STATUS;
   }
