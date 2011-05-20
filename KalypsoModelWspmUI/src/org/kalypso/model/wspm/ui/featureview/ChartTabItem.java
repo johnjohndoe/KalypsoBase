@@ -66,7 +66,7 @@ import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
+import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
@@ -151,7 +151,7 @@ public class ChartTabItem extends Composite implements IChartPart
         if( commands.keySet().contains( commandId ) && parentToolbar == managerToolbar )
         {
           final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-          context.addVariable( ChartHandlerUtilities.ACTIVE_CHART_PART_NAME, ChartTabItem.this );
+          context.addVariable( ChartSourceProvider.ACTIVE_CHART_NAME, ChartTabItem.this.getChartComposite() );
         }
       }
 
@@ -162,13 +162,15 @@ public class ChartTabItem extends Composite implements IChartPart
           return;
 
         final IEvaluationContext currentState = handlerService.getCurrentState();
-        currentState.removeVariable( ChartHandlerUtilities.ACTIVE_CHART_PART_NAME );
+        currentState.removeVariable( ChartSourceProvider.ACTIVE_CHART_NAME );
 
         // REMARK: it would be nice to have an error mesage here, but:
         // If we have several tabs, we get several msg-boxes, as we have several listeners.
         // How-to avoid that??
-// final IStatus errorStatus = StatusUtilities.createStatus( IStatus.ERROR, "Kommando mit Fehler beendet", exception );
-// ErrorDialog.openError( getShell(), "Kommando ausführen", "Fehler bei der Ausführung eines Kommandos", errorStatus );
+        // final IStatus errorStatus = StatusUtilities.createStatus( IStatus.ERROR, "Kommando mit Fehler beendet",
+// exception );
+        // ErrorDialog.openError( getShell(), "Kommando ausführen", "Fehler bei der Ausführung eines Kommandos",
+// errorStatus );
       }
 
       @Override
@@ -178,7 +180,7 @@ public class ChartTabItem extends Composite implements IChartPart
           return;
 
         final IEvaluationContext currentState = handlerService.getCurrentState();
-        currentState.removeVariable( ChartHandlerUtilities.ACTIVE_CHART_PART_NAME );
+        currentState.removeVariable( ChartSourceProvider.ACTIVE_CHART_NAME );
       }
     };
 
