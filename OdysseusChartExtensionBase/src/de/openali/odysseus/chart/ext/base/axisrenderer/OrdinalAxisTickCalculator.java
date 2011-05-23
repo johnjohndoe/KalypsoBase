@@ -44,20 +44,13 @@ public class OrdinalAxisTickCalculator implements ITickCalculator
 
     final int start = axis.getNumericRange().getMin().intValue();
     final int end = axis.getNumericRange().getMax().intValue();
-
-    final int intervallCount = end - start + 1;
-    final int tickDist = m_fixedMinWidth < 1 ? Math.min( m_fixedMaxWidth, axis.getScreenHeight() / intervallCount - 1/* Pixel */) : m_fixedMaxWidth;
-
-    final Number[] tickPos = new Number[m_axisContentProvider.size()];
-    int pos = -tickDist * start;
-
-    for( int i = 0; i < m_axisContentProvider.size(); i++ )
+    final Number[] tickPos = new Number[end - start + 1];
+    for( int i = 0; i < tickPos.length; i++ )
     {
-      tickPos[i] = pos;
-      pos += tickDist;
+      tickPos[i] = start + i;
     }
-
     return tickPos;
+
 
   }
 

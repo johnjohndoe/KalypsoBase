@@ -91,12 +91,12 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
         continue;
       gc.drawLine( tickPos, getGap() + inset.top, tickPos, getGap() + inset.top + getTickLength() );
       // draw Ticklabel
-      labelRenderer.getTitleTypeBean().setLabel( getLabelCreator().getLabel( ticks, i, axis.getNumericRange() ) );
+      labelRenderer.getTitleTypeBean().setLabel( getLabelCreator().getLabel( ticks, ticks[i].intValue(), axis.getNumericRange() ) );
       final Rectangle textSize = labelRenderer.getSize();
       // hide cut
       if( isHideCut() )
       {
-        if( tickPos + textSize.x > 0 && tickPos + textSize.x + textSize.width < axis.getScreenHeight() )
+        if( isIntervallLabeledTick() || (tickPos + textSize.x > 0 && tickPos + textSize.x + textSize.width < axis.getScreenHeight()) )
           labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() + inset.top), tickDistance, -1 ) );
       }
       else
