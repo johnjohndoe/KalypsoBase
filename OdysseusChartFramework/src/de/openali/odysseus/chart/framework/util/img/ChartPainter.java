@@ -121,17 +121,19 @@ public class ChartPainter
       m_titlePainter.paint( gc, new Rectangle( clientRect.x, clientRect.y, clientRect.width, m_titlePainter.getSize().y ) );
 
       // paint left Axes
-      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ), gc, plotInsets.left, plotInsets.top,plotInsets.top, m_size.height, 90, false );
+      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ), gc, plotInsets.left, plotInsets.top, plotInsets.top, m_size.height, 90, false );
       // paint right Axes
-      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ), gc, m_size.width - plotInsets.right, plotInsets.top,plotInsets.top, m_size.height, 90, true );
+      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ), gc, m_size.width - plotInsets.right, plotInsets.top, plotInsets.top, m_size.height, 90, true );
       // paint top Axes
-      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ), gc, plotInsets.left, plotInsets.top,plotInsets.left, m_size.width, 0, true );
+      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ), gc, plotInsets.left, plotInsets.top, plotInsets.left, m_size.width, 0, true );
       // paint bottom Axes
-      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ), gc, plotInsets.left, m_size.height - plotInsets.bottom,plotInsets.left, m_size.width, 0, false );
+      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ), gc, plotInsets.left, m_size.height - plotInsets.bottom, plotInsets.left, m_size.width, 0, false );
       // paint plot
       if( legendImage != null )
         gc.drawImage( legendImage, m_chartInsets.left, m_size.height - m_legendPainter.getSize().height - m_chartInsets.bottom );
-      gc.setClipping( RectangleUtils.inflateRect( m_size, plotInsets ) );
+      final Rectangle plotRect = RectangleUtils.inflateRect( m_size, plotInsets );
+      //Layer könnten sonst in die Achsen zeichnen
+      gc.setClipping( RectangleUtils.inflateRect(plotRect , 1 ) );
       getPlotPainter().paint( gc, new Insets( plotInsets.top - panOffset.y, plotInsets.left - panOffset.x, plotInsets.bottom + panOffset.y, plotInsets.right + panOffset.x ) );
     }
     finally
@@ -196,7 +198,7 @@ public class ChartPainter
     return m_plotPainter;
   }
 
-  private void paintAxes( final IAxis[] axes, final GC gc, final int anchorX, final int anchorY,final int startOffset, final int screenWidth, final int rotation, final boolean invertVertical )
+  private void paintAxes( final IAxis[] axes, final GC gc, final int anchorX, final int anchorY, final int startOffset, final int screenWidth, final int rotation, final boolean invertVertical )
   {
     final Transform oldTransform = new Transform( gc.getDevice() );
     final Transform newTransform = new Transform( gc.getDevice() );
