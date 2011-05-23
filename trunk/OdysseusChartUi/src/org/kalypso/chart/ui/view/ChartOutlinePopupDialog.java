@@ -48,26 +48,26 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author burtscher1
  */
 public class ChartOutlinePopupDialog extends PopupDialog
 {
+  private final IChartComposite m_chartComposite;
 
-  private final IChartPart m_chartPart;
-
-  public ChartOutlinePopupDialog( final Shell parentShell, final IChartPart chartPart )
+  public ChartOutlinePopupDialog( final Shell parentShell, final IChartComposite chartComposite )
   {
     super( parentShell, SWT.RESIZE, true, true, true, false, false, "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_chartPart = chartPart;
+
+    m_chartComposite = chartComposite;
   }
 
   /**
@@ -76,14 +76,16 @@ public class ChartOutlinePopupDialog extends PopupDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    if( m_chartPart != null && m_chartPart.getChartComposite() != null )
+    if( m_chartComposite != null )
     {
       final Composite da = (Composite) super.createDialogArea( parent );
       da.setLayout( new GridLayout( 1, true ) );
-      final ChartEditorTreeOutlinePage cop = (ChartEditorTreeOutlinePage) m_chartPart.getOutlinePage();
+
+      ChartEditorTreeOutlinePage cop = new ChartEditorTreeOutlinePage();
+      cop.setModel( m_chartComposite.getChartModel() );
       cop.createControl( da );
 
-      final TitleTypeBean[] titles = m_chartPart.getChartComposite().getChartModel().getSettings().getTitles();
+      final TitleTypeBean[] titles = m_chartComposite.getChartModel().getSettings().getTitles();
       final String title = getTitle( titles );
 
       setTitleText( title );
