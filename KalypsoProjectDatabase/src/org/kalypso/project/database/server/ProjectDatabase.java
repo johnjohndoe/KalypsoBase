@@ -226,7 +226,7 @@ public class ProjectDatabase implements IProjectDatabase
       final List< ? > projects = session.createQuery( String.format( "from KalypsoProjectBean where m_unixName = '%s' ORDER by m_projectVersion desc", projectUnixName ) ).list(); //$NON-NLS-1$
       tx.commit();
 
-      if( projects.size() <= 0 )
+      if( projects.isEmpty() )
         return null;
 
       /* determine head */
