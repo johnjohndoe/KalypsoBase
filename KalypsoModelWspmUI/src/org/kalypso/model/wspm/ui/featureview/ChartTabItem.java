@@ -236,8 +236,6 @@ public class ChartTabItem extends Composite implements IChartPart
   @Override
   public void addListener( final IChartModelEventListener listener )
   {
-    // TODO Auto-generated method stub
-
   }
 
   /**
@@ -246,8 +244,5 @@ public class ChartTabItem extends Composite implements IChartPart
   @Override
   public void removeListener( final IChartModelEventListener listener )
   {
-    // TODO Auto-generated method stub
-
   }
-
 }

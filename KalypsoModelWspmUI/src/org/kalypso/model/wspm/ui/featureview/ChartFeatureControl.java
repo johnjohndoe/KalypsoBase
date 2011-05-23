@@ -73,6 +73,8 @@ import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
@@ -86,37 +88,58 @@ import de.openali.odysseus.chartconfig.x020.TitleType;
  */
 public class ChartFeatureControl extends AbstractFeatureControl implements IFeatureControl
 {
-  /** These settings are used locally to remember the last selected tab-folder. */
+  /**
+   * These settings are used locally to remember the last selected tab-folder.
+   */
   private final static IDialogSettings SETTINGS = new DialogSettings( "bla" ); //$NON-NLS-1$
 
   private final static String STR_SETTINGS_TAB = "tabIndex"; //$NON-NLS-1$
 
-  private IChartComposite[] m_charts;
+  private ChartConfigurationLoader m_ccl;
 
-  private final ChartType[] m_chartTypes;
+  private ChartType[] m_chartTypes;
 
-  private final URL m_context;
+  private URL m_context;
 
-  private final ChartConfigurationLoader m_ccl;
-
-  private ChartTabItem[] m_chartTabs;
-
-  private final Map<String, Integer> m_commands;
+  private Map<String, Integer> m_commands;
 
   /**
    * The ID of the chart provider. May be null.
    */
-  private final String m_chartProviderID;
+  private String m_chartProviderID;
 
+  /**
+   * The chart tabs.
+   */
+  private ChartTabItem[] m_chartTabs;
+
+  /**
+   * The chart composites. Each corresponds to one tab.
+   */
+  private IChartComposite[] m_charts;
+
+  /**
+   * The constructor.
+   * 
+   * @param feature
+   * @param ftp
+   * @param ccl
+   * @param chartTypes
+   * @param context
+   * @param commands
+   * @param chartProviderID
+   */
   public ChartFeatureControl( final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final ChartType[] chartTypes, final URL context, final Map<String, Integer> commands, final String chartProviderID )
   {
     super( feature, ftp );
-    m_ccl = ccl;
-    m_commands = commands;
 
+    m_ccl = ccl;
     m_chartTypes = chartTypes;
     m_context = context;
+    m_commands = commands;
     m_chartProviderID = chartProviderID;
+    m_chartTabs = null;
+    m_charts = null;
   }
 
   /**
@@ -125,9 +148,11 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
   @Override
   public Control createControl( final Composite parent, final int style )
   {
-    m_charts = new ChartImageComposite[m_chartTypes.length];
+    /* Prepare the chart tabs and the charts. */
     m_chartTabs = new ChartTabItem[m_chartTypes.length];
+    m_charts = new ChartImageComposite[m_chartTypes.length];
 
+    /* If there are no tabs show a warning. */
     if( m_chartTabs.length == 0 )
     {
       final IStatus warningStatus = StatusUtilities.createStatus( IStatus.WARNING, org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.featureview.ChartFeatureControl.0" ), null ); //$NON-NLS-1$
@@ -136,33 +161,48 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
       return statusComposite;
     }
 
+    /* Only one chart? */
     if( m_chartTabs.length == 1 )
     {
-      // REAMRK: we do not tab, if we have only one chart
-      m_chartTabs[0] = new ChartTabItem( /* composite */parent, style, m_commands );
+      /* REMARK: We do not tab, if we have only one chart. */
+      m_chartTabs[0] = new ChartTabItem( parent, style, m_commands );
 
+      /* Update the controls. */
       updateControl();
 
       return m_chartTabs[0];
     }
 
+    /* Only show tabs, which are not empty. */
     final TabFolder folder = new TabFolder( parent, SWT.TOP );
 
+    /* Create a tab for each type. */
     for( int i = 0; i < m_chartTypes.length; i++ )
     {
+      /* Check for each type, if it is empty... */
       final ChartType chartType = m_chartTypes[i];
+      if( !hasData( chartType ) )
+      {
+        m_chartTabs[i] = null;
+        m_charts[i] = null;
+        continue;
+      }
 
       /* The tab item */
       final TabItem item = new TabItem( folder, SWT.NONE );
 
+      /* Set the title. */
       final TitleType[] title = chartType.getTitleArray();
       if( !ArrayUtils.isEmpty( title ) )
         item.setText( title[0].getStringValue() );
 
+      /* Set the tooltip. */
       item.setToolTipText( chartType.getDescription() );
 
+      /* Create the chart tab. */
       m_chartTabs[i] = new ChartTabItem( folder, style, m_commands );
 
+      /* Set the chart tab to the tab. */
       item.setControl( m_chartTabs[i] );
     }
 
@@ -224,24 +264,74 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
   @Override
   public void updateControl( )
   {
-    for( int i = 0; i < m_charts.length; i++ )
+    /* HINT: m_chartTypes, m_chartTabs and m_charts will have the same length. */
+    for( int i = 0; i < m_chartTabs.length; i++ )
     {
-      final IChartComposite chart = m_chartTabs[i].getChartComposite();
+      /* Configured tabs, for whose there is no data, will have no chart tabs. */
+      if( m_chartTabs[i] == null )
+        continue;
 
-      // if the chart was previously loaded, it will contain layers - these have to be removed
-      final IChartModel chartModel = chart.getChartModel();
-      final ILayerManager lm = chartModel.getLayerManager();
-      final IChartLayer[] layers = lm.getLayers();
-      for( final IChartLayer chartLayer : layers )
+      /* If the chart was previously loaded, it will contain layers - these have to be removed. */
+      IChartComposite chart = m_chartTabs[i].getChartComposite();
+      IChartModel chartModel = chart.getChartModel();
+      ILayerManager lm = chartModel.getLayerManager();
+      IChartLayer[] layers = lm.getLayers();
+      for( IChartLayer chartLayer : layers )
         lm.removeLayer( chartLayer );
 
+      /* Configure. */
       ChartFactory.doConfiguration( chartModel, m_ccl, m_chartTypes[i], ChartExtensionLoader.getInstance(), m_context );
 
       /* Configure via a chart provider. */
       doConfiguration( chartModel );
 
+      /* Maximise. */
       ChartUtilities.maximize( chartModel );
     }
+  }
+
+  private boolean hasData( ChartType chartType )
+  {
+    /* Make a dummy chart model. */
+    IChartModel chartModel = new ChartModel();
+
+    /* Configure. */
+    ChartFactory.doConfiguration( chartModel, m_ccl, chartType, ChartExtensionLoader.getInstance(), m_context );
+
+    /* Configure via a chart provider. */
+    doConfiguration( chartModel );
+
+    /* Check, if all layers are emtpy. */
+    ILayerManager layerManager = chartModel.getLayerManager();
+    IChartLayer[] layers = layerManager.getLayers();
+    for( IChartLayer layer : layers )
+    {
+      IDataRange<Number> domainRange = layer.getDomainRange();
+      IDataRange<Number> targetRange = layer.getTargetRange( null );
+      if( domainRange != null && targetRange != null )
+      {
+        Number domainMin = domainRange.getMin();
+        Number domainMax = domainRange.getMax();
+        Number targetMin = targetRange.getMin();
+        Number targetMax = targetRange.getMax();
+
+        if( domainMin.doubleValue() > Double.NEGATIVE_INFINITY )
+          return true;
+
+        if( domainMax.doubleValue() < Double.POSITIVE_INFINITY )
+          return true;
+
+        if( targetMin.doubleValue() > Double.NEGATIVE_INFINITY )
+          return true;
+
+        if( targetMax.doubleValue() < Double.POSITIVE_INFINITY )
+          return true;
+
+        return false;
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -306,7 +396,10 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
     if( m_chartTabs != null )
     {
       for( final ChartTabItem item : m_chartTabs )
-        item.dispose();
+      {
+        if( item != null )
+          item.dispose();
+      }
     }
 
     super.dispose();
