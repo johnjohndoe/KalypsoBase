@@ -147,6 +147,8 @@ public abstract class AbstractAxisContentProvider implements IAxisContentProvide
   @Override
   public String getLabel( final int index )
   {
+    if( index < 0 || index >= m_content.size() )
+      return "";
     return m_labels.get( index );
   }
 
