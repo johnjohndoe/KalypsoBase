@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.visitor;
 
+import org.kalypso.commons.exception.CancelVisitorException;
+
 /**
  * @author Dirk Kuch
  */
 public interface ITupleModelVisitor
 {
-  void visit( ITupleModelValueContainer container );
+  void visit( ITupleModelValueContainer container ) throws CancelVisitorException;
 }

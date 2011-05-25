@@ -90,7 +90,7 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
     {
       for( final SimulationJobSpecification job : m_jobSpecificationList )
       {
-        setTask( String.format( Messages.getString( "CalculationChainRunnable_0" ), job.getDescription() ), monitor );
+        setTask( String.format( Messages.getString( "CalculationChainRunnable_0" ), job.getDescription() ), monitor ); //$NON-NLS-1$
 
         if( status.isOK() )
         {
