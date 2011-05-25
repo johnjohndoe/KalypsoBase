@@ -303,7 +303,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   private void drawTicks( final GC gc, final IAxis axis, final int startX, final int startY, final Number[] ticks, final int offset )
   {
 
-    if( (gc == null) || (axis == null) || (ticks == null) || ticks.length < 1 )
+    if( gc == null || axis == null || ticks == null || ticks.length < 1 )
       return;
 
     final int tickLength = getTickLength();
@@ -321,7 +321,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
     final ITextStyle tickLabelStyle = getTickLabelStyle();
     final ILineStyle tickLineStyle = getTickLineStyle();
-    final int tickScreenDistance = (screenMax - screenMin) / ticks.length == 1 ? 1 : (ticks.length - 1);
+    final int tickScreenDistance = (screenMax - screenMin) / ticks.length == 1 ? 1 : ticks.length - 1;
 
     for( int i = 0; i < ticks.length; i++ )
     {
@@ -363,7 +363,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
         // Nicht zeichnen, wenn 1. Text abgeschnitten & hideCut angegeben oder 2. Tick ausserhalb der AxisRange
         if( x1 < screenMin + offset || x1 > screenMax + offset )
           drawTick = false;
-        if( (m_hideCut || !drawTick) && ((textX < screenMin) || ((textX + labelSize.x) > screenMax)) )
+        if( (m_hideCut || !drawTick) && (textX < screenMin || textX + labelSize.x > screenMax) )
           drawTickLabel = false;
       }
       // VERTICAL
@@ -393,7 +393,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 // drawTick = false;
         if( y1 < screenMin + offset || y1 > screenMax + offset )
           drawTick = false;
-        if( (m_hideCut || !drawTick) && ((textY < screenMin) || ((textY + labelSize.y) > screenMax)) )
+        if( (m_hideCut || !drawTick) && (textY < screenMin || textY + labelSize.y > screenMax) )
           drawTickLabel = false;
 
       }
@@ -556,7 +556,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   @Override
   public void paint( final GC gc, final IAxis axis, final Rectangle screen )
   {
-    if( (screen.width > 0) && (screen.height > 0) && axis.isVisible() )
+    if( screen.width > 0 && screen.height > 0 && axis.isVisible() )
     {
 
       gc.setBackground( gc.getDevice().getSystemColor( SWT.COLOR_GRAY ) );
@@ -564,7 +564,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
       // draw axis line
       final int[] coords = createAxisSegment( axis, screen );
-      assert (coords != null) && (coords.length == 4);
+      assert coords != null && coords.length == 4;
       drawAxisLine( gc, coords[0], coords[1], coords[2], coords[3] );
 
       int offset = 0;

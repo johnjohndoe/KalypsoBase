@@ -182,7 +182,7 @@
 	
 	<target name="init" description="Initialize the build">
 		<tstamp>
-			<format property="subversion" pattern="yyyy-MM-dd hh:mm:ss"/>
+			<format property="subversion" pattern="yyyy-MM-dd HH:mm:ss"/>
 		</tstamp>
 		<tstamp>
 			<format property="releasedate" pattern="dd-MM-yyyy"/>
