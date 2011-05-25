@@ -47,7 +47,9 @@ import org.eclipse.swt.widgets.Table;
  * This class provides functions for dealing with table viewers.
  * 
  * @author Holger Albert
+ * @deprecated {@link ColumnsResizeControlListener} should now directly be added to the table.
  */
+@Deprecated
 public final class TableViewerUtilities
 {
   private TableViewerUtilities( )
