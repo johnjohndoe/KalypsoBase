@@ -40,13 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers.table;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -57,78 +53,77 @@ import org.eclipse.swt.widgets.TableColumn;
  */
 public class ColumnsResizeControlListener extends ControlAdapter
 {
-  /**
-   * The table.
-   */
-  private Table m_table;
+  /* Define the minimal column width of each table column with this data-entry */
+  public static final String DATA_MIN_COL_WIDTH = ColumnsResizeControlListener.class.getName() + ".minColumnWidth"; //$NON-NLS-1$
 
-  /**
-   * The constructor.
-   * 
-   * @param table
-   *          The table.
-   */
-  public ColumnsResizeControlListener( Table table )
+  public static final int MIN_COL_WIDTH_PACK = -2;
+
+  private boolean m_isActive;
+
+  @Override
+  public void controlResized( final ControlEvent e )
   {
-    m_table = table;
+    if( !(e.widget instanceof Table) )
+      return;
+
+    if( m_isActive )
+      return;
+
+    try
+    {
+      m_isActive = true;
+
+      final Table table = (Table) e.widget;
+
+      /* Get the area of the parent. */
+      final Rectangle area = table.getClientArea();
+
+      final int width = area.width;
+
+      /* Set the size for each colum. */
+      final TableColumn[] columns = table.getColumns();
+      int remainingWidth = width;
+
+      for( int i = 0; i < columns.length; i++ )
+      {
+        final TableColumn column = columns[i];
+        final int minColWidth = getMinimumColumnWidth( column );
+
+        if( remainingWidth > 0 )
+        {
+          final int remainingColumns = columns.length - i;
+          final int columnWidth = Math.max( minColWidth, remainingWidth / remainingColumns );
+          column.setWidth( columnWidth );
+          remainingWidth -= columnWidth;
+        }
+        else
+          column.setWidth( minColWidth );
+      }
+    }
+    finally
+    {
+      m_isActive = false;
+    }
   }
 
-  /**
-   * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-   */
-  @Override
-  public void controlResized( ControlEvent e )
+  private int getMinimumColumnWidth( final TableColumn column )
   {
-    /* Get the parent. */
-    Composite parent = m_table.getParent();
-
-    /* Get the area of the parent. */
-    Rectangle area = parent.getClientArea();
-
-    /* Calculate the needed size of the table. */
-    Point size = m_table.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-
-    /* Get the vertical bar. */
-    ScrollBar vBar = m_table.getVerticalBar();
-
-    /* Calculate the available width for the table. */
-    int width = area.width - m_table.computeTrim( 0, 0, 0, 0 ).width - vBar.getSize().x;
-
-    /* Subtract the scrollbar width from the total column width if a vertical scrollbar will be required. */
-    if( size.y > area.height + m_table.getHeaderHeight() )
+    final Object data = column.getData( DATA_MIN_COL_WIDTH );
+    if( data instanceof Integer )
     {
-      Point vBarSize = vBar.getSize();
-      width -= vBarSize.x;
+      final int minColWidth = (Integer) data;
+      if( minColWidth == MIN_COL_WIDTH_PACK )
+        return calculatePack( column );
+      else
+        return Math.max( 0, minColWidth );
     }
 
-    /* Get the colums. */
-    TableColumn[] columns = m_table.getColumns();
+    return 0;
+  }
 
-    /* Get the old size. */
-    Point oldSize = m_table.getSize();
-
-    /* Table is getting smaller so make the columns smaller first. */
-    /* Then resize the table to match the client area width. */
-    if( oldSize.x > area.width )
-    {
-      /* Set the size for each colum. */
-      for( TableColumn column : columns )
-        column.setWidth( width / columns.length );
-
-      /* Set the size for the table. */
-      m_table.setSize( area.width, area.height );
-
-      return;
-    }
-
-    /* Table is getting bigger so make the table bigger first. */
-    /* Then make the columns wider to match the client area width. */
-
-    /* Set the size for the table. */
-    m_table.setSize( area.width, area.height );
-
-    /* Set the size for each colum. */
-    for( TableColumn column : columns )
-      column.setWidth( width / columns.length );
+  private int calculatePack( final TableColumn column )
+  {
+    column.pack();
+    return column.getWidth();
   }
 }
