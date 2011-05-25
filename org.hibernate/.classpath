@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/drivers/hsqldb/hsqldb_2_2_2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/drivers/oracle/ojdbc6.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/drivers/postgis/postgis-jdbc-1.1.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate-core/lib/optional/c3p0/c3p0-0.9.1.jar"/>

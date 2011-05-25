@@ -28,7 +28,8 @@ Bundle-ClassPath: .,
  lib/hibernate-core/lib/optional/jbosscache/jbosscache-core-3.2.1.GA.jar,
  lib/hibernate-core/lib/optional/oscache/oscache-2.1.jar,
  lib/drivers/postgis/postgis-jdbc-1.1.6.jar,
- lib/drivers/oracle/ojdbc6.jar
+ lib/drivers/oracle/ojdbc6.jar,
+ lib/drivers/hsqldb/hsqldb_2_2_2.jar
 Export-Package: javassist.util.proxy,
  javax.persistence,
  oracle.jdbc,
