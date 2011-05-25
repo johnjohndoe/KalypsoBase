@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
@@ -90,44 +91,51 @@ public abstract class AbstractTupleModel implements ITupleModel
     {
       final int index = i;
 
-      visitor.visit( new ITupleModelValueContainer()
+      try
       {
-        @Override
-        public int getIndex( )
+        visitor.visit( new ITupleModelValueContainer()
         {
-          return index;
-        }
-
-        @Override
-        public Object get( final IAxis axis ) throws SensorException
-        {
-          return AbstractTupleModel.this.get( index, axis );
-        }
-
-        @Override
-        public boolean hasAxis( final String... types )
-        {
-          for( final String type : types )
+          @Override
+          public int getIndex( )
           {
-            if( AxisUtils.findAxis( AbstractTupleModel.this.getAxes(), type ) == null )
-              return false;
+            return index;
           }
 
-          return true;
-        }
+          @Override
+          public Object get( final IAxis axis ) throws SensorException
+          {
+            return AbstractTupleModel.this.get( index, axis );
+          }
 
-        @Override
-        public IAxis[] getAxes( )
-        {
-          return AbstractTupleModel.this.getAxes();
-        }
+          @Override
+          public boolean hasAxis( final String... types )
+          {
+            for( final String type : types )
+            {
+              if( AxisUtils.findAxis( AbstractTupleModel.this.getAxes(), type ) == null )
+                return false;
+            }
 
-        @Override
-        public void set( final IAxis axis, final Object value ) throws SensorException
-        {
-          AbstractTupleModel.this.set( index, axis, value );
-        }
-      } );
+            return true;
+          }
+
+          @Override
+          public IAxis[] getAxes( )
+          {
+            return AbstractTupleModel.this.getAxes();
+          }
+
+          @Override
+          public void set( final IAxis axis, final Object value ) throws SensorException
+          {
+            AbstractTupleModel.this.set( index, axis, value );
+          }
+        } );
+      }
+      catch( final CancelVisitorException e )
+      {
+        return;
+      }
     }
   }
 
