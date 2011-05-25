@@ -2,10 +2,8 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import java.text.Format;
 
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -73,8 +71,9 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
   private void drawTicks( final GC gc, final int offset, final IAxis axis, final Number[] ticks )
   {
 
-    if( (gc == null) || (axis == null) || (ticks == null) || ticks.length < 1 )
+    if( gc == null || axis == null || ticks == null || ticks.length < 1 )
       return;
+
     getTickLineStyle().apply( gc );
     final IChartLabelRenderer labelRenderer = getTickLabelRenderer();
     int tickDistance = -1;
@@ -90,12 +89,12 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
 
       if( tickPos < 0 || tickPos > axis.getScreenHeight() )
         continue;
-      gc.drawLine( tickPos,  getGap() + offset, tickPos,  getGap() + offset + getTickLength() );
+      gc.drawLine( tickPos, getGap() + offset, tickPos, getGap() + offset + getTickLength() );
       // draw Ticklabel
       labelRenderer.getTitleTypeBean().setLabel( getLabelCreator().getLabel( ticks, i, axis.getNumericRange() ) );
       final Rectangle textSize = labelRenderer.getSize();
       // hide cut
-      if( !isHideCut() || (tickPos + textSize.x > 0 && tickPos + textSize.x + textSize.width < axis.getScreenHeight()) )
+      if( !isHideCut() || tickPos + textSize.x > 0 && tickPos + textSize.x + textSize.width < axis.getScreenHeight() )
         labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() + offset), tickDistance, -1 ) );
 
     }
@@ -195,7 +194,7 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
   @Override
   public void paint( final GC gc, final IAxis axis, final Rectangle screen )
   {
-    if( (screen.width > 0) && (screen.height > 0) && axis.isVisible() )
+    if( screen.width > 0 && screen.height > 0 && axis.isVisible() )
     {
       getLineStyle().apply( gc );
       gc.drawLine( screen.x, getGap() + screen.y, screen.width, getGap() + screen.y );

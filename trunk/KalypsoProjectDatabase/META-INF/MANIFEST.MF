@@ -51,5 +51,5 @@ Bundle-ClassPath: lib/jax-ws-2.1.7/activation.jar,
  lib/hibernate/core/lib/required/dom4j-1.6.1.jar,
  lib/hibernate/core/lib/required/javassist-3.4.GA.jar,
  lib/hibernate/core/lib/required/jta-1.1.jar,
- lib/hsqldb/hsqldb_2_2_1.jar,
+ lib/hsqldb/hsqldb_2_2_2.jar,
  .

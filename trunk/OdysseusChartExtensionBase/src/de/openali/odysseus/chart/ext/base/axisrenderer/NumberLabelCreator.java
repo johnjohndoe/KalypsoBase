@@ -51,7 +51,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 /**
  * @author alibu
  */
-public class NumberLabelCreator  implements ILabelCreator
+public class NumberLabelCreator implements ILabelCreator
 {
 
   private final String m_formatString;
@@ -105,7 +105,7 @@ public class NumberLabelCreator  implements ILabelCreator
       return null;
 
     // Differenz bilden und sicherstellen, dass sie positiv ist
-    Double diff = (max == null || min == null) ? 0.0 : Math.abs( max.doubleValue() - min.doubleValue() );
+    Double diff = max == null || min == null ? 0.0 : Math.abs( max.doubleValue() - min.doubleValue() );
 
     final NumberFormat nf = new DecimalFormat();
     // Anzahl gültiger stellen
@@ -122,7 +122,7 @@ public class NumberLabelCreator  implements ILabelCreator
     }
 
     // Vorkommastellen ausrechnen
-    double tmpmax = (max == null || min == null) ? 0.0 : Math.max( Math.abs( max.doubleValue() ), Math.abs( min.doubleValue() ) );
+    double tmpmax = max == null || min == null ? 0.0 : Math.max( Math.abs( max.doubleValue() ), Math.abs( min.doubleValue() ) );
     if( tmpmax >= 1 )
     {
       while( tmpmax >= 1 )

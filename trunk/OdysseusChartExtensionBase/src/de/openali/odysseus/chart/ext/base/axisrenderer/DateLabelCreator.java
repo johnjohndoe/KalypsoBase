@@ -45,19 +45,17 @@ import java.util.Date;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.CalendarFormat;
 
-;
-
 /**
  * @author alibu
  */
-public class DateLabelCreator  implements ILabelCreator
+public class DateLabelCreator implements ILabelCreator
 {
 
   CalendarFormat m_format;
 
   /**
    * @param formatString
-   *          z.B. "yyyy-MM-dd\nhh:mm:ss"
+   *          z.B. "yyyy-MM-dd\nHH:mm:ss"
    */
   public DateLabelCreator( final String formatString )
   {
