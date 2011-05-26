@@ -49,6 +49,22 @@ import org.kalypso.commons.java.lang.Strings;
 
 class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
 {
+  private final WorkspaceJob m_flushJob = new WorkspaceJob( "" ) //$NON-NLS-1$
+  {
+    @Override
+    public IStatus runInWorkspace( final IProgressMonitor monitor )
+    {
+      try
+      {
+        m_node.flush();
+      }
+      catch( final Exception e )
+      {
+      }
+      return Status.OK_STATUS;
+    }
+  };
+
   private static final String PROJECT_LOCK_TICKET = "project.lock"; //$NON-NLS-1$
 
   private static final String PROJECT_IS_MODIFIED = "project.is.modified"; //$NON-NLS-1$
@@ -145,22 +161,7 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
 
   private void flush( )
   {
-    new WorkspaceJob( "" ) //$NON-NLS-1$
-    {
-      @Override
-      public IStatus runInWorkspace( final IProgressMonitor monitor )
-      {
-        try
-        {
-          m_node.flush();
-        }
-        catch( final Exception e )
-        {
-        }
-        return Status.OK_STATUS;
-      }
-    }.schedule();
-
+    m_flushJob.schedule();
   }
 
   /**
