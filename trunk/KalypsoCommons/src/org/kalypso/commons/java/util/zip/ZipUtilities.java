@@ -523,6 +523,18 @@ public class ZipUtilities
 
   public static void pack( final File archiveTarget, final File packDir ) throws ZipException, IOException
   {
+    pack( archiveTarget, packDir, new IFileFilter()
+    {
+      @Override
+      public boolean accept( final File file )
+      {
+        return true;
+      }
+    } );
+  }
+
+  public static void pack( final File archiveTarget, final File packDir, final IFileFilter filter ) throws ZipException, IOException
+  {
     if( !packDir.isDirectory() )
     {
       return;
@@ -537,7 +549,7 @@ public class ZipUtilities
 
     for( final File file : files )
     {
-      processFiles( packDir, file, out );
+      processFiles( packDir, file, out, filter );
     }
     out.close();
 
@@ -545,8 +557,11 @@ public class ZipUtilities
     bos.close();
   }
 
-  private static void processFiles( final File packDir, final File file, final ZipOutputStream out ) throws IOException
+  private static void processFiles( final File packDir, final File file, final ZipOutputStream out, final IFileFilter filter ) throws IOException
   {
+    if( !filter.accept( file ) )
+      return;
+
     if( file.isDirectory() )
     {
       final ZipEntry e = new ZipEntry( convertFileName( packDir, file ) + "/" ); //$NON-NLS-1$
@@ -556,11 +571,12 @@ public class ZipUtilities
       final File[] files = file.listFiles();
       for( final File f : files )
       {
-        processFiles( packDir, f, out );
+        processFiles( packDir, f, out, filter );
       }
     }
     else
     {
+
       final BufferedInputStream bis = new BufferedInputStream( new FileInputStream( file ) );
 
       final ZipEntry e = new ZipEntry( convertFileName( packDir, file ) );

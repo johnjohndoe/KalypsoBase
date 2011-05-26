@@ -93,7 +93,7 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
     // skip header
     /* Read header */
     m_gridStream.skip( 12 );
-    byte[] lScaleBuff = new byte[4];
+    final byte[] lScaleBuff = new byte[4];
     read( lScaleBuff, 1 );
     m_scale = ByteUtils.readBEInt( lScaleBuff, 0 );
 
@@ -102,13 +102,13 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
       m_linesTotal = getSizeY();
       m_lineLen = getSizeX() * 4;
     }
-    catch( GeoGridException e )
+    catch( final GeoGridException e )
     {
       e.printStackTrace();
     }
 
     // block_size is set to "optimal" size of the buffer from start on
-    m_linesInBlock = (BLOCK_SIZE / m_lineLen);
+    m_linesInBlock = BLOCK_SIZE / m_lineLen;
 
     if( m_linesInBlock >= m_linesTotal )
       m_linesInBlock = m_linesTotal;
@@ -140,7 +140,7 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
     {
       m_gridStream.close();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
@@ -153,7 +153,7 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
     close();
   }
 
-  private void read( byte[] blockData, int items ) throws IOException
+  private void read( final byte[] blockData, final int items ) throws IOException
   {
     m_gridStream.read( blockData, 0, items * 4 );
   }
@@ -164,7 +164,7 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
     {
       m_gridStream.read( m_blockData, 0, BLOCK_SIZE );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }

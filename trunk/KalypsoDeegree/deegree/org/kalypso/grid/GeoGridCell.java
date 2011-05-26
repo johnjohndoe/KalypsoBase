@@ -52,9 +52,7 @@ public class GeoGridCell
 
   public final int y;
 
-  public GeoGridCell( @SuppressWarnings("hiding")
-  final int x, @SuppressWarnings("hiding")
-  final int y )
+  public GeoGridCell( @SuppressWarnings("hiding") final int x, @SuppressWarnings("hiding") final int y )
   {
     this.x = x;
     this.y = y;
