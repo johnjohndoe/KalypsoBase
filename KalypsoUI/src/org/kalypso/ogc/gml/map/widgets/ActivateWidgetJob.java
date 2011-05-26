@@ -48,6 +48,9 @@ public final class ActivateWidgetJob extends UIJob
     {
       if( m_widget instanceof IWidgetWithOptions && m_activePage != null )
       {
+        if( !m_widget.canBeActivated( null, m_mapPanel ) ){
+          return Status.CANCEL_STATUS;
+        }
         final MapWidgetView widgetView = (MapWidgetView) m_activePage.showView( MapWidgetView.ID, null, IWorkbenchPage.VIEW_VISIBLE );
         widgetView.setWidgetForPanel( m_mapPanel, (IWidgetWithOptions) m_widget );
       }
