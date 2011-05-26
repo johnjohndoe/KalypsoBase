@@ -101,6 +101,7 @@ import org.kalypso.ogc.gml.outline.ViewContentOutline;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
+import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.CssParameter;
@@ -126,6 +127,8 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 @SuppressWarnings("unchecked")
 public class FindElementMapWidget extends AbstractWidget implements IWidgetWithOptions
 {
+  private static IWorkbenchPage m_activePage;
+
   private final String m_defaultCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
   private final FindElementWidgetFace m_widgetFace;
@@ -222,8 +225,8 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-    final IWorkbenchPage page = window.getActivePage();
-    return (ViewContentOutline) page.findView( ViewContentOutline.ID );
+    m_activePage = window.getActivePage();
+    return (ViewContentOutline) m_activePage.findView( ViewContentOutline.ID );
   }
 
   /**
@@ -244,10 +247,16 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     if( m_widgetFace != null )
     {
       m_widgetFace.disposeControl();
-      m_widgetFace.disposeParent();
+      hideView();
     }
   }
 
+
+  public void hideView( )
+  {
+    m_activePage.hideView( m_activePage.findView( MapWidgetView.ID ) );
+  }
+  
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
    */
@@ -408,7 +417,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     }
     else if( featureObj instanceof List )
     {
-      final List featureList = (List) featureObj;
+      final List< ? > featureList = (List< ? >) featureObj;
       String lStrSuffix = ""; //$NON-NLS-1$
       String lStrPrefix = ""; //$NON-NLS-1$
       if( featureType != null )
@@ -456,11 +465,6 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
 
     public FindElementWidgetFace( )
     {
-    }
-
-    public void disposeParent( )
-    {
-
     }
 
     public Control createControl( final Composite parent )
@@ -926,5 +930,25 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
       final FeatureList featureList = lActTheme.getFeatureList();
       m_boolFound = findFeature( featureList );
     }
+  }
+  
+  /**
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#canBeActivated(org.eclipse.jface.viewers.ISelection, org.kalypso.ogc.gml.map.IMapPanel)
+   */
+  @Override
+  public boolean canBeActivated( ISelection selection, IMapPanel mapPanel )
+  {
+    MapWidgetView widgetView = null;
+    try{
+      if( m_activePage == null ){
+        findOutlineView();
+      }
+      widgetView = (MapWidgetView) m_activePage.findView( MapWidgetView.ID );
+    }catch (Exception e) {
+    }
+    if( widgetView != null ){
+      return false;
+    }
+    return super.canBeActivated( selection, mapPanel );
   }
 }

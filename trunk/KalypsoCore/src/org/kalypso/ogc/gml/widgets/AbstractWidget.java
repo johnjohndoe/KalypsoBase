@@ -111,7 +111,7 @@ public abstract class AbstractWidget implements IWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#isActive()
    */
   @Override
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
+  public synchronized boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     return true;
   }
