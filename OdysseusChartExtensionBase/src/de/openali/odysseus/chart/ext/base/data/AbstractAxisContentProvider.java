@@ -59,7 +59,7 @@ public abstract class AbstractAxisContentProvider implements IAxisContentProvide
   public String getLabel( Number[] ticks, int i, IDataRange<Number> range )
   {
     // TODO Auto-generated method stub
-    return getLabel( i );
+    return getLabel( ticks[i].intValue() );
   }
 
   /**
