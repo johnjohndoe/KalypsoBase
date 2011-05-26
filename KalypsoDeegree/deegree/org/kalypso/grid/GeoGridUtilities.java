@@ -290,7 +290,7 @@ public final class GeoGridUtilities
 
       /* Transform it. */
       Assert.isNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
-      if( grid.getSourceCRS() != null && (!grid.getSourceCRS().equals( targetCRS )) )
+      if( grid.getSourceCRS() != null && !grid.getSourceCRS().equals( targetCRS ) )
       {
         final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
         return (GM_Surface< ? >) geoTransformer.transform( surface );
@@ -351,7 +351,7 @@ public final class GeoGridUtilities
 
       /* Transform it. */
       Assert.isNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
-      if( grid.getSourceCRS() != null && (!grid.getSourceCRS().equals( targetCRS )) )
+      if( grid.getSourceCRS() != null && !grid.getSourceCRS().equals( targetCRS ) )
       {
         final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
         return (GM_Surface< ? >) geoTransformer.transform( surface );
@@ -716,7 +716,7 @@ public final class GeoGridUtilities
    * @param monitor
    *          A progress monitor.
    */
-  private static void toTiff( final IGeoGrid grid, final File file, IProgressMonitor monitor ) throws GeoGridException
+  public static void toTiff( final IGeoGrid grid, final File file, IProgressMonitor monitor ) throws GeoGridException
   {
     /* Monitor. */
     if( monitor == null )

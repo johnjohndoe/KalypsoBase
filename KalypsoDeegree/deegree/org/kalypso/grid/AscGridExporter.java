@@ -84,7 +84,7 @@ public class AscGridExporter
    * Writes a grid into a file in the ESRI Ascii Grid format.
    * 
    * @throws IOException
-   *             If write access to the output file fails.
+   *           If write access to the output file fails.
    */
   public void export( final IGeoGrid inputGrid, final File outputFile, final IProgressMonitor monitor ) throws GeoGridException, CoreException
   {
@@ -133,18 +133,18 @@ public class AscGridExporter
     final int sizeY = inputGrid.getSizeY();
     final double cellsize = inputGrid.getOffsetX().x;
 
-    final String m_valueFormat = "%." + m_scale + "f ";
+    final String valueFormat = "%." + m_scale + "f ";
 
     progress.setWorkRemaining( sizeY );
 
     // adjust written origin according to xllcorner
     final Double size = cellsize / 2.0;
 
-    double minX = envelope.getMinX();
-    double minY = envelope.getMinY();
+    final double minX = envelope.getMinX();
+    final double minY = envelope.getMinY();
 
-    double xllcorner = minX - size;
-    double yllcorner = minY - size;
+    final double xllcorner = minX - size;
+    final double yllcorner = minY - size;
 
     // TODO: add parameter to let user decide, if xllcorner or xllcenter
 
@@ -154,8 +154,8 @@ public class AscGridExporter
     destination.format( "nrows         %d%n", sizeY );
     destination.format( "xllcorner     %.3f%n", xllcorner ); // xllcorner
     destination.format( "yllcorner     %.3f%n", yllcorner ); // yllcorner
-    destination.format( "cellsize      " + m_valueFormat + "%n", cellsize );
-    destination.format( "NODATA_value  " + m_valueFormat + "%n", m_noDataValue );
+    destination.format( "cellsize      " + valueFormat + "%n", cellsize );
+    destination.format( "NODATA_value  " + valueFormat + "%n", m_noDataValue );
 
     /* Values */
     for( int y = 0; y < sizeY; y++ )
@@ -164,9 +164,9 @@ public class AscGridExporter
       {
         final double value = inputGrid.getValue( x, y );
         if( Double.isNaN( value ) )
-          destination.format( m_valueFormat, m_noDataValue );
+          destination.format( valueFormat, m_noDataValue );
         else
-          destination.format( m_valueFormat, value );
+          destination.format( valueFormat, value );
       }
 
       destination.format( "%n" );

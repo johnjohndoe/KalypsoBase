@@ -80,13 +80,13 @@ public abstract class AbstractGeoGrid implements IGeoGrid
    * The constructor.
    * 
    * @param origin
-   *            The origin coordinates.
+   *          The origin coordinates.
    * @param offsetX
-   *            The offset in x direction.
+   *          The offset in x direction.
    * @param offsetY
-   *            The offset in y direction.
+   *          The offset in y direction.
    * @param sourceCRS
-   *            The source coordinate system. Could be null.
+   *          The source coordinate system. Could be null.
    */
   public AbstractGeoGrid( final Coordinate origin, final Coordinate offsetX, final Coordinate offsetY, final String sourceCRS )
   {
@@ -100,7 +100,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
    * @see org.kalypso.grid.IGeoGrid#getSurface(java.lang.String)
    */
   @Override
-  public GM_Surface< ? > getSurface( String targetCRS ) throws GeoGridException
+  public GM_Surface< ? > getSurface( final String targetCRS ) throws GeoGridException
   {
     return GeoGridUtilities.createSurface( this, targetCRS );
   }
@@ -109,7 +109,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
    * @see org.kalypso.grid.IGeoGrid#getCell(int, int, java.lang.String)
    */
   @Override
-  public GM_Surface< ? > getCell( int x, int y, String targetCRS ) throws GeoGridException
+  public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
   {
     return GeoGridUtilities.createCell( this, x, y, targetCRS );
   }
@@ -167,7 +167,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   @Override
   public double getValueChecked( final int x, final int y ) throws GeoGridException
   {
-    if( (x < 0) || (x >= getSizeX()) || (y < 0) || (y >= getSizeY()) )
+    if( x < 0 || x >= getSizeX() || y < 0 || y >= getSizeY() )
       return Double.NaN;
 
     return getValue( x, y );
@@ -187,7 +187,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
    * This function returns the value of the given cell.
    * 
    * @param cell
-   *            The cell.
+   *          The cell.
    * @return The value.
    */
   private double getValue( final GeoGridCell cell ) throws GeoGridException
