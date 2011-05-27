@@ -198,7 +198,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    *      org.eclipse.swt.graphics.Font)
    */
   @Override
-  public org.eclipse.swt.graphics.Image getLegendGraphic( String[] whiteList, final Font font ) throws CoreException
+  public org.eclipse.swt.graphics.Image getLegendGraphic( final String[] whiteList, final Font font ) throws CoreException
   {
     /* Initialize the remote WMS, if it is not already done. */
     initializeRemoteWMS();
@@ -228,10 +228,10 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
       /* Ask for the srs. */
       m_negotiatedSRS = negotiateCRS( m_localSRS, wmsCaps, m_layers );
-      Operation operation = wmsCaps.getOperationMetadata().getOperation( new QualifiedName( "GetMap" ) );
+      final Operation operation = wmsCaps.getOperationMetadata().getOperation( new QualifiedName( "GetMap" ) );
       HTTP http = null;
-      List<DCP> dcps = operation.getDCP();
-      for( DCP dcp : dcps )
+      final List<DCP> dcps = operation.getDCP();
+      for( final DCP dcp : dcps )
         if( dcp instanceof HTTP )
           http = (HTTP) dcp;
       if( http != null )
@@ -448,6 +448,8 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
     /* Get the URL of the legend. */
     final LegendURL legendURL = findLegendURL( layers );
+    if( legendURL == null )
+      return null;
 
     /* Get the real URL. */
     final URL onlineResource = legendURL.getOnlineResource();
@@ -497,7 +499,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     return result.toArray( new Layer[result.size()] );
   }
 
-  private LegendURL findLegendURL( Layer[] layers )
+  private LegendURL findLegendURL( final Layer[] layers )
   {
     /* End recursion. */
     if( layers == null || layers.length == 0 )
@@ -505,20 +507,20 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
     // TODO: we should show all styles of all layers as a tree in the outline
     // TODO: Instead, we show the graphic of the first style of the first layer
-    Style[] styles = layers[0].getStyles();
+    final Style[] styles = layers[0].getStyles();
     if( styles.length == 0 )
       return findLegendURL( layers[0].getLayer() );
 
     /* TODO Only the first style will be used for now. */
-    Style style = styles[0];
+    final Style style = styles[0];
 
     /* Only use styles, denoted by m_styles. */
-    List<String> styleList = Arrays.asList( m_styles );
+    final List<String> styleList = Arrays.asList( m_styles );
     if( !styleList.contains( style.getName() ) )
       return null;
 
     /* Get the URLs for the legend. */
-    LegendURL[] legendURLs = style.getLegendURL();
+    final LegendURL[] legendURLs = style.getLegendURL();
     if( legendURLs.length == 0 )
       return null;
 
