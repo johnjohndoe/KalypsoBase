@@ -70,6 +70,7 @@ public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
   public KalypsoWizardSelectionPage( final IWorkbench aWorkbench, final IStructuredSelection selection, final AdaptableList wizardElts, final String message, final GisMapOutlinePage outlineview )
   {
     super( aWorkbench, selection, wizardElts, message, null );
+
     m_outline = outlineview;
     m_selection = selection;
   }
@@ -82,9 +83,6 @@ public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
   {
     return new WorkbenchWizardNode( this, element )
     {
-      /**
-       * @see org.eclipse.ui.internal.dialogs.WorkbenchWizardNode#createWizard()
-       */
       @Override
       public IWorkbenchWizard createWizard( ) throws CoreException
       {
