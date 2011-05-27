@@ -23,6 +23,15 @@ public final class RectangleUtils
 
     return new Rectangle( x, y, w, h );
   }
+  public static final Rectangle createInnerRectangle( final int width,final int height,final Insets inset )
+  {
+    final int x = inset.left+1;
+    final int y = inset.top+1;
+    final int w = width-inset.left-inset.right;
+    final int h = height -inset.top-inset.bottom;
+
+    return new Rectangle( x, y, w, h );
+  }
 
   public static final Rectangle createNormalizedRectangle( final Point p1, final Point p2 )
   {

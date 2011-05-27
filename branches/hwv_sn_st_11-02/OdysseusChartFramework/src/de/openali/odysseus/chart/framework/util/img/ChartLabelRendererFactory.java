@@ -66,10 +66,11 @@ public class ChartLabelRendererFactory
 
     if( axisPosition.getOrientation() == ORIENTATION.VERTICAL )
     {
-      titleType.setTextAnchorX( ALIGNMENT.RIGHT );
+      titleType.setMirrorVertical( true );
+      titleType.setTextAnchorX( ALIGNMENT.LEFT );
       titleType.setTextAnchorY( ALIGNMENT.CENTER );
-      titleType.setRotation( -90 );
-      if( axisPosition == POSITION.RIGHT )
+      titleType.setRotation( 90 );
+      if( axisPosition == POSITION.LEFT )
         titleType.setMirrorHorizontal( true );
     }
     else
@@ -109,11 +110,6 @@ public class ChartLabelRendererFactory
     {
       titleType.setMirrorVertical( true );
     }
-    else if( axisPosition == POSITION.TOP )
-    {
-      titleType.setMirrorHorizontal( false );
-    }
-
     return titleType;
   }
 }

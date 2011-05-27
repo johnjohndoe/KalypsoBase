@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.config;
 
+import java.awt.Insets;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -48,6 +49,10 @@ import org.eclipse.swt.graphics.RGB;
 
 import de.openali.odysseus.chart.factory.util.LayerTypeHelper;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.util.img.ChartLabelRendererFactory;
+import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.AreaStyleType;
 import de.openali.odysseus.chartconfig.x020.ChartType;
@@ -58,6 +63,7 @@ import de.openali.odysseus.chartconfig.x020.PointStyleType;
 import de.openali.odysseus.chartconfig.x020.ReferencableType;
 import de.openali.odysseus.chartconfig.x020.StylesDocument.Styles;
 import de.openali.odysseus.chartconfig.x020.TextStyleType;
+import de.openali.odysseus.chartconfig.x020.TitleType;
 
 /**
  * @author Dirk Kuch
@@ -179,6 +185,22 @@ public final class StyleHelper
     }
 
     return collected.toArray( new Styles[] {} );
+  }
+
+  public static TitleTypeBean getTitleTypeBean( final TitleType type, final ITextStyle style )
+  {
+    return getTitleTypeBean( POSITION.BOTTOM, type, style );
+  }
+
+  public static TitleTypeBean getTitleTypeBean( final POSITION position, final TitleType type, final ITextStyle style )
+  {
+    final Insets inset = new Insets( type.getInsetTop(), type.getInsetLeft(), type.getInsetBottom(), type.getInsetBottom() );
+    final TitleTypeBean title = ChartLabelRendererFactory.getAxisLabelType( position, type.getStringValue(), inset, style );
+    title.setPositionHorizontal( StyleHelper.getAlignment( type.getHorizontalPosition() ) );
+    title.setPositionVertical( StyleHelper.getAlignment( type.getVerticalPosition() ) );
+    title.setTextAnchorX( StyleHelper.getAlignment( type.getHorizontalTextAnchor() ) );
+    title.setTextAnchorY( StyleHelper.getAlignment( type.getVerticalTextAnchor() ) );
+    return title;
   }
 
   public static AbstractStyleType findStyle( final Styles styles, final String identifier )
