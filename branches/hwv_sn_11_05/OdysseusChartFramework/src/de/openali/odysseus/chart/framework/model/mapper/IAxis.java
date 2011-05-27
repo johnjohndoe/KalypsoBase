@@ -1,9 +1,8 @@
 package de.openali.odysseus.chart.framework.model.mapper;
 
-import org.eclipse.swt.graphics.Point;
-
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
+import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
@@ -124,4 +123,7 @@ public interface IAxis extends IMapper
   void setScreenHeight( int height );
 
   void setVisible( final boolean visible );
+
+  IAxisVisitorBehavior getAxisVisitorBehavior( );
+
 }

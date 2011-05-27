@@ -77,11 +77,18 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
     getTickLineStyle().apply( gc );
     final IChartLabelRenderer labelRenderer = getTickLabelRenderer();
     int tickDistance = -1;
-    // TODO hideCut is not exactly calculated
+
     // TODO axisrenderer don't render labels, move isIntervallLabeledTick to labelRenderer
-    if( isIntervallLabeledTick() && ticks.length > 1 )
+    if( isIntervallLabeledTick() )
     {
-      tickDistance = Math.abs( axis.numericToScreen( ticks[1] ) - axis.numericToScreen( ticks[0] ) );
+      if( ticks.length > 1 )
+      {
+        tickDistance = Math.abs( axis.numericToScreen( ticks[1] ) - axis.numericToScreen( ticks[0] ) );
+      }
+      else
+      {
+        tickDistance = axis.getScreenHeight();
+      }
     }
     for( int i = 0; i < ticks.length; i++ )
     {
@@ -91,12 +98,12 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
         continue;
       gc.drawLine( tickPos, getGap() + inset.top, tickPos, getGap() + inset.top + getTickLength() );
       // draw Ticklabel
-      labelRenderer.getTitleTypeBean().setLabel( getLabelCreator().getLabel( ticks, i, axis.getNumericRange() ) );
+      labelRenderer.getTitleTypeBean().setLabel( getLabelCreator().getLabel( ticks,i, axis.getNumericRange() ) );
       final Rectangle textSize = labelRenderer.getSize();
       // hide cut
       if( isHideCut() )
       {
-        if( tickPos + textSize.x > 0 && tickPos + textSize.x + textSize.width < axis.getScreenHeight() )
+        if( isIntervallLabeledTick() || (tickPos + textSize.x > 0 && tickPos + textSize.x + textSize.width < axis.getScreenHeight()) )
           labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() + inset.top), tickDistance, -1 ) );
       }
       else
