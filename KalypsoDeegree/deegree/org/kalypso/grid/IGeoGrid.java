@@ -20,17 +20,17 @@ public interface IGeoGrid extends IGeoValueProvider
   /**
    * Call this after this grid is nor more used. Disposes of any use resources.
    */
-  public void dispose( );
+  void dispose( );
 
   /**
    * Size of the raster. Amount of raster-cells in direction of x.
    */
-  public int getSizeX( ) throws GeoGridException;
+  int getSizeX( ) throws GeoGridException;
 
   /**
    * Size of the raster. Amount of raster-cells in direction of y.
    */
-  public int getSizeY( ) throws GeoGridException;
+  int getSizeY( ) throws GeoGridException;
 
   /**
    * Returns the value of the raster at (cell-)coordinates x-y. Does not check, if x or y lie within the raster bounds.
@@ -44,13 +44,13 @@ public interface IGeoGrid extends IGeoValueProvider
    *          The (cell-)coordinate y.
    * @return The value.
    */
-  public double getValue( final int x, final int y ) throws GeoGridException;
+  double getValue( final int x, final int y ) throws GeoGridException;
 
   /**
    * Simliar to {@link #getValue(int, int, String)} but checks if the given cell coordinates lie in the raster. If not,
    * return {@link Double#NaN}.
    */
-  public double getValueChecked( final int x, final int y ) throws GeoGridException;
+  double getValueChecked( final int x, final int y ) throws GeoGridException;
 
   /**
    * This function returns the surface of this grid.
@@ -60,7 +60,7 @@ public interface IGeoGrid extends IGeoValueProvider
    *          returned.
    * @return The surface of the grid.
    */
-  public GM_Surface< ? > getSurface( final String targetCRS ) throws GeoGridException;
+  GM_Surface< ? > getSurface( final String targetCRS ) throws GeoGridException;
 
   /**
    * This function returns the cell at the given (cell-)coordinates. We interpret the grid cell as a surface with the
@@ -74,7 +74,7 @@ public interface IGeoGrid extends IGeoValueProvider
    *          The coordinate system will be used to transform the cell, after it was created and before it is returned.
    * @return The cell.
    */
-  public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException;
+  GM_Surface< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException;
 
   /**
    * The envelope of this grid.<br>
@@ -83,7 +83,7 @@ public interface IGeoGrid extends IGeoValueProvider
    * 
    * @return The envelope of this grid.
    */
-  public Envelope getEnvelope( ) throws GeoGridException;
+  Envelope getEnvelope( ) throws GeoGridException;
 
   /**
    * This function returns the origin point of this grid.<br>
@@ -95,35 +95,35 @@ public interface IGeoGrid extends IGeoValueProvider
    * 
    * @return The origin of this grid.
    */
-  public Coordinate getOrigin( ) throws GeoGridException;
+  Coordinate getOrigin( ) throws GeoGridException;
 
   /**
    * Offset from the origin in direction of x. Add (as vector) to origin to to walk along the raster alon the x-Axis.
    */
-  public Coordinate getOffsetX( ) throws GeoGridException;
+  Coordinate getOffsetX( ) throws GeoGridException;
 
   /**
    * Offset from the origin in direction of y. Add (as vector) to origin to to walk along the raster alon the y-Axis.
    */
-  public Coordinate getOffsetY( ) throws GeoGridException;
+  Coordinate getOffsetY( ) throws GeoGridException;
 
   /**
    * This function returns the source coordinate system of this grid.
    * 
    * @return The source coordinate system.
    */
-  public String getSourceCRS( ) throws GeoGridException;
+  String getSourceCRS( ) throws GeoGridException;
 
   /**
    * Returns a walking strategy suitable to iterate through this grid.
    */
-  public IGeoWalkingStrategy getWalkingStrategy( ) throws GeoGridException;
+  IGeoWalkingStrategy getWalkingStrategy( ) throws GeoGridException;
 
-  public BigDecimal getMin( ) throws GeoGridException;
+  BigDecimal getMin( ) throws GeoGridException;
 
-  public BigDecimal getMax( ) throws GeoGridException;
+  BigDecimal getMax( ) throws GeoGridException;
 
-  public void setMin( final BigDecimal minValue ) throws GeoGridException;
+  void setMin( final BigDecimal minValue ) throws GeoGridException;
 
-  public void setMax( final BigDecimal maxValue ) throws GeoGridException;
+  void setMax( final BigDecimal maxValue ) throws GeoGridException;
 }
