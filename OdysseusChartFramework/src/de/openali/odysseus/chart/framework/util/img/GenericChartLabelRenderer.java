@@ -59,9 +59,12 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.w3c.dom.css.Rect;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 
 /**
@@ -137,10 +140,16 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     final int charWidth = lineWidth / line.length();
     if( lineWidth <= width )
       return line;
-    final int maxChar = width / charWidth;
+    int maxChar = width / charWidth;
     if( maxChar < 6 )
       return (StringUtils.abbreviate( line, 5 ));
-    return StringUtils.abbreviateMiddle( line, "...", maxChar );
+    String s = StringUtils.abbreviateMiddle( line, "..", maxChar );
+    while( calcTextSize( gc, s ).x > width )
+    {
+      maxChar -= 1;
+      s = StringUtils.abbreviateMiddle( line, "..", maxChar );
+    }
+    return s;
 
   }
 
@@ -391,14 +400,31 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     paint( gc, new Rectangle( textAnchor.x, textAnchor.y, -1, -1 ) );
   }
 
-  private Rectangle inflateRect( final Rectangle rect, final int x )
+  final private Rectangle checkSize( final Rectangle boundsRect, final Rectangle textRect, final ALIGNMENT alignment )
   {
-    return inflateRect( rect, new Insets( x, x, x, x ) );
-  }
+    final int delta = textRect.width - boundsRect.width;
+    final int height = boundsRect.height < 0 ? textRect.height : boundsRect.height;
+    if( boundsRect.width < 0 || delta <= 0 )
+      return new Rectangle( textRect.x, textRect.y, textRect.width, height );
 
-  private Rectangle inflateRect( final Rectangle rect, final Insets insets )
-  {
-    return new Rectangle( rect.x + insets.left, rect.y + insets.top, rect.width - insets.left - insets.right, rect.height - insets.top - insets.bottom );
+    switch( alignment )
+    {
+      case LEFT:
+      {
+        return new Rectangle( textRect.x, textRect.y, textRect.width - delta, height );
+      }
+      case RIGHT:
+      {
+        return new Rectangle( textRect.x + delta, textRect.y, textRect.width - delta, height );
+      }
+      case CENTER:
+      {
+        return new Rectangle( textRect.x + delta / 2, textRect.y, textRect.width - delta, height );
+      }
+      default:
+        return textRect;
+    }
+
   }
 
   /**
@@ -410,9 +436,6 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   {
     if( m_titleBean == null || StringUtils.isEmpty( m_titleBean.getText() ) || boundsRect == null )
       return;
-    // if no size given, fit Rectangle to TextSize
-
-    // final Point overAllTextSize = calcSize( gc, 0 );
 
     // save GC
     final Font oldFont = gc.getFont();
@@ -425,9 +448,8 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     final Transform oldTransform = new Transform( device );
     final Transform newTransform = new Transform( device );
     final Point rendererAnchor = getRendererAnchor( m_titleBean.getPositionHorizontal(), m_titleBean.getPositionVertical(), boundsRect );
-    final Rectangle titleRect = calcSize( gc, 0 );// getTextRect( m_titleBean.getTextAnchorX(),
-// m_titleBean.getTextAnchorY(), overAllTextSize );
-
+    final Rectangle titleRect = calcSize( gc, 0 );
+    final Rectangle fitRect = checkSize( boundsRect, titleRect, m_titleBean.getPositionHorizontal() );
     try
     {
       // get transform from gc
@@ -438,9 +460,9 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       // rotate TextRectangle
       newTransform.rotate( m_titleBean.getRotation() );
       // mirror Text
-      newTransform.translate( titleRect.x + titleRect.width / 2, titleRect.y + titleRect.height / 2 );
+      newTransform.translate( fitRect.x + fitRect.width / 2, fitRect.y + fitRect.height / 2 );
       newTransform.scale( m_titleBean.isMirrorHorizontal() ? -1 : 1, m_titleBean.isMirrorVertical() ? -1 : 1 );
-      newTransform.translate( -(titleRect.x + titleRect.width / 2), -(titleRect.y + titleRect.height / 2) );
+      newTransform.translate( -(fitRect.x + fitRect.width / 2), -(fitRect.y + fitRect.height / 2) );
       gc.setTransform( newTransform );
 
       if( isImageURL( m_titleBean.getText() ) )
@@ -467,14 +489,14 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
         final int borderWidth = getBorderStyle() == null ? 0 : getBorderStyle().getStroke().getWidth();
         if( isDrawBorder() )
         {
-          final Rectangle borderLineCentered = inflateRect( titleRect, (borderWidth + 1) / 2 );
+          final Rectangle borderLineCentered = RectangleUtils.inflateRect( fitRect, (borderWidth + 1) / 2 );
           getBorderStyle().apply( gc );
           if( getBorderStyle().isFillVisible() )
             gc.fillRectangle( borderLineCentered );
           gc.drawRectangle( borderLineCentered );
         }
-        final Rectangle innerBorder = inflateRect( titleRect, borderWidth );
-        final Rectangle textRect = inflateRect( innerBorder, getTitleTypeBean().getInsets() );
+        final Rectangle innerBorder = RectangleUtils.inflateRect( fitRect, borderWidth );
+        final Rectangle textRect = RectangleUtils.inflateRect( innerBorder, getTitleTypeBean().getInsets() );
         final String[] lines = StringUtils.split( m_titleBean.getText(), "\n" );// TODO: maybe other split strategy
         final int lineHeight = textRect.height / lines.length;
         int top = textRect.y;
@@ -483,10 +505,10 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
         m_titleBean.getTextStyle().apply( gc );
         for( String line : lines )
         {
-          final String fitLine = fitToFixedWidth( gc, line, inflateRect( boundsRect, getTitleTypeBean().getInsets() ).width - 2 * borderWidth );
+          final String fitLine = fitToFixedWidth( gc, line, textRect.width );
 
           final Point lineSize = gc.textExtent( fitLine, flags );
-          final int lineInset = getLineInset( m_titleBean.getTextStyle().getAlignment(), lineSize.x, textRect.width );
+          final int lineInset = getLineInset( m_titleBean.getPositionHorizontal(), lineSize.x, textRect.width );
           gc.drawText( fitLine, textRect.x + lineInset, top, flags );
           top += lineHeight;
         }

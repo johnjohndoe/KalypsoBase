@@ -38,24 +38,72 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.ext.base.data;
-
-import de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator;
+package de.openali.odysseus.chart.framework.model.impl;
 
 /**
  * @author kimwerner
  */
-public interface IAxisContentProvider extends ILabelCreator
+public class AxisVisitorBehavior implements IAxisVisitorBehavior
 {
-  Object getContent( final int index );
+  public AxisVisitorBehavior( )
+  {
+    this( true, true, true );
+  }
 
-  int size( );
+  public AxisVisitorBehavior( boolean zoomEnabled, boolean panEnabled, boolean autoscaleEnabled )
+  {
+    super();
+    m_zoomEnabled = zoomEnabled;
+    m_panEnabled = panEnabled;
+    m_autoscaleEnabled = autoscaleEnabled;
+  }
 
-  String getLabel( final int index );
+  private boolean m_zoomEnabled = true;
 
-  void addContent( final Object content, final String label );
+  private boolean m_panEnabled = true;
 
-  void removeContent( final Object content );
+  private boolean m_autoscaleEnabled = true;
 
-  void clear( );
+  /**
+   * @see de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior#isAutoscaleEnabled()
+   */
+  @Override
+  public boolean isAutoscaleEnabled( )
+  {
+    return m_autoscaleEnabled;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior#isPanEnabled()
+   */
+  @Override
+  public boolean isPanEnabled( )
+  {
+    return m_panEnabled;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior#isZoomEnabled()
+   */
+  @Override
+  public boolean isZoomEnabled( )
+  {
+    return m_zoomEnabled;
+  }
+
+  public void setAutoscaleEnabled( boolean autoscaleEnabled )
+  {
+    m_autoscaleEnabled = autoscaleEnabled;
+  }
+
+  public void setPanEnabled( boolean panEnabled )
+  {
+    m_panEnabled = panEnabled;
+  }
+
+  public void setZoomEnabled( boolean zoomEnabled )
+  {
+    m_zoomEnabled = zoomEnabled;
+  }
+
 }

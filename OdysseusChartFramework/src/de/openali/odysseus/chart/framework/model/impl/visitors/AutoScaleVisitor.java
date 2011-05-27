@@ -43,9 +43,12 @@ package de.openali.odysseus.chart.framework.model.impl.visitors;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.commons.java.lang.Objects;
+
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
+import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
@@ -76,6 +79,9 @@ public class AutoScaleVisitor implements IAxisVisitor
   {
     final IChartLayer[] layers = m_model.getLayerManager().getLayers( axis, m_recursive );
     final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>( layers.length );
+    final IAxisVisitorBehavior visitorBehavior = axis.getAxisVisitorBehavior();
+    if( visitorBehavior != null && !visitorBehavior.isAutoscaleEnabled() )
+      return;
 
     for( final IChartLayer layer : layers )
     {

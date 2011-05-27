@@ -32,17 +32,6 @@ public class GenericNumberTickCalculator implements ITickCalculator
     if( max == null || Double.isNaN( max.doubleValue() ) || min == null || Double.isNaN( min.doubleValue() ) )
       return new Number[] {};
 
-    // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
-    /* minimaler Bildschirmabstand zwischen zwei labels */
-//    final int tickLabelWidth;
-//    if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-//    {
-//      tickLabelWidth = ticklabelSize.x;
-//    }
-//    else
-//    {
-//      tickLabelWidth = ticklabelSize.y;
-//    }
 
     // Collection für Ticks
     // final TreeMap<Integer, SortedSet<Double>> ticks = new TreeMap<Integer, SortedSet<Double>>();

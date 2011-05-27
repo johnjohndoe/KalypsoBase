@@ -41,9 +41,11 @@
 package de.openali.odysseus.chart.framework.model.impl.visitors;
 
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
+import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
 
@@ -69,7 +71,9 @@ public class ZoomOutVisitor implements IAxisVisitor
   @Override
   public void visit( final IAxis axis )
   {
-    if( m_start == null || m_end == null )
+    final IAxisVisitorBehavior visitorBehavior = axis.getAxisVisitorBehavior();
+    final boolean isAllowed = visitorBehavior == null ? true : visitorBehavior.isZoomEnabled();
+    if( m_start == null || m_end == null || !isAllowed )
       return;
 
     double from = Double.NaN;

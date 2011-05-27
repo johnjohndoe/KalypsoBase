@@ -10,6 +10,7 @@ import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.impl.settings.CHART_DATA_LOADER_STRATEGY;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
@@ -65,31 +66,17 @@ public final class ChartFactory
 
     for( final TitleType type : chartType.getTitleArray() )
     {
-      final TitleTypeBean title = new TitleTypeBean( type.getStringValue() );
-
       try
       {
         final AbstractStyleType styleType = chartTypeResolver.findStyleType( type.getStyleref(), context );
         final ITextStyle style = StyleFactory.createTextStyle( (TextStyleType) styleType );
-
-        title.setTextStyle( style );
+        final TitleTypeBean title = StyleHelper.getTitleTypeBean(type, style );
+        model.getSettings().addTitles( title );
       }
       catch( final Throwable t )
       {
         t.printStackTrace();
       }
-
-      title.setPositionHorizontal( StyleHelper.getAlignment( type.getHorizontalPosition() ) );
-      title.setPositionVertical( StyleHelper.getAlignment( type.getVerticalPosition() ) );
-      // textSytle configure this alignment itself
-      // title.getTextStyle().setAlignment( StyleHelper.getAlignment( type.getHorizontalAlignment() ) );
-      title.setTextAnchorX( StyleHelper.getAlignment( type.getHorizontalTextAnchor() ) );
-      title.setTextAnchorY( StyleHelper.getAlignment( type.getVerticalTextAnchor() ) );
-
-      final Insets inset = new Insets( type.getInsetTop(), type.getInsetLeft(), type.getInsetBottom(), type.getInsetBottom() );
-      title.setInsets( inset );
-
-      model.getSettings().addTitles( title );
     }
 
     model.getSettings().setDescription( chartType.getDescription() );

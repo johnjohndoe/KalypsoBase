@@ -86,6 +86,7 @@ public class ChartHandlerUtilities
    */
   public static IChartComposite getChart( final IEvaluationContext context )
   {
+    //Fixme: wenn mehrere Charts geöffnet sind wird die contextVariable nicht immer richtig gesetzt
     return (IChartComposite) context.getVariable( ChartSourceProvider.ACTIVE_CHART_NAME );
   }
 

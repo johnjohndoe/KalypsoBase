@@ -38,24 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.ext.base.data;
-
-import de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator;
+package de.openali.odysseus.chart.framework.model.impl;
 
 /**
  * @author kimwerner
  */
-public interface IAxisContentProvider extends ILabelCreator
+public interface IAxisVisitorBehavior
 {
-  Object getContent( final int index );
+  boolean isZoomEnabled( );
 
-  int size( );
+  boolean isPanEnabled( );
 
-  String getLabel( final int index );
-
-  void addContent( final Object content, final String label );
-
-  void removeContent( final Object content );
-
-  void clear( );
+  boolean isAutoscaleEnabled( );
 }
