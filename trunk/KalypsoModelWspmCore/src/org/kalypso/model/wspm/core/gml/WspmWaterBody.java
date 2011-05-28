@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -70,6 +71,8 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
   public static final QName QNAME_PROP_PROFILEMEMBER = new QName( NS_WSPM, "profileMember" ); //$NON-NLS-1$
 
   private static final QName QNAME_REFNR = new QName( NS_WSPM, "refNr" );//$NON-NLS-1$
+
+  private static final QName QNAME_CENTER_LINE = new QName( NS_WSPM, "centerLine" );//$NON-NLS-1$
 
   private final IFeatureBindingCollection<IProfileFeature> m_profileMembers;
 
@@ -175,6 +178,28 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
     final Feature owner = getOwner();
     if( owner instanceof WspmProject )
       return (WspmProject) owner;
+
+    return null;
+  }
+
+  public GM_Curve getCenterLine( )
+  {
+    return getProperty( QNAME_CENTER_LINE, GM_Curve.class );
+  }
+
+  public void setCenterLine( final GM_Curve centerLine )
+  {
+    setProperty( QNAME_CENTER_LINE, centerLine );
+  }
+
+  public WspmReach findReachByName( final String name )
+  {
+    final WspmReach[] reaches = getReaches();
+    for( final WspmReach reach : reaches )
+    {
+      if( name.equals( reach.getName() ) )
+        return reach;
+    }
 
     return null;
   }
