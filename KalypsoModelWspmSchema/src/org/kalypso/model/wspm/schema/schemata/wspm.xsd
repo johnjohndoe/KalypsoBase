@@ -202,7 +202,15 @@
 							<documentation>River reference number (optional)</documentation>
 						</annotation>
 					</element>
+                    <!-- REMARK: probably save to delete, as this was never used.
+                    In any case this cannot be used, because the property is wrongly defined.  
 					<element name="waterBodyCenterLine" type="gml:LineStringSegmentType">
+						<annotation>
+							<documentation>River center line</documentation>
+						</annotation>
+					</element>
+                     -->
+					<element name="centerLine" type="gml:CurvePropertyType">
 						<annotation>
 							<documentation>River center line</documentation>
 						</annotation>
