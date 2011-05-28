@@ -35,6 +35,7 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -73,17 +74,25 @@ import com.vividsolutions.jts.geom.PrecisionModel;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider</a>
  * @version $Revision$ $Date$
  */
-public class JTSAdapter
+public final class JTSAdapter
 {
-  // precision model that is used for all JTS-Geometries
-  public static PrecisionModel pm = new PrecisionModel();
+  private static final String EPSG = "ESPG:"; //$NON-NLS-1$
 
+  private static final String EPSG_FORMAT = "ESPG:%d"; //$NON-NLS-1$
+
+  public static final int DEFAULT_SRID = 0;
   // factory for creating JTS-Geometries
-  public static com.vividsolutions.jts.geom.GeometryFactory jtsFactory = new com.vividsolutions.jts.geom.GeometryFactory( pm, 0 );
+  public static com.vividsolutions.jts.geom.GeometryFactory jtsFactory = new com.vividsolutions.jts.geom.GeometryFactory( new PrecisionModel(), DEFAULT_SRID );
+
+  private JTSAdapter( )
+  {
+    throw new UnsupportedOperationException();
+  }
 
   /**
-   * Converts a <tt>GM_Object</tt> to a corresponding JTS- <tt>Geometry</tt> object.
-   * <p>
+   * Converts a <tt>GM_Object</tt> to a corresponding JTS- <tt>Geometry</tt> object.<br/>
+   * Also converts the coordinate system of the given geometry into the corresponding SRID and sets it into the jts
+   * geometry.<br/>
    * Currently, the following conversions are supported:
    * <ul>
    * <li>GM_Point -> Point
@@ -103,6 +112,19 @@ public class JTSAdapter
    *           if type unsupported or conversion failed
    */
   public static Geometry export( final GM_Object gmObject ) throws GM_Exception
+  {
+    final Geometry export = doExport( gmObject );
+    if( export == null )
+      return null;
+
+    final String srs = gmObject.getCoordinateSystem();
+    final int srid = toSrid( srs );
+    export.setSRID( srid );
+
+    return export;
+  }
+
+  protected static Geometry doExport( final GM_Object gmObject ) throws GM_Exception
   {
     if( gmObject == null )
       return null;
@@ -189,6 +211,20 @@ public class JTSAdapter
   public static GM_Object wrap( final Geometry geometry ) throws GM_Exception
   {
     return wrap( geometry, null );
+  }
+
+  /**
+   * Same as {@link #wrap(Geometry, srs)}, but tries to fetch the srs from the given geometry (it's srid).<br/>
+   * The srid of the Geometry will be converted to <code>EPSG:srid</code>.
+   */
+  public static GM_Object wrapWithSrid( final Geometry geometry ) throws GM_Exception
+  {
+    if( geometry == null )
+      return null;
+
+    final int srid = geometry.getSRID();
+    final String srs = toSrs( srid );
+    return wrap( geometry, srs );
   }
 
   /**
@@ -553,6 +589,32 @@ public class JTSAdapter
   {
     final Coordinate[] crds = export( positions );
     return jtsFactory.createLineString( crds );
+  }
+
+  /**
+   * Converts an srid into a EPSG code by simply prefixing the srid by 'EPSG:'<br/>
+   * A srid of '0' is considered to be invalid and <code>null</code> is returned in that case.
+   */
+  public static String toSrs( final int srid )
+  {
+    /* srid of 0 means 'not set' */
+    if( srid == 0 )
+      return null;
+
+    return String.format( EPSG_FORMAT, srid );
+  }
+
+  /**
+   * Converts the coordinate code to an srid.<br>
+   * Currently, only srs of the form 'EPSG:srid' are converted. Everything else gets the SRID of 0.
+   */
+  public static int toSrid( final String srs )
+  {
+    final String srsUpper = srs.toUpperCase();
+    if( srsUpper.toUpperCase().startsWith( EPSG ) )
+      return NumberUtils.parseQuietInt( srsUpper.substring( EPSG.length() ), DEFAULT_SRID );
+
+    return DEFAULT_SRID;
   }
 
 }
