@@ -76,9 +76,9 @@ import com.vividsolutions.jts.geom.PrecisionModel;
  */
 public final class JTSAdapter
 {
-  private static final String EPSG = "ESPG:"; //$NON-NLS-1$
+  private static final String EPSG = "EPSG:"; //$NON-NLS-1$
 
-  private static final String EPSG_FORMAT = "ESPG:%d"; //$NON-NLS-1$
+  private static final String EPSG_FORMAT = "EPSG:%d"; //$NON-NLS-1$
 
   public static final int DEFAULT_SRID = 0;
   // factory for creating JTS-Geometries
