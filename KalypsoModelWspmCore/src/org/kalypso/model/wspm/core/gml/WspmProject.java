@@ -87,12 +87,27 @@ public abstract class WspmProject extends Feature_Impl implements IWspmConstants
     return getProperty( QNAME_WATER_BODY_MEMBER, FeatureList.class );
   }
 
+  /**
+   * Returns the {@link WspmWaterBody} with the given name.
+   */
   public WspmWaterBody findWater( final String waterName )
   {
     final WspmWaterBody[] waters = getWaterBodies();
     for( final WspmWaterBody body : waters )
     {
       if( waterName.equals( body.getName() ) )
+        return body;
+    }
+
+    return null;
+  }
+
+  public WspmWaterBody findWaterByRefNr( final String refNr )
+  {
+    final WspmWaterBody[] waters = getWaterBodies();
+    for( final WspmWaterBody body : waters )
+    {
+      if( refNr.equals( body.getRefNr() ) )
         return body;
     }
 
@@ -121,5 +136,4 @@ public abstract class WspmProject extends Feature_Impl implements IWspmConstants
 
     return wspmWaterBody;
   }
-
 }
