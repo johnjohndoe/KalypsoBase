@@ -941,9 +941,8 @@ public final class ProfilUtil
 
   /**
    * Searches for a point at the given position.<br>
-   * If no point (within the standard tolerance of profile points) is found, a new one is created at the given position.
    */
-  public static IRecord findOrInsertPointAt( final IProfil profil, final BigDecimal distance )
+  public static IRecord findPointAt( final IProfil profil, final BigDecimal distance )
   {
     final int indexOfDistance = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
 
@@ -956,12 +955,32 @@ public final class ProfilUtil
         return nearestPoint;
     }
 
+    return null;
+  }
+
+  public static IRecord insertPointAt( final IProfil profil, final BigDecimal distance )
+  {
+    final int indexOfDistance = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+
     final IRecord newPoint = profil.createProfilPoint();
     newPoint.setValue( indexOfDistance, new Double( distance.doubleValue() ) );
 
     final IRecord pointBefore = getPointBefore( profil, distance.doubleValue() );
     insertPoint( profil, newPoint, pointBefore );
     return newPoint;
+  }
+
+  /**
+   * Searches for a point at the given position.<br>
+   * If no point (within the standard tolerance of profile points) is found, a new one is created at the given position.
+   */
+  public static IRecord findOrInsertPointAt( final IProfil profil, final BigDecimal distance )
+  {
+    final IRecord nearestPoint = findPointAt( profil, distance );
+    if( nearestPoint != null )
+      return nearestPoint;
+
+    return insertPointAt( profil, distance );
   }
 
   /**
