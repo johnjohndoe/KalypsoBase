@@ -12,11 +12,11 @@
   <gml:name>Profile Point Component Dictionary</gml:name>
   <gml:dictionaryEntry>
     <swe:ItemDefinition gml:id="BREITE">
-      <gml:name>%breiteItemName</gml:name>
+      <gml:name>%breite.item.name</gml:name>
       <swe:property>
         <swe:Phenomenon gml:id="Phenomenon_Breite">
           <gml:description />
-          <gml:name>Breite</gml:name>
+          <gml:name>%breite.item.name</gml:name>
         </swe:Phenomenon>
       </swe:property>
       <swe:representation>
@@ -29,13 +29,14 @@
       </swe:representation>
     </swe:ItemDefinition>
   </gml:dictionaryEntry>
+  
   <gml:dictionaryEntry>
     <swe:ItemDefinition gml:id="HOEHE">
-      <gml:name>%hoeheItemName</gml:name>
+      <gml:name>%hoehe.item.name</gml:name>
       <swe:property>
         <swe:Phenomenon gml:id="Phenomenon_Hoehe">
           <gml:description />
-          <gml:name>Höhe</gml:name>
+          <gml:name>%hoehe.item.name</gml:name>
         </swe:Phenomenon>
       </swe:property>
       <swe:representation>
@@ -45,13 +46,14 @@
       </swe:representation>
     </swe:ItemDefinition>
   </gml:dictionaryEntry>
+  
   <gml:dictionaryEntry>
     <swe:ItemDefinition gml:id="RAUHEIT">
-      <gml:name>%rauheit.name</gml:name>
+      <gml:name>%rauheit.item.name</gml:name>
       <swe:property>
         <swe:Phenomenon gml:id="Phenomenon_Rauheit">
           <gml:description />
-          <gml:name>%rauheit.name</gml:name>
+          <gml:name>%rauheit.item.name</gml:name>
         </swe:Phenomenon>
       </swe:property>
       <swe:representation>
@@ -61,29 +63,31 @@
       </swe:representation>
     </swe:ItemDefinition>
   </gml:dictionaryEntry>
+  
   <gml:dictionaryEntry>
     <swe:ItemDefinition gml:id="RAUHEIT_KST">
-      <gml:name>%rauheit_kst.name</gml:name>
+      <gml:name>%rauheit_kst.item.name</gml:name>
       <swe:property>
         <swe:Phenomenon gml:id="Phenomenon_Rauheit_kst">
           <gml:description />
-          <gml:name>%rauheit_kst.name</gml:name>
+          <gml:name>%rauheit_kst.item.name</gml:name>
         </swe:Phenomenon>
       </swe:property>
       <swe:representation>
         <swe:Number>
-          <gml:unitOfMeasure uom="" />
+          <gml:unitOfMeasure uom="dict_uom.xml#m^(1/3)/s" />
         </swe:Number>
       </swe:representation>
     </swe:ItemDefinition>
   </gml:dictionaryEntry>
+  
   <gml:dictionaryEntry>
     <swe:ItemDefinition gml:id="HOCHWERT">
-      <gml:name>%hochwertItemName</gml:name>
+      <gml:name>%hochwert.item.name</gml:name>
       <swe:property>
         <swe:Phenomenon gml:id="Phenomenon_Hochwert">
           <gml:description />
-          <gml:name>Hochwert</gml:name>
+          <gml:name>%hochwert.item.name</gml:name>
         </swe:Phenomenon>
       </swe:property>
       <swe:representation>
@@ -93,13 +97,14 @@
       </swe:representation>
     </swe:ItemDefinition>
   </gml:dictionaryEntry>
+  
   <gml:dictionaryEntry>
     <swe:ItemDefinition gml:id="RECHTSWERT">
-      <gml:name>%rechtswertItemName</gml:name>
+      <gml:name>%rechtswert.item.name</gml:name>
       <swe:property>
         <swe:Phenomenon gml:id="Phenomenon_Rechtswert">
           <gml:description />
-          <gml:name>Rechtswert</gml:name>
+          <gml:name>%rechtswert.item.name</gml:name>
         </swe:Phenomenon>
       </swe:property>
       <swe:representation>
@@ -109,6 +114,7 @@
       </swe:representation>
     </swe:ItemDefinition>
   </gml:dictionaryEntry>
+  
   <gml:dictionaryEntry>
     <swe:ItemDefinition gml:id="BEWUCHS_AX">
       <gml:name>AX</gml:name>
@@ -157,13 +163,14 @@
       </swe:representation>
     </swe:ItemDefinition>
   </gml:dictionaryEntry>
+  
   <gml:dictionaryEntry>
     <swe:ItemDefinition gml:id="UNTERKANTEBRUECKE">
-      <gml:name>%unterkantebruecke.name</gml:name>
+      <gml:name>%unterkantebruecke.item.name</gml:name>
       <swe:property>
         <swe:Phenomenon gml:id="Phenomenon_Brueckenunterkante">
           <gml:description />
-          <gml:name>%unterkantebruecke.name</gml:name>
+          <gml:name>%unterkantebruecke.item.name</gml:name>
         </swe:Phenomenon>
       </swe:property>
       <swe:representation>
@@ -173,13 +180,14 @@
       </swe:representation>
     </swe:ItemDefinition>
   </gml:dictionaryEntry>
+  
   <gml:dictionaryEntry>
     <swe:ItemDefinition gml:id="OBERKANTEBRUECKE">
-      <gml:name>%oberkantebruecke.name</gml:name>
+      <gml:name>%oberkantebruecke.item.name</gml:name>
       <swe:property>
         <swe:Phenomenon gml:id="Phenomenon_Oberkantebruecke">
           <gml:description />
-          <gml:name>%oberkantebruecke.name</gml:name>
+          <gml:name>%oberkantebruecke.item.name</gml:name>
         </swe:Phenomenon>
       </swe:property>
       <swe:representation>
@@ -189,13 +197,14 @@
       </swe:representation>
     </swe:ItemDefinition>
   </gml:dictionaryEntry>
+  
   <gml:dictionaryEntry>
     <swe:ItemDefinition gml:id="OBERKANTEWEHR">
-      <gml:name>%oberkantewehr.name</gml:name>
+      <gml:name>%oberkantewehr.item.name</gml:name>
       <swe:property>
         <swe:Phenomenon gml:id="Phenomenon_Wehr">
           <gml:description />
-          <gml:name>%oberkantewehr.name</gml:name>
+          <gml:name>%oberkantewehr.item.name</gml:name>
         </swe:Phenomenon>
       </swe:property>
       <swe:representation>
@@ -208,13 +217,14 @@
       </swe:representation>
     </swe:ItemDefinition>
   </gml:dictionaryEntry>
+  
   <gml:dictionaryEntry>
     <swe:ItemDefinition gml:id="COMMENT">
-      <gml:name>%commentItemName</gml:name>
+      <gml:name>%comment.item.name</gml:name>
       <swe:property>
         <swe:Phenomenon gml:id="Phenomenon_Comment">
           <gml:description />
-          <gml:name>%commentItemUnit</gml:name>
+          <gml:name>%comment.item.name</gml:name>
         </swe:Phenomenon>
       </swe:property>
       <swe:representation>
@@ -224,4 +234,39 @@
       </swe:representation>
     </swe:ItemDefinition>
   </gml:dictionaryEntry>
+
+  <gml:dictionaryEntry>
+    <swe:ItemDefinition gml:id="CODE">
+      <gml:name>%code.item.name</gml:name>
+      <swe:property>
+        <swe:Phenomenon gml:id="Phenomenon_Code">
+          <gml:description />
+          <gml:name>%code.item.name</gml:name>
+        </swe:Phenomenon>
+      </swe:property>
+      <swe:representation>
+        <swe:Word>
+          <swe:classification />
+        </swe:Word>
+      </swe:representation>
+    </swe:ItemDefinition>
+  </gml:dictionaryEntry>
+
+  <gml:dictionaryEntry>
+    <swe:ItemDefinition gml:id="ID">
+      <gml:name>%id.item.name</gml:name>
+      <swe:property>
+        <swe:Phenomenon gml:id="Phenomenon_Name">
+          <gml:description />
+          <gml:name>%id.item.name</gml:name>
+        </swe:Phenomenon>
+      </swe:property>
+      <swe:representation>
+        <swe:Word>
+          <swe:classification />
+        </swe:Word>
+      </swe:representation>
+    </swe:ItemDefinition>
+  </gml:dictionaryEntry>
+  
 </gml:Dictionary>

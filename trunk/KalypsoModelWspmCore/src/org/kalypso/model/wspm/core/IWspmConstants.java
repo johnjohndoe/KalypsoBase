@@ -83,6 +83,18 @@ public interface IWspmConstants extends IWspmPhenomenonConstants
 
   String POINT_PROPERTY_COMMENT = POINT_PROPERTY + "COMMENT"; //$NON-NLS-1$
 
+  /**
+   * An (optional) (, arbitrary string-) code any profile point can have<br/>
+   * Meant to be some kind of (elsewhere defined) classification of a point.
+   */
+  String POINT_PROPERTY_CODE = POINT_PROPERTY + "CODE"; //$NON-NLS-1$
+
+  /**
+   * An (optional) (, arbitrary string-) id any profile point can have.<br/>
+   * Meant to be some kind of (possibly unique) identifier of a point.
+   */
+  String POINT_PROPERTY_ID = POINT_PROPERTY + "ID"; //$NON-NLS-1$
+
   String POINT_PROPERTY_RAUHEIT = POINT_PROPERTY + "RAUHEIT"; //$NON-NLS-1$
 
 // Die Id im Dictionary bleibt "Rauheit" wird aber im IProfil als Typ "ks" interpretiert
