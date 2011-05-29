@@ -171,9 +171,15 @@ public interface IProfil extends IObservation<TupleResult>
   <T extends IProfileObject> T[] getProfileObjects( Class<T> clazz );
 
   /**
+   * FIXME: make usable again:<br>
+   * - use String/String instead of object/object<br/>
+   * - make sure everything gets serialized automatically (feature <-> profile)
+   * 
    * @param key
    * @return the value from internal HashMap<Object,Object>
+   * @deprecated caution: additional properties will not be serialized to profile features
    */
+  @Deprecated
   Object getProperty( Object key );
 
   double getStation( );
