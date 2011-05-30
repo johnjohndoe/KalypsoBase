@@ -610,6 +610,9 @@ public final class JTSAdapter
    */
   public static int toSrid( final String srs )
   {
+    if( srs == null )
+      return DEFAULT_SRID;
+
     final String srsUpper = srs.toUpperCase();
     if( srsUpper.toUpperCase().startsWith( EPSG ) )
       return NumberUtils.parseQuietInt( srsUpper.substring( EPSG.length() ), DEFAULT_SRID );
