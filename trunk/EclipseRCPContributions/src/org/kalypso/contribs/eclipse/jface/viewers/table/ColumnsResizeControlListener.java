@@ -53,7 +53,10 @@ import org.eclipse.swt.widgets.TableColumn;
  */
 public class ColumnsResizeControlListener extends ControlAdapter
 {
-  /* Define the minimal column width of each table column with this data-entry */
+  /** If set to a column, the column will always get this fixed width */
+  public static final String DATA_FIXED_COL_WIDTH = ColumnsResizeControlListener.class.getName() + ".fixedColumnWidth"; //$NON-NLS-1$
+
+  /** Defines the minimal column width of each table column with this data-entry */
   public static final String DATA_MIN_COL_WIDTH = ColumnsResizeControlListener.class.getName() + ".minColumnWidth"; //$NON-NLS-1$
 
   public static final int MIN_COL_WIDTH_PACK = -2;
@@ -87,23 +90,42 @@ public class ColumnsResizeControlListener extends ControlAdapter
       for( int i = 0; i < columns.length; i++ )
       {
         final TableColumn column = columns[i];
-        final int minColWidth = getMinimumColumnWidth( column );
 
-        if( remainingWidth > 0 )
+        final int fixedWidth = getFixedWidth( column );
+        if( fixedWidth != -1 )
         {
-          final int remainingColumns = columns.length - i;
-          final int columnWidth = Math.max( minColWidth, remainingWidth / remainingColumns );
-          column.setWidth( columnWidth );
-          remainingWidth -= columnWidth;
+          column.setWidth( fixedWidth );
+          remainingWidth -= fixedWidth;
         }
         else
-          column.setWidth( minColWidth );
+        {
+          final int minColWidth = getMinimumColumnWidth( column );
+
+          if( remainingWidth > 0 )
+          {
+            final int remainingColumns = columns.length - i;
+            final int columnWidth = Math.max( minColWidth, remainingWidth / remainingColumns );
+            column.setWidth( columnWidth );
+            remainingWidth -= columnWidth;
+          }
+          else
+            column.setWidth( minColWidth );
+        }
       }
     }
     finally
     {
       m_isActive = false;
     }
+  }
+
+  private int getFixedWidth( final TableColumn column )
+  {
+    final Object data = column.getData( DATA_FIXED_COL_WIDTH );
+    if( data instanceof Integer )
+      return (Integer) data;
+
+    return -1;
   }
 
   private int getMinimumColumnWidth( final TableColumn column )
