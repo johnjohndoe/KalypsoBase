@@ -155,7 +155,7 @@
          <adapter type="org.kalypso.model.wspm.ui.profil.IProfilProvider"/>
       </factory>
       <factory
-            adaptableType="org.kalypso.ui.editor.gmleditor.ui.GmlEditor"
+            adaptableType="org.kalypso.ui.editor.gmleditor.part.GmlEditor"
             class="org.kalypso.model.wspm.ui.adapter.ProfileProviderAdapterFactory">
          <adapter type="org.kalypso.model.wspm.ui.profil.IProfilProvider"/>
       </factory>
@@ -184,7 +184,7 @@
       <objectContribution
             adaptable="false"
             id="org.kalypso.model.wspm.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"
-            objectClass="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement">
+            objectClass="org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement">
          <menu
                id="wspmProfileActions"
                label="%wspmProfileActions"/>

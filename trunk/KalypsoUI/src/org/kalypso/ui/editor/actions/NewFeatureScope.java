@@ -59,8 +59,8 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
 import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
-import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
-import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 

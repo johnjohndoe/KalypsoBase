@@ -94,7 +94,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#dispose()
    */
   @Override
   public void dispose( )
@@ -106,7 +106,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
   public void createPartControl( final Composite parent )
@@ -145,7 +145,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.core.resources.IFile)
    */
   @Override
@@ -178,7 +178,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#setFocus()
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#setFocus()
    */
   @Override
   public void setFocus( )

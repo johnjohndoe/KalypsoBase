@@ -107,7 +107,7 @@ public class FeatureEditor extends EditorPart
   private final FeatureTemplateviewer m_viewer = new FeatureTemplateviewer( m_commandTarget );
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#dispose()
    */
   @Override
   public void dispose( )

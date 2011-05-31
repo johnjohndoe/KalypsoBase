@@ -57,7 +57,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.ogc.gml.schemaeditor.GmlSchemaEditorInput;
-import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
+import org.kalypso.ui.editor.gmleditor.part.GmlEditor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**

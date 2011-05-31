@@ -163,7 +163,7 @@ public class FeatureTemplateviewer
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#dispose()
    */
   public void dispose( )
   {

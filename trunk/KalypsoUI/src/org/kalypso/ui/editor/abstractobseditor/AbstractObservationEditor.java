@@ -67,14 +67,14 @@ import org.kalypso.ogc.sensor.template.PseudoTemplateEditorInput;
 import org.kalypso.ogc.sensor.template.TemplateStorage;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obstableview.Obstableview;
-import org.kalypso.ui.editor.AbstractEditorPart;
+import org.kalypso.ui.editor.AbstractWorkbenchPart;
 
 /**
  * AbstractObsEditor
  * 
  * @author schlienger
  */
-public abstract class AbstractObservationEditor extends AbstractEditorPart implements IEditorPart, IObsViewEventListener
+public abstract class AbstractObservationEditor extends AbstractWorkbenchPart implements IEditorPart, IObsViewEventListener
 {
   private final ObsView m_view;
 
@@ -90,7 +90,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#dispose()
    */
   @Override
   public void dispose( )
@@ -116,7 +116,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#tweakInput(org.eclipse.ui.IStorageEditorInput)
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#tweakInput(org.eclipse.ui.IStorageEditorInput)
    */
   @Override
   protected IStorageEditorInput tweakInput( final IStorageEditorInput input )
@@ -161,7 +161,7 @@ public abstract class AbstractObservationEditor extends AbstractEditorPart imple
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
   @Override

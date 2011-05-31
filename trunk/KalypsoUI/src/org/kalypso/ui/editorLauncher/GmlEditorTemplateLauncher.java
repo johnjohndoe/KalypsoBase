@@ -43,11 +43,11 @@ package org.kalypso.ui.editorLauncher;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.CharEncoding;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -58,10 +58,10 @@ import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.template.gistreeview.Gistreeview;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.template.types.LayerTypeUtilities;
@@ -105,9 +105,6 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
 
   public static IStorageEditorInput createInputForGml( final IFile file ) throws CoreException
   {
-    final org.kalypso.template.gistreeview.ObjectFactory gisViewFact = new org.kalypso.template.gistreeview.ObjectFactory();
-    final JAXBContext jc = JaxbUtilities.createQuiet( org.kalypso.template.gistreeview.ObjectFactory.class );
-
     try
     {
       final ObjectFactory typesFac = new ObjectFactory();
@@ -115,10 +112,10 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
       final LayerType type = typesFac.createLayerType();
       LayerTypeUtilities.initLayerType( type, file );
 
-      final Gistreeview gistreeview = gisViewFact.createGistreeview();
+      final Gistreeview gistreeview = TemplateUtilities.OF_GISTREEVIEW.createGistreeview();
       gistreeview.setInput( type );
 
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( jc );
+      final Marshaller marshaller = TemplateUtilities.createGistreeviewMarshaller( CharEncoding.UTF_8 );
       final StringWriter w = new StringWriter();
       marshaller.marshal( gistreeview, w );
       w.close();
