@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.core.resources;
 
@@ -68,10 +68,21 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
 
   private final IPath m_path;
 
+  private String m_name = null;
+
   public StringStorage( final String content, final IPath path )
   {
     m_content = content;
     m_path = path;
+  }
+
+  /**
+   * Overwrites the name of this storage.<br/>
+   * If set to non-<code>null</code>, {@link #getName()} will return the given value.
+   */
+  public void setName( final String name )
+  {
+    m_name = name;
   }
 
   /**
@@ -107,9 +118,12 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
   @Override
   public String getName( )
   {
+    if( m_name != null )
+      return m_name;
+
     if( m_path == null )
       return "<Unknown>";
-    
+
     return m_path.lastSegment();
   }
 
