@@ -40,11 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers.table;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.progress.UIJob;
 
 /**
  * This listener resizes the columns of a table to match its borders, if the table is resized.
@@ -61,7 +65,25 @@ public class ColumnsResizeControlListener extends ControlAdapter
 
   public static final int MIN_COL_WIDTH_PACK = -2;
 
+  private final UIJob m_resizeColumnsJob = new UIJob( "Resize columns" ) //$NON-NLS-1$
+  {
+    @Override
+    public IStatus runInUIThread( final IProgressMonitor monitor )
+    {
+      resizeColumns();
+      monitor.done();
+      return Status.OK_STATUS;
+    }
+  };
+
   private boolean m_isActive;
+
+  private Table m_table;
+
+  public ColumnsResizeControlListener( )
+  {
+    m_resizeColumnsJob.setSystem( true );
+  }
 
   @Override
   public void controlResized( final ControlEvent e )
@@ -69,22 +91,33 @@ public class ColumnsResizeControlListener extends ControlAdapter
     if( !(e.widget instanceof Table) )
       return;
 
+    if( m_table == null )
+      m_table = (Table) e.widget;
+
     if( m_isActive )
+      return;
+
+    // In order to handle many resize events in short time, we schedule the real update into a job
+    m_resizeColumnsJob.cancel();
+    m_resizeColumnsJob.schedule( 50 );
+  }
+
+  protected void resizeColumns( )
+  {
+    if( m_table.isDisposed() )
       return;
 
     try
     {
       m_isActive = true;
 
-      final Table table = (Table) e.widget;
-
       /* Get the area of the parent. */
-      final Rectangle area = table.getClientArea();
+      final Rectangle area = m_table.getClientArea();
 
       final int width = area.width;
 
       /* Set the size for each colum. */
-      final TableColumn[] columns = table.getColumns();
+      final TableColumn[] columns = m_table.getColumns();
       int remainingWidth = width;
 
       for( int i = 0; i < columns.length; i++ )
