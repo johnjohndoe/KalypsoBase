@@ -100,6 +100,7 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
  */
 public class TableView extends ViewPart implements IAdapterEater<IProfilProvider>, IProfilProviderListener, ITupleResultViewerProvider
 {
+  public static String ID = "org.kalypso.model.wspm.ui.view.table.TableView"; //$NON-NLS-1$
   private final AdapterPartListener<IProfilProvider> m_profilProviderListener = new AdapterPartListener<IProfilProvider>( IProfilProvider.class, this, EditorFirstAdapterFinder.<IProfilProvider> instance(), EditorFirstAdapterFinder.<IProfilProvider> instance() );
 
   protected Form m_form;
