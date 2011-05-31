@@ -56,8 +56,6 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements ICommandTa
 {
   public static final String EXTENSIN_GMV = ".gmv"; //$NON-NLS-1$
 
-  public static final String ID = "org.kalypso.ui.editor.GmlEditor"; //$NON-NLS-1$
-
   private GmlTreeView m_viewer = null;
 
   @Override
@@ -113,9 +111,11 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements ICommandTa
 
     try
     {
+      final String charset = file.getCharset();
+
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
       writer = new OutputStreamWriter( bos );
-      m_viewer.saveInput( writer, monitor );
+      m_viewer.saveInput( bos, charset, monitor );
       writer.close();
 
       bis = new ByteArrayInputStream( bos.toByteArray() );
@@ -304,6 +304,11 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements ICommandTa
       return m_viewer;
 
     return super.getAdapter( adapter );
+  }
+
+  protected GmlTreeView getViewer( )
+  {
+    return m_viewer;
   }
 
   /**
