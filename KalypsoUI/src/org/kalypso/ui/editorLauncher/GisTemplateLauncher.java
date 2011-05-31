@@ -44,7 +44,7 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.IEditorLauncher;
-import org.kalypso.ui.editor.gmleditor.ui.GmlEditor;
+import org.kalypso.ui.editor.gmleditor.part.GmlEditor;
 
 /**
  * @author belger

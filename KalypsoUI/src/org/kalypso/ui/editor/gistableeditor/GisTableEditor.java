@@ -99,7 +99,7 @@ import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.Gistableview.Layer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.AbstractEditorPart;
+import org.kalypso.ui.editor.AbstractWorkbenchPart;
 import org.kalypso.ui.editor.gistableeditor.actions.ColumnAction;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -116,7 +116,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
  * 
  * @author belger
  */
-public class GisTableEditor extends AbstractEditorPart implements IEditorPart, ISelectionProvider, IExportableObjectFactory
+public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart, ISelectionProvider, IExportableObjectFactory
 {
   private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {
@@ -160,7 +160,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
   private Gistableview m_tableTemplate;
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#dispose()
    */
   @Override
   public void dispose( )
@@ -173,7 +173,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.core.resources.IFile)
    */
   @Override

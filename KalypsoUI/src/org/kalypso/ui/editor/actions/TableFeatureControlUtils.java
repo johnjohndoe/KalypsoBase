@@ -58,7 +58,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -124,7 +124,7 @@ public class TableFeatureControlUtils
             viewer.setLabelProvider( new GMLLabelProvider()
             {
               /**
-               * @see org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2#getText(java.lang.Object)
+               * @see org.kalypso.ui.editor.gmleditor.part.GMLEditorLabelProvider2#getText(java.lang.Object)
                */
               @Override
               public String getText( Object element )

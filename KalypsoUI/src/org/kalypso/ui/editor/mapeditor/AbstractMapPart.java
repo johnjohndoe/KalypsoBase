@@ -89,22 +89,22 @@ import org.kalypso.ogc.gml.mapmodel.IMapPanelProvider;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.AbstractEditorPart;
+import org.kalypso.ui.editor.AbstractWorkbenchPart;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * Abstract superclass for map editor and map view. Inherits from AbstractEditorPart for editor behavior (save when
+ * Abstract superclass for map editor and map view. Inherits from AbstractWorkbenchPart for editor behavior (save when
  * dirty, command target). Based on the old {@link GisMapEditor} implementation.
  * 
  * @author Stefan Kurzbach
  */
 // TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
-// (SK) This might have to be looked at. GisMapEditor used to implement AbstractEditorPart for basic gml editor
+// (SK) This might have to be looked at. GisMapEditor used to implement AbstractWorkbenchPart for basic gml editor
 // functionality (save when dirty, command target).
-public abstract class AbstractMapPart extends AbstractEditorPart implements IMapPanelProvider
+public abstract class AbstractMapPart extends AbstractWorkbenchPart implements IMapPanelProvider
 {
   // TODO: we probably should move this elsewhere
   public static final String MAP_COMMAND_CATEGORY = "org.kalypso.ogc.gml.map.category"; //$NON-NLS-1$
@@ -166,7 +166,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IMap
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
    */
   @Override
   public void init( final IEditorSite site, final IEditorInput input )
@@ -201,7 +201,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IMap
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
   public synchronized void createPartControl( final Composite parent )
@@ -289,7 +289,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IMap
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IStorageEditorInput)
    */
   @Override
@@ -415,7 +415,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IMap
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.core.resources.IFile)
    */
   @Override
@@ -537,7 +537,7 @@ public abstract class AbstractMapPart extends AbstractEditorPart implements IMap
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
+   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#dispose()
    */
   @Override
   public void dispose( )

@@ -28,7 +28,7 @@
 		<editor default="true" name="%org.kalypso.ui.editor.featureeditor.FeatureEditor" icon="icons/kalypso_gtt.gif" extensions="gft" class="org.kalypso.ui.editor.featureeditor.FeatureEditor" id="org.kalypso.ui.editor.featureeditor.FeatureEditor">
 		</editor>
 		<editor class="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" default="true" extensions="xsd" icon="icons/full/obj16/gml_schema_file.gif" id="org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" name="%org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor" />
-		<editor class="org.kalypso.ui.editor.gmleditor.ui.GmlEditor" contributorClass="org.kalypso.ui.editor.gmleditor.ui.GmlEditorActionBarContributor" default="true" extensions="gmv,gml,shp,gmlz" icon="icons/kalypso_gtt.gif" id="org.kalypso.ui.editor.GmlEditor" name="%org.kalypso.ui.editor.gmleditor.ui.GmlEditor">
+		<editor class="org.kalypso.ui.editor.gmleditor.part.GmlEditor" contributorClass="org.kalypso.ui.editor.gmleditor.part.GmlEditorActionBarContributor" default="true" extensions="gmv,gml,shp,gmlz" icon="icons/kalypso_gtt.gif" id="org.kalypso.ui.editor.GmlEditor" name="%org.kalypso.ui.editor.gmleditor.part.GmlEditor">
 		</editor>
 		<editor class="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" icon="icons/kalypso_odt.gif" default="true" contributorClass="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditorContributor" name="%org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" id="org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor" extensions="odt,zml">
 		</editor>
@@ -79,16 +79,16 @@
 				<separator name="selection" />
 				<separator name="additions" />
 			</menu>
-			<action disabledIcon="icons/map/save_edit_disabled.gif" toolbarPath="edit" label="%org.kalypso.ui.editor.gmleditor.util.actions.SaveGmlDelagate.label" tooltip="%org.kalypso.ui.editor.gmleditor.util.actions.SaveGmlDelagate.tooltip" icon="icons/feature/save_GML.gif" class="org.kalypso.ui.editor.gmleditor.util.actions.SaveGmlDelagate" style="push" menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit" id="org.kalypso.ui.editor.gistreeeditor.SaveDataAction">
+			<action disabledIcon="icons/map/save_edit_disabled.gif" toolbarPath="edit" label="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelagate.label" tooltip="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelagate.tooltip" icon="icons/feature/save_GML.gif" class="org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate" style="push" menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit" id="org.kalypso.ui.editor.gistreeeditor.SaveDataAction">
 			</action>
-			<action class="org.kalypso.ui.editor.gmleditor.util.actions.RedoDelegate" disabledIcon="icons/gistable/redo_edit_disabled.gif" icon="icons/gistable/redo_edit.gif" id="org.kalypso.ui.editor.gmleditor.util.actions.RedoDelegate" label="%org.kalypso.ui.editor.gmleditor.util.actions.RedoDelegate.label" menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit" style="push" toolbarPath="edit" tooltip="%org.kalypso.ui.editor.gmleditor.util.actions.RedoDelegate.tooltip">
+			<action class="org.kalypso.ui.editor.gmleditor.actions.RedoDelegate" disabledIcon="icons/gistable/redo_edit_disabled.gif" icon="icons/gistable/redo_edit.gif" id="org.kalypso.ui.editor.gmleditor.util.actions.RedoDelegate" label="%org.kalypso.ui.editor.gmleditor.actions.RedoDelegate.label" menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit" style="push" toolbarPath="edit" tooltip="%org.kalypso.ui.editor.gmleditor.actions.RedoDelegate.tooltip">
 			</action>
-			<action class="org.kalypso.ui.editor.gmleditor.util.actions.UndoDelegate" disabledIcon="icons/gistable/undo_edit_disabled.gif" icon="icons/gistable/undo_edit.gif" id="org.kalypso.ui.editor.gmleditor.util.actions.UndoDelegate" label="%org.kalypso.ui.editor.gmleditor.util.actions.UndoDelegate.label" menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit" style="push" toolbarPath="edit" tooltip="%org.kalypso.ui.editor.gmleditor.util.actions.UndoDelegate.tooltip">
+			<action class="org.kalypso.ui.editor.gmleditor.actions.UndoDelegate" disabledIcon="icons/gistable/undo_edit_disabled.gif" icon="icons/gistable/undo_edit.gif" id="org.kalypso.ui.editor.gmleditor.util.actions.UndoDelegate" label="%org.kalypso.ui.editor.gmleditor.actions.UndoDelegate.label" menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit" style="push" toolbarPath="edit" tooltip="%org.kalypso.ui.editor.gmleditor.actions.UndoDelegate.tooltip">
 			</action>
-			<action class="org.kalypso.ui.editor.gmleditor.util.actions.CollapseAllActionDelegate" disabledIcon="icons/util/tree_collapse_all_disabled.gif" icon="icons/util/tree_collapse_all.gif" id="org.kalypso.ui.editor.gmleditor.util.actions.CollapseAllActionDelegate" label="%org.kalypso.ui.editor.gmleditor.util.actions.CollapseAllActionDelegate.label" menubarPath="org.kalypso.ui.editors.treeeditor.menu/navigate" style="push" toolbarPath="navigate"
-				tooltip="%org.kalypso.ui.editor.gmleditor.util.actions.CollapseAllActionDelegate.label" />
-			<action class="org.kalypso.ui.editor.gmleditor.util.actions.GoIntoActionDelegate" disabledIcon="icons/full/dlcl16/gointo.gif" icon="icons/full/elcl16/gointo.gif" id="org.kalypso.ui.editor.gmleditor.util.actions.GoIntoActionDelegate" label="%org.kalypso.ui.editor.gmleditor.util.actions.GoIntoActionDelegate.label" menubarPath="org.kalypso.ui.editors.treeeditor.menu/navigate" style="push" toolbarPath="navigate" tooltip="%org.kalypso.ui.editor.gmleditor.util.actions.GoIntoActionDelegate.tooltip" />
-			<action class="org.kalypso.ui.editor.gmleditor.util.actions.GoUpActionDelegate" disabledIcon="icons/full/dlcl16/up_nav.gif" icon="icons/full/elcl16/up_nav.gif" id="org.kalypso.ui.editor.gmleditor.util.actions.GoUpActionDelegate" label="%org.kalypso.ui.editor.gmleditor.util.actions.GoUpActionDelegate.label" menubarPath="org.kalypso.ui.editors.treeeditor.menu/navigate" style="push" toolbarPath="navigate" tooltip="%org.kalypso.ui.editor.gmleditor.util.actions.GoUpActionDelegate.tooltip" />
+			<action class="org.kalypso.ui.editor.gmleditor.actions.CollapseAllActionDelegate" disabledIcon="icons/util/tree_collapse_all_disabled.gif" icon="icons/util/tree_collapse_all.gif" id="org.kalypso.ui.editor.gmleditor.util.actions.CollapseAllActionDelegate" label="%org.kalypso.ui.editor.gmleditor.actions.CollapseAllActionDelegate.label" menubarPath="org.kalypso.ui.editors.treeeditor.menu/navigate" style="push" toolbarPath="navigate"
+				tooltip="%org.kalypso.ui.editor.gmleditor.actions.CollapseAllActionDelegate.label" />
+			<action class="org.kalypso.ui.editor.gmleditor.actions.GoIntoActionDelegate" disabledIcon="icons/full/dlcl16/gointo.gif" icon="icons/full/elcl16/gointo.gif" id="org.kalypso.ui.editor.gmleditor.util.actions.GoIntoActionDelegate" label="%org.kalypso.ui.editor.gmleditor.actions.GoIntoActionDelegate.label" menubarPath="org.kalypso.ui.editors.treeeditor.menu/navigate" style="push" toolbarPath="navigate" tooltip="%org.kalypso.ui.editor.gmleditor.actions.GoIntoActionDelegate.tooltip" />
+			<action class="org.kalypso.ui.editor.gmleditor.actions.GoUpActionDelegate" disabledIcon="icons/full/dlcl16/up_nav.gif" icon="icons/full/elcl16/up_nav.gif" id="org.kalypso.ui.editor.gmleditor.util.actions.GoUpActionDelegate" label="%org.kalypso.ui.editor.gmleditor.actions.GoUpActionDelegate.label" menubarPath="org.kalypso.ui.editors.treeeditor.menu/navigate" style="push" toolbarPath="navigate" tooltip="%org.kalypso.ui.editor.gmleditor.actions.GoUpActionDelegate.tooltip" />
 		</editorContribution>
 		<editorContribution targetID="org.kalypso.ui.editor.obstableeditor.ObservationTableEditor" id="org.kalypso.ui.editor.obstableeditor.EditorContribution">
 			<menu label="%org.kalypso.ui.editor.obstableeditor.menu" path="additions" id="org.kalypso.ui.editor.obstableeditor.menu">
@@ -114,7 +114,7 @@
 		<objectContribution objectClass="org.kalypsodeegree.model.feature.Feature" adaptable="false" id="org.kalypso.objectclass.feature">
 			<action enablesFor="1" label="%org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate.label" tooltip="%org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate.tooltip" class="org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate" icon="icons/feature/gis_feature_delete.gif" style="push" id="org.kalypso.objectclass.feature.action.remove">
 			</action>
-			<action class="org.kalypso.ui.editor.gmleditor.util.actions.EditFeature" icon="icons/feature/gis_feature_edit.gif" id="org.kalypso.objectclass.feature.editfeature" label="%org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.label.edit" tooltip="%org.kalypso.ui.editor.gmleditor.util.actions.EditFeature.tooltip" />
+			<action class="org.kalypso.ui.editor.gmleditor.actions.EditFeature" icon="icons/feature/gis_feature_edit.gif" id="org.kalypso.objectclass.feature.editfeature" label="%org.kalypso.ui.editor.gmleditor.actions.EditFeature.label.edit" tooltip="%org.kalypso.ui.editor.gmleditor.actions.EditFeature.tooltip" />
 			<menu label="%org.kalypso.objectclass.feature.menu.batchedit.label" path="additions" id="org.kalypso.objectclass.feature.menu.batchedit">
 				<separator name="editGroup" />
 			</menu>
@@ -166,7 +166,7 @@
 			<action class="org.kalypso.ogc.gml.om.EditObservationAction" enablesFor="1" icon="icons/observation/zml-icon.gif" id="org.kalypso.ogc.gml.om.EditObservationAction" label="%org.kalypso.ogc.gml.om.EditObservationAction.label" style="push" tooltip="%org.kalypso.ogc.gml.om.EditObservationAction.tooltip" />
 			<action class="org.kalypso.ogc.gml.om.ShowObservationAction" icon="icons/kalypso_ott.gif" id="org.kalypso.ogc.gml.om.ShowObservationAction" label="%org.kalypso.ogc.gml.om.ShowObservationAction.label" tooltip="%org.kalypso.ogc.gml.om.ShowObservationAction.tooltip" />
 		</objectContribution>
-		<objectContribution adaptable="false" id="org.kalypso.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement" objectClass="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement">
+		<objectContribution adaptable="false" id="org.kalypso.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement" objectClass="org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement">
 			<filter name="featureAssociationQname" value="http://www.opengis.net/gml#_Feature" />
 			<filter name="featureAssociationList" value="true" />
 			<action class="org.kalypso.ui.editor.actions.SortFeaturesActionDelegate" id="org.kalypso.ui.editor.actions.SortFeaturesActionDelegate" label="%action.label.20" menubarPath="featureListMenu" style="push" tooltip="%action.tooltip.1" />
@@ -194,7 +194,7 @@
 		<factory adaptableType="org.kalypsodeegree.model.feature.Feature" class="org.kalypso.ogc.gml.actionfilters.FeatureActionFilterAdapterFactory">
 			<adapter type="org.eclipse.ui.IActionFilter" />
 		</factory>
-		<factory adaptableType="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement" class="org.kalypso.ogc.gml.actionfilters.FeatureAssociationActionFilterAdapterFactory">
+		<factory adaptableType="org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement" class="org.kalypso.ogc.gml.actionfilters.FeatureAssociationActionFilterAdapterFactory">
 			<adapter type="org.eclipse.ui.IActionFilter" />
 		</factory>
 		<factory adaptableType="org.kalypso.ui.editor.mapeditor.GisMapEditor" class="org.kalypso.ui.views.properties.MapPartAdapterFactory">
@@ -223,7 +223,7 @@
 		<actionFilter class="org.kalypso.ogc.gml.actionfilters.FeatureTypeActionFilter" id="org.kalypso.ogc.gml.actionfilters.FeatureTypeActionFilter" targetType="org.kalypsodeegree.model.feature.Feature" />
 		<actionFilter class="org.kalypso.ogc.gml.actionfilters.FeatureTypeStrictActionFilter" id="org.kalypso.ogc.gml.actionfilters.FeatureTypeStrictActionFilter" targetType="org.kalypsodeegree.model.feature.Feature" />
 		<actionFilter class="org.kalypso.ogc.gml.actionfilters.FeatureListElementActionFilter" id="org.kalypso.ogc.gml.actionfilters.FeatureListElementActionFilter" targetType="org.kalypsodeegree.model.feature.Feature" />
-		<actionFilter class="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter" id="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter" targetType="org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement" />
+		<actionFilter class="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter" id="org.kalypso.ogc.gml.actionfilters.FeatureAssociationQNameActionFilter" targetType="org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement" />
 	</extension>
 	<extension point="org.eclipse.ui.newWizards">
 		<category id="org.kalypso.ui.newwizards.kalypso" name="%category.name.1" />
@@ -1416,7 +1416,7 @@
 		<propertyTester class="org.kalypso.ogc.gml.map.properties.ThemeTester" id="org.kalypso.ogc.gml.map.ThemeTester" namespace="org.kalypso.ui.test.theme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.IKalypsoThemeProvider" />
 		<propertyTester class="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" id="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" namespace="org.kalypso.ui" properties="repositoryItemHasWQTable" type="org.kalypso.repository.IRepositoryItem" />
         <propertyTester
-              class="org.kalypso.ui.editor.gmleditor.ui.GmlEditorPropertyTester"
+              class="org.kalypso.ui.editor.gmleditor.part.GmlEditorPropertyTester"
               id="org.kalypso.ogc.gml.expressions.GMLEditorTester"
               namespace="org.kalypso.ui.test.gmleditor"
               properties="qname"

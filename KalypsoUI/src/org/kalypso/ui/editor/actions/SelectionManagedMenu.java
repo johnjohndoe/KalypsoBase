@@ -55,7 +55,7 @@ public class SelectionManagedMenu extends AbstractManagedMenu
 {
   public SelectionManagedMenu( final String menuPath )
   {
-    super( "selectionMenuManager", menuPath, Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlEditorActionBarContributor.2" ) );//$NON-NLS-1$
+    super( "selectionMenuManager", menuPath, Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlEditorActionBarContributor.2" ) );//$NON-NLS-1$
   }
 
   /**
