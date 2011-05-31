@@ -91,6 +91,8 @@ public final class TemplateUtilities
   /* GisTreeView */
   public static final JAXBContext JC_GISTREEVIEW = JaxbUtilities.createQuiet( org.kalypso.template.gistreeview.ObjectFactory.class );
 
+  public static final org.kalypso.template.gistreeview.ObjectFactory OF_GISTREEVIEW = new org.kalypso.template.gistreeview.ObjectFactory();
+
   /* Featureview */
   public static final JAXBContext JC_FEATUREVIEW = JaxbUtilities.createQuiet( org.kalypso.template.featureview.ObjectFactory.class );
 
@@ -98,6 +100,7 @@ public final class TemplateUtilities
 
   /* .gmc */
   public static final JAXBContext JC_GMC = JaxbUtilities.createQuiet( org.kalypso.gml.util.ObjectFactory.class );
+
 
   private TemplateUtilities( )
   {
@@ -189,5 +192,19 @@ public final class TemplateUtilities
     final Element rootElement = doc.createElementNS( "gistableview.template.kalypso.org", "filter" );
     rootElement.appendChild( filterElement );
     layer.setFilter( rootElement );
+  }
+
+  public static Marshaller createGistreeviewMarshaller( final String encoding ) throws JAXBException
+  {
+    final Marshaller marshaller = JaxbUtilities.createMarshaller( TemplateUtilities.JC_GISTREEVIEW );
+    marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+    marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
+    return marshaller;
+  }
+
+  public static Unmarshaller createGistreeviewUnmarshaller( ) throws JAXBException
+  {
+    final Unmarshaller unmarshaller = TemplateUtilities.JC_GISTREEVIEW.createUnmarshaller();
+    return unmarshaller;
   }
 }
