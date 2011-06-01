@@ -112,6 +112,10 @@ public interface IMapModell
 
   GM_Envelope getFullExtentBoundingBox( );
 
+  /**
+   * @deprecated Should not be here... This is just a ui hack and should be solved otherwise. Do not use any more.
+   */
+  @Deprecated
   IProject getProject( );
 
   void accept( final IKalypsoThemeVisitor visitor, int depth );
