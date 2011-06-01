@@ -191,6 +191,9 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
 
   protected IFile findfile( final IEditorInput eInput )
   {
+    if( eInput == null )
+      return null;
+
     if( eInput instanceof IFileEditorInput )
     {
       final IFileEditorInput input = (IFileEditorInput) eInput;

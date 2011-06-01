@@ -41,6 +41,8 @@
 package org.kalypso.ui.editor.mapeditor;
 
 import java.awt.Component;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.SwingUtilities;
@@ -49,7 +51,9 @@ import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -70,6 +74,7 @@ import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.ide.ResourceUtil;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -319,19 +324,8 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
       final Gismapview gisview = GisTemplateHelper.loadGisMapView( input.getStorage() );
       monitor.worked( 1 );
 
-      final URL context;
-      final IProject project;
-      if( input instanceof IFileEditorInput )
-      {
-        final IFile file = ((IFileEditorInput) input).getFile();
-        context = file == null ? null : ResourceUtilities.createURL( file );
-        project = file == null ? null : file.getProject();
-      }
-      else
-      {
-        context = null;
-        project = null;
-      }
+      final URL context = findContext( input );
+      final IProject project = findProject( input );
 
       if( !m_disposed )
       {
@@ -361,6 +355,51 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     {
       monitor.done();
     }
+  }
+
+  private URL findContext( final IStorageEditorInput input )
+  {
+    try
+    {
+      final IResource resource = findResource( input );
+      if( resource instanceof IFile )
+        return ResourceUtilities.createURL( resource );
+
+      final IStorage storage = input.getStorage();
+      final IPath fullPath = storage.getFullPath();
+      if( fullPath == null )
+        return null;
+
+      final File file = fullPath.toFile();
+      if( file.exists() )
+        return file.toURI().toURL();
+
+      return null;
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  private IProject findProject( final IStorageEditorInput input )
+  {
+    final IResource resource = findResource( input );
+    if( resource == null )
+      return null;
+
+    return resource.getProject();
+  }
+
+  private IResource findResource( final IStorageEditorInput input )
+  {
+    return ResourceUtil.getResource( input );
   }
 
   /**
