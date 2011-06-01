@@ -55,6 +55,8 @@ import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.i18n.I10nString;
@@ -486,6 +488,9 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
         return KalypsoCoreExtensions.createThemeInfo( themeInfoId, this );
     }
 
+    if( ISelection.class.isAssignableFrom( adapter ) )
+      return StructuredSelection.EMPTY;
+
     return super.getAdapter( adapter );
   }
 
@@ -555,7 +560,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * @see org.kalypso.ogc.gml.IKalypsoTheme#setId(java.lang.String)
    */
   @Override
-  public void setId( String id )
+  public void setId( final String id )
   {
     m_id = id;
   }
