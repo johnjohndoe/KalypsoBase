@@ -167,15 +167,29 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
     m_hoverFeature = null;
     m_hoverTheme = null;
 
+    repaintMap();
+
+    m_themes = initializeThemes();
+  }
+
+  /**
+   * Initialized the themes, from which features can be selected.<br/>
+   * The default implementation return the active theme.
+   */
+  protected IKalypsoFeatureTheme[] initializeThemes( )
+  {
     final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
-    mapPanel.repaintMap();
+
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
-      m_themes = new IKalypsoFeatureTheme[1];
-      m_themes[0] = (IKalypsoFeatureTheme) activeTheme;
+      final IKalypsoFeatureTheme[] themes = new IKalypsoFeatureTheme[1];
+      themes[0] = (IKalypsoFeatureTheme) activeTheme;
+      return themes;
     }
+
+    return null;
   }
 
   /**

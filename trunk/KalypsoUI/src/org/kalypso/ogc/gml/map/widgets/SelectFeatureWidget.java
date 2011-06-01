@@ -53,7 +53,7 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -118,7 +118,7 @@ public class SelectFeatureWidget extends AbstractWidget
   /** The feature the mouse is currently over */
   private Feature m_hoverFeature;
 
-  /** The theme, the hover feature blongs to */
+  /** The theme, the hover feature belongs to */
   private IKalypsoFeatureTheme m_hoverTheme;
 
   private boolean m_toggleMode;
@@ -766,7 +766,6 @@ public class SelectFeatureWidget extends AbstractWidget
 
   private IDialogSettings getSettings( )
   {
-    return PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
+    return DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
   }
-
 }
