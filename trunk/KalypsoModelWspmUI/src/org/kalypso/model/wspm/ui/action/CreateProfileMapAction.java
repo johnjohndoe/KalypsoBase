@@ -25,7 +25,6 @@ import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorRegistry;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -121,7 +120,7 @@ public class CreateProfileMapAction extends ActionDelegate
           final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
           final IEditorDescriptor editorDescription = editorRegistry.findEditor( GisMapEditor.ID );
 
-          final IFileEditorInput input = new StorageEditorInput( new StringStorage( mapTemplate, storagePath ) );
+          final IEditorInput input = new StorageEditorInput( new StringStorage( mapTemplate, storagePath ) );
 
           page.openEditor( input, editorDescription.getId(), true );
         }
@@ -139,7 +138,7 @@ public class CreateProfileMapAction extends ActionDelegate
     uijob.schedule();
   }
 
-  static IPath guessPath( final IWorkbenchPart part, final String storageName, Map<Feature, IRelationType> selectedProfiles ) throws CoreException
+  static IPath guessPath( final IWorkbenchPart part, final String storageName, final Map<Feature, IRelationType> selectedProfiles ) throws CoreException
   {
     if( part instanceof IEditorPart )
     {
@@ -155,19 +154,19 @@ public class CreateProfileMapAction extends ActionDelegate
         }
       }
     }
-    
-    Set<Entry<Feature, IRelationType>> entrySet = selectedProfiles.entrySet();
-    for( Entry<Feature, IRelationType> entry : entrySet )
+
+    final Set<Entry<Feature, IRelationType>> entrySet = selectedProfiles.entrySet();
+    for( final Entry<Feature, IRelationType> entry : entrySet )
     {
-      Feature feature = entry.getKey();
-      GMLWorkspace workspace = feature.getWorkspace();
+      final Feature feature = entry.getKey();
+      final GMLWorkspace workspace = feature.getWorkspace();
       if( workspace != null )
       {
-        URL context = workspace.getContext();
+        final URL context = workspace.getContext();
         if( context != null )
         {
-          
-          
+
+
         }
       }
     }

@@ -222,8 +222,8 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     }
 
     /* Read the properties. */
-    List<Property> properties = layerType.getProperty();
-    for( Property property : properties )
+    final List<Property> properties = layerType.getProperty();
+    for( final Property property : properties )
       theme.setProperty( property.getName(), property.getValue() );
 
     return theme;
@@ -534,9 +534,9 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
    *      org.kalypso.ogc.gml.IKalypsoTheme)
    */
   @Override
-  public void accept( final IKalypsoThemeVisitor visitor, final int depth_infinite, final IKalypsoTheme theme )
+  public void accept( final IKalypsoThemeVisitor visitor, final int depth, final IKalypsoTheme theme )
   {
-    m_modell.accept( visitor, depth_infinite, theme );
+    m_modell.accept( visitor, depth, theme );
 
   }
 
