@@ -55,7 +55,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  * 
  * @author Holger Albert
  */
-public class CRSHelper
+public final class CRSHelper
 {
   /**
    * The constructor.
@@ -72,14 +72,14 @@ public class CRSHelper
    *          The code of the coordinate system to check.
    * @return True, if the coordinate system exists.
    */
-  public static boolean isKnownCRS( String code )
+  public static boolean isKnownCRS( final String code )
   {
     if( code == null )
       return false;
 
     try
     {
-      ICoordinateSystem coordinateSystem = CoordinateSystemFactory.getCoordinateSystem( code );
+      final ICoordinateSystem coordinateSystem = CoordinateSystemFactory.getCoordinateSystem( code );
       if( coordinateSystem == null )
         return false;
 
@@ -88,7 +88,7 @@ public class CRSHelper
 
       return true;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return false;
     }
@@ -101,11 +101,11 @@ public class CRSHelper
    */
   public static String[] getAllNames( )
   {
-    String preferenceCodes = Platform.getPreferencesService().getString( KalypsoDeegreePlugin.getID(), IKalypsoDeegreePreferences.AVAILABLE_CRS_SETTING, IKalypsoDeegreePreferences.AVAILABLE_CRS_VALUE, null );
+    final String preferenceCodes = Platform.getPreferencesService().getString( KalypsoDeegreePlugin.getID(), IKalypsoDeegreePreferences.AVAILABLE_CRS_SETTING, IKalypsoDeegreePreferences.AVAILABLE_CRS_VALUE, null );
     if( preferenceCodes == null || preferenceCodes.length() == 0 )
       return new String[] {};
 
-    String[] availableNames = preferenceCodes.split( ";" );
+    final String[] availableNames = preferenceCodes.split( ";" );
     return availableNames;
   }
 
@@ -114,9 +114,9 @@ public class CRSHelper
    * 
    * @return The dimension of the coordinate system.
    */
-  public static int getDimension( String code )
+  public static int getDimension( final String code )
   {
-    ICoordinateSystem coordinateSystem = CoordinateSystemFactory.getCoordinateSystem( code );
+    final ICoordinateSystem coordinateSystem = CoordinateSystemFactory.getCoordinateSystem( code );
     if( coordinateSystem == null )
       return -1;
 
@@ -132,14 +132,14 @@ public class CRSHelper
    *          The array of codes.
    * @return The array of coordinate systems.
    */
-  public static ICoordinateSystem[] getCRSListByNames( String[] codes )
+  public static ICoordinateSystem[] getCRSListByNames( final String[] codes )
   {
     /* Memory for the coordinate systems. */
-    ArrayList<ICoordinateSystem> coordinateSystems = new ArrayList<ICoordinateSystem>();
+    final ArrayList<ICoordinateSystem> coordinateSystems = new ArrayList<ICoordinateSystem>();
 
-    for( int i = 0; i < codes.length; i++ )
+    for( final String code : codes )
     {
-      ICoordinateSystem coordinateSystem = CoordinateSystemFactory.getCoordinateSystem( codes[i] );
+      final ICoordinateSystem coordinateSystem = CoordinateSystemFactory.getCoordinateSystem( code );
       coordinateSystems.add( coordinateSystem );
     }
 
@@ -154,11 +154,11 @@ public class CRSHelper
    *          The code of the coordinate system.
    * @return The tooltip string.
    */
-  public static String getTooltipText( String code )
+  public static String getTooltipText( final String code )
   {
     try
     {
-      ICoordinateSystem coordinateSystem = CoordinateSystemFactory.getCoordinateSystem( code );
+      final ICoordinateSystem coordinateSystem = CoordinateSystemFactory.getCoordinateSystem( code );
       if( coordinateSystem != null )
       {
         /* The tooltip. */
@@ -173,7 +173,7 @@ public class CRSHelper
       /* Leave the tooltip empty. */
       return "No valid CRS: " + code;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       /* Log the error. */
       KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex ) );
@@ -188,16 +188,15 @@ public class CRSHelper
    * 
    * @return The hash of the given coordinate systems.
    */
-  public static HashMap<String, ICoordinateSystem> getCoordHash( String[] codes )
+  public static HashMap<String, ICoordinateSystem> getCoordHash( final String[] codes )
   {
     /* Get all coordinate systems. */
-    ICoordinateSystem[] coordinateSystems = CRSHelper.getCRSListByNames( codes );
+    final ICoordinateSystem[] coordinateSystems = CRSHelper.getCRSListByNames( codes );
 
     /* Cache the coordinate systems. */
-    HashMap<String, ICoordinateSystem> coordHash = new HashMap<String, ICoordinateSystem>();
-    for( int i = 0; i < coordinateSystems.length; i++ )
+    final HashMap<String, ICoordinateSystem> coordHash = new HashMap<String, ICoordinateSystem>();
+    for( final ICoordinateSystem coordinateSystem : coordinateSystems )
     {
-      ICoordinateSystem coordinateSystem = coordinateSystems[i];
       coordHash.put( coordinateSystem.getCode(), coordinateSystem );
     }
 
@@ -211,16 +210,16 @@ public class CRSHelper
    *          The code of the coordinate system.
    * @return The EPSG code of the given coordinate system.
    */
-  public static String getEPSG( String code )
+  public static String getEPSG( final String code )
   {
     /* First try: Parse it directly from the code. */
-    String epsgPrefix = "EPSG:"; //$NON-NLS-1$
+    final String epsgPrefix = "EPSG:"; //$NON-NLS-1$
     if( code.startsWith( epsgPrefix ) )
       return code.substring( epsgPrefix.length() );
 
     /* Second try: Check the name. */
-    ICoordinateSystem coordinateSystem = CoordinateSystemFactory.getCoordinateSystem( code );
-    String name = coordinateSystem.getName();
+    final ICoordinateSystem coordinateSystem = CoordinateSystemFactory.getCoordinateSystem( code );
+    final String name = coordinateSystem.getName();
     if( name.startsWith( epsgPrefix ) )
       return name.substring( epsgPrefix.length() );
 
