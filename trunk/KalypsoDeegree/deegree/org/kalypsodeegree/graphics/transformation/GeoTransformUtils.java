@@ -53,10 +53,10 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * 
  * @author Gernot Belger
  */
-public class GeoTransformUtils
+public final class GeoTransformUtils
 {
   /** Constant for LatLon-Coordinate System: 'ESPG:4326' */
-  public static String EPSG_LATLON = "EPSG:4326";
+  public static final String EPSG_LATLON = "EPSG:4326";
 
   private GeoTransformUtils( )
   {
