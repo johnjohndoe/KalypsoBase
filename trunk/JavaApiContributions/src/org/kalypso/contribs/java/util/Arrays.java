@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.util;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -568,4 +569,10 @@ public final class Arrays
     return globalSet.equals( set );
   }
 
+  public static <T> T[] toArray( final Collection< ? extends T> c, final Class< ? extends T> type )
+  {
+    @SuppressWarnings("unchecked")
+    final T[] newArray = (T[]) Array.newInstance( type, c.size() );
+    return c.toArray( newArray );
+  }
 }
