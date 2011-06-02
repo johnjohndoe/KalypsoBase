@@ -58,6 +58,8 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
  */
 public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider implements ILoadStartable
 {
+  public static final IStatus LOADING_STATUS = new Status( IStatus.INFO, KalypsoCorePlugin.getID(), "Loading..." );
+
   private final IPoolListener m_poolListener = new IPoolListener()
   {
     @Override
@@ -104,8 +106,7 @@ public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider imple
   @Override
   public void startLoading( )
   {
-    final IStatus loadingStatus = new Status( IStatus.INFO, KalypsoCorePlugin.getID(), Messages.getString( "org.kalypso.ogc.gml.PoolGmlWorkspaceProvider.0" ) ); //$NON-NLS-1$
-    setWorkspace( null, loadingStatus );
+    setWorkspace( null, LOADING_STATUS );
 
     try
     {
@@ -138,7 +139,6 @@ public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider imple
     setWorkspace( null, new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), Messages.getString( "org.kalypso.ogc.gml.PoolGmlWorkspaceProvider.2" ) ) ); //$NON-NLS-1$
   }
 
-
   public IPoolableObjectType getPoolKey( )
   {
     return m_poolKey;
@@ -151,5 +151,4 @@ public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider imple
     if( info.isDirty() )
       info.saveObject( monitor );
   }
-
 }
