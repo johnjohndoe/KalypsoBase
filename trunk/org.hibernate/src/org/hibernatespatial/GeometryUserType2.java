@@ -193,6 +193,7 @@ public class GeometryUserType2 implements UserType, ParameterizedType, Serializa
    * @throws SQLException
    * @see org.hibernate.usertype.UserType#nullSafeGet(java.sql.ResultSet, java.lang.String[], java.lang.Object)
    */
+  @SuppressWarnings("deprecation")
   @Override
   public Object nullSafeGet( final ResultSet arg0, final String[] arg1, final Object arg2 ) throws HibernateException, SQLException
   {
@@ -208,6 +209,7 @@ public class GeometryUserType2 implements UserType, ParameterizedType, Serializa
    * @throws SQLException
    * @see org.hibernate.usertype.UserType#nullSafeSet(java.sql.PreparedStatement, java.lang.Object, int)
    */
+  @SuppressWarnings("deprecation")
   @Override
   public void nullSafeSet( final PreparedStatement arg0, final Object arg1, final int arg2 ) throws HibernateException, SQLException
   {
@@ -235,7 +237,7 @@ public class GeometryUserType2 implements UserType, ParameterizedType, Serializa
    * @see org.hibernate.usertype.UserType#returnedClass()
    */
   @Override
-  public Class returnedClass( )
+  public Class< ? > returnedClass( )
   {
     initialize();
     return delegate.returnedClass();
