@@ -244,7 +244,7 @@ public class MapModell implements IMapModell
 
     if( m_activeTheme == null )
     {
-      activateTheme( theme );
+      // activateTheme( theme );
     }
   }
 
