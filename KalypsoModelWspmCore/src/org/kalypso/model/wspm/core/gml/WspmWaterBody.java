@@ -64,15 +64,17 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 {
   public static final QName QNAME = new QName( NS_WSPM, "WaterBody" ); //$NON-NLS-1$
 
-  public static final QName QNAME_WSP_FIX_MEMBER = new QName( NS_WSPM, "waterlevelFixationMember" ); //$NON-NLS-1$
+  public static final QName QNAME_MEMBER_WSP_FIX = new QName( NS_WSPM, "waterlevelFixationMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_REACH_MEMBER = new QName( NS_WSPM, "reachMember" ); //$NON-NLS-1$
+  public static final QName QNAME_MEMBER_REACH = new QName( NS_WSPM, "reachMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_PROFILEMEMBER = new QName( NS_WSPM, "profileMember" ); //$NON-NLS-1$
+  public static final QName QNAME_MEMBER_PROFILE = new QName( NS_WSPM, "profileMember" ); //$NON-NLS-1$
 
-  private static final QName QNAME_REFNR = new QName( NS_WSPM, "refNr" );//$NON-NLS-1$
+  public static final QName QNAME_PROP_REFNR = new QName( NS_WSPM, "refNr" );//$NON-NLS-1$
 
-  private static final QName QNAME_CENTER_LINE = new QName( NS_WSPM, "centerLine" );//$NON-NLS-1$
+  public static final QName QNAME_PROP_CENTER_LINE = new QName( NS_WSPM, "centerLine" );//$NON-NLS-1$
+
+  public static final QName QNAME_MEMBER_RUNOFF = new QName( NS_WSPM, "runOffEventMember" ); //$NON-NLS-1$
 
   private final IFeatureBindingCollection<IProfileFeature> m_profileMembers;
 
@@ -80,7 +82,7 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_profileMembers = new FeatureBindingCollection<IProfileFeature>( this, IProfileFeature.class, QNAME_PROP_PROFILEMEMBER );
+    m_profileMembers = new FeatureBindingCollection<IProfileFeature>( this, IProfileFeature.class, QNAME_MEMBER_PROFILE );
   }
 
   public IFeatureBindingCollection<IProfileFeature> getProfiles( )
@@ -92,7 +94,7 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
   {
     try
     {
-      final Feature profile = FeatureHelper.addFeature( this, QNAME_PROP_PROFILEMEMBER, IProfileFeature.QN_PROFILE );
+      final Feature profile = FeatureHelper.addFeature( this, QNAME_MEMBER_PROFILE, IProfileFeature.QN_PROFILE );
       if( profile instanceof IProfileFeature )
         return (IProfileFeature) profile;
     }
@@ -107,12 +109,12 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
   public void setRefNr( final String refNr )
   {
-    setProperty( QNAME_REFNR, refNr );
+    setProperty( QNAME_PROP_REFNR, refNr );
   }
 
   public String getRefNr( )
   {
-    return getProperty( QNAME_REFNR, String.class ); //$NON-NLS-1$
+    return getProperty( QNAME_PROP_REFNR, String.class ); //$NON-NLS-1$
   }
 
   public void setDirectionUpstreams( final boolean directionIsUpstream )
@@ -122,17 +124,17 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
   public Feature createRunOffEvent( ) throws GMLSchemaException
   {
-    return FeatureHelper.addFeature( this, new QName( NS_WSPM, "runOffEventMember" ), new QName( NS_WSPMRUNOFF, "RunOffEvent" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    return FeatureHelper.addFeature( this, QNAME_MEMBER_RUNOFF, new QName( NS_WSPMRUNOFF, "RunOffEvent" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public Feature createWspFix( ) throws GMLSchemaException
   {
-    return FeatureHelper.addFeature( this, QNAME_WSP_FIX_MEMBER, new QName( NS_WSPMRUNOFF, "WaterlevelFixation" ) ); //$NON-NLS-1$
+    return FeatureHelper.addFeature( this, QNAME_MEMBER_WSP_FIX, new QName( NS_WSPMRUNOFF, "WaterlevelFixation" ) ); //$NON-NLS-1$
   }
 
   public List< ? > getWspFixations( )
   {
-    return getProperty( QNAME_WSP_FIX_MEMBER, List.class );
+    return getProperty( QNAME_MEMBER_WSP_FIX, List.class );
   }
 
   public boolean isDirectionUpstreams( )
@@ -142,7 +144,7 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
   public WspmReach[] getReaches( )
   {
-    final FeatureList reaches = (FeatureList) getProperty( QNAME_REACH_MEMBER );
+    final FeatureList reaches = (FeatureList) getProperty( QNAME_MEMBER_REACH );
     final List<WspmReach> reachList = new ArrayList<WspmReach>( reaches.size() );
     for( final Object object : reaches )
     {
@@ -184,12 +186,12 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
   public GM_Curve getCenterLine( )
   {
-    return getProperty( QNAME_CENTER_LINE, GM_Curve.class );
+    return getProperty( QNAME_PROP_CENTER_LINE, GM_Curve.class );
   }
 
   public void setCenterLine( final GM_Curve centerLine )
   {
-    setProperty( QNAME_CENTER_LINE, centerLine );
+    setProperty( QNAME_PROP_CENTER_LINE, centerLine );
   }
 
   public WspmReach findReachByName( final String name )
