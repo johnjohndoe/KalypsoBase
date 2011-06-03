@@ -526,14 +526,11 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     }
   }
 
-  protected GisTemplateMapModell getMapModell( )
+  public GisTemplateMapModell getMapModell( )
   {
     return m_mapModell;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapPanelProvider#getMapPanel()
-   */
   @Override
   public IMapPanel getMapPanel( )
   {
