@@ -46,8 +46,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.progress.UIJob;
 
 /**
@@ -78,7 +82,7 @@ public class ColumnsResizeControlListener extends ControlAdapter
 
   private boolean m_isActive;
 
-  private Table m_table;
+  private Composite m_tableOrTree;
 
   public ColumnsResizeControlListener( )
   {
@@ -88,11 +92,11 @@ public class ColumnsResizeControlListener extends ControlAdapter
   @Override
   public void controlResized( final ControlEvent e )
   {
-    if( !(e.widget instanceof Table) )
+    if( !(e.widget instanceof Table) && !(e.widget instanceof Tree) )
       return;
 
-    if( m_table == null )
-      m_table = (Table) e.widget;
+    if( m_tableOrTree == null )
+      m_tableOrTree = (Composite) e.widget;
 
     if( m_isActive )
       return;
@@ -104,7 +108,7 @@ public class ColumnsResizeControlListener extends ControlAdapter
 
   protected void resizeColumns( )
   {
-    if( m_table.isDisposed() )
+    if( m_tableOrTree.isDisposed() )
       return;
 
     try
@@ -112,22 +116,23 @@ public class ColumnsResizeControlListener extends ControlAdapter
       m_isActive = true;
 
       /* Get the area of the parent. */
-      final Rectangle area = m_table.getClientArea();
+      final Rectangle area = m_tableOrTree.getClientArea();
 
       final int width = area.width;
 
       /* Set the size for each colum. */
-      final TableColumn[] columns = m_table.getColumns();
+      final Item[] columns = getItems( m_tableOrTree );
+
       int remainingWidth = width;
 
       for( int i = 0; i < columns.length; i++ )
       {
-        final TableColumn column = columns[i];
+        final Item column = columns[i];
 
         final int fixedWidth = getFixedWidth( column );
         if( fixedWidth != -1 )
         {
-          column.setWidth( fixedWidth );
+          setWidth( column, fixedWidth );
           remainingWidth -= fixedWidth;
         }
         else
@@ -138,11 +143,11 @@ public class ColumnsResizeControlListener extends ControlAdapter
           {
             final int remainingColumns = columns.length - i;
             final int columnWidth = Math.max( minColWidth, remainingWidth / remainingColumns );
-            column.setWidth( columnWidth );
+            setWidth( column, columnWidth );
             remainingWidth -= columnWidth;
           }
           else
-            column.setWidth( minColWidth );
+            setWidth( column, minColWidth );
         }
       }
     }
@@ -152,7 +157,18 @@ public class ColumnsResizeControlListener extends ControlAdapter
     }
   }
 
-  private int getFixedWidth( final TableColumn column )
+  private static Item[] getItems( final Composite tableOrTree )
+  {
+    if( tableOrTree instanceof Table )
+      return ((Table) tableOrTree).getColumns();
+
+    if( tableOrTree instanceof Tree )
+      return ((Tree) tableOrTree).getColumns();
+
+    throw new IllegalArgumentException();
+  }
+
+  private int getFixedWidth( final Item column )
   {
     final Object data = column.getData( DATA_FIXED_COL_WIDTH );
     if( data instanceof Integer )
@@ -161,7 +177,7 @@ public class ColumnsResizeControlListener extends ControlAdapter
     return -1;
   }
 
-  private int getMinimumColumnWidth( final TableColumn column )
+  private int getMinimumColumnWidth( final Item column )
   {
     final Object data = column.getData( DATA_MIN_COL_WIDTH );
     if( data instanceof Integer )
@@ -176,9 +192,30 @@ public class ColumnsResizeControlListener extends ControlAdapter
     return 0;
   }
 
-  private int calculatePack( final TableColumn column )
+  private int calculatePack( final Item column )
   {
-    column.pack();
-    return column.getWidth();
+    if( column instanceof TableColumn )
+    {
+      ((TableColumn) column).pack();
+      return ((TableColumn) column).getWidth();
+    }
+
+    if( column instanceof TreeColumn )
+    {
+      ((TreeColumn) column).pack();
+      return ((TreeColumn) column).getWidth();
+    }
+
+    throw new IllegalArgumentException();
+  }
+
+  private static void setWidth( final Item column, final int width )
+  {
+    if( column instanceof TableColumn )
+      ((TableColumn) column).setWidth( width );
+    else if( column instanceof TreeColumn )
+      ((TreeColumn) column).setWidth( width );
+    else
+      throw new IllegalArgumentException();
   }
 }
