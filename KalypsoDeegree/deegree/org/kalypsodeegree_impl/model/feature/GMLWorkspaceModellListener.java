@@ -135,6 +135,7 @@ public class GMLWorkspaceModellListener implements ModellEventListener, FeatureV
           /* Check for its properties */
           final IPropertyType[] properties = featureType.getProperties();
           for( final IPropertyType type : properties )
+          {
             if( type instanceof IRelationType )
             {
               final IRelationType rt = (IRelationType) type;
@@ -142,6 +143,7 @@ public class GMLWorkspaceModellListener implements ModellEventListener, FeatureV
 
               /* Check for current values qname */
             }
+          }
         }
       }
     }
