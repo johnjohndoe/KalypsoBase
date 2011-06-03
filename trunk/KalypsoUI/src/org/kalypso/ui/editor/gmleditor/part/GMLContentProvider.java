@@ -30,7 +30,9 @@
 package org.kalypso.ui.editor.gmleditor.part;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.namespace.QName;
@@ -77,6 +79,8 @@ public class GMLContentProvider implements ITreeContentProvider
     }
   };
 
+  private final Map<QName, Boolean> m_showChildrenOverrides = new HashMap<QName, Boolean>();
+
   private TreeViewer m_viewer;
 
   private GMLWorkspace m_workspace;
@@ -88,18 +92,9 @@ public class GMLContentProvider implements ITreeContentProvider
    */
   private GMLXPath m_rootPath = EMPTY_ROOT_PATH; //$NON-NLS-1$
 
-  private final boolean m_showAssociations;
+  private boolean m_showAssociations;
 
   private final boolean m_handleModelEvents;
-
-  /**
-   * @deprecated Use the full constructor instead
-   */
-  @Deprecated
-  public GMLContentProvider( )
-  {
-    this( true, false );
-  }
 
   public GMLContentProvider( final boolean showAssociations )
   {
@@ -130,24 +125,36 @@ public class GMLContentProvider implements ITreeContentProvider
       return new Object[] {};
 
     // Test first if we should show children
-    final QName qname;
-    if( parentElement instanceof Feature )
-      qname = ((Feature) parentElement).getFeatureType().getQName();
-    else if( parentElement instanceof FeatureAssociationTypeElement )
-      qname = ((FeatureAssociationTypeElement) parentElement).getAssociationTypeProperty().getQName();
-    else
-      qname = null;
-
-    if( qname != null )
-    {
-      final Properties properties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), qname );
-      final String showChildrenString = properties.getProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN, IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN_DEFAULT );
-      final boolean showChildren = Boolean.parseBoolean( showChildrenString );
-      if( !showChildren )
-        return new Object[] {};
-    }
+    final QName qname = getQName( parentElement );
+    final boolean showChildren = isShowChildren( qname );
+    if( !showChildren )
+      return new Object[] {};
 
     return getChildrenInternal( parentElement );
+  }
+
+  private boolean isShowChildren( final QName qname )
+  {
+    if( qname == null )
+      return true;
+
+    if( m_showChildrenOverrides.containsKey( qname ) )
+      return m_showChildrenOverrides.get( qname );
+
+    final Properties properties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), qname );
+    final String showChildrenString = properties.getProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN, IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN_DEFAULT );
+    return Boolean.parseBoolean( showChildrenString );
+  }
+
+  public static QName getQName( final Object element )
+  {
+    if( element instanceof Feature )
+      return ((Feature) element).getQualifiedName();
+
+    if( element instanceof FeatureAssociationTypeElement )
+      return ((FeatureAssociationTypeElement) element).getAssociationTypeProperty().getQName();
+
+    return null;
   }
 
   private Object[] getChildrenInternal( final Object parentElement )
@@ -179,7 +186,11 @@ public class GMLContentProvider implements ITreeContentProvider
         if( m_showAssociations )
           result.add( fate );
         else
+        {
+// final Object[] children = getChildren( fate );
+// result.addAll( Arrays.asList( children ) );
           collectAssociationChildren( fate, result );
+        }
       }
       else if( GeometryUtilities.isGeometry( property ) )
       {
@@ -199,10 +210,12 @@ public class GMLContentProvider implements ITreeContentProvider
     {
       final Feature feature = features[i];
       if( feature != null )
+      {
         if( m_workspace.isAggregatedLink( parentFeature, ftp, i ) || feature instanceof XLinkedFeature_Impl )
-          result.add( new LinkedFeatureElement( feature ) );
+          result.add( new LinkedFeatureElement( fate, feature ) );
         else
           result.add( feature );
+      }
     }
   }
 
@@ -493,6 +506,7 @@ public class GMLContentProvider implements ITreeContentProvider
       final Feature[] parentFeature = structureEvent.getParentFeatures();
 
       if( !control.isDisposed() )
+      {
         // REMARK: must be sync, if not we get a racing condition with handleGlobalSelection
         control.getDisplay().syncExec( new Runnable()
         {
@@ -506,15 +520,12 @@ public class GMLContentProvider implements ITreeContentProvider
             if( parentFeature == null )
               treeViewer.refresh();
             else
-              // for( final Feature feature : parentFeature )
-// {
-              // treeViewer.refresh( feature ); childs are not updated!
               treeViewer.refresh();
-// }
 
             treeViewer.setExpandedElements( expandedElements );
           }
         } );
+      }
     }
     else if( modellEvent instanceof FeaturesChangedModellEvent )
     {
@@ -534,4 +545,24 @@ public class GMLContentProvider implements ITreeContentProvider
     }
   }
 
+  public void setShowAssociations( final boolean showAssociations )
+  {
+    m_showAssociations = showAssociations;
+    if( m_viewer != null )
+      m_viewer.refresh();
+  }
+
+  /**
+   * Allows to override default behavior regarding visibility of children, defined by the catalog-properties.<br/>
+   * 
+   * @param override
+   *          Value that overrides the catalog behavior. Set to <code>null</code>, to use the default behavior.
+   */
+  public void setShowChildreOverride( final QName element, final Boolean override )
+  {
+    if( override == null )
+      m_showChildrenOverrides.remove( element );
+    else
+      m_showChildrenOverrides.put( element, override );
+  }
 }

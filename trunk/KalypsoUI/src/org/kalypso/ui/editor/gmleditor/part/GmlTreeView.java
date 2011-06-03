@@ -163,6 +163,11 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     this( composite, style, selectionManager, null );
   }
 
+  public GMLContentProvider getContentProvider( )
+  {
+    return m_contentProvider;
+  }
+
   /**
    * @param objectLoadedCallback
    *          We be called each time after the tree-object was loaded
