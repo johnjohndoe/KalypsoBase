@@ -46,9 +46,11 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerColumn;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 
 /**
  * Utilities for {@link org.eclipse.jface.viewers.ColumnViewer}'s.
@@ -73,7 +75,7 @@ public final class ColumnViewerUtil
     throw new IllegalArgumentException( String.format( "Unknown item type for sorting %s", item.getClass().getName() ) );
   }
 
-  public static Item itemForColumn( final ViewerColumn column ) throws IllegalArgumentException
+  public static Item itemForColumn( final ViewerColumn column )
   {
     if( column instanceof TableViewerColumn )
       return ((TableViewerColumn) column).getColumn();
@@ -104,6 +106,31 @@ public final class ColumnViewerUtil
       return new TreeViewerColumn( (TreeViewer) viewer, style );
     if( viewer instanceof TableViewer )
       return new TableViewerColumn( (TableViewer) viewer, style );
+
+    throw new IllegalArgumentException();
+  }
+
+  public static ViewerColumn createEmptyColumn( final ColumnViewer viewer )
+  {
+    if( viewer instanceof TableViewer )
+    {
+      final TableViewerColumn nullColumn = new TableViewerColumn( (TableViewer) viewer, SWT.NONE );
+      final TableColumn column = nullColumn.getColumn();
+      column.setResizable( false );
+      column.setMoveable( false );
+      column.setData( ColumnsResizeControlListener.DATA_FIXED_COL_WIDTH, 0 );
+      return nullColumn;
+    }
+
+    if( viewer instanceof TreeViewer )
+    {
+      final TreeViewerColumn nullColumn = new TreeViewerColumn( (TreeViewer) viewer, SWT.NONE );
+      final TreeColumn column = nullColumn.getColumn();
+      column.setResizable( false );
+      column.setMoveable( false );
+      column.setData( ColumnsResizeControlListener.DATA_FIXED_COL_WIDTH, 0 );
+      return nullColumn;
+    }
 
     throw new IllegalArgumentException();
   }
