@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.Properties;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -64,5 +65,5 @@ public interface IExtensionsFeatureControlFactory2
    * @param arguments
    *          Arbitrary properties to configure this control. Used taken from the xml-file.
    */
-  public IFeatureControl createFeatureControl( final FormToolkit toolkit, final Feature feature, final IPropertyType pt, final Properties arguments );
+  public IFeatureControl createFeatureControl( final FormToolkit toolkit, final Feature feature, final IPropertyType pt, final Properties arguments ) throws CoreException;
 }

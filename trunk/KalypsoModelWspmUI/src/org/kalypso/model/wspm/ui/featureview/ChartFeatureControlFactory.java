@@ -45,15 +45,16 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory;
+import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory2;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -73,14 +74,10 @@ import de.openali.odysseus.chartconfig.x020.ChartType;
  * 
  * @author Gernot Belger
  */
-public class ChartFeatureControlFactory implements IExtensionsFeatureControlFactory
+public class ChartFeatureControlFactory implements IExtensionsFeatureControlFactory2
 {
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory#createFeatureControl(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.util.Properties)
-   */
   @Override
-  public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments )
+  public IFeatureControl createFeatureControl( final FormToolkit toolkit, final Feature feature, final IPropertyType pt, final Properties arguments ) throws CoreException
   {
     final String configurationUrn = arguments.getProperty( "configuration", null ); //$NON-NLS-1$
     final String chartName = arguments.getProperty( "chart", null ); //$NON-NLS-1$
@@ -97,7 +94,7 @@ public class ChartFeatureControlFactory implements IExtensionsFeatureControlFact
     if( commandIds.length != commandStyles.length )
     {
       final String msg = Messages.getString( "org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory.0", commandIds, commandIds.length, cmdStyles, commandStyles.length ); //$NON-NLS-1$
-      IStatus status = StatusUtilities.createStatus( IStatus.WARNING, msg, null );
+      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, msg, null );
       KalypsoCorePlugin.getDefault().getLog().log( status );
     }
     else
@@ -148,9 +145,7 @@ public class ChartFeatureControlFactory implements IExtensionsFeatureControlFact
     catch( final Throwable e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
+      throw new CoreException( status );
     }
-
-    return null;
   }
 }
