@@ -251,6 +251,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private Dimension m_size;
 
+  private boolean m_useFullSelection = false;
+
   public MapPanel( final ICommandTarget viewCommandTarget, final IFeatureSelectionManager manager )
   {
     m_selectionManager = manager;
@@ -267,6 +269,16 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   protected final GM_Envelope getWishBox( )
   {
     return m_wishBBox;
+  }
+
+  // REMARK: most probably we should always return the complete selection; filtering by themes does not make so much
+// sense
+  // However, we use this flag for the moment to keep this backwards compatible and avoid side effekt.
+  // TODO: try this out when we are fare from deploying
+  @Override
+  public void setUseFullSelection( final boolean useFullSelection )
+  {
+    m_useFullSelection = useFullSelection;
   }
 
   /**
@@ -544,6 +556,10 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   @Override
   public ISelection getSelection( )
   {
+    // See setUseFullSelection
+    if( m_useFullSelection )
+      return m_selectionManager;
+
     final IMapModell mapModell = getMapModell();
     if( mapModell == null )
       return StructuredSelection.EMPTY;
