@@ -38,14 +38,21 @@ public class LinkedFeatureElement
 {
   private final Feature m_feature;
 
-  public LinkedFeatureElement( final Feature feature )
+  private final FeatureAssociationTypeElement m_fate;
+
+  public LinkedFeatureElement( final FeatureAssociationTypeElement fate, final Feature feature )
   {
+    m_fate = fate;
     m_feature = feature;
   }
-  
+
   public Feature getDecoratedFeature()
   {
     return m_feature;
   }
 
+  public FeatureAssociationTypeElement getParentElement( )
+  {
+    return m_fate;
+  }
 }
