@@ -80,12 +80,22 @@ public class AddThemeCommand implements IThemeCommand
 
   private final GMLXPath m_xpath;
 
+  private boolean m_shouldActivateTheme = true;
+
   /**
    * Same as {@link #AddThemeCommand(IKalypsoLayerModell, String, String, String, String)}, but without feature path.
    */
   public AddThemeCommand( final IKalypsoLayerModell model, final String name, final String type, final String source )
   {
     this( model, name, type, null, null, source );
+  }
+
+  /**
+   * Sets if the theme should be activated after it is added to the map.
+   */
+  public void setShouldActivateTheme( final boolean shouldActivateTheme )
+  {
+    m_shouldActivateTheme = shouldActivateTheme;
   }
 
   /**
@@ -224,7 +234,9 @@ public class AddThemeCommand implements IThemeCommand
   {
     m_layer = init();
     m_theme = m_mapModell.insertLayer( m_layer, 0 );
-    m_mapModell.activateTheme( m_theme );
+
+    if( m_shouldActivateTheme )
+      m_mapModell.activateTheme( m_theme );
   }
 
   /**
