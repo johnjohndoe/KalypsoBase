@@ -38,28 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.jface.viewers;
+package org.kalypso.contribs.eclipse.swt.widgets;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 
 /**
- * Inverts another sorter.
+ * Inverts a given other {@link ViewerComparator}.
  * 
  * @author Gernot Belger
  */
-public final class InverseSorter extends ViewerSorter
+public class InverseComparator extends ViewerComparator
 {
-  private final ViewerSorter m_sorter;
+  private final ViewerComparator m_delegate;
 
-  public InverseSorter( final ViewerSorter sorter )
+  public InverseComparator( final ViewerComparator delegate )
   {
-    m_sorter = sorter;
+    m_delegate = delegate;
   }
 
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    return m_sorter.compare( viewer, e1, e2 ) * -1;
+    return m_delegate.compare( viewer, e1, e2 ) * -1;
   }
 }

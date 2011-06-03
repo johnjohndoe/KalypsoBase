@@ -38,28 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.jface.viewers;
+package org.kalypso.contribs.eclipse.swt.widgets;
 
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.widgets.Text;
 
 /**
- * Inverts another sorter.
+ * Selects all text of a {@link org.eclipse.swt.widgets.Text}-control when focus is gained.
  * 
  * @author Gernot Belger
  */
-public final class InverseSorter extends ViewerSorter
+public class SelectAllFocusListener extends FocusAdapter
 {
-  private final ViewerSorter m_sorter;
-
-  public InverseSorter( final ViewerSorter sorter )
-  {
-    m_sorter = sorter;
-  }
-
   @Override
-  public int compare( final Viewer viewer, final Object e1, final Object e2 )
+  public void focusGained( final FocusEvent e )
   {
-    return m_sorter.compare( viewer, e1, e2 ) * -1;
+    if( !(e.widget instanceof Text) )
+      return;
+
+    final Text text = (Text) e.widget;
+    text.selectAll();
   }
 }
