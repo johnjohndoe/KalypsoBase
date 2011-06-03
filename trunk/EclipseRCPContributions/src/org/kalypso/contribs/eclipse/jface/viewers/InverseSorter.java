@@ -57,10 +57,6 @@ public final class InverseSorter extends ViewerSorter
     m_sorter = sorter;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
