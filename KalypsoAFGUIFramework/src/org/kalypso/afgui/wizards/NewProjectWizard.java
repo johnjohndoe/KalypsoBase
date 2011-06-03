@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.wizards;
 
-import java.net.URL;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -66,6 +64,7 @@ import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.module.welcome.INewProjectWizard;
 
 /**
  * Basic wizard implementation for the various workflow/scenario based projects.<br>
@@ -73,7 +72,7 @@ import org.kalypso.core.status.StatusDialog;
  * 
  * @author Gernot Belger
  */
-public class NewProjectWizard extends BasicNewProjectResourceWizard implements INewProjectWizard
+public class NewProjectWizard extends BasicNewProjectResourceWizard implements INewProjectWizard, INewProjectHandler
 {
   protected static final String PDE_NATURE_ID = "org.eclipse.pde.PluginNature"; //$NON-NLS-1$
 
@@ -229,9 +228,8 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
       }
     }
 
-    final URL dataLocation = selectedProject.getData();
-
-    final WorkspaceModifyOperation operation = new UnpackProjectTemplateOperation( this, dataLocation, project, m_moduleID );
+    final NewProjectData data = new NewProjectData( this, selectedProject, project, m_moduleID );
+    final WorkspaceModifyOperation operation = new UnpackProjectTemplateOperation( data );
 
     final IStatus resultStatus = RunnableContextHelper.execute( getContainer(), true, true, operation );
     KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );
@@ -254,6 +252,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
    * Does nothing by default.
    */
   @SuppressWarnings("unused")
+  @Override
   public IStatus postCreateProject( final IProject project, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.done();
@@ -264,6 +263,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
    * Opens the project after it has been created. By default, if the project is scenario based, the Base-Scenario is
    * opened.
    */
+  @Override
   public void openProject( final IProject project ) throws CoreException
   {
     /* Also activate new project */
