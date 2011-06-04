@@ -66,12 +66,6 @@ public class ColumnSortListener extends SelectionAdapter
 
   private static final String SORT_LISTENER = "sortListener"; //$NON-NLS-1$
 
-// private static final Image IMAGE_EMPTY = ImageProvider.ID_EMPTY.createImage();
-
-// private static final Image IMAGE_DOWN = ImageProvider.ID_SORT_DOWN.createImage();
-
-// private static final Image IMAGE_UP = ImageProvider.ID_SORT_UP.createImage();
-
   private final ViewerColumnItem m_columnItem;
 
   public ColumnSortListener( final ViewerColumn column )
@@ -163,10 +157,7 @@ public class ColumnSortListener extends SelectionAdapter
     final Item itemToSort = m_columnItem.getColumn();
     final Item[] columns = ColumnViewerUtil.getSisterItems( itemToSort );
     for( final Item column : columns )
-    {
       column.setData( SORT_KEY, null );
-// column.setImage( m_emptyImage );
-    }
   }
 
   private void applySortState( final Boolean sortState )
@@ -186,20 +177,7 @@ public class ColumnSortListener extends SelectionAdapter
       final ViewerSorter sortSorter = createSorter( sorter, sortState );
       viewer.setComparator( sortSorter );
     }
-
-    // final Image img = getSortImage( sortState );
   }
-
-// private static Image getSortImage( final Boolean sortState )
-// {
-// if( sortState == null )
-// return m_emptyImage;
-//
-// if( sortState.booleanValue() )
-// return m_upImage;
-//
-// return m_downImage;
-// }
 
   private ViewerSorter createSorter( final ViewerSorter sorter, final Boolean sortState )
   {
