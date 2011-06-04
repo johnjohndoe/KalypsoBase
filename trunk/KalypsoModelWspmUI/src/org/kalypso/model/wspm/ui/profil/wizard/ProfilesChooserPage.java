@@ -40,10 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard;
 
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -70,6 +72,9 @@ public class ProfilesChooserPage extends ArrayChooserPage
     super( chooseables, selected, checked, numToSelect, "profilesChooserPage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage.1" ), null, useDialogSettings );//$NON-NLS-1$//$NON-NLS-2$
     setLabelProvider( new GMLLabelProvider() );
     setDescription( message );
+
+    if( chooseables instanceof Object[] && Arrays.isEmpty( (Object[]) chooseables ) )
+      setMessage( "The selection does not containt any cross sections.", IMessageProvider.WARNING );
   }
 
   /**
@@ -104,5 +109,4 @@ public class ProfilesChooserPage extends ArrayChooserPage
   {
     return m_resultInterpolationSettingsComposite;
   }
-
 }
