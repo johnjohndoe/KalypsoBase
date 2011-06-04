@@ -102,14 +102,6 @@ public class ChartSourceProvider extends AbstractSourceProvider
   private final IServiceLocator m_serviceLocator;
 
   /**
-   * Creates a new {@link ChartSourceProvider} on the given service locator.
-   */
-  public ChartSourceProvider( final IServiceLocator serviceLocator )
-  {
-    this( serviceLocator, null );
-  }
-
-  /**
    * Creates a new {@link ChartSourceProvider} on the given chart.<br>
    * Initializes it state with the given parameters.
    */
