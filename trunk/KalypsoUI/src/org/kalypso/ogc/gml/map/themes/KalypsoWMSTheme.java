@@ -79,17 +79,17 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   /**
    * The source string. Do not remove this, because it is needed, when the template is saved.
    */
-  private String m_source;
+  private final String m_source;
 
   /**
    * The layer.
    */
-  private LayerType m_layer;
+  private final LayerType m_layer;
 
   /**
    * This variable stores the image provider.
    */
-  private IKalypsoImageProvider m_provider;
+  private final IKalypsoImageProvider m_provider;
 
   /**
    * This variable stores the legend, if any.
@@ -138,17 +138,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   @Override
   public GM_Envelope getFullExtent( )
   {
-    if( m_maxEnvLocalSRS == null )
-      m_maxEnvLocalSRS = m_provider.getFullExtent();
-
+    // should not block! If capabilities are not yet loaded, return null
     return m_maxEnvLocalSRS;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
@@ -157,6 +150,12 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
       return Status.OK_STATUS;
 
     setStatus( AbstractKalypsoTheme.PAINT_STATUS );
+
+    // HACK: initialize the max-extend on first paint, because paint is the only method that is allowed to block
+    // FIXME: we should refaktor4 the whole image provider: it should immediately start loading the capas in a sepearate
+    // thread and should inform the theme when it has finished.
+    if( m_maxEnvLocalSRS == null )
+      m_maxEnvLocalSRS = m_provider.getFullExtent();
 
     final int width = (int) p.getDestWidth();
     final int height = (int) p.getDestHeight();
@@ -321,14 +320,14 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     return ((AbstractDeegreeImageProvider) m_provider).getLastRequest();
   }
 
-  public org.eclipse.swt.graphics.Image getLegendGraphic( Font font ) throws CoreException
+  public org.eclipse.swt.graphics.Image getLegendGraphic( final Font font ) throws CoreException
   {
     if( m_provider == null || !(m_provider instanceof ILegendProvider) )
       return null;
 
     if( m_legend == null )
     {
-      ILegendProvider legendProvider = (ILegendProvider) m_provider;
+      final ILegendProvider legendProvider = (ILegendProvider) m_provider;
       m_legend = legendProvider.getLegendGraphic( null, font );
     }
 
@@ -343,7 +342,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     if( !(m_layer instanceof StyledLayerType) )
       return new Style[] {};
 
-    StyledLayerType styledLayer = (StyledLayerType) m_layer;
+    final StyledLayerType styledLayer = (StyledLayerType) m_layer;
     return styledLayer.getStyle().toArray( new Style[] {} );
   }
 }
