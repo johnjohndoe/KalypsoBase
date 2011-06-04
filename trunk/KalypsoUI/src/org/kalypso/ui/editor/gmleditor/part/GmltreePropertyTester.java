@@ -49,6 +49,8 @@ public class GmltreePropertyTester extends PropertyTester
 {
   private static final String PROPERTY_IS_DATA_DIRTY = "isDataDirty"; //$NON-NLS-1$
 
+  private static final String PROPERTY_HAS_SELECTION = "hasSelection"; //$NON-NLS-1$
+
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
@@ -59,6 +61,9 @@ public class GmltreePropertyTester extends PropertyTester
 
     if( PROPERTY_IS_DATA_DIRTY.equals( property ) )
       return viewer.isDataDirty();
+
+    if( PROPERTY_HAS_SELECTION.equals( property ) )
+      return !viewer.getSelection().isEmpty();
 
     return false;
   }

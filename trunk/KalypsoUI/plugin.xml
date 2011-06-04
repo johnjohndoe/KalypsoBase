@@ -8,6 +8,7 @@
 	<extension-point id="typeHandlers" name="typeHandlers" schema="schema/typeHandlers.exsd" />
  <extension-point id="observationTableHeaderPopupMenu" name="observationTableHeaderPopupMenu" schema="schema/observationTableHeaderPopupMenu.exsd"/>
  <extension-point id="movieImageProvider" name="movieImageProvider" schema="schema/movieImageProvider.exsd"/>
+ <extension-point id="gmlExportWizards" name="gmlExportWizards" schema="schema/gmlExportWizards.exsd"/>
 	<extension id="preferences" name="preferences" point="org.eclipse.core.runtime.preferences">
 		<initializer class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer"/>
 	</extension>
@@ -804,6 +805,7 @@
 	</extension>
 	<extension point="org.eclipse.ui.contexts">
 		<context id="org.kalypso.ogc.gml.map.context" name="%context.name.0" parentId="org.eclipse.ui.contexts.window" />
+        <context id="org.kalypso.ogc.gml.gmltree.context" name="Gml Tree" parentId="org.eclipse.ui.contexts.window"/>
 	</extension>
 	<extension point="org.kalypso.ui.featureViewExtensionControl">
 		<extensionControl class="org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory" id="org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory">
@@ -1587,14 +1589,13 @@
      </handler>
      <handler commandId="org.kalypso.ui.gmvtree.command.exportData" class="org.kalypso.ui.editor.gmleditor.command.ExportGmltreeHandler">
         <enabledWhen>
-            <!-- FIXME: uses the global selection ... how to access selection of active part ? -->
-            <with variable="selection">
-               <count value="+"/>
+            <with variable="activeGmlTree">
+               <test property="org.kalypso.ui.gmltree.hasSelection"/>
             </with>
         </enabledWhen>
      </handler>
   </extension>
   <extension point="org.eclipse.core.expressions.propertyTesters">
-      <propertyTester class="org.kalypso.ui.editor.gmleditor.part.GmltreePropertyTester" id="org.kalypso.ui.editor.gmleditor.part.GmltreePropertyTester" namespace="org.kalypso.ui.gmltree" properties="isDataDirty" type="org.kalypso.ui.editor.gmleditor.part.GmlTreeView" />
+      <propertyTester class="org.kalypso.ui.editor.gmleditor.part.GmltreePropertyTester" id="org.kalypso.ui.editor.gmleditor.part.GmltreePropertyTester" namespace="org.kalypso.ui.gmltree" properties="isDataDirty,hasSelection" type="org.kalypso.ui.editor.gmleditor.part.GmlTreeView" />
   </extension>
 </plugin>
