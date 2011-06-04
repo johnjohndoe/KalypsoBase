@@ -43,6 +43,9 @@ package org.kalypso.contribs.eclipse.ui.dialogs;
 import org.eclipse.ui.internal.wizards.AbstractExtensionWizardRegistry;
 
 /**
+ * Generic registry for export/import wizards. In order to use this registry define a new extension point that referes
+ * to eclipse's wizard schema: <code>schema://org.eclipse.ui/schema/importWizards.exsd</code>.
+ * 
  * @author Gernot Belger
  */
 @SuppressWarnings("restriction")
