@@ -320,6 +320,8 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     {
       if( m_workspace != null )
         m_pool.saveObject( m_workspace, monitor );
+
+      // FIXME: fire some kind source event in order to refresh ui elements
     }
     catch( final Exception e )
     {

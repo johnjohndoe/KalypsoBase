@@ -79,7 +79,7 @@
 				<separator name="selection" />
 				<separator name="additions" />
 			</menu>
-			<action disabledIcon="icons/map/save_edit_disabled.gif" toolbarPath="edit" label="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelagate.label" tooltip="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelagate.tooltip" icon="icons/feature/save_GML.gif" class="org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate" style="push" menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit" id="org.kalypso.ui.editor.gistreeeditor.SaveDataAction">
+			<action disabledIcon="icons/map/save_edit_disabled.gif" toolbarPath="edit" label="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.label" tooltip="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.tooltip" icon="icons/feature/save_GML.gif" class="org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate" style="push" menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit" id="org.kalypso.ui.editor.gistreeeditor.SaveDataAction">
 			</action>
 			<action class="org.kalypso.ui.editor.gmleditor.actions.RedoDelegate" disabledIcon="icons/gistable/redo_edit_disabled.gif" icon="icons/gistable/redo_edit.gif" id="org.kalypso.ui.editor.gmleditor.util.actions.RedoDelegate" label="%org.kalypso.ui.editor.gmleditor.actions.RedoDelegate.label" menubarPath="org.kalypso.ui.editors.treeeditor.menu/edit" style="push" toolbarPath="edit" tooltip="%org.kalypso.ui.editor.gmleditor.actions.RedoDelegate.tooltip">
 			</action>
@@ -1522,11 +1522,6 @@
            label="Text Theme"
            type="text">
      </factory>
-     <factory
-           class="org.kalypso.ogc.gml.movie.KalypsoMovieThemeFactory"
-           label="Movie Theme"
-           type="movie">
-     </factory>
 	 </extension>
   <extension
         point="org.kalypso.core.featureviewFilter">
@@ -1546,4 +1541,33 @@
            name="Catalog Contribution for KalypsoUI">
      </catalogContribution>
   </extension>
+  
+  <!-- GMV- (aka GML-) Tree -->
+  <extension point="org.eclipse.ui.commands">
+     <category
+           description="GIS Tree Commands"
+           id="org.kalypso.ogc.gml.gmltree.category"
+           name="GIS Tree">
+     </category>
+     <command
+           categoryId="org.kalypso.ogc.gml.gmltree.category"
+           description="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.tooltip"
+           id="org.kalypso.ui.gmvtree.command.saveData"
+           name="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.label"/>
+  </extension>
+  <extension point="org.eclipse.ui.commandImages">
+     <image commandId="org.kalypso.ui.gmvtree.command.saveData" icon="icons/feature/save_GML.gif" disabledIcon="icons/map/save_edit_disabled.gif"/>
+  </extension>
+  <extension point="org.eclipse.ui.handlers">
+     <handler commandId="org.kalypso.ui.gmvtree.command.saveData" class="org.kalypso.ui.editor.gmleditor.command.SaveGmltreeHandler">
+        <enabledWhen>
+            <with variable="activeGmlTree">
+               <test property="org.kalypso.ui.gmltree.isDataDirty"/>
+            </with>
+        </enabledWhen>
+     </handler>
+  </extension>
+    <extension point="org.eclipse.core.expressions.propertyTesters">
+        <propertyTester class="org.kalypso.ui.editor.gmleditor.part.GmltreePropertyTester" id="org.kalypso.ui.editor.gmleditor.part.GmltreePropertyTester" namespace="org.kalypso.ui.gmltree" properties="isDataDirty" type="org.kalypso.ui.editor.gmleditor.part.GmlTreeView" />
+    </extension>
 </plugin>
