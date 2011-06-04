@@ -199,4 +199,14 @@ public class PoolFeaturesProvider extends AbstractFeaturesProvider implements IL
   {
     m_workspaceProvider.save( monitor );
   }
+
+  public boolean isDirty( )
+  {
+    return m_workspaceProvider.isDirty();
+  }
+
+  public void reload( final boolean evenIfDirty )
+  {
+    m_workspaceProvider.reload( evenIfDirty );
+  }
 }
