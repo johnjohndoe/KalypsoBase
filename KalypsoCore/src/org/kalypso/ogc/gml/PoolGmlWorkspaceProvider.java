@@ -144,11 +144,32 @@ public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider imple
     return m_poolKey;
   }
 
-  public void save( final IProgressMonitor monitor ) throws CoreException
+  private KeyInfo getInfo( )
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
     final KeyInfo info = pool.getInfoForKey( m_poolKey );
+    return info;
+  }
+
+  public void save( final IProgressMonitor monitor ) throws CoreException
+  {
+    final KeyInfo info = getInfo();
     if( info.isDirty() )
       info.saveObject( monitor );
+  }
+
+  public boolean isDirty( )
+  {
+    final KeyInfo info = getInfo();
+    if( info == null )
+      return false;
+
+    return info.isDirty();
+  }
+
+  public void reload( final boolean evenIfDirty )
+  {
+    final KeyInfo info = getInfo();
+    info.reload( evenIfDirty );
   }
 }
