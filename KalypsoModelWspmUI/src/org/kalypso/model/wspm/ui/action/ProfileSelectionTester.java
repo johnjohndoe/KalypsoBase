@@ -57,10 +57,18 @@ public class ProfileSelectionTester extends PropertyTester
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
-    if( PROPERTY_HAS_PROFILE_SELECTION.equals( property ) )
-      return testHasProfileSelection( receiver );
+    try
+    {
+      if( PROPERTY_HAS_PROFILE_SELECTION.equals( property ) )
+        return testHasProfileSelection( receiver );
 
-    return false;
+      return false;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return false;
+    }
   }
 
   private boolean testHasProfileSelection( final Object receiver )
