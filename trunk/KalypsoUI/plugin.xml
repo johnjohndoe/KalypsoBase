@@ -1554,9 +1554,21 @@
            description="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.tooltip"
            id="org.kalypso.ui.gmvtree.command.saveData"
            name="%org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.label"/>
+     <command
+           categoryId="org.kalypso.ogc.gml.gmltree.category"
+           description="Reload the contents of the tree and discards local changes."
+           id="org.kalypso.ui.gmvtree.command.reloadData"
+           name="Reload"/>
+     <command
+           categoryId="org.kalypso.ogc.gml.gmltree.category"
+           description="Export selected items in various formats"
+           id="org.kalypso.ui.gmvtree.command.exportData"
+           name="Export..."/>
   </extension>
   <extension point="org.eclipse.ui.commandImages">
      <image commandId="org.kalypso.ui.gmvtree.command.saveData" icon="icons/feature/save_GML.gif" disabledIcon="icons/map/save_edit_disabled.gif"/>
+     <image commandId="org.kalypso.ui.gmvtree.command.reloadData" icon="icons/feature/reload_gmltree.png"/>
+     <image commandId="org.kalypso.ui.gmvtree.command.exportData" icon="icons/feature/export_gmltree.gif"/>
   </extension>
   <extension point="org.eclipse.ui.handlers">
      <handler commandId="org.kalypso.ui.gmvtree.command.saveData" class="org.kalypso.ui.editor.gmleditor.command.SaveGmltreeHandler">
@@ -1566,8 +1578,23 @@
             </with>
         </enabledWhen>
      </handler>
+     <handler commandId="org.kalypso.ui.gmvtree.command.reloadData" class="org.kalypso.ui.editor.gmleditor.command.ReloadGmltreeHandler">
+        <enabledWhen>
+            <with variable="activeGmlTree">
+               <test property="org.kalypso.ui.gmltree.isDataDirty"/>
+            </with>
+        </enabledWhen>
+     </handler>
+     <handler commandId="org.kalypso.ui.gmvtree.command.exportData" class="org.kalypso.ui.editor.gmleditor.command.ExportGmltreeHandler">
+        <enabledWhen>
+            <!-- FIXME: uses the global selection ... how to access selection of active part ? -->
+            <with variable="selection">
+               <count value="+"/>
+            </with>
+        </enabledWhen>
+     </handler>
   </extension>
-    <extension point="org.eclipse.core.expressions.propertyTesters">
-        <propertyTester class="org.kalypso.ui.editor.gmleditor.part.GmltreePropertyTester" id="org.kalypso.ui.editor.gmleditor.part.GmltreePropertyTester" namespace="org.kalypso.ui.gmltree" properties="isDataDirty" type="org.kalypso.ui.editor.gmleditor.part.GmlTreeView" />
-    </extension>
+  <extension point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester class="org.kalypso.ui.editor.gmleditor.part.GmltreePropertyTester" id="org.kalypso.ui.editor.gmleditor.part.GmltreePropertyTester" namespace="org.kalypso.ui.gmltree" properties="isDataDirty" type="org.kalypso.ui.editor.gmleditor.part.GmlTreeView" />
+  </extension>
 </plugin>
