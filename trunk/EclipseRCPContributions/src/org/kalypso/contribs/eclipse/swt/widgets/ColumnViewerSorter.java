@@ -54,7 +54,11 @@ public final class ColumnViewerSorter
   /**
    * Registers a {@link ViewerSorter} with a column. If the sorter is registered, clicking on the column header will
    * toggle the sorting state for this column.
+   * 
+   * @deprecated Use {@link #registerSorter(ViewerColumn, ViewerComparator)} instead. Usage of Viewersorter is
+   *             discouraged by eclipse.
    */
+  @Deprecated
   public static void registerSorter( final ViewerColumn column, final ViewerSorter sorter )
   {
     final ColumnSortListener sortListener = new ColumnSortListener( column );
