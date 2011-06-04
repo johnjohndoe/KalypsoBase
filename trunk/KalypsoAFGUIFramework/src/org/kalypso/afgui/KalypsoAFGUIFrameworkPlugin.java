@@ -167,6 +167,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         final IEvaluationService evalService = (IEvaluationService) workbench.getService( IEvaluationService.class );
+        // FIXME: must be called in ui thread
         evalService.addSourceProvider( m_szenarioSourceProvider );
 
         new WorkspaceJob( "" ) //$NON-NLS-1$
@@ -290,7 +291,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     final IWorkflow workflow = ScenarioHelper.findWorkflow( caze, nature );
     //lazy check and insurance for backwards compatibility 
     ScenarioHelper.ensureBackwardsCompatibility( caze, nature );
-    
+
     final ITask defaultTask = workflow == null ? null : workflow.getDefaultTask();
     if( defaultTask != null )
     {
