@@ -13,7 +13,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/slf4j/slf4j-jdk14-1.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate-core/lib/bytecode/cglib/cglib-2.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate-core/lib/bytecode/javassist/javassist-3.12.0.GA.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/hibernate-core/lib/jpa/hibernate-jpa-2.0-api-1.0.0.Final.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/hibernate-core/lib/jpa/hibernate-jpa-2.0-api-1.0.0.Final.jar" sourcepath="lib/hibernate-core/lib/jpa/hibernate-jpa-2.0-api-1.0.0.Final-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate-core/lib/required/antlr-2.7.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate-core/lib/required/commons-collections-3.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hibernate-core/lib/required/dom4j-1.6.1.jar"/>
