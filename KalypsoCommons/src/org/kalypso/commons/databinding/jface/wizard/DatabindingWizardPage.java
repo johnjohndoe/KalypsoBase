@@ -38,11 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.styleeditor.binding;
+package org.kalypso.commons.databinding.jface.wizard;
 
 import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.commons.databinding.AbstractDatabinding;
 
 /**
  * @author Dirk Kuch
@@ -58,9 +59,6 @@ public class DatabindingWizardPage extends AbstractDatabinding
     m_support = WizardPageSupport.create( page, getBindingContext() );
   }
 
-  /**
-   * @see org.kalypso.ui.editor.styleeditor.binding.AbstractDatabinding#dispose()
-   */
   @Override
   public void dispose( )
   {

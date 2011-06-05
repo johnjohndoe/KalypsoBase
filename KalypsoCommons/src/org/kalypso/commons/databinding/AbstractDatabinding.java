@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.styleeditor.binding;
+package org.kalypso.commons.databinding;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
@@ -106,7 +106,7 @@ public abstract class AbstractDatabinding implements IDataBinding
   }
 
   @Override
-  public Binding bindValue( final DataBinder binder )
+  public Binding bindValue( final IDataBinder binder )
   {
     return binder.apply( m_bindingContext );
   }
