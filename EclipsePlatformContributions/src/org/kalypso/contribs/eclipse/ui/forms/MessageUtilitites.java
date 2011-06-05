@@ -137,12 +137,19 @@ public final class MessageUtilitites
 
   /**
    * Converts an {@link IStatus} to an {@link org.eclipse.ui.forms.IMessage} (including its children) and sets it a
-   * message to the given form.
+   * message to the given form.<br/>
+   * If the status isOK(), the message will be cleared.
    */
   public static void setMessage( final Form form, final IStatus status )
   {
     if( form.isDisposed() )
       return;
+
+    if( status.isOK() )
+    {
+      form.setMessage( null );
+      return;
+    }
 
     final IMessage msg = convertStatus( status );
     final IMessage[] msgChildren = convertStatus( status.getChildren() );
