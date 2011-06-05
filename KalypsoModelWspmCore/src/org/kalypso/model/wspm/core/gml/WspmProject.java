@@ -63,7 +63,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public abstract class WspmProject extends Feature_Impl implements IWspmConstants
 {
-  private static final QName QNAME_WATER_BODY_MEMBER = new QName( NS_WSPM, "waterBodyMember" ); //$NON-NLS-1$
+  public static final QName QNAME_MEMBER_WATER_BODY = new QName( NS_WSPM, "waterBodyMember" ); //$NON-NLS-1$
 
   public static final QName QNAME = new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" ); //$NON-NLS-1$
 
@@ -84,7 +84,7 @@ public abstract class WspmProject extends Feature_Impl implements IWspmConstants
 
   private FeatureList getWaterBodyList( )
   {
-    return getProperty( QNAME_WATER_BODY_MEMBER, FeatureList.class );
+    return getProperty( QNAME_MEMBER_WATER_BODY, FeatureList.class );
   }
 
   /**
@@ -126,7 +126,7 @@ public abstract class WspmProject extends Feature_Impl implements IWspmConstants
     if( water != null )
       return water;
 
-    final WspmWaterBody wspmWaterBody = (WspmWaterBody) FeatureHelper.addFeature( this, QNAME_WATER_BODY_MEMBER, null );
+    final WspmWaterBody wspmWaterBody = (WspmWaterBody) FeatureHelper.addFeature( this, QNAME_MEMBER_WATER_BODY, null );
 
     // set default values
     wspmWaterBody.setName( name );
