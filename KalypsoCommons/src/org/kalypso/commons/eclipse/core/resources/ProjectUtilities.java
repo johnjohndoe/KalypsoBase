@@ -38,14 +38,18 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.core.resources;
+package org.kalypso.commons.eclipse.core.resources;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -54,11 +58,15 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.commons.KalypsoCommonsPlugin;
 
 /**
  * Helper methods for {@link IProject}.
@@ -67,6 +75,8 @@ import org.eclipse.ui.PlatformUI;
  */
 public final class ProjectUtilities
 {
+  private static final String FILE_PROJECT = ".project";
+
   private ProjectUtilities( )
   {
     // do not instantiate
@@ -177,4 +187,32 @@ public final class ProjectUtilities
     return result.toArray( new IProject[result.size()] );
   }
 
+  /**
+   * Hack method to directly change the projects name in the project file.<br/>
+   * Setting the project name to the project description actually does not work.<br>
+   * We resolve this by directly tweaking the .project file, which is not nice but works.
+   */
+  public static void setProjectName( final IProject project, final String nameToSet ) throws CoreException
+  {
+    try
+    {
+      final IFile projectResource = project.getFile( FILE_PROJECT );
+      final File projectFile = projectResource.getLocation().toFile();
+
+      final String projectEncoding = projectResource.getCharset();
+
+      final String projectContents = FileUtils.readFileToString( projectFile, projectEncoding );
+      final String nameTag = String.format( "<name>%s</name>", nameToSet );
+      final String cleanedProjectContents = projectContents.replaceAll( "<name>.*</name>", nameTag );
+
+      FileUtils.writeStringToFile( projectFile, cleanedProjectContents, projectEncoding );
+
+      projectResource.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
+    }
+    catch( final IOException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), "Failed to write project name into .project file.", e );
+      throw new CoreException( status );
+    }
+  }
 }

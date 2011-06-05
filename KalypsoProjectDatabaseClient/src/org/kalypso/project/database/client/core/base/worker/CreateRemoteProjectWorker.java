@@ -57,8 +57,8 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.core.projecthandle.local.exportwizard.ProjectExportWorker;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.i18n.Messages;
@@ -75,11 +75,11 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
 {
   private final ILocalProject m_handler;
 
-  private final IKalypsoModuleDatabaseSettings m_settings;
+  private final String m_commitType;
 
-  public CreateRemoteProjectWorker( final IKalypsoModuleDatabaseSettings settings, final ILocalProject handler )
+  public CreateRemoteProjectWorker( final String commitType, final ILocalProject handler )
   {
-    m_settings = settings;
+    m_commitType = commitType;
     m_handler = handler;
   }
 
@@ -99,7 +99,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
     try
     {
 
-      final ProjectExportWorker worker = new ProjectExportWorker( project, src );
+      final ProjectExportWorker worker = new ProjectExportWorker( project, src, false );
       final IStatus status = worker.execute( monitor );
 
       if( !status.isOK() )
@@ -131,7 +131,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       bean.setDescription( project.getName() );
       bean.setUnixName( project.getName() ); // TODO generate unixName
       bean.setProjectVersion( 0 );
-      bean.setProjectType( m_settings.getModuleCommitType() );
+      bean.setProjectType( m_commitType );
 
       service.createProject( bean, new URL( urlDestination ) );
 
