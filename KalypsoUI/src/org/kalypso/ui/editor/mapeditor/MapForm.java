@@ -139,10 +139,7 @@ public class MapForm extends Form
 
         final String oldMessage = getMessage();
         final boolean ok = status.isOK();
-        if( ok )
-          setMessage( null );
-        else
-          MessageUtilitites.setMessage( MapForm.this, status );
+        MessageUtilitites.setMessage( MapForm.this, status );
         // TODO: add hyperlink listener if sub-messages exist. Show these sub-messages on click
         // Same for tooltip support
 
