@@ -38,31 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.styleeditor.binding;
+package org.kalypso.commons.databinding;
 
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.UpdateSetStrategy;
 import org.eclipse.core.databinding.conversion.IConverter;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.core.databinding.observable.set.IObservableSet;
 
 /**
+ * Helper that wraps all information needed for a data binding of
+ * {@link org.eclipse.core.databinding.observable.set.IObservableSet}s:
+ * <ul>
+ * <li>model and target values</li>
+ * <li>converters</li>
+ * <li>validators</li>
+ * </ul>
+ * 
  * @author Gernot Belger
  */
-public interface IDataBinding
+public class DataSetBinder extends AbstractDataBinder
 {
-  Binding bindValue( IObservableValue targetValue, IObservableValue modelValue, IValidator... validators );
+  private final IObservableSet m_target;
 
-  Binding bindValue( IObservableValue targetValue, IObservableValue modelValue, IConverter targetToModel, IValidator... validators );
+  private final IObservableSet m_model;
 
-  Binding bindValue( IObservableValue target, IObservableValue model, IConverter targetToModel, IConverter modelToTarget, IValidator... validators );
+  public DataSetBinder( final IObservableSet target, final IObservableSet model )
+  {
+    m_target = target;
+    m_model = model;
+  }
 
-  Binding bindValue( final DataBinder binder );
+  @Override
+  protected Binding doApply( final DataBindingContext context )
+  {
+    final UpdateSetStrategy targetToModel = new UpdateSetStrategy();
+    final IConverter targetToModelConverter = getTargetToModelConverter();
+    if( targetToModelConverter != null )
+      targetToModel.setConverter( targetToModelConverter );
 
-  DataBindingContext getBindingContext( );
+    final UpdateSetStrategy modelToTarget = new UpdateSetStrategy();
+    final IConverter modelToTargetConverter = getModelToTargetConverter();
+    if( modelToTargetConverter != null )
+      modelToTarget.setConverter( modelToTargetConverter );
 
-  FormToolkit getToolkit( );
-
-  void dispose( );
+    return context.bindSet( m_target, m_model, targetToModel, modelToTarget );
+  }
 }
