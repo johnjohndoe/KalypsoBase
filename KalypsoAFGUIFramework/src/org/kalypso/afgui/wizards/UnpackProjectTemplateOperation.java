@@ -50,7 +50,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
@@ -66,6 +66,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.i18n.Messages;
+import org.kalypso.commons.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -74,8 +75,6 @@ import org.kalypso.module.nature.ModuleNature;
 public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperation
 {
   private static final String FILE_ABOUT_HTML = "about.html";
-
-  private static final String FILE_PROJECT = ".project";
 
   private final NewProjectData m_data;
 
@@ -109,7 +108,11 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
 
       project.open( progress.newChild( 10 ) );
 
-      resetProjectName( project );
+      /* Necessary to remove all build specs from the data projects (we have at least the manifest builder now) */
+      removeBuildspec( project );
+
+      /* Reset project to its own value, else we get the name from the zip, which leads to problems later. */
+      ProjectUtilities.setProjectName( project, project.getName() );
 
       // IMPORTANT: As the project was already open once before, we need to refresh here, else
       // not all resources are up-to-date
@@ -159,32 +162,12 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
     }
   }
 
-  /**
-   * REMARK: setting the project name to the project description actually does not work any more.<br>
-   * We resolve this by directly tweaking the .project file, which is not nice but works.
-   */
-  private void resetProjectName( final IProject project ) throws CoreException
+
+  private void removeBuildspec( final IProject project ) throws CoreException
   {
-    try
-    {
-      final IFile projectResource = project.getFile( FILE_PROJECT );
-      final File projectFile = projectResource.getLocation().toFile();
-
-      final String projectEncoding = projectResource.getCharset();
-
-      final String projectContents = FileUtils.readFileToString( projectFile, projectEncoding );
-      final String nameTag = String.format( "<name>%s</name>", project.getName() );
-      final String cleanedProjectContents = projectContents.replaceAll( "<name>.*</name>", nameTag );
-
-      FileUtils.writeStringToFile( projectFile, cleanedProjectContents, projectEncoding );
-
-      projectResource.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
-    }
-    catch( final IOException e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, "Failed to write project name into .project file.", e );
-      throw new CoreException( status );
-    }
+    final IProjectDescription description = project.getDescription();
+    description.setBuildSpec( new ICommand[0] );
+    project.setDescription( description, null );
   }
 
   /**
