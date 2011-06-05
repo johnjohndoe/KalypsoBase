@@ -30,6 +30,7 @@
 package org.kalypso.ui.editor.gmleditor.part;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -187,9 +188,8 @@ public class GMLContentProvider implements ITreeContentProvider
           result.add( fate );
         else
         {
-// final Object[] children = getChildren( fate );
-// result.addAll( Arrays.asList( children ) );
-          collectAssociationChildren( fate, result );
+          final Object[] children = getChildren( fate );
+          result.addAll( Arrays.asList( children ) );
         }
       }
       else if( GeometryUtilities.isGeometry( property ) )
