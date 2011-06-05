@@ -80,7 +80,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
-import org.kalypso.contribs.eclipse.core.resources.ProjectUtilities;
+import org.kalypso.commons.eclipse.core.resources.ProjectUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.gmlschema.feature.IFeatureType;
