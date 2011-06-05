@@ -61,7 +61,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * @author Gernot Belger
  */
-public class WspmGeometryUtilities
+public final class WspmGeometryUtilities
 {
   // TODO: this is a general transformer to the Kalypso default crs; should be moved to a central place
   public static IGeoTransformer GEO_TRANSFORMER;
