@@ -46,6 +46,8 @@ import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IRecord;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 /**
  * @author Dirk Kuch
  */
@@ -130,6 +132,19 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
       return;
 
     getRecord().setValue( index, kstValue );
+  }
+
+  public Coordinate getCoordinate( )
+  {
+    final double rechtswert = getRechtswert();
+    final double hochwert = getHochwert();
+
+    if( Double.isNaN( rechtswert ) )
+      return null;
+    else if( Double.isNaN( hochwert ) )
+      return null;
+
+    return new Coordinate( rechtswert, hochwert );
   }
 
   public Double getKsValue( )

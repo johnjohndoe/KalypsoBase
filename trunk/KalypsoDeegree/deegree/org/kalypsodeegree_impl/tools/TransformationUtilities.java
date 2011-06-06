@@ -85,7 +85,7 @@ public class TransformationUtilities
    *          Graphics context to draw the transformed image to.
    * @throws Exception
    */
-  public static void transformImage( TiledImage remoteImage, GM_Envelope sourceEnvelope, String targetCrs, GeoTransform worldToScreenTransformation, Graphics g ) throws Exception
+  public static void transformImage( final TiledImage remoteImage, final GM_Envelope sourceEnvelope, final String targetCrs, final GeoTransform worldToScreenTransformation, final Graphics g ) throws Exception
   {
     if( remoteImage == null )
       return;
@@ -118,83 +118,83 @@ public class TransformationUtilities
    * @param targetCS
    *          Target coordinate system (local CS from client).
    */
-  private static void internalTransformation( Graphics2D g2d, GeoTransform projection, TiledImage rasterImage, RectifiedGridDomain gridDomain, String targetCS ) throws Exception
+  private static void internalTransformation( final Graphics2D g2d, final GeoTransform projection, final TiledImage rasterImage, final RectifiedGridDomain gridDomain, final String targetCS ) throws Exception
   {
     /* Get the Screen extent in real world coordiantes. */
-    GM_Envelope sourceScreenRect = projection.getSourceRect();
+    final GM_Envelope sourceScreenRect = projection.getSourceRect();
 
     /* Create a surface and transform it in the coordinate system of the. */
-    GM_Surface< ? > sourceScreenSurface = GeometryFactory.createGM_Surface( sourceScreenRect, targetCS );
+    final GM_Surface< ? > sourceScreenSurface = GeometryFactory.createGM_Surface( sourceScreenRect, targetCS );
 
     GM_Surface< ? > destScreenSurface;
     if( !targetCS.equals( gridDomain.getOrigin( null ).getCoordinateSystem() ) )
     {
-      IGeoTransformer geoTrans1 = GeoTransformerFactory.getGeoTransformer( gridDomain.getOrigin( null ).getCoordinateSystem() );
+      final IGeoTransformer geoTrans1 = GeoTransformerFactory.getGeoTransformer( gridDomain.getOrigin( null ).getCoordinateSystem() );
       destScreenSurface = (GM_Surface< ? >) geoTrans1.transform( sourceScreenSurface );
     }
     else
       destScreenSurface = sourceScreenSurface;
 
     /* Get the gridExtent for the envelope of the surface. */
-    int[] gridExtent = gridDomain.getGridExtent( destScreenSurface.getEnvelope(), gridDomain.getOrigin( null ).getCoordinateSystem() );
+    final int[] gridExtent = gridDomain.getGridExtent( destScreenSurface.getEnvelope(), gridDomain.getOrigin( null ).getCoordinateSystem() );
     // Make it a bit larger in order to avoid undrawn border
-    int lowX = gridExtent[0] - 2;
-    int lowY = gridExtent[1] - 2;
-    int highX = gridExtent[2] + 2;
-    int highY = gridExtent[3] + 2;
+    final int lowX = gridExtent[0] - 2;
+    final int lowY = gridExtent[1] - 2;
+    final int highX = gridExtent[2] + 2;
+    final int highY = gridExtent[3] + 2;
 
     /* Calculate imageExtent from gridExtent. */
-    int minX = lowX;
-    int minY = rasterImage.getHeight() - highY;
-    int width = highX - lowX;
-    int height = highY - lowY;
+    final int minX = lowX;
+    final int minY = rasterImage.getHeight() - highY;
+    final int width = highX - lowX;
+    final int height = highY - lowY;
 
     /* Get the required subImage according to the gridExtent (size of the screen). */
-    TiledImage image = rasterImage.getSubImage( minX, minY, width, height );
+    final TiledImage image = rasterImage.getSubImage( minX, minY, width, height );
 
     /* If the requested sub image is not on the screen (map panel) nothing to display. */
     if( image == null )
       return;
 
     /* Get the destinationSurface in target coordinates. */
-    GM_Surface< ? > destSurface = gridDomain.getGM_Surface( lowX, lowY, highX, highY, targetCS );
-    GM_Ring destExtRing = destSurface.getSurfaceBoundary().getExteriorRing();
-    GM_Position llCorner = destExtRing.getPositions()[0];
-    GM_Position lrCorner = destExtRing.getPositions()[1];
-    GM_Position urCorner = destExtRing.getPositions()[2];
-    GM_Position ulCorner = destExtRing.getPositions()[3];
+    final GM_Surface< ? > destSurface = gridDomain.getGM_Surface( lowX, lowY, highX, highY, targetCS );
+    final GM_Ring destExtRing = destSurface.getSurfaceBoundary().getExteriorRing();
+    final GM_Position llCorner = destExtRing.getPositions()[0];
+    final GM_Position lrCorner = destExtRing.getPositions()[1];
+    final GM_Position urCorner = destExtRing.getPositions()[2];
+    final GM_Position ulCorner = destExtRing.getPositions()[3];
 
     /* Calculate the Corners in screen coordinates. */
-    GM_Position pixel_llCorner = projection.getDestPoint( llCorner );
-    GM_Position pixel_lrCorner = projection.getDestPoint( lrCorner );
-    GM_Position pixel_urCorner = projection.getDestPoint( urCorner );
-    GM_Position pixel_ulCorner = projection.getDestPoint( ulCorner );
+    final GM_Position pixel_llCorner = projection.getDestPoint( llCorner );
+    final GM_Position pixel_lrCorner = projection.getDestPoint( lrCorner );
+    final GM_Position pixel_urCorner = projection.getDestPoint( urCorner );
+    final GM_Position pixel_ulCorner = projection.getDestPoint( ulCorner );
 
     /* Calculate the height and width of the image on screen. */
-    double destImageWidth = pixel_lrCorner.getX() - pixel_llCorner.getX();
-    double destImageHeight = pixel_llCorner.getY() - pixel_ulCorner.getY();
+    final double destImageWidth = pixel_lrCorner.getX() - pixel_llCorner.getX();
+    final double destImageHeight = pixel_llCorner.getY() - pixel_ulCorner.getY();
 
     /* If one of the values is <=0, there could nothing displayed. */
     if( destImageHeight <= 0 || destImageWidth <= 0 )
       return;
 
     /* Calculate the scaling factors for the transformation. */
-    double scaleX = destImageWidth / image.getWidth();
-    double scaleY = destImageHeight / image.getHeight();
+    final double scaleX = destImageWidth / image.getWidth();
+    final double scaleY = destImageHeight / image.getHeight();
 
     /* Calculate the shear parameters for the transformation. */
-    double shearX = pixel_llCorner.getX() - pixel_ulCorner.getX();
-    double shearY = pixel_lrCorner.getY() - pixel_llCorner.getY();
+    final double shearX = pixel_llCorner.getX() - pixel_ulCorner.getX();
+    final double shearY = pixel_lrCorner.getY() - pixel_llCorner.getY();
 
     /* Calculate the required extent of the bufferedImage. */
-    GM_Position scaledImage_min = pixel_ulCorner;
-    GM_Position scaledImage_max = GeometryFactory.createGM_Position( pixel_urCorner.getX(), pixel_llCorner.getY() );
+    final GM_Position scaledImage_min = pixel_ulCorner;
+    final GM_Position scaledImage_max = GeometryFactory.createGM_Position( pixel_urCorner.getX(), pixel_llCorner.getY() );
 
-    GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX() - Math.abs( shearX ), scaledImage_min.getY() - Math.abs( shearY ) );
-    GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX() + Math.abs( shearX ), scaledImage_max.getY() + Math.abs( shearY ) );
-    GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max, targetCS );
+    final GM_Position buffImage_min = GeometryFactory.createGM_Position( scaledImage_min.getX() - Math.abs( shearX ), scaledImage_min.getY() - Math.abs( shearY ) );
+    final GM_Position buffImage_max = GeometryFactory.createGM_Position( scaledImage_max.getX() + Math.abs( shearX ), scaledImage_max.getY() + Math.abs( shearY ) );
+    final GM_Envelope buffImageEnv = GeometryFactory.createGM_Envelope( buffImage_min, buffImage_max, targetCS );
 
-    AffineTransform trafo = new AffineTransform();
+    final AffineTransform trafo = new AffineTransform();
     trafo.translate( (int) buffImageEnv.getMin().getX(), (int) buffImageEnv.getMin().getY() );
 
     /* Translate the image, so that the subImage is at the right position. */
@@ -210,8 +210,8 @@ public class TransformationUtilities
     trafo.shear( shearX / destImageWidth, shearY / destImageHeight );
 
     /* We cannot draw, if the image would have one or both side with 0 pixels. */
-    int width2 = (int) buffImageEnv.getWidth();
-    int height2 = (int) buffImageEnv.getHeight();
+    final int width2 = (int) buffImageEnv.getWidth();
+    final int height2 = (int) buffImageEnv.getHeight();
     if( width2 <= 0 || height2 <= 0 )
       return;
 
