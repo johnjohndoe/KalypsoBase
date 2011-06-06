@@ -161,8 +161,8 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
     {
       final int size = m_positions.size();
 
-      if( size < 2 )
-        throwSAXParseException( "A gml:LineString must contain at least two positions!" );
+      if( size == 1 )
+        throwSAXParseException( "A gml:LineString must contain either 0 or at least two positions!" );
 
       return GeometryFactory.createGM_Curve( m_positions.toArray( new GM_Position[m_positions.size()] ), m_activeSrs );
     }
