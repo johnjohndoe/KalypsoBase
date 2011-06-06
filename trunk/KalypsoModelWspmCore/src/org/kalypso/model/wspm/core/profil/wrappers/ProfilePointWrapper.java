@@ -136,15 +136,16 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
   public Coordinate getCoordinate( )
   {
-    final double rechtswert = getRechtswert();
-    final double hochwert = getHochwert();
+    final double x = getRechtswert();
+    final double y = getHochwert();
+    final double z = getHoehe();
 
-    if( Double.isNaN( rechtswert ) )
+    if( Double.isNaN( x ) )
       return null;
-    else if( Double.isNaN( hochwert ) )
+    else if( Double.isNaN( y ) )
       return null;
 
-    return new Coordinate( rechtswert, hochwert );
+    return new Coordinate( x, y, z );
   }
 
   public Double getKsValue( )
