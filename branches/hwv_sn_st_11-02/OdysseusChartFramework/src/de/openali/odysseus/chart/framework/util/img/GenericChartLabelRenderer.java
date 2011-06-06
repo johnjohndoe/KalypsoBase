@@ -108,7 +108,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     final Point overAllSize = new Point( textSize.x + border * 2 + m_titleBean.getInsets().left + m_titleBean.getInsets().right, textSize.y + border * 2 + m_titleBean.getInsets().top
         + m_titleBean.getInsets().bottom );
     final Rectangle textRect = getTextRect( m_titleBean.getTextAnchorX(), m_titleBean.getTextAnchorY(), overAllSize );
-    final double radian = Math.toRadians( -degree );
+    final double radian = Math.toRadians( degree );
     final double cosi = Math.cos( radian );
     final double sinu = Math.sin( radian );
     final double rotX = cosi * textRect.x + sinu * textRect.y;
@@ -129,6 +129,33 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     m_titleBean.getTextStyle().apply( gc );
     final Point textSize = gc.textExtent( text, m_drawTransparent | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
     return textSize;
+
+  }
+
+  final private Rectangle checkSize( final Rectangle boundsRect, final Rectangle textRect, final ALIGNMENT alignment )
+  {
+    final int delta = textRect.width - boundsRect.width;
+    final int height = boundsRect.height < 0 ? textRect.height : boundsRect.height;
+    if( boundsRect.width < 0 || delta <= 0 )
+      return new Rectangle( textRect.x, textRect.y, textRect.width, height );
+
+    switch( alignment )
+    {
+      case LEFT:
+      {
+        return new Rectangle( textRect.x, textRect.y, textRect.width - delta, height );
+      }
+      case RIGHT:
+      {
+        return new Rectangle( textRect.x + delta, textRect.y, textRect.width - delta, height );
+      }
+      case CENTER:
+      {
+        return new Rectangle( textRect.x + delta / 2, textRect.y, textRect.width - delta, height );
+      }
+      default:
+        return textRect;
+    }
 
   }
 
@@ -171,35 +198,33 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     return new Point( imageData.width, imageData.height );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getSize()
-   */
-  @Override
-  public Rectangle getSize( )
+  private int getLineInset( final ALIGNMENT posX, final int lineWidth, final int width )
   {
-    final Device device = PlatformUI.getWorkbench().getDisplay();
-    final Image image = new Image( device, 1, 1 );
-    final GC gc = new GC( image );
-    try
+    int left;
+    switch( posX )
     {
-      m_titleBean.getTextStyle().apply( gc );
-      final Rectangle textRectangle = calcSize( gc, m_titleBean.getRotation() );
-      return textRectangle;
-    }
-    finally
-    {
-      gc.dispose();
-      image.dispose();
-    }
-  }
+      case RIGHT:
+      {
+        left = width - lineWidth;
+        break;
+      }
+      case LEFT:
+      {
+        left = 0;
+        break;
+      }
+      case CENTER:
+      {
+        left = (width - lineWidth) / 2;
+        break;
+      }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getTitleTypeBean()
-   */
-  @Override
-  public TitleTypeBean getTitleTypeBean( )
-  {
-    return m_titleBean;
+      default:
+        left = (lineWidth - width) / 2;
+    }
+
+    return left;
+
   }
 
   private Point getRendererAnchor( final ALIGNMENT posX, final ALIGNMENT posY, final Rectangle rect )
@@ -254,6 +279,28 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getSize()
+   */
+  @Override
+  public Rectangle getSize( )
+  {
+    final Device device = PlatformUI.getWorkbench().getDisplay();
+    final Image image = new Image( device, 1, 1 );
+    final GC gc = new GC( image );
+    try
+    {
+      m_titleBean.getTextStyle().apply( gc );
+      final Rectangle textRectangle = calcSize( gc, m_titleBean.getRotation() );
+      return textRectangle;
+    }
+    finally
+    {
+      gc.dispose();
+      image.dispose();
+    }
+  }
+
   private Rectangle getTextRect( final ALIGNMENT posX, final ALIGNMENT posY, final Point size )
   {
     int left;
@@ -304,33 +351,13 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
   }
 
-  private int getLineInset( final ALIGNMENT posX, final int lineWidth, final int width )
+  /**
+   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getTitleTypeBean()
+   */
+  @Override
+  public TitleTypeBean getTitleTypeBean( )
   {
-    int left;
-    switch( posX )
-    {
-      case RIGHT:
-      {
-        left = width - lineWidth;
-        break;
-      }
-      case LEFT:
-      {
-        left = 0;
-        break;
-      }
-      case CENTER:
-      {
-        left = (width - lineWidth) / 2;
-        break;
-      }
-
-      default:
-        left = (lineWidth - width) / 2;
-    }
-
-    return left;
-
+    return m_titleBean;
   }
 
   /**
@@ -400,33 +427,6 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     paint( gc, new Rectangle( textAnchor.x, textAnchor.y, -1, -1 ) );
   }
 
-  final private Rectangle checkSize( final Rectangle boundsRect, final Rectangle textRect, final ALIGNMENT alignment )
-  {
-    final int delta = textRect.width - boundsRect.width;
-    final int height = boundsRect.height < 0 ? textRect.height : boundsRect.height;
-    if( boundsRect.width < 0 || delta <= 0 )
-      return new Rectangle( textRect.x, textRect.y, textRect.width, height );
-
-    switch( alignment )
-    {
-      case LEFT:
-      {
-        return new Rectangle( textRect.x, textRect.y, textRect.width - delta, height );
-      }
-      case RIGHT:
-      {
-        return new Rectangle( textRect.x + delta, textRect.y, textRect.width - delta, height );
-      }
-      case CENTER:
-      {
-        return new Rectangle( textRect.x + delta / 2, textRect.y, textRect.width - delta, height );
-      }
-      default:
-        return textRect;
-    }
-
-  }
-
   /**
    * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#paint(org.eclipse.swt.graphics.GC,
    *      org.eclipse.swt.graphics.Rectangle)
@@ -434,7 +434,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   @Override
   public void paint( final GC gc, final Rectangle boundsRect )
   {
-    if( m_titleBean == null || StringUtils.isEmpty( m_titleBean.getText() ) || boundsRect == null )
+    if( gc == null || m_titleBean == null || StringUtils.isEmpty( m_titleBean.getText() ) || boundsRect == null )
       return;
 
     // save GC
