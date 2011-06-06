@@ -170,14 +170,19 @@ public final class WspmGeometryUtilities
     return null;
   }
 
-  public static GM_Point createLocation( final IProfil profil, final IRecord point, String srsName )
+  public static GM_Point createLocation( final IProfil profil, final IRecord point, final String srsName )
+  {
+    return createLocation( profil, point, srsName, IWspmConstants.POINT_PROPERTY_HOEHE );
+  }
+
+  public static GM_Point createLocation( final IProfil profil, final IRecord point, String srsName, final String heightComponentID )
   {
     try
     {
       final int compRechtswert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
       final int compHochwert = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOCHWERT );
       final int compBreite = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_BREITE );
-      final int compHoehe = TupleResultUtilities.indexOfComponent( profil, IWspmConstants.POINT_PROPERTY_HOEHE );
+      final int compHoehe = TupleResultUtilities.indexOfComponent( profil, heightComponentID );
 
       /* If there are no rw/hw create pseudo geometries from breite and station */
       final Double rw;
