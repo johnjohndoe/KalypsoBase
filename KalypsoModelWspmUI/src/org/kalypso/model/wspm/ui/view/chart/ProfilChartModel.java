@@ -53,6 +53,10 @@ import de.openali.odysseus.chart.framework.model.impl.visitors.AutoScaleVisitor;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
+import de.openali.odysseus.chart.framework.util.img.ChartTitleTester;
+import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
+import de.openali.odysseus.chartconfig.x020.TitleType;
 
 /**
  * @author kimwerner
@@ -118,7 +122,7 @@ public class ProfilChartModel extends ChartModel
     {
       m_profil.addProfilListener( m_profilListener );
       m_layerProvider.registerAxis( getMapperRegistry() );
-
+     // getSettings().addTitles( ChartTitleTester.getTitleTypes() );
       updateLayers();
     }
   }

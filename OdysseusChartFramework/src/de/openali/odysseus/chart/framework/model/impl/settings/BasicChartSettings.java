@@ -149,8 +149,13 @@ public class BasicChartSettings implements IBasicChartSettings
   @Override
   public void setTitle( final String title, final ALIGNMENT position, final ITextStyle textStyle, final Insets insets )
   {
+    final TitleTypeBean titleType = m_title.isEmpty() ? new TitleTypeBean( null ) : m_title.get( 0 );
+    titleType.setLabel( title );
+    titleType.setInsets( insets );
+    titleType.setPositionHorizontal( position );
+    titleType.setTextStyle( textStyle );
     m_title.clear();
-    m_title.add( new TitleTypeBean( title, position, ALIGNMENT.CENTER, textStyle, insets ) );
+    m_title.add( titleType );
   }
 
   /**
