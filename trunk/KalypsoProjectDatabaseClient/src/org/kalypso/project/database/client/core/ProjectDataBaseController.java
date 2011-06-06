@@ -71,7 +71,7 @@ public class ProjectDataBaseController
 
   public static IStatus createRemoteProject( final IKalypsoModuleDatabaseSettings settings, final ILocalProject handler )
   {
-    final CreateRemoteProjectWorker worker = new CreateRemoteProjectWorker( settings, handler );
+    final CreateRemoteProjectWorker worker = new CreateRemoteProjectWorker( settings.getModuleCommitType(), handler );
     final IStatus status = ProgressUtilities.busyCursorWhile( worker );
     setDirty();
 
@@ -140,7 +140,7 @@ public class ProjectDataBaseController
   public static IStatus acquireProjectLock( final ILocalProject handler )
   {
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    if( MessageDialog.openQuestion( shell, Messages.getString("org.kalypso.project.database.client.core.ProjectDataBaseController.0"), Messages.getString("org.kalypso.project.database.client.core.ProjectDataBaseController.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( MessageDialog.openQuestion( shell, Messages.getString( "org.kalypso.project.database.client.core.ProjectDataBaseController.0" ), Messages.getString( "org.kalypso.project.database.client.core.ProjectDataBaseController.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       final AcquireProjectLockWorker worker = new AcquireProjectLockWorker( handler );
       final IStatus status = ProgressUtilities.busyCursorWhile( worker );

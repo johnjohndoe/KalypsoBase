@@ -98,7 +98,6 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
 
     try
     {
-
       final ProjectExportWorker worker = new ProjectExportWorker( project, src, false );
       final IStatus status = worker.execute( monitor );
 
