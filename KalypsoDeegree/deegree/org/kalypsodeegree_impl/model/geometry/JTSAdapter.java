@@ -36,6 +36,7 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -50,6 +51,8 @@ import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Triangle;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -63,6 +66,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geom.PrecisionModel;
+import com.vividsolutions.jts.triangulate.ConformingDelaunayTriangulationBuilder;
 
 /**
  * Adapter between deegree- <tt>GM_Object</tt> s and JTS- <tt>Geometry<tt> objects.
@@ -81,6 +85,7 @@ public final class JTSAdapter
   private static final String EPSG_FORMAT = "EPSG:%d"; //$NON-NLS-1$
 
   public static final int DEFAULT_SRID = 0;
+
   // factory for creating JTS-Geometries
   public static com.vividsolutions.jts.geom.GeometryFactory jtsFactory = new com.vividsolutions.jts.geom.GeometryFactory( new PrecisionModel(), DEFAULT_SRID );
 
@@ -618,6 +623,44 @@ public final class JTSAdapter
       return NumberUtils.parseQuietInt( srsUpper.substring( EPSG.length() ), DEFAULT_SRID );
 
     return DEFAULT_SRID;
+  }
+
+  public static GM_TriangulatedSurface toSurface( final ConformingDelaunayTriangulationBuilder builder, final String coordinateSystem ) throws GM_Exception
+  {
+    final Geometry triangles = builder.getTriangles( new com.vividsolutions.jts.geom.GeometryFactory() );
+    final GM_TriangulatedSurface surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( coordinateSystem );
+
+    for( int index = 0; index < triangles.getNumGeometries(); index++ )
+    {
+      try
+      {
+        final Geometry geometry = triangles.getGeometryN( index );
+        if( !(geometry instanceof Polygon) )
+          continue;
+
+        final GM_Triangle triangle = toTriangle( (Polygon) geometry );
+        surface.add( triangle );
+      }
+      catch( final GM_Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    return surface;
+  }
+
+  private static GM_Triangle toTriangle( final Polygon polygon ) throws GM_Exception
+  {
+    final Coordinate[] coordinates = polygon.getCoordinates();
+    if( coordinates.length != 4 )
+      return null;
+
+    final GM_Position p1 = JTSAdapter.wrap( coordinates[0] );
+    final GM_Position p2 = JTSAdapter.wrap( coordinates[1] );
+    final GM_Position p3 = JTSAdapter.wrap( coordinates[2] );
+
+    return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Triangle( new GM_Position[] { p1, p2, p3 }, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
   }
 
 }
