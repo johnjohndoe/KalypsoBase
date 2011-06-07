@@ -48,13 +48,13 @@ import org.kalypsodeegree.xml.Marshallable;
 public class LineColorMapEntry_Impl implements LineColorMapEntry
 {
 
-  private Stroke m_stroke;
+  private final Stroke m_stroke;
 
-  private ParameterValueType m_quantity;
+  private final ParameterValueType m_quantity;
 
-  private ParameterValueType m_label;
+  private final ParameterValueType m_label;
 
-  public LineColorMapEntry_Impl( Stroke stroke, ParameterValueType label, ParameterValueType quantity )
+  public LineColorMapEntry_Impl( final Stroke stroke, final ParameterValueType label, final ParameterValueType quantity )
   {
     m_stroke = stroke;
     m_label = label;
@@ -92,14 +92,14 @@ public class LineColorMapEntry_Impl implements LineColorMapEntry
    * @see org.kalypsodeegree.graphics.sld.LineColorMapEntry#getLabel(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public String getLabel( Feature feature )
+  public String getLabel( final Feature feature )
   {
     String val = null;
     try
     {
       val = m_label.evaluate( feature );
     }
-    catch( FilterEvaluationException e )
+    catch( final FilterEvaluationException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -111,14 +111,14 @@ public class LineColorMapEntry_Impl implements LineColorMapEntry
    * @see org.kalypsodeegree.graphics.sld.LineColorMapEntry#getQuantity(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public double getQuantity( Feature feature )
+  public double getQuantity( final Feature feature )
   {
     String val = null;
     try
     {
       val = m_quantity.evaluate( feature );
     }
-    catch( FilterEvaluationException e )
+    catch( final FilterEvaluationException e )
     {
       // TODO Auto-generated catch block
       e.printStackTrace();
