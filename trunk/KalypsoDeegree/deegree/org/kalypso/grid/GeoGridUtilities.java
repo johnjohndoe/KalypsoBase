@@ -564,8 +564,6 @@ public final class GeoGridUtilities
     final ParallelBinaryGridProcessor manager = new ParallelBinaryGridProcessor( grid, outputGridWriter );
     manager.calculate();
     outputGridWriter.close();
-// IGeoGrid outputGrid = BinaryGeoGrid.openGrid( outputCoverageFile.toURI().toURL(), grid.getOrigin(),
-// grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
 
     try
     {
