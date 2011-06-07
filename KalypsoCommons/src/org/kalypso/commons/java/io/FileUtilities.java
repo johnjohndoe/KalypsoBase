@@ -976,4 +976,25 @@ public class FileUtilities
     return proceedFileCompressOperation( sourceFileURL, outputDirURL, compressKind, true );
   }
 
+  /**
+   * @return complete file name including suffix
+   */
+  public static String resolveFileName( final String file )
+  {
+    final int index = findLastSeperator( file );
+    if( index == -1 )
+      return file;
+
+    return file.substring( index + 1 );
+  }
+
+  public static int findLastSeperator( final String file )
+  {
+    if( file.contains( "/" ) ) //$NON-NLS-1$
+      return file.lastIndexOf( "/" ); //$NON-NLS-1$
+    else if( file.contains( "\\" ) ) //$NON-NLS-1$
+      return file.lastIndexOf( "\\" ); //$NON-NLS-1$
+
+    return -1;
+  }
 }
