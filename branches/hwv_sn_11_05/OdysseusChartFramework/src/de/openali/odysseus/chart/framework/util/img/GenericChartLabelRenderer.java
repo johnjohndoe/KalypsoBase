@@ -470,7 +470,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
           final Image image = new Image( device, imageData );
           try
           {
-            gc.drawImage( image, 0, 0 );
+            gc.drawImage( image, fitRect.x, fitRect.y );
           }
           finally
           {
