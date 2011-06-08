@@ -168,7 +168,7 @@ public class ChartTitlePainter
       final Rectangle textRect = m_renderer.getSize();
       textRect.x += anchorX;
       textRect.y = anchorY;
-      m_renderer.paint( gc,  new Point( textRect.x, textRect.y ));//anchorX, anchorY ) );
+      m_renderer.paint( gc,  new Point( anchorX, anchorY ) );
       titleType.setTextAnchorY( oldAnchor );
       anchorY += textRect.height;
       usedRect = usedRect.union( textRect );
@@ -241,7 +241,7 @@ public class ChartTitlePainter
     final int deltaRight = bottomRight.y - topRight.y - topRight.height - centerRight.height;
     if( deltaRight > 1 )
       centerRight.y += deltaRight / 2;
-
+ 
     // paint
     paint( gc, topLeft, ALIGNMENT.LEFT, ALIGNMENT.TOP );
     paint( gc, topCenter, ALIGNMENT.CENTER, ALIGNMENT.TOP );
