@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img;
 
-import java.awt.Insets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -60,11 +59,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
-import org.w3c.dom.css.Rect;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 
 /**
