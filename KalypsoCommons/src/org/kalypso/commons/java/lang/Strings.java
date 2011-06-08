@@ -114,4 +114,15 @@ public final class Strings
 
     return working;
   }
+
+  public static boolean containsEqualIgnoreCase( final String[] strings, final String string )
+  {
+    for( final String s : strings )
+    {
+      if( StringUtils.equalsIgnoreCase( s, string ) )
+        return true;
+    }
+
+    return false;
+  }
 }
