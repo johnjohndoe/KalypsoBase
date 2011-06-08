@@ -168,7 +168,7 @@ public class ChartTitlePainter
       final Rectangle textRect = m_renderer.getSize();
       textRect.x += anchorX;
       textRect.y = anchorY;
-      m_renderer.paint( gc, new Point( anchorX, anchorY ) );
+      m_renderer.paint( gc,  new Point( textRect.x, textRect.y ));//anchorX, anchorY ) );
       titleType.setTextAnchorY( oldAnchor );
       anchorY += textRect.height;
       usedRect = usedRect.union( textRect );
