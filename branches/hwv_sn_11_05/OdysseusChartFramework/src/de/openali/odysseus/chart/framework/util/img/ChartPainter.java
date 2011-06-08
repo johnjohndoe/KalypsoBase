@@ -119,8 +119,7 @@ public class ChartPainter
       gc.setAntialias( SWT.ON );
       gc.setTextAntialias( SWT.ON );
       gc.setAdvanced( true );
-
-      m_titlePainter.paint( gc, new Rectangle( m_clientRect.x, m_clientRect.y, m_clientRect.width, m_titlePainter.getSize().y ) );
+      m_titlePainter.paint( gc, new Rectangle( m_clientRect.x, m_clientRect.y, m_clientRect.width, m_titlePainter.getSize( m_clientRect.width ).y ) );
 
       // paint left Axes
       paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ), gc, plotInsets.left, plotInsets.top, plotInsets.top, m_size.height, 90, false );
@@ -131,11 +130,12 @@ public class ChartPainter
       // paint bottom Axes
       paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ), gc, plotInsets.left, m_size.height - plotInsets.bottom, plotInsets.left, m_size.width, 0, false );
       // paint plot
+
       if( legendImage != null )
         gc.drawImage( legendImage, m_chartInsets.left, m_size.height - m_legendPainter.getSize().height - m_chartInsets.bottom );
-      final Rectangle plotRect = RectangleUtils.inflateRect( m_size, plotInsets );
+      final Rectangle plotRect = RectangleUtils.createInnerRectangle( m_size.width, m_size.height, plotInsets );
       // Layer könnten sonst in die Achsen zeichnen
-      gc.setClipping( RectangleUtils.inflateRect( plotRect, 1 ) );
+      gc.setClipping( plotRect );
       getPlotPainter().paint( gc, new Insets( plotInsets.top - panOffset.y, plotInsets.left - panOffset.x, plotInsets.bottom + panOffset.y, plotInsets.right + panOffset.x ) );
     }
     finally
@@ -184,7 +184,7 @@ public class ChartPainter
       final int axisRightWidth = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ) );
       final int axisTopWidth = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ) );
       final int axisBottomWidth = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ) );
-      final int top = m_titlePainter.getSize().y + axisTopWidth;
+      final int top = m_titlePainter.getSize( m_clientRect.width ).y + axisTopWidth ;
       final int bottom = m_legendPainter.getSize().height + axisBottomWidth;
       m_plotInsets = new Insets( top + m_chartInsets.top, axisLeftWidth + m_chartInsets.left, bottom + m_chartInsets.bottom, axisRightWidth + m_chartInsets.right );
     }

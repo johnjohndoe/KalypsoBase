@@ -40,12 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.GroupLayout.Alignment;
+
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.PlatformUI;
+
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 
 /**
  * @author kimwerner
@@ -56,31 +63,56 @@ public class ChartTitlePainter
 
   private Point m_size = null;
 
-  final IChartLabelRenderer m_renderer = new GenericChartLabelRenderer();
+  private final IChartLabelRenderer m_renderer;
 
-  public ChartTitlePainter( final TitleTypeBean... titleTypes )
+  /**
+   * @param titleTypes
+   *          titleTypeBean.textAnchorY will be ignored, always set to TOP
+   */
+  public ChartTitlePainter( final IChartLabelRenderer labelRenderer, final TitleTypeBean... titleTypes )
   {
     m_titleTypes = titleTypes;
+    m_renderer = labelRenderer;
+  }
+
+  /**
+   * @param titleTypes
+   *          titleTypeBean.textAnchorY will be ignored, always set to TOP
+   */
+  public ChartTitlePainter( final TitleTypeBean... titleTypes )
+  {
+    this( new GenericChartLabelRenderer(), titleTypes );
   }
 
   /**
    * @see de.openali.odysseus.chart.framework.model.style.IChartLabelRenderer#paint(org.eclipse.swt.graphics.GC)
    */
 
-  private Point calcSize( )
+// private int calcHeight( final ALIGNMENT line )
+// {
+// final Rectangle minRect = new Rectangle( 0, 0, m_width, 0 );
+// final Rectangle left = paint( null, minRect, ALIGNMENT.LEFT, line );
+// final Rectangle right = paint( null, minRect, ALIGNMENT.RIGHT, line );
+// final Rectangle center = paint( null, minRect, ALIGNMENT.CENTER, line );
+// final int height = Math.max( left.height, right.height );
+// if( center.intersects( left ) || center.intersects( right ) )
+// return height + center.height;
+// return height;
+// }
+
+  private TitleTypeBean[] getTitlesAtPosition( final ALIGNMENT horizontal, final ALIGNMENT vertical )
   {
-
-    int x = 0;
-    int y = 0;
-
+    final List<TitleTypeBean> titles = new ArrayList<TitleTypeBean>();
     for( final TitleTypeBean titleType : m_titleTypes )
     {
-      m_renderer.setTitleTypeBean( titleType );
-      final Rectangle size = m_renderer.getSize();
-      y += size.height;
-      x = Math.max( x, size.width );
+      if( titleType == null )
+        continue;
+      if( (vertical == null || titleType.getPositionVertical() == vertical) && (horizontal == null || titleType.getPositionHorizontal() == horizontal) )
+      {
+        titles.add( titleType );
+      }
     }
-    return new Point( x, y );
+    return titles.toArray( new TitleTypeBean[] {} );
   }
 
   public Image createImage( )
@@ -107,21 +139,120 @@ public class ChartTitlePainter
     return image;
   }
 
-  public final Point getSize( )
+  public final Point getSize( final int width )
   {
     if( m_size == null )
-      m_size = calcSize();
+    {
+      final Rectangle minRect = new Rectangle( 0, 0, width, 0 );
+      final Rectangle used = paint( null, minRect );
+      m_size = new Point( used.width, used.height );
+    }
     return m_size;
   }
 
-  public void paint( final GC gc, final Rectangle boundsRect )
+  public Rectangle probe( final Rectangle boundsRect, final ALIGNMENT horizontal, final ALIGNMENT vertical )
   {
-    for( final TitleTypeBean titleType : m_titleTypes )
-    {
-      m_renderer.setTitleTypeBean( titleType );
-      m_renderer.paint( gc, boundsRect );
-    }
-
+    return paint( null, boundsRect, horizontal, vertical );
   }
 
+  private Rectangle paint( final GC gc, final Rectangle boundsRect, final ALIGNMENT horizontal, final ALIGNMENT vertical )
+  {
+    final int anchorX = boundsRect.x + (int) Math.ceil( boundsRect.width * horizontal.doubleValue() );
+    int anchorY = boundsRect.y;// + (int) Math.ceil( boundsRect.height * vertical.doubleValue() );
+    Rectangle usedRect = new Rectangle( anchorX, anchorY, 0, 0 );
+    for( final TitleTypeBean titleType : getTitlesAtPosition( horizontal, vertical ) )
+    {
+      final ALIGNMENT oldAnchor = titleType.getTextAnchorY();
+      titleType.setTextAnchorY( ALIGNMENT.TOP );
+      m_renderer.setTitleTypeBean( titleType );
+      final Rectangle textRect = m_renderer.getSize();
+      textRect.x += anchorX;
+      textRect.y = anchorY;
+      m_renderer.paint( gc,  new Point( textRect.x, textRect.y ));//anchorX, anchorY ) );
+      titleType.setTextAnchorY( oldAnchor );
+      anchorY += textRect.height;
+      usedRect = usedRect.union( textRect );
+    }
+    return usedRect;
+  }
+
+  private final int getTopMost( final Rectangle rect, final Rectangle... rectangles )
+  {
+    for( final Rectangle r : rectangles )
+    {
+      if( rect.intersects( r ) )
+        rect.y = Math.max( rect.y, r.y + r.height );
+    }
+    return rect.y;
+  }
+
+  public Rectangle paint( final GC gc, final Rectangle boundsRect )
+  {
+    // titleTypeBean.textAnchorY is ignored, always set to TOP
+
+    final Rectangle topLeft = probe( boundsRect, ALIGNMENT.LEFT, ALIGNMENT.TOP );
+    final Rectangle topCenter = probe( boundsRect, ALIGNMENT.CENTER, ALIGNMENT.TOP );
+    final Rectangle topRight = probe( boundsRect, ALIGNMENT.RIGHT, ALIGNMENT.TOP );
+    final Rectangle centerLeft = probe( boundsRect, ALIGNMENT.LEFT, ALIGNMENT.CENTER );
+    final Rectangle centerCenter = probe( boundsRect, ALIGNMENT.CENTER, ALIGNMENT.CENTER );
+    final Rectangle centerRight = probe( boundsRect, ALIGNMENT.RIGHT, ALIGNMENT.CENTER );
+    final Rectangle bottomLeft = probe( boundsRect, ALIGNMENT.LEFT, ALIGNMENT.BOTTOM );
+    final Rectangle bottomCenter = probe( boundsRect, ALIGNMENT.CENTER, ALIGNMENT.BOTTOM );
+    final Rectangle bottomRight = probe( boundsRect, ALIGNMENT.RIGHT, ALIGNMENT.BOTTOM );
+
+    // top-Line
+    Rectangle usedRect = boundsRect.union( topLeft );
+    topRight.y = getTopMost( topRight, topLeft );
+    usedRect = usedRect.union( topRight );
+    topCenter.y = getTopMost( topCenter, topLeft, topRight );
+    usedRect = usedRect.union( topCenter );
+    // center-Line
+    centerLeft.y = getTopMost( centerLeft, topLeft, topRight, topCenter );
+    usedRect = usedRect.union( centerLeft );
+    centerRight.y = getTopMost( centerRight, topLeft, topRight, topCenter, centerLeft );
+    usedRect = usedRect.union( centerRight );
+    centerCenter.y = getTopMost( centerCenter, topLeft, topRight, topCenter, centerLeft, centerRight );
+    usedRect = usedRect.union( centerCenter );
+
+    // bottom-Line
+    bottomRight.y = getTopMost( bottomRight, topLeft, topRight, topCenter, centerLeft, centerRight, centerCenter );
+    usedRect = usedRect.union( bottomRight );
+    bottomLeft.y = getTopMost( bottomLeft, topLeft, topRight, topCenter, centerLeft, centerRight, bottomRight, centerCenter );
+    usedRect = usedRect.union( bottomLeft );
+    bottomLeft.y = usedRect.y + usedRect.height - bottomLeft.height;
+    bottomRight.y = usedRect.y + usedRect.height - bottomRight.height;
+    if( bottomRight.x - bottomLeft.x + bottomLeft.width > bottomCenter.width )
+      bottomCenter.y = usedRect.y + usedRect.height - bottomCenter.height;
+    else
+    {
+      bottomCenter.y = Math.min( bottomLeft.y, bottomRight.y ) - bottomCenter.height;
+      bottomLeft.y += bottomCenter.height;
+      bottomRight.y += bottomCenter.height;
+    }
+    usedRect = usedRect.union( bottomLeft );
+
+    // adjust Center-Line
+    final int deltaLeft = bottomLeft.y - topLeft.y - topLeft.height - centerLeft.height;
+    if( deltaLeft > 1 )
+      centerLeft.y += deltaLeft / 2;
+    final int deltaCenter = bottomCenter.y - topCenter.y - topCenter.height - centerCenter.height;
+    if( deltaCenter > 1 )
+      centerCenter.y += deltaCenter / 2;
+    final int deltaRight = bottomRight.y - topRight.y - topRight.height - centerRight.height;
+    if( deltaRight > 1 )
+      centerRight.y += deltaRight / 2;
+
+    // paint
+    paint( gc, topLeft, ALIGNMENT.LEFT, ALIGNMENT.TOP );
+    paint( gc, topCenter, ALIGNMENT.CENTER, ALIGNMENT.TOP );
+    paint( gc, topRight, ALIGNMENT.RIGHT, ALIGNMENT.TOP );
+    paint( gc, centerLeft, ALIGNMENT.LEFT, ALIGNMENT.CENTER );
+    paint( gc, centerCenter, ALIGNMENT.CENTER, ALIGNMENT.CENTER );
+    paint( gc, centerRight, ALIGNMENT.RIGHT, ALIGNMENT.CENTER );
+    paint( gc, bottomLeft, ALIGNMENT.LEFT, ALIGNMENT.BOTTOM );
+    paint( gc, bottomCenter, ALIGNMENT.CENTER, ALIGNMENT.BOTTOM );
+    paint( gc, bottomRight, ALIGNMENT.RIGHT, ALIGNMENT.BOTTOM );
+
+    return usedRect;
+  }
 }
