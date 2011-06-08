@@ -28,8 +28,8 @@ public final class RectangleUtils
   {
     final int x = inset.left + 1;
     final int y = inset.top + 1;
-    final int w = width - inset.left - inset.right;
-    final int h = height - inset.top - inset.bottom;
+    final int w = width - inset.left - inset.right - 2;
+    final int h = height - inset.top - inset.bottom - 2;
 
     return new Rectangle( x, y, w, h );
   }

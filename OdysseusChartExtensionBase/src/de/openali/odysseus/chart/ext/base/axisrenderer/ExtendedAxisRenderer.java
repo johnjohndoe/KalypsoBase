@@ -3,6 +3,7 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 import java.awt.Insets;
 import java.text.Format;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -71,6 +72,7 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
    */
   private void drawTicks( final GC gc, final Rectangle screen, final IAxis axis, final Number[] ticks )
   {
+
     final Insets inset = new Insets( screen.y, screen.x, 0, screen.width - screen.x - axis.getScreenHeight() );
     if( (gc == null) || (axis == null) || (ticks == null) || ticks.length < 1 )
       return;
@@ -96,9 +98,12 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
 
       if( tickPos < 0 || tickPos > axis.getScreenHeight() )
         continue;
-      gc.drawLine( tickPos, getGap() + inset.top, tickPos, getGap() + inset.top + getTickLength() );
+      final int oldAlias = gc.getAntialias();
+      gc.setAntialias( SWT.OFF );
+      gc.drawLine( tickPos, getGap() + inset.top, tickPos, getGap() + inset.top + getTickLength() + getLineStyle().getWidth() );
+      gc.setAntialias( oldAlias );
       // draw Ticklabel
-      labelRenderer.getTitleTypeBean().setLabel( getLabelCreator().getLabel( ticks,i, axis.getNumericRange() ) );
+      labelRenderer.getTitleTypeBean().setLabel( getLabelCreator().getLabel( ticks, i, axis.getNumericRange() ) );
       final Rectangle textSize = labelRenderer.getSize();
       // hide cut
       if( isHideCut() )
@@ -211,9 +216,13 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
   {
     if( (screen.width > 0) && (screen.height > 0) && axis.isVisible() )
     {
+      final int oldAlias = gc.getAntialias();
+      gc.setAntialias( SWT.OFF );
       getLineStyle().apply( gc );
       // gc.drawLine( screen.x, getGap() + screen.y, screen.width, getGap() + screen.y );
-      gc.drawLine( 0, getGap() + screen.y, axis.getScreenHeight(), getGap() + screen.y );
+      final int posY = getGap() + screen.y + (getLineStyle().getWidth() / 2) - 1/* Pixel */;
+      gc.drawLine( 0, posY, axis.getScreenHeight(), posY );
+      gc.setAntialias( oldAlias );
       drawTicks( gc, screen, axis, getTicks( axis, gc ) );
       final IChartLabelRenderer labelRenderer = getAxisLabelRenderer();
       for( final TitleTypeBean title : axis.getLabels() )
