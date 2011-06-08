@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -48,18 +52,23 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.scenarios.IDerivedScenarioCopyFilter;
 import org.kalypso.afgui.scenarios.IScenario;
 import org.kalypso.afgui.scenarios.IScenarioManager;
 import org.kalypso.afgui.scenarios.ScenarioManager;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.ICase;
@@ -140,82 +149,115 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<ISc
     final IPath projectPath = getRelativeProjectPath( scenario );
     final IFolder newFolder = getProject().getFolder( projectPath );
 
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+
+    IStatus resultStatus = Status.OK_STATUS;
     final IScenario parentScenario = scenario.getParentScenario();
-    // if( parentScenario == null )
-    // {
-    // // this is a new scenario at base level, so use empty project zip
-    // final URL resource = getClass().getResource( EMPTY_PROJECT_ZIP_PATH );
-    // final IPath newLocation = newFolder.getLocation();
-    // try
-    // {
-    // ZipUtilities.unzip( resource.openStream(), "Basis/**", newLocation.toFile(), false );
-    // newFolder.refreshLocal( IResource.DEPTH_INFINITE, null );
-    // final IFolder basisFolder = newFolder.getFolder( "Basis" );
-    // for( final IResource res : basisFolder.members() )
-    // {
-    // res.move( newFolder.getFullPath().append( res.getName() ), false, null );
-    // }
-    // basisFolder.delete( false, null );
-    // }
-    // catch( final Throwable e )
-    // {
-    // final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    // final IStatus status = StatusUtilities.statusFromThrowable( e );
-    // ErrorDialog.openError( activeShell, "Problem", "Konnte neue Szenariodaten nicht erzeugen.", status );
-    // KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
-    // }
-    // }
-    // else
     if( parentScenario != null )
     {
       // this is a new derived scenario, so copy scenario contents of parent folder
       final IPath parentPath = getRelativeProjectPath( parentScenario );
-      final IFolder parentFolder = getProject().getFolder( parentPath );
+      final List<IScenario> derivedScenarios = parentScenario.getDerivedScenarios().getScenarios();
+      final List<IFolder> scenarioFolders = new ArrayList<IFolder>( derivedScenarios.size() );
       try
       {
-        parentFolder.accept( new IResourceVisitor()
+        for( final IScenario derivedScenario : derivedScenarios )
         {
-          @Override
-          public boolean visit( final IResource resource ) throws CoreException
-          {
-            if( parentFolder.equals( resource ) || newFolder.equals( resource ) )
-            {
-              // ignore scenario folder and .* resources
-              return true;
-            }
-
-            if( m_filter.copy( resource ) )
-            {
-              final IPath parentFolderPath = parentFolder.getFullPath();
-              final IPath resourcePath = resource.getFullPath();
-
-              final IPath relativePath = resourcePath.removeFirstSegments( parentFolderPath.segments().length );
-
-              if( resource instanceof IFolder )
-              {
-                newFolder.getFolder( relativePath ).create( true, true, new NullProgressMonitor() );
-              }
-              else if( resource instanceof IFile )
-              {
-                resource.copy( newFolder.getFullPath().append( relativePath ), true, new NullProgressMonitor() );
-              }
-
-              return true;
-            }
-
-            if( !m_filter.copy( resource ) && resource instanceof IFolder )
-              return false;
-
-            return true;
-          }
-        } );
+          scenarioFolders.add( derivedScenario.getFolder() );
+        }
       }
       catch( final CoreException e )
       {
-        final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-        final IStatus status = e.getStatus();
-        ErrorDialog.openError( activeShell, Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.1" ), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.2" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
-        KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
+        resultStatus = e.getStatus();
+      }
+
+      if( !resultStatus.isOK() )
+      {
+        ErrorDialog.openError( activeWorkbenchWindow.getShell(), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.1" ), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.2" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+        KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );
+      }
+
+      final IFolder parentFolder = getProject().getFolder( parentPath );
+      final WorkspaceModifyOperation copyScenarioContentsOperation = new WorkspaceModifyOperation( parentFolder )
+      {
+
+        @Override
+        protected void execute( final IProgressMonitor monitor ) throws CoreException
+        {
+          final SubMonitor submonitor = SubMonitor.convert( monitor, getTotalChildCount( parentFolder ) );
+          parentFolder.accept( new IResourceVisitor()
+          {
+            @Override
+            public boolean visit( final IResource resource ) throws CoreException
+            {
+              if( parentFolder.equals( resource ) )
+              {
+                return true;
+              }
+              else if( scenarioFolders.contains( resource ) )
+              {
+                // ignore scenario folder
+                return false;
+              }
+
+              if( m_filter.copy( resource ) )
+              {
+                final IPath parentFolderPath = parentFolder.getFullPath();
+                final IPath resourcePath = resource.getFullPath();
+
+                final IPath relativePath = resourcePath.removeFirstSegments( parentFolderPath.segments().length );
+
+                if( resource instanceof IFolder )
+                {
+                  newFolder.getFolder( relativePath ).create( true, true, submonitor.newChild( 1 ) );
+                }
+                else if( resource instanceof IFile )
+                {
+                  resource.copy( newFolder.getFullPath().append( relativePath ), true, submonitor.newChild( 1 ) );
+                }
+
+                return true;
+              }
+
+              if( !m_filter.copy( resource ) && resource instanceof IFolder )
+                return false;
+
+              return true;
+            }
+          } );
+        }
+
+        private int getTotalChildCount( final IContainer container )
+        {
+          IResource[] members;
+          try
+          {
+            members = container.members();
+          }
+          catch( CoreException ex )
+          {
+            return 0;
+          }
+          int count = 0;
+          for( int i = 0; i < members.length; i++ )
+          {
+            if( !m_filter.copy( members[i] ) )
+              continue;
+            if( members[i].getType() == IResource.FILE )
+              count++;
+            else
+              count += getTotalChildCount( (IContainer) members[i] );
+          }
+          return count;
+        }
+      };
+
+      resultStatus = RunnableContextHelper.execute( activeWorkbenchWindow, true, true, copyScenarioContentsOperation );
+      if( !resultStatus.isOK() )
+      {
+        ErrorDialog.openError( activeWorkbenchWindow.getShell(), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.1" ), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.2" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+        KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );
       }
     }
   }
