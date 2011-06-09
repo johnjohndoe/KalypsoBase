@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.command;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.namespace.QName;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -74,7 +77,7 @@ public class AddFeatureCommand implements ICommand
   private final GMLWorkspace m_workspace;
 
   /** A map with key=IPropertyType and value=Object to pass properties when the feature is newly created */
-  private final Map<IPropertyType, Object> m_props;
+  private final Map<Object, Object> m_properties = new HashMap<Object, Object>();
 
   private final IFeatureSelectionManager m_selectionManager;
 
@@ -90,22 +93,23 @@ public class AddFeatureCommand implements ICommand
 
   private final boolean m_doAddOnProcess;
 
-  /**
-   * @param If
-   *          dropSelection is true, the workspace must be a {@link CommandableWorkspace}.
-   */
+  public AddFeatureCommand( final GMLWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final int depth )
+  {
+    this( workspace, type, parentFeature, propertyName, pos, new HashMap<IPropertyType, Object>(), null, depth );
+  }
+
   public AddFeatureCommand( final GMLWorkspace workspace, final IFeatureType type, final Feature parentFeature, final IRelationType propertyName, final int pos, final Map<IPropertyType, Object> properties, final IFeatureSelectionManager selectionManager, final int depth )
   {
     m_workspace = workspace;
     m_parentFeature = parentFeature;
     m_propName = propertyName;
     m_pos = pos;
-    m_props = properties;
     m_type = type;
     m_selectionManager = selectionManager;
     m_depth = depth;
     m_doFireEvents = true;
     m_doAddOnProcess = true;
+    m_properties.putAll( properties );
   }
 
   /**
@@ -142,7 +146,6 @@ public class AddFeatureCommand implements ICommand
     m_pos = pos;
     m_doFireEvents = doFireEvents;
     m_doAddOnProcess = doAddOnProcess;
-    m_props = null;
     m_newFeature = newFeature;
     m_type = null;
     m_selectionManager = selectionManager;
@@ -168,10 +171,17 @@ public class AddFeatureCommand implements ICommand
     {
       m_newFeature = m_workspace.createFeature( m_parentFeature, m_propName, m_type, m_depth );
 
-      if( m_props != null )
+      for( final Map.Entry<Object, Object> entry : m_properties.entrySet() )
       {
-        for( final Map.Entry<IPropertyType, Object> entry : m_props.entrySet() )
-          m_newFeature.setProperty( entry.getKey(), entry.getValue() );
+        final Object property = entry.getKey();
+        final Object value = entry.getValue();
+
+        if( property instanceof QName )
+          m_newFeature.setProperty( (QName) property, value );
+        else if( property instanceof IPropertyType )
+          m_newFeature.setProperty( (IPropertyType) property, value );
+        else
+          throw new IllegalStateException();
       }
     }
 
@@ -237,4 +247,19 @@ public class AddFeatureCommand implements ICommand
     m_dropSelection = dropSelection;
   }
 
+  /**
+   * Adds a property that will be set after the feature is created.
+   */
+  public void setProperty( final QName property, final Object value )
+  {
+    m_properties.put( property, value );
+  }
+
+  /**
+   * Adds a property that will be set after the feature is created.
+   */
+  public void setProperty( final IPropertyType property, final Object value )
+  {
+    m_properties.put( property, value );
+  }
 }
