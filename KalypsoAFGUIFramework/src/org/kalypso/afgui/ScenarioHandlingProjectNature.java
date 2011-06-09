@@ -150,7 +150,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<ISc
     final IFolder newFolder = getProject().getFolder( projectPath );
 
     final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 
     IStatus resultStatus = Status.OK_STATUS;
     final IScenario parentScenario = scenario.getParentScenario();
@@ -174,7 +174,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<ISc
 
       if( !resultStatus.isOK() )
       {
-        ErrorDialog.openError( activeWorkbenchWindow.getShell(), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.1" ), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.2" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( window.getShell(), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.1" ), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.2" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
         KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );
       }
 
@@ -235,7 +235,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<ISc
           {
             members = container.members();
           }
-          catch( CoreException ex )
+          catch( final CoreException ex )
           {
             return 0;
           }
@@ -253,10 +253,10 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature<ISc
         }
       };
 
-      resultStatus = RunnableContextHelper.execute( activeWorkbenchWindow, true, true, copyScenarioContentsOperation );
+      resultStatus = RunnableContextHelper.execute( window, true, true, copyScenarioContentsOperation );
       if( !resultStatus.isOK() )
       {
-        ErrorDialog.openError( activeWorkbenchWindow.getShell(), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.1" ), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.2" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( window.getShell(), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.1" ), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.2" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
         KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( resultStatus );
       }
     }
