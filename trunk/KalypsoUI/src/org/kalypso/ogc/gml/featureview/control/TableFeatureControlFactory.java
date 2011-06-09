@@ -71,12 +71,11 @@ public class TableFeatureControlFactory implements IFeatureControlFactory
 
     final IFeatureSelectionManager selectionManager = parentComposite.getSelectionManager();
 
-    final TableFeatureControl fc;
     final Toolbar toolbar = tableType.getToolbar();
-    if( toolbar == null )
-      fc = new TableFeatureControl( pt, featureTypeCellEditorFactory, selectionManager, toolbar, tableType.isShowToolbar(), tableType.isShowContextMenu() );
-    else
-      fc = new TableFeatureControl( pt, featureTypeCellEditorFactory, selectionManager, toolbar, true, tableType.isShowContextMenu() );
+
+    final boolean showToolbar = toolbar == null ? true : tableType.isShowToolbar();
+
+    final TableFeatureControl fc = new TableFeatureControl( pt, featureTypeCellEditorFactory, selectionManager, toolbar, showToolbar, tableType.isShowContextMenu() );
 
     final Gistableview gistableview = tableType.getGistableview();
     if( gistableview != null )

@@ -35,6 +35,7 @@ import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.toolbar.AddFeatureHandler;
@@ -275,15 +276,32 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
       }
       else
       {
+        m_viewer.addColumn( null, null, null, false, 0, "SWT.CENTER", null, null, false ); //$NON-NLS-1$
+
         final IFeatureType featureType = m_viewer.getInput().getFeatureType();
         final IPropertyType[] properties = featureType == null ? new IPropertyType[0] : featureType.getProperties();
         for( int i = 0; i < properties.length; i++ )
         {
           final IPropertyType ftp = properties[i];
-          m_viewer.addColumn( ftp.getQName().getLocalPart(), null, null, true, 100, "SWT.CENTER", null, null, i == properties.length - 1 ); //$NON-NLS-1$
+          final String columnAlignment = findDefaultColumnAlignment( ftp );
+
+          m_viewer.addColumn( ftp.getQName().getLocalPart(), null, null, true, 100, columnAlignment, null, null, i == properties.length - 1 ); //$NON-NLS-1$
         }
       }
     }
+  }
+
+  private String findDefaultColumnAlignment( final IPropertyType ftp )
+  {
+    if( ftp instanceof IValuePropertyType )
+    {
+      final IValuePropertyType vpt = (IValuePropertyType) ftp;
+      final Class< ? > valueClass = vpt.getValueClass();
+      if( Number.class.isAssignableFrom( valueClass ) )
+        return "SWT.RIGHT"; //$NON-NLS-1$
+    }
+
+    return "SWT.LEFT"; //$NON-NLS-1$
   }
 
   /**

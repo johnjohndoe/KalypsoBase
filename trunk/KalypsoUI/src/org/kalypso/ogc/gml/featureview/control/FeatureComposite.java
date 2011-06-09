@@ -238,6 +238,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     }
     catch( final Throwable t )
     {
+      t.printStackTrace();
+
       final org.eclipse.swt.widgets.Text text = new org.eclipse.swt.widgets.Text( parent, SWT.MULTI );
       text.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
       text.setEditable( false );
