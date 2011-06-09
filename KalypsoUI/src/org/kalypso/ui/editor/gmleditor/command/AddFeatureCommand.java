@@ -109,7 +109,8 @@ public class AddFeatureCommand implements ICommand
     m_depth = depth;
     m_doFireEvents = true;
     m_doAddOnProcess = true;
-    m_properties.putAll( properties );
+    if( properties != null )
+      m_properties.putAll( properties );
   }
 
   /**
