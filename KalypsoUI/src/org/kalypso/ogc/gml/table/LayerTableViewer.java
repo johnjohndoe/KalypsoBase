@@ -47,6 +47,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -424,6 +425,8 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
   protected void setColumnText( final TableColumn tc )
   {
     final String propertyName = (String) tc.getData( COLUMN_PROP_NAME );
+    if( propertyName == null )
+      return;
 
     final String label = (String) tc.getData( COLUMN_PROP_LABEL );
     final String tooltip = (String) tc.getData( COLUMN_PROP_TOOLTIP );
@@ -503,8 +506,8 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     {
       if( column != null )
       {
-        final String propName = column.getData( COLUMN_PROP_NAME ).toString();
-        if( featureType.getProperty( propName ) == null )
+        final String propName = (String) column.getData( COLUMN_PROP_NAME );
+        if( propName != null && featureType.getProperty( propName ) == null )
         {
           column.dispose();
           changed = true;
@@ -594,16 +597,19 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     m_modifier = new IFeatureModifier[columns.length];
     for( int i = 0; i < editors.length; i++ )
     {
-      final String propName = columns[i].getData( COLUMN_PROP_NAME ).toString();
+      final String propName = (String) columns[i].getData( COLUMN_PROP_NAME );
       final String format = (String) columns[i].getData( COLUMN_PROP_FORMAT );
-      final IPropertyType ftp = featureType.getProperty( propName );
-      final String modifierId = (String) columns[i].getData( COLUMN_PROP_MODIFIER );
-
-      m_modifier[i] = createModifier( format, ftp, modifierId );
-      if( m_modifier[i] != null )
+      if( propName != null )
       {
-        editors[i] = m_modifier[i].createCellEditor( table );
-        editors[i].setValidator( m_modifier[i] );
+        final IPropertyType ftp = featureType.getProperty( propName );
+        final String modifierId = (String) columns[i].getData( COLUMN_PROP_MODIFIER );
+
+        m_modifier[i] = createModifier( format, ftp, modifierId );
+        if( m_modifier[i] != null )
+        {
+          editors[i] = m_modifier[i].createCellEditor( table );
+          editors[i].setValidator( m_modifier[i] );
+        }
       }
     }
     setCellEditors( editors );
@@ -641,7 +647,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     final String[] properties = new String[columns.length];
 
     for( int i = 0; i < properties.length; i++ )
-      properties[i] = columns[i].getData( COLUMN_PROP_NAME ).toString();
+      properties[i] = (String) columns[i].getData( COLUMN_PROP_NAME );
 
     setColumnProperties( properties );
   }
@@ -680,8 +686,8 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     final TableColumn[] columns = getTable().getColumns();
     for( final TableColumn element : columns )
     {
-      final String name = element.getData( COLUMN_PROP_NAME ).toString();
-      if( property.equals( name ) )
+      final String name = (String) element.getData( COLUMN_PROP_NAME );
+      if( ObjectUtils.equals( property, name ) )
         return element;
     }
 
@@ -693,7 +699,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     final TableColumn[] columns = getTable().getColumns();
     for( int i = 0; i < columns.length; i++ )
     {
-      final String name = columns[i].getData( COLUMN_PROP_NAME ).toString();
+      final String name = (String) columns[i].getData( COLUMN_PROP_NAME );
       if( property.equals( name ) )
         return i;
     }
