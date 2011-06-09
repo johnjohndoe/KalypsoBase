@@ -45,6 +45,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -122,7 +123,11 @@ public final class WspmProfileHelper
    */
   private static String getCoordinateSystem( final IProfil profile )
   {
-    return ObjectUtils.toString( profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS ) );
+    final String crs = ObjectUtils.toString( profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS ) );
+    if( Strings.isEmpty( crs ) )
+      return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
+    return crs;
   }
 
   /**

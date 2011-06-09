@@ -59,7 +59,6 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -1334,8 +1333,17 @@ public final class JTSUtilities
       /* Get the coordinate pair. */
       final CoordinatePair coordinatePair = coordinatePairs.get( i );
 
+      final double d = coordinatePair.getDistance();
+      if( 0.0 == d )
+      {
+        final Coordinate second = coordinatePair.getSecondCoordinate();
+        coordinate.z = second.z;
+
+        return;
+      }
+
       /* Get the distance of the coordinate to the coordinate of the point. */
-      final double distance = 1 / coordinatePair.getDistance();
+      final double distance = 1 / d;
 
       /* First add it to the sum of distances. */
       sumDistances = sumDistances + distance;
@@ -1468,7 +1476,7 @@ public final class JTSUtilities
    * 
    * @return The list of affected points. Always with size = 2.
    */
-  public static Point findNearestProjectionPoints( final Polygon polygone, final Point point ) throws GM_Exception
+  public static Point findNearestProjectionPoints( final Polygon polygone, final Point point )
   {
     final Coordinate base = point.getCoordinate();
 
