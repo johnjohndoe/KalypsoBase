@@ -113,6 +113,7 @@ public class MoviePlayer
     m_job.setSystem( false );
     m_job.setUser( false );
     m_job.setPriority( Job.LONG );
+
     m_job.schedule();
   }
 

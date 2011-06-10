@@ -73,13 +73,15 @@ public class ChartPainter
 
   private Insets m_plotInsets = null;
 
-  final ChartTitlePainter2 m_titlePainter;
+  final ChartTitlePainter m_titlePainter;
 
   final ChartLegendCanvas m_legendPainter;
 
   private ChartPlotPainter m_plotPainter = null;
 
   private final Insets m_chartInsets;
+
+  private final Rectangle m_clientRect;
 
   public ChartPainter( final IChartModel model, final Rectangle size )
   {
@@ -91,9 +93,9 @@ public class ChartPainter
     m_model = model;
     m_size = size;
     m_chartInsets = chartInsets;
-    m_legendPainter = new ChartLegendCanvas( m_model, new DefaultChartLegendConfig( RectangleUtils.inflateRect( m_size, m_chartInsets ) ) );
-    m_titlePainter = new ChartTitlePainter2();
-    m_titlePainter.addTitle( model.getSettings().getTitles() );
+    m_clientRect = RectangleUtils.inflateRect( m_size, m_chartInsets );
+    m_legendPainter = new ChartLegendCanvas( m_model, new DefaultChartLegendConfig( m_clientRect ) );
+    m_titlePainter = new ChartTitlePainter( model.getSettings().getTitles() );
   }
 
   public final Image createImage( )
@@ -105,7 +107,7 @@ public class ChartPainter
   {
     if( m_size.width == 0 || m_size.height == 0 )
       return null;
-    final Rectangle clientRect = RectangleUtils.inflateRect( m_size, m_chartInsets );
+
     final Insets plotInsets = getPlotInsets();
     setAxesHeight( plotInsets, m_size );
     final Device dev = PlatformUI.getWorkbench().getDisplay();
@@ -117,21 +119,23 @@ public class ChartPainter
       gc.setAntialias( SWT.ON );
       gc.setTextAntialias( SWT.ON );
       gc.setAdvanced( true );
-
-      m_titlePainter.paint( gc, new Rectangle( clientRect.x, clientRect.y, clientRect.width, m_titlePainter.getSize().y ) );
+      m_titlePainter.paint( gc, new Rectangle( m_clientRect.x, m_clientRect.y, m_clientRect.width, m_titlePainter.getSize( m_clientRect.width ).y ) );
 
       // paint left Axes
-      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ), gc, plotInsets.left, plotInsets.top, m_size.height - m_plotInsets.bottom - m_plotInsets.top, 90, false );
+      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ), gc, plotInsets.left, plotInsets.top, plotInsets.top, m_size.height, 90, false );
       // paint right Axes
-      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ), gc, m_size.width - plotInsets.right, plotInsets.top, m_size.height - m_plotInsets.bottom - plotInsets.top, 90, true );
+      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ), gc, m_size.width - plotInsets.right, plotInsets.top, plotInsets.top, m_size.height, 90, true );
       // paint top Axes
-      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ), gc, plotInsets.left, plotInsets.top, m_size.width - plotInsets.left - plotInsets.right, 0, true );
+      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ), gc, plotInsets.left, plotInsets.top, plotInsets.left, m_size.width, 0, true );
       // paint bottom Axes
-      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ), gc, plotInsets.left, m_size.height - plotInsets.bottom, m_size.width - plotInsets.left - plotInsets.right, 0, false );
+      paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ), gc, plotInsets.left, m_size.height - plotInsets.bottom, plotInsets.left, m_size.width, 0, false );
       // paint plot
+
       if( legendImage != null )
         gc.drawImage( legendImage, m_chartInsets.left, m_size.height - m_legendPainter.getSize().height - m_chartInsets.bottom );
-      gc.setClipping( RectangleUtils.inflateRect( m_size, plotInsets ) );
+      final Rectangle plotRect = RectangleUtils.createInnerRectangle( m_size.width, m_size.height, plotInsets );
+      // Layer könnten sonst in die Achsen zeichnen
+      gc.setClipping( plotRect );
       getPlotPainter().paint( gc, new Insets( plotInsets.top - panOffset.y, plotInsets.left - panOffset.x, plotInsets.bottom + panOffset.y, plotInsets.right + panOffset.x ) );
     }
     finally
@@ -180,7 +184,7 @@ public class ChartPainter
       final int axisRightWidth = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ) );
       final int axisTopWidth = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ) );
       final int axisBottomWidth = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ) );
-      final int top = m_titlePainter.getSize().y + axisTopWidth;
+      final int top = m_titlePainter.getSize( m_clientRect.width ).y + axisTopWidth ;
       final int bottom = m_legendPainter.getSize().height + axisBottomWidth;
       m_plotInsets = new Insets( top + m_chartInsets.top, axisLeftWidth + m_chartInsets.left, bottom + m_chartInsets.bottom, axisRightWidth + m_chartInsets.right );
     }
@@ -196,7 +200,7 @@ public class ChartPainter
     return m_plotPainter;
   }
 
-  private void paintAxes( final IAxis[] axes, final GC gc, final int anchorX, final int anchorY, final int axisWidth, final int rotation, final boolean invertVertical )
+  private void paintAxes( final IAxis[] axes, final GC gc, final int anchorX, final int anchorY, final int startOffset, final int screenWidth, final int rotation, final boolean invertVertical )
   {
     final Transform oldTransform = new Transform( gc.getDevice() );
     final Transform newTransform = new Transform( gc.getDevice() );
@@ -223,7 +227,7 @@ public class ChartPainter
         {
           final IAxisRenderer renderer = axis.getRenderer();
           height = renderer.getAxisWidth( axis );
-          renderer.paint( gc, axis, new Rectangle( 0, offset, axisWidth, height ) );
+          renderer.paint( gc, axis, new Rectangle( startOffset, offset, screenWidth, height ) );
         }
         finally
         {

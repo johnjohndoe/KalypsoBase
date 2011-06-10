@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.config;
 
+import java.awt.Insets;
 import java.net.URL;
 import java.util.Calendar;
 
@@ -47,6 +48,7 @@ import org.apache.xmlbeans.GDuration;
 
 import de.openali.odysseus.chart.factory.config.parameters.impl.AxisDirectionParser;
 import de.openali.odysseus.chart.factory.config.parameters.impl.AxisPositionParser;
+import de.openali.odysseus.chart.factory.config.resolver.ChartTypeResolver;
 import de.openali.odysseus.chart.factory.provider.IAxisProvider;
 import de.openali.odysseus.chart.factory.provider.IAxisRendererProvider;
 import de.openali.odysseus.chart.factory.util.AxisUtils;
@@ -67,6 +69,10 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.util.img.ChartLabelRendererFactory;
+import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
+import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisNumberRangeRestrictionType;
@@ -82,6 +88,9 @@ import de.openali.odysseus.chartconfig.x020.PositionType;
 import de.openali.odysseus.chartconfig.x020.ReferencableType;
 import de.openali.odysseus.chartconfig.x020.ReferencingType;
 import de.openali.odysseus.chartconfig.x020.ScreenAxisType;
+import de.openali.odysseus.chartconfig.x020.TextStyleType;
+import de.openali.odysseus.chartconfig.x020.TitleType;
+import de.openali.odysseus.chartconfig.x020.TitleTypes;
 
 /**
  * @author Dirk Kuch
@@ -151,7 +160,25 @@ public class ChartMapperFactory extends AbstractChartFactory
             axis.setData( CONFIGURATION_TYPE_KEY, axisType ); // save configuration type so it can be used for saving to
 // chartfile
             axis.setDirection( getAxisDirection( axisType ) );
-            axis.setLabel( axisType.getLabel() );
+            final TitleType[] titles =  axisType.isSetLabels() ? axisType.getLabels().getTitleTypeArray() : new TitleType[] {};
+            final ChartTypeResolver chartTypeResolver = ChartTypeResolver.getInstance();
+            for( final TitleType title : titles )
+            {
+              try
+              {
+                final AbstractStyleType styleType = chartTypeResolver.findStyleType( title.getStyleref(), getContext() );
+                final ITextStyle style = StyleFactory.createTextStyle( (TextStyleType) styleType );
+                final TitleTypeBean titleBean = StyleHelper.getTitleTypeBean( axis.getPosition(), title, style );
+                axis.addLabel( titleBean );
+
+              }
+              catch( final Throwable t )
+              {
+                t.printStackTrace();
+              }
+            }
+            if( axisType.isSetLabel() )
+              axis.addLabel( ChartLabelRendererFactory.getAxisLabelType( axis.getPosition(), axisType.getLabel(), new Insets( 1, 1, 1, 1 ), null ) );
             axis.setPreferredAdjustment( getAxisAdjustment( axisType ) );
             axis.setNumericRange( getAxisRange( axis, axisType ) );
             axis.setRangeRestriction( getRangeRestriction( axisType ) );
@@ -179,7 +206,7 @@ public class ChartMapperFactory extends AbstractChartFactory
 
               try
               {
-                IAxisRenderer axisRenderer = axisRendererProvider.getAxisRenderer( axis.getPosition() );
+                final IAxisRenderer axisRenderer = axisRendererProvider.getAxisRenderer( axis.getPosition() );
                 axisRenderer.setData( ChartFactory.AXISRENDERER_PROVIDER_KEY, axisRendererProvider );
                 // save configuration type so it can be used for saving to chart file
                 axisRenderer.setData( CONFIGURATION_TYPE_KEY, rendererType );
