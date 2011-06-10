@@ -38,56 +38,72 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.outline.nodes;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
+package de.openali.odysseus.chart.framework.model.impl;
 
 /**
- * This node provides images for the ouline and the legend.
- * 
- * @author Gernot Belger
- * @author Holger Albert
+ * @author kimwerner
  */
-public class WMSThemeNode extends KalypsoThemeNode<KalypsoWMSTheme>
+public class AxisVisitorBehavior implements IAxisVisitorBehavior
 {
-  /**
-   * The constructor.
-   * 
-   * @param parent
-   *          The parent node.
-   * @param theme
-   *          The wms theme.
-   */
-  public WMSThemeNode( IThemeNode parent, KalypsoWMSTheme theme )
+  public AxisVisitorBehavior( )
   {
-    super( parent, theme );
+    this( true, true, true );
   }
 
+  public AxisVisitorBehavior( boolean zoomEnabled, boolean panEnabled, boolean autoscaleEnabled )
+  {
+    super();
+    m_zoomEnabled = zoomEnabled;
+    m_panEnabled = panEnabled;
+    m_autoscaleEnabled = autoscaleEnabled;
+  }
+
+  private boolean m_zoomEnabled = true;
+
+  private boolean m_panEnabled = true;
+
+  private boolean m_autoscaleEnabled = true;
+
   /**
-   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getLegendGraphic(java.lang.String[], boolean,
-   *      org.eclipse.swt.graphics.Font)
+   * @see de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior#isAutoscaleEnabled()
    */
   @Override
-  public Image getLegendGraphic( String[] whiteList, boolean onlyVisible, Font font ) throws CoreException
+  public boolean isAutoscaleEnabled( )
   {
-    /* Check, if this theme is allowed. */
-    if( !checkWhiteList( whiteList ) )
-      return null;
-
-    /* Get the wms theme. */
-    KalypsoWMSTheme element = getElement();
-
-    /* Ask the theme for a legend. */
-    Image legendGraphic = element.getLegendGraphic( font );
-
-    /* Clone this image, the returned image will be disposed outside! */
-    if( legendGraphic != null )
-      return new Image( font.getDevice(), legendGraphic, SWT.IMAGE_COPY );
-
-    return super.getLegendGraphic( whiteList, onlyVisible, font );
+    return m_autoscaleEnabled;
   }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior#isPanEnabled()
+   */
+  @Override
+  public boolean isPanEnabled( )
+  {
+    return m_panEnabled;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior#isZoomEnabled()
+   */
+  @Override
+  public boolean isZoomEnabled( )
+  {
+    return m_zoomEnabled;
+  }
+
+  public void setAutoscaleEnabled( boolean autoscaleEnabled )
+  {
+    m_autoscaleEnabled = autoscaleEnabled;
+  }
+
+  public void setPanEnabled( boolean panEnabled )
+  {
+    m_panEnabled = panEnabled;
+  }
+
+  public void setZoomEnabled( boolean zoomEnabled )
+  {
+    m_zoomEnabled = zoomEnabled;
+  }
+
 }

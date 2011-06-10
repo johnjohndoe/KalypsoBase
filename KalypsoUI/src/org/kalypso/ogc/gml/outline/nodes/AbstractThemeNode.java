@@ -326,11 +326,11 @@ abstract class AbstractThemeNode<T> implements IThemeNode
   }
 
   /**
-   * @see org.kalypso.ogc.gml.outline.nodes.ILegendProvider#getLegendGraphic(java.lang.String[],
+   * @see org.kalypso.ogc.gml.outline.nodes.ILegendProvider#getLegendGraphic(java.lang.String[], boolean,
    *      org.eclipse.swt.graphics.Font)
    */
   @Override
-  public Image getLegendGraphic( final String[] whiteList, final Font font ) throws CoreException
+  public Image getLegendGraphic( final String[] whiteList, final boolean onlyVisible, final Font font ) throws CoreException
   {
     /* Legend themes should not provide itself for a legend. */
     if( m_element instanceof KalypsoLegendTheme )
@@ -347,8 +347,11 @@ abstract class AbstractThemeNode<T> implements IThemeNode
     final IThemeNode[] children = getChildrenCompact();
     for( final IThemeNode childNode : children )
     {
+      if( onlyVisible && !childNode.isChecked( childNode ) )
+        continue;
+
       /* Get the legend. */
-      final Image legendGraphic = childNode.getLegendGraphic( whiteList, font );
+      final Image legendGraphic = childNode.getLegendGraphic( whiteList, onlyVisible, font );
       if( legendGraphic != null )
         legends.add( legendGraphic );
     }

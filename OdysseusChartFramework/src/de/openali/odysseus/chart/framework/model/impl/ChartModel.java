@@ -133,8 +133,7 @@ public class ChartModel implements IChartModel
   public void maximize( )
   {
     autoscale();
-    // TODO ModelChangedEvent werfen, damit Composite das Model neu zeichnet
-  }
+   }
 
   /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#setId()

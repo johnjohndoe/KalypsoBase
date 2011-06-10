@@ -328,7 +328,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     if( m_legend == null )
     {
       final ILegendProvider legendProvider = (ILegendProvider) m_provider;
-      m_legend = legendProvider.getLegendGraphic( null, font );
+      m_legend = legendProvider.getLegendGraphic( null, false, font );
     }
 
     return m_legend;

@@ -7,6 +7,8 @@ import java.util.List;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
+import de.openali.odysseus.chart.framework.model.impl.AxisVisitorBehavior;
+import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
@@ -22,6 +24,15 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
  */
 public abstract class AbstractAxis extends AbstractMapper implements IAxis
 {
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getAxisVisitorBehavior()
+   */
+  @Override
+  public IAxisVisitorBehavior getAxisVisitorBehavior( )
+  {
+    return new AxisVisitorBehavior( m_allowZoom, true, true );
+  }
+
   private final Class< ? > m_dataClass;
 
   private DIRECTION m_dir = DIRECTION.POSITIVE;
@@ -44,9 +55,21 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
 
   private boolean m_visible = true;
 
+  private boolean m_allowZoom = true;
+
   public AbstractAxis( final String id, final POSITION pos, final Class< ? > dataClass )
   {
     this( id, pos, dataClass, null );
+  }
+
+  public boolean isAllowZoom( )
+  {
+    return m_allowZoom;
+  }
+
+  public void setAllowZoom( boolean allowZoom )
+  {
+    m_allowZoom = allowZoom;
   }
 
   public AbstractAxis( final String id, final POSITION pos, final Class< ? > dataClass, final IAxisRenderer renderer )
@@ -54,7 +77,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     super( id );
     m_id = id;
     m_pos = pos;
-  //  m_dir = pos.getOrientation() == ORIENTATION.VERTICAL ? DIRECTION.NEGATIVE : DIRECTION.POSITIVE;
+    // m_dir = pos.getOrientation() == ORIENTATION.VERTICAL ? DIRECTION.NEGATIVE : DIRECTION.POSITIVE;
     m_dataClass = dataClass;
     setRenderer( renderer );
   }
