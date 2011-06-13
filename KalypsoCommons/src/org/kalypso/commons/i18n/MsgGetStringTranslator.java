@@ -44,7 +44,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.List;
-import java.util.Locale;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -132,21 +131,15 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
     return m_configuration;
   }
 
-  /**
-   * REMARK: locale is always ignored, as the language is determined whn the message class is loaded. It is always the
-   * current locale of the eclipse platform.
-   * 
-   * @see org.kalypso.contribs.java.lang.I10nTranslator#get(java.lang.String, java.util.Locale, java.lang.Object[])
-   */
   @Override
-  public String get( final String key, final Locale locale, final Object[] context )
+  public String get( final String key )
   {
     if( m_nls == null )
       return Messages.getString("org.kalypso.commons.i18n.MsgGetStringTranslator.4", key); //$NON-NLS-1$
 
     try
     {
-      Method method = m_nls.getMethod( "getString", new Class< ? >[] { String.class } ); //$NON-NLS-1$
+      final Method method = m_nls.getMethod( "getString", new Class< ? >[] { String.class } ); //$NON-NLS-1$
       return (String) method.invoke( m_nls, new Object[] { key } );
     }
     catch( final SecurityException e )
@@ -154,7 +147,7 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
       e.printStackTrace();
       return Messages.getString("org.kalypso.commons.i18n.MsgGetStringTranslator.6",key , e.toString()); //$NON-NLS-1$ 
     }
-    catch( NoSuchMethodException e )
+    catch( final NoSuchMethodException e )
     {
       e.printStackTrace();
       return Messages.getString("org.kalypso.commons.i18n.MsgGetStringTranslator.6",key , e.toString()); //$NON-NLS-1$ 
@@ -169,7 +162,7 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
       e.printStackTrace();
       return Messages.getString("org.kalypso.commons.i18n.MsgGetStringTranslator.6",key , e.toString()); //$NON-NLS-1$ 
     }
-    catch( InvocationTargetException e )
+    catch( final InvocationTargetException e )
     {
       e.printStackTrace();
       return Messages.getString("org.kalypso.commons.i18n.MsgGetStringTranslator.6",key , e.toString()); //$NON-NLS-1$ 

@@ -42,7 +42,6 @@ package org.kalypso.commons.i18n;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Locale;
 
 import org.w3c.dom.Element;
 
@@ -57,5 +56,5 @@ public interface ITranslator
 
   List<Element> getConfiguration( );
 
-  String get( String key, Locale locale, Object[] context );
+  String get( String key );
 }

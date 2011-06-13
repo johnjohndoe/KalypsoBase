@@ -40,14 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.featureview.views;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -56,7 +56,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.eclipse.core.resources.IEncodedStorage;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -67,6 +67,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -75,7 +76,6 @@ import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.template.featureview.Featuretemplate;
-import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -97,12 +97,12 @@ public class FeatureCompositeGFTWrapper
    * @deprecated because of new commandable workspaces (how to resolve feature changes, aso)
    */
   @Deprecated
-  public void show( final IFile file, final Feature feature, final Composite composite, final FormToolkit toolkit ) throws UnsupportedEncodingException, CoreException, JAXBException
+  public void show( final IFile file, final Feature feature, final Composite composite, final FormToolkit toolkit ) throws CoreException, JAXBException, IOException
   {
     show( file, new CommandableWorkspace( feature.getWorkspace() ), feature, composite, toolkit );
   }
 
-  public void show( final IFile file, final CommandableWorkspace workspace, final Feature feature, final Composite composite, final FormToolkit toolkit ) throws UnsupportedEncodingException, CoreException, JAXBException
+  public void show( final IFile file, final CommandableWorkspace workspace, final Feature feature, final Composite composite, final FormToolkit toolkit ) throws CoreException, JAXBException, IOException
   {
     /* Create a new FeatureComposite. */
     final FeatureviewHelper fvFactory = new FeatureviewHelper();
@@ -112,20 +112,9 @@ public class FeatureCompositeGFTWrapper
 
     final CachedFeatureviewFactory cfvFactory = new CachedFeatureviewFactory( fvFactory );
 
-    final Reader r;
-
-    r = new InputStreamReader( file.getContents(), ((IEncodedStorage) file).getCharset() );
-
-    final InputSource is = new InputSource( r );
-    final Unmarshaller unmarshaller = FeatureCompositeGFTWrapper.JC.createUnmarshaller();
-
-    // TODO close reader and stream!
-
-    final Featuretemplate m_template = (Featuretemplate) unmarshaller.unmarshal( is );
-    final List<FeatureviewType> view = m_template.getView();
-
-    for( final FeatureviewType featureviewType : view )
-      cfvFactory.addView( featureviewType );
+    final URL context = ResourceUtilities.createQuietURL( file );
+    final Featuretemplate template = readTemplate( file );
+    cfvFactory.addViews( template, context );
 
     m_compFeature = new FeatureComposite( feature, KalypsoCorePlugin.getDefault().getSelectionManager(), cfvFactory );
     m_compFeature.setFormToolkit( toolkit );
@@ -135,6 +124,25 @@ public class FeatureCompositeGFTWrapper
 
     removeListener();
     addListener( workspace );
+  }
+
+  protected Featuretemplate readTemplate( final IFile file ) throws CoreException, JAXBException, IOException
+  {
+    InputStream stream = null;
+
+    try
+    {
+      stream = new BufferedInputStream( file.getContents() );
+      final InputSource is = new InputSource( stream );
+      final Unmarshaller unmarshaller = FeatureCompositeGFTWrapper.JC.createUnmarshaller();
+      final Featuretemplate template = (Featuretemplate) unmarshaller.unmarshal( is );
+      stream.close();
+      return template;
+    }
+    finally
+    {
+      IOUtils.closeQuietly( stream );
+    }
   }
 
   private void removeListener( )

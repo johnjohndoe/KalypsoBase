@@ -58,10 +58,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.commons.KalypsoCommonsExtensions;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -78,7 +78,6 @@ import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.w3c.dom.Element;
 
 /**
  * @author Gernot Belger
@@ -140,13 +139,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   private ITranslator createTranslator( final Gismapview gisview )
   {
     final I18NTranslatorType translatorElement = gisview.getTranslator();
-    if( translatorElement == null )
-      return null;
-
-    final ITranslator translator = KalypsoCommonsExtensions.createTranslator( translatorElement.getId() );
-    if( translator != null )
-      translator.configure( m_context, translatorElement.getAny() );
-    return translator;
+    return TemplateUtilities.createTranslator( translatorElement, m_context );
   }
 
   public void createFromTemplate( final List<JAXBElement< ? extends StyledLayerType>> layerList, final Object activeLayer ) throws CoreException
@@ -255,15 +248,8 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
       /* Create the translator. */
       final ITranslator i10nTranslator = name.getTranslator();
-      if( i10nTranslator != null )
-      {
-        final I18NTranslatorType translator = GisTemplateHelper.OF_TEMPLATE_TYPES.createI18NTranslatorType();
-        translator.setId( i10nTranslator.getId() );
-        final List<Element> configuration = i10nTranslator.getConfiguration();
-        if( configuration != null )
-          translator.getAny().addAll( configuration );
-        gismapview.setTranslator( translator );
-      }
+      final I18NTranslatorType translator = TemplateUtilities.createTranslatorType( i10nTranslator );
+      gismapview.setTranslator( translator );
 
       /* Set the bounding box. */
       if( bbox != null )

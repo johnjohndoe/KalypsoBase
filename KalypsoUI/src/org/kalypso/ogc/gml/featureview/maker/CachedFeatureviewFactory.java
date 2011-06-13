@@ -52,12 +52,14 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
+import org.kalypso.template.types.I18NTranslatorType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.catalogs.FeatureTypeFeatureviewCatalog;
 import org.kalypsodeegree.model.feature.Feature;
@@ -171,9 +173,7 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
       else if( unmarshal instanceof Featuretemplate )
       {
         final Featuretemplate ftt = (Featuretemplate) unmarshal;
-        final List<FeatureviewType> view = ftt.getView();
-        for( final FeatureviewType element : view )
-          addView( element );
+        addViews( ftt, url );
       }
       else
         System.out.println( getClass().getName() + ": Unsupported type: " + unmarshal.getClass().getName() + " in " + url.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -182,6 +182,38 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
     {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Adds all views of the given template to this factory and sets the default translator.
+   */
+  public void addViews( final Featuretemplate template, final URL context )
+  {
+    final List<FeatureviewType> view = template.getView();
+    for( final FeatureviewType element : view )
+      addView( element );
+
+    final I18NTranslatorType translatorElement = template.getTranslator();
+    final ITranslator translator = TemplateUtilities.createTranslator( translatorElement, context );
+    setDefaultTranslator( translator );
+  }
+
+  @Override
+  public ITranslator getDefaultTranslator( )
+  {
+    return m_delegateFactory.getDefaultTranslator();
+  }
+
+  @Override
+  public void setDefaultTranslator( final ITranslator translator )
+  {
+    m_delegateFactory.setDefaultTranslator( translator );
+  }
+
+  @Override
+  public ITranslator getTranslator( final FeatureviewType view, final URL context )
+  {
+    return m_delegateFactory.getTranslator( view, context );
   }
 
   /**

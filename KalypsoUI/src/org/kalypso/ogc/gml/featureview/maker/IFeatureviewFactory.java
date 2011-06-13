@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.maker;
 
+import java.net.URL;
+
+import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypsodeegree.model.feature.Feature;
@@ -59,4 +62,26 @@ public interface IFeatureviewFactory
    *           If <code>featureType</code> is null.
    */
   public FeatureviewType get( final IFeatureType featureType, final Feature feature );
+
+  /**
+   * Get the {@link ITranslator} for elements of the given {@link FeatureviewType}.<br/>
+   * If the view is not configure with a translator, it falls back to the default translator.
+   * 
+   * @see #getDefaultTranslator()
+   */
+  ITranslator getTranslator( FeatureviewType view, URL context );
+
+  /**
+   * returns the default {@link ITranslator} that will be used if a single view has no own translator.
+   */
+  public ITranslator getDefaultTranslator( );
+
+  /**
+   * Sets the default {@link ITranslator}.
+   * 
+   * @param translator
+   *          If <code>null</code>, a standard translator that does nothing is set.
+   * @see #getDefaultTranslator()
+   */
+  public void setDefaultTranslator( ITranslator translator );
 }
