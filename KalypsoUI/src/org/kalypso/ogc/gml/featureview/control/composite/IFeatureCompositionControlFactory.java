@@ -38,22 +38,18 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.featureview.control;
+package org.kalypso.ogc.gml.featureview.control.composite;
 
+import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.template.featureview.ControlType;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 
 /**
+ * Factory for featre controls that contain other controls.
+ * 
  * @author Gernot Belger
  */
-public class GeometryFeatureControlFactory implements IFeatureControlFactory
+public interface IFeatureCompositionControlFactory
 {
-  @Override
-  public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
-  {
-    return new GeometryFeatureControl( feature, pt );
-  }
-
+  IFeatureCompositionControl createControl( FeatureComposite featureComposite, IAnnotation annotation, ITranslator translator );
 }

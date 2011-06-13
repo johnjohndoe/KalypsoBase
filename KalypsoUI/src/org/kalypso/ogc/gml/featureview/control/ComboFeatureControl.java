@@ -144,7 +144,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
       if( !rt.isInlineAble() && rt.isLinkAble() )
       {
         /* Null entry to delete link if this is allowed */
-        if( rt.isNillable() )
+        if( rt.isNillable() || rt.getMinOccurs() == 0 )
           m_entries.put( NULL_LINK, "<kein Link>" ); //$NON-NLS-1$
 
         /* Find all substituting features. */

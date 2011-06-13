@@ -38,22 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.featureview.control;
+package org.kalypso.ogc.gml.featureview.control.composite;
 
-import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.template.featureview.ControlType;
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 /**
  * @author Gernot Belger
  */
-public class GeometryFeatureControlFactory implements IFeatureControlFactory
+public interface IFeatureCompositionControl
 {
-  @Override
-  public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
-  {
-    return new GeometryFeatureControl( feature, pt );
-  }
-
+  Control createControl( FormToolkit toolkit, Composite parent, int style );
 }

@@ -38,22 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.featureview.control;
+package org.kalypso.ogc.gml.featureview.control.composite;
 
+import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.template.featureview.ControlType;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
+import org.kalypso.template.featureview.TabFolder;
 
 /**
  * @author Gernot Belger
  */
-public class GeometryFeatureControlFactory implements IFeatureControlFactory
+public class TablFolderCompositionFactory implements IFeatureCompositionControlFactory
 {
-  @Override
-  public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
+  private final TabFolder m_folderType;
+
+  public TablFolderCompositionFactory( final TabFolder folderType )
   {
-    return new GeometryFeatureControl( feature, pt );
+    m_folderType = folderType;
   }
 
+  @Override
+  public IFeatureCompositionControl createControl( final FeatureComposite featureComposite, final IAnnotation annotation, final ITranslator translator )
+  {
+    return new TabFolderCompositionControl( m_folderType, featureComposite, annotation, translator );
+  }
 }

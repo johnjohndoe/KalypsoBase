@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,13 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -51,7 +52,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IFeatureControl
 {
-  Control createControl( Composite parent, int style );
+  Control createControl( FormToolkit toolkit, Composite parent, int style );
 
   void dispose( );
 

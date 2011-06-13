@@ -40,20 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.template.featureview.CommandHyperlink;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class GeometryFeatureControlFactory implements IFeatureControlFactory
+public class CommandHyperlinkFeatureControlFactory implements IFeatureControlFactory
 {
   @Override
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
   {
-    return new GeometryFeatureControl( feature, pt );
-  }
+    final CommandHyperlink hyperlinkType = (CommandHyperlink) controlType;
+    final String commandID = hyperlinkType.getCommandID();
 
+    // TODO: get locator from other source, in preference from the feature composite
+    final IServiceLocator locator = PlatformUI.getWorkbench();
+
+    return new CommandHyperlinkFeatureControl( locator, commandID );
+  }
 }

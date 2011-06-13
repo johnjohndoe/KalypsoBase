@@ -40,20 +40,53 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
-import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.template.featureview.ControlType;
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.internal.actions.CommandAction;
+import org.eclipse.ui.services.IServiceLocator;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 
 /**
  * @author Gernot Belger
  */
-public class GeometryFeatureControlFactory implements IFeatureControlFactory
+@SuppressWarnings("restriction")
+public class CommandHyperlinkFeatureControl extends AbstractFeatureControl
 {
-  @Override
-  public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
+  private final CommandAction m_commandAction;
+
+  public CommandHyperlinkFeatureControl( final IServiceLocator locator, final String commandID )
   {
-    return new GeometryFeatureControl( feature, pt );
+    super( null, null );
+
+    m_commandAction = new CommandAction( locator, commandID );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    m_commandAction.dispose();
+
+    super.dispose();
+  }
+
+  @Override
+  public Control createControl( final FormToolkit toolkit, final Composite parent, final int style )
+  {
+    return ActionHyperlink.createHyperlink( toolkit, parent, style, m_commandAction );
+  }
+
+  @Override
+  public void updateControl( )
+  {
+  }
+
+  @Override
+  public boolean isValid( )
+  {
+    return true;
+  }
 }
