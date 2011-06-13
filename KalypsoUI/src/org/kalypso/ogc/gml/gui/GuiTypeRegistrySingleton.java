@@ -1,8 +1,9 @@
 package org.kalypso.ogc.gml.gui;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.types.ITypeHandlerFactory;
 import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypso.gmlschema.types.TypeRegistry_impl;
 import org.kalypso.ui.KalypsoUIExtensions;
 
@@ -33,10 +34,14 @@ public class GuiTypeRegistrySingleton
         {
           factory.registerTypeHandlers( m_typeRegistry );
         }
-        catch( final TypeRegistryException e )
+        catch( final Exception e ) // generic exception caught for simplicity
         {
-          // TODO handle exception
           e.printStackTrace();
+          // this method is also used in headless mode
+          if( PlatformUI.isWorkbenchRunning() )
+          {
+            MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() ); //$NON-NLS-1$
+          }
         }
       }
     }

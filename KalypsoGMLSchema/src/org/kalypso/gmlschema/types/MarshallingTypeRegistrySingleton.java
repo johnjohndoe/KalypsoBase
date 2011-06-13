@@ -1,10 +1,11 @@
 package org.kalypso.gmlschema.types;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Dies sollte irgenwo zentral liegen oder in eine andere solche Klasse integriert werden
@@ -40,15 +41,14 @@ public class MarshallingTypeRegistrySingleton
           final ITypeHandlerFactory<IMarshallingTypeHandler> factory = (ITypeHandlerFactory<IMarshallingTypeHandler>) element.createExecutableExtension( TYPE_HANDLER_FACTORY_CLASS );
           factory.registerTypeHandlers( m_typeRegistry );
         }
-        catch( final CoreException e )
+        catch( final Exception e ) // generic exception caught for simplicity
         {
-          // TODO handle exception
           e.printStackTrace();
-        }
-        catch( final TypeRegistryException e )
-        {
-          // TODO handle exception
-          e.printStackTrace();
+          // this method is also used in headless mode
+          if( PlatformUI.isWorkbenchRunning() )
+          {
+            MessageDialog.openError( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Interne Applikationsfehler", e.getLocalizedMessage() ); //$NON-NLS-1$
+          }
         }
       }
     }

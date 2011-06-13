@@ -89,7 +89,7 @@ import org.kalypsodeegree_impl.tools.GMLConstants;
 /**
  * @author doemming
  */
-public class TypeHandlerUtilities
+public final class TypeHandlerUtilities
 {
   /**
    * simple type handler of build-in XMLSCHEMA types <br>
@@ -256,7 +256,7 @@ public class TypeHandlerUtilities
 
     // Geometries
     // TODO: probably not needed, as soon as all geometries are parsed with sax: these are just properties pointing to a
-// gm_object
+    // gm_object
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_GEOMETRY, GMLConstants.QN_GEOMETRY, GM_Object.class, true ) );
     registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_LOCATION, GMLConstants.QN_LOCATION, GM_Object.class, true ) );
 
@@ -265,13 +265,6 @@ public class TypeHandlerUtilities
     // - MultiSurface from MultiSurfaceTye
     // - Surface from SurfaceType
     // - Surface from PolygonType
-
-// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider, GMLConstants.QN_SURFACE,
-// GMLConstants.QN_SURFACE, GM_Surface.class, true ) );
-    // registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
-// GMLConstants.QN_POLYGON, GMLConstants.QN_POLYGON, GM_Surface.class, true ) );
-// registry.registerTypeHandler( new GenericGM_ObjectBindingTypeHandler( jaxbContextProvider,
-// GMLConstants.QN_MULTI_POLYGON, GMLConstants.QN_MULTI_POLYGON, GM_MultiSurface.class, true ) );
 
     registry.registerTypeHandler( new PointHandler() );
     registry.registerTypeHandler( new MultiPointHandler() );

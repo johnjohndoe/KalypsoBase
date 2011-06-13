@@ -183,12 +183,6 @@
     </themeInfo>
  </extension>
  <extension
-       point="org.kalypso.gmlschema.typeHandlers">
-    <typeHandler
-          factory="org.kalypso.core.KalypsoCoreTypeHandlerFactory">
-    </typeHandler>
- </extension>
- <extension
        point="org.kalypso.core.poolLoader">
     <loader
           class="org.kalypso.ogc.gml.loader.GmlLoader"

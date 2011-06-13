@@ -22,18 +22,18 @@ public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<
   private final Map<Class< ? >, H> m_classMap = new HashMap<Class< ? >, H>();
 
   /**
-   * Falls TypeName oder ClassName bereits belegt sind
-   * 
    * @throws TypeRegistryException
+   *           Falls TypeName oder ClassName bereits belegt sind
    * @see org.kalypsodeegree_impl.extension.ITypeRegistry#registerTypeHandler(org.kalypsodeegree_impl.extension.IMarshallingTypeHandler)
    */
   @Override
   public void registerTypeHandler( final H typeHandler )
   {
     final QName typeName = typeHandler.getTypeName();
+
     final Class< ? > className = typeHandler.getValueClass();
-// if( m_typeMap.containsKey( typeName ) )
-// throw new TypeRegistryException( "Typname wurde bereits registriert: " + typeName );
+    // if( m_typeMap.containsKey( typeName ) )
+    // throw new TypeRegistryException( "Typname wurde bereits registriert: " + typeName );
 
     m_typeMap.put( typeName, typeHandler );
 
