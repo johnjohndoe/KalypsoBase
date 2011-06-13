@@ -40,13 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.observationDialog;
 
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.jface.action.IAction;
 
 /**
  * @author Gernot Belger
  */
-public interface IObservationAction
+public interface IObservationAction extends IAction
 {
-  Button createButton( Composite parent );
+  void init( ObservationViewer viewer );
 }
