@@ -491,7 +491,11 @@ public final class StyleFactory
   {
     final ITextStyle style = StyleUtils.getDefaultTextStyle();
 
+    if( tst == null )
+      return null;
+
     style.setTitle( tst.getTitle() );
+
     // visible
     if( tst.isSetIsVisible() )
     {
