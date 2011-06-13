@@ -40,19 +40,59 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
-import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.template.featureview.ControlType;
-import org.kalypsodeegree.model.feature.Feature;
+import java.net.URL;
+import java.util.List;
+
+import org.kalypso.commons.i18n.ITranslator;
+import org.w3c.dom.Element;
 
 /**
+ * Helper that wraps a translator but checks for the translation key ('%'). If the string does not start with this
+ * character, it just returns the string.<br/>
+ * 
  * @author Gernot Belger
  */
-public class ButtonFeatureControlFactory implements IFeatureControlFactory
+public class FeatureViewTranslator implements ITranslator
 {
-  @Override
-  public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
+  private static final char TRANSLATION_CHAR = '%'; //$NON-NLS-1$
+
+  private final ITranslator m_delegate;
+
+  public FeatureViewTranslator( final ITranslator delegate )
   {
-    return new ButtonFeatureControl( feature, pt );
+    m_delegate = delegate;
+  }
+
+  @Override
+  public String getId( )
+  {
+    return m_delegate.getId();
+  }
+
+  @Override
+  public void configure( final URL context, final List<Element> elements )
+  {
+    m_delegate.configure( context, elements );
+  }
+
+  @Override
+  public List<Element> getConfiguration( )
+  {
+    return m_delegate.getConfiguration();
+  }
+
+  @Override
+  public String get( final String key )
+  {
+    if( key == null )
+      return null;
+
+    if( key.length() == 0 )
+      return key;
+
+    if( key.charAt( 0 ) != TRANSLATION_CHAR )
+      return key;
+
+    return m_delegate.get( key.substring( 1 ) );
   }
 }

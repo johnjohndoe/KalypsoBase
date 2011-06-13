@@ -19,6 +19,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
@@ -111,11 +112,8 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
     m_toolbar = toolbar;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
-  public Control createControl( final Composite parent, final int style )
+  public Control createControl( final FormToolkit toolkit, final Composite parent, final int style )
   {
     /* Create a new Composite for the toolbar. */
     final Composite client = new Composite( parent, SWT.NONE );
@@ -128,8 +126,10 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
 
     /* Create the layer table viewer. */
     m_viewer = new LayerTableViewer( client, style, m_templateTarget, m_factory, m_selectionManager, m_fcl );
+    final Table table = m_viewer.getTable();
+    applyToolkit( toolkit, client );
 
-    m_viewer.getTable().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     /* Set the feature. */
     final Feature feature = getFeature();
@@ -200,17 +200,15 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
         addToolbarItems( contribution.getUri() );
     }
 
-    if( getToolbarManager() == null )
-      return client;
+    if( getToolbarManager() != null )
+    {
+      final ToolBar toolbar = getToolbarManager().createControl( client );
+      toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, true ) );
 
-    final ToolBar toolbar = getToolbarManager().createControl( client );
-    toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, true ) );
+      applyToolkit( toolkit, toolbar );
 
-    final FormToolkit toolkit = new FormToolkit( toolbar.getDisplay() );
-    toolkit.adapt( client );
-    toolkit.adapt( toolbar );
-
-    hookExecutionListener( m_viewer, getToolbarManager() );
+      hookExecutionListener( m_viewer, getToolbarManager() );
+    }
 
     return client;
   }

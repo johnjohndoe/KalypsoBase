@@ -65,7 +65,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.view.chart.provider.IChartProvider;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
-import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -86,7 +85,7 @@ import de.openali.odysseus.chartconfig.x020.TitleType;
 /**
  * @author Gernot Belger
  */
-public class ChartFeatureControl extends AbstractFeatureControl implements IFeatureControl
+public class ChartFeatureControl extends AbstractFeatureControl
 {
   /**
    * These settings are used locally to remember the last selected tab-folder.
@@ -95,18 +94,18 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
 
   private final static String STR_SETTINGS_TAB = "tabIndex"; //$NON-NLS-1$
 
-  private ChartConfigurationLoader m_ccl;
+  private final ChartConfigurationLoader m_ccl;
 
-  private ChartType[] m_chartTypes;
+  private final ChartType[] m_chartTypes;
 
-  private URL m_context;
+  private final URL m_context;
 
-  private Map<String, Integer> m_commands;
+  private final Map<String, Integer> m_commands;
 
   /**
    * The ID of the chart provider. May be null.
    */
-  private String m_chartProviderID;
+  private final String m_chartProviderID;
 
   /**
    * The chart tabs.
@@ -272,11 +271,11 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
         continue;
 
       /* If the chart was previously loaded, it will contain layers - these have to be removed. */
-      IChartComposite chart = m_chartTabs[i].getChartComposite();
-      IChartModel chartModel = chart.getChartModel();
-      ILayerManager lm = chartModel.getLayerManager();
-      IChartLayer[] layers = lm.getLayers();
-      for( IChartLayer chartLayer : layers )
+      final IChartComposite chart = m_chartTabs[i].getChartComposite();
+      final IChartModel chartModel = chart.getChartModel();
+      final ILayerManager lm = chartModel.getLayerManager();
+      final IChartLayer[] layers = lm.getLayers();
+      for( final IChartLayer chartLayer : layers )
         lm.removeLayer( chartLayer );
 
       /* Configure. */
@@ -290,10 +289,10 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
     }
   }
 
-  private boolean hasData( ChartType chartType )
+  private boolean hasData( final ChartType chartType )
   {
     /* Make a dummy chart model. */
-    IChartModel chartModel = new ChartModel();
+    final IChartModel chartModel = new ChartModel();
 
     /* Configure. */
     ChartFactory.doConfiguration( chartModel, m_ccl, chartType, ChartExtensionLoader.getInstance(), m_context );
@@ -302,18 +301,18 @@ public class ChartFeatureControl extends AbstractFeatureControl implements IFeat
     doConfiguration( chartModel );
 
     /* Check, if all layers are emtpy. */
-    ILayerManager layerManager = chartModel.getLayerManager();
-    IChartLayer[] layers = layerManager.getLayers();
-    for( IChartLayer layer : layers )
+    final ILayerManager layerManager = chartModel.getLayerManager();
+    final IChartLayer[] layers = layerManager.getLayers();
+    for( final IChartLayer layer : layers )
     {
-      IDataRange<Number> domainRange = layer.getDomainRange();
-      IDataRange<Number> targetRange = layer.getTargetRange( null );
+      final IDataRange<Number> domainRange = layer.getDomainRange();
+      final IDataRange<Number> targetRange = layer.getTargetRange( null );
       if( domainRange != null && targetRange != null )
       {
-        Number domainMin = domainRange.getMin();
-        Number domainMax = domainRange.getMax();
-        Number targetMin = targetRange.getMin();
-        Number targetMax = targetRange.getMax();
+        final Number domainMin = domainRange.getMin();
+        final Number domainMax = domainRange.getMax();
+        final Number targetMin = targetRange.getMin();
+        final Number targetMax = targetRange.getMax();
 
         if( domainMin.doubleValue() > Double.NEGATIVE_INFINITY )
           return true;
