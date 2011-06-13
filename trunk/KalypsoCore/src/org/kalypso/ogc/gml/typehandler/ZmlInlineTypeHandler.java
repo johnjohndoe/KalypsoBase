@@ -36,7 +36,6 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 import org.xml.sax.InputSource;
@@ -50,9 +49,9 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
 
   protected final String[] m_axisTypes;
 
-  public ZmlInlineTypeHandler( final String name, final String[] axisTypes, final Class<IObservation> clazz )
+  public ZmlInlineTypeHandler( final String name, final String[] axisTypes )
   {
-    super( new QName( NAMESPACE, name ), clazz );
+    super( new QName( NAMESPACE, name ), IObservation.class );
 
     m_axisTypes = axisTypes;
   }
@@ -127,32 +126,4 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
   {
     throw new UnsupportedOperationException();
   }
-
-  // TODO: these do NOT belong here!
-  public interface TA extends IObservation
-  {
-    String[] axis = new String[] { ITimeseriesConstants.TYPE_HOURS, ITimeseriesConstants.TYPE_NORM };
-  }
-
-  public interface WtKcLai extends IObservation
-  {
-    String[] axis = new String[] { ITimeseriesConstants.TYPE_DATE, ITimeseriesConstants.TYPE_LAI, ITimeseriesConstants.TYPE_WT, ITimeseriesConstants.TYPE_KC };
-  }
-
-  public interface WVQ extends IObservation
-  {
-    String[] axis = new String[] { ITimeseriesConstants.TYPE_NORMNULL, ITimeseriesConstants.TYPE_VOLUME, ITimeseriesConstants.TYPE_RUNOFF, ITimeseriesConstants.TYPE_RUNOFF_Q2,
-        ITimeseriesConstants.TYPE_RUNOFF_Q3 };
-  }
-
-  public interface TN extends IObservation
-  {
-    String[] axis = new String[] { ITimeseriesConstants.TYPE_MIN, ITimeseriesConstants.TYPE_RAINFALL };
-  }
-
-  public interface QQ extends IObservation
-  {
-    String[] axis = new String[] { ITimeseriesConstants.TYPE_RUNOFF, ITimeseriesConstants.TYPE_RUNOFF_RHB };
-  }
-
 }

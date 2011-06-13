@@ -41,12 +41,10 @@
 package org.kalypso.ogc.sensor.view.observationDialog;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.java.util.ValueIterator;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -54,66 +52,65 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
-import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 
 /**
  * @author Gernot Belger
  */
 public class NewIdealLanduseAction extends AbstractObservationAction
 {
-  public NewIdealLanduseAction( final ObservationViewerDialog dialog )
+  /**
+   * We produce 13 values instead of 12....
+   */
+  private static final int MONTH_IN_YEAR = 13;
+  private final String[] m_axisTypes;
+
+  public NewIdealLanduseAction( final String[] axisTypes )
   {
-    super( dialog );
+    m_axisTypes = axisTypes;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction#getLabel()
-   */
   @Override
   protected String getLabel( )
   {
     return Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.6" ); //$NON-NLS-1$ 
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction#getTooltip()
-   */
   @Override
   protected String getTooltip( )
   {
     return Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.7" ); //$NON-NLS-1$ 
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction#run()
-   */
   @Override
-  protected IStatus run( )
+  protected IStatus execute( )
   {
-    final String[] axisTypes = getDialog().getAxisTypes();
-    final IAxis[] axis = TimeseriesUtils.createDefaultAxes( axisTypes, true );
+    final ObservationViewer viewer = getViewer();
+    final IAxis[] axis = TimeseriesUtils.createDefaultAxes( m_axisTypes, true );
 
     final String name = Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.5" ); //$NON-NLS-1$
-    final Calendar startDate = Calendar.getInstance();
-    startDate.set( 2000, 11, 15 );
-    final Calendar idealMonth = Calendar.getInstance();
-    idealMonth.setTimeInMillis( 30 * 24 * 60 * 60 * 1000 );
-    final Object intervall = new Date( idealMonth.getTimeInMillis() );
-    final Object min = new Date( startDate.getTimeInMillis() );
-    final int months = 12;
 
-    final Object[][] values = new Object[months][axis.length];
-    final Iterator< ? > iterator = new ValueIterator( min, intervall, months );
-    for( int row = 0; row < months; row++ )
+    // FIXME: validate this!
+
+    final Calendar startDate = Calendar.getInstance();
+    startDate.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+    startDate.clear();
+    startDate.set( 2000, 10, 15, 12, 0, 0 );
+
+    final Object[][] values = new Object[MONTH_IN_YEAR][axis.length];
+
+    for( int row = 0; row < MONTH_IN_YEAR; row++ )
     {
-      values[row][0] = iterator.next();
+      values[row][0] = startDate.getTime();
+
       for( int ax = 1; ax < axis.length; ax++ )
-        values[row][ax] = new Double( 0 );
+        values[row][ax] = 0.0;
+
+      startDate.add( Calendar.MONTH, 1 );
     }
+
     final ITupleModel model = new SimpleTupleModel( axis, values );
-    getDialog().setInput( new SimpleObservation( null, name, new MetadataList(), model ) );
+    viewer.setInput( new SimpleObservation( null, name, new MetadataList(), model ), viewer.getShow() );
 
     return Status.OK_STATUS;
   }
-
 }

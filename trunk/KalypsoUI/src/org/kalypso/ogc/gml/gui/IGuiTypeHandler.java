@@ -49,24 +49,20 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.types.ITypeHandler;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
-import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.ObjectFactory;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Provides editors and visualisation for {@link org.kalypsodeegree.model.feature.Feature}s.
  * 
  * @author Gernot Belger
  */
-public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
+public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler, IFeatureDialogFactory
 {
-  public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp );
+  JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory );
 
-  public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory );
-
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format );
+  IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format );
 
   /**
    * Inverse operation to {@link ILabelProvider#getText(java.lang.Object)}. Must return an object of the type for which
@@ -81,5 +77,5 @@ public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
    *            supported. For example for the date-handler, DateFormat format string can be used. May be
    *            <code>null</code>.
    */
-  public Object parseText( final String text, final String formatHint ) throws ParseException;
+  Object parseText( final String text, final String formatHint ) throws ParseException;
 }
