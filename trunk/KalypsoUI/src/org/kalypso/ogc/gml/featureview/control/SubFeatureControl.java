@@ -55,11 +55,8 @@ public class SubFeatureControl extends AbstractFeatureControl
       m_selector = null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
-  public Control createControl( final Composite parent, final int style )
+  public Control createControl( final FormToolkit toolkit, final Composite parent, final int style )
   {
     if( m_container == null )
     {
@@ -72,6 +69,8 @@ public class SubFeatureControl extends AbstractFeatureControl
       layout.marginWidth = 0;
       layout.marginHeight = 0;
       m_container.setLayout( layout );
+
+      applyToolkit( toolkit, m_container );
     }
 
     try
@@ -119,7 +118,7 @@ public class SubFeatureControl extends AbstractFeatureControl
       }
     } );
 
-    m_fc.createControl( m_container, SWT.NONE );
+    m_fc.createControl( toolkit, m_container, SWT.NONE );
     // FIXME we should set the layout here, but the FeatureComposite does it itself, which it shouldn't
     return m_container;
   }

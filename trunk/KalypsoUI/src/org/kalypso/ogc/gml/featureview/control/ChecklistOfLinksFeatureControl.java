@@ -82,7 +82,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * 
  * @author Gernot Belger
  */
-public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl implements IFeatureControl
+public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
 {
   public static final String PARAM_SELECT_BUTTONS = "showSelectButtons"; //$NON-NLS-1$
 
