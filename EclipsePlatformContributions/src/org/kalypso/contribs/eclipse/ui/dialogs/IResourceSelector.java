@@ -38,14 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.view.observationDialog;
+package org.kalypso.contribs.eclipse.ui.dialogs;
 
-import org.eclipse.jface.action.IAction;
+import org.eclipse.core.resources.IResource;
 
 /**
+ * Filter {@link org.eclipse.core.resources.IResource}s.
+ * 
  * @author Gernot Belger
  */
-public interface IObservationAction extends IAction
+public interface IResourceSelector
 {
-  void init( ObservationViewer viewer );
+  boolean select( IResource resource );
 }

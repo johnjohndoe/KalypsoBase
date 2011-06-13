@@ -40,12 +40,27 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.observationDialog;
 
-import org.eclipse.jface.action.IAction;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.kalypso.contribs.eclipse.ui.dialogs.IResourceSelector;
 
 /**
  * @author Gernot Belger
  */
-public interface IObservationAction extends IAction
+public class ZmlResourceSelector implements IResourceSelector
 {
-  void init( ObservationViewer viewer );
+  private static final String EXT_ZML = "zml"; //$NON-NLS-1$
+
+  @Override
+  public boolean select( final IResource resource )
+  {
+    if( resource instanceof IFile )
+    {
+      final String fileExtension = resource.getFileExtension();
+      if( !EXT_ZML.equalsIgnoreCase( fileExtension ) )
+        return false;
+    }
+
+    return true;
+  }
 }

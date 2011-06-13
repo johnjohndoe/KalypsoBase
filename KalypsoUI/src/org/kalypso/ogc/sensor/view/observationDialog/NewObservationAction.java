@@ -54,48 +54,38 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
-import org.kalypso.ogc.sensor.view.AxisRangeDialog;
-import org.kalypso.ogc.sensor.view.ObservationViewerDialog;
 
 /**
  * @author Gernot Belger
  */
 public class NewObservationAction extends AbstractObservationAction
 {
-  public NewObservationAction( final ObservationViewerDialog dialog )
+  private final String[] m_axisTypes;
+
+  public NewObservationAction( final String[] axisTypes )
   {
-    super( dialog );
+    m_axisTypes = axisTypes;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction#getLabel()
-   */
   @Override
   protected String getLabel( )
   {
     return Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.3" ); //$NON-NLS-1$ 
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction#getTooltip()
-   */
   @Override
   protected String getTooltip( )
   {
     return Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.4" ); //$NON-NLS-1$ 
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.view.observationDialog.AbstractObservationAction#run()
-   */
   @Override
-  protected IStatus run( )
+  protected IStatus execute( )
   {
-    final ObservationViewerDialog obsDialog = getDialog();
-    final Shell shell = obsDialog.getShell();
-    final String[] axisTypes = obsDialog.getAxisTypes();
+    final ObservationViewer viewer = getViewer();
+    final Shell shell = viewer.getShell();
 
-    final AxisRangeDialog dialog = new AxisRangeDialog( shell, axisTypes[0] );
+    final AxisRangeDialog dialog = new AxisRangeDialog( shell, m_axisTypes[0] );
     if( dialog.open() != Window.OK )
       return Status.CANCEL_STATUS;
 
@@ -107,7 +97,7 @@ public class NewObservationAction extends AbstractObservationAction
     final Object intervall = dialog.getInt();
     final int rows = dialog.getCount();
 
-    final IAxis[] axis = TimeseriesUtils.createDefaultAxes( axisTypes, true );
+    final IAxis[] axis = TimeseriesUtils.createDefaultAxes( m_axisTypes, true );
 
     final Object[][] values = new Object[rows][axis.length];
     final Iterator< ? > iterator = new ValueIterator( min, intervall, rows );
@@ -118,10 +108,9 @@ public class NewObservationAction extends AbstractObservationAction
         values[row][ax] = dialog.getDefault();
     }
     final ITupleModel model = new SimpleTupleModel( axis, values );
-    getDialog().setInput( new SimpleObservation( null, name, new MetadataList(), model ) );
+    viewer.setInput( new SimpleObservation( null, name, new MetadataList(), model ), viewer.getShow() );
 
     return Status.OK_STATUS;
 
   }
-
 }
