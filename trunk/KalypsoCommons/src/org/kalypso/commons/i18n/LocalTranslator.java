@@ -42,7 +42,6 @@ package org.kalypso.commons.i18n;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -102,14 +101,8 @@ public class LocalTranslator implements ITranslator, IExecutableExtension
     return m_configuration;
   }
 
-  /**
-   * REMARK: locale is always ignored, as the language is determined when the message class is loaded. It is always the
-   * current locale of the eclipse platform.
-   * 
-   * @see org.kalypso.contribs.java.lang.I10nTranslator#get(java.lang.String, java.util.Locale, java.lang.Object[])
-   */
   @Override
-  public String get( final String key, final Locale locale, final Object[] context )
+  public String get( final String key )
   {
     if( m_bundle == null )
       return Messages.getString("org.kalypso.commons.i18n.LocalTranslator.1",key); //$NON-NLS-1$

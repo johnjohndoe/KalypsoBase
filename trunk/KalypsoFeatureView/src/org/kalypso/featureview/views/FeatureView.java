@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -68,6 +69,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.ActionContext;
@@ -78,6 +80,7 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderAdapter;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -110,7 +113,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * </p>
  * <ul>
  * <li>Shows the current selected feature in either a view or an editor. The latter can only be recieved, if the editor
- * adapts {@link org.eclipse.jface.viewers.ISelectionProvider}or {@linked
+ * adapts {@link org.eclipse.jface.viewers.ISelectionProvider} or {@linked
  * org.eclipse.jface.viewers.IPostSelectionProvider}.</li>
  * <li>In preference, the view listens to post-selections, in order to change the shown feature not too often.</li>
  * <li>If the returned selection is a {@link org.kalypso.ogc.gml.selection.IFeatureSelection}, changes (i.e. made by the
@@ -235,6 +238,8 @@ public class FeatureView extends ViewPart implements ModellEventListener
    */
   private IWorkbenchPart m_selectionSourcePart;
 
+  final ISelectionProvider m_selectionProvider = new SelectionProviderAdapter();
+
   public FeatureView( )
   {
     final IDialogSettings viewsSettings = KalypsoFeatureViewPlugin.getDefault().getDialogSettings();
@@ -268,18 +273,21 @@ public class FeatureView extends ViewPart implements ModellEventListener
     m_featureSelectionActionGroup.setPart( this );
     m_featureSelectionActionGroup.setContext( new ActionContext( StructuredSelection.EMPTY ) );
     m_featureSelectionActionGroup.fillActionBars( site.getActionBars() );
+
+    site.setSelectionProvider( m_selectionProvider );
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#dispose()
-   */
   @Override
   public void dispose( )
   {
     activateFeature( null, false, null ); // to unhook listeners
     m_featureComposite.dispose();
 
-    final IWorkbenchPage page = getSite().getPage();
+    final IWorkbenchPartSite site = getSite();
+
+    site.setSelectionProvider( null );
+
+    final IWorkbenchPage page = site.getPage();
     page.removePartListener( m_partListener );
     page.getWorkbenchWindow().getSelectionService().removePostSelectionListener( m_selectionListener );
 
@@ -337,29 +345,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
       m_commandManager = null;
       activateFeature( null, false, null );
     }
-
-    // final FeatureSelectionActionGroup featureSelectionActionGroup = m_featureSelectionActionGroup;
-    //
-    // runAsync( new Runnable()
-    // {
-    // public void run( )
-    // {
-    // featureSelectionActionGroup.getContext().setSelection( selection );
-    // featureSelectionActionGroup.updateActionBars();
-    // }
-    // } );
   }
-
-  // private void runAsync( final Runnable runnable )
-  // {
-  // final Group mainGroup = m_mainGroup;
-  // final Control control = m_featureComposite.getControl();
-  // if( mainGroup != null && !mainGroup.isDisposed() && control != null && !control.isDisposed() )
-  // {
-  // if( !control.isDisposed() )
-  // control.getDisplay().asyncExec( runnable );
-  // }
-  // }
 
   protected void handlePartClosed( final IWorkbenchPart part )
   {
@@ -474,7 +460,8 @@ public class FeatureView extends ViewPart implements ModellEventListener
         if( oldWorkspace != null )
         {
           oldWorkspace.removeModellListener( FeatureView.this );
-          getSite().setSelectionProvider( null );
+          // TODO: WHY?
+          /// getSite().setSelectionProvider( null );
         }
         try
         {
@@ -533,6 +520,11 @@ public class FeatureView extends ViewPart implements ModellEventListener
           if( FeatureView.this == getViewSite().getPage().getActivePart() )
             mainGroup.setFocus();
         }
+
+        if( feature == null )
+          m_selectionProvider.setSelection( StructuredSelection.EMPTY );
+        else
+          m_selectionProvider.setSelection( KalypsoCorePlugin.getDefault().getSelectionManager() );
 
         featureSelectionActionGroup.getContext().setSelection( selection );
         featureSelectionActionGroup.updateActionBars();

@@ -43,7 +43,6 @@ package org.kalypso.commons.i18n;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.List;
-import java.util.Locale;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -129,14 +128,8 @@ public class NLSTranslator implements ITranslator, IExecutableExtension
     return m_configuration;
   }
 
-  /**
-   * REMARK: locale is always ignored, as the language is determined whn the message class is loaded. It is always the
-   * current locale of the eclipse platform.
-   * 
-   * @see org.kalypso.contribs.java.lang.I10nTranslator#get(java.lang.String, java.util.Locale, java.lang.Object[])
-   */
   @Override
-  public String get( final String key, final Locale locale, final Object[] context )
+  public String get( final String key )
   {
     if( m_nls == null )
       return Messages.getString("org.kalypso.commons.i18n.NLSTranslator.4", key); //$NON-NLS-1$
