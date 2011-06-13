@@ -49,9 +49,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.ui.progress.UIJob;
 
 /**
@@ -61,11 +59,13 @@ import org.eclipse.ui.progress.UIJob;
  */
 public class ColumnsResizeControlListener extends ControlAdapter
 {
-  /** If set to a column, the column will always get this fixed width */
-  public static final String DATA_FIXED_COL_WIDTH = ColumnsResizeControlListener.class.getName() + ".fixedColumnWidth"; //$NON-NLS-1$
+// /** If set to a column, the column will always get this fixed width */
+//  public static final String DATA_FIXED_COL_WIDTH = ColumnsResizeControlListener.class.getName() + ".fixedColumnWidth"; //$NON-NLS-1$
+//
+// /** Defines the minimal column width of each table column with this data-entry */
+//  public static final String DATA_MIN_COL_WIDTH = ColumnsResizeControlListener.class.getName() + ".minColumnWidth"; //$NON-NLS-1$
 
-  /** Defines the minimal column width of each table column with this data-entry */
-  public static final String DATA_MIN_COL_WIDTH = ColumnsResizeControlListener.class.getName() + ".minColumnWidth"; //$NON-NLS-1$
+  private static final String DATA_WIDTH_INFO = "columnWidthInfo"; //$NON-NLS-1$
 
   public static final int MIN_COL_WIDTH_PACK = -2;
 
@@ -106,7 +106,7 @@ public class ColumnsResizeControlListener extends ControlAdapter
     m_resizeColumnsJob.schedule( 50 );
   }
 
-  protected void resizeColumns( )
+  void resizeColumns( )
   {
     if( m_tableOrTree.isDisposed() )
       return;
@@ -115,46 +115,52 @@ public class ColumnsResizeControlListener extends ControlAdapter
     {
       m_isActive = true;
 
-      /* Get the area of the parent. */
-      final Rectangle area = m_tableOrTree.getClientArea();
-
-      final int width = area.width;
-
-      /* Set the size for each colum. */
-      final Item[] columns = getItems( m_tableOrTree );
-
-      int remainingWidth = width;
-
-      for( int i = 0; i < columns.length; i++ )
-      {
-        final Item column = columns[i];
-
-        final int fixedWidth = getFixedWidth( column );
-        if( fixedWidth != -1 )
-        {
-          setWidth( column, fixedWidth );
-          remainingWidth -= fixedWidth;
-        }
-        else
-        {
-          final int minColWidth = getMinimumColumnWidth( column );
-
-          if( remainingWidth > 0 )
-          {
-            final int remainingColumns = columns.length - i;
-            final int columnWidth = Math.max( minColWidth, remainingWidth / remainingColumns );
-            setWidth( column, columnWidth );
-            remainingWidth -= columnWidth;
-          }
-          else
-            setWidth( column, minColWidth );
-        }
-      }
+      doRefreshColumnsWidth( m_tableOrTree );
     }
     finally
     {
       m_isActive = false;
     }
+  }
+
+  public static void refreshColumnsWidth( final Table table )
+  {
+    doRefreshColumnsWidth( table );
+  }
+
+  public static void refreshColumnsWidth( final Tree tree )
+  {
+    doRefreshColumnsWidth( tree );
+  }
+
+  private static void doRefreshColumnsWidth( final Composite tableOrTree )
+  {
+    /* Set the size for each colum. */
+    final Item[] columns = getItems( tableOrTree );
+    final ColumnWidthInfo[] infos = new ColumnWidthInfo[columns.length];
+    for( int i = 0; i < columns.length; i++ )
+      infos[i] = updateWidthInfo( columns[i] );
+
+    /* Get the area of the parent. */
+    final Rectangle area = tableOrTree.getClientArea();
+    final int width = area.width;
+
+    final ColumnResizeUpdater updater = new ColumnResizeUpdater( width, infos );
+    updater.updateColumnsWidth();
+  }
+
+  /**
+   * Make sure all items have a info.
+   */
+  private static ColumnWidthInfo updateWidthInfo( final Item item )
+  {
+    final Object info = item.getData( DATA_WIDTH_INFO );
+    if( info instanceof ColumnWidthInfo )
+      return (ColumnWidthInfo) info;
+
+    final ColumnWidthInfo newInfo = new ColumnWidthInfo( item );
+    item.setData( DATA_WIDTH_INFO, newInfo );
+    return newInfo;
   }
 
   private static Item[] getItems( final Composite tableOrTree )
@@ -168,54 +174,24 @@ public class ColumnsResizeControlListener extends ControlAdapter
     throw new IllegalArgumentException();
   }
 
-  private int getFixedWidth( final Item column )
+  public static void setMinimumWidth( final Item column, final int minimumWidth )
   {
-    final Object data = column.getData( DATA_FIXED_COL_WIDTH );
-    if( data instanceof Integer )
-      return (Integer) data;
-
-    return -1;
+    final ColumnWidthInfo info = new ColumnWidthInfo( column );
+    info.setMinimumWidth( minimumWidth );
+    column.setData( DATA_WIDTH_INFO, info );
   }
 
-  private int getMinimumColumnWidth( final Item column )
+  public static void setMinimumPackWidth( final Item column )
   {
-    final Object data = column.getData( DATA_MIN_COL_WIDTH );
-    if( data instanceof Integer )
-    {
-      final int minColWidth = (Integer) data;
-      if( minColWidth == MIN_COL_WIDTH_PACK )
-        return calculatePack( column );
-      else
-        return Math.max( 0, minColWidth );
-    }
-
-    return 0;
+    final ColumnWidthInfo info = new ColumnWidthInfo( column );
+    info.setMinimumWidth( ColumnWidthInfo.PACK );
+    column.setData( DATA_WIDTH_INFO, info );
   }
 
-  private int calculatePack( final Item column )
+  public static void setFixedWidth( final Item column, final int fixedWidth )
   {
-    if( column instanceof TableColumn )
-    {
-      ((TableColumn) column).pack();
-      return ((TableColumn) column).getWidth();
-    }
-
-    if( column instanceof TreeColumn )
-    {
-      ((TreeColumn) column).pack();
-      return ((TreeColumn) column).getWidth();
-    }
-
-    throw new IllegalArgumentException();
-  }
-
-  private static void setWidth( final Item column, final int width )
-  {
-    if( column instanceof TableColumn )
-      ((TableColumn) column).setWidth( width );
-    else if( column instanceof TreeColumn )
-      ((TreeColumn) column).setWidth( width );
-    else
-      throw new IllegalArgumentException();
+    final ColumnWidthInfo info = new ColumnWidthInfo( column );
+    info.setFixedWidth( fixedWidth );
+    column.setData( DATA_WIDTH_INFO, info );
   }
 }

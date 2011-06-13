@@ -112,26 +112,15 @@ public final class ColumnViewerUtil
 
   public static ViewerColumn createEmptyColumn( final ColumnViewer viewer )
   {
-    if( viewer instanceof TableViewer )
-    {
-      final TableViewerColumn nullColumn = new TableViewerColumn( (TableViewer) viewer, SWT.NONE );
-      final TableColumn column = nullColumn.getColumn();
-      column.setResizable( false );
-      column.setMoveable( false );
-      column.setData( ColumnsResizeControlListener.DATA_FIXED_COL_WIDTH, 0 );
-      return nullColumn;
-    }
+    final ViewerColumn nullColumn = createViewerColumn( viewer, SWT.NONE );
+    final ViewerColumnItem nullItem = new ViewerColumnItem( nullColumn );
 
-    if( viewer instanceof TreeViewer )
-    {
-      final TreeViewerColumn nullColumn = new TreeViewerColumn( (TreeViewer) viewer, SWT.NONE );
-      final TreeColumn column = nullColumn.getColumn();
-      column.setResizable( false );
-      column.setMoveable( false );
-      column.setData( ColumnsResizeControlListener.DATA_FIXED_COL_WIDTH, 0 );
-      return nullColumn;
-    }
+    nullItem.setResizable( false );
+    nullItem.setMoveable( false );
 
-    throw new IllegalArgumentException();
+    final Item column = nullItem.getColumn();
+    ColumnsResizeControlListener.setFixedWidth( column, 0 );
+
+    return nullColumn;
   }
 }
