@@ -75,7 +75,7 @@ public class TableControlMaker implements IControlMaker
    *      org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
-  public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, IFeatureType ft, final IPropertyType ftp, final Feature feature ) throws AbortCreationException
+  public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, final IFeatureType ft, final IPropertyType ftp, final Feature feature ) throws AbortCreationException
   {
     if( !(ftp instanceof IRelationType) )
       return false;
@@ -91,7 +91,7 @@ public class TableControlMaker implements IControlMaker
     final GridLayout layout = (GridLayout) parentLayout;
 
     final Table table = TemplateUtilities.OF_FEATUREVIEW.createTable();
-    table.setStyle( "SWT.NONE" ); //$NON-NLS-1$
+    table.setStyle( "SWT.BORDER" ); //$NON-NLS-1$
     table.setProperty( propertyName );
 
     final GridDataType griddata = TemplateUtilities.OF_FEATUREVIEW.createGridDataType();

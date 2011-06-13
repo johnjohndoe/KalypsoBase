@@ -46,6 +46,9 @@
 	<xs:complexType name="FeatureviewType">
 		<xs:complexContent>
 			<xs:extension base="fv:compositeType">
+                <xs:sequence>
+                  <xs:element name="translator" type="kalypso:I18nTranslatorType" minOccurs="0" />
+                </xs:sequence>
 				<xs:attribute name="typename" type="xs:QName" use="required" />
 			</xs:extension>
 		</xs:complexContent>
@@ -114,6 +117,19 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
+    <xs:element name="section" substitutionGroup="fv:control">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="fv:ControlType">
+                    <xs:sequence minOccurs="0">
+                        <xs:element name="description" type="xs:string" minOccurs="0" />
+                        <xs:element ref="fv:control"/>
+                    </xs:sequence>
+                    <xs:attribute name="title" type="xs:string" use="optional" />
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
 	<xs:element name="tabFolder" substitutionGroup="fv:control">
 		<xs:complexType>
 			<xs:complexContent>
@@ -296,6 +312,25 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
+    <xs:element name="commandHyperlink" substitutionGroup="fv:control">
+        <xs:annotation>
+            <xs:documentation>Hyperlink that is based on a command. Most properties of this element are taken from the command such as
+image, label, tooltip, enablement, etc.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="fv:ControlType">
+                    <xs:sequence>
+                        <xs:element name="commandID" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>ID of the command that is represented by this hyperlink.</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
 
 	<xs:element name="image" substitutionGroup="fv:control">
 		<xs:complexType>

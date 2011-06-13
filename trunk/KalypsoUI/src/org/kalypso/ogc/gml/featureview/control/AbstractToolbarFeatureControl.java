@@ -68,7 +68,6 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public abstract class AbstractToolbarFeatureControl extends AbstractFeatureControl
 {
-
   private ToolBarManager m_toolbar;
 
   private IExecutionListener m_executionListener;
