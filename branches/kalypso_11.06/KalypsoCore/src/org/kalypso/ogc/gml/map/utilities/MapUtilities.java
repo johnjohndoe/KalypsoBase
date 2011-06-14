@@ -137,7 +137,7 @@ public final class MapUtilities
     if( geometryJTS instanceof com.vividsolutions.jts.geom.Point )
       return SnapUtilities.snapPoint( pointJTS );
     else if( geometryJTS instanceof LineString )
-      return SnapUtilities.snapLine( (LineString) geometryJTS, pointBuffer, type );
+      return SnapUtilities.snapToLine( (LineString) geometryJTS, pointBuffer, type );
     else if( geometryJTS instanceof MultiLineString )
       return SnapUtilities.snapMultiLine( (MultiLineString) geometryJTS, pointBuffer, type );
     else if( geometryJTS instanceof Polygon )

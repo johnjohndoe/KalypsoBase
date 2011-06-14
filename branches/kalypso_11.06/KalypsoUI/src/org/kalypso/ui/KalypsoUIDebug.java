@@ -58,4 +58,6 @@ public class KalypsoUIDebug
    * Output for property testers defined in org.kalypso.ui.
    */
   public static Debug PROPERTY_TESTER = new Debug( KalypsoGisPlugin.getDefault(), "/debug/propertytester" ); //$NON-NLS-1$
+
+  public static Debug DEBUG_ADVANCED_EDIT_WIDGETS = new Debug( KalypsoGisPlugin.getDefault(), "/debug/advanced/edit/widget" ); //$NON-NLS-1$
 }
