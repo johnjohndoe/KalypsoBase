@@ -258,6 +258,12 @@
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.ExtentHistoryNextCommand" name="%org.kalypso.ogc.gml.map.ExtentHistoryNextCommand.label" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.ZoomInByRectCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.ZoomInByRectWidgetDelegate.label" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.PanToCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.PanToWidgetDelegate.label" />
+  <command
+        categoryId="org.kalypso.ogc.gml.map.category"
+        description="%org.kalypso.ogc.gml.map.ExportClipboardCommand.description"
+        id="org.kalypso.ogc.gml.map.ExportClipboardCommand"
+        name="%org.kalypso.ogc.gml.map.ExportClipboardCommand.name">
+  </command>
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ogc.gml.map.Screenshot.description" id="org.kalypso.ogc.gml.map.Screenshot" name="%org.kalypso.ogc.gml.map.Screenshot.name" />
   <command
         categoryId="org.kalypso.ogc.gml.map.category"
@@ -639,6 +645,10 @@
 		<image commandId="org.kalypso.ogc.gml.map.ExtentHistoryNextCommand" icon="icons/map/extentHistoryNext.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.ZoomInByRectCommand" icon="icons/map/zoomin.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.PanToCommand" icon="icons/map/pan.gif" />
+  <image
+        commandId="org.kalypso.ogc.gml.map.ExportClipboardCommand"
+        icon="icons/map/exportClipboard.gif">
+  </image>
 		<image commandId="org.kalypso.ogc.gml.map.Screenshot" icon="icons/map/screenshot.gif" />
   <image
         commandId="org.kalypso.ogc.gml.map.ExportPdfCommand"
@@ -1114,6 +1124,12 @@
 		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeatures" commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesCommand"/>
 		<handler class="org.kalypso.ogc.gml.map.handlers.ZoomToSelectedFeaturesByLayer" commandId="org.kalypso.ogc.gml.map.ZoomToSelectedFeaturesByLayerCommand"/>
 		<handler class="org.kalypso.ogc.gml.map.handlers.PanToSelectedFeature" commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand"/>
+  <handler
+        commandId="org.kalypso.ogc.gml.map.ExportClipboardCommand">
+     <class
+           class="org.kalypso.ogc.gml.map.handlers.ExportClipboardHandler">
+     </class>
+  </handler>
 		<handler class="org.kalypso.ogc.gml.map.handlers.ScreenshotHandler" commandId="org.kalypso.ogc.gml.map.Screenshot"/>
   <handler
         class="org.kalypso.ogc.gml.map.handlers.ExportPdfHandler"
