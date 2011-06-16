@@ -65,6 +65,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
@@ -92,7 +93,7 @@ public class ImportRasterSourceWizard extends Wizard implements IKalypsoDataImpo
     Assert.isTrue( modell != null );
 
     m_mapModel = modell;
-    m_project = m_mapModel.getProject();
+    m_project = MapUtilities.findProject( m_mapModel );
 
     final URL context = m_mapModel.getContext();
     m_mapFile = ResourceUtilities.findFileFromURL( context );

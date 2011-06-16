@@ -41,8 +41,8 @@
 package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Graphics;
+import java.net.URL;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.i18n.I10nString;
@@ -112,12 +112,6 @@ public interface IMapModell
 
   GM_Envelope getFullExtentBoundingBox( );
 
-  /**
-   * @deprecated Should not be here... This is just a ui hack and should be solved otherwise. Do not use any more.
-   */
-  @Deprecated
-  IProject getProject( );
-
   void accept( final IKalypsoThemeVisitor visitor, int depth );
 
   /**
@@ -150,4 +144,11 @@ public interface IMapModell
    *         added in the near future...)
    */
   boolean isLoaded( );
+
+  /**
+   * This function returns the context of the map model.
+   * 
+   * @return The context.
+   */
+  URL getContext( );
 }

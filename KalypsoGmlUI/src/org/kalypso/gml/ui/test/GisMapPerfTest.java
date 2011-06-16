@@ -67,7 +67,7 @@ import org.xml.sax.InputSource;
 
 /**
  * Not for automatic testing.
- *
+ * 
  * @author Gernot Belger
  */
 public class GisMapPerfTest extends TestCase
@@ -167,7 +167,7 @@ public class GisMapPerfTest extends TestCase
     logger.takeInterimTime();
     logger.printCurrentInterim( "Loading map modell..." );
 
-    final GisTemplateMapModell mapModell = new GisTemplateMapModell( resource, crs, null, selectionManager );
+    final GisTemplateMapModell mapModell = new GisTemplateMapModell( resource, crs, selectionManager );
     mapModell.createFromTemplate( gismapview );
 
     return mapModell;

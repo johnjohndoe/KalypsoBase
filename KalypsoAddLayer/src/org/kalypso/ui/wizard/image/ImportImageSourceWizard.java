@@ -36,6 +36,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.i18n.Messages;
@@ -99,10 +100,8 @@ public class ImportImageSourceWizard extends Wizard implements IKalypsoDataImpor
   public void addPages( )
   {
     m_page = new ImportImageWizardPage( "imageimport", Messages.getString( "org.kalypso.ui.wizard.image.ImportImageSourceWizard.3" ), ImageProvider.IMAGE_KALYPSO_ICON_BIG ); //$NON-NLS-1$ //$NON-NLS-2$
-    if( m_outlineviewer != null )
-    {
-      m_page.setProjectSelection( m_mapModel.getProject() );
-    }
+    m_page.setProjectSelection( MapUtilities.findProject( m_mapModel ) );
+
     addPage( m_page );
   }
 

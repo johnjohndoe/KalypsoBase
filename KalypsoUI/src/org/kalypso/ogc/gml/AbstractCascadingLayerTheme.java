@@ -44,7 +44,6 @@ import java.awt.Graphics;
 import java.net.URL;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -223,7 +222,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoLayerModell#getContext()
+   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getContext()
    */
   @Override
   public URL getContext( )
@@ -294,16 +293,6 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   public GisTemplateMapModell getInnerMapModel( )
   {
     return m_innerMapModel;
-  }
-
-  /**
-   * @return
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
-   */
-  @Override
-  public IProject getProject( )
-  {
-    return m_innerMapModel.getProject();
   }
 
   /**

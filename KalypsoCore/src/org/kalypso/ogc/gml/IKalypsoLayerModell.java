@@ -58,5 +58,6 @@ public interface IKalypsoLayerModell extends IMapModell
 
   IKalypsoTheme insertLayer( final StyledLayerType layer, final int position ) throws Exception;
 
+  @Override
   URL getContext( );
 }
