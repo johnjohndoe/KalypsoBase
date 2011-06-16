@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.view.observationDialog;
 
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.window.Window;
@@ -92,7 +93,6 @@ public class NewObservationAction extends AbstractObservationAction
     if( !dialog.isValid() )
       return Status.OK_STATUS;
 
-    final String name = dialog.getName().toString();
     final Object min = dialog.getMin();
     final Object intervall = dialog.getInt();
     final int rows = dialog.getCount();
@@ -108,9 +108,8 @@ public class NewObservationAction extends AbstractObservationAction
         values[row][ax] = dialog.getDefault();
     }
     final ITupleModel model = new SimpleTupleModel( axis, values );
-    viewer.setInput( new SimpleObservation( null, name, new MetadataList(), model ), viewer.getShow() );
+    viewer.setInput( new SimpleObservation( null, StringUtils.EMPTY, new MetadataList(), model ), viewer.getShow() );
 
     return Status.OK_STATUS;
-
   }
 }

@@ -45,13 +45,11 @@ import org.xml.sax.InputSource;
  */
 public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
 {
-  public static final String NAMESPACE = "inline.zml.kalypso.org"; //$NON-NLS-1$
-
   protected final String[] m_axisTypes;
 
-  public ZmlInlineTypeHandler( final String name, final String[] axisTypes )
+  public ZmlInlineTypeHandler( final QName name, final String[] axisTypes )
   {
-    super( new QName( NAMESPACE, name ), IObservation.class );
+    super( name, IObservation.class );
 
     m_axisTypes = axisTypes;
   }
