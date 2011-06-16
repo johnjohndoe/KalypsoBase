@@ -82,9 +82,14 @@ import org.kalypso.ogc.sensor.zml.ZmlURL;
  */
 public class ObservationViewer extends Composite
 {
-  private static final String SETTINGS_WEIGHTS_BOTTOM = "weightsBottom";
+  /**
+   * If this style is used, the properties viewer is not shown.
+   */
+  public static final int HIDE_PROPERTIES = 1 << 1;
 
-  private static final String SETTINGS_WEIGHTS_MAIN = "weightsMain";
+  private static final String SETTINGS_WEIGHTS_BOTTOM = "weightsBottom"; //$NON-NLS-1$
+
+  private static final String SETTINGS_WEIGHTS_MAIN = "weightsMain"; //$NON-NLS-1$
 
   private Label m_lblObs;
 
@@ -119,6 +124,7 @@ public class ObservationViewer extends Composite
   public ObservationViewer( final Composite parent, final int style, final boolean header, final IObservationAction[] buttons, final IDialogSettings settings, final Clipboard clipboard )
   {
     super( parent, style );
+
     m_settings = settings;
     m_clipboard = clipboard;
     m_tableView.setAlphaSort( false );
@@ -333,6 +339,9 @@ public class ObservationViewer extends Composite
     final int[] mainWeights = getWeightsFromSettings( new int[] { 2, 5 }, SETTINGS_WEIGHTS_MAIN );
     form.setWeights( mainWeights );
     addWeightsListener( form, SETTINGS_WEIGHTS_MAIN );
+
+    if( (getStyle() & HIDE_PROPERTIES) != 0 )
+      form.setMaximizedControl( tableComp );
   }
 
   /**
