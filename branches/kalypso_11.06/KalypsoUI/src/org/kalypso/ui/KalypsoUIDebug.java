@@ -54,6 +54,8 @@ public class KalypsoUIDebug
 {
   public static Debug FEATUREVIEW_OPERATIONS = new Debug( KalypsoGisPlugin.getDefault(), "/debug/featurecomposite/operations" ); //$NON-NLS-1$
 
+  public static Debug DEBUG_WMS = new Debug( KalypsoGisPlugin.getDefault(), "/debug/wms" ); //$NON-NLS-1$
+
   /**
    * Output for property testers defined in org.kalypso.ui.
    */
