@@ -190,7 +190,7 @@ public class MovieUtilities
       final Gismapview newGisview = GisTemplateHelper.loadGisMapView( tmpFile );
 
       /* Create the new gis template map model. */
-      final GisTemplateMapModell newGisModel = new GisTemplateMapModell( mapModel.getContext(), mapModel.getCoordinatesSystem(), mapModel.getProject(), new FeatureSelectionManager2() );
+      final GisTemplateMapModell newGisModel = new GisTemplateMapModell( mapModel.getContext(), mapModel.getCoordinatesSystem(), new FeatureSelectionManager2() );
       newGisModel.createFromTemplate( newGisview );
 
       return newGisModel;
@@ -259,7 +259,7 @@ public class MovieUtilities
         final Gismapview newGisview = GisTemplateHelper.loadGisMapView( is );
 
         /* Create the new gis template map model. */
-        final GisTemplateMapModell newGisModel = new GisTemplateMapModell( mapModel.getContext(), mapModel.getCoordinatesSystem(), mapModel.getProject(), new FeatureSelectionManager2() );
+        final GisTemplateMapModell newGisModel = new GisTemplateMapModell( mapModel.getContext(), mapModel.getCoordinatesSystem(), new FeatureSelectionManager2() );
         newGisModel.createFromTemplate( newGisview );
 
         /* Store the new gis template map model. */

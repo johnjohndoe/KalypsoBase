@@ -52,7 +52,6 @@ import javax.xml.bind.JAXBElement;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -92,11 +91,11 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
 
   private boolean m_isLoaded = true;
 
-  public GisTemplateMapModell( final URL context, final String crs, final IProject project, final IFeatureSelectionManager selectionManager )
+  public GisTemplateMapModell( final URL context, final String crs, final IFeatureSelectionManager selectionManager )
   {
     m_context = context;
     m_selectionManager = selectionManager;
-    m_modell = new MapModell( crs, project );
+    m_modell = new MapModell( crs );
 
     setName( new I10nString( Messages.getString( "org.kalypso.ogc.gml.GisTemplateMapModell.0" ), null ) ); //$NON-NLS-1$
   }
@@ -466,6 +465,9 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     m_modell.swapThemes( theme1, theme2 );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getContext()
+   */
   @Override
   public URL getContext( )
   {
@@ -475,15 +477,6 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   public IMapModell getModell( )
   {
     return m_modell;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
-   */
-  @Override
-  public IProject getProject( )
-  {
-    return m_modell.getProject();
   }
 
   /**

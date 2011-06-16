@@ -41,11 +41,11 @@
 package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Graphics;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
@@ -83,8 +83,6 @@ public class MapModell implements IMapModell
   // at once...
   private IKalypsoTheme m_activeTheme = null;
 
-  private IProject m_project;
-
   private I10nString m_name;
 
   private final IKalypsoThemeListener m_themeListener = new KalypsoThemeAdapter()
@@ -114,10 +112,9 @@ public class MapModell implements IMapModell
     }
   };
 
-  public MapModell( final String crs, final IProject project )
+  public MapModell( final String crs )
   {
     m_coordinatesSystem = crs;
-    m_project = project;
   }
 
   @Override
@@ -132,8 +129,6 @@ public class MapModell implements IMapModell
     {
       theme.dispose();
     }
-
-    m_project = null;
   }
 
   /**
@@ -417,15 +412,6 @@ public class MapModell implements IMapModell
   }
 
   /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
-   */
-  @Override
-  public IProject getProject( )
-  {
-    return m_project;
-  }
-
-  /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.kalypsomodel1d2d.ui.map.channeledit.KalypsoThemeVisitor,
    *      int)
    */
@@ -625,5 +611,14 @@ public class MapModell implements IMapModell
   public boolean isLoaded( )
   {
     return true;
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getContext()
+   */
+  @Override
+  public URL getContext( )
+  {
+    return null;
   }
 }

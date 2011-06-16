@@ -68,6 +68,7 @@ import org.kalypso.core.catalog.CatalogSLD;
 import org.kalypso.core.catalog.CatalogSLDUtils;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
@@ -234,9 +235,7 @@ public class ImportShapeSourceWizard extends Wizard implements IKalypsoDataImpor
   public void addPages( )
   {
     m_page = new ImportShapeFileImportPage( "shapefileimport", m_title, ImageProvider.IMAGE_KALYPSO_ICON_BIG ); //$NON-NLS-1$
-
-    if( m_modell != null )
-      m_page.setProjectSelection( m_modell.getProject() );
+    m_page.setProjectSelection( MapUtilities.findProject( m_modell ) );
 
     addPage( m_page );
   }

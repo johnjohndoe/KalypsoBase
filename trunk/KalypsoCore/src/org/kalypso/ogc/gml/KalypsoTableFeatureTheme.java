@@ -90,7 +90,7 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
   {
     // Because of Assert.isNotNull( mapModel ) in AbstractKalypsoTheme, we need some map model for table theme...
     // super( name, "FeatureTheme", null, null, context, shouldShowChildren ); //$NON-NLS-1$
-    super( name, "FeatureTheme", new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null ) ); //$NON-NLS-1$
+    super( name, "FeatureTheme", new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ) ); //$NON-NLS-1$
 
     m_workspace = workspace;
     m_featurePath = featurePath;
