@@ -181,7 +181,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
           outputDescriptions.add( outputDescription );
         }
 
-        final String title = identifier;
+        final String title = "Kalypso Simulation";
         final String abstrakt = null;
         final boolean storeSupported = true;
         final boolean statusSupported = true;
