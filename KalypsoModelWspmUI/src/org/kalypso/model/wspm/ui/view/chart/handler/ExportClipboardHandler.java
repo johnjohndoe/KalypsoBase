@@ -38,42 +38,36 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.handlers;
+package org.kalypso.model.wspm.ui.view.chart.handler;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.ImageTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.handlers.utils.ExportImageOperation;
+import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
+
+import de.openali.odysseus.chart.framework.util.img.ChartPainter;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
- * This handler starts the clipboard export.
+ * This handler copies the contents of the chart to the clipboard.
  * 
  * @author Holger Albert
  */
 public class ExportClipboardHandler extends AbstractHandler
 {
   /**
-   * The constructor.
-   */
-  public ExportClipboardHandler( )
-  {
-  }
-
-  /**
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     /* The clipboard. */
     Clipboard clipboard = null;
@@ -86,27 +80,19 @@ public class ExportClipboardHandler extends AbstractHandler
       /* Get the shell. */
       Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
-      /* Get the map panel. */
-      IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
+      /* Get the chart composite. */
+      IChartComposite chartComposite = ChartHandlerUtilities.getChart( context );
 
-      /* Create the job. */
-      ExportImageOperation job = new ExportImageOperation( mapPanel );
-
-      /* Execute the job. */
-      IStatus status = ProgressUtilities.busyCursorWhile( job );
-
-      /* If the export has failed, show an error to the user. */
-      if( !status.isOK() )
-      {
-        ErrorDialog.openError( shell, "Zwischenablage", "Der Export in die Zwischenablage ist fehlgeschlagen...", status );
-        return null;
-      }
+      /* Create the image. */
+      Rectangle bounds = chartComposite.getPlot().getBounds();
+      ChartPainter chartPainter = new ChartPainter( chartComposite.getChartModel(), bounds );
+      ImageData imageData = chartPainter.getImageData();
 
       /* Create a new clipboard. */
       clipboard = new Clipboard( shell.getDisplay() );
 
       /* Set the contents. */
-      clipboard.setContents( new Object[] { job.getImageData() }, new Transfer[] { ImageTransfer.getInstance() } );
+      clipboard.setContents( new Object[] { imageData }, new Transfer[] { ImageTransfer.getInstance() } );
 
       return null;
     }

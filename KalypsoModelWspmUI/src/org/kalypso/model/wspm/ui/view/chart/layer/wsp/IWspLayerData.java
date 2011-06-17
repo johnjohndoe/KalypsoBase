@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view.chart.layer;
+package org.kalypso.model.wspm.ui.view.chart.layer.wsp;
 
 import java.math.BigDecimal;
 
