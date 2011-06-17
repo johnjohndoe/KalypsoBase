@@ -35,11 +35,6 @@
       </category>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
-            id="org.kalypso.chart.ui.commands.pan"
-            name="%org.kalypso.chart.ui.commands.pan.name">
-      </command>
-      <command
-            categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.zoomIn"
             name="%org.kalypso.chart.ui.commands.zoomIn.name">
       </command>
@@ -50,8 +45,8 @@
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
-            id="org.kalypso.chart.ui.commands.edit"
-            name="%org.kalypso.chart.ui.commands.edit.name">
+            id="org.kalypso.chart.ui.commands.pan"
+            name="%org.kalypso.chart.ui.commands.pan.name">
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
@@ -65,13 +60,24 @@
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
-            id="org.kalypso.chart.ui.commands.export"
-            name="%org.kalypso.chart.ui.commands.export.name">
+            id="org.kalypso.chart.ui.commands.edit"
+            name="%org.kalypso.chart.ui.commands.edit.name">
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
             id="org.kalypso.chart.ui.commands.openOutline"
             name="%org.kalypso.chart.ui.commands.openOutline.name">
+      </command>
+      <command
+             categoryId="org.kalypso.chart.ui.commands.category"
+             description="%org.kalypso.chart.ui.commands.ExportClipboardCommand.description"
+             id="org.kalypso.chart.ui.commands.ExportClipboardCommand"
+             name="%org.kalypso.chart.ui.commands.ExportClipboardCommand.name">
+      </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            id="org.kalypso.chart.ui.commands.export"
+            name="%org.kalypso.chart.ui.commands.export.name">
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
@@ -108,16 +114,16 @@
    <extension
          point="org.eclipse.ui.commandImages">
       <image
-            commandId="org.kalypso.chart.ui.commands.pan"
-            icon="icons/elcl16/chart_pan.gif">
-      </image>
-      <image
             commandId="org.kalypso.chart.ui.commands.zoomIn"
             icon="icons/elcl16/chart_zoom_in.gif">
       </image>
       <image
             commandId="org.kalypso.chart.ui.commands.zoomOut"
             icon="icons/elcl16/chart_zoom_out.gif">
+      </image>
+      <image
+            commandId="org.kalypso.chart.ui.commands.pan"
+            icon="icons/elcl16/chart_pan.gif">
       </image>
       <image
             commandId="org.kalypso.chart.ui.commands.maximize"
@@ -132,12 +138,16 @@
             icon="icons/elcl16/chart_edit.gif">
       </image>
       <image
-            commandId="org.kalypso.chart.ui.commands.export"
-            icon="icons/elcl16/chart_export_img.gif">
-      </image>
-      <image
             commandId="org.kalypso.chart.ui.commands.openOutline"
             icon="icons/elcl16/show_outline.gif">
+      </image>
+      <image
+            commandId="org.kalypso.chart.ui.commands.ExportClipboardCommand"
+            icon="icons/elcl16/exportClipboard.gif">
+      </image>
+      <image
+            commandId="org.kalypso.chart.ui.commands.export"
+            icon="icons/elcl16/chart_export_img.gif">
       </image>
       <image
             commandId="org.kalypso.chart.ui.command.axis.selection"
@@ -151,16 +161,12 @@
             commandId="org.kalypso.chart.ui.commands.zoomOut">
       </handler>
       <handler
-            class="org.kalypso.chart.ui.editor.commandhandler.PanHandler"
-            commandId="org.kalypso.chart.ui.commands.pan">
-      </handler>
-      <handler
             class="org.kalypso.chart.ui.editor.commandhandler.ZoomInHandler"
             commandId="org.kalypso.chart.ui.commands.zoomIn">
       </handler>
       <handler
-            class="org.kalypso.chart.ui.editor.commandhandler.EditHandler"
-            commandId="org.kalypso.chart.ui.commands.edit">
+            class="org.kalypso.chart.ui.editor.commandhandler.PanHandler"
+            commandId="org.kalypso.chart.ui.commands.pan">
       </handler>
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.MaximizeHandler"
@@ -171,16 +177,24 @@
             commandId="org.kalypso.chart.ui.commands.maximizeView">
       </handler>
       <handler
-            class="org.kalypso.chart.ui.editor.commandhandler.ExportHandler"
-            commandId="org.kalypso.chart.ui.commands.export">
+            class="org.kalypso.chart.ui.editor.commandhandler.ZoomPanMaximizeCommandHandler"
+            commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.EditHandler"
+            commandId="org.kalypso.chart.ui.commands.edit">
       </handler>
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.OpenOutlineHandler"
             commandId="org.kalypso.chart.ui.commands.openOutline">
       </handler>
       <handler
-            class="org.kalypso.chart.ui.editor.commandhandler.ZoomPanMaximizeCommandHandler"
-            commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize">
+            class="org.kalypso.chart.ui.editor.commandhandler.ExportClipboardHandler"
+            commandId="org.kalypso.chart.ui.commands.ExportClipboardCommand">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.ExportHandler"
+            commandId="org.kalypso.chart.ui.commands.export">
       </handler>
       <handler
             class="org.kalypso.chart.ui.editor.commandhandler.ChangeVisibilityCommandHandler"
