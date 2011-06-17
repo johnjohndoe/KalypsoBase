@@ -51,8 +51,6 @@ import org.eclipse.swt.dnd.ImageTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.utils.ExportImageOperation;
@@ -87,11 +85,6 @@ public class ExportClipboardHandler extends AbstractHandler
 
       /* Get the shell. */
       Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-
-      /* Get the active part. */
-      IWorkbenchPart activePart = HandlerUtil.getActivePart( event );
-      if( activePart == null )
-        return null;
 
       /* Get the map panel. */
       IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
