@@ -145,8 +145,6 @@ public class GMLSchemaUtilities
   private final static QName XSD_SCHEMALOCATION = new QName( NS.XSD, "schemaLocation" );
 
   /**
-   * FIXME: check who calls this one....
-   * 
    * @param substitueeName
    *          Name of the type which may or may not be substituted by type
    */
@@ -155,41 +153,6 @@ public class GMLSchemaUtilities
     final QNameUnique substQName = QNameUnique.create( substitueeName );
     final QNameUnique substLocalQName = QNameUnique.create( XMLConstants.NULL_NS_URI, substitueeName.getLocalPart() );
     return substitutes( type, substQName, substLocalQName );
-
-// // everyone is substituting himself
-// if( type.getQName().equals( substitueeName ) )
-// return true;
-//
-// if( substitueeName.getNamespaceURI().isEmpty() && QNameUtilities.equalsLocal( type.getQName(), substitueeName ) )
-// return true;
-//
-// final IFeatureType substitutionGroupFT = type.getSubstitutionGroupFT();
-// final boolean substitutesResult;
-// if( substitutionGroupFT == null )
-// substitutesResult = false;
-// else
-// {
-// final QName keyQName = substitutionGroupFT.getQName();
-// Map<QName, Boolean> substitutesList = m_substitutesCache.get( keyQName );
-// if( substitutesList == null )
-// {
-// substitutesList = new HashMap<QName, Boolean>();
-// m_substitutesCache.put( keyQName, substitutesList );
-// }
-//
-// final Boolean cachedResult = substitutesList.get( substitueeName );
-// if( cachedResult != null )
-// {
-// substitutesResult = cachedResult;
-// }
-// else
-// {
-// substitutesResult = substitutes( substitutionGroupFT, substitueeName );
-// substitutesList.put( substitueeName, substitutesResult );
-// }
-// }
-//
-// return substitutesResult;
   }
 
   /**
@@ -202,15 +165,13 @@ public class GMLSchemaUtilities
       return true;
 
     // everyone is substituting himself
+    // FIXME: this is just wrong! Who did this!??
     if( featureType.getLocalQName() == localQName )
       return true;
 
     // this comparison comes up as one of the very often used operations
     // using static comparison might be slightly faster then using isEmpty()
     // if check for string being null has to be done use StringUtils.isEmpty( pQName.getNamespaceURI() )
-
-// if( "".equals( pQName.getNamespaceURI() ) && type1.getLocalID() == mLocalID )
-// return true;
 
     final IFeatureType substitutionGroupFT = featureType.getSubstitutionGroupFT();
     final boolean substitutesResult;
