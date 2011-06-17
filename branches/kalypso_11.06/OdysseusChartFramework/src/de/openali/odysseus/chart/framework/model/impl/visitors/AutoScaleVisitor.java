@@ -43,8 +43,6 @@ package de.openali.odysseus.chart.framework.model.impl.visitors;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypso.commons.java.lang.Objects;
-
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
@@ -63,12 +61,10 @@ public class AutoScaleVisitor implements IAxisVisitor
 
   private final IChartModel m_model;
 
-  private final boolean m_recursive;
 
-  public AutoScaleVisitor( final IChartModel model, final boolean recursive )
+  public AutoScaleVisitor( final IChartModel model)
   {
     m_model = model;
-    m_recursive = recursive;
   }
 
   /**
@@ -77,7 +73,7 @@ public class AutoScaleVisitor implements IAxisVisitor
   @Override
   public void visit( final IAxis axis )
   {
-    final IChartLayer[] layers = m_model.getLayerManager().getLayers( axis, m_recursive );
+    final IChartLayer[] layers = m_model.getLayerManager().getLayers( axis, true );
     final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>( layers.length );
     final IAxisVisitorBehavior visitorBehavior = axis.getAxisVisitorBehavior();
     if( visitorBehavior != null && !visitorBehavior.isAutoscaleEnabled() )
@@ -85,7 +81,7 @@ public class AutoScaleVisitor implements IAxisVisitor
 
     for( final IChartLayer layer : layers )
     {
-      if( layer.isVisible() )
+      if( layer.isVisible() && layer.isAutoScale())
       {
         final IDataRange<Number> range = getRangeFor( layer, axis );
         if( range != null )

@@ -41,6 +41,15 @@ import de.openali.odysseus.chart.framework.model.mapper.IScreenAxis;
  */
 public abstract class AbstractChartLayer implements IChartLayer
 {
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#isAutoScale()
+   */
+  @Override
+  public boolean isAutoScale( )
+  {
+    return true;
+  }
+
   private ICoordinateMapper m_coordinateMapper;
 
   Set<IChartLayerFilter> m_filters = new LinkedHashSet<IChartLayerFilter>();
@@ -333,31 +342,32 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public boolean isVisible( )
   {
-    if( !m_isVisible )
-      return false;
-
-    final ICoordinateMapper mapper = getCoordinateMapper();
-    if( mapper == null )
-      return true;
-
-    if( isNotVisible( mapper.getDomainAxis() ) )
-      return false;
-
-    if( isNotVisible( mapper.getTargetAxis() ) )
-      return false;
-
-    return true;
+    return m_isVisible;
+//    if( !m_isVisible )
+//      return false;
+//
+//    final ICoordinateMapper mapper = getCoordinateMapper();
+//    if( mapper == null )
+//      return true;
+//
+//    if( isNotVisible( mapper.getDomainAxis() ) )
+//      return false;
+//
+//    if( isNotVisible( mapper.getTargetAxis() ) )
+//      return false;
+//
+//    return true;
   }
 
-  private boolean isNotVisible( final IAxis axis )
-  {
-    if( Objects.isNull( axis ) )
-      return true;
-    else if( axis instanceof IScreenAxis )
-      return false;
-
-    return !axis.isVisible();
-  }
+//  private boolean isNotVisible( final IAxis axis )
+//  {
+//    if( Objects.isNull( axis ) )
+//      return true;
+//    else if( axis instanceof IScreenAxis )
+//      return false;
+//
+//    return !axis.isVisible();
+//  }
 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)

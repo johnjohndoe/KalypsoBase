@@ -80,6 +80,25 @@ public class BasicChartSettings implements IBasicChartSettings
   }
 
   /**
+   * @see de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings#clearTitles()
+   */
+  @Override
+  public void clearTitles( )
+  {
+    m_title.clear();
+
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.impl.IBasicChartSettings#getDataLoaderStrategy()
+   */
+  @Override
+  public CHART_DATA_LOADER_STRATEGY getDataLoaderStrategy( )
+  {
+    return m_strategy;
+  }
+
+  /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#getDescription()
    */
   @Override
@@ -116,6 +135,15 @@ public class BasicChartSettings implements IBasicChartSettings
   public TitleTypeBean[] getTitles( )
   {
     return m_title.toArray( new TitleTypeBean[] {} );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.impl.IBasicChartSettings#setDataLoaderStrategy(de.openali.odysseus.chart.framework.model.impl.CHART_DATA_LOADER_STRATEGY)
+   */
+  @Override
+  public void setDataLoaderStrategy( final CHART_DATA_LOADER_STRATEGY strategy )
+  {
+    m_strategy = strategy;
   }
 
   /**
@@ -156,23 +184,5 @@ public class BasicChartSettings implements IBasicChartSettings
     titleType.setTextStyle( textStyle );
     m_title.clear();
     m_title.add( titleType );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.impl.IBasicChartSettings#setDataLoaderStrategy(de.openali.odysseus.chart.framework.model.impl.CHART_DATA_LOADER_STRATEGY)
-   */
-  @Override
-  public void setDataLoaderStrategy( final CHART_DATA_LOADER_STRATEGY strategy )
-  {
-    m_strategy = strategy;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.impl.IBasicChartSettings#getDataLoaderStrategy()
-   */
-  @Override
-  public CHART_DATA_LOADER_STRATEGY getDataLoaderStrategy( )
-  {
-    return m_strategy;
   }
 }
