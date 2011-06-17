@@ -133,6 +133,7 @@ public class ChartLayerFactory extends AbstractChartFactory
       try
       {
         final IChartLayer layer = parse( child, baseTypes );
+        if( layer != null )
         layers.add( layer );
       }
       catch( final Throwable t )
@@ -282,8 +283,11 @@ public class ChartLayerFactory extends AbstractChartFactory
     } );
 
     final IChartLayer layer = provider.getLayer( getContext() );
+    if( layer == null )
+      return null;
+    
     setBasicParameters( layerType, layer );
-
+    
     if( Objects.isNotNull( domainAxis, targetAxis ) )
       layer.setCoordinateMapper( new CoordinateMapper( domainAxis, targetAxis ) );
 
