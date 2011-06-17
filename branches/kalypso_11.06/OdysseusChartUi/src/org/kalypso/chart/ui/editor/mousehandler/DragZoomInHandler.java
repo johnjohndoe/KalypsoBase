@@ -59,6 +59,7 @@ public class DragZoomInHandler extends AbstractChartDragHandler
   public DragZoomInHandler( final IChartComposite chartComposite, final int observedButtonMask )
   {
     super( chartComposite, 5, observedButtonMask );
+    setCursor( SWT.CURSOR_CROSS );
   }
 
   public DragZoomInHandler( final IChartComposite chartComposite )
@@ -97,8 +98,6 @@ public class DragZoomInHandler extends AbstractChartDragHandler
   @Override
   public void doMouseMoveAction( final Point end, final EditInfo editInfo )
   {
-    setCursor( SWT.CURSOR_CROSS );
-
     getChart().setDragArea( new Rectangle( editInfo.getPosition().x, editInfo.getPosition().y, end.x - editInfo.getPosition().x, end.y - editInfo.getPosition().y ) );
   }
 
