@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.graphics.ImageData;
-import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
+import org.kalypso.contribs.eclipse.swt.udig.AWTSWTImageUtils;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -102,7 +102,7 @@ public class ImageExporter
       monitor.subTask( "Konvertiere Bild ins SWT-Format..." );
 
       /* Convert to a SWT image data. */
-      ImageData imageData = ImageConverter.convertToSWT( image );
+      ImageData imageData = AWTSWTImageUtils.createImageData( image );
 
       /* Store the result. */
       m_imageData = imageData;
