@@ -38,7 +38,7 @@
  v.doemming@tuhh.de
 
  ---------------------------------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.map.widgets.editrelation;
+package org.kalypso.ogc.gml.map;
 
 import java.awt.Graphics;
 import java.awt.Point;

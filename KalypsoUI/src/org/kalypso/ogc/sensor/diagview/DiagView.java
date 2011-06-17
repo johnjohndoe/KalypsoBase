@@ -199,55 +199,53 @@ public class DiagView extends ObsView
     // again, if the provider-observation changes
     final IObservation obs = provider.getObservation();
 
-    if( obs != null )
+    if( obs == null )
+      return;
+
+    final IAxis[] valueAxis = KalypsoStatusUtils.findAxesByClasses( obs.getAxes(), new Class[] { Number.class, Boolean.class }, true );
+    final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( obs.getAxes() );
+
+    if( keyAxes.length == 0 )
+      return;
+
+    final IAxis keyAxis = keyAxes[0];
+
+    for( final IAxis valueAxi : valueAxis )
     {
-      final IAxis[] valueAxis = KalypsoStatusUtils.findAxesByClasses( obs.getAxes(), new Class[] { Number.class, Boolean.class }, true );
-      final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( obs.getAxes() );
+      final String valueAxisType = valueAxi.getType();
 
-      if( keyAxes.length == 0 )
-        return;
-
-      final IAxis keyAxis = keyAxes[0];
-
-      for( final IAxis valueAxi : valueAxis )
+      if( !valueAxi.isKey() && !ignoreTypeList.contains( valueAxisType ) )
       {
-        if( valueAxi.isKey() )
-          continue;
+        final AxisMapping[] mappings = new AxisMapping[2];
 
-        final String valueAxisType = valueAxi.getType();
-        if( !ignoreTypeList.contains( valueAxisType ) )
+        // look for a date diagram axis
+        DiagramAxis daDate = getDiagramAxis( keyAxis.getType() );
+        if( daDate == null )
         {
-          final AxisMapping[] mappings = new AxisMapping[2];
-
-          // look for a date diagram axis
-          DiagramAxis daDate = getDiagramAxis( keyAxis.getType() );
-          if( daDate == null )
-          {
-            daDate = DiagViewUtils.createAxisFor( keyAxis );
-            addAxis( daDate );
-          }
-          mappings[0] = new AxisMapping( keyAxis, daDate );
-
-          // look for a value diagram axis
-          DiagramAxis daValue = getDiagramAxis( valueAxisType );
-          if( daValue == null )
-          {
-            daValue = DiagViewUtils.createAxisFor( valueAxi );
-            addAxis( daValue );
-          }
-          mappings[1] = new AxisMapping( valueAxi, daValue );
-
-          // if color not defined, find suitable one
-          final Color color = data.color == null ? getColor( valueAxisType ) : data.color;
-          final Stroke stroke = data.stroke == null ? new BasicStroke( 3f ) : data.stroke;
-
-          final String name = ObservationTokenHelper.replaceTokens( tokenizedName, obs, valueAxi );
-
-          final DiagViewCurve curve = new DiagViewCurve( this, provider.copy(), name, color, stroke, mappings );
-          curve.setShowLegend( data.showLegend );
-
-          addItem( curve );
+          daDate = DiagViewUtils.createAxisFor( keyAxis );
+          addAxis( daDate );
         }
+        mappings[0] = new AxisMapping( keyAxis, daDate );
+
+        // look for a value diagram axis
+        DiagramAxis daValue = getDiagramAxis( valueAxisType );
+        if( daValue == null )
+        {
+          daValue = DiagViewUtils.createAxisFor( valueAxi );
+          addAxis( daValue );
+        }
+        mappings[1] = new AxisMapping( valueAxi, daValue );
+
+        // if color not defined, find suitable one
+        final Color color = data.color == null ? getColor( valueAxisType ) : data.color;
+        final Stroke stroke = data.stroke == null ? new BasicStroke( 3f ) : data.stroke;
+
+        final String name = ObservationTokenHelper.replaceTokens( tokenizedName, obs, valueAxi );
+
+        final DiagViewCurve curve = new DiagViewCurve( this, provider.copy(), name, color, stroke, mappings );
+        curve.setShowLegend( data.showLegend );
+
+        addItem( curve );
       }
     }
   }
