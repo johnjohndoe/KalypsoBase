@@ -115,15 +115,6 @@ public class SLDComposite extends Composite
     setKalypsoStyle( null, null, -1 );
   }
 
-// public IKalypsoStyle getKalypsoStyle( )
-// {
-// if( m_input == null )
-// return null;
-//
-// final IStyleContext context = m_input.getContext();
-// return context.getKalypsoStyle();
-// }
-
   public IFeatureType getFeatureType( )
   {
     if( m_input == null )
