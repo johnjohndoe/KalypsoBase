@@ -91,8 +91,6 @@ public class ObservationViewer extends Composite
 
   private static final String SETTINGS_WEIGHTS_MAIN = "weightsMain"; //$NON-NLS-1$
 
-  private Label m_lblObs;
-
   protected Text m_txtHref;
 
   protected Text m_txtFilter;
@@ -238,9 +236,9 @@ public class ObservationViewer extends Composite
     header.setLayout( new GridLayout( 4, false ) );
 
     // 1. HREF
-    m_lblObs = new Label( header, SWT.LEFT );
-    m_lblObs.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.0" ) ); //$NON-NLS-1$
-    m_lblObs.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
+    final Label lblObs = new Label( header, SWT.LEFT );
+    lblObs.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.0" ) ); //$NON-NLS-1$
+    lblObs.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
 
     m_txtHref = new Text( header, SWT.BORDER | SWT.MULTI | SWT.WRAP );
     m_txtHref.setSize( 400, m_txtHref.getSize().y );
