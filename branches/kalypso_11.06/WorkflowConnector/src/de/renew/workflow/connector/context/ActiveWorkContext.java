@@ -140,10 +140,8 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
     else
     {
       final IProject project = caze.getProject();
-      if( project.exists() )
+      if( project.exists() && project.isOpen() )
       {
-        // open a closed project, should we do this?
-        project.open( null );
         final CaseHandlingProjectNature< ? > nature = (CaseHandlingProjectNature< ? >) project.getNature( m_natureID );
         setCurrentProject( (CaseHandlingProjectNature<T>) nature );
       }
