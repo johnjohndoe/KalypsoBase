@@ -394,7 +394,11 @@
                </visibleWhen>
             </command>
             <command
-                  commandId="org.kalypso.model.wspm.ui.commands.ExportClipboardCommand"
+                  commandId="org.kalypso.chart.ui.commands.ExportClipboardCommand"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.chart.ui.commands.export"
                   style="push">
             </command>
             <separator
@@ -645,12 +649,6 @@
         id="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
         name="%org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand.name" description="%org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand.description">
   </command>
-   <command
-         categoryId="org.kalypso.chart.ui.commands.category"
-         description="%org.kalypso.model.wspm.ui.commands.ExportClipboardCommand.description"
-         id="org.kalypso.model.wspm.ui.commands.ExportClipboardCommand"
-         name="%org.kalypso.model.wspm.ui.commands.ExportClipboardCommand.name">
-   </command>
 </extension>
 <extension
       point="org.eclipse.ui.commandImages">
@@ -658,20 +656,12 @@
          commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
          icon="icons/etool16/wspLayerCommand.gif">
    </image>
-   <image
-         commandId="org.kalypso.model.wspm.ui.commands.ExportClipboardCommand"
-         icon="icons/elcl16/exportClipboard.gif">
-   </image>
 </extension>
 <extension
       point="org.eclipse.ui.handlers">
    <handler
          class="org.kalypso.model.wspm.ui.view.chart.handler.WspLegendHandler"
          commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand">
-   </handler>
-   <handler
-         class="org.kalypso.model.wspm.ui.view.chart.handler.ExportClipboardHandler"
-         commandId="org.kalypso.model.wspm.ui.commands.ExportClipboardCommand">
    </handler>
 </extension>
 
