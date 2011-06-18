@@ -52,8 +52,8 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 
-/*
- * class AddHeavyRelationshipCommand created by @author doemming (19.04.2005)
+/**
+ * @author doemming
  */
 public class AddHeavyRelationshipCommand implements ICommand
 {
@@ -71,9 +71,6 @@ public class AddHeavyRelationshipCommand implements ICommand
 
   private final IFeatureType m_bodyFT;
 
-  /**
-   *  
-   */
   public AddHeavyRelationshipCommand( final GMLWorkspace workspace, final Feature srcFE, final IRelationType linkFT1, final IFeatureType bodyFT, final IRelationType linkFT2, final Feature targetFE )
   {
     m_workspace = workspace;
@@ -133,23 +130,21 @@ public class AddHeavyRelationshipCommand implements ICommand
     // remove second link
     if( m_linkFT2.isList() )
     {
-      ((List) m_newFeature.getProperty( m_linkFT2 )).remove( m_targetFE.getId() );
+      ((List< ? >) m_newFeature.getProperty( m_linkFT2 )).remove( m_targetFE.getId() );
       m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_newFeature, m_targetFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
     }
     else
     {
       m_newFeature.setProperty( m_linkFT2, null );
       m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_newFeature } ) );
-
     }
 
     // remove relation feature and also first link
     m_workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkFT1, m_newFeature );
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
 
-    // HACK: Normally, the first two event shold be enough; however the virtual-relation geometries don't get updated
-    // this way.
-    // In order to enforce a map redrawal, the next event is fired additinally.
+    // HACK: Normally, the first two events should be enough; however the virtual-relation geometries don't get updated
+    // this way. In order to enforce a map redrawal, the next event is fired additionally.
     // TODO: This should (somehow) be done automatically be the feature framework...
     m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_srcFE } ) );
   }

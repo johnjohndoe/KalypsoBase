@@ -43,11 +43,6 @@ package org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -57,6 +52,7 @@ import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidg
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetGeometryProvider;
+import org.kalypso.ogc.gml.map.widgets.advanced.utils.WidgetCursors;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
@@ -65,13 +61,9 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
  */
 public class AddRemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDelegate
 {
-  private static BufferedImage IMG_CURSOR_ADD;
+  private Cursor m_addCursor = null;
 
-  private static BufferedImage IMG_CURSOR_REMOVE;
-
-  private static Cursor ADD_CURSOR;
-
-  private static Cursor REMOVE_CURSOR;
+  private Cursor m_removeCursor = null;
 
   private EDIT_MODE m_lastMode = null;
 
@@ -146,45 +138,22 @@ public class AddRemovePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
     return new String[] { Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.AddRemovePolygonDelegate.0") }; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getCursor()
-   */
   @Override
   public Cursor getCursor( )
   {
-    try
+    switch( getEditMode() )
     {
-      if( IMG_CURSOR_ADD == null )
-        IMG_CURSOR_ADD = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_add.png" ) ); //$NON-NLS-1$
+      case eRemove:
+        if( m_removeCursor == null )
+          m_removeCursor = WidgetCursors.createRemoveCursor();
+        return m_removeCursor;
 
-      if( IMG_CURSOR_REMOVE == null )
-        IMG_CURSOR_REMOVE = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_remove.png" ) ); //$NON-NLS-1$
-
-      final Toolkit toolkit = Toolkit.getDefaultToolkit();
-      if( ADD_CURSOR == null )
-        ADD_CURSOR = toolkit.createCustomCursor( IMG_CURSOR_ADD, new Point( 2, 1 ), "selection add cursor" ); //$NON-NLS-1$
-
-      if( REMOVE_CURSOR == null )
-        REMOVE_CURSOR = toolkit.createCustomCursor( IMG_CURSOR_REMOVE, new Point( 2, 1 ), "selection remove cursor" ); //$NON-NLS-1$
-
-      return getCursor( getEditMode() );
+      case eAdd:
+      default:
+        if( m_addCursor == null )
+          m_addCursor = WidgetCursors.createAddCursor();
+        return m_addCursor;
     }
-    catch( final IOException e )
-    {
-      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-
-    return null;
-  }
-
-  private Cursor getCursor( final EDIT_MODE mode )
-  {
-    if( EDIT_MODE.eAdd.equals( mode ) )
-      return ADD_CURSOR;
-    else if( EDIT_MODE.eRemove.equals( mode ) )
-      return REMOVE_CURSOR;
-
-    return ADD_CURSOR;
   }
 
   /**
