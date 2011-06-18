@@ -849,22 +849,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#isExistingRelation(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypsodeegree.model.feature.Feature, java.lang.String)
-   */
-  @Override
-  public boolean isExistingRelation( final Feature srcFE, final Feature destFE, final IRelationType relationProp )
-  {
-    final Feature[] features = resolveLinks( srcFE, relationProp );
-    for( final Feature element : features )
-    {
-      if( element == destFE )
-        return true;
-    }
-    return false;
-  }
-
-  /**
    * TODO: this method does not use any members of this class and so does not depends on this specific implementation.
    * Move it into a utility class.
    * 
