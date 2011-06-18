@@ -99,7 +99,7 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
       return;
 
     // setTransform
-    setAffineTransformation( p1, p2 );
+    setAffineTransformation( p1 );
 
     draw( size.intValue(), m_uom, m_projection );
 
@@ -114,7 +114,7 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
 
   }
 
-  private void setAffineTransformation( final int[] p1, final int[] p2 )
+  private void setAffineTransformation( final int[] p1 )
   {
     m_savedAT = getGraphic().getTransform();
     final AffineTransform transform = new AffineTransform();
@@ -127,10 +127,10 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
   {
     switch( widget )
     {
-      case eFill:
+      case fill:
         return new FillArrowGeometry( g2, projection, points, uom );
 
-      case eOpen:
+      case open:
         return new OpenArrowGeometry( g2, projection, points, uom );
 
       default:
@@ -143,7 +143,7 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
     final double dx = m_points[0].getPosition().getX() - m_points[1].getPosition().getX();
     final double dy = m_points[0].getPosition().getY() - m_points[1].getPosition().getY();
 
-    double atan = Math.atan( dy / dx );
+    final double atan = Math.atan( dy / dx );
 
     if( dx >= 0 )
       return -atan;

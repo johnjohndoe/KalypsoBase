@@ -46,5 +46,5 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
  */
 public interface IStrokeArrowPaintDelegate
 {
-  void paint( Graphics2D g2, GeoTransform projection, GM_Curve curve, final UOM m_uom );
+  void paint( Graphics2D g2, GeoTransform projection, GM_Curve curve, final UOM uom );
 }
