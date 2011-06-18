@@ -162,7 +162,8 @@ public class FontComposite extends Composite
       return null;
 
     final FontData fontData = new FontData();
-    fontData.setName( font.getFamily( null ) );
+    final String family = font.getFamily( null );
+    fontData.setName( family == null ? "Dialog" : family ); //$NON-NLS-1$
     fontData.setHeight( font.getSize( null ) );
 
     final int style = font.getStyle( null );
