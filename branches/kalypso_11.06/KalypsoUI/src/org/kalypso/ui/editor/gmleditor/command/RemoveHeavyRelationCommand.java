@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.command;
 
@@ -121,9 +121,9 @@ public class RemoveHeavyRelationCommand implements ICommand
 
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_bodyFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
 
-    // HACK: Normally, the first two event shold be enough; however the virtual-relation geometries don't get updated
+    // HACK: Normally, the first two events should be enough; however the virtual-relation geometries don't get updated
     // this way.
-    // In order to enforce a map redrawal, the next event is fired additinally.
+    // In order to enforce a map redrawal, the next event is fired additionally.
     // TODO: This should (somehow) be done automatically be the feature framework...
     m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_srcFE } ) );
   }
@@ -157,9 +157,9 @@ public class RemoveHeavyRelationCommand implements ICommand
 
     m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_srcFE, m_bodyFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
-    // HACK: Normally, the first two event shold be enough; however the virtual-relation geometries don't get updated
+    // HACK: Normally, the first two events should be enough; however the virtual-relation geometries don't get updated
     // this way.
-    // In order to enforce a map redrawal, the next event is fired additinally.
+    // In order to enforce a map redrawal, the next event is fired additionally.
     // TODO: This should (somehow) be done automatically be the feature framework...
     m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_srcFE } ) );
   }
