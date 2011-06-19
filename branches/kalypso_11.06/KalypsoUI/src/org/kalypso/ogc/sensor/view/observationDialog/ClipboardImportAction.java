@@ -46,12 +46,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -59,11 +59,11 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class ClipboardImportAction extends AbstractObservationAction
 {
-  private final String[] m_axisTypes;
+  private final ZmlInlineTypeHandler m_typeHandler;
 
-  public ClipboardImportAction( final String[] axisTypes )
+  public ClipboardImportAction( final ZmlInlineTypeHandler typeHandler )
   {
-    m_axisTypes = axisTypes;
+    m_typeHandler = typeHandler;
   }
 
   @Override
@@ -92,7 +92,7 @@ public class ClipboardImportAction extends AbstractObservationAction
       final Object inputObs = viewer.getInput();
       final String name = inputObs instanceof IObservation ? ((IObservation) inputObs).getName() : ""; //$NON-NLS-1$
 
-      final IAxis[] axis = TimeseriesUtils.createDefaultAxes( m_axisTypes, true );
+      final IAxis[] axis = m_typeHandler.createAxes();
 
       final Clipboard2Zml clipboard2Zml = new Clipboard2Zml( axis );
 
