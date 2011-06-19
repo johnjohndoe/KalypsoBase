@@ -78,7 +78,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.commons.command.ICommandManager;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderAdapter;
 import org.kalypso.contribs.eclipse.swt.custom.ScrolledCompositeCreator;
@@ -92,6 +91,9 @@ import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
+import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.ui.editor.actions.FeatureSelectionActionGroup;
@@ -184,7 +186,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   protected final JobExclusiveCommandTarget m_target = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
-  protected ICommandManager m_commandManager = null;
+  protected CommandableWorkspace m_commandManager = null;
 
   private Group m_mainGroup;
 
@@ -521,10 +523,14 @@ public class FeatureView extends ViewPart implements ModellEventListener
             mainGroup.setFocus();
         }
 
-        if( feature == null )
+        if( feature == null || m_commandManager == null )
           m_selectionProvider.setSelection( StructuredSelection.EMPTY );
         else
-          m_selectionProvider.setSelection( KalypsoCorePlugin.getDefault().getSelectionManager() );
+        {
+          final FeatureSelectionManager2 featureSelection = new FeatureSelectionManager2();
+          featureSelection.setSelection( new EasyFeatureWrapper[] { new EasyFeatureWrapper( m_commandManager, feature ) } );
+          m_selectionProvider.setSelection( featureSelection );
+        }
 
         featureSelectionActionGroup.getContext().setSelection( selection );
         featureSelectionActionGroup.updateActionBars();
