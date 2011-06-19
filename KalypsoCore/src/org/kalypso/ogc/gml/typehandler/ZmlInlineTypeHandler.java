@@ -34,8 +34,10 @@ import java.io.StringReader;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 import org.xml.sax.InputSource;
@@ -54,9 +56,6 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
     m_axisTypes = axisTypes;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
-   */
   @Override
   public String convertToXMLString( final IObservation value )
   {
@@ -100,11 +99,11 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
   }
 
   /**
-   * @return axistypes as String[]
+   * Creates the axes for this kind of observation.
    */
-  public String[] getAxisTypes( )
+  public IAxis[] createAxes( )
   {
-    return m_axisTypes;
+    return TimeseriesUtils.createDefaultAxes( m_axisTypes, true );
   }
 
   /**
