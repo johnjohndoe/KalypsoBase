@@ -175,30 +175,6 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     setBigStation( bigStation );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getFeature()
-   * @Deprecated: Implementation of {@link org.kalypsodeegree.model.feature.binding.IFeatureWrapper2}, do not use any
-   *              more. This object already is a feature.
-   */
-  @Override
-  @Deprecated
-  public Feature getFeature( )
-  {
-    return this;
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getGmlID()
-   * @Deprecated: Implementation of {@link org.kalypsodeegree.model.feature.binding.IFeatureWrapper2}, do not use any
-   *              more. This object already is a feature.
-   */
-  @Override
-  @Deprecated
-  public String getGmlID( )
-  {
-    return this.getId();
-  }
-
   @Override
   public String getProfileType( )
   {
