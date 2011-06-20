@@ -42,21 +42,18 @@ package de.openali.odysseus.chart.framework.util.img;
 
 import java.awt.Insets;
 
-import org.eclipse.swt.graphics.RGB;
-
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 /**
  * @author kimwerner
  */
 public class ChartLabelRendererFactory
 {
-  static public TitleTypeBean getTickLabelType( final POSITION axisPosition, final Insets tickInsets, final ITextStyle tickLabelStyle )
+  public static TitleTypeBean getTickLabelType( final POSITION axisPosition, final Insets tickInsets, final ITextStyle tickLabelStyle )
   {
     final TitleTypeBean titleType = new TitleTypeBean( null );
     titleType.setPositionVertical( ALIGNMENT.CENTER );
@@ -83,14 +80,14 @@ public class ChartLabelRendererFactory
     return titleType;
   }
 
-  static public IChartLabelRenderer getTickLabelRenderer( final POSITION axisPosition, final Insets tickInsets, final ITextStyle tickLabelStyle, final IAreaStyle tickFrameStyle )
+  public static IChartLabelRenderer getTickLabelRenderer( final POSITION axisPosition, final Insets tickInsets, final ITextStyle tickLabelStyle, final IAreaStyle tickFrameStyle )
   {
     final IChartLabelRenderer labelRenderer = new GenericChartLabelRenderer( getTickLabelType( axisPosition, tickInsets, tickLabelStyle ), tickFrameStyle );
     labelRenderer.setBorderStyle( tickFrameStyle );
     return labelRenderer;
   }
 
-  static public IChartLabelRenderer getAxisLabelRenderer( final POSITION axisPosition, final Insets axisLabelInsets, final ITextStyle axisLabelStyle, final IAreaStyle labelFrameStyle )
+  public static IChartLabelRenderer getAxisLabelRenderer( final POSITION axisPosition, final Insets axisLabelInsets, final ITextStyle axisLabelStyle, final IAreaStyle labelFrameStyle )
   {
     final IChartLabelRenderer labelRenderer = new GenericChartLabelRenderer( getAxisLabelType( axisPosition, null, axisLabelInsets, axisLabelStyle ), labelFrameStyle );
     labelRenderer.setBorderStyle( labelFrameStyle );
