@@ -126,7 +126,7 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
   @Override
   public int getAxisWidth( final IAxis axis )
   {
-    if( !axis.isVisible())
+    if( !axis.isVisible() )
       return 0;
 
     // if width is fixed, return fixed width
