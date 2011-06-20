@@ -38,7 +38,7 @@ package org.kalypsodeegree_impl.gml.binding.math;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Specifies the interface for object representing a 1D polynom in the simulation model base schema
@@ -71,7 +71,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * 
  * @author Patrice Congo
  */
-public interface IPolynomial1D extends IPolynomial, IFeatureWrapper2
+public interface IPolynomial1D extends IPolynomial, Feature
 {
   public static final QName QNAME = new QName( NS.COMMON_MATH, "Polynomial1D" );
 

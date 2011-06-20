@@ -291,6 +291,8 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
 
         if( cls.equals( o ) )
           return i;
+        else if( cls.getId().equals( ((Feature) o).getId() ) )
+          return i;
       }
     }
 
@@ -461,7 +463,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     boolean ret = false;
     for( final Object o : c )
     {
-      ret = ret || remove( o );
+      ret = ret | remove( o );
     }
     return ret;
   }

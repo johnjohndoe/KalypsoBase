@@ -40,14 +40,20 @@ import java.math.BigInteger;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Patrice Congo
  */
-public class Polynomial2D extends AbstractFeatureBinder implements IPolynomial2D
+public class Polynomial2D extends Feature_Impl implements IPolynomial2D
 {
+  public Polynomial2D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  {
+    super( parent, parentRelation, ft, id, propValues );
+  }
+
   public static final QName QNAME = new QName( NS.COMMON_MATH, "Polynomial2D" );
 
   public static final QName QNAME_PROP_DEGREEX = new QName( NS.COMMON_MATH, "degreeX" );
@@ -56,10 +62,6 @@ public class Polynomial2D extends AbstractFeatureBinder implements IPolynomial2D
 
   public static final QName QNAME_PROP_COEFFICIENTS = new QName( NS.COMMON_MATH, "coefficients" );
 
-  public Polynomial2D( final Feature polFeature )
-  {
-    super( polFeature, QNAME );
-  }
 
   @Override
   public PolynomialConfigState checkConsistency( )
@@ -105,7 +107,7 @@ public class Polynomial2D extends AbstractFeatureBinder implements IPolynomial2D
   @Override
   public double[] getCoefficients( ) throws IllegalFeatureState
   {
-    Object coefs = getFeature().getProperty( QNAME_PROP_COEFFICIENTS );
+    Object coefs = getProperty( QNAME_PROP_COEFFICIENTS );
     if( coefs instanceof String )
     {
       String[] subStrings = ((String) coefs).split( " " );// "/s+");
@@ -118,7 +120,7 @@ public class Polynomial2D extends AbstractFeatureBinder implements IPolynomial2D
     }
     else
     {
-      throw new IllegalFeatureState( getFeature(), QNAME_PROP_COEFFICIENTS, coefs );
+      throw new IllegalFeatureState( this, QNAME_PROP_COEFFICIENTS, coefs );
     }
   }
 
@@ -160,12 +162,12 @@ public class Polynomial2D extends AbstractFeatureBinder implements IPolynomial2D
       throw new IllegalArgumentException();
     }
 
-    getFeature().setProperty( degreeQName, new Integer( degree ) );
+    setProperty( degreeQName, new Integer( degree ) );
   }
 
   private final int getDegree( QName degreeQName ) throws IllegalFeatureState
   {
-    Object dx = getFeature().getProperty( degreeQName );
+    Object dx = getProperty( degreeQName );
     if( dx instanceof BigInteger )
     {
       return ((BigInteger) dx).intValue();
@@ -178,7 +180,7 @@ public class Polynomial2D extends AbstractFeatureBinder implements IPolynomial2D
       buf.append( dx == null ? null : dx.getClass() );
       buf.append( "with the value:" );
       buf.append( dx );
-      throw new IllegalFeatureState( buf.toString(), getFeature(), degreeQName, dx );
+      throw new IllegalFeatureState( buf.toString(), this, degreeQName, dx );
 
     }
 
@@ -198,7 +200,7 @@ public class Polynomial2D extends AbstractFeatureBinder implements IPolynomial2D
       buf.append( coef );
       buf.append( ' ' );
     }
-    getFeature().setProperty( QNAME_PROP_COEFFICIENTS, buf.toString() );
+    setProperty( QNAME_PROP_COEFFICIENTS, buf.toString() );
   }
 
 }
