@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.model;
 
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Tagging interface for classes representing a simBase:_Model
@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
  * @author Patrice Congo
  * 
  */
-public interface IModel extends IFeatureWrapper2
+public interface IModel extends Feature
 {
   public static final String NO_VERSION = null;
 
