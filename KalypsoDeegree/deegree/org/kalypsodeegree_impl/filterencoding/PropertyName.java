@@ -47,7 +47,6 @@ import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
@@ -176,8 +175,6 @@ public class PropertyName extends Expression_Impl
         return object;
       else if( object instanceof XMLGregorianCalendar )
         return DateUtilities.toDate( (XMLGregorianCalendar) object );
-      else if( object instanceof IFeatureWrapper2 )
-        return object;
       else if( object instanceof XLinkedFeature_Impl )
         return ((XLinkedFeature_Impl) object).getFeature();
 
