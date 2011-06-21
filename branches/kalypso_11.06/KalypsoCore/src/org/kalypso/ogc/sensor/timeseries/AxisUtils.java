@@ -196,4 +196,15 @@ public final class AxisUtils implements ITimeseriesConstants
     return Objects.isNotNull( findAxis( axes, type ) );
   }
 
+  public static IAxis findAxisByName( final IAxis[] axes, final String name )
+  {
+    for( final IAxis axis : axes )
+    {
+      if( axis.getName().equals( name ) )
+        return axis;
+    }
+
+    return null;
+  }
+
 }
