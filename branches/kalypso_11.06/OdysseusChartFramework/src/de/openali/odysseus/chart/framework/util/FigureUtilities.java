@@ -1,5 +1,9 @@
 package de.openali.odysseus.chart.framework.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.graphics.Point;
 
 public final class FigureUtilities
@@ -16,13 +20,15 @@ public final class FigureUtilities
    */
   public static int[] pointArrayToIntArray( final Point[] points )
   {
-    final int[] intArray = new int[points.length * 2];
+    final List<Integer> intList = new ArrayList<Integer>();
     for( int i = 0; i < points.length; i++ )
     {
-      intArray[i * 2] = points[i].x;
-      intArray[(i * 2) + 1] = points[i].y;
+      if( points[i] == null )
+        continue;
+      intList.add( points[i].x );
+      intList.add( points[i].y );
     }
-    return intArray;
+    return ArrayUtils.toPrimitive( intList.toArray( new Integer[] {} ) );
   }
 
   /**

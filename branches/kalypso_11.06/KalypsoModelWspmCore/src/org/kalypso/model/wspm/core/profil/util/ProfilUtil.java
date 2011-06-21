@@ -149,7 +149,7 @@ public final class ProfilUtil
 
   public static double getDoubleValueFor( final String componentID, final IRecord point )
   {
-    final int iComponent = point.indexOfComponent( componentID );
+    final int iComponent = point == null ? -1 : point.indexOfComponent( componentID );
     if( iComponent == -1 )
       return Double.NaN;
 

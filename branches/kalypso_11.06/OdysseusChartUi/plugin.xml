@@ -40,8 +40,8 @@
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
-            id="org.kalypso.chart.ui.commands.zoomOut"
-            name="%org.kalypso.chart.ui.commands.zoomOut.name">
+            id="org.kalypso.chart.ui.commands.zoom_pan_maximize"
+            name="%org.kalypso.chart.ui.commands.zoom_pan_maximize.name">
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
@@ -222,32 +222,9 @@
          </visibleWhen>
          </command>
          <command
-               commandId="org.kalypso.chart.ui.commands.zoomIn"
-               label="%org.kalypso.chart.ui.commands.zoomIn.name"
+               commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize"
+               label="%org.kalypso.chart.ui.commands.zoom_pan_maximize.name"
                style="radio">
-               <visibleWhen
-               checkEnabled="true">
-            <reference
-                  definitionId="org.kalypso.chart.ui.chartEditorActive">
-            </reference>
-         </visibleWhen>
-         </command>
-         <command
-               commandId="org.kalypso.chart.ui.commands.zoomOut"
-               label="%org.kalypso.chart.ui.commands.zoomOut.name"
-               style="radio">
-               <visibleWhen
-               checkEnabled="true">
-            <reference
-                  definitionId="org.kalypso.chart.ui.chartEditorActive">
-            </reference>
-         </visibleWhen>
-         </command>
-         <command
-               commandId="org.kalypso.chart.ui.commands.edit"
-               label="%org.kalypso.chart.ui.commands.edit.name "
-               style="radio"
-               tooltip="Edit ">
                <visibleWhen
                checkEnabled="true">
             <reference
@@ -297,14 +274,8 @@
                      style="radio">
          </command>
          <command
-               commandId="org.kalypso.chart.ui.commands.zoomIn"
-               id="zoomId"
-               label="%org.kalypso.chart.ui.commands.zoomIn.name"
-               style="radio">
-         </command>
-         <command
-               commandId="org.kalypso.chart.ui.commands.zoomOut"
-               label="%org.kalypso.chart.ui.commands.zoomOut.name"
+               commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize"
+               label="%org.kalypso.chart.ui.commands.zoom_pan_maximize.name"
                style="radio">
          </command>
          <command

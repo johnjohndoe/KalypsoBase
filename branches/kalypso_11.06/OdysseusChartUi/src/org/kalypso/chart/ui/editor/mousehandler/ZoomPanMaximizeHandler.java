@@ -52,16 +52,19 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.impl.visitors.LayerTooltipVisitor;
 import de.openali.odysseus.chart.framework.model.impl.visitors.PanToVisitor;
+import de.openali.odysseus.chart.framework.model.impl.visitors.SetActivePointVisitor;
 import de.openali.odysseus.chart.framework.model.impl.visitors.ZoomInVisitor;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * @author Dirk Kuch
+ * @author kimwerner
  */
 public class ZoomPanMaximizeHandler extends AbstractChartHandler
 {
-  private static final int m_trashHold = 5;
+  private static final int m_trashold = 5;
 
   public enum DIRECTION
   {
@@ -116,7 +119,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
       return SWT.CURSOR_CROSS;
 
     if( EventUtils.isButton2( e ) )
-      return SWT.CURSOR_HAND;
+      return SWT.CURSOR_SIZEALL;
 
     return -1;
   }
@@ -129,11 +132,14 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
   {
     super.mouseMove( e );
 
-    if( m_startPlot == null )
-      return;
-
     final Point currentPos = EventUtils.getPoint( e );
     final Point currentPlot = getChart().screen2plotPoint( currentPos );
+    getChart().setTooltipInfo( null );
+    if( m_startPlot == null )
+    {
+      doSetTooltip( currentPlot );
+      return;
+    }
 
     final boolean isMoved = isMoved( currentPos );
     if( !isMoved )
@@ -150,9 +156,16 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
       doMouseMovePan( m_startPlot, currentPlot );
   }
 
+  private void doSetTooltip( final Point point )
+  {
+    final LayerTooltipVisitor visitor = new LayerTooltipVisitor( getChart(), point );
+    final IChartModel model = getChart().getChartModel();
+    model.getLayerManager().accept( visitor );
+  }
+
   private boolean isMoved( final Point currentPos )
   {
-    return Math.abs( currentPos.x - m_startPos.x ) > m_trashHold || Math.abs( currentPos.y - m_startPos.y ) > 5;
+    return Math.abs( currentPos.x - m_startPos.x ) > m_trashold || Math.abs( currentPos.y - m_startPos.y ) > 5;
   }
 
   protected void doMouseMovePan( final Point start, final Point end )
@@ -215,6 +228,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     {
       if( EventUtils.isStateButton1( e ) )
         fireSelectionChanged( currentPlot );
+      doMouseUpClick( m_startPlot );
       return;
     }
 
@@ -235,6 +249,15 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
       if( Objects.isNotNull( currentPlot ) )
         doMouseUpPan( m_startPlot, currentPlot );
     }
+  }
+
+  private void doMouseUpClick( final Point start )
+  {
+
+    final SetActivePointVisitor visitor = new SetActivePointVisitor( start, 10 );
+
+    final IChartModel model = getChart().getChartModel();
+    model.getMapperRegistry().accept( visitor );
   }
 
   private void doMouseUpPan( final Point start, final Point end )

@@ -629,8 +629,9 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public void setActivePoint( final IRecord point )
   {
+    if( m_activePoint == point)
+      return;
     m_activePoint = point;
-
     final ProfilChangeHint hint = new ProfilChangeHint();
     hint.setActivePointChanged();
     fireProfilChanged( hint, new IProfilChange[] { new ActiveObjectEdit( this, point, m_activePointProperty ) } );

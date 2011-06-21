@@ -1,6 +1,7 @@
 package de.openali.odysseus.chart.framework.model.mapper;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
 import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
@@ -31,6 +32,7 @@ public interface IAxis extends IMapper
    */
   DIRECTION getDirection( );
 
+  @Deprecated
   /**
    * @return axis label
    * @use getLabels() instead
@@ -95,6 +97,7 @@ public interface IAxis extends IMapper
 
   void setDirection( DIRECTION dir );
 
+  @Deprecated
   /**
    * @deprecated * @use addLabel(title) instead
    */
@@ -123,6 +126,10 @@ public interface IAxis extends IMapper
   void setScreenHeight( int height );
 
   void setVisible( final boolean visible );
+
+  void setSelection( DataRange<Number> range );
+
+  DataRange<Number> getSelection( );
 
   IAxisVisitorBehavior getAxisVisitorBehavior( );
 

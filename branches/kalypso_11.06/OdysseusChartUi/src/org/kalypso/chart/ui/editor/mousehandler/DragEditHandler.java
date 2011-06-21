@@ -16,20 +16,6 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 public class DragEditHandler extends AbstractChartDragHandler
 {
 
-  /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#mouseMove(org.eclipse.swt.events.MouseEvent)
-   */
-  @Override
-  public void mouseMove( final MouseEvent e )
-  {
-    if( canSnap( getChart().screen2plotPoint( new Point( e.x, e.y ) ) ) )
-      setCursor( SWT.CURSOR_HAND );
-    else
-      setCursor( SWT.CURSOR_ARROW );
-
-    super.mouseMove( e );
-  }
-
   EditInfo m_editInfo = null;
 
   public DragEditHandler( final IChartComposite chart )
@@ -63,24 +49,6 @@ public class DragEditHandler extends AbstractChartDragHandler
   }
 
   /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler#doMouseUpAction(org.eclipse.swt.graphics.Point,
-   *      org.eclipse.swt.graphics.Point, de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
-  @Override
-  public void doMouseUpAction( final Point start, final EditInfo editInfo )
-  {
-    try
-    {
-      if( m_editInfo != null && m_editInfo.getLayer() != null )
-        ((IEditableChartLayer) m_editInfo.getLayer()).commitDrag( start, editInfo );
-    }
-    finally
-    {
-      m_editInfo = null;
-    }
-  }
-
-  /**
    * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler#doMouseMoveAction(org.eclipse.swt.graphics.Point,
    *      org.eclipse.swt.graphics.Point, de.openali.odysseus.chart.framework.model.layer.EditInfo)
    */
@@ -97,5 +65,37 @@ public class DragEditHandler extends AbstractChartDragHandler
       else
         getChart().setEditInfo( ((IEditableChartLayer) editInfo.getLayer()).drag( start, m_editInfo ) );
     }
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler#doMouseUpAction(org.eclipse.swt.graphics.Point,
+   *      org.eclipse.swt.graphics.Point, de.openali.odysseus.chart.framework.model.layer.EditInfo)
+   */
+  @Override
+  public void doMouseUpAction( final Point start, final EditInfo editInfo )
+  {
+    try
+    {
+      if( editInfo != null && editInfo.getLayer() != null )
+        ((IEditableChartLayer) editInfo.getLayer()).commitDrag( start, editInfo );
+    }
+    finally
+    {
+      m_editInfo = null;
+    }
+  }
+
+  /**
+   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#mouseMove(org.eclipse.swt.events.MouseEvent)
+   */
+  @Override
+  public void mouseMove( final MouseEvent e )
+  {
+    if( canSnap( getChart().screen2plotPoint( new Point( e.x, e.y ) ) ) )
+      setCursor( SWT.CURSOR_HAND );
+    else
+      setCursor( SWT.CURSOR_ARROW );
+
+    super.mouseMove( e );
   }
 }
