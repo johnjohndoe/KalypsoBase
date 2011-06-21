@@ -164,7 +164,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     }
   };
 
-  private final TooltipHandler m_tooltipHandler = new TooltipHandler( this );
+  
 
   private final InvalidateChartJob m_invalidateChartJob = new InvalidateChartJob( "" );
 
@@ -213,8 +213,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   {
     unregisterListener();
 
-    if( m_tooltipHandler != null )
-      m_tooltipHandler.dispose();
+//    if( m_tooltipHandler != null )
+//      m_tooltipHandler.dispose();
 
     if( m_image != null )
       m_image.dispose();
@@ -374,6 +374,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       return;
     m_model.getLayerManager().addListener( m_layerEventListener );
     m_model.getMapperRegistry().addListener( m_mapperListener );
+    
   }
 
   @Override

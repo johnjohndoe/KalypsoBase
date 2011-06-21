@@ -22,39 +22,47 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class ExportHandler extends AbstractHandler
 {
+  private IChartComposite m_chartComposite = null;
+
+  public ExportHandler( final IChartComposite chartComposite )
+  {
+    super();
+    m_chartComposite = chartComposite;
+  }
+
   /**
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( ExecutionEvent event )
+  public Object execute( final ExecutionEvent event )
   {
-    IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-    Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
-    IChartComposite chartComposite = ChartHandlerUtilities.getChart( context );
+    final IChartComposite chartComposite = getChartComposite( context );
     if( chartComposite == null )
     {
-      MessageDialog ed = new MessageDialog( shell, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler.2" ), null, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler.3" ), MessageDialog.NONE, new String[] { "OK" }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final MessageDialog ed = new MessageDialog( shell, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler.2" ), null, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler.3" ), MessageDialog.NONE, new String[] { "OK" }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       ed.open();
       return null;
     }
 
-    SafeSaveDialog dia = new SafeSaveDialog( shell );
+    final SafeSaveDialog dia = new SafeSaveDialog( shell );
     dia.setFilterExtensions( new String[] { "*.png", "*.jpg", "*.bmp" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    String filename = dia.open();
+    final String filename = dia.open();
     if( filename == null || filename.length() == 0 )
       return null;
 
-    Rectangle bounds = chartComposite.getPlot().getBounds();
-    ChartPainter chartPainter = new ChartPainter( chartComposite.getChartModel(), bounds );
-    ImageData id = chartPainter.getImageData();
+    final Rectangle bounds = chartComposite.getPlot().getBounds();
+    final ChartPainter chartPainter = new ChartPainter( chartComposite.getChartModel(), bounds );
+    final ImageData id = chartPainter.getImageData();
 
-    ImageLoader il = new ImageLoader();
+    final ImageLoader il = new ImageLoader();
     il.data = new ImageData[] { id };
 
     int format = -1;
-    String formatString = filename.substring( filename.lastIndexOf( "." ) + 1 ).toLowerCase(); //$NON-NLS-1$
+    final String formatString = filename.substring( filename.lastIndexOf( "." ) + 1 ).toLowerCase(); //$NON-NLS-1$
 
     if( formatString.equals( "png" ) ) //$NON-NLS-1$
       format = SWT.IMAGE_PNG;
@@ -65,7 +73,7 @@ public class ExportHandler extends AbstractHandler
 
     if( format == -1 )
     {
-      MessageDialog ed = new MessageDialog( shell, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler.0" ), null, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler.1" ), MessageDialog.NONE, new String[] { "OK" }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final MessageDialog ed = new MessageDialog( shell, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler.0" ), null, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler.1" ), MessageDialog.NONE, new String[] { "OK" }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       ed.open();
       return null;
     }
@@ -74,5 +82,13 @@ public class ExportHandler extends AbstractHandler
     il.save( filename, format );
 
     return null;
+  }
+
+  private IChartComposite getChartComposite( final IEvaluationContext context )
+  {
+    if( m_chartComposite != null )
+      return m_chartComposite;
+    return ChartHandlerUtilities.getChart( context );
+
   }
 }
