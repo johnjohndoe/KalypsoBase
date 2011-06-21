@@ -40,18 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.dialog.compare;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
+import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.IChartModelState;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.impl.ChartModelState;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
@@ -65,21 +73,6 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   private static final RGB BACKGROUND_RGB = new RGB( 255, 255, 255 );
 
   private IProfilLayerProvider m_profilLayerProvider = null;
-
-  protected IProfilLayerProvider getProfilLayerProvider( final IProfil profile )
-  {
-    if( m_profilLayerProvider != null )
-      return m_profilLayerProvider;
-    if( profile != null )
-    {
-      m_profilLayerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profile.getType() );
-    }
-    else if( getProfil() != null )
-    {
-      m_profilLayerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( getProfil().getType() );
-    }
-    return m_profilLayerProvider;
-  }
 
   private ProfilChartModel m_profilChartModel = null;
 
@@ -105,6 +98,20 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   }
 
   /**
+   * @see de.openali.odysseus.chart.framework.view.impl.ChartImageComposite#doInvalidateChart()
+   */
+  @Override
+  protected IStatus doInvalidateChart( )
+  {
+    final IChartLayer layer = getChartModel().getLayerManager().findLayer( IWspmConstants.LAYER_GELAENDE );
+
+    final IRecord point = getSelectedPoint( layer );
+    if( point != null )
+      getProfil().setActivePoint( point );
+    return super.doInvalidateChart();
+  }
+
+  /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChart#getChart()
    */
 
@@ -121,6 +128,49 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   public IProfil getProfil( )
   {
     return m_profilChartModel == null ? null : m_profilChartModel.getProfil();
+  }
+
+  protected IProfilLayerProvider getProfilLayerProvider( final IProfil profile )
+  {
+    if( m_profilLayerProvider != null )
+      return m_profilLayerProvider;
+    if( profile != null )
+    {
+      m_profilLayerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profile.getType() );
+    }
+    else if( getProfil() != null )
+    {
+      m_profilLayerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( getProfil().getType() );
+    }
+    return m_profilLayerProvider;
+  }
+
+  final IRecord getSelectedPoint( final IChartLayer layer )
+  {
+    final ICoordinateMapper cm = layer == null ? null : layer.getCoordinateMapper();
+    final IAxis domAxis = cm == null ? null : cm.getDomainAxis();
+    final IAxis valAxis = cm == null ? null : cm.getTargetAxis();
+    final DataRange<Number> activeDom = domAxis == null ? null : domAxis.getSelection();
+    final DataRange<Number> activeVal = valAxis == null ? null : valAxis.getSelection();
+
+    if( activeDom == null || activeVal == null || getProfil() == null )
+      return null;
+
+    for( final IRecord point : getProfil().getPoints() )
+    {
+      final Double hoehe = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
+      final Double breite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
+      if( hoehe.isNaN() || breite.isNaN() )
+        continue;
+      final Double deltaX = Math.abs( activeDom.getMin().doubleValue() - activeDom.getMax().doubleValue() );
+      final IRecord record = ProfilUtil.findPoint( getProfil(), activeDom.getMin().doubleValue() + deltaX / 2, deltaX );
+      if( record != null && record != getProfil().getActivePoint() )
+      {
+        if( hoehe > activeVal.getMin().doubleValue() && hoehe < activeVal.getMax().doubleValue() && breite > activeDom.getMin().doubleValue() && breite < activeDom.getMax().doubleValue() )
+          return record;
+      }
+    }
+    return null;
   }
 
   public void invalidate( final IProfil profile, final Object result )
