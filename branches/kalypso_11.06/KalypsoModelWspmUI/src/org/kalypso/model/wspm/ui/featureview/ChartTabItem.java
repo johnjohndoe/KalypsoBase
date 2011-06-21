@@ -106,7 +106,7 @@ public class ChartTabItem extends Composite implements IChartPart
     final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
     if( commands.size() > 0 )
     {
-      manager.createControl( this );
+      final ToolBar toolBar = manager.createControl( this );
       for( final Entry<String, Integer> entry : commands.entrySet() )
       {
         final String cmdId = entry.getKey();
@@ -143,9 +143,8 @@ public class ChartTabItem extends Composite implements IChartPart
         if( !commands.keySet().contains( commandId ) )
           return;
 
-        final Event trigger = (Event) event.getTrigger();
-        final ToolItem toolItem = (ToolItem) trigger.widget;
-        final ToolBar parentToolbar = toolItem.getParent();
+        final ToolBar parentToolbar = findToolbar( event );
+
         final ToolBar managerToolbar = manager.getControl();
 
         if( commands.keySet().contains( commandId ) && parentToolbar == managerToolbar )
@@ -153,6 +152,23 @@ public class ChartTabItem extends Composite implements IChartPart
           final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
           context.addVariable( ChartSourceProvider.ACTIVE_CHART_NAME, ChartTabItem.this.getChartComposite() );
         }
+      }
+
+      private ToolBar findToolbar( final ExecutionEvent event )
+      {
+        final Event trigger = (Event) event.getTrigger();
+
+        if( trigger.widget instanceof ToolItem )
+        {
+          final ToolItem toolItem = (ToolItem) trigger.widget;
+          final ToolBar parentToolbar = toolItem.getParent();
+          return parentToolbar;
+        }
+
+        if( trigger.widget instanceof ToolBar )
+          return (ToolBar) trigger.widget;
+
+        throw new IllegalArgumentException();
       }
 
       @Override
@@ -185,6 +201,19 @@ public class ChartTabItem extends Composite implements IChartPart
     };
 
     cmdService.addExecutionListener( m_executionListener );
+
+    final Event event = new Event();
+    event.widget = manager.getControl();
+    final String firstCommand = commands.keySet().toArray( new String[] {} )[0];
+    try
+    {
+      handlerService.executeCommand( firstCommand, event );
+    }
+    catch( final Throwable e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   /**
