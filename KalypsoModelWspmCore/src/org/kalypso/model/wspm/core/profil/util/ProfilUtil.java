@@ -394,6 +394,9 @@ public final class ProfilUtil
   public static IRecord findNearestPoint( final IProfil profil, final double breite )
   {
     final Integer index = findNearestPointIndices( profil, new double[] { breite } )[0];
+    if( index == null )
+      return null;
+
     return profil.getPoint( index );
   }
 
