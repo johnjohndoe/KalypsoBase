@@ -107,9 +107,9 @@ public final class SobekStructDef
     return new SobekStructDef( id, name, SOBEK_STRUCT_TYPE.bridge, SOBEK_BRIDGE_TYPE.abutment_bridge, -1, -1, 0, 0, width, bottomLevel, crossSectionReference );
   }
 
-  private String m_id = "notSet";
+  private String m_id = "notSet"; //$NON-NLS-1$
 
-  private String m_name = "notSet";
+  private String m_name = "notSet"; //$NON-NLS-1$
 
   private SOBEK_STRUCT_TYPE m_ty = SOBEK_STRUCT_TYPE._unknown_;
 
@@ -127,7 +127,7 @@ public final class SobekStructDef
 
   private double m_rl = -1;
 
-  private String m_si = "notSet";
+  private String m_si = "notSet"; //$NON-NLS-1$
 
   public SobekStructDef( final String id, final String name, final SOBEK_STRUCT_TYPE ty, final SOBEK_BRIDGE_TYPE tb, final double pw, final double vf, final double li, final double lo, final double dl, final double rl, final String si )
   {
@@ -214,7 +214,7 @@ public final class SobekStructDef
     final double dl = getDl(); // 10.0 = length of bridge in flow direction.
     final double rl = getRl(); // -1.0 = bottom level
 
-    return String.format( Locale.US, "STDS id '%s' nm '%s' ty %d tb %d si '%s' pw %.2f vf %.2f li %.2f lo %.2f dl %.2f rl %.2f stds", id, name, type, bridgeType, profileRefId, pw, vf, li, lo, dl, rl );
+    return String.format( Locale.US, "STDS id '%s' nm '%s' ty %d tb %d si '%s' pw %.2f vf %.2f li %.2f lo %.2f dl %.2f rl %.2f stds", id, name, type, bridgeType, profileRefId, pw, vf, li, lo, dl, rl ); //$NON-NLS-1$
   }
 
 }
