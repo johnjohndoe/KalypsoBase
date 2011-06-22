@@ -16,22 +16,11 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class MaximizeHandler extends AbstractHandler
 {
-  private IChartComposite m_chartComposite = null;
-
-  public MaximizeHandler( final IChartComposite chartComposite )
-  {
-    super();
-    m_chartComposite = chartComposite;
-  }
-
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IChartComposite chart = getChartComposite( context );
+    final IChartComposite chart = ChartHandlerUtilities.getChart( context );
     if( chart == null || chart.getChartModel() == null )
       return Status.CANCEL_STATUS;
     final IChartModel model = chart.getChartModel();
@@ -39,12 +28,4 @@ public class MaximizeHandler extends AbstractHandler
 
     return Status.OK_STATUS;
   }
-
-  private IChartComposite getChartComposite( final IEvaluationContext context )
-  {
-    if( m_chartComposite != null )
-      return m_chartComposite;
-    return ChartHandlerUtilities.getChart( context );
-  }
-
 }
