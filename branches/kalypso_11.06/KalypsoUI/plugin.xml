@@ -829,8 +829,8 @@
 	<extension point="org.eclipse.ui.commands">
 		<category description="%category.description.2" id="org.kalypso.ui.tupleResult.category" name="%category.name.7">
 		</category>
-		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.22" id="org.kalypso.ui.tupleResult.copyToClipboardCommand" name="%command.name.26">
-		</command>
+		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.22" id="org.kalypso.ui.tupleResult.copyToClipboardCommand" name="%command.name.26"/>
+		<command categoryId="org.kalypso.ui.tupleResult.category" description="%org.kalypso.ui.tupleResult.selectAll.description" id="org.kalypso.ui.tupleResult.selectAll" name="%org.kalypso.ui.tupleResult.selectAll.name"/>
 		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.23" id="org.kalypso.ui.tupleResult.pasteFromClipboardCommand" name="%command.name.27">
 		</command>
 		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.24" id="org.kalypso.ui.tupleResult.deleteSelectedRowsCommand" name="%command.name.28">
@@ -843,6 +843,7 @@
 		</command>
 		<command categoryId="org.kalypso.ui.tupleResult.category" description="%command.description.27" id="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand" name="%command.name.31">
 		</command>
+		<!-- FIXME: wron category! -->
 		<command categoryId="org.kalypso.ui.tupleResult.category" description="Add feature command" id="org.kalypso.ogc.gml.featureview.toolbar.AddFeatureHandler" name="Add feature command">
 		</command>
 		<command categoryId="org.kalypso.ui.tupleResult.category" description="Delete feature command" id="org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler" name="Delete feature command">
@@ -850,6 +851,8 @@
 	</extension>
 	<extension point="org.eclipse.ui.handlers">
 		<handler class="org.kalypso.ogc.gml.om.table.command.CopyToClipboardHandler" commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand">
+		</handler>
+		<handler class="org.kalypso.ogc.gml.om.table.command.SelectAllHandler" commandId="org.kalypso.ui.tupleResult.selectAll">
 		</handler>
 		<handler class="org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler" commandId="org.kalypso.ui.tupleResult.pasteFromClipboardCommand">
 		</handler>
@@ -863,16 +866,16 @@
 		</handler>
 		<handler class="org.kalypso.ogc.gml.om.table.command.MoveDownSelectedRowsHandler" commandId="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand">
 		</handler>
-		
-		
 		<handler class="org.kalypso.ogc.gml.featureview.toolbar.AddFeatureHandler" commandId="org.kalypso.ogc.gml.featureview.toolbar.AddFeatureHandler">
 		</handler>
 		<handler class="org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler" commandId="org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler">
 		</handler>
-		
 	</extension>
+	
 	<extension point="org.eclipse.ui.commandImages">
 		<image commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand" icon="icons/table/copy.gif">
+		</image>
+		<image commandId="org.kalypso.ui.tupleResult.selectAll" icon="icons/table/selectAll.png">
 		</image>
 		<image commandId="org.kalypso.ui.tupleResult.pasteFromClipboardCommand" icon="icons/table/paste_edit.gif">
 		</image>
@@ -898,6 +901,8 @@
 	<extension point="org.eclipse.ui.menus">
 		<!-- Standard Add/Remove Rows -->
 		<menuContribution locationURI="toolbar:org.kalypso.ui.tupleResult.menus.standardEdit">
+			<command commandId="org.kalypso.ui.tupleResult.selectAll" style="push"/>
+			<separator name="selection" visible="true"/>
 			<command commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand" style="push"/>
 			<command commandId="org.kalypso.ui.tupleResult.pasteFromClipboardCommand" style="push"/>
 			<separator name="row" visible="true"/>
@@ -908,6 +913,8 @@
 
 		<!-- Standard Only-Copy -->
 		<menuContribution locationURI="toolbar:org.kalypso.ui.tupleResult.menus.standardReadOnly">
+            <command commandId="org.kalypso.ui.tupleResult.selectAll" style="push"/>
+            <separator name="selection" visible="true"/>
 			<command commandId="org.kalypso.ui.tupleResult.copyToClipboardCommand" style="push"/>
 		</menuContribution>
 	</extension>
