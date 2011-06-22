@@ -24,7 +24,7 @@
 					<element name="calendarAmount" type="int" default="1" minOccurs="1" maxOccurs="1" />
 					<element name="calendarField" type="string" default="HOUR_OF_DAY" minOccurs="1" maxOccurs="1" />
 					<element name="defaultStatus" type="int" default="0" minOccurs="1" maxOccurs="1" />
-					<element name="defaultValue" type="double" default="0.0" minOccurs="1" maxOccurs="1" />
+					<element name="defaultValue" type="string" default="0.0" minOccurs="1" maxOccurs="1" />
 					<element name="forceFill" type="boolean" default="true" minOccurs="1" maxOccurs="1" />
 				</sequence>
 			</extension>
