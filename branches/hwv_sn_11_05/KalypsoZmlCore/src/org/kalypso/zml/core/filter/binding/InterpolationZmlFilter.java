@@ -45,14 +45,13 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.zml.core.KalypsoZmlCoreConstants;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * The interpolation zml filter.
  * 
  * @author Holger Albert
  */
-public class InterpolationZmlFilter extends Feature_Impl
+public class InterpolationZmlFilter extends AbstractZmlFilter
 {
   /**
    * The qname of the calendar amount.
@@ -128,9 +127,9 @@ public class InterpolationZmlFilter extends Feature_Impl
    * 
    * @return The default value.
    */
-  public Double getDefaultValue( )
+  public String getDefaultValue( )
   {
-    return getProperty( QNAME_DEFAULT_VALUE, Double.class );
+    return getProperty( QNAME_DEFAULT_VALUE, String.class );
   }
 
   /**

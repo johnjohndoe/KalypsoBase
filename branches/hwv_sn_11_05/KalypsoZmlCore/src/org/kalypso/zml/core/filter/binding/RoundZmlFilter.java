@@ -45,14 +45,13 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.zml.core.KalypsoZmlCoreConstants;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * The round zml filter.
  * 
  * @author Holger Albert
  */
-public class RoundZmlFilter extends Feature_Impl
+public class RoundZmlFilter extends AbstractZmlFilter
 {
   /**
    * The qname of the factor.
