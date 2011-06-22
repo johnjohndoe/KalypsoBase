@@ -104,12 +104,9 @@ public class ChartFeatureControlFactory implements IExtensionsFeatureControlFact
         final String cmdId = commandIds[i].trim();
         final String cmdStyle = commandStyles[i].trim();
 
-        if( cmdId.length() > 0 && cmdStyle.length() > 0 )
-        {
-          final int styleFromString = SWTUtilities.createStyleFromString( cmdStyle );
-          final int style = styleFromString == 0 ? SWT.PUSH : styleFromString;
-          commands.put( cmdId, style );
-        }
+        final int styleFromString = SWTUtilities.createStyleFromString( cmdStyle );
+        final int style = styleFromString == 0 ? SWT.PUSH : styleFromString;
+        commands.put( cmdId, style );
       }
     }
 
