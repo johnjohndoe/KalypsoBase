@@ -487,6 +487,7 @@ Export-Package: au.com.bytecode.opencsv,
  org.kalypso.commons.eclipse.core.resources,
  org.kalypso.commons.eclipse.core.runtime,
  org.kalypso.commons.eclipse.jface.viewers,
+ org.kalypso.commons.eclipse.ui,
  org.kalypso.commons.exception,
  org.kalypso.commons.factory,
  org.kalypso.commons.i18n,
@@ -539,6 +540,7 @@ Require-Bundle: org.junit4;bundle-version="4.5.0";resolution:=optional,
  org.eclipse.core.databinding.observable;visibility:=reexport,
  org.eclipse.core.databinding.property;visibility:=reexport,
  org.eclipse.jface.databinding;visibility:=reexport,
- org.kalypso.deegree2;bundle-version="10.10.2";visibility:=reexport
+ org.kalypso.deegree2;bundle-version="10.10.2";visibility:=reexport,
+ org.eclipse.core.expressions
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
