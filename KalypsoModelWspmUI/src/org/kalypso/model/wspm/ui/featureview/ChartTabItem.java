@@ -41,32 +41,21 @@
 package org.kalypso.model.wspm.ui.featureview;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IExecutionListener;
-import org.eclipse.core.commands.NotHandledException;
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.ui.menus.CommandContributionItem;
-import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
+import org.kalypso.commons.eclipse.ui.EmbeddedSourceToolbarManager;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
@@ -85,140 +74,35 @@ public class ChartTabItem extends Composite implements IChartPart
 {
   private final IChartComposite m_chartComposite;
 
-  private final IExecutionListener m_executionListener;
-
-  // private final AxisDragHandlerDelegate m_axisDragHandlerDelegate;
-
   private ChartEditorTreeOutlinePage m_outlinePage;
+
+  private final EmbeddedSourceToolbarManager m_sourceManager;
 
   public ChartTabItem( final Composite parent, final int style, final Map<String, Integer> commands )
   {
     super( parent, style );
 
-    final GridLayout gridLayout = new GridLayout();
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
-    gridLayout.horizontalSpacing = 0;
-    gridLayout.verticalSpacing = 0;
-    setLayout( gridLayout );
+    GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( this );
 
-    final IWorkbench serviceLocator = PlatformUI.getWorkbench();
     final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
-    if( commands.size() > 0 )
-    {
-      final ToolBar toolBar = manager.createControl( this );
-      for( final Entry<String, Integer> entry : commands.entrySet() )
-      {
-        final String cmdId = entry.getKey();
-        final Integer cmdStyle = entry.getValue();
-
-        final CommandContributionItemParameter cmdParams = new CommandContributionItemParameter( serviceLocator, cmdId + "_item_", cmdId, cmdStyle ); //$NON-NLS-1$
-        final CommandContributionItem contribItem = new CommandContributionItem( cmdParams );
-        manager.add( contribItem );
-      }
-      manager.update( true );
-    }
+    final ToolBar toolBar = manager.createControl( this );
 
     final IChartModel chartModel = new ChartModel();
     m_chartComposite = new ChartImageComposite( this, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ) );
-    final GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    m_chartComposite.getPlot().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    m_chartComposite.getPlot().setLayoutData( gridData );
+    final IWorkbench sourceLocator = PlatformUI.getWorkbench();
+    m_sourceManager = new EmbeddedSourceToolbarManager( sourceLocator, ChartSourceProvider.ACTIVE_CHART_NAME, ChartTabItem.this.getChartComposite() );
+    m_sourceManager.fillToolbar( manager, commands );
 
-    // m_axisDragHandlerDelegate = new AxisDragHandlerDelegate( m_chartComposite );
-
-    final ICommandService cmdService = (ICommandService) serviceLocator.getService( ICommandService.class );
-    final IHandlerService handlerService = (IHandlerService) serviceLocator.getService( IHandlerService.class );
-
-    m_executionListener = new IExecutionListener()
-    {
-      @Override
-      public void notHandled( final String commandId, final NotHandledException exception )
-      {
-      }
-
-      @Override
-      public void preExecute( final String commandId, final ExecutionEvent event )
-      {
-        if( !commands.keySet().contains( commandId ) )
-          return;
-
-        final ToolBar parentToolbar = findToolbar( event );
-
-        final ToolBar managerToolbar = manager.getControl();
-
-        if( commands.keySet().contains( commandId ) && parentToolbar == managerToolbar )
-        {
-          final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-          context.addVariable( ChartSourceProvider.ACTIVE_CHART_NAME, ChartTabItem.this.getChartComposite() );
-        }
-      }
-
-      private ToolBar findToolbar( final ExecutionEvent event )
-      {
-        final Event trigger = (Event) event.getTrigger();
-
-        if( trigger.widget instanceof ToolItem )
-        {
-          final ToolItem toolItem = (ToolItem) trigger.widget;
-          final ToolBar parentToolbar = toolItem.getParent();
-          return parentToolbar;
-        }
-
-        if( trigger.widget instanceof ToolBar )
-          return (ToolBar) trigger.widget;
-
-        throw new IllegalArgumentException();
-      }
-
-      @Override
-      public void postExecuteFailure( final String commandId, final ExecutionException exception )
-      {
-        if( !commands.keySet().contains( commandId ) )
-          return;
-
-        final IEvaluationContext currentState = handlerService.getCurrentState();
-        currentState.removeVariable( ChartSourceProvider.ACTIVE_CHART_NAME );
-
-        // REMARK: it would be nice to have an error mesage here, but:
-        // If we have several tabs, we get several msg-boxes, as we have several listeners.
-        // How-to avoid that??
-        // final IStatus errorStatus = StatusUtilities.createStatus( IStatus.ERROR, "Kommando mit Fehler beendet",
-// exception );
-        // ErrorDialog.openError( getShell(), "Kommando ausführen", "Fehler bei der Ausführung eines Kommandos",
-// errorStatus );
-      }
-
-      @Override
-      public void postExecuteSuccess( final String commandId, final Object returnValue )
-      {
-        if( !commands.keySet().contains( commandId ) )
-          return;
-
-        final IEvaluationContext currentState = handlerService.getCurrentState();
-        currentState.removeVariable( ChartSourceProvider.ACTIVE_CHART_NAME );
-      }
-    };
-
-    cmdService.addExecutionListener( m_executionListener );
-
-    final Event event = new Event();
-    event.widget = manager.getControl();
-    final String firstCommand = commands.keySet().toArray( new String[] {} )[0];
-    try
-    {
-      handlerService.executeCommand( firstCommand, event );
-    }
-    catch( final Throwable e )
-    {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    final GridData toolbarData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    toolBar.setLayoutData( toolbarData );
+    final boolean hasCommands = commands.size() > 0;
+    toolbarData.exclude = !hasCommands;
+    toolBar.setVisible( hasCommands );
+    layout();
   }
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
-   */
   @Override
   public IChartComposite getChartComposite( )
   {
@@ -237,8 +121,7 @@ public class ChartTabItem extends Composite implements IChartPart
   @Override
   public void dispose( )
   {
-    final ICommandService cmdService = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
-    cmdService.removeExecutionListener( m_executionListener );
+    m_sourceManager.dispose();
 
     if( m_chartComposite != null && !m_chartComposite.getPlot().isDisposed() )
       m_chartComposite.getPlot().dispose();

@@ -22,17 +22,6 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class ExportHandler extends AbstractHandler
 {
-  private IChartComposite m_chartComposite = null;
-
-  public ExportHandler( final IChartComposite chartComposite )
-  {
-    super();
-    m_chartComposite = chartComposite;
-  }
-
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -40,7 +29,7 @@ public class ExportHandler extends AbstractHandler
 
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
-    final IChartComposite chartComposite = getChartComposite( context );
+    final IChartComposite chartComposite = ChartHandlerUtilities.getChart( context );
     if( chartComposite == null )
     {
       final MessageDialog ed = new MessageDialog( shell, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler.2" ), null, Messages.getString( "org.kalypso.chart.ui.editor.commandhandler.ExportHandler.3" ), MessageDialog.NONE, new String[] { "OK" }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -82,13 +71,5 @@ public class ExportHandler extends AbstractHandler
     il.save( filename, format );
 
     return null;
-  }
-
-  private IChartComposite getChartComposite( final IEvaluationContext context )
-  {
-    if( m_chartComposite != null )
-      return m_chartComposite;
-    return ChartHandlerUtilities.getChart( context );
-
   }
 }
