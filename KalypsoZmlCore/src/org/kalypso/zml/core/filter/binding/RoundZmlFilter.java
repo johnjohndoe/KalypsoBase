@@ -82,4 +82,34 @@ public class RoundZmlFilter extends Feature_Impl
   {
     super( parent, parentRelation, ft, id, propValues );
   }
+
+  /**
+   * This function returns the factor.
+   * 
+   * @return The factor.
+   */
+  public Integer getFactor( )
+  {
+    return getProperty( QNAME_FACTOR, Integer.class );
+  }
+
+  /**
+   * This function returns the mode.
+   * 
+   * @return The mode.
+   */
+  public String getMode( )
+  {
+    return getProperty( QNAME_MODE, String.class );
+  }
+
+  /**
+   * This function returns the axis type.
+   * 
+   * @return The axis type.
+   */
+  public String getAxisType( )
+  {
+    return getProperty( QNAME_AXIS_TYPE, String.class );
+  }
 }

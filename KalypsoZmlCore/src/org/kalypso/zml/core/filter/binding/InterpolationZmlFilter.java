@@ -92,4 +92,58 @@ public class InterpolationZmlFilter extends Feature_Impl
   {
     super( parent, parentRelation, ft, id, propValues );
   }
+
+  /**
+   * This function returns the calendar amount.
+   * 
+   * @return The calendar amount.
+   */
+  public Integer getCalendarAmount( )
+  {
+    return getProperty( QNAME_CALENDAR_AMOUNT, Integer.class );
+  }
+
+  /**
+   * This function returns the calendar field.
+   * 
+   * @return The calendar field.
+   */
+  public String getCalendarField( )
+  {
+    return getProperty( QNAME_CALENDAR_FIELD, String.class );
+  }
+
+  /**
+   * This function returns the default status.
+   * 
+   * @return The default status.
+   */
+  public Integer getDefaultStatus( )
+  {
+    return getProperty( QNAME_DEFAULT_STATUS, Integer.class );
+  }
+
+  /**
+   * This function returns the default value.
+   * 
+   * @return The default value.
+   */
+  public Double getDefaultValue( )
+  {
+    return getProperty( QNAME_DEFAULT_VALUE, Double.class );
+  }
+
+  /**
+   * This function returns true, if force fill is set.
+   * 
+   * @return True, if force fill is set.
+   */
+  public boolean isForceFill( )
+  {
+    Boolean forceFill = getProperty( QNAME_FORCE_FILL, Boolean.class );
+    if( forceFill == null )
+      return true;
+
+    return forceFill.booleanValue();
+  }
 }
