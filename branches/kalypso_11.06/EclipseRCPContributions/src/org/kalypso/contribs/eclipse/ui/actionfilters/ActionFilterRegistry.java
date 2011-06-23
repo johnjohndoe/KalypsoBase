@@ -60,7 +60,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
  */
 public class ActionFilterRegistry implements IActionFilter
 {
-  public final static String ID = "org.kalypso.contribs.eclipsercp.actionFilters";
+  public static final String ID = "org.kalypso.contribs.eclipsercp.actionFilters";
 
   private static final String ATT_TARGET_TYPE = "targetType";
 
@@ -81,7 +81,7 @@ public class ActionFilterRegistry implements IActionFilter
    * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
    */
   @Override
-  public boolean testAttribute( Object target, String name, String value )
+  public boolean testAttribute( final Object target, final String name, final String value )
   {
     final Map<IActionFilterEx, String[]> list = getList();
     for(final Map.Entry<IActionFilterEx, String[]> entry : list.entrySet() )

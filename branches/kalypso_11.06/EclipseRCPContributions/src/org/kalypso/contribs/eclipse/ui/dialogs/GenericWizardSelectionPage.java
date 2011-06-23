@@ -51,6 +51,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.dialogs.ImportExportPage;
 import org.eclipse.ui.wizards.IWizardCategory;
 import org.eclipse.ui.wizards.IWizardRegistry;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 /**
  * @author Gernot Belger
@@ -92,6 +93,8 @@ public class GenericWizardSelectionPage extends ImportExportPage
 
   private final String m_description;
 
+  private final GenericWizardFilter m_treeFilter = new GenericWizardFilter();
+
   public GenericWizardSelectionPage( final IWizardRegistry registry, final IStructuredSelection currentSelection, final String settingsName, final String message, final String description )
   {
     super( PlatformUI.getWorkbench(), currentSelection );
@@ -103,6 +106,14 @@ public class GenericWizardSelectionPage extends ImportExportPage
     m_wizardRegistry = registry;
   }
 
+  public void setFilter( final IWizardFilter filter )
+  {
+    m_treeFilter.setFilter( filter );
+
+    if( m_exportTree != null )
+      ViewerUtilities.refresh( m_exportTree.getViewer(), true );
+  }
+
   @Override
   protected Composite createTreeViewer( final Composite parent )
   {
@@ -111,7 +122,8 @@ public class GenericWizardSelectionPage extends ImportExportPage
 
     m_exportTree = new MyCategorizedWizardSelectionTree( root, m_message );
     final Composite exportComp = m_exportTree.createControl( parent );
-    m_exportTree.getViewer().addSelectionChangedListener( new ISelectionChangedListener()
+    final TreeViewer viewer = m_exportTree.getViewer();
+    viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @SuppressWarnings("synthetic-access")
       @Override
@@ -120,7 +132,7 @@ public class GenericWizardSelectionPage extends ImportExportPage
         listSelectionChanged( event.getSelection() );
       }
     } );
-    m_exportTree.getViewer().addDoubleClickListener( new IDoubleClickListener()
+    viewer.addDoubleClickListener( new IDoubleClickListener()
     {
       @SuppressWarnings("synthetic-access")
       @Override
@@ -129,7 +141,11 @@ public class GenericWizardSelectionPage extends ImportExportPage
         treeDoubleClicked( event );
       }
     } );
-    setTreeViewer( m_exportTree.getViewer() );
+
+    viewer.addFilter( m_treeFilter );
+
+    setTreeViewer( viewer );
+
     return exportComp;
   }
 
