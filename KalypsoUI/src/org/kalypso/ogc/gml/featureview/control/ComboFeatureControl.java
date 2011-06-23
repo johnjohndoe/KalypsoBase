@@ -302,9 +302,17 @@ public class ComboFeatureControl extends AbstractFeatureControl
       final String href = xlink.getHref();
       final int indexOfHref = href.indexOf( '#' );
       final String uri = indexOfHref == -1 ? null : href.substring( 0, indexOfHref );
-      final Feature linkedFeature = xlink.getFeature();
-      if( linkedFeature != null && uri != null )
-        collectFromWorkspace( localWorkspace, parentFeature, rt, targetFeatureType, foundFeatures, uri, linkedFeature.getWorkspace() );
+
+      try
+      {
+        final Feature linkedFeature = xlink.getFeature();
+        if( linkedFeature != null && uri != null )
+          collectFromWorkspace( localWorkspace, parentFeature, rt, targetFeatureType, foundFeatures, uri, linkedFeature.getWorkspace() );
+      }
+      catch( final IllegalStateException e )
+      {
+        e.printStackTrace();
+      }
     }
 
     return foundFeatures.toArray( new Feature[foundFeatures.size()] );
