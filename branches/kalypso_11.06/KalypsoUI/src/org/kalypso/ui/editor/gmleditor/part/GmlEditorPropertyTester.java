@@ -14,6 +14,8 @@ public class GmlEditorPropertyTester extends PropertyTester
 {
   private static final String PROPERTY_QNAME = "qname"; //$NON-NLS-1$
 
+  private static final String PROPERTY_ROOT_QNAME = "rootQName"; //$NON-NLS-1$
+
   private static final String ARG_PROPERTY = "property"; //$NON-NLS-1$
 
   private static final String ARG_FEATURE = "feature"; //$NON-NLS-1$
@@ -22,18 +24,42 @@ public class GmlEditorPropertyTester extends PropertyTester
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
     if( PROPERTY_QNAME.equals( property ) )
-    {
-      final IFeatureType featureType = findFeatureType( receiver, args );
-      if( featureType == null )
-        return false;
+      return testQName( receiver, args, expectedValue );
 
-      final String excpectedStr = expectedValue.toString().replaceAll( "\"", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-      final QName expectedQName = QName.valueOf( excpectedStr );
-      return GMLSchemaUtilities.substitutes( featureType, expectedQName );
-    }
+    if( PROPERTY_ROOT_QNAME.equals( property ) )
+      return testRootQName( receiver, expectedValue );
 
-    final String msg = String.format( "Unknown test property %s", property );
+    final String msg = String.format( "Unknown test property %s", property ); //$NON-NLS-1$
     throw new NotImplementedException( msg );
+  }
+
+  private boolean testRootQName( final Object receiver, final Object expectedValue )
+  {
+    final Feature rootFeature = findRootFeature( receiver );
+    if( rootFeature == null )
+      return false;
+
+    final QName expectedQName = asQName( expectedValue );
+
+    final IFeatureType featureType = rootFeature.getFeatureType();
+
+    return GMLSchemaUtilities.substitutes( featureType, expectedQName );
+  }
+
+  protected boolean testQName( final Object receiver, final Object[] args, final Object expectedValue )
+  {
+    final IFeatureType featureType = findFeatureType( receiver, args );
+    if( featureType == null )
+      return false;
+
+    final QName expectedQName = asQName( expectedValue );
+    return GMLSchemaUtilities.substitutes( featureType, expectedQName );
+  }
+
+  protected QName asQName( final Object expectedValue )
+  {
+    final String excpectedStr = expectedValue.toString().replaceAll( "\"", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    return QName.valueOf( excpectedStr );
   }
 
   private IFeatureType findFeatureType( final Object receiver, final Object[] args )
@@ -63,4 +89,17 @@ public class GmlEditorPropertyTester extends PropertyTester
     return ArrayUtils.contains( args, argument );
   }
 
+  private Feature findRootFeature( final Object receiver )
+  {
+    if( receiver instanceof FeatureAssociationTypeElement )
+    {
+      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) receiver;
+      return findRootFeature( fate.getParentFeature() );
+    }
+
+    if( receiver instanceof Feature )
+      return ((Feature) receiver).getWorkspace().getRootFeature();
+
+    return null;
+  }
 }

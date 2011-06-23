@@ -1429,7 +1429,7 @@
               class="org.kalypso.ui.editor.gmleditor.part.GmlEditorPropertyTester"
               id="org.kalypso.ogc.gml.expressions.GMLEditorTester"
               namespace="org.kalypso.ui.test.gmleditor"
-              properties="qname"
+              properties="qname,rootQName"
               type="java.lang.Object">
         </propertyTester>
 	</extension>
@@ -1442,19 +1442,6 @@
       </imageProvider>
    </extension>
    
-   
-
-	<!--setting this activity removes the compare functionality in application
-		<extension point="org.eclipse.ui.activities">
-		<activity id="org.kalypso.ui.activity"
-		description="Filters contributions"
-		name="Kalypso activity" />
-		<activityPatternBinding
-		activityId="org.kalypso.ui.activity"
-		pattern="org\.eclipse\.compare/.*"/>
-		</extension>
-	-->
-
 	 <extension
 	       point="org.kalypso.ui.themeFactory">
      <factory
