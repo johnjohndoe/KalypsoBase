@@ -3,10 +3,10 @@
 <schema targetNamespace="org.kalypso.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.kalypso.ui" id="gmlExportWizards" name="gmlExportWizards"/>
+         <meta.schema plugin="org.kalypso.ui" id="exportWizards" name="exportWizards"/>
       </appInfo>
       <documentation>
-         This extension-points allows to register export wiazrd for gml selections.
+         Wizards registered with this extension appear in the general export wizard-wizard, that appears in Kalypso context menu.
       </documentation>
    </annotation>
 

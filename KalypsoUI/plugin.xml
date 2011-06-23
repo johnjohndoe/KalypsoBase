@@ -6,20 +6,21 @@
 	<extension-point id="themeFactory" name="themeFactory" schema="schema/themeFactory.exsd" />
 	<extension-point id="modelAdapter" name="modelAdapter" schema="schema/modelAdapter.exsd" />
 	<extension-point id="typeHandlers" name="typeHandlers" schema="schema/typeHandlers.exsd" />
- <extension-point id="observationTableHeaderPopupMenu" name="observationTableHeaderPopupMenu" schema="schema/observationTableHeaderPopupMenu.exsd"/>
- <extension-point id="movieImageProvider" name="movieImageProvider" schema="schema/movieImageProvider.exsd"/>
- <extension-point id="gmlExportWizards" name="gmlExportWizards" schema="schema/gmlExportWizards.exsd"/>
+    <extension-point id="observationTableHeaderPopupMenu" name="observationTableHeaderPopupMenu" schema="schema/observationTableHeaderPopupMenu.exsd"/>
+    <extension-point id="movieImageProvider" name="movieImageProvider" schema="schema/movieImageProvider.exsd"/>
+    <extension-point id="exportWizards" name="exportWizards" schema="schema/exportWizards.exsd"/>
+	
 	<extension id="preferences" name="preferences" point="org.eclipse.core.runtime.preferences">
 		<initializer class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer"/>
 	</extension>
 	<extension id="preferencePages" name="preferencePages" point="org.eclipse.ui.preferencePages">
 		<page class="org.eclipse.ui.internal.dialogs.EmptyPreferencePage" id="org.kalypso.ui.preferences.KalypsoPreferencePage" name="%org.kalypso.ui.preferences.KalypsoPreferencePage"/>
-  <page
-        category="org.kalypso.ui.preferences.KalypsoPreferencePage"
-        class="org.kalypso.ui.preferences.KalypsoGeneralPreferencePage"
-        id="org.kalypso.ui.preferences.KalypsoGeneralPreferencePage"
-        name="%org.kalypso.ui.preferences.KalypsoGeneralPreferencePage">
-  </page>
+        <page
+            category="org.kalypso.ui.preferences.KalypsoPreferencePage"
+            class="org.kalypso.ui.preferences.KalypsoGeneralPreferencePage"
+            id="org.kalypso.ui.preferences.KalypsoGeneralPreferencePage"
+            name="%org.kalypso.ui.preferences.KalypsoGeneralPreferencePage">
+      </page>
 	</extension>
 	<extension id="editors" name="editors" point="org.eclipse.ui.editors">
 		<editor class="org.kalypso.ui.editor.mapeditor.GisMapEditor" icon="icons/kalypso_gmt.gif" default="true"  name="%org.kalypso.ui.editor.mapeditor.GisMapEditor" id="org.kalypso.ui.editor.mapeditor.GisMapEditor" extensions="gmt">
@@ -553,6 +554,10 @@
         <menuContribution
               locationURI="popup:org.eclipse.ui.popup.any?after=additions">
               <command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push">
+                   <visibleWhen checkEnabled="true"/>
+              </command>
+              
+              <command commandId="org.kalypso.ui.command.export" style="push">
                    <visibleWhen checkEnabled="true"/>
               </command>
         </menuContribution>
@@ -1564,16 +1569,10 @@
            description="Reload the contents of the tree and discards local changes."
            id="org.kalypso.ui.gmvtree.command.reloadData"
            name="Reload"/>
-     <command
-           categoryId="org.kalypso.ogc.gml.gmltree.category"
-           description="Export selected items in various formats"
-           id="org.kalypso.ui.gmvtree.command.exportData"
-           name="Export..."/>
   </extension>
   <extension point="org.eclipse.ui.commandImages">
      <image commandId="org.kalypso.ui.gmvtree.command.saveData" icon="icons/feature/save_GML.gif" disabledIcon="icons/map/save_edit_disabled.gif"/>
      <image commandId="org.kalypso.ui.gmvtree.command.reloadData" icon="icons/feature/reload_gmltree.png"/>
-     <image commandId="org.kalypso.ui.gmvtree.command.exportData" icon="icons/feature/export_gmltree.gif"/>
   </extension>
   <extension point="org.eclipse.ui.handlers">
      <handler commandId="org.kalypso.ui.gmvtree.command.saveData" class="org.kalypso.ui.editor.gmleditor.command.SaveGmltreeHandler">
@@ -1590,15 +1589,34 @@
             </with>
         </enabledWhen>
      </handler>
-     <handler commandId="org.kalypso.ui.gmvtree.command.exportData" class="org.kalypso.ui.editor.gmleditor.command.ExportGmltreeHandler">
-        <enabledWhen>
-            <with variable="activeGmlTree">
-               <test property="org.kalypso.ui.gmltree.hasSelection"/>
-            </with>
-        </enabledWhen>
-     </handler>
   </extension>
   <extension point="org.eclipse.core.expressions.propertyTesters">
       <propertyTester class="org.kalypso.ui.editor.gmleditor.part.GmltreePropertyTester" id="org.kalypso.ui.editor.gmleditor.part.GmltreePropertyTester" namespace="org.kalypso.ui.gmltree" properties="isDataDirty,hasSelection" type="org.kalypso.ui.editor.gmleditor.part.GmlTreeView" />
+  </extension>
+  
+  <!-- General purpose commands -->
+  <extension point="org.eclipse.ui.commands">
+     <command
+           description="Exports the selected items in various formats"
+           id="org.kalypso.ui.command.export"
+           name="Export..."/>
+  </extension>
+  <extension point="org.eclipse.ui.commandImages">
+     <image commandId="org.kalypso.ui.command.export" icon="icons/feature/export_gmltree.gif"/>
+  </extension>
+  <extension point="org.eclipse.ui.handlers">
+     <handler commandId="org.kalypso.ui.command.export" class="org.kalypso.ui.internal.export.ExportWizardsHandler">
+        <enabledWhen>
+           <with
+                 variable="selection">
+              <count
+                    value="+">
+              </count>
+           </with>
+        </enabledWhen>
+     </handler>
+  </extension>
+  <extension point="org.kalypso.ui.exportWizards">
+     <category id="org.kalypso.ui.exportWizards" name="Export Wizards"/>
   </extension>
 </plugin>

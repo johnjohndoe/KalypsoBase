@@ -41,7 +41,6 @@
 
 package org.kalypso.contribs.eclipse.jface.wizard;
 
-
 /**
  * Marks wizards than may be resetted.
  * 

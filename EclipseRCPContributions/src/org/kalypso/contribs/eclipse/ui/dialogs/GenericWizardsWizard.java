@@ -38,51 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.gmleditor.command;
+package org.kalypso.contribs.eclipse.ui.dialogs;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
-import org.eclipse.ui.internal.WorkbenchImages;
-import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.wizards.IWizardRegistry;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.contribs.eclipse.ui.dialogs.GenericWizardRegistry;
-import org.kalypso.contribs.eclipse.ui.dialogs.GenericWizardSelectionPage;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * TODO: move to eclipse rcp contributions and make generic.
+ * Template for Wizard wizards using the generic wizard mechanism.
  * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
-public class ExportGmlWizard extends Wizard
+public abstract class GenericWizardsWizard extends Wizard
 {
-  private static final String EXPORT_GML_WIZARDS_CATEGORY = "gmlExportWizards"; //$NON-NLS-1$
-  private final GenericWizardSelectionPage m_exportPage;
+  private final GenericWizardSelectionPage m_wizardsPage;
 
-  public ExportGmlWizard( final IStructuredSelection selection )
+  public GenericWizardsWizard( final IStructuredSelection selection, final IWizardRegistry registry )
   {
-    setWindowTitle( "Export" ); //$NON-NLS-1$
-    setDefaultPageImageDescriptor( WorkbenchImages.getImageDescriptor( IWorkbenchGraphicConstants.IMG_WIZBAN_EXPORT_WIZ ) );
     setNeedsProgressMonitor( true );
     setForcePreviousAndNextButtons( true );
 
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() ) );
+    final String message = getWizardsPageMessage();
+    final String description = getWizardsPageDescription();
 
-    final String description = WorkbenchMessages.ImportExportPage_chooseExportDestination;
-    final String message = WorkbenchMessages.ExportWizard_selectDestination;
-    final IWizardRegistry registry = new GenericWizardRegistry( KalypsoGisPlugin.getId(), EXPORT_GML_WIZARDS_CATEGORY );
-    m_exportPage = new GenericWizardSelectionPage( registry, selection, "export", message, description ); //$NON-NLS-1$
+    m_wizardsPage = new GenericWizardSelectionPage( registry, selection, "wizards", message, description ); //$NON-NLS-1$
 
-    addPage( m_exportPage );
+    addPage( m_wizardsPage );
   }
 
-  @Override
-  public boolean performFinish( )
+  public void setFilter( final IWizardFilter filter )
   {
-    m_exportPage.saveWidgetValues();
+    m_wizardsPage.setFilter( filter );
+  }
+
+  protected abstract String getWizardsPageMessage( );
+
+  protected abstract String getWizardsPageDescription( );
+
+  @Override
+  public final boolean performFinish( )
+  {
+    m_wizardsPage.saveWidgetValues();
     return true;
   }
 }

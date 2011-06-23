@@ -53,5 +53,5 @@ public interface IAdapterEater<C>
    * @param part
    *            The part which has provided the adapted object.
    */
-  public void setAdapter( final IWorkbenchPart part, final C adapter );
+  void setAdapter( final IWorkbenchPart part, final C adapter );
 }
