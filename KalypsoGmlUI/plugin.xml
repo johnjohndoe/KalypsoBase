@@ -238,7 +238,7 @@
           <enablement>
             <with variable="selection">
                <iterate ifEmpty="false" operator="and">
-                    <!-- Fixem: should be more flexible about the selection; see Tin Export for a better example -->
+                    <!-- FIXME: should be more flexible about the selection; see Tin Export for a better example -->
                   <test
                         forcePluginActivation="false"
                         property="org.kalypso.core.qname"

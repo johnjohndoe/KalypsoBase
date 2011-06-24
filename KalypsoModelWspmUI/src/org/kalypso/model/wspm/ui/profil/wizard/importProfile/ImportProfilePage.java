@@ -78,7 +78,6 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  */
 public class ImportProfilePage extends WizardPage implements SelectionListener, ModifyListener, KeyListener
 {
-
   // constants
   private static final int SIZING_TEXT_FIELD_WIDTH = 250;
 
@@ -113,7 +112,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   public ImportProfilePage( final String pageName )
   {
     super( pageName );
-    setDescription( "Dieser Dialog liest eine ASCII-Trippel-Datei in den Workspace ein" ); //$NON-NLS-1$
+    setDescription( "Dieser Dialog liest eine ASCII-Trippel-Datei in den Workspace ein" );
     setPageComplete( false );
   }
 
@@ -125,7 +124,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
   public ImportProfilePage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
-    setDescription( "Dieser Dialog liest eine ASCII-Trippel-Datei in den Workspace ein" ); //$NON-NLS-1$
+    setDescription( "Dieser Dialog liest eine ASCII-Trippel-Datei in den Workspace ein" );
     setPageComplete( false );
   }
 
@@ -229,14 +228,14 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     }
     else
     {
-      setErrorMessage( "Bitte eine Profil-Datei auswählen!" ); //$NON-NLS-1$
+      setErrorMessage( "Bitte eine Profil-Datei auswählen!" );
       pageComplete = false;
     }
 
     // CoordinateSystem
     if( m_crs == null || !CRSHelper.isKnownCRS( m_crs ) )
     {
-      setErrorMessage( "Gewähltes KoordinatenSystem wird nicht unterstützt!" ); //$NON-NLS-1$
+      setErrorMessage( "Gewähltes KoordinatenSystem wird nicht unterstützt!" );
       pageComplete = false;
     }
 
@@ -271,7 +270,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
       {
         final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
         final FileDialog dialog = new FileDialog( shell, SWT.OPEN );
-        dialog.setText( "Trippel-Import" ); //$NON-NLS-1$
+        dialog.setText( "Trippel-Import" );
         dialog.setFilterExtensions( new String[] { "*.txt", "*.*" } ); //$NON-NLS-1$ //$NON-NLS-2$
         dialog.open();
 
