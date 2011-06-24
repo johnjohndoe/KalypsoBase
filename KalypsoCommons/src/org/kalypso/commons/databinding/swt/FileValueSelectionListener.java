@@ -67,7 +67,7 @@ public class FileValueSelectionListener implements SelectionListener
 
   private final String m_dialogTitle;
 
-  private final IObservableValue m_fileValue;
+  private IObservableValue m_fileValue;
 
   private final int m_fileDialogStyle;
 
@@ -77,11 +77,17 @@ public class FileValueSelectionListener implements SelectionListener
    */
   public FileValueSelectionListener( final IObservableValue fileValue, final String dialogTitle, final int fileDialogStyle )
   {
-    Assert.isTrue( fileValue.getValueType() == File.class );
-
-    m_fileValue = fileValue;
+    if( fileValue != null )
+      setFileValue( fileValue );
     m_dialogTitle = dialogTitle;
     m_fileDialogStyle = fileDialogStyle;
+  }
+
+  public void setFileValue( final IObservableValue value )
+  {
+    Assert.isTrue( value.getValueType() == File.class );
+
+    m_fileValue = value;
   }
 
   @Override

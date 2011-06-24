@@ -40,50 +40,63 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.handler;
 
-import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
-import org.kalypso.i18n.Messages;
+import java.io.File;
+
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.jface.dialogs.IDialogSettings;
+import org.kalypso.commons.java.util.AbstractModelObject;
 
 /**
  * @author Gernot Belger
  */
-public class ExportGmlWizardPage extends WizardPage
+public class AbstractExportFileData extends AbstractModelObject implements IExportFileData
 {
-  private final ExportGMLData m_data;
+  public static final String PROPERTY_EXPORT_FILE = "exportFile"; //$NON-NLS-1$
 
-  private DatabindingWizardPage m_binding;
+  private static final String SETTINGS_PATH = "exportPath"; //$NON-NLS-1$
 
-  public ExportGmlWizardPage( final String pageName, final ExportGMLData data )
+  private File m_exportFile = new File( StringUtils.EMPTY );
+
+  @Override
+  public void setFilename( final String fileName )
   {
-    super( pageName );
-    m_data = data;
-
-    setTitle( ExportFileWizardConstants.STR_EXPORT_FILE_PAGE_TITLE );
-    setDescription( ExportFileWizardConstants.STR_EXPORT_FILE_PAGE_DESCRIPTION );
+    final File newGmlFile = new File( m_exportFile.getParent(), fileName );
+    setExportFile( newGmlFile );
   }
 
   @Override
-  public void createControl( final Composite parent )
+  public File getExportFile( )
   {
-    final Composite panel = new Composite( parent, SWT.NONE );
-    setControl( panel );
-    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
-
-    m_binding = new DatabindingWizardPage( this, null );
-
-    createFileControls( panel );
+    return m_exportFile;
   }
 
-  private void createFileControls( final Composite parent )
+  @Override
+  public void setExportFile( final File gmlFile )
   {
-    final String title = getWizard().getWindowTitle();
-    final ExportFileControls exportFileControls = new ExportFileControls( m_data, m_binding, title );
+    final Object oldValue = m_exportFile;
 
-    final String gmlFilterName = Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.6" ); //$NON-NLS-1$
-    exportFileControls.addFilter( gmlFilterName, "*.gml" ); //$NON-NLS-1$
-    exportFileControls.createControls( parent, 1 );
+    m_exportFile = gmlFile;
+
+    firePropertyChange( PROPERTY_EXPORT_FILE, oldValue, gmlFile );
+  }
+
+  @Override
+  public void loadState( final IDialogSettings settings )
+  {
+    if( settings == null )
+      return;
+
+    final String gmlPath = settings.get( SETTINGS_PATH );
+    if( gmlPath != null )
+      m_exportFile = new File( gmlPath );
+  }
+
+  @Override
+  public void storeState( final IDialogSettings settings )
+  {
+    if( settings == null )
+      return;
+
+    settings.put( SETTINGS_PATH, m_exportFile.getAbsolutePath() );
   }
 }

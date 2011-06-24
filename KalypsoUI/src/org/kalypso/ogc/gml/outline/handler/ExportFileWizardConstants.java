@@ -40,22 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.handler;
 
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-
 /**
+ * Some common constants for the various file export wizards of this package.
+ * 
  * @author Gernot Belger
  */
-public class ExportGMLData extends AbstractExportFileData
+public interface ExportFileWizardConstants
 {
-  private GMLWorkspace m_workspace;
+  String STR_EXPORT_FILE_PAGE_TITLE = "Dateiauswahl";
 
-  public void setWorkspace( final GMLWorkspace workspace )
-  {
-    m_workspace = workspace;
-  }
-
-  public GMLWorkspace getWorkspace( )
-  {
-    return m_workspace;
-  }
+  String STR_EXPORT_FILE_PAGE_DESCRIPTION = "Wählen Sie die Exportdatei auf dieser Seite.";
 }

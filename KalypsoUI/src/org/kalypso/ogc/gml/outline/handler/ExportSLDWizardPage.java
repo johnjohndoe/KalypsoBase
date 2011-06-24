@@ -45,20 +45,20 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
-import org.kalypso.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
-public class ExportLegendWizardPage extends WizardPage
+public class ExportSLDWizardPage extends WizardPage
 {
-  private final ExportLegendData m_data;
+  private final ExportSLDData m_data;
 
   private DatabindingWizardPage m_binding;
 
-  public ExportLegendWizardPage( final String pageName, final ExportLegendData data )
+  public ExportSLDWizardPage( final String pageName, final ExportSLDData data )
   {
     super( pageName );
+
     m_data = data;
 
     setTitle( ExportFileWizardConstants.STR_EXPORT_FILE_PAGE_TITLE );
@@ -82,9 +82,8 @@ public class ExportLegendWizardPage extends WizardPage
     final String title = getWizard().getWindowTitle();
     final ExportFileControls exportFileControls = new ExportFileControls( m_data, m_binding, title );
 
-    exportFileControls.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.8" ), "*.png" ); //$NON-NLS-1$ //$NON-NLS-2$
-    exportFileControls.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.9" ), "*.jpg" ); //$NON-NLS-1$ //$NON-NLS-2$
-    exportFileControls.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.10" ), "*.gif" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String gmlFilterName = "Styled Layer Descriptors (*.sld)";
+    exportFileControls.addFilter( gmlFilterName, "*.sld" ); //$NON-NLS-1$
     exportFileControls.createControls( parent, 1 );
   }
 }

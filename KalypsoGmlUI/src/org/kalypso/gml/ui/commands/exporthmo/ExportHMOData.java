@@ -38,24 +38,38 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.outline.handler;
+package org.kalypso.gml.ui.commands.exporthmo;
 
-import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypso.ogc.gml.outline.handler.AbstractExportFileData;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.xml.Marshallable;
 
 /**
  * @author Gernot Belger
  */
-public class ExportGMLData extends AbstractExportFileData
+public class ExportHMOData extends AbstractExportFileData
 {
-  private GMLWorkspace m_workspace;
+  private Marshallable m_marshallable;
 
-  public void setWorkspace( final GMLWorkspace workspace )
+  private Feature[] m_features;
+
+  public void setMarshallable( final Marshallable marshallable )
   {
-    m_workspace = workspace;
+    m_marshallable = marshallable;
   }
 
-  public GMLWorkspace getWorkspace( )
+  public Marshallable getMarshallable( )
   {
-    return m_workspace;
+    return m_marshallable;
+  }
+
+  public void setFeatures( final Feature[] features )
+  {
+    m_features = features;
+  }
+
+  public Feature[] getFeatures( )
+  {
+    return m_features;
   }
 }

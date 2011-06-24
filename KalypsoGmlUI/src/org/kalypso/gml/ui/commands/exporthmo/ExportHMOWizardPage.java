@@ -38,27 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.outline.handler;
+package org.kalypso.gml.ui.commands.exporthmo;
 
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
-import org.kalypso.i18n.Messages;
+import org.kalypso.gml.ui.i18n.Messages;
+import org.kalypso.ogc.gml.outline.handler.ExportFileControls;
+import org.kalypso.ogc.gml.outline.handler.ExportFileWizardConstants;
 
 /**
  * @author Gernot Belger
  */
-public class ExportLegendWizardPage extends WizardPage
+public class ExportHMOWizardPage extends WizardPage
 {
-  private final ExportLegendData m_data;
+  private final ExportHMOData m_data;
 
   private DatabindingWizardPage m_binding;
 
-  public ExportLegendWizardPage( final String pageName, final ExportLegendData data )
+  public ExportHMOWizardPage( final String pageName, final ExportHMOData data )
   {
     super( pageName );
+
     m_data = data;
 
     setTitle( ExportFileWizardConstants.STR_EXPORT_FILE_PAGE_TITLE );
@@ -82,9 +85,7 @@ public class ExportLegendWizardPage extends WizardPage
     final String title = getWizard().getWindowTitle();
     final ExportFileControls exportFileControls = new ExportFileControls( m_data, m_binding, title );
 
-    exportFileControls.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.8" ), "*.png" ); //$NON-NLS-1$ //$NON-NLS-2$
-    exportFileControls.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.9" ), "*.jpg" ); //$NON-NLS-1$ //$NON-NLS-2$
-    exportFileControls.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.10" ), "*.gif" ); //$NON-NLS-1$ //$NON-NLS-2$
+    exportFileControls.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportHMOHandler.9" ), "*.hmo" ); //$NON-NLS-1$ //$NON-NLS-2$
     exportFileControls.createControls( parent, 1 );
   }
 }

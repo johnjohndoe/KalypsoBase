@@ -319,9 +319,6 @@
 
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.AddNode" name="Add" description="Adds a new element."/>
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.RemoveNode" name="Remove" description="Removes the selected element."/>
-
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.SldExport" name="SLD..." description="Export styling of selected layer as SLD-File"/>
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.views.outline.HMOExport" name="%command.name.11" description="%command.tooltip.5" />
 	</extension>
 	
 	<extension point="org.eclipse.ui.bindings">
@@ -559,24 +556,6 @@
                    <visibleWhen checkEnabled="true"/>
               </command>
         </menuContribution>
-  
-      <menuContribution
-            locationURI="popup:org.kalypso.gml.ui.exports?after=genericGml">
-            <command
-                  commandId="org.kalypso.ui.views.outline.SldExport"
-                  style="push">
-               <visibleWhen
-                     checkEnabled="true">
-               </visibleWhen>
-            </command>
-            <command
-                  commandId="org.kalypso.ui.views.outline.HMOExport"
-                  style="push">
-               <visibleWhen
-                     checkEnabled="true">
-               </visibleWhen>
-            </command>
-      </menuContribution>
 	</extension>
 	
 	<!-- Map-View-Outline: tool/menu-items for standard Map-View-Outline -->
@@ -596,7 +575,6 @@
 			<!-- Properties not allowed until they recognize how to handle non-editable themes
 			<command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push"/>
 			-->
-			<command commandId="org.kalypso.ui.views.outline.HMOExport" style="push"/>
 			<command commandId="org.kalypso.ui.command.export" style="push"/>
 			<separator name="additions" visible="false"/>
 		</menuContribution>
@@ -672,9 +650,6 @@
 
 		<image commandId="org.kalypso.ui.map.outline.command.AddNode" icon="icons/full/elcl16/nodeAdd.gif" />
 		<image commandId="org.kalypso.ui.map.outline.command.RemoveNode" icon="icons/full/elcl16/nodeRemove.gif" />
-
-		<image commandId="org.kalypso.ui.views.outline.SldExport" icon="icons/full/obj16/exportSld.gif" />
-		<image commandId="org.kalypso.ui.views.outline.HMOExport" icon="icons/full/obj16/exportHmo.gif" />
 	</extension>
 	
 	<extension id="org.kalypso.ui.repositoryContainerCommands" name="Repository Container Commands" point="org.eclipse.ui.commands">
@@ -1283,25 +1258,6 @@
 				<reference definitionId="org.kalypso.ui.definition.oneThemeNodeSelected"/>
 			</enabledWhen>
 		</handler>
-
-		<handler commandId="org.kalypso.ui.views.outline.SldExport" class="org.kalypso.ogc.gml.outline.handler.SldExportHandler" >
-			<enabledWhen>
-                <with variable="selection">
-                    <and>
-                        <count value="1"/>
-                        <iterate ifEmpty="false" operator="and">
-                            <adapt type="org.kalypsodeegree.xml.Marshallable"/>
-                        </iterate>
-                    </and>
-                </with>
-			</enabledWhen>
-		</handler>
-		
-		<handler commandId="org.kalypso.ui.views.outline.HMOExport" class="org.kalypso.ogc.gml.outline.handler.ExportHMOHandler" >
-			<enabledWhen>
-				<reference definitionId="org.kalypso.ui.definition.oneFeatureThemeSelected"/>
-			</enabledWhen>
-		</handler>
 	</extension>
 	
 	<extension point="org.eclipse.core.expressions.definitions">
@@ -1586,6 +1542,14 @@
            name="%command.name.16">
            <description>%command.tooltip.4</description>
      </wizard>
+     <wizard
+           category="exportWizards"
+           class="org.kalypso.ogc.gml.outline.handler.ExportSLDWizard"
+           id="org.kalypso.ogc.gml.outline.handler.ExportSLDWizard"
+           icon="icons/full/obj16/exportSld.gif"
+           name="Styled Layer Descriptor (SLD)">
+           <description>Export styling of selected layer in sld format</description>
+     </wizard>
   </extension>
   <extension
         point="org.kalypso.contribs.eclipsercp.wizardEnablement">
@@ -1600,6 +1564,18 @@
                 <iterate ifEmpty="false" operator="and">
                     <instanceof value="org.kalypso.ogc.gml.outline.nodes.ILegendProvider"/>
                 </iterate>
+            </with>
+        </enablement>
+     </wizardEnablement>
+     <wizardEnablement wizardID="org.kalypso.ogc.gml.outline.handler.ExportSLDWizard">
+        <enablement>
+            <with variable="selection">
+                <and>
+                    <count value="1"/>
+                    <iterate ifEmpty="false" operator="and">
+                        <adapt type="org.kalypsodeegree.xml.Marshallable"/>
+                    </iterate>
+                </and>
             </with>
         </enablement>
      </wizardEnablement>

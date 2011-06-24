@@ -38,66 +38,59 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.outline.handler;
+package org.kalypso.gml.ui.commands.exporthmo;
 
 import java.io.File;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Device;
-import org.kalypso.commons.java.io.FileUtilities;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
-import org.kalypso.ogc.gml.outline.nodes.LegendExporter;
+import org.kalypso.ogc.gml.serialize.Gml2HmoConverter;
+import org.kalypso.ogc.gml.serialize.GmlTriSurface2HmoConverter;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**
  * @author Gernot Belger
  */
-public class ExportLegendOperation implements ICoreRunnableWithProgress, Runnable
+public class ExportHMOOperation implements ICoreRunnableWithProgress
 {
-  private final ExportLegendData m_data;
+  private final ExportHMOData m_data;
 
-  private final Device m_display;
-
-  private IStatus m_result;
-
-  public ExportLegendOperation( final ExportLegendData data, final Device display )
+  public ExportHMOOperation( final ExportHMOData data )
   {
     m_data = data;
-    m_display = display;
-  }
-
-  @Override
-  public void run( )
-  {
-    m_result = execute( new NullProgressMonitor() );
-  }
-
-  public IStatus getResult( )
-  {
-    return m_result;
   }
 
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    /* Now save it to a file. */
-    final File legendFile = m_data.getExportFile();
-    final IThemeNode[] nodes = m_data.getNodes();
-    final String suffix = FileUtilities.getSuffix( legendFile );
+    try
+    {
+      final File exportFile = m_data.getExportFile();
+// final String result = file.getAbsolutePath();
+// final String hmoFileBase;
+//    if( !result.toLowerCase().endsWith( ".hmo" ) ) //$NON-NLS-1$ //$NON-NLS-2$
+// hmoFileBase = FileUtilities.setSuffix( result, "hmo" );
+// else
+// hmoFileBase = result;
 
-    int format = SWT.IMAGE_PNG;
-    if( "PNG".equals( suffix ) ) //$NON-NLS-1$
-      format = SWT.IMAGE_PNG;
-    else if( "JPG".equals( suffix ) ) //$NON-NLS-1$
-      format = SWT.IMAGE_JPEG;
-    else if( "GIF".equals( suffix ) ) //$NON-NLS-1$
-      format = SWT.IMAGE_GIF;
+      final Feature[] features = m_data.getFeatures();
+      // FIXME: why only the first?
+      final Feature feature = features[0];
+      // FIXME: is the tin always the default property?
+      final GM_TriangulatedSurface geometryProperty = (GM_TriangulatedSurface) feature.getDefaultGeometryPropertyValue();
+      final Gml2HmoConverter converter = new GmlTriSurface2HmoConverter( geometryProperty );
 
-    /* Export the legends. */
-    final LegendExporter legendExporter = new LegendExporter();
-    return legendExporter.exportLegends( nodes, legendFile, format, m_display, null, -1, -1, false, monitor );
+      converter.writeHmo( exportFile, monitor );
+      return Status.OK_STATUS;
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to write HMO", e );
+    }
   }
 }

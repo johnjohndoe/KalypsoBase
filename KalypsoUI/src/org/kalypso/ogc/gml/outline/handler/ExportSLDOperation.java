@@ -40,64 +40,63 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.handler;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.CharEncoding;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Device;
-import org.kalypso.commons.java.io.FileUtilities;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
-import org.kalypso.ogc.gml.outline.nodes.LegendExporter;
+import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.xml.Marshallable;
 
 /**
  * @author Gernot Belger
  */
-public class ExportLegendOperation implements ICoreRunnableWithProgress, Runnable
+public class ExportSLDOperation implements ICoreRunnableWithProgress
 {
-  private final ExportLegendData m_data;
+  private final ExportSLDData m_data;
 
-  private final Device m_display;
-
-  private IStatus m_result;
-
-  public ExportLegendOperation( final ExportLegendData data, final Device display )
+  public ExportSLDOperation( final ExportSLDData data )
   {
     m_data = data;
-    m_display = display;
   }
 
   @Override
-  public void run( )
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    m_result = execute( new NullProgressMonitor() );
-  }
+    final File sldFile = m_data.getExportFile();
+    final Marshallable marshallable = m_data.getMarshallable();
+    final String encoding = CharEncoding.UTF_8;
 
-  public IStatus getResult( )
-  {
-    return m_result;
-  }
+    OutputStream out = null;
+    try
+    {
+      out = new BufferedOutputStream( new FileOutputStream( sldFile ) );
 
-  @Override
-  public IStatus execute( final IProgressMonitor monitor )
-  {
-    /* Now save it to a file. */
-    final File legendFile = m_data.getExportFile();
-    final IThemeNode[] nodes = m_data.getNodes();
-    final String suffix = FileUtilities.getSuffix( legendFile );
+      final String xmlHeader = XMLUtilities.createXMLHeader( encoding );
+      IOUtils.write( xmlHeader, out, encoding );
+      final String sldAsXML = marshallable.exportAsXML();
+      IOUtils.write( sldAsXML, out, encoding );
 
-    int format = SWT.IMAGE_PNG;
-    if( "PNG".equals( suffix ) ) //$NON-NLS-1$
-      format = SWT.IMAGE_PNG;
-    else if( "JPG".equals( suffix ) ) //$NON-NLS-1$
-      format = SWT.IMAGE_JPEG;
-    else if( "GIF".equals( suffix ) ) //$NON-NLS-1$
-      format = SWT.IMAGE_GIF;
+      out.close();
 
-    /* Export the legends. */
-    final LegendExporter legendExporter = new LegendExporter();
-    return legendExporter.exportLegends( nodes, legendFile, format, m_display, null, -1, -1, false, monitor );
+      return Status.OK_STATUS;
+    }
+    catch( final IOException e )
+    {
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to write sld", e ) );
+    }
+    finally
+    {
+      IOUtils.closeQuietly( out );
+    }
   }
 }

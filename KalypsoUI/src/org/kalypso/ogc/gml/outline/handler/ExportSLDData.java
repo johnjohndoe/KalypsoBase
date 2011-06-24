@@ -40,50 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.handler;
 
-import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
-import org.kalypso.i18n.Messages;
+import org.kalypsodeegree.xml.Marshallable;
 
 /**
  * @author Gernot Belger
  */
-public class ExportGmlWizardPage extends WizardPage
+public class ExportSLDData extends AbstractExportFileData
 {
-  private final ExportGMLData m_data;
+  private Marshallable m_marshallable;
 
-  private DatabindingWizardPage m_binding;
-
-  public ExportGmlWizardPage( final String pageName, final ExportGMLData data )
+  public void setMarshallable( final Marshallable marshallable )
   {
-    super( pageName );
-    m_data = data;
-
-    setTitle( ExportFileWizardConstants.STR_EXPORT_FILE_PAGE_TITLE );
-    setDescription( ExportFileWizardConstants.STR_EXPORT_FILE_PAGE_DESCRIPTION );
+    m_marshallable = marshallable;
   }
 
-  @Override
-  public void createControl( final Composite parent )
+  public Marshallable getMarshallable( )
   {
-    final Composite panel = new Composite( parent, SWT.NONE );
-    setControl( panel );
-    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
-
-    m_binding = new DatabindingWizardPage( this, null );
-
-    createFileControls( panel );
-  }
-
-  private void createFileControls( final Composite parent )
-  {
-    final String title = getWizard().getWindowTitle();
-    final ExportFileControls exportFileControls = new ExportFileControls( m_data, m_binding, title );
-
-    final String gmlFilterName = Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.6" ); //$NON-NLS-1$
-    exportFileControls.addFilter( gmlFilterName, "*.gml" ); //$NON-NLS-1$
-    exportFileControls.createControls( parent, 1 );
+    return m_marshallable;
   }
 }

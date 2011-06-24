@@ -69,7 +69,7 @@ public class ExportGMLOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final File gmlFile = m_data.getGmlFile();
+    final File gmlFile = m_data.getExportFile();
     final String gmlPath = gmlFile.getAbsolutePath();
     final File xsdFile = new File( FileUtilities.setSuffix( gmlPath, ".xsd" ) ); //$NON-NLS-1$
 

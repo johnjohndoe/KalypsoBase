@@ -67,12 +67,7 @@ public class ExportTin2ShapeWizard extends ExportShapeWizard
     final IFeatureType featureType = GenericShapeDataFactory.findLeastCommonType( features );
     final IValuePropertyType[] tinTypes = FeatureSelectionTester.findGeometryTypes( featureType, GM_TriangulatedSurface.class );
     if( tinTypes.length == 0 )
-    {
-      // TODO: error handling
-// final String message = String.format( "Choosen features do not contains a Triangulated-Surface: %s", featureType );
-      return new ShapeSignature( shapeType, null, null );
-// throw new ShapeDataException( message );
-    }
+      throw new IllegalStateException( String.format( "Chosen features do not contains a Triangulated-Surface: %s", featureType ) );
 
     final GMLXPath geometry = new GMLXPath( tinTypes[0].getQName() );
 

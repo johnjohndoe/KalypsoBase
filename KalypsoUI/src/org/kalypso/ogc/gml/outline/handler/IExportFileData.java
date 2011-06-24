@@ -40,50 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.handler;
 
-import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
-import org.kalypso.i18n.Messages;
+import java.io.File;
+
+import org.eclipse.jface.dialogs.IDialogSettings;
 
 /**
  * @author Gernot Belger
  */
-public class ExportGmlWizardPage extends WizardPage
+public interface IExportFileData
 {
-  private final ExportGMLData m_data;
+  void setFilename( final String fileName );
 
-  private DatabindingWizardPage m_binding;
+  File getExportFile( );
 
-  public ExportGmlWizardPage( final String pageName, final ExportGMLData data )
-  {
-    super( pageName );
-    m_data = data;
+  void setExportFile( File gmlFile );
 
-    setTitle( ExportFileWizardConstants.STR_EXPORT_FILE_PAGE_TITLE );
-    setDescription( ExportFileWizardConstants.STR_EXPORT_FILE_PAGE_DESCRIPTION );
-  }
+  void loadState( IDialogSettings settings );
 
-  @Override
-  public void createControl( final Composite parent )
-  {
-    final Composite panel = new Composite( parent, SWT.NONE );
-    setControl( panel );
-    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( panel );
-
-    m_binding = new DatabindingWizardPage( this, null );
-
-    createFileControls( panel );
-  }
-
-  private void createFileControls( final Composite parent )
-  {
-    final String title = getWizard().getWindowTitle();
-    final ExportFileControls exportFileControls = new ExportFileControls( m_data, m_binding, title );
-
-    final String gmlFilterName = Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.6" ); //$NON-NLS-1$
-    exportFileControls.addFilter( gmlFilterName, "*.gml" ); //$NON-NLS-1$
-    exportFileControls.createControls( parent, 1 );
-  }
+  void storeState( IDialogSettings settings );
 }
