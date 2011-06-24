@@ -29,16 +29,10 @@
             id="org.kalypso.gml.ui.importGridCommand"
             name="Raster importieren">
       </command>
-      <command
-            description="Export das selektierte Coverage in eine externe Rasterdatei"
-            id="org.kalypso.gml.ui.exportGridCommand"
-            name="Raster exportieren">
-      </command>
       <command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description" id="org.kalypso.ogc.gml.map.CoverageManagementCommand" name="%org.kalypso.ogc.gml.map.CoverageManagementCommand.name" />
    </extension>
    <extension point="org.eclipse.ui.commandImages">
       <image commandId="org.kalypso.gml.ui.importGridCommand" icon="icons/obj16/gridImport.gif"/>
-      <image commandId="org.kalypso.gml.ui.exportGridCommand" icon="icons/obj16/gridImport.gif"/>
       <image commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" icon="icons/obj16/manageCoverages.gif" />
    </extension>
    <extension
@@ -56,24 +50,6 @@
                         forcePluginActivation="false"
                         property="org.kalypso.core.qname"
                         value="{org.kalypso.gml.common.coverage}CoverageCollection">
-                  </test>
-               </iterate>
-            </with>
-         </enabledWhen>
-      </handler>
-      <handler
-            class="org.kalypso.gml.ui.commands.exportgrid.ExportGridHandler"
-            commandId="org.kalypso.gml.ui.exportGridCommand">
-         <enabledWhen>
-            <with
-                  variable="selection">
-               <iterate
-                     ifEmpty="false"
-                     operator="and">
-                  <test
-                        forcePluginActivation="false"
-                        property="org.kalypso.core.qname"
-                        value="{http://www.opengis.net/gml}_Coverage">
                   </test>
                </iterate>
             </with>
@@ -131,16 +107,6 @@
                      id="org.kalypso.gml.ui.exports"
                      label="%menuContribution.menu.exports.label"
                      mnemonic="e">
-				<command commandId="org.kalypso.gml.ui.exportGridCommand">
-					<visibleWhen checkEnabled="false">
-						<with variable="selection">
-							<iterate ifEmpty="false" operator="and">
-								<test forcePluginActivation="false" property="org.kalypso.core.qname" value="{http://www.opengis.net/gml}_Coverage">
-								</test>
-							</iterate>
-						</with>
-					</visibleWhen>
-				</command>
                 <separator
                       name="genericGml">
                 </separator>
@@ -273,6 +239,14 @@
            name="%org.kalypso.gml.ui.commands.exporthmo.ExportHMOWizard.name">
            <description>%org.kalypso.gml.ui.commands.exporthmo.ExportHMOWizard.description</description>
      </wizard>
+     <wizard
+           category="exportWizards"
+           class="org.kalypso.gml.ui.commands.exportgrid.RectifiedGridCoverageExportWizard"
+           id="org.kalypso.gml.ui.commands.exportgrid.RectifiedGridCoverageExportWizard"
+           icon="icons/obj16/gridImport.gif"
+           name="Raster exportieren">
+           <description>Export das selektierte Coverage in eine externe Rasterdatei</description>
+     </wizard>
     </extension>
     <extension
           point="org.kalypso.contribs.eclipsercp.wizardEnablement">
@@ -299,6 +273,19 @@
                </with>
           </enablement>
        </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.gml.ui.commands.exportgrid.RectifiedGridCoverageExportWizard">
+          <enablement>
+            <with variable="selection">
+               <iterate ifEmpty="false" operator="and">
+                    <!-- Fixem: should be more flexible about the selection; see Tin Export for a better example -->
+                  <test
+                        forcePluginActivation="false"
+                        property="org.kalypso.core.qname"
+                        value="{http://www.opengis.net/gml}_Coverage">
+                  </test>
+               </iterate>
+            </with>
+          </enablement>
+       </wizardEnablement>
     </extension>
-
 </plugin>
