@@ -63,6 +63,11 @@ public class GenericWizardSelectionPage extends ImportExportPage
 
   private static final String STORE_EXPANDED_CATEGORIES = "STORE_EXPANDED_EXPORT_CATEGORIES"; //$NON-NLS-1$
 
+  /**
+   * Override to make some methods visible to this class.
+   * 
+   * @author Gernot Belger
+   */
   class MyCategorizedWizardSelectionTree extends CategorizedWizardSelectionTree
   {
     protected MyCategorizedWizardSelectionTree( final IWizardCategory categories, final String msg )
@@ -117,7 +122,6 @@ public class GenericWizardSelectionPage extends ImportExportPage
   @Override
   protected Composite createTreeViewer( final Composite parent )
   {
-    // FIXME: filter wizards...
     final IWizardCategory root = m_wizardRegistry.getRootCategory();
 
     m_exportTree = new MyCategorizedWizardSelectionTree( root, m_message );
@@ -145,6 +149,8 @@ public class GenericWizardSelectionPage extends ImportExportPage
     viewer.addFilter( m_treeFilter );
 
     setTreeViewer( viewer );
+
+    viewer.expandToLevel( 2 );
 
     return exportComp;
   }

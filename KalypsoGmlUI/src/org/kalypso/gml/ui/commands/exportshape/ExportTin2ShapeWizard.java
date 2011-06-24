@@ -45,7 +45,6 @@ import java.nio.charset.Charset;
 import org.kalypso.gml.ui.extensions.FeatureSelectionTester;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypso.shape.deegree.GenericShapeDataFactory;
@@ -60,14 +59,6 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
  */
 public class ExportTin2ShapeWizard extends ExportShapeWizard
 {
-  public ExportTin2ShapeWizard( final IFeatureSelection featureSelection, final String fileName )
-  {
-    super( featureSelection, fileName );
-  }
-
-  /**
-   * @see org.kalypso.gml.ui.commands.exportshape.ExportShapeWizard#createSignature(org.kalypsodeegree.model.feature.Feature[])
-   */
   @Override
   protected ShapeSignature createSignature( final Feature[] features )
   {
@@ -93,10 +84,6 @@ public class ExportTin2ShapeWizard extends ExportShapeWizard
     return new ShapeSignature( shapeType, geometry, tinFields );
   }
 
-  /**
-   * @see org.kalypso.gml.ui.commands.exportshape.ExportShapeWizard#createDataFactory(org.kalypsodeegree.model.feature.Feature[],
-   *      java.nio.charset.Charset, java.lang.String, org.kalypso.gml.ui.commands.exportshape.ShapeSignature)
-   */
   @Override
   protected IShapeDataFactory createDataFactory( final Feature[] chosenFeatures, final Charset shapeCharset, final String coordinateSystem, final ShapeSignature signature )
   {

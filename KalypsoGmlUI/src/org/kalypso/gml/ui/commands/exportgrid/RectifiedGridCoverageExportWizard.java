@@ -58,7 +58,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage;
@@ -82,7 +82,7 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
 
   public RectifiedGridCoverageExportWizard( )
   {
-    final IDialogSettings settings = PluginUtilities.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ExportRectifiedGridCoverageWizardSettings" ); //$NON-NLS-1$
+    final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ExportRectifiedGridCoverageWizardSettings" ); //$NON-NLS-1$
     setDialogSettings( settings );
     setNeedsProgressMonitor( true );
 
@@ -150,7 +150,7 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
       final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
       {
         @Override
-        public IStatus execute( IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+        public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
         {
           try
           {
@@ -167,7 +167,7 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
           {
             throw e;
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             e.printStackTrace();
             throw new InvocationTargetException( e );
