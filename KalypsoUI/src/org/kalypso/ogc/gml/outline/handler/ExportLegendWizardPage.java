@@ -65,13 +65,13 @@ import org.kalypso.i18n.Messages;
 /**
  * @author Gernot Belger
  */
-public class ExportGmlWizardPage extends WizardPage
+public class ExportLegendWizardPage extends WizardPage
 {
-  private final ExportGMLData m_data;
+  private final ExportLegendData m_data;
 
   private DatabindingWizardPage m_binding;
 
-  public ExportGmlWizardPage( final String pageName, final ExportGMLData data )
+  public ExportLegendWizardPage( final String pageName, final ExportLegendData data )
   {
     super( pageName );
     m_data = data;
@@ -103,7 +103,7 @@ public class ExportGmlWizardPage extends WizardPage
 
     /* field binding */
     final ISWTObservableValue target = SWTObservables.observeText( fileField, new int[] { SWT.Modify, SWT.DefaultSelection } );
-    final IObservableValue model = BeansObservables.observeValue( m_data, ExportGMLData.PROPERTY_GML_FILE );
+    final IObservableValue model = BeansObservables.observeValue( m_data, ExportLegendData.PROPERTY_LEGEND_FILE );
     final DataBinder binder = new DataBinder( target, model );
 
     binder.setTargetToModelConverter( new StringToFileConverter() );
@@ -119,9 +119,9 @@ public class ExportGmlWizardPage extends WizardPage
     final String titel = getWizard().getWindowTitle();
     final FileValueSelectionListener fileListener = new FileValueSelectionListener( model, titel, SWT.SAVE );
 
-    final String gmlFilterName = Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.6" ); //$NON-NLS-1$
-
-    fileListener.addFilter( gmlFilterName, "*.gml" ); //$NON-NLS-1$
+    fileListener.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.8" ), "*.png" ); //$NON-NLS-1$ //$NON-NLS-2$
+    fileListener.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.9" ), "*.jpg" ); //$NON-NLS-1$ //$NON-NLS-2$
+    fileListener.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.10" ), "*.gif" ); //$NON-NLS-1$ //$NON-NLS-2$
     fileListener.addAllFilter();
 
     fileButton.addSelectionListener( fileListener );
