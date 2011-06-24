@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
+   <extension-point id="toolWizards" name="toolWizards" schema="schema/toolWizards.exsd"/>
    <extension
          point="org.eclipse.ui.importWizards">
       <wizard
@@ -24,9 +25,11 @@
    
    <extension point="org.eclipse.ui.commands">
       <command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description" id="org.kalypso.ogc.gml.map.CoverageManagementCommand" name="%org.kalypso.ogc.gml.map.CoverageManagementCommand.name" />
+      <command id="org.kalypso.gml.ui.toolWizards" name="Tools" description="Tools on the selected element"/>
    </extension>
    <extension point="org.eclipse.ui.commandImages">
       <image commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" icon="icons/obj16/manageCoverages.gif" />
+      <image commandId="org.kalypso.gml.ui.toolWizards" icon="icons/obj16/tools_16.png"/>
    </extension>
    <extension point="org.eclipse.ui.handlers">
 		<handler commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand">
@@ -42,6 +45,13 @@
 				</and>
 			</enabledWhen>
 		</handler>
+          <handler commandId="org.kalypso.gml.ui.toolWizards" class="org.kalypso.gml.ui.tools.ToolWizardsHandler">
+                <enabledWhen>
+                   <with variable="selection">
+                      <count value="+"/>
+                   </with>
+                </enabledWhen>
+          </handler>
    </extension>
    <extension
          point="org.kalypso.core.themeInfo">
@@ -51,22 +61,6 @@
       </themeInfo>
    </extension>
 	<extension point="org.eclipse.ui.menus">
-		<menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-			<menu
-         icon="icons/obj16/import.gif"
-         id="org.kalypso.gml.ui.imports"
-         label="%menuContribution.menu.imports.label"
-         mnemonic="i">
-                <separator
-                      name="genericGml"
-                      visible="true">
-                </separator>
-                <separator
-                      name="additions"
-                      visible="false">
-                </separator>
-			</menu>
-		</menuContribution>
 		<menuContribution locationURI="toolbar:org.kalypso.ui.menus.mapToolbar?before=widgetAdditions">
 			<command commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" style="radio" tooltip="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description">
 				<visibleWhen checkEnabled="false">
@@ -97,6 +91,16 @@
 				</visibleWhen>
 			</command>		
 		</menuContribution>
+		
+        <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+            <command commandId="org.kalypso.gml.ui.toolWizards" style="push">
+                 <visibleWhen checkEnabled="true"/>
+            </command>
+        </menuContribution>
+        
+        <menuContribution locationURI="popup:org.kalypso.ui.views.mapView.outline?after=additions">
+            <command commandId="org.kalypso.gml.ui.toolWizards" style="push"/>
+        </menuContribution>
 	</extension>
 
     <extension point="org.eclipse.core.expressions.propertyTesters">
@@ -261,5 +265,12 @@
             </with>
           </enablement>
        </wizardEnablement>
+    </extension>
+    <extension
+          point="org.kalypso.gml.ui.toolWizards">
+       <category
+             id="toolWizards"
+             name="Tool Wizards">
+       </category>
     </extension>
 </plugin>

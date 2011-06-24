@@ -1,4 +1,4 @@
-package org.kalypso.ui.internal.export;
+package org.kalypso.gml.ui.tools;
 
 import java.util.Map;
 
@@ -15,13 +15,13 @@ import org.kalypso.contribs.eclipse.ui.dialogs.GenericWizardRegistry;
 import org.kalypso.contribs.eclipse.ui.dialogs.IWizardFilter;
 import org.kalypso.contribs.eclipse.ui.dialogs.WizardEnablementVisitor;
 import org.kalypso.contribs.eclipse.ui.dialogs.WizardFilter;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 
-public class ExportWizardsHandler extends AbstractHandler
+public class ToolWizardsHandler extends AbstractHandler
 {
-  private static final String EXPORT_GML_WIZARDS_EXTENSION_POINT = "exportWizards"; //$NON-NLS-1$
+  private static final String TOOL_WIZARDS_EXTENSION_POINT = "toolWizards"; //$NON-NLS-1$
 
-  private final IWizardRegistry m_registry = new GenericWizardRegistry( KalypsoGisPlugin.getId(), EXPORT_GML_WIZARDS_EXTENSION_POINT );
+  private final IWizardRegistry m_registry = new GenericWizardRegistry( KalypsoGmlUIPlugin.id(), TOOL_WIZARDS_EXTENSION_POINT );
 
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
@@ -42,9 +42,9 @@ public class ExportWizardsHandler extends AbstractHandler
 
     final IWizardFilter filter = new WizardFilter( enablement );
 
-    final ExportWizardsWizard exportWizard = new ExportWizardsWizard( selection, m_registry );
-    exportWizard.setFilter( filter );
-    final WizardDialog dialog = new WizardDialog( shell, exportWizard );
+    final ToolWizardsWizard importWizard = new ToolWizardsWizard( selection, m_registry );
+    importWizard.setFilter( filter );
+    final WizardDialog dialog = new WizardDialog( shell, importWizard );
     dialog.open();
 
     return null;
