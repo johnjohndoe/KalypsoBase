@@ -416,7 +416,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
               return;
             }
 
-            IFeatureBindingCollection<ICoverage> coverageList = coverages.getCoverages();
+            final IFeatureBindingCollection<ICoverage> coverageList = coverages.getCoverages();
             coverageViewer.setInput( coverageList );
             if( coverageList != null && coverageList.size() > 0 )
               coverageViewer.setSelection( new StructuredSelection( coverageList.get( 0 ) ), true );
@@ -515,7 +515,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_colorMapViewer.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the color map toolbar. */
-    ToolBar colormapToolbar = new ToolBar( colormapPanel, SWT.VERTICAL | SWT.FLAT );
+    final ToolBar colormapToolbar = new ToolBar( colormapPanel, SWT.VERTICAL | SWT.FLAT );
     toolkit.adapt( colormapToolbar );
     colormapToolbar.setLayoutData( new GridData( SWT.CENTER, SWT.BEGINNING, false, true ) );
 
@@ -552,7 +552,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     initializeThemeCombo();
 
-    IFeatureBindingCollection<ICoverage> coverages = m_coverages == null ? null : m_coverages.getCoverages();
+    final IFeatureBindingCollection<ICoverage> coverages = m_coverages == null ? null : m_coverages.getCoverages();
     if( coverages != null && coverages.size() > 0 )
       m_coverageViewer.setSelection( new StructuredSelection( coverages.get( 0 ) ) );
 
@@ -685,7 +685,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   protected void updateButtons( )
   {
     /* Let actions update themselves */
-    IFeatureBindingCollection<ICoverage> coverages = m_coverages == null ? null : m_coverages.getCoverages();
+    final IFeatureBindingCollection<ICoverage> coverages = m_coverages == null ? null : m_coverages.getCoverages();
     final ICoverage[] allCoverages = coverages == null ? null : coverages.toArray( new ICoverage[coverages.size()] );
     final ICoverage[] selectedCoverages = m_selectedCoverage == null ? new ICoverage[0] : new ICoverage[] { m_selectedCoverage };
     for( final CoverageManagementAction action : m_actions )
@@ -1121,7 +1121,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final IContainer gridFolder = determineGridFolder();
 
-    final AddRectifiedGridCoveragesWizard wizard = new AddRectifiedGridCoveragesWizard( coverages, gridFolder, m_allowUserChangeGridFolder );
+    final AddRectifiedGridCoveragesWizard wizard = new AddRectifiedGridCoveragesWizard();
+    wizard.init( coverages, gridFolder, m_allowUserChangeGridFolder );
     final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
     if( wizardDialog.open() != Window.OK )
       return;
