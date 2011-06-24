@@ -22,39 +22,13 @@
             name="GML Style Catalog"/>
    </extension>
    
-   <extension
-         point="org.eclipse.ui.commands">
-      <command
-            description="Importiert ein Raster als GML-Coverage"
-            id="org.kalypso.gml.ui.importGridCommand"
-            name="Raster importieren">
-      </command>
+   <extension point="org.eclipse.ui.commands">
       <command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description" id="org.kalypso.ogc.gml.map.CoverageManagementCommand" name="%org.kalypso.ogc.gml.map.CoverageManagementCommand.name" />
    </extension>
    <extension point="org.eclipse.ui.commandImages">
-      <image commandId="org.kalypso.gml.ui.importGridCommand" icon="icons/obj16/gridImport.gif"/>
       <image commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" icon="icons/obj16/manageCoverages.gif" />
    </extension>
-   <extension
-         point="org.eclipse.ui.handlers">
-      <handler
-            class="org.kalypso.gml.ui.commands.importgrid.ImportGridHandler"
-            commandId="org.kalypso.gml.ui.importGridCommand">
-         <enabledWhen>
-            <with
-                  variable="selection">
-               <iterate
-                     ifEmpty="false"
-                     operator="and">
-                  <test
-                        forcePluginActivation="false"
-                        property="org.kalypso.core.qname"
-                        value="{org.kalypso.gml.common.coverage}CoverageCollection">
-                  </test>
-               </iterate>
-            </with>
-         </enabledWhen>
-      </handler>
+   <extension point="org.eclipse.ui.handlers">
 		<handler commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
 				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.gml.ui.map.CoverageManagementWidget" />
@@ -83,16 +57,6 @@
          id="org.kalypso.gml.ui.imports"
          label="%menuContribution.menu.imports.label"
          mnemonic="i">
-				<command commandId="org.kalypso.gml.ui.importGridCommand">
-					<visibleWhen checkEnabled="false">
-						<with variable="selection">
-							<iterate ifEmpty="false" operator="and">
-								<test forcePluginActivation="false" property="org.kalypso.core.qname" value="{org.kalypso.gml.common.coverage}CoverageCollection">
-								</test>
-							</iterate>
-						</with>
-					</visibleWhen>
-				</command>
                 <separator
                       name="genericGml"
                       visible="true">
@@ -236,6 +200,16 @@
      </wizard>
     </extension>
     <extension
+          point="org.kalypso.ui.importWizards">
+       <wizard
+             class="org.kalypso.gml.ui.commands.importgrid.AddRectifiedGridCoveragesWizard"
+             id="org.kalypso.gml.ui.commands.importgrid.AddRectifiedGridCoveragesWizard"
+             icon="icons/obj16/gridImport.gif"
+             name="Raster importieren">
+             <description>Importiert ein Raster als GML-Coverage</description>
+       </wizard>
+    </extension>
+    <extension
           point="org.kalypso.contribs.eclipsercp.wizardEnablement">
        <wizardEnablement
              wizardID="org.kalypso.gml.ui.commands.exportshape.ExportShapeWizard">
@@ -269,6 +243,19 @@
                         forcePluginActivation="false"
                         property="org.kalypso.core.qname"
                         value="{http://www.opengis.net/gml}_Coverage">
+                  </test>
+               </iterate>
+            </with>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.gml.ui.commands.importgrid.AddRectifiedGridCoveragesWizard">
+          <enablement>
+            <with variable="selection">
+               <iterate ifEmpty="false" operator="and">
+                  <test
+                        forcePluginActivation="false"
+                        property="org.kalypso.core.qname"
+                        value="{org.kalypso.gml.common.coverage}CoverageCollection">
                   </test>
                </iterate>
             </with>
