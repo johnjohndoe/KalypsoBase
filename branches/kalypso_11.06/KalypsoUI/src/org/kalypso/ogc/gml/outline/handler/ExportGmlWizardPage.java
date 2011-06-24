@@ -116,7 +116,7 @@ public class ExportGmlWizardPage extends WizardPage
     m_binding.bindValue( binder );
 
     /* Button binding */
-    final String titel = "Select GML File";
+    final String titel = getWizard().getWindowTitle();
     final FileValueSelectionListener fileListener = new FileValueSelectionListener( model, titel, SWT.SAVE );
 
     final String gmlFilterName = Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.6" ); //$NON-NLS-1$
