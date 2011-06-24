@@ -456,14 +456,6 @@
                commandId="org.kalypso.model.wspm.ui.view.legend.removelayer"
                icon="icons/etool16/delete_layer.gif">
          </image>
-         <image
-               commandId="org.kalypso.model.wspm.ui.command.profile.editProperties"
-               icon="icons/etool16/profile_property_edit.gif">
-         </image>
-         <image
-               commandId="org.kalypso.model.wspm.ui.command.profile.validate"
-               icon="icons/etool16/profile_validate.gif">
-         </image>
       </extension>
      
     <!-- Commands for the map outline -->
@@ -471,16 +463,6 @@
 		<category id="org.kalypso.mode.wspm.ui.profile.commands" name="%category.name.1"/>
 		<command categoryId="org.kalypso.mode.wspm.ui.profile.commands" id="org.kalypso.ui.map.outline.command.WspmCreateDevider" name="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description"/>
 		<command categoryId="org.kalypso.mode.wspm.ui.profile.commands" id="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" name="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description"/>
-		  <command
-		        description="%org.kalypso.model.wspm.ui.action.PropertyEditAction.description"
-		        id="org.kalypso.model.wspm.ui.command.profile.editProperties"
-		        name="%org.kalypso.model.wspm.ui.action.PropertyEditAction">
-		  </command>
-		  <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
-		        description="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction.description"
-		        id="org.kalypso.model.wspm.ui.command.profile.validate"
-		        name="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction">
-		  </command>
 	</extension>
 
 	<extension point="org.eclipse.ui.handlers">
@@ -548,20 +530,6 @@
                     </reference>
                  </visibleWhen>
               </command>
-              <command
-                    commandId="org.kalypso.model.wspm.ui.command.profile.editProperties"
-                    style="push">
-                 <visibleWhen
-                       checkEnabled="true">
-                 </visibleWhen>
-              </command>
-              <command
-                    commandId="org.kalypso.model.wspm.ui.command.profile.validate"
-                    style="push">
-                 <visibleWhen
-                       checkEnabled="true">
-                 </visibleWhen>
-              </command>
               <separator
                     name="additions"
                     visible="false">
@@ -578,27 +546,6 @@
              properties="hasProfileSelection"
              type="org.eclipse.jface.viewers.ISelection">
        </propertyTester>
-    </extension>
-    <extension
-          point="org.eclipse.ui.handlers">
-       <handler
-             class="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditHandler"
-             commandId="org.kalypso.model.wspm.ui.command.profile.editProperties">
-          <enabledWhen>
-             <reference
-                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-             </reference>
-          </enabledWhen>
-       </handler>
-       <handler
-             class="org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesHandler"
-             commandId="org.kalypso.model.wspm.ui.command.profile.validate">
-          <enabledWhen>
-             <reference
-                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-             </reference>
-          </enabledWhen>
-       </handler>
     </extension>
     <extension point="org.eclipse.ui.commands">
        <command
@@ -647,6 +594,20 @@
              name="%org.kalypso.model.wspm.ui.action.FlipProfileAction">
              <description>%org.kalypso.model.wspm.ui.action.FlipProfileAction.description</description>
        </wizard>
+       <wizard
+             class="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard"
+             icon="icons/etool16/profile_property_edit.gif"
+             name="%org.kalypso.model.wspm.ui.action.PropertyEditAction">
+             <description>%org.kalypso.model.wspm.ui.action.PropertyEditAction.description</description>
+       </wizard>
+       <wizard
+             class="org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard"
+             icon="icons/etool16/profile_validate.gif"
+             name="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction">
+             <description>%org.kalypso.model.wspm.ui.action.ValidateProfilesAction.description</description>
+       </wizard>
     </extension>
     
     <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
@@ -661,6 +622,21 @@
           </enablement>
        </wizardEnablement>
        <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard">
+          <enablement>
+             <reference
+                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+             </reference>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard">
+          <enablement>
+             <reference
+                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+             </reference>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement
+             wizardID="org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard">
           <enablement>
              <reference
                    definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
