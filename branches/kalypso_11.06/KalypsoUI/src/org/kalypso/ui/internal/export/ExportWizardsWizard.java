@@ -61,7 +61,7 @@ public class ExportWizardsWizard extends GenericWizardsWizard
   {
     super( selection, registry );
 
-    setWindowTitle( "Export" ); //$NON-NLS-1$
+    setWindowTitle( WorkbenchMessages.ExportWizard_title );
     setDefaultPageImageDescriptor( WorkbenchImages.getImageDescriptor( IWorkbenchGraphicConstants.IMG_WIZBAN_EXPORT_WIZ ) );
 
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() ) );
