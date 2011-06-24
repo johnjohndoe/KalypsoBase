@@ -40,63 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.handler;
 
-import java.io.File;
-
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 
 /**
  * @author Gernot Belger
  */
-public class ExportLegendData extends AbstractModelObject
+public class ExportLegendData extends AbstractExportFileData
 {
-  public static final String PROPERTY_LEGEND_FILE = "legendFile"; //$NON-NLS-1$
-
-  private static final String SETTINGS_PATH = "legendExportPath"; //$NON-NLS-1$
-
-  private File m_legendFile = new File( StringUtils.EMPTY );
-
   private IThemeNode[] m_nodes;
-
-  public void setFilename( final String fileName )
-  {
-    final File newGmlFile = new File( m_legendFile.getParent(), fileName );
-    setLegendFile( newGmlFile );
-  }
-
-  public File getLegendFile( )
-  {
-    return m_legendFile;
-  }
-
-  public void setLegendFile( final File gmlFile )
-  {
-    final Object oldValue = m_legendFile;
-
-    m_legendFile = gmlFile;
-
-    firePropertyChange( PROPERTY_LEGEND_FILE, oldValue, gmlFile );
-  }
-
-  public void loadState( final IDialogSettings settings )
-  {
-    if( settings == null )
-      return;
-
-    final String legendPath = settings.get( SETTINGS_PATH );
-    if( legendPath != null )
-      m_legendFile = new File( legendPath );
-  }
-
-  public void storeState( final IDialogSettings settings )
-  {
-    if( settings == null )
-      return;
-
-    settings.put( SETTINGS_PATH, m_legendFile.getAbsolutePath() );
-  }
 
   public void setNodes( final IThemeNode[] nodes )
   {

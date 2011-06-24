@@ -88,12 +88,7 @@ public class ExportShapeWizard extends Wizard implements IWorkbenchWizard
   {
     final IFeatureSelection featureSelection = GenericFeatureSelection.create( selection, null );
     if( featureSelection == null || featureSelection.size() == 0 )
-    {
-      // TODO: who will do it now?
-// final String msg = "No features in selection. Please select features for export.";
-// MessageDialog.openWarning( shell, title, msg );
-// return;
-    }
+      throw new IllegalStateException( "No features in selection. Please select features for export." ); //$NON-NLS-1$
 
     final String fileName = ExportShapeUtils.guessExportFileName( selection );
 

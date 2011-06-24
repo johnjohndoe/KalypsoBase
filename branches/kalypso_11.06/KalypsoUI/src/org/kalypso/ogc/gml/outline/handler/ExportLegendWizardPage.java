@@ -40,26 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.handler;
 
-import org.eclipse.core.databinding.beans.BeansObservables;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
-import org.kalypso.commons.databinding.DataBinder;
-import org.kalypso.commons.databinding.conversion.FileToStringConverter;
-import org.kalypso.commons.databinding.conversion.StringToFileConverter;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
-import org.kalypso.commons.databinding.swt.FileValueSelectionListener;
-import org.kalypso.commons.databinding.validation.FileAlreadyExistsValidator;
-import org.kalypso.commons.databinding.validation.FileIsDirectoryValidator;
-import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.i18n.Messages;
 
 /**
@@ -76,8 +61,8 @@ public class ExportLegendWizardPage extends WizardPage
     super( pageName );
     m_data = data;
 
-    setTitle( "Dateiauswahl" );
-    setDescription( "Wählen Sie die Exportdatei auf dieser Seite." );
+    setTitle( ExportFileWizardConstants.STR_EXPORT_FILE_PAGE_TITLE );
+    setDescription( ExportFileWizardConstants.STR_EXPORT_FILE_PAGE_DESCRIPTION );
   }
 
   @Override
@@ -94,36 +79,12 @@ public class ExportLegendWizardPage extends WizardPage
 
   private void createFileControls( final Composite parent )
   {
-    final Text fileField = new Text( parent, SWT.BORDER | SWT.SINGLE );
-    fileField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    final String title = getWizard().getWindowTitle();
+    final ExportFileControls exportFileControls = new ExportFileControls( m_data, m_binding, title );
 
-    final Button fileButton = new Button( parent, SWT.PUSH );
-    fileButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-    fileButton.setText( "Browse..." ); //$NON-NLS-1$
-
-    /* field binding */
-    final ISWTObservableValue target = SWTObservables.observeText( fileField, new int[] { SWT.Modify, SWT.DefaultSelection } );
-    final IObservableValue model = BeansObservables.observeValue( m_data, ExportLegendData.PROPERTY_LEGEND_FILE );
-    final DataBinder binder = new DataBinder( target, model );
-
-    binder.setTargetToModelConverter( new StringToFileConverter() );
-    binder.setModelToTargetConverter( new FileToStringConverter() );
-
-    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "File path may not be empty" ) );
-    binder.addTargetAfterConvertValidator( new FileIsDirectoryValidator() );
-    binder.addTargetAfterConvertValidator( new FileAlreadyExistsValidator() );
-
-    m_binding.bindValue( binder );
-
-    /* Button binding */
-    final String titel = getWizard().getWindowTitle();
-    final FileValueSelectionListener fileListener = new FileValueSelectionListener( model, titel, SWT.SAVE );
-
-    fileListener.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.8" ), "*.png" ); //$NON-NLS-1$ //$NON-NLS-2$
-    fileListener.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.9" ), "*.jpg" ); //$NON-NLS-1$ //$NON-NLS-2$
-    fileListener.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.10" ), "*.gif" ); //$NON-NLS-1$ //$NON-NLS-2$
-    fileListener.addAllFilter();
-
-    fileButton.addSelectionListener( fileListener );
+    exportFileControls.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.8" ), "*.png" ); //$NON-NLS-1$ //$NON-NLS-2$
+    exportFileControls.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.9" ), "*.jpg" ); //$NON-NLS-1$ //$NON-NLS-2$
+    exportFileControls.addFilter( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.10" ), "*.gif" ); //$NON-NLS-1$ //$NON-NLS-2$
+    exportFileControls.createControls( parent, 1 );
   }
 }

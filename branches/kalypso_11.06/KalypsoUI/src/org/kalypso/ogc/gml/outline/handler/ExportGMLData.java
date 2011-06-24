@@ -40,45 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.handler;
 
-import java.io.File;
-
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Gernot Belger
  */
-public class ExportGMLData extends AbstractModelObject
+public class ExportGMLData extends AbstractExportFileData
 {
-  public static final String PROPERTY_GML_FILE = "gmlFile"; //$NON-NLS-1$
-
-  private static final String SETTINGS_PATH = "gmlExportPath"; //$NON-NLS-1$
-
   private GMLWorkspace m_workspace;
-
-  private File m_gmlFile = new File( StringUtils.EMPTY );
-
-  public void setFilename( final String fileName )
-  {
-    final File newGmlFile = new File( m_gmlFile.getParent(), fileName );
-    setGmlFile( newGmlFile );
-  }
-
-  public File getGmlFile( )
-  {
-    return m_gmlFile;
-  }
-
-  public void setGmlFile( final File gmlFile )
-  {
-    final Object oldValue = m_gmlFile;
-
-    m_gmlFile = gmlFile;
-
-    firePropertyChange( PROPERTY_GML_FILE, oldValue, gmlFile );
-  }
 
   public void setWorkspace( final GMLWorkspace workspace )
   {
@@ -88,23 +57,5 @@ public class ExportGMLData extends AbstractModelObject
   public GMLWorkspace getWorkspace( )
   {
     return m_workspace;
-  }
-
-  public void loadState( final IDialogSettings settings )
-  {
-    if( settings == null )
-      return;
-
-    final String gmlPath = settings.get( SETTINGS_PATH );
-    if( gmlPath != null )
-      m_gmlFile = new File( gmlPath );
-  }
-
-  public void storeState( final IDialogSettings settings )
-  {
-    if( settings == null )
-      return;
-
-    settings.put( SETTINGS_PATH, m_gmlFile.getAbsolutePath() );
   }
 }

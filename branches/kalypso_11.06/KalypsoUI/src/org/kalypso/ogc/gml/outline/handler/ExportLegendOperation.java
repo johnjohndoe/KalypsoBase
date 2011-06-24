@@ -84,7 +84,7 @@ public class ExportLegendOperation implements ICoreRunnableWithProgress, Runnabl
   public IStatus execute( final IProgressMonitor monitor )
   {
     /* Now save it to a file. */
-    final File legendFile = m_data.getLegendFile();
+    final File legendFile = m_data.getExportFile();
     final IThemeNode[] nodes = m_data.getNodes();
     final String suffix = FileUtilities.getSuffix( legendFile );
 

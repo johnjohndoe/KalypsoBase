@@ -265,6 +265,14 @@
              %org.kalypso.gml.ui.commands.Tin2ShapeExport.description
           </description>
        </wizard>
+     <wizard
+           category="exportWizards"
+           class="org.kalypso.gml.ui.commands.exporthmo.ExportHMOWizard"
+           id="org.kalypso.gml.ui.commands.exporthmo.ExportHMOWizard"
+           icon="icons/obj16/exportHmo.gif"
+           name="%org.kalypso.gml.ui.commands.exporthmo.ExportHMOWizard.name">
+           <description>%org.kalypso.gml.ui.commands.exporthmo.ExportHMOWizard.description</description>
+     </wizard>
     </extension>
     <extension
           point="org.kalypso.contribs.eclipsercp.wizardEnablement">
@@ -282,6 +290,13 @@
              <reference
                    definitionId="org.kalypso.gml.ui.definition.selectionHasTins">
              </reference>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.gml.ui.commands.exporthmo.ExportHMOWizard">
+          <enablement>
+               <with variable="selection">
+                  <test property="org.kalypso.gml.ui.featureSelection.hasGeometryOfType" value="org.kalypsodeegree.model.geometry.GM_TriangulatedSurface"/>
+               </with>
           </enablement>
        </wizardEnablement>
     </extension>
