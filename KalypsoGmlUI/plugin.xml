@@ -25,7 +25,7 @@
    
    <extension point="org.eclipse.ui.commands">
       <command categoryId="org.kalypso.ogc.gml.map.category" description="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description" id="org.kalypso.ogc.gml.map.CoverageManagementCommand" name="%org.kalypso.ogc.gml.map.CoverageManagementCommand.name" />
-      <command id="org.kalypso.gml.ui.toolWizards" name="Tools" description="Tools on the selected element"/>
+      <command id="org.kalypso.gml.ui.toolWizards" name="Tools..." description="Tools on the selected element"/>
    </extension>
    <extension point="org.eclipse.ui.commandImages">
       <image commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" icon="icons/obj16/manageCoverages.gif" />
