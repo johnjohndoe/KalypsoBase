@@ -464,10 +464,6 @@
                commandId="org.kalypso.model.wspm.ui.command.profile.validate"
                icon="icons/etool16/profile_validate.gif">
          </image>
-         <image
-               commandId="org.kalypso.model.wspm.ui.command.profile.flip"
-               icon="icons/obj16/flipProfile.gif">
-         </image>
       </extension>
      
     <!-- Commands for the map outline -->
@@ -484,11 +480,6 @@
 		        description="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction.description"
 		        id="org.kalypso.model.wspm.ui.command.profile.validate"
 		        name="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction">
-		  </command>
-		  <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
-		        description="%org.kalypso.model.wspm.ui.action.FlipProfileAction.description"
-		        id="org.kalypso.model.wspm.ui.command.profile.flip"
-		        name="%org.kalypso.model.wspm.ui.action.FlipProfileAction">
 		  </command>
 	</extension>
 
@@ -571,13 +562,6 @@
                        checkEnabled="true">
                  </visibleWhen>
               </command>
-              <command
-                    commandId="org.kalypso.model.wspm.ui.command.profile.flip"
-                    style="push">
-                 <visibleWhen
-                       checkEnabled="true">
-                 </visibleWhen>
-              </command>
               <separator
                     name="additions"
                     visible="false">
@@ -609,15 +593,6 @@
        <handler
              class="org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesHandler"
              commandId="org.kalypso.model.wspm.ui.command.profile.validate">
-          <enabledWhen>
-             <reference
-                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-             </reference>
-          </enabledWhen>
-       </handler>
-       <handler
-             class="org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileHandler"
-             commandId="org.kalypso.model.wspm.ui.command.profile.flip">
           <enabledWhen>
              <reference
                    definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
@@ -663,6 +638,16 @@
           <description>%org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.description</description>
        </wizard>
     </extension>
+    <extension
+          point="org.kalypso.gml.ui.toolWizards">
+       <wizard
+             class="org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard"
+             icon="icons/obj16/flipProfile.gif"
+             name="%org.kalypso.model.wspm.ui.action.FlipProfileAction">
+             <description>%org.kalypso.model.wspm.ui.action.FlipProfileAction.description</description>
+       </wizard>
+    </extension>
     
     <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
        <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfileWizard">
@@ -673,6 +658,13 @@
        <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportPrfWizard">
           <enablement>
             <reference definitionId="isProfileContainerSelection"/>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard">
+          <enablement>
+             <reference
+                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+             </reference>
           </enablement>
        </wizardEnablement>
     </extension>
@@ -688,5 +680,4 @@
              </with>
        </definition>
     </extension>
-
 </plugin>
