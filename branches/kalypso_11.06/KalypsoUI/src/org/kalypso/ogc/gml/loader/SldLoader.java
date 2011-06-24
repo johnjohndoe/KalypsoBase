@@ -218,7 +218,7 @@ public class SldLoader extends AbstractLoader implements ISaveAsLoader
 
   private Object loadFromUrl( final URL sldLocation, final URL resourceLocation ) throws IOException, XMLParsingException
   {
-    final Object element = SLDFactory.createSLD( sldLocation );
+    final Object element = SLDFactory.readSLD( sldLocation );
     setResources( sldLocation );
     loadResourceBundle( resourceLocation );
     return element;
