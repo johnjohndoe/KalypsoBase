@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.internal.export;
+package org.kalypso.contribs.eclipse.ui.dialogs;
 
 import java.util.Map;
 

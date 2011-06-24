@@ -13,9 +13,9 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.wizards.IWizardRegistry;
 import org.kalypso.contribs.eclipse.ui.dialogs.GenericWizardRegistry;
 import org.kalypso.contribs.eclipse.ui.dialogs.IWizardFilter;
+import org.kalypso.contribs.eclipse.ui.dialogs.WizardEnablementVisitor;
+import org.kalypso.contribs.eclipse.ui.dialogs.WizardFilter;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.internal.export.WizardEnablementVisitor;
-import org.kalypso.ui.internal.export.WizardFilter;
 
 public class ImportWizardsHandler extends AbstractHandler
 {

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.internal.export;
+package org.kalypso.contribs.eclipse.ui.dialogs;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,8 +49,8 @@ import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.wizards.IWizardCategory;
 import org.eclipse.ui.wizards.IWizardDescriptor;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardEnablementRegistry;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author Gernot Belger
@@ -114,7 +114,7 @@ public class WizardEnablementVisitor
     }
     catch( final CoreException e )
     {
-      KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
+      EclipseRCPContributionsPlugin.getDefault().getLog().log( e.getStatus() );
       return false;
     }
   }
