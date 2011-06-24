@@ -74,7 +74,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
  */
 public class RectifiedGridCoverageExportWizard extends Wizard implements IImportWizard
 {
-  private static final String FMT_ASC = "ESRI Ascii Datei (*.asc)"; //$NON-NLS-1$
+  private static final String FMT_ASC = "ESRI Ascii Datei (*.asc)";
 
   private ICoverage[] m_coverages;
 
@@ -119,9 +119,6 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
     return null;
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
   @Override
   public void addPages( )
   {
