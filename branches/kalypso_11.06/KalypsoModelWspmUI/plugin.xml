@@ -458,27 +458,6 @@
          </image>
       </extension>
      
-    <!-- Commands for the map outline -->
-	<extension point="org.eclipse.ui.commands">
-		<category id="org.kalypso.mode.wspm.ui.profile.commands" name="%category.name.1"/>
-		<command categoryId="org.kalypso.mode.wspm.ui.profile.commands" id="org.kalypso.ui.map.outline.command.WspmCreateDevider" name="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description"/>
-		<command categoryId="org.kalypso.mode.wspm.ui.profile.commands" id="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" name="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description"/>
-	</extension>
-
-	<extension point="org.eclipse.ui.handlers">
-		<handler commandId="org.kalypso.ui.map.outline.command.WspmCreateDevider" class="org.kalypso.model.wspm.ui.action.CreateDeviderHandler">
-			<activeWhen>
-				<reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
-			</activeWhen>
-		</handler>
-		<handler commandId="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" class="org.kalypso.model.wspm.ui.action.IntersectRoughnessHandler">
-			<enabledWhen>
-				<reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
-			</enabledWhen>
-		</handler>
-	</extension>
-
-
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected">
 			<with variable="selection">
@@ -491,52 +470,17 @@
 				</and>
 			</with>
 		</definition>
-  <definition
-        id="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-     <with
-           variable="selection">
-        <test
-              property="org.kalypso.model.wspm.ui.hasProfileSelection">
-        </test>
-     </with>
-  </definition>
+      <definition
+            id="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+         <with
+               variable="selection">
+            <test
+                  property="org.kalypso.model.wspm.ui.hasProfileSelection">
+            </test>
+         </with>
+      </definition>
 	</extension>
 
-    <extension point="org.eclipse.ui.menus">
-        <menuContribution
-              locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-           <menu
-                 icon="icons/etool16/profileChange.gif"
-                 id="org.kalypso.model.wspm.ui.profileChange"
-                 label="%menu.label"
-                 mnemonic="%menu.mnemonic">
-              <command
-                    commandId="org.kalypso.ui.map.outline.command.WspmCreateDevider"
-                    style="push">
-                 <visibleWhen
-                       checkEnabled="false">
-                    <reference
-                          definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected">
-                    </reference>
-                 </visibleWhen>
-              </command>
-              <command
-                    commandId="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap"
-                    style="push">
-                 <visibleWhen
-                       checkEnabled="false">
-                    <reference
-                          definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected">
-                    </reference>
-                 </visibleWhen>
-              </command>
-              <separator
-                    name="additions"
-                    visible="false">
-              </separator>
-           </menu>
-        </menuContribution>
-      </extension>
     <extension
           point="org.eclipse.core.expressions.propertyTesters">
        <propertyTester
@@ -608,6 +552,18 @@
              name="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction">
              <description>%org.kalypso.model.wspm.ui.action.ValidateProfilesAction.description</description>
        </wizard>
+       <wizard
+             class="org.kalypso.model.wspm.ui.profil.wizard.createDivider.CreateProfileDeviderWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.createDivider.CreateProfileDeviderWizard"
+             name="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction">
+             <description>%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description</description>  
+       </wizard>
+       <wizard
+             class="org.kalypso.model.wspm.ui.profil.wizard.intersectRoughness.IntersectRoughnessWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.intersectRoughness.IntersectRoughnessWizard"
+             name="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction">
+             <description>%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description</description>
+       </wizard>
     </extension>
     
     <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
@@ -635,12 +591,19 @@
              </reference>
           </enablement>
        </wizardEnablement>
-       <wizardEnablement
-             wizardID="org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard">
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard">
           <enablement>
-             <reference
-                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-             </reference>
+             <reference definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles"/>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.createDivider.CreateProfileDeviderWizard">
+          <enablement>
+                <reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.intersectRoughness.IntersectRoughnessWizard">
+          <enablement>
+                <reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
           </enablement>
        </wizardEnablement>
     </extension>
