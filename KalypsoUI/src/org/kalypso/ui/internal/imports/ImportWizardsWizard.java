@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.internal.export;
+package org.kalypso.ui.internal.imports;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
@@ -55,14 +55,14 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * @author Gernot Belger
  */
 @SuppressWarnings("restriction")
-public class ExportWizardsWizard extends GenericWizardsWizard
+public class ImportWizardsWizard extends GenericWizardsWizard
 {
-  public ExportWizardsWizard( final IStructuredSelection selection, final IWizardRegistry registry )
+  public ImportWizardsWizard( final IStructuredSelection selection, final IWizardRegistry registry )
   {
     super( selection, registry );
 
-    setWindowTitle( WorkbenchMessages.ExportWizard_title );
-    setDefaultPageImageDescriptor( WorkbenchImages.getImageDescriptor( IWorkbenchGraphicConstants.IMG_WIZBAN_EXPORT_WIZ ) );
+    setWindowTitle( WorkbenchMessages.ImportWizard_title );
+    setDefaultPageImageDescriptor( WorkbenchImages.getImageDescriptor( IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ ) );
 
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() ) );
   }
@@ -70,12 +70,12 @@ public class ExportWizardsWizard extends GenericWizardsWizard
   @Override
   protected String getWizardsPageMessage( )
   {
-    return WorkbenchMessages.ExportWizard_selectDestination;
+    return WorkbenchMessages.ImportWizard_selectSource;
   }
 
   @Override
   protected String getWizardsPageDescription( )
   {
-    return WorkbenchMessages.ImportExportPage_chooseExportDestination;
+    return WorkbenchMessages.ImportExportPage_chooseImportSource;
   }
 }

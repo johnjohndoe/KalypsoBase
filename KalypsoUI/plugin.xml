@@ -9,6 +9,7 @@
     <extension-point id="observationTableHeaderPopupMenu" name="observationTableHeaderPopupMenu" schema="schema/observationTableHeaderPopupMenu.exsd"/>
     <extension-point id="movieImageProvider" name="movieImageProvider" schema="schema/movieImageProvider.exsd"/>
     <extension-point id="exportWizards" name="exportWizards" schema="schema/exportWizards.exsd"/>
+    <extension-point id="importWizards" name="importWizards" schema="schema/importWizards.exsd"/>
 	
 	<extension id="preferences" name="preferences" point="org.eclipse.core.runtime.preferences">
 		<initializer class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer"/>
@@ -552,6 +553,9 @@
                    <visibleWhen checkEnabled="true"/>
               </command>
               
+              <command commandId="org.kalypso.ui.command.import" style="push">
+                   <visibleWhen checkEnabled="true"/>
+              </command>
               <command commandId="org.kalypso.ui.command.export" style="push">
                    <visibleWhen checkEnabled="true"/>
               </command>
@@ -575,6 +579,7 @@
 			<!-- Properties not allowed until they recognize how to handle non-editable themes
 			<command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push"/>
 			-->
+			<command commandId="org.kalypso.ui.command.import" style="push"/>
 			<command commandId="org.kalypso.ui.command.export" style="push"/>
 			<separator name="additions" visible="false"/>
 		</menuContribution>
@@ -1505,21 +1510,30 @@
   <!-- General purpose commands -->
   <extension point="org.eclipse.ui.commands">
      <command
+           description="Import external data into the selected items"
+           id="org.kalypso.ui.command.import"
+           name="Import..."/>
+     <command
            description="Exports the selected items in various formats"
            id="org.kalypso.ui.command.export"
            name="Export..."/>
   </extension>
   <extension point="org.eclipse.ui.commandImages">
+     <image commandId="org.kalypso.ui.command.import" icon="icons/util/import_wiz.gif"/>
      <image commandId="org.kalypso.ui.command.export" icon="icons/feature/export_gmltree.gif"/>
   </extension>
   <extension point="org.eclipse.ui.handlers">
+     <handler commandId="org.kalypso.ui.command.import" class="org.kalypso.ui.internal.imports.ImportWizardsHandler">
+        <enabledWhen>
+           <with variable="selection">
+              <count value="+"/>
+           </with>
+        </enabledWhen>
+     </handler>
      <handler commandId="org.kalypso.ui.command.export" class="org.kalypso.ui.internal.export.ExportWizardsHandler">
         <enabledWhen>
-           <with
-                 variable="selection">
-              <count
-                    value="+">
-              </count>
+           <with variable="selection">
+              <count value="+"/>
            </with>
         </enabledWhen>
      </handler>
@@ -1579,5 +1593,12 @@
             </with>
         </enablement>
      </wizardEnablement>
+  </extension>
+  <extension
+        point="org.kalypso.ui.importWizards">
+     <category
+           id="importWizards"
+           name="Import Wizards">
+     </category>
   </extension>
 </plugin>

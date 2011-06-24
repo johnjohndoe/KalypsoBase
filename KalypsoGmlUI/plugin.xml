@@ -102,19 +102,6 @@
                       visible="false">
                 </separator>
 			</menu>
-			<menu
-                     icon="icons/obj16/export.gif"
-                     id="org.kalypso.gml.ui.exports"
-                     label="%menuContribution.menu.exports.label"
-                     mnemonic="e">
-                <separator
-                      name="genericGml">
-                </separator>
-                <separator
-                      name="additions"
-                      visible="true">
-                </separator>
-			</menu>
 		</menuContribution>
 		<menuContribution locationURI="toolbar:org.kalypso.ui.menus.mapToolbar?before=widgetAdditions">
 			<command commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" style="radio" tooltip="%org.kalypso.ogc.gml.map.CoverageManagementCommand.description">
