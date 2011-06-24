@@ -1587,4 +1587,21 @@
            <description>%command.tooltip.4</description>
      </wizard>
   </extension>
+  <extension
+        point="org.kalypso.contribs.eclipsercp.wizardEnablement">
+     <wizardEnablement wizardID="org.kalypso.ogc.gml.outline.handler.ExportGMLWizard">
+        <enablement>
+                <reference definitionId="org.kalypso.ui.definition.oneFeatureThemeSelected"/>
+        </enablement>
+     </wizardEnablement>
+     <wizardEnablement wizardID="org.kalypso.ogc.gml.outline.handler.ExportLegendWizard">
+        <enablement>
+            <with variable="selection">
+                <iterate ifEmpty="false" operator="and">
+                    <instanceof value="org.kalypso.ogc.gml.outline.nodes.ILegendProvider"/>
+                </iterate>
+            </with>
+        </enablement>
+     </wizardEnablement>
+  </extension>
 </plugin>
