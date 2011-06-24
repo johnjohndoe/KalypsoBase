@@ -53,7 +53,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.wizard.Wizard;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
@@ -92,7 +92,7 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
     m_gridFolder = gridFolder;
     m_allowUserChangeGridFolder = allowUserChangeGridFolder;
 
-    final IDialogSettings settings = PluginUtilities.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ImportRectifiedGridCoverageWizardSettings" ); //$NON-NLS-1$
+    final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ImportRectifiedGridCoverageWizardSettings" ); //$NON-NLS-1$
     setDialogSettings( settings );
     setNeedsProgressMonitor( true );
 
@@ -138,7 +138,7 @@ public class AddRectifiedGridCoveragesWizard extends Wizard
           for( final File gridFile : selectedFiles )
             newCoverages.add( ImportGridUtilities.importGrid( coverageCollection, gridFile, gridFile.getName(), crs, gridFolder, null, progress.newChild( 1, SubMonitor.SUPPRESS_NONE ) ) );
 
-          IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
+          final IFeatureBindingCollection<ICoverage> coverages = coverageCollection.getCoverages();
           setCoverages( coverages.toArray( new ICoverage[coverages.size()] ) );
 
           return Status.OK_STATUS;

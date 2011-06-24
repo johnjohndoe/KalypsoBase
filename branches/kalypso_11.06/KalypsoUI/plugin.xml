@@ -615,6 +615,7 @@
 			<command commandId="org.kalypso.ui.views.outline.GMLExport" style="push"/>
 			<command commandId="org.kalypso.ui.views.outline.LegendExport" style="push"/>
 			<command commandId="org.kalypso.ui.views.outline.HMOExport" style="push"/>
+			<command commandId="org.kalypso.ui.command.export" style="push"/>
 			<separator name="additions" visible="false"/>
 		</menuContribution>
 
@@ -1604,6 +1605,6 @@
      </handler>
   </extension>
   <extension point="org.kalypso.ui.exportWizards">
-     <category id="org.kalypso.ui.exportWizards" name="Export Wizards"/>
+     <category id="exportWizards" name="Export Wizards"/>
   </extension>
 </plugin>
