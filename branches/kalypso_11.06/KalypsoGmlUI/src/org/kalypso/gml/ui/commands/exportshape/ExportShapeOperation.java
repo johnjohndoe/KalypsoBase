@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeWriter;
 import org.kalypso.shape.dbf.DBaseException;
@@ -34,7 +35,7 @@ public final class ExportShapeOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
   {
-    monitor.beginTask( "Exporting shape data", 100 );
+    monitor.beginTask( Messages.getString("ExportShapeOperation_0"), 100 ); //$NON-NLS-1$
     try
     {
       final IShapeData dataProvider = m_shapeDataFactory.createData();
@@ -53,7 +54,7 @@ public final class ExportShapeOperation implements ICoreRunnableWithProgress
     }
     catch( final DBaseException e )
     {
-      throw new InvocationTargetException( e, "Failed to create default shape provider" );
+      throw new InvocationTargetException( e, "Failed to create default shape provider" ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {

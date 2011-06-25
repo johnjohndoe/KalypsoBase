@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.IDBFField;
@@ -73,7 +74,7 @@ public class ShapeFileNewOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    monitor.beginTask( "Create Shape File", 100 );
+    monitor.beginTask( Messages.getString("ShapeFileNewOperation_0"), 100 ); //$NON-NLS-1$
 
     final IFile shpFile = m_input.getShpFile();
     final IPath shpLocation = shpFile.getLocation();
@@ -91,12 +92,12 @@ public class ShapeFileNewOperation implements ICoreRunnableWithProgress
 
       shpFile.getParent().refreshLocal( IResource.DEPTH_ONE, new SubProgressMonitor( monitor, 20 ) );
 
-      return new Status( IStatus.OK, KalypsoGmlUIPlugin.id(), "Shape File was successfully created" );
+      return new Status( IStatus.OK, KalypsoGmlUIPlugin.id(), Messages.getString("ShapeFileNewOperation_1") ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), "Failed to create shape file", e );
+      return new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), Messages.getString("ShapeFileNewOperation_2"), e ); //$NON-NLS-1$
     }
     finally
     {

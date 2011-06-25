@@ -142,7 +142,7 @@ public class GMLSchemaUtilities
 
   private static final Map<QNameUnique, Map<QNameUnique, Boolean>> m_substitutesIDCache = new HashMap<QNameUnique, Map<QNameUnique, Boolean>>();
 
-  private final static QName XSD_SCHEMALOCATION = new QName( NS.XSD, "schemaLocation" );
+  private final static QName XSD_SCHEMALOCATION = new QName( NS.XSD, "schemaLocation" ); //$NON-NLS-1$
 
   /**
    * @param substitueeName

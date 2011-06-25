@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.Gml2HmoConverter;
 import org.kalypso.ogc.gml.serialize.GmlTriSurface2HmoConverter;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -90,7 +91,7 @@ public class ExportHMOOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to write HMO", e );
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("ExportHMOOperation_0"), e ); //$NON-NLS-1$
     }
   }
 }

@@ -62,8 +62,10 @@ import org.kalypso.contribs.eclipse.jface.viewers.CharsetViewer;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup.FileChangedListener;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.gml.ui.jface.ShapeCharsetUI;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.transformation.PrjHelper;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
@@ -90,14 +92,14 @@ public class ExportShapePage extends WizardPage
   {
     super( pageName );
 
-    setTitle( "Shape File" );
-    setDescription( "Please choose the target shape file on this page." );
+    setTitle( Messages.getString("ExportShapePage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("ExportShapePage_1") ); //$NON-NLS-1$
 
     m_fileDelegate = new FileChooserDelegateSave();
     m_fileDelegate.setFileName( fileName );
     // TODO: fetch filter from central place
-    m_fileDelegate.addFilter( "ESRI Shape Files", "*.shp" );
-    m_fileDelegate.addFilter( "DBase Files", "*.dbf" );
+    m_fileDelegate.addFilter( Messages.getString("ExportShapePage_2"), "*.shp" ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_fileDelegate.addFilter( Messages.getString("ExportShapePage_4"), "*.dbf" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -130,8 +132,9 @@ public class ExportShapePage extends WizardPage
       m_writePrj = dialogSettings.getBoolean( SETTINGS_WRITE_PRJ );
 
     final Button button = new Button( panel, SWT.CHECK );
-    button.setText( "Write PRJ file (needs internet access)" );
-    button.setToolTipText( "Fetches and saves the ESRI projection file (PRJ) from http://spatialreferences.org." );
+    button.setText( Messages.getString("ExportShapePage_6") ); //$NON-NLS-1$
+    final String tooltip = String.format( Messages.getString("ExportShapePage_7"), PrjHelper.HTTP_SPATIALREFERENCE_ORG ); //$NON-NLS-1$
+    button.setToolTipText( tooltip );
 
     button.setSelection( m_writePrj );
 
@@ -161,8 +164,8 @@ public class ExportShapePage extends WizardPage
   private void createCoordinateSystemChooser( final Composite parent )
   {
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( "Coordinate System" );
-    final String tooltip = "All exported geometries will be projected into the chosen coordinate system.";
+    label.setText( Messages.getString("ExportShapePage_8") ); //$NON-NLS-1$
+    final String tooltip = Messages.getString("ExportShapePage_9"); //$NON-NLS-1$
     label.setToolTipText( tooltip );
     label.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
 
@@ -207,9 +210,9 @@ public class ExportShapePage extends WizardPage
   private Control createCharsetChooser( final Composite parent )
   {
     final Label charsetLabel = new Label( parent, SWT.NONE );
-    charsetLabel.setText( "Charset" );
+    charsetLabel.setText( Messages.getString("ExportShapePage_10") ); //$NON-NLS-1$
     final Charset shapeDefaultCharset = ShapeSerializer.getShapeDefaultCharset();
-    final String tooltip = String.format( "The choosen charset will be used for string encodings of .dbf file. Default for ESRI Shape Files is %s.", shapeDefaultCharset.displayName() );
+    final String tooltip = String.format( Messages.getString("ExportShapePage_11"), shapeDefaultCharset.displayName() ); //$NON-NLS-1$
     charsetLabel.setToolTipText( tooltip );
     charsetLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
 

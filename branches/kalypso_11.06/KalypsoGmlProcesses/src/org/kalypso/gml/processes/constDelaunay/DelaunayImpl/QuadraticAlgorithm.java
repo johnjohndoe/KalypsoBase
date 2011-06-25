@@ -12,7 +12,7 @@ final public class QuadraticAlgorithm extends TriangulationAlgorithm
 
   private Circle m_Circle = new Circle();
 
-  final static String STR_ALG_NAME = "QuadraticAlgorithm class. O(n^2)";
+  final static String STR_ALG_NAME = "QuadraticAlgorithm class. O(n^2)"; //$NON-NLS-1$
 
 //  int nFaces;
 
@@ -91,7 +91,7 @@ final public class QuadraticAlgorithm extends TriangulationAlgorithm
         }
         catch( Exception e )
         {
-          System.out.println( "findClosestNeighbours: on " + lIntIteratorIndexI + ", " + lIntIteratorIndexJ + ": " + e );
+          System.out.println( "findClosestNeighbours: on " + lIntIteratorIndexI + ", " + lIntIteratorIndexJ + ": " + e ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           // TODO: handle exception
         }
       }

@@ -43,6 +43,7 @@ package org.kalypso.gml.ui.internal.shape;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.shape.dbf.DBaseException;
 
 /**
@@ -61,7 +62,7 @@ public class DBFFieldLengthValidator implements IValidator
   public IStatus validate( final Object value )
   {
     if( !(value instanceof Number) )
-      return ValidationStatus.error( "'Length' must be a number" );
+      return ValidationStatus.error( Messages.getString("DBFFieldLengthValidator_0") ); //$NON-NLS-1$
 
     try
     {

@@ -45,6 +45,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
@@ -59,12 +60,12 @@ public class AddFieldAction extends Action
 
   public AddFieldAction( final IObservableList fieldList )
   {
-    super( "Add Attribute" );
+    super( Messages.getString("AddFieldAction_0") ); //$NON-NLS-1$
 
     final ImageDescriptor image = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.SHAPE_FILE_NEW_ADD_FIELD );
     setImageDescriptor( image );
 
-    setToolTipText( "Adds a new attribute to the shape file." );
+    setToolTipText( Messages.getString("AddFieldAction_1") ); //$NON-NLS-1$
 
     m_fieldList = fieldList;
   }
@@ -77,7 +78,7 @@ public class AddFieldAction extends Action
   {
     try
     {
-      m_fieldList.add( new DBFFieldBean( new DBFField( "Value" + m_fieldList.size(), FieldType.N, (short) 20, (short) 10 ) ) );
+      m_fieldList.add( new DBFFieldBean( new DBFField( Messages.getString("AddFieldAction_2") + m_fieldList.size(), FieldType.N, (short) 20, (short) 10 ) ) ); //$NON-NLS-1$
     }
     catch( final DBaseException e )
     {

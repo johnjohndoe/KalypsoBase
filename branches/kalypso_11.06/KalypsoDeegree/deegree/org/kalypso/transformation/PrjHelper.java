@@ -61,6 +61,10 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
  */
 public final class PrjHelper
 {
+  public static final String HTTP_SPATIALREFERENCE_ORG = "http://spatialreference.org"; //$NON-NLS-1$
+
+  private static final String DOWNLOAD_URL_PATTERN = HTTP_SPATIALREFERENCE_ORG + "/ref/epsg/%s/prj/"; //$NON-NLS-1$
+
   private static final String PRJ_EXTENSION = ".prj"; //$NON-NLS-1$
 
   private static final String PRJ_CACHE_DIR = "prjCache"; //$NON-NLS-1$
@@ -70,7 +74,7 @@ public final class PrjHelper
     throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
-  public synchronized static final void fetchPrjFile( final String coordinateSystem, final File destination, final IProgressMonitor monitor ) throws CoreException
+  public static synchronized void fetchPrjFile( final String coordinateSystem, final File destination, final IProgressMonitor monitor ) throws CoreException
   {
     final String name = String.format( "Fetching PRJ for %s", coordinateSystem );
     monitor.beginTask( name, IProgressMonitor.UNKNOWN );
@@ -88,7 +92,8 @@ public final class PrjHelper
       if( !cachedPrjFile.exists() )
       {
         cacheDir.mkdirs();
-        final URL sourceUrl = new URL( "http://spatialreference.org/ref/epsg/" + code + "/prj/" ); //$NON-NLS-1$ //$NON-NLS-2$
+        final String downloadLink = String.format( DOWNLOAD_URL_PATTERN, code );
+        final URL sourceUrl = new URL( downloadLink );
         monitor.subTask( String.format( "Accessing %s", sourceUrl.toString() ) );
         HttpClientUtilities.requestFileFromServer( sourceUrl, cachedPrjFile );
       }

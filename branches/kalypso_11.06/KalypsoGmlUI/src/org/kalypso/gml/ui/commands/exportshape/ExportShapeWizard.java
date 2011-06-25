@@ -52,6 +52,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.gml.ui.jface.FeatureSelectionPage;
 import org.kalypso.gml.ui.util.GenericFeatureSelection;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
@@ -75,7 +76,7 @@ public class ExportShapeWizard extends Wizard implements IWorkbenchWizard
   public ExportShapeWizard( )
   {
     setNeedsProgressMonitor( true );
-    setWindowTitle( "General Shape Export" );
+    setWindowTitle( Messages.getString("ExportShapeWizard_0") ); //$NON-NLS-1$
   }
 
   protected ShapeSignature createSignature( final Feature[] featureArray )
@@ -94,8 +95,8 @@ public class ExportShapeWizard extends Wizard implements IWorkbenchWizard
 
     final Feature[] featureArray = FeatureSelectionHelper.getFeatures( featureSelection );
     m_selectFeaturesPage = new FeatureSelectionPage( "festureSelection", featureArray, null, featureArray, 1 ); //$NON-NLS-1$
-    m_selectFeaturesPage.setTitle( "Choose Features" );
-    m_selectFeaturesPage.setDescription( "Please choose features for export." );
+    m_selectFeaturesPage.setTitle( Messages.getString("ExportShapeWizard_1") ); //$NON-NLS-1$
+    m_selectFeaturesPage.setDescription( Messages.getString("ExportShapeWizard_2") ); //$NON-NLS-1$
 
     addPage( m_selectFeaturesPage );
 
@@ -104,7 +105,7 @@ public class ExportShapeWizard extends Wizard implements IWorkbenchWizard
 // m_shapeSignaturePage = new ExportShapeSignaturePage( "exportShapeSignaturePage", m_signature );
 // addPage( m_shapeSignaturePage );
 
-    m_exportShapePage = new ExportShapePage( "exportShapePage", fileName );
+    m_exportShapePage = new ExportShapePage( "exportShapePage", fileName ); //$NON-NLS-1$
     addPage( m_exportShapePage );
   }
 
