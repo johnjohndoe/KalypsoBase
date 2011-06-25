@@ -47,6 +47,7 @@ import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.ui.dialogs.GenericWizardsWizard;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -60,7 +61,7 @@ public class ToolWizardsWizard extends GenericWizardsWizard
   {
     super( selection, registry );
 
-    setWindowTitle( "Tools" );
+    setWindowTitle( Messages.getString("ToolWizardsWizard_0") ); //$NON-NLS-1$
 
     final ImageDescriptor toolImage = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.TOOLS_WIZ );
     setDefaultPageImageDescriptor( toolImage );
@@ -71,12 +72,12 @@ public class ToolWizardsWizard extends GenericWizardsWizard
   @Override
   protected String getWizardsPageMessage( )
   {
-    return "Tool Selection";
+    return Messages.getString("ToolWizardsWizard_1"); //$NON-NLS-1$
   }
 
   @Override
   protected String getWizardsPageDescription( )
   {
-    return "Select the tool on this page";
+    return Messages.getString("ToolWizardsWizard_2"); //$NON-NLS-1$
   }
 }

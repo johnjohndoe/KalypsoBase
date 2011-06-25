@@ -55,15 +55,15 @@ import org.kalypso.shape.dbf.IDBFField;
  */
 public class DBFFieldBean extends AbstractModelObject implements IDBFField
 {
-  public static final String PROPERTY_TYPE = "type";
+  public static final String PROPERTY_TYPE = "type"; //$NON-NLS-1$
 
-  public static final String PROPERTY_TYPE_LABEL = "typeLabel";
+  public static final String PROPERTY_TYPE_LABEL = "typeLabel"; //$NON-NLS-1$
 
-  public static final String PROPERTY_DECIMAL_COUNT = "decimalCount";
+  public static final String PROPERTY_DECIMAL_COUNT = "decimalCount"; //$NON-NLS-1$
 
-  public static final String PROPERTY_LENGTH = "length";
+  public static final String PROPERTY_LENGTH = "length"; //$NON-NLS-1$
 
-  public static final String PROPERTY_NAME = "name";
+  public static final String PROPERTY_NAME = "name"; //$NON-NLS-1$
 
   private DBFField m_field;
 

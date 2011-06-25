@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.jface.viewers.CharsetViewer;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 
 /**
@@ -56,11 +57,11 @@ import org.kalypso.ogc.gml.serialize.ShapeSerializer;
  */
 public final class ShapeCharsetUI
 {
-  private static final String SETTINGS_CHARSET = "shapeCharset";
+  private static final String SETTINGS_CHARSET = "shapeCharset"; //$NON-NLS-1$
 
   private ShapeCharsetUI( )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
   /**
@@ -71,7 +72,7 @@ public final class ShapeCharsetUI
     final CharsetViewer charsetViewer = new CharsetViewer( parent );
 
     final Charset shapeDefaultCharset = ShapeSerializer.getShapeDefaultCharset();
-    final String shapeLabel = String.format( "%s (default for ESRI Shape)", shapeDefaultCharset.displayName() );
+    final String shapeLabel = String.format( Messages.getString("ShapeCharsetUI_2"), shapeDefaultCharset.displayName() ); //$NON-NLS-1$
     charsetViewer.addLabelMapping( shapeDefaultCharset, shapeLabel );
 
     final Charset charset = getInitialCharset( shapeDefaultCharset, dialogSettings );

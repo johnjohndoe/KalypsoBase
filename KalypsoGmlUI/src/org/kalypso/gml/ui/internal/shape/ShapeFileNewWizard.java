@@ -63,6 +63,7 @@ import org.eclipse.ui.IWorkbench;
 import org.kalypso.contribs.eclipse.core.resources.FileFilterVisitor;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.shape.ShapeFile;
 
 /**
@@ -79,7 +80,7 @@ public class ShapeFileNewWizard extends Wizard implements INewWizard
     setNeedsProgressMonitor( true );
     setHelpAvailable( false );
 
-    setWindowTitle( "New Shape File" );
+    setWindowTitle( Messages.getString("ShapeFileNewWizard_0") ); //$NON-NLS-1$
   }
 
   /**
@@ -92,7 +93,7 @@ public class ShapeFileNewWizard extends Wizard implements INewWizard
     final IContainer container = findSelection( selection );
     if( container != null )
     {
-      final IFile shapeFile = container.getFile( new Path( "newShapeFile.shp" ) );
+      final IFile shapeFile = container.getFile( new Path( Messages.getString("ShapeFileNewWizard_1") ) ); //$NON-NLS-1$
       m_shapeFileNewData.setShapeFile( shapeFile );
     }
 
@@ -105,7 +106,7 @@ public class ShapeFileNewWizard extends Wizard implements INewWizard
   @Override
   public void addPages( )
   {
-    final IWizardPage page = new ShapeFileNewPage( "newShapePage", m_shapeFileNewData );
+    final IWizardPage page = new ShapeFileNewPage( "newShapePage", m_shapeFileNewData ); //$NON-NLS-1$
     addPage( page );
   }
 
@@ -148,7 +149,7 @@ public class ShapeFileNewWizard extends Wizard implements INewWizard
       final IFile[] shapeFileExists = getExistingShapeFiles();
       if( shapeFileExists.length > 0 )
       {
-        final MessageDialog dialog = new MessageDialog( getShell(), getWindowTitle(), null, "A file with the same name already exists and will be overwritten. Continue?", MessageDialog.WARNING, new String[] {
+        final MessageDialog dialog = new MessageDialog( getShell(), getWindowTitle(), null, Messages.getString("ShapeFileNewWizard_3"), MessageDialog.WARNING, new String[] { //$NON-NLS-1$
           IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 );
         if( dialog.open() != IDialogConstants.OK_ID )
           return Status.CANCEL_STATUS;

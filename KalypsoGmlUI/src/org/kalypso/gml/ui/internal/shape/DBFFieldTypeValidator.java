@@ -62,7 +62,7 @@ public class DBFFieldTypeValidator implements IValidator
   public IStatus validate( final Object value )
   {
     if( !(value instanceof FieldType) )
-      return ValidationStatus.error( "'Name' must be a FieldType" );
+      return ValidationStatus.error( "'Field Type' must be a valid FieldType" ); //$NON-NLS-1$
 
     try
     {

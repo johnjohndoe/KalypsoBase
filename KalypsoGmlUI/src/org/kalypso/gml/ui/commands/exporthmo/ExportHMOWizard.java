@@ -87,7 +87,7 @@ public class ExportHMOWizard extends Wizard implements IWorkbenchWizard
     final IFeatureType featureType = GenericShapeDataFactory.findLeastCommonType( features );
     final IValuePropertyType[] tinTypes = FeatureSelectionTester.findGeometryTypes( featureType, GM_TriangulatedSurface.class );
     if( tinTypes.length == 0 )
-      throw new IllegalStateException( String.format( "Chosen features do not contains a Triangulated-Surface: %s", featureType ) );
+      throw new IllegalStateException( String.format( Messages.getString("ExportHMOWizard.0"), featureType ) ); //$NON-NLS-1$
 
     final IDialogSettings settings = getDialogSettings();
     m_data.loadState( settings );

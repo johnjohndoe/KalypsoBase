@@ -127,7 +127,7 @@ public class GMLSchemaLoaderWithLocalCache
     }
     catch( final GMLSchemaException e )
     {
-      throw new SAXParseException( "Unknown schema for namespace: " + namespace, null );
+      throw new SAXParseException( "Unknown schema for namespace: " + namespace, null ); //$NON-NLS-1$
     }
   }
 
@@ -177,7 +177,7 @@ public class GMLSchemaLoaderWithLocalCache
       // But atts.getURI gives empty string for xmlns entries.
       // so we ask for the qname
       final String qname = atts.getQName( i );
-      if( qname != null && qname.startsWith( "xmlns:" ) )
+      if( qname != null && qname.startsWith( "xmlns:" ) ) //$NON-NLS-1$
       {
         final String xmlnsUri = atts.getValue( i );
         // HM: are there any other possible namespaces we do NOT want to load?
@@ -224,8 +224,8 @@ public class GMLSchemaLoaderWithLocalCache
        */
       if( schema == null )
       {
-        schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + schemaLocationHint
-            + ") (schemaLocation was " + schemaLocationString + "): ", e ) );
+        schemaNotFoundExceptions.addException( new SAXException( "Schema unknown. Unable to load schema with namespace: " + uri + " (schemaLocationHint was " + schemaLocationHint //$NON-NLS-1$ //$NON-NLS-2$
+            + ") (schemaLocation was " + schemaLocationString + "): ", e ) ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
 
@@ -238,8 +238,8 @@ public class GMLSchemaLoaderWithLocalCache
     if( schema == null )
     {
       if( schemaNotFoundExceptions.isEmpty() )
-        throw new SAXException( "Schema unknown. Could not load schema with namespace: " + uri + " (schemaLocationHint was " + schemaLocationHint + ") (schemaLocation was " + schemaLocationString
-            + ")" );
+        throw new SAXException( "Schema unknown. Unable to load schema with namespace: " + uri + " (schemaLocationHint was " + schemaLocationHint + ") (schemaLocation was " + schemaLocationString //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            + ")" ); //$NON-NLS-1$
       else
         throw new SAXException( schemaNotFoundExceptions );
     }
@@ -259,7 +259,7 @@ public class GMLSchemaLoaderWithLocalCache
       }
       catch( final GMLSchemaException e )
       {
-        final String msg = String.format( "Could not load schema (namespace=%s) from it's schemaLocation: %s", uri, schemaLocation );
+        final String msg = String.format( "Failed to load schema (namespace=%s) from it's schemaLocation: %s", uri, schemaLocation ); //$NON-NLS-1$
         throw new SAXException( msg, e );
       }
     }

@@ -74,7 +74,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
  */
 public class RectifiedGridCoverageExportWizard extends Wizard implements IImportWizard
 {
-  private static final String FMT_ASC = "ESRI Ascii Datei (*.asc)";
+  private static final String FMT_ASC = Messages.getString("RectifiedGridCoverageExportWizard.0"); //$NON-NLS-1$
 
   private ICoverage[] m_coverages;
 
