@@ -549,14 +549,21 @@
   
         <menuContribution
               locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-              <command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push">
-                   <visibleWhen checkEnabled="true"/>
-              </command>
+           <separator
+                 name="importExportStart">
+           </separator>
               
               <command commandId="org.kalypso.ui.command.import" style="push">
                    <visibleWhen checkEnabled="true"/>
               </command>
               <command commandId="org.kalypso.ui.command.export" style="push">
+                   <visibleWhen checkEnabled="true"/>
+              </command>
+              <separator
+                    name="importExportEnd"
+                    visible="true">
+              </separator>
+              <command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push">
                    <visibleWhen checkEnabled="true"/>
               </command>
         </menuContribution>

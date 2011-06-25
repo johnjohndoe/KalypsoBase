@@ -176,20 +176,6 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="false"
-            id="org.kalypso.model.wspm.ui.objectContribution.showProfile"
-            objectClass="org.kalypsodeegree.model.feature.Feature">
-         <filter
-               name="featureType"
-               value="org.kalypso.model.wspmprofile#Profile"/>
-         <action
-               class="org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               icon="icons/obj16/openProfile.gif"
-               id="org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               label="%org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               tooltip="%org.kalypso.model.wspm.ui.action.ShowProfileAction.description"/>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
             id="org.kalypso.model.wspm.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"
             objectClass="org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement">
          <menu
@@ -230,6 +216,20 @@
                  tooltip="%com.bce.profil.app.profilLayerContributions.showProperties.tooltip"/>
         </objectContribution>
      </extension>
+      <extension
+            point="org.eclipse.ui.menus">
+         <menuContribution
+               allPopups="false"
+               locationURI="popup:org.eclipse.ui.popup.any?before=featureCommandsEnd">
+            <command
+                  commandId="org.kalypso.model.wspm.ui.commands.ShowProfile"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
+            </command>
+         </menuContribution>
+      </extension>
      <extension
            point="org.kalypso.core.catalogContribution">
         <catalogContribution
@@ -497,20 +497,19 @@
             id="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
             name="%org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand.name" description="%org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand.description">
       </command>
+       <command
+             id="org.kalypso.model.wspm.ui.commands.ShowProfile"
+             description="%org.kalypso.model.wspm.ui.action.ShowProfileAction.description"
+             name="%org.kalypso.model.wspm.ui.action.ShowProfileAction">
+       </command>
     </extension>
     <extension
           point="org.eclipse.ui.commandImages">
-       <image
-             commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
-             icon="icons/etool16/wspLayerCommand.gif">
-       </image>
+       <image commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand" icon="icons/etool16/wspLayerCommand.gif"/>
+       <image commandId="org.kalypso.model.wspm.ui.commands.ShowProfile" icon="icons/obj16/openProfile.gif"/>
     </extension>
-    <extension
-          point="org.eclipse.ui.handlers">
-       <handler
-             class="org.kalypso.model.wspm.ui.view.chart.handler.WspLegendHandler"
-             commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand">
-       </handler>
+    <extension point="org.eclipse.ui.handlers">
+       <handler class="org.kalypso.model.wspm.ui.view.chart.handler.WspLegendHandler" commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"/>
     </extension>
     <extension
           point="org.kalypso.ui.importWizards">
