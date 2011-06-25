@@ -74,7 +74,6 @@ import org.kalypso.observation.result.IRecord;
 @SuppressWarnings("restriction")
 public class ProfileProblemView
 {
-
   final private FormToolkit m_toolkit;
 
   protected boolean errors_expanded = false;
