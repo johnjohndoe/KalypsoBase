@@ -92,10 +92,22 @@
 			</command>		
 		</menuContribution>
 		
-        <menuContribution locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+        <menuContribution locationURI="popup:org.eclipse.ui.popup.any?before=importExportStart">
+           <separator
+                 name="featureCommandsStart"
+                 visible="false">
+           </separator>
+           <separator
+                 name="featureCommandsEnd"
+                 visible="false">
+           </separator>
             <command commandId="org.kalypso.gml.ui.toolWizards" style="push">
                  <visibleWhen checkEnabled="true"/>
             </command>
+            <separator
+                  name="gmlTools"
+                  visible="true">
+            </separator>
         </menuContribution>
         
         <menuContribution locationURI="popup:org.kalypso.ui.views.mapView.outline?after=additions">
