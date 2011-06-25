@@ -18,6 +18,7 @@ import org.kalypso.gmlschema.i18n.Messages;
  * 
  * @author schlienger
  */
+@SuppressWarnings("restriction")
 public final class GMLSchemaCatalog
 {
   private final IUrlCatalog m_urlCatalog;
