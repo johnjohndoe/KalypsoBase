@@ -13,7 +13,7 @@ import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.gml.ui.i18n.Messages;
 
-public class EditFeatureCommand extends AbstractHandler
+public class EditFeatureHandler extends AbstractHandler
 {
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException

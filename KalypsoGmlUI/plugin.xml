@@ -31,6 +31,11 @@
             id="org.kalyso.gml.ui.command.editFeature"
             name="%org.kalyso.gml.ui.command.editFeature.name">
       </command>
+      <command
+            description="%org.kalyso.gml.ui.command.deleteFeature.description"
+            id="org.kalyso.gml.ui.command.deleteFeature"
+            name="%org.kalyso.gml.ui.command.deleteFeature.name">
+      </command>
    </extension>
    <extension point="org.eclipse.ui.commandImages">
       <image commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" icon="icons/obj16/manageCoverages.gif" />
@@ -38,6 +43,10 @@
       <image
             commandId="org.kalyso.gml.ui.command.editFeature"
             icon="icons/obj16/gis_feature_edit.gif">
+      </image>
+      <image
+            commandId="org.kalyso.gml.ui.command.deleteFeature"
+            icon="icons/obj16/gis_feature_delete.gif">
       </image>
    </extension>
    <extension point="org.eclipse.ui.handlers">
@@ -62,7 +71,7 @@
                 </enabledWhen>
           </handler>
           <handler
-                class="org.kalypso.gml.ui.internal.feature.EditFeatureCommand"
+                class="org.kalypso.gml.ui.internal.feature.EditFeatureHandler"
                 commandId="org.kalyso.gml.ui.command.editFeature">
              <enabledWhen>
                 <with
@@ -80,6 +89,15 @@
                       </iterate>
                    </and>
                 </with>
+             </enabledWhen>
+          </handler>
+          <handler
+                class="org.kalypso.gml.ui.internal.feature.DeleteFeatureHandler"
+                commandId="org.kalyso.gml.ui.command.deleteFeature">
+             <enabledWhen>
+                <reference
+                      definitionId="org.kalypso.gml.ui.definition.selectionHasFeatures">
+                </reference>
              </enabledWhen>
           </handler>
    </extension>
@@ -128,6 +146,13 @@
            </separator>
            <command
                  commandId="org.kalyso.gml.ui.command.editFeature"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="true">
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="org.kalyso.gml.ui.command.deleteFeature"
                  style="push">
               <visibleWhen
                     checkEnabled="true">
