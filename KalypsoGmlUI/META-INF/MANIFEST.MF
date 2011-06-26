@@ -10,7 +10,8 @@ Require-Bundle: org.junit;resolution:=optional,
  org.kalypso.contribs.ogc31,
  org.kalypso.gml.processes,
  org.kalypso.ui.addlayer,
- org.eclipse.core.expressions
+ org.eclipse.core.expressions,
+ org.kalypso.featureview;bundle-version="10.10.3"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.gml.ui,
