@@ -220,7 +220,7 @@
             point="org.eclipse.ui.menus">
          <menuContribution
                allPopups="false"
-               locationURI="popup:org.eclipse.ui.popup.any?before=featureCommandsEnd">
+               locationURI="popup:org.eclipse.ui.popup.any?before=gmlToolsEnd">
             <command
                   commandId="org.kalypso.model.wspm.ui.commands.ShowProfile"
                   style="push">
