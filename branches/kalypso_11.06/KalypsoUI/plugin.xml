@@ -115,8 +115,6 @@
 	</extension>
 	<extension id="popupMenus" name="popupMenus" point="org.eclipse.ui.popupMenus">
 		<objectContribution objectClass="org.kalypsodeegree.model.feature.Feature" adaptable="false" id="org.kalypso.objectclass.feature">
-			<action enablesFor="1" label="%org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate.label" tooltip="%org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate.tooltip" class="org.kalypso.ui.editor.actions.FeatureRemoveActionDelegate" icon="icons/feature/gis_feature_delete.gif" style="push" id="org.kalypso.objectclass.feature.action.remove">
-			</action>
 			<menu label="%org.kalypso.objectclass.feature.menu.batchedit.label" path="additions" id="org.kalypso.objectclass.feature.menu.batchedit">
 				<separator name="editGroup" />
 			</menu>
