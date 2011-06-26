@@ -612,7 +612,10 @@
                 <and>
                     <count value="1"/>
                     <iterate operator="and" ifEmpty="false">
-                       <test property="org.kalypso.ui.test.gmleditor.qname" value="{org.kalypso.model.wspmprofile}Profile" />
+                       <or>
+                          <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspmprofile}Profile" />
+                          <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspmprofile}Profile" />
+                       </or>
                     </iterate>
                 </and>
              </with>

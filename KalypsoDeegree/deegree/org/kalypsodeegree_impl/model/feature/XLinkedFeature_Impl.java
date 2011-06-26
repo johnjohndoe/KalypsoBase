@@ -543,9 +543,6 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
     NamedFeatureHelper.setDescription( getFeature(), desc );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
-   */
   @Override
   public GM_Object getLocation( )
   {
@@ -563,5 +560,31 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
   public void setLocation( final GM_Object location )
   {
     getFeature().setProperty( NamedFeatureHelper.GML_LOCATION, location );
+  }
+
+  @Override
+  public QName getTargetQualifiedName( )
+  {
+    return null;
+  }
+
+  @Override
+  public QName getParentFeatureQualifiedName( )
+  {
+    final Feature parent = getParent();
+    if( parent == null )
+      return null;
+
+    return parent.getQualifiedName();
+  }
+
+  @Override
+  public QName getParentPropertyQualifiedName( )
+  {
+    final IRelationType parentRelation = getParentRelation();
+    if( parentRelation == null )
+      return null;
+
+    return parentRelation.getQName();
   }
 }

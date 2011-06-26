@@ -360,12 +360,27 @@ public class DictionaryFeature implements Feature
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
-   */
   @Override
   public void setLocation( final GM_Object location )
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
+  }
+
+  @Override
+  public QName getTargetQualifiedName( )
+  {
+    return m_feature.getTargetQualifiedName();
+  }
+
+  @Override
+  public QName getParentFeatureQualifiedName( )
+  {
+    return m_feature.getParentFeatureQualifiedName();
+  }
+
+  @Override
+  public QName getParentPropertyQualifiedName( )
+  {
+    return m_feature.getParentPropertyQualifiedName();
   }
 }
