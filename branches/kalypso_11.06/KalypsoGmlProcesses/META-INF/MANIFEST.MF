@@ -11,7 +11,9 @@ Require-Bundle: org.kalypso.simulation.core;visibility:=reexport,
  org.kalypso.deegree,
  org.kalypso.core,
  org.junit;resolution:=optional,
- org.kalypso.contribs.ogc31
+ org.kalypso.contribs.ogc31,
+ org.kalypso.gmlschema,
+ org.eclipse.core.expressions
 Bundle-ActivationPolicy: lazy
 Export-Package: com.bce.apps.wspfli,
  com.bce.ext.jargs,

@@ -93,21 +93,13 @@
 		</menuContribution>
 		
         <menuContribution locationURI="popup:org.eclipse.ui.popup.any?before=importExportStart">
-           <separator
-                 name="featureCommandsStart"
-                 visible="false">
-           </separator>
-           <separator
-                 name="featureCommandsEnd"
-                 visible="false">
-           </separator>
-            <command commandId="org.kalypso.gml.ui.toolWizards" style="push">
+           <separator name="featureCommandsStart" visible="false"/>
+           <separator name="featureCommandsEnd" visible="false"/>
+           <separator name="gmlToolsStart" visible="true"/>
+           <command commandId="org.kalypso.gml.ui.toolWizards" style="push">
                  <visibleWhen checkEnabled="true"/>
-            </command>
-            <separator
-                  name="gmlTools"
-                  visible="true">
-            </separator>
+           </command>
+           <separator name="gmlToolsEnd" visible="true"/>
         </menuContribution>
         
         <menuContribution locationURI="popup:org.kalypso.ui.views.mapView.outline?after=additions">
@@ -257,7 +249,7 @@
                     <!-- FIXME: should be more flexible about the selection; see Tin Export for a better example -->
                   <test
                         forcePluginActivation="false"
-                        property="org.kalypso.core.qname"
+                        property="org.kalypso.gml.qname"
                         value="{http://www.opengis.net/gml}_Coverage">
                   </test>
                </iterate>
@@ -270,7 +262,7 @@
                <iterate ifEmpty="false" operator="and">
                   <test
                         forcePluginActivation="false"
-                        property="org.kalypso.core.qname"
+                        property="org.kalypso.gml.qname"
                         value="{org.kalypso.gml.common.coverage}CoverageCollection">
                   </test>
                </iterate>

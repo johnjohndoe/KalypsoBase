@@ -625,6 +625,33 @@ public class Feature_Impl extends PlatformObject implements Feature
     return value.doubleValue();
   }
 
+  @Override
+  public QName getTargetQualifiedName( )
+  {
+    /* We are not a property, return null */
+    return null;
+  }
+
+  @Override
+  public QName getParentFeatureQualifiedName( )
+  {
+    final Feature parent = getParent();
+    if( parent == null )
+      return null;
+
+    return parent.getQualifiedName();
+  }
+
+  @Override
+  public QName getParentPropertyQualifiedName( )
+  {
+    final IRelationType parentRelation = getParentRelation();
+    if( parentRelation == null )
+      return null;
+
+    return parentRelation.getQName();
+  }
+
 // /**
 // * @see org.kalypsodeegree.model.feature.BaseFeature#setGeometry(java.lang.Object)
 // */

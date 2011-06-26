@@ -29,16 +29,19 @@
  */
 package org.kalypso.ui.editor.gmleditor.part;
 
+import javax.xml.namespace.QName;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IQNameProvider;
 
 /**
  * @author kuepfer
  */
-public class FeatureAssociationTypeElement extends PlatformObject
+public class FeatureAssociationTypeElement extends PlatformObject implements IQNameProvider
 {
   private final IRelationType m_featureAssociattionTypeProp;
 
@@ -70,7 +73,7 @@ public class FeatureAssociationTypeElement extends PlatformObject
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     return EqualsBuilder.reflectionEquals( this, obj );
   }
@@ -83,5 +86,32 @@ public class FeatureAssociationTypeElement extends PlatformObject
   public int hashCode( )
   {
     return HashCodeBuilder.reflectionHashCode( this );
+  }
+
+  @Override
+  public QName getQualifiedName( )
+  {
+    return m_featureAssociattionTypeProp.getQName();
+  }
+
+  @Override
+  public QName getTargetQualifiedName( )
+  {
+    return m_featureAssociattionTypeProp.getTargetFeatureType().getQName();
+  }
+
+  @Override
+  public QName getParentFeatureQualifiedName( )
+  {
+    if( m_parent == null )
+      return null;
+
+    return m_parent.getQualifiedName();
+  }
+
+  @Override
+  public QName getParentPropertyQualifiedName( )
+  {
+    return null;
   }
 }
