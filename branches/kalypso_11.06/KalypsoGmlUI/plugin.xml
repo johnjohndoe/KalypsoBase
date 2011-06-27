@@ -36,6 +36,11 @@
             id="org.kalyso.gml.ui.command.deleteFeature"
             name="%org.kalyso.gml.ui.command.deleteFeature.name">
       </command>
+      <command
+            description="%org.kalyso.gml.ui.command.duplicateFeature.description"
+            id="org.kalyso.gml.ui.command.duplicateFeature"
+            name="%org.kalyso.gml.ui.command.duplicateFeature.name">
+      </command>
    </extension>
    <extension point="org.eclipse.ui.commandImages">
       <image commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" icon="icons/obj16/manageCoverages.gif" />
@@ -47,6 +52,10 @@
       <image
             commandId="org.kalyso.gml.ui.command.deleteFeature"
             icon="icons/obj16/gis_feature_delete.gif">
+      </image>
+      <image
+            commandId="org.kalyso.gml.ui.command.duplicateFeature"
+            icon="icons/obj16/gis_feature_duplicate.gif">
       </image>
    </extension>
    <extension point="org.eclipse.ui.handlers">
@@ -74,12 +83,26 @@
                 class="org.kalypso.gml.ui.internal.feature.EditFeatureHandler"
                 commandId="org.kalyso.gml.ui.command.editFeature">
              <enabledWhen>
+                <with variable="selection">
+                   <and>
+                      <count value="1"/>
+                      <iterate ifEmpty="false" operator="and">
+                         <instanceof value="org.kalypsodeegree.model.feature.Feature"/>
+                      </iterate>
+                   </and>
+                </with>
+             </enabledWhen>
+          </handler>
+          <handler
+                class="org.kalypso.gml.ui.internal.feature.DeleteFeatureHandler"
+                commandId="org.kalyso.gml.ui.command.deleteFeature">
+             <enabledWhen>
                 <with
                       variable="selection">
                    <and>
-                      <count
-                            value="1">
-                      </count>
+                      <reference
+                            definitionId="org.kalypso.gml.ui.definition.selectionHasFeatures">
+                      </reference>
                       <iterate
                             ifEmpty="false"
                             operator="and">
@@ -91,13 +114,26 @@
                 </with>
              </enabledWhen>
           </handler>
-          <handler
-                class="org.kalypso.gml.ui.internal.feature.DeleteFeatureHandler"
-                commandId="org.kalyso.gml.ui.command.deleteFeature">
+          <handler class="org.kalypso.gml.ui.internal.feature.DuplicateFeatureHandler" commandId="org.kalyso.gml.ui.command.duplicateFeature">
              <enabledWhen>
-                <reference
-                      definitionId="org.kalypso.gml.ui.definition.selectionHasFeatures">
-                </reference>
+                <with
+                      variable="selection">
+                   <and>
+                      <count
+                            value="1">
+                      </count>
+                      <reference
+                            definitionId="org.kalypso.gml.ui.definition.selectionHasFeatures">
+                      </reference>
+                      <iterate
+                            ifEmpty="false"
+                            operator="and">
+                         <test
+                               property="org.kalypso.gml.isListFeature">
+                         </test>
+                      </iterate>
+                   </and>
+                </with>
              </enabledWhen>
           </handler>
    </extension>
@@ -153,6 +189,13 @@
            </command>
            <command
                  commandId="org.kalyso.gml.ui.command.deleteFeature"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="true">
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="org.kalyso.gml.ui.command.duplicateFeature"
                  style="push">
               <visibleWhen
                     checkEnabled="true">
