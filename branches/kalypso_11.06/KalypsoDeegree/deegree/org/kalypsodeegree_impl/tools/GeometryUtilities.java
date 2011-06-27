@@ -72,9 +72,8 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.simplify.DouglasPeuckerLineSimplifier;
+import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 /**
  * @author doemming
@@ -553,49 +552,49 @@ public final class GeometryUtilities
   }
 
   public static Class< ? extends GM_Object> getPointClass( )
-      {
+  {
     return GM_Point.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getMultiPointClass( )
-      {
+  {
     return GM_MultiPoint.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getLineStringClass( )
-      {
+  {
     return GM_Curve.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getCurveClass( )
-      {
+  {
     return GM_Curve.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getMultiLineStringClass( )
-      {
+  {
     return GM_MultiCurve.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getSurfaceClass( )
-      {
+  {
     return GM_Surface.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getPolygonClass( )
-      {
+  {
     return GM_Surface.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getMultiPolygonClass( )
-      {
+  {
     return GM_MultiSurface.class;
-      }
+  }
 
   public static Class< ? extends GM_Object> getUndefinedGeometryClass( )
-      {
+  {
     return GM_Object.class;
-      }
+  }
 
   public static boolean isGeometry( final Object o )
   {
@@ -657,10 +656,10 @@ public final class GeometryUtilities
       final GM_Position b = positions[i];
       final GM_Position c = positions[i + 1];
       area += (b.getY() - a.getY()) * (a.getX() - c.getX()) // bounding rectangle
-      - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
-          + (b.getX() - c.getX()) * (b.getY() - c.getY())//
+          - ((a.getX() - b.getX()) * (b.getY() - a.getY())//
+              + (b.getX() - c.getX()) * (b.getY() - c.getY())//
           + (a.getX() - c.getX()) * (c.getY() - a.getY())//
-      ) / 2d;
+          ) / 2d;
     }
     return area;
   }
@@ -721,10 +720,9 @@ public final class GeometryUtilities
   public static GM_Curve getThinnedCurve( final GM_Curve curve, final Double epsThinning ) throws GM_Exception
   {
     final LineString line = (LineString) JTSAdapter.export( curve );
-    final Coordinate[] coordinates = line.getCoordinates();
 
-    final Coordinate[] simplifiedCrds = DouglasPeuckerLineSimplifier.simplify( coordinates, epsThinning );
-    final LineString simplifiedLine = line.getFactory().createLineString( simplifiedCrds );
+    final LineString simplifiedLine = (LineString) DouglasPeuckerSimplifier.simplify( line, epsThinning );
+
     final GM_Curve thinnedCurve = (GM_Curve) JTSAdapter.wrap( simplifiedLine );
     return thinnedCurve;
   }
@@ -841,7 +839,7 @@ public final class GeometryUtilities
     return result;
   }
 
-  /**
+/**
    * Same as
    * {@link #findNearestFeature(GM_Point, double, FeatureList, QName, QName[]), but with an array of Featurelists.
    *
