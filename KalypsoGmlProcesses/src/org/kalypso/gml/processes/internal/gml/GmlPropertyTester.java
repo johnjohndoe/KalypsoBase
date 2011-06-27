@@ -71,9 +71,25 @@ public class GmlPropertyTester extends PropertyTester
 
   private static final String PROPERTY_ROOT_QNAME = "rootQName"; //$NON-NLS-1$
 
+  /**
+   * Works on IFeatureProperty only. True if it represents a list of features.
+   */
+  private static final String PROPERTY_IS_LIST_PROPERTY = "isListProperty"; //$NON-NLS-1$
+
+  /**
+   * Works on {@link Feature}s. Is <code>true</code>, if this feature is part of a list.
+   */
+  private static final String PROPERTY_IS_LIST_FEATURE = "isListFeature"; //$NON-NLS-1$
+
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
+    if( PROPERTY_IS_LIST_PROPERTY.equals( property ) )
+      return testIsListProperty( receiver );
+    if( PROPERTY_IS_LIST_FEATURE.equals( property ) )
+      return testIsListFeature( receiver );
+
+    /* Properties that expect a qname */
     final QName expectedQName = parseQName( expectedValue );
     if( expectedQName == null )
       return false;
@@ -92,25 +108,17 @@ public class GmlPropertyTester extends PropertyTester
     throw new IllegalArgumentException( String.format( "Unknown property '%s'", property ) ); //$NON-NLS-1$
   }
 
-  private GMLSchema findSchema( final QName qname )
+  private boolean testIsListFeature( final Object receiver )
   {
-    try
+    if( receiver instanceof Feature )
     {
-      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      final String namespaceURI = qname.getNamespaceURI();
-      return schemaCatalog.getSchema( namespaceURI, (String) null );
+      final Feature feature = (Feature) receiver;
+      final IRelationType parentRelation = feature.getParentRelation();
+      if( parentRelation != null )
+        return parentRelation.isList();
     }
-    catch( final GMLSchemaException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-  }
 
-  private static QName parseQName( final Object expectedValue )
-  {
-    final String excpectedStr = expectedValue.toString().replaceAll( "\"", "" ); // strip " //$NON-NLS-1$ //$NON-NLS-2$
-    return QName.valueOf( excpectedStr );
+    return false;
   }
 
   private boolean testQName( final QName expectedQName, final Object receiver )
@@ -146,6 +154,41 @@ public class GmlPropertyTester extends PropertyTester
       return false;
 
     return testQName( expectedQName, workspace.getRootFeature() );
+  }
+
+  private boolean testIsListProperty( final Object receiver )
+  {
+    if( receiver instanceof IFeatureProperty )
+    {
+      final IRelationType type = ((IFeatureProperty) receiver).getPropertyType();
+      if( type == null )
+        return false;
+
+      return type.isList();
+    }
+
+    return false;
+  }
+
+  private GMLSchema findSchema( final QName qname )
+  {
+    try
+    {
+      final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+      final String namespaceURI = qname.getNamespaceURI();
+      return schemaCatalog.getSchema( namespaceURI, (String) null );
+    }
+    catch( final GMLSchemaException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  private static QName parseQName( final Object expectedValue )
+  {
+    final String excpectedStr = expectedValue.toString().replaceAll( "\"", "" ); // strip " //$NON-NLS-1$ //$NON-NLS-2$
+    return QName.valueOf( excpectedStr );
   }
 
   private boolean checkEquals( final QName expectedQName, final QName qname )
