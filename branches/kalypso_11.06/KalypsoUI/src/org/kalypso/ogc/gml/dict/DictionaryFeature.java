@@ -365,22 +365,4 @@ public class DictionaryFeature implements Feature
   {
     throw new UnsupportedOperationException( "Dictionary entries may not be changed." ); //$NON-NLS-1$
   }
-
-  @Override
-  public QName getTargetQualifiedName( )
-  {
-    return m_feature.getTargetQualifiedName();
-  }
-
-  @Override
-  public QName getParentFeatureQualifiedName( )
-  {
-    return m_feature.getParentFeatureQualifiedName();
-  }
-
-  @Override
-  public QName getParentPropertyQualifiedName( )
-  {
-    return m_feature.getParentPropertyQualifiedName();
-  }
 }

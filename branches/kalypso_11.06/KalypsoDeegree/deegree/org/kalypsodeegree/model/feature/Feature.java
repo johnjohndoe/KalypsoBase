@@ -49,7 +49,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 /**
  * @author Dirk Kuch
  */
-public interface Feature extends BaseFeature, Deegree2Feature, IAdaptable, IQNameProvider
+public interface Feature extends BaseFeature, Deegree2Feature, IAdaptable
 {
   QName QN_NAME = new QName( NS.GML3, "name" ); //$NON-NLS-1$
 

@@ -40,35 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.feature;
 
-import javax.xml.namespace.QName;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 
 /**
- * Helper interface used to test various elements on their provided qname. Mainly used to identify elements in the user
- * interface.
+ * Implementors of this interface behave like feature-properties, i.e. a property of a feature that contains (an)other
+ * feature(s).
  * 
  * @author Gernot Belger
  */
-public interface IQNameProvider
+public interface IFeatureProperty
 {
-  /**
-   * The qualified name if this element. Name is chosen to be the same as in {@link Deegree2Feature#getQualifiedName()}
-   */
-  QName getQualifiedName( );
+  Feature getParentFeature( );
 
-  /**
-   * The qualified name of the target of this element. Returns only non-null if this element represents some kind of
-   * property.
-   */
-  QName getTargetQualifiedName( );
+  IRelationType getPropertyType( );
 
-  /**
-   * The qualified name of the parent of this element, if this element has a parent feature.
-   */
-  QName getParentFeatureQualifiedName( );
-
-  /**
-   * The qualified name of the property containing this element, if any.
-   */
-  QName getParentPropertyQualifiedName( );
-
+// /**
+// * @return Either a {@link Feature} or a {@link FeatureList}.
+// */
+// Object getValue( );
 }
