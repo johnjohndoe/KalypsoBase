@@ -199,7 +199,7 @@ public class GridLayer extends AbstractChartLayer
     final ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
     final PolylineFigure pf = getPolylineFigure();
     final ILineStyle ls = pf.getStyle();
-    final String title = ls.getTitle();
+    final String title = getTitle();
     if( ls.isVisible() )
     {
 
