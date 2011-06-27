@@ -1,6 +1,8 @@
 package org.kalypso.commons.databinding.viewers;
 
 import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.databinding.observable.ChangeEvent;
+import org.eclipse.core.databinding.observable.IChangeListener;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.jface.databinding.swt.SWTObservables;
@@ -53,6 +55,18 @@ public class CheckboxEditingSupport extends ObservableValueEditingSupport
   @Override
   protected IObservableValue doCreateElementObservable( Object element, ViewerCell cell )
   {
-    return m_property.observe( element );
+    IObservableValue observeableValue = m_property.observe( element );
+    observeableValue.addChangeListener( new IChangeListener()
+    {
+      /**
+       * @see org.eclipse.core.databinding.observable.IChangeListener#handleChange(org.eclipse.core.databinding.observable.ChangeEvent)
+       */
+      @Override
+      public void handleChange( ChangeEvent event )
+      {
+        CheckboxEditingSupport.this.getViewer().refresh();
+      }
+    } );
+    return observeableValue;
   }
 }
