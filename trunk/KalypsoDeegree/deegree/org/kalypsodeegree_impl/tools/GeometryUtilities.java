@@ -72,9 +72,8 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.simplify.DouglasPeuckerLineSimplifier;
+import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
 /**
  * @author doemming
@@ -721,11 +720,9 @@ public final class GeometryUtilities
   public static GM_Curve getThinnedCurve( final GM_Curve curve, final Double epsThinning ) throws GM_Exception
   {
     final LineString line = (LineString) JTSAdapter.export( curve );
-    final Coordinate[] coordinates = line.getCoordinates();
-
-    final Coordinate[] simplifiedCrds = DouglasPeuckerLineSimplifier.simplify( coordinates, epsThinning );
-    final LineString simplifiedLine = line.getFactory().createLineString( simplifiedCrds );
+    final LineString simplifiedLine = (LineString) DouglasPeuckerSimplifier.simplify( line, epsThinning );
     final GM_Curve thinnedCurve = (GM_Curve) JTSAdapter.wrap( simplifiedLine );
+
     return thinnedCurve;
   }
 
