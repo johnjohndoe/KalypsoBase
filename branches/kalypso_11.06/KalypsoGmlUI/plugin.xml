@@ -41,6 +41,16 @@
             id="org.kalyso.gml.ui.command.duplicateFeature"
             name="%org.kalyso.gml.ui.command.duplicateFeature.name">
       </command>
+      <command
+            description="%org.kalyso.gml.ui.command.featureUp.description"
+            id="org.kalyso.gml.ui.command.featureUp"
+            name="%org.kalyso.gml.ui.command.featureUp.name">
+      </command>
+      <command
+            description="%org.kalyso.gml.ui.command.featureDown.description"
+            id="org.kalyso.gml.ui.command.featureDown"
+            name="%org.kalyso.gml.ui.command.featureDown.name">
+      </command>
    </extension>
    <extension point="org.eclipse.ui.commandImages">
       <image commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand" icon="icons/obj16/manageCoverages.gif" />
@@ -56,6 +66,14 @@
       <image
             commandId="org.kalyso.gml.ui.command.duplicateFeature"
             icon="icons/obj16/gis_feature_duplicate.gif">
+      </image>
+      <image
+            commandId="org.kalyso.gml.ui.command.featureUp"
+            icon="icons/obj16/gis_feature_up.gif">
+      </image>
+      <image
+            commandId="org.kalyso.gml.ui.command.featureDown"
+            icon="icons/obj16/gis_feature_down.gif">
       </image>
    </extension>
    <extension point="org.eclipse.ui.handlers">
@@ -116,24 +134,35 @@
           </handler>
           <handler class="org.kalypso.gml.ui.internal.feature.DuplicateFeatureHandler" commandId="org.kalyso.gml.ui.command.duplicateFeature">
              <enabledWhen>
-                <with
-                      variable="selection">
-                   <and>
-                      <count
-                            value="1">
-                      </count>
-                      <reference
-                            definitionId="org.kalypso.gml.ui.definition.selectionHasFeatures">
-                      </reference>
-                      <iterate
-                            ifEmpty="false"
-                            operator="and">
-                         <test
-                               property="org.kalypso.gml.isListFeature">
-                         </test>
-                      </iterate>
-                   </and>
-                </with>
+                <reference definitionId="org.kalypso.gml.ui.definition.oneFeatureSelectionFeature"/>
+             </enabledWhen>
+          </handler>
+          <handler
+                class="org.kalypso.gml.ui.internal.feature.MoveFeatureUpHandler"
+                commandId="org.kalyso.gml.ui.command.featureUp">
+             <enabledWhen>
+                 <and>
+                    <reference definitionId="org.kalypso.gml.ui.definition.oneFeatureSelectionFeature"/>
+                    <with variable="selection">
+                       <iterate ifEmpty="false" operator="and">
+                          <not><test property="org.kalypso.gml.isListFeatureFirst"/></not>
+                       </iterate>
+                    </with>
+                </and>
+             </enabledWhen>
+          </handler>
+          <handler
+                class="org.kalypso.gml.ui.internal.feature.MoveFeatureDownHandler"
+                commandId="org.kalyso.gml.ui.command.featureDown">
+             <enabledWhen>
+                 <and>
+                    <reference definitionId="org.kalypso.gml.ui.definition.oneFeatureSelectionFeature"/>
+                    <with variable="selection">
+                       <iterate ifEmpty="false" operator="and">
+                          <not><test property="org.kalypso.gml.isListFeatureLast"/></not>
+                       </iterate>
+                    </with>
+                </and>
              </enabledWhen>
           </handler>
    </extension>
@@ -201,6 +230,20 @@
                     checkEnabled="true">
               </visibleWhen>
            </command>
+           <command
+                 commandId="org.kalyso.gml.ui.command.featureUp"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="true">
+              </visibleWhen>
+           </command>
+           <command
+                 commandId="org.kalyso.gml.ui.command.featureDown"
+                 style="push">
+              <visibleWhen
+                    checkEnabled="true">
+              </visibleWhen>
+           </command>
            <separator name="gmlToolsStart" visible="true"/>
            <command
                  commandId="org.kalypso.gml.ui.toolWizards"
@@ -231,15 +274,21 @@
                 <test property="org.kalypso.gml.ui.featureSelection.isNotEmpty"/>
              </with>
           </definition>
-          <definition
-                id="org.kalypso.gml.ui.definition.selectionHasTins">
-             <with
-                   variable="selection">
-                <test
-                      property="org.kalypso.gml.ui.featureSelection.hasGeometryOfType"
-                      value="org.kalypsodeegree.model.geometry.GM_TriangulatedSurface">
-                </test>
+          <definition id="org.kalypso.gml.ui.definition.selectionHasTins">
+             <with variable="selection">
+                <test property="org.kalypso.gml.ui.featureSelection.hasGeometryOfType" value="org.kalypsodeegree.model.geometry.GM_TriangulatedSurface"/>
              </with>
+          </definition>
+          <definition id="org.kalypso.gml.ui.definition.oneFeatureSelectionFeature">
+                <with variable="selection">
+                   <and>
+                      <count value="1"/>
+                      <reference definitionId="org.kalypso.gml.ui.definition.selectionHasFeatures"/>
+                      <iterate ifEmpty="false" operator="and">
+                         <test property="org.kalypso.gml.isListFeature"/>
+                      </iterate>
+                   </and>
+                </with>
           </definition>
     </extension>
     <extension

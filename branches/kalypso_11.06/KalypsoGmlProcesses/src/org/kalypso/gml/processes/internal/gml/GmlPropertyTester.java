@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.processes.internal.gml;
 
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.expressions.PropertyTester;
@@ -81,6 +83,10 @@ public class GmlPropertyTester extends PropertyTester
    */
   private static final String PROPERTY_IS_LIST_FEATURE = "isListFeature"; //$NON-NLS-1$
 
+  private static final String PROPERTY_IS_LIST_FEATURE_FIRST = "isListFeatureFirst"; //$NON-NLS-1$
+
+  private static final String PROPERTY_IS_LIST_FEATURE_LAST = "isListFeatureLast"; //$NON-NLS-1$
+
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
@@ -88,6 +94,10 @@ public class GmlPropertyTester extends PropertyTester
       return testIsListProperty( receiver );
     if( PROPERTY_IS_LIST_FEATURE.equals( property ) )
       return testIsListFeature( receiver );
+    if( PROPERTY_IS_LIST_FEATURE_FIRST.equals( property ) )
+      return testIsListFeatureFirst( receiver );
+    if( PROPERTY_IS_LIST_FEATURE_LAST.equals( property ) )
+      return testIsListFeatureLast( receiver );
 
     /* Properties that expect a qname */
     final QName expectedQName = parseQName( expectedValue );
@@ -106,6 +116,44 @@ public class GmlPropertyTester extends PropertyTester
     // TODO: add tests for parent, etc.
 
     throw new IllegalArgumentException( String.format( "Unknown property '%s'", property ) ); //$NON-NLS-1$
+  }
+
+  private boolean testIsListFeatureFirst( final Object receiver )
+  {
+    final List< ? > list = getList( receiver );
+    if( list == null )
+      return false;
+
+    final int index = list.indexOf( receiver );
+    return index == 0;
+  }
+
+  private boolean testIsListFeatureLast( final Object receiver )
+  {
+    final List< ? > list = getList( receiver );
+    if( list == null )
+      return false;
+
+    final int index = list.indexOf( receiver );
+    if( index == -1 )
+      return false;
+
+    final int size = list.size();
+    return index == size - 1;
+  }
+
+  private List< ? > getList( final Object receiver )
+  {
+    if( receiver instanceof Feature )
+    {
+      final Feature feature = (Feature) receiver;
+      final IRelationType parentRelation = feature.getParentRelation();
+      final Feature parent = feature.getParent();
+      if( parent != null && parentRelation != null && parentRelation.isList() )
+        return (List< ? >) parent.getProperty( parentRelation );
+    }
+
+    return null;
   }
 
   private boolean testIsListFeature( final Object receiver )
