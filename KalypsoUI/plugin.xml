@@ -171,11 +171,6 @@
 			<filter name="featureAssociationList" value="true" />
 			<action class="org.kalypso.ui.editor.actions.SortFeaturesActionDelegate" id="org.kalypso.ui.editor.actions.SortFeaturesActionDelegate" label="%action.label.20" menubarPath="featureListMenu" style="push" tooltip="%action.tooltip.1" />
 		</objectContribution>
-		<objectContribution adaptable="false" id="org.kalypso.objectclass.feature.listElements" objectClass="org.kalypsodeegree.model.feature.Feature">
-			<filter name="featureListElement" value="true" />
-			<action class="org.kalypso.ui.editor.actions.FeatureListElementDownActionDelegate" icon="icons/feature/gis_feature_down.gif" id="org.kalypso.ui.editor.actions.FeatureListElementDownActionDelegate" label="%action.label.21" menubarPath="featureListMenu" tooltip="%action.tooltip.2" />
-			<action class="org.kalypso.ui.editor.actions.FeatureListElementUpActionDelegate" icon="icons/feature/gis_feature_up.gif" id="org.kalypso.ui.editor.actions.FeatureListElementUpActionDelegate" label="%action.label.22" menubarPath="featureListMenu" tooltip="%action.tooltip.3" />
-		</objectContribution>
 	</extension>
 	<extension id="resourceFilters" name="resourceFilters" point="org.eclipse.ui.ide.resourceFilters">
 		<filter selected="false" pattern="*.gml"></filter>
