@@ -73,7 +73,7 @@ public class DeleteObsoleteFilesVisitor implements FileVisitor
     final String relativePathTo = FileUtilities.getRelativePathTo( m_adoptDir, file );
     final File compareFile = new File( m_compareDir, relativePathTo );
 
-    // falls es ein Verzeichnis ist und das Auschlussfile enthält, hier abbrechen
+    // falls es ein Verzeichnis ist und das Ausschlussfile enthält, hier abbrechen
     if( m_excludeDirWithFile != null && file.isDirectory() )
     {
       /* If one of the exclude files exists, return false. */
