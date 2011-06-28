@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.dialogs;
 
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -150,9 +151,17 @@ public class GenericWizardSelectionPage extends ImportExportPage
 
     setTreeViewer( viewer );
 
-    viewer.expandToLevel( 2 );
+    viewer.expandToLevel( AbstractTreeViewer.ALL_LEVELS );
 
     return exportComp;
+  }
+
+  @Override
+  protected void initialize( )
+  {
+    super.initialize();
+
+    getTreeViewer().expandToLevel( AbstractTreeViewer.ALL_LEVELS );
   }
 
   @Override
