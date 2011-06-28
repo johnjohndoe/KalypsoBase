@@ -92,7 +92,7 @@ public class FileCopyVisitor implements FileVisitor
 
       final boolean isDir = file.isDirectory();
 
-      // falls es ein Verzeichnis ist und das Auschlussfile enthält, hier abbrechen
+      // falls es ein Verzeichnis ist und das Ausschlussfile enthält, hier abbrechen
       if( m_excludeDirWithFile != null && isDir )
       {
         /* If one of the exclude files exists, return false. */
