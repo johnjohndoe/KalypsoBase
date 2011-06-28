@@ -166,11 +166,6 @@
 			<action class="org.kalypso.ogc.gml.om.EditObservationAction" enablesFor="1" icon="icons/observation/zml-icon.gif" id="org.kalypso.ogc.gml.om.EditObservationAction" label="%org.kalypso.ogc.gml.om.EditObservationAction.label" style="push" tooltip="%org.kalypso.ogc.gml.om.EditObservationAction.tooltip" />
 			<action class="org.kalypso.ogc.gml.om.ShowObservationAction" icon="icons/kalypso_ott.gif" id="org.kalypso.ogc.gml.om.ShowObservationAction" label="%org.kalypso.ogc.gml.om.ShowObservationAction.label" tooltip="%org.kalypso.ogc.gml.om.ShowObservationAction.tooltip" />
 		</objectContribution>
-		<objectContribution adaptable="false" id="org.kalypso.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement" objectClass="org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement">
-			<filter name="featureAssociationQname" value="http://www.opengis.net/gml#_Feature" />
-			<filter name="featureAssociationList" value="true" />
-			<action class="org.kalypso.ui.editor.actions.SortFeaturesActionDelegate" id="org.kalypso.ui.editor.actions.SortFeaturesActionDelegate" label="%action.label.20" menubarPath="featureListMenu" style="push" tooltip="%action.tooltip.1" />
-		</objectContribution>
 	</extension>
 	<extension id="resourceFilters" name="resourceFilters" point="org.eclipse.ui.ide.resourceFilters">
 		<filter selected="false" pattern="*.gml"></filter>
