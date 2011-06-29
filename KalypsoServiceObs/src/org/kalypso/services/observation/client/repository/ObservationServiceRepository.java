@@ -61,7 +61,7 @@ import org.kalypso.services.observation.sei.ItemBean;
 public class ObservationServiceRepository extends AbstractRepository implements IModifyableRepository, IWriteableRepository
 {
   /** URL-Scheme that identifies the observation service */
-  public static String ID = "kalypso-ocs"; //$NON-NLS-1$
+  public static final String ID = "kalypso-ocs"; //$NON-NLS-1$ 
 
   private static String ID_COLON = ID + ":"; //$NON-NLS-1$
 
