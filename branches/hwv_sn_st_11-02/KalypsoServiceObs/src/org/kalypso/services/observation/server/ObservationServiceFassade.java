@@ -59,6 +59,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.eclipse.ui.services.IDisposable;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -321,6 +322,10 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   @Override
   public final boolean hasChildren( final ItemBean parent ) throws RepositoryException
   {
+    // root item?
+    if( Objects.isNull( parent ) )
+      return m_repository.hasChildren();
+
     final String id = parent.getId();
     final IRepositoryItem item = m_repository.findItem( id );
 
