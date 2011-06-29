@@ -51,8 +51,6 @@ import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * TODO: move to eclipse rcp contributions and make generic.
- * 
  * @author Gernot Belger
  */
 public class ToolWizardsWizard extends GenericWizardsWizard

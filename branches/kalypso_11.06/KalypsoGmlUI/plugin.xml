@@ -275,9 +275,7 @@
               </visibleWhen>
            </command>
            <separator name="gmlToolsStart" visible="true"/>
-           <command
-                 commandId="org.kalypso.gml.ui.toolWizards"
-                 style="push">
+           <command commandId="org.kalypso.gml.ui.toolWizards" style="push">
                  <visibleWhen checkEnabled="true"/>
            </command>
            <command
@@ -291,7 +289,9 @@
         </menuContribution>
         
         <menuContribution locationURI="popup:org.kalypso.ui.views.mapView.outline?after=additions">
-            <command commandId="org.kalypso.gml.ui.toolWizards" style="push"/>
+            <command commandId="org.kalypso.gml.ui.toolWizards" style="push">
+                <visibleWhen checkEnabled="true"/>
+            </command>
         </menuContribution>
 	</extension>
 
@@ -464,11 +464,7 @@
           </enablement>
        </wizardEnablement>
     </extension>
-    <extension
-          point="org.kalypso.gml.ui.toolWizards">
-       <category
-             id="toolWizards"
-             name="Tool Wizards">
-       </category>
+    <extension point="org.kalypso.gml.ui.toolWizards">
+       <category id="toolWizards" name="Tool Wizards"/>
     </extension>
 </plugin>
