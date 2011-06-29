@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.featureview.control;
 
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 
@@ -57,4 +58,5 @@ public interface IFeatureComposite
 
   boolean isShowOk( );
 
+  ITranslator getTranslator( );
 }

@@ -149,6 +149,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private final IFeatureviewFactory m_featureviewFactory;
 
+  private FeatureViewTranslator m_translator;
+
   /**
    * Constructs the FeatureComposite.
    * 
@@ -197,9 +199,6 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     m_modifyListeners.clear();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
-   */
   @Override
   public boolean isValid( )
   {
@@ -219,13 +218,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     final FeatureviewType view = m_featureviewFactory.get( ft, getFeature() );
 
     // FIXME: we need the context of this view
-    final ITranslator translator = new FeatureViewTranslator( m_featureviewFactory.getTranslator( view, null ) );
+    m_translator = new FeatureViewTranslator( m_featureviewFactory.getTranslator( view, null ) );
 
     // TODO: dubious we shoudn't need to adapt the parent, that should already have been done by the calling code
     if( m_formToolkit != null )
       m_formToolkit.adapt( parent );
 
-    m_control = createControl( parent, defaultStyle, view, translator );
+    m_control = createControl( parent, defaultStyle, view, m_translator );
 
     /* If a toolkit is set, use it. */
     if( m_formToolkit != null )
@@ -739,5 +738,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   public boolean isShowOk( )
   {
     return m_showOk;
+  }
+
+  @Override
+  public ITranslator getTranslator( )
+  {
+    return m_translator;
   }
 }
