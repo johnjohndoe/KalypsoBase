@@ -38,42 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.internal.export;
+package org.kalypso.contribs.eclipse.ui.dialogs;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
-import org.eclipse.ui.internal.WorkbenchImages;
-import org.eclipse.ui.internal.WorkbenchMessages;
-import org.eclipse.ui.wizards.IWizardRegistry;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.contribs.eclipse.ui.dialogs.GenericWizardsWizard;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.eclipse.ui.wizards.IWizardCategory;
+import org.eclipse.ui.wizards.IWizardDescriptor;
 
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
-public class ExportWizardsWizard extends GenericWizardsWizard
+public abstract class AbstractWizardRegistryVisitor
 {
-  public ExportWizardsWizard( final IStructuredSelection selection, final IWizardRegistry registry )
+  public void accept( final IWizardCategory category )
   {
-    super( selection, registry );
+    final IWizardDescriptor[] wizards = category.getWizards();
+    for( final IWizardDescriptor wizard : wizards )
+      visit( wizard );
 
-    setWindowTitle( WorkbenchMessages.ExportWizard_title );
-    setDefaultPageImageDescriptor( WorkbenchImages.getImageDescriptor( IWorkbenchGraphicConstants.IMG_WIZBAN_EXPORT_WIZ ) );
-
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() ) );
+    final IWizardCategory[] categories = category.getCategories();
+    for( final IWizardCategory child : categories )
+      accept( child );
   }
 
-  @Override
-  protected String getWizardsPageMessage( )
-  {
-    return WorkbenchMessages.ExportWizard_selectDestination;
-  }
-
-  @Override
-  protected String getWizardsPageDescription( )
-  {
-    return WorkbenchMessages.ImportExportPage_chooseExportDestination;
-  }
+  protected abstract void visit( IWizardDescriptor wizard );
 }

@@ -47,7 +47,6 @@ import org.eclipse.core.expressions.EvaluationResult;
 import org.eclipse.core.expressions.Expression;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ui.wizards.IWizardCategory;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardEnablementRegistry;
@@ -55,7 +54,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.WizardEnablementRegistry;
 /**
  * @author Gernot Belger
  */
-public class WizardEnablementVisitor
+public class WizardEnablementVisitor extends AbstractWizardRegistryVisitor
 {
   private final IEvaluationContext m_context;
 
@@ -81,15 +80,10 @@ public class WizardEnablementVisitor
     return m_hasEnabled;
   }
 
-  public void accept( final IWizardCategory category )
+  @Override
+  protected void visit( final IWizardDescriptor wizard )
   {
-    final IWizardDescriptor[] wizards = category.getWizards();
-    for( final IWizardDescriptor wizard : wizards )
-      addEnablement( wizard.getId(), isEnabled( wizard ) );
-
-    final IWizardCategory[] categories = category.getCategories();
-    for( final IWizardCategory child : categories )
-      accept( child );
+    addEnablement( wizard.getId(), isEnabled( wizard ) );
   }
 
   private void addEnablement( final String id, final boolean enabled )

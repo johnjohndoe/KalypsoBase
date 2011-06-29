@@ -38,42 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.internal.export;
+package org.kalypso.contribs.eclipse.ui.dialogs;
 
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
-import org.eclipse.ui.internal.WorkbenchImages;
-import org.eclipse.ui.internal.WorkbenchMessages;
-import org.eclipse.ui.wizards.IWizardRegistry;
-import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.contribs.eclipse.ui.dialogs.GenericWizardsWizard;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.eclipse.core.expressions.Expression;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.ui.services.IEvaluationService;
+import org.eclipse.ui.wizards.IWizardDescriptor;
+import org.kalypso.contribs.eclipse.jface.wizard.WizardEnablementRegistry;
 
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
-public class ExportWizardsWizard extends GenericWizardsWizard
+public class RegisterExpressionsVisitor extends AbstractWizardRegistryVisitor
 {
-  public ExportWizardsWizard( final IStructuredSelection selection, final IWizardRegistry registry )
+  private final IEvaluationService m_service;
+
+  private final IPropertyChangeListener m_listener;
+
+  public RegisterExpressionsVisitor( final IEvaluationService service, final IPropertyChangeListener listener )
   {
-    super( selection, registry );
-
-    setWindowTitle( WorkbenchMessages.ExportWizard_title );
-    setDefaultPageImageDescriptor( WorkbenchImages.getImageDescriptor( IWorkbenchGraphicConstants.IMG_WIZBAN_EXPORT_WIZ ) );
-
-    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() ) );
+    m_service = service;
+    m_listener = listener;
   }
 
   @Override
-  protected String getWizardsPageMessage( )
+  protected void visit( final IWizardDescriptor wizard )
   {
-    return WorkbenchMessages.ExportWizard_selectDestination;
-  }
-
-  @Override
-  protected String getWizardsPageDescription( )
-  {
-    return WorkbenchMessages.ImportExportPage_chooseExportDestination;
+    final String wizardID = wizard.getId();
+    final Expression expression = WizardEnablementRegistry.getInstance().getExpression( wizardID );
+    m_service.addEvaluationListener( expression, m_listener, IEvaluationService.RESULT );
   }
 }

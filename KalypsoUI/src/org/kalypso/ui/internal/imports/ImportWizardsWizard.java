@@ -50,8 +50,6 @@ import org.kalypso.contribs.eclipse.ui.dialogs.GenericWizardsWizard;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * TODO: move to eclipse rcp contributions and make generic.
- * 
  * @author Gernot Belger
  */
 @SuppressWarnings("restriction")
