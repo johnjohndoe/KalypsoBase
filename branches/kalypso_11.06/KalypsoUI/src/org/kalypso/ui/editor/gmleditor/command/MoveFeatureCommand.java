@@ -121,9 +121,6 @@ public class MoveFeatureCommand implements ICommand
     move( -m_step );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
