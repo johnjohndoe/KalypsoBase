@@ -99,7 +99,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
    * @see org.eclipse.jface.wizard.IWizardContainer#showPage(org.eclipse.jface.wizard.IWizardPage)
    */
   @Override
-  public void showPage( IWizardPage page )
+  public void showPage( final IWizardPage page )
   {
     //  
   }
@@ -145,7 +145,7 @@ public class WizardComposite extends Composite implements IWizardContainer2
    *      org.eclipse.jface.operation.IRunnableWithProgress)
    */
   @Override
-  public void run( boolean fork, boolean cancelable, IRunnableWithProgress runnable )
+  public void run( final boolean fork, final boolean cancelable, final IRunnableWithProgress runnable )
   // throws InvocationTargetException, InterruptedException
   {
     //  

@@ -120,7 +120,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     GisTemplateFeatureTheme.configureProperties( this, layerType );
 
     final URL url = CascadingKalypsoTheme.resolveUrl( context, m_mapViewRefUrl );
-    setInnerMapModel( new GisTemplateMapModell( url, mapModel.getCoordinatesSystem(), selectionManager )
+    setInnerMapModel( new GisTemplateMapModell( url, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager )
     {
       /**
        * @see org.kalypso.ogc.gml.GisTemplateMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)

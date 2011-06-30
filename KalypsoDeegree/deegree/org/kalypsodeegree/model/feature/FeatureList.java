@@ -46,7 +46,7 @@ import org.kalypsodeegree.model.sort.JMSpatialIndex;
 /**
  * @author Gernot Belger
  */
-public interface FeatureList extends List, JMSpatialIndex
+public interface FeatureList extends List, JMSpatialIndex, IFeatureProperty
 {
   /**
    * Gets ALL features in this list. Resolves any links.
@@ -69,13 +69,16 @@ public interface FeatureList extends List, JMSpatialIndex
    * 
    * @return The parent feature, <code>null</code> if the list has no parent feature.
    */
+  @Override
   Feature getParentFeature( );
 
   /**
    * This method returns the property-type of the parent feature that denotes this list.
    * 
    * @return Property of parent feature that contains this list or <code>null</code>, if this list has no parent.
+   * @deprecated Use {@link #getPropertyType()} instead.
    */
+  @Deprecated
   IRelationType getParentFeatureTypeProperty( );
 
   /**

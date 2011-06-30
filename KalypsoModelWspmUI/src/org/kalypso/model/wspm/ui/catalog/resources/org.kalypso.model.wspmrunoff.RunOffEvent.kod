@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Cp1252" standalone="yes"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<Chart id="runoffChart">
-		<Title>Discharge</Title>
+	<Chart legend= "false" id="runoffChart">
+		<Title></Title>
 		<Description>Discharge</Description>
 		<Layers>
 			<Layer visible="true" id="dischargeLayer">
@@ -61,7 +61,7 @@
 				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 					<Parameters>
 						<Parameter name="inset_tick" value="1" />
-                        <Parameter name="hide_cut" value="true" />
+                        <Parameter name="hide_cut" value="false" />
                         <Parameter name="gap" value="3" />
 					</Parameters>
 				</Provider>
@@ -70,7 +70,7 @@
 				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 					<Parameters>
 						<Parameter name="inset_tick" value="1" />
-                        <Parameter name="hide_cut" value="true" />
+                        <Parameter name="hide_cut" value="false" />
                         <Parameter name="gap" value="3" />
 					</Parameters>
 				</Provider>

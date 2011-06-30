@@ -60,7 +60,8 @@ public class KalypsoGmlUiImages
     STYLE_EDIT("icons/cview16/style_edit.gif"), //$NON-NLS-1$
 
     SHAPE_FILE_NEW_ADD_FIELD("icons/obj16/shapeFileNew_addField.gif"), //$NON-NLS-1$
-    SHAPE_FILE_NEW_REMOVE_FIELD("icons/obj16/shapeFileNew_removeField.gif"); //$NON-NLS-1$
+    SHAPE_FILE_NEW_REMOVE_FIELD("icons/obj16/shapeFileNew_removeField.gif"), //$NON-NLS-1$
+    TOOLS_WIZ("icons/obj16/tools_64.png"); //$NON-NLS-1$
 
     private final String m_imagePath;
 

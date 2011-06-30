@@ -77,4 +77,5 @@ public interface IChartComposite
 
   IPlotHandler getPlotHandler( );
 
+  boolean isDisposed( );
 }

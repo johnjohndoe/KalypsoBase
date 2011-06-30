@@ -45,7 +45,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
   public LineStyle clone( )
   {
     final LineStyle lineStyle = new LineStyle( getWidth(), getColor(), getAlpha(), getDashOffset(), getDashArray(), getLineJoin(), getLineCap(), getMiterLimit(), isVisible() );
-    lineStyle.setTitle( getTitle() );
+   // lineStyle.setTitle( getTitle() );
     return lineStyle;
   }
 

@@ -13,7 +13,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.calculation.chain.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -121,10 +120,6 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
 
           final ISimulationRunner runner = SimulationRunnerFactory.createRunner( job.getCalculationTypeID(), modeldata, context );
           runner.run( inputs, outputs, monitor );
-
-          // FIXME: no need to refresh all; if we are working in a workspace (not tmp), the runner already refreshes the
-          // resources
-          workspaceResource.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
         }
       }
 

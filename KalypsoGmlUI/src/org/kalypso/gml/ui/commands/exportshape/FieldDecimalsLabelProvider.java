@@ -67,7 +67,7 @@ public class FieldDecimalsLabelProvider extends FieldLabelProvider
     {
       final IDBFValue value = (IDBFValue) element;
       final short decimals = value.getField().getDecimalCount();
-      return String.format( "%d", decimals );
+      return String.format( "%d", decimals ); //$NON-NLS-1$
     }
     catch( final ShapeDataException e )
     {

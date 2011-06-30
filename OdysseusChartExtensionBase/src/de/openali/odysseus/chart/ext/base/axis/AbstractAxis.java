@@ -25,6 +25,27 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 public abstract class AbstractAxis extends AbstractMapper implements IAxis
 {
   /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setActiveRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
+   */
+  @Override
+  public void setSelection( final DataRange<Number> range )
+  {
+    if( m_activeRange == range )
+      return;
+    m_activeRange = range;
+    fireMapperChanged( this );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getActiveRange()
+   */
+  @Override
+  public DataRange<Number> getSelection( )
+  {
+    return m_activeRange;
+  }
+
+  /**
    * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getAxisVisitorBehavior()
    */
   @Override
@@ -39,7 +60,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
 
   private int m_height = 1;
 
-  private final String m_id;
+  private DataRange<Number> m_activeRange = null;
 
   private final List<TitleTypeBean> m_axisLabels = new ArrayList<TitleTypeBean>();
 
@@ -67,7 +88,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     return m_allowZoom;
   }
 
-  public void setAllowZoom( boolean allowZoom )
+  public void setAllowZoom( final boolean allowZoom )
   {
     m_allowZoom = allowZoom;
   }
@@ -75,7 +96,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   public AbstractAxis( final String id, final POSITION pos, final Class< ? > dataClass, final IAxisRenderer renderer )
   {
     super( id );
-    m_id = id;
+    // m_id = id;
     m_pos = pos;
     // m_dir = pos.getOrientation() == ORIENTATION.VERTICAL ? DIRECTION.NEGATIVE : DIRECTION.POSITIVE;
     m_dataClass = dataClass;
@@ -86,7 +107,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
    * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#addLabel(de.openali.odysseus.chart.framework.util.img.TitleTypeBean)
    */
   @Override
-  public void addLabel( TitleTypeBean title )
+  public void addLabel( final TitleTypeBean title )
   {
     m_axisLabels.add( title );
 
@@ -295,7 +316,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   @Override
   public String toString( )
   {
-    return String.format( "%s {id=%s, pos=%s, dir=%s, visible=%s }", getLabel(), m_id, m_pos, m_dir, isVisible() ); //$NON-NLS-1$
+    return String.format( "%s {id=%s, pos=%s, dir=%s, visible=%s }", getLabel(), getIdentifier(), m_pos, m_dir, isVisible() ); //$NON-NLS-1$
   }
 
   protected IDataRange<Number> validateDataRange( final IDataRange<Number> range, final DataRangeRestriction<Number> restriction )

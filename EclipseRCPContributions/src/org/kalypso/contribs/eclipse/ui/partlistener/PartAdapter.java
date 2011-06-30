@@ -59,7 +59,7 @@ public abstract class PartAdapter implements IPartListener
    * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
    */
   @Override
-  public void partActivated( IWorkbenchPart part )
+  public void partActivated( final IWorkbenchPart part )
   {
     // Does nothing, overwrite to implement.
   }
@@ -70,7 +70,7 @@ public abstract class PartAdapter implements IPartListener
    * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
    */
   @Override
-  public void partBroughtToTop( IWorkbenchPart part )
+  public void partBroughtToTop( final IWorkbenchPart part )
   {
     // Does nothing, overwrite to implement.
   }
@@ -81,7 +81,7 @@ public abstract class PartAdapter implements IPartListener
    * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
    */
   @Override
-  public void partClosed( IWorkbenchPart part )
+  public void partClosed( final IWorkbenchPart part )
   {
     // Does nothing, overwrite to implement.
   }
@@ -92,7 +92,7 @@ public abstract class PartAdapter implements IPartListener
    * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
    */
   @Override
-  public void partDeactivated( IWorkbenchPart part )
+  public void partDeactivated( final IWorkbenchPart part )
   {
     // Does nothing, overwrite to implement.
   }
@@ -103,7 +103,7 @@ public abstract class PartAdapter implements IPartListener
    * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
    */
   @Override
-  public void partOpened( IWorkbenchPart part )
+  public void partOpened( final IWorkbenchPart part )
   {
     // Does nothing, overwrite to implement.
   }

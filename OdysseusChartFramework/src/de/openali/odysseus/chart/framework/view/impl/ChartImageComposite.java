@@ -1,7 +1,5 @@
 package de.openali.odysseus.chart.framework.view.impl;
 
-import java.awt.Insets;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -33,7 +31,6 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.util.img.ChartPainter;
 import de.openali.odysseus.chart.framework.util.img.ChartTooltipPainter;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
@@ -167,7 +164,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     }
   };
 
-  private final TooltipHandler m_tooltipHandler = new TooltipHandler( this );
+  
 
   private final InvalidateChartJob m_invalidateChartJob = new InvalidateChartJob( "" );
 
@@ -216,10 +213,12 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   {
     unregisterListener();
 
-    if( m_tooltipHandler != null )
-      m_tooltipHandler.dispose();
+//    if( m_tooltipHandler != null )
+//      m_tooltipHandler.dispose();
+
     if( m_image != null )
       m_image.dispose();
+
     super.dispose();
   }
 
@@ -286,7 +285,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       return Status.OK_STATUS;
 
     final Rectangle panel = getClientArea();
-    final ChartPainter chartPainter = new ChartPainter( model, panel );//,new Insets(25,25,25,25));
+    final ChartPainter chartPainter = new ChartPainter( model, panel );// ,new Insets(25,25,25,25));
     m_plotRect = RectangleUtils.inflateRect( panel, chartPainter.getPlotInsets() );
     m_image = chartPainter.createImage( m_panOffset );
 
@@ -375,6 +374,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       return;
     m_model.getLayerManager().addListener( m_layerEventListener );
     m_model.getMapperRegistry().addListener( m_mapperListener );
+    
   }
 
   @Override
@@ -439,6 +439,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   {
     if( m_model == null )
       return;
+
     m_model.getLayerManager().removeListener( m_layerEventListener );
     m_model.getMapperRegistry().removeListener( m_mapperListener );
   }

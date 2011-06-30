@@ -74,7 +74,7 @@ public class ProfilesChooserPage extends ArrayChooserPage
     setDescription( message );
 
     if( chooseables instanceof Object[] && Arrays.isEmpty( (Object[]) chooseables ) )
-      setMessage( "The selection does not containt any cross sections.", IMessageProvider.WARNING );
+      setMessage( Messages.getString("ProfilesChooserPage.0"), IMessageProvider.WARNING ); //$NON-NLS-1$
   }
 
   /**

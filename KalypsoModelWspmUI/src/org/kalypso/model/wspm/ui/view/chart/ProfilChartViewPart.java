@@ -146,6 +146,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     gridLayout.marginWidth = 0;
     m_control.setLayout( gridLayout );
     createContent( m_control );
+
     if( m_provider != null )
       onProfilProviderChanged( m_provider, null, m_provider.getProfil() );
   }
@@ -272,7 +273,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     }
 
     setChartModel( newProfile, provider == null ? null : provider.getResult() );
-
   }
 
   /**
@@ -282,7 +282,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   public void removeListener( final IChartModelEventListener listener )
   {
     m_chartModelEventHandler.removeListener( listener );
-
   }
 
   @Override

@@ -262,7 +262,7 @@ final public class TriangulationDT
   {
     if( !((m_arrayEdges[eI].getS() == s && m_arrayEdges[eI].getT() == t) || (m_arrayEdges[eI].getS() == t && m_arrayEdges[eI].getT() == s)) )
     {
-      System.out.println( "updateLeftFace: adj. matrix and edge table mismatch" );
+      System.out.println( "updateLeftFace: adj. matrix and edge table mismatch" ); //$NON-NLS-1$
       return;
     }
     if( m_arrayEdges[eI].getS() == s && m_arrayEdges[eI].getL() == TriangulationDT.Undefined )
@@ -274,7 +274,7 @@ final public class TriangulationDT
       m_arrayEdges[eI].setR( f );
     }
     else
-      System.out.println( "updateLeftFace: attempt to overwrite edge info" );
+      System.out.println( "updateLeftFace: attempt to overwrite edge info" ); //$NON-NLS-1$
   }
 
   public final List<GM_Triangle> getListGMTriangles( )

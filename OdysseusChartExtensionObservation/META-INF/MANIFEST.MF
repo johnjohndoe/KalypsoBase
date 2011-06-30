@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OdysseusChartExtensionObservation Plug-in
 Bundle-SymbolicName: de.openali.odysseus.chart.ext.observation;singleton:=true
-Bundle-Version: 10.10.3.qualifier
+Bundle-Version: 11.6.0.qualifier
 Require-Bundle: org.kalypso.core,
- de.openali.odysseus.chart.ext.base;bundle-version="0.2.0";visibility:=reexport
+ de.openali.odysseus.chart.ext.base;visibility:=reexport
 Export-Package: org.kalypso.chart.ext.observation.data,
  org.kalypso.chart.ext.observation.layer,
  org.kalypso.chart.ext.observation.layer.provider,

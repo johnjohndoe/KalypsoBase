@@ -43,6 +43,7 @@ package org.kalypso.gml.ui.internal.shape;
 import org.eclipse.core.databinding.validation.IValidator;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.shape.dbf.DBaseException;
 
 /**
@@ -61,7 +62,7 @@ public class DBFFieldNameValidator implements IValidator
   public IStatus validate( final Object value )
   {
     if( !(value instanceof String) )
-      return ValidationStatus.error( "'Name' must be a string" );
+      return ValidationStatus.error( Messages.getString("DBFFieldNameValidator_0") ); //$NON-NLS-1$
 
     try
     {

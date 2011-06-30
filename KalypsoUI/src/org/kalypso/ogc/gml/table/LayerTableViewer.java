@@ -59,6 +59,7 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -165,7 +166,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       final Feature[] features = FeatureSelectionHelper.getFeatures( selection );
       final List<Feature> globalFeatureList = new ArrayList<Feature>( Arrays.asList( features ) );
 
-      // filter ths which are in my list
+      // filter those which are in my list
       final IFeaturesProvider featureProvider = getInput();
       if( featureProvider == null )
         return;
@@ -194,6 +195,8 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
             final Feature[] currentFeatures = FeatureSelectionHelper.getFeatures( currentSelection );
             if( !org.kalypso.contribs.java.util.Arrays.equalsUnordered( globalFeatures, currentFeatures ) )
               setSelection( selection );
+            else
+              fireSelectionChanged( new SelectionChangedEvent( LayerTableViewer.this, selection ) );
           }
         }
       } );

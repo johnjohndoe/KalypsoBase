@@ -67,7 +67,7 @@ public class FeatureVolumeRasterWalker implements IGeoGridWalker
 
       for( final Feature f : features )
       {
-        if( f.getDefaultGeometryProperty().contains( position ) )
+        if( f.getDefaultGeometryPropertyValue().contains( position ) )
         {
           final Object oldVolumeObj = f.getProperty( m_volumeProperty );
           if( oldVolumeObj instanceof Double )

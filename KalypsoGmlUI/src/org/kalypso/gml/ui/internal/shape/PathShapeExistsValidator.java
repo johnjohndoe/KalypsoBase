@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.databinding.validation.TypedValidator;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.shape.ShapeFile;
 
 /**
@@ -57,7 +58,7 @@ import org.kalypso.shape.ShapeFile;
  */
 public class PathShapeExistsValidator extends TypedValidator<IPath>
 {
-  private static final String DEFAULT_MESSAGE = "The shape file already exists and will be overwritten.";
+  private static final String DEFAULT_MESSAGE = Messages.getString("PathShapeExistsValidator_0"); //$NON-NLS-1$
 
   public PathShapeExistsValidator( final int severity )
   {
@@ -95,7 +96,7 @@ public class PathShapeExistsValidator extends TypedValidator<IPath>
 
   private void checkFileExists( final IWorkspaceRoot root, final IPath basePath, final String extension ) throws CoreException
   {
-    final String ext = StringUtils.substringAfter( extension, "." );
+    final String ext = StringUtils.substringAfter( extension, "." ); //$NON-NLS-1$
 
     final IPath path = basePath.addFileExtension( ext );
 

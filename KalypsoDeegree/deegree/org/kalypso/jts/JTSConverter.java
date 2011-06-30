@@ -42,6 +42,7 @@ package org.kalypso.jts;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -57,6 +58,7 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
 
 /**
@@ -153,5 +155,20 @@ public class JTSConverter
   public static Point toPoint( final Coordinate coordinate )
   {
     return new GeometryFactory().createPoint( coordinate );
+  }
+
+  public static LineString[] toLineString( final MultiLineString multi )
+  {
+    final Set<LineString> lineStrings = new LinkedHashSet<LineString>();
+    for( int i = 0; i < multi.getNumGeometries(); i++ )
+    {
+      final LineString lineString = (LineString) multi.getGeometryN( i );
+      if( lineString.isEmpty() )
+        continue;
+
+      lineStrings.add( lineString );
+    }
+
+    return lineStrings.toArray( new LineString[] {} );
   }
 }

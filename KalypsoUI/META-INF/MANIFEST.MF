@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.ui; singleton:=true
-Bundle-Version: 10.10.3.qualifier
+Bundle-Version: 11.6.0.qualifier
 Bundle-ClassPath: lib/jcommon-0.9.6.jar,
  lib/jfreechart-0.9.21.jar,
  .
@@ -99,7 +99,6 @@ Export-Package: com.keypoint,
  org.kalypso.ogc.gml.map.widgets.builders.sld,
  org.kalypso.ogc.gml.map.widgets.builders.sld.rules,
  org.kalypso.ogc.gml.map.widgets.changers,
- org.kalypso.ogc.gml.map.widgets.editrelation,
  org.kalypso.ogc.gml.map.widgets.mapfunctions,
  org.kalypso.ogc.gml.map.widgets.newfeature,
  org.kalypso.ogc.gml.map.widgets.providers,
@@ -115,6 +114,7 @@ Export-Package: com.keypoint,
  org.kalypso.ogc.gml.om.table.command,
  org.kalypso.ogc.gml.om.table.handlers,
  org.kalypso.ogc.gml.outline,
+ org.kalypso.ogc.gml.outline.handler,
  org.kalypso.ogc.gml.outline.nodes,
  org.kalypso.ogc.gml.schemaeditor,
  org.kalypso.ogc.gml.table,
@@ -215,7 +215,6 @@ Export-Package: com.keypoint,
  org.kalypso.util.themes.text,
  org.kalypso.util.themes.text.controls,
  org.kalypso.util.themes.text.listener,
- org.kalypsodeegree.model.feature,
  org.vafada.swtcalendar
 Require-Bundle: org.eclipse.compare;visibility:=reexport,
  org.eclipse.core.expressions;visibility:=reexport,

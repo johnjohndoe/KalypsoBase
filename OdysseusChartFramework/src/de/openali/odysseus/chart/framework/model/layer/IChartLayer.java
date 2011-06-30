@@ -103,4 +103,6 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
   void setFilter( IChartLayerFilter... filters );
 
   IChartLayerFilter[] getFilters( );
+
+  boolean isAutoScale( );
 }

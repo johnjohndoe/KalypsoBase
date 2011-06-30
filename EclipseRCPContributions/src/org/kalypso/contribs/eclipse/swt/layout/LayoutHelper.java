@@ -54,12 +54,21 @@ public final class LayoutHelper
   /**
    * Creates a {@link GridLayout} with no border (i.e. marginHeight and marginWidth set to 0).
    */
-  public static GridLayout createGridLayout( final int numColumns )
+  public static GridLayout createGridLayout( final int numColumns, final boolean makeColumnsEqualWidth )
   {
-    final GridLayout layout = new GridLayout( numColumns, false );
+    final GridLayout layout = new GridLayout( numColumns, makeColumnsEqualWidth );
     layout.marginHeight = 0;
     layout.marginWidth = 0;
+
     return layout;
+  }
+
+  /**
+   * Creates a {@link GridLayout} with no border (i.e. marginHeight and marginWidth set to 0).
+   */
+  public static GridLayout createGridLayout( final int numColumns )
+  {
+    return createGridLayout( numColumns, false );
   }
 
   public static GridLayout createGridLayout( )

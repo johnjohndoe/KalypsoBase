@@ -38,10 +38,12 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.displayelements.Label;
 import org.kalypsodeegree.graphics.displayelements.LabelDisplayElement;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
@@ -51,12 +53,12 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
- * <tt>DisplayElement</tt> that encapsulates a <tt>GM_Object</tt> (geometry), a <tt>ParameterValueType</tt>
- * (caption) and a <tt>TextSymbolizer</tt> (style).
+ * <tt>DisplayElement</tt> that encapsulates a <tt>GM_Object</tt> (geometry), a <tt>ParameterValueType</tt> (caption)
+ * and a <tt>TextSymbolizer</tt> (style).
  * <p>
- * The graphical (say: screen) representations of this <tt>DisplayElement</tt> are <tt>Label</tt> -instances. These
- * are generated either when the <tt>paint</tt> -method is called or assigned externally using the <tt>setLabels</tt>-
- * or <tt>addLabels</tt> -methods.
+ * The graphical (say: screen) representations of this <tt>DisplayElement</tt> are <tt>Label</tt> -instances. These are
+ * generated either when the <tt>paint</tt> -method is called or assigned externally using the <tt>setLabels</tt>- or
+ * <tt>addLabels</tt> -methods.
  * <p>
  * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
@@ -65,26 +67,21 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  */
 public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implements LabelDisplayElement, Serializable
 {
-
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -7870967255670858503L;
 
   private ParameterValueType m_label = null;
-
-  // null means that the labels have to be created inside the paint-method
-  // (and have not been set externally)
-  private ArrayList<Label> m_labels = null;
 
   /**
    * Creates a new LabelDisplayElement_Impl object.
    * <p>
    * 
    * @param feature
-   *            associated <tt>Feature</tt>
+   *          associated <tt>Feature</tt>
    * @param geometry
-   *            associated <tt>GM_Object</tt>
+   *          associated <tt>GM_Object</tt>
    * @param symbolizer
-   *            associated <tt>TextSymbolizer</tt>
+   *          associated <tt>TextSymbolizer</tt>
    */
   LabelDisplayElement_Impl( final Feature feature, final GM_Object[] geometry, final TextSymbolizer symbolizer )
   {
@@ -111,97 +108,33 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
   }
 
   /**
-   * Renders the <tt>DisplayElement</tt> to the submitted graphic context. If the <tt>Label</tt> -represenations
-   * have been assigned externally, these labels are used, else <tt>Label</tt> -instances are created automatically
-   * using the <tt>LabelFactory</tt>.
+   * Renders the <tt>DisplayElement</tt> to the submitted graphic context. If the <tt>Label</tt> -represenations have
+   * been assigned externally, these labels are used, else <tt>Label</tt> -instances are created automatically using the
+   * <tt>LabelFactory</tt>.
    * <p>
    * 
    * @param g
-   *            <tt>Graphics</tt> context to be used
+   *          <tt>Graphics</tt> context to be used
    * @param projection
-   *            <tt>GeoTransform</tt> to be used
+   *          <tt>GeoTransform</tt> to be used
    */
   @Override
-  public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor )
+  public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor ) throws CoreException
   {
-    if( m_label == null )
-      return;
-    final Graphics2D g2D = (Graphics2D) g;
-
-    if( m_labels == null )
+    try
     {
-      try
-      {
-        setLabels( LabelFactory.createLabels( this, projection, g2D ) );
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
+      if( m_label == null )
+        return;
+
+      final Graphics2D g2D = (Graphics2D) g;
+      final Label[] labels = LabelFactory.createLabels( this, projection, g2D );
+      for( final Label label : labels )
+        label.paint( g2D );
     }
-
-    // paint all labels
-    if( m_labels != null )
+    catch( final Exception e )
     {
-      final Iterator<Label> it = m_labels.iterator();
-      while( it.hasNext() )
-      {
-        it.next().paint( g2D );
-      }
-    }
-    // mark the labels as unset (for the next paint-call)
-    m_labels = null;
-  }
-
-  /**
-   * Removes all <tt>Label<tt> representations for this
-   * <tt>LabelDisplayElement</tt>.
-   */
-  @Override
-  public void clearLabels( )
-  {
-    m_labels = null;
-  }
-
-  /**
-   * Adds a <tt>Label<tt> representation that is to be considered when the
-   * <tt>LabelDisplayElement</tt> is painted to the view.
-   */
-  @Override
-  public void addLabel( final Label label )
-  {
-    if( m_labels == null )
-    {
-      m_labels = new ArrayList<Label>( 100 );
-    }
-    m_labels.add( label );
-  }
-
-  /**
-   * Adds <tt>Label<tt> representations that are to be considered when the
-   * <tt>LabelDisplayElement</tt> is painted to the view.
-   */
-  @Override
-  public void addLabels( final Label[] labels )
-  {
-    if( m_labels == null )
-      m_labels = new ArrayList<Label>( 100 );
-
-    for( final Label element : labels )
-      m_labels.add( element );
-  }
-
-  /**
-   * Sets the <tt>Label<tt> representations that are to be considered when
-   * the <tt>LabelDisplayElement</tt> is painted to the view.
-   */
-  @Override
-  public void setLabels( final Label[] labels )
-  {
-    m_labels = new ArrayList<Label>( 100 );
-    for( final Label element : labels )
-    {
-      this.m_labels.add( element );
+      e.printStackTrace();
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), "Failed to paint labels", e ) );
     }
   }
 }

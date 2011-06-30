@@ -55,6 +55,7 @@ import org.kalypsodeegree.graphics.sld.LabelPlacement;
 import org.kalypsodeegree.graphics.sld.LinePlacement;
 import org.kalypsodeegree.graphics.sld.LinePlacement.PlacementType;
 import org.kalypsodeegree.graphics.sld.PointPlacement;
+import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
@@ -126,7 +127,7 @@ public class LabelFactory
     final FontRenderContext frc = g.getFontRenderContext();
 
     // bugstories...
-    // I got the follwoing error in the next line:
+    // I got the following error in the next line:
     // # An unexpected error has been detected by HotSpot Virtual Machine:
     // # [...]
     // # Problematic frame:
@@ -142,7 +143,6 @@ public class LabelFactory
     final LineMetrics metrics = font.getLineMetrics( caption, frc );
     final int w = (int) bounds.getWidth();
     final int h = (int) bounds.getHeight();
-    // int descent = (int) metrics.getDescent ();
 
     final GM_Object[] geometries = element.getGeometry();
     final List<Label> allLabels = new ArrayList<Label>();
@@ -268,7 +268,6 @@ public class LabelFactory
   /**
    * Determines positions on the given <tt>GM_Curve</tt> where a caption could be drawn. For each of this positons,
    * three candidates are produced; one on the line, one above of it and one below.
-   * <p>
    * 
    * @param curve
    * @param element
@@ -286,29 +285,43 @@ public class LabelFactory
     PlacementType placementType = PlacementType.absolute;
     double lineWidth = 3.0;
     int gap = 6;
+    double radius = 0;
     final TextSymbolizer symbolizer = ((TextSymbolizer) element.getSymbolizer());
+
+    final Halo halo = symbolizer.getHalo();
+    if( halo != null )
+    {
+      radius = halo.getRadius( feature );
+      final Stroke haloStroke = halo.getStroke();
+      if( haloStroke != null )
+        radius += haloStroke.getWidth( feature );
+    }
+
     if( symbolizer.getLabelPlacement() != null )
     {
       final LinePlacement linePlacement = symbolizer.getLabelPlacement().getLinePlacement();
       if( linePlacement != null )
       {
-        placementType = linePlacement.getPlacementType( element.getFeature() );
-        perpendicularOffset = linePlacement.getPerpendicularOffset( element.getFeature() );
-        lineWidth = linePlacement.getLineWidth( element.getFeature() );
-        gap = linePlacement.getGap( element.getFeature() );
+        placementType = linePlacement.getPlacementType( feature );
+        perpendicularOffset = linePlacement.getPerpendicularOffset( feature );
+        lineWidth = linePlacement.getLineWidth( feature );
+        gap = linePlacement.getGap( feature );
       }
     }
 
     // get width & height of the caption
-    final String caption = element.getLabel().evaluate( element.getFeature() );
+    final String caption = element.getLabel().evaluate( feature );
     final org.kalypsodeegree.graphics.sld.Font sldFont = symbolizer.getFont();
-    final java.awt.Font font = new java.awt.Font( sldFont.getFamily( element.getFeature() ), sldFont.getStyle( element.getFeature() ) | sldFont.getWeight( element.getFeature() ), sldFont.getSize( element.getFeature() ) );
+    final java.awt.Font font = new java.awt.Font( sldFont.getFamily( feature ), sldFont.getStyle( feature ) | sldFont.getWeight( feature ), sldFont.getSize( feature ) );
     g.setFont( font );
     final FontRenderContext frc = g.getFontRenderContext();
     final Rectangle2D bounds = font.getStringBounds( caption, frc );
     final LineMetrics metrics = font.getLineMetrics( caption, frc );
     final double width = bounds.getWidth();
     final double height = bounds.getHeight();
+
+    final double widthR = bounds.getWidth() + 2 * radius;
+    final double heightR = bounds.getHeight() + 2 * radius;
 
     // get screen coordinates of the line
     int[][] pos;
@@ -323,10 +336,10 @@ public class LabelFactory
     }
 
     // ideal distance from the line
-    final double delta = height / 2.0 + lineWidth / 2.0;
+    final double delta = heightR / 2.0 + lineWidth / 2.0;
 
     // walk along the linestring and "collect" possible placement positions
-    final int w = (int) width;
+    final int w = (int) widthR;
     int lastX = pos[0][0];
     int lastY = pos[1][0];
     final int count = pos[2][0];
@@ -374,11 +387,9 @@ public class LabelFactory
         final double rotation = getRotation( boxStartX, boxStartY, x, y );
         final double[] deviation = calcDeviation( new int[] { boxStartX, boxStartY }, new int[] { boxEndX, boxEndY }, eCandidates );
 
-
-        final double ww = (w - width) / 2;
-        final double[] displacement = calculateDisplacement( placementType, ww, perpendicularOffset, delta, deviation );
+        final double[] displacement = calculateDisplacement( placementType, 0.0, perpendicularOffset, delta, deviation );
         final double[] anchorPoint = new double[] { 0.0, 0.5 };
-        final Label label = createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer.getHalo(), boxStartX, boxStartY, (int) width, (int) height, rotation, anchorPoint, displacement );
+        final Label label = createLabel( caption, font, sldFont.getColor( feature ), metrics, feature, symbolizer.getHalo(), (int) (boxStartX + radius), boxStartY, (int) width, (int) height, rotation, anchorPoint, displacement );
 
         labels.add( label );
         boxStartX = lastX;
@@ -550,8 +561,8 @@ public class LabelFactory
    */
   public static int[] findPointWithDistance( final int[] p0, final int[] p1, final int[] p2, final int d )
   {
-
     double x, y;
+
     final double x0 = p0[0];
     final double y0 = p0[1];
     final double x1 = p1[0];

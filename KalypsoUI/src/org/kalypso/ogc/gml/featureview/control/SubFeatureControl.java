@@ -168,7 +168,7 @@ public class SubFeatureControl extends AbstractFeatureControl
     {
       // re-create control
       m_fc.dispose();
-      createControl( null, m_container.getStyle() );
+      createControl( null, m_container, m_container.getStyle() );
       m_container.layout();
     }
 

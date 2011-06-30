@@ -87,7 +87,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     if( ls.isVisible() )
     {
 
-      final LegendEntry le = new LegendEntry( this, ls.getTitle() )
+      final LegendEntry le = new LegendEntry( this, getTitle() )
       {
 
         @Override
@@ -116,7 +116,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
     if( ps.isVisible() )
     {
 
-      final LegendEntry le = new LegendEntry( this, ps.getTitle() )
+      final LegendEntry le = new LegendEntry( this, getTitle() )
       {
         @Override
         public void paintSymbol( final GC gc, final Point size )

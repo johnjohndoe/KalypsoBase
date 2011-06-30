@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: de.openali.odysseus.chart.ui;singleton:=true
-Bundle-Version: 10.10.3.qualifier
+Bundle-Version: 11.6.0.qualifier
 Bundle-Activator: org.kalypso.chart.ui.KalypsoChartUiPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources,
  org.eclipse.ui.views,
  org.eclipse.core.expressions,
- de.openali.odysseus.chart.factory;bundle-version="0.2.0";visibility:=reexport
+ de.openali.odysseus.chart.factory;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.chart.ui,
  org.kalypso.chart.ui.editor,

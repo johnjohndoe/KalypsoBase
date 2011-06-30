@@ -125,16 +125,16 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
   {
     // unzip test data into workspace
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    final IProject project = workspace.getRoot().getProject( "InundationFrequenciesTest" );
+    final IProject project = workspace.getRoot().getProject( "InundationFrequenciesTest" ); //$NON-NLS-1$
     project.create( new NullProgressMonitor() );
 
-    final URL zipLocation = getClass().getResource( "resources/inundationDepthRaster.zip" );
+    final URL zipLocation = getClass().getResource( "resources/inundationDepthRaster.zip" ); //$NON-NLS-1$
 // final URL zipLocation = getClass().getResource( "resources/flattentestgrids.zip" );
     ZipUtilities.unzip( zipLocation, project, new NullProgressMonitor() );
 
     // run test model
 // final IFolder importDataFolder = project.getFolder( "flattentestgrids" );
-    final IFolder importDataFolder = project.getFolder( "inundationDepthRaster" );
+    final IFolder importDataFolder = project.getFolder( "inundationDepthRaster" ); //$NON-NLS-1$
 
     //
     ICoverageCollection[] collections = getTestGrid( importDataFolder );
@@ -174,7 +174,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     final Geometry globalEnv = GeoGridUtilities.getCommonGridEnvelopeForCollections( collections, intersection );
     final GM_Object gmObject = JTSAdapter.wrap( globalEnv );
 
-    final String shapeBase1 = importDataFolder.getLocation() + "grid_envelope";
+    final String shapeBase1 = importDataFolder.getLocation() + "grid_envelope"; //$NON-NLS-1$
     writeEnvelopeShape( gmObject.getEnvelope(), shapeBase1 );
 
     collections = null;
@@ -184,7 +184,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
 
     /* export it ====================================================================== */
     final AscGridExporter gridExporter = new AscGridExporter( -9999, 3 );
-    gridExporter.export( grid, new File( importDataFolder.getLocation() + "_flatten.asc" ), new NullProgressMonitor() );
+    gridExporter.export( grid, new File( importDataFolder.getLocation() + "_flatten.asc" ), new NullProgressMonitor() ); //$NON-NLS-1$
 
     /* vectorize it ====================================================================== */
     vectorize( importDataFolder, grid );
@@ -208,12 +208,12 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     // Shape schreiben
     if( collector instanceof PolygonCollector )
     {
-      final String shapeBase = importDataFolder.getLocation() + "grid_polygons";
+      final String shapeBase = importDataFolder.getLocation() + "grid_polygons"; //$NON-NLS-1$
       writePolygonShape( data, shapeBase );
     }
     else
     {
-      final String shapeBase = importDataFolder.getLocation() + "grid_lines";
+      final String shapeBase = importDataFolder.getLocation() + "grid_lines"; //$NON-NLS-1$
       writeLineShape( data, shapeBase );
     }
   }
@@ -227,11 +227,11 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
     final IMarshallingTypeHandler lineTypeHandler = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_LINE_STRING );
 
-    final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
+    final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false );
-    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "name" ), stringTypeHandler, 1, 1, false );
-    final IValuePropertyType lineType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aGeometry" ), lineTypeHandler, 1, 1, false );
+    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "name" ), stringTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IValuePropertyType lineType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aGeometry" ), lineTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IPropertyType[] properties = new IPropertyType[] { lineType, doubleType, stringType };
     final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
@@ -248,7 +248,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
       final String[] name = data[i].getName();
 
       final Object[] shapeData = new Object[] { line, id, name[0] };
-      final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + i, shapeFT, shapeData );
+      final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + i, shapeFT, shapeData ); //$NON-NLS-1$
       shapeWorkspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
     }
 
@@ -260,13 +260,13 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     /* Create feature type which describes what data the shape file contains */
     final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
-    final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "double" ) );
+    final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "double" ) ); //$NON-NLS-1$
     final IMarshallingTypeHandler polygonTypeHandler = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_POLYGON );
 
-    final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
+    final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final IValuePropertyType doubleTypeId = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false );
-    final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "geometry" ), polygonTypeHandler, 1, 1, false );
+    final IValuePropertyType doubleTypeId = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "geometry" ), polygonTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IPropertyType[] properties = new IPropertyType[] { polygonType, doubleTypeId };
     final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
@@ -281,7 +281,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     final Double id = 1.0;
 
     final Object[] shapeData = new Object[] { surface, id };
-    final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID", shapeFT, shapeData );
+    final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID", shapeFT, shapeData ); //$NON-NLS-1$
     shapeWorkspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
 
     ShapeSerializer.serialize( shapeWorkspace, shapeBase, null );
@@ -296,13 +296,13 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
     final IMarshallingTypeHandler polygonTypeHandler = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_POLYGON );
 
-    final QName shapeTypeQName = new QName( "anyNS", "shapeType" );
+    final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final IValuePropertyType doubleTypeId = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false );
-    final IValuePropertyType doubleTypeFrom = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "from" ), doubleTypeHandler, 1, 1, false );
-    final IValuePropertyType doubleTypeTo = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "to" ), doubleTypeHandler, 1, 1, false );
-    final IValuePropertyType stringTypeRange = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "range" ), stringTypeHandler, 1, 1, false );
-    final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "geometry" ), polygonTypeHandler, 1, 1, false );
+    final IValuePropertyType doubleTypeId = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IValuePropertyType doubleTypeFrom = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "from" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IValuePropertyType doubleTypeTo = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "to" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IValuePropertyType stringTypeRange = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "range" ), stringTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "geometry" ), polygonTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final IPropertyType[] properties = new IPropertyType[] { polygonType, doubleTypeId, doubleTypeFrom, doubleTypeTo, stringTypeRange };
     final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
@@ -322,7 +322,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
       final String[] name = data[i].getName();
 
       final Object[] shapeData = new Object[] { line, id, from, to, name[0] };
-      final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + i, shapeFT, shapeData );
+      final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + i, shapeFT, shapeData ); //$NON-NLS-1$
       shapeWorkspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
     }
 
@@ -345,25 +345,25 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
 // files[3] = importDataFolder.getFile( "test4.asc" );
 // files[4] = importDataFolder.getFile( "test5.asc" );
 // files[5] = importDataFolder.getFile( "test6.asc" );
-    files[0] = importDataFolder.getFile( "wt_hq100.asc" );
-    files[1] = importDataFolder.getFile( "wt_hq50.asc" );
-    files[2] = importDataFolder.getFile( "wt_hq18.asc" );
-    files[3] = importDataFolder.getFile( "wt_hq5_18m15.asc" );
-    files[4] = importDataFolder.getFile( "wt_hq2_18m25.asc" );
-    files[5] = importDataFolder.getFile( "wt_hq1_18m30.asc" );
+    files[0] = importDataFolder.getFile( "wt_hq100.asc" ); //$NON-NLS-1$
+    files[1] = importDataFolder.getFile( "wt_hq50.asc" ); //$NON-NLS-1$
+    files[2] = importDataFolder.getFile( "wt_hq18.asc" ); //$NON-NLS-1$
+    files[3] = importDataFolder.getFile( "wt_hq5_18m15.asc" ); //$NON-NLS-1$
+    files[4] = importDataFolder.getFile( "wt_hq2_18m25.asc" ); //$NON-NLS-1$
+    files[5] = importDataFolder.getFile( "wt_hq1_18m30.asc" ); //$NON-NLS-1$
 
     for( int i = 0; i < collections.length; i++ )
     {
-      final GMLWorkspace covCollWorkspace = FeatureFactory.createGMLWorkspace( new QName( "org.kalypso.gml.common.coverage", "CoverageCollection" ), gmlContext, null );
+      final GMLWorkspace covCollWorkspace = FeatureFactory.createGMLWorkspace( new QName( "org.kalypso.gml.common.coverage", "CoverageCollection" ), gmlContext, null ); //$NON-NLS-1$ //$NON-NLS-2$
       final Feature rootFeature = covCollWorkspace.getRootFeature();
       final ICoverageCollection covColl = (ICoverageCollection) rootFeature.getAdapter( ICoverageCollection.class );
 
       final IFile file = files[i];
-      final String binFileName = file.getName() + ".bin";
+      final String binFileName = file.getName() + ".bin"; //$NON-NLS-1$
       final String dstFileName = binFileName;
       final IFile dstRasterIFile = importDataFolder.getFile( dstFileName );
       final File dstRasterFile = dstRasterIFile.getRawLocation().toFile();
-      final RectifiedGridDomain gridDomain = importAsBinaryRaster( file.getLocation().toFile(), dstRasterFile, "EPSG:31467", new NullProgressMonitor() );
+      final RectifiedGridDomain gridDomain = importAsBinaryRaster( file.getLocation().toFile(), dstRasterFile, "EPSG:31467", new NullProgressMonitor() ); //$NON-NLS-1$
 
       final IFeatureType ft = covCollWorkspace.getGMLSchema().getFeatureType( RectifiedGridCoverage.QNAME );
       final IRelationType parentRelation = (IRelationType) covColl.getFeatureType().getProperty( CoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
@@ -378,7 +378,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
       coverage.setRangeSet( rangeSetFile );
       coverage.setGridDomain( gridDomain );
       coverage.setName( binFileName );
-      coverage.setDescription( "ASCII-Import" );
+      coverage.setDescription( "ASCII-Import" ); //$NON-NLS-1$
 
       collections[i] = covColl;
     }

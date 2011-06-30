@@ -41,12 +41,9 @@
 package org.kalypso.ogc.gml.map.utilities;
 
 import java.awt.Point;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IProject;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.jts.SnapUtilities;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -140,7 +137,7 @@ public final class MapUtilities
     if( geometryJTS instanceof com.vividsolutions.jts.geom.Point )
       return SnapUtilities.snapPoint( pointJTS );
     else if( geometryJTS instanceof LineString )
-      return SnapUtilities.snapLine( (LineString) geometryJTS, pointBuffer, type );
+      return SnapUtilities.snapToLine( (LineString) geometryJTS, pointBuffer, type );
     else if( geometryJTS instanceof MultiLineString )
       return SnapUtilities.snapMultiLine( (MultiLineString) geometryJTS, pointBuffer, type );
     else if( geometryJTS instanceof Polygon )
@@ -337,33 +334,5 @@ public final class MapUtilities
       newId = "ID_" + count++;
 
     return newId;
-  }
-
-  /**
-   * This function returns the project resource of the content in the given map panel.
-   * 
-   * @param mapPanel
-   *          The map panel.
-   * @return The project resource or null.
-   */
-  public static IProject findProject( IMapPanel mapPanel )
-  {
-    return findProject( mapPanel.getMapModell() );
-  }
-
-  /**
-   * This function returns the project resource of the content in the given map model.
-   * 
-   * @param mapModel
-   *          The map model.
-   * @return The project resource or null.
-   */
-  public static IProject findProject( IMapModell mapModel )
-  {
-    URL context = mapModel.getContext();
-    if( context == null )
-      return null;
-
-    return ResourceUtilities.findProjectFromURL( context );
   }
 }

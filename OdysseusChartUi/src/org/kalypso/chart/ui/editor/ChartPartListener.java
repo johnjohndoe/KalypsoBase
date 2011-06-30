@@ -41,9 +41,12 @@
 package org.kalypso.chart.ui.editor;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.ISourceProvider;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.part.WorkbenchPart;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
@@ -61,6 +64,7 @@ public class ChartPartListener extends PartAdapter2
 {
   private final IChartPart m_chartPart;
 
+  // TODO: move to IChartPart and introduce new method IChartPart#activateSource
   private ISourceProvider m_sourceProvider = null;
 
   private final IServiceLocator m_locator;
@@ -88,7 +92,15 @@ public class ChartPartListener extends PartAdapter2
     final IWorkbenchPart part = partRef.getPart( false );
     if( part == m_chartPart )
     {
-      activateSource();
+      try
+      {
+        activateSource();
+      }
+      catch( final Throwable e )
+      {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
       // FIXME: remove, as soon as the source activation automatically refreshes the elements
       ChartHandlerUtilities.updateElements( m_chartPart );
     }
@@ -96,13 +108,26 @@ public class ChartPartListener extends PartAdapter2
       destroySource();
   }
 
-  private void activateSource( )
+  // TODO: move to IChartPart
+  public void activateSource( ) throws Throwable
   {
     destroySource();
 
     final IChartComposite chartComposite = m_chartPart.getChartComposite();
     if( chartComposite != null )
       m_sourceProvider = new ChartSourceProvider( m_locator, chartComposite );
+
+    activateDefaultHandler( chartComposite );
+  }
+
+  private void activateDefaultHandler( final IChartComposite chartComposite ) throws Throwable
+  {
+    if( chartComposite.getPlotHandler().getActiveHandlers().length > 0 )
+      return;
+    final IHandlerService hs = (IHandlerService) ((WorkbenchPart) m_chartPart).getSite().getService( IHandlerService.class );
+    final Event event = new Event();
+    hs.executeCommand( "org.kalypso.chart.ui.commands.zoom_pan_maximize", event );
+ 
   }
 
   private void destroySource( )

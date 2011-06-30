@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.featureview.control;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
@@ -53,7 +54,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ControlEditor;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
@@ -115,29 +115,20 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
     m_handlerProvider = handlerProvider;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {
     final Composite composite = new Composite( parent, SWT.NONE );
-    final GridLayout compLayout = new GridLayout();
-    compLayout.marginHeight = 0;
-    compLayout.marginWidth = 0;
-    composite.setLayout( compLayout );
+    GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( composite );
 
     if( getToolbarManager() != null )
       getToolbarManager().createControl( composite );
 
-    m_viewer = new TupleResultTableViewer( composite, style ); // TODO and not SWT.BORDER delete border style here...
+    m_viewer = new TupleResultTableViewer( composite, style );
 
     // dem Editor beibringen, nur dann eine Zelle zu editieren, wenn der EditMode aktiviert ist
     final ColumnViewerEditorActivationStrategy eas = new ColumnViewerEditorActivationStrategy( m_viewer )
     {
-      /**
-       * @see org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy#isEditorActivationEvent(org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent)
-       */
       @Override
       protected boolean isEditorActivationEvent( final ColumnViewerEditorActivationEvent event )
       {

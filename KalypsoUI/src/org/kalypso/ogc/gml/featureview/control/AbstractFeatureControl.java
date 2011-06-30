@@ -126,7 +126,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#getFeature()
    */
   @Override
-  public final Feature getFeature( )
+  public Feature getFeature( )
   {
     return m_feature;
   }
