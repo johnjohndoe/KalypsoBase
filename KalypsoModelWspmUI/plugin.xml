@@ -216,17 +216,15 @@
                  tooltip="%com.bce.profil.app.profilLayerContributions.showProperties.tooltip"/>
         </objectContribution>
      </extension>
-      <extension
-            point="org.eclipse.ui.menus">
-         <menuContribution
-               allPopups="false"
-               locationURI="popup:org.eclipse.ui.popup.any?before=gmlToolsEnd">
-            <command
-                  commandId="org.kalypso.model.wspm.ui.commands.ShowProfile"
-                  style="push">
-               <visibleWhen
-                     checkEnabled="true">
-               </visibleWhen>
+      <extension point="org.eclipse.ui.menus">
+         <menuContribution allPopups="false" locationURI="popup:org.eclipse.ui.popup.any?before=gmlToolsEnd">
+            <command commandId="org.kalypso.model.wspm.ui.commands.ShowProfile" style="push">
+               <visibleWhen checkEnabled="true"/>
+            </command>
+         </menuContribution>
+         <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.featureview.views.FeatureView">
+            <command commandId="org.kalypso.model.wspm.ui.commands.ShowProfile" style="push">
+               <visibleWhen checkEnabled="true"/>
             </command>
          </menuContribution>
       </extension>
