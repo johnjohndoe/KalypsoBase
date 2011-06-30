@@ -62,7 +62,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
@@ -121,7 +120,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
  * 
  * @author belger
  */
-public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart, ISelectionProvider, IExportableObjectFactory
+public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart, IExportableObjectFactory
 {
   private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {
@@ -172,7 +171,7 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
   {
     final IWorkbenchPartSite site = getSite();
     if( site != null )
-      site.setSelectionProvider( this );
+      site.setSelectionProvider( null );
 
     super.dispose();
   }
@@ -247,7 +246,7 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     } );
 
     getEditorSite().registerContextMenu( menuManager, m_layerTable, false );
-    getSite().setSelectionProvider( getLayerTable() );
+    getSite().setSelectionProvider( m_layerTable );
     m_layerTable.setMenu( menuManager );
 
     try
@@ -271,6 +270,12 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
 
   protected void handleContextMenuAboutToShow( final IMenuManager manager )
   {
+    final ISelectionProvider selectionProvider = getSite().getSelectionProvider();
+    final ISelection selection = selectionProvider.getSelection();
+    final ISelection mySelection = m_layerTable.getSelection();
+// selectionProvider.setSelection( getSelection() );
+
+
     appendNewFeatureActions( manager );
     manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
     manager.add( new Separator() );
@@ -283,7 +288,6 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     final IMenuManager newFeatureMenu = new MenuManager( Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.7" ) );
     manager.add( newFeatureMenu );
     GisTableEditorActionBarContributor.fillNewFeatureMenu( newFeatureMenu, this );
-
   }
 
   @Override
@@ -303,42 +307,6 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
   public LayerTableViewer getLayerTable( )
   {
     return m_layerTable;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  @Override
-  public void addSelectionChangedListener( final ISelectionChangedListener listener )
-  {
-    m_layerTable.addSelectionChangedListener( listener );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
-  @Override
-  public ISelection getSelection( )
-  {
-    return m_layerTable.getSelection();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  @Override
-  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
-  {
-    m_layerTable.removeSelectionChangedListener( listener );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-   */
-  @Override
-  public void setSelection( final ISelection selection )
-  {
-    m_layerTable.setSelection( selection );
   }
 
   public void appendSpaltenActions( final IMenuManager manager )
