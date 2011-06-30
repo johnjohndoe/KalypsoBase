@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoGmlProcesses Plug-in
 Bundle-SymbolicName: org.kalypso.gml.processes; singleton:=true
-Bundle-Version: 10.10.3.qualifier
+Bundle-Version: 11.6.0.qualifier
 Bundle-ClassPath: lib/jargs.jar,
  .
 Bundle-Activator: org.kalypso.gml.processes.KalypsoGmlProcessesPlugin
@@ -10,10 +10,10 @@ Bundle-Vendor: kalypsobase.sourceforge.net
 Require-Bundle: org.kalypso.simulation.core;visibility:=reexport,
  org.kalypso.deegree,
  org.kalypso.core,
- org.junit;resolution:=optional,
  org.kalypso.contribs.ogc31,
  org.kalypso.gmlschema,
- org.eclipse.core.expressions
+ org.eclipse.core.expressions,
+ org.junit;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Export-Package: com.bce.apps.wspfli,
  com.bce.ext.jargs,
