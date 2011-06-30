@@ -107,14 +107,14 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
       try
       {
         final String[] split = msgClass.split( ":" ); //$NON-NLS-1$
-        Assert.isTrue( split.length == 2, Messages.getString("org.kalypso.commons.i18n.MsgGetStringTranslator.2", msgClass )); //$NON-NLS-1$
+        Assert.isTrue( split.length == 2, Messages.getString( "org.kalypso.commons.i18n.MsgGetStringTranslator.2", msgClass ) ); //$NON-NLS-1$
         final Bundle bundle = Platform.getBundle( split[0] );
-        m_nls = bundle.loadClass( split[1] );
+        m_nls = (Class< ? extends NLS>) bundle.loadClass( split[1] );
         return;
       }
       catch( final ClassNotFoundException e )
       {
-        final Status status = new Status( IStatus.ERROR, JavaApiContributionsPlugin.getDefault().getBundle().getSymbolicName(), -1, Messages.getString("org.kalypso.commons.i18n.MsgGetStringTranslator.3",msgClass), e ); //$NON-NLS-1$
+        final Status status = new Status( IStatus.ERROR, JavaApiContributionsPlugin.getDefault().getBundle().getSymbolicName(), -1, Messages.getString( "org.kalypso.commons.i18n.MsgGetStringTranslator.3", msgClass ), e ); //$NON-NLS-1$
         JavaApiContributionsPlugin.getDefault().getLog().log( status );
         return;
       }
@@ -135,7 +135,7 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
   public String get( final String key )
   {
     if( m_nls == null )
-      return Messages.getString("org.kalypso.commons.i18n.MsgGetStringTranslator.4", key); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.commons.i18n.MsgGetStringTranslator.4", key ); //$NON-NLS-1$
 
     try
     {
@@ -145,27 +145,27 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
     catch( final SecurityException e )
     {
       e.printStackTrace();
-      return Messages.getString("org.kalypso.commons.i18n.MsgGetStringTranslator.6",key , e.toString()); //$NON-NLS-1$ 
+      return Messages.getString( "org.kalypso.commons.i18n.MsgGetStringTranslator.6", key, e.toString() ); //$NON-NLS-1$ 
     }
     catch( final NoSuchMethodException e )
     {
       e.printStackTrace();
-      return Messages.getString("org.kalypso.commons.i18n.MsgGetStringTranslator.6",key , e.toString()); //$NON-NLS-1$ 
+      return Messages.getString( "org.kalypso.commons.i18n.MsgGetStringTranslator.6", key, e.toString() ); //$NON-NLS-1$ 
     }
     catch( final IllegalArgumentException e )
     {
       e.printStackTrace();
-      return Messages.getString("org.kalypso.commons.i18n.MsgGetStringTranslator.6",key , e.toString()); //$NON-NLS-1$ 
+      return Messages.getString( "org.kalypso.commons.i18n.MsgGetStringTranslator.6", key, e.toString() ); //$NON-NLS-1$ 
     }
     catch( final IllegalAccessException e )
     {
       e.printStackTrace();
-      return Messages.getString("org.kalypso.commons.i18n.MsgGetStringTranslator.6",key , e.toString()); //$NON-NLS-1$ 
+      return Messages.getString( "org.kalypso.commons.i18n.MsgGetStringTranslator.6", key, e.toString() ); //$NON-NLS-1$ 
     }
     catch( final InvocationTargetException e )
     {
       e.printStackTrace();
-      return Messages.getString("org.kalypso.commons.i18n.MsgGetStringTranslator.6",key , e.toString()); //$NON-NLS-1$ 
+      return Messages.getString( "org.kalypso.commons.i18n.MsgGetStringTranslator.6", key, e.toString() ); //$NON-NLS-1$ 
     }
   }
 }

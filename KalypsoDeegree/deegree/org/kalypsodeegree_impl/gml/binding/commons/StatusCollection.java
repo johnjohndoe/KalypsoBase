@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class StatusCollection extends Feature_Impl implements IStatusCollection
 {
-  private final FeatureBindingCollection<IGeoStatus> m_statusCollection = new FeatureBindingCollection<IGeoStatus>( this, IGeoStatus.class, QNAME_PROP_STATUS_MEMBER );
+  private final IFeatureBindingCollection<IGeoStatus> m_statusCollection = new FeatureBindingCollection<IGeoStatus>( this, IGeoStatus.class, QNAME_PROP_STATUS_MEMBER );
 
   public StatusCollection( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
   {
@@ -128,6 +128,24 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
       geoStatus.setTime( new Date() );
 
     return geoStatus;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#contains(org.eclipse.core.runtime.IStatus)
+   */
+  @Override
+  public boolean contains( IStatus simulationStatus )
+  {
+    return m_statusCollection.contains( simulationStatus );
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#isEmpty()
+   */
+  @Override
+  public boolean isEmpty( )
+  {
+    return m_statusCollection.isEmpty();
   }
 
   private IGeoStatus createMultiGeoStatus( final IStatus status, final GM_Object location, final Date time )
@@ -308,22 +326,9 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     return StatusUtilities.createStatus( children, "Multistatus" );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#contains(org.eclipse.core.runtime.IStatus)
-   */
-  @Override
-  public boolean contains( IStatus simulationStatus )
+  public final IFeatureBindingCollection<IGeoStatus> getStati( )
   {
-    return m_statusCollection.contains( simulationStatus );
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#isEmpty()
-   */
-  @Override
-  public boolean isEmpty( )
-  {
-    return m_statusCollection.isEmpty();
+    return m_statusCollection;
   }
 
 }
