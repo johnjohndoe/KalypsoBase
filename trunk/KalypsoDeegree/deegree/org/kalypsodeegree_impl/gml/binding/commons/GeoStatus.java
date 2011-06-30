@@ -84,6 +84,7 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
   /**
    * @see org.kalypsodeegree_impl.gml.binding.commons.IStatus#getChildrenCollection()
    */
+  @Override
   public IFeatureBindingCollection<IGeoStatus> getChildrenCollection( )
   {
     return m_children;
