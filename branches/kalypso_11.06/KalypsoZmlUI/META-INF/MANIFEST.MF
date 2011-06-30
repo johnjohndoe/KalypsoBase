@@ -2,14 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoZmlUI
 Bundle-SymbolicName: org.kalypso.zml.ui;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 11.6.0.qualifier
 Bundle-Activator: org.kalypso.zml.ui.KalypsoZmlUI
-Require-Bundle: org.kalypso.zml.core;bundle-version="1.0.0";visibility:=reexport,
- org.eclipse.core.expressions;bundle-version="3.4.200";visibility:=reexport,
- de.openali.odysseus.chart.ext.base;bundle-version="10.10.0",
- org.kalypso.ui;bundle-version="10.10.0",
+Require-Bundle: org.kalypso.zml.core;visibility:=reexport,
+ org.eclipse.core.expressions;visibility:=reexport,
+ de.openali.odysseus.chart.ext.base,
+ org.kalypso.ui,
  de.openali.odysseus.chart.framework,
- de.openali.odysseus.chart.ui;bundle-version="10.10.1",
+ de.openali.odysseus.chart.ui,
  org.kalypso.core
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
