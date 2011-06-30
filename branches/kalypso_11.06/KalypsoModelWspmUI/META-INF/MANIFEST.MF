@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.kalypso.model.wspm.ui;singleton:=true
-Bundle-Version: 10.10.3.qualifier
+Bundle-Version: 11.6.0.qualifier
 Bundle-Activator: org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
@@ -15,7 +15,7 @@ Require-Bundle: org.kalypso.ui,
  org.eclipse.core.expressions,
  org.eclipse.ui.views,
  de.openali.odysseus.chart.ext.observation;visibility:=reexport,
- org.kalypso.ui.addlayer;bundle-version="2.3.0",
+ org.kalypso.ui.addlayer,
  org.kalypso.gml.ui
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.ui,
