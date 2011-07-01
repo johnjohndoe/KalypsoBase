@@ -41,23 +41,17 @@
 package org.kalypso.project.database.client.core.base.actions;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.forms.events.HyperlinkAdapter;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject;
@@ -66,76 +60,49 @@ import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 /**
  * @author Dirk Kuch
  */
-public class ProjectUploadChangesAction implements IProjectAction
+public class ProjectUploadChangesAction extends Action
 {
-  private static final Image IMG_COMMIT_CHANGES = new Image( null, ProjectUploadChangesAction.class.getResourceAsStream( "images/action_changes_commit.gif" ) ); //$NON-NLS-1$
+  private static final ImageDescriptor IMG_COMMIT_CHANGES = ImageDescriptor.createFromURL( ProjectUploadChangesAction.class.getResource( "images/action_changes_commit.gif" ) ); //$NON-NLS-1$
 
   protected final IKalypsoModule m_module;
 
   protected final ITranscendenceProject m_handler;
 
-  protected final IProjectDatabaseUiLocker m_locker;
-
-  public ProjectUploadChangesAction( final IKalypsoModule module, final ITranscendenceProject handler, final IProjectDatabaseUiLocker locker )
+  public ProjectUploadChangesAction( final IKalypsoModule module, final ITranscendenceProject handler )
   {
     m_module = module;
     m_handler = handler;
-    m_locker = locker;
+
+    setImageDescriptor( IMG_COMMIT_CHANGES );
+    setToolTipText( Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectUploadChangesAction.1" ) ); //$NON-NLS-1$
   }
 
   /**
-   * @see org.kalypso.project.database.client.core.base.actions.IProjectAction#render(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
    */
   @Override
-  public void render( final Composite body, final FormToolkit toolkit )
+  public void runWithEvent( final Event event )
   {
-    final ImageHyperlink link = toolkit.createImageHyperlink( body, SWT.NULL );
-    link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
-    link.setImage( IMG_COMMIT_CHANGES );
-    link.setToolTipText( Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectUploadChangesAction.1") ); //$NON-NLS-1$
+    final WizardCommitProject wizard = new WizardCommitProject( m_handler );
+    final WizardDialog2 dialog = new WizardDialog2( null, wizard );
+    dialog.open();
 
-    link.addHyperlinkListener( new HyperlinkAdapter()
+    try
     {
-      /**
-       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-       */
-      @Override
-      public void linkActivated( final HyperlinkEvent e )
-      {
-        try
-        {
-          m_locker.acquireUiUpdateLock();
+      final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
+      preferences.setChangesCommited( true );
 
-          final WizardCommitProject wizard = new WizardCommitProject( m_handler );
-          final WizardDialog2 dialog = new WizardDialog2( null, wizard );
-          dialog.open();
+    }
+    catch( final CoreException e1 )
+    {
+      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+    }
 
-          try
-          {
-            final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
-            preferences.setChangesCommited( true );
-
-          }
-          catch( final CoreException e1 )
-          {
-            KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
-          }
-
-          final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-          if( shell != null && !shell.isDisposed() && Window.OK != dialog.getReturnCode() )
-          {
-            ErrorDialog.openError( shell, Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.21" ), Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.22" ), StatusUtilities.createErrorStatus( "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          }
-        }
-        finally
-        {
-          m_locker.releaseUiUpdateLock();
-        }
-
-      }
-    } );
-
+    final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+    if( shell != null && !shell.isDisposed() && Window.OK != dialog.getReturnCode() )
+    {
+      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.21" ), Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.22" ), StatusUtilities.createErrorStatus( "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
   }
 
 }

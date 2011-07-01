@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.model.interfaces;
 
-import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 
 /**
@@ -50,9 +49,9 @@ public interface ILocalWorkspaceModel
 {
   ILocalProject getProject( final String projectReference );
 
-  ILocalProject getProject( final IProjectDatabaseFilter filter, final String projectReference );
+// ILocalProject getProject( final IProjectDatabaseFilter filter, final String projectReference );
 
   ILocalProject[] getProjects( );
 
-  ILocalProject[] getProjects( IProjectDatabaseFilter filter );
+// ILocalProject[] getProjects( IProjectDatabaseFilter filter );
 }

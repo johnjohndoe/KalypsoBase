@@ -226,7 +226,6 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
   public boolean isModified( )
   {
     final String value = m_node.get( PROJECT_IS_MODIFIED, Boolean.FALSE.toString() );
-
     return Boolean.valueOf( value );
   }
 
@@ -238,6 +237,5 @@ class RemoteProjectPreferencesHandler implements IRemoteProjectPreferences
   {
     m_node.put( PROJECT_IS_MODIFIED, Boolean.valueOf( value ).toString() );
     flush();
-
   }
 }

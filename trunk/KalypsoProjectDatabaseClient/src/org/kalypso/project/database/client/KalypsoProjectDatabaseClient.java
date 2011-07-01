@@ -21,6 +21,7 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
 {
   public static final Color COLOR_WELCOME_PAGE_HEADING = new Color( null, 0x99, 0xB4, 0xCE );
 
+  // FIXME: bad static font/colors... never disposed: we should use an eclipse font in any case...
   static public final Font WELCOME_PAGE_HEADING = new Font( Display.getDefault(), "Tahoma", 28, SWT.BOLD ); //$NON-NLS-1$
 
   static public final Font WELCOME_PAGE_MODULE = new Font( Display.getDefault(), "Tahoma", 14, SWT.BOLD ); //$NON-NLS-1$
@@ -57,11 +58,6 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
     return m_service;
   }
 
-  public static IProjectDatabaseModel getModel( )
-  {
-    return getDefault().getProjectDatabaseModel();
-  }
-
   /**
    * Returns the database-service.<br>
    * Does not block but returns the current available service. If the service is not yet available (see
@@ -80,17 +76,6 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
   // The shared instance
   private static KalypsoProjectDatabaseClient plugin;
 
-  /**
-   * The constructor
-   */
-  public KalypsoProjectDatabaseClient( )
-  {
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-   */
   @Override
   public void start( final BundleContext context ) throws Exception
   {
@@ -98,17 +83,11 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
     plugin = this;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-   */
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
     if( PROJECT_DATABASE_MODEL != null )
-    {
       PROJECT_DATABASE_MODEL.stop();
-    }
     plugin = null;
 
     super.stop( context );
@@ -124,13 +103,20 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
     return plugin;
   }
 
+  /**
+   * Used only for planer client
+   */
+  @Deprecated
+  public static IProjectDatabaseModel getModel( )
+  {
+    return getDefault().getProjectDatabaseModel();
+  }
+
   private IProjectDatabaseModel getProjectDatabaseModel( )
   {
     /* don't implement ProjectdatabaseModel() as Singleton, perhaps we have to flexibilise the model in future */
     if( PROJECT_DATABASE_MODEL == null )
-    {
       PROJECT_DATABASE_MODEL = new ProjectDatabaseModel();
-    }
 
     return PROJECT_DATABASE_MODEL;
   }

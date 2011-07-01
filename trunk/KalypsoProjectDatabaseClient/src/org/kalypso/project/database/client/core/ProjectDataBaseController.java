@@ -55,7 +55,6 @@ import org.kalypso.project.database.client.core.base.worker.ReleaseProjectLockWo
 import org.kalypso.project.database.client.core.base.worker.UpdateProjectDescriptionWorker;
 import org.kalypso.project.database.client.core.base.worker.UpdateProjectWorker;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
-import org.kalypso.project.database.client.extension.database.IKalypsoModuleDatabaseSettings;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
@@ -69,9 +68,9 @@ public class ProjectDataBaseController
 {
   protected static WorkspaceJob JOB = null;
 
-  public static IStatus createRemoteProject( final IKalypsoModuleDatabaseSettings settings, final ILocalProject handler )
+  public static IStatus createRemoteProject( final String commitType, final ILocalProject handler )
   {
-    final CreateRemoteProjectWorker worker = new CreateRemoteProjectWorker( settings.getModuleCommitType(), handler );
+    final CreateRemoteProjectWorker worker = new CreateRemoteProjectWorker( commitType, handler );
     final IStatus status = ProgressUtilities.busyCursorWhile( worker );
     setDirty();
 

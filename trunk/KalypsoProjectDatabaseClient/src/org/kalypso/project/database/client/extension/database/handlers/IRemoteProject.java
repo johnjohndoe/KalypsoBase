@@ -40,12 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension.database.handlers;
 
+import org.kalypso.core.projecthandle.IProjectHandle;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * @author Dirk Kuch
  */
-public interface IRemoteProject extends IProjectHandler
+public interface IRemoteProject extends IProjectHandle
 {
   KalypsoProjectBean getBean( );
 }

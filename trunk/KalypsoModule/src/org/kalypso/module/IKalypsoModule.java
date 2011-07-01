@@ -43,6 +43,8 @@ package org.kalypso.module;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.osgi.framework.Version;
 
@@ -54,14 +56,11 @@ import org.osgi.framework.Version;
  */
 public interface IKalypsoModule
 {
+  String EXTENSION_POINT_ID = "org.kalypso.module.kalypsoModule"; //$NON-NLS-1$
+
   String getId( );
 
   IKalypsoModuleWelcomePageFrame getWelcomePageFrame( );
-
-  /**
-   * FIXME: returns IKalypsoModuleDatabaseSettings; the IKalypsoModuleDatabaseSettings must be removed at all.
-   */
-  Object getDatabaseSettings( );
 
   /**
    * @return Entering Page Heading
@@ -82,9 +81,7 @@ public interface IKalypsoModule
 
   IKalypsoModuleProjectOpenAction getProjectOpenAction( );
 
-  /**
-   * Returns the current version of this module (i.e. the version of it's projects).<br/>
-   * The version is usually the version of the defining plug-in of each {@link IKalypsoModule} implementation.
-   */
+  boolean acceptProject( IProject project ) throws CoreException;
+
   Version getVersion( );
 }

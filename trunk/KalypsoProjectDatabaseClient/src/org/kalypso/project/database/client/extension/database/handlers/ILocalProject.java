@@ -40,18 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension.database.handlers;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.kalypso.core.projecthandle.local.ILocalProjectHandle;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
  * @author Dirk Kuch
  */
-public interface ILocalProject extends IProjectHandler
+public interface ILocalProject extends ILocalProjectHandle
 {
   void dispose( );
-
-  IProject getProject( );
 
   // FIXME brrrrrr remove those preferences - each project can be uploaded by default!!!!
   IRemoteProjectPreferences getRemotePreferences( ) throws CoreException;

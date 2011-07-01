@@ -42,9 +42,9 @@ package org.kalypso.project.database.client.core.utils;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.projecthandle.IProjectHandle;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.extension.database.IProjectDataBaseClientConstant;
-import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.IProjectDatabase;
@@ -86,7 +86,7 @@ public class ProjectDatabaseServerUtils
     return false;
   }
 
-  public static boolean isUpdateAvailable( final IProjectHandler handler )
+  public static boolean isUpdateAvailable( final IProjectHandle handler )
   {
     if( handler instanceof ITranscendenceProject )
     {

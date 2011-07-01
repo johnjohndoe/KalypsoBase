@@ -52,8 +52,19 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
+import org.eclipse.jface.action.IAction;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.projecthandle.IProjectOpenAction;
+import org.kalypso.core.projecthandle.LocalProjectHandle;
+import org.kalypso.core.projecthandle.local.ProjectDeleteAction;
+import org.kalypso.core.projecthandle.local.ProjectExportAction;
+import org.kalypso.core.projecthandle.local.ProjectInfoAction;
+import org.kalypso.core.projecthandle.local.ProjectOpenAction;
+import org.kalypso.module.IKalypsoModule;
+import org.kalypso.module.nature.ModuleNature;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.base.actions.EmptyProjectAction;
+import org.kalypso.project.database.client.core.base.actions.ProjectUploadAction;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
@@ -66,19 +77,20 @@ import org.kalypso.project.database.common.nature.RemoteProjectNature;
 /**
  * @author Dirk Kuch
  */
-public class LocalProjectHandler extends AbstractProjectHandler implements ILocalProject, IPreferenceChangeListener
+public class LocalProjectHandler extends LocalProjectHandle implements ILocalProject, IPreferenceChangeListener
 {
-
-  protected final IProject m_project;
-
   private final LocalWorkspaceModel m_model;
 
   private IRemoteProjectPreferences m_preferences;
 
+  private final IKalypsoModule m_module;
+
   public LocalProjectHandler( final IProject project, final LocalWorkspaceModel model )
   {
-    m_project = project;
+    super( project );
+
     m_model = model;
+    m_module = ModuleNature.findModule( project );
 
     final WorkspaceResourceManager manager = WorkspaceResourceManager.getInstance();
     manager.add( this );
@@ -116,7 +128,6 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
   /**
    * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IProjectHandler#isLocal()
    */
-  @Override
   public boolean isLocal( )
   {
     return true;
@@ -125,7 +136,6 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
   /**
    * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IProjectHandler#isRemote()
    */
-  @Override
   public boolean isRemote( )
   {
     return false;
@@ -185,14 +195,14 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
         int count = 0;
         while( job.getState() != Job.NONE && count < 100 )
           try
-          {
+        {
             Thread.sleep( 200 );
             count += 1;
-          }
-          catch( final InterruptedException e )
-          {
-            KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-          }
+        }
+        catch( final InterruptedException e )
+        {
+          KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        }
       }
 
       final RemoteProjectNature myNature = (RemoteProjectNature) m_project.getNature( RemoteProjectNature.NATURE_ID );
@@ -256,14 +266,14 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
 
     if( !remote.isDatabaseOnline() )
       try
-      {
+    {
         if( getRemotePreferences().isOnServer() )
           return false;
-      }
-      catch( final CoreException e )
-      {
-        KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
+    }
+    catch( final CoreException e )
+    {
+      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
 
     return true;
   }
@@ -293,6 +303,67 @@ public class LocalProjectHandler extends AbstractProjectHandler implements ILoca
   public String toString( )
   {
     return String.format( "Local Project: %s", getName() );
+  }
+
+  /**
+   * @see org.kalypso.core.projecthandle.IProjectHandle#getProjectActions()
+   */
+  @Override
+  public IAction[] getProjectActions( )
+  {
+    final IAction[] actions = new IAction[4];
+    actions[0] = new ProjectInfoAction( this );
+    actions[1] = createDeleteAction();
+    actions[2] = new ProjectExportAction( this );
+    actions[3] = createDatabaseAction();
+    return actions;
+  }
+
+  private IAction createDatabaseAction( )
+  {
+    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
+    final IRemoteWorkspaceModel remote = model.getRemoteWorkspaceModel();
+
+    if( remote != null && remote.isDatabaseOnline() )
+      return new ProjectUploadAction( this, m_module );
+
+    return new EmptyProjectAction();
+  }
+
+  private IAction createDeleteAction( )
+  {
+    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
+    final IRemoteWorkspaceModel remote = model.getRemoteWorkspaceModel();
+
+    try
+    {
+      if( remote != null && !remote.isDatabaseOnline() )
+      {
+        final IRemoteProjectPreferences preferences = getRemotePreferences();
+        if( preferences == null || preferences.isLocked() )
+          return new EmptyProjectAction();
+      }
+
+      return new ProjectDeleteAction( this );
+    }
+    catch( final CoreException e )
+    {
+      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+
+    return new EmptyProjectAction();
+  }
+
+  /**
+   * @see org.kalypso.core.projecthandle.LocalProjectHandle#getAdapter(java.lang.Class)
+   */
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  {
+    if( adapter == IProjectOpenAction.class )
+      return new ProjectOpenAction( this );
+
+    return super.getAdapter( adapter );
   }
 
 }

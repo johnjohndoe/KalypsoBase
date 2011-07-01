@@ -40,20 +40,32 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension.database.handlers.implementation;
 
+import org.eclipse.jface.action.IAction;
+import org.kalypso.core.projecthandle.AbstractProjectHandle;
+import org.kalypso.core.projecthandle.IProjectOpenAction;
+import org.kalypso.module.IKalypsoModule;
+import org.kalypso.module.ModuleExtensions;
+import org.kalypso.project.database.client.core.base.actions.EmptyProjectAction;
+import org.kalypso.project.database.client.core.base.actions.ListRemoteProjectAction;
+import org.kalypso.project.database.client.core.base.actions.ProjectDownloadAction;
+import org.kalypso.project.database.client.core.base.actions.RemoteInfoAction;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * @author Dirk Kuch
  */
-public class RemoteProjectHandler extends AbstractProjectHandler implements IRemoteProject
+public class RemoteProjectHandler extends AbstractProjectHandle implements IRemoteProject
 {
-
   private final KalypsoProjectBean m_bean;
+
+  private final IKalypsoModule m_module;
 
   public RemoteProjectHandler( final KalypsoProjectBean bean )
   {
     m_bean = bean;
+    final String projectType = bean.getProjectType();
+    m_module = ModuleExtensions.getKalypsoModule( projectType );
   }
 
   /**
@@ -75,24 +87,6 @@ public class RemoteProjectHandler extends AbstractProjectHandler implements IRem
   }
 
   /**
-   * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IProjectHandler#isLocal()
-   */
-  @Override
-  public boolean isLocal( )
-  {
-    return false;
-  }
-
-  /**
-   * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IProjectHandler#isRemote()
-   */
-  @Override
-  public boolean isRemote( )
-  {
-    return true;
-  }
-
-  /**
    * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.IRemoteProjectHandler#getBean()
    */
   @Override
@@ -108,6 +102,33 @@ public class RemoteProjectHandler extends AbstractProjectHandler implements IRem
   public String getDescription( )
   {
     return m_bean.getDescription();
+  }
+
+  /**
+   * @see org.kalypso.core.projecthandle.IProjectHandle#getProjectActions()
+   */
+  @Override
+  public IAction[] getProjectActions( )
+  {
+    final IAction[] actions = new IAction[5];
+    actions[0] = new RemoteInfoAction( this );
+    actions[1] = new EmptyProjectAction(); // no delete
+    actions[2] = new EmptyProjectAction(); // no export
+    actions[3] = new EmptyProjectAction(); // no edit
+    actions[4] = new ProjectDownloadAction( m_module, this );
+    return actions;
+  }
+
+  /**
+   * @see org.kalypso.core.projecthandle.LocalProjectHandle#getAdapter(java.lang.Class)
+   */
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  {
+    if( adapter == IProjectOpenAction.class )
+      return new ListRemoteProjectAction( this );
+
+    return super.getAdapter( adapter );
   }
 
   /**
