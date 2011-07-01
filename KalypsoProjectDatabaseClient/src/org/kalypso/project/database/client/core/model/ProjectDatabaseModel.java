@@ -50,6 +50,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.projecthandle.IProjectHandle;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
@@ -58,9 +59,7 @@ import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
-import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
-import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.client.extension.database.handlers.implementation.RemoteProjectHandler;
 import org.kalypso.project.database.client.extension.database.handlers.implementation.TranscendenceProjectHandler;
@@ -77,7 +76,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 
   private RemoteWorkspaceModel m_remote = null;
 
-  private final Set<IProjectHandler> m_projects = new TreeSet<IProjectHandler>( IProjectHandler.COMPARATOR );
+  private final Set<IProjectHandle> m_projects = new TreeSet<IProjectHandle>( IProjectHandle.COMPARATOR );
 
   private final Set<IProjectDatabaseListener> m_listener = new LinkedHashSet<IProjectDatabaseListener>();
 
@@ -168,14 +167,14 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
   }
 
   @Override
-  public synchronized IProjectHandler[] getProjects( )
+  public synchronized IProjectHandle[] getProjects( )
   {
     if( m_projects.isEmpty() )
     {
       buildProjectList();
     }
 
-    return m_projects.toArray( new IProjectHandler[] {} );
+    return m_projects.toArray( new IProjectHandle[] {} );
   }
 
   /**
@@ -236,22 +235,22 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     m_listener.remove( listener );
   }
 
-  @Override
-  public IProjectHandler[] getProjects( final IProjectDatabaseFilter filter )
-  {
-    final Set<IProjectHandler> myProjects = new HashSet<IProjectHandler>();
-
-    final IProjectHandler[] projects = getProjects();
-    for( final IProjectHandler handler : projects )
-    {
-      if( filter.select( handler ) )
-      {
-        myProjects.add( handler );
-      }
-    }
-
-    return myProjects.toArray( new IProjectHandler[] {} );
-  }
+// @Override
+// public IProjectHandler[] getProjects( final IProjectDatabaseFilter filter )
+// {
+// final Set<IProjectHandler> myProjects = new HashSet<IProjectHandler>();
+//
+// final IProjectHandler[] projects = getProjects();
+// for( final IProjectHandler handler : projects )
+// {
+// if( filter.select( handler ) )
+// {
+// myProjects.add( handler );
+// }
+// }
+//
+// return myProjects.toArray( new IProjectHandler[] {} );
+// }
 
   @Override
   public void setRemoteProjectsDirty( )
@@ -289,10 +288,10 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
    * @see org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel#findProject(org.eclipse.core.resources.IProject)
    */
   @Override
-  public IProjectHandler findProject( final IProject project )
+  public IProjectHandle findProject( final IProject project )
   {
-    final IProjectHandler[] projects = getProjects();
-    for( final IProjectHandler handler : projects )
+    final IProjectHandle[] projects = getProjects();
+    for( final IProjectHandle handler : projects )
     {
       if( handler.equals( project ) )
         return handler;
@@ -323,15 +322,15 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
    * @see org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel#getProject(java.lang.String)
    */
   @Override
-  public IProjectHandler getProject( String unique )
+  public IProjectHandle getProject( String unique )
   {
     if( unique.startsWith( "/" ) ) //$NON-NLS-1$
     {
       unique = unique.substring( 1 );
     }
 
-    final IProjectHandler[] projects = getProjects();
-    for( final IProjectHandler project : projects )
+    final IProjectHandle[] projects = getProjects();
+    for( final IProjectHandle project : projects )
     {
       if( project.getUniqueName().equals( unique ) )
         return project;

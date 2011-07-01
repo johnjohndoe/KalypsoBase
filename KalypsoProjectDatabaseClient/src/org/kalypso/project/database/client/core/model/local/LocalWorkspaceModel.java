@@ -1,6 +1,5 @@
 package org.kalypso.project.database.client.core.model.local;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -11,10 +10,9 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.kalypso.core.projecthandle.IProjectHandle;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel;
-import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
-import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
 import org.kalypso.project.database.client.extension.database.handlers.implementation.LocalProjectHandler;
 
 /**
@@ -77,7 +75,7 @@ public class LocalWorkspaceModel implements ILocalWorkspaceModel
 
   protected final void update( )
   {
-    m_projects = new TreeSet<ILocalProject>( IProjectHandler.COMPARATOR );
+    m_projects = new TreeSet<ILocalProject>( IProjectHandle.COMPARATOR );
 
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     workspace.addResourceChangeListener( RESOURCE_LISTENER );
@@ -123,25 +121,26 @@ public class LocalWorkspaceModel implements ILocalWorkspaceModel
     return null;
   }
 
-  /**
-   * @see org.kalypso.project.database.client.core.model.local.ILocalWorkspaceModel#getProjects(org.kalypso.project.database.client.extension.IProjectDatabaseFilter)
-   */
-  @Override
-  public ILocalProject[] getProjects( final IProjectDatabaseFilter filter )
-  {
-    final Set<ILocalProject> myProjects = new HashSet<ILocalProject>();
-
-    final ILocalProject[] projects = getProjects();
-    for( final ILocalProject project : projects )
-    {
-      if( filter.select( project ) )
-      {
-        myProjects.add( project );
-      }
-    }
-
-    return myProjects.toArray( new ILocalProject[] {} );
-  }
+// /**
+// * @see
+// org.kalypso.project.database.client.core.model.local.ILocalWorkspaceModel#getProjects(org.kalypso.project.database.client.extension.IProjectDatabaseFilter)
+// */
+// @Override
+// public ILocalProject[] getProjects( final IProjectDatabaseFilter filter )
+// {
+// final Set<ILocalProject> myProjects = new HashSet<ILocalProject>();
+//
+// final ILocalProject[] projects = getProjects();
+// for( final ILocalProject project : projects )
+// {
+// if( filter.select( project ) )
+// {
+// myProjects.add( project );
+// }
+// }
+//
+// return myProjects.toArray( new ILocalProject[] {} );
+// }
 
   /**
    * @see org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel#getProject(java.lang.String)
@@ -171,16 +170,17 @@ public class LocalWorkspaceModel implements ILocalWorkspaceModel
     return null;
   }
 
-  /**
-   * @see org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel#getProject(org.kalypso.project.database.client.extension.IProjectDatabaseFilter,
-   *      java.lang.String)
-   */
-  @Override
-  public ILocalProject getProject( final IProjectDatabaseFilter filter, final String projectReference )
-  {
-    final ILocalProject[] projects = getProjects( filter );
-
-    return resolveProject( projects, projectReference );
-  }
+// /**
+// * @see
+// org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel#getProject(org.kalypso.project.database.client.extension.IProjectDatabaseFilter,
+// * java.lang.String)
+// */
+// @Override
+// public ILocalProject getProject( final IProjectDatabaseFilter filter, final String projectReference )
+// {
+// final ILocalProject[] projects = getProjects( filter );
+//
+// return resolveProject( projects, projectReference );
+// }
 
 }

@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.core.projecthandle.local.exportwizard.ProjectExportWorker;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.extension.database.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
@@ -94,7 +95,7 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
     try
     {
       monitor.subTask( Messages.getString( "org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.4" ) ); //$NON-NLS-1$
-      final ProjectExportWorker worker = new ProjectExportWorker( m_handler.getProject(), src );
+      final ProjectExportWorker worker = new ProjectExportWorker( m_handler.getProject(), src, false );
       final IStatus status = worker.execute( monitor );
       monitor.worked( 1 );
 
@@ -117,6 +118,7 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
       }, fileName ); //$NON-NLS-1$
 
       monitor.subTask( Messages.getString( "org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.7" ) ); //$NON-NLS-1$
+
 
       final FileObject destination = manager.resolveFile( urlDestination );
       VFSUtilities.copy( source, destination );

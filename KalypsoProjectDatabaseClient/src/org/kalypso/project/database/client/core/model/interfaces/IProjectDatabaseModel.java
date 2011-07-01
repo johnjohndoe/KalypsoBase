@@ -42,9 +42,8 @@ package org.kalypso.project.database.client.core.model.interfaces;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.core.projecthandle.IProjectHandle;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
-import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
-import org.kalypso.project.database.client.extension.database.handlers.IProjectHandler;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
 
 /**
@@ -64,9 +63,9 @@ public interface IProjectDatabaseModel
 
   public void setRemoteProjectsDirty( );
 
-  public IProjectHandler[] getProjects( );
+  public IProjectHandle[] getProjects( );
 
-  public IProjectHandler[] getProjects( final IProjectDatabaseFilter filter );
+// public IProjectHandler[] getProjects( final IProjectDatabaseFilter filter );
 
   public ILocalWorkspaceModel getLocalWorkspaceModel( );
 
@@ -75,8 +74,8 @@ public interface IProjectDatabaseModel
   /**
    * @return {@link IProjectDatabaseModel} project representation of a "local" IProject
    */
-  public IProjectHandler findProject( IProject project );
+  public IProjectHandle findProject( IProject project );
 
-  public IProjectHandler getProject( String name );
+  public IProjectHandle getProject( String name );
 
 }

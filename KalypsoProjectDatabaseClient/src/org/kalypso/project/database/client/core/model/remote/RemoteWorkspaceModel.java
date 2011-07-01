@@ -18,7 +18,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
-import org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.client.extension.database.handlers.implementation.RemoteProjectHandler;
 import org.kalypso.project.database.client.i18n.Messages;
@@ -275,25 +274,26 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
     return myHandlers.toArray( new IRemoteProject[] {} );
   }
 
-  /**
-   * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#getProjects(org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter)
-   */
-  @Override
-  public IRemoteProject[] getProjects( final IProjectDatabaseFilter filter )
-  {
-    final Set<IRemoteProject> myHandlers = new HashSet<IRemoteProject>();
-
-    final IRemoteProject[] projects = getProjects();
-    for( final IRemoteProject project : projects )
-    {
-      if( filter.select( project ) )
-      {
-        myHandlers.add( project );
-      }
-    }
-
-    return myHandlers.toArray( new IRemoteProject[] {} );
-  }
+// /**
+// * @see
+// org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#getProjects(org.kalypso.project.database.client.extension.database.IProjectDatabaseFilter)
+// */
+// @Override
+// public IRemoteProject[] getProjects( final IProjectDatabaseFilter filter )
+// {
+// final Set<IRemoteProject> myHandlers = new HashSet<IRemoteProject>();
+//
+// final IRemoteProject[] projects = getProjects();
+// for( final IRemoteProject project : projects )
+// {
+// if( filter.select( project ) )
+// {
+// myHandlers.add( project );
+// }
+// }
+//
+// return myHandlers.toArray( new IRemoteProject[] {} );
+// }
 
   /**
    * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#deleteBean(org.kalypso.project.database.sei.beans.KalypsoProjectBean)

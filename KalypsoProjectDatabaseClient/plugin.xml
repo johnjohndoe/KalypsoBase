@@ -15,5 +15,15 @@
             name="%org.kalypso.project.database.client.ui.view.ViewManageServerProjects.name">
       </view>
    </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.core.resources.IProject"
+            class="org.kalypso.project.database.client.ui.project.internal.ProjectInfoAdapterFactory">
+         <adapter
+               type="org.kalypso.project.database.client.ui.project.IRemoteProjectInfo">
+         </adapter>
+      </factory>
+   </extension>
 
 </plugin>

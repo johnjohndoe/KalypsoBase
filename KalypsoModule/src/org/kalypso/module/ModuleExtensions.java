@@ -1,74 +1,109 @@
+/*----------------    FILE HEADER KALYPSO ------------------------------------------
+ *
+ *  This file is part of kalypso.
+ *  Copyright (C) 2004 by:
+ * 
+ *  Technical University Hamburg-Harburg (TUHH)
+ *  Institute of River and coastal engineering
+ *  DenickestraÃŸe 22
+ *  21073 Hamburg, Germany
+ *  http://www.tuhh.de/wb
+ * 
+ *  and
+ *  
+ *  Bjoernsen Consulting Engineers (BCE)
+ *  Maria Trost 3
+ *  56070 Koblenz, Germany
+ *  http://www.bjoernsen.de
+ * 
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * 
+ *  Contact:
+ * 
+ *  E-Mail:
+ *  belger@bjoernsen.de
+ *  schlienger@bjoernsen.de
+ *  v.doemming@tuhh.de
+ *   
+ *  ---------------------------------------------------------------------------*/
 package org.kalypso.module;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.module.internal.ModuleComparator;
+import org.kalypso.module.internal.Module;
+import org.kalypso.module.utils.ModuleComparator;
 
 /**
- * The activator class controls the plug-in life cycle
+ * @author Gernot Belger
  */
-public class ModuleExtensions extends AbstractUIPlugin
+public class ModuleExtensions
 {
-  private static final String EXTENSION_NAMESPACE = "org.kalypso.module"; //$NON-NLS-1$
-
-  private static final String EXTENSION_POINT_MODULE = "kalypsoModule"; //$NON-NLS-1$
+  public static final String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
 
   private static final String ATTRIBUTE_CLASS = "class"; //$NON-NLS-1$
 
-  private static List<IKalypsoModule> KALYPSO_MODULES = null;
+  private static IKalypsoModule[] KALYPSO_MODULES = null;
+
+  public static IKalypsoModule getKalypsoModule( final String moduleId )
+  {
+    final IKalypsoModule[] modules = getKalypsoModules();
+    for( final IKalypsoModule module : modules )
+    {
+      if( moduleId.equals( module.getId() ) )
+        return module;
+    }
+
+    return null;
+  }
 
   /**
    * @return list of feature binding handlers, handling a special featureType qname
    */
-  public static synchronized IKalypsoModule[] getKalypsoModules( )
+  public synchronized static IKalypsoModule[] getKalypsoModules( )
   {
     // fill binding map
     if( KALYPSO_MODULES == null )
     {
-      KALYPSO_MODULES = new ArrayList<IKalypsoModule>();
-
+      final List<IKalypsoModule> modules = new ArrayList<IKalypsoModule>();
       /* get extension points */
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
-      final IExtensionPoint extensionPoint = registry.getExtensionPoint( EXTENSION_NAMESPACE, EXTENSION_POINT_MODULE );
-      final IConfigurationElement[] elements = extensionPoint.getConfigurationElements();
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IKalypsoModule.EXTENSION_POINT_ID );
+
       for( final IConfigurationElement element : elements )
       {
         try
         {
           final IKalypsoModule instance = (IKalypsoModule) element.createExecutableExtension( ATTRIBUTE_CLASS );
-          KALYPSO_MODULES.add( instance );
+          modules.add( instance );
         }
-        catch( final Throwable e )
+        catch( final CoreException e )
         {
-          e.printStackTrace();
+          Module.getDefault().getLog().log( e.getStatus() );
         }
       }
 
-      final Comparator<IKalypsoModule> comparator = new ModuleComparator();
-
-      Collections.sort( KALYPSO_MODULES, comparator );
+      Collections.sort( modules, new ModuleComparator() );
+      KALYPSO_MODULES = modules.toArray( new IKalypsoModule[modules.size()] );
     }
 
-    return KALYPSO_MODULES.toArray( new IKalypsoModule[] {} );
-  }
-
-  public static IKalypsoModule getKalypsoModule( final String modulueId )
-  {
-    final IKalypsoModule[] modules = getKalypsoModules();
-    for( final IKalypsoModule module : modules )
-    {
-      if( modulueId.equals( module.getId() ) )
-        return module;
-    }
-
-    return null;
+    return KALYPSO_MODULES;
   }
 }
