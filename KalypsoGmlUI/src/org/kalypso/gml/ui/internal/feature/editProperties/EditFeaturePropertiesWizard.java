@@ -38,39 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.editor.actions;
+package org.kalypso.gml.ui.internal.feature.editProperties;
 
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.internal.ObjectActionContributorManager;
-import org.kalypso.i18n.Messages;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.core.status.tree.StatusDialog;
+import org.kalypso.gml.ui.i18n.Messages;
 
 /**
- * Fills the managed menu with all commands that apply to the current selection.
- * 
  * @author Gernot Belger
  */
-public class SelectionManagedMenu extends AbstractManagedMenu
+public class EditFeaturePropertiesWizard extends Wizard implements IWorkbenchWizard
 {
-  public SelectionManagedMenu( final String menuPath )
+  private final EditFeaturePropertiesData m_data = new EditFeaturePropertiesData();
+
+  public EditFeaturePropertiesWizard( )
   {
-    super( "selectionMenuManager", menuPath, Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlEditorActionBarContributor.2" ) );//$NON-NLS-1$
+    setNeedsProgressMonitor( true );
+    setWindowTitle( Messages.getString("EditFeaturePropertiesWizard_0") ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ui.editor.actions.AbstractManagedMenu#fillMenu(org.eclipse.jface.action.IMenuManager)
-   */
   @Override
-  protected void fillMenu( final IMenuManager menuManager )
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    final IWorkbenchPart part = getPart();
-    if( part == null )
-      return;
+    m_data.init( selection );
 
-    final ISelectionProvider selectionProvider = part.getSite().getSelectionProvider();
-
-    ObjectActionContributorManager.getManager().contributeObjectActions( part, menuManager, selectionProvider );
+    addPage( new EditFeaturePropertiesPage( "propertiesPage", m_data ) ); //$NON-NLS-1$
   }
 
+  @Override
+  public boolean performFinish( )
+  {
+    final ICoreRunnableWithProgress operation = new EditFeaturePropertiesOperation( m_data );
+    final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, operation );
+    if( !status.isOK() )
+      new StatusDialog( getShell(), getWindowTitle(), status ).open();
+
+    return !status.matches( IStatus.ERROR );
+  }
 }
