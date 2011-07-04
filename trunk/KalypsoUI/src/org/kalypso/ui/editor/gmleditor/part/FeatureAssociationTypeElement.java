@@ -34,11 +34,12 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureProperty;
 
 /**
  * @author kuepfer
  */
-public class FeatureAssociationTypeElement extends PlatformObject
+public class FeatureAssociationTypeElement extends PlatformObject implements IFeatureProperty
 {
   private final IRelationType m_featureAssociattionTypeProp;
 
@@ -50,11 +51,16 @@ public class FeatureAssociationTypeElement extends PlatformObject
     m_featureAssociattionTypeProp = property;
   }
 
+  @Override
   public Feature getParentFeature( )
   {
     return m_parent;
   }
 
+  /**
+   * @deprecated Use {@link #getPropertyType()} instead.
+   */
+  @Deprecated
   public IRelationType getAssociationTypeProperty( )
   {
     return m_featureAssociattionTypeProp;
@@ -70,7 +76,7 @@ public class FeatureAssociationTypeElement extends PlatformObject
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     return EqualsBuilder.reflectionEquals( this, obj );
   }
@@ -83,5 +89,11 @@ public class FeatureAssociationTypeElement extends PlatformObject
   public int hashCode( )
   {
     return HashCodeBuilder.reflectionHashCode( this );
+  }
+
+  @Override
+  public IRelationType getPropertyType( )
+  {
+    return m_featureAssociattionTypeProp;
   }
 }

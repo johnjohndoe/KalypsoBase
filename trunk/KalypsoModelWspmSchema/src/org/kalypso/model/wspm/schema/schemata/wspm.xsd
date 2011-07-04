@@ -210,7 +210,7 @@
 						</annotation>
 					</element>
                      -->
-					<element name="centerLine" type="gml:CurvePropertyType">
+					<element name="centerLine" type="gml:LineStringPropertyType">
 						<annotation>
 							<documentation>River center line</documentation>
 						</annotation>

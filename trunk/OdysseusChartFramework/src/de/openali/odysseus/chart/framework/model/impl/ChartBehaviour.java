@@ -87,15 +87,16 @@ public class ChartBehaviour implements IChartBehaviour
         axis.setVisible( false );
         break;
       }
-
+      boolean hideAxis = true;
       for( final IChartLayer layer : layers )
       {
         if( layer.isVisible() )
         {
-          axis.setVisible( true );
+          hideAxis = false;
           break;
         }
       }
+      axis.setVisible( !hideAxis );
     }
 
   }

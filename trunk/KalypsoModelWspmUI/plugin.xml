@@ -176,20 +176,6 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="false"
-            id="org.kalypso.model.wspm.ui.objectContribution.showProfile"
-            objectClass="org.kalypsodeegree.model.feature.Feature">
-         <filter
-               name="featureType"
-               value="org.kalypso.model.wspmprofile#Profile"/>
-         <action
-               class="org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               icon="icons/obj16/openProfile.gif"
-               id="org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               label="%org.kalypso.model.wspm.ui.action.ShowProfileAction"
-               tooltip="%org.kalypso.model.wspm.ui.action.ShowProfileAction.description"/>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
             id="org.kalypso.model.wspm.ui.object.contribution.org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement"
             objectClass="org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement">
          <menu
@@ -205,20 +191,6 @@
             <groupMarker name="imports"/>
             <separator name="additions"/>
          </menu>
-         <action
-               class="org.kalypso.model.wspm.ui.action.ImportProfilePrfAction"
-               id="org.kalypso.model.wspm.ui.action.ImportProfilePrfAction"
-               label="%org.kalypso.model.wspm.ui.action.ImportProfilePrfAction"
-               menubarPath="org.kalypso.model.wspm.ui.menu.import/imports"
-               style="push"
-               tooltip="%org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.description"/>
-         <action
-               class="org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction"
-               id="org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction"
-               label="%org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction"
-               menubarPath="org.kalypso.model.wspm.ui.menu.import/imports"
-               style="push"
-               tooltip="%org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction.description"/>
          <action
                class="org.kalypso.model.wspm.ui.action.CreateProfileMapAction"
                icon="icons/elcl16/createProfileMap.gif"
@@ -244,6 +216,18 @@
                  tooltip="%com.bce.profil.app.profilLayerContributions.showProperties.tooltip"/>
         </objectContribution>
      </extension>
+      <extension point="org.eclipse.ui.menus">
+         <menuContribution allPopups="false" locationURI="popup:org.eclipse.ui.popup.any?before=gmlToolsEnd">
+            <command commandId="org.kalypso.model.wspm.ui.commands.ShowProfile" style="push">
+               <visibleWhen checkEnabled="true"/>
+            </command>
+         </menuContribution>
+         <menuContribution allPopups="false" locationURI="toolbar:org.kalypso.featureview.views.FeatureView">
+            <command commandId="org.kalypso.model.wspm.ui.commands.ShowProfile" style="push">
+               <visibleWhen checkEnabled="true"/>
+            </command>
+         </menuContribution>
+      </extension>
      <extension
            point="org.kalypso.core.catalogContribution">
         <catalogContribution
@@ -367,11 +351,7 @@
          <menuContribution
                locationURI="toolbar:org.kalypso.model.wspm.ui.view.chart.ChartView">
             <command
-                  commandId="org.kalypso.chart.ui.commands.zoomIn"
-                  style="toggle">
-            </command>
-            <command
-                  commandId="org.kalypso.chart.ui.commands.zoomOut"
+                  commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize"
                   style="toggle">
             </command>
             <command
@@ -392,6 +372,14 @@
                <visibleWhen
                      checkEnabled="true">
                </visibleWhen>
+            </command>
+            <command
+                  commandId="org.kalypso.chart.ui.commands.ExportClipboardCommand"
+                  style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.chart.ui.commands.export"
+                  style="push">
             </command>
             <separator
                   name="additions"
@@ -466,56 +454,8 @@
                commandId="org.kalypso.model.wspm.ui.view.legend.removelayer"
                icon="icons/etool16/delete_layer.gif">
          </image>
-         <image
-               commandId="org.kalypso.model.wspm.ui.command.profile.editProperties"
-               icon="icons/etool16/profile_property_edit.gif">
-         </image>
-         <image
-               commandId="org.kalypso.model.wspm.ui.command.profile.validate"
-               icon="icons/etool16/profile_validate.gif">
-         </image>
-         <image
-               commandId="org.kalypso.model.wspm.ui.command.profile.flip"
-               icon="icons/obj16/flipProfile.gif">
-         </image>
       </extension>
      
-    <!-- Commands for the map outline -->
-	<extension point="org.eclipse.ui.commands">
-		<category id="org.kalypso.mode.wspm.ui.profile.commands" name="%category.name.1"/>
-		<command categoryId="org.kalypso.mode.wspm.ui.profile.commands" id="org.kalypso.ui.map.outline.command.WspmCreateDevider" name="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description"/>
-		<command categoryId="org.kalypso.mode.wspm.ui.profile.commands" id="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" name="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction"  description="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description"/>
-		  <command
-		        description="%org.kalypso.model.wspm.ui.action.PropertyEditAction.description"
-		        id="org.kalypso.model.wspm.ui.command.profile.editProperties"
-		        name="%org.kalypso.model.wspm.ui.action.PropertyEditAction">
-		  </command>
-		  <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
-		        description="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction.description"
-		        id="org.kalypso.model.wspm.ui.command.profile.validate"
-		        name="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction">
-		  </command>
-		  <command categoryId="org.kalypso.mode.wspm.ui.profile.commands"
-		        description="%org.kalypso.model.wspm.ui.action.FlipProfileAction.description"
-		        id="org.kalypso.model.wspm.ui.command.profile.flip"
-		        name="%org.kalypso.model.wspm.ui.action.FlipProfileAction">
-		  </command>
-	</extension>
-
-	<extension point="org.eclipse.ui.handlers">
-		<handler commandId="org.kalypso.ui.map.outline.command.WspmCreateDevider" class="org.kalypso.model.wspm.ui.action.CreateDeviderHandler">
-			<activeWhen>
-				<reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
-			</activeWhen>
-		</handler>
-		<handler commandId="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap" class="org.kalypso.model.wspm.ui.action.IntersectRoughnessHandler">
-			<enabledWhen>
-				<reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
-			</enabledWhen>
-		</handler>
-	</extension>
-
-
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected">
 			<with variable="selection">
@@ -528,133 +468,155 @@
 				</and>
 			</with>
 		</definition>
-  <definition
-        id="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-     <with
-           variable="selection">
-        <test
-              property="org.kalypso.model.wspm.ui.hasProfileSelection">
-        </test>
-     </with>
-  </definition>
+      <definition
+            id="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+         <with
+               variable="selection">
+            <test
+                  property="org.kalypso.model.wspm.ui.hasProfileSelection">
+            </test>
+         </with>
+      </definition>
 	</extension>
 
-<extension point="org.eclipse.ui.menus">
-    <menuContribution
-          locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-       <menu
-             icon="icons/etool16/profileChange.gif"
-             id="org.kalypso.model.wspm.ui.profileChange"
-             label="%menu.label"
-             mnemonic="%menu.mnemonic">
-          <command
-                commandId="org.kalypso.ui.map.outline.command.WspmCreateDevider"
-                style="push">
-             <visibleWhen
-                   checkEnabled="false">
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected">
-                </reference>
-             </visibleWhen>
-          </command>
-          <command
-                commandId="org.kalypso.ui.map.outline.command.WspmIntersectRoughnessMap"
-                style="push">
-             <visibleWhen
-                   checkEnabled="false">
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected">
-                </reference>
-             </visibleWhen>
-          </command>
-          <command
-                commandId="org.kalypso.model.wspm.ui.command.profile.editProperties"
-                style="push">
-             <visibleWhen
-                   checkEnabled="true">
-             </visibleWhen>
-          </command>
-          <command
-                commandId="org.kalypso.model.wspm.ui.command.profile.validate"
-                style="push">
-             <visibleWhen
-                   checkEnabled="true">
-             </visibleWhen>
-          </command>
-          <command
-                commandId="org.kalypso.model.wspm.ui.command.profile.flip"
-                style="push">
-             <visibleWhen
-                   checkEnabled="true">
-             </visibleWhen>
-          </command>
-          <separator
-                name="additions"
-                visible="false">
-          </separator>
-       </menu>
-    </menuContribution>
-  </extension>
-<extension
-      point="org.eclipse.core.expressions.propertyTesters">
-   <propertyTester
-         class="org.kalypso.model.wspm.ui.action.ProfileSelectionTester"
-         id="org.kalypso.model.wspm.ui.propertyTester.profiles"
-         namespace="org.kalypso.model.wspm.ui"
-         properties="hasProfileSelection"
-         type="org.eclipse.jface.viewers.ISelection">
-   </propertyTester>
-</extension>
-<extension
-      point="org.eclipse.ui.handlers">
-   <handler
-         class="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditHandler"
-         commandId="org.kalypso.model.wspm.ui.command.profile.editProperties">
-      <enabledWhen>
-         <reference
-               definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-         </reference>
-      </enabledWhen>
-   </handler>
-   <handler
-         class="org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesHandler"
-         commandId="org.kalypso.model.wspm.ui.command.profile.validate">
-      <enabledWhen>
-         <reference
-               definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-         </reference>
-      </enabledWhen>
-   </handler>
-   <handler
-         class="org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileHandler"
-         commandId="org.kalypso.model.wspm.ui.command.profile.flip">
-      <enabledWhen>
-         <reference
-               definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-         </reference>
-      </enabledWhen>
-   </handler>
-</extension>
-<extension point="org.eclipse.ui.commands">
-   <command
-        categoryId="org.kalypso.chart.ui.commands.category"
-        id="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
-        name="%org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand.name" description="%org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand.description">
-  </command>
-</extension>
-<extension
-      point="org.eclipse.ui.commandImages">
-   <image
-         commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
-         icon="icons/etool16/wspLayerCommand.gif">
-   </image>
-</extension>
-<extension
-      point="org.eclipse.ui.handlers">
-   <handler
-         class="org.kalypso.model.wspm.ui.view.chart.layer.WspLegendHandler"
-         commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand">
-   </handler>
-</extension>
-
+    <extension
+          point="org.eclipse.core.expressions.propertyTesters">
+       <propertyTester
+             class="org.kalypso.model.wspm.ui.action.ProfileSelectionTester"
+             id="org.kalypso.model.wspm.ui.propertyTester.profiles"
+             namespace="org.kalypso.model.wspm.ui"
+             properties="hasProfileSelection"
+             type="org.eclipse.jface.viewers.ISelection">
+       </propertyTester>
+    </extension>
+    <extension point="org.eclipse.ui.commands">
+       <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            id="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
+            name="%org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand.name" description="%org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand.description">
+      </command>
+       <command
+             id="org.kalypso.model.wspm.ui.commands.ShowProfile"
+             description="%org.kalypso.model.wspm.ui.action.ShowProfileAction.description"
+             name="%org.kalypso.model.wspm.ui.action.ShowProfileAction">
+       </command>
+    </extension>
+    <extension
+          point="org.eclipse.ui.commandImages">
+       <image commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand" icon="icons/etool16/wspLayerCommand.gif"/>
+       <image commandId="org.kalypso.model.wspm.ui.commands.ShowProfile" icon="icons/obj16/openProfile.gif"/>
+    </extension>
+    <extension point="org.eclipse.ui.handlers">
+       <handler class="org.kalypso.model.wspm.ui.view.chart.handler.WspLegendHandler" commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"/>
+    </extension>
+    <extension
+          point="org.kalypso.ui.importWizards">
+       <wizard
+             category="importWizards"
+             class="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfileWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfileWizard"
+             name="%org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction">
+          <description>%org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction.description</description>
+       </wizard>
+       <wizard
+             category="importWizards"
+             class="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportPrfWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportPrfWizard"
+             name="%org.kalypso.model.wspm.ui.action.ImportProfilePrfAction">
+          <description>%org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.description</description>
+       </wizard>
+    </extension>
+    <extension
+          point="org.kalypso.gml.ui.toolWizards">
+       <wizard
+             class="org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard"
+             icon="icons/obj16/flipProfile.gif"
+             name="%org.kalypso.model.wspm.ui.action.FlipProfileAction">
+             <description>%org.kalypso.model.wspm.ui.action.FlipProfileAction.description</description>
+       </wizard>
+       <wizard
+             class="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard"
+             icon="icons/etool16/profile_property_edit.gif"
+             name="%org.kalypso.model.wspm.ui.action.PropertyEditAction">
+             <description>%org.kalypso.model.wspm.ui.action.PropertyEditAction.description</description>
+       </wizard>
+       <wizard
+             class="org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard"
+             icon="icons/etool16/profile_validate.gif"
+             name="%org.kalypso.model.wspm.ui.action.ValidateProfilesAction">
+             <description>%org.kalypso.model.wspm.ui.action.ValidateProfilesAction.description</description>
+       </wizard>
+       <wizard
+             class="org.kalypso.model.wspm.ui.profil.wizard.createDivider.CreateProfileDeviderWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.createDivider.CreateProfileDeviderWizard"
+             name="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction">
+             <description>%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description</description>  
+       </wizard>
+       <wizard
+             class="org.kalypso.model.wspm.ui.profil.wizard.intersectRoughness.IntersectRoughnessWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.intersectRoughness.IntersectRoughnessWizard"
+             name="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction">
+             <description>%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description</description>
+       </wizard>
+    </extension>
+    
+    <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfileWizard">
+          <enablement>
+            <reference definitionId="isProfileContainerSelection"/>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportPrfWizard">
+          <enablement>
+            <reference definitionId="isProfileContainerSelection"/>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard">
+          <enablement>
+             <reference
+                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+             </reference>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard">
+          <enablement>
+             <reference
+                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+             </reference>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard">
+          <enablement>
+             <reference definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles"/>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.createDivider.CreateProfileDeviderWizard">
+          <enablement>
+                <reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.intersectRoughness.IntersectRoughnessWizard">
+          <enablement>
+                <reference definitionId="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected"/>
+          </enablement>
+       </wizardEnablement>
+    </extension>
+    <extension point="org.eclipse.core.expressions.definitions">
+       <definition id="isProfileContainerSelection">
+             <with variable="selection">
+                <and>
+                    <count value="1"/>
+                    <iterate operator="and" ifEmpty="false">
+                       <or>
+                          <test property="org.kalypso.gml.qname" value="{org.kalypso.model.wspmprofile}Profile" />
+                          <test property="org.kalypso.gml.targetQName" value="{org.kalypso.model.wspmprofile}Profile" />
+                       </or>
+                    </iterate>
+                </and>
+             </with>
+       </definition>
+    </extension>
 </plugin>

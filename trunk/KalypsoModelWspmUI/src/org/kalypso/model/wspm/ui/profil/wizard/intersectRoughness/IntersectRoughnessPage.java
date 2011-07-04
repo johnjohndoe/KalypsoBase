@@ -113,7 +113,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
         if( pt instanceof IValuePropertyType )
         {
           final QName valueQName = ((IValuePropertyType) pt).getValueQName();
-          if( valueQName.equals( GMLConstants.QN_POLYGON ) || valueQName.equals( GMLConstants.QN_MULTI_POLYGON ) )
+          if( valueQName.equals( GMLConstants.QN_POLYGON ) || valueQName.equals( GMLConstants.QN_MULTI_POLYGON ) || valueQName.equals( GMLConstants.QN_MULTI_SURFACE ) )
             return true;
         }
 

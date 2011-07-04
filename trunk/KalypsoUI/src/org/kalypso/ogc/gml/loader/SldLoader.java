@@ -40,20 +40,21 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.loader;
 
-import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.CharEncoding;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.i18n.ResourceBundleUtils;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
@@ -64,7 +65,9 @@ import org.kalypso.core.catalog.CatalogSLD;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
+import org.kalypso.loader.ISaveAsLoader;
 import org.kalypso.loader.LoaderException;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree.xml.XMLParsingException;
@@ -73,11 +76,13 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 /**
  * @author schlienger
  */
-public class SldLoader extends AbstractLoader
+public class SldLoader extends AbstractLoader implements ISaveAsLoader
 {
   private final UrlResolver m_urlResolver = new UrlResolver();
 
   private ResourceBundle m_resourceBundle;
+
+  private IResource[] m_resources = new IResource[] {};
 
   /**
    * @see org.kalypso.loader.ILoader#getDescription()
@@ -105,7 +110,9 @@ public class SldLoader extends AbstractLoader
       if( source.startsWith( "urn" ) ) //$NON-NLS-1$
         return loadFromCatalog( context, source );
 
-      return loadFromUrl( context, source );
+      /* Local url: sld and resources reside at the same location */
+      final URL sldLocation = m_urlResolver.resolveURL( context, source );
+      return loadFromUrl( sldLocation, sldLocation );
     }
     catch( final IllegalArgumentException e )
     {
@@ -164,15 +171,10 @@ public class SldLoader extends AbstractLoader
     }
   }
 
-  private Object loadFromCatalog( final URL context, final String source ) throws LoaderException
+  private Object loadFromCatalog( final URL context, final String source ) throws LoaderException, IOException, XMLParsingException
   {
-    final CatalogSLD catalog = KalypsoCorePlugin.getDefault().getSLDCatalog();
-
     final IUrlResolver2 resolver = new IUrlResolver2()
     {
-      /**
-       * @see org.kalypso.contribs.java.net.IUrlResolver2#resolveURL(java.lang.String)
-       */
       @Override
       public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
       {
@@ -180,55 +182,55 @@ public class SldLoader extends AbstractLoader
       }
     };
 
+    final CatalogSLD catalog = KalypsoCorePlugin.getDefault().getSLDCatalog();
+    final URL catalogURL = catalog.getURL( resolver, source, source );
+
+    /* Check for user saved style */
+    final URL userURL = findUserUrl( context, source );
+    if( userURL != null )
+    {
+      final File userFile = FileUtils.toFile( userURL );
+      if( userFile != null && userFile.exists() )
+      {
+        // sld from user location but resources still from catalog location
+        return loadFromUrl( userURL, catalogURL );
+      }
+
+      /* Fall through, loading from catalog */
+    }
+
     // Try to load the fts from the catalog
     final FeatureTypeStyle fts = catalog.getValue( resolver, source, source );
     if( fts == null )
       throw new LoaderException( String.format( "Failed to resolve urn %s", source ) ); //$NON-NLS-1$
 
-    // Load resource bundle
-    URL sldURL = null;
-    try
-    {
-      // get the url, should be the same used for loading the sld
-      sldURL = catalog.getURL( resolver, source, source );
-      loadResourceBundle( sldURL );
-    }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-    }
+    // get the url, should be the same used for loading the sld
+    loadResourceBundle( catalogURL );
 
     return fts;
   }
 
-  private Object loadFromUrl( final URL context, final String source ) throws IOException, XMLParsingException
+  private URL findUserUrl( final URL context, final String source )
   {
-    InputStream is = null;
-    try
-    {
-      final URL url = m_urlResolver.resolveURL( context, source );
-      is = new BufferedInputStream( url.openStream() );
-      final IUrlResolver2 resolver = new IUrlResolver2()
-      {
-        @Override
-        public URL resolveURL( final String href ) throws MalformedURLException
-        {
-          return UrlResolverSingleton.resolveUrl( url, href );
-        }
-      };
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-      final Object element = SLDFactory.readSLD( resolver, is );
+  private Object loadFromUrl( final URL sldLocation, final URL resourceLocation ) throws IOException, XMLParsingException
+  {
+    final Object element = SLDFactory.readSLD( sldLocation );
+    setResources( sldLocation );
+    loadResourceBundle( resourceLocation );
+    return element;
+  }
 
-      is.close();
-
-      loadResourceBundle( url );
-
-      return element;
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
-    }
+  private void setResources( final URL sldLocation )
+  {
+    final IResource resource = ResourceUtilities.findFileFromURL( sldLocation );
+    if( resource == null )
+      m_resources = new IResource[] {};
+    else
+      m_resources = new IResource[] { resource };
   }
 
   @Override
@@ -242,7 +244,6 @@ public class SldLoader extends AbstractLoader
       IFile sldFile = null;
       try
       {
-        final Marshallable marshallable = (Marshallable) data;
         final URL styleURL = m_urlResolver.resolveURL( context, source );
 
         sldFile = ResourceUtilities.findFileFromURL( styleURL );
@@ -250,9 +251,7 @@ public class SldLoader extends AbstractLoader
           throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.6" ) + styleURL ); //$NON-NLS-1$
 
         final String charset = sldFile.getCharset();
-
-        final String sldXML = marshallable.exportAsXML();
-        final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + sldXML; //$NON-NLS-1$ //$NON-NLS-2$
+        final String sldXMLwithHeader = marshallObject( data, charset );
 
         sldFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), true, false, monitor );
       }
@@ -270,34 +269,20 @@ public class SldLoader extends AbstractLoader
     }
   }
 
-  /**
-   * @see org.kalypso.loader.AbstractLoader#getResourcesInternal(org.kalypso.core.util.pool.IPoolableObjectType)
-   */
   @Override
-  public IResource[] getResourcesInternal( final IPoolableObjectType key ) throws MalformedURLException
+  public IResource[] getResourcesInternal( final IPoolableObjectType key )
   {
-    final String source = key.getLocation();
-    final URL context = key.getContext();
-
-    if( source.startsWith( "urn" ) ) //$NON-NLS-1$
-      return new IResource[] {};
-
-    final URL url = m_urlResolver.resolveURL( context, source );
-    final IResource resource = ResourceUtilities.findFileFromURL( url );
-    return new IResource[] { resource };
+    return m_resources;
   }
 
-  /**
-   * @see org.kalypso.loader.ILoader#release(java.lang.Object)
-   */
   @Override
   public void release( final Object object )
   {
   }
 
-  private void loadResourceBundle( final URL sldURL )
+  private void loadResourceBundle( final URL resourceLocation )
   {
-    m_resourceBundle = ResourceBundleUtils.loadResourceBundle( sldURL );
+    m_resourceBundle = ResourceBundleUtils.loadResourceBundle( resourceLocation );
   }
 
   /**
@@ -306,5 +291,57 @@ public class SldLoader extends AbstractLoader
   public ResourceBundle getResourceBundle( )
   {
     return m_resourceBundle;
+  }
+
+  @Override
+  public void saveAs( final IPoolableObjectType key, final IProgressMonitor monitor, final Object object ) throws LoaderException
+  {
+    try
+    {
+      final String location = key.getLocation();
+
+      final String monitorMessage = String.format( "Saving '%s'", location );
+      monitor.beginTask( monitorMessage, IProgressMonitor.UNKNOWN );
+
+      /* create filename */
+      final URL userLocation = findUserUrl( key.getContext(), location );
+      final File userFile = FileUtils.toFile( userLocation );
+
+      /* Check if already exists -> error */
+      if( userFile == null || userFile.exists() )
+      {
+        /* Should never happen */
+        // TODO: we need an extra method in the interface that checks, if we already have savedAs
+        throw new LoaderException( "User version of this file already exists" ); //$NON-NLS-1$
+      }
+
+      /* Really save to this location */
+      final String sldXMLwithHeader = marshallObject( object, CharEncoding.UTF_8 );
+      FileUtils.writeStringToFile( userFile, sldXMLwithHeader );
+
+      /* Just for formal reasons, should already be empty */
+      setResources( null );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to save SLD", e );
+      throw new LoaderException( status );
+    }
+    finally
+    {
+      monitor.done();
+    }
+  }
+
+  protected String marshallObject( final Object object, final String charset ) throws LoaderException
+  {
+    if( !(object instanceof Marshallable) )
+      throw new LoaderException( "Wrong kind of object" ); //$NON-NLS-1$
+
+    final Marshallable marshallable = (Marshallable) object;
+    final String sldXML = marshallable.exportAsXML();
+    final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + sldXML; //$NON-NLS-1$ //$NON-NLS-2$
+    return sldXMLwithHeader;
   }
 }

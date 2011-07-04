@@ -359,16 +359,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#isExistingRelation(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypsodeegree.model.feature.Feature, java.lang.String)
-   */
-  @Override
-  public boolean isExistingRelation( final Feature f1, final Feature f2, final IRelationType name )
-  {
-    return m_workspace.isExistingRelation( f1, f2, name );
-  }
-
-  /**
    * @see org.kalypsodeegree.model.feature.GMLWorkspace#isAggrigatedLink(org.kalypsodeegree.model.feature.Feature,
    *      java.lang.String, int)
    */

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.dialogs;
 
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -51,6 +52,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.dialogs.ImportExportPage;
 import org.eclipse.ui.wizards.IWizardCategory;
 import org.eclipse.ui.wizards.IWizardRegistry;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 /**
  * @author Gernot Belger
@@ -62,6 +64,11 @@ public class GenericWizardSelectionPage extends ImportExportPage
 
   private static final String STORE_EXPANDED_CATEGORIES = "STORE_EXPANDED_EXPORT_CATEGORIES"; //$NON-NLS-1$
 
+  /**
+   * Override to make some methods visible to this class.
+   * 
+   * @author Gernot Belger
+   */
   class MyCategorizedWizardSelectionTree extends CategorizedWizardSelectionTree
   {
     protected MyCategorizedWizardSelectionTree( final IWizardCategory categories, final String msg )
@@ -92,6 +99,8 @@ public class GenericWizardSelectionPage extends ImportExportPage
 
   private final String m_description;
 
+  private final GenericWizardFilter m_treeFilter = new GenericWizardFilter();
+
   public GenericWizardSelectionPage( final IWizardRegistry registry, final IStructuredSelection currentSelection, final String settingsName, final String message, final String description )
   {
     super( PlatformUI.getWorkbench(), currentSelection );
@@ -103,15 +112,23 @@ public class GenericWizardSelectionPage extends ImportExportPage
     m_wizardRegistry = registry;
   }
 
+  public void setFilter( final IWizardFilter filter )
+  {
+    m_treeFilter.setFilter( filter );
+
+    if( m_exportTree != null )
+      ViewerUtilities.refresh( m_exportTree.getViewer(), true );
+  }
+
   @Override
   protected Composite createTreeViewer( final Composite parent )
   {
-    // FIXME: filter wizards...
     final IWizardCategory root = m_wizardRegistry.getRootCategory();
 
     m_exportTree = new MyCategorizedWizardSelectionTree( root, m_message );
     final Composite exportComp = m_exportTree.createControl( parent );
-    m_exportTree.getViewer().addSelectionChangedListener( new ISelectionChangedListener()
+    final TreeViewer viewer = m_exportTree.getViewer();
+    viewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @SuppressWarnings("synthetic-access")
       @Override
@@ -120,7 +137,7 @@ public class GenericWizardSelectionPage extends ImportExportPage
         listSelectionChanged( event.getSelection() );
       }
     } );
-    m_exportTree.getViewer().addDoubleClickListener( new IDoubleClickListener()
+    viewer.addDoubleClickListener( new IDoubleClickListener()
     {
       @SuppressWarnings("synthetic-access")
       @Override
@@ -129,8 +146,22 @@ public class GenericWizardSelectionPage extends ImportExportPage
         treeDoubleClicked( event );
       }
     } );
-    setTreeViewer( m_exportTree.getViewer() );
+
+    viewer.addFilter( m_treeFilter );
+
+    setTreeViewer( viewer );
+
+    viewer.expandToLevel( AbstractTreeViewer.ALL_LEVELS );
+
     return exportComp;
+  }
+
+  @Override
+  protected void initialize( )
+  {
+    super.initialize();
+
+    getTreeViewer().expandToLevel( AbstractTreeViewer.ALL_LEVELS );
   }
 
   @Override

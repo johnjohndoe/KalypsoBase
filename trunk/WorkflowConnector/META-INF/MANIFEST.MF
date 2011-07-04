@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: de.renew.workflow.connector;singleton:=true
-Bundle-Version: 10.10.3.qualifier
+Bundle-Version: 11.6.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
@@ -18,7 +18,7 @@ Require-Bundle: de.renew.workflow.model;visibility:=reexport,
  org.eclipse.ui.navigator,
  org.eclipse.ui.ide,
  org.kalypso.contribs.eclipseplatform,
- org.kalypso.commons;bundle-version="0.0.1"
+ org.kalypso.commons
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.renew.workflow.connector.WorkflowConnectorPlugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -37,7 +37,6 @@ package org.kalypsodeegree_impl.graphics.displayelements.strokearrow;
 
 import java.util.Map;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.Stroke;
@@ -45,13 +44,17 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 /**
  * @author Dirk Kuch
  */
-public class StrokeArrowHelper
+public final class StrokeArrowHelper
 {
-
-  public enum ARROW_TYPE
+  public StrokeArrowHelper( )
   {
-    eLine,
-    eSegmentOfLine;
+    throw new UnsupportedOperationException();
+  }
+
+  public static enum ARROW_TYPE
+  {
+    line,
+    segment;
 
     public static ARROW_TYPE getType( final CssParameter param )
     {
@@ -61,45 +64,33 @@ public class StrokeArrowHelper
         throw (new IllegalStateException( "StrokeArrowType consists only of one parameter." ));
 
       final String type = ((String) components[0]).toLowerCase();
-
-      if( type.equals( "line" ) )
-        return ARROW_TYPE.eLine;
-      else if( type.equals( "segment" ) )
-        return ARROW_TYPE.eSegmentOfLine;
-
-      throw (new NotImplementedException());
+      return ARROW_TYPE.valueOf( type );
     }
   }
 
-  public enum ARROW_WIDGET
+  public static enum ARROW_WIDGET
   {
-    eOpen,
-    eFill;
+    open,
+    fill;
 
     public static ARROW_WIDGET getType( final CssParameter param )
     {
       final ParameterValueType value = param.getValue();
       final Object[] components = value.getComponents();
       if( components.length != 1 )
-        return ARROW_WIDGET.eOpen; // default value!
+        return ARROW_WIDGET.open; // default value!
 
       final String type = ((String) components[0]).toLowerCase();
-
-      if( type.equals( "open" ) )
-        return ARROW_WIDGET.eOpen;
-      else if( type.equals( "fill" ) )
-        return ARROW_WIDGET.eFill;
-
-      throw (new NotImplementedException());
+      return ARROW_WIDGET.valueOf( type );
     }
-
   }
 
-  public enum ARROW_ALIGNMENT
+  public static enum ARROW_ALIGNMENT
   {
-    eStart,
-    eMiddle,
-    eEnd;
+    start,
+    middle,
+    end;
+
     public static ARROW_ALIGNMENT getType( final CssParameter param )
     {
       final ParameterValueType value = param.getValue();
@@ -109,19 +100,12 @@ public class StrokeArrowHelper
 
       final String type = ((String) components[0]).toLowerCase();
 
-      if( type.equals( "start" ) )
-        return ARROW_ALIGNMENT.eStart;
-      else if( type.equals( "middle" ) )
-        return ARROW_ALIGNMENT.eMiddle;
-      else if( type.equals( "end" ) )
-        return ARROW_ALIGNMENT.eEnd;
-
-      throw (new NotImplementedException());
+      return ARROW_ALIGNMENT.valueOf( type );
     }
   }
 
   public static final String STROKE_WIDTH = "stroke-width";
-  
+
   public static final String STROKE_ARROW_TYPE = "stroke-arrow-type";
 
   public static final String STROKE_ARROW_WIDGET = "stroke-arrow-widget";
@@ -135,9 +119,7 @@ public class StrokeArrowHelper
     if( stroke == null )
       return false;
 
-    final Map< ? , ? > map = stroke.getCssParameters();
-    final Object object = map.get( STROKE_ARROW_TYPE );
-
+    final Object object = stroke.getParameter( STROKE_ARROW_TYPE );
     if( object != null )
       return true;
 

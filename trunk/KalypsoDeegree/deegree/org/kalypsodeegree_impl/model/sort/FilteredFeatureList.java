@@ -421,7 +421,7 @@ public class FilteredFeatureList implements FeatureList
     return filteredList;
   }
 
-  
+
   /**
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Position,
    *      java.util.List)
@@ -508,7 +508,7 @@ public class FilteredFeatureList implements FeatureList
   {
     return filterList( m_original.searchFeatures( geometry ) );
   }
-  
+
   /**
    * @see org.kalypsodeegree.model.feature.FeatureList#addNew(javax.xml.namespace.QName)
    */
@@ -622,4 +622,12 @@ public class FilteredFeatureList implements FeatureList
     return false;
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.IFeatureProperty#getPropertyType()
+   */
+  @Override
+  public IRelationType getPropertyType( )
+  {
+    return m_original.getPropertyType();
+  }
 }

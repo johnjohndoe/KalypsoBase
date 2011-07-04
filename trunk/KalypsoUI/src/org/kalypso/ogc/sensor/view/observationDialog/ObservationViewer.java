@@ -82,11 +82,14 @@ import org.kalypso.ogc.sensor.zml.ZmlURL;
  */
 public class ObservationViewer extends Composite
 {
-  private static final String SETTINGS_WEIGHTS_BOTTOM = "weightsBottom";
+  /**
+   * If this style is used, the properties viewer is not shown.
+   */
+  public static final int HIDE_PROPERTIES = 1 << 1;
 
-  private static final String SETTINGS_WEIGHTS_MAIN = "weightsMain";
+  private static final String SETTINGS_WEIGHTS_BOTTOM = "weightsBottom"; //$NON-NLS-1$
 
-  private Label m_lblObs;
+  private static final String SETTINGS_WEIGHTS_MAIN = "weightsMain"; //$NON-NLS-1$
 
   protected Text m_txtHref;
 
@@ -119,6 +122,7 @@ public class ObservationViewer extends Composite
   public ObservationViewer( final Composite parent, final int style, final boolean header, final IObservationAction[] buttons, final IDialogSettings settings, final Clipboard clipboard )
   {
     super( parent, style );
+
     m_settings = settings;
     m_clipboard = clipboard;
     m_tableView.setAlphaSort( false );
@@ -232,9 +236,9 @@ public class ObservationViewer extends Composite
     header.setLayout( new GridLayout( 4, false ) );
 
     // 1. HREF
-    m_lblObs = new Label( header, SWT.LEFT );
-    m_lblObs.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.0" ) ); //$NON-NLS-1$
-    m_lblObs.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
+    final Label lblObs = new Label( header, SWT.LEFT );
+    lblObs.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.0" ) ); //$NON-NLS-1$
+    lblObs.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
 
     m_txtHref = new Text( header, SWT.BORDER | SWT.MULTI | SWT.WRAP );
     m_txtHref.setSize( 400, m_txtHref.getSize().y );
@@ -333,6 +337,9 @@ public class ObservationViewer extends Composite
     final int[] mainWeights = getWeightsFromSettings( new int[] { 2, 5 }, SETTINGS_WEIGHTS_MAIN );
     form.setWeights( mainWeights );
     addWeightsListener( form, SETTINGS_WEIGHTS_MAIN );
+
+    if( (getStyle() & HIDE_PROPERTIES) != 0 )
+      form.setMaximizedControl( tableComp );
   }
 
   /**

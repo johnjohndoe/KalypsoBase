@@ -889,4 +889,9 @@ public class SplitSort implements FeatureList
     return false;
   }
 
+  @Override
+  public IRelationType getPropertyType( )
+  {
+    return m_parentFeatureTypeProperty;
+  }
 }

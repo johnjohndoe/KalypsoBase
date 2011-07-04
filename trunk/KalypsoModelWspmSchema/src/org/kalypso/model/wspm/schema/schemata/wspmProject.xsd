@@ -18,11 +18,6 @@
         License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspm="org.kalypso.model.wspm" xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:wspmproj="org.kalypso.model.wspmproj" targetNamespace="org.kalypso.model.wspmproj" elementFormDefault="qualified" version="0.1">
-        <annotation>
-                <appinfo xmlns:kapp="org.kalypso.appinfo">
-                        <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
-                </appinfo>
-        </annotation>
         <import namespace="org.kalypso.model.wspm" schemaLocation="wspm.xsd"/>
         <import namespace="org.kalypso.model.wspmcommon" schemaLocation="wspmCommons.xsd"/>
         <import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/gml.xsd"/>

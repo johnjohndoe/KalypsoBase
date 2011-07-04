@@ -53,10 +53,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
@@ -73,6 +77,7 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.validation.ResourceValidatorMarkerCollector;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -82,41 +87,45 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author kimwerner
  */
-public class ValidateProfilesWizard extends Wizard
+public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
 {
+  private String m_profiletype = StringUtils.EMPTY;
 
-  private String m_profiletype = ""; //$NON-NLS-1$
+  private ValidatorRuleSet m_validatorRuleSet;
 
-  final private ValidatorRuleSet m_validatorRuleSet;
+  private IProfilMarkerResolution[] m_reparatorRules;
 
-  final private IProfilMarkerResolution[] m_reparatorRules;
-
-  final private ProfilesChooserPage m_profileChooserPage;
+  private ProfilesChooserPage m_profileChooserPage;
 
   private ArrayChooserPage m_validatorChooserPage;
 
   private ArrayChooserPage m_quickFixChoosePage;
 
-  final private IProfileFeature[] m_profiles;
+  private IProfileFeature[] m_profiles;
 
-  final protected CommandableWorkspace m_workspace;
+  protected CommandableWorkspace m_workspace;
 
-  public ValidateProfilesWizard( final ProfileSelection profileSelection )
+  public ValidateProfilesWizard( )
   {
+    setNeedsProgressMonitor( true );
+    setWindowTitle( Messages.getString( "org.kalypso.model.wspm.ui.action.ValidateProfilesActionDelegate.0" ) ); //$NON-NLS-1$
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
+  }
+
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
     m_workspace = profileSelection.getWorkspace();
     m_profiles = profileSelection.getProfiles();
     m_profiletype = (String) m_profiles[0].getProperty( ProfileFeatureFactory.QNAME_TYPE );
     m_validatorRuleSet = KalypsoModelWspmCorePlugin.getValidatorSet( m_profiletype );
 
     m_reparatorRules = KalypsoModelWspmCoreExtensions.createReparatorRules();
-    setNeedsProgressMonitor( true );
     final String description = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.2" ); //$NON-NLS-1$ 
     m_profileChooserPage = new ProfilesChooserPage( description, profileSelection, false );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
   @Override
   public void addPages( )
   {

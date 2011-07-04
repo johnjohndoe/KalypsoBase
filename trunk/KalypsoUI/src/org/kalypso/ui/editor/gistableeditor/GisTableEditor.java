@@ -47,6 +47,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.IOUtils;
@@ -61,7 +62,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
@@ -82,6 +82,8 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
@@ -90,6 +92,8 @@ import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IFeaturesProvider;
 import org.kalypso.ogc.gml.IFeaturesProviderListener;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
+import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.table.ILayerTableInput;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
@@ -116,7 +120,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
  * 
  * @author belger
  */
-public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart, ISelectionProvider, IExportableObjectFactory
+public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart, IExportableObjectFactory
 {
   private final IFeatureChangeListener m_fcl = new IFeatureChangeListener()
   {
@@ -167,7 +171,7 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
   {
     final IWorkbenchPartSite site = getSite();
     if( site != null )
-      site.setSelectionProvider( this );
+      site.setSelectionProvider( null );
 
     super.dispose();
   }
@@ -242,7 +246,7 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     } );
 
     getEditorSite().registerContextMenu( menuManager, m_layerTable, false );
-    getSite().setSelectionProvider( getLayerTable() );
+    getSite().setSelectionProvider( m_layerTable );
     m_layerTable.setMenu( menuManager );
 
     try
@@ -266,6 +270,12 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
 
   protected void handleContextMenuAboutToShow( final IMenuManager manager )
   {
+    final ISelectionProvider selectionProvider = getSite().getSelectionProvider();
+    final ISelection selection = selectionProvider.getSelection();
+    final ISelection mySelection = m_layerTable.getSelection();
+// selectionProvider.setSelection( getSelection() );
+
+
     appendNewFeatureActions( manager );
     manager.add( new GroupMarker( IWorkbenchActionConstants.MB_ADDITIONS ) );
     manager.add( new Separator() );
@@ -278,7 +288,6 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     final IMenuManager newFeatureMenu = new MenuManager( Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.7" ) );
     manager.add( newFeatureMenu );
     GisTableEditorActionBarContributor.fillNewFeatureMenu( newFeatureMenu, this );
-
   }
 
   @Override
@@ -300,42 +309,6 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     return m_layerTable;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  @Override
-  public void addSelectionChangedListener( final ISelectionChangedListener listener )
-  {
-    m_layerTable.addSelectionChangedListener( listener );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
-  @Override
-  public ISelection getSelection( )
-  {
-    return m_layerTable.getSelection();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
-  @Override
-  public void removeSelectionChangedListener( final ISelectionChangedListener listener )
-  {
-    m_layerTable.removeSelectionChangedListener( listener );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-   */
-  @Override
-  public void setSelection( final ISelection selection )
-  {
-    m_layerTable.setSelection( selection );
-  }
-
   public void appendSpaltenActions( final IMenuManager manager )
   {
     final IFeaturesProvider features = m_layerTable.getInput();
@@ -349,9 +322,44 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     final IPropertyType[] ftps = featureType.getProperties();
     for( final IPropertyType element : ftps )
     {
-      final String columnName = element.getQName().getLocalPart();
-      manager.add( new ColumnAction( this, m_layerTable, columnName, element.getAnnotation() ) );
+      // FIXME: we should not show all columns...
+
+      if( isColumnShowable( element ) )
+      {
+        final String columnName = element.getQName().getLocalPart();
+        manager.add( new ColumnAction( this, m_layerTable, columnName, element.getAnnotation() ) );
+      }
     }
+  }
+
+  private boolean isColumnShowable( final IPropertyType type )
+  {
+    final QName typeName = type.getQName();
+
+    if( Feature.QN_NAME.equals( typeName ) )
+      return true;
+
+    /* Never make sense to edit/show a list of sub-element in a table column, except gml:name */
+    if( type.isList() )
+      return false;
+
+    if( Feature.QN_BOUNDED_BY.equals( typeName ) )
+      return false;
+
+    if( type instanceof IValuePropertyType )
+    {
+      final IValuePropertyType vpt = (IValuePropertyType) type;
+      if( vpt.isGeometry() )
+      {
+        /* Do not show geometries without type handler */
+        final ITypeRegistry<IGuiTypeHandler> registry = GuiTypeRegistrySingleton.getTypeRegistry();
+        final IGuiTypeHandler typeHandler = registry.getTypeHandlerFor( vpt );
+        if( typeHandler == null )
+          return false;
+      }
+    }
+
+    return true;
   }
 
   /**

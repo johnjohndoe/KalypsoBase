@@ -43,11 +43,6 @@ package org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -58,6 +53,7 @@ import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidg
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDataProvider;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetGeometryProvider;
+import org.kalypso.ogc.gml.map.widgets.advanced.utils.WidgetCursors;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -70,7 +66,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDelegate
 {
-  private static BufferedImage IMG_CURSOR;
+  private Cursor m_cursor;
 
   public RectanglePolygonDelegate( final IAdvancedSelectionWidget widget, final IAdvancedSelectionWidgetDataProvider provider, final IAdvancedSelectionWidgetGeometryProvider geometryProvider )
   {
@@ -161,20 +157,8 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
   @Override
   public Cursor getCursor( )
   {
-    try
-    {
-      if( IMG_CURSOR == null )
-        IMG_CURSOR = ImageIO.read( RemovePolygonDelegate.class.getResourceAsStream( "images/cursor_add_rectangle.png" ) ); //$NON-NLS-1$
-
-      final Toolkit toolkit = Toolkit.getDefaultToolkit();
-      return toolkit.createCustomCursor( IMG_CURSOR, new Point( 2, 1 ), "selection cursor" ); //$NON-NLS-1$
-    }
-    catch( final IOException e )
-    {
-      KalypsoCorePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-
-    return null;
+    if( m_cursor == null )
+      m_cursor = WidgetCursors.createAddRectangleCursor();
+    return m_cursor;
   }
-
 }

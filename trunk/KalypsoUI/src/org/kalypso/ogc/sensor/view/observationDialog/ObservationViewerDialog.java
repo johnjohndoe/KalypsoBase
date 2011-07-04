@@ -71,6 +71,10 @@ public class ObservationViewerDialog extends Dialog
 
   private ObservationViewer m_viewer;
 
+  private int m_viewerStyle = SWT.NONE;
+
+  private String m_windowTitle;
+
   public ObservationViewerDialog( final Shell parent, final boolean withHeaderForm )
   {
     super( parent );
@@ -85,9 +89,11 @@ public class ObservationViewerDialog extends Dialog
     this( parent, true );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
+  public void setViewerStyle( final int viewerStyle )
+  {
+    m_viewerStyle = viewerStyle;
+  }
+
   @Override
   protected final Control createDialogArea( final Composite parent )
   {
@@ -100,13 +106,23 @@ public class ObservationViewerDialog extends Dialog
 
     final IDialogSettings viewerSettings = DialogSettingsUtils.getSection( m_settings, SETTINGS_VIEWER );
     final IObservationAction[] actions = m_actions.toArray( new IObservationAction[m_actions.size()] );
-    m_viewer = new ObservationViewer( composite, SWT.NONE, m_withHeader, actions, viewerSettings, m_clipboard );
+    m_viewer = new ObservationViewer( composite, m_viewerStyle, m_withHeader, actions, viewerSettings, m_clipboard );
 
     updateViewer();
 
-    getShell().setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.0" ) ); //$NON-NLS-1$
+    final String windowTitle = getWindowTitle();
+    getShell().setText( windowTitle );
 
     return composite;
+  }
+
+  private String getWindowTitle( )
+  {
+    final String title = Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewerDialog.0" ); //$NON-NLS-1$
+    if( m_windowTitle == null )
+      return title;
+
+    return String.format( "%s - %s", title, m_windowTitle ); //$NON-NLS-1$
   }
 
   protected void handleDispose( )
@@ -161,5 +177,10 @@ public class ObservationViewerDialog extends Dialog
   public void addObservationAction( final IObservationAction action )
   {
     m_actions.add( action );
+  }
+
+  public void setWindowTitle( final String windowTitle )
+  {
+    m_windowTitle = windowTitle;
   }
 }

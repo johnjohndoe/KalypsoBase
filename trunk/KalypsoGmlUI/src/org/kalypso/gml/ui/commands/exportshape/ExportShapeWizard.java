@@ -43,13 +43,18 @@ package org.kalypso.gml.ui.commands.exportshape;
 import java.nio.charset.Charset;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.gml.ui.jface.FeatureSelectionPage;
+import org.kalypso.gml.ui.util.GenericFeatureSelection;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.shape.deegree.IShapeDataFactory;
@@ -58,22 +63,40 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * @author Gernot Belger
  */
-public class ExportShapeWizard extends Wizard
+public class ExportShapeWizard extends Wizard implements IWorkbenchWizard
 {
-  private final ExportShapePage m_exportShapePage;
+  private ExportShapePage m_exportShapePage;
 
-  private final FeatureSelectionPage m_selectFeaturesPage;
+  private FeatureSelectionPage m_selectFeaturesPage;
 
 // private final ExportShapeSignaturePage m_shapeSignaturePage;
 
-  private final ShapeSignature m_signature;
+  private ShapeSignature m_signature;
 
-  public ExportShapeWizard( final IFeatureSelection featureSelection, final String fileName )
+  public ExportShapeWizard( )
   {
+    setNeedsProgressMonitor( true );
+    setWindowTitle( Messages.getString("ExportShapeWizard_0") ); //$NON-NLS-1$
+  }
+
+  protected ShapeSignature createSignature( final Feature[] featureArray )
+  {
+    return StandardShapeDataFactory.createDefaultSignature( featureArray );
+  }
+
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    final IFeatureSelection featureSelection = GenericFeatureSelection.create( selection, null );
+    if( featureSelection == null || featureSelection.size() == 0 )
+      throw new IllegalStateException( "No features in selection. Please select features for export." ); //$NON-NLS-1$
+
+    final String fileName = ExportShapeUtils.guessExportFileName( selection );
+
     final Feature[] featureArray = FeatureSelectionHelper.getFeatures( featureSelection );
-    m_selectFeaturesPage = new FeatureSelectionPage( "festureSelection", featureArray, null, featureArray, 1 );
-    m_selectFeaturesPage.setTitle( "Choose Features" );
-    m_selectFeaturesPage.setDescription( "Please choose features for export." );
+    m_selectFeaturesPage = new FeatureSelectionPage( "festureSelection", featureArray, null, featureArray, 1 ); //$NON-NLS-1$
+    m_selectFeaturesPage.setTitle( Messages.getString("ExportShapeWizard_1") ); //$NON-NLS-1$
+    m_selectFeaturesPage.setDescription( Messages.getString("ExportShapeWizard_2") ); //$NON-NLS-1$
 
     addPage( m_selectFeaturesPage );
 
@@ -82,20 +105,10 @@ public class ExportShapeWizard extends Wizard
 // m_shapeSignaturePage = new ExportShapeSignaturePage( "exportShapeSignaturePage", m_signature );
 // addPage( m_shapeSignaturePage );
 
-    m_exportShapePage = new ExportShapePage( "exportShapePage", fileName );
+    m_exportShapePage = new ExportShapePage( "exportShapePage", fileName ); //$NON-NLS-1$
     addPage( m_exportShapePage );
-
-    setNeedsProgressMonitor( true );
   }
 
-  protected ShapeSignature createSignature( final Feature[] featureArray )
-  {
-    return StandardShapeDataFactory.createDefaultSignature( featureArray );
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
@@ -123,5 +136,4 @@ public class ExportShapeWizard extends Wizard
   {
     return new StandardShapeDataFactory( chosenFeatures, shapeCharset, coordinateSystem, signature );
   }
-
 }

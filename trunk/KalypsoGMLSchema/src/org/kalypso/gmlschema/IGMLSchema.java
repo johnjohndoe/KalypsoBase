@@ -53,7 +53,7 @@ import org.kalypso.gmlschema.xml.ComplexTypeReference;
  */
 public interface IGMLSchema
 {
-  public final static String VERSION_GML3_1_1 = "3.1.1";
+  public final static String VERSION_GML3_1_1 = "3.1.1"; //$NON-NLS-1$
 
   /**
    * @return version of GML e.g. "2.2.1", "3.1."

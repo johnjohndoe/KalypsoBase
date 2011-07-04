@@ -155,21 +155,15 @@
        point="org.eclipse.core.runtime.preferences">
     <initializer class="org.kalypso.core.preferences.KalypsoCorePreferenceInitializer"/>
  </extension>
- <extension
-       point="org.eclipse.core.expressions.propertyTesters">
+ <extension point="org.eclipse.core.expressions.propertyTesters">
+    <!-- FIXME: replace with org.kalypso.gml.qname -->
+    <!-- deprecated -->
     <propertyTester
           class="org.kalypso.ogc.gml.KalypsoFeatureThemeTester"
           id="org.kalypso.ogc.gml.FeatureThemeTester"
           namespace="org.kalypso.core"
           properties="featureType"
           type="org.kalypso.ogc.gml.IKalypsoFeatureTheme">
-    </propertyTester>
-    <propertyTester
-          class="org.kalypso.ogc.gml.expressions.QNamePropertyTester"
-          id="org.kalypso.ogc.gml.expressions.featureQNameTester"
-          namespace="org.kalypso.core"
-          properties="qname"
-          type="org.kalypsodeegree.model.feature.Feature">
     </propertyTester>
  </extension>
  <extension

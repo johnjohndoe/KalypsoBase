@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoCore Plug-in
 Bundle-SymbolicName: org.kalypso.core; singleton:=true
-Bundle-Version: 10.10.3.qualifier
+Bundle-Version: 11.6.0.qualifier
 Bundle-Activator: org.kalypso.core.KalypsoCorePlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
@@ -108,6 +108,7 @@ Require-Bundle: org.junit4;bundle-version="4.3.0";resolution:=optional,
  org.kalypso.contribs.ogc31,
  org.kalypso.deegree;visibility:=reexport,
  org.kalypso.repository;visibility:=reexport,
- org.eclipse.ui.ide
+ org.eclipse.ui.ide,
+ org.junit4;resolution:=optional
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -558,7 +558,7 @@ public class GMLContentProvider implements ITreeContentProvider
    * @param override
    *          Value that overrides the catalog behavior. Set to <code>null</code>, to use the default behavior.
    */
-  public void setShowChildreOverride( final QName element, final Boolean override )
+  public void setShowChildrenOverride( final QName element, final Boolean override )
   {
     if( override == null )
       m_showChildrenOverrides.remove( element );

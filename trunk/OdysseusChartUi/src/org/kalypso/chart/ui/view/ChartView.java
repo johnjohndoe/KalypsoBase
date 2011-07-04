@@ -203,9 +203,6 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
         if( m_chartModel != null )
         {
           m_chartComposite = new ChartImageComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
-
-          // TODO: m_axisDragHandler = new AxisDragHandlerDelegate( m_chartComposite );
-
           // Titel der View setzen
           final TitleTypeBean[] title = m_chartModel.getSettings().getTitles();
           if( !ArrayUtils.isEmpty( title ) )

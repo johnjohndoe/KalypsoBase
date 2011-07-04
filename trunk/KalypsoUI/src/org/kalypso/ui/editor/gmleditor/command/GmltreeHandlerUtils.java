@@ -58,45 +58,6 @@ public class GmltreeHandlerUtils
     throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
-// /**
-// * Post a command to the currently active map.
-// */
-// public static void postCommandChecked( final IEvaluationContext context, final ICommand command, final Runnable
-// runnnable ) throws ExecutionException
-// {
-// final ICommandTarget commandTarget = findCommandTarget( context );
-// if( commandTarget == null )
-//      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.map.handlers.MapHandlerUtils.1" ) ); //$NON-NLS-1$
-//
-// commandTarget.postCommand( command, runnnable );
-// }
-
-// /**
-// * Returns either the map outline or the currently active map-part, suitable to accept map-commands.
-// */
-// private static ICommandTarget findCommandTarget( final IEvaluationContext context )
-// {
-// final ICommandTarget outline = MapHandlerUtils.getMapOutline( context );
-// if( outline != null )
-// return outline;
-//
-// final Object part = context.getVariable( ISources.ACTIVE_PART_NAME );
-// if( part instanceof AbstractMapPart )
-// return ((AbstractMapPart) part).getCommandTarget();
-//
-// return null;
-// }
-
-// public static void postMapCommandChecked( final IMapPanel mapPanel, final ChangeExtentCommand command, final Runnable
-// runnable ) throws ExecutionException
-// {
-// final ICommandTarget commandTarget = mapPanel.getWidgetManager().getCommandTarget();
-// if( commandTarget == null )
-//      throw new ExecutionException( "No active command target" ); //$NON-NLS-1$
-//
-// commandTarget.postCommand( command, runnable );
-// }
-
   /**
    * Gets the currently active tree from the handler event.<br>
    * To be more precise, gets the <code>activeGmlTree</code> source from the events context.

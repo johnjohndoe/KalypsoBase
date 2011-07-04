@@ -57,7 +57,6 @@ public class OsmImageProvider implements IKalypsoImageProvider
 {
   public OsmImageProvider( )
   {
-    // TODO Auto-generated constructor stub
   }
 
   /**
@@ -67,7 +66,6 @@ public class OsmImageProvider implements IKalypsoImageProvider
   @Override
   public void init( final String themeName, final String[] layers, final String[] styles, final String service, final String localSRS, final String sldBody )
   {
-    // TODO Auto-generated method stub
   }
 
   /**
@@ -106,11 +104,8 @@ public class OsmImageProvider implements IKalypsoImageProvider
     final BufferedImage bi = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
 
     final Graphics2D g = bi.createGraphics();
-
     g.setColor( Color.cyan );
-
     g.fillRect( 0, 0, width, height );
-
     g.dispose();
 
     return bi;

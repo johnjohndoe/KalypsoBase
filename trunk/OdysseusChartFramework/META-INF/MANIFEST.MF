@@ -2,10 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OdysseusChartFramework Plug-in
 Bundle-SymbolicName: de.openali.odysseus.chart.framework;singleton:=true
-Bundle-Version: 10.10.3.qualifier
-Require-Bundle: org.eclipse.swt;visibility:=reexport,
- org.eclipse.core.runtime,
- org.kalypso.commons
+Bundle-Version: 11.6.0.qualifier
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.swt;visibility:=reexport,
+ org.kalypso.commons,
+ org.kalypso.metadoc,
+ org.kalypso.ui
 Export-Package: de.openali.odysseus.chart.framework,
  de.openali.odysseus.chart.framework.exception,
  de.openali.odysseus.chart.framework.logging,

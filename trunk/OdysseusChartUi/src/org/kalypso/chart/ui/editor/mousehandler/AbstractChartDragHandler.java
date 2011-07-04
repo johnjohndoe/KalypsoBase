@@ -6,6 +6,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.impl.visitors.LayerTooltipVisitor;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -22,7 +23,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
 {
   private EditInfo m_editInfo = null;
 
-  private final int m_trashHold;
+  private final int m_trashold;
 
   private EditInfo m_clickInfo = null;
 
@@ -50,7 +51,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
   {
     super( chart );
 
-    m_trashHold = trashHold;
+    m_trashold = trashHold;
     m_observedButtonMask = observedButtonMask;
   }
 
@@ -121,16 +122,24 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
   public void mouseMove( final MouseEvent e )
   {
     super.mouseMove( e );
-
+    getChart().setTooltipInfo( null );
+    final Point p = new Point( e.x, e.y );
     if( m_clickInfo == null )
-      return;
+      doSetTooltip( p );
+    else
+      mouseMove( p );
+  }
 
-    mouseMove( new Point( e.x, e.y ) );
+  private void doSetTooltip( final Point point )
+  {
+    final LayerTooltipVisitor visitor = new LayerTooltipVisitor( getChart(), getChart().screen2plotPoint( point ) );
+    final IChartModel model = getChart().getChartModel();
+    model.getLayerManager().accept( visitor );
   }
 
   protected void mouseMove( final Point move )
   {
-    if( m_editInfo == null && (Math.abs( move.x - m_startX ) > m_trashHold || Math.abs( move.y - m_startY ) > m_trashHold) )
+    if( m_editInfo == null && (Math.abs( move.x - m_startX ) > m_trashold || Math.abs( move.y - m_startY ) > m_trashold) )
       m_editInfo = m_clickInfo.clone();
 
     final Point plotPoint = getChart().screen2plotPoint( new Point( move.x - m_deltaSnapX, move.y - m_deltaSnapY ) );

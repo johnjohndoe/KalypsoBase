@@ -59,8 +59,6 @@ public class AxisRangeDialog extends TitleAreaDialog
 
   private Text m_defaultText;
 
-  private Text m_nameText;
-
   private int m_count = 1;
 
   private Object m_int = null;
@@ -70,8 +68,6 @@ public class AxisRangeDialog extends TitleAreaDialog
   private boolean m_valid = false;
 
   private Object m_default = null;
-
-  private Object m_name = null;
 
   public AxisRangeDialog( final Shell parent, final String axisType )
   {
@@ -96,14 +92,6 @@ public class AxisRangeDialog extends TitleAreaDialog
     group.setLayout( new GridLayout( 2, true ) );
     group.setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
-    // Name
-    final Label label6 = new Label( group, SWT.NONE );
-    label6.setText( Messages.getString( "org.kalypso.ogc.sensor.view.AxisRangeDialog.1" ) ); //$NON-NLS-1$
-    m_nameText = new Text( group, SWT.BORDER );
-    m_nameText.setText( "" ); //$NON-NLS-1$
-    final GridData nameData = new GridData( GridData.FILL_HORIZONTAL );
-    nameData.widthHint = 150;
-    m_nameText.setLayoutData( nameData );
     // MIN
     final Label label = new Label( group, SWT.NONE );
     label.setText( Messages.getString( "org.kalypso.ogc.sensor.view.AxisRangeDialog.3" ) ); //$NON-NLS-1$
@@ -150,7 +138,6 @@ public class AxisRangeDialog extends TitleAreaDialog
     m_intText.addModifyListener( modifyListener );
     m_countText.addModifyListener( modifyListener );
     m_defaultText.addModifyListener( modifyListener );
-    m_nameText.addModifyListener( modifyListener );
 
     validate();
     return group;
@@ -164,18 +151,11 @@ public class AxisRangeDialog extends TitleAreaDialog
   public Object getInt( )
   {
     return m_int;
-
   }
 
   public Object getDefault( )
   {
     return m_default;
-
-  }
-
-  public Object getName( )
-  {
-    return m_name;
 
   }
 
@@ -189,8 +169,6 @@ public class AxisRangeDialog extends TitleAreaDialog
     String message = ""; //$NON-NLS-1$
     try
     {
-      message = Messages.getString( "org.kalypso.ogc.sensor.view.AxisRangeDialog.13" ); //$NON-NLS-1$
-      m_name = m_nameText.getText();
       message = Messages.getString( "org.kalypso.ogc.sensor.view.AxisRangeDialog.14" ); //$NON-NLS-1$
       m_min = SpecialPropertyMapper.cast( m_minText.getText(), TimeseriesUtils.getDataClass( m_axisType ), false );
       message = Messages.getString( "org.kalypso.ogc.sensor.view.AxisRangeDialog.15" ); //$NON-NLS-1$
@@ -199,7 +177,6 @@ public class AxisRangeDialog extends TitleAreaDialog
       m_count = ((Integer) SpecialPropertyMapper.cast( m_countText.getText(), Integer.class, false )).intValue();
       message = Messages.getString( "org.kalypso.ogc.sensor.view.AxisRangeDialog.17" ); //$NON-NLS-1$
       m_default = SpecialPropertyMapper.cast( m_defaultText.getText(), TimeseriesUtils.getDataClass( m_axisType ), false );
-//      message = Messages.getString( "org.kalypso.ogc.sensor.view.AxisRangeDialog.18" ); //$NON-NLS-1$
       m_valid = true;
     }
     catch( final Exception e )

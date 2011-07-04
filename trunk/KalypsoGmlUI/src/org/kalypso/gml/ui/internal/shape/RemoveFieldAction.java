@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
+import org.kalypso.gml.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -64,12 +65,12 @@ public class RemoveFieldAction extends Action
 
   public RemoveFieldAction( final TableViewer viewer, final IObservableList fieldList )
   {
-    super( "Remove Attribute(s)" );
+    super( Messages.getString("RemoveFieldAction_0") ); //$NON-NLS-1$
 
     final ImageDescriptor image = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.SHAPE_FILE_NEW_REMOVE_FIELD );
     setImageDescriptor( image );
 
-    setToolTipText( "Removes the selected attributes" );
+    setToolTipText( Messages.getString("RemoveFieldAction_1") ); //$NON-NLS-1$
 
     m_viewer = viewer;
     m_fieldList = fieldList;
@@ -86,10 +87,10 @@ public class RemoveFieldAction extends Action
     final Shell shell = m_viewer.getControl().getShell();
     if( selection.isEmpty() )
     {
-      MessageDialog.openInformation( shell, getText(), "Please select one or more attributes in the table." );
+      MessageDialog.openInformation( shell, getText(), Messages.getString("RemoveFieldAction_2") ); //$NON-NLS-1$
       return;
     }
-    else if( !MessageDialog.openConfirm( shell, getText(), "Remove the selected attribute(s)?" ) )
+    else if( !MessageDialog.openConfirm( shell, getText(), Messages.getString("RemoveFieldAction_3") ) ) //$NON-NLS-1$
       return;
 
     for( final Iterator< ? > iterator = selection.iterator(); iterator.hasNext(); )

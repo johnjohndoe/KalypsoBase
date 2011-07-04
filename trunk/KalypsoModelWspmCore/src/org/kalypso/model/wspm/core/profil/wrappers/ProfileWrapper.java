@@ -278,8 +278,8 @@ public class ProfileWrapper
     {
       final ProfileWrapper other = (ProfileWrapper) obj;
 
-      final String station = String.format( "%.3f", getStation() );
-      final String otherStation = String.format( "%.3f", other.getStation() );
+      final String station = String.format( "%.3f", getStation() ); //$NON-NLS-1$
+      final String otherStation = String.format( "%.3f", other.getStation() ); //$NON-NLS-1$
 
       final EqualsBuilder builder = new EqualsBuilder();
       builder.append( station, otherStation );
@@ -296,7 +296,7 @@ public class ProfileWrapper
   @Override
   public int hashCode( )
   {
-    final String station = String.format( "%.3f", getStation() );
+    final String station = String.format( "%.3f", getStation() ); //$NON-NLS-1$
 
     final HashCodeBuilder builder = new HashCodeBuilder();
     builder.append( station );

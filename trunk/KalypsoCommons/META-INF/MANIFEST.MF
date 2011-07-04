@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoCommons Plug-in
 Bundle-SymbolicName: org.kalypso.commons;singleton:=true
-Bundle-Version: 10.10.3.qualifier
+Bundle-Version: 11.6.0.qualifier
 Bundle-ClassPath: lib/apache/lang/commons-lang-2.6.jar,
  lib/modified-httpclient-contribs.jar,
  lib/jaxb_2_1_7/activation.jar,
@@ -487,6 +487,7 @@ Export-Package: au.com.bytecode.opencsv,
  org.kalypso.commons.eclipse.core.resources,
  org.kalypso.commons.eclipse.core.runtime,
  org.kalypso.commons.eclipse.jface.viewers,
+ org.kalypso.commons.eclipse.ui,
  org.kalypso.commons.exception,
  org.kalypso.commons.factory,
  org.kalypso.commons.i18n,
@@ -526,9 +527,9 @@ Export-Package: au.com.bytecode.opencsv,
  org.slf4j.profiler,
  org.slf4j.spi,
  org.w3c.dom
-Require-Bundle: org.junit4;bundle-version="4.5.0";resolution:=optional,
+Require-Bundle: org.junit4;resolution:=optional,
  org.apache.ant;visibility:=reexport,
- org.eclipse.compare;bundle-version="3.5.100",
+ org.eclipse.compare,
  org.eclipse.core.runtime,
  org.eclipse.core.resources;visibility:=reexport,
  org.apache.commons.vfs;visibility:=reexport,
@@ -539,6 +540,7 @@ Require-Bundle: org.junit4;bundle-version="4.5.0";resolution:=optional,
  org.eclipse.core.databinding.observable;visibility:=reexport,
  org.eclipse.core.databinding.property;visibility:=reexport,
  org.eclipse.jface.databinding;visibility:=reexport,
- org.kalypso.deegree2;bundle-version="10.10.2";visibility:=reexport
+ org.kalypso.deegree2;visibility:=reexport,
+ org.eclipse.core.expressions
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

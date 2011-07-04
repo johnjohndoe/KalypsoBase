@@ -543,9 +543,6 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
     NamedFeatureHelper.setDescription( getFeature(), desc );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getLocation()
-   */
   @Override
   public GM_Object getLocation( )
   {
@@ -556,9 +553,6 @@ public class XLinkedFeature_Impl extends PlatformObject implements Feature
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#setLocation(org.kalypsodeegree.model.geometry.GM_Object)
-   */
   @Override
   public void setLocation( final GM_Object location )
   {

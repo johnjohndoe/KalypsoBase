@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="Cp1252" standalone="yes"?>
-<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<Chart id="waterlevelChart">
-		<Title>Waterlevel Fixation</Title>
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Chart legend= "false" id="waterlevelChart">
+		<Title></Title>
 		<Description>Waterlevel Fixation</Description>
 		<Layers>
 			<Layer visible="true" id="wspLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+				<Provider
+					epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
 					<Parameters>
 						<Parameter name="featureKey" value="waterlevelFeatureKey" />
-						<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" />
-						<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" />
+						<Parameter name="domainComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" />
+						<Parameter name="valueComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionWaterlevel" />
 					</Parameters>
 				</Provider>
 				<Title>Waterlevel Fixation</Title>
@@ -41,7 +45,8 @@
 		</Layers>
 		<Mappers>
 			<Axis id="Station_Axis">
-				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+				<Provider
+					epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
 				<Label>Station [km]</Label>
 				<Direction>NEGATIVE</Direction>
 				<Position>BOTTOM</Position>
@@ -52,7 +57,8 @@
 				<RendererRef ref="NumberAxisRenderer" />
 			</Axis>
 			<Axis id="nnAxis">
-				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+				<Provider
+					epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
 				<Label>Waterlevel [NN+m]</Label>
 				<Direction>POSITIVE</Direction>
 				<Position>LEFT</Position>
@@ -60,15 +66,18 @@
 					<MinValue>0</MinValue>
 					<MaxValue>1</MaxValue>
 				</NumberRange>
-				<PreferredAdjustment before="1" range="20" after="1" />
+				<PreferredAdjustment before="1" range="20"
+					after="1" />
 				<RendererRef ref="NumberWspAxisRenderer" />
 			</Axis>
 		</Mappers>
 		<Renderers>
 			<AxisRenderer id="NumberAxisRenderer">
-				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+				<Provider
+					epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 					<Parameters>
 						<Parameter name="inset_tick" value="1" />
+						<Parameter name="hide_cut" value="false" />
 					</Parameters>
 				</Provider>
 				<Styles>
@@ -91,10 +100,12 @@
 				</Styles>
 			</AxisRenderer>
 			<AxisRenderer id="NumberWspAxisRenderer">
-				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+				<Provider
+					epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 					<Parameters>
 						<Parameter name="color" value="#0000aa" />
 						<Parameter name="inset_tick" value="1" />
+						<Parameter name="hide_cut" value="false" />
 					</Parameters>
 				</Provider>
 				<Styles>

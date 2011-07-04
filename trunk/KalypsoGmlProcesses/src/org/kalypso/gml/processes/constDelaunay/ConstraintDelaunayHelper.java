@@ -387,7 +387,7 @@ public class ConstraintDelaunayHelper
     final String firstLine = nodeReader.readLine();
     final StringTokenizer firstTokenizer = new StringTokenizer( firstLine );
     final int pointCount = Integer.parseInt( firstTokenizer.nextToken() );
-    final int coordCount = Integer.parseInt( firstTokenizer.nextToken() );
+    /* final int coordCount = */Integer.parseInt( firstTokenizer.nextToken() );
     final int attCount = Integer.parseInt( firstTokenizer.nextToken() );
 
     final GM_Position[] points = new GM_Position[pointCount + 1];
@@ -765,13 +765,13 @@ public class ConstraintDelaunayHelper
       IOUtils.closeQuietly( eleReader );
       if( tempDir != null && tempDir.exists() )
         try
-        {
+      {
           FileUtils.deleteDirectory( tempDir );
-        }
-        catch( final IOException e )
-        {
-          e.printStackTrace();
-        }
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+      }
     }
   }
 

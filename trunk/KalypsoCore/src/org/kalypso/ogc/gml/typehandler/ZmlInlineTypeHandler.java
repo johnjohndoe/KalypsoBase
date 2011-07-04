@@ -34,8 +34,10 @@ import java.io.StringReader;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 import org.xml.sax.InputSource;
@@ -45,20 +47,15 @@ import org.xml.sax.InputSource;
  */
 public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
 {
-  public static final String NAMESPACE = "inline.zml.kalypso.org"; //$NON-NLS-1$
-
   protected final String[] m_axisTypes;
 
-  public ZmlInlineTypeHandler( final String name, final String[] axisTypes )
+  public ZmlInlineTypeHandler( final QName name, final String[] axisTypes )
   {
-    super( new QName( NAMESPACE, name ), IObservation.class );
+    super( name, IObservation.class );
 
     m_axisTypes = axisTypes;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
-   */
   @Override
   public String convertToXMLString( final IObservation value )
   {
@@ -102,11 +99,11 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
   }
 
   /**
-   * @return axistypes as String[]
+   * Creates the axes for this kind of observation.
    */
-  public String[] getAxisTypes( )
+  public IAxis[] createAxes( )
   {
-    return m_axisTypes;
+    return TimeseriesUtils.createDefaultAxes( m_axisTypes, true );
   }
 
   /**

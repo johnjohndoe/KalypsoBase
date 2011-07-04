@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ApacheCommonsVFS Plug-in
 Bundle-SymbolicName: org.apache.commons.vfs;singleton:=true
-Bundle-Version: 10.10.3.qualifier
+Bundle-Version: 11.6.0.qualifier
 Bundle-Localization: plugin
 Bundle-ClassPath: lib/jakarta-slide/antlr.jar,
  lib/jakarta-slide/commons-transaction-1.0.jar,
@@ -51,4 +51,4 @@ Export-Package: org.apache.commons.vfs,
  org.apache.commons.vfs.util
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.eclipse.core.runtime;bundle-version="3.4.0"
+Require-Bundle: org.eclipse.core.runtime

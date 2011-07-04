@@ -57,11 +57,10 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelegate
 {
-
   private static final double MIN_DISTANCE_OF_POINTS = 4.0; /*
-                                                             * REMARK: GM_POINTS will be transfered to screen
-                                                             * coordinates, and these points must differ!
-                                                             */
+   * REMARK: GM_POINTS will be transfered to screen
+   * coordinates, and these points must differ!
+   */
 
   public StrokeArrowPaintDelegateLine( final ARROW_TYPE arrowType, final ARROW_WIDGET arrowWidget, final ARROW_ALIGNMENT arrowAlignment, final Double arrowSize, final Double strokeWidth )
   {
@@ -96,14 +95,14 @@ public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelega
   {
     switch( getAlignment() )
     {
-      case eStart:
+      case start:
         return calculateStartPoints( curve );
 
-      case eEnd:
+      case end:
         return calculateEndPoints( curve );
 
-      case eMiddle:
-        return calculateCenterPoints( curve );
+      case middle:
+        throw new NotImplementedException();
     }
 
     return null;
@@ -171,12 +170,4 @@ public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelega
 
     return new GM_Point[] { a, b };
   }
-
-  private GM_Point[] calculateCenterPoints( final GM_Curve curve )
-  {
-    // TODO JTSUtilis.pointOnPercent - getcenterpoint
-
-    throw new NotImplementedException();
-  }
-
 }

@@ -238,7 +238,7 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
   {
     final Point maxItemSize = calculateItemSize( layers, config );
     if( maxItemSize == null || maxItemSize.x == 0 || maxItemSize.y == 0 )
-      return new Rectangle(config.getMaximumWidth().x,config.getMaximumWidth().y, 1, 1 );
+      return new Rectangle( config.getMaximumWidth().x, config.getMaximumWidth().y, 1, 1 );
 
     final int legendEntries = calculateLegendEntries( layers );
     // never return 0 itemsperrow,
@@ -246,7 +246,7 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
 
     m_rows = calculateRowNumbers( legendEntries, itemsPerRow );
 
-    return new Rectangle(config.getMaximumWidth().x,config.getMaximumWidth().y, config.getMaximumWidth().width, Double.valueOf( m_rows ).intValue() * maxItemSize.y );
+    return new Rectangle( config.getMaximumWidth().x, config.getMaximumWidth().y, config.getMaximumWidth().width, Double.valueOf( m_rows ).intValue() * maxItemSize.y );
   }
 
   private int calculateRowNumbers( final int legendEntries, final int itemsPerRow )
@@ -263,7 +263,8 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     int legendEntries = 0;
     for( final IChartLayer layer : layers )
     {
-      legendEntries += layer.getLegendEntries().length;
+      final ILegendEntry[] entries = layer.getLegendEntries();
+      legendEntries += entries == null ? 0 : entries.length;
     }
 
     return legendEntries;
@@ -298,6 +299,8 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     Point maxItemSize = null;
 
     final ILegendEntry[] entries = layer.getLegendEntries();
+    if( entries == null )
+      return null;
     for( final ILegendEntry entry : entries )
     {
       if( entry == null )

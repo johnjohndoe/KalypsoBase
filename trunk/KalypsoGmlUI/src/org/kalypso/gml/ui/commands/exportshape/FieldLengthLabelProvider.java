@@ -67,7 +67,7 @@ public class FieldLengthLabelProvider extends FieldLabelProvider
     {
       final IDBFValue value = (IDBFValue) element;
       final short length = value.getField().getLength();
-      return String.format( "%d", length );
+      return String.format( "%d", length ); //$NON-NLS-1$
     }
     catch( final ShapeDataException e )
     {

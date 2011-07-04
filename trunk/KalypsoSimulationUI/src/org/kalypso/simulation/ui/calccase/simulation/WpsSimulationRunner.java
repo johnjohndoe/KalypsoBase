@@ -93,8 +93,6 @@ public class WpsSimulationRunner implements ISimulationRunner
     final List<String> outputs = delegate.createOutputs();
 
     final IStatus status = simulationJob.run( inputs, outputs, progress.newChild( 800, SubMonitor.SUPPRESS_NONE ) );
-    if( !status.isOK() )
-      return status;
 
     monitor.subTask( "Altergebnisse aus dem Arbeitsbereich löschen..." );
     SimulationUtils.clearResultsAfterCalculation( m_modelspec, m_calcCaseFolder, progress.newChild( 100, SubMonitor.SUPPRESS_NONE ) );
@@ -102,7 +100,7 @@ public class WpsSimulationRunner implements ISimulationRunner
     monitor.subTask( "Ergebnisse in den Arbeitsbereich kopieren..." );
     delegate.copyResults( simulationJob.getReferences() );
     delegate.finish();
-
+    
     return status;
   }
 

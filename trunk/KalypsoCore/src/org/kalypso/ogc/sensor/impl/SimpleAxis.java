@@ -51,7 +51,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
  */
 public class SimpleAxis extends AbstractAxis
 {
-  private String m_type;
+  private final String m_type;
 
   private String m_name;
 
@@ -102,11 +102,6 @@ public class SimpleAxis extends AbstractAxis
   public String getType( )
   {
     return m_type;
-  }
-
-  public void setType( final String type )
-  {
-    m_type = type;
   }
 
   @Override

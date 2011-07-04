@@ -116,7 +116,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     m_id = id;
 
     setCoordinateMapper( cm );
-// m_layerManager.addListener( m_eventListener );
 
     if( chartLayers != null )
     {
@@ -347,8 +346,8 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     }
     if( min == null || max == null )
       return null;
-    if( min == max )
-      min = 0.9 * max;
+//    if( min == max )
+//      min = 0.9 * max;
     return new DataRange<Number>( min, max );
   }
 
