@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="tableRule" name="tableRule" schema="schema/tableRule.exsd"/>
+   <extension-point id="tableRule" name="tableRule" schema="schema/tableRule.exsd"/> 
+ <extension
+         point="org.eclipse.wst.xml.core.catalogContributions">
+      <catalogContribution>
+         <nextCatalog
+               catalog="etc/schemas/catalog.xmlcatalog">
+         </nextCatalog>
+      </catalogContribution>
+ </extension>
+ <extension
+       point="org.kalypso.contribs.java.urlCatalog">
+    <catalog
+          class="org.kalypso.zml.core.KalypsoZmlCoreCatalog"
+          id="org.kalypso.zml.core.KalypsoZmlCoreCatalog">
+    </catalog>
+ </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypso.zml.core.filter.binding.InterpolationZmlFilter"
+            qname="{org.kalypso.zml.core.filter}InterpolationZmlFilter">
+      </feature>
+      <feature
+            class="org.kalypso.zml.core.filter.binding.RoundZmlFilter"
+            qname="{org.kalypso.zml.core.filter}RoundZmlFilter">
+      </feature>
+   </extension>
   	<extension
        point="org.kalypso.zml.core.tableRule">
     <rule
@@ -44,14 +70,6 @@
           id="org.kalypso.zml.ui.core.rule.data.source"
           rule="org.kalypso.zml.core.table.rules.impl.ZmlRuleDataSource">
     </rule>
- </extension> 
- <extension
-         point="org.eclipse.wst.xml.core.catalogContributions">
-      <catalogContribution>
-         <nextCatalog
-               catalog="etc/schemas/catalog.xmlcatalog">
-         </nextCatalog>
-      </catalogContribution>
  </extension>
 
 </plugin>
