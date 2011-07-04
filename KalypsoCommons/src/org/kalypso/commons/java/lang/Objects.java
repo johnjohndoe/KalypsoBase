@@ -91,4 +91,9 @@ public final class Objects
 
     return true;
   }
+
+  public static boolean notEqual( final Object a, final Object b )
+  {
+    return !equal( a, b );
+  }
 }

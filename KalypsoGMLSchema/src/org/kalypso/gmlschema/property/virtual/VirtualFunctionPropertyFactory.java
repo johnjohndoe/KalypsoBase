@@ -130,7 +130,7 @@ public class VirtualFunctionPropertyFactory
       return defaultValue;
     else if( attributeText.trim().isEmpty() )
       return defaultValue;
-    else if( "unbounded".equals( attributeText ) )
+    else if( "unbounded".equals( attributeText ) ) //$NON-NLS-1$
       return Integer.MAX_VALUE;
 
     Integer parseQuietInteger = NumberUtils.parseQuietInteger( attributeText );

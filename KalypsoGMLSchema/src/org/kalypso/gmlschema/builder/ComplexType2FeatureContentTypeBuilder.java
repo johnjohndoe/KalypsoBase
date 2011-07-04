@@ -55,7 +55,7 @@ import org.kalypso.gmlschema.xml.ElementWithOccurs;
 public class ComplexType2FeatureContentTypeBuilder extends AbstractBuilder
 {
 
-  private static final String ABSTRACT_GML_TYPE_STRING = "AbstractGMLType";
+  private static final String ABSTRACT_GML_TYPE_STRING = "AbstractGMLType"; //$NON-NLS-1$
 
   private final String m_version;
 

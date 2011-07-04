@@ -158,11 +158,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     this( composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, selectionManager, null );
   }
 
-  public GmlTreeView( final Composite composite, final int style, final IFeatureSelectionManager selectionManager )
-  {
-    this( composite, style, selectionManager, null );
-  }
-
   public GMLContentProvider getContentProvider( )
   {
     return m_contentProvider;

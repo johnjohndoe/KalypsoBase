@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.DBFField;
@@ -69,8 +70,8 @@ public class ShapeFileNewData
   {
     try
     {
-      m_fields.add( new DBFFieldBean( new DBFField( "NAME", FieldType.C, (short) 128, (short) 0 ) ) );
-      m_fields.add( new DBFFieldBean( new DBFField( "VALUE", FieldType.N, (short) 20, (short) 10 ) ) );
+      m_fields.add( new DBFFieldBean( new DBFField( Messages.getString("ShapeFileNewData_0"), FieldType.C, (short) 128, (short) 0 ) ) ); //$NON-NLS-1$
+      m_fields.add( new DBFFieldBean( new DBFField( Messages.getString("ShapeFileNewData_1"), FieldType.N, (short) 20, (short) 10 ) ) ); //$NON-NLS-1$
     }
     catch( final DBaseException e )
     {
@@ -100,12 +101,6 @@ public class ShapeFileNewData
 
   public IDBFField[] getFields( )
   {
-// final IDBFField[] fields = new IDBFField[m_fields.size()];
-// for( int i = 0; i < fields.length; i++ )
-// fields[i] = m_fields.get( i ).getField();
-//
-// return fields;
-
     return m_fields.toArray( new IDBFField[m_fields.size()] );
   }
 

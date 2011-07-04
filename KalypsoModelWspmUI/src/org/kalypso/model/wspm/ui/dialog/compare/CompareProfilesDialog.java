@@ -64,8 +64,6 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
  */
 public class CompareProfilesDialog extends EnhancedTitleAreaDialog
 {
-  private static final String SCREEN_SIZE = "compare.profiles.dialog"; // $NON-NLS-1$
-
   protected final String m_screen_setting;
 
   private final ICompareProfileProvider m_provider;
@@ -78,21 +76,13 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
     m_screen_setting = screenSetting;
   }
 
-  public CompareProfilesDialog( final Shell shell, final ICompareProfileProvider provider )
-  {
-    this( shell, provider, SCREEN_SIZE );
-  }
-
   /**
    * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    getShell().setText( Messages.getString("CompareProfilesDialog_0") ); //$NON-NLS-1$
-
-    // FIXME: title should be set from outside, we always have different reasons to compare two profiles
-    setTitle( "Profilvergleich zwischen KalypsoWSPM Modellprofil und Maﬂnahmenprofil" );
+    getShell().setText( Messages.getString( "CompareProfilesDialog_0" ) ); //$NON-NLS-1$
 
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
 

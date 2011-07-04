@@ -45,6 +45,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.scenarios.IScenario;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -87,7 +88,8 @@ public class ScenarioWorkspaceHandler
 
   public void dispose( )
   {
-    m_workspace.dispose();
+    if( Objects.isNotNull( m_workspace ) )
+      m_workspace.dispose();
   }
 
 }

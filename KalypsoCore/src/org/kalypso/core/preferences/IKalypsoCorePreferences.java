@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.core.preferences;
 
@@ -47,9 +47,9 @@ package org.kalypso.core.preferences;
  */
 public interface IKalypsoCorePreferences
 {
-  static final String DISPLAY_TIMEZONE = "kalypso.global.display_timezone"; //$NON-NLS-1$
+  String DISPLAY_TIMEZONE = "kalypso.global.display_timezone"; //$NON-NLS-1$
 
-  static final String PREFS_CONFIG_TIMEZONE = "CONFIG_TIMEZONE";//$NON-NLS-1$
+  String PREFS_CONFIG_TIMEZONE = "CONFIG_TIMEZONE";//$NON-NLS-1$
 
-  static final String PREFS_OS_TIMEZONE = "OS_TIMEZONE";//$NON-NLS-1$
+  String PREFS_OS_TIMEZONE = "OS_TIMEZONE";//$NON-NLS-1$
 }

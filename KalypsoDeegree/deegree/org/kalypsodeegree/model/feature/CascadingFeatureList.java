@@ -614,4 +614,10 @@ public class CascadingFeatureList implements FeatureList
   {
     throw new UnsupportedOperationException();
   }
+
+  @Override
+  public IRelationType getPropertyType( )
+  {
+    return null;
+  }
 }

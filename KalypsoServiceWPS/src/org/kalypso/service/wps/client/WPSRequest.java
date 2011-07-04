@@ -189,11 +189,11 @@ public class WPSRequest
     return wpsRequest.cancelJob();
   }
 
-  public IStatus run( final Map<String, Object> inputs, final List<String> outputs, IProgressMonitor monitor )
+  public IStatus run( final Map<String, Object> inputs, final List<String> outputs, final IProgressMonitor progressMonitor )
   {
-    monitor = SubMonitor.convert( monitor );
+    final SubMonitor monitor = SubMonitor.convert( progressMonitor, 100 );
 
-    IStatus status = wpsRequest.init( inputs, outputs, monitor );
+    IStatus status = wpsRequest.init( inputs, outputs, monitor.newChild( 1 ) );
 
     // on error return immediately
     if( !status.isOK() )
@@ -206,7 +206,7 @@ public class WPSRequest
     }
 
     // start request, returns immediately
-    status = wpsRequest.run( monitor );
+    status = wpsRequest.run( monitor.newChild( 1 ) );
 
     // on error return immediately
     if( !status.isOK() )
@@ -231,9 +231,10 @@ public class WPSRequest
       long executed = 0;
 
       /* Loop, until an result is available, a timeout is reached or the user has cancelled the job. */
-      final ProcessDescriptionType processDescription = getProcessDescription( monitor );
+      final ProcessDescriptionType processDescription = getProcessDescription( monitor.newChild( 1 ) );
       final String title = processDescription.getTitle();
-      monitor.beginTask( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.1" ) + title, IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
+      final SubMonitor processMonitor = monitor.newChild( 97 );
+      processMonitor.beginTask( Messages.getString( "org.kalypso.service.wps.client.WPSRequest.1" ) + title, MONITOR_SERVER_VALUE ); //$NON-NLS-1$
 
       m_manager = VFSUtilities.getNewManager();
       while( run )
@@ -258,7 +259,7 @@ public class WPSRequest
         else if( state.getProcessFailed() != null )
           return doProcessFailed( exState );
         else if( state.getProcessStarted() != null )
-          doProcessStarted( monitor, exState );
+          doProcessStarted( processMonitor, exState );
         else if( state.getProcessSucceeded() != null )
           return doProcessSucceeded( exState );
         else

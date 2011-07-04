@@ -49,7 +49,6 @@ import org.kalypsodeegree.graphics.sld.ParameterValueType;
  */
 public interface LabelDisplayElement extends GeometryDisplayElement
 {
-
   /**
    * sets the text of the label
    */
@@ -59,28 +58,4 @@ public interface LabelDisplayElement extends GeometryDisplayElement
    * gets the text of the label
    */
   ParameterValueType getLabel();
-
-  /**
-   * Removes all <tt>Label<tt> representations for this
-   * <tt>LabelDisplayElement</tt>.
-   */
-  void clearLabels();
-
-  /**
-   * Adds a <tt>Label<tt> representation that is to be considered when the
-   * <tt>LabelDisplayElement</tt> is painted to the view.
-   */
-  void addLabel( Label label );
-
-  /**
-   * Adds <tt>Label<tt> representations that are to be considered when the
-   * <tt>LabelDisplayElement</tt> is painted to the view.
-   */
-  void addLabels( Label[] labels );
-
-  /**
-   * Sets the <tt>Label<tt> representations that are to be considered when
-   * the <tt>LabelDisplayElement</tt> is painted to the view.
-   */
-  void setLabels( Label[] labels );
 }

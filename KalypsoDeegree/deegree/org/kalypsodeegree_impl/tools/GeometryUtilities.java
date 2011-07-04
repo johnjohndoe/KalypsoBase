@@ -773,8 +773,8 @@ public final class GeometryUtilities
    */
   public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList modelList, final QName[] geomQNames, final QName[] allowedQNames )
   {
-// if( geomQNames == null )
-// return null;
+    if( modelList == null )
+      return null;
 
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, grabDistance );
     final List< ? > foundElements = modelList.query( reqEnvelope, null );
@@ -787,7 +787,7 @@ public final class GeometryUtilities
     for( final Object object : foundElements )
     {
       final Feature feature = FeatureHelper.getFeature( workspace, object );
-      if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), allowedQNames ) )
+      if( allowedQNames == null || GMLSchemaUtilities.substitutes( feature.getFeatureType(), allowedQNames ) )
       {
         final QName[] geomProperties = GeometryUtilities.getGeometryQNames( feature, geomQNames );
 

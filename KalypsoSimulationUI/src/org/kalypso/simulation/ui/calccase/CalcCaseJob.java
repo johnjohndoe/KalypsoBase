@@ -63,9 +63,6 @@ public class CalcCaseJob extends Job
     setUser( true );
   }
 
-  /**
-   * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
@@ -81,5 +78,4 @@ public class CalcCaseJob extends Job
       return e.getStatus();
     }
   }
-
 }

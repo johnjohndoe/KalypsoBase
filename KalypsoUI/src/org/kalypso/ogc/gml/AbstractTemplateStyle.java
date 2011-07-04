@@ -53,8 +53,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolListener;
@@ -68,6 +73,7 @@ import org.kalypso.loader.ILoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.loader.SldLoader;
 import org.kalypso.template.types.StyledLayerType.Style;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.xml.Marshallable;
 
 /**
@@ -252,7 +258,79 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     return info.isDirty();
   }
 
+  /**
+   * Asks the user to save the style and saves it.<br/>
+   * Must be called in the display thread.
+   */
+  public IStatus save( final Shell shell )
+  {
+    final KeyInfo info = getPoolInfo();
+    final String title = String.format( "Save Style" );
+
+    if( info.isSaveable() )
+    {
+      final String msg = String.format( "Save Style '%s'?", getLabel() );
+      if( !MessageDialog.openConfirm( shell, title, msg ) )
+        return Status.CANCEL_STATUS;
+
+      /* If regular saveable, just save */
+      final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+      {
+        @Override
+        public IStatus execute( final IProgressMonitor monitor )
+        {
+          try
+          {
+            info.saveObject( monitor );
+            return Status.OK_STATUS;
+          }
+          catch( final LoaderException e )
+          {
+            e.printStackTrace();
+            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to save style" );
+          }
+        }
+      };
+
+      return ProgressUtilities.busyCursorWhile( operation );
+    }
+
+    /* Stlye is not saveable... is it a catalog style? */
+    if( info.isSaveAsSupported() )
+    {
+      final String msg = "This is a globally registered style. Save this style as user style?\nIf a style is saved as user style, "
+        + "the user style will replace the global style wherever used. You can reset the user style in the style editor.";
+      if( !MessageDialog.openConfirm( shell, title, msg ) )
+        return Status.CANCEL_STATUS;
+
+      final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+      {
+        @Override
+        public IStatus execute( final IProgressMonitor monitor )
+        {
+          try
+          {
+            info.saveObjectAs( monitor );
+            return Status.OK_STATUS;
+          }
+          catch( final LoaderException e )
+          {
+            e.printStackTrace();
+            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to save style" );
+          }
+        }
+      };
+
+      return ProgressUtilities.busyCursorWhile( operation );
+    }
+
+    final String msg = "This style cannot be saved.";
+    return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), msg );
+  }
+
   @Override
+  @Deprecated
+  // FIXME: remove
   public void save( final IProgressMonitor monitor ) throws CoreException
   {
     try

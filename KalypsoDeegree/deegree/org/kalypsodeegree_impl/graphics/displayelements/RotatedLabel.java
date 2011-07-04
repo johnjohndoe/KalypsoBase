@@ -78,7 +78,9 @@ class RotatedLabel implements Label
 
   private final Font m_font;
 
-  private final int m_descent, m_ascent;
+  private final int m_descent;
+
+  private final int m_ascent;
 
   private final Halo m_halo;
 
@@ -167,7 +169,6 @@ class RotatedLabel implements Label
   @Override
   public void paint( final Graphics2D g )
   {
-
     // get the current transform
     final AffineTransform saveAT = g.getTransform();
 

@@ -18,6 +18,7 @@ import org.kalypso.gmlschema.i18n.Messages;
  * 
  * @author schlienger
  */
+@SuppressWarnings("restriction")
 public final class GMLSchemaCatalog
 {
   private final IUrlCatalog m_urlCatalog;
@@ -143,7 +144,7 @@ public final class GMLSchemaCatalog
     catch( final Throwable e )
     {
       if( Objects.isNotNull( namespace ) )
-        System.out.println( String.format( "Failed to resolve namespace: %s", namespace ) );
+        System.out.println( String.format( "Failed to resolve namespace: %s", namespace ) ); //$NON-NLS-1$
 
       throw new GMLSchemaException( e );
     }

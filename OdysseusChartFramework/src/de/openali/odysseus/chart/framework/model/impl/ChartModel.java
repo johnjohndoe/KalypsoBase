@@ -38,7 +38,7 @@ public class ChartModel implements IChartModel
   @Override
   public void autoscale( final IAxis... axes )
   {
-    final AutoScaleVisitor visitor = new AutoScaleVisitor( this, true );
+    final AutoScaleVisitor visitor = new AutoScaleVisitor( this);
     // axes==null means all Axes
     for( final IAxis axis : Arrays.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes )
     {

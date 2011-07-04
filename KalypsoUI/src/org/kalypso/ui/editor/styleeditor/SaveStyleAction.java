@@ -38,9 +38,12 @@ public final class SaveStyleAction extends Action
   {
     final Shell shell = event.display.getActiveShell();
     final IKalypsoStyle style = m_sldEditor.getKalypsoStyle();
+
+    // FIXME: distinguish between catalog style and other style
+
     final String label = style.getLabel();
-    final String titel = String.format( "Save - UserStyle '%s'", label );
-    final String msg = String.format( "Save UserStyle '%s'?", label );
+    final String titel = String.format( "Save '%s'", label );
+    final String msg = String.format( "Save '%s'?", label );
     MessageDialog.openConfirm( shell, titel, msg );
 
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
@@ -66,5 +69,4 @@ public final class SaveStyleAction extends Action
 
     setEnabled( style != null && style.isDirty() );
   }
-
 }

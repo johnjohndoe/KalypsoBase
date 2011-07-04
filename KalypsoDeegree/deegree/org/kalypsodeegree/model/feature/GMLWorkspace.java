@@ -191,11 +191,6 @@ public interface GMLWorkspace extends ModellEventProvider
   boolean removeLinkedAsCompositionFeature( Feature parentFeature, IRelationType linkProperty, Feature childFeature );
 
   /**
-   * return true if these feature are related
-   */
-  boolean isExistingRelation( Feature f1, Feature f2, IRelationType linkProperty );
-
-  /**
    * @param parent
    * @param linkPropName
    * @param pos

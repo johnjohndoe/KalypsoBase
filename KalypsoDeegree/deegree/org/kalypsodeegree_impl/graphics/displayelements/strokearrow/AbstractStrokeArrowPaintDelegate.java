@@ -78,13 +78,12 @@ public abstract class AbstractStrokeArrowPaintDelegate implements IStrokeArrowPa
 
   public static IStrokeArrowPaintDelegate getPaintDelegate( final ARROW_TYPE arrowType, final ARROW_WIDGET arrowWidget, final ARROW_ALIGNMENT arrowAlignment, final Double arrowSize, final Double strokeWidth )
   {
-
     switch( arrowType )
     {
-      case eLine:
+      case line:
         return new StrokeArrowPaintDelegateLine( arrowType, arrowWidget, arrowAlignment, arrowSize, strokeWidth );
 
-      case eSegmentOfLine:
+      case segment:
         return new StrokeArrowPaintDelegateSegment( arrowType, arrowWidget, arrowAlignment, arrowSize, strokeWidth );
 
       default:

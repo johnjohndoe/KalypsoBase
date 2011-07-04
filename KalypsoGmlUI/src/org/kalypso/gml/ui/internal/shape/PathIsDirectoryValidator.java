@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.databinding.validation.TypedValidator;
+import org.kalypso.gml.ui.i18n.Messages;
 
 /**
  * Validates an {@link org.eclipse.core.runtime.IPath} and fails, if it is an existing directory.
@@ -58,7 +59,7 @@ import org.kalypso.commons.databinding.validation.TypedValidator;
  */
 public class PathIsDirectoryValidator extends TypedValidator<IPath>
 {
-  private static final String DEFAULT_MESSAGE = "The resource already exists and is a directory.";
+  private static final String DEFAULT_MESSAGE = Messages.getString("PathIsDirectoryValidator_0"); //$NON-NLS-1$
 
   public PathIsDirectoryValidator( final int severity )
   {
