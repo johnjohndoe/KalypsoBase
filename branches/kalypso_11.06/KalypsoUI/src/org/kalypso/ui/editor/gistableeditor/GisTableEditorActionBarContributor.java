@@ -66,7 +66,6 @@ import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.editor.AbstractEditorActionBarContributor;
 import org.kalypso.ui.editor.actions.FeatureSelectionActionGroup;
 import org.kalypso.ui.editor.actions.NewFeatureScope;
-import org.kalypso.ui.editor.actions.SelectionManagedMenu;
 import org.kalypso.ui.editor.gistableeditor.actions.CopyEditorPartAction;
 import org.kalypso.ui.editor.gistableeditor.actions.PasteEditorPartAction;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -90,8 +89,6 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
 
   private final RetargetActionManager m_retargetManager = new RetargetActionManager();
 
-  private final SelectionManagedMenu m_selectionManagedMenu = new SelectionManagedMenu( GIS_TABLE_MENU_ID ); //$NON-NLS-1$
-
   public GisTableEditorActionBarContributor( )
   {
     final RetargetInfo copyInfo = new RetargetInfo( ActionFactory.COPY.getId(), null, SWT.NONE );
@@ -109,9 +106,6 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
   @Override
   public void init( final IActionBars bars )
   {
-    m_selectionManagedMenu.setGroupName( GROUP_SELECTION );
-
-    m_featureSelectionActionGroup.addManagedMenu( m_selectionManagedMenu );
     m_featureSelectionActionGroup.setContext( new ActionContext( StructuredSelection.EMPTY ) );
     m_featureSelectionActionGroup.fillActionBars( bars );
 
@@ -197,7 +191,6 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
       m_retargetManager.disposeActions( bars, page );
 
     m_featureSelectionActionGroup.dispose();
-    m_selectionManagedMenu.disposeMenu();
 
     bars.updateActionBars();
 

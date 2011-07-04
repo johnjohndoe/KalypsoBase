@@ -49,7 +49,6 @@ import org.eclipse.ui.actions.ActionContext;
 import org.kalypso.ui.editor.AbstractEditorActionBarContributor;
 import org.kalypso.ui.editor.actions.FeatureSelectionActionGroup;
 import org.kalypso.ui.editor.actions.NewFeatureManagedMenu;
-import org.kalypso.ui.editor.actions.SelectionManagedMenu;
 
 /**
  * Contributes to the actions bars of the {@link org.kalypso.ui.editor.gmleditor.GmlEditor}.
@@ -59,8 +58,6 @@ import org.kalypso.ui.editor.actions.SelectionManagedMenu;
 public class GmlEditorActionBarContributor extends AbstractEditorActionBarContributor
 {
   private final FeatureSelectionActionGroup m_featureSelectionActionGroup = new FeatureSelectionActionGroup();
-
-  private final SelectionManagedMenu m_selectionManagedMenu = new SelectionManagedMenu( "org.kalypso.ui.editors.treeeditor.menu" ); //$NON-NLS-1$
 
   private final NewFeatureManagedMenu m_newFeatureManagedMenu = new NewFeatureManagedMenu( "org.kalypso.ui.editors.treeeditor.menu" ); //$NON-NLS-1$
 
@@ -75,9 +72,7 @@ public class GmlEditorActionBarContributor extends AbstractEditorActionBarContri
     super.init( bars );
 
     m_newFeatureManagedMenu.setGroupName( "selection" );
-    m_selectionManagedMenu.setGroupName( "selection" );
 
-    m_featureSelectionActionGroup.addManagedMenu( m_selectionManagedMenu );
     m_featureSelectionActionGroup.addManagedMenu( m_newFeatureManagedMenu );
     m_featureSelectionActionGroup.setContext( new ActionContext( StructuredSelection.EMPTY ) );
     m_featureSelectionActionGroup.fillActionBars( bars );
@@ -90,7 +85,6 @@ public class GmlEditorActionBarContributor extends AbstractEditorActionBarContri
   public void dispose( )
   {
     m_featureSelectionActionGroup.dispose();
-    m_selectionManagedMenu.disposeMenu();
 
     super.dispose();
   }
