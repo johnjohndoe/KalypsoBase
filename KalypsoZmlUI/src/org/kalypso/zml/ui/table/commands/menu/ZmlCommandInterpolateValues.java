@@ -75,7 +75,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
       if( selected.length < 2 )
         throw new ExecutionException( "Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
 
-      final IZmlTableCell[] intervall = findIntervall( selected );
+      final IZmlTableCell[] intervall = ZmlCommandUtils.findIntervall( selected );
       final IZmlTableCell intervallStart = intervall[0];
       final IZmlTableCell intervallEnd = intervall[1];
 
@@ -86,7 +86,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
 
       final int baseIndex = intervallStart.getIndex();
       final IZmlValueReference reference = intervallStart.getValueReference();
-      final double baseValue = (reference.getValue()).doubleValue();
+      final double baseValue = reference.getValue().doubleValue();
 
       final IZmlTableCell[] cells = column.getCells();
       for( final IZmlTableCell cell : cells )
@@ -122,21 +122,4 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
     return valueEnd.doubleValue() - valueStart.doubleValue();
   }
 
-  private IZmlTableCell[] findIntervall( final IZmlTableCell[] cells )
-  {
-    IZmlTableCell start = cells[0];
-    IZmlTableCell end = cells[0];
-
-    for( final IZmlTableCell cell : cells )
-    {
-      if( cell.getIndex() < start.getIndex() )
-        start = cell;
-
-      if( cell.getIndex() > end.getIndex() )
-        end = cell;
-    }
-
-    return new IZmlTableCell[] { start, end };
-
-  }
 }

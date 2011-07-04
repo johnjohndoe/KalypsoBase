@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,35 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.metadata;
+package org.kalypso.zml.core;
 
 /**
- * @author Dirk Kuch
+ * This interface contains constants for the KalypsoZmlCore plugin.
+ * 
+ * @author Holger Albert
  */
-public interface IMetadataConstants
+public interface KalypsoZmlCoreConstants
 {
-  String BOUNDARY_PREFIX = "Grenzwert_";//$NON-NLS-1$
+  public static final String NS_ZML_FILTER = "org.kalypso.zml.core.filter";
 
-  String BOUNDARY_FORMAT = BOUNDARY_PREFIX + "%s: %s";//$NON-NLS-1$
-
-  String LTV_BOUNDARY_FORMAT = BOUNDARY_PREFIX + "%s: Kalypso_Grenzwert_%s";//$NON-NLS-1$
-
-  String AUX_BOUNDARY_FORMAT = "DEBUG_AUXILARY_" + BOUNDARY_PREFIX + "%s: %s";//$NON-NLS-1$
-
-  String AUSGABE_ZEITPUNKT = "Zeitreihe_Ausgabezeitpunkt";//$NON-NLS-1$
-
-  String BEREITSTELLUNGS_ZEITPUNKT = "Zeitreihe_Bereitstellungszeitpunkt";//$NON-NLS-1$
-
-  String LAST_UPDATE = "Letzte_Aktualisierung";//$NON-NLS-1$
-
-  String WQ_TABLE = "WQ-Tabelle";//$NON-NLS-1$
-
-  /** Name of the observation */
-  String MD_NAME = "Name"; //$NON-NLS-1$
-
-  /** Description of the observation */
-  String MD_DESCRIPTION = "Beschreibung";//$NON-NLS-1$ 
-
-  /** Some information about the Origin of the observation */
-  String MD_ORIGIN = "Entstehung"; //$NON-NLS-1$
+  public static final String PREFIX_ZML_FILTER = "zf";
 }

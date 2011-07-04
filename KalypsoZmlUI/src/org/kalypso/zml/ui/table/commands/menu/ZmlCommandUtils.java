@@ -38,35 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.sensor.metadata;
+package org.kalypso.zml.ui.table.commands.menu;
+
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
 
 /**
  * @author Dirk Kuch
  */
-public interface IMetadataConstants
+public final class ZmlCommandUtils
 {
-  String BOUNDARY_PREFIX = "Grenzwert_";//$NON-NLS-1$
+  private ZmlCommandUtils( )
+  {
+  }
 
-  String BOUNDARY_FORMAT = BOUNDARY_PREFIX + "%s: %s";//$NON-NLS-1$
+  public static IZmlTableCell[] findIntervall( final IZmlTableCell[] cells )
+  {
+    IZmlTableCell start = cells[0];
+    IZmlTableCell end = cells[0];
 
-  String LTV_BOUNDARY_FORMAT = BOUNDARY_PREFIX + "%s: Kalypso_Grenzwert_%s";//$NON-NLS-1$
+    for( final IZmlTableCell cell : cells )
+    {
+      if( cell.getIndex() < start.getIndex() )
+        start = cell;
 
-  String AUX_BOUNDARY_FORMAT = "DEBUG_AUXILARY_" + BOUNDARY_PREFIX + "%s: %s";//$NON-NLS-1$
+      if( cell.getIndex() > end.getIndex() )
+        end = cell;
+    }
 
-  String AUSGABE_ZEITPUNKT = "Zeitreihe_Ausgabezeitpunkt";//$NON-NLS-1$
+    return new IZmlTableCell[] { start, end };
 
-  String BEREITSTELLUNGS_ZEITPUNKT = "Zeitreihe_Bereitstellungszeitpunkt";//$NON-NLS-1$
-
-  String LAST_UPDATE = "Letzte_Aktualisierung";//$NON-NLS-1$
-
-  String WQ_TABLE = "WQ-Tabelle";//$NON-NLS-1$
-
-  /** Name of the observation */
-  String MD_NAME = "Name"; //$NON-NLS-1$
-
-  /** Description of the observation */
-  String MD_DESCRIPTION = "Beschreibung";//$NON-NLS-1$ 
-
-  /** Some information about the Origin of the observation */
-  String MD_ORIGIN = "Entstehung"; //$NON-NLS-1$
+  }
 }
