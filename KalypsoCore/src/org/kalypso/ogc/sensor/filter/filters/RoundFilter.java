@@ -64,9 +64,9 @@ import org.kalypso.zml.filters.RoundFilterType;
  */
 public class RoundFilter extends AbstractObservationFilter
 {
-  private final int m_mode;
-
   private final int m_factor;
+
+  private final int m_mode;
 
   private final String m_type;
 
@@ -74,11 +74,18 @@ public class RoundFilter extends AbstractObservationFilter
 
   public RoundFilter( final RoundFilterType filter )
   {
-    final String mode = filter.getMode();
-    m_mode = toBigDecimalRoundingConstant( mode );
-
     m_factor = filter.getFactor();
+    m_mode = toBigDecimalRoundingConstant( filter.getMode() );
     m_type = filter.getAxisType();
+    m_baseobservation = null;
+  }
+
+  public RoundFilter( int factor, String mode, String type )
+  {
+    m_factor = factor;
+    m_mode = toBigDecimalRoundingConstant( mode );
+    m_type = type;
+    m_baseobservation = null;
   }
 
   private static int toBigDecimalRoundingConstant( final String mode )
@@ -103,6 +110,10 @@ public class RoundFilter extends AbstractObservationFilter
     throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.RoundFilter.0" ) + mode ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#initFilter(java.lang.Object,
+   *      org.kalypso.ogc.sensor.IObservation, java.net.URL)
+   */
   @Override
   public void initFilter( final Object dummy, final IObservation baseObs, final URL context ) throws SensorException
   {
@@ -119,6 +130,9 @@ public class RoundFilter extends AbstractObservationFilter
   {
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#getValues(org.kalypso.ogc.sensor.request.IRequest)
+   */
   @Override
   public ITupleModel getValues( final IRequest request ) throws SensorException
   {
@@ -184,6 +198,9 @@ public class RoundFilter extends AbstractObservationFilter
     return simpleTuppleModel;
   }
 
+  /**
+   * @see org.kalypso.ogc.sensor.filter.filters.AbstractObservationFilter#setValues(org.kalypso.ogc.sensor.ITupleModel)
+   */
   @Override
   public void setValues( final ITupleModel values )
   {

@@ -9,33 +9,32 @@ import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.contribs.eclipse.jface.viewers.CheckboxCellEditor;
 
 /**
- * @author Gernot Belger
+ * @author Holger Albert
  */
-public class TextEditingSupport extends ObservableValueEditingSupport
+public class CheckboxEditingSupport extends ObservableValueEditingSupport
 {
-  private final TextCellEditor m_cellEditor;
+  private IValueProperty m_property;
 
-  private final IValueProperty m_property;
+  private CheckboxCellEditor m_cellEditor;
 
-  public TextEditingSupport( final ColumnViewer viewer, final DataBindingContext dbc, final IValueProperty property )
+  public CheckboxEditingSupport( ColumnViewer viewer, DataBindingContext dbc, IValueProperty property )
   {
     super( viewer, dbc );
 
     m_property = property;
-    m_cellEditor = new TextCellEditor( (Composite) viewer.getControl() );
+    m_cellEditor = new CheckboxCellEditor( (Composite) viewer.getControl() );
   }
 
   /**
    * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
    */
   @Override
-  protected TextCellEditor getCellEditor( final Object element )
+  public CheckboxCellEditor getCellEditor( Object element )
   {
     return m_cellEditor;
   }
@@ -44,9 +43,9 @@ public class TextEditingSupport extends ObservableValueEditingSupport
    * @see org.eclipse.jface.databinding.viewers.ObservableValueEditingSupport#doCreateCellEditorObservable(org.eclipse.jface.viewers.CellEditor)
    */
   @Override
-  protected IObservableValue doCreateCellEditorObservable( final CellEditor cellEditor )
+  protected IObservableValue doCreateCellEditorObservable( CellEditor cellEditor )
   {
-    return SWTObservables.observeText( cellEditor.getControl(), SWT.Modify );
+    return SWTObservables.observeSelection( m_cellEditor.getControl() );
   }
 
   /**
@@ -54,7 +53,7 @@ public class TextEditingSupport extends ObservableValueEditingSupport
    *      org.eclipse.jface.viewers.ViewerCell)
    */
   @Override
-  protected IObservableValue doCreateElementObservable( final Object element, final ViewerCell cell )
+  protected IObservableValue doCreateElementObservable( Object element, ViewerCell cell )
   {
     IObservableValue observeableValue = m_property.observe( element );
     observeableValue.addChangeListener( new IChangeListener()
@@ -65,7 +64,7 @@ public class TextEditingSupport extends ObservableValueEditingSupport
       @Override
       public void handleChange( ChangeEvent event )
       {
-        TextEditingSupport.this.getViewer().refresh();
+        CheckboxEditingSupport.this.getViewer().refresh();
       }
     } );
     return observeableValue;
