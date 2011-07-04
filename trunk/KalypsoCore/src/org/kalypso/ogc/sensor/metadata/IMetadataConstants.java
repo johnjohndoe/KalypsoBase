@@ -49,6 +49,10 @@ public interface IMetadataConstants
 
   String BOUNDARY_FORMAT = BOUNDARY_PREFIX + "%s: %s";//$NON-NLS-1$
 
+  String LTV_BOUNDARY_FORMAT = BOUNDARY_PREFIX + "%s: Kalypso_Grenzwert_%s";//$NON-NLS-1$
+
+  String AUX_BOUNDARY_FORMAT = "DEBUG_AUXILARY_" + BOUNDARY_PREFIX + "%s: %s";//$NON-NLS-1$
+
   String AUSGABE_ZEITPUNKT = "Zeitreihe_Ausgabezeitpunkt";//$NON-NLS-1$
 
   String BEREITSTELLUNGS_ZEITPUNKT = "Zeitreihe_Bereitstellungszeitpunkt";//$NON-NLS-1$

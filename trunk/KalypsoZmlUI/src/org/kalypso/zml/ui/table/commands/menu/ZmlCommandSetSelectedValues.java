@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.menu;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -47,6 +48,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
@@ -76,10 +78,18 @@ public class ZmlCommandSetSelectedValues extends AbstractHandler
       final Number targetValue = reference.getValue();
 
       final IZmlTableCell[] selected = column.getSelectedCells();
-      for( final IZmlTableCell cell : selected )
+      final IZmlTableCell[] intervall = ZmlCommandUtils.findIntervall( selected );
+      if( ArrayUtils.isEmpty( intervall ) )
+        return Status.CANCEL_STATUS;
+
+      final int intervallStart = intervall[0].getValueReference().getModelIndex();
+      final int intervallEnd = intervall[1].getValueReference().getModelIndex();
+
+      final IZmlModelColumn model = column.getModelColumn();
+
+      for( int index = intervallStart; index <= intervallEnd; index++ )
       {
-        final IZmlValueReference ref = cell.getValueReference();
-        ref.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+        model.update( index, targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
       }
 
       return Status.OK_STATUS;
