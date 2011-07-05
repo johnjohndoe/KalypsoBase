@@ -163,7 +163,12 @@ public class WspLayer extends AbstractProfilTheme
   @Override
   public IProfilView createLayerPanel( )
   {
-    return new WspPanel( m_profile );
+    return new WspPanel( this );
+  }
+
+  public IProfil getProfile( )
+  {
+    return m_profile;
   }
 
   /**

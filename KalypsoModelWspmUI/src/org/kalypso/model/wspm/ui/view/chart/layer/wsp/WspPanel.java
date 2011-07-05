@@ -40,28 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart.layer.wsp;
 
-import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
-import org.kalypso.observation.result.IComponent;
 
 /**
  * @author Dirk Kuch
  */
 public class WspPanel extends AbstractProfilView
 {
-  private FormToolkit m_toolkit = null;
+  protected Composite m_composite;
 
-  protected Composite m_propPanel;
+  private final WspLayer m_layer;
 
-  public WspPanel( final IProfil profile )
+  public WspPanel( final WspLayer layer )
   {
-    super( profile );
+    super( layer.getProfil() );
+
+    m_layer = layer;
   }
 
   /**
@@ -71,29 +71,10 @@ public class WspPanel extends AbstractProfilView
   @Override
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
-    m_toolkit = toolkit;
-    m_propPanel = m_toolkit.createComposite( parent );
-    m_propPanel.setLayout( new GridLayout( 2, false ) );
-    createPropertyPanel();
+    final WaterLevelResultTree tree = new WaterLevelResultTree( parent, m_layer, toolkit );
+    tree.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
-    updateControls();
-
-    return m_propPanel;
-  }
-
-  protected void setValueFor( final IComponent component, final Object value )
-  {
-
-  }
-
-  protected void createPropertyPanel( )
-  {
-
-  }
-
-  protected void updateControls( )
-  {
-
+    return tree;
   }
 
   @Override
