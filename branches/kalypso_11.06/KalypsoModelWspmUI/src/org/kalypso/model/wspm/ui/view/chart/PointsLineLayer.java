@@ -93,11 +93,11 @@ public class PointsLineLayer extends AbstractProfilLayer
 
     final PolylineFigure lineFigure = new PolylineFigure();
     lineFigure.setPoints( new Point[] { previous, newPoint, next } );
-    lineFigure.setStyle( getLineStyle_hover() );
+    lineFigure.setStyle( getLineStyleHover() );
 
     final PointFigure pointFigure = new PointFigure();
 
-    pointFigure.setStyle( getPointStyle_hover() );
+    pointFigure.setStyle( getPointStyleHover() );
     pointFigure.setPoints( new Point[] { newPoint } );
 
     final IPaintable dragFigure = new IPaintable()
@@ -249,7 +249,7 @@ public class PointsLineLayer extends AbstractProfilLayer
 
     if( activePoint != null && activePoint2 != null )
     {
-      pf.setStyle( getLineStyle_active() );
+      pf.setStyle( getLineStyleActive() );
       pf.setPoints( new Point[] { activePoint, activePoint2 } );
       pf.paint( gc );
     }
@@ -261,7 +261,7 @@ public class PointsLineLayer extends AbstractProfilLayer
     pf2.paint( gc );
     if( activePoint != null )
     {
-      pf2.setStyle( getPointStyle_active() );
+      pf2.setStyle( getPointStyleActive() );
       pf2.setPoints( new Point[] { activePoint } );
       pf2.paint( gc );
     }

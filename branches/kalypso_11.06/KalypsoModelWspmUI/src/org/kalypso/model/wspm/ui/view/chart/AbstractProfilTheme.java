@@ -99,9 +99,9 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 
   private final String m_id;
 
-// private final ILayerManager m_layerManager = new LayerManager();
+  private String m_title;
 
-  private final String m_title;
+// private final ILayerManager m_layerManager = new LayerManager();
 
   public AbstractProfilTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
@@ -112,7 +112,10 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   {
     super( id, profil, "", styleProvider ); //$NON-NLS-1$
 
+    /* *grml* AbstractProfileLayer overwrites getTitle() implementation */
+    setTitle( title );
     m_title = title;
+
     m_id = id;
 
     setCoordinateMapper( cm );
@@ -186,6 +189,26 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
       }
     };
     return new ILegendEntry[] { le };
+  }
+
+  /**
+   * *grml* AbstractProfileLayer overwrites getTitle() implementation
+   */
+  @Override
+  public String getTitle( )
+  {
+    return m_title;
+  }
+
+  /**
+   * *grml* AbstractProfileLayer overwrites getTitle() implementation
+   */
+  @Override
+  public void setTitle( final String title )
+  {
+    super.setTitle( title );
+
+    m_title = title;
   }
 
   /**
@@ -371,15 +394,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
 // if( min == max )
 // min = 0.9 * max;
     return new DataRange<Number>( min, max );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTitle()
-   */
-  @Override
-  public String getTitle( )
-  {
-    return m_title;
   }
 
   /**

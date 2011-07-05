@@ -250,7 +250,7 @@ public class WspLayer extends AbstractProfilTheme
         {
           /* Create a full rectangle figure. */
           final PolylineFigure hoverFigure = new PolylineFigure();
-          hoverFigure.setStyle( getLineStyle_hover() );
+          hoverFigure.setStyle( getLineStyleHover() );
           hoverFigure.setPoints( new Point[] { new Point( xStart, y ), new Point( xEnd, y ) } );
 
           final String activeLabel = findActiveLabel( activeElement );
