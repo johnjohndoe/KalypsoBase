@@ -38,18 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view.chart.layer.wsp;
+package org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils;
+
+import org.eclipse.jface.viewers.Viewer;
 
 /**
- * Represents one waterlevel in the {@link WspLayer}.<br/>
- * Implementors of this interface are possibly returned by {@link IWspLayerData}.
- * 
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public interface IWspLayerDataElement
+public class WaterLevelFilter extends AbstractWaterLevelViewerFilter
 {
-  /** The human readable name of this element which will will shown in the tooltip of the data provider */
-  String getLabel( );
+  /**
+   * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+   *      java.lang.Object)
+   */
+  @Override
+  public boolean select( final Viewer viewer, final Object parentElement, final Object element )
+  {
+    if( isWaterLevelFixiation( element ) )
+      return false;
 
-  String getId( );
+    return true;
+  }
+
 }

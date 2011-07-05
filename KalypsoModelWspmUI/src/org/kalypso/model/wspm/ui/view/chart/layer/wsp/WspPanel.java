@@ -47,6 +47,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
+import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelFilter;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelResultTree;
 
 /**
@@ -74,6 +75,7 @@ public class WspPanel extends AbstractProfilView
   {
     final WaterLevelResultTree tree = new WaterLevelResultTree( parent, m_layer, toolkit );
     tree.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+    tree.addFilter( new WaterLevelFilter() );
 
     return tree;
   }

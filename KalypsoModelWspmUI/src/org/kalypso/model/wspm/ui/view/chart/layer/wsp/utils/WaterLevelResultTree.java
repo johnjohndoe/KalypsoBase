@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -66,6 +67,7 @@ import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer;
  */
 public class WaterLevelResultTree extends Composite
 {
+  protected CheckboxTreeViewer m_treeViewer;
 
   public WaterLevelResultTree( final Composite parent, final WspLayer layer, final FormToolkit toolkit )
   {
@@ -95,27 +97,27 @@ public class WaterLevelResultTree extends Composite
 
       toolkit.createLabel( this, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.5" ) );
 
-      final CheckboxTreeViewer treeViewer = new CheckboxTreeViewer( this, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL );
-      treeViewer.getTree().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+      m_treeViewer = new CheckboxTreeViewer( this, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL );
+      m_treeViewer.getTree().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
       final ITreeContentProvider contentProvider = data.createContentProvider();
-      treeViewer.setContentProvider( contentProvider );
+      m_treeViewer.setContentProvider( contentProvider );
 
       final ILabelProvider labelProvider = data.createLabelProvider();
-      treeViewer.setLabelProvider( labelProvider );
-      treeViewer.setSorter( new ViewerSorter() );
+      m_treeViewer.setLabelProvider( labelProvider );
+      m_treeViewer.setSorter( new ViewerSorter() );
 
-      treeViewer.setInput( input );
-      treeViewer.expandToLevel( 2 );
+      m_treeViewer.setInput( input );
+      m_treeViewer.expandToLevel( 2 );
 
       /* Get all active names. */
       final Object[] activeNames = data.getActiveElements();
       if( !Arrays.isEmpty( activeNames ) )
       {
-        treeViewer.setCheckedElements( activeNames );
+        m_treeViewer.setCheckedElements( activeNames );
       }
 
-      treeViewer.addCheckStateListener( new ICheckStateListener()
+      m_treeViewer.addCheckStateListener( new ICheckStateListener()
       {
         @Override
         public void checkStateChanged( final CheckStateChangedEvent event )
@@ -123,7 +125,7 @@ public class WaterLevelResultTree extends Composite
           try
           {
             /* Get the source. */
-            final CheckboxTreeViewer source = treeViewer;
+            final CheckboxTreeViewer source = m_treeViewer;
             final Object[] checked = source.getCheckedElements();
             data.activateElements( checked );
 
@@ -144,6 +146,11 @@ public class WaterLevelResultTree extends Composite
 
       toolkit.createLabel( this, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.6", e.getLocalizedMessage() ) );
     }
+  }
 
+  public void addFilter( final ViewerFilter filter )
+  {
+    if( Objects.isNotNull( m_treeViewer ) )
+      m_treeViewer.addFilter( filter );
   }
 }
