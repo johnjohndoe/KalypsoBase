@@ -81,7 +81,9 @@ public class ProfileAndResults
             // the gml-tree which knows nothing about profiles... Everyone else should create profile programatically
             // and directly set the prefered type.
             if( profileMember.getProfileType() == null )
+            {
               profileMember.setProfileType( "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
+            }
 
             return new ProfileAndResults( profileMember, result );
           }

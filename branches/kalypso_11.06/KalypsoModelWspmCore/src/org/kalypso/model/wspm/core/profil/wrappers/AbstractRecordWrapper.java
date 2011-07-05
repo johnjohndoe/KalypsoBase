@@ -81,6 +81,7 @@ public class AbstractRecordWrapper implements IRecord
   /**
    * @see org.kalypso.observation.result.IRecord#getValue(org.kalypso.observation.result.IComponent)
    */
+  @Deprecated
   @Override
   public Object getValue( final IComponent comp ) throws IllegalArgumentException
   {
@@ -99,6 +100,7 @@ public class AbstractRecordWrapper implements IRecord
   /**
    * @see org.kalypso.observation.result.IRecord#setValue(org.kalypso.observation.result.IComponent, java.lang.Object)
    */
+  @Deprecated
   @Override
   public void setValue( final IComponent comp, final Object value )
   {
@@ -136,7 +138,7 @@ public class AbstractRecordWrapper implements IRecord
    * @see org.kalypso.observation.result.IRecord#indexOfComponent(java.lang.String)
    */
   @Override
-  public int indexOfComponent( String componentID )
+  public int indexOfComponent( final String componentID )
   {
     return m_record.indexOfComponent( componentID );
   }

@@ -213,6 +213,7 @@ public interface IProfil extends IObservation<TupleResult>
   boolean removePoint( IRecord point );
 
   boolean removePoints( IRecord[] points );
+
   /*
    * obsolete - point markers will be automatically set by their own setValue() implementation (value will be directly
    * added to observation, and so the point marker is registered)

@@ -121,7 +121,9 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
     }
 
     if( !crds.get( 0 ).equals( crds.get( crds.size() - 1 ) ) )
+    {
       crds.add( new Coordinate( crds.get( 0 ) ) );
+    }
     final Coordinate[] crdArray = crds.toArray( new Coordinate[crds.size()] );
     final LinearRing ring = GF.createLinearRing( crdArray );
 
@@ -224,7 +226,9 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
 
     double maxWidth = -Double.MAX_VALUE;
     for( final double mWidth : m_widths )
+    {
       maxWidth = Math.max( maxWidth, mWidth );
+    }
 
     final String id = m_id;
     final String name = m_name;

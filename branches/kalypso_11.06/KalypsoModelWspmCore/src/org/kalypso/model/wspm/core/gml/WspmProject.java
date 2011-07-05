@@ -77,7 +77,9 @@ public abstract class WspmProject extends Feature_Impl implements IWspmConstants
     final FeatureList waters = getWaterBodyList();
     final List<WspmWaterBody> waterList = new ArrayList<WspmWaterBody>( waters.size() );
     for( final Object object : waters )
+    {
       waterList.add( (WspmWaterBody) object );
+    }
 
     return waterList.toArray( new WspmWaterBody[waterList.size()] );
   }

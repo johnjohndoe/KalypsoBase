@@ -22,7 +22,7 @@ public class KalypsoModelWspmCorePlugin extends Plugin
   }
 
   /** The rules will will created (laziliy) only once and used in every rule set. */
- 
+
   private ValidatorFactory m_validatorFactory = null;
 
   @Override
@@ -52,7 +52,9 @@ public class KalypsoModelWspmCorePlugin extends Plugin
   public ValidatorFactory getValidatorFactory( )
   {
     if( m_validatorFactory == null )
+    {
       m_validatorFactory = new ValidatorFactory();
+    }
 
     return m_validatorFactory;
   }

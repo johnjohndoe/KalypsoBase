@@ -2,11 +2,11 @@ package org.kalypso.model.wspm.core.result;
 
 public interface IStationResult
 {
-  public String[] getComponentIds();
+  String[] getComponentIds( );
 
-  public String getName();
-  
-  public String getComponentName( final String componentId );
+  String getName( );
 
-  public Number getComponentValue( final String componentId );
+  String getComponentName( final String componentId );
+
+  Number getComponentValue( final String componentId );
 }

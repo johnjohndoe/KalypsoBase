@@ -180,14 +180,18 @@ public final class WspmProfileHelper
       final Object valueRechtswert = point.getValue( iRechtswert );
       final Object valueHochwert = point.getValue( iHochwert );
       if( valueRechtswert == null || valueHochwert == null )
+      {
         continue;
+      }
 
       final double rechtsWert = (Double) valueRechtswert;
       final double hochWert = (Double) valueHochwert;
 
       if( rechtsWert > 0.0 || hochWert > 0.0 )
+      {
         /* Memorize the point, because it has a geo reference. */
         geoReferencedPoints.add( point );
+      }
     }
 
     /* If no or only one geo referenced points are found, return. */
@@ -199,9 +203,13 @@ public final class WspmProfileHelper
     /* It is assumed that all points and values share the same coordinate system. */
     final String crs;
     if( srsName == null )
+    {
       crs = TimeseriesUtils.getCoordinateSystemNameForGkr( Double.toString( (Double) geoReferencedPoints.get( 0 ).getValue( iRechtswert ) ) );
+    }
     else
+    {
       crs = srsName;
+    }
 
     final String kalypsoCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
@@ -398,7 +406,9 @@ public final class WspmProfileHelper
   {
     final Double[] values = new Double[widths.length];
     for( int i = 0; i < values.length; i++ )
+    {
       values[i] = interpolateValue( profile, widths[i], indexValueComponent );
+    }
 
     return values;
   }
@@ -523,11 +533,17 @@ public final class WspmProfileHelper
     final SortedSet<Double> intersections = new TreeSet<Double>();
 
     if( firstY < wspHoehe )
+    {
       intersections.add( new Double( firstX ) );
+    }
     for( final double d : intersectionXs )
+    {
       intersections.add( new Double( d ) );
+    }
     if( lastY < wspHoehe )
+    {
       intersections.add( new Double( lastX ) );
+    }
 
     return intersections.toArray( new Double[intersections.size()] );
   }
@@ -624,13 +640,21 @@ public final class WspmProfileHelper
     final IComponent cRechtswert = tmpProfil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
 
     if( !tmpProfil.hasPointProperty( cBreite ) )
+    {
       tmpProfil.addPointProperty( cBreite );
+    }
     if( !tmpProfil.hasPointProperty( cHoehe ) )
+    {
       tmpProfil.addPointProperty( cHoehe );
+    }
     if( !tmpProfil.hasPointProperty( cHochwert ) )
+    {
       tmpProfil.addPointProperty( cHochwert );
+    }
     if( !tmpProfil.hasPointProperty( cRechtswert ) )
+    {
       tmpProfil.addPointProperty( cRechtswert );
+    }
 
     final int iBreite = tmpProfil.indexOfProperty( cBreite );
     final int iHoehe = tmpProfil.indexOfProperty( cHoehe );
@@ -697,7 +721,9 @@ public final class WspmProfileHelper
         {
           // don't overwrite existing point markers!
           if( !overwritePointMarkers && profile.isPointMarker( component.getId() ) )
+          {
             continue;
+          }
           final int index = profile.indexOfProperty( component );
           r.setValue( index, record.getValue( index ) );
         }

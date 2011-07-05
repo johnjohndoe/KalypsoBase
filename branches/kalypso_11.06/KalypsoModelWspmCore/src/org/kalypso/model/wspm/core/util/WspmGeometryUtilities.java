@@ -63,6 +63,11 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public final class WspmGeometryUtilities
 {
+  private WspmGeometryUtilities( )
+  {
+
+  }
+
   // TODO: this is a general transformer to the Kalypso default crs; should be moved to a central place
   public static IGeoTransformer GEO_TRANSFORMER;
 
@@ -125,7 +130,9 @@ public final class WspmGeometryUtilities
 
           /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
           if( StringUtils.isBlank( srsName ) && rw != null )
+          {
             srsName = TimeseriesUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
+          }
         }
         else
         {
@@ -137,19 +144,27 @@ public final class WspmGeometryUtilities
 
           /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
           if( srsName == null )
+          {
             srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+          }
         }
 
         if( rw == null || hw == null || rw.isNaN() || hw.isNaN() )
+        {
           continue;
+        }
 
         final Double h = compHoehe == -1 ? null : (Double) point.getValue( compHoehe );
 
         final GM_Position position;
         if( h == null )
+        {
           position = GeometryFactory.createGM_Position( rw, hw );
+        }
         else
+        {
           position = GeometryFactory.createGM_Position( rw, hw, h );
+        }
 
         positions.add( position );
       }
@@ -195,7 +210,9 @@ public final class WspmGeometryUtilities
 
         /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
         if( StringUtils.isBlank( srsName ) && rw != null )
+        {
           srsName = TimeseriesUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
+        }
       }
       else
       {
@@ -207,7 +224,9 @@ public final class WspmGeometryUtilities
 
         /* We assume here that we have a GAUSS-KRUEGER crs in a profile. */
         if( srsName == null )
+        {
           srsName = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+        }
       }
 
       if( rw == null || hw == null || rw.isNaN() || hw.isNaN() )
@@ -217,9 +236,13 @@ public final class WspmGeometryUtilities
 
       final GM_Position position;
       if( h == null )
+      {
         position = GeometryFactory.createGM_Position( rw, hw );
+      }
       else
+      {
         position = GeometryFactory.createGM_Position( rw, hw, h );
+      }
 
       return GeometryFactory.createGM_Point( position, srsName );
     }
@@ -251,7 +274,9 @@ public final class WspmGeometryUtilities
 
     /* If CRS is not known, we assume here that we have a GAUSS-KRUEGER crs in a profile. */
     if( StringUtils.isBlank( crsName ) )
+    {
       crsName = TimeseriesUtils.getCoordinateSystemNameForGkr( Double.toString( rw ) );
+    }
 
     final GM_Point point = GeometryFactory.createGM_Point( position, crsName );
     if( transformer != null )

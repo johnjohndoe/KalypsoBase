@@ -79,10 +79,10 @@ public class SobekProfile
   public IStatus validate( )
   {
     if( m_profileDat == null )
-      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), Messages.getString("SobekProfile_0") ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), Messages.getString( "SobekProfile_0" ) ); //$NON-NLS-1$
 
     if( m_profileDef == null )
-      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), Messages.getString("SobekProfile_1") ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), Messages.getString( "SobekProfile_1" ) ); //$NON-NLS-1$
 
     final IStatus statusDat = m_profileDat.validate();
     if( !statusDat.isOK() )
@@ -95,7 +95,7 @@ public class SobekProfile
     final String di = m_profileDat.getDi();
     final String id = m_profileDef.getId();
     if( !di.equals( id ) )
-      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), Messages.getString("SobekProfile_2") ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), Messages.getString( "SobekProfile_2" ) ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }

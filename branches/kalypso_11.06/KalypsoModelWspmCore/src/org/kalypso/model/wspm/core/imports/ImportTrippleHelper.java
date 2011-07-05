@@ -115,15 +115,18 @@ public final class ImportTrippleHelper
       {
         final String line = fileReader.readLine();
         if( line == null )
+        {
           break;
+        }
 
         /* ignore empty lines */
         if( StringUtils.isBlank( line ) )
+        {
           continue;
+        }
 
         /* trippel-format should be: station, x, y, z */
         final String[] tokens = StringUtils.split( line, separator );
-
 
         /* continue just if there are enough values in the trippel file */
         if( tokens.length != 4 )
@@ -162,7 +165,9 @@ public final class ImportTrippleHelper
 
           final IRecord point = ImportTrippleHelper.createProfilePoint( currentProfile, tokens, lastPoint );
           if( point != null )
+          {
             currentProfile.addPoint( point );
+          }
 
           lastPoint = point;
         }

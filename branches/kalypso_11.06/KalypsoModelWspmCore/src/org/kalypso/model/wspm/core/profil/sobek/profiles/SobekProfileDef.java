@@ -389,11 +389,15 @@ public class SobekProfileDef
 
       /* Create a warning. */
       if( height < lastHeight || fullWidth < lastFullWidth || flowWidth < lastFlowWidth )
-        profileWarning.addWarning( String.format( Locale.PRC, Messages.getString("SobekProfileDef_0"), height, lastHeight, fullWidth, lastFullWidth, flowWidth, lastFlowWidth ) ); //$NON-NLS-1$
+      {
+        profileWarning.addWarning( String.format( Locale.PRC, Messages.getString( "SobekProfileDef_0" ), height, lastHeight, fullWidth, lastFullWidth, flowWidth, lastFlowWidth ) ); //$NON-NLS-1$
+      }
 
       /* Create a warning. */
       if( fullWidth < flowWidth )
-        profileWarning.addWarning( String.format( Locale.PRC, Messages.getString("SobekProfileDef_4"), flowWidth, fullWidth ) ); //$NON-NLS-1$
+      {
+        profileWarning.addWarning( String.format( Locale.PRC, Messages.getString( "SobekProfileDef_4" ), flowWidth, fullWidth ) ); //$NON-NLS-1$
+      }
 
       /* Store the warning. */
       profileWarnings.add( profileWarning );
@@ -414,7 +418,7 @@ public class SobekProfileDef
 
       /* Add a warning in the last sobek profile warning. */
       final SobekProfileWarning profileWarning = profileWarnings.get( profileWarnings.size() - 1 );
-      profileWarning.addWarning( String.format( Locale.PRC, Messages.getString("SobekProfileDef_5"), w2, width, lastFlowWidth ) ); //$NON-NLS-1$
+      profileWarning.addWarning( String.format( Locale.PRC, Messages.getString( "SobekProfileDef_5" ), w2, width, lastFlowWidth ) ); //$NON-NLS-1$
     }
 
     /* Create a string builder. */

@@ -61,9 +61,13 @@ public class ProfileObjectAdd implements IProfilChange
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
+    {
       hint.setObjectChanged();
+    }
     if( hint != null )
+    {
       hint.setPointPropertiesChanged();
+    }
 
     m_profil.addProfileObjects( m_objectsToAdd );
 

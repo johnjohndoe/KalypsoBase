@@ -164,15 +164,25 @@ public final class CoverageProfile
 
     /* add components if necessary */
     if( !profile.hasPointProperty( cRechtswert ) )
+    {
       profile.addPointProperty( cRechtswert );
+    }
     if( !profile.hasPointProperty( cHochwert ) )
+    {
       profile.addPointProperty( cHochwert );
+    }
     if( !profile.hasPointProperty( cBreite ) )
+    {
       profile.addPointProperty( cBreite );
+    }
     if( !profile.hasPointProperty( cHoehe ) )
+    {
       profile.addPointProperty( cHoehe );
+    }
     if( !profile.hasPointProperty( cRauheit ) )
+    {
       profile.addPointProperty( cRauheit );
+    }
 
     /* get index for component */
     final int iRechtswert = profile.indexOfProperty( cRechtswert );
@@ -228,9 +238,13 @@ public final class CoverageProfile
       {
         final double distance = lastCrd.distance( coordinate );
         if( insertSign < 0 )
+        {
           breite -= distance;
+        }
         else
+        {
           breite += distance;
+        }
 
         final IRecord newPoint = createPoint( profile, coordinate, breite );
         newRecords.add( newPoint );
@@ -246,7 +260,9 @@ public final class CoverageProfile
       result.addAll( 0, newRecords );
     }
     else
+    {
       result.addAll( newRecords );
+    }
   }
 
   public static IProfil convertLinestringToEmptyProfile( final GM_Curve curve, final String profileType ) throws GM_Exception

@@ -64,11 +64,11 @@ public interface IValidatorMarkerCollector
    * implementation (e.g. the type of the marker) are reflected on all rules.
    * 
    * @param resoultionPluginId
-   *            the plugin-id from which to instantiate the resolutionClasses
+   *          the plugin-id from which to instantiate the resolutionClasses
    * @param resolutionClasses
-   *            An array of class-names of marker resolutions (quick fixes)
-   *            <p>
-   *            these classes must not contain references to Objects, only simple Datatypes are allowed
+   *          An array of class-names of marker resolutions (quick fixes)
+   *          <p>
+   *          these classes must not contain references to Objects, only simple Datatypes are allowed
    * @throws CoreException
    */
   void createProfilMarker( int severity, String message, String location, int pointPos, String pointProperty, IProfilMarkerResolution... resolutions ) throws CoreException;

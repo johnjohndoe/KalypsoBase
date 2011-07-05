@@ -78,7 +78,7 @@ public class AssignmentBinder
     m_assignmentWorkspace = assignmentWorkspace;
   }
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public Map<String, Double> getAssignmentsFor( final String value )
   {
     final Map<String, Double> map = getValueToAssignment().get( value );

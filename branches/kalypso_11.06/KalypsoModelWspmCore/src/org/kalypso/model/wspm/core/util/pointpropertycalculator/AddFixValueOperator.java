@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.core.util.pointpropertycalculator;
 
 import java.util.Collection;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.i18n.Messages;
@@ -69,7 +70,9 @@ public class AddFixValueOperator implements IPointPropertyCalculator
           point.setValue( i, (Double) oldVal + operand, true );
         }
         else
-          KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( Status.CANCEL, KalypsoModelWspmCorePlugin.getID(), Messages.getString( "org.kalypso.model.wspm.core.util.pointpropertycalculator.AddFixValueOperator.0", property, point ) ) ); //$NON-NLS-1$
+        {
+          KalypsoModelWspmCorePlugin.getDefault().getLog().log( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), Messages.getString( "org.kalypso.model.wspm.core.util.pointpropertycalculator.AddFixValueOperator.0", property, point ) ) ); //$NON-NLS-1$
+        }
       }
     }
   }
