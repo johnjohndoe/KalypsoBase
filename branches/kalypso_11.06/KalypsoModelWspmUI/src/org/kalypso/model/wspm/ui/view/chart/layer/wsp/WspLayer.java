@@ -60,6 +60,7 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
+import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.observation.result.IRecord;
 
@@ -98,7 +99,7 @@ public class WspLayer extends AbstractProfilTheme
   /**
    * The profile.
    */
-  private final IProfil m_profil;
+  private final IProfil m_profile;
 
   /**
    * The constructor.
@@ -119,7 +120,7 @@ public class WspLayer extends AbstractProfilTheme
   {
     super( profile, layerId, Messages.getString( "WspLayer.0" ), null, mapper, styleProvider ); //$NON-NLS-1$
 
-    m_profil = profile;
+    m_profile = profile;
     m_data = data;
     m_fill = fill;
   }
@@ -154,6 +155,15 @@ public class WspLayer extends AbstractProfilTheme
     };
 
     return new ILegendEntry[] { le };
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#createLayerPanel()
+   */
+  @Override
+  public IProfilView createLayerPanel( )
+  {
+    return new WspPanel( m_profile );
   }
 
   /**
@@ -277,7 +287,7 @@ public class WspLayer extends AbstractProfilTheme
     final List<Point> points = new ArrayList<Point>();
 
     /* Get the record (points) of the profile. */
-    final IRecord[] ppoints = m_profil.getPoints();
+    final IRecord[] ppoints = m_profile.getPoints();
     for( int i = 0; i < ppoints.length; i++ )
     {
       /* Get the record. */
