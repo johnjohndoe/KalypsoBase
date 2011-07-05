@@ -53,6 +53,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
+import org.kalypso.commons.java.lang.Arrays;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -213,37 +215,26 @@ public class WspLayer extends AbstractProfilTheme
   {
     try
     {
-      /* No data. */
-      if( m_data == null )
-        return null;
-
       /* Get the profile. */
       final IProfil profile = getProfil();
-      if( profile == null )
+      if( Objects.isNull( m_data, profile ) )
         return null;
 
       /* Get all active names. */
       final Object[] activeElements = m_data.getActiveElements();
-
-      /* Nothing was ever activated or nothing is activated. */
-      if( activeElements == null || activeElements.length == 0 )
+      if( Arrays.isEmpty( activeElements ) )
         return null;
 
       /* Get the station. */
       final BigDecimal station = ProfilUtil.stationToBigDecimal( profile.getStation() );
 
-      /* Get the domain axis. */
       final IAxis domainAxis = getDomainAxis();
-
-      /* Get the range. */
+      final IAxis targetAxis = getTargetAxis();
       final IDataRange<Number> domainRange = domainAxis.getNumericRange();
 
       /* The x positions. */
       final int xStart = domainAxis.numericToScreen( domainRange.getMin() );
       final int xEnd = domainAxis.numericToScreen( domainRange.getMax() );
-
-      /* Get the target axis. */
-      final IAxis targetAxis = getTargetAxis();
 
       /* Search the values for the active names. */
       for( final Object activeElement : activeElements )
@@ -251,13 +242,10 @@ public class WspLayer extends AbstractProfilTheme
         /* Search the value. */
         final double value = getValue( activeElement, station );
         if( Double.isNaN( value ) )
-        {
           continue;
-        }
 
         /* The y position. */
         final int y = targetAxis.numericToScreen( value );
-
         if( pos.y >= y - 5 && pos.y <= y + 5 )
         {
           /* Create a full rectangle figure. */
@@ -267,6 +255,7 @@ public class WspLayer extends AbstractProfilTheme
 
           final String activeLabel = findActiveLabel( activeElement );
           final String format = String.format( "%-12s %-14s%n%-12s %-10.2f [m]", Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.1" ), activeLabel, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.2" ), value ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
           return new EditInfo( this, hoverFigure, null, null, format, pos );
         }
       }
@@ -276,9 +265,9 @@ public class WspLayer extends AbstractProfilTheme
     catch( final Exception ex )
     {
       ex.printStackTrace();
-
-      return null;
     }
+
+    return null;
   }
 
   /**
