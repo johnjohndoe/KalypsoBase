@@ -132,7 +132,9 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
     }
 
     if( m_dialogSettings != null )
+    {
       m_dialogSettings.put( SETTINGS_FILTER_IDS, ids );
+    }
   }
 
   /**
@@ -155,7 +157,9 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
     for( final IProfilePointFilter filter : m_filters )
     {
       if( ArrayUtils.contains( idArray, filter.getId() ) )
+      {
         checkedFilters.add( filter );
+      }
     }
 
     setCheckedElements( checkedFilters.toArray( new IProfilePointFilter[checkedFilters.size()] ) );
@@ -244,7 +248,9 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
     for( final IRecord point : points )
     {
       if( accept( profile, point ) )
+      {
         filteredPoints.add( point );
+      }
     }
 
     return filteredPoints.toArray( new IRecord[filteredPoints.size()] );

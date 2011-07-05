@@ -48,6 +48,7 @@ import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.observation.result.IRecord;
+
 /**
  * @author kimwerner
  */
@@ -80,7 +81,9 @@ public class PointMove implements IProfilChange
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
+    {
       hint.setPointsChanged();
+    }
     if( m_direction == 0 )
       return new PointMove( m_profil, m_points, 0 );
     final IRecord[] points = m_profil.getPoints();
@@ -102,6 +105,6 @@ public class PointMove implements IProfilChange
   @Override
   public String toString( )
   {
-    return Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointMove.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointMove.0" ); //$NON-NLS-1$
   }
 }

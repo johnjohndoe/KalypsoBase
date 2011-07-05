@@ -87,7 +87,9 @@ public abstract class AbstractSobekProvider
   {
     /* Monitor. */
     if( monitor == null )
+    {
       monitor = new NullProgressMonitor();
+    }
 
     try
     {
@@ -95,7 +97,7 @@ public abstract class AbstractSobekProvider
       final IProfileFeature[] profiles = getProfiles();
 
       /* Monitor. */
-      final String taskName = Messages.getString("AbstractSobekProvider_0"); //$NON-NLS-1$
+      final String taskName = Messages.getString( "AbstractSobekProvider_0" ); //$NON-NLS-1$
       monitor.beginTask( taskName, profiles.length * 100 );
       monitor.subTask( taskName );
 
@@ -106,7 +108,7 @@ public abstract class AbstractSobekProvider
       {
         /* Monitor. */
         if( monitor.isCanceled() )
-          throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), Messages.getString("AbstractSobekProvider_1") ) ); //$NON-NLS-1$
+          throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), Messages.getString( "AbstractSobekProvider_1" ) ) ); //$NON-NLS-1$
 
         /* Convert the profile into a sobek profile. */
         final SobekProfile sobekProfile = convertProfile( profileFeature );

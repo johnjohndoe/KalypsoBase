@@ -5,17 +5,17 @@ import java.util.LinkedList;
 
 import org.kalypso.model.wspm.core.result.IResultSet;
 
-
-
 /**
  * @author gernot
- *
  */
 public class StrangInfo
 {
   private final ProfilInfo[] m_profiles;
+
   private int m_index;
+
   private final Collection<IStranginfoListener> m_listeners = new LinkedList<IStranginfoListener>();
+
   private final IResultSet[] m_results;
 
   public StrangInfo( final ProfilInfo[] profile, final int index, final IResultSet[] results )
@@ -24,7 +24,7 @@ public class StrangInfo
     m_index = index;
     m_results = results;
   }
-  
+
   /**
    * @return Returns the index.
    */
@@ -32,23 +32,24 @@ public class StrangInfo
   {
     return m_index;
   }
-  
+
   /**
-   * @param index The index to set.
+   * @param index
+   *          The index to set.
    */
   public void setIndex( final int index )
   {
     if( m_index == index )
       return;
-    
+
     if( !tryChangeIndex() )
       return;
-    
+
     m_index = index;
-    
+
     fireIndexChanged();
   }
-  
+
   private boolean tryChangeIndex( )
   {
     for( final IStranginfoListener l : m_listeners )
@@ -60,21 +61,21 @@ public class StrangInfo
     return true;
   }
 
-  public ProfilInfo getInfo()
+  public ProfilInfo getInfo( )
   {
     return m_profiles[m_index];
   }
-  
-  public IResultSet[] getCurrentResults()
+
+  public IResultSet[] getCurrentResults( )
   {
     return m_results;
   }
-  
-  public int size()
+
+  public int size( )
   {
     return m_profiles.length;
   }
-  
+
   public void addStranginfoListener( final IStranginfoListener l )
   {
     m_listeners.add( l );
@@ -84,11 +85,13 @@ public class StrangInfo
   {
     m_listeners.remove( l );
   }
-  
-  private void fireIndexChanged()
+
+  private void fireIndexChanged( )
   {
     for( final IStranginfoListener l : m_listeners )
+    {
       l.onIndexChanged( this );
+    }
   }
 
   public ProfilInfo[] getInfos( )

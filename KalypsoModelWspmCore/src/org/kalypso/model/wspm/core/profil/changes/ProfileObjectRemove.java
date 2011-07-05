@@ -66,12 +66,18 @@ public class ProfileObjectRemove implements IProfilChange
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
+    {
       hint.setObjectChanged();
+    }
     if( hint != null )
+    {
       hint.setPointPropertiesChanged();
+    }
 
     for( final IProfileObject element : m_objectsToRemove )
+    {
       m_profil.removeProfileObject( element );
+    }
 
     final IProfileObject[] objectsToAdd = m_objectsToRemove;
     ArrayUtils.reverse( objectsToAdd );

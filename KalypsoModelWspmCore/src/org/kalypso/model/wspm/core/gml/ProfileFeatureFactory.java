@@ -93,7 +93,9 @@ public final class ProfileFeatureFactory implements IWspmConstants
   {
     final FeatureChange[] changes = ProfileFeatureFactory.toFeatureAsChanges( profile, targetFeature );
     for( final FeatureChange change : changes )
+    {
       change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
+    }
 
     targetFeature.setEnvelopesUpdated();
   }
@@ -133,7 +135,9 @@ public final class ProfileFeatureFactory implements IWspmConstants
       /* Ensure that record-definition is there */
       final FeatureChange changeRecordDefinition = checkRecordDefinition( targetFeature );
       if( changeRecordDefinition != null )
+      {
         changes.add( changeRecordDefinition );
+      }
 
       final FeatureChange[] obsChanges = ObservationFeatureFactory.toFeatureAsChanges( profile, targetFeature );
       Collections.addAll( changes, obsChanges );

@@ -189,7 +189,9 @@ public final class KalypsoModelWspmCoreExtensions
   public static synchronized IProfilePointFilter[] getProfilePointFilters( final String usageHint )
   {
     if( PROFILE_POINT_FILTERS == null )
+    {
       PROFILE_POINT_FILTERS = readProfileFilters();
+    }
 
     return restrictFilterByUsage( PROFILE_POINT_FILTERS, usageHint );
   }
@@ -204,7 +206,9 @@ public final class KalypsoModelWspmCoreExtensions
 
       /* Blank usage: filter should be used everywhere */
       if( StringUtils.isBlank( filterUsage ) )
+      {
         restrictedFilters.add( filter );
+      }
       else
       {
         /*
@@ -213,7 +217,9 @@ public final class KalypsoModelWspmCoreExtensions
          */
         final String[] usages = filterUsage.split( "," ); //$NON-NLS-1$
         if( ArrayUtils.contains( usages, usageHint ) )
+        {
           restrictedFilters.add( filter );
+        }
       }
     }
 
@@ -259,7 +265,9 @@ public final class KalypsoModelWspmCoreExtensions
     final Map<String, List<IProfilPointMarkerProvider>> map = getMarkerProviders();
     final List<IProfilPointMarkerProvider> list = new ArrayList<IProfilPointMarkerProvider>();
     for( final List<IProfilPointMarkerProvider> ppmp : map.values() )
+    {
       list.addAll( ppmp );
+    }
 
     return list.toArray( new IProfilPointMarkerProvider[list.size()] );
   }
@@ -282,7 +290,9 @@ public final class KalypsoModelWspmCoreExtensions
         final IProfilPointMarkerProvider provider = (IProfilPointMarkerProvider) protoProvider;
 
         if( !THE_MARKER_PROVIDER_MAP.containsKey( profilType ) )
+        {
           THE_MARKER_PROVIDER_MAP.put( profilType, new ArrayList<IProfilPointMarkerProvider>() );
+        }
 
         THE_MARKER_PROVIDER_MAP.get( profilType ).add( provider );
       }
@@ -343,7 +353,7 @@ public final class KalypsoModelWspmCoreExtensions
     if( profileType == null )
       return null;
 
-    return profileType.pointProvider;
+    return profileType.m_pointProvider;
   }
 
   private static synchronized Map<String, ProfileType> getProfileTypes( )
@@ -385,7 +395,9 @@ public final class KalypsoModelWspmCoreExtensions
     final Map<String, IProfileObjectProvider> map = getProfileObjectProviders();
     final IProfileObjectProvider provider = map.get( providerId );
     if( provider == null )
+    {
       System.out.println( "ProfileObjectProvider not registered: " + providerId ); //$NON-NLS-1$
+    }
     return provider;
   }
 

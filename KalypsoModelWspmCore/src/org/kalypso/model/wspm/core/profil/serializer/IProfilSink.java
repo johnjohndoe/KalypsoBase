@@ -50,5 +50,5 @@ import org.kalypso.model.wspm.core.profil.IProfil;
  */
 public interface IProfilSink
 {
-  public boolean write( final IProfil[] profiles, final Writer writer ) throws IOException;
+  boolean write( final IProfil[] profiles, final Writer writer ) throws IOException;
 }

@@ -60,6 +60,7 @@ public final class PointPropertyEdit implements IProfilChange
     m_property = property;
     m_newValues = new Object[] { newValue };
   }
+
   public PointPropertyEdit( final IRecord[] p, final IComponent property, final Object newValue )
   {
     m_points = p;
@@ -67,6 +68,7 @@ public final class PointPropertyEdit implements IProfilChange
     m_newValues = new Object[p.length];
     Arrays.fill( m_newValues, newValue );
   }
+
   public PointPropertyEdit( final IRecord[] points, final IComponent property, final Object[] newValues )
   {
     m_points = points;
@@ -82,9 +84,11 @@ public final class PointPropertyEdit implements IProfilChange
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
+    {
       hint.setPointValuesChanged();
+    }
     final int index = m_points[0].getOwner().indexOfComponent( m_property );
-    if( m_points.length < 1||index < 0 )
+    if( m_points.length < 1 || index < 0 )
       return new PointPropertyEdit( m_points, m_property, m_newValues );
 
     final Object[] oldValues = new Object[m_points.length];
@@ -93,7 +97,7 @@ public final class PointPropertyEdit implements IProfilChange
     {
       final IRecord point = m_points[i];
       oldValues[i] = point.getValue( index );
-      point.setValue( index, i < m_newValues.length ? m_newValues[i] : Double.NaN,i < m_points.length-1 );
+      point.setValue( index, i < m_newValues.length ? m_newValues[i] : Double.NaN, i < m_points.length - 1 );
     }
 
     return new PointPropertyEdit( m_points, m_property, oldValues );

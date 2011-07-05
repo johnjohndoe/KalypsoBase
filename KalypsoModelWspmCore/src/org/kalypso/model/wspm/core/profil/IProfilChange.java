@@ -46,7 +46,7 @@ public interface IProfilChange
 {
   /**
    * @param the
-   *            Themes , affected by this ProfilChange should be set true
+   *          Themes , affected by this ProfilChange should be set true
    * @return the undo operation for this ProfilChange or {@code null} if not undoable
    */
   IProfilChange doChange( final ProfilChangeHint hint ) throws IllegalProfileOperationException;

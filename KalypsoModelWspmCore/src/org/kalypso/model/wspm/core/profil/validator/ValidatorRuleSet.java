@@ -65,8 +65,7 @@ public class ValidatorRuleSet
     m_rules = rules;
   }
 
-  public IStatus validateProfile( final IProfil profil, final IValidatorMarkerCollector collector,
-      final boolean validate, final String[] excludeIDs )
+  public IStatus validateProfile( final IProfil profil, final IValidatorMarkerCollector collector, final boolean validate, final String[] excludeIDs )
   {
     final IValidatorRule[] rules = m_rules;
     final List<IStatus> stati = new ArrayList<IStatus>( rules.length );
@@ -93,9 +92,7 @@ public class ValidatorRuleSet
     if( stati.size() == 0 )
       return Status.OK_STATUS;
 
-    return new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0,
-        stati.toArray( new IStatus[stati.size()] ),
-        Messages.getString( "org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet.0"), null ); //$NON-NLS-1$
+    return new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, stati.toArray( new IStatus[stati.size()] ), Messages.getString( "org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet.0" ), null ); //$NON-NLS-1$
   }
 
   public IValidatorRule[] getRules( )

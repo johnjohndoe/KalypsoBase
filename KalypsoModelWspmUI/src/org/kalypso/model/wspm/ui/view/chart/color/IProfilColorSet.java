@@ -62,5 +62,5 @@ public interface IProfilColorSet
 
   String COLOUR_WSP = "profil.color.wsp"; //$NON-NLS-1$
 
-  String COLOUR_ = "profil.color."; //$NON-NLS-1$
+  String COLOUR = "profil.color."; //$NON-NLS-1$
 }
