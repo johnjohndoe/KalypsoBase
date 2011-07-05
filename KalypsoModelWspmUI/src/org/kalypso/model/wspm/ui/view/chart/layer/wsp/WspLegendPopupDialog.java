@@ -58,6 +58,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
@@ -150,7 +151,9 @@ public class WspLegendPopupDialog extends PopupDialog
       /* Get all active names. */
       final Object[] activeNames = data.getActiveElements();
       if( activeNames != null )
+      {
         treeViewer.setCheckedElements( activeNames );
+      }
 
       treeViewer.addCheckStateListener( new ICheckStateListener()
       {
@@ -174,7 +177,7 @@ public class WspLegendPopupDialog extends PopupDialog
           catch( final Exception ex )
           {
             /* Log the error message. */
-            KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, ex.getLocalizedMessage(), ex ) );
+            KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, AbstractUIPluginExt.ID, ex.getLocalizedMessage(), ex ) );
           }
         }
       } );
@@ -184,7 +187,7 @@ public class WspLegendPopupDialog extends PopupDialog
     catch( final Exception ex )
     {
       /* Log the error message. */
-      KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, ex.getLocalizedMessage(), ex ) );
+      KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, AbstractUIPluginExt.ID, ex.getLocalizedMessage(), ex ) );
 
       /* Show the error message to the user. */
       setInfoText( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.6", ex.getLocalizedMessage() ) ); //$NON-NLS-1$

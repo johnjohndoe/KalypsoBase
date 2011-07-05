@@ -51,7 +51,7 @@ import org.osgi.framework.BundleContext;
 public class KalypsoModelWspmUIPlugin extends AbstractUIPluginExt
 {
   // The shared instance.
-  private static KalypsoModelWspmUIPlugin plugin;
+  private static KalypsoModelWspmUIPlugin PLUGIN;
 
   public static final String MARKER_ID = "org.kalypso.model.wspm.ui.profilemarker"; //$NON-NLS-1$
 
@@ -60,7 +60,7 @@ public class KalypsoModelWspmUIPlugin extends AbstractUIPluginExt
    */
   public KalypsoModelWspmUIPlugin( )
   {
-    plugin = this;
+    PLUGIN = this;
   }
 
   /**
@@ -79,7 +79,7 @@ public class KalypsoModelWspmUIPlugin extends AbstractUIPluginExt
   public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
-    plugin = null;
+    PLUGIN = null;
   }
 
   /**
@@ -87,14 +87,14 @@ public class KalypsoModelWspmUIPlugin extends AbstractUIPluginExt
    */
   public static KalypsoModelWspmUIPlugin getDefault( )
   {
-    return plugin;
+    return PLUGIN;
   }
 
   /**
    * Returns an image descriptor for the image file at the given plug-in relative path.
    * 
    * @param path
-   *            the path
+   *          the path
    * @return the image descriptor
    */
   public static ImageDescriptor getImageDescriptor( final String path )

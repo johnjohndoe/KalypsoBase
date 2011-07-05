@@ -102,7 +102,7 @@ public class ObservationStationResult implements IStationResult
 
       final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( m_feature );
       final TupleResult result = obs.getResult();
-      final IComponent stationComp = TupleResultUtilities.findComponentById( result,IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ); //$NON-NLS-1$
+      final IComponent stationComp = TupleResultUtilities.findComponentById( result, IWspmConstants.LENGTH_SECTION_PROPERTY_STATION ); //$NON-NLS-1$
       if( stationComp != null )
       {
         final int index = result.indexOfComponent( stationComp );
@@ -116,7 +116,9 @@ public class ObservationStationResult implements IStationResult
       m_idMap = new HashMap<String, IComponent>();
 
       for( final IComponent component : result.getComponents() )
+      {
         m_idMap.put( component.getId(), component );
+      }
     }
   }
 
@@ -144,6 +146,6 @@ public class ObservationStationResult implements IStationResult
     final IRecord record = m_recordMap.get( m_station );
     final IComponent comp = m_idMap.get( componentId );
     final int index = record.getOwner().indexOfComponent( comp );
-    return (record == null || comp == null) ? null : (Number) record.getValue( index );
+    return record == null || comp == null ? null : (Number) record.getValue( index );
   }
 }

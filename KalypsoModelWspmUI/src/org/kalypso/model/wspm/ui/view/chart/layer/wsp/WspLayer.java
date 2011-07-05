@@ -53,6 +53,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
+import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -84,7 +85,7 @@ public class WspLayer extends AbstractProfilTheme
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     Double min = null;
     Double max = null;
@@ -100,7 +101,9 @@ public class WspLayer extends AbstractProfilTheme
         /* Search the value. */
         final Double value = getValue( element, station );
         if( Double.isNaN( value ) )
+        {
           continue;
+        }
 
         if( min == null || max == null )
         {
@@ -117,7 +120,7 @@ public class WspLayer extends AbstractProfilTheme
     catch( final Exception e )
     {
       /* Log the error message. */
-      KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, e.getLocalizedMessage(), e ) );
+      KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, AbstractUIPluginExt.ID, e.getLocalizedMessage(), e ) );
     }
 
     if( min == null || Double.isNaN( min ) || max == null || Double.isNaN( max ) )
@@ -207,7 +210,9 @@ public class WspLayer extends AbstractProfilTheme
   public void dispose( )
   {
     if( m_color != null )
+    {
       m_color.dispose();
+    }
 
     super.dispose();
   }
@@ -230,7 +235,9 @@ public class WspLayer extends AbstractProfilTheme
 
     // HACK: we need to set the background color as we fill a clipped-rectangle in order to create the line
     if( m_color != null )
+    {
       gc.setBackground( m_color );
+    }
 
     try
     {
@@ -255,7 +262,9 @@ public class WspLayer extends AbstractProfilTheme
         /* Search the value. */
         final double value = getValue( element, station );
         if( Double.isNaN( value ) )
+        {
           continue;
+        }
 
         /* Paint the value. */
         paint( gc, value );
@@ -264,7 +273,7 @@ public class WspLayer extends AbstractProfilTheme
     catch( final Exception ex )
     {
       /* Log the error message. */
-      KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, ex.getLocalizedMessage(), ex ) );
+      KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, AbstractUIPluginExt.ID, ex.getLocalizedMessage(), ex ) );
     }
   }
 
@@ -307,8 +316,8 @@ public class WspLayer extends AbstractProfilTheme
       final IDataRange<Number> domainRange = domainAxis.getNumericRange();
 
       /* The x positions. */
-      final int x_start = domainAxis.numericToScreen( domainRange.getMin() );
-      final int x_end = domainAxis.numericToScreen( domainRange.getMax() );
+      final int xStart = domainAxis.numericToScreen( domainRange.getMin() );
+      final int xEnd = domainAxis.numericToScreen( domainRange.getMax() );
 
       /* Get the target axis. */
       final IAxis targetAxis = getTargetAxis();
@@ -319,7 +328,9 @@ public class WspLayer extends AbstractProfilTheme
         /* Search the value. */
         final double value = getValue( activeElement, station );
         if( Double.isNaN( value ) )
+        {
           continue;
+        }
 
         /* The y position. */
         final int y = targetAxis.numericToScreen( value );
@@ -329,7 +340,7 @@ public class WspLayer extends AbstractProfilTheme
           /* Create a full rectangle figure. */
           final PolylineFigure hoverFigure = new PolylineFigure();
           hoverFigure.setStyle( getLineStyle_hover() );
-          hoverFigure.setPoints( new Point[] { new Point( x_start, y ), new Point( x_end, y ) } );
+          hoverFigure.setPoints( new Point[] { new Point( xStart, y ), new Point( xEnd, y ) } );
 
           final String activeLabel = findActiveLabel( activeElement );
           final String format = String.format( "%-12s %-14s%n%-12s %-10.2f [m]", Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.1" ), activeLabel, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.2" ), value ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -420,12 +431,16 @@ public class WspLayer extends AbstractProfilTheme
       final Point point = getCoordinateMapper().numericToScreen( x, y );
 
       if( i == 0 )
+      {
         points.add( new Point( point.x, -1000 ) );
+      }
 
       points.add( point );
 
       if( i == ppoints.length - 1 )
+      {
         points.add( new Point( point.x, -1000 ) );
+      }
     }
 
     /* The array for the screen coordinates. */

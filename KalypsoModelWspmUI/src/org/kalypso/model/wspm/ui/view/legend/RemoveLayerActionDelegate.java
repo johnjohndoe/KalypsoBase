@@ -52,7 +52,7 @@ public class RemoveLayerActionDelegate extends AbstractLegendViewActionDelegate
     final IStructuredSelection selection = getSelection();
     if( selection == null || selection.isEmpty() )
     {
-      handleError( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.legend.RemoveLayerActionDelegate.0") ); //$NON-NLS-1$
+      handleError( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.view.legend.RemoveLayerActionDelegate.0" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -64,7 +64,7 @@ public class RemoveLayerActionDelegate extends AbstractLegendViewActionDelegate
     }
     catch( final UnsupportedOperationException e )
     {
-      handleError( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.view.legend.RemoveLayerActionDelegate.1") ); //$NON-NLS-1$
+      handleError( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.view.legend.RemoveLayerActionDelegate.1" ) ); //$NON-NLS-1$
       return;
     }
   }

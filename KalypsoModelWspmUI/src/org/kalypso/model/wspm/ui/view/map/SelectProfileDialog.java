@@ -85,8 +85,8 @@ public class SelectProfileDialog extends TitleAreaDialog
   {
     final Control contents = super.createContents( parent );
 
-    setTitle( Messages.getString("org.kalypso.model.wspm.ui.view.map.SelectProfileDialog.0") ); //$NON-NLS-1$
-    setMessage( Messages.getString("org.kalypso.model.wspm.ui.view.map.SelectProfileDialog.1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.model.wspm.ui.view.map.SelectProfileDialog.0" ) ); //$NON-NLS-1$
+    setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.map.SelectProfileDialog.1" ) ); //$NON-NLS-1$
 
     return contents;
   }
@@ -107,7 +107,7 @@ public class SelectProfileDialog extends TitleAreaDialog
 
     final Label label = new Label( composite, SWT.NONE );
     label.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    label.setText( Messages.getString("org.kalypso.model.wspm.ui.view.map.SelectProfileDialog.2") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "org.kalypso.model.wspm.ui.view.map.SelectProfileDialog.2" ) ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( composite, SWT.READ_ONLY | SWT.BORDER );
     viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -133,7 +133,7 @@ public class SelectProfileDialog extends TitleAreaDialog
           final Feature waterbody = crossSection.getOwner();
 
           final String wn = FeatureUtils.getFeatureName( NS.GML3, waterbody );
-          final String s = Messages.getString("org.kalypso.model.wspm.ui.view.map.SelectProfileDialog.3", name, station, wn ); //$NON-NLS-1$
+          final String s = Messages.getString( "org.kalypso.model.wspm.ui.view.map.SelectProfileDialog.3", name, station, wn ); //$NON-NLS-1$
 
           return s;
         }

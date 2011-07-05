@@ -120,9 +120,9 @@ public final class ProfilOperation extends AbstractOperation
   }
 
   private IStatus doit( final IProgressMonitor monitor, @SuppressWarnings("unused")//$NON-NLS-1$
-      final IAdaptable info, final List<IProfilChange> undoChanges, final List<IProfilChange> changes )
+  final IAdaptable info, final List<IProfilChange> undoChanges, final List<IProfilChange> changes )
   {
-    monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.operation.ProfilOperation.0"), changes.size() ); //$NON-NLS-1$
+    monitor.beginTask( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.operation.ProfilOperation.0" ), changes.size() ); //$NON-NLS-1$
     final ProfilChangeHint hint = new ProfilChangeHint();
     final ArrayList<IProfilChange> doneChanges = new ArrayList<IProfilChange>();
     try
@@ -155,9 +155,13 @@ public final class ProfilOperation extends AbstractOperation
           {
             final IProfilChange change = e.getProfilChange();
             if( change == null )
-              MessageDialog.openWarning( d.getActiveShell(), org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.operation.ProfilOperation.1"), e.getMessage() ); //$NON-NLS-1$
+            {
+              MessageDialog.openWarning( d.getActiveShell(), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.operation.ProfilOperation.1" ), e.getMessage() ); //$NON-NLS-1$
+            }
             else
+            {
               MessageDialog.openWarning( d.getActiveShell(), e.getMessage(), change.toString() );
+            }
           }
         }
       } );
@@ -183,7 +187,9 @@ public final class ProfilOperation extends AbstractOperation
       try
       {
         if( undo != null )
+        {
           undo.doChange( hint );
+        }
       }
       catch( final IllegalProfileOperationException e )
       {

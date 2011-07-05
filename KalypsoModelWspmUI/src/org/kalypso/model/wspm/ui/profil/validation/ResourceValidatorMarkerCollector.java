@@ -60,8 +60,8 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
   private final IResource m_resource;
 
   private final static String[] USED_ATTRIBUTES = new String[] { IMarker.MESSAGE, IMarker.LOCATION, IMarker.SEVERITY, IMarker.TRANSIENT, IDE.EDITOR_ID_ATTR,
-    IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPOS, IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPROPERTY, IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS,
-    IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID, IValidatorMarkerCollector.MARKER_ATTRIBUTE_STATION };
+      IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPOS, IValidatorMarkerCollector.MARKER_ATTRIBUTE_POINTPROPERTY, IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS,
+      IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID, IValidatorMarkerCollector.MARKER_ATTRIBUTE_STATION };
 
   private final String m_editorID;
 
@@ -99,19 +99,27 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
     for( final IMarker marker : markers )
     {
       if( marker == null )
+      {
         continue;
+      }
 
       final Object attribute = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID );
       if( attribute == null )
+      {
         continue;
+      }
 
       if( attribute.equals( profilFeatureID ) )
+      {
         toDelete.add( marker );
+      }
     }
     if( !toDelete.isEmpty() )
     {
       for( final IMarker marker : toDelete )
+      {
         marker.delete();
+      }
     }
   }
 
@@ -145,7 +153,9 @@ final public class ResourceValidatorMarkerCollector implements IValidatorMarkerC
     final IMarker marker = m_resource.createMarker( KalypsoModelWspmUIPlugin.MARKER_ID );
     final String[] resMarkerStrings = new String[markerResolutions.length];
     for( int i = 0; i < markerResolutions.length; i++ )
+    {
       resMarkerStrings[i] = markerResolutions[i].getSerializedParameter();
+    }
 
     final String resMarkerSerialized = StringUtils.join( resMarkerStrings, '\u0000' );
     final Object[] values = new Object[] { message, location, severity, true, m_editorID, pointPos, pointProperty, resMarkerSerialized == "" ? null : resMarkerSerialized, //$NON-NLS-1$

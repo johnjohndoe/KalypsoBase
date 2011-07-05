@@ -129,7 +129,7 @@ public class PointsLineLayer extends AbstractProfilLayer
       return;
 
     final Point newPoint = verifyPos( dragStartData.getPosition(), point );
-    final Integer pos = dragStartData.getData() instanceof Integer ? (Integer) (dragStartData.getData()) : -1;
+    final Integer pos = dragStartData.getData() instanceof Integer ? (Integer) dragStartData.getData() : -1;
     if( pos > -1 )
     {
       final IProfil profil = getProfil();
@@ -196,7 +196,9 @@ public class PointsLineLayer extends AbstractProfilLayer
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
     if( hint.isPointsChanged() || hint.isPointValuesChanged() )
+    {
       getEventHandler().fireLayerContentChanged( this );
+    }
   }
 
   /**
@@ -229,9 +231,13 @@ public class PointsLineLayer extends AbstractProfilLayer
         points.add( p );
 
         if( i == active )
+        {
           activePoint = p;
+        }
         else if( i > active && activePoint2 == null )
+        {
           activePoint2 = p;
+        }
       }
     }
     final Point[] pointsArray = points.toArray( new Point[points.size()] );
@@ -261,7 +267,7 @@ public class PointsLineLayer extends AbstractProfilLayer
     }
   }
 
-  private final Point verifyPos( final Point oldPos, final Point newPos )
+  private Point verifyPos( final Point oldPos, final Point newPos )
   {
     final Object o = getData( IProfilChartLayer.VIEW_DATA_KEY );
     if( o != null )

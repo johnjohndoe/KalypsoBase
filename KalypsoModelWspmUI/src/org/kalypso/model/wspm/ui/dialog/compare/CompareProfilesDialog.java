@@ -64,7 +64,7 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
  */
 public class CompareProfilesDialog extends EnhancedTitleAreaDialog
 {
-  protected final String m_screen_setting;
+  protected final String m_screenSettings;
 
   private final ICompareProfileProvider m_provider;
 
@@ -73,7 +73,7 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
     super( shell );
     setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
     m_provider = provider;
-    m_screen_setting = screenSetting;
+    m_screenSettings = screenSetting;
   }
 
   /**
@@ -89,7 +89,7 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
     final Composite base = toolkit.createComposite( parent, SWT.NULL );
     base.setLayout( new GridLayout() );
 
-    final Point screen = getScreenSize( m_screen_setting );
+    final Point screen = getScreenSize( m_screenSettings );
 
     final GridData data = new GridData( GridData.FILL, GridData.FILL, true, true );
     data.widthHint = screen.x;
@@ -111,7 +111,7 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
       @Override
       public void controlResized( final ControlEvent e )
       {
-        setScreenSize( m_screen_setting, base.getSize() );
+        setScreenSize( m_screenSettings, base.getSize() );
       }
     } );
 

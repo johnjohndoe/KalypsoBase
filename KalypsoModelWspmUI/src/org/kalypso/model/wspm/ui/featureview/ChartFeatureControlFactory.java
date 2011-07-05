@@ -122,14 +122,18 @@ public class ChartFeatureControlFactory implements IExtensionsFeatureControlFact
 
       final ChartType[] chartTypes;
       if( chartName == null )
+      {
         chartTypes = ccl.getCharts();
+      }
       else
       {
         chartTypes = new ChartType[1];
         for( final ChartType chartType : ccl.getCharts() )
         {
           if( chartType.getId().equals( chartName ) )
+          {
             chartTypes[0] = chartType;
+          }
         }
       }
 

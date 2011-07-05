@@ -74,7 +74,9 @@ public class ProfilesChooserPage extends ArrayChooserPage
     setDescription( message );
 
     if( chooseables instanceof Object[] && Arrays.isEmpty( (Object[]) chooseables ) )
-      setMessage( Messages.getString("ProfilesChooserPage.0"), IMessageProvider.WARNING ); //$NON-NLS-1$
+    {
+      setMessage( Messages.getString( "ProfilesChooserPage.0" ), IMessageProvider.WARNING ); //$NON-NLS-1$
+    }
   }
 
   /**
@@ -88,7 +90,9 @@ public class ProfilesChooserPage extends ArrayChooserPage
     final Composite panel = (Composite) getControl();
     final Control interpolationGroup = createInterpolationGroup( panel );
     if( interpolationGroup != null )
+    {
       interpolationGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    }
   }
 
   private Control createInterpolationGroup( final Composite parent )

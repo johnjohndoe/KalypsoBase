@@ -189,7 +189,9 @@ public class ImportPrfWizard extends Wizard implements IWorkbenchWizard
         final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
         final IProfil[] profs = ProfilSerializerUtilitites.readProfile( prfSource, file, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
         if( profs == null || profs.length < 0 )
+        {
           continue;
+        }
         final IProfil profile = profs[0];
         profile.setName( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.4" ) ); //$NON-NLS-1$
 
@@ -217,7 +219,9 @@ public class ImportPrfWizard extends Wizard implements IWorkbenchWizard
     }
 
     if( prfReadStatus.getChildren().length > 0 )
+    {
       ErrorDialog.openError( shell, getWindowTitle(), org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.5" ), prfReadStatus ); //$NON-NLS-1$
+    }
     return prfReadStatus;
   }
 }

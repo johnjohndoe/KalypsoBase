@@ -90,9 +90,9 @@ public class ChartFeatureControl extends AbstractFeatureControl
   /**
    * These settings are used locally to remember the last selected tab-folder.
    */
-  private final static IDialogSettings SETTINGS = new DialogSettings( "bla" ); //$NON-NLS-1$
+  private static final IDialogSettings SETTINGS = new DialogSettings( "bla" ); //$NON-NLS-1$
 
-  private final static String STR_SETTINGS_TAB = "tabIndex"; //$NON-NLS-1$
+  private static final String STR_SETTINGS_TAB = "tabIndex"; //$NON-NLS-1$
 
   private final ChartConfigurationLoader m_ccl;
 
@@ -193,7 +193,9 @@ public class ChartFeatureControl extends AbstractFeatureControl
       /* Set the title. */
       final TitleType[] title = chartType.getTitleArray();
       if( !ArrayUtils.isEmpty( title ) )
+      {
         item.setText( title[0].getStringValue() );
+      }
 
       /* Set the tooltip. */
       item.setToolTipText( chartType.getDescription() );
@@ -208,7 +210,9 @@ public class ChartFeatureControl extends AbstractFeatureControl
     final String selectedTabStr = SETTINGS.get( STR_SETTINGS_TAB );
     final int selectedTab = selectedTabStr == null ? 0 : Integer.parseInt( selectedTabStr );
     if( selectedTab < folder.getTabList().length )
+    {
       folder.setSelection( selectedTab );
+    }
 
     folder.addSelectionListener( new SelectionAdapter()
     {
@@ -268,7 +272,9 @@ public class ChartFeatureControl extends AbstractFeatureControl
     {
       /* Configured tabs, for whose there is no data, will have no chart tabs. */
       if( m_chartTabs[i] == null )
+      {
         continue;
+      }
 
       /* If the chart was previously loaded, it will contain layers - these have to be removed. */
       final IChartComposite chart = m_chartTabs[i].getChartComposite();
@@ -276,7 +282,9 @@ public class ChartFeatureControl extends AbstractFeatureControl
       final ILayerManager lm = chartModel.getLayerManager();
       final IChartLayer[] layers = lm.getLayers();
       for( final IChartLayer chartLayer : layers )
+      {
         lm.removeLayer( chartLayer );
+      }
       chartModel.getSettings().clearTitles();
 
       /* Configure. */
@@ -398,7 +406,9 @@ public class ChartFeatureControl extends AbstractFeatureControl
       for( final ChartTabItem item : m_chartTabs )
       {
         if( item != null )
+        {
           item.dispose();
+        }
       }
     }
 

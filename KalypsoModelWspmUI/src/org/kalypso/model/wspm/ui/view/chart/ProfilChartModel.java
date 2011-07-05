@@ -78,13 +78,19 @@ public class ProfilChartModel extends ChartModel
     public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
     {
       if( hint.isObjectChanged() )
+      {
         updateLayers();
+      }
       else if( hint.isPointPropertiesChanged() )
+      {
         handlePropertyOrBuildingChanged( changes );
+      }
       else
       {
         for( final IChartLayer layer : getLayerManager().getLayers() )
+        {
           ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
+        }
       }
     }
   };
@@ -118,7 +124,7 @@ public class ProfilChartModel extends ChartModel
     {
       m_profil.addProfilListener( m_profilListener );
       m_layerProvider.registerAxis( getMapperRegistry() );
-     // getSettings().addTitles( ChartTitleTester.getTitleTypes() );
+      // getSettings().addTitles( ChartTitleTester.getTitleTypes() );
       updateLayers();
     }
   }
@@ -129,7 +135,7 @@ public class ProfilChartModel extends ChartModel
   @Override
   public void autoscale( final IAxis... axes )
   {
-    final AutoScaleVisitor visitor = new AutoScaleVisitor( this);
+    final AutoScaleVisitor visitor = new AutoScaleVisitor( this );
 
     // TODO ?!? auto scaled axes will be updated when?!? strange behaviour
     final IAxis[] autoscaledAxes = ArrayUtils.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes;
@@ -143,7 +149,9 @@ public class ProfilChartModel extends ChartModel
   public void dispose( )
   {
     if( m_profil != null )
+    {
       m_profil.removeProfilListener( m_profilListener );
+    }
   }
 
   public final IProfilChartLayer getLayer( final String layerID )

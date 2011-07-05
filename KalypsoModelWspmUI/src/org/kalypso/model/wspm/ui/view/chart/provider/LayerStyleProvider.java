@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.view.chart.provider;
 
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPhenomenonConstants;
 import org.kalypso.model.wspm.ui.view.AbstractLayerStyleProvider;
 
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -63,7 +64,7 @@ public class LayerStyleProvider extends AbstractLayerStyleProvider
 
   private void createWasserspiegel2dStyle( )
   {
-    final ILineStyle ls = getStyleFor( IWspmConstants.PHENOMENON_WATERLEVEL_2D + LINE, LineStyle.class ); //$NON-NLS-1$
+    final ILineStyle ls = getStyleFor( IWspmPhenomenonConstants.PHENOMENON_WATERLEVEL_2D + LINE, LineStyle.class ); //$NON-NLS-1$
     ls.setColor( new RGB( 0, 0, 255 ) );
   }
 

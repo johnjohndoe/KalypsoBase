@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -93,7 +94,9 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   public void dispose( )
   {
     if( m_profilChartModel != null )
+    {
       m_profilChartModel.dispose();
+    }
     super.dispose();
   }
 
@@ -107,7 +110,10 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
 
     final IRecord point = getSelectedPoint( layer );
     if( point != null )
+    {
       getProfil().setActivePoint( point );
+    }
+
     return super.doInvalidateChart();
   }
 
@@ -127,21 +133,25 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   @Override
   public IProfil getProfil( )
   {
-    return m_profilChartModel == null ? null : m_profilChartModel.getProfil();
+    if( Objects.isNull( m_profilChartModel ) )
+      return null;
+
+    return m_profilChartModel.getProfil();
   }
 
   protected IProfilLayerProvider getProfilLayerProvider( final IProfil profile )
   {
-    if( m_profilLayerProvider != null )
+    if( Objects.isNotNull( m_profilLayerProvider ) )
       return m_profilLayerProvider;
-    if( profile != null )
+    else if( Objects.isNotNull( profile ) )
     {
       m_profilLayerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profile.getType() );
     }
-    else if( getProfil() != null )
+    else if( Objects.isNotNull( getProfil() ) )
     {
       m_profilLayerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( getProfil().getType() );
     }
+
     return m_profilLayerProvider;
   }
 
@@ -161,7 +171,9 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
       final Double hoehe = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
       final Double breite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
       if( hoehe.isNaN() || breite.isNaN() )
+      {
         continue;
+      }
       final Double deltaX = Math.abs( activeDom.getMin().doubleValue() - activeDom.getMax().doubleValue() );
       final IRecord record = ProfilUtil.findPoint( getProfil(), activeDom.getMin().doubleValue() + deltaX / 2, deltaX );
       if( record != null && record != getProfil().getActivePoint() )
@@ -187,11 +199,15 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     final IChartModel chartModel = getChartModel();
     state.storeState( chartModel );
     if( m_profilChartModel != null )
+    {
       m_profilChartModel.dispose();
+    }
 
     m_profilChartModel = new ProfilChartModel( getProfilLayerProvider( profile ), profile, result );
     if( state != null )
+    {
       state.restoreState( m_profilChartModel );
+    }
     // TODO: don't autoscale, restore zoom instead
     m_profilChartModel.autoscale();
     setChartModel( m_profilChartModel );

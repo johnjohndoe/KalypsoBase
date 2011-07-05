@@ -100,12 +100,16 @@ public class ValidatorChooserPage extends WizardPage
       // get selected rules
       final String[] ruleArray = dialogSettings.getArray( SETTINGS_RULES_IDS );
       if( ruleArray != null )
+      {
         Collections.addAll( selectedRules, ruleArray );
+      }
 
       // get selected fixes
       final String[] fixArray = dialogSettings.getArray( SETTINGS_QUICKFIX_IDS );
       if( fixArray != null )
+      {
         Collections.addAll( selectedFixes, fixArray );
+      }
 
     }
 
@@ -185,11 +189,17 @@ public class ValidatorChooserPage extends WizardPage
         {
           final String[] ruleIds = dialogSettings.getArray( SETTINGS_RULES_IDS );
           if( ruleIds != null )
+          {
             Collections.addAll( fs, ruleIds );
+          }
           if( button.getSelection() )
+          {
             fs.add( rule.getID() );
+          }
           else
+          {
             fs.remove( rule.getID() );
+          }
           dialogSettings.put( SETTINGS_RULES_IDS, fs.toArray( new String[0] ) );
         }
       }
