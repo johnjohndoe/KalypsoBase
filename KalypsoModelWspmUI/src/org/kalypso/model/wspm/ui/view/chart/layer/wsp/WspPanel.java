@@ -47,6 +47,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
+import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelResultTree;
 
 /**
  * @author Dirk Kuch

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view.chart.layer.wsp;
+package org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -52,11 +52,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerData;
+import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer;
 
 /**
  * @author Dirk Kuch
@@ -64,7 +67,7 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 public class WaterLevelResultTree extends Composite
 {
 
-  WaterLevelResultTree( final Composite parent, final WspLayer layer, final FormToolkit toolkit )
+  public WaterLevelResultTree( final Composite parent, final WspLayer layer, final FormToolkit toolkit )
   {
     super( parent, SWT.NULL );
 
@@ -86,7 +89,7 @@ public class WaterLevelResultTree extends Composite
       final Object input = data.getInput();
       if( Objects.isNull( input ) )
       {
-        toolkit.createLabel( this, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.r" ) );
+        toolkit.createLabel( this, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.3" ) );
         return;
       }
 
@@ -100,16 +103,14 @@ public class WaterLevelResultTree extends Composite
 
       final ILabelProvider labelProvider = data.createLabelProvider();
       treeViewer.setLabelProvider( labelProvider );
-
       treeViewer.setSorter( new ViewerSorter() );
 
       treeViewer.setInput( input );
-
       treeViewer.expandToLevel( 2 );
 
       /* Get all active names. */
       final Object[] activeNames = data.getActiveElements();
-      if( activeNames != null )
+      if( !Arrays.isEmpty( activeNames ) )
       {
         treeViewer.setCheckedElements( activeNames );
       }
@@ -123,11 +124,7 @@ public class WaterLevelResultTree extends Composite
           {
             /* Get the source. */
             final CheckboxTreeViewer source = treeViewer;
-
-            /* Get the checked elements. */
             final Object[] checked = source.getCheckedElements();
-
-            /* Activate the newly checked names. */
             data.activateElements( checked );
 
             /* Refresh the layer. */
@@ -135,7 +132,6 @@ public class WaterLevelResultTree extends Composite
           }
           catch( final Exception ex )
           {
-            /* Log the error message. */
             KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, AbstractUIPluginExt.ID, ex.getLocalizedMessage(), ex ) );
           }
         }
