@@ -81,52 +81,47 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
  */
 public class WspLayer extends AbstractProfilTheme
 {
+
+  private Color m_color;
+
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetRange()
+   * The wsp layer data.
    */
-  @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  private final IWspLayerData m_data;
+
+  /**
+   * True, if the area below the wsp lines should be filled. If there are more than one wsp line, this option should be
+   * false, because you could see only the most above line and its area.
+   */
+  private final boolean m_fill;
+
+  /**
+   * The profile.
+   */
+  private final IProfil m_profil;
+
+  /**
+   * The constructor.
+   * 
+   * @param profile
+   *          The profile.
+   * @param layerId
+   *          The id of the layer.
+   * @param styleProvider
+   *          The style provider.
+   * @param data
+   *          The wsp layer data.
+   * @param fill
+   *          True, if the area below the wsp lines should be filled. If there are more than one wsp line, this option
+   *          should be false, because you could see only the most above line and its area.
+   */
+  public WspLayer( final IProfil profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final boolean fill, final ICoordinateMapper mapper )
   {
-    Double min = null;
-    Double max = null;
-    final BigDecimal station = ProfilUtil.stationToBigDecimal( getProfil().getStation() );
+    super( profile, layerId, Messages.getString( "WspLayer.0" ), null, mapper, styleProvider ); //$NON-NLS-1$
 
-    try
-    {
-      if( m_data == null )
-        return null;
-
-      for( final Object element : m_data.getActiveElements() )
-      {
-        /* Search the value. */
-        final Double value = getValue( element, station );
-        if( Double.isNaN( value ) )
-        {
-          continue;
-        }
-
-        if( min == null || max == null )
-        {
-          min = value;
-          max = value;
-        }
-        else
-        {
-          min = Math.min( min, value );
-          max = Math.max( max, value );
-        }
-      }
-    }
-    catch( final Exception e )
-    {
-      /* Log the error message. */
-      KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, AbstractUIPluginExt.ID, e.getLocalizedMessage(), e ) );
-    }
-
-    if( min == null || Double.isNaN( min ) || max == null || Double.isNaN( max ) )
-      return null;
-
-    return new DataRange<Number>( min, max );
+    m_profil = profile;
+    m_data = data;
+    m_fill = fill;
   }
 
   /**
@@ -162,48 +157,6 @@ public class WspLayer extends AbstractProfilTheme
   }
 
   /**
-   * The profile.
-   */
-  private final IProfil m_profil;
-
-  /**
-   * The wsp layer data.
-   */
-  private final IWspLayerData m_data;
-
-  /**
-   * True, if the area below the wsp lines should be filled. If there are more than one wsp line, this option should be
-   * false, because you could see only the most above line and its area.
-   */
-  private final boolean m_fill;
-
-  private Color m_color;
-
-  /**
-   * The constructor.
-   * 
-   * @param profile
-   *          The profile.
-   * @param layerId
-   *          The id of the layer.
-   * @param styleProvider
-   *          The style provider.
-   * @param data
-   *          The wsp layer data.
-   * @param fill
-   *          True, if the area below the wsp lines should be filled. If there are more than one wsp line, this option
-   *          should be false, because you could see only the most above line and its area.
-   */
-  public WspLayer( final IProfil profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final boolean fill, final ICoordinateMapper mapper )
-  {
-    super( profile, layerId, Messages.getString( "WspLayer.0" ), null, mapper, styleProvider ); //$NON-NLS-1$
-
-    m_profil = profile;
-    m_data = data;
-    m_fill = fill;
-  }
-
-  /**
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#dispose()
    */
   @Override
@@ -217,69 +170,24 @@ public class WspLayer extends AbstractProfilTheme
     super.dispose();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#paint(org.eclipse.swt.graphics.GC)
-   */
-  @Override
-  public void paint( final GC gc )
+  private String findActiveLabel( final Object activeElement )
   {
-    if( m_color == null )
-    {
-      final ILineStyle lineStyle = getLineStyle();
-      if( lineStyle != null )
-      {
-        final RGB rgb = lineStyle.getColor();
-        m_color = new Color( gc.getDevice(), rgb );
-      }
-    }
+    Assert.isNotNull( activeElement );
 
-    // HACK: we need to set the background color as we fill a clipped-rectangle in order to create the line
-    if( m_color != null )
-    {
-      gc.setBackground( m_color );
-    }
+    if( activeElement instanceof IWspLayerDataElement )
+      return ((IWspLayerDataElement) activeElement).getLabel();
 
-    try
-    {
-      /* No data. */
-      if( m_data == null )
-        return;
-
-      /* Get the profile. */
-      final IProfil profile = getProfil();
-      if( profile == null )
-        return;
-
-      /* Get all active names. */
-      final Object[] activeElements = m_data.getActiveElements();
-
-      /* Get the station. */
-      final BigDecimal station = ProfilUtil.stationToBigDecimal( profile.getStation() );
-
-      /* Paint the values for the active names. */
-      for( final Object element : activeElements )
-      {
-        /* Search the value. */
-        final double value = getValue( element, station );
-        if( Double.isNaN( value ) )
-        {
-          continue;
-        }
-
-        /* Paint the value. */
-        paint( gc, value );
-      }
-    }
-    catch( final Exception ex )
-    {
-      /* Log the error message. */
-      KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, AbstractUIPluginExt.ID, ex.getLocalizedMessage(), ex ) );
-    }
+    return activeElement.toString();
   }
 
-  private double getValue( final Object element, final BigDecimal station ) throws Exception
+  /**
+   * This function returns the wsp layer data.
+   * 
+   * @return The wsp layer data.
+   */
+  public IWspLayerData getData( )
   {
-    return m_data.searchValue( element, station );
+    return m_data;
   }
 
   /**
@@ -358,54 +266,6 @@ public class WspLayer extends AbstractProfilTheme
     }
   }
 
-  private String findActiveLabel( final Object activeElement )
-  {
-    Assert.isNotNull( activeElement );
-
-    if( activeElement instanceof IWspLayerDataElement )
-      return ((IWspLayerDataElement) activeElement).getLabel();
-
-    return activeElement.toString();
-  }
-
-  /**
-   * This function paints one wsp line.
-   * 
-   * @param gc
-   *          The graphical context.
-   * @param height
-   *          The height of the wsp line.
-   */
-  private void paint( final GC gc, final double height )
-  {
-    final Rectangle clipping = gc.getClipping();
-    final ICoordinateMapper cm = getCoordinateMapper();
-    if( cm == null )
-      return;
-    final Point location = cm.numericToScreen( 0.0, height );
-
-    final Region clipreg = new Region();
-    final int[] points = getPoints();
-
-    clipreg.add( points );
-    clipreg.intersect( clipping );
-
-    final Rectangle toprect = new Rectangle( clipping.x, location.y - 100000, clipping.width, 100000 );
-    clipreg.subtract( toprect );
-
-    /* If not fill, ... */
-    if( !m_fill )
-    {
-      final int linesize = 2;
-      final Rectangle bottomrect = new Rectangle( clipping.x, location.y + linesize, clipping.width, 10000 );
-      clipreg.subtract( bottomrect );
-    }
-
-    gc.setClipping( clipreg );
-    gc.fillRectangle( clipping );
-    gc.setClipping( clipping );
-  }
-
   /**
    * This function creates the points of the polygon above the line of the cross section.
    * 
@@ -462,12 +322,154 @@ public class WspLayer extends AbstractProfilTheme
   }
 
   /**
-   * This function returns the wsp layer data.
-   * 
-   * @return The wsp layer data.
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetRange()
    */
-  public IWspLayerData getData( )
+  @Override
+  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
-    return m_data;
+    Double min = null;
+    Double max = null;
+    final BigDecimal station = ProfilUtil.stationToBigDecimal( getProfil().getStation() );
+
+    try
+    {
+      if( m_data == null )
+        return null;
+
+      for( final Object element : m_data.getActiveElements() )
+      {
+        /* Search the value. */
+        final Double value = getValue( element, station );
+        if( Double.isNaN( value ) )
+        {
+          continue;
+        }
+
+        if( min == null || max == null )
+        {
+          min = value;
+          max = value;
+        }
+        else
+        {
+          min = Math.min( min, value );
+          max = Math.max( max, value );
+        }
+      }
+    }
+    catch( final Exception e )
+    {
+      /* Log the error message. */
+      KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, AbstractUIPluginExt.ID, e.getLocalizedMessage(), e ) );
+    }
+
+    if( min == null || Double.isNaN( min ) || max == null || Double.isNaN( max ) )
+      return null;
+
+    return new DataRange<Number>( min, max );
+  }
+
+  private double getValue( final Object element, final BigDecimal station ) throws Exception
+  {
+    return m_data.searchValue( element, station );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#paint(org.eclipse.swt.graphics.GC)
+   */
+  @Override
+  public void paint( final GC gc )
+  {
+    if( m_color == null )
+    {
+      final ILineStyle lineStyle = getLineStyle();
+      if( lineStyle != null )
+      {
+        final RGB rgb = lineStyle.getColor();
+        m_color = new Color( gc.getDevice(), rgb );
+      }
+    }
+
+    // HACK: we need to set the background color as we fill a clipped-rectangle in order to create the line
+    if( m_color != null )
+    {
+      gc.setBackground( m_color );
+    }
+
+    try
+    {
+      /* No data. */
+      if( m_data == null )
+        return;
+
+      /* Get the profile. */
+      final IProfil profile = getProfil();
+      if( profile == null )
+        return;
+
+      /* Get all active names. */
+      final Object[] activeElements = m_data.getActiveElements();
+
+      /* Get the station. */
+      final BigDecimal station = ProfilUtil.stationToBigDecimal( profile.getStation() );
+
+      /* Paint the values for the active names. */
+      for( final Object element : activeElements )
+      {
+        /* Search the value. */
+        final double value = getValue( element, station );
+        if( Double.isNaN( value ) )
+        {
+          continue;
+        }
+
+        /* Paint the value. */
+        paint( gc, value );
+      }
+    }
+    catch( final Exception ex )
+    {
+      /* Log the error message. */
+      KalypsoModelWspmUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, AbstractUIPluginExt.ID, ex.getLocalizedMessage(), ex ) );
+    }
+  }
+
+  /**
+   * This function paints one wsp line.
+   * 
+   * @param gc
+   *          The graphical context.
+   * @param height
+   *          The height of the wsp line.
+   */
+  private void paint( final GC gc, final double height )
+  {
+    final Rectangle clipping = gc.getClipping();
+    final ICoordinateMapper cm = getCoordinateMapper();
+    if( cm == null )
+      return;
+
+    final Point location = cm.numericToScreen( 0.0, height );
+
+    final Region clipreg = new Region();
+    final int[] points = getPoints();
+
+    clipreg.add( points );
+    clipreg.intersect( clipping );
+
+    final Rectangle toprect = new Rectangle( clipping.x, location.y - 100000, clipping.width, 100000 );
+    clipreg.subtract( toprect );
+
+    /* If not fill, ... */
+    if( !m_fill )
+    {
+      final int linesize = 2;
+      final Rectangle bottomrect = new Rectangle( clipping.x, location.y + linesize, clipping.width, 10000 );
+      clipreg.subtract( bottomrect );
+    }
+
+    gc.setClipping( clipreg );
+    gc.fillRectangle( clipping );
+    gc.setClipping( clipping );
   }
 }
