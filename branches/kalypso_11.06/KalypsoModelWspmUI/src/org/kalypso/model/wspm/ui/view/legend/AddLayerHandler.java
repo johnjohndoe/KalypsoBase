@@ -81,16 +81,12 @@ public class AddLayerHandler extends AbstractHandler
     final ProfilChartModel profChartModel = chartModel instanceof ProfilChartModel ? (ProfilChartModel) chartModel : null;
     final IProfil profil = profChartModel == null ? null : profChartModel.getProfil();
     if( profil == null )
-    {
       return null;
-    }
 
     final IProfilLayerProvider layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profil.getType() );
     if( layerProvider == null )
-    {
       // TODO: show error message
       return null;
-    }
 
     final LayerDescriptor[] layerDescriptors = layerProvider.getAddableLayers( profChartModel );
 
@@ -107,7 +103,7 @@ public class AddLayerHandler extends AbstractHandler
       }
     } );
     dialog.setInput( layerDescriptors );
-    dialog.setMessage( Messages.getString("org.kalypso.model.wspm.ui.view.legend.AddLayerHandler.0") ); //$NON-NLS-1$
+    dialog.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.legend.AddLayerHandler.0" ) ); //$NON-NLS-1$
     dialog.setTitle( view.getTitle() ); //$NON-NLS-1$
 
     dialog.open();

@@ -16,7 +16,8 @@ public class LineLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    return new TupleResultLineLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
+    return new TupleResultLineLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); // $NON-NLS-1$
+// // $NON-NLS-2$
   }
 
   /**
@@ -26,9 +27,9 @@ public class LineLayerProvider extends AbstractLayerProvider
   {
     final String href = getParameterContainer().getParameterValue( "href", null ); // $NON-NLS-1$
 
-    final String observationId = getParameterContainer().getParameterValue( "observationId", null );
-    final String domainComponentName = getParameterContainer().getParameterValue( "domainComponent", null );
-    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponent", null );
+    final String observationId = getParameterContainer().getParameterValue( "observationId", null ); // $NON-NLS-1$
+    final String domainComponentName = getParameterContainer().getParameterValue( "domainComponent", null ); // $NON-NLS-1$
+    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponent", null ); // $NON-NLS-1$
 
     TupleResultDomainValueData<Calendar, Double> data = null;
     if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )

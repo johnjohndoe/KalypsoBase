@@ -130,7 +130,6 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
 
   /*
    * (non-Javadoc)
-   * 
    * @see wizard.eclipse.jface.dialogs.IDialogPage#createControl(wizard.eclipse.swt.widgets.Composite)
    */
   @Override
@@ -150,7 +149,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
 
     m_crsPanel = new CRSSelectionPanel( m_topComposite, SWT.NONE );
     m_crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    m_crsPanel.setToolTipText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfilePage.0") ); //$NON-NLS-1$
+    m_crsPanel.setToolTipText( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.wizard.ImportProfilePage.0" ) ); //$NON-NLS-1$
 
     m_crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     m_crsPanel.setSelectedCRS( m_crs );
@@ -166,12 +165,12 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     } );
 
     final Label seperatorLabel = new Label( m_group, SWT.NONE );
-    seperatorLabel.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfilePage.1") ); //$NON-NLS-1$
+    seperatorLabel.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.wizard.ImportProfilePage.1" ) ); //$NON-NLS-1$
 
     m_separatorCombo = new Combo( m_group, SWT.READ_ONLY );
     final GridData sepData = new GridData( SWT.FILL, SWT.FILL, false, false );
 
-    m_separatorCombo.setToolTipText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.wizard.ImportProfilePage.2") ); //$NON-NLS-1$
+    m_separatorCombo.setToolTipText( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.wizard.ImportProfilePage.2" ) ); //$NON-NLS-1$
     m_separatorCombo.setLayoutData( sepData );
     m_separatorCombo.addSelectionListener( this );
     m_separatorCombo.addKeyListener( this );
@@ -242,13 +241,19 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     // separator
     final String sepText = m_separatorCombo.getText();
     if( sepText == null )
+    {
       pageComplete = false;
+    }
     else
     {
       if( sepText.equals( TAB ) )
+      {
         m_seperator = "\t"; //$NON-NLS-1$
+      }
       else
+      {
         m_seperator = sepText;
+      }
 
       setPageComplete( pageComplete );
     }

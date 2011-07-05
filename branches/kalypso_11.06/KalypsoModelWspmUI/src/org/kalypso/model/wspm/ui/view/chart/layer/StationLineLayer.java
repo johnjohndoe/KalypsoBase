@@ -110,7 +110,9 @@ public class StationLineLayer extends ComponentLayer
     {
       final Point point = toScreen( profilPoint );
       if( point == null )
+      {
         continue;
+      }
       drawLine( gc, new Rectangle( point.x, point.y, 0, baseLine ) );
     }
   }

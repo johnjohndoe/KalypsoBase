@@ -14,6 +14,7 @@ import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -31,6 +32,7 @@ import org.kalypso.afgui.scenarios.SzenarioDataProvider;
 import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 import org.kalypso.afgui.scenarios.TaskExecutor;
 import org.kalypso.afgui.views.WorkflowView;
+import org.kalypso.commons.java.lang.Objects;
 import org.osgi.framework.BundleContext;
 
 import de.renew.workflow.base.ITask;
@@ -124,7 +126,14 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
           if( !forced && m_taskExecutionAuthority.canStopTask( m_taskExecutor.getActiveTask() ) )
           {
             // IMPORTAN: only close views on workflow perspective
-            final IWorkbenchPage activePage = workbench2.getActiveWorkbenchWindow().getActivePage();
+            final IWorkbenchWindow window = workbench2.getActiveWorkbenchWindow();
+            if( Objects.isNull( window ) )
+              return true;
+
+            final IWorkbenchPage activePage = window.getActivePage();
+            if( Objects.isNull( activePage ) )
+              return true;
+
             final IPerspectiveDescriptor perspective = activePage.getPerspective();
             if( !ObjectUtils.equals( perspective.getId(), Perspective.ID ) )
               return true;
@@ -289,7 +298,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
     // Then execute default task
     final IWorkflow workflow = ScenarioHelper.findWorkflow( caze, nature );
-    //lazy check and insurance for backwards compatibility 
+    // lazy check and insurance for backwards compatibility
     ScenarioHelper.ensureBackwardsCompatibility( caze, nature );
 
     final ITask defaultTask = workflow == null ? null : workflow.getDefaultTask();

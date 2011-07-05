@@ -66,9 +66,13 @@ public class ProfilMidTarget extends AbstractPointsTarget
   public void insertPoints( final IProfil profile, final List<IRecord> points )
   {
     if( points != null )
+    {
       insertPointsInternal( profile, points );
+    }
     else
+    {
       addPointInternal( profile );
+    }
   }
 
   private final void addPointInternal( final IProfil profile )
@@ -83,9 +87,13 @@ public class ProfilMidTarget extends AbstractPointsTarget
     final boolean success = tupleResult.doInterpolation( tupleResult, row, index, 0.5 );
 
     if( success )
+    {
       tupleResult.add( index + 1, row );
+    }
     else
+    {
       tupleResult.add( row );
+    }
 
   }
 
@@ -121,7 +129,9 @@ public class ProfilMidTarget extends AbstractPointsTarget
 
             final int index = profile.indexOfProperty( prop.getId() );
             if( index > -1 )
+            {
               newPoint.setValue( index, point.getValue( owner.indexOfComponent( prop ) ) );
+            }
           }
         }
         changes[i--] = new PointAdd( profile, targetPkt, newPoint );

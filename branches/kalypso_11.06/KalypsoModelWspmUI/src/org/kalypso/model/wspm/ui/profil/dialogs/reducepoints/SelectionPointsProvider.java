@@ -68,7 +68,7 @@ public class SelectionPointsProvider implements IPointsProvider
 
     if( selection.isEmpty() )
     {
-      m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.0"); //$NON-NLS-1$
+      m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.0" ); //$NON-NLS-1$
       return;
     }
 
@@ -80,7 +80,7 @@ public class SelectionPointsProvider implements IPointsProvider
 
       if( structSel.size() < 3 )
       {
-        m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.1"); //$NON-NLS-1$
+        m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.1" ); //$NON-NLS-1$
         return;
       }
 
@@ -95,7 +95,7 @@ public class SelectionPointsProvider implements IPointsProvider
           final IRecord point = (IRecord) object;
           if( lastPoint != null && lastPoint != ProfilUtil.getPointBefore( m_profil, point ) )
           {
-            m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.2"); //$NON-NLS-1$
+            m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.2" ); //$NON-NLS-1$
             return;
           }
 
@@ -104,7 +104,7 @@ public class SelectionPointsProvider implements IPointsProvider
         }
         else
         {
-          m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.3"); //$NON-NLS-1$
+          m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.3" ); //$NON-NLS-1$
           return;
         }
       }
@@ -120,7 +120,7 @@ public class SelectionPointsProvider implements IPointsProvider
 // }
     }
 
-    m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.4"); //$NON-NLS-1$
+    m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.4" ); //$NON-NLS-1$
   }
 
   /**
@@ -147,6 +147,6 @@ public class SelectionPointsProvider implements IPointsProvider
   @Override
   public String getName( )
   {
-    return org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.5"); //$NON-NLS-1$
+    return org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.5" ); //$NON-NLS-1$
   }
 }

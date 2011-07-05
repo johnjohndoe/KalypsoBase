@@ -115,11 +115,8 @@ public class WspLegendHandler extends AbstractHandler
 
     /* Get all layers. */
     final IChartLayer[] layers = layerManager.getLayers();
-    for( int i = 0; i < layers.length; i++ )
+    for( final IChartLayer layer : layers )
     {
-      /* Get the layer. */
-      final IChartLayer layer = layers[i];
-
       if( layer instanceof WspLayer )
       {
         /* Cast. */

@@ -57,7 +57,7 @@ public class TablePreferencePage extends FieldEditorPreferencePage implements IW
     super( GRID );
     setPreferenceStore( KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore() );
 
-    setDescription( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.preferences.TablePreferencePage.0") ); //$NON-NLS-1$
+    setDescription( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.preferences.TablePreferencePage.0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -66,7 +66,7 @@ public class TablePreferencePage extends FieldEditorPreferencePage implements IW
 // addField( new DirectoryFieldEditor( PreferenceConstants.P_PATH,
 // "&Directory preference:", getFieldEditorParent() ) );
 
-    addField( new BooleanFieldEditor( PreferenceConstants.P_ALLWAYSOPENTABLE, org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.preferences.TablePreferencePage.1"), getFieldEditorParent() ) ); //$NON-NLS-1$
+    addField( new BooleanFieldEditor( PreferenceConstants.P_ALLWAYSOPENTABLE, org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.preferences.TablePreferencePage.1" ), getFieldEditorParent() ) ); //$NON-NLS-1$
 
 // addField( new StringFieldEditor( PreferenceConstants.P_STRING,
 // "A &text preference:", getFieldEditorParent() ) );

@@ -75,7 +75,9 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
     m_results = results == null ? new IStationResult[0] : results;
 
     if( m_profile != null )
+    {
       m_profile.addProfilListener( this );
+    }
   }
 
   /**
@@ -118,7 +120,9 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   public void dispose( )
   {
     if( m_profile != null )
+    {
       m_profile.removeProfilListener( this );
+    }
   }
 
   @Override

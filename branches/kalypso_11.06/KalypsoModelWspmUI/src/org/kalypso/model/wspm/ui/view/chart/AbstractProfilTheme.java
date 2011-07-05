@@ -135,15 +135,21 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
     if( getTargetComponent() != null )
+    {
       getProfil().setActivePointProperty( getTargetComponent() );
+    }
     final IProfilChartLayer layer = getActiveLayer();
     if( layer == null )
       return null;
 
     if( dragStartData.getPosition() == point )
+    {
       layer.executeClick( dragStartData );
+    }
     else
+    {
       layer.executeDrop( point, dragStartData );
+    }
 
     return null;
   }
@@ -169,7 +175,9 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
         {
           final ILegendEntry[] les = layer.getLegendEntries();
           if( les == null || les.length == 0 )
+          {
             continue;
+          }
           for( final ILegendEntry l : les )
           {
             ((LegendEntry) l).paintSymbol( gc, size );
@@ -202,7 +210,9 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   {
     final IProfilChartLayer layer = getActiveLayer();
     if( layer != null )
+    {
       layer.executeClick( clickInfo );
+    }
   }
 
   /**
@@ -215,7 +225,9 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   {
     final IProfilChartLayer layer = getActiveLayer();
     if( layer != null )
+    {
       layer.executeDrop( point, dragStartData );
+    }
   }
 
   protected final void fireLayerContentChanged( )
@@ -223,7 +235,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     getEventHandler().fireLayerContentChanged( this );
   }
 
-  private final IProfilChartLayer getActiveLayer( )
+  private IProfilChartLayer getActiveLayer( )
   {
     for( final IChartLayer l : getLayerManager().getLayers() )
     {
@@ -286,7 +298,9 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
         if( info != null )
         {
           if( !pLayer.isActive() )
+          {
             pLayer.setActive( true );
+          }
           return info;
         }
       }
@@ -335,19 +349,27 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
       if( dr != null )
       {
         if( max == null )
+        {
           max = dr.getMax().doubleValue();
+        }
         else
+        {
           max = Math.max( max, dr.getMax().doubleValue() );
+        }
         if( min == null )
+        {
           min = dr.getMin().doubleValue();
+        }
         else
+        {
           min = Math.min( min, dr.getMin().doubleValue() );
+        }
       }
     }
     if( min == null || max == null )
       return null;
-//    if( min == max )
-//      min = 0.9 * max;
+// if( min == max )
+// min = 0.9 * max;
     return new DataRange<Number>( min, max );
   }
 
@@ -392,11 +414,15 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
       fireLayerContentChanged();
     }
     else
+    {
       for( final IChartLayer layer : getLayerManager().getLayers() )
       {
         if( layer instanceof IProfilChartLayer )
+        {
           ((IProfilChartLayer) layer).onProfilChanged( hint, changes );
+        }
       }
+    }
   }
 
   /**
@@ -407,7 +433,9 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
   {
     for( final IChartLayer layer : getLayerManager().getLayers() )
       if( layer.isVisible() )
+      {
         layer.paint( gc );
+      }
   }
 
   /**
@@ -429,7 +457,9 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
       if( layer instanceof IProfilChartLayer )
+      {
         ((IProfilChartLayer) layer).setProfil( profil );
+      }
     }
   }
 }

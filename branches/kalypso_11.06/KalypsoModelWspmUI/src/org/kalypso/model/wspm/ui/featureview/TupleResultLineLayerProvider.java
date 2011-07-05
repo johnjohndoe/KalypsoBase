@@ -95,9 +95,13 @@ public class TupleResultLineLayerProvider extends AbstractLayerProvider
     final Feature baseFeature = ChartDataProvider.FEATURE_MAP.get( featureKey );
     final Feature feature;
     if( propertyName == null )
+    {
       feature = baseFeature;
+    }
     else
+    {
       feature = FeatureHelper.getFeature( baseFeature.getWorkspace(), baseFeature.getProperty( propertyName ) );
+    }
 
     if( feature == null )
       return null;

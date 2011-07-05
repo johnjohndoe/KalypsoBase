@@ -86,9 +86,9 @@ public class ThemeAndPropertyChooserGroup
     public final IPropertyTypeFilter filter;
 
     public PropertyDescriptor( @SuppressWarnings("hiding")//$NON-NLS-1$
-        final String label, @SuppressWarnings("hiding")//$NON-NLS-1$
-        final IPropertyTypeFilter filter, @SuppressWarnings("hiding")//$NON-NLS-1$
-        final boolean hideIfUnique )
+    final String label, @SuppressWarnings("hiding")//$NON-NLS-1$
+    final IPropertyTypeFilter filter, @SuppressWarnings("hiding")//$NON-NLS-1$
+    final boolean hideIfUnique )
     {
       this.label = label;
       this.filter = filter;
@@ -114,7 +114,7 @@ public class ThemeAndPropertyChooserGroup
 
   /**
    * @param filer
-   *            only themes accepted by this filter are shown to the user
+   *          only themes accepted by this filter are shown to the user
    */
   public ThemeAndPropertyChooserGroup( final IUpdateable updatable, final IMapModell modell, final IKalypsoThemeFilter themeFilter, final PropertyDescriptor[] properties )
   {
@@ -123,7 +123,9 @@ public class ThemeAndPropertyChooserGroup
     m_themeFilter = themeFilter;
 
     for( final PropertyDescriptor descriptor : properties )
+    {
       m_properties.put( descriptor, null );
+    }
   }
 
   public void setDialogSettings( final IDialogSettings dialogSettings )
@@ -151,7 +153,9 @@ public class ThemeAndPropertyChooserGroup
     final Map<PropertyDescriptor, ComboViewer> propertyCombos = new HashMap<PropertyDescriptor, ComboViewer>();
 
     for( final PropertyDescriptor pd : m_properties.keySet() )
+    {
       createPropertyChooser( group, pd, propertyControls, propertyCombos );
+    }
 
     themeComboViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
@@ -232,7 +236,9 @@ public class ThemeAndPropertyChooserGroup
     {
       final IStructuredSelection selection = propertySelection.get( pd );
       if( selection != null )
+      {
         propertyCombos.get( pd ).setSelection( selection );
+      }
     }
 
     return group;
@@ -271,7 +277,9 @@ public class ThemeAndPropertyChooserGroup
       {
         final IPropertyType pt = m_properties.get( desc );
         if( pt != null )
+        {
           propSettings.put( desc.label, pt.getQName().toString() );
+        }
       }
     }
 
@@ -289,7 +297,9 @@ public class ThemeAndPropertyChooserGroup
     if( theme == null )
     {
       for( final ComboViewer comboViewer : propertyCombos.values() )
+      {
         comboViewer.setInput( new IPropertyType[] {} );
+      }
     }
     else
     {
@@ -303,21 +313,31 @@ public class ThemeAndPropertyChooserGroup
         final IPropertyType[] pts = PropertyUtils.filterProperties( featureType, pd.filter );
         comboViewer.setInput( pts );
         if( pts.length == 0 )
+        {
           comboViewer.setSelection( StructuredSelection.EMPTY );
+        }
         else
+        {
           comboViewer.setSelection( new StructuredSelection( pts[0] ) );
+        }
 
         final boolean hideIfUnique = pd.hideIfUnique;
         for( final Control propertyControl : controls )
+        {
           ((GridData) propertyControl.getLayoutData()).exclude = hideIfUnique && pts.length < 2;
+        }
       }
     }
 
     if( m_dialogSettings != null )
+    {
       m_dialogSettings.put( SETTINGS_THEME, m_choosenTheme == null ? "" : m_choosenTheme.getLabel() ); //$NON-NLS-1$
+    }
 
     for( final ComboViewer comboViewer : propertyCombos.values() )
+    {
       comboViewer.getControl().setEnabled( theme != null );
+    }
   }
 
   public IPropertyType getProperty( final PropertyDescriptor pd )

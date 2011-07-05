@@ -102,7 +102,9 @@ public class HyperlinkStyledText
           setCurrentRange( null );
         }
         else
+        {
           styledText.setCursor( display.getSystemCursor( SWT.CURSOR_HAND ) );
+        }
       }
     } );
 

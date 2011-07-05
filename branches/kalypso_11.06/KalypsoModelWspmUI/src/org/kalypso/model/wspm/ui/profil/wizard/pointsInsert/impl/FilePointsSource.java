@@ -84,7 +84,7 @@ public class FilePointsSource extends AbstractPointsSource
       // change this later to let the user choose how to read
 
       final IProfil[] profiles = ProfilSerializerUtilitites.readProfile( prfS, f, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
-      return (profiles == null || profiles.length < 0) ? null : profiles[0].getResult();
+      return profiles == null || profiles.length < 0 ? null : profiles[0].getResult();
     }
     catch( final Exception e )
     {
@@ -119,7 +119,9 @@ public class FilePointsSource extends AbstractPointsSource
         final FileDialog dlg = new FileDialog( parent.getShell() );
         final String fileName = dlg.open();
         if( fileName != null )
+        {
           m_fileName.setText( fileName );
+        }
       }
     } );
 
@@ -131,7 +133,9 @@ public class FilePointsSource extends AbstractPointsSource
   {
     final String fileName = settings.get( "DLG_SETTINGS_FILENAME" ); //$NON-NLS-1$
     if( fileName != null )
+    {
       m_fileName.setText( fileName );
+    }
 
   }
 

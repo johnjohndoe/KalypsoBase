@@ -149,7 +149,6 @@ public class CreateProfileMapAction extends AbstractHandler
         if( context != null )
         {
 
-
         }
       }
     }
@@ -172,7 +171,9 @@ public class CreateProfileMapAction extends AbstractHandler
     {
       final Gismapview gismapview = GisTemplateHelper.createGisMapView( selectedProfiles, true );
       if( title != null )
+      {
         gismapview.setName( title );
+      }
       final StringWriter stringWriter = new StringWriter();
       GisTemplateHelper.saveGisMapView( gismapview, stringWriter, "UTF8" ); //$NON-NLS-1$
       stringWriter.close();

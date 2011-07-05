@@ -98,9 +98,13 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
       m_provider.addSelectionChangedListener( this );
       final ISelection selection = m_provider.getSelection();
       if( selection == null )
+      {
         selectionChanged( new SelectionChangedEvent( m_provider, StructuredSelection.EMPTY ) );
+      }
       else
+      {
         selectionChanged( new SelectionChangedEvent( m_provider, selection ) );
+      }
     }
   }
 
@@ -249,7 +253,9 @@ public class FeatureSelectionProfileProvider extends AbstractProfilProvider impl
     }
 
     if( m_feature != null )
+    {
       m_feature.getWorkspace().addModellListener( this );
+    }
 
     setProfil( oldProfile, newProfile );
   }

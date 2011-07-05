@@ -135,12 +135,18 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     final IComponent targetComponent = getTargetComponent();
     if( targetComponent != null )
+    {
       getProfil().setActivePointProperty( targetComponent );
+    }
 
     if( point == null || dragStartData.getPosition() == point )
+    {
       executeClick( dragStartData );
+    }
     else
+    {
       executeDrop( point, dragStartData );
+    }
 
     return null;
   }
@@ -254,7 +260,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
       final Rectangle hover = getHoverRect( profilPoints[i] );
       if( hover == null )
+      {
         continue;
+      }
 
       if( hover.contains( pos ) )
       {
@@ -276,7 +284,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   protected ILineStyle getLineStyle( )
   {
     if( m_lineStyle == null )
+    {
       m_lineStyle = StyleUtils.getDefaultLineStyle();
+    }
     return m_lineStyle;
   }
 

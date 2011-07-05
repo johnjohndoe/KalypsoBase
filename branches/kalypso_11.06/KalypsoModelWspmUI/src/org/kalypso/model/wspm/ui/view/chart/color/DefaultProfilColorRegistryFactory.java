@@ -45,7 +45,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 /** Erzeugt eine {@link org.eclipse.jface.resource.ColorRegistry} mit einer Standardfarbeelegung für den Profileditor */
-public class DefaultProfilColorRegistryFactory
+public final class DefaultProfilColorRegistryFactory
 {
   private DefaultProfilColorRegistryFactory( )
   {

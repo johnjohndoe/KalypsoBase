@@ -152,7 +152,9 @@ public class OperationChooserPage extends WizardPage
         m_value = Double.valueOf( doubleValue );
       }
       else
+      {
         m_value = Double.NaN;
+      }
     }
 
     createFilterGroup( panel );
@@ -205,7 +207,9 @@ public class OperationChooserPage extends WizardPage
     final Text bldText = new Text( group, SWT.TRAIL | SWT.SINGLE | SWT.BORDER );
     bldText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     if( value != null )
+    {
       bldText.setText( value );
+    }
 
     // TODO: move this code into a separate class
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -304,7 +308,9 @@ public class OperationChooserPage extends WizardPage
     for( final IRecord point : profil.getResult() )
     {
       if( m_filterChooser.accept( profil, point ) )
+      {
         selectedPoints.add( point );
+      }
     }
 
     calculator.calculate( m_value, propertyIds, selectedPoints );
@@ -315,7 +321,9 @@ public class OperationChooserPage extends WizardPage
     final IDialogSettings dialogSettings = getDialogSettings();
     m_value = NumberUtils.parseQuietDouble( text );
     if( dialogSettings != null )
+    {
       dialogSettings.put( SETTINGS_CALCULATOR_VALUE, m_value.isNaN() ? "" : m_value.toString() ); //$NON-NLS-1$
+    }
 
     updateMessage();
   }
@@ -339,10 +347,10 @@ public class OperationChooserPage extends WizardPage
   {
     final Object[] checkedElements = m_filterChooser.getCheckedElements();
     if( checkedElements.length == 0 )
-      return new MessageProvider( Messages.getString("OperationChooserPage.0"), IMessageProvider.WARNING ); //$NON-NLS-1$
+      return new MessageProvider( Messages.getString( "OperationChooserPage.0" ), IMessageProvider.WARNING ); //$NON-NLS-1$
 
     if( m_value.isNaN() )
-      return new MessageProvider( Messages.getString("OperationChooserPage.1"), IMessageProvider.WARNING ); //$NON-NLS-1$
+      return new MessageProvider( Messages.getString( "OperationChooserPage.1" ), IMessageProvider.WARNING ); //$NON-NLS-1$
 
     return null;
   }

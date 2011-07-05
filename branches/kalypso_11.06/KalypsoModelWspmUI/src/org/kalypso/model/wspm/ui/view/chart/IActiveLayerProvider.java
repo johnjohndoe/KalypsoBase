@@ -46,11 +46,12 @@ package org.kalypso.model.wspm.ui.view.chart;
  * @author Gernot Belger
  */
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+
 public interface IActiveLayerProvider
 {
-  public IChartLayer getActiveLayer( );
+  IChartLayer getActiveLayer( );
 
-  public void addActiveLayerChangeListener( final IActiveLayerChangeListener l );
+  void addActiveLayerChangeListener( final IActiveLayerChangeListener l );
 
-  public void removeActiveLayerChangeListener( final IActiveLayerChangeListener l );
+  void removeActiveLayerChangeListener( final IActiveLayerChangeListener l );
 }

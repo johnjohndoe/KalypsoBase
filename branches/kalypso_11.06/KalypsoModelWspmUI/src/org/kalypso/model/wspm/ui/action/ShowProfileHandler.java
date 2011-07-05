@@ -79,7 +79,9 @@ public class ShowProfileHandler extends AbstractHandler
       final IPerspectiveRegistry reg = workbench.getPerspectiveRegistry();
       final IPerspectiveDescriptor finalPersp = reg.findPerspectiveWithId( ProfileManagerPerspective.ID );
       if( finalPersp != null )
+      {
         activePage.setPerspective( finalPersp );
+      }
 
       /* Make sure that the diagram view is visible. */
       activePage.showView( ProfilChartViewPart.ID );

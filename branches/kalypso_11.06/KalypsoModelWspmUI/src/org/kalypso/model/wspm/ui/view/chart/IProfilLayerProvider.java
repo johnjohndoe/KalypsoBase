@@ -57,24 +57,24 @@ public interface IProfilLayerProvider
    * if the layer depends on other layers or properties, create all required things here. </p> if there is nothing to do
    * see getLayer( final String layerId, final ProfilChartView view ) </p> return all affected layer
    */
-  public void addLayerToProfile( final IProfil profil, final String layerId );
+  void addLayerToProfile( final IProfil profil, final String layerId );
 
   /**
    * return the layers not shown yet, but addable.
    * 
    * @FIXME: return some wrapper for a potential layer instead.
    */
-  public LayerDescriptor[] getAddableLayers( final ProfilChartModel chartModel );
+  LayerDescriptor[] getAddableLayers( final ProfilChartModel chartModel );
 
-  public IProfilChartLayer createLayer( final IProfil profile, final String layerId );
+  IProfilChartLayer createLayer( final IProfil profile, final String layerId );
 
-  public IProfilChartLayer[] createLayers( final IProfil profile, Object result );
+  IProfilChartLayer[] createLayers( final IProfil profile, Object result );
 
-  public IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile );
+  IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile );
 
-  public IAxis[] registerAxis( IMapperRegistry mapperRegistry );
+  IAxis[] registerAxis( IMapperRegistry mapperRegistry );
 
-  public LayerDescriptor getLayer( final String pointPropertyID );
+  LayerDescriptor getLayer( final String pointPropertyID );
 
   // public IAxisRenderer[] registerAxisRenderer( IMapperRegistry mapperRegistry );
 }

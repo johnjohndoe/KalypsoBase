@@ -114,7 +114,9 @@ public class PolynomeChartLayer extends AbstractLineLayer
     {
       final IPolynomial1D poly = PolynomialUtilities.getPoly( m_data.getPolyArray(), pos );
       if( poly == null )
+      {
         continue;
+      }
 
       final double value = poly.computeResult( pos );
 

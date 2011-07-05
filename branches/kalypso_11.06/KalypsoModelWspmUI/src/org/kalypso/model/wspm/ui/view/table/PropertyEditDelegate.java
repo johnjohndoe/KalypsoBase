@@ -79,7 +79,7 @@ public class PropertyEditDelegate implements IViewActionDelegate
   {
     final Shell viewShell = m_view.getViewSite().getShell();
 
-    final IProfil profile = (m_view instanceof TableView) ? ((TableView) m_view).getProfil() : null;
+    final IProfil profile = m_view instanceof TableView ? ((TableView) m_view).getProfil() : null;
 
     if( profile == null )
     {
