@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * @author Dirk Kuch
  */
-public class WaterLevelFixiationFilter extends AbstractWaterLevelViewerFilter
+public class WaterLevelFixationFilter extends AbstractWaterLevelViewerFilter
 {
   /**
    * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
@@ -54,10 +54,7 @@ public class WaterLevelFixiationFilter extends AbstractWaterLevelViewerFilter
   @Override
   public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
-    if( isWaterLevelFixiation( element ) )
-      return false;
-
-    return true;
+    return isWaterLevelFixiation( element );
   }
 
 }
