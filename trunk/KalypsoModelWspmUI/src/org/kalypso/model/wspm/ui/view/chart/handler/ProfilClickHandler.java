@@ -1,6 +1,5 @@
 package org.kalypso.model.wspm.ui.view.chart.handler;
 
-
 /**
  * @author kimwerner
  */

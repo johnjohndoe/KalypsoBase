@@ -54,7 +54,7 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer;
-import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLegendPopupDialog;
+import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WspLegendPopupDialog;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -115,11 +115,8 @@ public class WspLegendHandler extends AbstractHandler
 
     /* Get all layers. */
     final IChartLayer[] layers = layerManager.getLayers();
-    for( int i = 0; i < layers.length; i++ )
+    for( final IChartLayer layer : layers )
     {
-      /* Get the layer. */
-      final IChartLayer layer = layers[i];
-
       if( layer instanceof WspLayer )
       {
         /* Cast. */

@@ -106,7 +106,9 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
       final Feature polyFeature = (Feature) object;
       final IPolynomial1D poly1d = (IPolynomial1D) polyFeature.getAdapter( IPolynomial1D.class );
       if( domainId == null || domainId.equals( poly1d.getDomainPhenomenon() ) )
+      {
         polys.add( poly1d );
+      }
     }
     final IPolynomial1D[] polyArray = polys.toArray( new IPolynomial1D[polys.size()] );
     return new PolynomDataContainer( polyArray );

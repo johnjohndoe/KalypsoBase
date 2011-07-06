@@ -64,7 +64,7 @@ public class DefaultProfileFeatureProvider implements IProfileFeatureProvider
    * @see org.kalypso.model.wspm.core.gml.IProfileFeatureProvider#getResult(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public Object getResult( Feature feature )
+  public Object getResult( final Feature feature )
   {
     return null;
   }

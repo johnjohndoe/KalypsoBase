@@ -82,7 +82,6 @@ public class LayerViewPart extends AbstractChartModelViewPart
 
   private ScrolledForm m_form;
 
-
   /**
    * @see org.kalypso.model.wspm.ui.view.AbstractChartModelViewPart#doCreateControl(org.eclipse.swt.widgets.Composite,
    *      org.eclipse.ui.forms.widgets.FormToolkit)
@@ -113,12 +112,14 @@ public class LayerViewPart extends AbstractChartModelViewPart
   {
     final ILayerManager lm = getChartModel() == null ? null : getChartModel().getLayerManager();
     if( lm != null )
+    {
       lm.removeListener( m_layerManagerEventListener );
+    }
 
     super.dispose();
   }
 
-  private final IChartLayer getActiveLayer( )
+  private IChartLayer getActiveLayer( )
   {
     final IChartModel model = getChartModel();
     final ILayerManager mngr = model == null ? null : model.getLayerManager();
@@ -148,12 +149,16 @@ public class LayerViewPart extends AbstractChartModelViewPart
       return;
 
     for( final Control ctrl : m_parent.getChildren() )
+    {
       ctrl.dispose();
+    }
 
     final IChartLayer activeLayer = getActiveLayer();
     IChartModel model = getChartModel();
     if( model != null && model instanceof ProfilChartModel && ((ProfilChartModel) model).getProfil() == null )
+    {
       model = null;
+    }
 
     updatePartName( model, activeLayer == null ? null : activeLayer.getTitle(), m_form.getForm() );
 
@@ -178,9 +183,13 @@ public class LayerViewPart extends AbstractChartModelViewPart
     final ILayerManager oldLm = oldModel == null ? null : oldModel.getLayerManager();
     final ILayerManager lm = getChartModel() == null ? null : getChartModel().getLayerManager();
     if( oldLm != null )
+    {
       oldLm.removeListener( m_layerManagerEventListener );
+    }
     if( lm != null )
+    {
       lm.addListener( m_layerManagerEventListener );
+    }
 
     final Runnable runnable = new Runnable()
     {

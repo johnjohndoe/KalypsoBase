@@ -152,7 +152,8 @@ public class NewFeatureScope
       newMenuManager.add( new NewFeatureAction( this, ft ) );
 
     newMenuManager.add( new Separator( "additions" ) ); //$NON-NLS-1$
-    newMenuManager.add( new NewFeatureFromExternalSchemaAction() );
+    /* Not yet implemented, makes no sense to show it for now ... */
+    // newMenuManager.add( new NewFeatureFromExternalSchemaAction() );
   }
 
   private boolean checkFullList( final IMenuManager newMenuManager )

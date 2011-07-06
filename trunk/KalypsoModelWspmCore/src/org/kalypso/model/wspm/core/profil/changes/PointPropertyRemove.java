@@ -61,7 +61,9 @@ public final class PointPropertyRemove implements IProfilChange
   public IProfilChange doChange( final ProfilChangeHint hint )
   {
     if( hint != null )
+    {
       hint.setPointPropertiesChanged();
+    }
 
     final Object[] oldValue = ProfilUtil.getValuesFor( m_profil, m_property );
     m_profil.removePointProperty( m_property );

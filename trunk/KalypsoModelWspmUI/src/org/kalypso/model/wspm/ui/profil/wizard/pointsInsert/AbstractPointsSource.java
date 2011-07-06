@@ -93,11 +93,13 @@ public abstract class AbstractPointsSource implements IPointsSource
   {
     m_control = doCreateControl( parent );
   }
-protected abstract void loadState( final IDialogSettings settings );
+
+  protected abstract void loadState( final IDialogSettings settings );
+
   @Override
-  public final Control getControl( final IDialogSettings settings  )
+  public final Control getControl( final IDialogSettings settings )
   {
-    loadState(settings);
+    loadState( settings );
     return m_control;
   }
 

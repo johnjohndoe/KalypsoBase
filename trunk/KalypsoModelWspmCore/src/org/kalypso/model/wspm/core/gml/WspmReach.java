@@ -52,7 +52,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public abstract class WspmReach extends Feature_Impl implements IWspmConstants
 {
-  public final static QName QNAME_WSPM_REACH = new QName( NS_WSPM, "AbstractReach" ); //$NON-NLS-1$
+  public static final QName QNAME_WSPM_REACH = new QName( NS_WSPM, "AbstractReach" ); //$NON-NLS-1$
 
   public WspmReach( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {

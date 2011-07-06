@@ -67,9 +67,13 @@ public class ProfilStartTarget extends AbstractPointsTarget
   public void insertPoints( final IProfil profile, final List<IRecord> points )
   {
     if( points != null )
+    {
       insertPointsInternal( profile, points );
+    }
     else
+    {
       addPointInternal( profile );
+    }
   }
 
   private final void addPointInternal( final IProfil profile )
@@ -77,7 +81,9 @@ public class ProfilStartTarget extends AbstractPointsTarget
     final TupleResult result = profile.getResult();
     IRecord record = null;
     if( result.size() > 0 )
+    {
       record = result.get( 0 );
+    }
     else if( record == null )
     {
       record = result.createRecord();
@@ -91,12 +97,16 @@ public class ProfilStartTarget extends AbstractPointsTarget
 
     /* shift new point to an position located before old first point position */
     if( iBreite > -1 )
+    {
       myPoint.setValue( iBreite, (Double) myPoint.getValue( iBreite ) - 10 );
+    }
 
     // remove all markers from new point
     final IComponent[] pointMarkerTypes = profile.getPointMarkerTypes();
     for( final IComponent pmt : pointMarkerTypes )
+    {
       myPoint.setValue( profile.indexOfProperty( pmt ), pmt.getDefaultValue() );
+    }
 
     result.add( 0, myPoint );
   }
@@ -110,7 +120,7 @@ public class ProfilStartTarget extends AbstractPointsTarget
     else
     {
       final int pointsToAdd = points.size();
-      
+
       final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
       final int iHoehe = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
 
@@ -140,7 +150,9 @@ public class ProfilStartTarget extends AbstractPointsTarget
 
               final int index = profile.indexOfProperty( prop.getId() );
               if( index > -1 )
+              {
                 newPoint.setValue( index, point.getValue( owner.indexOfComponent( prop ) ) );
+              }
             }
           }
           changes[i--] = new PointAdd( profile, null, newPoint );
@@ -151,7 +163,7 @@ public class ProfilStartTarget extends AbstractPointsTarget
         // should never happen, stops operation and raise NullPointerException in ProfilOperation.doChange
         changes[0] = null;
       }
-      final ProfilOperation operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilStartTarget.0"), profile, changes, false ); //$NON-NLS-1$
+      final ProfilOperation operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilStartTarget.0" ), profile, changes, false ); //$NON-NLS-1$
       new ProfilOperationJob( operation ).schedule();
     }
 

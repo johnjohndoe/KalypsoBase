@@ -47,5 +47,5 @@ import de.openali.odysseus.chart.framework.model.style.IStyle;
  */
 public interface ILayerStyleProvider
 {
-  public <T extends IStyle> T getStyleFor( final String id, final Class<T> defaultStyle );
+  <T extends IStyle> T getStyleFor( final String id, final Class<T> defaultStyle );
 }

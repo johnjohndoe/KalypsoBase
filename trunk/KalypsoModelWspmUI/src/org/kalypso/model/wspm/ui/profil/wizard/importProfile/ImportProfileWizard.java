@@ -135,8 +135,10 @@ public class ImportProfileWizard extends Wizard implements IWorkbenchWizard
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, op );
     if( !status.isOK() )
+    {
       KalypsoModelWspmUIPlugin.getDefault().getLog().log( status );
-    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("ImportProfileWizard.0"), status ); //$NON-NLS-1$
+    }
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "ImportProfileWizard.0" ), status ); //$NON-NLS-1$
 
     return !status.matches( IStatus.ERROR );
   }

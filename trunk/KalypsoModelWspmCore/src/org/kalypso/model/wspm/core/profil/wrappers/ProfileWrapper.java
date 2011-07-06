@@ -149,7 +149,9 @@ public class ProfileWrapper
     for( final ProfilePointWrapper point : points )
     {
       if( point.getBreite() < width )
+      {
         before = point;
+      }
       else
         return before;
     }
@@ -338,9 +340,13 @@ public class ProfileWrapper
     for( final ProfilePointWrapper point : points )
     {
       if( point.getBreite() < breite )
+      {
         last = point;
+      }
       else if( point.getBreite() >= breite )
+      {
         break;
+      }
     }
 
     return last;
@@ -375,7 +381,9 @@ public class ProfileWrapper
     for( final ProfilePointWrapper point : points )
     {
       if( point.getHoehe() < height )
+      {
         height = point.getHoehe();
+      }
     }
 
     return height;

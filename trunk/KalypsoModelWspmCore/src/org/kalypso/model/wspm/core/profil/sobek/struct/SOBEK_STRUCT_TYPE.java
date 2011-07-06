@@ -44,22 +44,22 @@ import org.kalypso.model.wspm.core.i18n.Messages;
 
 public enum SOBEK_STRUCT_TYPE
 {
-  _unknown_(Messages.getString("SOBEK_STRUCT_TYPE_2"), -1), //$NON-NLS-1$
-  river_weir(Messages.getString("SOBEK_STRUCT_TYPE_1"), 0), // (River module only) //$NON-NLS-1$
-  river_advanced_weir(Messages.getString("SOBEK_STRUCT_TYPE_0"), 1), // //$NON-NLS-1$
-  general_structure(Messages.getString("SOBEK_STRUCT_TYPE_3"), 2), // //$NON-NLS-1$
-  river_pump(Messages.getString("SOBEK_STRUCT_TYPE_4"), 3), // //$NON-NLS-1$
-  database_structure(Messages.getString("SOBEK_STRUCT_TYPE_5"), 4), // (River module only) //$NON-NLS-1$
+  _unknown_(Messages.getString( "SOBEK_STRUCT_TYPE_2" ), -1), //$NON-NLS-1$
+  river_weir(Messages.getString( "SOBEK_STRUCT_TYPE_1" ), 0), // (River module only) //$NON-NLS-1$
+  river_advanced_weir(Messages.getString( "SOBEK_STRUCT_TYPE_0" ), 1), // //$NON-NLS-1$
+  general_structure(Messages.getString( "SOBEK_STRUCT_TYPE_3" ), 2), // //$NON-NLS-1$
+  river_pump(Messages.getString( "SOBEK_STRUCT_TYPE_4" ), 3), // //$NON-NLS-1$
+  database_structure(Messages.getString( "SOBEK_STRUCT_TYPE_5" ), 4), // (River module only) //$NON-NLS-1$
   _5("", 5), // //$NON-NLS-1$
-  weir(Messages.getString("SOBEK_STRUCT_TYPE_7"), 6), // //$NON-NLS-1$
-  orifice(Messages.getString("SOBEK_STRUCT_TYPE_8"), 7), // //$NON-NLS-1$
+  weir(Messages.getString( "SOBEK_STRUCT_TYPE_7" ), 6), // //$NON-NLS-1$
+  orifice(Messages.getString( "SOBEK_STRUCT_TYPE_8" ), 7), // //$NON-NLS-1$
   _8("", 8), // //$NON-NLS-1$
-  pump(Messages.getString("SOBEK_STRUCT_TYPE_10"), 9), // //$NON-NLS-1$
-  culvert_siphon_inverse_siphon(Messages.getString("SOBEK_STRUCT_TYPE_11"), 10), // //$NON-NLS-1$
-  universal_weir(Messages.getString("SOBEK_STRUCT_TYPE_12"), 11), // //$NON-NLS-1$
-  bridge(Messages.getString("SOBEK_STRUCT_TYPE_13"), 12), // //$NON-NLS-1$
-  breach_growth_1d_dam_break_node(Messages.getString("SOBEK_STRUCT_TYPE_14"), 13), // //$NON-NLS-1$
-  breach_growth_2d_dam_break_node(Messages.getString("SOBEK_STRUCT_TYPE_15"), 112); //$NON-NLS-1$
+  pump(Messages.getString( "SOBEK_STRUCT_TYPE_10" ), 9), // //$NON-NLS-1$
+  culvert_siphon_inverse_siphon(Messages.getString( "SOBEK_STRUCT_TYPE_11" ), 10), // //$NON-NLS-1$
+  universal_weir(Messages.getString( "SOBEK_STRUCT_TYPE_12" ), 11), // //$NON-NLS-1$
+  bridge(Messages.getString( "SOBEK_STRUCT_TYPE_13" ), 12), // //$NON-NLS-1$
+  breach_growth_1d_dam_break_node(Messages.getString( "SOBEK_STRUCT_TYPE_14" ), 13), // //$NON-NLS-1$
+  breach_growth_2d_dam_break_node(Messages.getString( "SOBEK_STRUCT_TYPE_15" ), 112); //$NON-NLS-1$
 
   private final String m_label;
 
@@ -75,6 +75,7 @@ public enum SOBEK_STRUCT_TYPE
   {
     return m_ty;
   }
+
   /**
    * @see java.lang.Enum#toString()
    */

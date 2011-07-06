@@ -166,12 +166,16 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
   {
     final IWizardContainer oldContainer = getContainer();
     if( oldContainer instanceof IPageChangeProvider )
+    {
       ((IPageChangeProvider) oldContainer).removePageChangedListener( m_pageChangedListener );
+    }
 
     super.setContainer( wizardContainer );
 
     if( wizardContainer instanceof IPageChangeProvider )
+    {
       ((IPageChangeProvider) wizardContainer).addPageChangedListener( m_pageChangedListener );
+    }
   }
 
   /**
@@ -229,16 +233,24 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
       {
         final IProfil profile;
         if( object instanceof IProfil )
+        {
           profile = (IProfil) object;
+        }
         else if( object instanceof ProfileFeatureBinding )
+        {
           profile = ((ProfileFeatureBinding) object).getProfil();
+        }
         else
+        {
           continue;
+        }
 
         for( final IComponent property : profile.getPointProperties() )
         {
           if( !profile.isPointMarker( property.getId() ) )
+          {
             properties.add( property );
+          }
         }
       }
 

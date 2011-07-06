@@ -99,7 +99,9 @@ public class GenericComponentUiHandlerProvider implements IComponentUiHandlerPro
 
       /* marker?!? yes -> continue */
       if( ArrayUtils.contains( pointMarkerTypes, component ) )
+      {
         continue;
+      }
 
       final int spacing = 100 / components.length;
 

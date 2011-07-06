@@ -75,9 +75,13 @@ public class ProblemResult implements IHeightWidthResult
   protected void addStatus( final int severity, final String message, final Throwable exception )
   {
     if( m_status == null )
+    {
       m_status = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), -1, "", null ); //$NON-NLS-1$
+    }
     else if( !(m_status instanceof MultiStatus) )
+    {
       m_status = new MultiStatus( m_status.getPlugin(), m_status.getCode(), m_status.getMessage(), m_status.getException() );
+    }
 
     ((MultiStatus) m_status).add( new Status( severity, KalypsoModelWspmCorePlugin.getID(), message, exception ) );
   }
@@ -115,7 +119,9 @@ public class ProblemResult implements IHeightWidthResult
     formatter.format( formatString, "", severity, status.getMessage(), status.getException() ); //$NON-NLS-1$
     final IStatus[] children = status.getChildren();
     for( final IStatus child : children )
+    {
       formatStatus( formatter, child, indent + 1 );
+    }
   }
 
 }

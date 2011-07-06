@@ -150,7 +150,9 @@ public class SobekModel
 
     /* Now add the new profiles. */
     for( final SobekProfile profile : profiles )
+    {
       m_profiles.add( profile );
+    }
   }
 
   /**
@@ -167,7 +169,7 @@ public class SobekModel
 
     try
     {
-      final String alreadyExistsWarning = Messages.getString("SobekModel_1"); //$NON-NLS-1$
+      final String alreadyExistsWarning = Messages.getString( "SobekModel_1" ); //$NON-NLS-1$
 
       /* Create the file handle for the file profile.dat. */
       final File datFile = new File( destinationFolder, "profile.dat" ); //$NON-NLS-1$

@@ -206,7 +206,9 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
+    {
       dialogSettings.put( SETTINGS_USE_EXISTING, useExisting );
+    }
   }
 
   private Group createDeviderGroup( final Composite composite )
@@ -239,7 +241,9 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     for( final String markerType : markerTypes )
     {
       if( provider.isMarker( markerType ) )
+      {
         markerComponents.add( provider.getPointProperty( markerType ) );
+      }
     }
     viewer.setInput( markerComponents );
 
@@ -249,7 +253,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        final Object firstElement = (selection).getFirstElement();
+        final Object firstElement = selection.getFirstElement();
         handleDeviderChanged( (IComponent) firstElement );
       }
     } );
@@ -290,7 +294,9 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
+    {
       dialogSettings.put( SETTINGS_DEVIDER, type.getId() );
+    }
   }
 
   private IKalypsoFeatureTheme getTheme( )
@@ -326,7 +332,9 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     setPageComplete( pageComplete );
 
     if( polygoneTheme == null )
+    {
       setErrorMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.11" ) ); //$NON-NLS-1$
+    }
     else
     {
       setErrorMessage( null );

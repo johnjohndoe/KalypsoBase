@@ -60,7 +60,9 @@ final class ImportTrippleOperation implements ICoreRunnableWithProgress
 
       final ImportProfilesCommand command = new ImportProfilesCommand( m_water, profiles );
       if( m_workspace != null )
+      {
         m_workspace.postCommand( command );
+      }
 
       monitor.worked( 1 );
 

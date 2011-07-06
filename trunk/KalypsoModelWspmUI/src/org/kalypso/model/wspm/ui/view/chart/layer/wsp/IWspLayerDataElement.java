@@ -50,4 +50,6 @@ public interface IWspLayerDataElement
 {
   /** The human readable name of this element which will will shown in the tooltip of the data provider */
   String getLabel( );
+
+  String getId( );
 }

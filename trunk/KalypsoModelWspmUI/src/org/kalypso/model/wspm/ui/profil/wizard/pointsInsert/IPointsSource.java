@@ -51,18 +51,18 @@ import org.kalypso.observation.result.IRecord;
 
 public interface IPointsSource extends IExecutableExtension
 {
-  public List<IRecord> getPoints( ) throws InvocationTargetException;
+  List<IRecord> getPoints( ) throws InvocationTargetException;
 
-  public void createControl( final Composite parent );
+  void createControl( final Composite parent );
 
   /** Write current state into settings. */
-  public void saveState( final IDialogSettings settings );
+  void saveState( final IDialogSettings settings );
 
-  public String getLabel( );
+  String getLabel( );
 
-  public String getDescription( );
+  String getDescription( );
 
-  public String getID( );
+  String getID( );
 
-  public Control getControl( final IDialogSettings settings );
+  Control getControl( final IDialogSettings settings );
 }

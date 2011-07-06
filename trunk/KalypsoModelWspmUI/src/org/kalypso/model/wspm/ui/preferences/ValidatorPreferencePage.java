@@ -52,56 +52,52 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorRule;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
-
 /**
  * @author gernot
- * 
  */
-public class ValidatorPreferencePage extends FieldEditorPreferencePage implements
-    IWorkbenchPreferencePage
+public class ValidatorPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
 {
-  protected final static class ValidatorLabelProvider extends LabelProvider implements ITableLabelProvider 
+  protected static final class ValidatorLabelProvider extends LabelProvider implements ITableLabelProvider
   {
     @Override
-    public Image getColumnImage( Object element, int columnIndex )
+    public Image getColumnImage( final Object element, final int columnIndex )
     {
       return null;
     }
 
     @Override
-    public String getColumnText( final Object element, int columnIndex )
+    public String getColumnText( final Object element, final int columnIndex )
     {
       if( element instanceof IValidatorRule )
-        return ((IValidatorRule)element).getDescription();
-      
+        return ((IValidatorRule) element).getDescription();
+
       return ""; //$NON-NLS-1$
     }
   }
-  
+
   public ValidatorPreferencePage( )
   {
     super( GRID );
-    
+
     setPreferenceStore( KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore() );
-    
-    setDescription( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.preferences.ValidatorPreferencePage.0") ); //$NON-NLS-1$
+
+    setDescription( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.preferences.ValidatorPreferencePage.0" ) ); //$NON-NLS-1$
   }
 
   @Override
   public void createFieldEditors( )
   {
-    addField( new BooleanFieldEditor( PreferenceConstants.P_VALIDATE_PROFILE,
-        org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.preferences.ValidatorPreferencePage.1"), getFieldEditorParent() ) ); //$NON-NLS-1$
+    addField( new BooleanFieldEditor( PreferenceConstants.P_VALIDATE_PROFILE, org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.preferences.ValidatorPreferencePage.1" ), getFieldEditorParent() ) ); //$NON-NLS-1$
 
     final Object[] elements = KalypsoModelWspmCorePlugin.getDefault().getValidatorFactory().getAllRules();
-    addField( new ChecklistFieldEditor( elements, "getID", new ValidatorLabelProvider(),  PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE, "", getFieldEditorParent() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    addField( new ChecklistFieldEditor( elements, "getID", new ValidatorLabelProvider(), PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE, "", getFieldEditorParent() ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
    * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
    */
   @Override
-  public void init( IWorkbench workbench )
+  public void init( final IWorkbench workbench )
   {
   }
 }

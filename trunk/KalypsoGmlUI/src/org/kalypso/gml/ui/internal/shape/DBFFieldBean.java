@@ -45,6 +45,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.shape.dbf.DBFField;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;

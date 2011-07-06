@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTitleAreaDialog;
+import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
@@ -64,7 +65,7 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
  */
 public class CompareProfilesDialog extends EnhancedTitleAreaDialog
 {
-  protected final String m_screen_setting;
+  protected final String m_screenSettings;
 
   private final ICompareProfileProvider m_provider;
 
@@ -73,7 +74,7 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
     super( shell );
     setShellStyle( SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE );
     m_provider = provider;
-    m_screen_setting = screenSetting;
+    m_screenSettings = screenSetting;
   }
 
   /**
@@ -89,7 +90,7 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
     final Composite base = toolkit.createComposite( parent, SWT.NULL );
     base.setLayout( new GridLayout() );
 
-    final Point screen = getScreenSize( m_screen_setting );
+    final Point screen = getScreenSize( m_screenSettings );
 
     final GridData data = new GridData( GridData.FILL, GridData.FILL, true, true );
     data.widthHint = screen.x;
@@ -99,19 +100,14 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
     final ScrolledForm form = toolkit.createScrolledForm( base );
     form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     final Composite body = form.getBody();
-    final GridLayout bodyLayout = new GridLayout();
-    bodyLayout.marginHeight = bodyLayout.marginWidth = 0;
-    body.setLayout( bodyLayout );
+    body.setLayout( LayoutHelper.createGridLayout() );
 
     base.addControlListener( new ControlAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-       */
       @Override
       public void controlResized( final ControlEvent e )
       {
-        setScreenSize( m_screen_setting, base.getSize() );
+        setScreenSize( m_screenSettings, base.getSize() );
       }
     } );
 
