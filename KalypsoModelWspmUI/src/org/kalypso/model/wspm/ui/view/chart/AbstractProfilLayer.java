@@ -548,10 +548,10 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     final Double y = ProfilUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
     if( Objects.isNull( x, y ) )
       return null;
-    else if( x.isNaN() && y.isNaN() )
+
+    if( x.isNaN() || y.isNaN() )
       return null;
 
     return cm.numericToScreen( x, y );
-
   }
 }
