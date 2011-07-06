@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.commons.java.lang.Strings;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
@@ -81,7 +81,7 @@ public class ChartOutlinePopupDialog extends PopupDialog
       final Composite da = (Composite) super.createDialogArea( parent );
       da.setLayout( new GridLayout( 1, true ) );
 
-      ChartEditorTreeOutlinePage cop = new ChartEditorTreeOutlinePage();
+      final ChartEditorTreeOutlinePage cop = new ChartEditorTreeOutlinePage();
       cop.setModel( m_chartComposite.getChartModel() );
       cop.createControl( da );
 
@@ -114,6 +114,6 @@ public class ChartOutlinePopupDialog extends PopupDialog
   @Override
   protected IDialogSettings getDialogSettings( )
   {
-    return PluginUtilities.getDialogSettings( KalypsoChartUiPlugin.getDefault(), ChartOutlinePopupDialog.class.getName() );
+    return DialogSettingsUtils.getDialogSettings( KalypsoChartUiPlugin.getDefault(), ChartOutlinePopupDialog.class.getName() );
   }
 }

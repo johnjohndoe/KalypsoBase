@@ -46,7 +46,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
@@ -95,7 +95,7 @@ public class PropertyEditDelegate implements IViewActionDelegate
     final PropertyEditWizard propertyEditWizard = new PropertyEditWizard( profile );
     propertyEditWizard.addFilter( tableSelectionFilter );
     propertyEditWizard.setWindowTitle( action.getText() );
-    propertyEditWizard.setDialogSettings( PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
+    propertyEditWizard.setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );
 
     /* show wizard */
     final WizardDialog2 dialog = new WizardDialog2( viewShell, propertyEditWizard );
