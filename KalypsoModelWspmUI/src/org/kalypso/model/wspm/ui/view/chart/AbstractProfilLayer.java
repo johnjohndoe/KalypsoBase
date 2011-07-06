@@ -284,9 +284,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   protected ILineStyle getLineStyle( )
   {
     if( m_lineStyle == null )
-    {
       m_lineStyle = StyleUtils.getDefaultLineStyle();
-    }
+
     return m_lineStyle;
   }
 

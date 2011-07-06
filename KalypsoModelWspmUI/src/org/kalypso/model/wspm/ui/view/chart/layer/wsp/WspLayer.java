@@ -133,13 +133,14 @@ public class WspLayer extends AbstractProfilTheme
   @Override
   public ILegendEntry[] createLegendEntries( )
   {
+    final ILineStyle lineStyle = getLineStyle();
+
     // TODO: get Symbol from file
     final LegendEntry le = new LegendEntry( this, getTitle() )
     {
       @Override
       public void paintSymbol( final GC gc, final Point size )
       {
-        final ILineStyle lineStyle = getLineStyle();
         if( lineStyle == null )
           return;
 
@@ -384,10 +385,13 @@ public class WspLayer extends AbstractProfilTheme
   @Override
   public void paint( final GC gc )
   {
-    if( m_color == null )
+    if( Objects.isNull( m_data ) )
+      return;
+
+    if( Objects.isNull( m_color ) )
     {
       final ILineStyle lineStyle = getLineStyle();
-      if( lineStyle != null )
+      if( Objects.isNotNull( lineStyle ) )
       {
         final RGB rgb = lineStyle.getColor();
         m_color = new Color( gc.getDevice(), rgb );
@@ -395,20 +399,14 @@ public class WspLayer extends AbstractProfilTheme
     }
 
     // HACK: we need to set the background color as we fill a clipped-rectangle in order to create the line
-    if( m_color != null )
-    {
+    if( Objects.isNotNull( m_color ) )
       gc.setBackground( m_color );
-    }
 
     try
     {
-      /* No data. */
-      if( m_data == null )
-        return;
-
       /* Get the profile. */
       final IProfil profile = getProfil();
-      if( profile == null )
+      if( Objects.isNull( profile ) )
         return;
 
       /* Get all active names. */
@@ -423,9 +421,7 @@ public class WspLayer extends AbstractProfilTheme
         /* Search the value. */
         final double value = getValue( element, station );
         if( Double.isNaN( value ) )
-        {
           continue;
-        }
 
         /* Paint the value. */
         paint( gc, value );
@@ -448,31 +444,30 @@ public class WspLayer extends AbstractProfilTheme
    */
   private void paint( final GC gc, final double height )
   {
-    final Rectangle clipping = gc.getClipping();
     final ICoordinateMapper cm = getCoordinateMapper();
     if( cm == null )
       return;
 
     final Point location = cm.numericToScreen( 0.0, height );
 
-    final Region clipreg = new Region();
+    final Rectangle clipping = gc.getClipping();
+    final Region region = new Region();
     final int[] points = getPoints();
-
-    clipreg.add( points );
-    clipreg.intersect( clipping );
+    region.add( points );
+    region.intersect( clipping );
 
     final Rectangle toprect = new Rectangle( clipping.x, location.y - 100000, clipping.width, 100000 );
-    clipreg.subtract( toprect );
+    region.subtract( toprect );
 
     /* If not fill, ... */
     if( !m_fill )
     {
       final int linesize = 2;
       final Rectangle bottomrect = new Rectangle( clipping.x, location.y + linesize, clipping.width, 10000 );
-      clipreg.subtract( bottomrect );
+      region.subtract( bottomrect );
     }
 
-    gc.setClipping( clipreg );
+    gc.setClipping( region );
     gc.fillRectangle( clipping );
     gc.setClipping( clipping );
   }

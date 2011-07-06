@@ -123,9 +123,8 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
     if( chartLayers != null )
     {
       for( final IChartLayer layer : chartLayers )
-      {
         layer.setCoordinateMapper( cm );
-      }
+
       getLayerManager().addLayer( chartLayers );
     }
   }
