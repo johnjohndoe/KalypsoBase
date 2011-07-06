@@ -75,14 +75,16 @@ public class ProfilMarkerResolutionGenerator implements IMarkerResolutionGenerat
     final String resArray = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
     if( resArray == null )
       return new IMarkerResolution2[] {};
-    final String[] resolutions = StringUtils.split( resArray, '\u0000');
-    final List<IMarkerResolution2> markers = new ArrayList<IMarkerResolution2>(resolutions.length);
-    for( int i = 0; i < resolutions.length; i++ )
+    final String[] resolutions = StringUtils.split( resArray, '\u0000' );
+    final List<IMarkerResolution2> markers = new ArrayList<IMarkerResolution2>( resolutions.length );
+    for( final String resolution : resolutions )
     {
-      final IMarkerResolution2 markerRes = KalypsoModelWspmCoreExtensions.getReparatorRule( resolutions[i] );
-      if (markerRes != null)
+      final IMarkerResolution2 markerRes = KalypsoModelWspmCoreExtensions.getReparatorRule( resolution );
+      if( markerRes != null )
+      {
         markers.add( markerRes );
+      }
     }
-    return markers.toArray(new IMarkerResolution2[]{});
+    return markers.toArray( new IMarkerResolution2[] {} );
   }
 }

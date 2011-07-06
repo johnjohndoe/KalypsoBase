@@ -68,7 +68,7 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 /**
  * TODO: show marker text as tooltip<br>
  * TODO: open dialog that shows all markers if user clicks on marker (use cell-editor)
- *
+ * 
  * @author Gernot Belger
  * @author Kim Werner
  */
@@ -89,21 +89,21 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   static
   {
     IMG_REGISTRY.put( IMAGE_ERROR, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_ERROR
-    
+
     IMG_REGISTRY.put( IMAGE_WARNING, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
-    
+
     IMG_REGISTRY.put( IMAGE_INFO, IDEInternalWorkbenchImages.getImageDescriptor( IDEInternalWorkbenchImages.IMG_OBJS_INFO_PATH ) );// KalypsoModelWspmUIImages.ID_MARKER_WARNING
-    
+
     IMG_REGISTRY.put( IMAGE_NO_ERROR, ImageDescriptor.createFromImageData( new ImageData( 16, 16, 1, new PaletteData( new RGB[] { new RGB( 255, 255, 255 ) } ) ) ) );
   }
-  
+
   private final IProfil m_profile;
 
   public ComponentUiProblemHandler( final IProfil profile )
   {
     m_profile = profile;
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
    */
@@ -191,11 +191,17 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
       {
         severity = MarkerUtils.getSeverity( worst );
         if( IMarker.SEVERITY_ERROR == severity )
+        {
           backgroundImage = IMG_REGISTRY.get( IMAGE_ERROR );
+        }
         else if( IMarker.SEVERITY_WARNING == severity )
+        {
           backgroundImage = IMG_REGISTRY.get( IMAGE_WARNING );
+        }
         else if( IMarker.SEVERITY_INFO == severity )
+        {
           backgroundImage = IMG_REGISTRY.get( IMAGE_INFO );
+        }
       }
     }
     final String[] deviderTypes = getMarkerTypes( record );
@@ -217,9 +223,13 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
       {
         mp.drawMarker( deviderTypes, gc );
         if( severity != -1 )
+        {
           gc.drawImage( backgroundImage, 0, 0 );
+        }
         if( img != null )
+        {
           IMG_REGISTRY.put( key, img );
+        }
       }
       finally
       {
@@ -296,7 +306,9 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
     {
       final IComponent type = marker.getId();
       if( !types.contains( type ) )
+      {
         types.add( type.getId() );
+      }
     }
 
     return types.toArray( new String[] {} );

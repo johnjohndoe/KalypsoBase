@@ -168,7 +168,9 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
       for( final Object object : property )
       {
         if( object instanceof IProfileFeature )
+        {
           profile.add( (IProfileFeature) object );
+        }
       }
     }
 

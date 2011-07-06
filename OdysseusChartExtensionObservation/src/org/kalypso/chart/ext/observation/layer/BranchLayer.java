@@ -134,7 +134,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
       else if( component.getId().equals( m_iconComponentId ) )
         m_iconComponent = component;
 
-    if( (m_domainComponent != null) && (m_targetComponent != null) && (m_iconComponent != null) )
+    if( m_domainComponent != null && m_targetComponent != null && m_iconComponent != null )
       m_isInited = true;
 
     // Icon-Mapping vorbereiten
@@ -143,7 +143,8 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
     final IRetinalMapper mapper = getMapper( "icon" );
     final IDataOperator dop = mapper.getDataOperator( String.class );
 
-    final String[] smallStyles = new String[] { "ConnectionNode", "LinkageNode", "CrossSectionNode" };
+    final String[] smallStyles = new String[] { "ConnectionNode", "LinkageNode", "CrossSectionNode" }; // $NON-NLS-1$ //
+// $NON-NLS-2$ // $NON-NLS-3$
 
     for( int i = 0; i < m_data.size(); i++ )
     {
@@ -405,7 +406,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
       if( cd.compare( domainVal, domainValMin ) >= 0 )
       {
         final Object targetVal = record.getValue( m_targetComponent );
-        if( (ct.compare( targetVal, targetValMin ) >= 0) && (ct.compare( targetVal, targetValMax ) <= 0) )
+        if( ct.compare( targetVal, targetValMin ) >= 0 && ct.compare( targetVal, targetValMax ) <= 0 )
           return createTooltipInfo( pos, i );
       }
     }
@@ -425,7 +426,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
     final T_domain domainVal = (T_domain) record.getValue( m_domainComponent );
     final T_target targetVal = (T_target) record.getValue( m_targetComponent );
 
-    if( (domainVal != null) && (targetVal != null) )
+    if( domainVal != null && targetVal != null )
     {
       final IAxis domainAxis = getDomainAxis();
       final IAxis targetAxis = getTargetAxis();
@@ -436,10 +437,10 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
       final Number dataTargetValNum = dopTarget.logicalToNumeric( targetVal );
 
       Point dataPos = null;
-      if( (dataDomainValNum != null) && (dataTargetValNum != null) )
+      if( dataDomainValNum != null && dataTargetValNum != null )
         dataPos = getCoordinateMapper().numericToScreen( dataDomainValNum, dataTargetValNum );
 
-      final IRetinalMapper mapper = getMapper( "icon" );
+      final IRetinalMapper mapper = getMapper( "icon" ); // $NON-NLS-1$
       final Object iconVal = record.getValue( m_iconComponent );
       final IDataOperator iop = mapper.getDataOperator( iconVal.getClass() );
 

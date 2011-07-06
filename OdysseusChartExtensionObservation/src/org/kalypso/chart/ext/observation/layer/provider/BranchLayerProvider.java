@@ -25,12 +25,12 @@ public class BranchLayerProvider extends AbstractLayerProvider
   @Override
   public BranchLayer getLayer( final URL context ) throws ConfigurationException
   {
-    final String href = getParameterContainer().getParameterValue( "href", null );
+    final String href = getParameterContainer().getParameterValue( "href", null ); // $NON-NLS-1$
 
-    final String observationId = getParameterContainer().getParameterValue( "observationId", null );
-    final String domainComponentName = getParameterContainer().getParameterValue( "domainComponent", null );
-    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponent", null );
-    final String iconComponentName = getParameterContainer().getParameterValue( "iconComponent", null );
+    final String observationId = getParameterContainer().getParameterValue( "observationId", null ); // $NON-NLS-1$
+    final String domainComponentName = getParameterContainer().getParameterValue( "domainComponent", null ); // $NON-NLS-1$
+    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponent", null ); // $NON-NLS-1$
+    final String iconComponentName = getParameterContainer().getParameterValue( "iconComponent", null ); // $NON-NLS-1$
 
     GMLWorkspace workspace;
     try

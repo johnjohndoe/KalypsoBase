@@ -65,7 +65,9 @@ public class PointMarker implements IProfilPointMarker
     /* type exists in result?!? */
     final TupleResult result = point.getOwner();
     if( !result.hasComponent( typ ) )
+    {
       result.addComponent( typ );
+    }
   }
 
   /**
@@ -117,7 +119,7 @@ public class PointMarker implements IProfilPointMarker
   public IRecord setPoint( final IRecord newPosition )
   {
     final IRecord oldPoint = m_point;
-    if( (newPosition != null) && (newPosition.getOwner() == m_point.getOwner()) )
+    if( newPosition != null && newPosition.getOwner() == m_point.getOwner() )
     {
 
       final TupleResult owner = m_point.getOwner();

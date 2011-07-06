@@ -57,23 +57,23 @@ import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 public interface IProfilChartLayer extends IEditableChartLayer
 {
   /** key to store IChartLayer.getData() in ProfilViewdataObject */
-  final public static String VIEW_DATA_KEY = "org.kalypso.model.wspm.ui.view.ProfilViewData"; //$NON-NLS-1$
+  String VIEW_DATA_KEY = "org.kalypso.model.wspm.ui.view.ProfilViewData"; //$NON-NLS-1$
 
   /** values to store */
-  final public static Integer ALLOW_HORIZONTAL_EDITING = 1;
+  Integer ALLOW_HORIZONTAL_EDITING = 1;
 
-  final public static Integer ALLOW_VERTICAL_EDITING = 2;
+  Integer ALLOW_VERTICAL_EDITING = 2;
 
-  final public static String TOOLTIP_FORMAT = "%-12s %10.4f [m]%n%-12s %10.4f [%s]"; //$NON-NLS-1$
+  String TOOLTIP_FORMAT = "%-12s %10.4f [m]%n%-12s %10.4f [%s]"; //$NON-NLS-1$
 
-  final public RGB COLOR_ACTIVE = new RGB( 255, 0, 0 );
+  RGB COLOR_ACTIVE = new RGB( 255, 0, 0 );
 
-  final public float[] HOVER_DASH = new float[] { 1, 1, 1 };
+  float[] HOVER_DASH = new float[] { 1, 1, 1 };
 
-  final public int POINT_STYLE_WIDTH = 5;
+  int POINT_STYLE_WIDTH = 5;
 
   /** Erzeugt eine Profil-View, welche die Spezifika dieses Layers anzeigt. */
-  public IProfilView createLayerPanel( );
+  IProfilView createLayerPanel( );
 
   /**
    * Löscht diesen Layer aus dem Profil. Besser gesagt, löscht die Daten aus dem Profil, die durch diesen Layer
@@ -84,19 +84,19 @@ public interface IProfilChartLayer extends IEditableChartLayer
    *           Falls diese Art von Layer nicht gelöscht werden kann.
    */
 
-  public void removeYourself( );
+  void removeYourself( );
 
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
+  void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes );
 
-  public IProfil getProfil( );
+  IProfil getProfil( );
 
-  public void setProfil( final IProfil profil );
+  void setProfil( final IProfil profil );
 
-  public IComponent getTargetComponent( );
+  IComponent getTargetComponent( );
 
-  public IComponent getDomainComponent( );
+  IComponent getDomainComponent( );
 
-  public void executeDrop( Point point, EditInfo dragStartData );
+  void executeDrop( Point point, EditInfo dragStartData );
 
-  public void executeClick( EditInfo dragStartData );
+  void executeClick( EditInfo dragStartData );
 }

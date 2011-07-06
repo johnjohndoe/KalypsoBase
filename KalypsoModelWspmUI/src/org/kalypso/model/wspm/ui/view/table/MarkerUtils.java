@@ -45,7 +45,7 @@ import org.eclipse.core.resources.IMarker;
 /**
  * @author Gernot Belger
  */
-public class MarkerUtils
+public final class MarkerUtils
 {
   private MarkerUtils( )
   {
@@ -57,11 +57,11 @@ public class MarkerUtils
    * is not an integer.
    * 
    * @param marker
-   *            the marker
+   *          the marker
    * @param attributeName
-   *            the name of the attribute
+   *          the name of the attribute
    * @param defaultValue
-   *            the default value
+   *          the default value
    * @return the attribute's value or the default value if the attribute does not exist or isn't an int
    */
   private static int getIntAttribute( final IMarker marker, final String attributeName, final int defaultValue )
@@ -75,7 +75,7 @@ public class MarkerUtils
    * Returns the severity of the given marker.
    * 
    * @param marker
-   *            the marker
+   *          the marker
    * @return the priority, or <code>IMarker.SEVERITY_INFO</code> if not set
    * @see IMarker#SEVERITY
    * @see IMarker#SEVERITY_INFO
@@ -101,9 +101,13 @@ public class MarkerUtils
 
       final int worstSeverity = worst == null ? IMarker.SEVERITY_INFO : getSeverity( worst );
       if( severity == IMarker.SEVERITY_WARNING && worstSeverity == IMarker.SEVERITY_INFO )
+      {
         worst = marker;
+      }
       else if( worst == null )
+      {
         worst = marker;
+      }
     }
 
     return worst;

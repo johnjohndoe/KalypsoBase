@@ -73,7 +73,9 @@ public class TableSelectionProfilePointFilter implements IProfilePointFilter
       {
         final Object element = it.next();
         if( element instanceof IRecord )
+        {
           result.add( (IRecord) element );
+        }
       }
     }
 
@@ -96,7 +98,7 @@ public class TableSelectionProfilePointFilter implements IProfilePointFilter
   @Override
   public String getDescription( )
   {
-    return Messages.getString("TableSelectionProfilePointFilter.0"); //$NON-NLS-1$
+    return Messages.getString( "TableSelectionProfilePointFilter.0" ); //$NON-NLS-1$
   }
 
   /**
@@ -114,7 +116,7 @@ public class TableSelectionProfilePointFilter implements IProfilePointFilter
   @Override
   public String getName( )
   {
-    return Messages.getString("TableSelectionProfilePointFilter.1"); //$NON-NLS-1$
+    return Messages.getString( "TableSelectionProfilePointFilter.1" ); //$NON-NLS-1$
   }
 
   /**

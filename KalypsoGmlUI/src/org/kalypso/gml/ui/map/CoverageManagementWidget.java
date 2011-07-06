@@ -1210,7 +1210,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final SortedMap<Double, ColorMapEntry> colorMap = symb.getColorMap();
     if( colorMap.isEmpty() )
     {
-      /* IN order to show anything to the user, create a default colour map, if no colours have been defined yet */
+      /* IN order to show anything to the user, create a default color map, if no colors have been defined yet */
       final Range minMax = GeoGridUtilities.calculateRange( m_coverages.getCoverages() );
       final BigDecimal min = (BigDecimal) minMax.getMinimumNumber();
       final BigDecimal max = (BigDecimal) minMax.getMaximumNumber();

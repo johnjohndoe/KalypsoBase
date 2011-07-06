@@ -207,7 +207,9 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
               for( final IMarker marker : markers )
               {
                 if( marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_PROFILE_ID ).equals( featureIDs[i] ) )
+                {
                   marker.delete();
+                }
               }
             }
             catch( final CoreException e )

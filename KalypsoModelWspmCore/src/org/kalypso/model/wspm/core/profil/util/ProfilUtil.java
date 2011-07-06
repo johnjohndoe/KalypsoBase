@@ -189,10 +189,8 @@ public final class ProfilUtil
 
     for( int i = i1; i < i2 - 1; i++ )
     {
-      if( Math.abs( (Double) (owner.get( i ).getValue( index )) - (Double) (owner.get( i + 1 ).getValue( index )) ) > p )
-      {
+      if( Math.abs( (Double) owner.get( i ).getValue( index ) - (Double) owner.get( i + 1 ).getValue( index ) ) > p )
         return false;
-      }
     }
     return true;
   }
@@ -236,7 +234,9 @@ public final class ProfilUtil
         final Object o1 = point1.getValue( index );
         final Object o2 = point2.getValue( index );
         if( o1 == null || o2 == null || o1.equals( o2 ) )
+        {
           continue;
+        }
       }
 
       if( Math.abs( x1 - x2 ) > property.getPrecision() )
@@ -313,7 +313,7 @@ public final class ProfilUtil
       lastRec = currentRec;
     }
 
-    if( (len / 2) * 2 < len )
+    if( len / 2 * 2 < len )
     {
       final int mid = len / 2;
       final Double dBreite = (Double) records[mid].getValue( iBreite );
@@ -325,7 +325,9 @@ public final class ProfilUtil
   {
     final Map<String, IComponent> propHash = new HashMap<String, IComponent>();
     for( final IComponent component : profile.getPointProperties() )
+    {
       propHash.put( component.getId(), component );
+    }
     return propHash;
   }
 
@@ -352,7 +354,9 @@ public final class ProfilUtil
         point.setValue( index, h1 + z / 2.0 );
       }
       else if( profile.isPointMarker( property.getId() ) )
+      {
         point.setValue( index, startPoint.getValue( index ) );
+      }
     }
     return point;
   }
@@ -364,7 +368,7 @@ public final class ProfilUtil
   public static IRecord findPoint( final IProfil profil, final int index, final double breite, final double delta )
   {
     final IRecord[] points = profil.getPoints();
-    final IRecord point = (index >= points.length || index < 0) ? null : points[index];
+    final IRecord point = index >= points.length || index < 0 ? null : points[index];
 
     if( getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point ) == breite )
       return point;
@@ -423,7 +427,9 @@ public final class ProfilUtil
       final IRecord currentPoint = points[i];
       final Object currentBreiteValue = currentPoint.getValue( iBreite );
       if( !(currentBreiteValue instanceof Number) )
+      {
         continue;
+      }
 
       final double currentBreite = ((Number) currentBreiteValue).doubleValue();
 
@@ -451,7 +457,9 @@ public final class ProfilUtil
     {
       final Point2D p2D = new Point2D.Double( getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, p ), getDoubleValueFor( propertyID, p ) );
       if( p2D.distance( point ) <= radius )
+      {
         found.add( p );
+      }
     }
     return found.toArray( new IRecord[] {} );
   }
@@ -538,7 +546,9 @@ public final class ProfilUtil
     {
       final Object o = point.getValue( propertyIndex );
       if( o instanceof Number )
+      {
         maxValue = Math.max( maxValue, ((Number) o).doubleValue() );
+      }
     }
     return maxValue > -Double.MAX_VALUE ? maxValue : null;
   }
@@ -582,7 +592,9 @@ public final class ProfilUtil
     {
       if( Math.abs( getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, bestPoint ) - breite ) > Math.abs( getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point ) - breite )
           || Math.abs( getDoubleValueFor( property.getId(), bestPoint ) - value ) > Math.abs( getDoubleValueFor( property.getId(), point ) - value ) )
+      {
         bestPoint = point;
+      }
     }
     return bestPoint;
   }
@@ -609,7 +621,9 @@ public final class ProfilUtil
         }
       }
       if( isEqual )
+      {
         points.add( point );
+      }
     }
     return points.toArray( new IRecord[0] );
   }
@@ -661,7 +675,9 @@ public final class ProfilUtil
     {
       final Object objVal = rec.getValue( index );
       if( objVal != null && objVal instanceof Number )
+      {
         minValue = Math.min( minValue.doubleValue(), ((Number) objVal).doubleValue() );
+      }
     }
     return minValue.doubleValue();
   }
@@ -682,7 +698,9 @@ public final class ProfilUtil
     {
       final Object value = rec.getValue( index );
       if( value instanceof Number )
+      {
         maxValue = Math.max( maxValue.doubleValue(), ((Number) value).doubleValue() );
+      }
     }
     return maxValue.doubleValue();
   }
@@ -864,7 +882,9 @@ public final class ProfilUtil
       index1 = 0;
     }
     else
+    {
       index1 = points.indexOf( segment1[1] );
+    }
 
     points.add( index1, startPoint );
 
@@ -876,7 +896,9 @@ public final class ProfilUtil
       index2 = points.size() - 1;
     }
     else
+    {
       index2 = points.indexOf( segment2[1] );
+    }
 
     points.add( index2, endPoint );
 
@@ -884,10 +906,14 @@ public final class ProfilUtil
     final IRecord[] toDelete2 = points.subList( index2 + 1, points.size() ).toArray( new IRecord[0] );
 
     for( final IRecord element : toDelete1 )
+    {
       profile.removePoint( element );
+    }
 
     for( final IRecord element : toDelete2 )
+    {
       profile.removePoint( element );
+    }
   }
 
   /**
@@ -907,7 +933,9 @@ public final class ProfilUtil
       final Double rechtsWert = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, point );
       final Double hochWert = getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, point );
       if( !rechtsWert.isNaN() && !hochWert.isNaN() )
+      {
         geoReferencedPoints.add( point );
+      }
     }
 
     return geoReferencedPoints.toArray( new IRecord[] {} );
@@ -1003,7 +1031,9 @@ public final class ProfilUtil
       if( value == null )
       {
         if( lastGood != null )
+        {
           toInterpolate.add( point );
+        }
       }
       else
       {
@@ -1029,12 +1059,16 @@ public final class ProfilUtil
     if( prevDistance == null || prevValue == null )
     {
       for( final IRecord point : toInterpolate )
+      {
         point.setValue( valueCompIndex, nextValue );
+      }
     }
     else if( nextDistance == null || nextValue == null )
     {
       for( final IRecord point : toInterpolate )
+      {
         point.setValue( valueCompIndex, prevValue );
+      }
     }
     else
     {
@@ -1112,7 +1146,9 @@ public final class ProfilUtil
 
               /* Loop over all invalid values */
               for( int j = lastValid + 1; j < i - 1; j++ )
+              {
                 componentValues[j] = linearEquation.computeY( widthValues[j] );
+              }
             }
           }
           catch( final SameXValuesException e )
@@ -1143,7 +1179,9 @@ public final class ProfilUtil
 
     final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
     for( final IProfilChange profilChange : removeChanges )
+    {
       profilChange.doChange( null );
+    }
   }
 
   /**
@@ -1161,7 +1199,9 @@ public final class ProfilUtil
 
     final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
     for( final IProfilChange profilChange : removeChanges )
+    {
       profilChange.doChange( null );
+    }
   }
 
 }

@@ -42,8 +42,9 @@ package org.kalypso.model.wspm.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
 
-public class KalypsoModelWspmUIImages
+public final class KalypsoModelWspmUIImages
 {
   public static final ImageDescriptor ID_SORT_DOWN = id( "icons/elcl16/sort_down.gif" ); //$NON-NLS-1$
 
@@ -77,9 +78,9 @@ public class KalypsoModelWspmUIImages
 
   public static final ImageDescriptor ID_ENABLED_OPEN_TABLE = id( "icons/eview16/profil_table.gif" ); //$NON-NLS-1$
 
-  public static final ImageDescriptor id( final String location )
+  public static ImageDescriptor id( final String location )
   {
-    return AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoModelWspmUIPlugin.ID, location );
+    return AbstractUIPlugin.imageDescriptorFromPlugin( AbstractUIPluginExt.ID, location );
   }
 
   private KalypsoModelWspmUIImages( )

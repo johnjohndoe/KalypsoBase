@@ -63,7 +63,7 @@ public class AbstractLayerStyleProvider implements ILayerStyleProvider
     // TODO: read styles from *.kod file or add Styles here
   }
 
-  final protected void addStyle( final String id, final IStyle style )
+  protected final void addStyle( final String id, final IStyle style )
   {
     m_styles.put( id, style );
   }
@@ -84,7 +84,9 @@ public class AbstractLayerStyleProvider implements ILayerStyleProvider
 
     final IStyle newStyle = StyleUtils.getDefaultStyle( defaultStyle );
     if( newStyle != null )
+    {
       m_styles.put( id, newStyle );
+    }
 
     return defaultStyle.cast( newStyle );
   }

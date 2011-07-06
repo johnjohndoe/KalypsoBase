@@ -86,9 +86,13 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
     for( int i = 0; i < l; i++ )
     {
       if( type == TYPE.ADDED )
+      {
         changes[i] = new PointPropertyAdd( m_profil, components[i] );
+      }
       else if( type == TYPE.REMOVED )
+      {
         changes[i] = new PointPropertyRemove( m_profil, components[i] );
+      }
     }
     m_profil.fireProfilChanged( hint, changes );
 
@@ -130,7 +134,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
       if( m_profil.isPointMarker( component.getId() ) )
       {
         IProfilPointMarker marker = null;
-        for( IProfilPointMarker m : m_profil.getPointMarkerFor( change.getRecord() ) )
+        for( final IProfilPointMarker m : m_profil.getPointMarkerFor( change.getRecord() ) )
         {
           if( m.getId() == component )
           {
@@ -158,7 +162,9 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
       }
     }
     if( profChanges.size() > 0 )
+    {
       m_profil.fireProfilChanged( hint, profChanges.toArray( new IProfilChange[profChanges.size()] ) );
+    }
 
   }
 

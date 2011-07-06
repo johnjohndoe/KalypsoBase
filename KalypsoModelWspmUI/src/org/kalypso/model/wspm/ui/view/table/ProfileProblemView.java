@@ -55,6 +55,7 @@ import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
@@ -74,15 +75,15 @@ import org.kalypso.observation.result.IRecord;
 @SuppressWarnings("restriction")
 public class ProfileProblemView
 {
-  final private FormToolkit m_toolkit;
+  private final FormToolkit m_toolkit;
 
-  protected boolean errors_expanded = false;
+  protected boolean m_errorsExpanded = false;
 
-  protected boolean warnings_expanded = false;
+  protected boolean m_warningsExpanded = false;
 
-  protected boolean infos_expanded = false;
+  protected boolean m_infosExpanded = false;
 
-  protected final int m_MaxHeight;
+  protected final int m_maxHeight;
 
   protected final ScrolledComposite m_scrolledComposite;
 
@@ -90,7 +91,7 @@ public class ProfileProblemView
   {
 
     m_toolkit = toolkit;
-    m_MaxHeight = maxHeight;
+    m_maxHeight = maxHeight;
     // Create the ScrolledComposite to scroll horizontally and vertically
     m_scrolledComposite = new ScrolledComposite( parent, SWT.V_SCROLL );
     m_scrolledComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
@@ -111,31 +112,32 @@ public class ProfileProblemView
     {
       final IProfilMarkerResolution markerResolution = KalypsoModelWspmCoreExtensions.getReparatorRule( resolutions[i] );
       if( markerResolution != null )
+      {
         markerRes[i] = markerResolution;
+      }
     }
     return markerRes;
   }
 
-  private final Section createSection( final IProfil profil, final Composite parent, final IMarker[] markers, final int color, final String multiMessage )
+  private Section createSection( final IProfil profil, final Composite parent, final IMarker[] markers, final int color, final String multiMessage )
   {
     Composite container = parent;
     Section result = null;
     if( markers.length > 1 )
     {
-      final Section section = m_toolkit.createSection( parent, Section.TWISTIE );
+      final Section section = m_toolkit.createSection( parent, ExpandableComposite.TWISTIE );
       section.setLayout( new GridLayout( 2, false ) );
-      section.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false,2,1 ) );
+      section.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false, 2, 1 ) );
       section.setTitleBarForeground( section.getDisplay().getSystemColor( color ) );
       section.setToggleColor( section.getDisplay().getSystemColor( color ) );
       section.setText( multiMessage );
 
-      final Composite expanded_section = m_toolkit.createComposite( section );
+      final Composite expandedSection = m_toolkit.createComposite( section );
+      expandedSection.setLayout( new GridLayout( 2, false ) );
+      expandedSection.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+      section.setClient( expandedSection );
 
-      expanded_section.setLayout( new GridLayout( 2, false ) );
-      expanded_section.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      section.setClient( expanded_section );
-
-      container = expanded_section;
+      container = expandedSection;
       result = section;
     }
 
@@ -165,7 +167,9 @@ public class ProfileProblemView
             for( final IProfilMarkerResolution profilMarkerResolution : markerRes )
             {
               if( profilMarkerResolution != null )
+              {
                 profilMarkerResolution.resolve( profil );
+              }
             }
           }
         } );
@@ -215,18 +219,18 @@ public class ProfileProblemView
     }
   }
 
-  protected void updateParentSize()
+  protected void updateParentSize( )
   {
     final Control cmp = m_scrolledComposite.getContent();
     final Point size = cmp.computeSize( SWT.DEFAULT, SWT.DEFAULT );
     cmp.setSize( size );
-    final int height = Math.min( size.y,50);
+    final int height = Math.min( size.y, 50 );
     ((GridData) m_scrolledComposite.getParent().getLayoutData()).heightHint = height;
     ((GridData) m_scrolledComposite.getLayoutData()).heightHint = height;
     m_scrolledComposite.getParent().getParent().layout();
   }
 
-  private final boolean createSections( final Composite parent, final IProfil profil )
+  private boolean createSections( final Composite parent, final IProfil profil )
   {
     final MarkerIndex markerIndex = profil.getProblemMarker();
     if( !(markerIndex != null && markerIndex.hasMarkers()) )
@@ -245,7 +249,7 @@ public class ProfileProblemView
     final Section infSec = createSection( profil, parent, infoMarkers, SWT.COLOR_DARK_BLUE, infoMessage );
     if( errSec != null )
     {
-      errSec.setExpanded( errors_expanded );
+      errSec.setExpanded( m_errorsExpanded );
       errSec.addExpansionListener( new ExpansionAdapter()
       {
         /**
@@ -254,15 +258,15 @@ public class ProfileProblemView
         @Override
         public void expansionStateChanged( final ExpansionEvent e )
         {
-          errors_expanded = errSec.isExpanded();
-          updateParentSize(  );
+          m_errorsExpanded = errSec.isExpanded();
+          updateParentSize();
         }
 
       } );
     }
     if( warnSec != null )
     {
-      warnSec.setExpanded( warnings_expanded );
+      warnSec.setExpanded( m_warningsExpanded );
       warnSec.addExpansionListener( new ExpansionAdapter()
       {
         /**
@@ -271,14 +275,14 @@ public class ProfileProblemView
         @Override
         public void expansionStateChanged( final ExpansionEvent e )
         {
-          warnings_expanded = warnSec.isExpanded();
+          m_warningsExpanded = warnSec.isExpanded();
           updateParentSize();
         }
       } );
     }
     if( infSec != null )
     {
-      infSec.setExpanded( infos_expanded );
+      infSec.setExpanded( m_infosExpanded );
       infSec.addExpansionListener( new ExpansionAdapter()
       {
 
@@ -288,21 +292,23 @@ public class ProfileProblemView
         @Override
         public void expansionStateChanged( final ExpansionEvent e )
         {
-          infos_expanded = infSec.isExpanded();
-          updateParentSize( );
+          m_infosExpanded = infSec.isExpanded();
+          updateParentSize();
         }
       } );
     }
     return true;
   }
 
-  public final int updateSections( final IProfil profil)
+  public final int updateSections( final IProfil profil )
   {
 
     if( m_scrolledComposite == null || m_scrolledComposite.isDisposed() )
       return -1;
     if( m_scrolledComposite.getContent() != null && !m_scrolledComposite.getContent().isDisposed() )
+    {
       m_scrolledComposite.getContent().dispose();
+    }
 
     if( profil == null )
       return -1;
@@ -315,11 +321,11 @@ public class ProfileProblemView
     child.setLayout( new GridLayout( 2, false ) );
     child.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
-    if( createSections( (Composite)m_scrolledComposite.getContent(), profil ) )
+    if( createSections( (Composite) m_scrolledComposite.getContent(), profil ) )
     {
       final Point size = child.computeSize( SWT.DEFAULT, SWT.DEFAULT );
       child.setSize( size );
-      ((GridData) (m_scrolledComposite.getLayoutData())).heightHint = Math.min( size.y, m_MaxHeight );
+      ((GridData) m_scrolledComposite.getLayoutData()).heightHint = Math.min( size.y, m_maxHeight );
       return size.y;
     }
     return -1;

@@ -167,7 +167,9 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
         final Integer[] newMarkerPoints = findNewMarkerPoints( profile );
 
         if( createNewDevider( profil, newMarkerPoints ) )
+        {
           Collections.addAll( m_changes, ProfileFeatureFactory.toFeatureAsChanges( profil, profile ) );
+        }
       }
       catch( final GM_Exception e )
       {
@@ -222,7 +224,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
           return new Integer[] { oneIndex };
 
         if( oneIndex < lowPointIndex )
-          return new Integer[]{oneIndex, last};
+          return new Integer[] { oneIndex, last };
         else
           return new Integer[] { first, oneIndex };
       }
@@ -315,14 +317,18 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
       // use leftmost of all left markers
       final SortedSet<Integer> leftSet = markerIndices.headSet( lowPointIndex );
       if( !leftSet.isEmpty() )
+      {
         result.add( leftSet.first() );
+      }
     }
     else
     {
       // use leftmost of all left markers
       final SortedSet<Integer> rightSet = markerIndices.tailSet( lowPointIndex );
       if( !rightSet.isEmpty() )
+      {
         result.add( rightSet.last() );
+      }
     }
 
     return result.toArray( new Integer[result.size()] );
@@ -360,7 +366,9 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
       final Feature lineFeature = (Feature) lineF;
       final Geometry line = getAsLine( lineFeature );
       if( line == null )
+      {
         continue;
+      }
 
       // find intersecting points
       final Geometry intersection = profileLine.intersection( line );
@@ -394,7 +402,9 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
       final MultiPoint mp = (MultiPoint) points;
       final Point[] result = new Point[mp.getNumGeometries()];
       for( int i = 0; i < result.length; i++ )
+      {
         result[i] = (Point) mp.getGeometryN( i );
+      }
 
       return result;
     }
@@ -410,7 +420,9 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     /** Clear existing points */
     final IProfilPointMarker[] existingMarkers = profil.getPointMarkerFor( m_deviderType );
     for( final IProfilPointMarker marker : existingMarkers )
+    {
       profil.removePointMarker( marker );
+    }
 
     /** Add new Points */
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
@@ -442,7 +454,9 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
         final GM_Point p = (GM_Point) JTSAdapter.wrap( point, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
         final Double width = WspmProfileHelper.getWidthPosition( p, profil );
         if( width != null )
+        {
           widthList.add( width );
+        }
       }
       catch( final Exception e )
       {

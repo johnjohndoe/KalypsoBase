@@ -283,7 +283,9 @@ public abstract class AbstractProfil implements IProfil
 
     for( final IRecord record : getResult() )
       if( getPointMarkerFor( record ).length > 0 )
+      {
         records.add( record );
+      }
     return records.toArray( new IRecord[] {} );
   }
 
@@ -330,7 +332,9 @@ public abstract class AbstractProfil implements IProfil
     {
       final Object value = record.getValue( index );
       if( value != null )
+      {
         markers.add( new PointMarker( markerColumn, record ) );
+      }
     }
     return markers.toArray( new IProfilPointMarker[] {} );
   }
@@ -347,7 +351,9 @@ public abstract class AbstractProfil implements IProfil
     {
       final int index = getResult().indexOfComponent( marker );
       if( record.getValue( index ) != null )
+      {
         pointMarkers.add( new PointMarker( marker, record ) );
+      }
     }
     return pointMarkers.toArray( new PointMarker[] {} );
   }
@@ -376,7 +382,9 @@ public abstract class AbstractProfil implements IProfil
 
     for( final IComponent component : properties )
       if( provider.isMarker( component.getId() ) )
+      {
         marker.add( component );
+      }
     return marker.toArray( new IComponent[] {} );
   }
 
@@ -463,7 +471,9 @@ public abstract class AbstractProfil implements IProfil
     for( final IProfileObject object : m_profileObjects )
     {
       if( clazz.isInstance( object ) )
+      {
         objects.add( (T) object );
+      }
     }
 
     return objects.toArray( (T[]) Array.newInstance( clazz, objects.size() ) );
@@ -629,7 +639,7 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public void setActivePoint( final IRecord point )
   {
-    if( m_activePoint == point)
+    if( m_activePoint == point )
       return;
     m_activePoint = point;
     final ProfilChangeHint hint = new ProfilChangeHint();
@@ -716,7 +726,9 @@ public abstract class AbstractProfil implements IProfil
     Assert.isNotNull( result );
 
     if( m_result != null )
+    {
       m_result.removeChangeListener( m_tupleResultListener );
+    }
 
     m_result = result;
 

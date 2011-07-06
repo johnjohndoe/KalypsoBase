@@ -48,14 +48,12 @@ import org.kalypso.model.wspm.core.strang.IStranginfoListener;
 import org.kalypso.model.wspm.core.strang.ProfilInfo;
 import org.kalypso.model.wspm.core.strang.StrangInfo;
 
-
 /**
  * @author gernot
- *
  */
 public class StranginfoCombo implements IStranginfoListener, SelectionListener
 {
-  private DropdownContributionItem<ProfilInfo> m_comboitem = new DropdownContributionItem<ProfilInfo>( null );
+  private final DropdownContributionItem<ProfilInfo> m_comboitem = new DropdownContributionItem<ProfilInfo>( null );
 
   private StrangInfo m_info = null;
 
@@ -63,20 +61,24 @@ public class StranginfoCombo implements IStranginfoListener, SelectionListener
   {
     m_comboitem.addSelectionListener( this );
   }
-  
+
   public void setInfo( final StrangInfo info )
   {
     if( m_info != null )
+    {
       m_info.removeStranginfoListener( this );
-    
+    }
+
     m_info = info;
-      
+
     if( m_info == null )
+    {
       m_comboitem.setItems( null );
+    }
     else
     {
       m_info.addStranginfoListener( this );
-      
+
       m_comboitem.setItems( m_info.getInfos() );
       onIndexChanged( m_info );
     }
@@ -92,7 +94,9 @@ public class StranginfoCombo implements IStranginfoListener, SelectionListener
     {
       final ProfilInfo oldItem = m_comboitem.getSelectedItem();
       if( oldItem != m_info.getInfo() )
+      {
         m_comboitem.setSelectedItem( m_info.getInfo() );
+      }
     }
   }
 
@@ -109,11 +113,11 @@ public class StranginfoCombo implements IStranginfoListener, SelectionListener
   {
     if( m_info == null )
       return;
-    
+
     final ProfilInfo selectedItem = m_comboitem.getSelectedItem();
 
     m_info.setInfo( selectedItem );
-    
+
     onIndexChanged( m_info );
   }
 
@@ -121,7 +125,7 @@ public class StranginfoCombo implements IStranginfoListener, SelectionListener
    * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
    */
   @Override
-  public void widgetDefaultSelected( SelectionEvent e )
+  public void widgetDefaultSelected( final SelectionEvent e )
   {
   }
 
@@ -129,7 +133,7 @@ public class StranginfoCombo implements IStranginfoListener, SelectionListener
    * @see org.kalypso.model.wspm.core.strang.IStranginfoListener#onTryChangeIndex(org.kalypso.model.wspm.core.strang.StrangInfo)
    */
   @Override
-  public boolean onTryChangeIndex( StrangInfo source )
+  public boolean onTryChangeIndex( final StrangInfo source )
   {
     return true;
   }

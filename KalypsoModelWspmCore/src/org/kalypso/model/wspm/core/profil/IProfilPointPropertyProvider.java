@@ -83,6 +83,7 @@ public interface IProfilPointPropertyProvider
    * markers maybe handled different in special cases (p.e. UI)
    */
   boolean isMarker( final String markerID );
+
   /**
    * Returns the default value for the given propertyID
    */

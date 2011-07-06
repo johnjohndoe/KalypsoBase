@@ -57,6 +57,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartPartListener;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -114,16 +116,17 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     if( parent == null )
       return null;
     if( m_toolkit == null )
+    {
       m_toolkit = new FormToolkit( parent.getDisplay() );
+    }
 
     if( m_form == null )
     {
       m_form = m_toolkit.createForm( parent );
+
+      // TODO no form layout? no scrolling? why we use a form composite here?
       m_form.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-      final GridLayout gridLayout = new GridLayout();
-      gridLayout.marginWidth = 0;
-      gridLayout.marginHeight = 0;
-      m_form.setLayout( gridLayout );
+      m_form.setLayout( LayoutHelper.createGridLayout() );
       m_form.getBody().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
       m_form.getBody().setLayout( new GridLayout() );
       m_toolkit.decorateFormHeading( m_form );
@@ -141,14 +144,13 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   public final void createPartControl( final Composite parent )
   {
     m_control = new Composite( parent, SWT.NONE );
-    final GridLayout gridLayout = new GridLayout();
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
-    m_control.setLayout( gridLayout );
+    m_control.setLayout( LayoutHelper.createGridLayout() );
     createContent( m_control );
 
     if( m_provider != null )
+    {
       onProfilProviderChanged( m_provider, null, m_provider.getProfil() );
+    }
   }
 
   /**
@@ -165,16 +167,24 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     }
 
     if( m_provider != null )
+    {
       m_provider.removeProfilProviderListener( this );
+    }
 
     if( m_adapterPartListener != null )
+    {
       m_adapterPartListener.dispose();
+    }
 
     if( m_profilChartComposite != null )
+    {
       m_profilChartComposite.dispose();
+    }
 
     if( m_form != null )
+    {
       m_form.dispose();
+    }
 
     m_form = null;
     m_profilChartComposite = null;
@@ -204,7 +214,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   @Override
   public IChartComposite getChartComposite( )
   {
-
     return m_profilChartComposite;
   }
 
@@ -287,15 +296,19 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   @Override
   public void setAdapter( final IWorkbenchPart part, final IProfilProvider adapter )
   {
-    if( adapter == m_provider )
+    if( Objects.equal( adapter, m_provider ) )
       return;
 
     if( m_provider != null )
+    {
       m_provider.removeProfilProviderListener( this );
+    }
 
     m_provider = adapter;
     if( m_provider != null )
+    {
       m_provider.addProfilProviderListener( this );
+    }
 
     onProfilProviderChanged( m_provider, null, m_provider == null ? null : m_provider.getProfil() );
   }
@@ -352,7 +365,9 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
       public void run( )
       {
         if( !form.isDisposed() )
+        {
           form.setMessage( message, type );
+        }
       }
     };
     display.syncExec( runnable );
@@ -369,7 +384,9 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
         public void run( )
         {
           if( !control.isDisposed() )
+          {
             setPartNamesInternal( partName, tooltip );
+          }
         }
       };
       control.getDisplay().asyncExec( object );

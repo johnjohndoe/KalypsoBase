@@ -64,7 +64,7 @@ public class PointsTargetChooserPage extends WizardPage implements IWizardPage
 
   public PointsTargetChooserPage( )
   {
-    super( "targetChooserPage", org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.PointsTargetChooserPage.0"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "targetChooserPage", org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.PointsTargetChooserPage.0" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -75,7 +75,9 @@ public class PointsTargetChooserPage extends WizardPage implements IWizardPage
   {
     final String targetID = getDialogSettings().get( DLG_SETTINGS_TARGET_ID );
     if( targetID == null )
+    {
       m_selectedTarget = m_targets.length == 0 ? null : m_targets[0];
+    }
     else
     {
       for( final IPointsTarget target : m_targets )
@@ -89,7 +91,7 @@ public class PointsTargetChooserPage extends WizardPage implements IWizardPage
     }
 
     final Group panel = new Group( parent, SWT.NONE );
-    panel.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString("org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.PointsTargetChooserPage.1") ); //$NON-NLS-1$
+    panel.setText( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.PointsTargetChooserPage.1" ) ); //$NON-NLS-1$
     panel.setLayout( new GridLayout() );
 
     for( final IPointsTarget target : m_targets )
@@ -116,7 +118,9 @@ public class PointsTargetChooserPage extends WizardPage implements IWizardPage
   public void dispose( )
   {
     if( m_selectedTarget != null )
+    {
       getDialogSettings().put( DLG_SETTINGS_TARGET_ID, m_selectedTarget.getID() );
+    }
 
     super.dispose();
   }

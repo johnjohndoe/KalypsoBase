@@ -50,46 +50,46 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
  */
 public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContentProvider
 {
-  //private final IExpandableChartLayer m_modelLayer;
+  // private final IExpandableChartLayer m_modelLayer;
 
   public ProfilChartEditorTreeContentProvider( )
   {
-//    final IChartModel model = getModel();
-//    m_modelLayer = new AbstractExpandableLayer()
-//    {
-//      /**
-//       * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
-//       */
-//      @Override
-//      public String getTitle( )
-//      {
-//        return model.getTitle();
-//      }
+// final IChartModel model = getModel();
+// m_modelLayer = new AbstractExpandableLayer()
+// {
+// /**
+// * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
+// */
+// @Override
+// public String getTitle( )
+// {
+// return model.getTitle();
+// }
 //
-//      /**
-//       * @see de.openali.odysseus.chart.ext.base.layer.AbstractExpandableLayer#getLayerManager()
-//       */
-//      @Override
-//      public ILayerManager getLayerManager( )
-//      {
-//        return model.getLayerManager();
-//      }
-//    };
+// /**
+// * @see de.openali.odysseus.chart.ext.base.layer.AbstractExpandableLayer#getLayerManager()
+// */
+// @Override
+// public ILayerManager getLayerManager( )
+// {
+// return model.getLayerManager();
+// }
+// };
 //
-//    m_modelLayer.setVisible( true );
+// m_modelLayer.setVisible( true );
   }
 
-//  /**
-//   * @see org.kalypso.chart.ui.editor.ChartEditorTreeContentProvider#getParent(java.lang.Object)
-//   */
-//  @Override
-//  public Object getParent( final Object element )
-//  {
-//    final Object parent = super.getParent( element );
-//    if( parent == getModel() )
-//      return m_modelLayer;
-//    return parent;
-//  }
+// /**
+// * @see org.kalypso.chart.ui.editor.ChartEditorTreeContentProvider#getParent(java.lang.Object)
+// */
+// @Override
+// public Object getParent( final Object element )
+// {
+// final Object parent = super.getParent( element );
+// if( parent == getModel() )
+// return m_modelLayer;
+// return parent;
+// }
 
   /**
    * @see org.kalypso.chart.ui.editor.ChartEditorTreeContentProvider#getChildren(java.lang.Object)
@@ -97,14 +97,12 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
   @Override
   public Object[] getChildren( final Object element )
   {
-//    if( element instanceof IChartModel )
-//    {
-//      return new IExpandableChartLayer[] { m_modelLayer };
-//    }
+// if( element instanceof IChartModel )
+// {
+// return new IExpandableChartLayer[] { m_modelLayer };
+// }
     if( element instanceof AbstractProfilTheme )
-    {
       return ((AbstractProfilTheme) element).getLegendNodes();
-    }
     return super.getChildren( element );
   }
 
@@ -115,13 +113,9 @@ public class ProfilChartEditorTreeContentProvider extends ChartEditorTreeContent
   public boolean hasChildren( final Object element )
   {
     if( element instanceof IChartModel )
-    {
       return true;
-    }
     if( element instanceof AbstractProfilTheme )
-    {
       return ((AbstractProfilTheme) element).getLegendNodes().length > 0;
-    }
     return super.hasChildren( element );
   }
 

@@ -124,7 +124,9 @@ public class ChartTabItem extends Composite implements IChartPart
     m_sourceManager.dispose();
 
     if( m_chartComposite != null && !m_chartComposite.getPlot().isDisposed() )
+    {
       m_chartComposite.getPlot().dispose();
+    }
   }
 
   /**

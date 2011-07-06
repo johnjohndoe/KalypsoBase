@@ -106,7 +106,9 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
   {
     getSite().setSelectionProvider( null );
     if( m_chartPart != null )
+    {
       m_chartPart.removeListener( this );
+    }
 
     super.dispose();
   }
@@ -204,7 +206,9 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     if( adapter == m_chartPart )
       return;
     if( m_chartPart != null )
+    {
       m_chartPart.removeListener( this );
+    }
     m_chartPart = adapter;
     if( adapter != null )
     {
@@ -222,7 +226,9 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
   public void setFocus( )
   {
     if( m_control != null && !m_control.isDisposed() )
+    {
       m_control.setFocus();
+    }
   }
 
   /** Must be called in SWT thread */

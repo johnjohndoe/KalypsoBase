@@ -228,9 +228,13 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
   {
     final IMessageProvider message = validatePage();
     if( message == null )
+    {
       setMessage( null );
+    }
     else
+    {
       setMessage( message.getMessage(), message.getMessageType() );
+    }
     setPageComplete( message == null );
   }
 
