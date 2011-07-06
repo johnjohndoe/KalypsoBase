@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -152,5 +155,20 @@ public class WaterLevelResultTree extends Composite
   {
     if( Objects.isNotNull( m_treeViewer ) )
       m_treeViewer.addFilter( filter );
+
+    /** update tree selection */
+    synchronized( this )
+    {
+      final Set<Object> checked = new LinkedHashSet<Object>();
+
+      final Object[] elemets = m_treeViewer.getCheckedElements();
+      for( final Object element : elemets )
+      {
+        if( filter.select( m_treeViewer, element, element ) )
+          checked.add( element );
+      }
+
+      m_treeViewer.setCheckedElements( checked.toArray() );
+    }
   }
 }
