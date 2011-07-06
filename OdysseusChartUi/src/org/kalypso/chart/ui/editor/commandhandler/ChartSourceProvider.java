@@ -125,7 +125,7 @@ public class ChartSourceProvider extends AbstractSourceProvider
     registerServiceWithSources( serviceLocator, IMenuService.class );
 
     m_chartContext = contextService.activateContext( CHART_CONTEXT );
-    
+
     // FIXME: check other source providers; they should do the same -> refaktor into helper class
     refreshUIelements();
   }
@@ -237,5 +237,4 @@ public class ChartSourceProvider extends AbstractSourceProvider
       e.printStackTrace();
     }
   }
-
 }
