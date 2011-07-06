@@ -46,6 +46,7 @@ import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.expressions.PropertyTester;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeProvider;
@@ -54,31 +55,34 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This property tester tests a {@link IKalypsoTheme}'s.
- *
+ * 
  * @author Gernot Belger
  */
 public class ThemeTester extends PropertyTester
 {
-  /** Property 'activeThemeNotNull': tests, returns <code>true</code>, if an active theme is set. */
+  /** Property 'isNotNull': tests, returns <code>true</code>, if an active theme is set. */
   private final static String PROPERTY_NOTNULL = "isNotNull"; //$NON-NLS-1$
 
   /**
-   * Property 'activeThemeQName': compares the given argument to the toString of the qname of the active theme. Returns
+   * Property 'qname': compares the given argument to the toString of the qname of the active theme. Returns
    * <code>false</code>, if the active theme is not an feature theme.
    */
   private final static String PROPERTY_QNAME = "qname"; //$NON-NLS-1$
 
-  /** Property 'activeThemeNotNull': tests, returns <code>true</code>, if the active theme has a non trivial extent. */
+  /** Property 'hasExtent': tests, returns <code>true</code>, if the active theme has a non trivial extent. */
   private final static String PROPERTY_HASEXTENT = "hasExtent"; //$NON-NLS-1$
 
   /**
-   * Property 'activeThemeNotNull': tests, returns <code>true</code>, if the active theme is a feature theme (i.e.
-   * inherits from {@link IKalypsoFeatureTheme}).
+   * Property 'isFeatureTheme': tests, returns <code>true</code>, if the active theme is a feature theme (i.e. inherits
+   * from {@link IKalypsoFeatureTheme}).
    */
   private final static String PROPERTY_ISFEATURETHEME = "isFeatureTheme"; //$NON-NLS-1$
 
-  /** Property 'themeProperty': tests a theme for the value of a given (theme-)property. */
+  /** Property 'property': tests a theme for the value of a given (theme-)property. */
   private final static String PROPERTY_THEME_PROPERTY = "property"; //$NON-NLS-1$
+
+  /** Property 'isCascading': tests a theme is cascading. */
+  private final static String PROPERTY_ISCASCADING = "isCascading"; //$NON-NLS-1$
 
   /**
    * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[],
@@ -125,6 +129,9 @@ public class ThemeTester extends PropertyTester
 
     if( PROPERTY_THEME_PROPERTY.equals( property ) )
       return testProperty( theme, args, expectedValue );
+
+    if( PROPERTY_ISCASCADING.equals( property ) )
+      return testIsCascading( theme );
 
     return false;
   }
@@ -175,5 +182,13 @@ public class ThemeTester extends PropertyTester
     final String expectedString = expectedValue == null ? null : expectedValue.toString();
 
     return ObjectUtils.equals( value, expectedString );
+  }
+
+  private boolean testIsCascading( IKalypsoTheme theme )
+  {
+    if( theme instanceof AbstractCascadingLayerTheme )
+      return true;
+
+    return false;
   }
 }
