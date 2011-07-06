@@ -523,9 +523,9 @@
 					<element name="waterlevelFixation" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
 						<annotation>
 							<documentation xml:lang="de">
-								<label>???waterlevelFixation</label>
-								<tooltip>???tooltip</tooltip>
-								<description>???description</description>
+								<label>water level fixation</label>
+								<tooltip>water level fixation</tooltip>
+								<description>water level fixation</description>
 							</documentation>
 						</annotation>
 					</element>
