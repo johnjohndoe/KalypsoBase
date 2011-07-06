@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer;
@@ -111,6 +111,6 @@ public class WspLegendPopupDialog extends PopupDialog
   @Override
   protected IDialogSettings getDialogSettings( )
   {
-    return PluginUtilities.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), WspLegendPopupDialog.class.getName() );
+    return DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), WspLegendPopupDialog.class.getName() );
   }
 }

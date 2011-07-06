@@ -98,9 +98,7 @@ public class WaterLevelResultTree extends Composite
         return;
       }
 
-      toolkit.createLabel( this, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.5" ) );
-
-      m_treeViewer = new CheckboxTreeViewer( this, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL );
+      m_treeViewer = new CheckboxTreeViewer( this, SWT.SINGLE );
       m_treeViewer.getTree().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
       final ITreeContentProvider contentProvider = data.createContentProvider();

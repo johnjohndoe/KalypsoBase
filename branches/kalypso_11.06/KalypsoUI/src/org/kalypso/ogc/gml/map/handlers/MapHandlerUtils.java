@@ -69,7 +69,7 @@ import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
@@ -355,7 +355,7 @@ public class MapHandlerUtils
    */
   public static File showSaveFileDialog( final Shell shell, final String title, final String fileName, final String settingsSectionName, final String[] filterExtensions, final String[] filterNames )
   {
-    final IDialogSettings dialogSettings = PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), settingsSectionName );
+    final IDialogSettings dialogSettings = DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), settingsSectionName );
     final String lastDirPath = dialogSettings.get( SETTINGS_LAST_DIR );
     final FileDialog fileDialog = new FileDialog( shell, SWT.SAVE );
 

@@ -57,8 +57,7 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
 public final class KalypsoModelWspmUIExtensions
 {
-  /** Only the Plugin may instantiate me */
-  KalypsoModelWspmUIExtensions( )
+  private KalypsoModelWspmUIExtensions( )
   {
   }
 
