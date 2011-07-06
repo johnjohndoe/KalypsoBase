@@ -67,7 +67,6 @@ import org.kalypso.core.i18n.Messages;
 
 /**
  * A composite, showing an {@link org.eclipse.core.runtime.IStatus}.<br>
- * *
  * <dl>
  * <dt><b>Styles:</b></dt>
  * <dd>DETAILS, HIDE_TEXT</dd>
@@ -188,6 +187,7 @@ public class StatusComposite extends Composite
   private void createDetailsButton( )
   {
     m_detailsButton = new Button( this, SWT.PUSH );
+    m_detailsButton.setLayoutData( new GridData() );
     ControlUtils.adapt( m_detailsButton, m_toolkit );
     m_detailsButton.setText( Messages.getString( "org.kalypso.util.swt.StatusComposite.1" ) ); //$NON-NLS-1$
     m_detailsButton.addSelectionListener( new SelectionAdapter()
@@ -282,6 +282,7 @@ public class StatusComposite extends Composite
       final boolean hideDetailsIfdisabled = (getStyle() & HIDE_DETAILS_IF_DISABLED) != 0;
       final boolean visible = !hideDetailsIfdisabled || enabled;
       m_detailsButton.setVisible( visible );
+      ((GridData) m_detailsButton.getLayoutData()).exclude = !visible;
     }
 
     layout();
@@ -443,5 +444,4 @@ public class StatusComposite extends Composite
   {
     m_labelProvider = provider;
   }
-
 }
