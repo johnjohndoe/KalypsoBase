@@ -80,6 +80,7 @@ public final class GMLXPathSegment
     if( trimmedPath.length() == 0 )
       return new GMLXPathSegment[] {};
 
+    // FIXME: we need to be able to escape '/' somehow in order to read fully quantified qnames (http://xxx.org)
     final String[] segments = trimmedPath.split( "/" );
     final GMLXPathSegment[] xSegments = new GMLXPathSegment[segments.length];
     for( int i = 0; i < segments.length; i++ )
