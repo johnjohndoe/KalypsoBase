@@ -62,6 +62,8 @@ import org.kalypsodeegree.graphics.sld.Rule;
 
 public class StyleEditorViewPart extends ViewPart implements ISelectionChangedListener
 {
+  public static String ID = "org.kalypso.ui.editor.mapeditor.views.styleeditor"; //$NON-NLS-1$
+
   private ISelectionProvider m_gmop = null;
 
   private SLDComposite m_sldComposite = null;
