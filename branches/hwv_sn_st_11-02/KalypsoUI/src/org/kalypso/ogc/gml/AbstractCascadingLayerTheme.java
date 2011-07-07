@@ -511,4 +511,15 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   {
     return m_innerMapModel.getLabel();
   }
+
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#setName(org.kalypso.contribs.java.lang.I10nString)
+   */
+  @Override
+  public void setName( final I10nString name )
+  {
+    m_innerMapModel.setName( name );
+
+    super.setName( name );
+  }
 }
