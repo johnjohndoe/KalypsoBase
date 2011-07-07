@@ -164,7 +164,11 @@ public class FileValueSelectionListener implements SelectionListener
   {
     final String[] names = new String[m_names.size()];
     for( int i = 0; i < names.length; i++ )
-      names[i] = String.format( "%s (%s)", m_names.get( i ), m_extensions.get( i ) );
+    {
+      final String[] extensions = m_extensions.get( i );
+      final String extensionText = StringUtils.join( extensions, ',' );
+      names[i] = String.format( "%s (%s)", m_names.get( i ), extensionText );
+    }
     return names;
   }
 }
