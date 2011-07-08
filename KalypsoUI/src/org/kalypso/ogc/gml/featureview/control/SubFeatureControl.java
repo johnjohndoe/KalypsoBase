@@ -6,11 +6,11 @@ import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -65,10 +65,7 @@ public class SubFeatureControl extends AbstractFeatureControl
 
       // FIXME: actually we'd like to use a FillLayout, but there are still buggy Feature-Controls out
       // there that set their own layoutData to grid-data....
-      final GridLayout layout = new GridLayout( 1, false );
-      layout.marginWidth = 0;
-      layout.marginHeight = 0;
-      m_container.setLayout( layout );
+      m_container.setLayout( Layouts.createGridLayout() );
 
       applyToolkit( toolkit, m_container );
     }

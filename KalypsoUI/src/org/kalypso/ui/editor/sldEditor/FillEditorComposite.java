@@ -72,6 +72,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
@@ -117,11 +118,7 @@ public class FillEditorComposite extends Composite
 
   private void createControl( ) throws FilterEvaluationException
   {
-    final GridLayout layout = new GridLayout( 2, false );
-    layout.marginWidth = 0;
-    layout.marginHeight = 0;
-
-    setLayout( layout );
+    setLayout( Layouts.createGridLayout( 2 ) );
 
     createColorControl();
 
@@ -290,7 +287,7 @@ public class FillEditorComposite extends Composite
 
     final Spinner opacitySpinner = new Spinner( this, SWT.NONE );
     opacitySpinner.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
-    opacitySpinner.setBackground( this.getBackground() );
+    opacitySpinner.setBackground( getBackground() );
     double opacity = m_fill.getOpacity( null );
     if( Double.isNaN( opacity ) || opacity > 1.0 || opacity < 0.0 )
       opacity = 1.0;
@@ -327,7 +324,7 @@ public class FillEditorComposite extends Composite
     previewCompData.heightHint = 22;
     m_previewComp.setLayoutData( previewCompData );
 
-    this.addDisposeListener( new DisposeListener()
+    addDisposeListener( new DisposeListener()
     {
       @Override
       public void widgetDisposed( final DisposeEvent e )

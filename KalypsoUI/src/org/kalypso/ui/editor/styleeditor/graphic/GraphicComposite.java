@@ -56,7 +56,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.commons.databinding.forms.IDataBindingForm;
 import org.kalypso.commons.databinding.validation.NumberNotNegativeValidator;
-import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.graphics.sld.Graphic;
@@ -125,7 +125,7 @@ public class GraphicComposite extends Composite
   private Control createSizeControl( final FormToolkit toolkit, final Composite parent )
   {
     final Composite composite = toolkit.createComposite( parent );
-    composite.setLayout( LayoutHelper.createGridLayout( 2 ) );
+    composite.setLayout( Layouts.createGridLayout( 2 ) );
 
     toolkit.createLabel( composite, MessageBundle.STYLE_EDITOR_SIZE );
 
@@ -145,7 +145,7 @@ public class GraphicComposite extends Composite
   private Control createRotationControl( final FormToolkit toolkit, final Composite parent )
   {
     final Composite composite = toolkit.createComposite( parent );
-    composite.setLayout( LayoutHelper.createGridLayout( 2 ) );
+    composite.setLayout( Layouts.createGridLayout( 2 ) );
 
     toolkit.createLabel( composite, MessageBundle.STYLE_EDITOR_ROTATION );
 

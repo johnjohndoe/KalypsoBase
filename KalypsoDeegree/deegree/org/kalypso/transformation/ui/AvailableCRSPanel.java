@@ -62,6 +62,7 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -76,6 +77,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.deegree.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.crs.CoordinateSystemFactory;
@@ -127,11 +129,9 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
   private void createControls( )
   {
     /* Set the layout data. */
-    final GridLayout gridLayout = new GridLayout( 1, false );
+    final GridLayout gridLayout = Layouts.createGridLayout();
     gridLayout.horizontalSpacing = 0;
     gridLayout.verticalSpacing = 0;
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
     super.setLayout( gridLayout );
 
     /* Create the main group for the panel. */
@@ -487,7 +487,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
       /* Create the dialog for entering the EPSG code coordinate system. */
       final InputDialog dialog = new InputDialog( display.getActiveShell(), Messages.getString( "org.kalypso.transformation.ui.AvailableCRSPanel.10" ), Messages.getString( "org.kalypso.transformation.ui.AvailableCRSPanel.11" ), "EPSG:", new CRSInputValidator() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       final int open = dialog.open();
-      if( open == InputDialog.CANCEL )
+      if( open == Window.CANCEL )
         return;
 
       /* The entered coordinate system. */

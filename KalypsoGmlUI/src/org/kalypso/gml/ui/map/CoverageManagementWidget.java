@@ -102,6 +102,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.ResourcePool;
@@ -447,13 +448,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     /* Coverage table + info pane */
     final Composite coveragePanel = toolkit.createComposite( panel, SWT.NONE );
-    final GridLayout coveragePanelLayout = new GridLayout( 2, false );
     final GridData coveragePanelData = new GridData( SWT.FILL, SWT.FILL, true, false );
     coveragePanelData.heightHint = 200;
     coveragePanel.setLayoutData( coveragePanelData );
-    coveragePanelLayout.marginHeight = 0;
-    coveragePanelLayout.marginWidth = 0;
-    coveragePanel.setLayout( coveragePanelLayout );
+    coveragePanel.setLayout( Layouts.createGridLayout( 2 ) );
 
     m_coverageViewer = new ListViewer( coveragePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
 
@@ -498,11 +496,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     /* Color Map table */
     final Composite colormapPanel = toolkit.createComposite( panel, SWT.NONE );
-    final GridLayout colormapPanelLayout = new GridLayout();
+    final GridLayout colormapPanelLayout = Layouts.createGridLayout();
     colormapPanelLayout.numColumns = 2;
     colormapPanelLayout.makeColumnsEqualWidth = false;
-    colormapPanelLayout.marginWidth = 0;
-    colormapPanelLayout.marginHeight = 0;
 
     colormapPanel.setLayout( colormapPanelLayout );
     final GridData colormapPanelData = new GridData( SWT.FILL, SWT.FILL, true, true );

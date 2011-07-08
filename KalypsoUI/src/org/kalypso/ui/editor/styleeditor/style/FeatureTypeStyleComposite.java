@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
-import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 
 /**
  * @author Gernot Belger
@@ -66,7 +66,7 @@ public class FeatureTypeStyleComposite extends Composite
 
     m_input = input;
 
-    setLayout( LayoutHelper.createGridLayout() );
+    setLayout( Layouts.createGridLayout() );
     toolkit.adapt( this );
 
     if( input.getConfig().isFeatureTypeStyleCompositeShowProperties() )

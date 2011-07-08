@@ -27,7 +27,6 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -36,6 +35,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.DrillDownComposite;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 
 @SuppressWarnings("restriction")
 public class ResourceSelectionGroup extends Composite
@@ -136,14 +136,12 @@ public class ResourceSelectionGroup extends Composite
    */
   public void createContents( final String message, final int heightHint )
   {
-    final GridLayout layout = new GridLayout();
-    layout.marginWidth = 0;
-    setLayout( layout );
+    setLayout( Layouts.createGridLayout() );
     setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final Label label = new Label( this, SWT.WRAP );
     label.setText( message );
-    label.setFont( this.getFont() );
+    label.setFont( getFont() );
 
     if( m_allowNewResourceName )
     {
@@ -151,7 +149,7 @@ public class ResourceSelectionGroup extends Composite
       m_resourceNameField.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
       // TODO: add listener to control user input
       // resourceNameField.addListener( SWT.DefaultSelection, m_listener );
-      m_resourceNameField.setFont( this.getFont() );
+      m_resourceNameField.setFont( getFont() );
     }
     else
     {
@@ -226,7 +224,7 @@ public class ResourceSelectionGroup extends Composite
       else
       {
         // The user may not have made this absolute so do it for them
-        resourcePath = (new Path( pathName )).makeAbsolute();
+        resourcePath = new Path( pathName ).makeAbsolute();
       }
     }
     else

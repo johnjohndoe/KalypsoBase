@@ -49,7 +49,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.zml.ui.table.base.widgets.rules.IWidgetRule;
 
 /**
@@ -70,7 +70,7 @@ public abstract class AbstractEnhancedWidget<T> extends Composite implements IAb
     super( parent, SWT.NULL );
     m_rule = rule;
 
-    setLayout( LayoutHelper.createGridLayout( 2 ) );
+    setLayout( Layouts.createGridLayout( 2 ) );
     initWidget( toolkit );
     initValidationIcon( toolkit );
 

@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.ui.internal.WorkbenchMessages;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 
 /**
  * A standard dialog which solicits a list of selections from the user. This class is configured with an arbitrary data
@@ -108,9 +109,7 @@ public class TreeSelectionDialog extends SelectionDialog
   private void addSelectionButtons( final Composite composite )
   {
     final Composite buttonComposite = new Composite( composite, SWT.NONE );
-    final GridLayout layout = new GridLayout();
-    layout.numColumns = 0;
-    layout.marginWidth = 0;
+    final GridLayout layout = Layouts.createGridLayout();
     layout.horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
     buttonComposite.setLayout( layout );
     buttonComposite.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
