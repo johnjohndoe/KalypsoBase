@@ -21,8 +21,8 @@ import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
-import org.w3c.dom.DocumentType;
 
+import de.micromata.opengis.kml.v_2_2_0.Document;
 import de.micromata.opengis.kml.v_2_2_0.Style;
 
 /**
@@ -64,8 +64,9 @@ public class StyleTypeFactory
    * @param documentType
    * @param googleEarthFactory
    */
-  public void addStylesToDocument( final DocumentType documentType )
+  public void addStylesToDocument( final Document document )
   {
+
     final List<JAXBElement< ? extends AbstractStyleSelectorType>> styles = documentType.getAbstractStyleSelectorGroup();
     styles.add( kmlFactory.createStyle( m_labelStyleType ) );
 
@@ -94,7 +95,7 @@ public class StyleTypeFactory
   private int[] getColor( final Color color, final double opacity )
   {
     if( opacity > 1.0 )
-      throw (new IllegalStateException( Messages.StyleTypeFactory_0 ));
+      throw new IllegalStateException( Messages.StyleTypeFactory_0 );
 
     final Double kmlOpacity = opacity * 255 + 40;
     // alpha=0x7f, blue=0xff, green=0x00, and red=0x00.
@@ -247,7 +248,7 @@ public class StyleTypeFactory
 
     final Fill fill = symbolizer.getFill();
 
-    final CssParameter parameter = (CssParameter) fill.getCssParameters().get( "fill" ); //$NON-NLS-1$
+    final CssParameter parameter = fill.getCssParameters().get( "fill" ); //$NON-NLS-1$
     final ParameterValueType value = parameter.getValue();
     final Object[] components = value.getComponents();
     final Color polyColor;
