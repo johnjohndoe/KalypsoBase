@@ -44,6 +44,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.ogc.gml.IKalypsoTheme;
 
 /**
  * This class provides functions for {@link org.kalypso.ogc.gml.IKalypsoTheme}s.
@@ -76,6 +77,21 @@ public class ThemeUtilities
         return new Color( display, r.intValue(), g.intValue(), b.intValue() );
     }
 
+    return null;
+  }
+
+  public static IKalypsoTheme findFirstVisible( IKalypsoTheme[] themes )
+  {
+    for( IKalypsoTheme theme : themes )
+    {
+      /* Return the first visible theme. */
+      if( theme.isVisible() )
+        return theme;
+
+      /* If the current theme is not visible, check the next one. */
+    }
+
+    /* No visible theme was found. */
     return null;
   }
 }
