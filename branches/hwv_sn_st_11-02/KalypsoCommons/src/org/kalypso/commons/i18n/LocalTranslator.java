@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.i18n;
 
-import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -85,12 +84,12 @@ public class LocalTranslator implements ITranslator, IExecutableExtension
   }
 
   /**
-   * @see org.kalypso.contribs.java.lang.I10nTranslator#configure(java.util.List)
+   * @see org.kalypso.commons.i18n.ITranslator#configure(org.kalypso.commons.i18n.ITranslatorContext, java.util.List)
    */
   @Override
-  public void configure( final URL context, final List<Element> configuration )
+  public void configure( ITranslatorContext context, List<Element> any )
   {
-    m_bundle = ResourceBundleUtils.loadResourceBundle( context );
+    m_bundle = ResourceBundleUtils.loadResourceBundle( context.getContext() );
   }
 
   /**
@@ -112,18 +111,18 @@ public class LocalTranslator implements ITranslator, IExecutableExtension
   public String get( final String key, final Locale locale, final Object[] context )
   {
     if( m_bundle == null )
-      return Messages.getString("org.kalypso.commons.i18n.LocalTranslator.1",key); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.commons.i18n.LocalTranslator.1", key ); //$NON-NLS-1$
 
     try
     {
       final String value = m_bundle.getString( key );
       if( value == null || value.isEmpty() )
-        return Messages.getString("org.kalypso.commons.i18n.LocalTranslator.2",key); //$NON-NLS-1$
+        return Messages.getString( "org.kalypso.commons.i18n.LocalTranslator.2", key ); //$NON-NLS-1$
       return value;
     }
     catch( final MissingResourceException e )
     {
-      return Messages.getString("org.kalypso.commons.i18n.LocalTranslator.2",key); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.commons.i18n.LocalTranslator.2", key ); //$NON-NLS-1$
     }
   }
 }
