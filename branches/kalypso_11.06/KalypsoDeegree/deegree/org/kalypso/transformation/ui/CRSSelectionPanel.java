@@ -75,6 +75,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.deegree.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.crs.ICoordinateSystem;
@@ -234,10 +235,8 @@ public class CRSSelectionPanel extends Composite
     if( (getStyle() & NO_GROUP) != 0 )
     {
       final Composite composite = new Composite( this, SWT.NONE );
-      final GridLayout layout = new GridLayout( 2, false );
-      layout.marginHeight = 0;
-      layout.marginWidth = 0;
-      composite.setLayout( layout );
+      composite.setLayout( Layouts.createGridLayout( 2 ) );
+
       return composite;
     }
 

@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -76,7 +76,7 @@ public class WaterLevelResultTree extends Composite
   {
     super( parent, SWT.NULL );
 
-    setLayout( LayoutHelper.createGridLayout() );
+    setLayout( Layouts.createGridLayout() );
     render( layer, toolkit );
   }
 

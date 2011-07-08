@@ -112,6 +112,7 @@ import org.kalypso.contribs.eclipse.i18n.Messages;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.IResetableWizard;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.lang.DisposeHelper;
@@ -360,9 +361,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
     // Now create a work area for the rest of the dialog
     m_workArea = new Composite( parent, SWT.NULL );
-    final GridLayout workLayout = new GridLayout();
-    workLayout.marginHeight = 0;
-    workLayout.marginWidth = 0;
+    final GridLayout workLayout = Layouts.createGridLayout();
     workLayout.verticalSpacing = 0;
     m_workArea.setLayout( workLayout );
 
@@ -389,9 +388,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     getSite().registerContextMenu( menuManager, getSite().getSelectionProvider() );
 
     m_pageAndButtonArea = new Composite( m_mainSash, SWT.NONE );
-    final GridLayout pageAndButtonLayout = new GridLayout();
-    pageAndButtonLayout.marginHeight = 0;
-    pageAndButtonLayout.marginWidth = 0;
+    final GridLayout pageAndButtonLayout = Layouts.createGridLayout();
     pageAndButtonLayout.horizontalSpacing = 0;
     pageAndButtonLayout.verticalSpacing = 0;
     m_pageAndButtonArea.setLayout( pageAndButtonLayout );
@@ -492,10 +489,8 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     ((GridLayout) parent.getLayout()).numColumns++;
     final Composite composite = new Composite( parent, SWT.NONE );
     // create a layout with spacing and margins appropriate for the font size.
-    final GridLayout layout = new GridLayout();
+    final GridLayout layout = Layouts.createGridLayout();
     layout.numColumns = 0; // will be incremented by createButton
-    layout.marginWidth = 0;
-    layout.marginHeight = 0;
     layout.horizontalSpacing = 0;
     layout.verticalSpacing = 0;
     composite.setLayout( layout );
@@ -704,7 +699,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       return false;
 
     if( !m_isMovingToPreviousPage )
-      // remember my previous page.
+    // remember my previous page.
     {
       if( m_backJumpsToLastVisited )
         page.setPreviousPage( m_currentPage );
@@ -1442,7 +1437,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
       m_message = "";//$NON-NLS-1$
     // Message string to be shown - if there is an image then add in
     // a space to the message for layout purposes
-    final String shownMessage = (newImage == null) ? m_message : " " + m_message; //$NON-NLS-1$
+    final String shownMessage = newImage == null ? m_message : " " + m_message; //$NON-NLS-1$
     m_messageImage = newImage;
     if( !m_showingError )
     {

@@ -51,7 +51,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 
 /**
  * @author Dirk Kuch
@@ -98,7 +98,7 @@ public class ElementsComposite extends Composite
     m_selectedPage = selectedPage;
     m_style = style;
 
-    setLayout( LayoutHelper.createGridLayout() );
+    setLayout( Layouts.createGridLayout() );
 
     update();
   }
@@ -138,7 +138,7 @@ public class ElementsComposite extends Composite
 
     m_body = m_toolkit.createComposite( this );
 
-    m_body.setLayout( LayoutHelper.createGridLayout() );
+    m_body.setLayout( Layouts.createGridLayout() );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     if( m_pages.length > 1 && m_style != SWT.BOTTOM )

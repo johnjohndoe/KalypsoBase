@@ -78,7 +78,7 @@ import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.commons.databinding.forms.IDataBindingForm;
 import org.kalypso.commons.databinding.validation.NumberNotNegativeValidator;
 import org.kalypso.contribs.eclipse.swt.ColorUtilities;
-import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.swt.widgets.MenuButton;
 import org.kalypso.i18n.Messages;
@@ -144,7 +144,7 @@ public class StrokeComposite extends Composite
     m_lineDetailsSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 3, 1 ) );
 
     final Composite detailsPanel = toolkit.createComposite( m_lineDetailsSection );
-    detailsPanel.setLayout( LayoutHelper.createGridLayout( 3 ) );
+    detailsPanel.setLayout( Layouts.createGridLayout( 3 ) );
     m_lineDetailsSection.setClient( detailsPanel );
     m_lineDetailsSection.setText( "Line Style" );
     m_lineDetailsSection.setExpanded( shouldExpand() );

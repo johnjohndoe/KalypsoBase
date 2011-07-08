@@ -82,6 +82,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
@@ -280,10 +281,7 @@ public class ImportShapeFileImportPage extends WizardPage
   private void createStyleChooser( final Composite parent )
   {
     final Composite radioPanel = new Composite( parent, SWT.NONE );
-    final GridLayout radioLayout = new GridLayout();
-    radioLayout.marginWidth = 0;
-    radioLayout.marginHeight = 0;
-    radioPanel.setLayout( radioLayout );
+    radioPanel.setLayout( Layouts.createGridLayout() );
     radioPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
 
     final StyleImport[] styleImportTypes = StyleImport.values();

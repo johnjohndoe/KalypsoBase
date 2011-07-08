@@ -45,9 +45,9 @@ import org.eclipse.swt.layout.GridLayout;
 /**
  * @author Dirk Kuch
  */
-public final class LayoutHelper
+public final class Layouts
 {
-  private LayoutHelper( )
+  private Layouts( )
   {
   }
 

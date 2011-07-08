@@ -58,7 +58,7 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartPartListener;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -126,7 +126,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
 
       // TODO no form layout? no scrolling? why we use a form composite here?
       m_form.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-      m_form.setLayout( LayoutHelper.createGridLayout() );
+      m_form.setLayout( Layouts.createGridLayout() );
       m_form.getBody().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
       m_form.getBody().setLayout( new GridLayout() );
       m_toolkit.decorateFormHeading( m_form );
@@ -144,7 +144,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   public final void createPartControl( final Composite parent )
   {
     m_control = new Composite( parent, SWT.NONE );
-    m_control.setLayout( LayoutHelper.createGridLayout() );
+    m_control.setLayout( Layouts.createGridLayout() );
     createContent( m_control );
 
     if( m_provider != null )

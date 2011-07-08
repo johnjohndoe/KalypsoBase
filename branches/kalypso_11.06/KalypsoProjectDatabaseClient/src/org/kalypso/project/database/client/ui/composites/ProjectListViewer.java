@@ -56,6 +56,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.controls.ScrolledSection;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
@@ -82,9 +83,7 @@ public class ProjectListViewer
   {
     final ScrolledSection sectionProjects = new ScrolledSection( parent, m_toolkit, ExpandableComposite.TITLE_BAR, true );
     final Composite bodyProjects = sectionProjects.setup( Messages.getString( "org.kalypso.project.database.client.ui.composites.ModulePageComposite.0" ), new GridData( GridData.FILL, GridData.FILL, true, true ), new GridData( GridData.FILL, GridData.FILL, true, true ) ); //$NON-NLS-1$
-    final GridLayout layout = new GridLayout( 2, true );
-    layout.verticalSpacing = layout.marginWidth = 0;
-    bodyProjects.setLayout( layout );
+    bodyProjects.setLayout( Layouts.createGridLayout( 2, true ) );
     bodyProjects.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final ProjectDatabaseComposite projects = new ProjectDatabaseComposite( m_module, bodyProjects, m_toolkit );
@@ -146,6 +145,5 @@ public class ProjectListViewer
 
     return projectActions;
   }
-
 
 }

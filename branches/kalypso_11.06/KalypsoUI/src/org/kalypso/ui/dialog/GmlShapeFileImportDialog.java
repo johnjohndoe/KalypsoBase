@@ -75,6 +75,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.contribs.java.net.IUrlResolver2;
@@ -276,10 +277,9 @@ public class GmlShapeFileImportDialog extends Dialog
     treeGroup.setLayoutData( new GridData() );
     treeGroup.setText( Messages.getString( "org.kalypso.ui.dialog.GmlShapeFileImportDialog.6" ) ); //$NON-NLS-1$
     m_viewerComposite = new Composite( treeGroup, SWT.SINGLE );
-    final GridLayout layout = new GridLayout();
+    final GridLayout layout = Layouts.createGridLayout();
     layout.numColumns = 1;
     layout.verticalSpacing = 2;
-    layout.marginWidth = 0;
     layout.marginHeight = 2;
     m_viewerComposite.setLayout( layout );
     m_viewerComposite.addFocusListener( new FocusAdapter()
@@ -806,7 +806,7 @@ public class GmlShapeFileImportDialog extends Dialog
           boolean test = false;
           for( final QName qName : m_selectableQNames )
           {
-            final Feature feature = ((Feature) o);
+            final Feature feature = (Feature) o;
             final IFeatureType ft = feature.getFeatureType();
             test = ft.getQName().equals( qName );
             if( test )
