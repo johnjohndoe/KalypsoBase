@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.swt.layout;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.layout.GridLayout;
 
 /**
@@ -47,6 +48,8 @@ import org.eclipse.swt.layout.GridLayout;
  */
 public final class Layouts
 {
+  private static final GridLayoutFactory FACTORY = GridLayoutFactory.swtDefaults();
+
   private Layouts( )
   {
   }
@@ -56,9 +59,9 @@ public final class Layouts
    */
   public static GridLayout createGridLayout( final int numColumns, final boolean makeColumnsEqualWidth )
   {
-    final GridLayout layout = new GridLayout( numColumns, makeColumnsEqualWidth );
-    layout.marginHeight = 0;
-    layout.marginWidth = 0;
+    final GridLayout layout = FACTORY.create();
+    layout.numColumns = numColumns;
+    layout.makeColumnsEqualWidth = makeColumnsEqualWidth;
 
     return layout;
   }

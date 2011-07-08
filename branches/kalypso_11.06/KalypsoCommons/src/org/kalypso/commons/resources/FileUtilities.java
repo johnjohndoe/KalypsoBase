@@ -44,12 +44,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.kalypso.commons.java.lang.Objects;
 
 /**
  * FileUtilities
@@ -119,5 +122,16 @@ public class FileUtilities
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IWorkspaceRoot root = workspace.getRoot();
     return root.getFile( fullPath );
+  }
+
+  public static boolean isParent( final IResource base, final IResource current )
+  {
+    final IContainer parent = current.getParent();
+    if( Objects.isNull( parent ) )
+      return false;
+    else if( base.equals( parent ) )
+      return true;
+
+    return isParent( base, parent );
   }
 }
