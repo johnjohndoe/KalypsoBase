@@ -6,7 +6,6 @@ package org.kalypso.kml.export;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.kml.export.convert.ConvertFacade;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
-import org.kalypso.kml.export.utils.GoogleEarthExportUtils;
 import org.kalypso.ogc.gml.painter.IStylePaintable;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.GeometryDisplayElement;
@@ -15,7 +14,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 import de.micromata.opengis.kml.v_2_2_0.Folder;
-import de.micromata.opengis.kml.v_2_2_0.Style;
 
 /**
  * @author Dirk Kuch
@@ -45,7 +43,6 @@ public class KMLExportDelegate implements IStylePaintable
   @Override
   public void paint( final DisplayElement displayElement, final IProgressMonitor monitor )
   {
-    final Style style = m_folder.createAndAddStyle();
 
     if( displayElement instanceof GeometryDisplayElement )
     {
@@ -54,9 +51,6 @@ public class KMLExportDelegate implements IStylePaintable
 
       try
       {
-        if( !GoogleEarthExportUtils.updateStyle( style, symbolizer ) )
-          return;
-
         final Feature feature = displayElement.getFeature();
         for( final IKMLAdapter adapter : m_provider )
         {
@@ -64,7 +58,7 @@ public class KMLExportDelegate implements IStylePaintable
         }
 
         // TODO perhaps, get rendered GM_Point geometry from symbolizer
-        ConvertFacade.convert( m_provider, m_folder, element.getGeometry(), style, feature );
+        ConvertFacade.convert( m_provider, m_folder, element );
       }
       catch( final Exception e )
       {
