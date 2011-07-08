@@ -5,6 +5,7 @@ package org.kalypso.kml.export.convert;
 
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.kml.export.utils.GoogleEarthUtils;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
@@ -70,6 +71,9 @@ public class ConverterSurface
       final List<Boundary> innerBoundaries = polygoneType.getInnerBoundaryIs();
 
       final GM_Position[][] interiorRings = polygon.getInteriorRings();
+      if( ArrayUtils.isEmpty( interiorRings ) )
+        return polygoneType;
+
       for( final GM_Position[] innerRing : interiorRings )
       {
 
