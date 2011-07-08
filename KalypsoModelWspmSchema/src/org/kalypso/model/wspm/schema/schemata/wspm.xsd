@@ -164,7 +164,8 @@
 					<!--
 						element ref="wspm:resultMember" minOccurs="0"
 						maxOccurs="unbounded"/
-					-->
+					--> 
+                  <element name="waterLevelFixationMember" type="runoff:WaterlevelFixationLinkPropertyType" minOccurs="0" maxOccurs="1" />
 				</sequence>
 			</extension>
 		</complexContent>
