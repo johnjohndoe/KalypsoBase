@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -106,7 +107,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
   /**
    * A hash of the displayed coordinate systems.
    */
-  protected HashMap<String, ICoordinateSystem> m_coordHash;
+  protected Map<String, ICoordinateSystem> m_coordHash;
 
   /**
    * The construtor.
@@ -600,7 +601,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
           }
 
           /* Get the hash of them. */
-          final HashMap<String, ICoordinateSystem> coordHash = initCRSJob.getCoordHash();
+          final Map<String, ICoordinateSystem> coordHash = initCRSJob.getCoordHash();
           if( coordHash == null || coordHash.size() == 0 )
           {
             /* Clear the hash. */
