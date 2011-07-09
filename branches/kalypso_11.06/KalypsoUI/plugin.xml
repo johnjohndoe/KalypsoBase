@@ -1330,7 +1330,7 @@
 		<propertyTester class="org.kalypso.ogc.gml.map.properties.ThemeTester" id="org.kalypso.ogc.gml.map.ThemeTester" namespace="org.kalypso.ui.test.theme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.IKalypsoTheme" />
 		<propertyTester class="org.kalypso.ogc.gml.map.properties.ThemeTester" id="org.kalypso.ogc.gml.map.ThemeTester" namespace="org.kalypso.ui.test.theme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.IKalypsoThemeProvider" />
 		<propertyTester class="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" id="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" namespace="org.kalypso.ui" properties="repositoryItemHasWQTable" type="org.kalypso.repository.IRepositoryItem" />
-		<propertyTester class="org.kalypso.ui.internal.utils.WorkbenchWindowPropertyTest" id="org.kalypso.ui.internal.utils.WorkbenchWindowPropertyTest" namespace="org.kalypso.ui.window" properties="isEditorAreaVisible" type="org.eclipse.ui.IWorkbenchWindow" />
+		<propertyTester class="org.kalypso.ui.internal.utils.WorkbenchWindowPropertyTest" id="org.kalypso.ui.internal.utils.WorkbenchWindowPropertyTest" namespace="org.kalypso.ui.window" properties="isEditorAreaVisible,isViewVisible" type="org.eclipse.ui.IWorkbenchWindow" />
 	</extension>
    <extension
          point="org.kalypso.ui.addlayer.WMSImageProvider">
