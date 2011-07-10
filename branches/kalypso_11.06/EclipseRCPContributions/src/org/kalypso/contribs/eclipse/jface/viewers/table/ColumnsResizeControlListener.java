@@ -107,7 +107,7 @@ public class ColumnsResizeControlListener extends ControlAdapter
 
   void resizeColumns( )
   {
-    if( m_tableOrTree.isDisposed() )
+    if( m_tableOrTree == null || m_tableOrTree.isDisposed() )
       return;
 
     try
