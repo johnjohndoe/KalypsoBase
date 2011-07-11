@@ -64,13 +64,13 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 {
   public static final QName QNAME = new QName( NS_WSPM, "WaterBody" ); //$NON-NLS-1$
 
-  public static final QName QNAME_MEMBER_WSP_FIX = new QName( NS_WSPM, "waterlevelFixationMember" ); //$NON-NLS-1$
+  private static final QName QNAME_MEMBER_WSP_FIX = new QName( NS_WSPM, "waterlevelFixationMember" ); //$NON-NLS-1$
 
   public static final QName QNAME_MEMBER_REACH = new QName( NS_WSPM, "reachMember" ); //$NON-NLS-1$
 
   public static final QName QNAME_MEMBER_PROFILE = new QName( NS_WSPM, "profileMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_REFNR = new QName( NS_WSPM, "refNr" );//$NON-NLS-1$
+  private static final QName QNAME_PROP_REFNR = new QName( NS_WSPM, "refNr" );//$NON-NLS-1$
 
   public static final QName QNAME_PROP_CENTER_LINE = new QName( NS_WSPM, "centerLine" );//$NON-NLS-1$
 
@@ -78,11 +78,17 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
   private final IFeatureBindingCollection<IProfileFeature> m_profileMembers;
 
+  private final IFeatureBindingCollection<WspmFixation> m_fixations;
+
+  private final IFeatureBindingCollection<WspmRunoffEvent> m_runoffEvents;
+
   public WspmWaterBody( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
 
     m_profileMembers = new FeatureBindingCollection<IProfileFeature>( this, IProfileFeature.class, QNAME_MEMBER_PROFILE );
+    m_fixations = new FeatureBindingCollection<WspmFixation>( this, WspmFixation.class, QNAME_MEMBER_WSP_FIX );
+    m_runoffEvents = new FeatureBindingCollection<WspmRunoffEvent>( this, WspmRunoffEvent.class, QNAME_MEMBER_RUNOFF );
   }
 
   public IFeatureBindingCollection<IProfileFeature> getProfiles( )
@@ -122,19 +128,14 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
     setProperty( new QName( NS_WSPM, "isDirectionUpstream" ), Boolean.valueOf( directionIsUpstream ) ); //$NON-NLS-1$
   }
 
-  public Feature createRunOffEvent( ) throws GMLSchemaException
+  public IFeatureBindingCollection<WspmRunoffEvent> getRunoffEvents( )
   {
-    return FeatureHelper.addFeature( this, QNAME_MEMBER_RUNOFF, new QName( NS_WSPMRUNOFF, "RunOffEvent" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    return m_runoffEvents;
   }
 
-  public Feature createWspFix( ) throws GMLSchemaException
+  public IFeatureBindingCollection<WspmFixation> getWspFixations( )
   {
-    return FeatureHelper.addFeature( this, QNAME_MEMBER_WSP_FIX, new QName( NS_WSPMRUNOFF, "WaterlevelFixation" ) ); //$NON-NLS-1$
-  }
-
-  public List< ? > getWspFixations( )
-  {
-    return getProperty( QNAME_MEMBER_WSP_FIX, List.class );
+    return m_fixations;
   }
 
   public boolean isDirectionUpstreams( )
