@@ -93,6 +93,16 @@ public class ViewerColumnItem
       ((TreeColumn) col).setText( text );
   }
 
+  public void setToolTipText( final String text )
+  {
+    final Item col = getColumn();
+
+    if( col instanceof TableColumn )
+      ((TableColumn) col).setToolTipText( text );
+    else if( col instanceof TreeColumn )
+      ((TreeColumn) col).setToolTipText( text );
+  }
+
   public void setWidth( final int width )
   {
     final Item col = getColumn();
