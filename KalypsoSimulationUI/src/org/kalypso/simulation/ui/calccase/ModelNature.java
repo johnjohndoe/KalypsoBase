@@ -335,7 +335,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
         final IValueVariable existingVariable = svm.getValueVariable( name );
         if( existingVariable == null )
         {
-          // add each variable separatedly, because it may have allready been registered
+          // add each variable separatedly, because it may have already been registered
           svm.addVariables( new IValueVariable[] { valueVariable } );
         }
         else
