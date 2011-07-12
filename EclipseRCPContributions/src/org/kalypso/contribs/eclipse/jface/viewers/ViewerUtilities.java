@@ -82,7 +82,7 @@ public final class ViewerUtilities
     }
   }
 
-  private static void execute( final Viewer viewer, final Runnable runner, final boolean async )
+  public static void execute( final Viewer viewer, final Runnable runner, final boolean async )
   {
     if( viewer == null )
       return;
