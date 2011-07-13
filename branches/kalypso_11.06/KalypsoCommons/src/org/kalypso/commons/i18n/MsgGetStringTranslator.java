@@ -51,7 +51,6 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
 import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.contribs.java.JavaApiContributionsPlugin;
 import org.osgi.framework.Bundle;
@@ -67,7 +66,7 @@ import org.w3c.dom.Element;
  */
 public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
 {
-  private Class< ? extends NLS> m_nls;
+  private Class<?> m_nls;
 
   private String m_id;
 
@@ -96,7 +95,6 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
    * @see org.kalypso.contribs.java.lang.I10nTranslator#configure(java.util.List)
    */
   @Override
-  @SuppressWarnings("unchecked")
   public void configure( final URL context, final List<Element> configuration )
   {
     m_configuration = configuration;

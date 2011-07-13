@@ -108,7 +108,7 @@ public class FeatureBindingConstructor
       final String pluginid = element.getContributor().getName();
       final Bundle bundle = Platform.getBundle( pluginid );
       @SuppressWarnings("unchecked")
-      final Class< ? extends Feature> featureClass = bundle.loadClass( element.getAttribute( "class" ) );
+      final Class< ? extends Feature> featureClass = (Class< ? extends Feature>) bundle.loadClass( element.getAttribute( "class" ) );
       final Constructor< ? extends Feature> constructor = featureClass.getConstructor( Object.class, IRelationType.class, IFeatureType.class, String.class, Object[].class );
       return new FeatureBindingConstructor( constructor );
     }
