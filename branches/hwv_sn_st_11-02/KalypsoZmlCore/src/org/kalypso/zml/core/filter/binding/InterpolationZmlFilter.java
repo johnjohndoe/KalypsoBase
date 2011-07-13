@@ -87,7 +87,7 @@ public class InterpolationZmlFilter extends AbstractZmlFilter
    * @param id
    * @param propValues
    */
-  public InterpolationZmlFilter( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public InterpolationZmlFilter( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -139,7 +139,7 @@ public class InterpolationZmlFilter extends AbstractZmlFilter
    */
   public boolean isForceFill( )
   {
-    Boolean forceFill = getProperty( QNAME_FORCE_FILL, Boolean.class );
+    final Boolean forceFill = getProperty( QNAME_FORCE_FILL, Boolean.class );
     if( forceFill == null )
       return true;
 
