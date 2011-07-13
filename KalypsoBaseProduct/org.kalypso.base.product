@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="%appName" id="org.kalypso.base.product" application="org.eclipse.ui.ide.workbench" version="10.10.1.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="%appName" id="org.kalypso.base.product" application="org.eclipse.ui.ide.workbench" version="11.4.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/KalypsoBaseProduct/etc/aboutKalypso.gif"/>
@@ -52,7 +52,7 @@
    </plugins>
 
    <features>
-      <feature id="org.kalypso.base.feature" version="2.2.0.qualifier"/>
+      <feature id="org.kalypso.base.feature"/>
    </features>
 
    <configurations>
