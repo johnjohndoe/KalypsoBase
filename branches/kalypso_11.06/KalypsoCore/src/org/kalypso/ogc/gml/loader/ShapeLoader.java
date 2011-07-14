@@ -239,6 +239,7 @@ public class ShapeLoader extends WorkspaceLoader
   {
     final String source = key.getLocation();
     final URL context = key.getContext();
+    final String targetSrs = parseSrs( source );
 
     try
     {
@@ -249,10 +250,7 @@ public class ShapeLoader extends WorkspaceLoader
 
       final IFile file = ResourceUtilities.findFileFromURL( shpURL );
       if( file != null )
-      {
-        // FIXME: Must be saved in the source coordinate system (map or prj), not in the kalypso coordinate system.
-        ShapeSerializer.serialize( workspace, file.getLocation().toFile().getAbsolutePath(), null );
-      }
+        ShapeSerializer.serialize( workspace, file.getLocation().toFile().getAbsolutePath(), targetSrs );
       else
         throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.ShapeLoader.12" ) + shpURL ); //$NON-NLS-1$
     }

@@ -298,7 +298,7 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
 
       final File shapeFile = new File( m_tempDir, m_parentName + "_" + getName() ); //$NON-NLS-1$
 
-      ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null );
+      ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), (String) null );
     }
     catch( final GM_Exception e )
     {

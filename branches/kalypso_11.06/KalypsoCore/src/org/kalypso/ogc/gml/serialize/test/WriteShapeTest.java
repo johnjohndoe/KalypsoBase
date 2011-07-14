@@ -70,7 +70,7 @@ public class WriteShapeTest extends TestCase
 
     final File shapeFile = FileUtilities.createNewUniqueFile( "shapetest", FileUtilities.TMP_DIR );
 
-    ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), null );
+    ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), (String) null );
 
     System.out.println( "Wrote shapeFile to:" + shapeFile.getAbsolutePath() );
 

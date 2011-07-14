@@ -180,7 +180,7 @@ public class TestGrid2Shp extends TestCase
     }
 
     final String shapeBase = importDataFolder.getLocation() + "export_isoline"; //$NON-NLS-1$
-    ShapeSerializer.serialize( shapeWorkspace, shapeBase, null );
+    ShapeSerializer.serialize( shapeWorkspace, shapeBase, (String) null );
   }
 
   private void writePolygonShape( final CollectorDataProvider[] data, final IFolder importDataFolder ) throws Exception, GmlSerializeException
@@ -224,7 +224,7 @@ public class TestGrid2Shp extends TestCase
     }
 
     final String shapeBase = importDataFolder.getLocation() + "export_polygon_"; //$NON-NLS-1$
-    ShapeSerializer.serialize( shapeWorkspace, shapeBase, null );
+    ShapeSerializer.serialize( shapeWorkspace, shapeBase, (String) null );
   }
 
   private IGeoGrid getTestGrid( final IFolder importDataFolder ) throws Exception, MalformedURLException, IOException

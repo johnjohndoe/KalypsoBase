@@ -250,6 +250,9 @@ public class GmlPropertyTester extends PropertyTester
 
     /* If we have a feature type, additionally test for substitution */
     final GMLSchema schema = findSchema( qname );
+    if( schema == null )
+      return false;
+
     final IFeatureType featureType = schema.getFeatureType( qname );
     if( featureType == null )
       return false;
