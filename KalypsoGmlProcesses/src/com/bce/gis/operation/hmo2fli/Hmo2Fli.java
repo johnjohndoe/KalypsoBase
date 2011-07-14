@@ -40,8 +40,8 @@ public class Hmo2Fli
   private final static Logger LOG = Logger.getLogger( Hmo2Fli.class.getName() );
 
   public static void transform( @SuppressWarnings("unused") //$NON-NLS-1$
-  final Component parent, final File hmoUntenFile, final File hmoObenFile, final double rasterSize, final boolean bIsolines, final String shapeBase, final double[] grenzen, final boolean calcVolume ) throws Exception
-  {
+      final Component parent, final File hmoUntenFile, final File hmoObenFile, final double rasterSize, final boolean bIsolines, final String shapeBase, final double[] grenzen, final boolean calcVolume ) throws Exception
+      {
     LOG.entering( Hmo2Fli.class.getName(), "transform" ); //$NON-NLS-1$
 
 // final ProgressMonitor pable = parent != null ? new ProgressMonitor( parent, "Fliesstiefenerstellung" ) : null;
@@ -112,7 +112,7 @@ public class Hmo2Fli
 
       LOG.info( Messages.getString("com.bce.gis.operation.hmo2fli.Hmo2Fli.9") + shapeBase ); //$NON-NLS-1$
       // transform geometries to shapes and write it
-      ShapeSerializer.serialize( fc.getWorkspace(), shapeBase, null );
+      ShapeSerializer.serialize( fc.getWorkspace(), shapeBase, (String) null );
 // final ShapeFile sf = new ShapeFile( shapeBase, "rw" );
 // sf.writeShape( fc );
 // sf.close();
@@ -123,5 +123,5 @@ public class Hmo2Fli
 // pable.cancel();
 
     LOG.exiting( Hmo2Fli.class.getName(), "transform" ); //$NON-NLS-1$
-  }
+      }
 }

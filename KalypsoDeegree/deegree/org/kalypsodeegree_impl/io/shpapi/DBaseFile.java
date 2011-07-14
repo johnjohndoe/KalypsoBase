@@ -53,8 +53,9 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -412,7 +413,7 @@ public class DBaseFile
     try
     {
       // TODO: comment! Why is this all needed etc.?
-      URL resource = getClass().getResource( "resources/shapeCustomTemplate.xsd" );
+      final URL resource = getClass().getResource( "resources/shapeCustomTemplate.xsd" );
       String schemaString = UrlUtilities.toString( resource, "UTF-8" );
 
       schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_NAMESPACE_SUFFIX}" ), m_suffix );
@@ -424,7 +425,11 @@ public class DBaseFile
 
       // TODO: why write this file to disk? Why not directly parse the schema from it and add the schema to the cache?
       FileUtils.writeStringToFile( tempFile, schemaString, "UTF8" );
-      final GMLSchema schema = GMLSchemaFactory.createGMLSchema( "3.1.1", tempFile.toURI().toURL() );
+      // final GMLSchema schema = GMLSchemaFactory.createGMLSchema( "3.1.1", tempFile.toURI().toURL() );
+
+      final GMLSchemaCatalog catalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+      final GMLSchema schema = catalog.getSchema( "3.1.1", tempFile.toURI().toURL() );
+
       return GMLSchemaFactory.createFeatureType( m_propertyCustomFeatureMember, ftp, schema, new QName( SHP_NAMESPACE_URI, "_Shape" ) );
     }
     catch( final IOException e )
@@ -432,11 +437,11 @@ public class DBaseFile
       // should not happen
       throw new IllegalStateException( e );
     }
-    catch( final GMLSchemaException e )
-    {
-      // should not happen
-      throw new IllegalStateException( e );
-    }
+// catch( final GMLSchemaException e )
+// {
+// // should not happen
+// throw new IllegalStateException( e );
+// }
   }
 
   public IFeatureType getFeatureType( )
@@ -446,7 +451,7 @@ public class DBaseFile
 
   // TODO: return gname instead
   private Class< ? extends GM_Object> getGeometryType( )
-  {
+      {
     switch( m_defaultFileShapeType )
     {
       // remember: the geometry classes must be the same
@@ -468,7 +473,7 @@ public class DBaseFile
       default:
         return GM_Object.class;
     }
-  }
+      }
 
   /**
    * method: getRecordNum() <BR>

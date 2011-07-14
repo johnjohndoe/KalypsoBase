@@ -81,8 +81,7 @@ public class TempFileUtilities
     // used here
     final String cleanPrefix = prefix.replaceAll( "[\\\\/:\\*\\?\"<>|]", "_" );
 
-    final File file = File.createTempFile( cleanPrefix, suffix, dir );
-    return file;
+    return File.createTempFile( cleanPrefix, suffix, dir );
   }
 
   /**

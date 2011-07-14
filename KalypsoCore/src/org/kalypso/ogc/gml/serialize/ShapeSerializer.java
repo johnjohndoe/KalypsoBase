@@ -111,7 +111,27 @@ public final class ShapeSerializer
    *             instead.
    */
   @Deprecated
-  public static void serialize( final GMLWorkspace workspace, final String filenameBase, IShapeDataProvider shapeDataProvider ) throws GmlSerializeException
+  public static void serialize( final GMLWorkspace workspace, final String filenameBase, final String targetSrs ) throws GmlSerializeException
+  {
+    serialize( workspace, filenameBase, null, targetSrs );
+  }
+
+  /**
+   * @deprecated Use {@link org.kalypso.shape.ShapeWriter} and {@link org.kalypso.shape.deegree.GenericShapeDataFactory}
+   *             instead.
+   */
+  @Deprecated
+  public static void serialize( final GMLWorkspace workspace, final String filenameBase, final IShapeDataProvider shapeDataProvider ) throws GmlSerializeException
+  {
+    serialize( workspace, filenameBase, shapeDataProvider );
+  }
+
+  /**
+   * @deprecated Use {@link org.kalypso.shape.ShapeWriter} and {@link org.kalypso.shape.deegree.GenericShapeDataFactory}
+   *             instead.
+   */
+  @Deprecated
+  private static void serialize( final GMLWorkspace workspace, final String filenameBase, IShapeDataProvider shapeDataProvider, final String targetSrs ) throws GmlSerializeException
   {
     final Feature rootFeature = workspace.getRootFeature();
     final List<Feature> features = (List<Feature>) rootFeature.getProperty( PROPERTY_FEATURE_MEMBER );
@@ -123,7 +143,7 @@ public final class ShapeSerializer
       // if no dataProvider is set take the StandardProvider
       if( shapeDataProvider == null )
       {
-        shapeDataProvider = new StandardShapeDataProvider( features.toArray( new Feature[features.size()] ) );
+        shapeDataProvider = new StandardShapeDataProvider( features.toArray( new Feature[features.size()] ), targetSrs );
       }
 
       shapeFile.writeShape( shapeDataProvider );
