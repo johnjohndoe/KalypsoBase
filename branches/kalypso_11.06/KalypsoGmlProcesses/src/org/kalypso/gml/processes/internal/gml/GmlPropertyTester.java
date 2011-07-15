@@ -171,6 +171,10 @@ public class GmlPropertyTester extends PropertyTester
 
   private boolean testQName( final QName expectedQName, final Object receiver )
   {
+    /* REMARK: special handling for feature types, because we need the schema */
+    if( receiver instanceof Feature )
+      return checkEquals( expectedQName, ((Feature) receiver).getFeatureType() );
+
     final QName qname = findQName( receiver );
     return checkEquals( expectedQName, qname );
   }
@@ -187,8 +191,7 @@ public class GmlPropertyTester extends PropertyTester
       if( targetFeatureType == null )
         return false;
 
-      final QName qname = targetFeatureType.getQName();
-      return checkEquals( expectedQName, qname );
+      return checkEquals( expectedQName, targetFeatureType );
     }
 
     /* Only works for containers of features */
@@ -237,6 +240,14 @@ public class GmlPropertyTester extends PropertyTester
   {
     final String excpectedStr = expectedValue.toString().replaceAll( "\"", "" ); // strip " //$NON-NLS-1$ //$NON-NLS-2$
     return QName.valueOf( excpectedStr );
+  }
+
+  private boolean checkEquals( final QName expectedQName, final IFeatureType featureType )
+  {
+    if( expectedQName == null || featureType == null )
+      return false;
+
+    return GMLSchemaUtilities.substitutes( featureType, expectedQName );
   }
 
   private boolean checkEquals( final QName expectedQName, final QName qname )
