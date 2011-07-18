@@ -491,6 +491,9 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     if( ISelection.class.isAssignableFrom( adapter ) )
       return StructuredSelection.EMPTY;
 
+    if( IKalypsoTheme.class.equals( adapter ) )
+      return this;
+
     return super.getAdapter( adapter );
   }
 
