@@ -1498,18 +1498,22 @@
   </extension>
   <extension point="org.eclipse.ui.handlers">
      <handler commandId="org.kalypso.ui.command.import" class="org.kalypso.ui.internal.imports.ImportWizardsHandler">
-        <enabledWhen>
-           <with variable="selection">
-              <count value="+"/>
-           </with>
-        </enabledWhen>
+        <activeWhen>
+           <test
+                 args="org.kalypso.ui,importWizards"
+                 forcePluginActivation="true"
+                 property="org.kalypso.contribs.eclipsercp.genericWizardTester.isEnabled">
+           </test>
+        </activeWhen>
      </handler>
      <handler commandId="org.kalypso.ui.command.export" class="org.kalypso.ui.internal.export.ExportWizardsHandler">
-        <enabledWhen>
-           <with variable="selection">
-              <count value="+"/>
-           </with>
-        </enabledWhen>
+        <activeWhen>
+           <test
+                 args="org.kalypso.ui,exportWizards"
+                 forcePluginActivation="true"
+                 property="org.kalypso.contribs.eclipsercp.genericWizardTester.isEnabled">
+           </test>
+        </activeWhen>
      </handler>
   </extension>
   <extension point="org.kalypso.ui.exportWizards">

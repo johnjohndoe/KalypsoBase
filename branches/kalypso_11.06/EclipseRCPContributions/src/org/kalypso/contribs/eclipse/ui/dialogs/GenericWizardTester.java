@@ -46,8 +46,6 @@ import java.util.Map;
 import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.expressions.PropertyTester;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.ISources;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.wizards.IWizardRegistry;
@@ -67,17 +65,14 @@ public class GenericWizardTester extends PropertyTester
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
     if( PROPERTY_IS_ENABLED.equals( property ) )
-      return testIsEnabled( receiver, args );
+      return testIsEnabled( args );
 
     final String message = String.format( "Unknown property '%s'", property ); //$NON-NLS-1$
     throw new IllegalArgumentException( message );
   }
 
-  private boolean testIsEnabled( final Object receiver, final Object[] args )
+  private boolean testIsEnabled( final Object[] args )
   {
-    if( !(receiver instanceof ISelection) )
-      throw new IllegalArgumentException();
-
     final String pluginID = (String) args[0];
     final String extensionPoint = (String) args[1];
     final IWizardRegistry registry = getRegistry( pluginID, extensionPoint );
@@ -85,8 +80,8 @@ public class GenericWizardTester extends PropertyTester
     final IEvaluationService service = (IEvaluationService) PlatformUI.getWorkbench().getService( IEvaluationService.class );
     final IEvaluationContext globalState = service.getCurrentState();
 
-    final EvaluationContext currentState = new EvaluationContext( globalState, null );
-    currentState.addVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME, receiver );
+    final EvaluationContext currentState = new EvaluationContext( globalState, globalState.getDefaultVariable() );
+// currentState.addVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME, receiver );
 
     final WizardEnablementVisitor wizardEnablementVisitor = new WizardEnablementVisitor( currentState );
     wizardEnablementVisitor.accept( registry.getRootCategory() );
