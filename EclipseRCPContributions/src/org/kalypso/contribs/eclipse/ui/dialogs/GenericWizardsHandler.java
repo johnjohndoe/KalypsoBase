@@ -75,16 +75,16 @@ public abstract class GenericWizardsHandler extends AbstractHandler
     setEnabled( currentState );
   }
 
-  @Override
-  public void setEnabled( final Object evaluationContext )
-  {
-    final IEvaluationContext context = (IEvaluationContext) evaluationContext;
-
-    final WizardEnablementVisitor wizardEnablementVisitor = new WizardEnablementVisitor( context );
-    wizardEnablementVisitor.accept( m_registry.getRootCategory() );
-
-    final boolean hasEnabled = wizardEnablementVisitor.hasEnabled();
-
-    setBaseEnabled( hasEnabled );
-  }
+// @Override
+// public void setEnabled( final Object evaluationContext )
+// {
+// final IEvaluationContext context = (IEvaluationContext) evaluationContext;
+//
+// final WizardEnablementVisitor wizardEnablementVisitor = new WizardEnablementVisitor( context );
+// wizardEnablementVisitor.accept( m_registry.getRootCategory() );
+//
+// final boolean hasEnabled = wizardEnablementVisitor.hasEnabled();
+//
+// setBaseEnabled( hasEnabled );
+// }
 }

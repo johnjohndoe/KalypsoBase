@@ -82,11 +82,13 @@
 			</enabledWhen>
 		</handler>
           <handler commandId="org.kalypso.gml.ui.toolWizards" class="org.kalypso.gml.ui.tools.ToolWizardsHandler">
-                <enabledWhen>
-                   <with variable="selection">
-                      <count value="+"/>
-                   </with>
-                </enabledWhen>
+             <activeWhen>
+                <test
+                      args="org.kalypso.gml.ui,toolWizards"
+                      forcePluginActivation="true"
+                      property="org.kalypso.contribs.eclipsercp.genericWizardTester.isEnabled">
+                </test>
+             </activeWhen>
           </handler>
           <handler
                 class="org.kalypso.gml.ui.internal.feature.EditFeatureHandler"
