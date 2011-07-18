@@ -438,7 +438,9 @@
 				<and>
 					<count value="1"/>
 					<iterate ifEmpty="false" operator="and">
-						<test property="org.kalypso.ui.test.theme.isFeatureTheme"/>
+					   <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
+    				       <test property="org.kalypso.ui.test.theme.isFeatureTheme"/>
+					   </adapt>
 					</iterate>
 			        <test property="org.kalypso.model.wspm.ui.hasProfileSelection"/>
 				</and>
@@ -446,11 +448,8 @@
 		</definition>
       <definition
             id="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-         <with
-               variable="selection">
-            <test
-                  property="org.kalypso.model.wspm.ui.hasProfileSelection">
-            </test>
+         <with variable="selection">
+            <test property="org.kalypso.model.wspm.ui.hasProfileSelection"/>
          </with>
       </definition>
 	</extension>

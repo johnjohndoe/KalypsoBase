@@ -61,7 +61,6 @@ import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeListener;
-import org.kalypso.ogc.gml.IKalypsoThemeProvider;
 import org.kalypso.ogc.gml.KalypsoThemeAdapter;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -69,7 +68,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 /**
  * @author Gernot Belger
  */
-public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode<T> implements IKalypsoThemeProvider
+public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode<T>
 {
   private final IKalypsoThemeListener m_themeListener = new KalypsoThemeAdapter()
   {
@@ -116,7 +115,7 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     if( externIcon != null )
     {
       final Display display = PlatformUI.getWorkbench().getDisplay();
-      
+
       if( display != null && !display.isDisposed() )
       {
         //set to be asynchronously to prevent graphic is disposed exception. 
@@ -134,10 +133,6 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     super.dispose();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeProvider#getTheme()
-   */
-  @Override
   public T getTheme( )
   {
     return getElement();
@@ -362,5 +357,14 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
       return null;
 
     return new EnableThemeCommand( theme, visible );
+  }
+
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  {
+    if( IKalypsoTheme.class.equals( adapter ) )
+      return getTheme();
+
+    return super.getAdapter( adapter );
   }
 }
