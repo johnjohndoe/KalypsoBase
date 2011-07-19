@@ -48,7 +48,8 @@ import org.eclipse.core.expressions.Expression;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.wizards.IWizardDescriptor;
-import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsDebug;
+import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardEnablementRegistry;
 
 /**
@@ -108,7 +109,10 @@ public class WizardEnablementVisitor extends AbstractWizardRegistryVisitor
     }
     catch( final CoreException e )
     {
-      EclipseRCPContributionsPlugin.getDefault().getLog().log( e.getStatus() );
+      // This happen often, as we always get an exception when the tested variable is not
+      // in scope, which happens always e.g. if a dialog is opened.
+      if( EclipseRCPContributionsDebug.GENERIC_WIZARDS.isEnabled() )
+        EclipseRCPContributionsPlugin.getDefault().getLog().log( e.getStatus() );
       return false;
     }
   }

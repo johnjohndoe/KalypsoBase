@@ -77,11 +77,12 @@ public class GenericWizardTester extends PropertyTester
     final String extensionPoint = (String) args[1];
     final IWizardRegistry registry = getRegistry( pluginID, extensionPoint );
 
+    // TODO: get more specific service, but how?
     final IEvaluationService service = (IEvaluationService) PlatformUI.getWorkbench().getService( IEvaluationService.class );
     final IEvaluationContext globalState = service.getCurrentState();
 
     final EvaluationContext currentState = new EvaluationContext( globalState, globalState.getDefaultVariable() );
-// currentState.addVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME, receiver );
+    // currentState.addVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME, receiver );
 
     final WizardEnablementVisitor wizardEnablementVisitor = new WizardEnablementVisitor( currentState );
     wizardEnablementVisitor.accept( registry.getRootCategory() );

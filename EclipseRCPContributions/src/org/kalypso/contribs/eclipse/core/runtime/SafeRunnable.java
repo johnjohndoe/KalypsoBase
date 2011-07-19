@@ -42,7 +42,7 @@ package org.kalypso.contribs.eclipse.core.runtime;
 
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
 
 /**
  * An implementation of {@link ISafeRunnable} whose error handling is to log the error to the plugin-log.
