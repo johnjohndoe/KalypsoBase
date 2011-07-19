@@ -38,23 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.utils;
+package org.kalypso.contribs.eclipse.internal;
 
-import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.core.runtime.Debug;
 
 /**
- * This class is a helper for debugging.
- * 
- * @author Holger Albert
+ * @author Gernot Belger
  */
-public class Debug
+public interface EclipseRCPContributionsDebug
 {
-  /**
-   * The constructor.
-   */
-  private Debug( )
-  {
-  }
+  Debug CRON_JOB = new Debug( EclipseRCPContributionsPlugin.getDefault(), "/debug/cronjob" ); //$NON-NLS-1$
 
-  public static final org.kalypso.contribs.eclipse.core.runtime.Debug CRON_JOB = new org.kalypso.contribs.eclipse.core.runtime.Debug( EclipseRCPContributionsPlugin.getDefault(), "/debug/cronjob" ); //$NON-NLS-1$
+  Debug GENERIC_WIZARDS = new Debug( EclipseRCPContributionsPlugin.getDefault(), "/debug/genericWizards" ); //$NON-NLS-1$
 }

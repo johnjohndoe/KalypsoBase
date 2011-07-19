@@ -1,4 +1,4 @@
-package org.kalypso.contribs.eclipse;
+package org.kalypso.contribs.eclipse.internal;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
