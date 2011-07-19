@@ -47,25 +47,25 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
- * Complains if a given file is an existing file, but not a directory.
+ * Complains if a given file is a directory.
  * 
  * @author Gernot Belger
  */
-public class FileIsDirectoryValidator extends TypedValidator<File>
+public class FileShouldNotBeDirectoryValidator extends TypedValidator<File>
 {
-  private static final String DEFAULT_MESSAGE = "This is not a directoy";
+  private static final String DEFAULT_MESSAGE = "This is a directoy";
 
-  public FileIsDirectoryValidator( )
+  public FileShouldNotBeDirectoryValidator( )
   {
     this( IStatus.ERROR );
   }
 
-  public FileIsDirectoryValidator( final int severity )
+  public FileShouldNotBeDirectoryValidator( final int severity )
   {
     this( severity, DEFAULT_MESSAGE );
   }
 
-  public FileIsDirectoryValidator( final int severity, final String message )
+  public FileShouldNotBeDirectoryValidator( final int severity, final String message )
   {
     super( File.class, severity, message );
   }
@@ -76,7 +76,7 @@ public class FileIsDirectoryValidator extends TypedValidator<File>
     if( value == null )
       return Status.OK_STATUS;
 
-    if( value.isFile() )
+    if( value.isDirectory() )
       fail();
 
     return Status.OK_STATUS;
