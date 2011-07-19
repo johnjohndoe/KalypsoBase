@@ -149,24 +149,11 @@ public final class WspmGeometryUtilities
           }
         }
 
-        if( rw == null || hw == null || rw.isNaN() || hw.isNaN() )
-        {
-          continue;
-        }
-
         final Double h = compHoehe == -1 ? null : (Double) point.getValue( compHoehe );
 
-        final GM_Position position;
-        if( h == null )
-        {
-          position = GeometryFactory.createGM_Position( rw, hw );
-        }
-        else
-        {
-          position = GeometryFactory.createGM_Position( rw, hw, h );
-        }
-
-        positions.add( position );
+        final GM_Position position = createPosition( rw, hw, h );
+        if( position != null )
+          positions.add( position );
       }
 
       if( positions.size() < 2 )
@@ -183,6 +170,20 @@ public final class WspmGeometryUtilities
     }
 
     return null;
+  }
+
+  private static GM_Position createPosition( final Double rw, final Double hw, final Double h )
+  {
+    if( rw == null || hw == null )
+      return null;
+
+    if( rw.isNaN() || hw.isNaN() )
+      return null;
+
+    if( h == null )
+      return GeometryFactory.createGM_Position( rw, hw );
+
+    return GeometryFactory.createGM_Position( rw, hw, h );
   }
 
   public static GM_Point createLocation( final IProfil profil, final IRecord point, final String srsName )
@@ -229,20 +230,11 @@ public final class WspmGeometryUtilities
         }
       }
 
-      if( rw == null || hw == null || rw.isNaN() || hw.isNaN() )
-        return null;
-
       final Double h = compHoehe == -1 ? null : (Double) point.getValue( compHoehe );
 
-      final GM_Position position;
-      if( h == null )
-      {
-        position = GeometryFactory.createGM_Position( rw, hw );
-      }
-      else
-      {
-        position = GeometryFactory.createGM_Position( rw, hw, h );
-      }
+      final GM_Position position = createPosition( rw, hw, h );
+      if( position == null )
+        return null;
 
       return GeometryFactory.createGM_Point( position, srsName );
     }
