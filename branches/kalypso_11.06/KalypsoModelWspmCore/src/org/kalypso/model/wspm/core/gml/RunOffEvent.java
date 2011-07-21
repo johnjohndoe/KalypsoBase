@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.schema.gml.binding;
+package org.kalypso.model.wspm.core.gml;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -47,12 +47,9 @@ import java.util.TreeMap;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.schema.IWspmDictionaryConstants;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
-import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
@@ -66,42 +63,33 @@ public class RunOffEvent extends Feature_Impl implements IRunOffEvent
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent#getAnnuality()
-   */
   @Override
   public Integer getAnnuality( )
   {
-    final Object property = getProperty( QN_PROP_ANNUALITY );
+    final Object property = getProperty( PROPERTY_ANNUALITY );
     if( property instanceof Number )
       return ((Number) property).intValue();
 
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent#toObservation()
-   */
   @Override
   public IObservation<TupleResult> toObservation( )
   {
     return ObservationFeatureFactory.toObservation( this );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.schema.gml.binding.IRunOffEvent#getDischarge(double)
-   */
   @Override
-  public Double getDischarge( final double station )
+  public BigDecimal getDischarge( final BigDecimal station )
   {
     final SortedMap<BigDecimal, BigDecimal> table = getDischargeTable();
-    final SortedMap<BigDecimal, BigDecimal> headMap = table.headMap( BigDecimal.valueOf( station ) );
+    final SortedMap<BigDecimal, BigDecimal> headMap = table.headMap( station );
 
     final BigDecimal lastKey = headMap.lastKey();
     if( lastKey == null )
       return null;
 
-    return headMap.get( lastKey ).doubleValue();
+    return headMap.get( lastKey );
   }
 
   /**
@@ -113,8 +101,8 @@ public class RunOffEvent extends Feature_Impl implements IRunOffEvent
     final IObservation<TupleResult> observation = toObservation();
     final TupleResult result = observation.getResult();
 
-    final int stationComp = TupleResultUtilities.indexOfComponentByPhenomenon( result, IWspmDictionaryConstants.PH_STATION );
-    final int abflussComp = TupleResultUtilities.indexOfComponentByPhenomenon( result, IWspmDictionaryConstants.PH_RUNOFF );
+    final int stationComp = result.indexOfComponent( COMPONENT_STATION );
+    final int abflussComp = result.indexOfComponent( COMPONENT_RUNOFF );
 
     final Comparator<BigDecimal> comp = new Comparator<BigDecimal>()
     {
@@ -152,5 +140,11 @@ public class RunOffEvent extends Feature_Impl implements IRunOffEvent
     final WspmWaterBody waterBody = getParent();
 
     return waterBody.isDirectionUpstreams();
+  }
+
+  @Override
+  public void saveObservation( final IObservation<TupleResult> observation )
+  {
+    ObservationFeatureFactory.toFeature( observation, this );
   }
 }

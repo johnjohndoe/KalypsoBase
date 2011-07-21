@@ -9,6 +9,5 @@ Require-Bundle: org.kalypso.core;visibility:=reexport,
  org.kalypso.model.wspm.core;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.schema,
- org.kalypso.model.wspm.schema.gml,
- org.kalypso.model.wspm.schema.gml.binding
+ org.kalypso.model.wspm.schema.gml
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
