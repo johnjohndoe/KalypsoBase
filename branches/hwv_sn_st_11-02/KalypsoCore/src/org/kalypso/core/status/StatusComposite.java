@@ -98,8 +98,6 @@ public class StatusComposite extends Composite
    */
   private FormToolkit m_toolkit;
 
-  private Button m_imageButton;
-
   private Label m_imageLabel;
 
   private Text m_messageText;
@@ -108,6 +106,9 @@ public class StatusComposite extends Composite
 
   private ILabelProvider m_labelProvider;
 
+  /**
+   * The status.
+   */
   private IStatus m_status;
 
   /**
@@ -138,7 +139,6 @@ public class StatusComposite extends Composite
     super( parent, style );
 
     m_toolkit = toolkit;
-    m_imageButton = null;
     m_imageLabel = null;
     m_messageText = null;
     m_detailsButton = null;
@@ -159,11 +159,8 @@ public class StatusComposite extends Composite
     /* The column count. */
     int colCount = 1;
 
-    /* If only the image label should be shown, but no text or details button, then make a image button. */
-    if( ((style & HIDE_TEXT) != 0) && ((style & DETAILS) == 0) )
-      createImageButton();
-    else
-      createImageLabel();
+    /* Create the image label. */
+    createImageLabel();
 
     /* Create the message text, if it should not be hidden. */
     if( (style & HIDE_TEXT) == 0 )
@@ -189,26 +186,6 @@ public class StatusComposite extends Composite
 
     /* Set the layout. */
     super.setLayout( gridLayout );
-  }
-
-  private void createImageButton( )
-  {
-    m_imageButton = new Button( this, SWT.PUSH | SWT.FLAT );
-    m_imageButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
-    m_imageButton.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetSelected( SelectionEvent e )
-      {
-        detailsButtonPressed();
-      }
-    } );
-
-    if( m_toolkit != null )
-      ControlUtils.adapt( m_imageButton, m_toolkit );
   }
 
   private void createImageLabel( )
@@ -279,9 +256,6 @@ public class StatusComposite extends Composite
   {
     super.setBackground( color );
 
-    if( m_imageButton != null )
-      m_imageButton.setBackground( color );
-
     if( m_imageLabel != null )
       m_imageLabel.setBackground( color );
 
@@ -335,12 +309,6 @@ public class StatusComposite extends Composite
     String text = getStatusText();
     String tooltipText = getStatusTooltipText();
     boolean enabled = getStatusIsEnabled();
-
-    if( m_imageButton != null )
-    {
-      m_imageButton.setImage( image );
-      m_imageButton.setToolTipText( tooltipText );
-    }
 
     if( m_imageLabel != null )
     {
