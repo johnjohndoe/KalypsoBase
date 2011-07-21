@@ -80,7 +80,7 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
   private final IFeatureBindingCollection<WspmFixation> m_fixations;
 
-  private final IFeatureBindingCollection<WspmRunoffEvent> m_runoffEvents;
+  private final IFeatureBindingCollection<IRunOffEvent> m_runoffEvents;
 
   public WspmWaterBody( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -88,7 +88,7 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
     m_profileMembers = new FeatureBindingCollection<IProfileFeature>( this, IProfileFeature.class, QNAME_MEMBER_PROFILE );
     m_fixations = new FeatureBindingCollection<WspmFixation>( this, WspmFixation.class, QNAME_MEMBER_WSP_FIX );
-    m_runoffEvents = new FeatureBindingCollection<WspmRunoffEvent>( this, WspmRunoffEvent.class, QNAME_MEMBER_RUNOFF );
+    m_runoffEvents = new FeatureBindingCollection<IRunOffEvent>( this, IRunOffEvent.class, QNAME_MEMBER_RUNOFF );
   }
 
   public IFeatureBindingCollection<IProfileFeature> getProfiles( )
@@ -128,7 +128,7 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
     setProperty( new QName( NS_WSPM, "isDirectionUpstream" ), Boolean.valueOf( directionIsUpstream ) ); //$NON-NLS-1$
   }
 
-  public IFeatureBindingCollection<WspmRunoffEvent> getRunoffEvents( )
+  public IFeatureBindingCollection<IRunOffEvent> getRunoffEvents( )
   {
     return m_runoffEvents;
   }

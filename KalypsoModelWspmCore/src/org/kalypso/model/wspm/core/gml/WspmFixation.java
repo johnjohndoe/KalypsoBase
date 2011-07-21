@@ -57,6 +57,10 @@ public class WspmFixation extends Feature_Impl implements IObservationFeature
 {
   public static final QName QNAME_FEATURE_WSPM_FIXATION = new QName( IWspmConstants.NS_WSPMRUNOFF, "WaterlevelFixation" ); //$NON-NLS-1$
 
+  public static final String COMPONENT_STATION = IWspmConstants.LENGTH_SECTION_PROPERTY_STATION;
+
+  public static final String COMPONENT_WSP = IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL;
+
   public WspmFixation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );

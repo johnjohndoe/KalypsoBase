@@ -23,6 +23,10 @@
             class="org.kalypso.model.wspm.core.gml.WspmFixation"
             qname="{org.kalypso.model.wspmrunoff}WaterlevelFixation">
       </feature>
+      <feature
+            class="org.kalypso.model.wspm.core.gml.RunOffEvent"
+            qname="{org.kalypso.model.wspmrunoff}RunOffEvent">
+      </feature>
    </extension>
    
 </plugin>

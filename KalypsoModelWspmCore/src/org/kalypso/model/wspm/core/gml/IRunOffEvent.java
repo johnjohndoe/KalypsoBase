@@ -40,37 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
+import java.math.BigDecimal;
+import java.util.SortedMap;
+
 import javax.xml.namespace.QName;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.TupleResult;
-import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public class WspmRunoffEvent extends Feature_Impl implements IObservationFeature
+public interface IRunOffEvent extends IObservationFeature
 {
-  public static final QName QNAME_FEATURE_RUNOFF_EVENT = new QName( IWspmConstants.NS_WSPMRUNOFF, "RunOffEvent" ); //$NON-NLS-1$
+  QName PROPERTY_ANNUALITY = new QName( IWspmConstants.NS_WSPMRUNOFF, "returnPeriod" ); //$NON-NLS-1$
 
-  public WspmRunoffEvent( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
+  QName FEATURE_RUNOFF_EVENT = new QName( IWspmConstants.NS_WSPMRUNOFF, "RunOffEvent" ); //$NON-NLS-1$
+
+  String COMPONENT_STATION = IWspmConstants.LENGTH_SECTION_PROPERTY_STATION;
+
+  String COMPONENT_RUNOFF = IWspmConstants.LENGTH_SECTION_PROPERTY_RUNOFF;
+
+  Integer getAnnuality( );
+
+  BigDecimal getDischarge( BigDecimal station );
+
+  SortedMap<BigDecimal, BigDecimal> getDischargeTable( );
 
   @Override
-  public IObservation<TupleResult> toObservation( )
-  {
-    return ObservationFeatureFactory.toObservation( this );
-  }
+  WspmWaterBody getParent( );
 
-  @Override
-  public void saveObservation( final IObservation<TupleResult> observation )
-  {
-    ObservationFeatureFactory.toFeature( observation, this );
-  }
+  boolean isDirectionUpstream( );
 }
