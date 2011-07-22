@@ -225,7 +225,7 @@ public final class DA50Importer
       try
       {
 
-        if( line.length() < 60 || !line.startsWith( "50" ) )
+        if( line.length() < 60 || !line.startsWith( "50" ) ) //$NON-NLS-1$
         {
           continue;
         }

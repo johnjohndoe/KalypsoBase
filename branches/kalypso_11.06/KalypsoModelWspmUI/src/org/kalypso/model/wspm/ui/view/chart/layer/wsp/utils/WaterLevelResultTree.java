@@ -85,7 +85,7 @@ public class WaterLevelResultTree extends Composite
     final IWspLayerData data = layer.getData();
     if( Objects.isNull( data ) )
     {
-      toolkit.createLabel( this, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.2" ) );
+      toolkit.createLabel( this, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.2" ) ); //$NON-NLS-1$
       return;
     }
 
@@ -94,7 +94,7 @@ public class WaterLevelResultTree extends Composite
       final Object input = data.getInput();
       if( Objects.isNull( input ) )
       {
-        toolkit.createLabel( this, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.3" ) );
+        toolkit.createLabel( this, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.3" ) ); //$NON-NLS-1$
         return;
       }
 
@@ -145,7 +145,7 @@ public class WaterLevelResultTree extends Composite
     {
       e.printStackTrace();
 
-      toolkit.createLabel( this, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.6", e.getLocalizedMessage() ) );
+      toolkit.createLabel( this, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.6", e.getLocalizedMessage() ) ); //$NON-NLS-1$
     }
   }
 

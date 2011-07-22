@@ -69,6 +69,7 @@ import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
 import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ImportProfilesCommand;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -88,7 +89,7 @@ public class ImportPrfWizard extends Wizard implements IWorkbenchWizard
 
   public ImportPrfWizard( )
   {
-    setWindowTitle( "Import WspWin Profiles" );
+    setWindowTitle( Messages.getString( "ImportPrfWizard.0" ) ); //$NON-NLS-1$
 
     final IDialogSettings dialogSettings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() );
     setDialogSettings( dialogSettings );
