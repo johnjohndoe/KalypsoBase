@@ -90,9 +90,7 @@
                 </test>
              </activeWhen>
           </handler>
-          <handler
-                class="org.kalypso.gml.ui.internal.feature.EditFeatureHandler"
-                commandId="org.kalyso.gml.ui.command.editFeature">
+          <handler class="org.kalypso.gml.ui.internal.feature.EditFeatureHandler" commandId="org.kalyso.gml.ui.command.editFeature">
              <enabledWhen>
                 <with variable="selection">
                    <and>
