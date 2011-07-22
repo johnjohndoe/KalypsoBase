@@ -68,6 +68,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.transformation.ui.listener.CRSSelectionListener;
@@ -108,23 +109,14 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
 
   /**
    * @param pageName
-   */
-  public ImportProfilePage( final String pageName )
-  {
-    super( pageName );
-    setDescription( "Dieser Dialog liest eine ASCII-Trippel-Datei in den Workspace ein" );
-    setPageComplete( false );
-  }
-
-  /**
-   * @param pageName
    * @param title
    * @param titleImage
    */
   public ImportProfilePage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
-    setDescription( "Dieser Dialog liest eine ASCII-Trippel-Datei in den Workspace ein" );
+
+    setDescription( Messages.getString("ImportProfilePage.0") ); //$NON-NLS-1$
     setPageComplete( false );
   }
 
@@ -227,14 +219,14 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
     }
     else
     {
-      setErrorMessage( "Bitte eine Profil-Datei auswählen!" );
+      setErrorMessage( Messages.getString("ImportProfilePage.1") ); //$NON-NLS-1$
       pageComplete = false;
     }
 
     // CoordinateSystem
     if( m_crs == null || !CRSHelper.isKnownCRS( m_crs ) )
     {
-      setErrorMessage( "Gewähltes KoordinatenSystem wird nicht unterstützt!" );
+      setErrorMessage( "Gewähltes KoordinatenSystem wird nicht unterstützt!" ); //$NON-NLS-1$
       pageComplete = false;
     }
 
@@ -275,7 +267,7 @@ public class ImportProfilePage extends WizardPage implements SelectionListener, 
       {
         final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
         final FileDialog dialog = new FileDialog( shell, SWT.OPEN );
-        dialog.setText( "Trippel-Import" );
+        dialog.setText( getWizard().getWindowTitle() );
         dialog.setFilterExtensions( new String[] { "*.txt", "*.*" } ); //$NON-NLS-1$ //$NON-NLS-2$
         dialog.open();
 

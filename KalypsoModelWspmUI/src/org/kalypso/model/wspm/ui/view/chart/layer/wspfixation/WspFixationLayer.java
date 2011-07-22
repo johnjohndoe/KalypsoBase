@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.ui.view.chart.layer.wspfixation;
 
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerData;
@@ -57,7 +58,7 @@ public class WspFixationLayer extends WspLayer
   {
     super( profile, layerId, styleProvider, data, fill, mapper );
 
-    setTitle( "Water Level Fixation" );
+    setTitle( Messages.getString("WspFixationLayer_0") ); //$NON-NLS-1$
   }
 
   /**
