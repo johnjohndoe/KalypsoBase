@@ -51,8 +51,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
@@ -67,6 +65,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.ColorUtilities;
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
+import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -509,17 +508,8 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   {
     if( m_formToolkit == null )
     {
-      final FormToolkit toolkit = new FormToolkit( control.getDisplay() );
+      final FormToolkit toolkit = ToolkitUtils.createToolkit( control );
       toolkit.setBackground( control.getBackground() );
-      control.addDisposeListener( new DisposeListener()
-      {
-        @Override
-        public void widgetDisposed( final DisposeEvent e )
-        {
-          // Need to dispose toolkit as we created it ourselves
-          toolkit.dispose();
-        }
-      } );
 
       return toolkit;
     }
@@ -596,11 +586,20 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     if( featureType == null )
       return null;
 
+    final QName propertyName = findPropertyName( controlType );
+    if( propertyName == null )
+      return null;
+
+    return getPropertyTypeForQName( featureType, propertyName );
+  }
+
+  private QName findPropertyName( final ControlType controlType )
+  {
     if( controlType instanceof PropertyControlType )
-      return getPropertyTypeForQName( featureType, ((PropertyControlType) controlType).getProperty() );
+      return ((PropertyControlType) controlType).getProperty();
 
     if( controlType instanceof CompositeType )
-      return getPropertyTypeForQName( featureType, ((CompositeType) controlType).getProperty() );
+      return ((CompositeType) controlType).getProperty();
 
     return null;
   }
