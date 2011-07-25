@@ -40,13 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.swt;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * A selection listener (to be added to a a button), that opens a {@link org.eclipse.swt.widgets.FileDialog} that
@@ -55,28 +57,21 @@ import org.eclipse.swt.widgets.Shell;
  * 
  * @author Gernot Belger
  */
-public class DirectoryValueSelectionListener implements SelectionListener
+class DirectoryValueSelectionListener implements SelectionListener
 {
   private final String m_dialogTitle;
 
-  private IObservableValue m_dirValue;
-
   private final String m_dialogMessage;
 
-  public DirectoryValueSelectionListener( final IObservableValue dirTextValue, final String dialogTitle, final String dialogMessage )
-  {
-    if( dirTextValue != null )
-      setDirectoryValue( dirTextValue );
+  private final Control m_textControl;
 
+  public DirectoryValueSelectionListener( final Control textControl, final String dialogTitle, final String dialogMessage )
+  {
+    Assert.isTrue( textControl instanceof Text || textControl instanceof Combo );
+
+    m_textControl = textControl;
     m_dialogTitle = dialogTitle;
     m_dialogMessage = dialogMessage;
-  }
-
-  public void setDirectoryValue( final IObservableValue value )
-  {
-    Assert.isTrue( value.getValueType() == String.class );
-
-    m_dirValue = value;
   }
 
   @Override
@@ -95,17 +90,38 @@ public class DirectoryValueSelectionListener implements SelectionListener
   {
     final Shell shell = e.display.getActiveShell();
 
-    final DirectoryDialog dialog = new DirectoryDialog( shell, SWT.SAVE );
+    final DirectoryDialog dialog = new DirectoryDialog( shell, SWT.NONE );
     dialog.setText( m_dialogTitle );
     dialog.setMessage( m_dialogMessage );
 
-    final String initialSelection = (String) m_dirValue.getValue();
+    final String initialSelection = getValue();
 
     if( initialSelection != null )
       dialog.setFilterPath( initialSelection );
 
     final String selectedDirectory = dialog.open();
     if( selectedDirectory != null )
-      m_dirValue.setValue( selectedDirectory );
+      setValue( selectedDirectory );
+  }
+
+  private void setValue( final String value )
+  {
+    if( m_textControl instanceof Text )
+      ((Text) m_textControl).setText( value );
+    else if( m_textControl instanceof Combo )
+      ((Combo) m_textControl).setText( value );
+    else
+      throw new IllegalStateException();
+  }
+
+  private String getValue( )
+  {
+    if( m_textControl instanceof Text )
+      return ((Text) m_textControl).getText();
+
+    if( m_textControl instanceof Combo )
+      return ((Combo) m_textControl).getText();
+
+    throw new IllegalStateException();
   }
 }
