@@ -271,14 +271,29 @@ public final class RepositoryItems
     return !identifier.contains( "://" ); //$NON-NLS-1$
   }
 
-  public static boolean isForecast( final IRepositoryItem item )
-  {
-    return isForecast( item.getIdentifier() );
-  }
-
   private static final Pattern PATTERN_IS_FORECAST = new Pattern( "[\\w\\d_]+\\.[\\w\\d]+_Prog_[\\w\\d_]+(\\..*)?" ); //$NON-NLS-1$
 
-  public static boolean isForecast( final String identifier )
+  public static boolean isForecastItem( final IRepositoryItem item )
+  {
+    return isForecastItem( item.getIdentifier() );
+  }
+
+  public static boolean isForecastItem( final String identifier )
+  {
+    if( isForecastGroupItem( identifier ) )
+      return true;
+
+    final String plain = getPlainId( identifier );
+
+    return plain.endsWith( ".Prognose" ); //$NON-NLS-1$
+  }
+
+  public static boolean isForecastGroupItem( final IRepositoryItem item )
+  {
+    return isForecastGroupItem( item.getIdentifier() );
+  }
+
+  public static boolean isForecastGroupItem( final String identifier )
   {
     /**
      * the group has to be forecast, not the station value itself's
