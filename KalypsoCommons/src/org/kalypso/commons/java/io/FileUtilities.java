@@ -449,34 +449,39 @@ public class FileUtilities
     return getRelativePathTo( baseAbs, absAbs );
   }
 
-  public static String getRelativePathTo( String base, final String absolute )
+  public static String getRelativePathTo( final String base, final String absolute )
   {
-    if( !absolute.startsWith( base ) )
+    final String separator = "/"; //$NON-NLS-1$
+    String basePath = base.replaceAll( "\\\\", separator ); //$NON-NLS-1$
+    final String absolutePath = absolute.replaceAll( "\\\\", separator ); //$NON-NLS-1$
+    if( !absolutePath.startsWith( basePath ) )
     {
-      if( base.lastIndexOf( "/" ) > -1 ) //$NON-NLS-1$
-        base = base.substring( 0, base.lastIndexOf( "/" ) ); //$NON-NLS-1$
+      if( basePath.lastIndexOf( separator ) > -1 )
+        basePath = basePath.substring( 0, basePath.lastIndexOf( separator ) + 1 );
 
-      final String difference = StringUtils.difference( base, absolute );
+      final String difference = StringUtils.difference( basePath, absolutePath );
       if( difference == null || "".equals( difference ) ) //$NON-NLS-1$
         return null;
 
-      final int index = absolute.indexOf( difference );
+      final int index = absolutePath.indexOf( difference );
       if( index < 5 )
         return null;
 
-      final String back = base.substring( index );
+      final String back = basePath.substring( index );
       // TODO change regExp to "everything except fileseparator"
-      final String x = back.replaceAll( "([a-zA-Z0-9]|\\.|_)+", ".." ); //$NON-NLS-1$ //$NON-NLS-2$
+      final String x = back.replaceAll("([a-zA-Z0-9_-]|\\.)+", ".."); //$NON-NLS-1$ //$NON-NLS-2$
       if( x.length() > 0 )
-        return x + "/" + difference; //$NON-NLS-1$
+        // return x + "/" + difference; //$NON-NLS-1$
+        return x + difference;
 
       return difference;
     }
-
-    if( absolute.length() == base.length() )
+    if( absolutePath.equalsIgnoreCase( basePath ) )
       return "";
-
-    return absolute.substring( base.length() );
+    if( basePath.endsWith( separator ) )
+      return absolutePath.substring( basePath.length() );
+    else
+      return absolutePath.substring( basePath.length() + 1 );
   }
 
   /**
