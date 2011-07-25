@@ -57,19 +57,28 @@ public class FeatureTypeFeatureviewCatalog extends FeatureTypeCatalog
 {
   private static final String BASETYPE = "featureview"; //$NON-NLS-1$
 
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
   public static FeatureviewType getFeatureview( final URL context, final QName qname ) throws JAXBException
   {
-    final URL url = getURL( BASETYPE, context, qname );
+    return getFeatureview( context, qname, DEFAULT_STYLE );
+  }
+
+  /**
+   * @param style
+   *          The urn style of the resource to to look for. If not specified, 'default' is used.
+   */
+  public static FeatureviewType getFeatureview( final URL context, final QName qname, final String style ) throws JAXBException
+  {
+    final URL url = getURL( BASETYPE, context, qname, style );
     if( url == null )
       return null;
 
     final Unmarshaller unmarshaller = TemplateUtilities.createFeatureviewUnmarshaller();
-    
-    final JAXBElement<FeatureviewType> element = (JAXBElement<FeatureviewType>) unmarshaller.unmarshal( url );
-    return element.getValue();
-  }
-  
 
-  
+    final JAXBElement< ? > element = (JAXBElement< ? >) unmarshaller.unmarshal( url );
+    final Object value = element.getValue();
+    if( value instanceof FeatureviewType )
+      return (FeatureviewType) value;
+
+    return null;
+  }
 }
