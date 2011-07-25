@@ -59,10 +59,22 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public class FeatureTypeCatalog
 {
+  /* Default urn style, used, if not specified */
+  protected static final String DEFAULT_STYLE = "default"; //$NON-NLS-1$
+
   public static URL getURL( final String catalogTypeBasename, final URL context, final QName qname )
   {
-    final String urn = createUrn( catalogTypeBasename, qname );
+    return getURL( catalogTypeBasename, context, qname, DEFAULT_STYLE );
+  }
 
+  public static URL getURL( final String catalogTypeBasename, final URL context, final QName qname, final String style )
+  {
+    final String urn = createUrn( catalogTypeBasename, qname, style );
+    return getURL( urn, context );
+  }
+
+  public static URL getURL( final String urn, final URL context )
+  {
     final String uri = getLocation( urn );
     // if we got no uri or an urn do nothing, we need a real url 
     if( uri == null || uri.startsWith( "urn" )) //$NON-NLS-1$
@@ -88,11 +100,16 @@ public class FeatureTypeCatalog
     final ICatalog baseCatalog = catalogManager.getBaseCatalog();
     if( baseCatalog == null )
       return null;
-    
+
     return baseCatalog.resolve( urn, urn );
   }
 
   public static String createUrn( final String catalogTypeBasename, final QName qname )
+  {
+    return createUrn( catalogTypeBasename, qname, DEFAULT_STYLE );//$NON-NLS-1$
+  }
+
+  public static String createUrn( final String catalogTypeBasename, final QName qname, final String style )
   {
     // REMARK: catalog is registered for feature type, not for qname
     // Hint for a refaktoring on the CatalogManager
@@ -105,7 +122,6 @@ public class FeatureTypeCatalog
     if( baseURN == null )
       return null;
 
-    return baseURN + ":" + catalogTypeBasename + ":default"; //$NON-NLS-1$ //$NON-NLS-2$
+    return String.format( "%s:%s:%s", baseURN, catalogTypeBasename, style ); //$NON-NLS-1$
   }
-
 }
