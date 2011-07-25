@@ -119,9 +119,6 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
     return true;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
-   */
   @Override
   public void updateControl( )
   {

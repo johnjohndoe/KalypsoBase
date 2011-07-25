@@ -623,4 +623,9 @@ public class FeatureView extends ViewPart implements ModellEventListener
   {
     m_toolkit = toolkit;
   }
+
+  protected CachedFeatureviewFactory getCachedFeatureViewFactory( )
+  {
+    return m_cfvFactory;
+  }
 }
