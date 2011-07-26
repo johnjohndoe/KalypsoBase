@@ -67,7 +67,6 @@ public final class ColumnViewerSorter
   {
     final Item item = ColumnViewerUtil.itemForColumn( column );
     item.setData( SORT_SORTER, sorter );
-
     item.addListener( SWT.Selection, new Listener()
     {
       @Override
@@ -129,6 +128,7 @@ public final class ColumnViewerSorter
 
     itemToSort.setData( SORT_KEY, sortState );
     itemToSort.setImage( img );
+
     final ColumnViewer viewer = columnToSort.getViewer();
     viewer.setSorter( sorter );
   }
