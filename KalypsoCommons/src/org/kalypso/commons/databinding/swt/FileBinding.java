@@ -40,9 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.swt;
 
+import java.io.File;
+
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
@@ -50,45 +51,41 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.conversion.FileToStringConverter;
 import org.kalypso.commons.databinding.conversion.StringToFileConverter;
-import org.kalypso.commons.databinding.validation.FileAlreadyExistsValidator;
-import org.kalypso.commons.databinding.validation.FileIsDirectoryValidator;
+import org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate;
 
 /**
- * Helper class for the ever repeating task to show the user a text-field in order to let him select a directory.
- * 
  * @author Gernot Belger
  */
-public class DirectoryBinding
+public class FileBinding
 {
   private final IDataBinding m_binding;
 
-  private final IObservableValue m_directoryValue;
+  private final IObservableValue m_fileValue;
 
-  private final int m_style;
+  private final IFileChooserDelegate m_delegate;
 
-  /**
-   * @param style
-   *          of the directory chooser. Either {@link SWT#OPEN} or {@link SWT#SAVE}.
-   */
-  public DirectoryBinding( final IDataBinding binding, final IObservableValue directoryValue, final int style )
+  public FileBinding( final IDataBinding binding, final IObservableValue fileValue, final IFileChooserDelegate delegate )
   {
     m_binding = binding;
-    m_directoryValue = directoryValue;
-    m_style = style;
+    m_fileValue = fileValue;
+    m_delegate = delegate;
   }
 
   /**
    * @param historyValue
-   *          The value representing the history of directories. Must be of type SAtring[].
+   *          The value representing the history of directories. Must be of type String[].
    */
-  public Control createDirectoryFieldWithHistory( final Composite parent, final IObservableValue historyValue )
+  public Control createFileFieldWithHistory( final Composite parent, final IObservableValue historyValue )
   {
     Assert.isTrue( historyValue.getValueType() == String[].class );
 
@@ -101,32 +98,44 @@ public class DirectoryBinding
     m_binding.bindValue( targetInput, historyValue );
 
     final ISWTObservableValue targetText = SWTObservables.observeText( viewer.getControl() );
-    final DataBinder binder = new DataBinder( targetText, m_directoryValue );
+    final DataBinder binder = new DataBinder( targetText, m_fileValue );
     binder.setModelToTargetConverter( new FileToStringConverter() );
     binder.setTargetToModelConverter( new StringToFileConverter() );
 
-    // FIXME: better validation and depending on save or load
-    binder.addTargetAfterConvertValidator( new FileIsDirectoryValidator( IStatus.ERROR ) );
-
-    if( m_style == SWT.SAVE )
-      binder.addTargetAfterConvertValidator( new FileAlreadyExistsValidator( IStatus.WARNING, "Directory already exists" ) );
-// else
-// binder.addTargetAfterConvertValidator( new File
+    binder.addTargetAfterConvertValidator( new FileChooserValidator( m_delegate ) );
 
     m_binding.bindValue( binder );
 
     return viewer.getControl();
   }
 
-  public Button createDirectorySearchButton( final Composite parent, final Control directoryTextControl, final String dialogTitle, final String dialogMessage )
+  public Button createFileSearchButton( final Composite parent, final Control fileTextControl )
   {
     // destination browse button
     final Button browseButton = new Button( parent, SWT.PUSH );
     browseButton.setText( "Search..." );
     browseButton.setFont( parent.getFont() );
 
-    browseButton.addSelectionListener( new DirectoryValueSelectionListener( directoryTextControl, dialogTitle, dialogMessage ) );
+    browseButton.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        handleBrowseButtonSelected( parent.getShell(), fileTextControl );
+      }
+    } );
 
     return browseButton;
+  }
+
+  protected void handleBrowseButtonSelected( final Shell shell, final Control fileTextControl )
+  {
+    final File currentfile = (File) m_fileValue.getValue();
+    final File newFile = m_delegate.chooseFile( shell, currentfile );
+    if( newFile == null )
+      return;
+
+    final String newPath = newFile.getAbsolutePath();
+    DirectoryValueSelectionListener.setValue( fileTextControl, newPath );
   }
 }

@@ -41,9 +41,12 @@
 package org.kalypso.contribs.eclipse.ui.forms;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.IMessage;
 import org.eclipse.ui.forms.widgets.Form;
+import org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin;
 
 /**
  * Helper methods for {@link org.eclipse.ui.forms.IMessage}.
@@ -196,5 +199,37 @@ public final class MessageUtilitites
       default:
         throw new IllegalArgumentException( "Unknown status severity: " + severity ); //$NON-NLS-1$
     }
+  }
+
+  /**
+   * Converts the type of an {@link IMessage} to the severity of an {@link IStatus}.
+   * 
+   * @see IStatus#getSeverity()
+   * @see IMessage#getMessageType()
+   */
+  public static int convertMessageSeverity( final int type )
+  {
+    switch( type )
+    {
+      case IMessageProvider.NONE:
+        return IStatus.OK;
+
+      case IMessageProvider.INFORMATION:
+        return IStatus.INFO;
+      case IMessageProvider.WARNING:
+        return IStatus.WARNING;
+      case IMessageProvider.ERROR:
+        return IStatus.ERROR;
+
+      default:
+        throw new IllegalArgumentException( "Unknown message type: " + type ); //$NON-NLS-1$
+    }
+  }
+
+  public static IStatus convertMessage( final IMessageProvider message )
+  {
+    final int severity = convertMessageSeverity( message.getMessageType() );
+    final String msg = message.getMessage();
+    return new Status( severity, EclipsePlatformContributionsPlugin.getID(), msg );
   }
 }

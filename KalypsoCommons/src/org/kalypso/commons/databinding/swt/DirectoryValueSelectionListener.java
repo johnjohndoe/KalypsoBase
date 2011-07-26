@@ -94,33 +94,33 @@ class DirectoryValueSelectionListener implements SelectionListener
     dialog.setText( m_dialogTitle );
     dialog.setMessage( m_dialogMessage );
 
-    final String initialSelection = getValue();
+    final String initialSelection = getValue( m_textControl );
 
     if( initialSelection != null )
       dialog.setFilterPath( initialSelection );
 
     final String selectedDirectory = dialog.open();
     if( selectedDirectory != null )
-      setValue( selectedDirectory );
+      setValue( m_textControl, selectedDirectory );
   }
 
-  private void setValue( final String value )
+  static void setValue( final Control textControl, final String value )
   {
-    if( m_textControl instanceof Text )
-      ((Text) m_textControl).setText( value );
-    else if( m_textControl instanceof Combo )
-      ((Combo) m_textControl).setText( value );
+    if( textControl instanceof Text )
+      ((Text) textControl).setText( value );
+    else if( textControl instanceof Combo )
+      ((Combo) textControl).setText( value );
     else
       throw new IllegalStateException();
   }
 
-  private String getValue( )
+  static String getValue( final Control textControl )
   {
-    if( m_textControl instanceof Text )
-      return ((Text) m_textControl).getText();
+    if( textControl instanceof Text )
+      return ((Text) textControl).getText();
 
-    if( m_textControl instanceof Combo )
-      return ((Combo) m_textControl).getText();
+    if( textControl instanceof Combo )
+      return ((Combo) textControl).getText();
 
     throw new IllegalStateException();
   }
