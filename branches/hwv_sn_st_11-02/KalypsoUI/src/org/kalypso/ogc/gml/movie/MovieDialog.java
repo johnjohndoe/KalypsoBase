@@ -164,7 +164,7 @@ public class MovieDialog extends Dialog
     Composite buttonComposite = m_movieComposite.createButtonControls( parent );
     buttonComposite.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, false ) );
 
-    Button cancelButton = createButton( buttonComposite, CANCEL, "Ecject", true );
+    Button cancelButton = createButton( buttonComposite, CANCEL, "Schlieﬂen", true );
     final Image cancelImage = KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.MOVIE_PLAYER_EJECT ).createImage();
     cancelButton.setImage( cancelImage );
     cancelButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
