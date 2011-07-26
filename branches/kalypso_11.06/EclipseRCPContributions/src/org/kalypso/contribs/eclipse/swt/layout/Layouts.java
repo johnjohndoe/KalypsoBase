@@ -48,7 +48,7 @@ import org.eclipse.swt.layout.GridLayout;
  */
 public final class Layouts
 {
-  private static final GridLayoutFactory FACTORY = GridLayoutFactory.swtDefaults();
+  private static final GridLayoutFactory FACTORY = GridLayoutFactory.fillDefaults();
 
   private Layouts( )
   {
