@@ -40,11 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.dialogs;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -56,6 +56,7 @@ import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -89,6 +90,11 @@ public class ListSelectionDialog<T> extends Dialog
   private IBaseLabelProvider m_labelProvider;
 
   /**
+   * The class.
+   */
+  protected Class<T> m_clazz;
+
+  /**
    * The constructor.
    * 
    * @param parentShell
@@ -101,8 +107,10 @@ public class ListSelectionDialog<T> extends Dialog
    *          The array of elements, which should be selected by default. May be null.
    * @param labelProvider
    *          The label provider. May be null.
+   * @param clazz
+   *          The class.
    */
-  public ListSelectionDialog( Shell parentShell, String description, T[] allElements, T[] selectedElements, IBaseLabelProvider labelProvider )
+  public ListSelectionDialog( Shell parentShell, String description, T[] allElements, T[] selectedElements, IBaseLabelProvider labelProvider, Class<T> clazz )
   {
     super( parentShell );
 
@@ -110,6 +118,7 @@ public class ListSelectionDialog<T> extends Dialog
     m_allElements = allElements;
     m_selectedElements = selectedElements;
     m_labelProvider = labelProvider;
+    m_clazz = clazz;
   }
 
   /**
@@ -125,8 +134,10 @@ public class ListSelectionDialog<T> extends Dialog
    *          The array of elements, which should be selected by default. May be null.
    * @param labelProvider
    *          The label provider. May be null.
+   * @param clazz
+   *          The class.
    */
-  public ListSelectionDialog( IShellProvider parentShell, String description, T[] allElements, T[] selectedElements, IBaseLabelProvider labelProvider )
+  public ListSelectionDialog( IShellProvider parentShell, String description, T[] allElements, T[] selectedElements, IBaseLabelProvider labelProvider, Class<T> clazz )
   {
     super( parentShell );
 
@@ -134,6 +145,7 @@ public class ListSelectionDialog<T> extends Dialog
     m_allElements = allElements;
     m_selectedElements = selectedElements;
     m_labelProvider = labelProvider;
+    m_clazz = clazz;
   }
 
   /**
@@ -205,19 +217,30 @@ public class ListSelectionDialog<T> extends Dialog
       @Override
       public void checkStateChanged( CheckStateChangedEvent event )
       {
-        /* Memory for the new selection. */
-        List<Object> checkedElements = new ArrayList<Object>();
-
-        /* Get all check elements. */
-        for( Object object : listViewer.getCheckedElements() )
-          checkedElements.add( object );
-
         /* Store the new selection. */
-        m_selectedElements = (T[]) checkedElements.toArray();
+        Object[] checkedElements = listViewer.getCheckedElements();
+        Object newInstance = java.lang.reflect.Array.newInstance( m_clazz, checkedElements.length );
+        System.arraycopy( checkedElements, 0, newInstance, 0, checkedElements.length );
+        m_selectedElements = (T[]) newInstance;
+
+        /* Check if the dialog can be completed. */
+        checkDialogComplete();
       }
     } );
 
     return main;
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  protected void createButtonsForButtonBar( Composite parent )
+  {
+    super.createButtonsForButtonBar( parent );
+
+    /* Check, if the dialog is allowed to be completed. */
+    checkDialogComplete();
   }
 
   /**
@@ -237,5 +260,23 @@ public class ListSelectionDialog<T> extends Dialog
   public T[] getSelectedElements( )
   {
     return m_selectedElements;
+  }
+
+  /**
+   * This function checks, if the dialog is allowed to be completed.
+   */
+  protected void checkDialogComplete( )
+  {
+    /* Get the OK button. */
+    Button okButton = getButton( IDialogConstants.OK_ID );
+
+    /* First of all, it should be allowed to complete. */
+    okButton.setEnabled( true );
+
+    if( m_selectedElements == null || m_selectedElements.length == 0 )
+    {
+      okButton.setEnabled( false );
+      return;
+    }
   }
 }
