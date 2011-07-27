@@ -99,7 +99,7 @@ import org.xml.sax.InputSource;
 @SuppressWarnings("restriction")
 public class ObservationServiceFassade implements IObservationService, IDisposable
 {
-  public static final String DESTINATION_REPOSITORY = "org.kalypso.services.observation.server.fassade.destination.repository.name";
+  public static final String DESTINATION_REPOSITORY = "org.kalypso.services.observation.server.fassade.destination.repository.name"; //$NON-NLS-1$
 
   private IRepository m_repository = null;
 
