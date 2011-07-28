@@ -178,7 +178,11 @@ public class JTSConverter
     if( lineString instanceof LinearRing )
       return (LinearRing) lineString;
 
-    final Coordinate[] coordinates = lineString.getCoordinates();
+    return toLinearRing( lineString.getCoordinates() );
+  }
+
+  public static LinearRing toLinearRing( final Coordinate[] coordinates )
+  {
     if( coordinates[0].equals( coordinates[coordinates.length - 1] ) )
       return new GeometryFactory().createLinearRing( coordinates );
 

@@ -1509,4 +1509,18 @@ public final class JTSUtilities
     final GeometryFactory factory = new GeometryFactory( point.getPrecisionModel(), point.getSRID() );
     return factory.createPoint( ptr );
   }
+
+  public static Coordinate[] replace( final Coordinate[] coordinates, final Coordinate old, final Coordinate set )
+  {
+    final List<Coordinate> replaced = new ArrayList<Coordinate>();
+    for( final Coordinate coordinate : coordinates )
+    {
+      if( coordinate.equals( old ) )
+        replaced.add( set );
+      else
+        replaced.add( coordinate );
+    }
+
+    return replaced.toArray( new Coordinate[] {} );
+  }
 }
