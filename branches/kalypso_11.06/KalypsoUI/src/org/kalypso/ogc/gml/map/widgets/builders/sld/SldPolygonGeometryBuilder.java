@@ -43,6 +43,8 @@ package org.kalypso.ogc.gml.map.widgets.builders.sld;
 import java.net.URL;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.java.lang.Arrays;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -72,6 +74,8 @@ public class SldPolygonGeometryBuilder extends AbstractSldGeometryBuilder implem
   public GM_Object finish( ) throws Exception
   {
     final Geometry polygon = finishJts();
+    if( Objects.isNull( polygon ) )
+      return null;
 
     return JTSAdapter.wrap( polygon, getCrs() );
   }
@@ -79,9 +83,11 @@ public class SldPolygonGeometryBuilder extends AbstractSldGeometryBuilder implem
   @Override
   public Geometry finishJts( )
   {
-    final Geometry polygon = getGeometry( getCoordinates()[0] );
+    final Coordinate[] coordinates = getCoordinates();
+    if( Arrays.isEmpty( coordinates ) )
+      return null;
 
-    return polygon;
+    return getGeometry( coordinates[0] );
   }
 
   protected Geometry getGeometry( final Coordinate... additional )
