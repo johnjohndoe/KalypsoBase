@@ -734,6 +734,12 @@ public final class JTSUtilities
    */
   public static LineString addPointsToLine( final LineString line, final List<Point> originalPoints )
   {
+    return addPointsToLine( line, originalPoints.toArray( new Point[] {} ) );
+  }
+
+  public static LineString addPointsToLine( final LineString line, final Point... originalPoints )
+  {
+
     /* Clone the whole list. */
     final List<Point> clonedPoints = new ArrayList<Point>();
     for( final Point originalPoint : originalPoints )
