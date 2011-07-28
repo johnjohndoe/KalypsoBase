@@ -1485,7 +1485,6 @@ public final class JTSUtilities
 
     /* Get the exterior ring. */
     final LineString ring = polygone.getExteriorRing();
-
     final Coordinate[] coordinates = ring.getCoordinates();
 
     for( final Coordinate coordinate : coordinates )

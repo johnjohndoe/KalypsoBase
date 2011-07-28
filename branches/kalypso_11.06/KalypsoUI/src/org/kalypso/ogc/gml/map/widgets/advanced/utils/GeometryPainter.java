@@ -175,7 +175,6 @@ public class GeometryPainter
       awtPoints.add( awt );
     }
 
-
     final Color original = g.getColor();
     g.setColor( color );
 
@@ -234,7 +233,7 @@ public class GeometryPainter
     g.drawPolygon( poly );
 
     g.setColor( original );
-    
+
   }
 
   public static void highlightPoints( final Graphics graphics, final IMapPanel mapPanel, final Geometry geometry, final IPointHighLighter highlighter )
