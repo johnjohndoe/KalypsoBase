@@ -47,10 +47,13 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 /**
  * Includes a MapView KeyListener
@@ -166,5 +169,14 @@ public abstract class AbstractKeyListenerWidget extends AbstractWidget
       return MapUtilities.transform( getMapPanel(), current );
 
     return null;
+  }
+
+  public com.vividsolutions.jts.geom.Point getCurrentJtsPoint( ) throws GM_Exception
+  {
+    final GM_Point gmp = getCurrentGmPoint();
+    if( Objects.isNull( gmp ) )
+      return null;
+
+    return (com.vividsolutions.jts.geom.Point) JTSAdapter.export( gmp );
   }
 }
