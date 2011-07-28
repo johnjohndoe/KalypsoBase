@@ -91,15 +91,13 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
 
   static final IPointHighLighter POSSIBLE_VERTEX_POINT = new IPointHighLighter()
   {
-    Color cVertex = COLOR_VERTEX;
-
-    final int size = 14;
-
     @Override
     public void draw( final Graphics g, final java.awt.Point point )
     {
+      final int size = 14;
+
       final Color original = g.getColor();
-      g.setColor( cVertex );
+      g.setColor( COLOR_VERTEX );
       g.fillOval( point.x - size / 2, point.y - size / 2, size, size );
       g.setColor( original );
     }
