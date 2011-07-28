@@ -46,6 +46,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -170,5 +171,17 @@ public class JTSConverter
     }
 
     return lineStrings.toArray( new LineString[] {} );
+  }
+
+  public static LinearRing toLinearRing( final LineString lineString )
+  {
+    if( lineString instanceof LinearRing )
+      return (LinearRing) lineString;
+
+    final Coordinate[] coordinates = lineString.getCoordinates();
+    if( coordinates[0].equals( coordinates[coordinates.length - 1] ) )
+      return new GeometryFactory().createLinearRing( coordinates );
+
+    return new GeometryFactory().createLinearRing( (Coordinate[]) ArrayUtils.add( coordinates, coordinates[0] ) );
   }
 }
