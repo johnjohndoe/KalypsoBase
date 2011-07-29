@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.image;
 
+import java.util.Date;
+
 import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.formats.tiff.TiffDirectory;
 import org.apache.sanselan.formats.tiff.TiffField;
@@ -88,7 +90,10 @@ public final class ExifUtils
     }
   }
 
-  private static TiffField findField( final TiffImageMetadata exif, final TagInfo tag ) throws ImageReadException
+  /**
+   * Searches for a field, first by directory (if defined in tag), than directly.
+   */
+  public static TiffField findField( final TiffImageMetadata exif, final TagInfo tag ) throws ImageReadException
   {
     if( tag.directoryType == null )
       return exif.findField( tag );
@@ -222,5 +227,25 @@ public final class ExifUtils
       return null;
 
     return 2 * Math.atan( (Math.sqrt( width * width + height * height ) / 2) / focalLength );
+  }
+
+  public static Date getQuietDate( final TiffImageMetadata exif, final TagInfo tag )
+  {
+    try
+    {
+      final TiffField dateField = ExifUtils.findField( exif, tag );
+      if( dateField == null )
+        return null;
+
+      final org.apache.sanselan.formats.tiff.constants.TagInfo.Date fieldAsDate = new org.apache.sanselan.formats.tiff.constants.TagInfo.Date( tag.name, tag.tag, tag.dataTypes[0], tag.length );
+
+      return (Date) fieldAsDate.getValue( dateField );
+    }
+    catch( final ImageReadException e )
+    {
+      // e.printStackTrace();
+      // ignored
+      return null;
+    }
   }
 }
