@@ -40,34 +40,37 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.validation;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
- * This validator checks, if a number was provided.
+ * This validator checks, if a number is not an exact value.
  * 
- * @author Holger Albert
+ * @author Gernot Belger
  */
-public class NumberEmptyValidator extends TypedValidator<Number>
+public class NumberNotExactValidator extends TypedValidator<Number>
 {
+  private final Number m_compareValue;
+
   /**
-   * The constructor.
-   * 
    * @param severity
    *          Severity of IStatus, will be used to create validation failures.
    * @param message
    *          Will be used as message for a status, if validation fails.
    */
-  public NumberEmptyValidator( final int severity, final String message )
+  public NumberNotExactValidator( final Number compareValue, final int severity, final String message )
   {
     super( Number.class, severity, message );
+
+    m_compareValue = compareValue;
   }
 
   @Override
   protected IStatus doValidate( final Number value ) throws CoreException
   {
-    if( value == null )
+    if( ObjectUtils.equals( m_compareValue, value ) )
       fail();
 
     return Status.OK_STATUS;
