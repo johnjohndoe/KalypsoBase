@@ -44,6 +44,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -66,13 +67,13 @@ import de.renew.workflow.connector.WorkflowConnectorPlugin;
  */
 public abstract class AbstractCaseManager<T extends ICase> implements ICaseManager<T>
 {
-  public static final String METADATA_FOLDER = ".metadata";
+  public static final String METADATA_FOLDER = ".metadata"; //$NON-NLS-1$
 
-  public static final String METADATA_FILENAME = "cases.xml";
+  public static final String METADATA_FILENAME = "cases.xml"; //$NON-NLS-1$
 
   private final JAXBContext m_jc;
 
-  private final List<ICaseManagerListener<T>> m_listeners = new ArrayList<ICaseManagerListener<T>>();
+  private final List<ICaseManagerListener<T>> m_listeners = Collections.synchronizedList( new ArrayList<ICaseManagerListener<T>>() );
 
   private ICaseList m_cases;
 
@@ -147,7 +148,7 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
       }
       catch( final Throwable e )
       {
-        final IStatus status = new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "", e );
+        final IStatus status = new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "", e );
         throw new CoreException( status );
       }
     }
@@ -228,7 +229,7 @@ public abstract class AbstractCaseManager<T extends ICase> implements ICaseManag
         }
         catch( final Exception e )
         {
-          return new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "", e );
+          return new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "", e );
         }
         finally
         {
