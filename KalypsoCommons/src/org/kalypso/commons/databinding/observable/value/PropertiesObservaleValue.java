@@ -40,64 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.observable.value;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.eclipse.core.databinding.observable.Diffs;
-import org.eclipse.core.databinding.observable.value.AbstractObservableValue;
-import org.eclipse.core.databinding.observable.value.ValueDiff;
-import org.eclipse.core.runtime.Assert;
+import java.util.Properties;
 
 /**
- * @author Gernot Albert
- * @author Holger Albert
+ * Generic {@link org.eclipse.core.databinding.observable.value.IObservableValue} that represents a value from a
+ * {@link java.util.Properties} object.
+ * 
+ * @author Gernot Belger
  */
-public abstract class TypedObservableValue<SOURCE, VALUE> extends AbstractObservableValue implements ITypedObservableValue<SOURCE, VALUE>
+public class PropertiesObservaleValue extends TypedObservableValue<Properties, String>
 {
-  private final SOURCE m_source;
+  private final String m_key;
 
-  private final Class<VALUE> m_valueType;
-
-  public TypedObservableValue( final SOURCE source, final Class<VALUE> valueType )
+  public PropertiesObservaleValue( final Properties source, final String key )
   {
-    Assert.isNotNull( source );
-    Assert.isNotNull( valueType );
+    super( source, String.class );
 
-    m_source = source;
-    m_valueType = valueType;
-  }
-
-  protected SOURCE getSource( )
-  {
-    return m_source;
+    m_key = key;
   }
 
   @Override
-  public Class<VALUE> getValueType( )
+  public void doSetValueTyped( final Properties source, final String value )
   {
-    return m_valueType;
+    source.setProperty( m_key, value );
   }
 
   @Override
-  protected final VALUE doGetValue( )
+  public String doGetValueTyped( final Properties source )
   {
-    return doGetValueTyped( m_source );
-  }
-
-  @Override
-  protected final void doSetValue( final Object value )
-  {
-    final VALUE typedValue = m_valueType.cast( value );
-    final VALUE currentValue = doGetValue();
-    if( valueEquals( typedValue, currentValue ) )
-      return;
-
-    doSetValueTyped( m_source, typedValue );
-
-    final ValueDiff diff = Diffs.createValueDiff( currentValue, value );
-    fireValueChange( diff );
-  }
-
-  protected boolean valueEquals( final VALUE value1, final VALUE value2 )
-  {
-    return ObjectUtils.equals( value1, value2 );
+    return source.getProperty( m_key );
   }
 }
