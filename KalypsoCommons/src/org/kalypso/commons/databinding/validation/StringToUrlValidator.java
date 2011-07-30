@@ -38,59 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.patternreplace;
+package org.kalypso.commons.databinding.validation;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.IStatus;
 
 /**
  * @author Gernot Belger
  */
-public class ConstantReplacer implements IPatternInput<Object>
+public class StringToUrlValidator extends TypedValidator<String>
 {
-  private final String m_value;
-
-  private final String m_token;
-
-  public ConstantReplacer( final String value )
+  public StringToUrlValidator( )
   {
-    this( null, value );
-  }
-
-  public ConstantReplacer( final String token, final String value )
-  {
-    m_token = token;
-    m_value = value;
+    super( String.class, IStatus.ERROR, StringUtils.EMPTY );
   }
 
   @Override
-  public String getLabel( )
+  protected IStatus doValidate( final String value )
   {
-    return m_token;
-  }
+    if( StringUtils.isEmpty( value ) )
+      return ValidationStatus.error( "Location is empty" );
 
-  /**
-   * @see org.kalypso.commons.patternreplace.IPatternInput#getToken()
-   */
-  @Override
-  public String getToken( )
-  {
-    return m_token;
-  }
+    try
+    {
+      new URL( value );
+    }
+    catch( final MalformedURLException e )
+    {
+      return ValidationStatus.error( e.getLocalizedMessage(), e );
+    }
 
-  /**
-   * @see org.kalypso.commons.patternreplace.IPatternInput#getShowInMenu()
-   */
-  @Override
-  public boolean getShowInMenu( )
-  {
-    return false;
-  }
-
-  /**
-   * @see org.kalypso.commons.patternreplace.IPatternInput#getReplacement(java.lang.Object, java.lang.String)
-   */
-  @Override
-  public String getReplacement( final Object context, final String param )
-  {
-    return m_value;
+    return ValidationStatus.ok();
   }
 
 }
