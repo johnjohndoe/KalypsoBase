@@ -60,9 +60,6 @@ public class ConstantReplacer implements IPatternInput<Object>
     m_value = value;
   }
 
-  /**
-   * @see org.kalypso.commons.patternreplace.IPatternInput#getLabel()
-   */
   @Override
   public String getLabel( )
   {
