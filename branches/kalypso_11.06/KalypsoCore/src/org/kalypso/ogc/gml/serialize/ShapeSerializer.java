@@ -262,7 +262,7 @@ public final class ShapeSerializer
     }
     catch( final CoreException e )
     {
-      throw new GmlSerializeException( "Abbruch durch Benutzer" );
+      throw new GmlSerializeException( "Abbruch durch Benutzer", e );
     }
     catch( final Exception e )
     {
