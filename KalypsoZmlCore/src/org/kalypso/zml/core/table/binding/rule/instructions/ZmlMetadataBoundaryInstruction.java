@@ -4,41 +4,41 @@ package org.kalypso.zml.core.table.binding.rule.instructions;
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 
 import java.math.BigDecimal;
@@ -58,7 +58,7 @@ import org.kalypso.zml.core.table.schema.MetadataBoundaryInstructionType;
  */
 public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionType
 {
-  public static final String PATTERN_TEXT = "${text}";
+  public static final String PATTERN_TEXT = "${text}"; //$NON-NLS-1$
 
   private MetadataBoundary m_boundaryFrom;
 
@@ -146,7 +146,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
     if( ObjectUtils.equals( valueAxis.getType(), boundaryType ) )
       return getReferenceValue( reference );
 
-    /* Type of boundary is different from value type -> we need to retrieve the value ourselfs */
+    /* Type of boundary is different from value type -> we need to retrieve the value ourself's */
     final Integer tupleModelIndex = reference.getModelIndex();
     if( tupleModelIndex == null )
       return Double.NaN;
@@ -180,22 +180,22 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
 
     final BigDecimal compareValue = meta.getValue();
 
-    if( "<".equals( op ) )
+    if( "<".equals( op ) )// $NON-NLS-1$
     {
       if( value.compareTo( compareValue ) < 0 )
         return true;
     }
-    else if( "<=".equals( op ) )
+    else if( "<=".equals( op ) )// $NON-NLS-1$
     {
       if( value.compareTo( compareValue ) <= 0 )
         return true;
     }
-    else if( ">".equals( op ) )
+    else if( ">".equals( op ) )// $NON-NLS-1$
     {
       if( value.compareTo( compareValue ) > 0 )
         return true;
     }
-    else if( ">=".equals( op ) )
+    else if( ">=".equals( op ) ) // $NON-NLS-1$
     {
       if( value.compareTo( compareValue ) >= 0 )
         return true;
