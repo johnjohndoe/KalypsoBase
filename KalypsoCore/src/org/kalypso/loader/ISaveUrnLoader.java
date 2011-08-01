@@ -40,15 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.loader;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 
 /**
- * A loader that support 'save as'.
+ * A loader that support saving catalog based resources.
  * 
  * @author Gernot Belger
  */
-public interface ISaveAsLoader extends ILoader
+public interface ISaveUrnLoader extends ILoader
 {
-  void saveAs( IPoolableObjectType key, IProgressMonitor monitor, Object object ) throws LoaderException;
+  /**
+   * @return <code>true</code>, if the resource has been saved to the user store.
+   */
+  boolean isUserSaved( IPoolableObjectType key );
+
+  void resetUserStyle( IPoolableObjectType key );
 }
