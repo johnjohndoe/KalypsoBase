@@ -192,6 +192,8 @@ public class ImageProvider
 
   public static final ImageDescriptor IMAGE_STYLEEDITOR_SAVE = ImageProvider.id( "icons/gistable/save_edit.gif" ); //$NON-NLS-1$
 
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_RESET = ImageProvider.id( "icons/gistable/resetUserStyle.gif" ); //$NON-NLS-1$
+
   public static final ImageDescriptor IMAGE_STYLEEDITOR_ADD_RULE = ImageProvider.id( "icons/obstable/add_row.gif" ); //$NON-NLS-1$
 
   public static final ImageDescriptor IMAGE_STYLEEDITOR_ADD_RULE_PATTERN = ImageProvider.IMAGE_ZML_REPOSITORY_EXPAND;

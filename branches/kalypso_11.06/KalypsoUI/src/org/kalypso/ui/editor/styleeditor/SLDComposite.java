@@ -72,6 +72,8 @@ public class SLDComposite extends Composite
     }
   };
 
+  private final ResetUserStyleAction m_resetAction = new ResetUserStyleAction( this );
+
   private final SaveStyleAction m_saveAction = new SaveStyleAction( this );
 
   private final IKalypsoStyleListener m_styleListener = new IKalypsoStyleListener()
@@ -108,7 +110,7 @@ public class SLDComposite extends Composite
     body.setLayout( new FillLayout() );
 
     final IToolBarManager toolBarManager = m_form.getToolBarManager();
-    m_saveAction.setEnabled( false );
+    toolBarManager.add( m_resetAction );
     toolBarManager.add( m_saveAction );
     toolBarManager.update( true );
 
@@ -202,7 +204,7 @@ public class SLDComposite extends Composite
 
   protected void updateControl( )
   {
-    m_saveAction.update();
+    updateActions();
 
     final String formTitle = m_style == null ? MessageBundle.STYLE_EDITOR_NO_STYLE_FOR_EDITOR : m_style.getTitle();
     m_form.setText( formTitle );
@@ -220,5 +222,11 @@ public class SLDComposite extends Composite
   public IKalypsoStyle getKalypsoStyle( )
   {
     return m_style;
+  }
+
+  public void updateActions( )
+  {
+    m_saveAction.update();
+    m_resetAction.update();
   }
 }
