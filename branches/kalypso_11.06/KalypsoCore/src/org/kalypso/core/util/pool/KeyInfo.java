@@ -60,10 +60,10 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCoreDebug;
-import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.catalog.CatalogUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.loader.ILoader;
-import org.kalypso.loader.ISaveAsLoader;
+import org.kalypso.loader.ISaveUrnLoader;
 import org.kalypso.loader.LoaderException;
 
 public final class KeyInfo extends Job
@@ -415,6 +415,9 @@ public final class KeyInfo extends Job
 
     try
     {
+      if( force )
+        m_hasNothingBlocked = false;
+
       reloadInternal();
       setDirty( false );
     }
@@ -505,7 +508,7 @@ public final class KeyInfo extends Job
       final ILoader loader = getLoader();
       final IResource[] resources = loader.getResources( getKey() );
       if( resources.length == 0 )
-        return false;
+        return isSaveUrnSupported();
     }
     catch( final Throwable e )
     {
@@ -514,49 +517,15 @@ public final class KeyInfo extends Job
     return true;
   }
 
-  public boolean isSaveAsSupported( )
+  private boolean isSaveUrnSupported( )
   {
     final ILoader loader = getLoader();
-    return loader instanceof ISaveAsLoader;
-  }
-
-  /**
-   * Saves the object as a user object.<br/>
-   * Intended for globally registered objects (like styles). If 'saved as', the user style will replace the catalog
-   * object wherever possible.
-   */
-  public void saveObjectAs( final IProgressMonitor monitor ) throws LoaderException
-  {
-    /* Check if we can save as */
-    if( !isSaveAsSupported() )
-      throw new LoaderException( "Unable to save as" ); //$NON-NLS-1$
-
-    final ISaveAsLoader loader = (ISaveAsLoader) getLoader();
-
-    /* unhook old resources, but save for exception; empty in most cases */
-    final IResource[] oldResource = m_resources.keySet().toArray( new IResource[m_resources.size()] );
-    try
+    if( loader instanceof ISaveUrnLoader )
     {
-      m_resources.clear();
+      final String location = m_key.getLocation();
+      return CatalogUtilities.isCatalogResource( location );
+    }
 
-      /* save to user space */
-      loader.saveAs( m_key, monitor, m_object );
-
-      /* hook changed resources */
-      final IResource[] resources = loader.getResources( m_key );
-      for( final IResource resource : resources )
-        m_resources.put( resource, Boolean.FALSE );
-    }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to save" );
-      throw new LoaderException( status );
-    }
-    finally
-    {
-      for( final IResource resource : oldResource )
-        m_resources.put( resource, Boolean.FALSE );
-    }
+    return false;
   }
 }
