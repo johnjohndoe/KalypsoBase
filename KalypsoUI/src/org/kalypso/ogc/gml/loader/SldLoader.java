@@ -52,6 +52,7 @@ import org.apache.tools.ant.filters.StringInputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -62,10 +63,11 @@ import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogSLD;
+import org.kalypso.core.catalog.CatalogUtilities;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
-import org.kalypso.loader.ISaveAsLoader;
+import org.kalypso.loader.ISaveUrnLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
@@ -76,27 +78,22 @@ import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 /**
  * @author schlienger
  */
-public class SldLoader extends AbstractLoader implements ISaveAsLoader
+public class SldLoader extends AbstractLoader implements ISaveUrnLoader
 {
+  private static final String USER_STORE_DIR = "userDefinedSld"; //$NON-NLS-1$
+
   private final UrlResolver m_urlResolver = new UrlResolver();
 
   private ResourceBundle m_resourceBundle;
 
   private IResource[] m_resources = new IResource[] {};
 
-  /**
-   * @see org.kalypso.loader.ILoader#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return "OGC SLD"; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.loader.ILoader#load(org.kalypso.core.util.pool.IPoolableObjectType,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public Object load( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException
   {
@@ -107,7 +104,7 @@ public class SldLoader extends AbstractLoader implements ISaveAsLoader
     {
       monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.1" ), 1000 ); //$NON-NLS-1$
 
-      if( source.startsWith( "urn" ) ) //$NON-NLS-1$
+      if( CatalogUtilities.isCatalogResource( source ) )
         return loadFromCatalog( context, source );
 
       /* Local url: sld and resources reside at the same location */
@@ -186,18 +183,13 @@ public class SldLoader extends AbstractLoader implements ISaveAsLoader
     final URL catalogURL = catalog.getURL( resolver, source, source );
 
     /* Check for user saved style */
-    final URL userURL = findUserUrl( context, source );
-    if( userURL != null )
+    final File userFile = findUserFile( source );
+    if( userFile != null && userFile.exists() )
     {
-      final File userFile = FileUtils.toFile( userURL );
-      if( userFile != null && userFile.exists() )
-      {
-        // sld from user location but resources still from catalog location
-        return loadFromUrl( userURL, catalogURL );
-      }
-
-      /* Fall through, loading from catalog */
+      // sld from user location but resources still from catalog location
+      return loadFromUrl( userFile.toURI().toURL(), catalogURL );
     }
+    /* Fall through, loading from catalog */
 
     // Try to load the fts from the catalog
     final FeatureTypeStyle fts = catalog.getValue( resolver, source, source );
@@ -210,10 +202,17 @@ public class SldLoader extends AbstractLoader implements ISaveAsLoader
     return fts;
   }
 
-  private URL findUserUrl( final URL context, final String source )
+  private File findUserFile( final String source )
   {
-    // TODO Auto-generated method stub
-    return null;
+    if( !CatalogUtilities.isCatalogResource( source ) )
+      return null;
+
+    final IPath stateLocation = KalypsoGisPlugin.getDefault().getStateLocation();
+    final IPath userStore = stateLocation.append( USER_STORE_DIR );
+    final String sourceAsPath = source.replace( ':', IPath.SEPARATOR );
+    final IPath userSource = userStore.append( sourceAsPath );
+    final IPath userSld = userSource.addFileExtension( "sld" ); //$NON-NLS-1$
+    return userSld.toFile();
   }
 
   private Object loadFromUrl( final URL sldLocation, final URL resourceLocation ) throws IOException, XMLParsingException
@@ -236,24 +235,21 @@ public class SldLoader extends AbstractLoader implements ISaveAsLoader
   @Override
   public void save( final IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
-    final String source = key.getLocation();
     final URL context = key.getContext();
+    final String source = key.getLocation();
 
     if( data instanceof Marshallable )
     {
-      IFile sldFile = null;
       try
       {
-        final URL styleURL = m_urlResolver.resolveURL( context, source );
+        /* create filename */
+        final File userFile = findUserFile( source );
 
-        sldFile = ResourceUtilities.findFileFromURL( styleURL );
-        if( sldFile == null )
-          throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.6" ) + styleURL ); //$NON-NLS-1$
-
-        final String charset = sldFile.getCharset();
-        final String sldXMLwithHeader = marshallObject( data, charset );
-
-        sldFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), true, false, monitor );
+        /* Check if already exists -> error */
+        if( userFile == null )
+          saveToWorkspace( context, source, (Marshallable) data, monitor );
+        else
+          saveToUserStore( userFile, (Marshallable) data, monitor );
       }
       catch( final MalformedURLException e )
       {
@@ -266,6 +262,45 @@ public class SldLoader extends AbstractLoader implements ISaveAsLoader
         e.printStackTrace();
         throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.9" ) + e.getLocalizedMessage(), e ); //$NON-NLS-1$
       }
+    }
+  }
+
+  private void saveToWorkspace( final URL context, final String source, final Marshallable data, final IProgressMonitor monitor ) throws MalformedURLException, CoreException
+  {
+    final URL styleURL = m_urlResolver.resolveURL( context, source );
+
+    final IFile sldFile = ResourceUtilities.findFileFromURL( styleURL );
+    if( sldFile == null )
+      throw new LoaderException( Messages.getString( "org.kalypso.ogc.gml.loader.SldLoader.6" ) + styleURL ); //$NON-NLS-1$
+
+    final String charset = sldFile.getCharset();
+    final String sldXMLwithHeader = marshallObject( data, charset );
+
+    sldFile.setContents( new StringInputStream( sldXMLwithHeader, charset ), true, false, monitor );
+  }
+
+  private void saveToUserStore( final File userFile, final Marshallable data, final IProgressMonitor monitor ) throws LoaderException
+  {
+    try
+    {
+      userFile.getParentFile().mkdirs();
+
+      /* Really save to this location */
+      final String sldXMLwithHeader = marshallObject( data, CharEncoding.UTF_8 );
+      FileUtils.writeStringToFile( userFile, sldXMLwithHeader );
+
+      /* Just for formal reasons, should already be empty */
+      setResources( null );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to save SLD", e );
+      throw new LoaderException( status );
+    }
+    finally
+    {
+      monitor.done();
     }
   }
 
@@ -293,55 +328,39 @@ public class SldLoader extends AbstractLoader implements ISaveAsLoader
     return m_resourceBundle;
   }
 
-  @Override
-  public void saveAs( final IPoolableObjectType key, final IProgressMonitor monitor, final Object object ) throws LoaderException
+  protected String marshallObject( final Marshallable marshallable, final String charset )
   {
-    try
-    {
-      final String location = key.getLocation();
-
-      final String monitorMessage = String.format( "Saving '%s'", location );
-      monitor.beginTask( monitorMessage, IProgressMonitor.UNKNOWN );
-
-      /* create filename */
-      final URL userLocation = findUserUrl( key.getContext(), location );
-      final File userFile = FileUtils.toFile( userLocation );
-
-      /* Check if already exists -> error */
-      if( userFile == null || userFile.exists() )
-      {
-        /* Should never happen */
-        // TODO: we need an extra method in the interface that checks, if we already have savedAs
-        throw new LoaderException( "User version of this file already exists" ); //$NON-NLS-1$
-      }
-
-      /* Really save to this location */
-      final String sldXMLwithHeader = marshallObject( object, CharEncoding.UTF_8 );
-      FileUtils.writeStringToFile( userFile, sldXMLwithHeader );
-
-      /* Just for formal reasons, should already be empty */
-      setResources( null );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to save SLD", e );
-      throw new LoaderException( status );
-    }
-    finally
-    {
-      monitor.done();
-    }
-  }
-
-  protected String marshallObject( final Object object, final String charset ) throws LoaderException
-  {
-    if( !(object instanceof Marshallable) )
-      throw new LoaderException( "Wrong kind of object" ); //$NON-NLS-1$
-
-    final Marshallable marshallable = (Marshallable) object;
     final String sldXML = marshallable.exportAsXML();
     final String sldXMLwithHeader = "<?xml version=\"1.0\" encoding=\"" + charset + "\"?>" + sldXML; //$NON-NLS-1$ //$NON-NLS-2$
     return sldXMLwithHeader;
+  }
+
+  @Override
+  public boolean isUserSaved( final IPoolableObjectType key )
+  {
+    final String location = key.getLocation();
+    if( location == null )
+      return false;
+
+    if( !CatalogUtilities.isCatalogResource( location ) )
+      return false;
+
+    final File userFile = findUserFile( location );
+    if( userFile == null )
+      return false;
+
+    return userFile.exists();
+  }
+
+  @Override
+  public void resetUserStyle( final IPoolableObjectType key )
+  {
+    final String location = key.getLocation();
+    final File userFile = findUserFile( location );
+    if( userFile == null )
+      return;
+
+    if( userFile.exists() )
+      userFile.delete();
   }
 }
