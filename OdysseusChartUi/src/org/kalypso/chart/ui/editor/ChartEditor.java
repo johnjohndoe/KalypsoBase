@@ -464,11 +464,7 @@ public class ChartEditor extends EditorPart implements IChartPart
     return m_chartConfigurationLoader;
   }
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getOutlinePage()
-   */
-  @Override
-  public IContentOutlinePage getOutlinePage( )
+  private IContentOutlinePage getOutlinePage( )
   {
     if( m_outlinePage == null && getChartComposite() != null )
     {

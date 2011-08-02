@@ -26,7 +26,6 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 public class TupleResultLineLayer extends AbstractLineLayer
 {
-
   /**
    * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
    */

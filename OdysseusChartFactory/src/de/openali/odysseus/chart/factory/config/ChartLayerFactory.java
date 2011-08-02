@@ -134,7 +134,7 @@ public class ChartLayerFactory extends AbstractChartFactory
       {
         final IChartLayer layer = parse( child, baseTypes );
         if( layer != null )
-        layers.add( layer );
+          layers.add( layer );
       }
       catch( final Throwable t )
       {
@@ -231,6 +231,7 @@ public class ChartLayerFactory extends AbstractChartFactory
     final IStyleSet styleSet = StyleFactory.createStyleSet( styles, baseTypes, getContext() );
     final Map<String, String> map = createMapperMap( layerType );
 
+    // FIXME: too much inline code -> pull out!
     provider.init( new ILayerProviderSource()
     {
       @Override
@@ -285,12 +286,13 @@ public class ChartLayerFactory extends AbstractChartFactory
     final IChartLayer layer = provider.getLayer( getContext() );
     if( layer == null )
       return null;
-    
-    setBasicParameters( layerType, layer );
-    
-    if( Objects.isNotNull( domainAxis, targetAxis ) )
-      layer.setCoordinateMapper( new CoordinateMapper( domainAxis, targetAxis ) );
 
+    setBasicParameters( layerType, layer );
+
+    if( Objects.isNotNull( domainAxis, targetAxis ) )
+      // FIXME> layer is corrupt... do not use_
+      layer.setCoordinateMapper( new CoordinateMapper( domainAxis, targetAxis ) );
+   
     layer.setData( CONFIGURATION_TYPE_KEY, layerType );
     layer.init();
 
@@ -401,7 +403,7 @@ public class ChartLayerFactory extends AbstractChartFactory
       final String mpId = mapperType.getProvider().getEpid();
       if( mpId != null && mpId.length() > 0 )
         try
-        {
+      {
           final IMapperRegistry mr = getModel().getMapperRegistry();
           final IMapperProvider mp = getLoader().getExtension( IMapperProvider.class, mpId );
           final String mid = mapperType.getId();
@@ -413,11 +415,11 @@ public class ChartLayerFactory extends AbstractChartFactory
           // save configuration type so it can be used for saving to chartfile
           mapper.setData( CONFIGURATION_TYPE_KEY, mapperType );
           mr.addMapper( mapper );
-        }
-        catch( final ConfigurationException e )
-        {
-          e.printStackTrace();
-        }
+      }
+      catch( final ConfigurationException e )
+      {
+        e.printStackTrace();
+      }
       else
         Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider " + mpId + " not known" );
     }
