@@ -66,8 +66,17 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 /**
  * @author kimwerner
  */
-public abstract class AbstractChartModelViewPart extends ViewPart implements IAdapterEater<IChartPart>, IChartModelEventListener, IChartModelView
+public abstract class AbstractChartModelViewPart extends ViewPart implements IAdapterEater<IChartPart>, IChartModelView
 {
+  private final IChartModelEventListener m_chartListener = new IChartModelEventListener()
+  {
+    @Override
+    public void onModelChanged( final IChartModel oldModel, final IChartModel newModel )
+    {
+      handleModelChanged( oldModel, newModel );
+    }
+  };
+
   private final AdapterPartListener<IChartPart> m_chartProviderListener = new AdapterPartListener<IChartPart>( IChartPart.class, this, EditorFirstAdapterFinder.<IChartPart> instance(), EditorFirstAdapterFinder.<IChartPart> instance() );
 
   private IChartPart m_chartPart;
@@ -105,9 +114,12 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
   public void dispose( )
   {
     getSite().setSelectionProvider( null );
+
     if( m_chartPart != null )
     {
-      m_chartPart.removeListener( this );
+      final IChartComposite chart = m_chartPart.getChartComposite();
+      if( chart != null )
+        chart.removeChartEventListener( m_chartListener );
     }
 
     super.dispose();
@@ -172,51 +184,38 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     updateControl();
   }
 
-  protected abstract void modelChanged( final IChartModel oldModel );
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IChartModelEventListener#onModelChanged(de.openali.odysseus.chart.framework.model.IChartModel,
-   *      de.openali.odysseus.chart.framework.model.IChartModel)
-   */
-  @Override
-  public void onModelChanged( final IChartModel oldModel, final IChartModel newModel )
-  {
-    m_chartModel = newModel;
-
-    final Runnable runnable = new Runnable()
-    {
-      @Override
-      public void run( )
-      {
-        modelChanged( oldModel );
-      }
-    };
-
-    ControlUtils.asyncExec( m_control, runnable );
-
-  }
-
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(java.lang.Object)
-   */
-
   @Override
   public void setAdapter( final IWorkbenchPart part, final IChartPart adapter )
   {
     if( adapter == m_chartPart )
       return;
+
+    final IChartModel oldModel = m_chartModel;
+
     if( m_chartPart != null )
     {
-      m_chartPart.removeListener( this );
+      final IChartComposite chartComposite = m_chartPart.getChartComposite();
+      if( chartComposite != null )
+        chartComposite.removeChartEventListener( m_chartListener );
     }
+
     m_chartPart = adapter;
+
     if( adapter != null )
     {
-      adapter.addListener( this );
       final IChartComposite chart = adapter.getChartComposite();
-      m_chartModel = chart == null ? null : chart.getChartModel();
+      if( chart == null )
+        m_chartModel = null;
+      else
+      {
+        m_chartModel = chart.getChartModel();
+        chart.addChartEventListener( m_chartListener );
+      }
     }
-    updateControl();
+
+    handleModelChanged( oldModel, m_chartModel );
+
+    // updateControl();
   }
 
   /**
@@ -230,6 +229,24 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
       m_control.setFocus();
     }
   }
+
+  protected void handleModelChanged( final IChartModel oldModel, final IChartModel newModel )
+  {
+    m_chartModel = newModel;
+
+    final Runnable runnable = new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        modelChanged( oldModel );
+      }
+    };
+
+    ControlUtils.asyncExec( m_control, runnable );
+  }
+
+  protected abstract void modelChanged( final IChartModel oldModel );
 
   /** Must be called in SWT thread */
   protected abstract void updateControl( );

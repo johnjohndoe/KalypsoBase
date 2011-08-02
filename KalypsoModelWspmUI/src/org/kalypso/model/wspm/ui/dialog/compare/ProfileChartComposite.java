@@ -117,12 +117,8 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     return super.doInvalidateChart();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChart#getChart()
-   */
-
   @Override
-  public IChartComposite getChart( )
+  public IChartComposite getChartComposite( )
   {
     return this;
   }
@@ -190,6 +186,9 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     if( isDisposed() )
       return;
 
+    // FIXME: bad and ugly! we should keep only one model, m_chartModel; not two references to the same thing
+
+    final IChartModel oldModel = m_profilChartModel;
     final IProfil oldProfile = m_profilChartModel == null ? null : m_profilChartModel.getProfil();
 
     if( profile != null && profile == oldProfile )
@@ -211,7 +210,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
 
     // TODO: don't autoscale, restore zoom instead
     m_profilChartModel.autoscale();
-    setChartModel( m_profilChartModel );
+    setChartModel( oldModel, m_profilChartModel );
   }
 
   @Override

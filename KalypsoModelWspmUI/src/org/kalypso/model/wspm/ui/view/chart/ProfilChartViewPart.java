@@ -68,12 +68,8 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 
-import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
-import de.openali.odysseus.chart.framework.model.event.impl.ChartModelEventHandler;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartView;
-import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 /**
  * @author kimwerner
@@ -90,22 +86,11 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
 
   private IProfilProvider m_provider;
 
-  private final ChartModelEventHandler m_chartModelEventHandler = new ChartModelEventHandler();
-
   private FormToolkit m_toolkit;
 
   private Form m_form;
 
   private ChartPartListener m_partListener = null;
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
-   */
-  @Override
-  public void addListener( final IChartModelEventListener listener )
-  {
-    m_chartModelEventHandler.addListener( listener );
-  }
 
   /**
    * @see com.bce.profil.eclipse.view.AbstractProfilViewPart2#createContent(org.eclipse.swt.widgets.Composite)
@@ -221,15 +206,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     return m_control;
   }
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
-   */
-  @Override
-  public IPlotHandler getPlotDragHandler( )
-  {
-    return m_profilChartComposite.getPlotHandler();
-  }
-
   protected IProfilLayerProvider getProfilLayerProvider( )
   {
     if( m_profilChartComposite == null || m_profilChartComposite.getProfil() == null )
@@ -273,15 +249,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     setChartModel( newProfile, provider == null ? null : provider.getResult() );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
-   */
-  @Override
-  public void removeListener( final IChartModelEventListener listener )
-  {
-    m_chartModelEventHandler.removeListener( listener );
-  }
-
   @Override
   public void setAdapter( final IWorkbenchPart part, final IProfilProvider adapter )
   {
@@ -305,7 +272,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   private void setChartModel( final IProfil newProfile, final Object result )
   {
     final ProfileChartComposite chartComposite = m_profilChartComposite;
-    final ChartModelEventHandler chartModelEventHandler = m_chartModelEventHandler;
 
     if( chartComposite != null && !chartComposite.isDisposed() )
     {
@@ -318,18 +284,12 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
           public void run( )
           {
             if( !chartComposite.isDisposed() )
-            {
-              final IChartModel oldModel = chartComposite.getChartModel();
               chartComposite.setProfil( newProfile, result );
-              chartModelEventHandler.fireModelChanged( oldModel, chartComposite.getChartModel() );
-            }
-
           }
         };
         display.syncExec( runnable );
       }
     }
-
   }
 
   @Override
