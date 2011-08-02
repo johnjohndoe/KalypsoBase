@@ -55,7 +55,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewSite;
@@ -70,6 +69,7 @@ import org.kalypso.chart.ui.editor.ChartPartListener;
 import org.kalypso.chart.ui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
@@ -92,6 +92,8 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
 
   private ChartPartListener m_partListener = null;
 
+  // FIXME: use m_chartPartComposite
+
   private Composite m_composite = null;
 
   private IChartModel m_chartModel = null;
@@ -108,9 +110,6 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
 
   private ChartEditorTreeOutlinePage m_outlinePage;
 
-  /**
-   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite)
-   */
   @Override
   public void init( final IViewSite site ) throws PartInitException
   {
@@ -173,11 +172,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
     m_chartModel = null;
 
     /* Reset controls */
-    final Control[] children = m_composite.getChildren();
-    for( final Control control : children )
-    {
-      control.dispose();
-    }
+    ControlUtils.disposeChildren( m_composite );
 
     if( m_chartType == null )
     {
@@ -223,12 +218,11 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
     m_composite.layout();
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-   */
   @Override
   public void setFocus( )
   {
+    if( m_composite != null )
+      m_composite.setFocus();
   }
 
   @Override
@@ -309,10 +303,8 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   @Override
   public void selectionChanged( final IWorkbenchPart part, final ISelection selection )
   {
-    // TODO Auto-generated method stub
     if( selection instanceof ITreeSelection )
     {
-
       final ITreeSelection ts = (ITreeSelection) selection;
       final TreePath[] paths = ts.getPaths();
       for( final TreePath treePath : paths )

@@ -140,7 +140,7 @@ public class ChartHandlerUtilities
    * @deprecated Should happen automatically, use ISourceProvider mechanism instead.
    */
   @Deprecated
-  public static void updateElements( final IChartPart part )
+  public static void updateElements( final Object part )
   {
     final Map<Object, Object> filter = new HashMap<Object, Object>();
 

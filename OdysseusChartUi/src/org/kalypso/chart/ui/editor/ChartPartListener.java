@@ -42,14 +42,11 @@ package org.kalypso.chart.ui.editor;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.ISourceProvider;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.WorkbenchPart;
 import org.eclipse.ui.services.IServiceLocator;
-import org.kalypso.chart.ui.IChartPart;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 
@@ -62,14 +59,13 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class ChartPartListener extends PartAdapter2
 {
-  private final IChartPart m_chartPart;
+  private final IWorkbenchPart m_chartPart;
 
-  // TODO: move to IChartPart and introduce new method IChartPart#activateSource
-  private ISourceProvider m_sourceProvider = null;
+  private ChartSourceProvider m_sourceProvider = null;
 
   private final IServiceLocator m_locator;
 
-  public ChartPartListener( final IChartPart chartPart, final IServiceLocator locator )
+  public ChartPartListener( final IWorkbenchPart chartPart, final IServiceLocator locator )
   {
     Assert.isNotNull( locator );
     Assert.isNotNull( chartPart );
@@ -83,41 +79,23 @@ public class ChartPartListener extends PartAdapter2
     destroySource();
   }
 
-  /**
-   * @see org.eclipse.ui.IPartListener2#partActivated(org.eclipse.ui.IWorkbenchPartReference)
-   */
   @Override
   public void partActivated( final IWorkbenchPartReference partRef )
   {
     final IWorkbenchPart part = partRef.getPart( false );
-    if( part == m_chartPart )
-    {
-      try
-      {
-        activateSource();
-      }
-      catch( final Throwable e )
-      {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-      // FIXME: remove, as soon as the source activation automatically refreshes the elements
-      ChartHandlerUtilities.updateElements( m_chartPart );
-    }
-    else
-      destroySource();
+    if( part == m_chartPart && m_sourceProvider != null )
+      m_sourceProvider.fireSourceChanged();
   }
 
-  // TODO: move to IChartPart
-  public void activateSource( ) throws Throwable
+  private void activateSource( final IChartComposite chart ) throws Throwable
   {
     destroySource();
 
-    final IChartComposite chartComposite = m_chartPart.getChartComposite();
-    if( chartComposite != null )
-      m_sourceProvider = new ChartSourceProvider( m_locator, chartComposite );
-
-    activateDefaultHandler( chartComposite );
+    if( chart != null )
+    {
+      m_sourceProvider = new ChartSourceProvider( m_locator, chart );
+      activateDefaultHandler( chart );
+    }
   }
 
   private void activateDefaultHandler( final IChartComposite chartComposite ) throws Throwable
@@ -126,8 +104,7 @@ public class ChartPartListener extends PartAdapter2
       return;
     final IHandlerService hs = (IHandlerService) ((WorkbenchPart) m_chartPart).getSite().getService( IHandlerService.class );
     final Event event = new Event();
-    hs.executeCommand( "org.kalypso.chart.ui.commands.zoom_pan_maximize", event );
- 
+    hs.executeCommand( "org.kalypso.chart.ui.commands.zoom_pan_maximize", event ); //$NON-NLS-1$
   }
 
   private void destroySource( )
@@ -139,4 +116,18 @@ public class ChartPartListener extends PartAdapter2
     }
   }
 
+  public void setChart( final IChartComposite chartComposite )
+  {
+    try
+    {
+      if( m_sourceProvider == null )
+        activateSource( chartComposite );
+      else
+        m_sourceProvider.setChart( chartComposite );
+    }
+    catch( final Throwable e )
+    {
+      e.printStackTrace();
+    }
+  }
 }
