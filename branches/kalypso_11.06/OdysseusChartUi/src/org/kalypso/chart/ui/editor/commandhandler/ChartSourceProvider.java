@@ -117,7 +117,7 @@ public class ChartSourceProvider extends AbstractSourceProvider
     registerServiceWithSources( serviceLocator, IMenuService.class );
 
     m_chartContext = contextService.activateContext( CHART_CONTEXT );
-    
+
     // FIXME: check other source providers; they should do the same -> refaktor into helper class
     refreshUIelements();
   }
@@ -143,9 +143,6 @@ public class ChartSourceProvider extends AbstractSourceProvider
     // unregister the registered source provider
     for( final IServiceWithSources service : m_registeredServices )
       service.removeSourceProvider( this );
-
-// m_mapPanel.removeMapPanelListener( m_mapPanelListener );
-// m_mapPanelListener.onMapModelChanged( m_mapPanel, m_mapPanel.getMapModell(), null );
 
     m_chart = null;
 
@@ -230,4 +227,10 @@ public class ChartSourceProvider extends AbstractSourceProvider
     }
   }
 
+  public void setChart( final IChartComposite chart )
+  {
+    m_chart = chart;
+
+    fireSourceChanged();
+  }
 }
