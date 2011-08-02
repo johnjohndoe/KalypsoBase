@@ -54,7 +54,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartPartListener;
 import org.kalypso.commons.java.lang.Objects;
@@ -220,16 +219,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   protected Composite getControl( )
   {
     return m_control;
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getOutlinePage()
-   */
-  @Override
-  public IContentOutlinePage getOutlinePage( )
-  {
-    // TODO Auto-generated method stub
-    return null;
   }
 
   /**

@@ -231,12 +231,8 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
   @Override
   public void setFocus( )
   {
-
   }
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getChartComposite()
-   */
   @Override
   public IChartComposite getChartComposite( )
   {
@@ -271,11 +267,7 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
       m_outlinePage.dispose();
   }
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getOutlinePage()
-   */
-  @Override
-  public IContentOutlinePage getOutlinePage( )
+  private IContentOutlinePage getOutlinePage( )
   {
     if( m_outlinePage == null )
     {

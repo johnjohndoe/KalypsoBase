@@ -51,9 +51,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
-import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
 import org.kalypso.commons.eclipse.ui.EmbeddedSourceToolbarManager;
 
@@ -73,8 +71,6 @@ import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 public class ChartTabItem extends Composite implements IChartPart
 {
   private final IChartComposite m_chartComposite;
-
-  private ChartEditorTreeOutlinePage m_outlinePage;
 
   private final EmbeddedSourceToolbarManager m_sourceManager;
 
@@ -129,32 +125,11 @@ public class ChartTabItem extends Composite implements IChartPart
     }
   }
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getOutlinePage()
-   */
-  @Override
-  public IContentOutlinePage getOutlinePage( )
-  {
-    if( m_outlinePage == null && m_chartComposite != null )
-    {
-      final IChartModel model = getChartComposite().getChartModel();
-      m_outlinePage = new ChartEditorTreeOutlinePage();
-      m_outlinePage.setModel( model );
-    }
-    return m_outlinePage;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
-   */
   @Override
   public void addListener( final IChartModelEventListener listener )
   {
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
-   */
   @Override
   public void removeListener( final IChartModelEventListener listener )
   {

@@ -1,5 +1,3 @@
-package org.kalypso.zml.core.table.binding;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -40,6 +38,7 @@ package org.kalypso.zml.core.table.binding;
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.zml.core.table.binding;
 
 import java.net.MalformedURLException;
 import java.net.URL;
