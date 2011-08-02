@@ -78,7 +78,7 @@ import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.repository.utils.RepositoryItems;
-import org.kalypso.repository.utils.RepositoryUtils;
+import org.kalypso.repository.utils.Repositories;
 import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.ObservationServiceUtils;
 import org.kalypso.services.observation.sei.DataBean;
@@ -430,7 +430,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   @Override
   public final ItemBean findItem( final String id ) throws RepositoryException
   {
-    final IRepositoryItem item = RepositoryUtils.findEquivalentItem( m_repository, id );
+    final IRepositoryItem item = Repositories.findEquivalentItem( m_repository, id );
     if( item != null )
     {
       final Boolean modifyable = item instanceof IWriteableRepositoryItem;
@@ -475,7 +475,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   {
     if( m_repository instanceof IModifyableRepository )
     {
-      final IRepositoryItem item = RepositoryUtils.findEquivalentItem( m_repository, identifier );
+      final IRepositoryItem item = Repositories.findEquivalentItem( m_repository, identifier );
       if( item instanceof IWriteableRepositoryItem )
       {
         if( serializable instanceof Serializable )
@@ -514,7 +514,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   @Override
   public boolean isMultipleSourceItem( final String identifier ) throws RepositoryException
   {
-    final IRepositoryItem item = RepositoryUtils.findEquivalentItem( m_repository, identifier );
+    final IRepositoryItem item = Repositories.findEquivalentItem( m_repository, identifier );
     if( item != null )
     {
       return item.isMultipleSourceItem();

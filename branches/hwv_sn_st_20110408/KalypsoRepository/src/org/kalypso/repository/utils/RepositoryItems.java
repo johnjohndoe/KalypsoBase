@@ -114,7 +114,7 @@ public final class RepositoryItems
   {
     final String[] parts = getQualifiedItemParts( identifier, qualified );
     if( parts.length == 1 )
-      return RepositoryUtils.getRepositoryId( identifier );
+      return Repositories.getRepositoryId( identifier );
 
     String parent = ""; //$NON-NLS-1$
     for( int i = 0; i < parts.length - 1; i++ )
@@ -333,7 +333,7 @@ public final class RepositoryItems
   {
     String base = repositoryIdentifier;
 
-    final String repository = RepositoryUtils.getRepositoryId( itemIdentifier );
+    final String repository = Repositories.getRepositoryId( itemIdentifier );
     if( !base.endsWith( "://" ) ) //$NON-NLS-1$
       base = String.format( "%s://", base ); //$NON-NLS-1$
 
@@ -376,6 +376,22 @@ public final class RepositoryItems
     final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
 
     return parts.length;
+  }
+
+  public static boolean isForecastSourceItem( final IRepositoryItem item )
+  {
+    return isForecastSourceItem( item.getIdentifier() );
+  }
+
+  public static boolean isForecastSourceItem( final String identifier )
+  {
+    /**
+     * id is encoded like: HVZ_Modelle_Elbe.Elbe_Prio_1.553060.W.Prognose.201108010700 ?
+     */
+    final String plain = getPlainId( identifier );
+    final Pattern pattern = new Pattern( ".*\\.(\\d){12}$" ); //$NON-NLS-1$
+
+    return pattern.matches( plain );
   }
 
 }

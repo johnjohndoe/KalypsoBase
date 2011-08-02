@@ -77,7 +77,7 @@ import org.kalypso.ogc.sensor.zml.ZmlURL;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IWriteableRepository;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.utils.RepositoryUtils;
+import org.kalypso.repository.utils.Repositories;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
@@ -198,7 +198,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
       if( target == null )
         return new Status( IStatus.ERROR, KalypsoSimulationCorePlugin.getID(), "Fehler beim Ablegen der Ergebniszeitreihen. Konnte Werte nicht in die Zielzeitreihe kopieren" );
 
-      final IRepository repository = RepositoryUtils.findRegisteredRepository( targetHref );
+      final IRepository repository = Repositories.findRegisteredRepository( targetHref );
       if( repository instanceof IWriteableRepository )
       {
         final IWriteableRepository writeable = (IWriteableRepository) repository;

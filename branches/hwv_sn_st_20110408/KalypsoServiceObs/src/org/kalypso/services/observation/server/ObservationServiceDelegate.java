@@ -83,7 +83,7 @@ import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
 import org.kalypso.repository.utils.RepositoryItems;
-import org.kalypso.repository.utils.RepositoryUtils;
+import org.kalypso.repository.utils.Repositories;
 import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.ObservationServiceUtils;
 import org.kalypso.services.observation.i18n.Messages;
@@ -462,7 +462,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       return m_mapBeanId2Item.get( id );
 
     // try with repository id
-    final String repId = RepositoryUtils.getRepositoryId( id );
+    final String repId = Repositories.getRepositoryId( id );
     if( m_mapRepId2Rep.containsKey( repId ) )
     {
       final IRepository rep = m_mapRepId2Rep.get( repId );
@@ -769,7 +769,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   {
     for( final IRepository repository : m_repositories )
     {
-      final IRepositoryItem item = RepositoryUtils.findEquivalentItem( repository, identifier );
+      final IRepositoryItem item = Repositories.findEquivalentItem( repository, identifier );
       if( item != null )
         return item.isMultipleSourceItem();
     }
