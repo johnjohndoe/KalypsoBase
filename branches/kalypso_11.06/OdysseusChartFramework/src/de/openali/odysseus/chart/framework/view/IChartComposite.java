@@ -45,6 +45,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
@@ -53,6 +54,10 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
  */
 public interface IChartComposite
 {
+  void addChartEventListener( IChartModelEventListener listener );
+
+  void removeChartEventListener( IChartModelEventListener listener );
+
   IChartModel getChartModel( );
 
   Canvas getPlot( );

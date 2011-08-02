@@ -56,10 +56,8 @@ import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
 import org.kalypso.commons.eclipse.ui.EmbeddedSourceToolbarManager;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IPlotHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
@@ -105,15 +103,6 @@ public class ChartTabItem extends Composite implements IChartPart
     return m_chartComposite;
   }
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getChartDragHandler()
-   */
-  @Override
-  public IPlotHandler getPlotDragHandler( )
-  {
-    return m_chartComposite.getPlotHandler();
-  }
-
   @Override
   public void dispose( )
   {
@@ -123,15 +112,5 @@ public class ChartTabItem extends Composite implements IChartPart
     {
       m_chartComposite.getPlot().dispose();
     }
-  }
-
-  @Override
-  public void addListener( final IChartModelEventListener listener )
-  {
-  }
-
-  @Override
-  public void removeListener( final IChartModelEventListener listener )
-  {
   }
 }

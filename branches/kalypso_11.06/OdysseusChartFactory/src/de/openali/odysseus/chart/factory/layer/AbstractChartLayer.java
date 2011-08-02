@@ -409,27 +409,18 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_coordinateMapper = coordinateMapper;
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
-   */
   @Override
   public void setData( final String id, final Object data )
   {
     m_data.put( id, data );
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setDescription(java.lang.String)
-   */
   @Override
   public void setDescription( final String description )
   {
     m_description = description;
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setID(java.lang.String)
-   */
   @Override
   public void setIdentifier( final String identifier )
   {

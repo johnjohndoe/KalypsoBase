@@ -143,7 +143,7 @@ public class SwitchProfileButtonDialog extends Composite
   {
     m_chartView.setProfil( profile, null );
 
-    final IChartComposite chart = m_chartView.getChart();
+    final IChartComposite chart = m_chartView.getChartComposite();
     if( chart != null )
     {
       ChartUtilities.maximize( chart.getChartModel() );

@@ -43,7 +43,6 @@ import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.factory.config.IExtensionLoader;
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
@@ -54,7 +53,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IPlotHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
@@ -510,12 +508,6 @@ public class ChartEditor extends EditorPart implements IChartPart
     m_configuration = doc;
   }
 
-  @Override
-  public IPlotHandler getPlotDragHandler( )
-  {
-    return m_chartComposite == null ? null : m_chartComposite.getPlotHandler();
-  }
-
   protected void setDirty( final boolean dirty )
   {
     if( m_dirty == dirty )
@@ -526,25 +518,4 @@ public class ChartEditor extends EditorPart implements IChartPart
     m_dirty = dirty;
     firePropertyChange( PROP_DIRTY );
   }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
-   */
-  @Override
-  public void addListener( final IChartModelEventListener listener )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
-   */
-  @Override
-  public void removeListener( final IChartModelEventListener listener )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
 }

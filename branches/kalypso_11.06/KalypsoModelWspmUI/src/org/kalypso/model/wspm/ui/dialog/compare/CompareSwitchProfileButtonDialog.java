@@ -82,7 +82,7 @@ public class CompareSwitchProfileButtonDialog extends SwitchProfileButtonDialog
 
       view.setProfil( wrapper.getProfil(), null );
 
-      final IChartComposite chart = view.getChart();
+      final IChartComposite chart = view.getChartComposite();
       if( chart != null )
       {
         ChartUtilities.maximize( chart.getChartModel() );

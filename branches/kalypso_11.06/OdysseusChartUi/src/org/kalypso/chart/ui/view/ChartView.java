@@ -76,11 +76,9 @@ import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.factory.config.IExtensionLoader;
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.IPlotHandler;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 import de.openali.odysseus.chart.framework.view.impl.TooltipHandler;
 import de.openali.odysseus.chartconfig.x020.ChartType;
@@ -239,15 +237,6 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
     return m_chartComposite;
   }
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getChartDragHandler()
-   */
-  @Override
-  public IPlotHandler getPlotDragHandler( )
-  {
-    return m_chartComposite.getPlotHandler();
-  }
-
   @Override
   public void dispose( )
   {
@@ -349,25 +338,4 @@ public class ChartView extends ViewPart implements IChartPart, ISelectionListene
       }
     }
   }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
-   */
-  @Override
-  public void addListener( final IChartModelEventListener listener )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
-   */
-  @Override
-  public void removeListener( final IChartModelEventListener listener )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
 }
