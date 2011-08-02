@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.ImageData;
@@ -407,7 +406,6 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public final void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
   {
-    Assert.isNotNull( coordinateMapper );
     m_coordinateMapper = coordinateMapper;
   }
 
