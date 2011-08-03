@@ -145,27 +145,7 @@
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:conflict</property>
     </Style>
     <!-- alarmstufen styles -->
-    <!-- diverse Farbschemata (MG, AS1, AS2, AS3, AS4)
-      Problem: gelb ist nur schlecht erkennbar, insbesondere die Beschriftung
-      derzeit umgesetztes Farbschema: Sachsen-Anhalt
-      ursprüngliches Kalypso
-      BD6DFF (lila)
-      E8E800 (gelb-grün)
-      FF8000 (orange)
-      FF8080 (rosa)
-      FF0000 (rot)
-      Sachsen
-      - (keine Farbe für Meldegrenze auf Web-Seite erkennbar)
-      006699 (blau bis blau-grün)
-      FFFF00 (gelb)
-      FFCCCC (rosa)
-      FF0000 (rot)
-      Sachsen-Anhalt
-      0000FF (blau)
-      FFFF00 (gelb)
-      FF6600 (orange)
-      FF0000 (rot)
-      FF00FF (magenta) -->
+    <!-- diverse Farbschemata (MG, AS1, AS2, AS3, AS4) Problem: gelb ist nur schlecht erkennbar, insbesondere die Beschriftung derzeit umgesetztes Farbschema: Sachsen-Anhalt ursprüngliches Kalypso BD6DFF (lila) E8E800 (gelb-grün) FF8000 (orange) FF8080 (rosa) FF0000 (rot) Sachsen - (keine Farbe für Meldegrenze auf Web-Seite erkennbar) 006699 (blau bis blau-grün) FFFF00 (gelb) FFCCCC (rosa) FF0000 (rot) Sachsen-Anhalt 0000FF (blau) FFFF00 (gelb) FF6600 (orange) FF0000 (rot) FF00FF (magenta) -->
     <Style id="meldegrenze">
       <property name="backgroundColor">0000FF</property>
     </Style>
@@ -336,6 +316,11 @@
       </RuleInstructions>
       <label>Hauptzahl(en) W</label>
     </Rule>
+
+    <Rule id="ruleWqBoundaries" ruleReference="org.kalypso.zml.ui.core.rule.wq.boundaries" enabled="true">
+      <label>W/Q Grenzwerte</label>
+    </Rule>
+
     <Rule id="ruleDataSource" ruleReference="org.kalypso.zml.ui.core.rule.data.source" setHeaderIcon="false" enabled="false">
       <label>Datenquelle</label>
     </Rule>
