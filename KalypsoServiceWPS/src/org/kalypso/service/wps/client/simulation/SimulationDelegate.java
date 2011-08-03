@@ -427,7 +427,8 @@ public class SimulationDelegate
     {
       try
       {
-        m_serverTmpDirectory.close();
+        if( m_serverTmpDirectory != null )
+          m_serverTmpDirectory.close();
       }
       catch( final FileSystemException e )
       {
