@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="tableRule" name="tableRule" schema="schema/tableRule.exsd"/> 
+   <extension-point id="tableRule" name="tableRule" schema="schema/tableRule.exsd"/>
  <extension
          point="org.eclipse.wst.xml.core.catalogContributions">
       <catalogContribution>
@@ -53,6 +53,10 @@
     <rule
            id="org.kalypso.zml.ui.core.rule.grenzwerte"
            rule="org.kalypso.zml.core.table.rules.impl.grenzwert.ZmlRuleGrenzwerte">
+    </rule>
+    <rule
+           id="org.kalypso.zml.ui.core.rule.wq.boundaries"
+           rule="org.kalypso.zml.core.table.rules.impl.grenzwert.ZmlRuleWQBoundaries">
     </rule>
     <rule
            id="org.kalypso.zml.ui.core.rule.derived.value"
