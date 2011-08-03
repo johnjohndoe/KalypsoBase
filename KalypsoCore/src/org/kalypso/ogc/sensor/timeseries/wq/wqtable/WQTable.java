@@ -198,4 +198,37 @@ public class WQTable
   {
     return m_wSortedPairs.toArray( new WQPair[m_wSortedPairs.size()] );
   }
+
+  public Double getQMax( )
+  {
+    if( m_qSortedPairs.isEmpty() )
+      return null;
+
+    return m_qSortedPairs.last().getQ();
+  }
+
+  public Double getQMin( )
+  {
+    if( m_qSortedPairs.isEmpty() )
+      return null;
+
+    return m_qSortedPairs.first().getQ();
+  }
+
+  public Double getWMin( )
+  {
+    if( m_wSortedPairs.isEmpty() )
+      return null;
+
+    return m_wSortedPairs.first().getW();
+  }
+
+  public Double getWMax( )
+  {
+    if( m_wSortedPairs.isEmpty() )
+      return null;
+
+    return m_wSortedPairs.last().getW();
+  }
+
 }
