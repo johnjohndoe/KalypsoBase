@@ -68,9 +68,17 @@ public interface IMetadataConstants
   /** Some information about the Origin of the observation */
   String MD_ORIGIN = "Entstehung"; //$NON-NLS-1$
 
-  String WQ_BOUNDARY_PREFIX = "WQ_Grenzwert_"; //$NON-NLS-1$
+  String WQ_BOUNDARY_PREFIX = "WQ-Tabelle_"; //$NON-NLS-1$
 
-  String WQ_BOUNDARY_FORMAT = WQ_BOUNDARY_PREFIX + "%s: %s"; //$NON-NLS-1$
+  String WQ_BOUNDARY_FORMAT = WQ_BOUNDARY_PREFIX + "%s"; //$NON-NLS-1$
+
+  String WQ_BOUNDARY_Q_MIN = String.format( WQ_BOUNDARY_FORMAT, "Q_Min" ); //$NON-NLS-1$
+
+  String WQ_BOUNDARY_Q_MAX = String.format( WQ_BOUNDARY_FORMAT, "Q_Max" ); //$NON-NLS-1$
+
+  String WQ_BOUNDARY_W_MIN = String.format( WQ_BOUNDARY_FORMAT, "W_Min" ); //$NON-NLS-1$
+
+  String WQ_BOUNDARY_W_MAX = String.format( WQ_BOUNDARY_FORMAT, "W_Max" ); //$NON-NLS-1$
 
   String WQ_TABLE = "WQ-Tabelle"; //$NON-NLS-1$
 }

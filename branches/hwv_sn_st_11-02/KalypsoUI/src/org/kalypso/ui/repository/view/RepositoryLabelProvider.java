@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.repository.view;
 
@@ -78,8 +78,8 @@ public class RepositoryLabelProvider extends LabelProvider
         final IRepositoryItem item = (IRepositoryItem) element;
         if( RepositoryItems.isVirtual( item.getIdentifier() ) )
         {
-          if( item.hasChildren() )
-            return IMG_FOLDER;
+// if( item.hasChildren() )
+// return IMG_FOLDER;
 
           return IMG_VIRTUAL_ITEM;
         }
