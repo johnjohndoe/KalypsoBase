@@ -330,30 +330,42 @@
       <label>Hauptzahl(en) W</label>
     </Rule>
 
-    <Rule id="ruleWqBoundaryDeviationLower" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
+    <Rule id="ruleWqBoundaryDeviationLowerW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
       <RuleInstructions>
-        <MetadataBoundaryInstruction label="${text}" from="WQ-Tabelle_W_Min" opFrom="&lt;">
+        <MetadataBoundaryInstruction  from="WQ-Tabelle_W_Min" opFrom="&lt;">
           <styleReference>
             <reference>wqBoundaryDeviationLower</reference>
-          </styleReference>
-        </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction label="Hohe ${text}" from="WQ-Tabelle_Q_Min" opFrom="&lt;">
-          <styleReference>
-            <reference>wqBoundaryDeviationLowerMassive</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
       </RuleInstructions>
       <label>Unterschreitung des W/Q Grenzwertes</label>
     </Rule>
 
-    <Rule id="ruleWqBoundaryDeviationUpper" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
+    <Rule id="ruleWqBoundaryDeviationUpperW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
       <RuleInstructions>
-       <MetadataBoundaryInstruction label="${text}" from="WQ-Tabelle_W_Max" opFrom="&gt;">
+       <MetadataBoundaryInstruction from="WQ-Tabelle_W_Max" opFrom="&gt;">
           <styleReference>
             <reference>wqBoundaryDeviationUpper</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-       <MetadataBoundaryInstruction label="Hohe ${text}" from="WQ-Tabelle_Q_Max" opFrom="&gt;">
+      </RuleInstructions>
+      <label>Überschreitung des W/Q Grenzwertes</label>
+    </Rule>
+
+    <Rule id="ruleWqBoundaryDeviationLowerQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
+      <RuleInstructions>
+        <MetadataBoundaryInstruction  from="WQ-Tabelle_Q_Min" opFrom="&lt;">
+          <styleReference>
+            <reference>wqBoundaryDeviationLower</reference>
+          </styleReference>
+        </MetadataBoundaryInstruction>
+      </RuleInstructions>
+      <label>Unterschreitung des W/Q Grenzwertes</label>
+    </Rule>
+
+    <Rule id="ruleWqBoundaryDeviationUpperQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
+      <RuleInstructions>
+       <MetadataBoundaryInstruction from="WQ-Tabelle_Q_Max" opFrom="&gt;">
           <styleReference>
             <reference>wqBoundaryDeviationUpperMassive</reference>
           </styleReference>
@@ -361,6 +373,7 @@
       </RuleInstructions>
       <label>Überschreitung des W/Q Grenzwertes</label>
     </Rule>
+
 
     <Rule id="ruleDataSource" ruleReference="org.kalypso.zml.ui.core.rule.data.source" setHeaderIcon="false" enabled="false">
       <label>Datenquelle</label>
