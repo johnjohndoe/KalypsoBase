@@ -50,6 +50,7 @@ import java.util.Set;
 
 import jregex.Pattern;
 
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
@@ -198,6 +199,42 @@ public final class MetadataBoundary implements IMetadataBoundary
   public String toString( )
   {
     return String.format( "%s (%s) - Value: %.2f", m_name, m_parameterType, m_value.doubleValue() );
+  }
+
+  public static Double getWqTableMinW( final MetadataList metadata )
+  {
+    final String property = metadata.getProperty( IMetadataConstants.WQ_BOUNDARY_W_MIN );
+    if( Strings.isNotEmpty( property ) )
+      return NumberUtils.parseQuietDouble( property );
+
+    return null;
+  }
+
+  public static Double getWqTableMinQ( final MetadataList metadata )
+  {
+    final String property = metadata.getProperty( IMetadataConstants.WQ_BOUNDARY_Q_MIN );
+    if( Strings.isNotEmpty( property ) )
+      return NumberUtils.parseQuietDouble( property );
+
+    return null;
+  }
+
+  public static Double getWqTableMaxW( final MetadataList metadata )
+  {
+    final String property = metadata.getProperty( IMetadataConstants.WQ_BOUNDARY_W_MAX );
+    if( Strings.isNotEmpty( property ) )
+      return NumberUtils.parseQuietDouble( property );
+
+    return null;
+  }
+
+  public static Double getWqTableMaxQ( final MetadataList metadata )
+  {
+    final String property = metadata.getProperty( IMetadataConstants.WQ_BOUNDARY_Q_MAX );
+    if( Strings.isNotEmpty( property ) )
+      return NumberUtils.parseQuietDouble( property );
+
+    return null;
   }
 
 }

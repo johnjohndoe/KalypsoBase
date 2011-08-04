@@ -40,18 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.rules.impl.grenzwert;
 
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleWQBoundaries extends AbstractZmlTableRule
+public class ZmlRuleWQBoundaryDeviationUpper extends AbstractRuleWQBoundary
 {
-  public static final String ID = "org.kalypso.zml.ui.core.rule.wq.boundaries"; //$NON-NLS-1$
+  public static final String ID = "org.kalypso.zml.ui.core.rule.wq.boundary.deviation.upper"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.model.references.IZmlValueReference)
@@ -59,10 +60,22 @@ public class ZmlRuleWQBoundaries extends AbstractZmlTableRule
   @Override
   protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
   {
-    final IZmlModelColumn column = reference.getColumn();
-    final MetadataList metadata = column.getMetadata();
+    try
+    {
+      final IZmlModelColumn column = reference.getColumn();
+      final MetadataList metadata = column.getMetadata();
 
-    final String type = reference.getColumn().getValueAxis().getType();
+      final String type = reference.getColumn().getValueAxis().getType();
+
+      final Double max = getMax( metadata, type );
+      if( Objects.isNotNull( max ) )
+        if( reference.getValue().doubleValue() > max )
+          return true;
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+    }
 
     return false;
   }

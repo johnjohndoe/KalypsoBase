@@ -1,5 +1,3 @@
-package org.kalypso.zml.core.table.rules.impl;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -40,21 +38,47 @@ package org.kalypso.zml.core.table.rules.impl;
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.zml.core.table.rules.impl.grenzwert;
 
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.KalypsoZmlCore;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlRuleUserModified extends AbstractZmlTableRule
+public class ZmlRuleWQBoundaryDeviationLower extends AbstractRuleWQBoundary
 {
-  public static final String ID = "org.kalypso.zml.ui.core.rule.user.modified"; //$NON-NLS-1$
+  public static final String ID = "org.kalypso.zml.ui.core.rule.wq.boundary.deviation.lower"; //$NON-NLS-1$
+
+  /**
+   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.model.references.IZmlValueReference)
+   */
+  @Override
+  protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
+  {
+    try
+    {
+      final IZmlModelColumn column = reference.getColumn();
+      final MetadataList metadata = column.getMetadata();
+
+      final String type = reference.getColumn().getValueAxis().getType();
+
+      final Double min = getMin( metadata, type );
+      if( Objects.isNotNull( min ) )
+        if( reference.getValue().doubleValue() < min )
+          return true;
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+    }
+
+    return false;
+  }
 
   /**
    * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#getIdentifier()
@@ -64,35 +88,4 @@ public class ZmlRuleUserModified extends AbstractZmlTableRule
   {
     return ID;
   }
-
-  /**
-   * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#apply(org.kalypso.zml.ui.table.provider.ZmlValueReference)
-   */
-  @SuppressWarnings("deprecation")
-  @Override
-  protected boolean doApply( final ZmlRule rule, final IZmlValueReference reference )
-  {
-    try
-    {
-      final Integer status = reference.getStatus();
-      if( Objects.isNotNull( status ) )
-      {
-        if( KalypsoStati.BIT_USER_MODIFIED == (KalypsoStati.BIT_USER_MODIFIED & status) )
-          return true;
-      }
-
-      final String dataSource = reference.getDataSource();
-      if( dataSource == null )
-        return false;
-
-      return IDataSourceItem.SOURCE_MANUAL_CHANGED.equals( dataSource );
-    }
-    catch( final Throwable t )
-    {
-      KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
-    }
-
-    return false;
-  }
-
 }

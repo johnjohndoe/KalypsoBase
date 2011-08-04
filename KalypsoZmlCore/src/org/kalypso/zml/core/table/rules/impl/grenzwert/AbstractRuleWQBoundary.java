@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -38,28 +38,45 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.zml.core.table.rules.impl.grenzwert;
 
-package org.kalypso.zml.core;
-
-import java.net.URL;
-import java.util.Map;
-
-import org.kalypso.contribs.java.net.AbstractUrlCatalog;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule;
 
 /**
- * URL catalog for the KalypsoZmlCore plugin.
- * 
- * @author Holger Albert
+ * @author Dirk Kuch
  */
-public class KalypsoZmlCoreCatalog extends AbstractUrlCatalog
+public abstract class AbstractRuleWQBoundary extends AbstractZmlTableRule
 {
-  /**
-   * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map, java.util.Map)
-   */
-  @Override
-  protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
+
+  protected Double getMin( final MetadataList metadata, final String type )
   {
-    catalog.put( KalypsoZmlCoreConstants.NS_ZML_FILTER, myClass.getResource( "filter/schema/zmlFilter.xsd" ) ); //$NON-NLS-1$
-    prefixes.put( KalypsoZmlCoreConstants.NS_ZML_FILTER, KalypsoZmlCoreConstants.PREFIX_ZML_FILTER );
+    if( ITimeseriesConstants.TYPE_WATERLEVEL.equals( type ) )
+    {
+      return MetadataBoundary.getWqTableMinW( metadata );
+    }
+    else if( ITimeseriesConstants.TYPE_DISCHARGE.equals( type ) )
+    {
+      return MetadataBoundary.getWqTableMinQ( metadata );
+    }
+
+    return null;
   }
+
+  protected Double getMax( final MetadataList metadata, final String type )
+  {
+    if( ITimeseriesConstants.TYPE_WATERLEVEL.equals( type ) )
+    {
+      return MetadataBoundary.getWqTableMaxW( metadata );
+    }
+    else if( ITimeseriesConstants.TYPE_DISCHARGE.equals( type ) )
+    {
+      return MetadataBoundary.getWqTableMaxQ( metadata );
+    }
+
+    return null;
+  }
+
 }
