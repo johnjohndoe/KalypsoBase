@@ -332,12 +332,12 @@
 
     <Rule id="ruleWqBoundaryDeviationLowerW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
       <RuleInstructions>
-        <MetadataBoundaryInstruction  from="WQ-Tabelle_W_Min" opFrom="&lt;=" factorFrom="0.8">
+        <MetadataBoundaryInstruction from="WQ-Tabelle_W_Min" opFrom="&lt;=" factorFrom="0.8">
           <styleReference>
             <reference>wqBoundaryDeviationLowerMassive</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction  from="WQ-Tabelle_W_Min" opFrom="&gt;" factorFrom="0.8" to="WQ-Tabelle_W_Min" opTo="&lt;">
+        <MetadataBoundaryInstruction from="WQ-Tabelle_W_Min" opFrom="&gt;" factorFrom="0.8" to="WQ-Tabelle_W_Min" opTo="&lt;">
           <styleReference>
             <reference>wqBoundaryDeviationLower</reference>
           </styleReference>
@@ -348,12 +348,12 @@
 
     <Rule id="ruleWqBoundaryDeviationUpperW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
       <RuleInstructions>
-        <MetadataBoundaryInstruction from="WQ-Tabelle_W_Max" opFrom="&gt;=" factorFrom="1.2" >
+        <MetadataBoundaryInstruction from="WQ-Tabelle_W_Max" opFrom="&gt;=" factorFrom="1.2">
           <styleReference>
             <reference>wqBoundaryDeviationUpperMassive</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-       <MetadataBoundaryInstruction from="WQ-Tabelle_W_Max" opFrom="&gt;" to="WQ-Tabelle_W_Max" opTo="&lt;" factorTo="1.2" >
+        <MetadataBoundaryInstruction from="WQ-Tabelle_W_Max" opFrom="&gt;" to="WQ-Tabelle_W_Max" opTo="&lt;" factorTo="1.2">
           <styleReference>
             <reference>wqBoundaryDeviationUpper</reference>
           </styleReference>
@@ -364,12 +364,12 @@
 
     <Rule id="ruleWqBoundaryDeviationLowerQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
       <RuleInstructions>
-        <MetadataBoundaryInstruction  from="WQ-Tabelle_Q_Min" opFrom="&lt;=" factorFrom="0.8">
+        <MetadataBoundaryInstruction from="WQ-Tabelle_Q_Min" opFrom="&lt;=" factorFrom="0.8">
           <styleReference>
             <reference>wqBoundaryDeviationLowerMassive</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction  from="WQ-Tabelle_Q_Min" opFrom="&gt;" factorFrom="0.8" to="WQ-Tabelle_Q_Min" opTo="&lt;">
+        <MetadataBoundaryInstruction from="WQ-Tabelle_Q_Min" opFrom="&gt;" factorFrom="0.8" to="WQ-Tabelle_Q_Min" opTo="&lt;">
           <styleReference>
             <reference>wqBoundaryDeviationLower</reference>
           </styleReference>
@@ -380,9 +380,14 @@
 
     <Rule id="ruleWqBoundaryDeviationUpperQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
       <RuleInstructions>
-       <MetadataBoundaryInstruction from="WQ-Tabelle_Q_Max" opFrom="&gt;">
+        <MetadataBoundaryInstruction from="WQ-Tabelle_Q_Max" opFrom="&gt;=" factorFrom="1.2">
           <styleReference>
             <reference>wqBoundaryDeviationUpperMassive</reference>
+          </styleReference>
+        </MetadataBoundaryInstruction>
+        <MetadataBoundaryInstruction from="WQ-Tabelle_Q_Max" opFrom="&gt;" to="WQ-Tabelle_Q_Max" opTo="&lt;" factorTo="1.2">
+          <styleReference>
+            <reference>wqBoundaryDeviationUpper</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
       </RuleInstructions>
