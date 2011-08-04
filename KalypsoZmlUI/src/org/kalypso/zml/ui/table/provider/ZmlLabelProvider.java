@@ -120,15 +120,19 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     {
       try
       {
-        final IZmlRuleImplementation implemenation = rule.getImplementation();
-        final Color color = implemenation.getBackground( reference );
-        if( Objects.isNotNull( color ) )
-          return color;
+        final CellStyle style = resolveCellStyle( rule, reference );
+        if( Objects.isNotNull( style ) )
+        {
+          final Color color = style.getBackgroundColor();
+          if( Objects.isNotNull( color ) )
+            return color;
+        }
       }
-      catch( final SensorException e )
+      catch( final CoreException e )
       {
         e.printStackTrace();
       }
+
     }
 
     return null;
@@ -229,13 +233,14 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
   private CellStyle resolveCellStyle( final ZmlRule rule, final IZmlValueReference reference ) throws CoreException
   {
+    if( Objects.isNull( reference ) )
+      return rule.getPlainStyle();
+
     try
     {
       final IZmlRuleImplementation implementation = rule.getImplementation();
       final CellStyle style = implementation.getCellStyle( rule, reference );
-
-      final Image image = style.getImage();
-      if( Objects.isNotNull( image ) )
+      if( Objects.isNotNull( style ) )
         return style;
     }
     catch( final Exception e )

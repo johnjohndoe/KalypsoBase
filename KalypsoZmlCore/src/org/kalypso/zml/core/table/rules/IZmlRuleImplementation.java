@@ -41,7 +41,6 @@
 package org.kalypso.zml.core.table.rules;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.swt.graphics.Color;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
@@ -59,8 +58,6 @@ public interface IZmlRuleImplementation
   String getIdentifier( );
 
   String update( ZmlRule rule, final IZmlValueReference reference, String text ) throws SensorException;
-
-  Color getBackground( IZmlValueReference reference ) throws SensorException;
 
   CellStyle getCellStyle( ZmlRule rule, IZmlValueReference reference ) throws CoreException;
 }
