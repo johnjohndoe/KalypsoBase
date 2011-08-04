@@ -161,7 +161,7 @@ public final class MetadataBoundary implements IMetadataBoundary
 
     for( final String key : keys )
     {
-      final MetadataBoundary mb = getBoundary( metadata, key, null );
+      final MetadataBoundary mb = getBoundary( metadata, key, null, 1.0 );
       if( mb != null )
         boundaries.add( mb );
     }
@@ -176,7 +176,7 @@ public final class MetadataBoundary implements IMetadataBoundary
    *          Used, if the property is defined but cannot be parsed.
    * @return <code>null</code>, if the either the key is <code>null</code> or the property is not defined.
    */
-  public static MetadataBoundary getBoundary( final MetadataList metadata, final String key, final BigDecimal defaultValue )
+  public static MetadataBoundary getBoundary( final MetadataList metadata, final String key, final BigDecimal defaultValue, final double factor )
   {
     if( key == null )
       return null;
@@ -189,7 +189,7 @@ public final class MetadataBoundary implements IMetadataBoundary
     if( value == null )
       return new MetadataBoundary( property, defaultValue );
 
-    return new MetadataBoundary( key, value );
+    return new MetadataBoundary( key, BigDecimal.valueOf( value.doubleValue() * factor ) );
   }
 
   /**

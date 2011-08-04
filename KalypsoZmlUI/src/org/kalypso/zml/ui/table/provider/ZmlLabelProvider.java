@@ -120,7 +120,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     {
       try
       {
-        final CellStyle style = resolveCellStyle( rule, reference );
+        final CellStyle style = resolveRuleStyle( rule, reference );
         if( Objects.isNotNull( style ) )
         {
           final Color color = style.getBackgroundColor();
@@ -132,7 +132,6 @@ public class ZmlLabelProvider extends ColumnLabelProvider
       {
         e.printStackTrace();
       }
-
     }
 
     return null;
@@ -213,7 +212,10 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
           for( final ZmlRule rule : rules )
           {
-            final CellStyle style = resolveCellStyle( rule, reference );
+            final CellStyle style = resolveRuleStyle( rule, reference );
+            if( Objects.isNull( style ) )
+              continue;
+
             final Image image = style.getImage();
             if( Objects.isNotNull( image ) )
               iconMerger.addImage( new ZmlTableImage( style.getIdentifier(), image ) );
@@ -231,10 +233,10 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     return super.getImage( element );
   }
 
-  private CellStyle resolveCellStyle( final ZmlRule rule, final IZmlValueReference reference ) throws CoreException
+  private CellStyle resolveRuleStyle( final ZmlRule rule, final IZmlValueReference reference ) throws CoreException
   {
     if( Objects.isNull( reference ) )
-      return rule.getPlainStyle();
+      return null;
 
     try
     {
@@ -248,7 +250,7 @@ public class ZmlLabelProvider extends ColumnLabelProvider
       e.printStackTrace();
     }
 
-    return rule.getPlainStyle();
+    return null;
   }
 
   /**
