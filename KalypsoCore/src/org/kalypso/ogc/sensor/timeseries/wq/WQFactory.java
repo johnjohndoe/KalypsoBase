@@ -78,8 +78,7 @@ public final class WQFactory
 
         return WechmannFactory.parse( new InputSource( new StringReader( wechmann ) ) );
       }
-
-      if( mdl.containsKey( ITimeseriesConstants.MD_WQTABLE ) )
+      else if( mdl.containsKey( ITimeseriesConstants.MD_WQTABLE ) )
       {
         final String wqtable = mdl.getProperty( ITimeseriesConstants.MD_WQTABLE );
         if( StringUtils.isBlank( wqtable ) )

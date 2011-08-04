@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.proxy;
 
@@ -109,11 +109,11 @@ public final class AutoProxyFactory implements IProxyFactory
         boolean foundType2 = false;
 
         final IAxis[] axes = obs.getAxes();
-        for( int i = 0; i < axes.length; i++ )
+        for( final IAxis axe : axes )
         {
-          if( axes[i].getType().equals( type1 ) )
+          if( axe.getType().equals( type1 ) )
             foundType1 = true;
-          else if( axes[i].getType().equals( type2 ) )
+          else if( axe.getType().equals( type2 ) )
             foundType2 = true;
         }
 
@@ -154,11 +154,11 @@ public final class AutoProxyFactory implements IProxyFactory
       boolean foundW = false;
       boolean foundQ = false;
       final IAxis[] axes = obs.getAxes();
-      for( int i = 0; i < axes.length; i++ )
+      for( final IAxis axe : axes )
       {
-        if( axes[i].getType().equals( ITimeseriesConstants.TYPE_RUNOFF ) )
+        if( axe.getType().equals( ITimeseriesConstants.TYPE_RUNOFF ) )
           foundQ = true;
-        else if( axes[i].getType().equals( ITimeseriesConstants.TYPE_WATERLEVEL ) )
+        else if( axe.getType().equals( ITimeseriesConstants.TYPE_WATERLEVEL ) )
           foundW = true;
       }
 
