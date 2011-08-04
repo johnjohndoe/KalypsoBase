@@ -196,8 +196,10 @@
     <complexContent>
       <extension base="zmltable:AbstractRuleInstructionType">
         <attribute name="from" type="string" use="optional" />
+        <attribute name="factorFrom" type="string" use="optional" />
         <attribute name="opFrom" type="zmltable:operatorFromType" use="optional" default="&gt;" />
         <attribute name="to" type="string" use="optional" />
+        <attribute name="factorTo" type="string" use="optional" />
         <attribute name="opTo" type="zmltable:operatorToType" use="optional" default="&lt;" />
         <attribute name="label" type="string" use="optional" />
       </extension>
@@ -264,6 +266,8 @@
 
   <simpleType name="operatorFromType">
     <restriction base="string">
+      <enumeration value="&lt;"></enumeration>
+      <enumeration value="&lt;="></enumeration>
       <enumeration value="&gt;"></enumeration>
       <enumeration value="&gt;="></enumeration>
     </restriction>
