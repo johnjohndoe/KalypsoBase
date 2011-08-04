@@ -55,14 +55,6 @@
            rule="org.kalypso.zml.core.table.rules.impl.grenzwert.ZmlRuleGrenzwerte">
     </rule>
     <rule
-           id="org.kalypso.zml.ui.core.rule.wq.boundary.deviation.lower"
-           rule="org.kalypso.zml.core.table.rules.impl.grenzwert.ZmlRuleWQBoundaryDeviationLower">
-    </rule>
-	<rule
-           id="org.kalypso.zml.ui.core.rule.wq.boundary.deviation.upper"
-           rule="org.kalypso.zml.core.table.rules.impl.grenzwert.ZmlRuleWQBoundaryDeviationUpper">
-    </rule>
-    <rule
            id="org.kalypso.zml.ui.core.rule.derived.value"
            rule="org.kalypso.zml.core.table.rules.impl.ZmlDerivedValue">
     </rule>
