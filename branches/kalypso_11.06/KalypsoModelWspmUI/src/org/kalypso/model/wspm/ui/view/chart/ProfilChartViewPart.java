@@ -104,6 +104,8 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
       m_toolkit = new FormToolkit( parent.getDisplay() );
     }
 
+    m_partListener.setChart( null );
+
     if( m_form == null )
     {
       m_form = m_toolkit.createForm( parent );
@@ -117,6 +119,8 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
       final IProfil profile = m_provider == null ? null : m_provider.getProfil();
       m_profilChartComposite = new ProfileChartComposite( m_form.getBody(), parent.getStyle(), getProfilLayerProvider(), profile );
       m_profilChartComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+      m_partListener.setChart( m_profilChartComposite );
     }
     return m_profilChartComposite;
   }
