@@ -140,14 +140,17 @@ public class ChartSourceProvider extends AbstractSourceProvider
   @Override
   public void dispose( )
   {
+    m_chart = null;
+
+    fireSourceChanged();
+
     // unregister the registered source provider
     for( final IServiceWithSources service : m_registeredServices )
       service.removeSourceProvider( this );
 
-    m_chart = null;
-
     if( m_chartContext != null )
       m_chartContext.getContextService().deactivateContext( m_chartContext );
+
   }
 
   /**
