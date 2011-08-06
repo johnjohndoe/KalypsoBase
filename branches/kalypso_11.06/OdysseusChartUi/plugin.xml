@@ -16,6 +16,7 @@
             allowMultiple="false"
             category="org.kalypso.ui.kalypso"
             class="org.kalypso.chart.ui.view.ChartView"
+            restorable="false"
             icon="icons/obj16/kalypso_odt.gif"
             id="org.kalypso.chart.ui.view.ChartView"
             name="Chart View">

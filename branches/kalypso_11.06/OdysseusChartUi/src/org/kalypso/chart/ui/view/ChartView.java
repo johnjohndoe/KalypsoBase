@@ -46,11 +46,12 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.chart.ui.internal.workbench.ChartPartComposite;
+import org.kalypso.contribs.eclipse.ui.IContentOutlineProvider;
 
 /**
  * @author Thomas Jung
  */
-public class ChartView extends ViewPart
+public class ChartView extends ViewPart implements IContentOutlineProvider
 {
   public static final String ID = "org.kalypso.chart.ui.view.ChartView"; //$NON-NLS-1$
 
