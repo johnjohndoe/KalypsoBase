@@ -72,23 +72,26 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
   @Override
   public void open( )
   {
-    if( !m_isOpen )
+    if( m_isOpen )
+      return;
+
+    try
     {
-      try
+      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( m_context, m_href ), null );
+      final Feature feature = workspace.getFeature( m_observationId );
+      if( feature != null )
       {
-        final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( m_context, m_href ), null );
-        final Feature feature = workspace.getFeature( m_observationId );
-        if( feature != null )
-        {
-          Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Found feature: " + feature.getId() );
-        }
-        m_observation = ObservationFeatureFactory.toObservation( feature );
+        // FIXME: makes no sense.... however we should give some information if the
+        // feature was not found... -> exception?
+        Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Found feature: " + feature.getId() );
       }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
+      m_observation = ObservationFeatureFactory.toObservation( feature );
     }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+
     m_isOpen = true;
   }
 
