@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.outline;
+package org.kalypso.contribs.eclipse.ui;
 
 /**
  * Just a marker interface, that a {@link org.eclipse.ui.IViewPart} provides an outline page.
