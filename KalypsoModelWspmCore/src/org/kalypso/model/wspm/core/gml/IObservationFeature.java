@@ -40,17 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
+import javax.xml.namespace.QName;
+
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * TODO: move to a more common place, it can bes used by all feature dervied from om:Observation.
+ * TODO: move to a more common place, it can bes used by all feature derived from om:Observation.
  * 
  * @author Gernot Belger
  */
 public interface IObservationFeature extends Feature
 {
+  QName FEATURE_OBSERVATION = new QName( "http://www.opengis.net/om", "Observation" ); //$NON-NLS-1$ //$NON-NLS-2$
+
   IObservation<TupleResult> toObservation( );
 
   /**
