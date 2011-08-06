@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.impl.visitors;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
@@ -61,6 +61,9 @@ public class PanToVisitor implements IAxisVisitor
 
   public PanToVisitor( final Point start, final Point end )
   {
+    Assert.isNotNull( start );
+    Assert.isNotNull( end );
+
     m_start = start;
     m_end = end;
   }
