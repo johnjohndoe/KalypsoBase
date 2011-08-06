@@ -22,17 +22,6 @@ public final class ChartUtilities
     // not to be instanciated
   }
 
-//  /**
-//   * @return true if the screen coordinates should be inverted
-//   */
-//  public static boolean isInverseScreenCoords( final IAxis axis )
-//  {
-// final ORIENTATION ori = axis.getPosition().getOrientation();
-// final DIRECTION dir = axis.getDirection();
-// return ori == ORIENTATION.VERTICAL && dir == DIRECTION.POSITIVE || ori == ORIENTATION.HORIZONTAL && dir ==
-// DIRECTION.NEGATIVE;
-//  }
-
   /**
    * sets the given GC to an initial state - this methods should be called before any chart painting action is processed
    */
@@ -133,5 +122,4 @@ public final class ChartUtilities
     }
     return new ComparableDataRange<Integer>( new Integer[] { min, max } );
   }
-
 }
