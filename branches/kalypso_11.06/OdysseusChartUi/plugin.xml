@@ -11,20 +11,14 @@
             id="org.kalypso.chart.ui.editor.ChartEditor"
             name="Chart Editor"/>
    </extension>
-   <extension
-         point="org.eclipse.ui.views">
+   <extension point="org.eclipse.ui.views">
       <view
             allowMultiple="false"
             category="org.kalypso.ui.kalypso"
             class="org.kalypso.chart.ui.view.ChartView"
+            icon="icons/obj16/kalypso_odt.gif"
             id="org.kalypso.chart.ui.view.ChartView"
             name="Chart View">
-      </view>
-      <view
-            allowMultiple="false"
-            class="org.kalypso.chart.ui.SimpleChartOutline"
-            id="org.kalypso.chart.ui.view.SimpleChartOutline"
-            name="Simple Chart View ">
       </view>
    </extension>
    <extension

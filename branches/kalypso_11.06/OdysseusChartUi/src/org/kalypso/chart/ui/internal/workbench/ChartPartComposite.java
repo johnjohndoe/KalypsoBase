@@ -55,9 +55,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
@@ -94,7 +95,7 @@ public class ChartPartComposite implements IChartPart
 
   private ChartPartListener m_chartPartListener;
 
-  private final IPropertyPart m_part;
+  private final IWorkbenchPart m_part;
 
   private Composite m_composite = null;
 
@@ -104,7 +105,7 @@ public class ChartPartComposite implements IChartPart
 
   private boolean m_dirty = false;
 
-  public ChartPartComposite( final IPropertyPart part )
+  public ChartPartComposite( final IWorkbenchPart part )
   {
     m_part = part;
 
@@ -164,7 +165,7 @@ public class ChartPartComposite implements IChartPart
     return m_chartModel;
   }
 
-  public void init( final IEditorSite site )
+  public void init( final IWorkbenchPartSite site )
   {
     m_chartPartListener = new ChartPartListener( m_part, site );
     site.getPage().addPartListener( m_chartPartListener );
@@ -280,9 +281,8 @@ public class ChartPartComposite implements IChartPart
   {
     if( m_outlinePage == null && getChartComposite() != null )
     {
-      final IChartModel model = getChartComposite().getChartModel();
       m_outlinePage = new ChartEditorTreeOutlinePage();
-      m_outlinePage.setModel( model );
+      m_outlinePage.setModel( m_chartModel );
     }
 
     return m_outlinePage;
@@ -300,14 +300,16 @@ public class ChartPartComposite implements IChartPart
 
     m_dirty = dirty;
 
-    m_part.firePropertyChange( IEditorPart.PROP_DIRTY );
+    if( m_part instanceof IPropertyPart )
+      ((IPropertyPart) m_part).firePropertyChange( IEditorPart.PROP_DIRTY );
   }
 
   public String getPartName( )
   {
     final TitleTypeBean[] title = m_chartModel.getSettings().getTitles();
     if( ArrayUtils.isEmpty( title ) )
-      return null;
+      // TODO: check: should return the default title defined in the extension ('Chart View')
+      return m_part.getTitle();
 
     return title[0].getText();
   }
