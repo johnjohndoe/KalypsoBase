@@ -64,7 +64,12 @@ public class ProfilesChooserPage extends ArrayChooserPage
 
   public ProfilesChooserPage( final String message, final ProfileSelection selection, final boolean useDialogSettings )
   {
-    this( message, selection.getProfiles(), new Object[0], selection.getSelectedProfiles(), 1, useDialogSettings );//$NON-NLS-1$//$NON-NLS-2$
+    this( message, selection, useDialogSettings, 1 );
+  }
+
+  public ProfilesChooserPage( final String message, final ProfileSelection selection, final boolean useDialogSettings, final int numToSelect )
+  {
+    this( message, selection.getProfiles(), new Object[0], selection.getSelectedProfiles(), numToSelect, useDialogSettings );//$NON-NLS-1$//$NON-NLS-2$
   }
 
   public ProfilesChooserPage( final String message, final Object chooseables, final Object[] selected, final Object[] checked, final int numToSelect, final boolean useDialogSettings )
