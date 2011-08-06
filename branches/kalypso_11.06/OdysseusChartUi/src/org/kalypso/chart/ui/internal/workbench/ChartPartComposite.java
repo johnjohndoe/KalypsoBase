@@ -38,11 +38,9 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.editor;
+package org.kalypso.chart.ui.internal.workbench;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
@@ -56,37 +54,35 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
+import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
+import org.kalypso.chart.ui.editor.ChartPartListener;
 import org.kalypso.chart.ui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
+import org.kalypso.contribs.eclipse.ui.IPropertyPart;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.factory.config.IExtensionLoader;
+import de.openali.odysseus.chart.factory.util.ChartFactoryUtilities;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
-import de.openali.odysseus.chartconfig.x020.AxisDateRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisDurationRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisNumberRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisStringRangeType;
-import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 
 /**
@@ -98,7 +94,7 @@ public class ChartPartComposite implements IChartPart
 
   private ChartPartListener m_chartPartListener;
 
-  private final ChartEditor m_part;
+  private final IPropertyPart m_part;
 
   private Composite m_composite = null;
 
@@ -106,11 +102,12 @@ public class ChartPartComposite implements IChartPart
 
   private IChartComposite m_chartComposite = null;
 
-  public ChartPartComposite( final ChartEditor part )
+  private boolean m_dirty = false;
+
+  public ChartPartComposite( final IPropertyPart part )
   {
     m_part = part;
 
-    // FIXME: shouldn't we re create the chart model ?
     final AbstractMapperRegistryEventListener mapperRegistryListener = new AbstractMapperRegistryEventListener()
     {
       @Override
@@ -138,11 +135,6 @@ public class ChartPartComposite implements IChartPart
     m_chartModel.getLayerManager().addListener( layerManagerListener );
   }
 
-  protected void setDirty( final boolean dirty )
-  {
-    m_part.setDirty( dirty );
-  }
-
   public void dispose( )
   {
     if( m_chartPartListener != null )
@@ -162,7 +154,7 @@ public class ChartPartComposite implements IChartPart
 
     if( m_chartComposite != null )
     {
-      // FIXME: strange: is this necessary, should happen automaticall if IChartComposite is disposed
+      // FIXME: strange: is this necessary, should happen automatically if IChartComposite is disposed
       m_chartComposite.getPlot().dispose();
     }
   }
@@ -202,11 +194,8 @@ public class ChartPartComposite implements IChartPart
         final URL context = ResourceUtilities.createURL( file );
 
         ChartFactory.doConfiguration( m_chartModel, loader, chart, cel, context );
-
-        // FIXME: this needs to be done everywhere a .kod is loaded, not just only in the editor
-        final IMapperRegistry mapperRegistry = m_chartModel.getMapperRegistry();
-        final IAxis[] autoscaledAxes = doAutoscale( chart, mapperRegistry );
-        m_chartModel.autoscale( autoscaledAxes );
+        // FIXME: this needs to be done everywhere a .kod is loaded, not just only in the ChartEditor
+        ChartFactoryUtilities.doAutoscale( m_chartModel, chart );
       }
     }
     catch( final Exception e )
@@ -222,54 +211,6 @@ public class ChartPartComposite implements IChartPart
     setDirty( false );
   }
 
-  // FIXME: move into chart utilities
-  // Wenn die Achsenintervalle nicht in der Konfigurationsdatei gesetzt sind, muss ge-autorange-t werden
-  private static IAxis[] doAutoscale( final ChartType chart, final IMapperRegistry mapperRegistry )
-  {
-    final List<IAxis> autoscaledAxes = new ArrayList<IAxis>();
-
-    final AxisType[] axisArray = chart.getMappers().getAxisArray();
-    for( final AxisType axisType : axisArray )
-    {
-      Object min = null;
-      Object max = null;
-
-      if( axisType.isSetDateRange() )
-      {
-        final AxisDateRangeType range = axisType.getDateRange();
-        min = range.getMinValue();
-        max = range.getMaxValue();
-      }
-      else if( axisType.isSetDurationRange() )
-      {
-        final AxisDurationRangeType range = axisType.getDurationRange();
-        min = range.getMinValue();
-        max = range.getMaxValue();
-      }
-      else if( axisType.isSetStringRange() )
-      {
-        final AxisStringRangeType range = axisType.getStringRange();
-        min = range.getMinValue();
-        max = range.getMaxValue();
-      }
-      else if( axisType.isSetNumberRange() )
-      {
-        final AxisNumberRangeType range = axisType.getNumberRange();
-        min = range.getMinValue();
-        max = range.getMaxValue();
-        if( Double.isNaN( (Double) min ) )
-          min = null;
-        if( Double.isNaN( (Double) max ) )
-          max = null;
-      }
-
-      if( min == null || max == null )
-        autoscaledAxes.add( mapperRegistry.getAxis( axisType.getId() ) );
-    }
-
-    return autoscaledAxes.toArray( new IAxis[autoscaledAxes.size()] );
-  }
-
   public void setFocus( )
   {
     if( m_composite != null )
@@ -281,12 +222,7 @@ public class ChartPartComposite implements IChartPart
     m_composite = new Composite( parent, SWT.FILL );
     m_composite.setLayout( new FillLayout() );
 
-    final boolean isDirty = m_part.isDirty();
-
     updateControl();
-
-    // REMARK: Update control sets dirty to true, so we reset it here, in order to have a non dirty editor when opened.
-    setDirty( isDirty );
   }
 
   /**
@@ -336,18 +272,11 @@ public class ChartPartComposite implements IChartPart
   {
     m_chartComposite = new ChartImageComposite( m_composite, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
 
-    // Name des Parts
-    final TitleTypeBean[] title = m_chartModel.getSettings().getTitles();
-    if( !ArrayUtils.isEmpty( title ) )
-      m_part.setPartName( title[0].getText() );
-    else
-      m_part.setPartName( null );
-
     // drag delegates
     m_composite.layout();
   }
 
-  IContentOutlinePage getOutlinePage( )
+  public IContentOutlinePage getOutlinePage( )
   {
     if( m_outlinePage == null && getChartComposite() != null )
     {
@@ -357,5 +286,43 @@ public class ChartPartComposite implements IChartPart
     }
 
     return m_outlinePage;
+  }
+
+  public boolean isDirty( )
+  {
+    return m_dirty;
+  }
+
+  public void setDirty( final boolean dirty )
+  {
+    if( m_dirty == dirty )
+      return;
+
+    m_dirty = dirty;
+
+    m_part.firePropertyChange( IEditorPart.PROP_DIRTY );
+  }
+
+  public String getPartName( )
+  {
+    final TitleTypeBean[] title = m_chartModel.getSettings().getTitles();
+    if( ArrayUtils.isEmpty( title ) )
+      return null;
+
+    return title[0].getText();
+  }
+
+  public Object adapt( final Class< ? > adapter )
+  {
+    if( IContentOutlinePage.class.equals( adapter ) )
+      return getOutlinePage();
+
+    if( IChartComposite.class.equals( adapter ) )
+      return getChartComposite();
+
+    if( IChartPart.class.equals( adapter ) )
+      return this;
+
+    return null;
   }
 }
