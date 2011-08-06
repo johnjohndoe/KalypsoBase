@@ -38,14 +38,22 @@ public class ChartEditor extends EditorPart implements IPropertyPart
   private final ChartPartComposite m_chartPartComposite = new ChartPartComposite( this );
 
   @Override
+  public void dispose( )
+  {
+    m_chartPartComposite.dispose();
+
+    super.dispose();
+  }
+
+  @Override
   public void init( final IEditorSite site, final IEditorInput input ) throws PartInitException
   {
     if( !(input instanceof IStorageEditorInput) )
       throw new PartInitException( "Invalid Input: Must be IStorageEditorInput" ); //$NON-NLS-1$
 
-    m_chartPartComposite.init( site );
+    super.setSite( site );
 
-    setSite( site );
+    m_chartPartComposite.init( site );
 
     setInput( input );
   }
@@ -61,11 +69,49 @@ public class ChartEditor extends EditorPart implements IPropertyPart
   }
 
   @Override
-  public void dispose( )
+  public void createPartControl( final Composite parent )
   {
-    m_chartPartComposite.dispose();
+    m_chartPartComposite.createControl( parent );
 
-    super.dispose();
+    updatePartName();
+  }
+
+  @Override
+  public void setFocus( )
+  {
+    m_chartPartComposite.setFocus();
+  }
+
+  @Override
+  public boolean isDirty( )
+  {
+    return m_chartPartComposite.isDirty();
+  }
+
+  /**
+   * Made visible, because {@link ChartPartComposite} needs to call it.
+   * 
+   * @see org.eclipse.ui.part.WorkbenchPart#firePropertyChange(int)
+   */
+  @Override
+  public void firePropertyChange( final int propertyId )
+  {
+    super.firePropertyChange( propertyId );
+  }
+
+  @Override
+  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  {
+    final Object adapted = m_chartPartComposite.adapt( adapter );
+    if( adapted != null )
+      return adapted;
+
+    return super.getAdapter( adapter );
+  }
+
+  private void updatePartName( )
+  {
+    setPartName( m_chartPartComposite.getPartName() );
   }
 
   @Override
@@ -120,50 +166,10 @@ public class ChartEditor extends EditorPart implements IPropertyPart
     throw new UnsupportedOperationException();
   }
 
-  @Override
-  public boolean isDirty( )
-  {
-    return m_chartPartComposite.isDirty();
-  }
 
   @Override
   public boolean isSaveAsAllowed( )
   {
     return false;
-  }
-
-  @Override
-  public void createPartControl( final Composite parent )
-  {
-    m_chartPartComposite.createControl( parent );
-
-    updatePartName();
-  }
-
-  @Override
-  public void setFocus( )
-  {
-    m_chartPartComposite.setFocus();
-  }
-
-  @Override
-  public void firePropertyChange( final int propertyId )
-  {
-    super.firePropertyChange( propertyId );
-  }
-
-  @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
-  {
-    final Object adapted = m_chartPartComposite.adapt( adapter );
-    if( adapted != null )
-      return adapted;
-
-    return super.getAdapter( adapter );
-  }
-
-  private void updatePartName( )
-  {
-    setPartName( m_chartPartComposite.getPartName() );
   }
 }
