@@ -18,27 +18,24 @@ import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.i18n.Messages;
+import org.kalypso.chart.ui.internal.workbench.ChartPartComposite;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.IPropertyPart;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chart.factory.config.ChartConfigurationSaver;
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
 
 /**
  * @author Gernot Belger
  * @author alibu
  */
-public class ChartEditor extends EditorPart
+public class ChartEditor extends EditorPart implements IPropertyPart
 {
   private final ChartPartComposite m_chartPartComposite = new ChartPartComposite( this );
-
-  private boolean m_dirty = false;
 
   @Override
   public void init( final IEditorSite site, final IEditorInput input ) throws PartInitException
@@ -59,6 +56,8 @@ public class ChartEditor extends EditorPart
     super.setInput( input );
 
     m_chartPartComposite.loadInput( input );
+
+    updatePartName();
   }
 
   @Override
@@ -98,9 +97,8 @@ public class ChartEditor extends EditorPart
       final InputStream is = savedConfig.newInputStream( options );
       file.setContents( is, false, true, monitor );
       is.close();
-      // System.out.println( savedConfig.toString() );
 
-      setDirty( false );
+      m_chartPartComposite.setDirty( false );
     }
     catch( final CoreException e )
     {
@@ -125,7 +123,7 @@ public class ChartEditor extends EditorPart
   @Override
   public boolean isDirty( )
   {
-    return m_dirty;
+    return m_chartPartComposite.isDirty();
   }
 
   @Override
@@ -138,6 +136,8 @@ public class ChartEditor extends EditorPart
   public void createPartControl( final Composite parent )
   {
     m_chartPartComposite.createControl( parent );
+
+    updatePartName();
   }
 
   @Override
@@ -147,32 +147,23 @@ public class ChartEditor extends EditorPart
   }
 
   @Override
-  public void setPartName( final String partName )
+  public void firePropertyChange( final int propertyId )
   {
-    super.setPartName( partName );
+    super.firePropertyChange( propertyId );
   }
 
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
-    if( IContentOutlinePage.class.equals( adapter ) )
-      return m_chartPartComposite.getOutlinePage();
-
-    if( IChartComposite.class.equals( adapter ) )
-      return m_chartPartComposite.getChartComposite();
-
-    if( IChartPart.class.equals( adapter ) )
-      return m_chartPartComposite;
+    final Object adapted = m_chartPartComposite.adapt( adapter );
+    if( adapted != null )
+      return adapted;
 
     return super.getAdapter( adapter );
   }
 
-  protected void setDirty( final boolean dirty )
+  private void updatePartName( )
   {
-    if( m_dirty == dirty )
-      return;
-
-    m_dirty = dirty;
-    firePropertyChange( PROP_DIRTY );
+    setPartName( m_chartPartComposite.getPartName() );
   }
 }
