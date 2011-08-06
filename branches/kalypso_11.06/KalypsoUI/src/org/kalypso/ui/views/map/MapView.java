@@ -53,7 +53,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.ogc.gml.outline.IContentOutlineProvider;
+import org.kalypso.contribs.eclipse.ui.IContentOutlineProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
