@@ -222,8 +222,12 @@ public class SelectFeatureWidget extends AbstractWidget
   @Override
   public void moved( final Point p )
   {
-    m_currentPoint = p;
     final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
+    m_currentPoint = p;
+
     final GM_Point currentPos = MapUtilities.transform( mapPanel, p );
 
     m_hoverFeature = null;
