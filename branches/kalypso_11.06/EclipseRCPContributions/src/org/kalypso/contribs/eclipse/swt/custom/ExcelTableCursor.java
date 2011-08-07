@@ -542,8 +542,11 @@ public class ExcelTableCursor extends TableCursor
     if( DEBUG )
       System.out.println( "stopEditing" );
 
+    if( isDisposed() )
+      return;
+
     // leaf cell
-    if( cellEditorControl != null )
+    if( cellEditorControl != null && !cellEditorControl.isDisposed() )
     {
       cellEditorControl.removeKeyListener( m_keyListenerOnCell );
       cellEditorControl.removeTraverseListener( m_dontTraverseListener );
