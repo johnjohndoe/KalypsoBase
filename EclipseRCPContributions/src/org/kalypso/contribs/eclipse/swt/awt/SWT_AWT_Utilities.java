@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.swt.awt;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
@@ -53,8 +54,13 @@ import org.eclipse.ui.handlers.IHandlerService;
  * 
  * @author Gernot Belger
  */
-public class SWT_AWT_Utilities
+public final class SWT_AWT_Utilities
 {
+  private SWT_AWT_Utilities( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
   /**
    * Calls {@link MessageDialog#openConfirm(Shell, String, String)} on the currently active shell.<br>
    * This code can be called even outside a SWT thread.
@@ -96,12 +102,12 @@ public class SWT_AWT_Utilities
   }
 
   /**
-   * Calls {@link MessageDialog#openInformation(Shell, String, String)} on the currently active shell.<br>
+   * Calls {@link Dialog#open()} on the currently active shell.<br>
    * This code can be called even outside a SWT thread.
    * 
-   * @return The result of the call to {@link MessageDialog#openInformation(Shell, String, String)}
+   * @return The result of the call to {@link Dialog#open()}
    */
-  public static int openSwtMessageDialog( final MessageDialog dialog )
+  public static int openSwtMessageDialog( final Dialog dialog )
   {
     final Shell shell = findActiveShell();
     // Force it into swt
@@ -153,6 +159,20 @@ public class SWT_AWT_Utilities
       public void run( )
       {
         MessageDialog.openError( shell, title, message );
+      }
+    } );
+  }
+
+  public static void showSwtMessageBoxWarning( final String title, final String message )
+  {
+    final Shell shell = findActiveShell();
+    // Force it into swt
+    shell.getDisplay().syncExec( new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        MessageDialog.openWarning( shell, title, message );
       }
     } );
   }
