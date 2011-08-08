@@ -60,6 +60,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCoreDebug;
+import org.kalypso.core.catalog.CatalogUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ILoaderFactory;
@@ -184,10 +185,12 @@ public class ResourcePool
       final String askForSaveProperty = System.getProperty( CONFIG_INI_DO_ASK_FOR_POOL_SAVE, "false" ); //$NON-NLS-1$
       final boolean askForSave = Boolean.parseBoolean( askForSaveProperty );
       final boolean isSaveable = info.isSaveable();
+      final String location = info.getKey().getLocation();
+      final boolean isCatalogresource = CatalogUtilities.isCatalogResource( location );
 
       if( !info.isDirty() )
         info.dispose();
-      else if( askForSave && isSaveable )
+      else if( askForSave && isSaveable && !isCatalogresource )
       {
         final UIJob job = new SaveAndDisposeInfoJob( Messages.getString( "org.kalypso.util.pool.ResourcePool.5" ), info ); //$NON-NLS-1$
         job.setUser( true );
