@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.swt.awt;
 
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -107,7 +107,7 @@ public final class SWT_AWT_Utilities
    * 
    * @return The result of the call to {@link Dialog#open()}
    */
-  public static int openSwtMessageDialog( final Dialog dialog )
+  public static int openSwtWindow( final Window window )
   {
     final Shell shell = findActiveShell();
     // Force it into swt
@@ -117,7 +117,7 @@ public final class SWT_AWT_Utilities
       @Override
       public void run( )
       {
-        result[0] = dialog.open();
+        result[0] = window.open();
       }
     } );
     return result[0];
