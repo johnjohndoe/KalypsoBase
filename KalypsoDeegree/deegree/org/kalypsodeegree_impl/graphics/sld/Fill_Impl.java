@@ -89,33 +89,27 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
   @Override
   public Color getFill( final Feature feature ) throws FilterEvaluationException
   {
-    Color awtColor = FILL_DEFAULT;
-
     final CssParameter cssParam = getParameter( "fill" );
 
-    if( cssParam != null )
+    if( cssParam == null )
+      return FILL_DEFAULT;
+
+    String s = cssParam.getValue( feature );
+    if( s.length() < 2 )
+      return FILL_DEFAULT;
+
+    try
     {
-      String s = cssParam.getValue( feature );
+      if( s.charAt( 0 ) == '#' && s.charAt( 1 ) == '#' )
+        s = s.substring( 1 );
 
-      // EXTREMELY SLOW! used only for checking if string begins with ## 
-      //cssParam.getValue( feature ).replaceAll("##", "#");
-      try
-      {
-        if (s.charAt( 0 ) == '#' && s.charAt( 1 ) == '#') 
-          s = s.substring( 1 );
-        awtColor =  Color.decode( s );
-      }
-      catch( final Exception e )
-      {
-        KalypsoCommonsPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e, "Given value ('" + s + "') for CSS-Parameter 'fill' "
-            + "does not denote a valid color!" ) );
-        return awtColor;
-//        throw new FilterEvaluationException( "Given value ('" + s + "') for CSS-Parameter 'fill' "
-//            + "does not denote a valid color!" );
-      }
+      return Color.decode( s );
     }
-
-    return awtColor;
+    catch( final Exception e )
+    {
+      KalypsoCommonsPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e, "Given value ('" + s + "') for CSS-Parameter 'fill' " + "does not denote a valid color!" ) );
+      return FILL_DEFAULT;
+    }
   }
 
 
