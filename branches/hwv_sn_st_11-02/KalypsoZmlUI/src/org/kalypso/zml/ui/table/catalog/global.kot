@@ -168,11 +168,11 @@
     <Style id="wqBoundaryDeviationUpper">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:boundary:deviation:upper</property>
     </Style>
-    <Style id="wqBoundaryDeviationLowerMassive">
-      <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:boundary:deviation:lower:massive</property>
+    <Style id="wqBoundaryDeviationLowerExtreme">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:boundary:deviation:lower:extreme</property>
     </Style>
-    <Style id="wqBoundaryDeviationUpperMassive">
-      <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:boundary:deviation:upper:massive</property>
+    <Style id="wqBoundaryDeviationUpperExtreme">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:boundary:deviation:upper:extreme</property>
     </Style>
   </StyleSet>
   <defaultStyle>
@@ -332,12 +332,12 @@
 
     <Rule id="ruleWqBoundaryDeviationLowerW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
       <RuleInstructions>
-        <MetadataBoundaryInstruction from="WQ-Tabelle_W_Min" opFrom="&lt;=" factorFrom="0.8">
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_W_Min" opFrom="&lt;=">
           <styleReference>
-            <reference>wqBoundaryDeviationLowerMassive</reference>
+            <reference>wqBoundaryDeviationLowerExtreme</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="WQ-Tabelle_W_Min" opFrom="&gt;" factorFrom="0.8" to="WQ-Tabelle_W_Min" opTo="&lt;">
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_W_Min" opFrom="&gt;" to="WQ-Tabelle_W_Min" opTo="&lt;">
           <styleReference>
             <reference>wqBoundaryDeviationLower</reference>
           </styleReference>
@@ -348,12 +348,12 @@
 
     <Rule id="ruleWqBoundaryDeviationUpperW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
       <RuleInstructions>
-        <MetadataBoundaryInstruction from="WQ-Tabelle_W_Max" opFrom="&gt;=" factorFrom="1.2">
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_W_Max" opFrom="&gt;=">
           <styleReference>
-            <reference>wqBoundaryDeviationUpperMassive</reference>
+            <reference>wqBoundaryDeviationUpperExtreme</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="WQ-Tabelle_W_Max" opFrom="&gt;" to="WQ-Tabelle_W_Max" opTo="&lt;" factorTo="1.2">
+        <MetadataBoundaryInstruction from="WQ-Tabelle_W_Max" opFrom="&gt;" toExtensionPoint="wq.extreme.value" to="WQ-Tabelle_W_Max" opTo="&lt;">
           <styleReference>
             <reference>wqBoundaryDeviationUpper</reference>
           </styleReference>
@@ -364,12 +364,12 @@
 
     <Rule id="ruleWqBoundaryDeviationLowerQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
       <RuleInstructions>
-        <MetadataBoundaryInstruction from="WQ-Tabelle_Q_Min" opFrom="&lt;=" factorFrom="0.8">
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_Q_Min" opFrom="&lt;=" >
           <styleReference>
-            <reference>wqBoundaryDeviationLowerMassive</reference>
+            <reference>wqBoundaryDeviationLowerExtreme</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="WQ-Tabelle_Q_Min" opFrom="&gt;" factorFrom="0.8" to="WQ-Tabelle_Q_Min" opTo="&lt;">
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_Q_Min" opFrom="&gt;" to="WQ-Tabelle_Q_Min" opTo="&lt;">
           <styleReference>
             <reference>wqBoundaryDeviationLower</reference>
           </styleReference>
@@ -380,12 +380,12 @@
 
     <Rule id="ruleWqBoundaryDeviationUpperQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
       <RuleInstructions>
-        <MetadataBoundaryInstruction from="WQ-Tabelle_Q_Max" opFrom="&gt;=" factorFrom="1.2">
+        <MetadataBoundaryInstruction  fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_Q_Max" opFrom="&gt;=" >
           <styleReference>
-            <reference>wqBoundaryDeviationUpperMassive</reference>
+            <reference>wqBoundaryDeviationUpperExtreme</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="WQ-Tabelle_Q_Max" opFrom="&gt;" to="WQ-Tabelle_Q_Max" opTo="&lt;" factorTo="1.2">
+        <MetadataBoundaryInstruction from="WQ-Tabelle_Q_Max" opFrom="&gt;" to="WQ-Tabelle_Q_Max" opTo="&lt;" toExtensionPoint="wq.extreme.value">
           <styleReference>
             <reference>wqBoundaryDeviationUpper</reference>
           </styleReference>

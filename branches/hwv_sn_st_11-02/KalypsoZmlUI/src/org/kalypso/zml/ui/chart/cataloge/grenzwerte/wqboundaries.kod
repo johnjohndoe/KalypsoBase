@@ -25,7 +25,7 @@
         <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
           <Parameters>
             <Parameter name="grenzwert" value="WQ-Tabelle_W_.+$" />
-            <Parameter name="label" value="W %s" />
+            <Parameter name="label" value="W/Q %s" />
             <Parameter name="labelTokenizer" value="^.+_" />
             <Parameter name="hideOnMultiSelect" value="true" />
           </Parameters>
@@ -41,7 +41,7 @@
         <Provider epid="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
           <Parameters>
             <Parameter name="grenzwert" value="WQ-Tabelle_Q_.+$" />
-            <Parameter name="label" value="Q %s" />
+            <Parameter name="label" value="W/Q %s" />
             <Parameter name="labelTokenizer" value="^.+_" />
             <Parameter name="hideOnMultiSelect" value="true" />
           </Parameters>
