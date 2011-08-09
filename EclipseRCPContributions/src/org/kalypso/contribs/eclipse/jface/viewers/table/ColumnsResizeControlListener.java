@@ -102,7 +102,9 @@ public class ColumnsResizeControlListener extends ControlAdapter
   {
     // In order to handle many resize events in short time, we schedule the real update into a job
     m_resizeColumnsJob.cancel();
-    m_resizeColumnsJob.schedule( 50 );
+    // REMARK: using a long delay here also protects against strange effect in combinasion with
+    // scrolled forms.
+    m_resizeColumnsJob.schedule( 250 );
   }
 
   void resizeColumns( )
