@@ -308,6 +308,7 @@ public class MapFileUtilities
     item.getItem().add( createItem( "wms_title", mapName ) );
     item.getItem().add( createItem( "wms_onlineresource", resource ) );
     item.getItem().add( createItem( "wms_srs", String.format( "%s %s", sourceCRS, StringUtils.join( otherCRSs, " " ) ) ) );
+    item.getItem().add( createItem( "wms_feature_info_mime_type", "text/html" ) );
 
     /* Create the map element. */
     Web web = OF.createWeb();
@@ -387,6 +388,7 @@ public class MapFileUtilities
     layer.setType( shapeType );
     layer.setStatus( "ON" );
     layer.setData( data );
+    layer.setTemplate( "getfeatureinfo.html" );
 
     /* Fill the projection element. */
     layer.getProjection().add( "init=" + sourceCRS );
@@ -434,6 +436,7 @@ public class MapFileUtilities
     layer.setStatus( "ON" );
     layer.setOpacity( opacity );
     layer.setData( data );
+    layer.setTemplate( "getfeatureinfo.html" );
 
     /* Fill the processing element. */
     double min = -Double.MAX_VALUE;
