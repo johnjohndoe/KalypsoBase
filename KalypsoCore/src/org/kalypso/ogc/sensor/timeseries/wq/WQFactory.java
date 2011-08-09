@@ -43,7 +43,7 @@ package org.kalypso.ogc.sensor.timeseries.wq;
 
 import java.io.StringReader;
 
-import org.apache.commons.lang.StringUtils;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -68,20 +68,23 @@ public final class WQFactory
    */
   public static IWQConverter createWQConverter( final IObservation obs ) throws SensorException
   {
+    return createWQConverter( obs.getMetadataList() );
+  }
+
+  public static IWQConverter createWQConverter( final MetadataList metadata ) throws SensorException
+  {
     try
     {
-      final MetadataList mdl = obs.getMetadataList();
-
-      if( mdl.containsKey( ITimeseriesConstants.MD_WQWECHMANN ) )
+      if( metadata.containsKey( ITimeseriesConstants.MD_WQWECHMANN ) )
       {
-        final String wechmann = mdl.getProperty( ITimeseriesConstants.MD_WQWECHMANN );
+        final String wechmann = metadata.getProperty( ITimeseriesConstants.MD_WQWECHMANN );
 
         return WechmannFactory.parse( new InputSource( new StringReader( wechmann ) ) );
       }
-      else if( mdl.containsKey( ITimeseriesConstants.MD_WQTABLE ) )
+      else if( metadata.containsKey( ITimeseriesConstants.MD_WQTABLE ) )
       {
-        final String wqtable = mdl.getProperty( ITimeseriesConstants.MD_WQTABLE );
-        if( StringUtils.isBlank( wqtable ) )
+        final String wqtable = metadata.getProperty( ITimeseriesConstants.MD_WQTABLE );
+        if( Strings.isEmpty( wqtable ) )
           return null;
 
         return WQTableFactory.parse( new InputSource( new StringReader( wqtable ) ) );
