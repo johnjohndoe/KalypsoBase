@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.widgets;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.Map;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
@@ -125,4 +126,12 @@ public interface IWidget
    * determine if the action should be enabled.
    */
   boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel );
+
+  /**
+   * This function sets the map of all parameter.
+   * 
+   * @param parameter
+   *          The map of all parameter. May be null.
+   */
+  public void setParameter( Map<String, String> parameter );
 }

@@ -41,6 +41,7 @@
 package org.kalypso.contribs.eclipse.swt.awt;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -95,6 +96,34 @@ public class SWT_AWT_Utilities
     } );
 
     return result[0];
+  }
+
+  /**
+   * Calls {@link Dialog#open()} on the currently active shell.<br>
+   * This code can be called even outside a SWT thread.
+   * 
+   * @return The result of the call to {@link Dialog#open()}
+   */
+  public static int openSwtWindow( final Window window )
+  {
+    final Shell shell = findActiveShell();
+    // Force it into swt
+    final int[] result = new int[1];
+    shell.getDisplay().syncExec( new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        result[0] = window.open();
+      }
+    } );
+    return result[0];
+  }
+
+  public static Shell findActiveShell( )
+  {
+    final IHandlerService service = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+    return (Shell) service.getCurrentState().getVariable( ISources.ACTIVE_SHELL_NAME );
   }
 
   /**
