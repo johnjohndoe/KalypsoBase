@@ -139,7 +139,6 @@ public class WaterLevelResultTree extends Composite
           }
         }
       } );
-
     }
     catch( final Exception e )
     {
@@ -151,9 +150,9 @@ public class WaterLevelResultTree extends Composite
 
   public void addFilter( final ViewerFilter filter )
   {
-    //prevent NPE
     if( m_treeViewer == null )
       return;
+
     m_treeViewer.addFilter( filter );
 
     /** update tree selection */
