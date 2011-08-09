@@ -151,8 +151,10 @@ public class WaterLevelResultTree extends Composite
 
   public void addFilter( final ViewerFilter filter )
   {
-    if( Objects.isNotNull( m_treeViewer ) )
-      m_treeViewer.addFilter( filter );
+    //prevent NPE
+    if( m_treeViewer == null )
+      return;
+    m_treeViewer.addFilter( filter );
 
     /** update tree selection */
     synchronized( this )
