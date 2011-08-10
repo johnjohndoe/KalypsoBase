@@ -75,7 +75,7 @@ public class ImportProfileWizard extends Wizard implements IWorkbenchWizard
 
   public ImportProfileWizard( )
   {
-    setWindowTitle( Messages.getString("ImportProfileWizard.1") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "ImportProfileWizard.1" ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() ) );

@@ -503,6 +503,7 @@
              category="importWizards"
              class="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportPrfWizard"
              id="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportPrfWizard"
+             icon="icons/obj16/wspwin16.gif"
              name="%org.kalypso.model.wspm.ui.action.ImportProfilePrfAction">
           <description>%org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.description</description>
        </wizard>
