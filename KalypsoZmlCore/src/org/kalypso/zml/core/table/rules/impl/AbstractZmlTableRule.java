@@ -97,4 +97,23 @@ public abstract class AbstractZmlTableRule implements IZmlRuleImplementation
   {
     return rule.getPlainStyle();
   }
+
+  /**
+   * @see org.kalypso.zml.core.table.rules.IZmlRuleImplementation#getLabel(org.kalypso.zml.core.table.model.references.IZmlValueReference)
+   */
+  @Override
+  public String getLabel( final ZmlRule rule, final IZmlValueReference reference )
+  {
+    return rule.getRuleType().getLabel();
+  }
+
+  /**
+   * @see org.kalypso.zml.core.table.rules.IZmlRuleImplementation#getSeverity(org.kalypso.zml.core.table.binding.rule.ZmlRule,
+   *      org.kalypso.zml.core.table.model.references.IZmlValueReference)
+   */
+  @Override
+  public Double getSeverity( final ZmlRule rule, final IZmlValueReference reference )
+  {
+    return 1.0;
+  }
 }

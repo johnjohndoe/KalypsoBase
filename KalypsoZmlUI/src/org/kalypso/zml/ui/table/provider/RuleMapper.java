@@ -45,7 +45,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
@@ -60,7 +59,7 @@ public class RuleMapper
 {
   private ZmlRule[] m_rules;
 
-  private final Map<ZmlRule, CellStyle> m_applied = new LinkedHashMap<ZmlRule, CellStyle>();
+  private final Map<ZmlRule, AppliedRule> m_applied = new LinkedHashMap<ZmlRule, AppliedRule>();
 
   private final BaseColumn m_column;
 
@@ -85,17 +84,9 @@ public class RuleMapper
         final IZmlRuleImplementation impl = rule.getImplementation();
         if( impl.apply( rule, reference ) )
         {
-          try
-          {
-            final CellStyle style = impl.getCellStyle( rule, reference );
+          addRule( rule, impl, reference );
 
-            rules.add( rule );
-            m_applied.put( rule, style );
-          }
-          catch( final CoreException e )
-          {
-            e.printStackTrace();
-          }
+          rules.add( rule );
         }
       }
     }
@@ -106,14 +97,45 @@ public class RuleMapper
     return m_rules;
   }
 
+  private void addRule( final ZmlRule rule, final IZmlRuleImplementation implementation, final IZmlValueReference reference )
+  {
+    try
+    {
+      final Double severity = implementation.getSeverity( rule, reference );
+
+      final AppliedRule applied = m_applied.get( rule );
+      if( Objects.isNull( applied ) )
+      {
+        final CellStyle style = implementation.getCellStyle( rule, reference );
+        final String label = implementation.getLabel( rule, reference );
+
+        m_applied.put( rule, new AppliedRule( rule, style, label, severity ) );
+      }
+      else
+      {
+        if( applied.getSeverity() >= severity )
+          return;
+
+        final CellStyle style = implementation.getCellStyle( rule, reference );
+        final String label = implementation.getLabel( rule, reference );
+
+        m_applied.put( rule, new AppliedRule( rule, style, label, severity ) );
+      }
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
+    }
+  }
+
   public void reset( )
   {
     m_applied.clear();
     m_lastReference = null;
   }
 
-  public Map<ZmlRule, CellStyle> getAppliedRules( )
+  public AppliedRule[] getAppliedRules( )
   {
-    return m_applied;
+    return m_applied.values().toArray( new AppliedRule[] {} );
   }
 }

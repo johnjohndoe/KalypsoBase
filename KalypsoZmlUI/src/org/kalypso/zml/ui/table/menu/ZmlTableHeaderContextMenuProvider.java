@@ -40,10 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.menu;
 
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -54,10 +50,9 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ColumnHeader;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.provider.AppliedRule;
 import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
@@ -107,11 +102,10 @@ public class ZmlTableHeaderContextMenuProvider
       addAdditionalItem( header, menuManager );
     }
 
-    final Map<ZmlRule, CellStyle> applied = column.getAppliedRules();
-    final Set<Entry<ZmlRule, CellStyle>> entries = applied.entrySet();
-    for( final Entry<ZmlRule, CellStyle> entry : entries )
+    final AppliedRule[] rules = column.getAppliedRules();
+    for( final AppliedRule rule : rules )
     {
-      addAditionalItem( entry.getKey(), entry.getValue(), menuManager );
+      addAditionalItem( rule, menuManager );
     }
   }
 
@@ -152,7 +146,7 @@ public class ZmlTableHeaderContextMenuProvider
 
   }
 
-  private void addAditionalItem( final ZmlRule rule, final CellStyle cellStyle, final MenuManager menuManager )
+  private void addAditionalItem( final AppliedRule rule, final MenuManager menuManager )
   {
     menuManager.add( new Action()
     {
@@ -161,7 +155,7 @@ public class ZmlTableHeaderContextMenuProvider
       {
         try
         {
-          final Image image = cellStyle.getImage();
+          final Image image = rule.getCellStyle().getImage();
           if( Objects.isNotNull( image ) )
             return ImageDescriptor.createFromImage( image );
         }

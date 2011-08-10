@@ -38,19 +38,50 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy;
+package org.kalypso.zml.ui.table.provider;
 
-import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.AppliedRule;
+import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 
 /**
  * @author Dirk Kuch
  */
-public interface IExtendedZmlTableColumn extends IZmlTableColumn
+public class AppliedRule
 {
-  ZmlTableEditingSupport getEditingSupport( );
 
-  AppliedRule[] getAppliedRules( );
+  private final CellStyle m_style;
 
+  private final String m_label;
+
+  private final Double m_severity;
+
+  private final ZmlRule m_rule;
+
+  public AppliedRule( final ZmlRule rule, final CellStyle style, final String label, final Double severity )
+  {
+    m_rule = rule;
+    m_style = style;
+    m_label = label;
+    m_severity = severity;
+  }
+
+  public Double getSeverity( )
+  {
+    return m_severity;
+  }
+
+  public CellStyle getCellStyle( )
+  {
+    return m_style;
+  }
+
+  public String getLabel( )
+  {
+    return m_label;
+  }
+
+  public boolean hasHeaderIcon( )
+  {
+    return m_rule.hasHeaderIcon();
+  }
 }
