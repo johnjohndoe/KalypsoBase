@@ -330,7 +330,7 @@
       <label>Hauptzahl(en) W</label>
     </Rule>
 
-    <Rule id="ruleWqBoundaryDeviationLowerW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
+    <Rule id="ruleWqBoundaryDeviationLowerW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true" setHeaderIcon="true">
       <RuleInstructions>
         <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_W_Min" opFrom="&lt;=">
           <styleReference>
@@ -346,7 +346,7 @@
       <label>Unterschreitung des W/Q Grenzwertes</label>
     </Rule>
 
-    <Rule id="ruleWqBoundaryDeviationUpperW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
+    <Rule id="ruleWqBoundaryDeviationUpperW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true" setHeaderIcon="true">
       <RuleInstructions>
         <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_W_Max" opFrom="&gt;=">
           <styleReference>
@@ -362,9 +362,9 @@
       <label>Überschreitung des W/Q Grenzwertes</label>
     </Rule>
 
-    <Rule id="ruleWqBoundaryDeviationLowerQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
+    <Rule id="ruleWqBoundaryDeviationLowerQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true" setHeaderIcon="true">
       <RuleInstructions>
-        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_Q_Min" opFrom="&lt;=" >
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_Q_Min" opFrom="&lt;=">
           <styleReference>
             <reference>wqBoundaryDeviationLowerExtreme</reference>
           </styleReference>
@@ -378,9 +378,9 @@
       <label>Unterschreitung des W/Q Grenzwertes</label>
     </Rule>
 
-    <Rule id="ruleWqBoundaryDeviationUpperQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true">
+    <Rule id="ruleWqBoundaryDeviationUpperQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true" setHeaderIcon="true">
       <RuleInstructions>
-        <MetadataBoundaryInstruction  fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_Q_Max" opFrom="&gt;=" >
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_Q_Max" opFrom="&gt;=">
           <styleReference>
             <reference>wqBoundaryDeviationUpperExtreme</reference>
           </styleReference>

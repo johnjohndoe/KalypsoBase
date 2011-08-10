@@ -5,7 +5,7 @@
     <Description />
     <Styles>
       <LineStyle role="wqBoundaryLineStyle">
-        <Width>1</Width>
+        <Width>2</Width>
         <LineColor>4DCD2D</LineColor>
         <DashArray>10 6</DashArray>
         <LineCap>ROUND</LineCap>
@@ -16,7 +16,7 @@
         <TextColor>4DCD2D</TextColor>
         <FontFamily>Arial</FontFamily>
         <!-- <FillColor>000000</FillColor> -->
-        <!-- <FontWeight>BOLD</FontWeight> -->
+        <FontWeight>BOLD</FontWeight>
         <FontStyle>NORMAL</FontStyle>
       </TextStyle>
     </Styles>
