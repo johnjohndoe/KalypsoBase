@@ -41,8 +41,6 @@
 package org.kalypso.zml.ui.table.layout;
 
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -57,11 +55,11 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ColumnHeader;
-import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTableColumnVisitor;
+import org.kalypso.zml.ui.table.provider.AppliedRule;
 import org.kalypso.zml.ui.table.provider.ZmlTableImage;
 import org.kalypso.zml.ui.table.provider.ZmlTableImageMerger;
 import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
@@ -145,7 +143,6 @@ public class PackTableColumnVisitor implements IZmlTableColumnVisitor
   private void updateHeader( final IExtendedZmlTableColumn column )
   {
     final TableColumn tableColumn = column.getTableViewerColumn().getColumn();
-    final Map<ZmlRule, CellStyle> applied = column.getAppliedRules();
 
     final ZmlTableImageMerger provider = new ZmlTableImageMerger( 1 );
 
@@ -164,18 +161,17 @@ public class PackTableColumnVisitor implements IZmlTableColumnVisitor
       }
     }
 
-    final Set<Entry<ZmlRule, CellStyle>> entries = applied.entrySet();
-    for( final Entry<ZmlRule, CellStyle> entry : entries )
+    final AppliedRule[] rules = column.getAppliedRules();
+    for( final AppliedRule rule : rules )
     {
       try
       {
-        final ZmlRule rule = entry.getKey();
-        final CellStyle style = entry.getValue();
 
         if( rule.hasHeaderIcon() )
         {
+          final CellStyle style = rule.getCellStyle();
           final Image image = style.getImage();
-          if( image != null )
+          if( Objects.isNotNull( image ) )
             provider.addImage( new ZmlTableImage( style.getIdentifier(), image ) );
         }
       }

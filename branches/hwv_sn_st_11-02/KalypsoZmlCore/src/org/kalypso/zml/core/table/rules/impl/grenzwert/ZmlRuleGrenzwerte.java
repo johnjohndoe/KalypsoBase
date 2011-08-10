@@ -106,6 +106,32 @@ public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
   }
 
   /**
+   * @see org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule#getLabel(org.kalypso.zml.core.table.binding.rule.ZmlRule,
+   *      org.kalypso.zml.core.table.model.references.IZmlValueReference)
+   */
+  @Override
+  public String getLabel( final ZmlRule rule, final IZmlValueReference reference )
+  {
+    final AbstractZmlRuleInstructionType[] instructions = rule.getInstructions();
+    for( final AbstractZmlRuleInstructionType instruction : instructions )
+    {
+      try
+      {
+        if( instruction.matches( reference ) )
+
+          return instruction.getLabel( rule );
+
+      }
+      catch( final SensorException e )
+      {
+        KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
+
+    return rule.getRuleType().getLabel();
+  }
+
+  /**
    * @see org.kalypso.zml.ui.core.rules.IZmlTableRule#getIdentifier()
    */
   @Override
@@ -133,5 +159,31 @@ public class ZmlRuleGrenzwerte extends AbstractZmlTableRule
     }
 
     return text;
+  }
+
+  /**
+   * @see org.kalypso.zml.core.table.rules.impl.AbstractZmlTableRule#getSeverity(org.kalypso.zml.core.table.binding.rule.ZmlRule,
+   *      org.kalypso.zml.core.table.model.references.IZmlValueReference)
+   */
+  @Override
+  public Double getSeverity( final ZmlRule rule, final IZmlValueReference reference )
+  {
+    final AbstractZmlRuleInstructionType[] instructions = rule.getInstructions();
+    for( final AbstractZmlRuleInstructionType instruction : instructions )
+    {
+      try
+      {
+        if( instruction.matches( reference ) )
+
+          return instruction.getSeverity();
+
+      }
+      catch( final SensorException e )
+      {
+        KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      }
+    }
+
+    return 1.0;
   }
 }

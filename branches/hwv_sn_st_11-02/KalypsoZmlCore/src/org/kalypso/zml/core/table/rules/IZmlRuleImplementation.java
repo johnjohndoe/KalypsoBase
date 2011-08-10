@@ -60,4 +60,8 @@ public interface IZmlRuleImplementation
   String update( ZmlRule rule, final IZmlValueReference reference, String text ) throws SensorException;
 
   CellStyle getCellStyle( ZmlRule rule, IZmlValueReference reference ) throws CoreException;
+
+  String getLabel( ZmlRule rule, IZmlValueReference reference );
+
+  Double getSeverity( ZmlRule rule, IZmlValueReference reference );
 }

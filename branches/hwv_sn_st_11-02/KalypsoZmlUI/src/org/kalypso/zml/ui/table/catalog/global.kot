@@ -277,27 +277,27 @@
     </Rule>
     <Rule id="ruleAlarmstufen" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
       <RuleInstructions>
-        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_1" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_2" label="AS1 ${text}" severity="40">
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_1" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_2" label="AS1 ${text}" severity="10" tooltip="Überschreitung Alarmstufe 1">
           <styleReference>
             <reference>alarmstufe_1</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_2" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_3" label="AS2 ${text}" severity="30">
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_2" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_3" label="AS2 ${text}" severity="20" tooltip="Überschreitung Alarmstufe 2">
           <styleReference>
             <reference>alarmstufe_2</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_3" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_4" label="AS3 ${text}" severity="20">
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_3" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_4" label="AS3 ${text}" severity="30" tooltip="Überschreitung Alarmstufe 3">
           <styleReference>
             <reference>alarmstufe_3</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_4" opFrom="&gt;=" label="AS4 ${text}" severity="10">
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_4" opFrom="&gt;=" label="AS4 ${text}" severity="40" tooltip="Überschreitung Alarmstufe 4">
           <styleReference>
             <reference>alarmstufe_4</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="Grenzwert_W: Meldegrenze" opFrom="&gt;=" label="MG ${text}" severity="1">
+        <MetadataBoundaryInstruction from="Grenzwert_W: Meldegrenze" opFrom="&gt;=" label="MG ${text}" severity="1" tooltip="Überschreitung Meldegrenze">
           <styleReference>
             <reference>meldegrenze</reference>
           </styleReference>
@@ -332,7 +332,7 @@
 
     <Rule id="ruleWqBoundaryDeviationLowerW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true" setHeaderIcon="true">
       <RuleInstructions>
-        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_W_Min" opFrom="&lt;=" severity="10">
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_W_Min" opFrom="&lt;=" severity="10" tooltip="Hohe %s">
           <styleReference>
             <reference>wqBoundaryDeviationLowerExtreme</reference>
           </styleReference>
@@ -348,7 +348,7 @@
 
     <Rule id="ruleWqBoundaryDeviationUpperW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true" setHeaderIcon="true">
       <RuleInstructions>
-        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_W_Max" opFrom="&gt;=" severity="10">
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_W_Max" opFrom="&gt;=" severity="10" tooltip="Hohe %s">
           <styleReference>
             <reference>wqBoundaryDeviationUpperExtreme</reference>
           </styleReference>
@@ -364,7 +364,7 @@
 
     <Rule id="ruleWqBoundaryDeviationLowerQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true" setHeaderIcon="true">
       <RuleInstructions>
-        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_Q_Min" opFrom="&lt;=" severity="10">
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_Q_Min" opFrom="&lt;=" severity="10" tooltip="Hohe %s" >
           <styleReference>
             <reference>wqBoundaryDeviationLowerExtreme</reference>
           </styleReference>
@@ -380,7 +380,7 @@
 
     <Rule id="ruleWqBoundaryDeviationUpperQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true" setHeaderIcon="true">
       <RuleInstructions>
-        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_Q_Max" opFrom="&gt;=" severity="10">
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_Q_Max" opFrom="&gt;=" severity="10" tooltip="Hohe %s" >
           <styleReference>
             <reference>wqBoundaryDeviationUpperExtreme</reference>
           </styleReference>

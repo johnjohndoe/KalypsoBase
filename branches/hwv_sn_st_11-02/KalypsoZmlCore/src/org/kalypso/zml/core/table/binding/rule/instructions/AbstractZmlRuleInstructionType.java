@@ -42,9 +42,11 @@ package org.kalypso.zml.core.table.binding.rule.instructions;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ZmlStyleResolver;
+import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
 import org.kalypso.zml.core.table.schema.StyleReferenceType;
@@ -75,14 +77,25 @@ public abstract class AbstractZmlRuleInstructionType
 
     final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
     final StyleReferenceType styleReference = m_type.getStyleReference();
-
-    final CellStyle style = resolver.findStyle( styleReference );
-    m_style = style.clone();
-    m_style.setSeverity( m_type.getSeverity() );
+    m_style = resolver.findStyle( styleReference );
 
     return m_style;
   }
 
+  public String getLabel( final ZmlRule rule )
+  {
+    final String format = m_type.getTooltip();
+    if( Strings.isEmpty( format ) )
+      return rule.getRuleType().getLabel();
+
+    return String.format( format, rule.getRuleType().getLabel() );
+  }
+
   public abstract boolean matches( final IZmlValueReference reference ) throws SensorException;
+
+  public Double getSeverity( )
+  {
+    return m_type.getSeverity();
+  }
 
 }
