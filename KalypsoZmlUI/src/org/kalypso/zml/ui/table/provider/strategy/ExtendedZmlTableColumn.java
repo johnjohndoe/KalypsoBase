@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider.strategy;
 
+import java.util.Map;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -180,7 +182,7 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
   }
 
   @Override
-  public ZmlRule[] getAppliedRules( )
+  public Map<ZmlRule, CellStyle> getAppliedRules( )
   {
     return m_mapper.getAppliedRules();
   }
