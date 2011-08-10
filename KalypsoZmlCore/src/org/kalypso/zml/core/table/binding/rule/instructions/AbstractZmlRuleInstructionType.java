@@ -76,7 +76,9 @@ public abstract class AbstractZmlRuleInstructionType
     final ZmlStyleResolver resolver = ZmlStyleResolver.getInstance();
     final StyleReferenceType styleReference = m_type.getStyleReference();
 
-    m_style = resolver.findStyle( styleReference );
+    final CellStyle style = resolver.findStyle( styleReference );
+    m_style = style.clone();
+    m_style.setSeverity( m_type.getSeverity() );
 
     return m_style;
   }

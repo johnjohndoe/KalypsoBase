@@ -57,6 +57,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.graphics.RGBUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
@@ -228,6 +229,12 @@ public class CellStyle implements Cloneable
   public String getIdentifier( )
   {
     return m_style.getId();
+  }
+
+  public void setSeverity( final Double severity )
+  {
+    if( Objects.isNotNull( severity ) )
+      m_style.setSeverity( severity );
   }
 
 }
