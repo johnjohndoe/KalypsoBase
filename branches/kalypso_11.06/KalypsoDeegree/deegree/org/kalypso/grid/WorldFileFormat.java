@@ -54,8 +54,8 @@ public final class WorldFileFormat
   {
     AVAILABLE_FORMATS[0] = new WorldFileFormat( "tif", "tfw", "TIF File" );
     AVAILABLE_FORMATS[1] = new WorldFileFormat( "jpg", "jgw", "JPEG File" );
-    // AVAILABLE_FORMATS[2] = new WorldFileFormat( "jp2", "jgw", "JPEG2 File" );
-    AVAILABLE_FORMATS[3] = new WorldFileFormat( "png", "pgw", "Portable Network Graphic" );
+    AVAILABLE_FORMATS[2] = new WorldFileFormat( "png", "pgw", "Portable Network Graphic" );
+    // AVAILABLE_FORMATS[3] = new WorldFileFormat( "jp2", "jgw", "JPEG2 File" );
   }
 
   public static WorldFileFormat[] getAvailableFormats( )
