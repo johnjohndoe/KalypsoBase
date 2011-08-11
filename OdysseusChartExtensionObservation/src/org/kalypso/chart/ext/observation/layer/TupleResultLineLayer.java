@@ -246,6 +246,8 @@ public class TupleResultLineLayer extends AbstractLineLayer
     final IDataOperator domainDataOp = m_dataOpertatorHelper.getDataOperator( getDomainAxis().getDataClass() );
     for( int i = 0; i < domainValues.length; i++ )
     {
+      if (domainValues.length != targetValues.length)
+        return null;
       final Object domainValue = domainValues[i];
       final Object targetValue = targetValues[i];
       if( targetValue == null )
