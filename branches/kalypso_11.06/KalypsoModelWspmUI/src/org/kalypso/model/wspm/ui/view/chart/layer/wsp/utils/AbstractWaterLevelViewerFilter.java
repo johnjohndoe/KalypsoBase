@@ -50,7 +50,6 @@ public abstract class AbstractWaterLevelViewerFilter extends ViewerFilter
 {
   protected boolean isWaterLevelFixiation( final Object element )
   {
-
     if( element instanceof IWspLayerDataElement )
     {
       final IWspLayerDataElement wsp = (IWspLayerDataElement) element;
