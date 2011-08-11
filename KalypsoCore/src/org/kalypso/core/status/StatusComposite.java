@@ -69,7 +69,7 @@ import org.kalypso.core.i18n.Messages;
  * A composite, showing an {@link org.eclipse.core.runtime.IStatus}.<br>
  * <dl>
  * <dt><b>Styles:</b></dt>
- * <dd>DETAILS, HIDE_TEXT</dd>
+ * <dd>DETAILS, HIDE_TEXT, HIDE_DETAILS_IF_DISABLED</dd>
  * <dt><b>Events:</b></dt>
  * <dd>(none)</dd>
  * </dl>
@@ -170,9 +170,6 @@ public class StatusComposite extends Composite
 
     m_messageText.addMouseListener( new MouseAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.MouseAdapter#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
-       */
       @Override
       public void mouseDoubleClick( final MouseEvent e )
       {
