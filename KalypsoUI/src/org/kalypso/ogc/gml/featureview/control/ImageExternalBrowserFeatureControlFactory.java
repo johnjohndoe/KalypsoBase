@@ -40,19 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
-import org.kalypso.gmlschema.annotation.IAnnotation;
+import java.util.Properties;
+
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.template.featureview.ControlType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class ImageFeatureControlFactory implements IFeatureControlFactory
+public class ImageExternalBrowserFeatureControlFactory implements IExtensionsFeatureControlFactory2
 {
   @Override
-  public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
+  public IFeatureControl createFeatureControl( final FormToolkit toolkit, final Feature feature, final IPropertyType pt, final Properties arguments )
   {
-    return new ImageFeatureControl( feature, pt );
+    return new ImageExternalBrowserFeatureControl( feature, pt );
   }
 }
