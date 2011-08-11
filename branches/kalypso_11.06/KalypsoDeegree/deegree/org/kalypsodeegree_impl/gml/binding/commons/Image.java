@@ -42,8 +42,11 @@ package org.kalypsodeegree_impl.gml.binding.commons;
 
 import java.net.URI;
 
+import javax.activation.MimeType;
+import javax.activation.MimeTypeParseException;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -51,14 +54,16 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Feature-Binding for common:Image type.
- *
+ * 
  * @author Gernot Belger
  */
 public class Image extends Feature_Impl
 {
-  public static QName QNAME = new QName( NS.COMMON, "Image" );
+  public static final QName FEATURE_IMAGE = new QName( NS.COMMON, "Image" );
 
-  public static QName QNAME_PROP_URI = new QName( NS.COMMON, "uri" );
+  private static final QName PROPERTY_MIME_TYPE = new QName( NS.COMMON, "mimeType" );
+
+  public static final QName PROPERTY_URI = new QName( NS.COMMON, "uri" );
 
   public Image( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -67,13 +72,38 @@ public class Image extends Feature_Impl
 
   public void setUri( final URI uri )
   {
-    setProperty( QNAME_PROP_URI, uri == null ? null : uri.toASCIIString() );
+    setProperty( PROPERTY_URI, uri == null ? null : uri.toASCIIString() );
   }
 
   public URI getUri( )
   {
-    final String uriString = getProperty( QNAME_PROP_URI, String.class );
+    final String uriString = getProperty( PROPERTY_URI, String.class );
     return URI.create( uriString );
+  }
+
+  public void setMimeType( final MimeType mimeType )
+  {
+    if( mimeType == null )
+      setProperty( PROPERTY_MIME_TYPE, null );
+    else
+      setProperty( PROPERTY_MIME_TYPE, mimeType.toString() );
+  }
+
+  public MimeType getMimeType( )
+  {
+    final String property = getProperty( PROPERTY_MIME_TYPE, String.class );
+    if( StringUtils.isBlank( property ) )
+      return null;
+
+    try
+    {
+      return new MimeType( property );
+    }
+    catch( final MimeTypeParseException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
 }
