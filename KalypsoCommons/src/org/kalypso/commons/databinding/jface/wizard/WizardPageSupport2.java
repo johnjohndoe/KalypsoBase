@@ -40,34 +40,44 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.jface.wizard;
 
+import org.eclipse.core.databinding.DataBindingContext;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.databinding.dialog.DialogPageSupport;
+import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.databinding.AbstractDatabinding;
 
 /**
- * @author Dirk Kuch
+ * Re-implementation of {@link org.eclipse.jface.databinding.wizard.WizardPageSupport}, in order to be able to
+ * configure, at what status the page is complete.
+ * 
+ * @author Gernot Belger
  */
-public class DatabindingWizardPage extends AbstractDatabinding
+class WizardPageSupport2 extends DialogPageSupport
 {
-  private final WizardPageSupport2 m_support;
+  final static int DEFAULT_COMPLETION_MASK = IStatus.ERROR | IStatus.CANCEL;
 
-  public DatabindingWizardPage( final WizardPage page, final FormToolkit toolkit )
+  private final int m_completionMask;
+
+  WizardPageSupport2( final DialogPage dialogPage, final DataBindingContext dbc, final int completionMask )
   {
-    this( page, toolkit, WizardPageSupport2.DEFAULT_COMPLETION_MASK );
-  }
+    super( dialogPage, dbc );
 
-  public DatabindingWizardPage( final WizardPage page, final FormToolkit toolkit, final int completionMask )
-  {
-    super( toolkit );
-
-    m_support = new WizardPageSupport2( page, getBindingContext(), completionMask );
+    m_completionMask = completionMask;
   }
 
   @Override
-  public void dispose( )
+  protected void handleStatusChanged( )
   {
-    super.dispose();
-
-    m_support.dispose();
+    super.handleStatusChanged();
+    boolean pageComplete = true;
+    if( currentStatusStale )
+    {
+      pageComplete = false;
+    }
+    else if( currentStatus != null )
+    {
+      pageComplete = !currentStatus.matches( m_completionMask );
+    }
+    ((WizardPage) getDialogPage()).setPageComplete( pageComplete );
   }
 }
