@@ -281,14 +281,11 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     return myResults.toArray( new IObservation[] {} );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileFeature#setImage(java.net.URL)
-   */
   @Override
   public Image addImage( final URL imageURL )
   {
     final IFeatureType featureType = getFeatureType();
-    final IFeatureType ft = featureType.getGMLSchema().getFeatureType( Image.QNAME );
+    final IFeatureType ft = featureType.getGMLSchema().getFeatureType( Image.FEATURE_IMAGE );
     final IRelationType rt = (IRelationType) featureType.getProperty( QN_PROPERTY_IMAGE_MEMBER );
     final Image imageFeature = (Image) getWorkspace().createFeature( this, rt, ft );
 

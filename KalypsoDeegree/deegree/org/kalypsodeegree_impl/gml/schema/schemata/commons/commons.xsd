@@ -27,7 +27,6 @@
 	</annotation>
 	<import namespace="http://www.opengis.net/gml" />
 	<!-- utility schema for gml application schemas -->
-	<!-- TODO: KALYPSO-Header einfügen -->
 
 	<!-- @deprecated: no not use any more -->
 	<complexType name="EmptyFeatureBaseType">
@@ -106,6 +105,11 @@
 					<element name="uri" type="anyURI" nillable="true">
 						<annotation>
 							<documentation >Image location (relative pathes possible)</documentation>
+						</annotation>
+					</element>
+					<element name="mimeType" type="string" nillable="true" minOccurs="0">
+						<annotation>
+							<documentation >Mime type of the document referenced by uri</documentation>
 						</annotation>
 					</element>
 				</sequence>
