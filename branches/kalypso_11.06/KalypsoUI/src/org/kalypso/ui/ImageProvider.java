@@ -85,7 +85,9 @@ public class ImageProvider
     MOVIE_PLAYER_PLAY("icons/movie/player_play.png"), //$NON-NLS-1$
     MOVIE_PLAYER_FWD("icons/movie/player_fwd.png"), //$NON-NLS-1$
     MOVIE_PLAYER_END("icons/movie/player_end.png"), //$NON-NLS-1$
-    MOVIE_PLAYER_EJECT("icons/movie/player_eject.png"); //$NON-NLS-1$
+    MOVIE_PLAYER_EJECT("icons/movie/player_eject.png"), //$NON-NLS-1$
+
+    EXTERNAL_BROWSER("icons/feature/external_browser.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 

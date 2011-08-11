@@ -1579,4 +1579,11 @@
            name="Import Wizards">
      </category>
   </extension>
+  <extension
+        point="org.kalypso.ui.featureViewExtensionControl">
+     <extensionControl
+           class="org.kalypso.ogc.gml.featureview.control.ImageExternalBrowserFeatureControlFactory"
+           id="imageExternalBrowser">
+     </extensionControl>
+  </extension>
 </plugin>
