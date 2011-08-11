@@ -42,8 +42,8 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -110,18 +110,16 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     {
       m_form = m_toolkit.createForm( parent );
 
-      // TODO no form layout? no scrolling? why we use a form composite here?
       m_form.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-      m_form.setLayout( Layouts.createGridLayout() );
-      m_form.getBody().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-      m_form.getBody().setLayout( new GridLayout() );
+      m_form.getBody().setLayout( new FillLayout() );
       m_toolkit.decorateFormHeading( m_form );
-      final IProfil profile = m_provider == null ? null : m_provider.getProfil();
-      m_profilChartComposite = new ProfileChartComposite( m_form.getBody(), parent.getStyle(), getProfilLayerProvider(), profile );
-      m_profilChartComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
+      final IProfil profile = m_provider == null ? null : m_provider.getProfil();
+
+      m_profilChartComposite = new ProfileChartComposite( m_form.getBody(), parent.getStyle(), getProfilLayerProvider(), profile );
       m_partListener.setChart( m_profilChartComposite );
     }
+
     return m_profilChartComposite;
   }
 
