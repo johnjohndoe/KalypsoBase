@@ -45,13 +45,13 @@ import java.util.Collection;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.kalypso.core.catalog.FeatureTypePropertiesCatalog;
+import org.kalypso.core.catalog.IFeatureTypePropertiesConstants;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
-import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -103,12 +103,12 @@ public class NewFeatureScope implements INewScope
 
   private boolean showSubScopes( final Feature feature )
   {
-    return FeatureTypePropertiesCatalog.isPropertyOn( feature, IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_SHOW_SUB_FEATURES, IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_SHOW_SUB_FEATURES_DEFAULT );
+    return FeatureTypePropertiesCatalog.isPropertyOn( feature, IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_SHOW_SUB_FEATURES );
   }
 
   private static boolean showOwnScopeMenu( final Feature feature )
   {
-    return FeatureTypePropertiesCatalog.isPropertyOn( feature, IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_ON_FEATURE, IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_ON_FEATURE_DEFAULT );
+    return FeatureTypePropertiesCatalog.isPropertyOn( feature, IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_ON_FEATURE );
   }
 
   @Override

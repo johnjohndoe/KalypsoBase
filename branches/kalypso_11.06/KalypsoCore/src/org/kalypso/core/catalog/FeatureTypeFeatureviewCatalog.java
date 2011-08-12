@@ -38,39 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.catalogs;
+package org.kalypso.core.catalog;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.kalypso.core.jaxb.TemplateUtilities;
+import org.kalypso.template.featureview.FeatureviewType;
 
 /**
  * @author Gernot Belger
  */
-public class FeatureTypeImageCatalog extends FeatureTypeCatalog
+public final class FeatureTypeFeatureviewCatalog
 {
-  private static final String BASETYPE = "swtimage"; //$NON-NLS-1$
+  private static final String BASETYPE = "featureview"; //$NON-NLS-1$
 
-  private static Map<String, ImageDescriptor> m_imageDescriptorCache = new HashMap<String, ImageDescriptor>();
-
-  public static ImageDescriptor getImage( final URL context, final QName qname )
+  private FeatureTypeFeatureviewCatalog( )
   {
-    /* Try to get cached image descriptor */
-    final String contextStr = context == null ? "null" : context.toExternalForm(); //$NON-NLS-1$
-    final String qnameStr = qname == null ? "null" : qname.toString(); //$NON-NLS-1$
-    final String cacheKey = contextStr + '#' + qnameStr;
+    throw new UnsupportedOperationException();
+  }
 
-    if( m_imageDescriptorCache.containsKey( cacheKey ) )
-      return m_imageDescriptorCache.get( cacheKey );
+  public static FeatureviewType getFeatureview( final URL context, final QName qname ) throws JAXBException
+  {
+    return getFeatureview( context, qname, FeatureTypeCatalog.DEFAULT_STYLE );
+  }
 
-    /* Search for image descriptor in catalog or local url */
-    final URL imgUrl = getURL( BASETYPE, context, qname );
-    final ImageDescriptor newId = imgUrl == null ? null : ImageDescriptor.createFromURL( imgUrl );
-    m_imageDescriptorCache.put( cacheKey, newId );
-    return newId;
+  /**
+   * @param style
+   *          The urn style of the resource to to look for. If not specified, 'default' is used.
+   */
+  public static FeatureviewType getFeatureview( final URL context, final QName qname, final String style ) throws JAXBException
+  {
+    final URL url = FeatureTypeCatalog.getURL( BASETYPE, context, qname, style );
+    if( url == null )
+      return null;
+
+    final Unmarshaller unmarshaller = TemplateUtilities.createFeatureviewUnmarshaller();
+
+    final JAXBElement< ? > element = (JAXBElement< ? >) unmarshaller.unmarshal( url );
+    final Object value = element.getValue();
+    if( value instanceof FeatureviewType )
+      return (FeatureviewType) value;
+
+    return null;
   }
 }

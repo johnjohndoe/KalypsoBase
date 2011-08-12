@@ -35,10 +35,10 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.catalog.FeatureTypeImageCatalog;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.catalogs.FeatureTypeImageCatalog;
 
 /**
  * @author kuepfer

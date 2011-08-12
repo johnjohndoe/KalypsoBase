@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.catalogs;
+package org.kalypso.core.catalog;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -51,18 +51,21 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.urn.IURNGenerator;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * This is an image catalog for linked features.
  * 
  * @author Holger Albert
  */
-public class LinkedFeatureTypeImageCatalog
+public final class LinkedFeatureTypeImageCatalog
 {
+  private LinkedFeatureTypeImageCatalog( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
   /**
    * The base type.
    */
@@ -71,32 +74,32 @@ public class LinkedFeatureTypeImageCatalog
   /**
    * The image descriptor cache.
    */
-  private static Map<String, ImageDescriptor> m_imageDescriptorCache = new HashMap<String, ImageDescriptor>();
+  private static Map<String, ImageDescriptor> IMAGE_DESCRIPTOR_CACHE = new HashMap<String, ImageDescriptor>();
 
   /**
    * This function returns the image descriptor for the given qname and URL.
    * 
    * @return The image descriptor, or null.
    */
-  public static ImageDescriptor getImage( URL context, QName qname )
+  public static ImageDescriptor getImage( final URL context, final QName qname )
   {
     /* Try to get cached image descriptor. */
-    String contextStr = context == null ? "null" : context.toExternalForm(); //$NON-NLS-1$
-    String qnameStr = qname == null ? "null" : qname.toString(); //$NON-NLS-1$
-    String cacheKey = contextStr + '#' + qnameStr;
+    final String contextStr = context == null ? "null" : context.toExternalForm(); //$NON-NLS-1$
+    final String qnameStr = qname == null ? "null" : qname.toString(); //$NON-NLS-1$
+    final String cacheKey = contextStr + '#' + qnameStr;
 
     /* Does a cached one exist? */
-    if( m_imageDescriptorCache.containsKey( cacheKey ) )
-      return m_imageDescriptorCache.get( cacheKey );
+    if( IMAGE_DESCRIPTOR_CACHE.containsKey( cacheKey ) )
+      return IMAGE_DESCRIPTOR_CACHE.get( cacheKey );
 
     /* Get the URL. */
-    URL imgUrl = getURL( BASETYPE, context, qname );
+    final URL imgUrl = getURL( BASETYPE, context, qname );
 
     /* Search for image descriptor in catalog or local url. */
-    ImageDescriptor newId = imgUrl == null ? null : ImageDescriptor.createFromURL( imgUrl );
+    final ImageDescriptor newId = imgUrl == null ? null : ImageDescriptor.createFromURL( imgUrl );
 
     /* Store. */
-    m_imageDescriptorCache.put( cacheKey, newId );
+    IMAGE_DESCRIPTOR_CACHE.put( cacheKey, newId );
 
     return newId;
   }
@@ -112,13 +115,13 @@ public class LinkedFeatureTypeImageCatalog
    *            The qname.
    * @return The URL or null.
    */
-  public static URL getURL( String catalogTypeBasename, URL context, QName qname )
+  public static URL getURL( final String catalogTypeBasename, final URL context, final QName qname )
   {
     /* Create the URN. */
-    String urn = createUrn( catalogTypeBasename, qname );
+    final String urn = createUrn( catalogTypeBasename, qname );
 
     /* Get the URI. */
-    String uri = FeatureTypeImageCatalog.getLocation( urn );
+    final String uri = FeatureTypeCatalog.getLocation( urn );
 
     /* If we got no uri or an urn, do nothing, we need a real url. */
     if( uri == null || uri.startsWith( "urn" ) ) //$NON-NLS-1$
@@ -128,10 +131,10 @@ public class LinkedFeatureTypeImageCatalog
     {
       return new URL( context, uri );
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
-      IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoGisPlugin.getDefault().getLog().log( status );
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoCorePlugin.getDefault().getLog().log( status );
     }
 
     return null;
@@ -146,18 +149,18 @@ public class LinkedFeatureTypeImageCatalog
    *            The qname.
    * @return The URN.
    */
-  public static String createUrn( String catalogTypeBasename, QName qname )
+  public static String createUrn( final String catalogTypeBasename, final QName qname )
   {
     // REMARK: catalog is registered for feature type, not for qname
     // Hint for a refaktoring on the CatalogManager
-    CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
+    final CatalogManager catalogManager = KalypsoCorePlugin.getDefault().getCatalogManager();
 
     /* This generator is suiteable, because it is the same base URN here, as in FeatureImageTypeCatalog. */
-    IURNGenerator generator = catalogManager.getURNGeneratorFor( IFeatureType.class );
+    final IURNGenerator generator = catalogManager.getURNGeneratorFor( IFeatureType.class );
     if( generator == null )
       return null;
 
-    String baseURN = generator.generateURNFor( qname );
+    final String baseURN = generator.generateURNFor( qname );
     if( baseURN == null )
       return null;
 

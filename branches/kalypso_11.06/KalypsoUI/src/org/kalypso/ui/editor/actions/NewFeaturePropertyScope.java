@@ -47,6 +47,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.core.catalog.FeatureTypePropertiesCatalog;
+import org.kalypso.core.catalog.IFeatureTypePropertiesConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -54,8 +56,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
-import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureProperty;
@@ -163,7 +163,7 @@ class NewFeaturePropertyScope implements INewScope
   void createNewFeature( final IFeatureType featureType ) throws Exception
   {
     final Properties uiProperties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), featureType.getQName() );
-    final String depthStr = uiProperties.getProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH, IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH_DEFAULT );
+    final String depthStr = uiProperties.getProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH );
     final int depth = Integer.parseInt( depthStr );
 
     final ICommand command = new AddFeatureCommand( m_workspace, featureType, m_parentFeature, m_targetRelation, 0, null, m_selectionManager, depth );

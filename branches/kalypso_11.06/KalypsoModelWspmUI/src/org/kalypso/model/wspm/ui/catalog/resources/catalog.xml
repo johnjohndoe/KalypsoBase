@@ -40,6 +40,7 @@
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:waterBodyMember:swtimage:default" uri="org.kalypso.model.wspm.WaterBody.gif" />
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:WaterBody:featureview:default" uri="org.kalypso.model.wspm.WaterBody.gft" />
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:WaterBody:sld:default" uri="org.kalypso.model.wspm.WaterBody.sld" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:WaterBody:uiproperties:default" uri="org.kalypso.model.wspm.WaterBody.properties" />
 
     <!-- {org.kalypso.model.wspm}calculationMember -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:calculationMember:swtimage:default" uri="org.kalypso.model.wspm.tuhh.CalculationWspmTuhhSteadyState.gif" />
