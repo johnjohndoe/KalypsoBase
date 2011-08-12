@@ -80,5 +80,4 @@ public interface IMetadataConstants
 
   String WQ_BOUNDARY_W_MAX = String.format( WQ_BOUNDARY_FORMAT, "W_Max" ); //$NON-NLS-1$
 
-  String WQ_TABLE = "WQ-Tabelle"; //$NON-NLS-1$
 }

@@ -50,8 +50,6 @@ import java.util.Set;
 
 import jregex.Pattern;
 
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
@@ -202,73 +200,4 @@ public final class MetadataBoundary implements IMetadataBoundary
     return String.format( "%s (%s) - Value: %.2f", m_name, m_parameterType, m_value.doubleValue() );
   }
 
-  public static Double getWqTableMinW( final MetadataList metadata )
-  {
-    final String property = metadata.getProperty( IMetadataConstants.WQ_BOUNDARY_W_MIN );
-    if( Strings.isNotEmpty( property ) )
-      return NumberUtils.parseQuietDouble( property );
-
-    return null;
-  }
-
-  public static Double getWqTableMinQ( final MetadataList metadata )
-  {
-    final String property = metadata.getProperty( IMetadataConstants.WQ_BOUNDARY_Q_MIN );
-    if( Strings.isNotEmpty( property ) )
-      return NumberUtils.parseQuietDouble( property );
-
-    return null;
-  }
-
-  public static Double getWqTableMaxW( final MetadataList metadata )
-  {
-    final String property = metadata.getProperty( IMetadataConstants.WQ_BOUNDARY_W_MAX );
-    if( Strings.isNotEmpty( property ) )
-      return NumberUtils.parseQuietDouble( property );
-
-    return null;
-  }
-
-  public static Double getWqTableMaxQ( final MetadataList metadata )
-  {
-    final String property = metadata.getProperty( IMetadataConstants.WQ_BOUNDARY_Q_MAX );
-    if( Strings.isNotEmpty( property ) )
-      return NumberUtils.parseQuietDouble( property );
-
-    return null;
-  }
-
-  /**
-   * update settings from base
-   */
-  public static boolean updateWqTable( final MetadataList base, final MetadataList overwrite )
-  {
-    final String table = overwrite.getProperty( WQ_TABLE );
-    if( Strings.isEmpty( table ) )
-      return false;
-
-    MetadataHelper.setWqTable( base, table );
-
-    final Double w1 = MetadataBoundary.getWqTableMinW( overwrite );
-    updateWqBoundary( base, IMetadataConstants.WQ_BOUNDARY_W_MIN, w1 );
-
-    final Double w2 = MetadataBoundary.getWqTableMaxW( overwrite );
-    updateWqBoundary( base, IMetadataConstants.WQ_BOUNDARY_W_MAX, w2 );
-
-    final Double q1 = MetadataBoundary.getWqTableMinQ( overwrite );
-    updateWqBoundary( base, IMetadataConstants.WQ_BOUNDARY_Q_MIN, q1 );
-
-    final Double q2 = MetadataBoundary.getWqTableMaxQ( overwrite );
-    updateWqBoundary( base, IMetadataConstants.WQ_BOUNDARY_Q_MAX, q2 );
-
-    return true;
-  }
-
-  private static void updateWqBoundary( final MetadataList metadata, final String property, final Double value )
-  {
-    if( Objects.isNull( value ) )
-      metadata.setProperty( property, null );
-    else
-      metadata.setProperty( property, value.toString() );
-  }
 }

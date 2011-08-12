@@ -58,9 +58,9 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.metadata.MetadataWQTables;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -183,7 +183,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
       for( final ObservationSource source : m_sources )
       {
         final MetadataList metadata = source.getObservation().getMetadataList();
-        if( MetadataBoundary.updateWqTable( m_metadata, metadata ) )
+        if( MetadataWQTables.updateWqTable( m_metadata, metadata ) )
           break;
       }
     }

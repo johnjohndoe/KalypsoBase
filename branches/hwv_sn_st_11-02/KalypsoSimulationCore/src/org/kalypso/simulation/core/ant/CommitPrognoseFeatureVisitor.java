@@ -95,7 +95,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
 
   private final DateRange m_dateRange;
 
-  private IStatusCollector m_stati = new StatusCollector( KalypsoSimulationCorePlugin.getID() );
+  private final IStatusCollector m_stati = new StatusCollector( KalypsoSimulationCorePlugin.getID() );
 
   private final String m_sourceTS;
 
@@ -121,14 +121,14 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
   public final boolean visit( final Feature f )
   {
     final IStatus work = work( f );
-    
+
     // FIXME: always return OK_STATUS, else later task will not run because we get a build exception
     // We should introduce a flag, if we should halt on errors
-     // m_stati.add( work );
-    
+    // m_stati.add( work );
+
     // FIXME: does not work well, as all OK-stati get logged as INFO, which gives an INFO-status later
     // Instead, we need to serialise the complete status at a central place.
-    String logLine = LoggerUtilities.formatLogStylish( work, LoggerUtilities.CODE_NEW_MSGBOX );
+    final String logLine = LoggerUtilities.formatLogStylish( work, LoggerUtilities.CODE_NEW_MSGBOX );
     System.out.print( logLine );
 
     System.out.print( work.toString() );
@@ -184,7 +184,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
     final IObservation source = ZmlFactory.parseXML( urlRS );
 
     try
-    {   
+    {
       // IMPORTANT: Die ZIELzeitreihe bestimmt, welche Achsen geschrieben werden!
       // Die Datenhaltung muss die Metadaten von WISKI beziehen
       // Wenn Daten in die Datenhaltung geschrieben werden, dürfen nur die Werte, keine
@@ -257,7 +257,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
       filteredSourceHref = sourceHref + "?" + m_sourceFilter; //$NON-NLS-1$
     else
       filteredSourceHref = sourceHref;
-    
+
     return filteredSourceHref;
   }
 
@@ -330,7 +330,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
     final MetadataList targetMetadata = new MetadataList();
     targetMetadata.putAll( metadataList );
 
-    targetMetadata.remove( ITimeseriesConstants.MD_WQTABLE );
+    targetMetadata.remove( ITimeseriesConstants.MD_WQ_TABLE );
     targetMetadata.remove( ITimeseriesConstants.MD_WQWECHMANN );
     return targetMetadata;
   }
