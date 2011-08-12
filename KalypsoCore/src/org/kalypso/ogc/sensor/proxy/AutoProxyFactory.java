@@ -91,7 +91,7 @@ public final class AutoProxyFactory implements IProxyFactory
   {
     final MetadataList mdl = obs.getMetadataList();
 
-    final String wq = mdl.getProperty( ITimeseriesConstants.MD_WQTABLE, "" ); //$NON-NLS-1$
+    final String wq = mdl.getProperty( ITimeseriesConstants.MD_WQ_TABLE, "" ); //$NON-NLS-1$
 
     if( wq.length() > 0 )
     {

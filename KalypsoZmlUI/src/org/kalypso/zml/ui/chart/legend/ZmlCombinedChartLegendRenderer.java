@@ -41,7 +41,6 @@
 package org.kalypso.zml.ui.chart.legend;
 
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.util.img.legend.IChartLegendCanvas;

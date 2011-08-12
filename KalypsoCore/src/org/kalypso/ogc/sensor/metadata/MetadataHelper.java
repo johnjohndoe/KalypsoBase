@@ -172,12 +172,12 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
 
   public static String getWqTable( final MetadataList mdl )
   {
-    return mdl.getProperty( ITimeseriesConstants.MD_WQTABLE );
+    return mdl.getProperty( ITimeseriesConstants.MD_WQ_TABLE );
   }
 
   public static void setWqTable( final MetadataList mdl, final String table )
   {
-    mdl.setProperty( ITimeseriesConstants.MD_WQTABLE, table );
+    mdl.setProperty( ITimeseriesConstants.MD_WQ_TABLE, table );
   }
 
   /**
