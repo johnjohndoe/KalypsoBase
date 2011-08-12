@@ -475,9 +475,6 @@ public class GMLWorkspace_Impl implements GMLWorkspace
 
   protected final class UnRegisterVisitor implements FeatureVisitor
   {
-    /**
-     * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
-     */
     @Override
     public boolean visit( final Feature f )
     {
@@ -827,15 +824,15 @@ public class GMLWorkspace_Impl implements GMLWorkspace
     return result;
   }
 
-  private void unregisterFeature( final Feature childFeature )
+  /**
+   * Unregisters a feature from this workspace.<br/>
+   * Should be called only within this implementation. NOT intended to be called by client.
+   */
+  public void unregisterFeature( final Feature childFeature )
   {
     m_indexMap.remove( childFeature.getId() );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#accept(org.kalypsodeegree.model.feature.FeatureVisitor,
-   *      java.lang.String, int)
-   */
   @Override
   public void accept( final FeatureVisitor fv, final String featurePath, final int depth )
   {
