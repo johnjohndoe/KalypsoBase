@@ -115,7 +115,14 @@
           </handler>
           <handler class="org.kalypso.gml.ui.internal.feature.DuplicateFeatureHandler" commandId="org.kalyso.gml.ui.command.duplicateFeature">
              <enabledWhen>
-                <reference definitionId="org.kalypso.gml.ui.definition.oneFeatureSelectionFeature"/>
+                <and>
+                  <reference definitionId="org.kalypso.gml.ui.definition.oneFeatureSelectionFeature"/>
+                  <with variable="selection">
+                    <iterate operator="and">
+                        <test property="org.kalypso.gml.catalogProperty" value="true" args="gmltree.showDuplicateMenu"/>
+                    </iterate>
+                  </with>
+                </and>
              </enabledWhen>
           </handler>
           <handler

@@ -44,7 +44,9 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.expressions.PropertyTester;
+import org.kalypso.core.catalog.FeatureTypePropertiesCatalog;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -87,6 +89,13 @@ public class GmlPropertyTester extends PropertyTester
 
   private static final String PROPERTY_IS_LIST_FEATURE_LAST = "isListFeatureLast"; //$NON-NLS-1$
 
+  /**
+   * Test for a property that is registered in a catalog with the feature type.
+   * 
+   * @see FeatureTypePropertiesCatalog.
+   */
+  private static final String PROPERTY_CATALOG_PROPERTY = "catalogProperty"; //$NON-NLS-1$
+
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
@@ -98,6 +107,9 @@ public class GmlPropertyTester extends PropertyTester
       return testIsListFeatureFirst( receiver );
     if( PROPERTY_IS_LIST_FEATURE_LAST.equals( property ) )
       return testIsListFeatureLast( receiver );
+
+    if( PROPERTY_CATALOG_PROPERTY.equals( property ) )
+      return testCatalogProperty( receiver, args, expectedValue );
 
     /* Properties that expect a qname */
     final QName expectedQName = parseQName( expectedValue );
@@ -303,4 +315,22 @@ public class GmlPropertyTester extends PropertyTester
 
     return null;
   }
+
+  private boolean testCatalogProperty( final Object receiver, final Object[] args, final Object expectedValue )
+  {
+    if( args.length != 1 )
+      return false;
+
+    if( !(receiver instanceof Feature) )
+      return false;
+
+    final Feature feature = (Feature) receiver;
+
+    final String catalogProperty = ObjectUtils.toString( args[0] );
+    final Boolean expected = Boolean.valueOf( ObjectUtils.toString( expectedValue  ));
+
+    final boolean isOn = FeatureTypePropertiesCatalog.isPropertyOn( feature, catalogProperty );
+    return isOn == expected;
+  }
+
 }

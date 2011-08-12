@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.catalogs;
+package org.kalypso.core.catalog;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -48,19 +48,21 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.catalog.CatalogManager;
-import org.kalypso.core.catalog.ICatalog;
 import org.kalypso.core.catalog.urn.IURNGenerator;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author Gernot Belger
  */
-public class FeatureTypeCatalog
+public final class FeatureTypeCatalog
 {
   /* Default urn style, used, if not specified */
-  protected static final String DEFAULT_STYLE = "default"; //$NON-NLS-1$
+  static final String DEFAULT_STYLE = "default"; //$NON-NLS-1$
+
+  private FeatureTypeCatalog( )
+  {
+    throw new UnsupportedOperationException();
+  }
 
   public static URL getURL( final String catalogTypeBasename, final URL context, final QName qname )
   {
@@ -87,7 +89,7 @@ public class FeatureTypeCatalog
     catch( final MalformedURLException e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoGisPlugin.getDefault().getLog().log( status );
+      KalypsoCorePlugin.getDefault().getLog().log( status );
     }
 
     return null;

@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.catalog.FeatureTypeFeatureviewCatalog;
 import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -61,7 +62,6 @@ import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.types.I18NTranslatorType;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.catalogs.FeatureTypeFeatureviewCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

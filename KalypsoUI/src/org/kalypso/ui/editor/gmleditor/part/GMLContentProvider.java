@@ -43,11 +43,11 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.catalog.FeatureTypePropertiesCatalog;
+import org.kalypso.core.catalog.IFeatureTypePropertiesConstants;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
-import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -141,7 +141,7 @@ public class GMLContentProvider implements ITreeContentProvider
     if( m_showChildrenOverrides.containsKey( qname ) )
       return m_showChildrenOverrides.get( qname );
 
-    return FeatureTypePropertiesCatalog.isPropertyOn( qname, m_workspace.getContext(), IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN, IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN_DEFAULT );
+    return FeatureTypePropertiesCatalog.isPropertyOn( qname, m_workspace.getContext(), IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN );
   }
 
   public static QName getQName( final Object element )
@@ -150,7 +150,7 @@ public class GMLContentProvider implements ITreeContentProvider
       return ((Feature) element).getQualifiedName();
 
     if( element instanceof FeatureAssociationTypeElement )
-      return ((FeatureAssociationTypeElement) element).getAssociationTypeProperty().getQName();
+      return ((FeatureAssociationTypeElement) element).getPropertyType().getQName();
 
     return null;
   }
@@ -201,7 +201,7 @@ public class GMLContentProvider implements ITreeContentProvider
   private void collectAssociationChildren( final FeatureAssociationTypeElement fate, final List<Object> result )
   {
     final Feature parentFeature = (fate).getParentFeature();
-    final IRelationType ftp = (fate).getAssociationTypeProperty();
+    final IRelationType ftp = (fate).getPropertyType();
     final Feature[] features = m_workspace.resolveLinks( parentFeature, ftp );
     for( int i = 0; i < features.length; i++ )
     {
@@ -254,7 +254,7 @@ public class GMLContentProvider implements ITreeContentProvider
           if( object instanceof FeatureAssociationTypeElement )
           {
             final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
-            final IRelationType associationTypeProperty = fate.getAssociationTypeProperty();
+            final IRelationType associationTypeProperty = fate.getPropertyType();
             final Object property = parent.getProperty( associationTypeProperty );
             if( property == feature )
               return fate;
@@ -331,7 +331,7 @@ public class GMLContentProvider implements ITreeContentProvider
         {
           final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
 
-          final Object property = ((Feature) parent).getProperty( fate.getAssociationTypeProperty() );
+          final Object property = ((Feature) parent).getProperty( fate.getPropertyType() );
           if( property == valueFromSegment )
             return object;
         }
@@ -411,7 +411,7 @@ public class GMLContentProvider implements ITreeContentProvider
         final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
         final Feature parentFeature = fate.getParentFeature();
         final GMLXPath path = new GMLXPath( parentFeature );
-        m_rootPath = new GMLXPath( path, fate.getAssociationTypeProperty().getQName() );
+        m_rootPath = new GMLXPath( path, fate.getPropertyType().getQName() );
       }
     }
     catch( final GMLXPathException e )

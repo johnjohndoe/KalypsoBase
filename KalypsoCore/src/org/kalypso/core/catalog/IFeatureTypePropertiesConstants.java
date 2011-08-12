@@ -38,47 +38,46 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.catalogs;
-
-import java.net.URL;
-
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.namespace.QName;
-
-import org.kalypso.core.jaxb.TemplateUtilities;
-import org.kalypso.template.featureview.FeatureviewType;
+package org.kalypso.core.catalog;
 
 /**
+ * Constants used in the ui-properties for qnames.<br/>
+ * IMPORTANT: for evdery constant here, a default value should be registered in {@link FeatureTypePropertiesCatalog}
+ * 
  * @author Gernot Belger
  */
-public class FeatureTypeFeatureviewCatalog extends FeatureTypeCatalog
+public interface IFeatureTypePropertiesConstants
 {
-  private static final String BASETYPE = "featureview"; //$NON-NLS-1$
+  //
+  // Common feature constants
+  //
 
-  public static FeatureviewType getFeatureview( final URL context, final QName qname ) throws JAXBException
-  {
-    return getFeatureview( context, qname, DEFAULT_STYLE );
-  }
+  /** How many levels of children should be created if a feature is created (-1 means infinite, 0 means none) */
+  String FEATURE_CREATION_DEPTH = "feature.creationDepth"; //$NON-NLS-1$
+
+  //
+  // GmlTree Constants
+  //
+
+  /** Show children of this element, defaults to true */
+  String GMLTREE_SHOW_CHILDREN = "gmltree.showChildren"; //$NON-NLS-1$
+
+  /** Show new menu on this feature element, defaults to true */
+  String GMLTREE_NEW_MENU_ON_FEATURE = "gmltree.showNewMenuOnFeature"; //$NON-NLS-1$
+
+  /** Show new menu of sub-features for this feature element, defaults to false */
+  String GMLTREE_NEW_MENU_SHOW_SUB_FEATURES = "gmltree.showNewMenuSubFeatures"; //$NON-NLS-1$
+
+  /** Prohibit the 'duplicate' menu of a feature, defaults to true */
+  String GMLTREE_SHOW_DUPLICATION_MENU = "gmltree.showDuplicateMenu"; //$NON-NLS-1$
+
+  //
+  // Map Constants
+  //
 
   /**
-   * @param style
-   *          The urn style of the resource to to look for. If not specified, 'default' is used.
+   * Extension id of a {@link org.kalypso.ogc.gml.IKalypsoThemeInfo} registered with the
+   * <code>org.kalypso.core.themeInfo</code> extension-point.
    */
-  public static FeatureviewType getFeatureview( final URL context, final QName qname, final String style ) throws JAXBException
-  {
-    final URL url = getURL( BASETYPE, context, qname, style );
-    if( url == null )
-      return null;
-
-    final Unmarshaller unmarshaller = TemplateUtilities.createFeatureviewUnmarshaller();
-
-    final JAXBElement< ? > element = (JAXBElement< ? >) unmarshaller.unmarshal( url );
-    final Object value = element.getValue();
-    if( value instanceof FeatureviewType )
-      return (FeatureviewType) value;
-
-    return null;
-  }
+  String THEME_INFO_ID = "map.themeInfoId"; //$NON-NLS-1$
 }
