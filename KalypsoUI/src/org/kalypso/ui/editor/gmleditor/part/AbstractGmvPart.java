@@ -318,7 +318,6 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
 
     final CommandableWorkspace workspace = m_viewer.getWorkspace();
     final INewScope scope = NewScopeFactory.createFromTreeSelection( workspace, selection, selectionManager );
-
     if( scope != null )
       manager.add( scope.createMenu() );
 
