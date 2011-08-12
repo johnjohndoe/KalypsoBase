@@ -50,6 +50,15 @@ public abstract class AbstractWaterLevelViewerFilter extends ViewerFilter
 {
   protected boolean isWaterLevelFixiation( final Object element )
   {
+    // HACK: FIXME
+    // check for stuff from WspmTuhh
+    if( element != null )
+    {
+      final String name = element.getClass().getName();
+      if( "org.kalypso.model.wspm.tuhh.core.results.WspmResultFixationNode".equals( name ) ) //$NON-NLS-1$
+        return true;
+    }
+
     if( element instanceof IWspLayerDataElement )
     {
       final IWspLayerDataElement wsp = (IWspLayerDataElement) element;
