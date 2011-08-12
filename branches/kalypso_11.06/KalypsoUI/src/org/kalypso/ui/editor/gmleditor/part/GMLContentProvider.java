@@ -34,7 +34,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.xml.namespace.QName;
 
@@ -142,9 +141,7 @@ public class GMLContentProvider implements ITreeContentProvider
     if( m_showChildrenOverrides.containsKey( qname ) )
       return m_showChildrenOverrides.get( qname );
 
-    final Properties properties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), qname );
-    final String showChildrenString = properties.getProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN, IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN_DEFAULT );
-    return Boolean.parseBoolean( showChildrenString );
+    return FeatureTypePropertiesCatalog.isPropertyOn( qname, m_workspace.getContext(), IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN, IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN_DEFAULT );
   }
 
   public static QName getQName( final Object element )

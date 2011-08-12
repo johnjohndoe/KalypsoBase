@@ -45,11 +45,11 @@ import org.kalypso.ui.catalogs.FeatureTypeImageCatalog;
  */
 public class NewFeatureAction extends Action
 {
-  private final NewFeatureScope m_scope;
+  private final NewFeaturePropertyScope m_scope;
 
   private final IFeatureType m_featureType;
 
-  public NewFeatureAction( final NewFeatureScope scope, final IFeatureType featureType )
+  public NewFeatureAction( final NewFeaturePropertyScope scope, final IFeatureType featureType )
   {
     m_scope = scope;
 
@@ -71,9 +71,6 @@ public class NewFeatureAction extends Action
     return catalogDescriptor;
   }
 
-  /**
-   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-   */
   @Override
   public void runWithEvent( final Event event )
   {

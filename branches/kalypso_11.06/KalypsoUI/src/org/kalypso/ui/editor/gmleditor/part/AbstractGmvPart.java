@@ -45,7 +45,8 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.AbstractWorkbenchPart;
-import org.kalypso.ui.editor.actions.NewFeatureScope;
+import org.kalypso.ui.editor.actions.INewScope;
+import org.kalypso.ui.editor.actions.NewScopeFactory;
 import org.kalypso.ui.editorLauncher.GmlEditorTemplateLauncher;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
@@ -316,7 +317,7 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
     final IFeatureSelectionManager selectionManager = m_viewer.getSelectionManager();
 
     final CommandableWorkspace workspace = m_viewer.getWorkspace();
-    final NewFeatureScope scope = NewFeatureScope.createFromTreeSelection( workspace, selection, selectionManager );
+    final INewScope scope = NewScopeFactory.createFromTreeSelection( workspace, selection, selectionManager );
 
     if( scope != null )
       manager.add( scope.createMenu() );
