@@ -52,7 +52,11 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.javax.xml.namespace.QNameUnique;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Returns properties for qnames.
@@ -64,7 +68,7 @@ public class FeatureTypePropertiesCatalog extends FeatureTypeCatalog
   private static final String BASETYPE = "uiproperties"; //$NON-NLS-1$
 
   private static Map<String, Properties> m_propertiesCache = new HashMap<String, Properties>();
-  
+
   public static Properties getProperties( final URL context, final QName qname )
   {
     /* Try to get cached image descriptor */
@@ -74,7 +78,7 @@ public class FeatureTypePropertiesCatalog extends FeatureTypeCatalog
 
     if( m_propertiesCache.containsKey( cacheKey ) )
       return m_propertiesCache.get( cacheKey );
-    
+
     final Properties properties = new Properties();
 
 
@@ -97,11 +101,30 @@ public class FeatureTypePropertiesCatalog extends FeatureTypeCatalog
     finally
     {
       IOUtils.closeQuietly( is );
-      
+
       /* Allways add properties, so this lookup takes only place once (not finding anything is very expensive) */
       m_propertiesCache.put( cacheKey, properties );
     }
 
     return properties;
+  }
+
+  public static boolean isPropertyOn( final Feature feature, final String property, final String defaultValue )
+  {
+    if( feature == null )
+      return false;
+
+    final IFeatureType featureType = feature.getFeatureType();
+    final QNameUnique qName = featureType.getQName();
+    final GMLWorkspace workspace = feature.getWorkspace();
+    final URL context = workspace == null ? null : workspace.getContext();
+    return isPropertyOn( qName, context, property, defaultValue );
+  }
+
+  public static boolean isPropertyOn( final QName qname, final URL context, final String property, final String defaultValue )
+  {
+    final Properties properties = FeatureTypePropertiesCatalog.getProperties( context, qname );
+    final String value = properties.getProperty( property, defaultValue );
+    return Boolean.parseBoolean( value );
   }
 }

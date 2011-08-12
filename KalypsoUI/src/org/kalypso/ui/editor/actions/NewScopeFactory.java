@@ -40,55 +40,49 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.actions;
 
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPart;
-import org.kalypso.i18n.Messages;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureProperty;
 
 /**
- * Fills the managed menu with all commands that apply to the current selection.
- * 
  * @author Gernot Belger
  */
-public class NewFeatureManagedMenu extends AbstractManagedMenu
+public final class NewScopeFactory
 {
-  public NewFeatureManagedMenu( final String menuPath )
+  private NewScopeFactory( )
   {
-    super( "newFeatureMenuManager", menuPath, Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.7" ) );//$NON-NLS-1$
+    throw new UnsupportedOperationException();
   }
 
   /**
-   * @see org.kalypso.ui.editor.actions.AbstractManagedMenu#fillMenu(org.eclipse.jface.action.IMenuManager)
+   * Bit HACKY: used for the GML-Tree to create the correct New-Scope.
    */
-  @Override
-  protected void fillMenu( final IMenuManager menuManager )
+  public static INewScope createFromTreeSelection( final CommandableWorkspace workspace, final IStructuredSelection selection, final IFeatureSelectionManager selectionManager )
   {
-    final IWorkbenchPart part = getPart();
-    if( part == null )
-      return;
+    final Object elementInScope = selection.getFirstElement();
 
-    final ISelectionProvider selectionProvider = part.getSite().getSelectionProvider();
-    final ISelection selection = selectionProvider.getSelection();
-    if( !(selection instanceof IFeatureSelection) )
-      return;
+    if( elementInScope instanceof FeatureAssociationTypeElement )
+      return new NewFeaturePropertyScope( (FeatureAssociationTypeElement) elementInScope, workspace, selectionManager );
 
-    final IFeatureSelection fs = (IFeatureSelection) selection;
-    final IFeatureSelectionManager selectionManager = fs.getSelectionManager();
+    if( selection instanceof IFeatureSelection )
+    {
+      final Feature feature = FeatureSelectionHelper.getFirstFeature( selectionManager );
+      if( feature == null )
+        return null;
 
-    // HACK: we know this works, as this must be the TreeFeatureSelection here
-    final CommandableWorkspace workspace = fs.getWorkspace( null );
+      return new NewFeatureScope( workspace, feature, selectionManager );
+    }
 
-    final INewScope scope = NewScopeFactory.createFromTreeSelection( workspace, fs, selectionManager );
-    scope.addMenuItems( menuManager );
-
-    // add additions separator: if not, eclipse whines
-    menuManager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
+    return null;
   }
 
+  public static INewScope createPropertyScope( final IFeatureProperty featureProperty, final CommandableWorkspace workspace, final IFeatureSelectionManager selectionManager )
+  {
+    return new NewFeaturePropertyScope( featureProperty, workspace, selectionManager );
+  }
 }

@@ -65,6 +65,16 @@ public interface IFeatureTypePropertiesConstants
 
   public final static String GMLTREE_SHOW_CHILDREN_DEFAULT = "true"; //$NON-NLS-1$
 
+  /** Show new menu on this feature element, defaults to true */
+  public final static String GMLTREE_NEW_MENU_ON_FEATURE = "gmltree.showNewMenuOnFeature"; //$NON-NLS-1$
+
+  public final static String GMLTREE_NEW_MENU_ON_FEATURE_DEFAULT = "true"; //$NON-NLS-1$
+
+  /** Show new menu of sub-features for this feature element, defaults to false */
+  public final static String GMLTREE_NEW_MENU_SHOW_SUB_FEATURES = "gmltree.showNewMenuSubFeatures"; //$NON-NLS-1$
+
+  public final static String GMLTREE_NEW_MENU_SHOW_SUB_FEATURES_DEFAULT = "false"; //$NON-NLS-1$
+
   //
   // Map Constants
   //
