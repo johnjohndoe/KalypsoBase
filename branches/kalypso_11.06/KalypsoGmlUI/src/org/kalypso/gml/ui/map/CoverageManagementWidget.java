@@ -170,6 +170,9 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class CoverageManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
+  /** Allows to define on the theme, if the user is allowed to change the grid folde for this theme */
+  private static final String THEME_PROPERTY_ALLOW_USER_CHANGE_GRID_FOLDER = "allowUserChangeGridFolder"; //$NON-NLS-1$
+
   public static final IKalypsoThemePredicate COVERAGE_PREDICATE = new IKalypsoThemePredicate()
   {
     @Override
@@ -185,7 +188,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       if( coveragesFeature == null )
         return false;
 
-      final IRelationType targetPropertyType = featureList.getParentFeatureTypeProperty();
+      final IRelationType targetPropertyType = featureList.getPropertyType();
       final IFeatureType targetFeatureType = targetPropertyType.getTargetFeatureType();
 
       return GMLSchemaUtilities.substitutes( targetFeatureType, ICoverage.QNAME );
@@ -198,10 +201,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private final IMapModellListener m_mapModelListener = new MapModellAdapter()
   {
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
     public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
     {
@@ -385,7 +384,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   {
     // remove listener
     if( m_theme != null )
-      m_theme.getWorkspace().removeModellListener( m_modellistener );
+    {
+      final CommandableWorkspace workspace = m_theme.getWorkspace();
+      if( workspace != null )
+        workspace.removeModellListener( m_modellistener );
+    }
 
     m_coverages = coverages;
     m_theme = theme;
@@ -557,6 +560,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     updateButtons();
 
+    refreshThemeCombo();
+
     return panel;
   }
 
@@ -581,9 +586,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_themeCombo.setContentProvider( new ArrayContentProvider() );
     m_themeCombo.setLabelProvider( new LabelProvider()
     {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
       @Override
       public String getText( final Object element )
       {
@@ -611,6 +613,15 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     else if( activeTheme instanceof IMapModell )
     {
       final IKalypsoTheme[] allThemes = ((IMapModell) activeTheme).getAllThemes();
+      for( final IKalypsoTheme kalypsoTheme : allThemes )
+      {
+        if( COVERAGE_PREDICATE.decide( kalypsoTheme ) )
+          themesForCombo.add( kalypsoTheme );
+      }
+    }
+    else
+    {
+      final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
       for( final IKalypsoTheme kalypsoTheme : allThemes )
       {
         if( COVERAGE_PREDICATE.decide( kalypsoTheme ) )
@@ -647,6 +658,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( firstElement instanceof IKalypsoFeatureTheme )
     {
       final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) firstElement;
+
+      final String property = ft.getProperty( THEME_PROPERTY_ALLOW_USER_CHANGE_GRID_FOLDER, null );
+      if( property != null )
+        m_allowUserChangeGridFolder = Boolean.valueOf( property );
+
       final FeatureList featureList = ft.getFeatureList();
       final Feature coveragesFeature = featureList == null ? null : featureList.getParentFeature();
       if( coveragesFeature != null )
@@ -1166,9 +1182,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   {
     if( m_gridFolder != null )
       return m_gridFolder;
-
-    if( m_allowUserChangeGridFolder == false )
-      return null;
 
     if( m_theme == null )
       return null;

@@ -76,7 +76,7 @@
 				<and>
 					<!--reference definitionId="mapContext" /-->
 					<with variable="activeMapPanel">
-						<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
+						<test property="org.kalypso.ui.test.map.hasTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
 					</with>
 				</and>
 			</enabledWhen>
@@ -192,7 +192,7 @@
 						</with>
 						<!--reference definitionId="mapContext" /-->
 						<with variable="activeMapPanel">
-							<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
+							<test property="org.kalypso.ui.test.map.hasTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
 						</with>
 					</and>
 				</visibleWhen>
@@ -207,7 +207,7 @@
 						</with>
 						<!--reference definitionId="mapContext" /-->
 						<with variable="activeMapPanel">
-							<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
+							<test property="org.kalypso.ui.test.map.hasTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
 						</with>
 					</and>
 				</visibleWhen>
