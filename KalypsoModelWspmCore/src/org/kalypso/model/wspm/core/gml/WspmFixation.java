@@ -77,4 +77,10 @@ public class WspmFixation extends Feature_Impl implements IObservationFeature
   {
     ObservationFeatureFactory.toFeature( observation, this );
   }
+
+  @Override
+  public WspmWaterBody getParent( )
+  {
+    return (WspmWaterBody) super.getParent();
+  }
 }
