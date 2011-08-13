@@ -536,10 +536,7 @@
           <command commandId="org.kalypso.ui.command.export" style="push">
                <visibleWhen checkEnabled="true"/>
           </command>
-          <separator
-                name="importExportEnd"
-                visible="true">
-          </separator>
+          <separator name="importExportEnd" visible="true"/>
           <command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push">
                <visibleWhen checkEnabled="true"/>
           </command>
@@ -1513,11 +1510,7 @@
      </handler>
      <handler commandId="org.kalypso.ui.command.export" class="org.kalypso.ui.internal.export.ExportWizardsHandler">
         <activeWhen>
-           <test
-                 args="org.kalypso.ui,exportWizards"
-                 forcePluginActivation="true"
-                 property="org.kalypso.contribs.eclipsercp.genericWizardTester.isEnabled">
-           </test>
+           <test args="org.kalypso.ui,exportWizards" forcePluginActivation="true" property="org.kalypso.contribs.eclipsercp.genericWizardTester.isEnabled"/>
         </activeWhen>
      </handler>
   </extension>
@@ -1577,12 +1570,8 @@
         </enablement>
      </wizardEnablement>
   </extension>
-  <extension
-        point="org.kalypso.ui.importWizards">
-     <category
-           id="importWizards"
-           name="Import Wizards">
-     </category>
+  <extension point="org.kalypso.ui.importWizards">
+     <category id="importWizards" name="Import Wizards"/>
   </extension>
   <extension
         point="org.kalypso.ui.featureViewExtensionControl">

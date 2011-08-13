@@ -496,6 +496,7 @@
              category="importWizards"
              class="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfileWizard"
              id="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfileWizard"
+             icon="icons/etool16/trippleImport.gif"
              name="%org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction">
           <description>%org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction.description</description>
        </wizard>
