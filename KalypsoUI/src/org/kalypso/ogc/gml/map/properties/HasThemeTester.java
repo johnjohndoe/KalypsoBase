@@ -46,12 +46,12 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
- * This property tester tests a mapPanel for its active theme.<br/>
+ * This property tester tests a mapPanel for any theme that matches a given criteria.<br/>
  * Supports the same properties as {@link ThemeTester}, as all calls are just delegated this {@link ThemeTester}.
  * 
  * @author Gernot Belger
  */
-public class ActiveThemeTester extends PropertyTester
+public class HasThemeTester extends PropertyTester
 {
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
@@ -64,8 +64,14 @@ public class ActiveThemeTester extends PropertyTester
     if( mapModell == null )
       return false;
 
-    final IKalypsoTheme theme = mapModell.getActiveTheme();
-    final ThemeTester themeTester = new ThemeTester();
-    return themeTester.test( theme, property, args, expectedValue );
+    final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+    for( final IKalypsoTheme theme : allThemes )
+    {
+      final ThemeTester themeTester = new ThemeTester();
+      if( themeTester.test( theme, property, args, expectedValue ) )
+        return true;
+    }
+
+    return false;
   }
 }
