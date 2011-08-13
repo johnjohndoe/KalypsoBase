@@ -41,12 +41,14 @@
 package org.kalypsodeegree_impl.gml.binding.commons;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.URIUtil;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -72,13 +74,27 @@ public class Image extends Feature_Impl
 
   public void setUri( final URI uri )
   {
-    setProperty( PROPERTY_URI, uri == null ? null : uri.toASCIIString() );
+    if( uri == null )
+      setProperty( PROPERTY_URI, null );
+    else
+    {
+      final String unencoded = URIUtil.toUnencodedString( uri );
+      setProperty( PROPERTY_URI, unencoded );
+    }
   }
 
   public URI getUri( )
   {
-    final String uriString = getProperty( PROPERTY_URI, String.class );
-    return URI.create( uriString );
+    try
+    {
+      final String uriString = getProperty( PROPERTY_URI, String.class );
+      return URIUtil.fromString( uriString );
+    }
+    catch( final URISyntaxException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public void setMimeType( final MimeType mimeType )
@@ -105,5 +121,4 @@ public class Image extends Feature_Impl
       return null;
     }
   }
-
 }
