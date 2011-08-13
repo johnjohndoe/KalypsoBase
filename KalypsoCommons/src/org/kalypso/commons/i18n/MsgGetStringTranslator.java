@@ -45,6 +45,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -106,8 +107,8 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
       {
         final String[] split = msgClass.split( ":" ); //$NON-NLS-1$
         Assert.isTrue( split.length == 2, Messages.getString("org.kalypso.commons.i18n.MsgGetStringTranslator.2", msgClass )); //$NON-NLS-1$
-        final Bundle bundle = Platform.getBundle( split[0] );
-        m_nls = bundle.loadClass( split[1] );
+        final Bundle bundle = Platform.getBundle( StringUtils.trimToEmpty( split[0] ) );
+        m_nls = bundle.loadClass( StringUtils.trimToEmpty( split[1] ) );
         return;
       }
       catch( final ClassNotFoundException e )
