@@ -3,8 +3,8 @@
 	<Name>waterBody</Name>
 	<Title>Water Body Style</Title>
 	<Rule>
-		<Name>textOnCenterline</Name>
-		<Title>Labels</Title>
+		<Name>centerline</Name>
+		<Title>Achse</Title>
 		<TextSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>centerLine</ogc:PropertyName>
@@ -27,11 +27,6 @@
 				</LinePlacement>
 			</LabelPlacement>
 		</TextSymbolizer>
-	</Rule>
-
-	<Rule>
-		<Name>centerline</Name>
-		<Title>Achse</Title>
 		<LineSymbolizer uom="pixel">
 			<Geometry>
 				<ogc:PropertyName>centerLine</ogc:PropertyName>
