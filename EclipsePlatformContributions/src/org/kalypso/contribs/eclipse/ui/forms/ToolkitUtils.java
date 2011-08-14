@@ -121,4 +121,12 @@ public final class ToolkitUtils
     form.setFont( JFaceResources.getHeaderFont() );
     return form;
   }
+
+  public static void adapt( final FormToolkit toolkit, final Composite composite )
+  {
+    if( toolkit == null )
+      return;
+
+    toolkit.adapt( composite );
+  }
 }
