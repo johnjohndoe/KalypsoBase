@@ -84,7 +84,8 @@ public class WizardEnablementVisitor extends AbstractWizardRegistryVisitor
   @Override
   protected void visit( final IWizardDescriptor wizard )
   {
-    addEnablement( wizard.getId(), isEnabled( wizard ) );
+    final String id = wizard.getId();
+    addEnablement( id, isEnabled( wizard ) );
   }
 
   private void addEnablement( final String id, final boolean enabled )
