@@ -117,6 +117,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   private Image m_featureThemeIcon;
 
+  private GM_Envelope m_fullExtent;
+
   public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final I10nString name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
     super( name, "FeatureTheme", mapModel ); //$NON-NLS-1$
@@ -195,11 +197,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_featurePath;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
@@ -275,9 +272,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_styles.toArray( new IKalypsoStyle[m_styles.size()] );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
   @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
@@ -309,7 +303,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         {
           // OPTIMIZATION: as List#contains is quite slow, we generally repaint if the number of changed features
           // is too large.
-          fireRepaintRequested( null );
+          requestRepaint( null );
         }
         else
         {
@@ -328,7 +322,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
           if( invalidBox != null )
           {
             // TODO: buffer: does not work well for points, or fat-lines
-            fireRepaintRequested( invalidBox );
+            requestRepaint( invalidBox );
           }
         }
       }
@@ -345,16 +339,16 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
               case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD:
                 // fall through
               case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE:
-                fireRepaintRequested( getFullExtent() );
+                requestRepaint( getActiveEnvelope() );
                 return;
 
               case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE:
                 // We need to repaint all: we do not know where the old feature was deleted
-                fireRepaintRequested( null );
+                requestRepaint( null );
                 return;
 
               default:
-                fireRepaintRequested( getFullExtent() );
+                requestRepaint( getActiveEnvelope() );
             }
           }
         }
@@ -363,26 +357,31 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     else
     {
       // unknown event, set dirty
-      fireRepaintRequested( getFullExtent() );
+      requestRepaint( getActiveEnvelope() );
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
-   */
+  private void requestRepaint( final GM_Envelope invalidEnvelope )
+  {
+    /* Also invalidate the current full extent: my features have changed */
+    m_fullExtent = null;
+
+    /* Request the repaint event */
+    fireRepaintRequested( invalidEnvelope );
+  }
+
   @Override
   public GM_Envelope getFullExtent( )
   {
-    if( m_activeEnvelope != null )
-      return m_activeEnvelope;
-    
-    // TODO: Very slow on large themes. We should cache the extent.
+    if( m_fullExtent != null )
+      return m_fullExtent;
+
     final FeatureList visibleFeatures = getFeatureListVisible( null );
     if( visibleFeatures == null )
       return null;
 
-    m_activeEnvelope = visibleFeatures.getBoundingBox();
-    return m_activeEnvelope;
+    m_fullExtent = visibleFeatures.getBoundingBox();
+    return m_fullExtent;
   }
 
   @Override
@@ -391,9 +390,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_featureList;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
   @Override
   public FeatureList getFeatureListVisible( final GM_Envelope searchEnvelope )
   {
@@ -458,10 +454,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return resultList;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
-   *      java.lang.Runnable)
-   */
   @Override
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -479,27 +471,18 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSchedulingRule()
-   */
   @Override
   public ISchedulingRule getSchedulingRule( )
   {
     return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSelectionManager()
-   */
   @Override
   public IFeatureSelectionManager getSelectionManager( )
   {
     return m_selectionManager;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
-   */
   @Override
   public ImageDescriptor getDefaultIcon( )
   {
@@ -509,13 +492,12 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return ImageDescriptor.createFromImage( m_featureThemeIcon );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoStyleListener#styleChanged()
-   */
   @Override
   public void styleChanged( )
   {
-    fireRepaintRequested( getFullExtent() );
+    m_fullExtent = null;
+
+    fireRepaintRequested( getActiveEnvelope() );
     fireStatusChanged( this );
   }
 
@@ -571,7 +553,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( infoId == null )
       return null;
 
-    if( infoId.startsWith( "%" ) )
+    if( infoId.startsWith( "%" ) ) //$NON-NLS-1$
     {
       final I10nString themeName = getName();
       if( themeName != null )

@@ -977,4 +977,12 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     fireVisibilityChanged( newVisibility );
   }
 
+  @Override
+  public void setActiveEnvelope( final GM_Envelope boundingBox )
+  {
+    super.setActiveEnvelope( boundingBox );
+
+    if( m_theme != null )
+      m_theme.setActiveEnvelope( boundingBox );
+  }
 }

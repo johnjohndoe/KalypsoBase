@@ -230,9 +230,6 @@ public class BufferedRescaleMapLayer extends AbstractMapLayer
         getMapPanel().invalidateMap();
       }
 
-      /**
-       * @see org.kalypso.contribs.eclipse.jobs.JobObserverJob#jobDone(org.eclipse.core.runtime.IStatus)
-       */
       @Override
       protected void jobDone( final IStatus result )
       {
