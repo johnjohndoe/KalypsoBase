@@ -51,18 +51,8 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
  */
 public class ThemeNameLabelProvider extends ColumnLabelProvider
 {
-  /**
-   * The constructor.
-   */
-  public ThemeNameLabelProvider( )
-  {
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-   */
   @Override
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     if( element instanceof IKalypsoTheme )
       return ((IKalypsoTheme) element).getName().getValue();
@@ -70,11 +60,8 @@ public class ThemeNameLabelProvider extends ColumnLabelProvider
     return super.getText( element );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
-   */
   @Override
-  public Image getImage( Object element )
+  public Image getImage( final Object element )
   {
     if( element instanceof IKalypsoTheme )
       return ((IKalypsoTheme) element).getDefaultIcon().createImage();
