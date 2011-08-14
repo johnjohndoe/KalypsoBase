@@ -876,6 +876,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     try
     {
+      // FIXME: move this code to the place, where the entries are created
       for( final ColorMapEntry colorMapEntry : entries )
       {
         // WHY? why do we not just ignore duplicate entries
@@ -896,7 +897,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     saveStyle();
 
-    m_colorMapViewer.refresh();
+    final ColorMapEntry[] newEntries = new_colorMap.values().toArray( new ColorMapEntry[new_colorMap.size()] );
+    m_colorMapViewer.setInput( newEntries );
   }
 
   private void initalizeCoverageActions( final IToolBarManager manager, final IAction[] customActions )
