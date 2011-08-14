@@ -147,7 +147,7 @@ public class StatusComposite extends Composite
   {
     m_imageLabel = new Label( this, SWT.NONE );
     ControlUtils.adapt( m_imageLabel, m_toolkit );
-    m_imageLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+    m_imageLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, true ) );
     m_imageLabel.addMouseListener( new MouseAdapter()
     {
       /**
@@ -166,7 +166,7 @@ public class StatusComposite extends Composite
     m_messageText = new Text( this, SWT.READ_ONLY );
     ControlUtils.adapt( m_messageText, m_toolkit );
 
-    m_messageText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_messageText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, true ) );
 
     m_messageText.addMouseListener( new MouseAdapter()
     {
@@ -181,7 +181,7 @@ public class StatusComposite extends Composite
   private void createDetailsButton( )
   {
     m_detailsButton = new Button( this, SWT.PUSH );
-    m_detailsButton.setLayoutData( new GridData() );
+    m_detailsButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, true ) );
     ControlUtils.adapt( m_detailsButton, m_toolkit );
     m_detailsButton.setText( Messages.getString( "org.kalypso.util.swt.StatusComposite.1" ) ); //$NON-NLS-1$
     m_detailsButton.addSelectionListener( new SelectionAdapter()
