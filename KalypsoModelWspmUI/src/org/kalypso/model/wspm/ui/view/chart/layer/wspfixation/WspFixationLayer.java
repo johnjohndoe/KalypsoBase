@@ -61,9 +61,6 @@ public class WspFixationLayer extends WspLayer
     setTitle( Messages.getString( "WspFixationLayer_0" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer#createLayerPanel()
-   */
   @Override
   public IProfilView createLayerPanel( )
   {
