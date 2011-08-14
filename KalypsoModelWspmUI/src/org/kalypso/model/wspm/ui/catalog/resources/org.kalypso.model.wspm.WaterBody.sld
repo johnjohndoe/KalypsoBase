@@ -3,8 +3,8 @@
 	<Name>waterBody</Name>
 	<Title>Water Body Style</Title>
 	<Rule>
-		<Name>centerline</Name>
-		<Title>Achse</Title>
+		<Name>textOnCenterline</Name>
+		<Title>Labels</Title>
 		<TextSymbolizer>
 			<Geometry>
 				<ogc:PropertyName>centerLine</ogc:PropertyName>
@@ -26,30 +26,19 @@
 					<Gap>10</Gap>
 				</LinePlacement>
 			</LabelPlacement>
-          <!-- 
-			<Halo>
-                <Radius>3</Radius>
-				<Fill>
-					<CssParameter name="fill-opacity">0.25</CssParameter>
-					<CssParameter name="fill">#808080</CssParameter>
-				</Fill>
-				<Stroke>
-					<CssParameter name="stroke">#000000</CssParameter>
-					<CssParameter name="stroke-width">1.0</CssParameter>
-					<CssParameter name="stroke-linejoin">round</CssParameter>
-					<CssParameter name="stroke-opacity">0.0</CssParameter>
-					<CssParameter name="stroke-linecap">square</CssParameter>
-				</Stroke>
-			</Halo>
-           -->
 		</TextSymbolizer>
+	</Rule>
+
+	<Rule>
+		<Name>centerline</Name>
+		<Title>Achse</Title>
 		<LineSymbolizer uom="pixel">
 			<Geometry>
 				<ogc:PropertyName>centerLine</ogc:PropertyName>
 			</Geometry>
 			<Stroke>
 				<CssParameter name="stroke">#0000ff</CssParameter>
-				<CssParameter name="stroke-width">2.0</CssParameter>
+				<CssParameter name="stroke-width">3.0</CssParameter>
 				<CssParameter name="stroke-linejoin">round</CssParameter>
 				<CssParameter name="stroke-opacity">1.0</CssParameter>
 				<CssParameter name="stroke-linecap">round</CssParameter>

@@ -38,34 +38,36 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.util.themes.legend.provider;
+package org.kalypso.commons.databinding.validation;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.swt.graphics.Image;
-import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
 /**
- * A column label provider.
+ * This validator fails, if a double is NaN or null.
  * 
- * @author Holger Albert
+ * @author Gernot Belger
  */
-public class ThemeNameLabelProvider extends ColumnLabelProvider
+public class DoubleNaNValidator extends TypedValidator<Double>
 {
-  @Override
-  public String getText( final Object element )
+  /**
+   * @param severity
+   *          Severity of IStatus, will be used to create validation failures.
+   * @param message
+   *          Will be used as message for a status, if validation fails.
+   */
+  public DoubleNaNValidator( final int severity, final String message )
   {
-    if( element instanceof IKalypsoTheme )
-      return ((IKalypsoTheme) element).getName().getValue();
-
-    return super.getText( element );
+    super( Double.class, severity, message );
   }
 
   @Override
-  public Image getImage( final Object element )
+  protected IStatus doValidate( final Double value ) throws CoreException
   {
-    if( element instanceof IKalypsoTheme )
-      return ((IKalypsoTheme) element).getDefaultIcon().createImage();
+    if( value == null || Double.isNaN( value ) )
+      fail();
 
-    return super.getImage( element );
+    return Status.OK_STATUS;
   }
 }
