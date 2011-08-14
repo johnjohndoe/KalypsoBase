@@ -40,16 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
@@ -67,26 +65,19 @@ public abstract class WspmProject extends Feature_Impl implements IWspmConstants
 
   public static final QName QNAME = new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" ); //$NON-NLS-1$
 
+  private IFeatureBindingCollection<WspmWaterBody> m_waterBodies = null;
+
   public WspmProject( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public WspmWaterBody[] getWaterBodies( )
+  public IFeatureBindingCollection<WspmWaterBody> getWaterBodies( )
   {
-    final FeatureList waters = getWaterBodyList();
-    final List<WspmWaterBody> waterList = new ArrayList<WspmWaterBody>( waters.size() );
-    for( final Object object : waters )
-    {
-      waterList.add( (WspmWaterBody) object );
-    }
+    if( m_waterBodies == null )
+      m_waterBodies = new FeatureBindingCollection<WspmWaterBody>( this, WspmWaterBody.class, QNAME_MEMBER_WATER_BODY );
 
-    return waterList.toArray( new WspmWaterBody[waterList.size()] );
-  }
-
-  private FeatureList getWaterBodyList( )
-  {
-    return getProperty( QNAME_MEMBER_WATER_BODY, FeatureList.class );
+    return m_waterBodies;
   }
 
   /**
@@ -94,7 +85,7 @@ public abstract class WspmProject extends Feature_Impl implements IWspmConstants
    */
   public WspmWaterBody findWater( final String waterName )
   {
-    final WspmWaterBody[] waters = getWaterBodies();
+    final IFeatureBindingCollection<WspmWaterBody> waters = getWaterBodies();
     for( final WspmWaterBody body : waters )
     {
       if( waterName.equals( body.getName() ) )
@@ -106,7 +97,7 @@ public abstract class WspmProject extends Feature_Impl implements IWspmConstants
 
   public WspmWaterBody findWaterByRefNr( final String refNr )
   {
-    final WspmWaterBody[] waters = getWaterBodies();
+    final IFeatureBindingCollection<WspmWaterBody> waters = getWaterBodies();
     for( final WspmWaterBody body : waters )
     {
       if( refNr.equals( body.getRefNr() ) )
