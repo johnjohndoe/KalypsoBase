@@ -1635,7 +1635,8 @@ public final class FeatureHelper
 
     final Feature result = getFeature( targetWorkspace, property );
     if( result == null )
-      throw new IllegalStateException( String.format( "Feature with id %s not found", property.toString() ) );
+      return null;
+    // throw new IllegalStateException( String.format( "Feature with id %s not found", property.toString() ) );
 
     return result;
   }
