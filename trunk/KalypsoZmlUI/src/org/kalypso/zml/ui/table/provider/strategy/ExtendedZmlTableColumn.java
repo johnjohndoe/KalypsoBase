@@ -55,6 +55,7 @@ import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.AppliedRule;
 import org.kalypso.zml.ui.table.provider.RuleMapper;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
@@ -180,7 +181,7 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
   }
 
   @Override
-  public ZmlRule[] getAppliedRules( )
+  public AppliedRule[] getAppliedRules( )
   {
     return m_mapper.getAppliedRules();
   }

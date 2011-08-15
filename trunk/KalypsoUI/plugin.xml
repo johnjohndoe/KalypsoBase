@@ -1326,9 +1326,10 @@
 		<loader class="org.kalypso.ogc.gml.loader.WfsLoader" type="wfs" />
 	</extension>
 	<extension point="org.eclipse.core.expressions.propertyTesters">
-		<propertyTester class="org.kalypso.ogc.gml.map.properties.ActiveThemeTester" id="org.kalypso.ogc.gml.map.ActiveThemeTester" namespace="org.kalypso.ui.test.map.activeTheme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.map.IMapPanel" />
-		<propertyTester class="org.kalypso.ogc.gml.map.properties.ThemeTester" id="org.kalypso.ogc.gml.map.ThemeTester" namespace="org.kalypso.ui.test.theme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.IKalypsoTheme" />
-		<propertyTester class="org.kalypso.ogc.gml.map.properties.ThemeTester" id="org.kalypso.ogc.gml.map.ThemeTester" namespace="org.kalypso.ui.test.theme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property" type="org.kalypso.ogc.gml.IKalypsoThemeProvider" />
+		<propertyTester class="org.kalypso.ogc.gml.map.properties.PropertyThemeTester" id="org.kalypso.ogc.gml.map.PropertyThemeTester" namespace="org.kalypso.ui.test.map.themeProperty" properties="hasProperty,isNotNull,hasExtent,isFeatureTheme,isCascading" type="org.kalypso.ogc.gml.map.IMapPanel" />
+		<propertyTester class="org.kalypso.ogc.gml.map.properties.ActiveThemeTester" id="org.kalypso.ogc.gml.map.ActiveThemeTester" namespace="org.kalypso.ui.test.map.activeTheme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property,isCascading" type="org.kalypso.ogc.gml.map.IMapPanel" />
+		<propertyTester class="org.kalypso.ogc.gml.map.properties.ThemeTester" id="org.kalypso.ogc.gml.map.ThemeTester" namespace="org.kalypso.ui.test.theme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property,isCascading" type="org.kalypso.ogc.gml.IKalypsoTheme" />
+		<propertyTester class="org.kalypso.ogc.gml.map.properties.ThemeTester" id="org.kalypso.ogc.gml.map.ThemeTester" namespace="org.kalypso.ui.test.theme" properties="isNotNull,qname,hasExtent,isFeatureTheme,property,isCascading" type="org.kalypso.ogc.gml.IKalypsoThemeProvider" />
 		<propertyTester class="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" id="org.kalypso.ogc.sensor.properties.RepositoryItemPropertyTester" namespace="org.kalypso.ui" properties="repositoryItemHasWQTable" type="org.kalypso.repository.IRepositoryItem" />
 		<propertyTester class="org.kalypso.ui.internal.utils.WorkbenchWindowPropertyTest" id="org.kalypso.ui.internal.utils.WorkbenchWindowPropertyTest" namespace="org.kalypso.ui.window" properties="isEditorAreaVisible" type="org.eclipse.ui.IWorkbenchWindow" />
 	</extension>

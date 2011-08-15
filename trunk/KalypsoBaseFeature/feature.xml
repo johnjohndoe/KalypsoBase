@@ -395,46 +395,26 @@
          version="0.0.0"
          unpack="false"/>
 
-   <plugin
-         id="org.junit"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.junit4"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.hamcrest.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.kalypso.mapserver"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="11.4.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.zml.core"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="11.4.0.qualifier"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.zml.ui"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="11.4.0.qualifier"
          unpack="false"/>
 
    <plugin
@@ -448,7 +428,7 @@
          id="com.vividsolutions.jts"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="11.4.0.qualifier"
          unpack="false"/>
 
 </feature>

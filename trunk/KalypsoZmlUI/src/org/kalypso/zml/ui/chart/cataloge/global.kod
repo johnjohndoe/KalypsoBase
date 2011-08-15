@@ -906,6 +906,7 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_2" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_3" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:wqboundaries#wBoundary" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
@@ -943,6 +944,7 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_2" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_3" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:wqboundaries#qBoundary" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
@@ -1162,7 +1164,7 @@
         <PreferredAdjustment before="0" range="100" after="0" />
         <RendererRef ref="DateAxisRenderer" />
         <!-- <AxisNumberRangeRestriction minRange="86400000" /> -->
-        <AxisNumberRangeRestriction minRange="1000" />
+        <AxisNumberRangeRestriction minRange="1000"  />
       </Axis>
       <ScreenAxis id="screenAxisX">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />

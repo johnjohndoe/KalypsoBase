@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,13 +36,12 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.observation.sei;
 
 import java.rmi.RemoteException;
 
-import javax.activation.DataHandler;
 import javax.jws.WebService;
 
 import org.kalypso.ogc.sensor.SensorException;
@@ -79,10 +78,5 @@ public interface IObservationService extends IRepositoryService
    *          the id of the DataBean that the client did receive after calling readData( String )
    */
   void clearTempData( final String dataId ) throws SensorException;
-
-  /**
-   * The given zml will be used to update the values of the server-side observation.
-   */
-  void writeData( final ObservationBean observation, final DataHandler data ) throws SensorException;
 
 }

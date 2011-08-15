@@ -86,7 +86,7 @@ public class PlayAction extends Action
   @Override
   public String getText( )
   {
-    return "Play";
+    return "Abspielen";
   }
 
   /**

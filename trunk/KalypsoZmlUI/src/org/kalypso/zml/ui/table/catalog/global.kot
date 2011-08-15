@@ -145,27 +145,7 @@
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:conflict</property>
     </Style>
     <!-- alarmstufen styles -->
-    <!-- diverse Farbschemata (MG, AS1, AS2, AS3, AS4)
-      Problem: gelb ist nur schlecht erkennbar, insbesondere die Beschriftung
-      derzeit umgesetztes Farbschema: Sachsen-Anhalt
-      ursprüngliches Kalypso
-      BD6DFF (lila)
-      E8E800 (gelb-grün)
-      FF8000 (orange)
-      FF8080 (rosa)
-      FF0000 (rot)
-      Sachsen
-      - (keine Farbe für Meldegrenze auf Web-Seite erkennbar)
-      006699 (blau bis blau-grün)
-      FFFF00 (gelb)
-      FFCCCC (rosa)
-      FF0000 (rot)
-      Sachsen-Anhalt
-      0000FF (blau)
-      FFFF00 (gelb)
-      FF6600 (orange)
-      FF0000 (rot)
-      FF00FF (magenta) -->
+    <!-- diverse Farbschemata (MG, AS1, AS2, AS3, AS4) Problem: gelb ist nur schlecht erkennbar, insbesondere die Beschriftung derzeit umgesetztes Farbschema: Sachsen-Anhalt ursprüngliches Kalypso BD6DFF (lila) E8E800 (gelb-grün) FF8000 (orange) FF8080 (rosa) FF0000 (rot) Sachsen - (keine Farbe für Meldegrenze auf Web-Seite erkennbar) 006699 (blau bis blau-grün) FFFF00 (gelb) FFCCCC (rosa) FF0000 (rot) Sachsen-Anhalt 0000FF (blau) FFFF00 (gelb) FF6600 (orange) FF0000 (rot) FF00FF (magenta) -->
     <Style id="meldegrenze">
       <property name="backgroundColor">0000FF</property>
     </Style>
@@ -181,6 +161,19 @@
     <Style id="alarmstufe_4">
       <property name="backgroundColor">FF00FF</property>
     </Style>
+    <!-- w/q boundaries -->
+    <Style id="wqBoundaryDeviationLower">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:boundary:deviation:lower</property>
+    </Style>
+    <Style id="wqBoundaryDeviationUpper">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:boundary:deviation:upper</property>
+    </Style>
+    <Style id="wqBoundaryDeviationLowerExtreme">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:boundary:deviation:lower:extreme</property>
+    </Style>
+    <Style id="wqBoundaryDeviationUpperExtreme">
+      <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:boundary:deviation:upper:extreme</property>
+    </Style>
   </StyleSet>
   <defaultStyle>
     <reference>defaultCellStyle</reference>
@@ -191,7 +184,7 @@
         <reference>dateForecastCellStyle</reference>
       </styleReference>
       <RuleInstructions>
-        <MetadataDateRangeInstruction propertyFrom="Vorhersage Start" propertyTo="Vorhersage Ende" propertyToInclusive="true" />
+        <MetadataDateRangeInstruction propertyFrom="Vorhersage Start" propertyTo="Vorhersage Ende" propertyToInclusive="true" severity="1" />
       </RuleInstructions>
       <label>gesamter Vorhersagezeitraum</label>
     </Rule>
@@ -200,7 +193,7 @@
         <reference>forecastCellStyleSafe</reference>
       </styleReference>
       <RuleInstructions>
-        <MetadataDateRangeInstruction propertyFrom="Vorhersage Start" propertyTo="Vorhersage Ende" propertyToInclusive="true" />
+        <MetadataDateRangeInstruction propertyFrom="Vorhersage Start" propertyTo="Vorhersage Ende" propertyToInclusive="true" severity="1" />
       </RuleInstructions>
       <label>gesamter Vorhersagezeitraum</label>
     </Rule>
@@ -209,7 +202,7 @@
         <reference>forecastCellStyleSafe</reference>
       </styleReference>
       <RuleInstructions>
-        <MetadataDateRangeInstruction propertyFrom="sichere Vorhersage Start" propertyTo="sichere Vorhersage Ende" propertyToInclusive="true" />
+        <MetadataDateRangeInstruction propertyFrom="sichere Vorhersage Start" propertyTo="sichere Vorhersage Ende" propertyToInclusive="true" severity="1" />
       </RuleInstructions>
       <label>Vorhersagezeitraum</label>
     </Rule>
@@ -218,7 +211,7 @@
         <reference>forecastCellStyleUnsafe</reference>
       </styleReference>
       <RuleInstructions>
-        <MetadataDateRangeInstruction propertyFrom="unsichere Vorhersage Start" propertyTo="unsichere Vorhersage Ende" propertyToInclusive="true" />
+        <MetadataDateRangeInstruction propertyFrom="unsichere Vorhersage Start" propertyTo="unsichere Vorhersage Ende" propertyToInclusive="true" severity="1" />
       </RuleInstructions>
       <label>Abschätzungszeitraum</label>
     </Rule>
@@ -227,7 +220,7 @@
         <reference>forecastCellStyleRestrechenzeitraum</reference>
       </styleReference>
       <RuleInstructions>
-        <MetadataDateRangeInstruction propertyFrom="unsichere Vorhersage Ende" propertyTo="Vorhersage Ende" propertyToInclusive="true" />
+        <MetadataDateRangeInstruction propertyFrom="unsichere Vorhersage Ende" propertyTo="Vorhersage Ende" propertyToInclusive="true" severity="1" />
       </RuleInstructions>
       <label>Restrechenzeitraum</label>
     </Rule>
@@ -236,7 +229,7 @@
         <reference>forecastCellStyleRestrechenzeitraum</reference>
       </styleReference>
       <RuleInstructions>
-        <MetadataDateRangeInstruction propertyFrom="sichere Vorhersage Ende" propertyTo="Vorhersage Ende" propertyToInclusive="true" />
+        <MetadataDateRangeInstruction propertyFrom="sichere Vorhersage Ende" propertyTo="Vorhersage Ende" propertyToInclusive="true" severity="1" />
       </RuleInstructions>
       <label>Restrechenzeitraum</label>
     </Rule>
@@ -284,27 +277,27 @@
     </Rule>
     <Rule id="ruleAlarmstufen" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
       <RuleInstructions>
-        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_1" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_2" label="AS1 ${text}">
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_1" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_2" label="AS1 ${text}" severity="10" tooltip="Überschreitung Alarmstufe 1">
           <styleReference>
             <reference>alarmstufe_1</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_2" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_3" label="AS2 ${text}">
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_2" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_3" label="AS2 ${text}" severity="20" tooltip="Überschreitung Alarmstufe 2">
           <styleReference>
             <reference>alarmstufe_2</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_3" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_4" label="AS3 ${text}">
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_3" opFrom="&gt;=" to="Grenzwert_W: Alarmstufe_4" label="AS3 ${text}" severity="30" tooltip="Überschreitung Alarmstufe 3">
           <styleReference>
             <reference>alarmstufe_3</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_4" opFrom="&gt;=" label="AS4 ${text}">
+        <MetadataBoundaryInstruction from="Grenzwert_W: Alarmstufe_4" opFrom="&gt;=" label="AS4 ${text}" severity="40" tooltip="Überschreitung Alarmstufe 4">
           <styleReference>
             <reference>alarmstufe_4</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="Grenzwert_W: Meldegrenze" opFrom="&gt;=" label="MG ${text}">
+        <MetadataBoundaryInstruction from="Grenzwert_W: Meldegrenze" opFrom="&gt;=" label="MG ${text}" severity="1" tooltip="Überschreitung Meldegrenze">
           <styleReference>
             <reference>meldegrenze</reference>
           </styleReference>
@@ -314,28 +307,94 @@
     </Rule>
     <Rule id="ruleHauptzahlenQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
       <RuleInstructions>
-        <MetadataBoundaryInstruction to="Grenzwert_Q: Kalypso_Grenzwert_NQ" label="&lt;N ${text}" />
-        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_NQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MNQ" label="&lt;MN ${text}" />
-        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MNQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MQ" label="&lt;M ${text}" />
-        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MQ" opTo="&lt;=" label="=M ${text}" />
-        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MQ" to="Grenzwert_Q: Kalypso_Grenzwert_MHQ" opTo="&lt;=" label="&gt;M ${text}" />
-        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MHQ" to="Grenzwert_Q: Kalypso_Grenzwert_HQ" opTo="&lt;=" label="&gt;MH ${text}" />
-        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_HQ" label="&gt;H ${text}" />
+        <MetadataBoundaryInstruction to="Grenzwert_Q: Kalypso_Grenzwert_NQ" label="&lt;N ${text}" severity="1" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_NQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MNQ" label="&lt;MN ${text}" severity="2" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MNQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MQ" label="&lt;M ${text}" severity="3" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MQ" opFrom="&gt;=" to="Grenzwert_Q: Kalypso_Grenzwert_MQ" opTo="&lt;=" label="=M ${text}" severity="4" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MQ" to="Grenzwert_Q: Kalypso_Grenzwert_MHQ" opTo="&lt;=" label="&gt;M ${text}" severity="5" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_MHQ" to="Grenzwert_Q: Kalypso_Grenzwert_HQ" opTo="&lt;=" label="&gt;MH ${text}" severity="6" />
+        <MetadataBoundaryInstruction from="Grenzwert_Q: Kalypso_Grenzwert_HQ" label="&gt;H ${text}" severity="7" />
       </RuleInstructions>
       <label>Hauptzahl(en) Q</label>
     </Rule>
     <Rule id="ruleHauptzahlenW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="false">
       <RuleInstructions>
-        <MetadataBoundaryInstruction to="Grenzwert_W: Kalypso_Grenzwert_NW" label="&lt;N ${text}" />
-        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_NW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MNW" label="&lt;MN ${text}" />
-        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MNW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MW" label="&lt;M ${text}" />
-        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MW" opTo="&lt;=" label="=M ${text}" />
-        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MW" to="Grenzwert_W: Kalypso_Grenzwert_MHW" opTo="&lt;=" label="&gt;M ${text}" />
-        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MHW" to="Grenzwert_W: Kalypso_Grenzwert_HW" opTo="&lt;=" label="&gt;MH ${text}" />
-        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_HW" label="&gt;H ${text}" />
+        <MetadataBoundaryInstruction to="Grenzwert_W: Kalypso_Grenzwert_NW" label="&lt;N ${text}" severity="1" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_NW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MNW" label="&lt;MN ${text}" severity="2" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MNW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MW" label="&lt;M ${text}" severity="3" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MW" opFrom="&gt;=" to="Grenzwert_W: Kalypso_Grenzwert_MW" opTo="&lt;=" label="=M ${text}" severity="4" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MW" to="Grenzwert_W: Kalypso_Grenzwert_MHW" opTo="&lt;=" label="&gt;M ${text}" severity="5" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_MHW" to="Grenzwert_W: Kalypso_Grenzwert_HW" opTo="&lt;=" label="&gt;MH ${text}" severity="6" />
+        <MetadataBoundaryInstruction from="Grenzwert_W: Kalypso_Grenzwert_HW" label="&gt;H ${text}" severity="7" />
       </RuleInstructions>
       <label>Hauptzahl(en) W</label>
     </Rule>
+
+    <Rule id="ruleWqBoundaryDeviationLowerW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true" setHeaderIcon="true">
+      <RuleInstructions>
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_W_Min" opFrom="&lt;=" severity="10" tooltip="Hohe %s">
+          <styleReference>
+            <reference>wqBoundaryDeviationLowerExtreme</reference>
+          </styleReference>
+        </MetadataBoundaryInstruction>
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_W_Min" opFrom="&gt;" to="WQ-Tabelle_W_Min" opTo="&lt;" severity="1">
+          <styleReference>
+            <reference>wqBoundaryDeviationLower</reference>
+          </styleReference>
+        </MetadataBoundaryInstruction>
+      </RuleInstructions>
+      <label>Unterschreitung des W/Q Grenzwertes</label>
+    </Rule>
+
+    <Rule id="ruleWqBoundaryDeviationUpperW" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true" setHeaderIcon="true">
+      <RuleInstructions>
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_W_Max" opFrom="&gt;=" severity="10" tooltip="Hohe %s">
+          <styleReference>
+            <reference>wqBoundaryDeviationUpperExtreme</reference>
+          </styleReference>
+        </MetadataBoundaryInstruction>
+        <MetadataBoundaryInstruction from="WQ-Tabelle_W_Max" opFrom="&gt;" toExtensionPoint="wq.extreme.value" to="WQ-Tabelle_W_Max" opTo="&lt;" severity="1">
+          <styleReference>
+            <reference>wqBoundaryDeviationUpper</reference>
+          </styleReference>
+        </MetadataBoundaryInstruction>
+      </RuleInstructions>
+      <label>Überschreitung des W/Q Grenzwertes</label>
+    </Rule>
+
+    <Rule id="ruleWqBoundaryDeviationLowerQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true" setHeaderIcon="true">
+      <RuleInstructions>
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_Q_Min" opFrom="&lt;=" severity="10" tooltip="Hohe %s" >
+          <styleReference>
+            <reference>wqBoundaryDeviationLowerExtreme</reference>
+          </styleReference>
+        </MetadataBoundaryInstruction>
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_Q_Min" opFrom="&gt;" to="WQ-Tabelle_Q_Min" opTo="&lt;" severity="1">
+          <styleReference>
+            <reference>wqBoundaryDeviationLower</reference>
+          </styleReference>
+        </MetadataBoundaryInstruction>
+      </RuleInstructions>
+      <label>Unterschreitung des W/Q Grenzwertes</label>
+    </Rule>
+
+    <Rule id="ruleWqBoundaryDeviationUpperQ" ruleReference="org.kalypso.zml.ui.core.rule.grenzwerte" enabled="true" setHeaderIcon="true">
+      <RuleInstructions>
+        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_Q_Max" opFrom="&gt;=" severity="10" tooltip="Hohe %s" >
+          <styleReference>
+            <reference>wqBoundaryDeviationUpperExtreme</reference>
+          </styleReference>
+        </MetadataBoundaryInstruction>
+        <MetadataBoundaryInstruction from="WQ-Tabelle_Q_Max" opFrom="&gt;" to="WQ-Tabelle_Q_Max" opTo="&lt;" toExtensionPoint="wq.extreme.value" severity="1">
+          <styleReference>
+            <reference>wqBoundaryDeviationUpper</reference>
+          </styleReference>
+        </MetadataBoundaryInstruction>
+      </RuleInstructions>
+      <label>Überschreitung des W/Q Grenzwertes</label>
+    </Rule>
+
+
     <Rule id="ruleDataSource" ruleReference="org.kalypso.zml.ui.core.rule.data.source" setHeaderIcon="false" enabled="false">
       <label>Datenquelle</label>
     </Rule>

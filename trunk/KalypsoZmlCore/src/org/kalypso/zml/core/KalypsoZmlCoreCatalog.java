@@ -57,9 +57,9 @@ public class KalypsoZmlCoreCatalog extends AbstractUrlCatalog
    * @see org.kalypso.contribs.java.net.AbstractUrlCatalog#fillCatalog(java.lang.Class, java.util.Map, java.util.Map)
    */
   @Override
-  protected void fillCatalog( Class< ? > myClass, Map<String, URL> catalog, Map<String, String> prefixes )
+  protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
-    catalog.put( KalypsoZmlCoreConstants.NS_ZML_FILTER, myClass.getResource( "filter/schema/zmlFilter.xsd" ) );
+    catalog.put( KalypsoZmlCoreConstants.NS_ZML_FILTER, myClass.getResource( "filter/schema/zmlFilter.xsd" ) ); //$NON-NLS-1$
     prefixes.put( KalypsoZmlCoreConstants.NS_ZML_FILTER, KalypsoZmlCoreConstants.PREFIX_ZML_FILTER );
   }
 }

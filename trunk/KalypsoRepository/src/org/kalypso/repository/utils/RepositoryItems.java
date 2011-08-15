@@ -114,7 +114,7 @@ public final class RepositoryItems
   {
     final String[] parts = getQualifiedItemParts( identifier, qualified );
     if( parts.length == 1 )
-      return RepositoryUtils.getRepositoryId( identifier );
+      return Repositories.getRepositoryId( identifier );
 
     String parent = ""; //$NON-NLS-1$
     for( int i = 0; i < parts.length - 1; i++ )
@@ -272,14 +272,31 @@ public final class RepositoryItems
     return !identifier.contains( "://" ); //$NON-NLS-1$
   }
 
-  public static boolean isForecast( final IRepositoryItem item )
-  {
-    return isForecast( item.getIdentifier() );
-  }
-
   private static final Pattern PATTERN_IS_FORECAST = new Pattern( "[\\w\\d_]+\\.[\\w\\d]+_Prog_[\\w\\d_]+(\\..*)?" ); //$NON-NLS-1$
 
-  public static boolean isForecast( final String identifier )
+  private static final Pattern PATTERN_FORECAST_END = new Pattern( ".+.Prognose[\\d]?" ); //$NON-NLS-1$
+
+  public static boolean isForecastItem( final IRepositoryItem item )
+  {
+    return isForecastItem( item.getIdentifier() );
+  }
+
+  public static boolean isForecastItem( final String identifier )
+  {
+    if( isForecastGroupItem( identifier ) )
+      return true;
+
+    final String plain = getPlainId( identifier );
+
+    return PATTERN_FORECAST_END.matches( plain );
+  }
+
+  public static boolean isForecastGroupItem( final IRepositoryItem item )
+  {
+    return isForecastGroupItem( item.getIdentifier() );
+  }
+
+  public static boolean isForecastGroupItem( final String identifier )
   {
     /**
      * the group has to be forecast, not the station value itself's
@@ -317,7 +334,7 @@ public final class RepositoryItems
   {
     String base = repositoryIdentifier;
 
-    final String repository = RepositoryUtils.getRepositoryId( itemIdentifier );
+    final String repository = Repositories.getRepositoryId( itemIdentifier );
     if( !base.endsWith( "://" ) ) //$NON-NLS-1$
       base = String.format( "%s://", base ); //$NON-NLS-1$
 
@@ -360,6 +377,22 @@ public final class RepositoryItems
     final String[] parts = identifier.split( "\\." ); //$NON-NLS-1$
 
     return parts.length;
+  }
+
+  public static boolean isForecastSourceItem( final IRepositoryItem item )
+  {
+    return isForecastSourceItem( item.getIdentifier() );
+  }
+
+  public static boolean isForecastSourceItem( final String identifier )
+  {
+    /**
+     * id is encoded like: HVZ_Modelle_Elbe.Elbe_Prio_1.553060.W.Prognose.201108010700 ?
+     */
+    final String plain = getPlainId( identifier );
+    final Pattern pattern = new Pattern( ".*\\.(\\d){12}$" ); //$NON-NLS-1$
+
+    return pattern.matches( plain );
   }
 
 }

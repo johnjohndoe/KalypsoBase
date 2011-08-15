@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.i18n;
 
-import java.net.URL;
 import java.util.List;
 
 import org.w3c.dom.Element;
@@ -52,7 +51,7 @@ public interface ITranslator
 {
   String getId( );
 
-  void configure( URL context, List<Element> any );
+  void configure( ITranslatorContext context, List<Element> configuration );
 
   List<Element> getConfiguration( );
 

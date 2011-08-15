@@ -55,6 +55,7 @@ import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.bind.NamespacePrefixMap;
 import org.kalypso.commons.bind.SchemaCache;
 import org.kalypso.commons.i18n.ITranslator;
+import org.kalypso.commons.i18n.ITranslatorContext;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.template.gismapview.ObjectFactory;
@@ -69,7 +70,7 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
  * Utility class for handling with the 'template' binding schemata.
- *
+ * 
  * @author Gernot Belger
  */
 public final class TemplateUtilities
@@ -106,7 +107,6 @@ public final class TemplateUtilities
   /* .gmc */
   public static final JAXBContext JC_GMC = JaxbUtilities.createQuiet( org.kalypso.gml.util.ObjectFactory.class );
 
-
   private TemplateUtilities( )
   {
     // do not instantiat, everything is static
@@ -116,8 +116,6 @@ public final class TemplateUtilities
   {
     return SCHEMA_CACHE.getSchema( "featureview.xsd" ); //$NON-NLS-1$
   }
-
-
 
   public static synchronized Schema getGismapviewSchema( )
   {
@@ -220,7 +218,28 @@ public final class TemplateUtilities
 
     final ITranslator translator = KalypsoCommonsExtensions.createTranslator( translatorElement.getId() );
     if( translator != null )
-      translator.configure( context, translatorElement.getAny() );
+    {
+      final ITranslatorContext translatorContext = new ITranslatorContext()
+      {
+
+        @Override
+        public Object getAdapter( final Class adapter )
+        {
+          // TODO Auto-generated method stub
+
+          return null;
+        }
+
+        @Override
+        public URL getContext( )
+        {
+          return context;
+        }
+      };
+
+      translator.configure( translatorContext, translatorElement.getAny() );
+    }
+
     return translator;
   }
 
