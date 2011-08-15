@@ -87,6 +87,7 @@ import org.mapserver.mapserver.Layer;
 import org.mapserver.mapserver.Legend;
 import org.mapserver.mapserver.Map;
 import org.mapserver.mapserver.ObjectFactory;
+import org.mapserver.mapserver.OutputFormat;
 import org.mapserver.mapserver.PositionEnum;
 import org.mapserver.mapserver.RgbColorType;
 import org.mapserver.mapserver.SizeType;
@@ -283,11 +284,20 @@ public class MapFileUtilities
       map.setUnits( units );
 
     /* Create the rgb color element. */
-    RgbColorType rgbColor = OF.createRgbColorType();
-    rgbColor.setRed( 255 );
-    rgbColor.setGreen( 255 );
-    rgbColor.setBlue( 255 );
-    map.setImageColor( rgbColor );
+    // RgbColorType rgbColor = OF.createRgbColorType();
+    // rgbColor.setRed( 255 );
+    // rgbColor.setGreen( 255 );
+    // rgbColor.setBlue( 255 );
+    // map.setImageColor( rgbColor );
+
+    /* Create the output format element. */
+    OutputFormat outputFormat = OF.createOutputFormat();
+    outputFormat.setName( "PNG" );
+    outputFormat.setDriver( "AGG/PNG" );
+    outputFormat.setMimeType( "image/png" );
+    outputFormat.setImageMode( "RGBA" );
+    outputFormat.setExtension( "png" );
+    map.getOutputFormat().add( outputFormat );
 
     /* Fill the projection element. */
     map.getProjection().add( "init=" + sourceCRS );
@@ -298,6 +308,7 @@ public class MapFileUtilities
     item.getItem().add( createItem( "wms_title", mapName ) );
     item.getItem().add( createItem( "wms_onlineresource", resource ) );
     item.getItem().add( createItem( "wms_srs", String.format( "%s %s", sourceCRS, StringUtils.join( otherCRSs, " " ) ) ) );
+    item.getItem().add( createItem( "wms_feature_info_mime_type", "text/html" ) );
 
     /* Create the map element. */
     Web web = OF.createWeb();
@@ -377,6 +388,7 @@ public class MapFileUtilities
     layer.setType( shapeType );
     layer.setStatus( "ON" );
     layer.setData( data );
+    layer.setTemplate( "getfeatureinfo.html" );
 
     /* Fill the projection element. */
     layer.getProjection().add( "init=" + sourceCRS );
@@ -391,7 +403,7 @@ public class MapFileUtilities
     layer.setMetadata( item );
 
     /* Create the class element. */
-    Class clazz = createClass( "Standard", null, null, 255, new RGB( 0, 0, 0 ) );
+    Class clazz = createClass( "Standard", null, null, new RGB( 0, 0, 0 ) );
 
     /* Fill the class element. */
     layer.getClazz().add( clazz );
@@ -406,6 +418,7 @@ public class MapFileUtilities
    * @param mapFile
    * @param layerName
    *          Used for naming the layer and the wms layer.
+   * @param opacity
    * @param data
    * @param bigMin
    * @param bigMax
@@ -414,14 +427,16 @@ public class MapFileUtilities
    * @param otherCRSs
    * @return The contents of the layer.
    */
-  public static Layer createLayerForRaster( String wmsURL, File mapFile, String layerName, String data, BigDecimal bigMin, BigDecimal bigMax, GM_Envelope envelope, String sourceCRS, String[] otherCRSs )
+  public static Layer createLayerForRaster( String wmsURL, File mapFile, String layerName, String opacity, String data, BigDecimal bigMin, BigDecimal bigMax, GM_Envelope envelope, String sourceCRS, String[] otherCRSs )
   {
     /* Create the layer element. */
     Layer layer = OF.createLayer();
     layer.setName( layerName );
     layer.setType( "RASTER" );
     layer.setStatus( "ON" );
+    layer.setOpacity( opacity );
     layer.setData( data );
+    layer.setTemplate( "getfeatureinfo.html" );
 
     /* Fill the processing element. */
     double min = -Double.MAX_VALUE;
@@ -465,9 +480,10 @@ public class MapFileUtilities
    * @param expressionType
    *          Must be set, if a expressionValue is set. Otherwise it may be null.
    * @param rgb
+   *          The rgb colors.
    * @return The contents of the class.
    */
-  public static Class createClass( String label, String expressionValue, String expressionType, int opacity, RGB rgb ) throws MapServerException
+  public static Class createClass( String label, String expressionValue, String expressionType, RGB rgb ) throws MapServerException
   {
     /* Create the class element. */
     Class clazz = OF.createClass();
@@ -493,7 +509,6 @@ public class MapFileUtilities
 
     /* Create the style element. */
     Style style = OF.createStyle();
-    style.setOpacity( BigInteger.valueOf( opacity ) );
     style.setColor( rgbColor );
     clazz.getStyle().add( style );
 

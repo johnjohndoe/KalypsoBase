@@ -96,4 +96,9 @@ public final class Objects
   {
     return !equal( a, b );
   }
+
+  public static Object firstNonNull( final Object a, final Object b )
+  {
+    return com.google.common.base.Objects.firstNonNull( a, b );
+  }
 }

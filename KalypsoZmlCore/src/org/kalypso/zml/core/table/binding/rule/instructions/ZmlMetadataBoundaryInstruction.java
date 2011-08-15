@@ -4,52 +4,57 @@ package org.kalypso.zml.core.table.binding.rule.instructions;
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 
 import java.math.BigDecimal;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.rules.impl.grenzwert.IZmlGrenzwertValue;
 import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
 import org.kalypso.zml.core.table.schema.MetadataBoundaryInstructionType;
 
@@ -58,7 +63,7 @@ import org.kalypso.zml.core.table.schema.MetadataBoundaryInstructionType;
  */
 public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionType
 {
-  public static final String PATTERN_TEXT = "${text}";
+  public static final String PATTERN_TEXT = "${text}"; //$NON-NLS-1$
 
   private MetadataBoundary m_boundaryFrom;
 
@@ -108,10 +113,27 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
     if( m_boundaryFrom == null || reference.getColumn() != m_lastFromColumn )
     {
       m_lastFromColumn = reference.getColumn();
-      m_boundaryFrom = MetadataBoundary.getBoundary( m_lastFromColumn.getMetadata(), getType().getFrom(), new BigDecimal( -Double.MAX_VALUE ) );
+      m_boundaryFrom = getBoundary( m_lastFromColumn.getMetadata(), getType().getFrom(), getType().getFromExtensionPoint(), new BigDecimal( -Double.MAX_VALUE ), getType().getFactorFrom() );
     }
 
     return m_boundaryFrom;
+  }
+
+  private MetadataBoundary getBoundary( final MetadataList metadata, final String property, final String propertyExtensionPoint, final BigDecimal defaultValue, final double factor )
+  {
+    if( Strings.isEmpty( propertyExtensionPoint ) )
+    {
+      final MetadataBoundary boundary = MetadataBoundary.getBoundary( metadata, property, defaultValue, factor );
+      return boundary;
+    }
+
+    final IZmlGrenzwertValue delegate = KalypsoZmlCore.getDefault().findGrenzwertDelegate( propertyExtensionPoint );
+    if( Objects.isNull( delegate ) )
+      return null;
+
+    final double value = delegate.getValue( metadata, property ) * factor;
+
+    return new MetadataBoundary( property, BigDecimal.valueOf( value ) );
   }
 
   private MetadataBoundary getBoundaryTo( final IZmlValueReference reference )
@@ -119,7 +141,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
     if( m_boundaryTo == null || reference.getColumn() != m_lastToColumn )
     {
       m_lastToColumn = reference.getColumn();
-      m_boundaryTo = MetadataBoundary.getBoundary( m_lastToColumn.getMetadata(), getType().getTo(), new BigDecimal( -Double.MAX_VALUE ) );
+      m_boundaryTo = getBoundary( m_lastToColumn.getMetadata(), getType().getTo(), getType().getToExtensionPoint(), new BigDecimal( -Double.MAX_VALUE ), getType().getFactorTo() );
     }
 
     return m_boundaryTo;
@@ -146,7 +168,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
     if( ObjectUtils.equals( valueAxis.getType(), boundaryType ) )
       return getReferenceValue( reference );
 
-    /* Type of boundary is different from value type -> we need to retrieve the value ourselfs */
+    /* Type of boundary is different from value type -> we need to retrieve the value ourself's */
     final Integer tupleModelIndex = reference.getModelIndex();
     if( tupleModelIndex == null )
       return Double.NaN;
@@ -180,22 +202,22 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
 
     final BigDecimal compareValue = meta.getValue();
 
-    if( "<".equals( op ) )
+    if( "<".equals( op ) )// $NON-NLS-1$
     {
       if( value.compareTo( compareValue ) < 0 )
         return true;
     }
-    else if( "<=".equals( op ) )
+    else if( "<=".equals( op ) )// $NON-NLS-1$
     {
       if( value.compareTo( compareValue ) <= 0 )
         return true;
     }
-    else if( ">".equals( op ) )
+    else if( ">".equals( op ) )// $NON-NLS-1$
     {
       if( value.compareTo( compareValue ) > 0 )
         return true;
     }
-    else if( ">=".equals( op ) )
+    else if( ">=".equals( op ) ) // $NON-NLS-1$
     {
       if( value.compareTo( compareValue ) >= 0 )
         return true;

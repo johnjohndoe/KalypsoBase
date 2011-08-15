@@ -42,7 +42,6 @@ package org.kalypso.commons.i18n;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
@@ -93,11 +92,11 @@ public class MsgGetStringTranslator implements ITranslator, IExecutableExtension
   }
 
   /**
-   * @see org.kalypso.contribs.java.lang.I10nTranslator#configure(java.util.List)
+   * @see org.kalypso.commons.i18n.ITranslator#configure(org.kalypso.commons.i18n.ITranslatorContext, java.util.List)
    */
-  @Override
   @SuppressWarnings("unchecked")
-  public void configure( final URL context, final List<Element> configuration )
+  @Override
+  public void configure( ITranslatorContext context, List<Element> configuration )
   {
     m_configuration = configuration;
 

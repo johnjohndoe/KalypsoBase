@@ -57,8 +57,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.commons.KalypsoCommonsExtensions;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.i18n.ITranslator;
+import org.kalypso.commons.i18n.ITranslatorContext;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.i18n.Messages;
@@ -81,7 +83,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * @author Gernot Belger
  */
-public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
+public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, ITranslatorContext
 {
   private final IFeatureSelectionManager m_selectionManager;
 
@@ -138,7 +140,13 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   private ITranslator createTranslator( final Gismapview gisview )
   {
     final I18NTranslatorType translatorElement = gisview.getTranslator();
-    return TemplateUtilities.createTranslator( translatorElement, m_context );
+    if( translatorElement == null )
+      return null;
+
+    final ITranslator translator = KalypsoCommonsExtensions.createTranslator( translatorElement.getId() );
+    if( translator != null )
+      translator.configure( this, translatorElement.getAny() );
+    return translator;
   }
 
   public void createFromTemplate( final List<JAXBElement< ? extends StyledLayerType>> layerList, final Object activeLayer ) throws CoreException
@@ -296,7 +304,10 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
       {
         String id = theme.getId();
         if( id == null || id.length() == 0 )
+        {
           id = MapUtilities.getNewId( usedIds );
+          usedIds.add( id );
+        }
 
         final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateHelper.configureLayer( theme, id, bbox, srsName, new SubProgressMonitor( monitor, 1000 ) );
         if( layerElement != null )
@@ -459,6 +470,10 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
     theme.dispose();
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#swapThemes(org.kalypso.ogc.gml.IKalypsoTheme,
+   *      org.kalypso.ogc.gml.IKalypsoTheme)
+   */
   @Override
   public void swapThemes( final IKalypsoTheme theme1, final IKalypsoTheme theme2 )
   {
@@ -562,5 +577,21 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell
   public boolean isLoaded( )
   {
     return m_isLoaded;
+  }
+
+  /**
+   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+   */
+  @SuppressWarnings("rawtypes")
+  @Override
+  public Object getAdapter( final Class adapter )
+  {
+    if( adapter.equals( IMapModell.class ) )
+      return this;
+
+    if( adapter.equals( GisTemplateMapModell.class ) )
+      return this;
+
+    return null;
   }
 }

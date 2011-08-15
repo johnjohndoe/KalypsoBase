@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.merged;
 
@@ -48,6 +48,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.DateRange;
@@ -59,6 +60,7 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.metadata.MetadataWQTables;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -176,17 +178,13 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
     // FIXME: this code does not belong here...
 
     final String wqTable = MetadataHelper.getWqTable( m_metadata );
-    if( wqTable == null )
+    if( Strings.isEmpty( wqTable ) )
     {
       for( final ObservationSource source : m_sources )
       {
         final MetadataList metadata = source.getObservation().getMetadataList();
-        final String localTable = MetadataHelper.getWqTable( metadata );
-        if( localTable != null )
-        {
-          MetadataHelper.setWqTable( m_metadata, localTable );
+        if( MetadataWQTables.updateWqTable( m_metadata, metadata ) )
           break;
-        }
       }
     }
   }
@@ -249,7 +247,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
       /* Clear the derived bit in all cases */
       final Number srcStatusNumber = (Number) srcValue;
       final int srcStatus = srcStatusNumber.intValue();
-      return srcStatus & ~( KalypsoStati.BIT_DERIVATED | KalypsoStati.BIT_DERIVATION_ERROR );
+      return srcStatus & ~(KalypsoStati.BIT_DERIVATED | KalypsoStati.BIT_DERIVATION_ERROR);
     }
 
     return srcValue;

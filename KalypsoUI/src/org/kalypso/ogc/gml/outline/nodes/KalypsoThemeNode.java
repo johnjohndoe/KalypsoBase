@@ -116,7 +116,7 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     if( externIcon != null )
     {
       final Display display = PlatformUI.getWorkbench().getDisplay();
-      
+
       if( display != null && !display.isDisposed() )
       {
         //set to be asynchronously to prevent graphic is disposed exception. 
@@ -127,7 +127,7 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
           public void run( )
           {
             externIcon.dispose();
-          } 
+          }
         } );
       }
     }
@@ -280,6 +280,9 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     }
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.outline.nodes.IThemeNode#getLabel()
+   */
   @Override
   public String getLabel( )
   {

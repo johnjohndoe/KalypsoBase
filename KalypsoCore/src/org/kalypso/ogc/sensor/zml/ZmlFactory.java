@@ -108,7 +108,7 @@ import org.kalypso.ogc.sensor.zml.values.ZmlTupleModel;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
-import org.kalypso.repository.utils.RepositoryUtils;
+import org.kalypso.repository.utils.Repositories;
 import org.kalypso.zml.AxisType;
 import org.kalypso.zml.AxisType.ValueArray;
 import org.kalypso.zml.AxisType.ValueLink;
@@ -299,7 +299,7 @@ public final class ZmlFactory
       if( ZmlURL.isEmpty( urlBase ) )
         return RequestFactory.createDefaultObservation( urlBase );
 
-      final IRepository registeredRepository = RepositoryUtils.findRegisteredRepository( url.toExternalForm() );
+      final IRepository registeredRepository = Repositories.findRegisteredRepository( url.toExternalForm() );
       if( registeredRepository == null )
         return null;
 
@@ -333,7 +333,6 @@ public final class ZmlFactory
 
   private static IObservation fetchZmlFromRepository( final IRepository repository, final String itemId ) throws RepositoryException
   {
-// final IRepositoryItem item = RepositoryUtils.findEquivalentItem( repository, itemId );
     final IRepositoryItem item = repository.findItem( itemId );
     if( item == null )
       throw new RepositoryException( String.format( "Unknown ID: %s", itemId ) );

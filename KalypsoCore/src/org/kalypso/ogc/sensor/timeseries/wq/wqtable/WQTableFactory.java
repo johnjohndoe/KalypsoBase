@@ -54,7 +54,7 @@ public class WQTableFactory implements ISerializer<WQTableSet>
     try
     {
       final Unmarshaller unm = JC.createUnmarshaller();
-      final JAXBElement<RatingTableList> element= (JAXBElement<RatingTableList>) unm.unmarshal( ins );
+      final JAXBElement<RatingTableList> element = (JAXBElement<RatingTableList>) unm.unmarshal( ins );
       final RatingTableList xmlTableList = element.getValue();
 
       return xmlTableList;
@@ -90,7 +90,7 @@ public class WQTableFactory implements ISerializer<WQTableSet>
         final String[] strY = yses.length() == 0 ? new String[0] : yses.split( "," ); //$NON-NLS-1$
 
         if( strX.length != strY.length )
-          throw new WQException( Messages.getString("org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory.2") ); //$NON-NLS-1$
+          throw new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory.2" ) ); //$NON-NLS-1$
 
         final double[] W = new double[strX.length];
         final double[] Q = new double[strX.length];
@@ -121,7 +121,7 @@ public class WQTableFactory implements ISerializer<WQTableSet>
     try
     {
       final RatingTableList xmlTables = OF.createRatingTableList();
-      
+
       xmlTables.setFromType( wqset.getFromType() );
       xmlTables.setToType( wqset.getToType() );
 
@@ -135,21 +135,21 @@ public class WQTableFactory implements ISerializer<WQTableSet>
         xmlTable.setOffset( table.getOffset() );
 
         final WQPair[] pairs = table.getPairs();
-        final double[] W = new double[pairs.length];
-        final double[] Q = new double[pairs.length];
-        WQPair.convert2doubles( pairs, W, Q );
-        xmlTable.setX( ArrayUtils.toString( W ).replaceAll( "\\{", "" ).replaceAll( "\\}", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        xmlTable.setY( ArrayUtils.toString( Q ).replaceAll( "\\{", "" ).replaceAll( "\\}", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        final double[] w = new double[pairs.length];
+        final double[] q = new double[pairs.length];
+        WQPair.convert2doubles( pairs, w, q );
+        xmlTable.setX( ArrayUtils.toString( w ).replaceAll( "\\{", "" ).replaceAll( "\\}", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        xmlTable.setY( ArrayUtils.toString( q ).replaceAll( "\\{", "" ).replaceAll( "\\}", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
         xmlTables.getTable().add( xmlTable );
       }
 
-      final Marshaller marshaller = JaxbUtilities.createMarshaller(JC);
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( JC );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      
+
       final StringWriter writer = new StringWriter();
-      final JAXBElement<RatingTableList> ratingTable = OF.createTables(xmlTables);
-      marshaller.marshal(ratingTable, writer );
+      final JAXBElement<RatingTableList> ratingTable = OF.createTables( xmlTables );
+      marshaller.marshal( ratingTable, writer );
 
       return writer.toString();
     }

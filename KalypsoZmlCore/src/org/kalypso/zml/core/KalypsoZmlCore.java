@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
+import org.kalypso.zml.core.table.rules.impl.grenzwert.IZmlGrenzwertValue;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -17,6 +18,8 @@ import org.osgi.framework.BundleContext;
 public class KalypsoZmlCore extends Plugin implements BundleActivator
 {
   private static Map<String, IZmlRuleImplementation> ZML_TABLE_RULES = null;
+
+  private static Map<String, IZmlGrenzwertValue> ZML_GRENZWERT_DELEGATES = null;
 
   private static BundleContext CONTEXT;
 
@@ -101,6 +104,49 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
   public synchronized IZmlRuleImplementation findRule( final String identifier )
   {
     final Map<String, IZmlRuleImplementation> rules = getRules();
+
+    return rules.get( identifier );
+  }
+
+  public synchronized Map<String, IZmlGrenzwertValue> getGrenzwertDelegates( )
+  {
+    // fill binding map
+    if( Objects.isNull( ZML_GRENZWERT_DELEGATES ) )
+    {
+      ZML_GRENZWERT_DELEGATES = new HashMap<String, IZmlGrenzwertValue>();
+
+      /* get extension points */
+      final IExtensionRegistry registry = Platform.getExtensionRegistry();
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IZmlGrenzwertValue.EXTENSION_POINT_ID );
+
+      for( final IConfigurationElement element : elements )
+      {
+        try
+        {
+          final String pluginid = element.getContributor().getName();
+          final Bundle bundle = Platform.getBundle( pluginid );
+          final Class< ? > featureClass = bundle.loadClass( element.getAttribute( "implementation" ) ); //$NON-NLS-1$
+          final Constructor< ? > constructor = featureClass.getConstructor();
+
+          final IZmlGrenzwertValue instance = (IZmlGrenzwertValue) constructor.newInstance();
+          ZML_GRENZWERT_DELEGATES.put( instance.getIdentifier(), instance );
+        }
+        catch( final Throwable e )
+        {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    return ZML_GRENZWERT_DELEGATES;
+  }
+
+  /**
+   * @return list of feature binding handlers, handling a special featureType qname
+   */
+  public synchronized IZmlGrenzwertValue findGrenzwertDelegate( final String identifier )
+  {
+    final Map<String, IZmlGrenzwertValue> rules = getGrenzwertDelegates();
 
     return rules.get( identifier );
   }
