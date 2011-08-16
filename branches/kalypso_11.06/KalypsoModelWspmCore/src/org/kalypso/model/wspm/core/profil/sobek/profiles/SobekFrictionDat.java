@@ -45,6 +45,18 @@ package org.kalypso.model.wspm.core.profil.sobek.profiles;
  */
 public class SobekFrictionDat
 {
+  public static enum FrictionType
+  {
+    Chezy,
+    Manning,
+    Strickler_Kn,
+    Strickler_Ks, // = WSPM kst
+    White_Colebrook, // WSPM ks
+    unknown1,
+    unknown2,
+    De_Bos_and_Bijkerk;
+  }
+
   private final String m_id;
 
   private final String m_name;
@@ -64,5 +76,10 @@ public class SobekFrictionDat
   public String getCsID( )
   {
     return m_csID;
+  }
+
+  public SobekFrictionDatCRFRSection[] getSections( )
+  {
+    return m_sections;
   }
 }

@@ -136,6 +136,11 @@ public class SobekProfile
     return new SobekProfile( profileDat, m_profileDef, m_frictionDat );
   }
 
+  public SobekProfile setFriction( final SobekFrictionDat frictionDat )
+  {
+    return new SobekProfile( m_profileDat, m_profileDef, frictionDat );
+  }
+
   public SobekProfileDef getProfileDef( )
   {
     return m_profileDef;
@@ -146,8 +151,8 @@ public class SobekProfile
     return m_profileDat;
   }
 
-  public SobekProfile setFriction( final SobekFrictionDat frictionDat )
+  public SobekFrictionDat getFrictionDat( )
   {
-    return new SobekProfile( m_profileDat, m_profileDef, frictionDat );
+    return m_frictionDat;
   }
 }

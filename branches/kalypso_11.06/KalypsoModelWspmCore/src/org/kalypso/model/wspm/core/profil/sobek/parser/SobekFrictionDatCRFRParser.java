@@ -48,6 +48,7 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat;
+import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat.FrictionType;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDatCRFRSection;
 
 /**
@@ -104,12 +105,7 @@ public class SobekFrictionDatCRFRParser
 
   private SobekFrictionDatCRFRSection[] readSections( ) throws IOException, CoreException
   {
-    final SobekLineParser startLine = new SobekLineParser( m_reader );
-    startLine.expectAttribute( ATTRIBUTE_LT );
-    startLine.expectAttribute( ATTRIBUTE_YS );
-
-    final SobekLineParser tableLine = new SobekLineParser( m_reader );
-    tableLine.expectToken( TOKEN_TBLE );
+    skipTbleAndAttributeLine( ATTRIBUTE_LT );
 
     final Collection<SobekFrictionDatCRFRSection> sections = new ArrayList<SobekFrictionDatCRFRSection>();
 
@@ -128,19 +124,16 @@ public class SobekFrictionDatCRFRParser
 
   private void readPositiveValues( final SobekFrictionDatCRFRSection[] sections ) throws IOException, CoreException
   {
-    final SobekLineParser startLine = new SobekLineParser( m_reader );
-    startLine.expectAttribute( ATTRIBUTE_FT );
-    startLine.expectAttribute( ATTRIBUTE_YS );
-
-    final SobekLineParser tableLine = new SobekLineParser( m_reader );
-    tableLine.expectToken( TOKEN_TBLE );
+    skipTbleAndAttributeLine( ATTRIBUTE_FT );
 
     for( final SobekFrictionDatCRFRSection section : sections )
     {
       final SobekLineParser line = new SobekLineParser( m_reader );
 
       final BigDecimal[] decimals = line.readDecimalsUntilComment( 2 );
-      section.setPositiveValue( decimals[0].intValue(), decimals[1] );
+      final FrictionType type = parseFrictionType( line, decimals[0] );
+
+      section.setPositiveValue( type, decimals[1] );
     }
 
     final SobekLineParser endLine = new SobekLineParser( m_reader );
@@ -149,19 +142,15 @@ public class SobekFrictionDatCRFRParser
 
   private SobekLineParser readNegativeValues( final SobekFrictionDatCRFRSection[] sections ) throws IOException, CoreException
   {
-    final SobekLineParser startLine = new SobekLineParser( m_reader );
-    startLine.expectAttribute( ATTRIBUTE_FR );
-    startLine.expectAttribute( ATTRIBUTE_YS );
-
-    final SobekLineParser tableLine = new SobekLineParser( m_reader );
-    tableLine.expectToken( TOKEN_TBLE );
+    skipTbleAndAttributeLine( ATTRIBUTE_FR );
 
     for( final SobekFrictionDatCRFRSection section : sections )
     {
       final SobekLineParser line = new SobekLineParser( m_reader );
 
       final BigDecimal[] decimals = line.readDecimalsUntilComment( 2 );
-      section.setNegativeValue( decimals[0].intValue(), decimals[1] );
+      final FrictionType type = parseFrictionType( line, decimals[0] );
+      section.setNegativeValue( type, decimals[1] );
     }
 
     final SobekLineParser endLine = new SobekLineParser( m_reader );
@@ -169,4 +158,26 @@ public class SobekFrictionDatCRFRParser
 
     return endLine;
   }
+
+  private void skipTbleAndAttributeLine( final String attribute ) throws CoreException, IOException
+  {
+    final SobekLineParser startLine = new SobekLineParser( m_reader );
+    startLine.expectAttribute( attribute );
+    startLine.expectAttribute( ATTRIBUTE_YS );
+
+    final SobekLineParser tableLine = new SobekLineParser( m_reader );
+    tableLine.expectToken( TOKEN_TBLE );
+  }
+
+  private FrictionType parseFrictionType( final SobekLineParser line, final BigDecimal decimal ) throws CoreException
+  {
+    final int index = decimal.intValue();
+
+    final FrictionType[] frictionTypes = FrictionType.values();
+    if( index < 0 || index > frictionTypes.length - 1 )
+      throw line.throwError( "Illegal friction type '%d'", index );
+
+    return frictionTypes[index];
+  }
+
 }
