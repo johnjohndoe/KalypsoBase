@@ -48,6 +48,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -63,7 +64,7 @@ import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
 /**
  * @author Gernot Belger
  */
-abstract class AbstractThemeNode<T> implements IThemeNode
+abstract class AbstractThemeNode<T> extends PlatformObject implements IThemeNode
 {
   /**
    * The border, left free in the image.
@@ -414,7 +415,7 @@ abstract class AbstractThemeNode<T> implements IThemeNode
    *          The list of ids of allowed themes.
    * @return True, if the current theme is allowed. False otherwise.
    */
-  protected boolean checkWhiteList( String[] whiteList )
+  protected boolean checkWhiteList( final String[] whiteList )
   {
     /* The theme ids, which are allowed. */
     List<String> themeIds = null;

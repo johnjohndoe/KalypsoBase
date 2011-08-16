@@ -63,7 +63,7 @@ public class EditableProfileChart extends ProfileChartComposite
 
   private void mkeEditable( )
   {
-    final IChartComposite chart = getChart();
+    final IChartComposite chart = getChartComposite();
 
     final DragEditHandler dragEditHandler = new DragEditHandler( chart );
 

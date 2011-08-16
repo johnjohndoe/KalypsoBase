@@ -65,12 +65,10 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.part.Page;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.editor.dnd.ChartLayerTransfer;
@@ -85,7 +83,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  * @author alibu
  * @author kimwerner
  */
-public class ChartEditorTreeOutlinePage implements IContentOutlinePage
+public class ChartEditorTreeOutlinePage extends Page implements IContentOutlinePage
 {
   protected ICheckStateListener m_checkStateListener = null;
 
@@ -141,7 +139,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       @Override
       public void onLayerVisibilityChanged( final IChartLayer layer )
       {
-
         refreshTreeViewer();
       }
 
@@ -224,11 +221,9 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       @Override
       public boolean isGrayed( final Object element )
       {
-        // TODO Auto-generated method stub
         return false;
       }
     };
-
   }
 
   protected final void refreshTreeViewer( )
@@ -389,11 +384,7 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   @Override
   public void createControl( final Composite parent )
   {
-    final Tree tree = new Tree( parent, SWT.CHECK | SWT.V_SCROLL | SWT.H_SCROLL );
-
-    // BAD: we do not know the layout, so this may cause trouble!
-    if( parent.getLayout() instanceof GridLayout )
-      tree.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    final Tree tree = new Tree( parent, SWT.CHECK | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
 
     m_treeViewer = new CheckboxTreeViewer( tree );
     m_treeViewer.setContentProvider( m_contentProvider );
@@ -431,6 +422,8 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
       m_contentProvider.dispose();
 
     removeListener();
+
+    super.dispose();
   }
 
   /**
@@ -463,14 +456,6 @@ public class ChartEditorTreeOutlinePage implements IContentOutlinePage
   public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_treeViewer.removeSelectionChangedListener( listener );
-  }
-
-  /**
-   * @see org.eclipse.ui.part.IPage#setActionBars(org.eclipse.ui.IActionBars)
-   */
-  @Override
-  public void setActionBars( final IActionBars actionBars )
-  {
   }
 
   public void setCheckStateListener( final ICheckStateListener checkStateListener )

@@ -148,4 +148,8 @@ public class CompositeCommand implements ICommand
     m_commands.addAll( Arrays.asList( commands ) );
   }
 
+  public ICommand[] getCommands( )
+  {
+    return m_commands.toArray( new ICommand[m_commands.size()] );
+  }
 }

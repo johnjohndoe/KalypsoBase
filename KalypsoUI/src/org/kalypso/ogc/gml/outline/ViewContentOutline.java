@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.outline;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
+import org.kalypso.contribs.eclipse.ui.IContentOutlineProvider;
 
 /**
  * A content outline that works for views. Only views that implement the {@link IContentOutlineProvider} interface are
@@ -54,9 +55,6 @@ public class ViewContentOutline extends ContentOutline
 {
   public static final String ID = "org.kalypso.ui.views.outline"; //$NON-NLS-1$
 
-  /**
-   * @see org.eclipse.ui.views.contentoutline.ContentOutline#isImportant(org.eclipse.ui.IWorkbenchPart)
-   */
   @Override
   protected boolean isImportant( final IWorkbenchPart part )
   {

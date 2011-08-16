@@ -82,9 +82,6 @@ public abstract class TypedObservableValue<SOURCE, VALUE> extends AbstractObserv
     return doGetValueTyped( m_source );
   }
 
-  /**
-   * @see org.eclipse.core.databinding.observable.value.AbstractObservableValue#doSetValue(java.lang.Object)
-   */
   @Override
   protected final void doSetValue( final Object value )
   {

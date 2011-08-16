@@ -44,7 +44,6 @@ import java.util.Map;
 
 import org.eclipse.ui.wizards.IWizardCategory;
 import org.eclipse.ui.wizards.IWizardDescriptor;
-import org.kalypso.contribs.eclipse.ui.dialogs.IWizardFilter;
 
 /**
  * @author Gernot Belger
@@ -76,6 +75,13 @@ public class WizardFilter implements IWizardFilter
   public boolean accept( final IWizardCategory category )
   {
     final IWizardDescriptor[] wizards = category.getWizards();
+    final IWizardCategory[] categories = category.getCategories();
+    for( final IWizardCategory child : categories )
+    {
+      if( accept( child ) )
+        return true;
+    }
+
     for( final IWizardDescriptor wizard : wizards )
     {
       if( accept( wizard ) )

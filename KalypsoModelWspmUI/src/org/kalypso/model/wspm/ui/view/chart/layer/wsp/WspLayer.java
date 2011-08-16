@@ -44,6 +44,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -84,7 +85,6 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
  */
 public class WspLayer extends AbstractProfilTheme
 {
-
   private Color m_color;
 
   /**
@@ -283,30 +283,26 @@ public class WspLayer extends AbstractProfilTheme
 
     /* Get the record (points) of the profile. */
     final IRecord[] ppoints = m_profile.getPoints();
-    for( int i = 0; i < ppoints.length; i++ )
+
+    for( final IRecord record : ppoints )
     {
-      /* Get the record. */
-      final IRecord record = ppoints[i];
-
       /* Get x and y from the record. */
-      final Double x = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, record );
-      final Double y = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, record );
-
-      /* Convert to screen coordinates. */
-      final Point point = getCoordinateMapper().numericToScreen( x, y );
-
-      if( i == 0 )
+      final double x = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, record );
+      final double y = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, record );
+      if( !Double.isNaN( x ) && !Double.isNaN( y ) )
       {
-        points.add( new Point( point.x, -1000 ) );
-      }
-
-      points.add( point );
-
-      if( i == ppoints.length - 1 )
-      {
-        points.add( new Point( point.x, -1000 ) );
+        /* Convert to screen coordinates. */
+        final Point point = getCoordinateMapper().numericToScreen( x, y );
+        points.add( point );
       }
     }
+
+    if( points.size() < 2 )
+      return null;
+
+    /* At last/first point far away */
+    points.add( 0, new Point( points.get( 0 ).x, -10000 ) );
+    points.add( new Point( points.get( points.size() - 1 ).x, -10000 ) );
 
     /* The array for the screen coordinates. */
     final int[] ps = new int[points.size() * 2];
@@ -332,23 +328,21 @@ public class WspLayer extends AbstractProfilTheme
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
+    if( m_data == null )
+      return null;
+
     Double min = null;
     Double max = null;
     final BigDecimal station = ProfilUtil.stationToBigDecimal( getProfil().getStation() );
 
     try
     {
-      if( m_data == null )
-        return null;
-
       for( final Object element : m_data.getActiveElements() )
       {
         /* Search the value. */
-        final Double value = getValue( element, station );
+        final double value = getValue( element, station );
         if( Double.isNaN( value ) )
-        {
           continue;
-        }
 
         if( min == null || max == null )
         {
@@ -453,6 +447,9 @@ public class WspLayer extends AbstractProfilTheme
     final Rectangle clipping = gc.getClipping();
     final Region region = new Region();
     final int[] points = getPoints();
+    if( ArrayUtils.isEmpty( points ) )
+      return;
+
     region.add( points );
     region.intersect( clipping );
 

@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.transformation.transformer;
 
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.transformation.internal.GeoToolsGeoTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * This factory returns geo transformers.
@@ -65,6 +67,9 @@ public final class GeoTransformerFactory
    */
   public static IGeoTransformer getGeoTransformer( final String targetCRS )
   {
+    if( Strings.isEmpty( targetCRS ) )
+      return new GeoToolsGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+
     return new GeoToolsGeoTransformer( targetCRS );
   }
 }

@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
@@ -79,7 +79,7 @@ public class SwitchProfileButtonDialog extends Composite
     m_chartView = chartView;
     m_profiles = profiles;
 
-    setLayout( LayoutHelper.createGridLayout( 4 ) );
+    setLayout( Layouts.createGridLayout( 4 ) );
 
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
     render( toolkit );
@@ -143,7 +143,7 @@ public class SwitchProfileButtonDialog extends Composite
   {
     m_chartView.setProfil( profile, null );
 
-    final IChartComposite chart = m_chartView.getChart();
+    final IChartComposite chart = m_chartView.getChartComposite();
     if( chart != null )
     {
       ChartUtilities.maximize( chart.getChartModel() );

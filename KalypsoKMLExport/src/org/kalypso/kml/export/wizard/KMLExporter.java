@@ -3,7 +3,9 @@
  */
 package org.kalypso.kml.export.wizard;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -149,9 +151,8 @@ public class KMLExporter implements ICoreRunnableWithProgress
         processTheme( folder, theme );
       }
 
-      // FIXME
-// final StyleTypeFactory styleFactory = StyleTypeFactory.getStyleFactory( document );
-// styleFactory.addStylesToDocument( documentType );
+// final StyleTypeFactory styleFactory = StyleTypeFactory.getStyleFactory();
+// styleFactory.addStylesToDocument( document );
 
       // TODO;
 // GoogleEarthExportUtils.removeEmtpyFolders( folderType );
@@ -166,7 +167,16 @@ public class KMLExporter implements ICoreRunnableWithProgress
 // styleFactory.dispose();
 
       /* marshalling */
-      kml.marshal( m_settings.getExportFile() );
+      final BufferedOutputStream outputStream = new BufferedOutputStream( new FileOutputStream( m_settings.getExportFile() ) );
+      try
+      {
+        kml.marshal( outputStream );
+      }
+      finally
+      {
+        outputStream.close();
+      }
+
     }
     catch( final Exception e )
     {
@@ -178,6 +188,9 @@ public class KMLExporter implements ICoreRunnableWithProgress
 
   private void processTheme( final Folder parentFolder, final IKalypsoTheme theme )
   {
+    if( !theme.isVisible() )
+      return;
+
     /* get inner themes */
     if( theme instanceof AbstractCascadingLayerTheme )
     {

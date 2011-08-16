@@ -62,6 +62,7 @@
 			</Stroke>
 		</LineSymbolizer>
 	</Rule>
+    <!--  
 	<Rule>
 		<Name>durchströmte Bereiche</Name>
 		<Title>durchströmte Bereiche</Title>
@@ -81,4 +82,5 @@
 			</Stroke>
 		</LineSymbolizer>
 	</Rule>
+    -->
 </FeatureTypeStyle>

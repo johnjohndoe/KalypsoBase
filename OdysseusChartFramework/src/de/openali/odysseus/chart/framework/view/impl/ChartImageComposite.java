@@ -24,8 +24,10 @@ import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
+import de.openali.odysseus.chart.framework.model.event.impl.ChartModelEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -57,6 +59,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       return doInvalidateChart();
     }
   }
+
+  private final ChartModelEventHandler m_chartModelEventHandler = new ChartModelEventHandler();
 
   private IChartModel m_model;
 
@@ -164,7 +168,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     }
   };
 
-  
+
 
   private final InvalidateChartJob m_invalidateChartJob = new InvalidateChartJob( "" );
 
@@ -374,7 +378,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       return;
     m_model.getLayerManager().addListener( m_layerEventListener );
     m_model.getMapperRegistry().addListener( m_mapperListener );
-    
+
   }
 
   @Override
@@ -388,12 +392,19 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   public void setChartModel( final IChartModel model )
   {
+    setChartModel( m_model, model );
+  }
+
+  protected final void setChartModel( final IChartModel oldModel, final IChartModel newModel )
+  {
     if( m_model != null )
       unregisterListener();
 
-    m_model = model;
+    m_model = newModel;
     registerListener();
     invalidate();
+
+    m_chartModelEventHandler.fireModelChanged( oldModel, newModel );
   }
 
   @Override
@@ -453,4 +464,15 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     return m_plotHandler;
   }
 
+  @Override
+  public void addChartEventListener( final IChartModelEventListener listener )
+  {
+    m_chartModelEventHandler.addListener( listener );
+  }
+
+  @Override
+  public void removeChartEventListener( final IChartModelEventListener listener )
+  {
+    m_chartModelEventHandler.removeListener( listener );
+  }
 }

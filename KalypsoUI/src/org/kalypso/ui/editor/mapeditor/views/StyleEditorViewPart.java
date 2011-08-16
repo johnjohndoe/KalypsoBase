@@ -47,11 +47,11 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
+import org.kalypso.contribs.eclipse.core.runtime.AdapterUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.IKalypsoThemeProvider;
 import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypso.ogc.gml.outline.nodes.FeatureTypeStyleNode;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
@@ -62,6 +62,8 @@ import org.kalypsodeegree.graphics.sld.Rule;
 
 public class StyleEditorViewPart extends ViewPart implements ISelectionChangedListener
 {
+  public static String ID = "org.kalypso.ui.editor.mapeditor.views.styleeditor"; //$NON-NLS-1$
+
   private ISelectionProvider m_gmop = null;
 
   private SLDComposite m_sldComposite = null;
@@ -157,6 +159,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
   private void chooseStyle( final IKalypsoFeatureTheme featureTheme, final IThemeNode node )
   {
     final IFeatureType featureType = featureTheme == null ? null : featureTheme.getFeatureType();
+    final IKalypsoTheme theme = AdapterUtils.getAdapter( node, IKalypsoTheme.class );
 
     if( node instanceof UserStyleNode )
     {
@@ -199,13 +202,12 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
       else
         m_sldComposite.setKalypsoStyle( style, featureType, index );
     }
-    else if( node instanceof IKalypsoThemeProvider )
+    else if( theme instanceof IKalypsoFeatureTheme )
     {
+      final IKalypsoFeatureTheme nodeTheme = (IKalypsoFeatureTheme) theme;
       // Reset style-editor, but the styles are not unique, so do not set anything
-      final IKalypsoThemeProvider provider = (IKalypsoThemeProvider) node;
-      final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) provider.getTheme();
-      final IFeatureType otherType = theme == null ? null : theme.getFeatureType();
-      final IKalypsoStyle[] styles = theme.getStyles();
+      final IFeatureType otherType = nodeTheme == null ? null : nodeTheme.getFeatureType();
+      final IKalypsoStyle[] styles = nodeTheme.getStyles();
       if( styles != null && styles.length > 0 )
         m_sldComposite.setKalypsoStyle( styles[0], otherType );
       else

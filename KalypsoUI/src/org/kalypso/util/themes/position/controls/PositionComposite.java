@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.forms.widgets.Form;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.util.themes.position.PositionUtilities;
 import org.kalypso.util.themes.position.listener.IPositionChangedListener;
@@ -103,7 +104,7 @@ public class PositionComposite extends Composite
    * @param vertical
    *          The default vertical position.
    */
-  public PositionComposite( Composite parent, int style, int horizontal, int vertical )
+  public PositionComposite( final Composite parent, final int style, final int horizontal, final int vertical )
   {
     super( parent, style );
 
@@ -122,7 +123,7 @@ public class PositionComposite extends Composite
    * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
    */
   @Override
-  public void setLayout( Layout layout )
+  public void setLayout( final Layout layout )
   {
     /* Ignore user set layouts, only layout datas are permitted. */
   }
@@ -151,17 +152,11 @@ public class PositionComposite extends Composite
   private void createControls( )
   {
     /* Create the layout. */
-    GridLayout layout = new GridLayout( 1, false );
-    layout.marginHeight = 0;
-    layout.marginWidth = 0;
-    super.setLayout( layout );
+    super.setLayout( Layouts.createGridLayout() );
 
     /* The content. */
-    Composite content = new Composite( this, SWT.NONE );
-    GridLayout contentLayout = new GridLayout( 1, false );
-    contentLayout.marginHeight = 0;
-    contentLayout.marginWidth = 0;
-    content.setLayout( contentLayout );
+    final Composite content = new Composite( this, SWT.NONE );
+    content.setLayout( Layouts.createGridLayout() );
     content.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the main form. */
@@ -169,13 +164,10 @@ public class PositionComposite extends Composite
     m_main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Get the body of the form. */
-    Composite body = m_main.getBody();
+    final Composite body = m_main.getBody();
 
     /* Set the properties for the body of the form. */
-    GridLayout bodyLayout = new GridLayout( 1, false );
-    bodyLayout.marginHeight = 0;
-    bodyLayout.marginWidth = 0;
-    body.setLayout( bodyLayout );
+    body.setLayout( Layouts.createGridLayout() );
 
     /* Create the content. */
     m_content = createContentComposite( body );
@@ -192,17 +184,14 @@ public class PositionComposite extends Composite
    *          The parent composite.
    * @return The content composite.
    */
-  private Composite createContentComposite( Composite parent )
+  private Composite createContentComposite( final Composite parent )
   {
     /* Create a composite. */
-    Composite contentComposite = new Composite( parent, SWT.NONE );
-    GridLayout contentLayout = new GridLayout( 1, false );
-    contentLayout.marginHeight = 0;
-    contentLayout.marginWidth = 0;
-    contentComposite.setLayout( contentLayout );
+    final Composite contentComposite = new Composite( parent, SWT.NONE );
+    contentComposite.setLayout( Layouts.createGridLayout() );
 
     /* Create the content internal composite. */
-    Composite contentInternalComposite = createContentInternalComposite( contentComposite );
+    final Composite contentInternalComposite = createContentInternalComposite( contentComposite );
     contentInternalComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     return contentComposite;
@@ -215,21 +204,18 @@ public class PositionComposite extends Composite
    *          The parent composite.
    * @return The content internal composite.
    */
-  private Composite createContentInternalComposite( Composite parent )
+  private Composite createContentInternalComposite( final Composite parent )
   {
     /* Create a composite. */
-    Composite contentInternalComposite = new Composite( parent, SWT.NONE );
-    GridLayout contentInternalData = new GridLayout( 2, false );
-    contentInternalData.marginHeight = 0;
-    contentInternalData.marginWidth = 0;
-    contentInternalComposite.setLayout( contentInternalData );
+    final Composite contentInternalComposite = new Composite( parent, SWT.NONE );
+    contentInternalComposite.setLayout( Layouts.createGridLayout( 2 ) );
 
     /* Create the horizontal group. */
-    Group horizontalGroup = createHorizontalGroup( contentInternalComposite );
+    final Group horizontalGroup = createHorizontalGroup( contentInternalComposite );
     horizontalGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the vertical group. */
-    Group verticalGroup = createVerticalGroup( contentInternalComposite );
+    final Group verticalGroup = createVerticalGroup( contentInternalComposite );
     verticalGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     return contentInternalComposite;
@@ -242,15 +228,15 @@ public class PositionComposite extends Composite
    *          The parent composite.
    * @return The horizontal group.
    */
-  private Group createHorizontalGroup( Composite parent )
+  private Group createHorizontalGroup( final Composite parent )
   {
     /* Create a group. */
-    Group horizontalGroup = new Group( parent, SWT.NONE );
+    final Group horizontalGroup = new Group( parent, SWT.NONE );
     horizontalGroup.setLayout( new GridLayout( 1, false ) );
     horizontalGroup.setText( "Position Horizontal" );
 
     /* Create a button. */
-    Button leftButton = new Button( horizontalGroup, SWT.RADIO );
+    final Button leftButton = new Button( horizontalGroup, SWT.RADIO );
     leftButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     leftButton.setText( "Links" );
     if( (m_horizontal & PositionUtilities.LEFT) != 0 )
@@ -261,7 +247,7 @@ public class PositionComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         m_horizontal = PositionUtilities.LEFT;
         firePositionChanged( m_horizontal, m_vertical );
@@ -269,7 +255,7 @@ public class PositionComposite extends Composite
     } );
 
     /* Create a button. */
-    Button hCenterButton = new Button( horizontalGroup, SWT.RADIO );
+    final Button hCenterButton = new Button( horizontalGroup, SWT.RADIO );
     hCenterButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     hCenterButton.setText( "Zentriert" );
     if( (m_horizontal & PositionUtilities.H_CENTER) != 0 )
@@ -280,7 +266,7 @@ public class PositionComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         m_horizontal = PositionUtilities.H_CENTER;
         firePositionChanged( m_horizontal, m_vertical );
@@ -288,7 +274,7 @@ public class PositionComposite extends Composite
     } );
 
     /* Create a button. */
-    Button rightButton = new Button( horizontalGroup, SWT.RADIO );
+    final Button rightButton = new Button( horizontalGroup, SWT.RADIO );
     rightButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     rightButton.setText( "Rechts" );
     if( (m_horizontal & PositionUtilities.RIGHT) != 0 )
@@ -299,7 +285,7 @@ public class PositionComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         m_horizontal = PositionUtilities.RIGHT;
         firePositionChanged( m_horizontal, m_vertical );
@@ -316,15 +302,15 @@ public class PositionComposite extends Composite
    *          The parent composite.
    * @return The vertical group.
    */
-  private Group createVerticalGroup( Composite parent )
+  private Group createVerticalGroup( final Composite parent )
   {
     /* Create a group. */
-    Group verticalGroup = new Group( parent, SWT.NONE );
+    final Group verticalGroup = new Group( parent, SWT.NONE );
     verticalGroup.setLayout( new GridLayout( 1, false ) );
     verticalGroup.setText( "Position Vertikal" );
 
     /* Create a button. */
-    Button topButton = new Button( verticalGroup, SWT.RADIO );
+    final Button topButton = new Button( verticalGroup, SWT.RADIO );
     topButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     topButton.setText( "Oben" );
     if( (m_vertical & PositionUtilities.TOP) != 0 )
@@ -335,7 +321,7 @@ public class PositionComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         m_vertical = PositionUtilities.TOP;
         firePositionChanged( m_horizontal, m_vertical );
@@ -343,7 +329,7 @@ public class PositionComposite extends Composite
     } );
 
     /* Create a button. */
-    Button vCenterButton = new Button( verticalGroup, SWT.RADIO );
+    final Button vCenterButton = new Button( verticalGroup, SWT.RADIO );
     vCenterButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     vCenterButton.setText( "Zentriert" );
     if( (m_vertical & PositionUtilities.V_CENTER) != 0 )
@@ -354,7 +340,7 @@ public class PositionComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         m_vertical = PositionUtilities.V_CENTER;
         firePositionChanged( m_horizontal, m_vertical );
@@ -362,7 +348,7 @@ public class PositionComposite extends Composite
     } );
 
     /* Create a button. */
-    Button bottomButton = new Button( verticalGroup, SWT.RADIO );
+    final Button bottomButton = new Button( verticalGroup, SWT.RADIO );
     bottomButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     bottomButton.setText( "Unten" );
     if( (m_vertical & PositionUtilities.BOTTOM) != 0 )
@@ -373,7 +359,7 @@ public class PositionComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         m_vertical = PositionUtilities.BOTTOM;
         firePositionChanged( m_horizontal, m_vertical );
@@ -389,7 +375,7 @@ public class PositionComposite extends Composite
    * @param status
    *          A status, containing a message, which should be displayed in the upper area of the view. May be null.
    */
-  protected void update( IStatus status )
+  protected void update( final IStatus status )
   {
     /* Update nothing, when no form or no content is defined. */
     /* In this case the composite was never correct initialized. */
@@ -422,9 +408,9 @@ public class PositionComposite extends Composite
    * @param vertical
    *          The vertical position.
    */
-  protected void firePositionChanged( int horizontal, int vertical )
+  protected void firePositionChanged( final int horizontal, final int vertical )
   {
-    for( IPositionChangedListener listener : m_listener )
+    for( final IPositionChangedListener listener : m_listener )
       listener.positionChanged( horizontal, vertical );
   }
 
@@ -434,7 +420,7 @@ public class PositionComposite extends Composite
    * @param listener
    *          The position changed listener to add.
    */
-  public void addPositionChangedListener( IPositionChangedListener listener )
+  public void addPositionChangedListener( final IPositionChangedListener listener )
   {
     if( !m_listener.contains( listener ) )
       m_listener.add( listener );
@@ -446,7 +432,7 @@ public class PositionComposite extends Composite
    * @param listener
    *          The position changed listener to remove.
    */
-  public void removePositionChangedListener( IPositionChangedListener listener )
+  public void removePositionChangedListener( final IPositionChangedListener listener )
   {
     if( m_listener.contains( listener ) )
       m_listener.remove( listener );

@@ -110,6 +110,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
 
     final Point currentPos = EventUtils.getPoint( e );
     m_startPos = currentPos;
+
     m_startPlot = getChart().screen2plotPoint( currentPos );
   }
 
@@ -203,6 +204,9 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
   @Override
   public void mouseUp( final MouseEvent e )
   {
+    if( m_startPlot == null )
+      return;
+
     try
     {
       doMouseUpAction( e );

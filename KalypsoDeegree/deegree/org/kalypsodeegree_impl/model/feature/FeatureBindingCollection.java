@@ -680,7 +680,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   @Override
   public void cloneInto( final FWCls toClone ) throws Exception
   {
-    final IRelationType relationType = getFeatureList().getParentFeatureTypeProperty();
+    final IRelationType relationType = getFeatureList().getPropertyType();
     FeatureHelper.cloneFeature( m_parentFeature, relationType, toClone );
   }
 

@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
@@ -145,10 +146,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
     gc.dispose();
 
     final Composite panel = new Composite( parent, style );
-    final GridLayout panelLayout = new GridLayout( 1, false );
-    panelLayout.marginWidth = 0;
-    panelLayout.marginHeight = 0;
-    panel.setLayout( panelLayout );
+    panel.setLayout( Layouts.createGridLayout() );
 
     m_linkChecklist = CheckboxTableViewer.newCheckList( panel, SWT.BORDER );
     m_linkChecklist.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );

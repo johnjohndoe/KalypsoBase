@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -52,7 +53,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -75,6 +75,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.deegree.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.crs.ICoordinateSystem;
@@ -104,7 +105,7 @@ public class CRSSelectionPanel extends Composite
     @Override
     public void done( final IJobChangeEvent event )
     {
-      handleCrsChanged( event.getJob() );
+      handleCrsChanged( (CRSInitializeJob) event.getJob() );
     }
   };
 
@@ -122,7 +123,7 @@ public class CRSSelectionPanel extends Composite
   /**
    * A hash of the displayed coordinate systems.
    */
-  private HashMap<String, ICoordinateSystem> m_coordHash;
+  private Map<String, ICoordinateSystem> m_coordHash;
 
   /**
    * List of all images.
@@ -234,10 +235,8 @@ public class CRSSelectionPanel extends Composite
     if( (getStyle() & NO_GROUP) != 0 )
     {
       final Composite composite = new Composite( this, SWT.NONE );
-      final GridLayout layout = new GridLayout( 2, false );
-      layout.marginHeight = 0;
-      layout.marginWidth = 0;
-      composite.setLayout( layout );
+      composite.setLayout( Layouts.createGridLayout( 2 ) );
+
       return composite;
     }
 
@@ -419,7 +418,7 @@ public class CRSSelectionPanel extends Composite
     initCRSJob.schedule();
   }
 
-  protected void handleCrsChanged( final Job job )
+  protected void handleCrsChanged( final CRSInitializeJob job )
   {
     if( isDisposed() )
       return;
@@ -441,7 +440,7 @@ public class CRSSelectionPanel extends Composite
     uiJob.schedule();
   }
 
-  protected IStatus doRefresh( final Job job, IProgressMonitor monitor )
+  protected IStatus doRefresh( final CRSInitializeJob job, IProgressMonitor monitor )
   {
     try
     {
@@ -453,7 +452,7 @@ public class CRSSelectionPanel extends Composite
       monitor.beginTask( Messages.getString( "org.kalypso.transformation.ui.CRSSelectionPanel.8" ), 100 ); //$NON-NLS-1$
 
       /* Get the job. */
-      if( !(job instanceof CRSInitializeJob) )
+      if( job == null )
       {
         /* Monitor. */
         monitor.worked( 100 );
@@ -462,7 +461,7 @@ public class CRSSelectionPanel extends Composite
       }
 
       /* Cast. */
-      final CRSInitializeJob initCRSJob = (CRSInitializeJob) job;
+      final CRSInitializeJob initCRSJob = job;
 
       /* If the viewer is already disposed, do nothing any more. */
       if( isDisposed() || m_viewer == null || m_viewer.getControl().isDisposed() )
@@ -477,7 +476,7 @@ public class CRSSelectionPanel extends Composite
       }
 
       /* Get the hash of them. */
-      final HashMap<String, ICoordinateSystem> coordHash = initCRSJob.getCoordHash();
+      final Map<String, ICoordinateSystem> coordHash = initCRSJob.getCoordHash();
       if( coordHash == null || coordHash.size() == 0 )
       {
         /* Clear the hash. */

@@ -64,13 +64,13 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 {
   public static final QName QNAME = new QName( NS_WSPM, "WaterBody" ); //$NON-NLS-1$
 
-  public static final QName QNAME_MEMBER_WSP_FIX = new QName( NS_WSPM, "waterlevelFixationMember" ); //$NON-NLS-1$
+  private static final QName QNAME_MEMBER_WSP_FIX = new QName( NS_WSPM, "waterlevelFixationMember" ); //$NON-NLS-1$
 
   public static final QName QNAME_MEMBER_REACH = new QName( NS_WSPM, "reachMember" ); //$NON-NLS-1$
 
   public static final QName QNAME_MEMBER_PROFILE = new QName( NS_WSPM, "profileMember" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_REFNR = new QName( NS_WSPM, "refNr" );//$NON-NLS-1$
+  private static final QName QNAME_PROP_REFNR = new QName( NS_WSPM, "refNr" );//$NON-NLS-1$
 
   public static final QName QNAME_PROP_CENTER_LINE = new QName( NS_WSPM, "centerLine" );//$NON-NLS-1$
 
@@ -78,11 +78,20 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
   private final IFeatureBindingCollection<IProfileFeature> m_profileMembers;
 
+  private final IFeatureBindingCollection<WspmFixation> m_fixations;
+
+  private final IFeatureBindingCollection<IRunOffEvent> m_runoffEvents;
+
+  private final IFeatureBindingCollection<WspmReach> m_reaches;
+
   public WspmWaterBody( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
 
     m_profileMembers = new FeatureBindingCollection<IProfileFeature>( this, IProfileFeature.class, QNAME_MEMBER_PROFILE );
+    m_fixations = new FeatureBindingCollection<WspmFixation>( this, WspmFixation.class, QNAME_MEMBER_WSP_FIX );
+    m_runoffEvents = new FeatureBindingCollection<IRunOffEvent>( this, IRunOffEvent.class, QNAME_MEMBER_RUNOFF );
+    m_reaches = new FeatureBindingCollection<WspmReach>( this, WspmReach.class, QNAME_MEMBER_REACH );
   }
 
   public IFeatureBindingCollection<IProfileFeature> getProfiles( )
@@ -122,19 +131,14 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
     setProperty( new QName( NS_WSPM, "isDirectionUpstream" ), Boolean.valueOf( directionIsUpstream ) ); //$NON-NLS-1$
   }
 
-  public Feature createRunOffEvent( ) throws GMLSchemaException
+  public IFeatureBindingCollection<IRunOffEvent> getRunoffEvents( )
   {
-    return FeatureHelper.addFeature( this, QNAME_MEMBER_RUNOFF, new QName( NS_WSPMRUNOFF, "RunOffEvent" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    return m_runoffEvents;
   }
 
-  public Feature createWspFix( ) throws GMLSchemaException
+  public IFeatureBindingCollection<WspmFixation> getWspFixations( )
   {
-    return FeatureHelper.addFeature( this, QNAME_MEMBER_WSP_FIX, new QName( NS_WSPMRUNOFF, "WaterlevelFixation" ) ); //$NON-NLS-1$
-  }
-
-  public List< ? > getWspFixations( )
-  {
-    return getProperty( QNAME_MEMBER_WSP_FIX, List.class );
+    return m_fixations;
   }
 
   public boolean isDirectionUpstreams( )
@@ -142,17 +146,9 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
     return getProperty( new QName( NS_WSPM, "isDirectionUpstream" ), Boolean.class ); //$NON-NLS-1$
   }
 
-  public WspmReach[] getReaches( )
+  public IFeatureBindingCollection<WspmReach> getReaches( )
   {
-    final FeatureList reaches = (FeatureList) getProperty( QNAME_MEMBER_REACH );
-    final List<WspmReach> reachList = new ArrayList<WspmReach>( reaches.size() );
-    for( final Object object : reaches )
-    {
-      final Feature f = (Feature) object;
-      reachList.add( (WspmReach) f );
-    }
-
-    return reachList.toArray( new WspmReach[reachList.size()] );
+    return m_reaches;
   }
 
   /**
@@ -198,11 +194,23 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
 
   public WspmReach findReachByName( final String name )
   {
-    final WspmReach[] reaches = getReaches();
+    final IFeatureBindingCollection<WspmReach> reaches = getReaches();
     for( final WspmReach reach : reaches )
     {
       if( name.equals( reach.getName() ) )
         return reach;
+    }
+
+    return null;
+  }
+
+  public Object findFixationByName( final String name )
+  {
+    final List<WspmFixation> fixations = getWspFixations();
+    for( final WspmFixation fixation : fixations )
+    {
+      if( name.equals( fixation.getName() ) )
+        return fixation;
     }
 
     return null;

@@ -56,7 +56,7 @@ import org.kalypso.commons.databinding.conversion.FileToStringConverter;
 import org.kalypso.commons.databinding.conversion.StringToFileConverter;
 import org.kalypso.commons.databinding.swt.FileValueSelectionListener;
 import org.kalypso.commons.databinding.validation.FileAlreadyExistsValidator;
-import org.kalypso.commons.databinding.validation.FileIsDirectoryValidator;
+import org.kalypso.commons.databinding.validation.FileShouldNotBeDirectoryValidator;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 
 /**
@@ -98,7 +98,7 @@ public class ExportFileControls
     binder.setModelToTargetConverter( new FileToStringConverter() );
 
     binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, "File path may not be empty" ) );
-    binder.addTargetAfterConvertValidator( new FileIsDirectoryValidator() );
+    binder.addTargetAfterConvertValidator( new FileShouldNotBeDirectoryValidator() );
     binder.addTargetAfterConvertValidator( new FileAlreadyExistsValidator() );
 
     m_binding.bindValue( binder );

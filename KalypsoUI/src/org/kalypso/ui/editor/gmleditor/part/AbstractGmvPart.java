@@ -45,7 +45,8 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.AbstractWorkbenchPart;
-import org.kalypso.ui.editor.actions.NewFeatureScope;
+import org.kalypso.ui.editor.actions.INewScope;
+import org.kalypso.ui.editor.actions.NewScopeFactory;
 import org.kalypso.ui.editorLauncher.GmlEditorTemplateLauncher;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
@@ -277,7 +278,7 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
     createContextMenu();
   }
 
-  private void createContextMenu( )
+  protected void createContextMenu( )
   {
     // create context menu for editor
     final MenuManager menuManager = new MenuManager();
@@ -293,27 +294,30 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
 
     final TreeViewer treeViewer = m_viewer.getTreeViewer();
     final Menu menu = menuManager.createContextMenu( treeViewer.getControl() );
+    treeViewer.getControl().setMenu( menu );
 
+    registerContextMenu( menuManager );
+  }
+
+  protected void registerContextMenu( final MenuManager menuManager )
+  {
     final IWorkbenchPartSite site = getSite();
     if( site instanceof IEditorSite )
       ((IEditorSite) site).registerContextMenu( menuManager, m_viewer, false );
     else
       site.registerContextMenu( menuManager, m_viewer );
-
-    treeViewer.getControl().setMenu( menu );
   }
 
   /**
    * Add some special actions to the menuManager, dependent on the current selection.
    */
-  public void handleMenuAboutToShow( final IMenuManager manager )
+  protected void handleMenuAboutToShow( final IMenuManager manager )
   {
-    final IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();
+    final IStructuredSelection selection = m_viewer.getSelection();
     final IFeatureSelectionManager selectionManager = m_viewer.getSelectionManager();
 
     final CommandableWorkspace workspace = m_viewer.getWorkspace();
-    final NewFeatureScope scope = NewFeatureScope.createFromTreeSelection( workspace, selection, selectionManager );
-
+    final INewScope scope = NewScopeFactory.createFromTreeSelection( workspace, selection, selectionManager );
     if( scope != null )
       manager.add( scope.createMenu() );
 

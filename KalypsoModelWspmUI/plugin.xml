@@ -438,7 +438,9 @@
 				<and>
 					<count value="1"/>
 					<iterate ifEmpty="false" operator="and">
-						<test property="org.kalypso.ui.test.theme.isFeatureTheme"/>
+					   <adapt type="org.kalypso.ogc.gml.IKalypsoTheme">
+    				       <test property="org.kalypso.ui.test.theme.isFeatureTheme"/>
+					   </adapt>
 					</iterate>
 			        <test property="org.kalypso.model.wspm.ui.hasProfileSelection"/>
 				</and>
@@ -446,11 +448,8 @@
 		</definition>
       <definition
             id="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-         <with
-               variable="selection">
-            <test
-                  property="org.kalypso.model.wspm.ui.hasProfileSelection">
-            </test>
+         <with variable="selection">
+            <test property="org.kalypso.model.wspm.ui.hasProfileSelection"/>
          </with>
       </definition>
 	</extension>
@@ -497,6 +496,7 @@
              category="importWizards"
              class="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfileWizard"
              id="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfileWizard"
+             icon="icons/etool16/trippleImport.gif"
              name="%org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction">
           <description>%org.kalypso.model.wspm.ui.action.ImportProfileTrippelAction.description</description>
        </wizard>
@@ -504,6 +504,7 @@
              category="importWizards"
              class="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportPrfWizard"
              id="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportPrfWizard"
+             icon="icons/obj16/wspwin16.gif"
              name="%org.kalypso.model.wspm.ui.action.ImportProfilePrfAction">
           <description>%org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.description</description>
        </wizard>

@@ -45,8 +45,8 @@ import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.Fill;
@@ -76,11 +76,7 @@ public class ColorMapEntryEditorComposite extends Composite
 
   private void createControl( )
   {
-    final GridLayout layout = new GridLayout( 1, false );
-    layout.marginWidth = 0;
-    layout.marginHeight = 0;
-
-    setLayout( layout );
+    setLayout( Layouts.createGridLayout() );
 
     m_fill = StyleFactory.createFill( m_entry.getColor(), m_entry.getOpacity() );
     m_fillEditor = new FillEditorComposite( this, SWT.NONE, m_fill, true );

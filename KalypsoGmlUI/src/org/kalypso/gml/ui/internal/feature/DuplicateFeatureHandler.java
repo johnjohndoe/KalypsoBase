@@ -52,6 +52,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.catalog.FeatureTypePropertiesCatalog;
+import org.kalypso.core.catalog.IFeatureTypePropertiesConstants;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -85,6 +87,8 @@ public class DuplicateFeatureHandler extends AbstractHandler
     final Feature feature = FeatureSelectionHelper.getFirstFeature( featureSelection );
     final CommandableWorkspace workspace = featureSelection.getWorkspace( feature );
 
+    checkDuplicationAllowed( feature );
+
     final IRelationType rt = feature.getParentRelation();
     if( rt == null )
       return null;
@@ -116,5 +120,12 @@ public class DuplicateFeatureHandler extends AbstractHandler
     }
 
     return null;
+  }
+
+  private void checkDuplicationAllowed( final Feature feature ) throws ExecutionException
+  {
+    final boolean canDuplicate = FeatureTypePropertiesCatalog.isPropertyOn( feature, IFeatureTypePropertiesConstants.GMLTREE_SHOW_DUPLICATION_MENU );
+    if( !canDuplicate )
+      throw new ExecutionException( "Duplication is not allowed" ); //$NON-NLS-1$
   }
 }

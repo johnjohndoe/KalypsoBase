@@ -107,25 +107,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     createStyles( styleProvider, id );
   }
 
-  private void createStyles( final ILayerStyleProvider styleProvider, final String id )
-  {
-    if( styleProvider == null )
-      return;
-
-    // TODO: stlyes should be fetched on demand!
-    // It is not guaranteed, that we need only one line style!
-
-    // FIXME: remove theses magic names
-    m_lineStyle = styleProvider.getStyleFor( id + "_LINE", null ); //$NON-NLS-1$
-    m_pointStyle = styleProvider.getStyleFor( id + "_POINT", null ); //$NON-NLS-1$
-
-    m_lineStyleActive = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null ); //$NON-NLS-1$
-    m_pointStyleActive = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null ); //$NON-NLS-1$
-
-    m_lineStyleHover = styleProvider.getStyleFor( id + "_LINE_HOVER", null ); //$NON-NLS-1$
-    m_pointStyleHover = styleProvider.getStyleFor( id + "_POINT_HOVER", null ); //$NON-NLS-1$
-  }
-
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer#commitDrag(org.eclipse.swt.graphics.Point,
    *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
@@ -169,6 +150,25 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     // override this method
     return null;
+  }
+
+  private void createStyles( final ILayerStyleProvider styleProvider, final String id )
+  {
+    if( styleProvider == null )
+      return;
+
+    // TODO: stlyes should be fetched on demand!
+    // It is not guaranteed, that we need only one line style!
+
+    // FIXME: remove theses magic names
+    m_lineStyle = styleProvider.getStyleFor( id + "_LINE", null ); //$NON-NLS-1$
+    m_pointStyle = styleProvider.getStyleFor( id + "_POINT", null ); //$NON-NLS-1$
+
+    m_lineStyleActive = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null ); //$NON-NLS-1$
+    m_pointStyleActive = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null ); //$NON-NLS-1$
+
+    m_lineStyleHover = styleProvider.getStyleFor( id + "_LINE_HOVER", null ); //$NON-NLS-1$
+    m_pointStyleHover = styleProvider.getStyleFor( id + "_POINT_HOVER", null ); //$NON-NLS-1$
   }
 
   /**
@@ -310,22 +310,25 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return m_lineStyleHover;
   }
 
+  public IRecord getNextNonNull( final int index )
+  {
+    final IRecord[] points = getProfil().getPoints();
+    final int prop = getProfil().indexOfProperty( m_targetRangeProperty );
+    for( int i = index + 1; i < points.length; i++ )
+    {
+
+      if( points[i] != null && points[i].getValue( prop ) != null )
+        return points[i];
+    }
+    return points[index];
+
+  }
+
   public Point2D getPoint2D( final IRecord point )
   {
     final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
     final Double y = ProfilUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
     return new Point2D.Double( x, y );
-  }
-
-  protected final int getTargetPropertyIndex( )
-  {
-    if( m_targetPropIndex < 0 )
-    {
-      if( m_profil == null )
-        return -1;
-      m_targetPropIndex = m_profil.getResult().indexOfComponent( m_targetRangeProperty );
-    }
-    return m_targetPropIndex;
   }
 
   protected IPointStyle getPointStyle( )
@@ -363,6 +366,19 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return m_pointStyleHover;
   }
 
+  public IRecord getPreviousNonNull( final int index )
+  {
+    final IRecord[] points = getProfil().getPoints();
+    final int prop = getProfil().indexOfProperty( m_targetRangeProperty );
+    for( int i = index - 1; i > -1; i-- )
+    {
+      if( points[i] != null && points[i].getValue( prop ) != null )
+        return points[i];
+    }
+    return points[index];
+
+  }
+
   /**
    * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer#getProfil()
    */
@@ -382,6 +398,17 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( indexOfProperty < 0 )
       return null;
     return m_profil.getResult().getComponent( indexOfProperty );
+  }
+
+  protected final int getTargetPropertyIndex( )
+  {
+    if( m_targetPropIndex < 0 )
+    {
+      if( m_profil == null )
+        return -1;
+      m_targetPropIndex = m_profil.getResult().indexOfComponent( m_targetRangeProperty );
+    }
+    return m_targetPropIndex;
   }
 
   /**

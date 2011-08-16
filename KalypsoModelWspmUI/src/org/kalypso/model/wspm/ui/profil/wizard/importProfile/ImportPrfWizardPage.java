@@ -45,6 +45,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -55,8 +56,8 @@ public class ImportPrfWizardPage extends WizardPage
   {
     super( pageName );
 
-    setTitle( "Dateiauswahl" );
-    setDescription( String.format( "Please press <%s> to choose files", IDialogConstants.FINISH_LABEL ) );
+    setTitle( Messages.getString("ImportPrfWizardPage_0") ); //$NON-NLS-1$
+    setDescription( String.format( Messages.getString("ImportPrfWizardPage_1"), IDialogConstants.FINISH_LABEL ) ); //$NON-NLS-1$
   }
 
   @Override

@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTitleAreaDialog;
-import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
@@ -100,7 +100,7 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
     final ScrolledForm form = toolkit.createScrolledForm( base );
     form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     final Composite body = form.getBody();
-    body.setLayout( LayoutHelper.createGridLayout() );
+    body.setLayout( Layouts.createGridLayout() );
 
     base.addControlListener( new ControlAdapter()
     {
@@ -134,9 +134,7 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
   {
     final Group group = new Group( body, SWT.NULL );
 
-    final GridLayout layout = new GridLayout();
-    layout.marginHeight = layout.marginWidth = 0;
-    group.setLayout( layout );
+    group.setLayout( Layouts.createGridLayout() );
 
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     group.setText( wrapper.getLabel() );

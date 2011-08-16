@@ -10,11 +10,11 @@ import java.io.File;
  */
 public interface IKMLExportSettings
 {
-  public static final String CONST_TARGET_FILE = "kmlExportTargetFile"; //$NON-NLS-1$
+  String CONST_TARGET_FILE = "kmlExportTargetFile"; //$NON-NLS-1$
 
-  public String getExportDescription( );
+  String getExportDescription( );
 
-  public File getExportFile( );
+  File getExportFile( );
 
-  public String getExportName( );
+  String getExportName( );
 }

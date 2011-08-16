@@ -31,6 +31,7 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.ResourcePool;
@@ -117,9 +118,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
   {
     /* Create a new Composite for the toolbar. */
     final Composite client = new Composite( parent, SWT.NONE );
-    final GridLayout gridLayout = new GridLayout( 1, false );
-    gridLayout.marginWidth = 0;
-    gridLayout.marginHeight = 0;
+    final GridLayout gridLayout = Layouts.createGridLayout();
     if( ToolbarHelper.hasActions( m_toolbar ) || m_showToolbar )
       gridLayout.numColumns++;
     client.setLayout( gridLayout );

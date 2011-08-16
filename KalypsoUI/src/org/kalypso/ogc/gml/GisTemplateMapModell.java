@@ -489,11 +489,6 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
     return m_context;
   }
 
-  public IMapModell getModell( )
-  {
-    return m_modell;
-  }
-
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int)
    */

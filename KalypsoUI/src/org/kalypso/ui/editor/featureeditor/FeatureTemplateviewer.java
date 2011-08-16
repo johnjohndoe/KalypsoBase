@@ -53,7 +53,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -68,6 +67,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.SharedScrolledComposite;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
@@ -153,7 +153,6 @@ public class FeatureTemplateviewer
   private FormToolkit m_toolkit;
 
   private IFeaturesProvider m_featuresProvider;
-
 
   public FeatureTemplateviewer( final JobExclusiveCommandTarget commandtarget )
   {
@@ -261,11 +260,7 @@ public class FeatureTemplateviewer
     m_featureComposite.setFormToolkit( m_toolkit );
 
     m_contentPanel = createTopLevelComposite( parent, formStyle );
-
-    final GridLayout gridLayout = new GridLayout();
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
-    m_contentPanel.setLayout( gridLayout );
+    m_contentPanel.setLayout( Layouts.createGridLayout() );
 
     try
     {
@@ -349,7 +344,7 @@ public class FeatureTemplateviewer
         throw new IllegalArgumentException();
 
       // REMARK: we allow for the null-feature!
-      final Feature feature = (features == null || features.size() == 0) ? null : features.get( 0 );
+      final Feature feature = features == null || features.size() == 0 ? null : features.get( 0 );
 
       /* Try to obtain the feature to display. */
       /* The result may be null, if the feature path is null, too. */

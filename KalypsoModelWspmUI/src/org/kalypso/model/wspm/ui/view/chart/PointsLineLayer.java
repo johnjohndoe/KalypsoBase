@@ -87,9 +87,9 @@ public class PointsLineLayer extends AbstractProfilLayer
 
     final Point newPoint = verifyPos( dragStartData.getPosition(), newPos );
     final Integer index = (Integer) dragStartData.getData();
-    final IRecord[] profilPoints = getProfil().getPoints();
-    final Point next = index == profilPoints.length - 1 ? newPoint : toScreen( profilPoints[index + 1] );
-    final Point previous = index == 0 ? newPoint : toScreen( profilPoints[index - 1] );
+
+    final Point next = toScreen( getNextNonNull( index ) );
+    final Point previous = toScreen( getPreviousNonNull( index ) );
 
     final PolylineFigure lineFigure = new PolylineFigure();
     lineFigure.setPoints( new Point[] { previous, newPoint, next } );

@@ -59,16 +59,13 @@ public class NumberEmptyValidator extends TypedValidator<Number>
    * @param message
    *          Will be used as message for a status, if validation fails.
    */
-  public NumberEmptyValidator( int severity, String message )
+  public NumberEmptyValidator( final int severity, final String message )
   {
     super( Number.class, severity, message );
   }
 
-  /**
-   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
-   */
   @Override
-  protected IStatus doValidate( Number value ) throws CoreException
+  protected IStatus doValidate( final Number value ) throws CoreException
   {
     if( value == null )
       fail();

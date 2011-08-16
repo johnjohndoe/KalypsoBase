@@ -85,7 +85,9 @@ public class ImageProvider
     MOVIE_PLAYER_PLAY("icons/movie/player_play.png"), //$NON-NLS-1$
     MOVIE_PLAYER_FWD("icons/movie/player_fwd.png"), //$NON-NLS-1$
     MOVIE_PLAYER_END("icons/movie/player_end.png"), //$NON-NLS-1$
-    MOVIE_PLAYER_EJECT("icons/movie/player_eject.png"); //$NON-NLS-1$
+    MOVIE_PLAYER_EJECT("icons/movie/player_eject.png"), //$NON-NLS-1$
+
+    EXTERNAL_BROWSER("icons/feature/external_browser.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 
@@ -191,6 +193,8 @@ public class ImageProvider
   public static final ImageDescriptor IMAGE_WIZBAN_IMPORT = ImageProvider.id( "icons/util/wizban-import.gif" ); //$NON-NLS-1$
 
   public static final ImageDescriptor IMAGE_STYLEEDITOR_SAVE = ImageProvider.id( "icons/gistable/save_edit.gif" ); //$NON-NLS-1$
+
+  public static final ImageDescriptor IMAGE_STYLEEDITOR_RESET = ImageProvider.id( "icons/gistable/resetUserStyle.gif" ); //$NON-NLS-1$
 
   public static final ImageDescriptor IMAGE_STYLEEDITOR_ADD_RULE = ImageProvider.id( "icons/obstable/add_row.gif" ); //$NON-NLS-1$
 

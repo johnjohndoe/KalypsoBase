@@ -49,7 +49,6 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.osgi.util.NLS;
 import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.contribs.java.JavaApiContributionsPlugin;
 import org.osgi.framework.Bundle;
@@ -63,7 +62,7 @@ import org.w3c.dom.Element;
  */
 public class NLSTranslator implements ITranslator, IExecutableExtension
 {
-  private Class< ? extends NLS> m_nls;
+  private Class<?> m_nls;
 
   private String m_id;
 
@@ -91,7 +90,6 @@ public class NLSTranslator implements ITranslator, IExecutableExtension
   /**
    * @see org.kalypso.commons.i18n.ITranslator#configure(org.kalypso.commons.i18n.ITranslatorContext, java.util.List)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public void configure( ITranslatorContext context, List<Element> configuration )
   {
@@ -105,7 +103,8 @@ public class NLSTranslator implements ITranslator, IExecutableExtension
         final String[] split = msgClass.split( ":" ); //$NON-NLS-1$
         Assert.isTrue( split.length == 2, Messages.getString( "org.kalypso.commons.i18n.NLSTranslator.2", msgClass ) ); //$NON-NLS-1$
         final Bundle bundle = Platform.getBundle( split[0] );
-        m_nls = (Class< ? extends NLS>) bundle.loadClass( split[1] );
+         m_nls = bundle.loadClass( split[1] );
+         
         return;
       }
       catch( final ClassNotFoundException e )

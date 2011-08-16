@@ -2,12 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: EclipseRCPContribution Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.eclipsercp; singleton:=true
-Bundle-Version: 11.6.0.qualifier
-Bundle-Activator: org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin
+Bundle-Version: 11.6.1.qualifier
+Bundle-Activator: org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
-Export-Package: org.kalypso.contribs.eclipse,
- org.kalypso.contribs.eclipse.core.commands,
+Export-Package: org.kalypso.contribs.eclipse.core.commands,
  org.kalypso.contribs.eclipse.core.commands.operations,
  org.kalypso.contribs.eclipse.core.net,
  org.kalypso.contribs.eclipse.core.resources,

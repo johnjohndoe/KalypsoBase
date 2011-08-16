@@ -70,6 +70,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -166,10 +167,7 @@ public class OperationChooserPage extends WizardPage
   {
     final Group group = new Group( composite, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.BEGINNING, true, false ) );
-    final GridLayout layout = new GridLayout();
-    layout.marginHeight = 0;
-    layout.marginWidth = 0;
-    group.setLayout( layout );
+    group.setLayout( Layouts.createGridLayout() );
     group.setText( ProfilePointFilterComposite.STR_GROUP_TEXT );
 
     final Control filterControl = m_filterChooser.createControl( group, SWT.BORDER );

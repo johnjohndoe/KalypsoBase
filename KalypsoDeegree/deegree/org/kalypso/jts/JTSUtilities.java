@@ -734,6 +734,12 @@ public final class JTSUtilities
    */
   public static LineString addPointsToLine( final LineString line, final List<Point> originalPoints )
   {
+    return addPointsToLine( line, originalPoints.toArray( new Point[] {} ) );
+  }
+
+  public static LineString addPointsToLine( final LineString line, final Point... originalPoints )
+  {
+
     /* Clone the whole list. */
     final List<Point> clonedPoints = new ArrayList<Point>();
     for( final Point originalPoint : originalPoints )
@@ -1485,7 +1491,6 @@ public final class JTSUtilities
 
     /* Get the exterior ring. */
     final LineString ring = polygone.getExteriorRing();
-
     final Coordinate[] coordinates = ring.getCoordinates();
 
     for( final Coordinate coordinate : coordinates )
@@ -1503,5 +1508,19 @@ public final class JTSUtilities
 
     final GeometryFactory factory = new GeometryFactory( point.getPrecisionModel(), point.getSRID() );
     return factory.createPoint( ptr );
+  }
+
+  public static Coordinate[] replace( final Coordinate[] coordinates, final Coordinate old, final Coordinate set )
+  {
+    final List<Coordinate> replaced = new ArrayList<Coordinate>();
+    for( final Coordinate coordinate : coordinates )
+    {
+      if( coordinate.equals( old ) )
+        replaced.add( set );
+      else
+        replaced.add( coordinate );
+    }
+
+    return replaced.toArray( new Coordinate[] {} );
   }
 }

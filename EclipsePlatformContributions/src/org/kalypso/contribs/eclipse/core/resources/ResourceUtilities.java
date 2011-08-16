@@ -140,6 +140,9 @@ public final class ResourceUtilities
   @SuppressWarnings("restriction")
   public static IPath findPathFromURL( final URL u )
   {
+    if( u == null )
+      return null;
+
     final String utostring = u.toString();
     final String urlpath;
     final int ix = utostring.indexOf( '?' );

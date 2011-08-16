@@ -40,6 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.dialogs;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -47,11 +53,15 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.wizard.IWizard;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.dialogs.ImportExportPage;
 import org.eclipse.ui.wizards.IWizardCategory;
 import org.eclipse.ui.wizards.IWizardRegistry;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 /**
@@ -100,6 +110,8 @@ public class GenericWizardSelectionPage extends ImportExportPage
   private final String m_description;
 
   private final GenericWizardFilter m_treeFilter = new GenericWizardFilter();
+
+  private boolean m_preInitDone = false;
 
   public GenericWizardSelectionPage( final IWizardRegistry registry, final IStructuredSelection currentSelection, final String settingsName, final String message, final String description )
   {
@@ -186,5 +198,43 @@ public class GenericWizardSelectionPage extends ImportExportPage
   {
     setMessage( m_description );
     super.updateMessage();
+  }
+
+  @Override
+  public IWizardPage getNextPage( )
+  {
+    final IWizardPage nextPage = super.getNextPage();
+    if( nextPage == null )
+      return null;
+
+    final IWizard wizard = nextPage.getWizard();
+    if( wizard instanceof IGenericWizard )
+      preInit( (IGenericWizard) wizard );
+
+    return nextPage;
+  }
+
+  private void preInit( final IGenericWizard wizard )
+  {
+    /* Pre-Initialize only once */
+    if( m_preInitDone )
+      return;
+
+    m_preInitDone = true;
+
+    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
+    {
+      @Override
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
+      {
+        return wizard.postInit( monitor );
+      }
+    };
+    final IStatus result = RunnableContextHelper.execute( getContainer(), true, false, operation );
+    if( !result.isOK() )
+    {
+      final String msg = "Failed to post-initialize wizard.";
+      ErrorDialog.openError( getShell(), wizard.getWindowTitle(), msg, result );
+    }
   }
 }
