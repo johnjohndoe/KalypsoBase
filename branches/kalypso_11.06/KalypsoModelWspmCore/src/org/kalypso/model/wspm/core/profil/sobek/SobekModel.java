@@ -44,6 +44,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -59,74 +60,9 @@ import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfile;
  * 
  * @author Holger Albert
  */
-public class SobekModel
+public class SobekModel implements ISobekConstants
 {
-  /**
-   * The profiles.
-   */
-  private List<SobekProfile> m_profiles;
-
-  /**
-   * The constructor.
-   */
-  public SobekModel( )
-  {
-    m_profiles = new ArrayList<SobekProfile>();
-  }
-
-  /**
-   * This function adds a profile.
-   * 
-   * @param profile
-   *          The profile, to add.
-   */
-  public void addProfile( final SobekProfile profile )
-  {
-    if( m_profiles.contains( profile ) )
-      return;
-
-    m_profiles.add( profile );
-  }
-
-  /**
-   * The function removes the profile at the given index.
-   * 
-   * @param index
-   *          The index of the profile, to remove.
-   * @return The removed profile or null, if the index was out of range.
-   */
-  public SobekProfile removeProfile( final int index )
-  {
-    if( index < 0 || index >= m_profiles.size() )
-      return null;
-
-    return m_profiles.remove( index );
-  }
-
-  /**
-   * The function returns the profile at the given index.
-   * 
-   * @param index
-   *          The index of the profile.
-   * @return The profile or null, if the index was out of range.
-   */
-  public SobekProfile getProfile( final int index )
-  {
-    if( index < 0 || index >= m_profiles.size() )
-      return null;
-
-    return m_profiles.get( index );
-  }
-
-  /**
-   * This function returns the number of profiles in this model.
-   * 
-   * @return The number of profiles in this model.
-   */
-  public int getNumberProfiles( )
-  {
-    return m_profiles.size();
-  }
+  private final List<SobekProfile> m_profiles = new ArrayList<SobekProfile>();
 
   /**
    * This function initializes this model with help of the given provider.
@@ -143,16 +79,11 @@ public class SobekModel
 
     /* Clear all old profiles. */
     /* If an error occurs later on, this model will be definitly empty. */
-    m_profiles = new ArrayList<SobekProfile>();
+    m_profiles.clear();
 
-    /* Get the profiles. */
+    /* Add all profiles. */
     final SobekProfile[] profiles = provider.getSobekProfiles( monitor );
-
-    /* Now add the new profiles. */
-    for( final SobekProfile profile : profiles )
-    {
-      m_profiles.add( profile );
-    }
+    m_profiles.addAll( Arrays.asList( profiles ) );
   }
 
   /**
@@ -172,7 +103,7 @@ public class SobekModel
       final String alreadyExistsWarning = Messages.getString( "SobekModel_1" ); //$NON-NLS-1$
 
       /* Create the file handle for the file profile.dat. */
-      final File datFile = new File( destinationFolder, "profile.dat" ); //$NON-NLS-1$
+      final File datFile = new File( destinationFolder, ISobekConstants.PROFILE_DAT ); //$NON-NLS-1$
       if( datFile.exists() )
         throw new Exception( String.format( alreadyExistsWarning, datFile.getAbsolutePath() ) );
 
