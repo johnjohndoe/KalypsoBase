@@ -87,4 +87,6 @@ public interface IKalypsoModule
   Version getVersion( );
 
   IProjectHandleProvider getProjectProvider( );
+
+  boolean supportsProjectType( String projectType );
 }
