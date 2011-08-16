@@ -67,6 +67,8 @@ public class SobekProfile
 
   private final SobekFrictionDat m_frictionDat;
 
+  private final SobekNetworkD12Point m_point;
+
   /**
    * The constructor.
    * 
@@ -75,11 +77,12 @@ public class SobekProfile
    * @param profileDef
    *          The data for the file 'profile.def'.
    */
-  public SobekProfile( final SobekProfileDat profileDat, final SobekProfileDef profileDef, final SobekFrictionDat frictionDat )
+  public SobekProfile( final SobekProfileDat profileDat, final SobekProfileDef profileDef, final SobekFrictionDat frictionDat, final SobekNetworkD12Point point )
   {
     m_profileDat = profileDat;
     m_profileDef = profileDef;
     m_frictionDat = frictionDat;
+    m_point = point;
   }
 
   public IStatus validate( )
@@ -128,17 +131,22 @@ public class SobekProfile
 
   public SobekProfile setDefinition( final SobekProfileDef profileDef )
   {
-    return new SobekProfile( m_profileDat, profileDef, m_frictionDat );
+    return new SobekProfile( m_profileDat, profileDef, m_frictionDat, m_point );
   }
 
   public SobekProfile setData( final SobekProfileDat profileDat )
   {
-    return new SobekProfile( profileDat, m_profileDef, m_frictionDat );
+    return new SobekProfile( profileDat, m_profileDef, m_frictionDat, m_point );
   }
 
   public SobekProfile setFriction( final SobekFrictionDat frictionDat )
   {
-    return new SobekProfile( m_profileDat, m_profileDef, frictionDat );
+    return new SobekProfile( m_profileDat, m_profileDef, frictionDat, m_point );
+  }
+
+  public SobekProfile setNetworkPoint( final SobekNetworkD12Point point )
+  {
+    return new SobekProfile( m_profileDat, m_profileDef, m_frictionDat, point );
   }
 
   public SobekProfileDef getProfileDef( )
@@ -154,5 +162,10 @@ public class SobekProfile
   public SobekFrictionDat getFrictionDat( )
   {
     return m_frictionDat;
+  }
+
+  public SobekNetworkD12Point getNetworkPoint( )
+  {
+    return m_point;
   }
 }

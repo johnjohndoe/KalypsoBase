@@ -41,23 +41,129 @@
 package org.kalypso.model.wspm.core.profil.sobek.parser;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.math.BigDecimal;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekNetworkD12;
+import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekNetworkD12Point;
 
 /**
  * @author Gernot Belger
  */
 public class SobekNetworkD12Parser
 {
+  private static final String TOKEN_DOMN = "DOMN"; //$NON-NLS-1$
+
+  private static final String TOKEN_GFLS = "GFLS"; //$NON-NLS-1$
+
+  private static final String TOKEN_PT12 = "PT12"; //$NON-NLS-1$
+
+  private static final String TOKEN_LM12 = "LM12"; //$NON-NLS-1$
+
+  private static final String TOKEN_LI12 = "LI12"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_NM = "nm"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_CI = "ci"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_LC = "lc"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_PX = "px"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_PY = "py"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_MC = "mc"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_MR = "mr"; //$NON-NLS-1$
+
+  private final File m_networkD12File;
+
+  private final SobekNetworkD12 m_network = new SobekNetworkD12();
+
   public SobekNetworkD12Parser( final File networkD12File )
   {
-    // TODO Auto-generated constructor stub
+    m_networkD12File = networkD12File;
   }
 
-  public SobekNetworkD12 read( final IProgressMonitor monitor )
+  public SobekNetworkD12 read( final IProgressMonitor monitor ) throws CoreException, IOException
   {
-    // TODO Auto-generated method stub
-    return null;
+    final LineNumberReader reader = new LineNumberReader( new FileReader( m_networkD12File ) );
+
+    // just skip first line
+    new SobekLineParser( reader );
+
+    final SobekLineParser line = new SobekLineParser( reader );
+    line.expectToken( TOKEN_DOMN );
+
+    while( reader.ready() )
+      readParts( reader );
+
+    ProgressUtilities.done( monitor );
+
+    return m_network;
+  }
+
+  private void readParts( final LineNumberReader reader ) throws CoreException, IOException
+  {
+    final SobekLineParser startLine = new SobekLineParser( reader );
+    final String token = startLine.nextTokenOrNull();
+    if( token == null )
+      return;
+    if( TOKEN_DOMN.toLowerCase().equals( token ) )
+      return;
+
+    if( TOKEN_GFLS.equals( token ) )
+    {
+      SobekParsing.searchForEndToken( TOKEN_GFLS, startLine, reader );
+      return;
+    }
+
+    if( TOKEN_PT12.equals( token ) )
+    {
+      readPT12( startLine );
+      return;
+    }
+
+    if( TOKEN_LM12.equals( token ) )
+    {
+      SobekParsing.searchForEndToken( TOKEN_LM12, startLine, reader );
+      return;
+    }
+
+    if( TOKEN_LI12.equals( token ) )
+    {
+      SobekParsing.searchForEndToken( TOKEN_LI12, startLine, reader );
+      return;
+    }
+
+    throw startLine.throwError( "unexpected token '%s'", token );
+  }
+
+  private void readPT12( final SobekLineParser line ) throws CoreException
+  {
+    // PT12 id '1' nm '1' ci '16' lc 107.586463742351 px 3396413.61741709 py 5701235.18117374 mc 112 mr 372 pt12
+
+    final String id = line.nextStringToken( ATTRIBUTE_ID );
+    final String name = line.nextStringToken( ATTRIBUTE_NM );
+    final String carrierID = line.nextStringToken( ATTRIBUTE_CI );
+
+    final BigDecimal lc = line.nextDecimalToken( ATTRIBUTE_LC );
+
+    final BigDecimal px = line.nextDecimalToken( ATTRIBUTE_PX );
+    final BigDecimal py = line.nextDecimalToken( ATTRIBUTE_PY );
+
+    final int mc = line.nextIntToken( ATTRIBUTE_MC );
+    final int mr = line.nextIntToken( ATTRIBUTE_MR );
+
+    line.expectToken( TOKEN_PT12.toLowerCase() );
+
+    m_network.add( new SobekNetworkD12Point( id, name, carrierID, lc, px, py, mc, mr ) );
   }
 }

@@ -40,11 +40,24 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.sobek.profiles;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * @author Gernot Belger
  *
  */
 public class SobekNetworkD12
 {
+  private final Collection<SobekNetworkD12Point> m_points = new ArrayList<SobekNetworkD12Point>();
 
+  public void add( final SobekNetworkD12Point point )
+  {
+    m_points.add( point );
+  }
+
+  public SobekNetworkD12Point[] getPoints( )
+  {
+    return m_points.toArray( new SobekNetworkD12Point[m_points.size()] );
+  }
 }
