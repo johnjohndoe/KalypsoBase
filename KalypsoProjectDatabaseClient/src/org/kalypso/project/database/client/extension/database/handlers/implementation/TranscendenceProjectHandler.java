@@ -45,14 +45,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.projecthandle.AbstractProjectHandle;
-import org.kalypso.core.projecthandle.IProjectOpenAction;
 import org.kalypso.core.projecthandle.local.ProjectExportAction;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.nature.ModuleNature;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.base.actions.AquireProjectLockAction;
 import org.kalypso.project.database.client.core.base.actions.EmptyProjectAction;
-import org.kalypso.project.database.client.core.base.actions.ProjectOpenAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectUpdateChangesAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectUploadChangesAction;
 import org.kalypso.project.database.client.core.base.actions.ReleaseProjectLockAction;
@@ -269,8 +267,6 @@ public class TranscendenceProjectHandler extends AbstractProjectHandle implement
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
-    if( adapter == IProjectOpenAction.class )
-      return new ProjectOpenAction( m_module, this );
 
     return super.getAdapter( adapter );
   }

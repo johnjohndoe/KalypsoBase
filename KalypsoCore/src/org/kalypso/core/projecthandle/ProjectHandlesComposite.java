@@ -197,7 +197,7 @@ public class ProjectHandlesComposite extends Composite
         if( bodyLayout.numColumns == 0 )
           bodyLayout.numColumns = actions.length + 1;
 
-        renderProject( m_body, mainAction, actions, description );
+        renderProject( m_body, mainAction, actions, project.getName(), description );
       }
 
     }
@@ -223,14 +223,14 @@ public class ProjectHandlesComposite extends Composite
     return projects;
   }
 
-  private void renderProject( final Composite body, final IAction mainAction, final IAction[] actions, final String description )
+  private void renderProject( final Composite body, final IAction mainAction, final IAction[] actions, final String name, final String description )
   {
-    final Control mainControl = renderAction( body, mainAction );
+    final Control mainControl = renderAction( body, mainAction, name );
     mainControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     for( final IAction action : actions )
     {
-      final Control control = renderAction( body, action );
+      final Control control = renderAction( body, action, name );
       control.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
     }
 
@@ -255,10 +255,12 @@ public class ProjectHandlesComposite extends Composite
     }
   }
 
-  private Control renderAction( final Composite parent, final IAction action )
+  private Control renderAction( final Composite parent, final IAction action, final String name )
   {
     if( action == null )
-      return new Label( parent, SWT.NONE );
+    {
+      return m_toolkit.createLabel( parent, name );
+    }
     else
       return ActionHyperlink.createHyperlink( m_toolkit, parent, SWT.NONE, action );
   }

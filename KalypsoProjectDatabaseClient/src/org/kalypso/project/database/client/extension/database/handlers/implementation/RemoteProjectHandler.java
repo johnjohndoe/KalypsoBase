@@ -62,8 +62,21 @@ public class RemoteProjectHandler extends AbstractProjectHandle implements IRemo
   public RemoteProjectHandler( final KalypsoProjectBean bean )
   {
     m_bean = bean;
+    m_module = findModule( bean );
+  }
+
+  private IKalypsoModule findModule( final KalypsoProjectBean bean )
+  {
     final String projectType = bean.getProjectType();
-    m_module = ModuleExtensions.getKalypsoModule( projectType );
+    final IKalypsoModule[] modules = ModuleExtensions.getKalypsoModules();
+    for( final IKalypsoModule module : modules )
+    {
+      if( module.supportsProjectType( projectType ) )
+        return module;
+
+    }
+
+    return null;
   }
 
   /**
