@@ -42,11 +42,9 @@ package org.kalypso.project.database.client.extension.database.handlers.implemen
 
 import org.eclipse.jface.action.IAction;
 import org.kalypso.core.projecthandle.AbstractProjectHandle;
-import org.kalypso.core.projecthandle.IProjectOpenAction;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.ModuleExtensions;
 import org.kalypso.project.database.client.core.base.actions.EmptyProjectAction;
-import org.kalypso.project.database.client.core.base.actions.ListRemoteProjectAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectDownloadAction;
 import org.kalypso.project.database.client.core.base.actions.RemoteInfoAction;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
@@ -125,8 +123,10 @@ public class RemoteProjectHandler extends AbstractProjectHandle implements IRemo
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
-    if( adapter == IProjectOpenAction.class )
-      return new ListRemoteProjectAction( this );
+    // FIXME
+
+// if( adapter == IProjectOpenAction.class )
+// return new ListRemoteProjectAction( this );
 
     return super.getAdapter( adapter );
   }

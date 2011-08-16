@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.model.interfaces;
 
+import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -75,4 +76,10 @@ public interface IRemoteWorkspaceModel
   IRemoteProject getProject( String uniqueProjectName );
 
   boolean isDatabaseOnline( );
+
+  void setDirty( );
+
+  void addListener( IRemoteProjectsListener listener );
+
+  void removeListener( IRemoteProjectsListener listener );
 }

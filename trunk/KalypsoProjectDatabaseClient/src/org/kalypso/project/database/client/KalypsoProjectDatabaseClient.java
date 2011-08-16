@@ -8,7 +8,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
-import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.extension.database.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.ProjectDatabaseServiceLocator;
@@ -28,7 +27,7 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
 
   static public final Font HEADING = new Font( Display.getDefault(), "Tahoma", 8, SWT.BOLD ); //$NON-NLS-1$
 
-  private ProjectDatabaseModel PROJECT_DATABASE_MODEL = null;
+  private final ProjectDatabaseModel PROJECT_DATABASE_MODEL = null;
 
   private static IProjectDatabase m_service = null;
 
@@ -103,21 +102,4 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
     return plugin;
   }
 
-  /**
-   * Used only for planer client
-   */
-  @Deprecated
-  public static IProjectDatabaseModel getModel( )
-  {
-    return getDefault().getProjectDatabaseModel();
-  }
-
-  private IProjectDatabaseModel getProjectDatabaseModel( )
-  {
-    /* don't implement ProjectdatabaseModel() as Singleton, perhaps we have to flexibilise the model in future */
-    if( PROJECT_DATABASE_MODEL == null )
-      PROJECT_DATABASE_MODEL = new ProjectDatabaseModel();
-
-    return PROJECT_DATABASE_MODEL;
-  }
 }

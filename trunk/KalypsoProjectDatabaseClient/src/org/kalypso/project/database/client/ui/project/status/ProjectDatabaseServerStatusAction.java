@@ -48,10 +48,11 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.core.projecthandle.IProjectHandleProvider;
+import org.kalypso.core.projecthandle.IProjectHandlesChangedListener;
+import org.kalypso.core.projecthandle.ProjectHandleExtensions;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
-import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteProjectHandleProvider;
 import org.kalypso.project.database.client.i18n.Messages;
 
 /**
@@ -59,7 +60,7 @@ import org.kalypso.project.database.client.i18n.Messages;
  * 
  * @author Dirk Kuch
  */
-public class ProjectDatabaseServerStatusAction extends Action implements IRemoteProjectsListener
+public class ProjectDatabaseServerStatusAction extends Action implements IProjectHandlesChangedListener
 {
   private static final ImageDescriptor IMG_SERVER_WAITING = ImageDescriptor.createFromURL( ProjectDatabaseServerStatusAction.class.getResource( "icons/server_refresh.gif" ) ); //$NON-NLS-1$
 
@@ -71,11 +72,18 @@ public class ProjectDatabaseServerStatusAction extends Action implements IRemote
 
   public ProjectDatabaseServerStatusAction( )
   {
-    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
-    // FIXME: listener is never removed!
-    model.addRemoteListener( this );
+    final IProjectHandleProvider[] providers = ProjectHandleExtensions.getProviders();
+    for( final IProjectHandleProvider provider : providers )
+    {
+      provider.addProviderChangedListener( this );
 
-    update( model.getRemoteConnectionState() );
+      if( provider instanceof IRemoteProjectHandleProvider )
+      {
+        final IRemoteProjectHandleProvider remote = (IRemoteProjectHandleProvider) provider;
+        update( remote.getConnectionState() );
+      }
+    }
+
   }
 
   protected final void update( final IStatus connectionState )
@@ -115,30 +123,31 @@ public class ProjectDatabaseServerStatusAction extends Action implements IRemote
   }
 
   /**
-   * @see org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener#remoteConnectionChanged(boolean)
+   * @see org.kalypso.core.projecthandle.IProjectHandlesChangedListener#itemsChanged()
    */
   @Override
-  public void remoteConnectionChanged( final IStatus connectionState )
+  public void itemsChanged( )
   {
     final UIJob job = new UIJob( "" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        update( connectionState );
+        final IProjectHandleProvider[] providers = ProjectHandleExtensions.getProviders();
+        for( final IProjectHandleProvider provider : providers )
+        {
+          if( provider instanceof IRemoteProjectHandleProvider )
+          {
+            final IRemoteProjectHandleProvider remote = (IRemoteProjectHandleProvider) provider;
+            update( remote.getConnectionState() );
+          }
+        }
+
         return Status.OK_STATUS;
       }
     };
     job.setSystem( true );
     job.schedule();
-  }
-
-  /**
-   * @see org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener#remoteWorkspaceChanged()
-   */
-  @Override
-  public void remoteWorkspaceChanged( )
-  {
   }
 
 }

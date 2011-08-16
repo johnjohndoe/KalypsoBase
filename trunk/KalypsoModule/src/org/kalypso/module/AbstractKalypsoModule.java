@@ -54,6 +54,8 @@ import org.eclipse.jface.action.IAction;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.i18n.I18nUtils;
+import org.kalypso.core.projecthandle.IProjectHandleProvider;
+import org.kalypso.core.projecthandle.ProjectHandleExtensions;
 import org.kalypso.module.internal.i18n.Messages;
 import org.kalypso.module.nature.ModuleUtils;
 import org.kalypso.module.welcome.INewProjectWizardProvider;
@@ -162,6 +164,15 @@ public abstract class AbstractKalypsoModule implements IKalypsoModule, IExecutab
   {
     // adds one placeholder by default
     actions.add( null );
+  }
+
+  /**
+   * @see org.kalypso.module.IKalypsoModule#getProjectProvider()
+   */
+  @Override
+  public IProjectHandleProvider getProjectProvider( )
+  {
+    return ProjectHandleExtensions.getGlobalProvider();
   }
 
 }

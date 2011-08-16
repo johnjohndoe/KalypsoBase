@@ -48,13 +48,14 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.core.projecthandle.IProjectHandleProvider;
+import org.kalypso.core.projecthandle.ProjectHandleExtensions;
 import org.kalypso.project.database.client.core.base.worker.AcquireProjectLockWorker;
 import org.kalypso.project.database.client.core.base.worker.CreateRemoteProjectWorker;
 import org.kalypso.project.database.client.core.base.worker.ReleaseProjectLockWorker;
 import org.kalypso.project.database.client.core.base.worker.UpdateProjectDescriptionWorker;
 import org.kalypso.project.database.client.core.base.worker.UpdateProjectWorker;
-import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteProjectHandleProvider;
 import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
@@ -90,10 +91,18 @@ public class ProjectDataBaseController
         @Override
         public IStatus runInWorkspace( final IProgressMonitor monitor )
         {
-          final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
-          model.setRemoteProjectsDirty();
 
-          JOB = null;
+          final IProjectHandleProvider[] providers = ProjectHandleExtensions.getProviders();
+          for( final IProjectHandleProvider provider : providers )
+          {
+            if( provider instanceof IRemoteProjectHandleProvider )
+            {
+              final IRemoteProjectHandleProvider remote = (IRemoteProjectHandleProvider) provider;
+              remote.getRemoteWorkspaceModel().setDirty();
+
+              JOB = null;
+            }
+          }
 
           return Status.OK_STATUS;
         }

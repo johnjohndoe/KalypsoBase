@@ -211,11 +211,13 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
     return m_beans;
   }
 
+  @Override
   public void addListener( final IRemoteProjectsListener listener )
   {
     m_listener.add( listener );
   }
 
+  @Override
   public void removeListener( final IRemoteProjectsListener listener )
   {
     m_listener.remove( listener );
@@ -227,6 +229,7 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
     m_beans = null;
   }
 
+  @Override
   public void setDirty( )
   {
     UPDATE_JOB.schedule();

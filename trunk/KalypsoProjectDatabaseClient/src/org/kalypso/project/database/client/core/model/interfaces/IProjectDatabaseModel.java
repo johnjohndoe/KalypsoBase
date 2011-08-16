@@ -59,7 +59,7 @@ public interface IProjectDatabaseModel
 
   public void removeListener( final IProjectDatabaseListener listener );
 
-  public IStatus getRemoteConnectionState( );
+  public IStatus getConnectionState( );
 
   public void setRemoteProjectsDirty( );
 

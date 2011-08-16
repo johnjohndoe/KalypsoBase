@@ -58,6 +58,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.core.projecthandle.internal.ProjectHandleComparator;
 
@@ -87,14 +88,14 @@ public class ProjectHandlesComposite extends Composite
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
       updateControl();
+
       return Status.OK_STATUS;
     }
   };
 
-  private IProjectHandleProvder m_model;
+  private IProjectHandleProvider m_model;
 
   private IProjectHandleFilter m_filter;
-
 
   /**
    * @param parent
@@ -134,7 +135,7 @@ public class ProjectHandlesComposite extends Composite
     updateControl();
   }
 
-  public void setModel( final IProjectHandleProvder model )
+  public void setModel( final IProjectHandleProvider model )
   {
     synchronized( this )
     {
@@ -186,7 +187,7 @@ public class ProjectHandlesComposite extends Composite
 
     for( final IProjectHandle project : projects )
     {
-      if( m_filter == null || m_filter.select( project ) )
+      if( select( project ) )
       {
         final IProjectOpenAction mainAction = (IProjectOpenAction) project.getAdapter( IProjectOpenAction.class );
         final IAction[] actions = project.getProjectActions();
@@ -198,9 +199,18 @@ public class ProjectHandlesComposite extends Composite
 
         renderProject( m_body, mainAction, actions, description );
       }
+
     }
 
     layout();
+  }
+
+  private boolean select( final IProjectHandle project )
+  {
+    if( Objects.isNull( m_filter ) )
+      return true;
+
+    return m_filter.select( project );
   }
 
   private IProjectHandle[] getProjectItems( )

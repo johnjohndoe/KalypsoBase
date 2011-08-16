@@ -53,7 +53,7 @@ public class ProjectItemModel // extends AbstractProjectHandleProvider implement
 {
   private final Set<IProjectHandlesChangedListener> m_listener = new LinkedHashSet<IProjectHandlesChangedListener>();
 
-  private final IProjectHandleProvder[] m_itemProviders;
+  private final IProjectHandleProvider[] m_itemProviders;
 
   private final IProjectHandlesChangedListener m_itemChangeListener = new IProjectHandlesChangedListener()
   {
@@ -70,13 +70,13 @@ public class ProjectItemModel // extends AbstractProjectHandleProvider implement
     m_itemProviders = null; // new IProjectHandleProvder[] { new LocalWorkspaceItemProvider() };
 
 // m_itemProviders = ModuleWorkspaceExtensions.getItemProviders();
-    for( final IProjectHandleProvder provider : m_itemProviders )
+    for( final IProjectHandleProvider provider : m_itemProviders )
       provider.addProviderChangedListener( m_itemChangeListener );
   }
 
   public void dispose( )
   {
-    for( final IProjectHandleProvder provider : m_itemProviders )
+    for( final IProjectHandleProvider provider : m_itemProviders )
       provider.removeProviderChangedListener( m_itemChangeListener );
   }
 
@@ -124,7 +124,7 @@ public class ProjectItemModel // extends AbstractProjectHandleProvider implement
   public synchronized IProjectHandle[] getProjects( )
   {
     final Collection<IProjectHandle> items = new ArrayList<IProjectHandle>();
-    for( final IProjectHandleProvder provider : m_itemProviders )
+    for( final IProjectHandleProvider provider : m_itemProviders )
     {
       final IProjectHandle[] projects = provider.getProjects();
       items.addAll( Arrays.asList( projects ) );

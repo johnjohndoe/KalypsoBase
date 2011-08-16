@@ -262,7 +262,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
   }
 
   @Override
-  public IStatus getRemoteConnectionState( )
+  public IStatus getConnectionState( )
   {
     if( m_remote != null )
       return m_remote.getRemoteConnectionState();

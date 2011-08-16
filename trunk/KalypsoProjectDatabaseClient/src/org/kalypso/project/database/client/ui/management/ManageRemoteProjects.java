@@ -44,7 +44,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -55,9 +54,11 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.core.projecthandle.IProjectHandleProvider;
+import org.kalypso.core.projecthandle.ProjectHandleExtensions;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
-import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteProjectHandleProvider;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
@@ -88,10 +89,19 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
     m_toolkit = toolkit;
     m_type = type;
 
-    this.setLayout( new GridLayout() );
+    setLayout( new GridLayout() );
 
-    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
-    model.addRemoteListener( this );
+    final IProjectHandleProvider[] providers = ProjectHandleExtensions.getProviders();
+    for( final IProjectHandleProvider provider : providers )
+    {
+      if( provider instanceof IRemoteProjectHandleProvider )
+      {
+        final IRemoteProjectHandleProvider remote = (IRemoteProjectHandleProvider) provider;
+        final IRemoteWorkspaceModel model = remote.getRemoteWorkspaceModel();
+
+        model.addListener( this );
+      }
+    }
 
     update();
   }
@@ -102,8 +112,15 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
   @Override
   public void dispose( )
   {
-    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
-    model.removeRemoteListener( this );
+    final IProjectHandleProvider[] providers = ProjectHandleExtensions.getProviders();
+    for( final IProjectHandleProvider provider : providers )
+    {
+
+      final IRemoteProjectHandleProvider remote = (IRemoteProjectHandleProvider) provider;
+      final IRemoteWorkspaceModel model = remote.getRemoteWorkspaceModel();
+
+      model.removeListener( this );
+    }
 
     super.dispose();
   }
@@ -114,7 +131,7 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
   @Override
   public void update( )
   {
-    if( this.isDisposed() )
+    if( isDisposed() )
       return;
 
     if( m_body != null )
@@ -207,10 +224,17 @@ public class ManageRemoteProjects extends Composite implements IRemoteProjectsLi
           @Override
           public void linkActivated( final HyperlinkEvent e )
           {
-            final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
-            final IRemoteWorkspaceModel remoteModel = model.getRemoteWorkspaceModel();
+            final IProjectHandleProvider[] providers = ProjectHandleExtensions.getProviders();
+            for( final IProjectHandleProvider provider : providers )
+            {
+              if( provider instanceof IRemoteProjectHandleProvider )
+              {
+                final IRemoteProjectHandleProvider remote = (IRemoteProjectHandleProvider) provider;
+                final IRemoteWorkspaceModel model = remote.getRemoteWorkspaceModel();
 
-            remoteModel.deleteBean( version );
+                model.deleteBean( version );
+              }
+            }
 
           }
         } );
