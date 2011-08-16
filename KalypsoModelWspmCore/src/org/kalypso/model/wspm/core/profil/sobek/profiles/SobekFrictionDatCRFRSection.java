@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.core.profil.sobek.profiles;
 
 import java.math.BigDecimal;
 
+import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat.FrictionType;
+
 /**
  * @author Gernot Belger
  */
@@ -51,11 +53,11 @@ public class SobekFrictionDatCRFRSection
 
   private final BigDecimal m_end;
 
-  private int m_positiveType;
+  private FrictionType m_positiveType;
 
   private BigDecimal m_positiveValue;
 
-  private int m_negativeType;
+  private FrictionType m_negativeType;
 
   private BigDecimal m_negativeValue;
 
@@ -65,15 +67,35 @@ public class SobekFrictionDatCRFRSection
     m_end = end;
   }
 
-  public void setPositiveValue( final int type, final BigDecimal value )
+  public void setPositiveValue( final FrictionType type, final BigDecimal value )
   {
     m_positiveType = type;
     m_positiveValue = value;
   }
 
-  public void setNegativeValue( final int type, final BigDecimal value )
+  public void setNegativeValue( final FrictionType type, final BigDecimal value )
   {
     m_negativeType = type;
     m_negativeValue = value;
+  }
+
+  public BigDecimal getStart( )
+  {
+    return m_start;
+  }
+
+  public BigDecimal getEnd( )
+  {
+    return m_end;
+  }
+
+  public FrictionType getPositiveType( )
+  {
+    return m_positiveType;
+  }
+
+  public BigDecimal getPositiveValue( )
+  {
+    return m_positiveValue;
   }
 }
