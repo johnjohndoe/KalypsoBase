@@ -137,4 +137,9 @@ public class SobekProfile
   {
     return m_profileDef;
   }
+
+  public SobekProfileDat getProfileDat( )
+  {
+    return m_profileDat;
+  }
 }
