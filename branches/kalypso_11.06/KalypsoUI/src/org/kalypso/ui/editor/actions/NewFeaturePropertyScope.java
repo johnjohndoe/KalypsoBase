@@ -47,6 +47,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.core.catalog.FeatureTypePropertiesCatalog;
 import org.kalypso.core.catalog.IFeatureTypePropertiesConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -164,7 +165,8 @@ class NewFeaturePropertyScope implements INewScope
   {
     final Properties uiProperties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), featureType.getQName() );
     final String depthStr = uiProperties.getProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH );
-    final int depth = Integer.parseInt( depthStr );
+    // TODO: move 0 into constants
+    final int depth = NumberUtils.parseQuietInt( depthStr, 0 );
 
     final ICommand command = new AddFeatureCommand( m_workspace, featureType, m_parentFeature, m_targetRelation, 0, null, m_selectionManager, depth );
     m_workspace.postCommand( command );
