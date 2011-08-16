@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
 import org.kalypso.model.wspm.core.profil.sobek.SobekModel;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekNetworkD12;
+import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekNetworkD12Point;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfile;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDat;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDef;
@@ -119,7 +120,7 @@ public class SobekModelParser
     return parser.read( monitor );
   }
 
-  private SobekNetworkD12 readNetworkD12( final IProgressMonitor monitor )
+  private SobekNetworkD12 readNetworkD12( final IProgressMonitor monitor ) throws CoreException, IOException
   {
     final File networkD12File = new File( m_sobekProjectDir, ISobekConstants.NETWORK_D12 );
     if( !networkD12File.isFile() )
@@ -155,6 +156,15 @@ public class SobekModelParser
       m_profileIndex.put( defId, profileWithDat );
     }
 
+    final SobekNetworkD12Point[] points = network.getPoints();
+    for( final SobekNetworkD12Point point : points )
+    {
+      final String defId = point.getID();
+      final SobekProfile profile = createOrGetProfile( defId );
+      final SobekProfile profileWithDat = profile.setNetworkPoint( point );
+      m_profileIndex.put( defId, profileWithDat );
+    }
+
     /* Create the SOBEK model */
     final SobekModel sobekModel = new SobekModel();
 
@@ -168,7 +178,7 @@ public class SobekModelParser
   private SobekProfile createOrGetProfile( final String definitionId )
   {
     if( !m_profileIndex.containsKey( definitionId ) )
-      m_profileIndex.put( definitionId, new SobekProfile( null, null, null ) );
+      m_profileIndex.put( definitionId, new SobekProfile( null, null, null, null ) );
 
     return m_profileIndex.get( definitionId );
   }

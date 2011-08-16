@@ -40,24 +40,54 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.sobek.profiles;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.math.BigDecimal;
 
 /**
  * @author Gernot Belger
  *
  */
-public class SobekNetworkD12
+public class SobekNetworkD12Point
 {
-  private final Collection<SobekNetworkD12Point> m_points = new ArrayList<SobekNetworkD12Point>();
+  private final String m_id;
 
-  public void add( final SobekNetworkD12Point point )
+  private final String m_name;
+
+  private final String m_carrierID;
+
+  private final BigDecimal m_lc;
+
+  private final BigDecimal m_px;
+
+  private final BigDecimal m_py;
+
+  private final int m_mc;
+
+  private final int m_mr;
+
+  public SobekNetworkD12Point( final String id, final String name, final String carrierID, final BigDecimal lc, final BigDecimal px, final BigDecimal py, final int mc, final int mr )
   {
-    m_points.add( point );
+    m_id = id;
+    m_name = name;
+    m_carrierID = carrierID;
+    m_lc = lc;
+    m_px = px;
+    m_py = py;
+    m_mc = mc;
+    m_mr = mr;
   }
 
-  public SobekNetworkD12Point[] getPoints( )
+  public String getID( )
   {
-    return m_points.toArray( new SobekNetworkD12Point[m_points.size()] );
+    return m_id;
+  }
+
+  public BigDecimal getPX( )
+  {
+    return m_px;
+  }
+
+  public BigDecimal getPY( )
+  {
+    return m_py;
   }
 }
