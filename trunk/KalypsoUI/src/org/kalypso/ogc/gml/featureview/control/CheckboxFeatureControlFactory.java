@@ -58,16 +58,15 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class CheckboxFeatureControlFactory implements IFeatureControlFactory
 {
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory#createFeatureControl(org.kalypso.ogc.gml.featureview.control.IFeatureComposite, org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, org.kalypso.template.featureview.ControlType, org.kalypso.gmlschema.annotation.IAnnotation)
-   */
   @Override
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
   {
     final Checkbox checkboxType = (Checkbox) controlType;
 
     final String checkboxControlText = checkboxType.getText();
-    final String text = AnnotationUtilities.getAnnotation( annotation, checkboxControlText, IAnnotation.ANNO_LABEL );
+    final String translatedCheckboxText = parentComposite.getTranslator().get( checkboxControlText );
+
+    final String text = AnnotationUtilities.getAnnotation( annotation, translatedCheckboxText, IAnnotation.ANNO_LABEL );
 
     final IValuePropertyType vpt = (IValuePropertyType) pt;
 

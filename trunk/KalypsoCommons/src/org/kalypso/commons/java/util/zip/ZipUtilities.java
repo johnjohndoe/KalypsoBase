@@ -666,6 +666,7 @@ public class ZipUtilities
       saveEntry( zf, targetDir, target );
       System.out.println( ". unpacked" ); //$NON-NLS-1$
     }
+    zf.close();
   }
 
 }

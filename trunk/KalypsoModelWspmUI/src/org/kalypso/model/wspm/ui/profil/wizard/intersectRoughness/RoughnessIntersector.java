@@ -210,7 +210,7 @@ public class RoughnessIntersector
                   final IComponent component = provider.getPointProperty( componentId );
 
                   Object defaultValue = component.getDefaultValue();
-                  if( defaultValue == null && component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) )
+                  if( defaultValue == null && component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) ) //$NON-NLS-1$
                   {
                     defaultValue = 0.0;
                   }

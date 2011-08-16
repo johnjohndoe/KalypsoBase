@@ -1,7 +1,7 @@
 package org.kalypso.model.wspm.core.gml;
 
 import java.math.BigDecimal;
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,10 +23,12 @@ import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.gml.binding.commons.Image;
 import org.kalypsodeegree_impl.model.feature.AbstractCachedFeature2;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureCacheDefinition;
 
 // FIXME: we have in parallel still the feature type handler for this kind of feature.
@@ -52,6 +54,8 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, ObservationFeatureFactory.OM_RESULTDEFINITION );
     CACHE_DEFINITION.addCachedProperty( QNAME_PSEUDO_PROFILE, QN_PROPERTY_OBS_MEMBERS );
   }
+
+  private IFeatureBindingCollection<Image> m_images = null;
 
   public ProfileFeatureBinding( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -253,21 +257,18 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     return myResults.toArray( new IObservation[] {} );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileFeature#setImage(java.net.URL)
-   */
   @Override
-  public Image addImage( final URL imageURL )
+  public Image addImage( final URI imageURI )
   {
     final IFeatureType featureType = getFeatureType();
-    final IFeatureType ft = featureType.getGMLSchema().getFeatureType( Image.QNAME );
+    final IFeatureType ft = featureType.getGMLSchema().getFeatureType( Image.FEATURE_IMAGE );
     final IRelationType rt = (IRelationType) featureType.getProperty( QN_PROPERTY_IMAGE_MEMBER );
     final Image imageFeature = (Image) getWorkspace().createFeature( this, rt, ft );
 
     try
     {
       getWorkspace().addFeatureAsComposition( this, rt, -1, imageFeature );
-      imageFeature.setUri( imageURL == null ? null : imageURL.toURI() );
+      imageFeature.setUri( imageURI == null ? null : imageURI );
     }
     catch( final Exception e )
     {
@@ -294,4 +295,12 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     return WspmGeometryUtilities.createProfileSegment( profil, srsName, pointMarkerName );
   }
 
+  @Override
+  public synchronized IFeatureBindingCollection<Image> getImages( )
+  {
+    if( m_images == null )
+      m_images = new FeatureBindingCollection<Image>( this, Image.class, QN_PROPERTY_IMAGE_MEMBER, true );
+
+    return m_images;
+  }
 }

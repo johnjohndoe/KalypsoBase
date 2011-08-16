@@ -76,21 +76,21 @@
 				<and>
 					<!--reference definitionId="mapContext" /-->
 					<with variable="activeMapPanel">
-						<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
+						<test property="org.kalypso.ui.test.map.hasTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
 					</with>
 				</and>
 			</enabledWhen>
 		</handler>
           <handler commandId="org.kalypso.gml.ui.toolWizards" class="org.kalypso.gml.ui.tools.ToolWizardsHandler">
-                <enabledWhen>
-                   <with variable="selection">
-                      <count value="+"/>
-                   </with>
-                </enabledWhen>
+             <activeWhen>
+                <test
+                      args="org.kalypso.gml.ui,toolWizards"
+                      forcePluginActivation="true"
+                      property="org.kalypso.contribs.eclipsercp.genericWizardTester.isEnabled">
+                </test>
+             </activeWhen>
           </handler>
-          <handler
-                class="org.kalypso.gml.ui.internal.feature.EditFeatureHandler"
-                commandId="org.kalyso.gml.ui.command.editFeature">
+          <handler class="org.kalypso.gml.ui.internal.feature.EditFeatureHandler" commandId="org.kalyso.gml.ui.command.editFeature">
              <enabledWhen>
                 <with variable="selection">
                    <and>
@@ -115,7 +115,14 @@
           </handler>
           <handler class="org.kalypso.gml.ui.internal.feature.DuplicateFeatureHandler" commandId="org.kalyso.gml.ui.command.duplicateFeature">
              <enabledWhen>
-                <reference definitionId="org.kalypso.gml.ui.definition.oneFeatureSelectionFeature"/>
+                <and>
+                  <reference definitionId="org.kalypso.gml.ui.definition.oneFeatureSelectionFeature"/>
+                  <with variable="selection">
+                    <iterate operator="and">
+                        <test property="org.kalypso.gml.catalogProperty" value="true" args="gmltree.showDuplicateMenu"/>
+                    </iterate>
+                  </with>
+                </and>
              </enabledWhen>
           </handler>
           <handler
@@ -185,7 +192,7 @@
 						</with>
 						<!--reference definitionId="mapContext" /-->
 						<with variable="activeMapPanel">
-							<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
+							<test property="org.kalypso.ui.test.map.hasTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
 						</with>
 					</and>
 				</visibleWhen>
@@ -200,7 +207,7 @@
 						</with>
 						<!--reference definitionId="mapContext" /-->
 						<with variable="activeMapPanel">
-							<test property="org.kalypso.ui.test.map.activeTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
+							<test property="org.kalypso.ui.test.map.hasTheme.qname" value="{http://www.opengis.net/gml}_Coverage" />
 						</with>
 					</and>
 				</visibleWhen>

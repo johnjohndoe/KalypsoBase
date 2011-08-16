@@ -62,6 +62,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.catalog.CatalogUtilities;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyComparator;
@@ -70,6 +71,7 @@ import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.i18n.Messages;
 import org.kalypso.loader.ILoader;
+import org.kalypso.loader.ISaveUrnLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.loader.SldLoader;
 import org.kalypso.template.types.StyledLayerType.Style;
@@ -262,6 +264,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
    * Asks the user to save the style and saves it.<br/>
    * Must be called in the display thread.
    */
+  @Override
   public IStatus save( final Shell shell )
   {
     final KeyInfo info = getPoolInfo();
@@ -269,7 +272,8 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
 
     if( info.isSaveable() )
     {
-      final String msg = String.format( "Save Style '%s'?", getLabel() );
+      final String msg = checkIsCatalogStyle( info );
+
       if( !MessageDialog.openConfirm( shell, title, msg ) )
         return Status.CANCEL_STATUS;
 
@@ -295,37 +299,24 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
       return ProgressUtilities.busyCursorWhile( operation );
     }
 
-    /* Stlye is not saveable... is it a catalog style? */
-    if( info.isSaveAsSupported() )
-    {
-      final String msg = "This is a globally registered style. Save this style as user style?\nIf a style is saved as user style, "
-        + "the user style will replace the global style wherever used. You can reset the user style in the style editor.";
-      if( !MessageDialog.openConfirm( shell, title, msg ) )
-        return Status.CANCEL_STATUS;
-
-      final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-      {
-        @Override
-        public IStatus execute( final IProgressMonitor monitor )
-        {
-          try
-          {
-            info.saveObjectAs( monitor );
-            return Status.OK_STATUS;
-          }
-          catch( final LoaderException e )
-          {
-            e.printStackTrace();
-            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to save style" );
-          }
-        }
-      };
-
-      return ProgressUtilities.busyCursorWhile( operation );
-    }
-
     final String msg = "This style cannot be saved.";
     return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), msg );
+  }
+
+  private String checkIsCatalogStyle( final KeyInfo info )
+  {
+    final ILoader loader = info.getLoader();
+    final IPoolableObjectType key = info.getKey();
+
+    final String location = key.getLocation();
+    if( CatalogUtilities.isCatalogResource( location ) )
+    {
+      if( loader instanceof ISaveUrnLoader && !((ISaveUrnLoader) loader).isUserSaved( key ) )
+        return "This is a globally registered style. Save this style as user style?\nIf a style is saved as user style, "
+        + "the user style will replace the global style wherever used. You can reset the user style in the style editor.";
+    }
+
+    return String.format( "Save Style '%s'?", getLabel() );
   }
 
   @Override
@@ -454,6 +445,47 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     }
   }
 
-  abstract protected String getStyleName( );
+  @Override
+  public boolean isResetable( )
+  {
+    final KeyInfo info = getPoolInfo();
 
+    if( !info.isSaveable() )
+      return false;
+
+    final ILoader loader = info.getLoader();
+    final IPoolableObjectType key = info.getKey();
+
+    final String location = key.getLocation();
+    if( !CatalogUtilities.isCatalogResource( location ) )
+      return false;
+
+    if( loader instanceof ISaveUrnLoader )
+    {
+      if( isDirty() )
+        return true;
+
+      if( ((ISaveUrnLoader) loader).isUserSaved( key ) )
+        return true;
+    }
+
+    return false;
+  }
+
+  @Override
+  public IStatus reset( final Shell shell )
+  {
+    if( !isResetable() )
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Unable to reset this style." );
+
+    final KeyInfo info = getPoolInfo();
+    final ISaveUrnLoader loader = (ISaveUrnLoader) info.getLoader();
+
+    final IPoolableObjectType key = info.getKey();
+    loader.resetUserStyle( key );
+    info.reload( true );
+    return Status.OK_STATUS;
+  }
+
+  abstract protected String getStyleName( );
 }

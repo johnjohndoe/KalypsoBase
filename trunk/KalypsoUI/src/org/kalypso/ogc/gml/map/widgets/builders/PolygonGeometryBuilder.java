@@ -160,9 +160,15 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
 
   private void drawHandles( final Graphics g, final int[] x, final int[] y )
   {
-    final int sizeOuter = 6;
     for( int i = 0; i < y.length; i++ )
-      g.drawRect( x[i] - sizeOuter / 2, y[i] - sizeOuter / 2, sizeOuter, sizeOuter );
+      drawHandle( g, x[i], y[i] );
+  }
+
+  // TODO: move to central place. Should used by all widgets / all geometry builders
+  public static void drawHandle( final Graphics g, final int x, final int y )
+  {
+    final int sizeOuter = 6;
+    g.drawRect( x - sizeOuter / 2, y - sizeOuter / 2, sizeOuter, sizeOuter );
   }
 
   /**
@@ -188,8 +194,6 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
         poses[i] = transformedPoint.getPosition();
       }
 
-// m_result = createGeometry( poses );
-// return m_result;
       return createGeometry( poses );
     }
 
@@ -277,12 +281,17 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
   }
 
   /**
-   * This function returns the number of points.
+   * This function returns the minimum number of points, as given in the constructor.
    * 
    * @return The number of points, at which the geometry should be finished. <= 2 if no rule will be used.
    */
   public int getCntPoints( )
   {
     return m_cnt_points;
+  }
+
+  public int getPointCount( )
+  {
+    return m_points.size();
   }
 }

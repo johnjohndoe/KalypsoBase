@@ -50,8 +50,13 @@ import org.kalypso.core.i18n.Messages;
 /**
  * @author doemming
  */
-public class CatalogUtilities
+public final class CatalogUtilities
 {
+  private CatalogUtilities( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
   /**
    * contract: a catalog URN is builded like this:<br>
    * baseURN="ogc:sld:"<br>
@@ -60,7 +65,7 @@ public class CatalogUtilities
    */
   private static final String CATALOG_URN = "_catalog"; //$NON-NLS-1$
 
-  public static String CATALOG_FILE_NAME = "catalog.xml"; //$NON-NLS-1$
+  public static final String CATALOG_FILE_NAME = "catalog.xml"; //$NON-NLS-1$
 
   // TODO find out XML namespace
   public static final QName BASE = new QName( "xml", "base" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -68,22 +73,22 @@ public class CatalogUtilities
   public static String getPathForCatalog( final String catalogURN )
   {
     if( !catalogURN.endsWith( ":" ) ) //$NON-NLS-1$
-      throw new UnsupportedOperationException( Messages.getString("org.kalypso.core.catalog.CatalogUtilities.5") + catalogURN ); //$NON-NLS-1$
-    if( catalogURN.equals( ":" ) ) //$NON-NLS-1$
+      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.core.catalog.CatalogUtilities.5" ) + catalogURN ); //$NON-NLS-1$
+
+    if( ":".equals( catalogURN ) ) //$NON-NLS-1$
       return CATALOG_FILE_NAME;
+
     final String path = catalogURN.replace( ':', File.separator.charAt( 0 ) );
     if( path.endsWith( File.separator ) )
       return path + CATALOG_FILE_NAME;
+
     return path + File.separator + CATALOG_FILE_NAME;
   }
 
-  /** 
-   *   
-   */
   public static String createCatalogURN( final String baseURN )
   {
     if( !baseURN.endsWith( ":" ) ) //$NON-NLS-1$
-      throw new UnsupportedOperationException( Messages.getString("org.kalypso.core.catalog.CatalogUtilities.8") + baseURN ); //$NON-NLS-1$
+      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.core.catalog.CatalogUtilities.8" ) + baseURN ); //$NON-NLS-1$
     // replace last ':' with catalog suffix, that is the contract
     return baseURN.substring( 0, baseURN.length() - 1 ) + CATALOG_URN;
   }
@@ -94,7 +99,7 @@ public class CatalogUtilities
    * 
    * @return part of urn
    */
-  public static String getUrnSection( final String urn, int level )
+  public static String getUrnSection( final String urn, final int level )
   {
     if( level == 0 )
       return ":"; //$NON-NLS-1$
@@ -103,7 +108,7 @@ public class CatalogUtilities
       final String[] urnParts = urn.split( ":" ); //$NON-NLS-1$
       return urnParts[level - 1];
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return null;
     }
@@ -155,5 +160,16 @@ public class CatalogUtilities
       result.append( urnSection );
     }
     return result.toString();
+  }
+
+  /**
+   * @return <code>true</code> iff the given path is a catalog resource, i.e. starts with 'urn:'
+   */
+  public static boolean isCatalogResource( final String location )
+  {
+    if( location == null )
+      return false;
+
+    return location.startsWith( "urn:" ); //$NON-NLS-1$
   }
 }

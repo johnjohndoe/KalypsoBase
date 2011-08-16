@@ -488,6 +488,8 @@ public final class WspmProfileHelper
     /* Same for RW and HW, but filter 0-values */
     final PolyLine rwLine = createPolyline( profil, cBreite, cRechtswert );
     final PolyLine hwLine = createPolyline( profil, cBreite, cHochwert );
+    if( rwLine.length() < 2 || hwLine.length() < 2 )
+      return new GM_Point[] {};
 
     final GM_Point[] poses = new GM_Point[intersections.length];
     int count = 0;
@@ -567,12 +569,14 @@ public final class WspmProfileHelper
       {
         final double x = ((Number) valueX).doubleValue();
         final double y = ((Number) valueY).doubleValue();
-
-        if( Math.abs( y ) > dy )
+        if( !Double.isNaN( x ) && !Double.isNaN( y ) )
         {
-          xValues[count] = x;
-          yValues[count] = y;
-          count++;
+          if( Math.abs( y ) > dy )
+          {
+            xValues[count] = x;
+            yValues[count] = y;
+            count++;
+          }
         }
       }
     }

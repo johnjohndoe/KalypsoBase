@@ -65,7 +65,8 @@ import org.kalypso.ogc.gml.table.ILayerTableInput;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.editor.AbstractEditorActionBarContributor;
 import org.kalypso.ui.editor.actions.FeatureSelectionActionGroup;
-import org.kalypso.ui.editor.actions.NewFeatureScope;
+import org.kalypso.ui.editor.actions.INewScope;
+import org.kalypso.ui.editor.actions.NewScopeFactory;
 import org.kalypso.ui.editor.gistableeditor.actions.CopyEditorPartAction;
 import org.kalypso.ui.editor.gistableeditor.actions.PasteEditorPartAction;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -174,8 +175,7 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
 
     // FIXME: hard to solve: we should consider if there is a feature-type filter on the list of the table -> only
     // features that may go into this list should be created
-
-    final NewFeatureScope scope = new NewFeatureScope( workspace, featureList, selectionManager );
+    final INewScope scope = NewScopeFactory.createPropertyScope( featureList, workspace, selectionManager );
     scope.addMenuItems( newFeatureMenu );
   }
 

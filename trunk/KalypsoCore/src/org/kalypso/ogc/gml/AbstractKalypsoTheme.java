@@ -93,7 +93,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * Externally set envelope for performance reasons
    */
-  protected GM_Envelope m_activeEnvelope = null;
+  private GM_Envelope m_activeEnvelope = null;
 
   /**
    * Stores the relative URL or an URN for an icon, which can be used for the layer in a legend. May be null.
@@ -491,6 +491,9 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     if( ISelection.class.isAssignableFrom( adapter ) )
       return StructuredSelection.EMPTY;
 
+    if( IKalypsoTheme.class.equals( adapter ) )
+      return this;
+
     return super.getAdapter( adapter );
   }
 
@@ -565,9 +568,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_id = id;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getId()
-   */
   @Override
   public String getId( )
   {
@@ -575,11 +575,16 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#setEnvelope(org.kalypsodeegree.model.geometry.GM_Envelope)
+   * Performance HACK: the current envelope for painting. Should NOT be called by clients, only within this API.
    */
   @Override
   public void setActiveEnvelope( final GM_Envelope boundingBox )
   {
     m_activeEnvelope = boundingBox;
+  }
+
+  protected GM_Envelope getActiveEnvelope( )
+  {
+    return m_activeEnvelope;
   }
 }

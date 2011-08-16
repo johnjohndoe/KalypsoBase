@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ISelectionValidator;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 
 @SuppressWarnings("restriction")
 public class KalypsoResourceSelectionDialog extends SelectionDialog
@@ -132,9 +133,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   {
     // create the top level composite for the dialog
     final Composite composite = new Composite( parent, 0 );
-    final GridLayout layout = new GridLayout();
-    layout.marginHeight = 0;
-    layout.marginWidth = 0;
+    final GridLayout layout = Layouts.createGridLayout();
     layout.verticalSpacing = 0;
     composite.setLayout( layout );
     composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -175,7 +174,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
    */
   public void setValidator( final ISelectionValidator val )
   {
-    this.m_validator = val;
+    m_validator = val;
   }
 
   /**

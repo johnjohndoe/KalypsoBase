@@ -53,7 +53,6 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -194,7 +193,7 @@ public class AddFeatureCommand implements ICommand
       m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     if( m_selectionManager != null && m_dropSelection == true && m_workspace instanceof CommandableWorkspace )
-      m_selectionManager.changeSelection( FeatureSelectionHelper.getFeatures( m_selectionManager ), new EasyFeatureWrapper[] { new EasyFeatureWrapper( (CommandableWorkspace) m_workspace, m_newFeature ) } );
+      m_selectionManager.setSelection( new EasyFeatureWrapper[] { new EasyFeatureWrapper( (CommandableWorkspace) m_workspace, m_newFeature ) } );
   }
 
   /**

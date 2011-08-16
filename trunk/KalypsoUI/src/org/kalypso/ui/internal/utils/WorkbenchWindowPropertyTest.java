@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.internal.utils;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.expressions.PropertyTester;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 
@@ -51,6 +53,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 public class WorkbenchWindowPropertyTest extends PropertyTester
 {
   private final static String PROPERTY_IS_EDITOR_AREA_VISIBLE = "isEditorAreaVisible"; //$NON-NLS-1$
+
+  private final static String PROPERTY_IS_VIEW_VISIBLE = "isViewVisible"; //$NON-NLS-1$
 
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
@@ -63,7 +67,27 @@ public class WorkbenchWindowPropertyTest extends PropertyTester
     if( PROPERTY_IS_EDITOR_AREA_VISIBLE.equals( property ) )
       return testIsEditorAreaVisible( window, expectedValue );
 
+    if( PROPERTY_IS_VIEW_VISIBLE.equals( property ) )
+      return testIsViewVisible( window, expectedValue );
+
     throw new IllegalArgumentException();
+  }
+
+  private boolean testIsViewVisible( final IWorkbenchWindow window, final Object expectedValue )
+  {
+    final String viewID = ObjectUtils.toString( expectedValue );
+    if( window == null )
+      return false;
+
+    final IWorkbenchPage page = window.getActivePage();
+    if( page == null )
+      return false;
+
+    final IViewPart part = page.findView( viewID );
+    if( part == null )
+      return false;
+
+    return page.isPartVisible( part );
   }
 
   private boolean testIsEditorAreaVisible( final IWorkbenchWindow window, final Object expectedValue )

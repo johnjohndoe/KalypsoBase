@@ -119,7 +119,7 @@ import org.xml.sax.XMLReader;
 public final class GmlSerializer
 {
   private static TransformerFactory m_tFac = TransformerFactory.newInstance();
-  
+
   public static final IFeatureProviderFactory DEFAULT_FACTORY = new GmlSerializerFeatureProviderFactory();
 
   public static final String[] GZ_EXTENSIONS = new String[] { "gz", "gmlz" }; //$NON-NLS-1$ //$NON-NLS-2$
@@ -503,11 +503,23 @@ public final class GmlSerializer
    */
   public static GMLWorkspace createGMLWorkspace( final IFile file ) throws Exception
   {
+    return createGMLWorkspace( file, new NullProgressMonitor() );
+  }
+
+  /**
+   * This function loads a workspace from a {@link IFile}.
+   * 
+   * @param file
+   *          The file of the workspace.
+   * @return The workspace of the file.
+   */
+  public static GMLWorkspace createGMLWorkspace( final IFile file, final IProgressMonitor monitor ) throws Exception
+  {
     /* Create the url of the workspace. */
     final URL url = ResourceUtilities.createURL( file );
 
     /* Load the workspace and return it. */
-    return GmlSerializer.createGMLWorkspace( url, null );
+    return GmlSerializer.createGMLWorkspace( url, null, monitor );
   }
 
   /**

@@ -34,7 +34,6 @@ import de.openali.odysseus.chart.framework.model.layer.manager.LayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
-import de.openali.odysseus.chart.framework.model.mapper.IScreenAxis;
 
 /**
  * @author alibu
@@ -405,32 +404,23 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @Override
-  public void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
+  public final void setCoordinateMapper( final ICoordinateMapper coordinateMapper )
   {
     m_coordinateMapper = coordinateMapper;
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
-   */
   @Override
   public void setData( final String id, final Object data )
   {
     m_data.put( id, data );
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setDescription(java.lang.String)
-   */
   @Override
   public void setDescription( final String description )
   {
     m_description = description;
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setID(java.lang.String)
-   */
   @Override
   public void setIdentifier( final String identifier )
   {

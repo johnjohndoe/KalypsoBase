@@ -42,7 +42,7 @@ package org.kalypso.commons.databinding.swt;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -61,9 +61,9 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class FileValueSelectionListener implements SelectionListener
 {
-  private final Collection<String> m_names = new ArrayList<String>();
+  private final List<String> m_names = new ArrayList<String>();
 
-  private final Collection<String[]> m_extensions = new ArrayList<String[]>();
+  private final List<String[]> m_extensions = new ArrayList<String[]>();
 
   private final String m_dialogTitle;
 
@@ -162,7 +162,13 @@ public class FileValueSelectionListener implements SelectionListener
 
   private String[] getFilterNames( )
   {
-    return m_names.toArray( new String[m_names.size()] );
+    final String[] names = new String[m_names.size()];
+    for( int i = 0; i < names.length; i++ )
+    {
+      final String[] extensions = m_extensions.get( i );
+      final String extensionText = StringUtils.join( extensions, ',' );
+      names[i] = String.format( "%s (%s)", m_names.get( i ), extensionText );
+    }
+    return names;
   }
-
 }

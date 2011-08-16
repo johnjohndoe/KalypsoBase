@@ -3,7 +3,6 @@ package org.kalypso.simulation.core;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 import org.kalypso.simulation.core.i18n.Messages;
 
 public class SimulationMonitorAdaptor implements IProgressMonitor
@@ -36,7 +35,7 @@ public class SimulationMonitorAdaptor implements IProgressMonitor
   @Override
   public void done( )
   {
-    done( new Status( IStatus.OK, EclipseRCPContributionsPlugin.getID(), -1, Messages.getString( "org.kalypso.simulation.core.SimulationMonitorAdaptor.0" ), null ) ); //$NON-NLS-1$
+    done( new Status( IStatus.OK, KalypsoSimulationCorePlugin.getID(), -1, Messages.getString( "org.kalypso.simulation.core.SimulationMonitorAdaptor.0" ), null ) ); //$NON-NLS-1$
   }
 
   @Override

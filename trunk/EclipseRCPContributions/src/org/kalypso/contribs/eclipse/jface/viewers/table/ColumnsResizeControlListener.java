@@ -59,12 +59,6 @@ import org.eclipse.ui.progress.UIJob;
  */
 public class ColumnsResizeControlListener extends ControlAdapter
 {
-// /** If set to a column, the column will always get this fixed width */
-//  public static final String DATA_FIXED_COL_WIDTH = ColumnsResizeControlListener.class.getName() + ".fixedColumnWidth"; //$NON-NLS-1$
-//
-// /** Defines the minimal column width of each table column with this data-entry */
-//  public static final String DATA_MIN_COL_WIDTH = ColumnsResizeControlListener.class.getName() + ".minColumnWidth"; //$NON-NLS-1$
-
   private static final String DATA_WIDTH_INFO = "columnWidthInfo"; //$NON-NLS-1$
 
   public static final int MIN_COL_WIDTH_PACK = -2;
@@ -101,14 +95,21 @@ public class ColumnsResizeControlListener extends ControlAdapter
     if( m_isActive )
       return;
 
+    updateColumnSizes();
+  }
+
+  public void updateColumnSizes( )
+  {
     // In order to handle many resize events in short time, we schedule the real update into a job
     m_resizeColumnsJob.cancel();
-    m_resizeColumnsJob.schedule( 50 );
+    // REMARK: using a long delay here also protects against strange effect in combinasion with
+    // scrolled forms.
+    m_resizeColumnsJob.schedule( 250 );
   }
 
   void resizeColumns( )
   {
-    if( m_tableOrTree.isDisposed() )
+    if( m_tableOrTree == null || m_tableOrTree.isDisposed() )
       return;
 
     try

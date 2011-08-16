@@ -60,6 +60,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
@@ -95,10 +96,7 @@ public class ProfileProblemView
     // Create the ScrolledComposite to scroll horizontally and vertically
     m_scrolledComposite = new ScrolledComposite( parent, SWT.V_SCROLL );
     m_scrolledComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    final GridLayout scLayout = new GridLayout( 1, false );
-    scLayout.marginWidth = 0;
-    scLayout.marginHeight = 0;
-    m_scrolledComposite.setLayout( scLayout );
+    m_scrolledComposite.setLayout( Layouts.createGridLayout() );
     m_toolkit.adapt( m_scrolledComposite );
   }
 

@@ -79,6 +79,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.Form;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.ogc.gml.movie.IMovieControls;
@@ -199,17 +200,11 @@ public class MovieComposite extends Composite
   private void createControls( )
   {
     /* Create the layout. */
-    final GridLayout layout = new GridLayout( 1, false );
-    layout.marginHeight = 0;
-    layout.marginWidth = 0;
-    super.setLayout( layout );
+    super.setLayout( Layouts.createGridLayout() );
 
     /* The content. */
     final Composite content = new Composite( this, SWT.NONE );
-    final GridLayout contentLayout = new GridLayout( 1, false );
-    contentLayout.marginHeight = 0;
-    contentLayout.marginWidth = 0;
-    content.setLayout( contentLayout );
+    content.setLayout( Layouts.createGridLayout() );
     content.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* A form. */
@@ -220,10 +215,7 @@ public class MovieComposite extends Composite
     final Composite body = m_form.getBody();
 
     /* Set the properties for the body of the form. */
-    final GridLayout bodyLayout = new GridLayout( 1, false );
-    bodyLayout.marginHeight = 0;
-    bodyLayout.marginWidth = 0;
-    body.setLayout( bodyLayout );
+    body.setLayout( Layouts.createGridLayout() );
 
     /* Create the content. */
     m_content = createContentComposite( body );
@@ -244,10 +236,7 @@ public class MovieComposite extends Composite
   {
     /* Create a composite. */
     final Composite contentComposite = new Composite( parent, SWT.NONE );
-    final GridLayout contentLayout = new GridLayout( 1, false );
-    contentLayout.marginHeight = 0;
-    contentLayout.marginWidth = 0;
-    contentComposite.setLayout( contentLayout );
+    contentComposite.setLayout( Layouts.createGridLayout() );
 
     /* Create the content internal composite. */
     final Composite contentInternalComposite = createContentInternalComposite( contentComposite );
@@ -287,10 +276,7 @@ public class MovieComposite extends Composite
   {
     /* Create a composite. */
     final Composite composite = new Composite( parent, SWT.NONE );
-    final GridLayout layout = new GridLayout( 3, false );
-    layout.marginHeight = 0;
-    layout.marginWidth = 0;
-    composite.setLayout( layout );
+    composite.setLayout( Layouts.createGridLayout( 3 ) );
 
     /* Create the image composite. */
     final Composite imageComposite = new Composite( composite, SWT.EMBEDDED | SWT.NO_BACKGROUND );

@@ -10,6 +10,11 @@ import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
+import de.openali.odysseus.chartconfig.x020.AxisType;
+import de.openali.odysseus.chartconfig.x020.ChartType;
 
 public final class ChartFactoryUtilities
 {
@@ -71,13 +76,13 @@ public final class ChartFactoryUtilities
     {
       if( is != null )
         try
-        {
+      {
           is.close();
-        }
-        catch( final IOException e )
-        {
-          // do nothing
-        }
+      }
+      catch( final IOException e )
+      {
+        // do nothing
+      }
     }
 
     if( id == null )
@@ -85,5 +90,17 @@ public final class ChartFactoryUtilities
       id = new ImageData( width > 0 ? width : 10, height > 0 ? height : 10, 1, new PaletteData( new RGB[] { new RGB( 0, 0, 0 ) } ) );
     }
     return id.scaledTo( width < 1 ? id.width : width, height < 1 ? id.height : height );
+  }
+
+  /**
+   * Does an autoscale of all axes that are configures as such in the given chart.<br/>
+   * FIXME: should probably not called by any client. Probably has to be moved into the chart loading mechanism.
+   */
+  public static void doAutoscale( final IChartModel chartModel, final ChartType chart )
+  {
+    final IMapperRegistry mapperRegistry = chartModel.getMapperRegistry();
+    final AxisType[] axes = chart.getMappers().getAxisArray();
+    final IAxis[] autoscaledAxes = AxisUtils.findAutoscaleAxes( axes, mapperRegistry );
+    chartModel.autoscale( autoscaledAxes );
   }
 }

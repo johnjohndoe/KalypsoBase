@@ -230,5 +230,4 @@ public class PatternInputReplacer<T>
 
     return button;
   }
-
 }

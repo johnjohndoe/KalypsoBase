@@ -178,10 +178,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private final IMapModellListener m_modellListener = new MapModellAdapter()
   {
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
@@ -191,39 +187,24 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
       updateStatus();
     }
 
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeOrderChanged(org.kalypso.ogc.gml.mapmodel.IMapModell)
-     */
     @Override
     public void themeOrderChanged( final IMapModell source )
     {
       invalidateMap();
     }
 
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
     public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
     {
       handleThemeRemoved( theme, lastVisibility );
     }
 
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeVisibilityChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
-     */
     @Override
     public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility )
     {
       invalidateMap();
     }
 
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeStatusChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
     public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
     {

@@ -68,7 +68,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
@@ -109,7 +109,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
     this.m_toolkit = toolkit;
     this.m_model = model;
 
-    setLayout( LayoutHelper.createGridLayout() );
+    setLayout( Layouts.createGridLayout() );
 
     render();
     toolkit.adapt( this );
@@ -135,14 +135,14 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
     }
 
     this.m_base = this.m_toolkit.createComposite( this );
-    this.m_base.setLayout( LayoutHelper.createGridLayout() );
+    this.m_base.setLayout( Layouts.createGridLayout() );
     this.m_base.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final ScrolledForm form = this.m_toolkit.createScrolledForm( this.m_base );
     form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     final Composite body = form.getBody();
-    body.setLayout( LayoutHelper.createGridLayout( 5 ) );
+    body.setLayout( Layouts.createGridLayout( 5 ) );
 
     this.m_toolkit.createLabel( body, "Datum" );
     this.m_toolkit.createLabel( body, "Uhrzeit" );

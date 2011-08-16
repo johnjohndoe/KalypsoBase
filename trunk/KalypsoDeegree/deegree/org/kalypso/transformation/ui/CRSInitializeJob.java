@@ -41,6 +41,7 @@
 package org.kalypso.transformation.ui;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -132,7 +133,7 @@ public class CRSInitializeJob extends Job
    * 
    * @return The hash of the coordinate systems.
    */
-  public HashMap<String, ICoordinateSystem> getCoordHash( )
+  public Map<String, ICoordinateSystem> getCoordHash( )
   {
     return m_coordHash;
   }

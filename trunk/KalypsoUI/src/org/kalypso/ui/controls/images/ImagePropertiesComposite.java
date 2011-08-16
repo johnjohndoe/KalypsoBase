@@ -66,6 +66,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ui.controls.images.listener.IImagePropertyChangedListener;
 
@@ -166,7 +167,7 @@ public class ImagePropertiesComposite extends Composite
    * @param defaultFormat
    *          The default image format.
    */
-  public ImagePropertiesComposite( Composite parent, int style, int defaultWidth, int defaultHeight, boolean defaultAspectRatio, Insets defaultInsets, boolean defaultBorder, String defaultFormat )
+  public ImagePropertiesComposite( final Composite parent, final int style, final int defaultWidth, final int defaultHeight, final boolean defaultAspectRatio, final Insets defaultInsets, final boolean defaultBorder, final String defaultFormat )
   {
     super( parent, style );
 
@@ -194,7 +195,7 @@ public class ImagePropertiesComposite extends Composite
    * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
    */
   @Override
-  public void setLayout( Layout layout )
+  public void setLayout( final Layout layout )
   {
     /* Ignore user set layouts, only layout datas are permitted. */
   }
@@ -232,27 +233,21 @@ public class ImagePropertiesComposite extends Composite
   private void createControls( )
   {
     /* Create the layout. */
-    GridLayout layout = new GridLayout( 1, false );
-    layout.marginHeight = 0;
-    layout.marginWidth = 0;
-    super.setLayout( layout );
+    super.setLayout( Layouts.createGridLayout() );
 
     /* The main composite. */
-    Composite main = new Composite( this, SWT.NONE );
-    GridLayout mainLayout = new GridLayout( 1, false );
-    mainLayout.marginHeight = 0;
-    mainLayout.marginWidth = 0;
-    main.setLayout( mainLayout );
+    final Composite main = new Composite( this, SWT.NONE );
+    main.setLayout( Layouts.createGridLayout() );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create a group. */
-    Group imageGroup = new Group( main, SWT.NONE );
+    final Group imageGroup = new Group( main, SWT.NONE );
     imageGroup.setLayout( new GridLayout( 2, false ) );
     imageGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     imageGroup.setText( "Maße, Format" );
 
     /* Create a label. */
-    Label imageWidthLabel = new Label( imageGroup, SWT.NONE );
+    final Label imageWidthLabel = new Label( imageGroup, SWT.NONE );
     imageWidthLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     imageWidthLabel.setText( "Breite [Pixel]" );
 
@@ -267,13 +262,13 @@ public class ImagePropertiesComposite extends Composite
        * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
        */
       @Override
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         /* Get the source. */
-        Text source = (Text) e.getSource();
+        final Text source = (Text) e.getSource();
 
         /* Store the text. */
-        Integer imageWidth = NumberUtils.parseQuietInteger( source.getText() );
+        final Integer imageWidth = NumberUtils.parseQuietInteger( source.getText() );
         if( imageWidth != null )
         {
           m_imageWidth = imageWidth.intValue();
@@ -284,7 +279,7 @@ public class ImagePropertiesComposite extends Composite
             m_aspectRatio = false;
 
             /* Calculate and set the adjusted height. */
-            int adjustedHeight = (int) Math.floor( m_imageWidth / m_aspectFactor );
+            final int adjustedHeight = (int) Math.floor( m_imageWidth / m_aspectFactor );
             m_imageHeightText.setText( String.format( "%d", adjustedHeight ) );
 
             /* Reset the aspect ratio. */
@@ -298,7 +293,7 @@ public class ImagePropertiesComposite extends Composite
     } );
 
     /* Create a label. */
-    Label imageHeightLabel = new Label( imageGroup, SWT.NONE );
+    final Label imageHeightLabel = new Label( imageGroup, SWT.NONE );
     imageHeightLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     imageHeightLabel.setText( "Höhe [Pixel]" );
 
@@ -313,13 +308,13 @@ public class ImagePropertiesComposite extends Composite
        * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
        */
       @Override
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         /* Get the source. */
-        Text source = (Text) e.getSource();
+        final Text source = (Text) e.getSource();
 
         /* Store the text. */
-        Integer imageHeight = NumberUtils.parseQuietInteger( source.getText() );
+        final Integer imageHeight = NumberUtils.parseQuietInteger( source.getText() );
         if( imageHeight != null )
         {
           m_imageHeight = imageHeight.intValue();
@@ -330,7 +325,7 @@ public class ImagePropertiesComposite extends Composite
             m_aspectRatio = false;
 
             /* Calculate and set the adjusted height. */
-            int adjustedWidth = (int) Math.floor( m_imageHeight * m_aspectFactor );
+            final int adjustedWidth = (int) Math.floor( m_imageHeight * m_aspectFactor );
             m_imageWidthText.setText( String.format( "%d", adjustedWidth ) );
 
             /* Reset the aspect ratio. */
@@ -353,11 +348,11 @@ public class ImagePropertiesComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        Button source = (Button) e.getSource();
+        final Button source = (Button) e.getSource();
 
-        boolean aspectRatio = source.getSelection();
+        final boolean aspectRatio = source.getSelection();
         if( aspectRatio && m_imageHeight > 0 )
           m_aspectFactor = (double) m_imageWidth / (double) m_imageHeight;
 
@@ -369,12 +364,12 @@ public class ImagePropertiesComposite extends Composite
     m_aspectRatioButton.setSelection( m_aspectRatio );
 
     /* Separator. */
-    Label separator = new Label( imageGroup, SWT.HORIZONTAL );
+    final Label separator = new Label( imageGroup, SWT.HORIZONTAL );
     separator.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     separator.setText( "" );
 
     /* Create a label. */
-    Label insetsLabel = new Label( imageGroup, SWT.NONE );
+    final Label insetsLabel = new Label( imageGroup, SWT.NONE );
     insetsLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     insetsLabel.setText( "Druckrand [Pixel]" );
     insetsLabel.setAlignment( SWT.LEFT );
@@ -392,13 +387,13 @@ public class ImagePropertiesComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         /* Get the source. */
-        Spinner source = (Spinner) e.getSource();
+        final Spinner source = (Spinner) e.getSource();
 
         /* Get the selection. */
-        int selection = source.getSelection();
+        final int selection = source.getSelection();
 
         /* Store the values. */
         if( selection > 0 )
@@ -421,10 +416,10 @@ public class ImagePropertiesComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        Button source = (Button) e.getSource();
-        boolean border = source.getSelection();
+        final Button source = (Button) e.getSource();
+        final boolean border = source.getSelection();
         m_border = border;
 
         /* Fire an image property changed event. */
@@ -436,12 +431,12 @@ public class ImagePropertiesComposite extends Composite
     m_borderButton.setSelection( m_border );
 
     /* Separator. */
-    Label separator1 = new Label( imageGroup, SWT.HORIZONTAL );
+    final Label separator1 = new Label( imageGroup, SWT.HORIZONTAL );
     separator1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     separator1.setText( "" );
 
     /* Create a label. */
-    Label imageFormatLabel = new Label( imageGroup, SWT.NONE );
+    final Label imageFormatLabel = new Label( imageGroup, SWT.NONE );
     imageFormatLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     imageFormatLabel.setText( "Format" );
 
@@ -457,31 +452,31 @@ public class ImagePropertiesComposite extends Composite
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
        */
       @Override
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
         /* Get the source. */
-        ComboViewer source = (ComboViewer) event.getSource();
+        final ComboViewer source = (ComboViewer) event.getSource();
 
         /* Get the selection index. */
-        int imageFormatIndex = source.getCombo().getSelectionIndex();
+        final int imageFormatIndex = source.getCombo().getSelectionIndex();
         if( imageFormatIndex == -1 )
           return;
 
         /* Get the selection. */
-        ISelection selection = source.getSelection();
+        final ISelection selection = source.getSelection();
         if( selection == null || selection.isEmpty() || !(selection instanceof StructuredSelection) )
           return;
 
         /* Cast. */
-        StructuredSelection structuredSelection = (StructuredSelection) selection;
+        final StructuredSelection structuredSelection = (StructuredSelection) selection;
 
         /* Get the first element. */
-        Object firstElement = structuredSelection.getFirstElement();
+        final Object firstElement = structuredSelection.getFirstElement();
         if( firstElement == null || !(firstElement instanceof String) )
           return;
 
         /* Cast. */
-        String imageFormat = (String) firstElement;
+        final String imageFormat = (String) firstElement;
 
         /* Store the values. */
         m_imageFormat = imageFormat;
@@ -512,9 +507,9 @@ public class ImagePropertiesComposite extends Composite
    * @param format
    *          The image format.
    */
-  protected void fireImagePropertyChanged( int imageWidth, int imageHeight, boolean aspectRatio, Insets insets, boolean border, String imageFormat )
+  protected void fireImagePropertyChanged( final int imageWidth, final int imageHeight, final boolean aspectRatio, final Insets insets, final boolean border, final String imageFormat )
   {
-    for( IImagePropertyChangedListener listener : m_listener )
+    for( final IImagePropertyChangedListener listener : m_listener )
       listener.imagePropertyChanged( imageWidth, imageHeight, aspectRatio, insets, border, imageFormat );
   }
 
@@ -524,7 +519,7 @@ public class ImagePropertiesComposite extends Composite
    * @param listener
    *          The image property changed listener to add.
    */
-  public void addImagePropertyChangedListener( IImagePropertyChangedListener listener )
+  public void addImagePropertyChangedListener( final IImagePropertyChangedListener listener )
   {
     if( !m_listener.contains( listener ) )
       m_listener.add( listener );
@@ -536,7 +531,7 @@ public class ImagePropertiesComposite extends Composite
    * @param listener
    *          The image property changed listener to remove.
    */
-  public void removeImagePropertyChangedListener( IImagePropertyChangedListener listener )
+  public void removeImagePropertyChangedListener( final IImagePropertyChangedListener listener )
   {
     if( m_listener.contains( listener ) )
       m_listener.remove( listener );
@@ -548,13 +543,13 @@ public class ImagePropertiesComposite extends Composite
    * @param imageWidth
    *          The width of the image or -1.
    */
-  public void setImageWidth( int imageWidth )
+  public void setImageWidth( final int imageWidth )
   {
     if( m_imageWidthText == null || m_imageWidthText.isDisposed() )
       return;
 
     /* We do not want to change the height as well, if the width is explicitly set. */
-    boolean tmpAspectRatio = m_aspectRatio;
+    final boolean tmpAspectRatio = m_aspectRatio;
     m_aspectRatio = false;
 
     /* The width of the image. */
@@ -573,13 +568,13 @@ public class ImagePropertiesComposite extends Composite
    * @param imageHeight
    *          The height of the image or -1.
    */
-  public void setImageHeight( int imageHeight )
+  public void setImageHeight( final int imageHeight )
   {
     if( m_imageHeightText == null || m_imageHeightText.isDisposed() )
       return;
 
     /* We do not want to change the width as well, if the height is explicitly set. */
-    boolean tmpAspectRatio = m_aspectRatio;
+    final boolean tmpAspectRatio = m_aspectRatio;
     m_aspectRatio = false;
 
     /* The height of the image. */
@@ -598,7 +593,7 @@ public class ImagePropertiesComposite extends Composite
    * @param aspectRatio
    *          True, if the aspect ratio should be maintained on change of the width or height.
    */
-  public void setAspectRatio( boolean aspectRatio )
+  public void setAspectRatio( final boolean aspectRatio )
   {
     if( m_aspectRatioButton == null || m_aspectRatioButton.isDisposed() )
       return;
@@ -607,7 +602,7 @@ public class ImagePropertiesComposite extends Composite
     m_aspectRatioButton.setSelection( aspectRatio );
 
     /* Create an event. */
-    Event newEvent = new Event();
+    final Event newEvent = new Event();
     newEvent.display = m_aspectRatioButton.getDisplay();
     newEvent.doit = true;
     newEvent.widget = m_aspectRatioButton;
@@ -622,7 +617,7 @@ public class ImagePropertiesComposite extends Composite
    * @param insets
    *          The insets of the image or null.
    */
-  public void setInsets( Insets insets )
+  public void setInsets( final Insets insets )
   {
     if( m_insetsSpinner == null || m_insetsSpinner.isDisposed() )
       return;
@@ -633,7 +628,7 @@ public class ImagePropertiesComposite extends Composite
       m_insetsSpinner.setSelection( insets.left );
 
       /* Create an event. */
-      Event newEvent = new Event();
+      final Event newEvent = new Event();
       newEvent.display = m_insetsSpinner.getDisplay();
       newEvent.doit = true;
       newEvent.widget = m_insetsSpinner;
@@ -649,7 +644,7 @@ public class ImagePropertiesComposite extends Composite
    * @param aspectRatio
    *          True, if the drawn border is enabled.
    */
-  public void setBorder( boolean border )
+  public void setBorder( final boolean border )
   {
     if( m_borderButton == null || m_borderButton.isDisposed() )
       return;
@@ -658,7 +653,7 @@ public class ImagePropertiesComposite extends Composite
     m_borderButton.setSelection( border );
 
     /* Create an event. */
-    Event newEvent = new Event();
+    final Event newEvent = new Event();
     newEvent.display = m_borderButton.getDisplay();
     newEvent.doit = true;
     newEvent.widget = m_borderButton;
@@ -673,7 +668,7 @@ public class ImagePropertiesComposite extends Composite
    * @param imageFormat
    *          The format of the image or null.
    */
-  public void setImageFormat( String imageFormat )
+  public void setImageFormat( final String imageFormat )
   {
     if( m_imageFormatViewer == null || m_imageFormatViewer.getCombo().isDisposed() )
       return;

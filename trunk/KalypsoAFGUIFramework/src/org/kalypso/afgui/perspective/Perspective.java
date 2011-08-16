@@ -5,7 +5,6 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IPlaceholderFolderLayout;
 import org.kalypso.afgui.views.WorkflowView;
-import org.kalypso.chart.ui.view.ChartView;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.ogc.gml.outline.ViewContentOutline;
 import org.kalypso.ogc.sensor.view.DiagramViewPart;
@@ -17,7 +16,7 @@ import org.kalypso.ui.views.map.MapView;
 
 public class Perspective implements IPerspectiveFactory
 {
-  // REMARK: still using kalypso1d2d.pjt as namespace in order to ebnsure backwards compability.
+  // REMARK: still using kalypso1d2d.pjt as namespace in order to ensure backwards compatibility.
   // If this should ever be changed, make sure all workflow.xml's got updated as well.
   public final static String ID = "org.kalypso.kalypso1d2d.pjt.perspective.Perspective"; //$NON-NLS-1$
 
@@ -48,7 +47,6 @@ public class Perspective implements IPerspectiveFactory
     rightTop.addPlaceholder( MapView.ID );
     rightTop.addPlaceholder( FeatureTemplateView.ID );
     rightTop.addPlaceholder( DiagramViewPart.ID );
-    rightTop.addPlaceholder( ChartView.ID );
     rightTop.addPlaceholder( "org.kalypso.risk.views.RiskStatisticsResultView" ); //$NON-NLS-1$
 
     rightBottom.addPlaceholder( FeatureView.ID );
@@ -76,8 +74,6 @@ public class Perspective implements IPerspectiveFactory
     // layout.getViewLayout( MapView.ID + ":*").setCloseable( false );
     layout.getViewLayout( MapView.ID ).setCloseable( false );
     layout.getViewLayout( MapView.ID ).setMoveable( false );
-    layout.getViewLayout( ChartView.ID ).setMoveable( false );
-    layout.getViewLayout( ChartView.ID ).setCloseable( false );
 
     layout.getViewLayout( "org.kalypso.risk.views.RiskStatisticsResultView" ).setMoveable( false ); //$NON-NLS-1$
     layout.getViewLayout( "org.kalypso.risk.views.RiskStatisticsResultView" ).setCloseable( false ); //$NON-NLS-1$

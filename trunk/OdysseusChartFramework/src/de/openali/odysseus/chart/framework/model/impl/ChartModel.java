@@ -46,12 +46,11 @@ public class ChartModel implements IChartModel
     }
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.IChartModel#clear()
-   */
   @Override
   public void clear( )
   {
+    m_settings.clearTitles();
+
     getLayerManager().clear();
   }
 
@@ -133,7 +132,7 @@ public class ChartModel implements IChartModel
   public void maximize( )
   {
     autoscale();
-   }
+  }
 
   /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#setId()

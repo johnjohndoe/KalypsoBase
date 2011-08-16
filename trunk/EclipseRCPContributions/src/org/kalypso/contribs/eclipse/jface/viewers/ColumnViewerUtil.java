@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers;
 
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -120,6 +121,9 @@ public final class ColumnViewerUtil
 
     final Item column = nullItem.getColumn();
     ColumnsResizeControlListener.setFixedWidth( column, 0 );
+
+    /* Empty label provider, else jface whines */
+    nullColumn.setLabelProvider( new ColumnLabelProvider() );
 
     return nullColumn;
   }

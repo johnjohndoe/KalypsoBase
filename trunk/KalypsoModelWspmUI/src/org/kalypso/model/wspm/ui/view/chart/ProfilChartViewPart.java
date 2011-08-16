@@ -42,8 +42,8 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -54,11 +54,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartPartListener;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -69,12 +68,8 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.IProfilProvider;
 import org.kalypso.model.wspm.ui.profil.IProfilProviderListener;
 
-import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
-import de.openali.odysseus.chart.framework.model.event.impl.ChartModelEventHandler;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartView;
-import de.openali.odysseus.chart.framework.view.IPlotHandler;
 
 /**
  * @author kimwerner
@@ -91,22 +86,11 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
 
   private IProfilProvider m_provider;
 
-  private final ChartModelEventHandler m_chartModelEventHandler = new ChartModelEventHandler();
-
   private FormToolkit m_toolkit;
 
   private Form m_form;
 
   private ChartPartListener m_partListener = null;
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
-   */
-  @Override
-  public void addListener( final IChartModelEventListener listener )
-  {
-    m_chartModelEventHandler.addListener( listener );
-  }
 
   /**
    * @see com.bce.profil.eclipse.view.AbstractProfilViewPart2#createContent(org.eclipse.swt.widgets.Composite)
@@ -120,20 +104,22 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
       m_toolkit = new FormToolkit( parent.getDisplay() );
     }
 
+    m_partListener.setChart( null );
+
     if( m_form == null )
     {
       m_form = m_toolkit.createForm( parent );
 
-      // TODO no form layout? no scrolling? why we use a form composite here?
       m_form.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-      m_form.setLayout( LayoutHelper.createGridLayout() );
-      m_form.getBody().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-      m_form.getBody().setLayout( new GridLayout() );
+      m_form.getBody().setLayout( new FillLayout() );
       m_toolkit.decorateFormHeading( m_form );
+
       final IProfil profile = m_provider == null ? null : m_provider.getProfil();
+
       m_profilChartComposite = new ProfileChartComposite( m_form.getBody(), parent.getStyle(), getProfilLayerProvider(), profile );
-      m_profilChartComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+      m_partListener.setChart( m_profilChartComposite );
     }
+
     return m_profilChartComposite;
   }
 
@@ -144,7 +130,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   public final void createPartControl( final Composite parent )
   {
     m_control = new Composite( parent, SWT.NONE );
-    m_control.setLayout( LayoutHelper.createGridLayout() );
+    m_control.setLayout( Layouts.createGridLayout() );
     createContent( m_control );
 
     if( m_provider != null )
@@ -222,25 +208,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     return m_control;
   }
 
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getOutlinePage()
-   */
-  @Override
-  public IContentOutlinePage getOutlinePage( )
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.chart.ui.IChartPart#getPlotDragHandler()
-   */
-  @Override
-  public IPlotHandler getPlotDragHandler( )
-  {
-    return m_profilChartComposite.getPlotHandler();
-  }
-
   protected IProfilLayerProvider getProfilLayerProvider( )
   {
     if( m_profilChartComposite == null || m_profilChartComposite.getProfil() == null )
@@ -284,15 +251,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     setChartModel( newProfile, provider == null ? null : provider.getResult() );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
-   */
-  @Override
-  public void removeListener( final IChartModelEventListener listener )
-  {
-    m_chartModelEventHandler.removeListener( listener );
-  }
-
   @Override
   public void setAdapter( final IWorkbenchPart part, final IProfilProvider adapter )
   {
@@ -316,7 +274,6 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   private void setChartModel( final IProfil newProfile, final Object result )
   {
     final ProfileChartComposite chartComposite = m_profilChartComposite;
-    final ChartModelEventHandler chartModelEventHandler = m_chartModelEventHandler;
 
     if( chartComposite != null && !chartComposite.isDisposed() )
     {
@@ -329,18 +286,12 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
           public void run( )
           {
             if( !chartComposite.isDisposed() )
-            {
-              final IChartModel oldModel = chartComposite.getChartModel();
               chartComposite.setProfil( newProfile, result );
-              chartModelEventHandler.fireModelChanged( oldModel, chartComposite.getChartModel() );
-            }
-
           }
         };
         display.syncExec( runnable );
       }
     }
-
   }
 
   @Override

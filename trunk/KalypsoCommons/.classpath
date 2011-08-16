@@ -43,7 +43,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/xalan-j/serializer.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xalan-j/xercesImpl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xalan-j/xml-apis.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/apache/sanselan-0_97/sanselan-0.97-incubator.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/apache/sanselan-0_97/sanselan-0.97-incubator.jar" sourcepath="lib/apache/sanselan-0_97/sanselan-0.97-incubator-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j_1_6_1/slf4j-api-1.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j_1_6_1/slf4j-ext-1.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j_1_6_1/slf4j-jdk14-1.6.1.jar"/>

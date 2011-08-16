@@ -164,7 +164,7 @@
 					<!--
 						element ref="wspm:resultMember" minOccurs="0"
 						maxOccurs="unbounded"/
-					-->
+					--> 
 				</sequence>
 			</extension>
 		</complexContent>

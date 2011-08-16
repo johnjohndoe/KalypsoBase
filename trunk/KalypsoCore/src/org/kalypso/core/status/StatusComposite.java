@@ -52,7 +52,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -60,6 +59,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.core.KalypsoCoreImages;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -181,18 +181,13 @@ public class StatusComposite extends Composite
     setStatus( m_status );
 
     /* Create the layout. */
-    GridLayout gridLayout = new GridLayout( colCount, false );
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
-
-    /* Set the layout. */
-    super.setLayout( gridLayout );
+   super.setLayout( Layouts.createGridLayout( colCount ) );
   }
 
   private void createImageLabel( )
   {
     m_imageLabel = new Label( this, SWT.NONE );
-    m_imageLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+    m_imageLabel.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, true ) );
     m_imageLabel.addMouseListener( new MouseAdapter()
     {
       /**
@@ -212,12 +207,9 @@ public class StatusComposite extends Composite
   private void createMessageText( )
   {
     m_messageText = new Text( this, SWT.READ_ONLY );
-    m_messageText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    m_messageText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, true ) );
     m_messageText.addMouseListener( new MouseAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.MouseAdapter#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
-       */
       @Override
       public void mouseDoubleClick( MouseEvent e )
       {
@@ -232,6 +224,7 @@ public class StatusComposite extends Composite
   private void createDetailsButton( )
   {
     m_detailsButton = new Button( this, SWT.PUSH );
+    m_detailsButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, true ) );
     m_detailsButton.setText( Messages.getString( "org.kalypso.util.swt.StatusComposite.1" ) ); //$NON-NLS-1$
     m_detailsButton.addSelectionListener( new SelectionAdapter()
     {
@@ -332,6 +325,7 @@ public class StatusComposite extends Composite
       boolean hideDetailsIfdisabled = (getStyle() & HIDE_DETAILS_IF_DISABLED) != 0;
       boolean visible = !hideDetailsIfdisabled || enabled;
       m_detailsButton.setVisible( visible );
+      ((GridData) m_detailsButton.getLayoutData()).exclude = !visible;
     }
 
     layout();

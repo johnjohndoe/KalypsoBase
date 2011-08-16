@@ -68,6 +68,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -250,9 +251,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     // create the top level composite for the dialog area
     final Composite composite = toolkit.createComposite( parent );
     composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    final GridLayout layout = new GridLayout();
-    layout.marginHeight = 0;
-    layout.marginWidth = 0;
+    final GridLayout layout = Layouts.createGridLayout();
     layout.verticalSpacing = 0;
     layout.horizontalSpacing = 0;
     composite.setLayout( layout );

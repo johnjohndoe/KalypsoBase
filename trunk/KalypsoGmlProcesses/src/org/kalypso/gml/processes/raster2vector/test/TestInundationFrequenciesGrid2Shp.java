@@ -159,7 +159,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     for( int i = 0; i < collections.length; i++ )
     {
       final ICoverageCollection collection = collections[i];
-      IFeatureBindingCollection<ICoverage> coverages = collection.getCoverages();
+      final IFeatureBindingCollection<ICoverage> coverages = collection.getCoverages();
       for( int j = 0; j < coverages.size(); j++ )
       {
         final ICoverage coverage = coverages.get( j );
@@ -252,7 +252,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
       shapeWorkspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
     }
 
-    ShapeSerializer.serialize( shapeWorkspace, shapeBase, null );
+    ShapeSerializer.serialize( shapeWorkspace, shapeBase, (String) null );
   }
 
   private void writeEnvelopeShape( final GM_Envelope env, final String shapeBase ) throws Exception, GmlSerializeException
@@ -284,7 +284,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
     final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID", shapeFT, shapeData ); //$NON-NLS-1$
     shapeWorkspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
 
-    ShapeSerializer.serialize( shapeWorkspace, shapeBase, null );
+    ShapeSerializer.serialize( shapeWorkspace, shapeBase, (String) null );
   }
 
   private void writePolygonShape( final CollectorDataProvider[] data, final String shapeBase ) throws Exception, GmlSerializeException
@@ -326,7 +326,7 @@ public class TestInundationFrequenciesGrid2Shp extends TestCase
       shapeWorkspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
     }
 
-    ShapeSerializer.serialize( shapeWorkspace, shapeBase, null );
+    ShapeSerializer.serialize( shapeWorkspace, shapeBase, (String) null );
   }
 
   private ICoverageCollection[] getTestGrid( final IFolder importDataFolder ) throws Exception, MalformedURLException, IOException

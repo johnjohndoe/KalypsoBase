@@ -40,13 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
@@ -60,36 +54,6 @@ public final class ProfileHandlerUtils
   private ProfileHandlerUtils( )
   {
     throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
-  }
-
-  public static ProfileSelection getProfileSelectionChecked( final ExecutionEvent event ) throws ExecutionException
-  {
-    final ProfileSelection profileSelection = getProfileSelection( event );
-    if( profileSelection.hasProfiles() )
-      return profileSelection;
-
-    final String message = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler.0" ); //$NON-NLS-1$
-    throw new ExecutionException( message );
-  }
-
-  public static ProfileSelection getProfileSelectionOrShowMessage( final ExecutionEvent event ) throws ExecutionException
-  {
-    final Shell shell = HandlerUtil.getActiveShellChecked( event );
-    final ProfileSelection profileSelection = getProfileSelection( event );
-
-    if( profileSelection.hasProfiles() )
-      return profileSelection;
-
-    final String title = Messages.getString( "ProfileHandlerUtils.0" ); //$NON-NLS-1$
-    final String message = Messages.getString( "org.kalypso.model.wspm.tuhh.ui.export.AbstractExportProfilesHandler.0" ); //$NON-NLS-1$
-    MessageDialog.openWarning( shell, title, message );
-    return null;
-  }
-
-  public static ProfileSelection getProfileSelection( final ExecutionEvent event ) throws ExecutionException
-  {
-    final ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
-    return new ProfileSelection( selection );
   }
 
   public static ProfileSelection getSelectionChecked( final IStructuredSelection selection )

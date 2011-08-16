@@ -658,6 +658,7 @@ public final class ProfilUtil
   }
 
   @Deprecated
+  // FIXME: what to use instead?!
   public static Double getSectionMinValueFor( final IRecord[] section, final IComponent property )
   {
     if( section.length == 0 )

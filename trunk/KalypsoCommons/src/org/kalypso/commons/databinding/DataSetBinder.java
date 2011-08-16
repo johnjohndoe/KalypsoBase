@@ -78,6 +78,7 @@ public class DataSetBinder extends AbstractDataBinder
       targetToModel.setConverter( targetToModelConverter );
 
     final UpdateSetStrategy modelToTarget = new UpdateSetStrategy();
+
     final IConverter modelToTargetConverter = getModelToTargetConverter();
     if( modelToTargetConverter != null )
       modelToTarget.setConverter( modelToTargetConverter );

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.jface.wizard;
 
-import org.eclipse.jface.databinding.wizard.WizardPageSupport;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.AbstractDatabinding;
@@ -50,13 +49,18 @@ import org.kalypso.commons.databinding.AbstractDatabinding;
  */
 public class DatabindingWizardPage extends AbstractDatabinding
 {
-  private final WizardPageSupport m_support;
+  private final WizardPageSupport2 m_support;
 
   public DatabindingWizardPage( final WizardPage page, final FormToolkit toolkit )
   {
+    this( page, toolkit, WizardPageSupport2.DEFAULT_COMPLETION_MASK );
+  }
+
+  public DatabindingWizardPage( final WizardPage page, final FormToolkit toolkit, final int completionMask )
+  {
     super( toolkit );
 
-    m_support = WizardPageSupport.create( page, getBindingContext() );
+    m_support = new WizardPageSupport2( page, getBindingContext(), completionMask );
   }
 
   @Override

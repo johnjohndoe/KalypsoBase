@@ -102,6 +102,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.ResourcePool;
@@ -169,6 +170,9 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class CoverageManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
+  /** Allows to define on the theme, if the user is allowed to change the grid folde for this theme */
+  private static final String THEME_PROPERTY_ALLOW_USER_CHANGE_GRID_FOLDER = "allowUserChangeGridFolder"; //$NON-NLS-1$
+
   public static final IKalypsoThemePredicate COVERAGE_PREDICATE = new IKalypsoThemePredicate()
   {
     @Override
@@ -184,7 +188,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       if( coveragesFeature == null )
         return false;
 
-      final IRelationType targetPropertyType = featureList.getParentFeatureTypeProperty();
+      final IRelationType targetPropertyType = featureList.getPropertyType();
       final IFeatureType targetFeatureType = targetPropertyType.getTargetFeatureType();
 
       return GMLSchemaUtilities.substitutes( targetFeatureType, ICoverage.QNAME );
@@ -197,10 +201,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private final IMapModellListener m_mapModelListener = new MapModellAdapter()
   {
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
     public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
     {
@@ -384,7 +384,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   {
     // remove listener
     if( m_theme != null )
-      m_theme.getWorkspace().removeModellListener( m_modellistener );
+    {
+      final CommandableWorkspace workspace = m_theme.getWorkspace();
+      if( workspace != null )
+        workspace.removeModellListener( m_modellistener );
+    }
 
     m_coverages = coverages;
     m_theme = theme;
@@ -447,13 +451,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     /* Coverage table + info pane */
     final Composite coveragePanel = toolkit.createComposite( panel, SWT.NONE );
-    final GridLayout coveragePanelLayout = new GridLayout( 2, false );
     final GridData coveragePanelData = new GridData( SWT.FILL, SWT.FILL, true, false );
     coveragePanelData.heightHint = 200;
     coveragePanel.setLayoutData( coveragePanelData );
-    coveragePanelLayout.marginHeight = 0;
-    coveragePanelLayout.marginWidth = 0;
-    coveragePanel.setLayout( coveragePanelLayout );
+    coveragePanel.setLayout( Layouts.createGridLayout( 2 ) );
 
     m_coverageViewer = new ListViewer( coveragePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
 
@@ -498,11 +499,9 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     /* Color Map table */
     final Composite colormapPanel = toolkit.createComposite( panel, SWT.NONE );
-    final GridLayout colormapPanelLayout = new GridLayout();
+    final GridLayout colormapPanelLayout = Layouts.createGridLayout();
     colormapPanelLayout.numColumns = 2;
     colormapPanelLayout.makeColumnsEqualWidth = false;
-    colormapPanelLayout.marginWidth = 0;
-    colormapPanelLayout.marginHeight = 0;
 
     colormapPanel.setLayout( colormapPanelLayout );
     final GridData colormapPanelData = new GridData( SWT.FILL, SWT.FILL, true, true );
@@ -561,6 +560,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     updateButtons();
 
+    refreshThemeCombo();
+
     return panel;
   }
 
@@ -585,9 +586,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_themeCombo.setContentProvider( new ArrayContentProvider() );
     m_themeCombo.setLabelProvider( new LabelProvider()
     {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
       @Override
       public String getText( final Object element )
       {
@@ -615,6 +613,15 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     else if( activeTheme instanceof IMapModell )
     {
       final IKalypsoTheme[] allThemes = ((IMapModell) activeTheme).getAllThemes();
+      for( final IKalypsoTheme kalypsoTheme : allThemes )
+      {
+        if( COVERAGE_PREDICATE.decide( kalypsoTheme ) )
+          themesForCombo.add( kalypsoTheme );
+      }
+    }
+    else
+    {
+      final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
       for( final IKalypsoTheme kalypsoTheme : allThemes )
       {
         if( COVERAGE_PREDICATE.decide( kalypsoTheme ) )
@@ -651,6 +658,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( firstElement instanceof IKalypsoFeatureTheme )
     {
       final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) firstElement;
+
+      final String property = ft.getProperty( THEME_PROPERTY_ALLOW_USER_CHANGE_GRID_FOLDER, null );
+      if( property != null )
+        m_allowUserChangeGridFolder = Boolean.valueOf( property );
+
       final FeatureList featureList = ft.getFeatureList();
       final Feature coveragesFeature = featureList == null ? null : featureList.getParentFeature();
       if( coveragesFeature != null )
@@ -864,6 +876,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     try
     {
+      // FIXME: move this code to the place, where the entries are created
       for( final ColorMapEntry colorMapEntry : entries )
       {
         // WHY? why do we not just ignore duplicate entries
@@ -884,7 +897,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     saveStyle();
 
-    m_colorMapViewer.refresh();
+    final ColorMapEntry[] newEntries = new_colorMap.values().toArray( new ColorMapEntry[new_colorMap.size()] );
+    m_colorMapViewer.setInput( newEntries );
   }
 
   private void initalizeCoverageActions( final IToolBarManager manager, final IAction[] customActions )
@@ -1170,9 +1184,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   {
     if( m_gridFolder != null )
       return m_gridFolder;
-
-    if( m_allowUserChangeGridFolder == false )
-      return null;
 
     if( m_theme == null )
       return null;
