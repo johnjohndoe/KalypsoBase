@@ -49,6 +49,7 @@ import java.util.Collection;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.model.wspm.core.profil.sobek.profiles.ISobekProfileDefData;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDef;
 
 /**
@@ -85,7 +86,7 @@ public class SobekProfileDefParser
 
     monitor.done();
 
-    return null;
+    return m_profiles.toArray( new SobekProfileDef[m_profiles.size()] );
   }
 
   private SobekProfileDef readCRDS( final LineNumberReader reader ) throws CoreException, IOException
@@ -96,19 +97,28 @@ public class SobekProfileDefParser
     final String id = lineParser.nextStringToken( ATTRIBUTE_ID );
     final String name = lineParser.nextStringToken( ATTRIBUTE_NAME );
     final int type = lineParser.nextIntToken( ATTRIBUTE_TYPE );
+
+    final ISobekProfileDefData data = parseData( lineParser, reader, type );
+    return new SobekProfileDef( id, name, data );
+  }
+
+  private ISobekProfileDefData parseData( final SobekLineParser lineParser, final LineNumberReader reader, final int type ) throws CoreException, IOException
+  {
     switch( type )
     {
-      case 10: // yz table
-        return readYZTable( id, name );
-
       case 0: // tabulated
+        return new SobekProfileDefTabulatedCrossSectionParser( lineParser, reader ).read();
+
+      case 10: // yz table
+        return new SobekProfileDefYZTableParser( lineParser, reader ).read();
+
       case 1: // trapezoidal
       case 2: // open circle
       case 3: // sedredge (2D morfology)
       case 4: // closed circle
       case 6: // egg shaped (width)
       case 11: // asymmetrical trapeziodal
-        throw lineParser.throwError( "Sorry, parsing type '%d' is not yet supported." );
+        throw lineParser.throwError( "Sorry, parsing type '%d' is not yet supported.", type );
 
       case 5: //
       case 9: //
@@ -119,13 +129,5 @@ public class SobekProfileDefParser
       default:
         throw lineParser.throwError( "Unknown type '%d'", type );
     }
-  }
-
-  private SobekProfileDef readYZTable( final String id, final String name )
-  {
-    // FIXME: we should distinguish the types by creating a sub-structure under the class SobekProfileDef
-
-    // TODO Auto-generated method stub
-    return null;
   }
 }

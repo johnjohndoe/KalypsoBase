@@ -153,4 +153,9 @@ public class SobekProfileDef
 
     writer.append( String.format( Locale.PRC, "crds" ) ); //$NON-NLS-1$
   }
+
+  public ISobekProfileDefData getData( )
+  {
+    return m_data;
+  }
 }

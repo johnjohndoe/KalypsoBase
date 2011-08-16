@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.core.profil.sobek.profiles;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -78,7 +79,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
   /**
    * The data for the heights of a tabulated sobek profile.
    */
-  private final List<SobekProfileHeight> m_profileHeights;
+  private final List<SobekProfileHeight> m_profileHeights = new ArrayList<SobekProfileHeight>();
 
   /**
    * Summer dike (1 = active, 0 = not active) (in River profile only).
@@ -115,6 +116,12 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
    */
   private final int m_gu;
 
+  public SobekProfileDefTabulatedCrossSection( final BigDecimal wm, final BigDecimal w1, final BigDecimal w2, final BigDecimal sw, final SobekProfileHeight[] profileHeights, final BigDecimal gl, final int gu )
+  {
+    // FIXME: when writing, consider case where no dike is defined
+    this( wm, w1, w2, sw, profileHeights, 0, null, null, null, null, gl, gu );
+  }
+
   /**
    * @param wm
    *          The width of the main channel.
@@ -142,13 +149,13 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
    * @param gu
    *          The ground layer to be used within hydraulics calculation (1) or not (0).
    */
-  public SobekProfileDefTabulatedCrossSection( final BigDecimal wm, final BigDecimal w1, final BigDecimal w2, final BigDecimal sw, final List<SobekProfileHeight> profileHeights, final int dk, final BigDecimal dc, final BigDecimal db, final BigDecimal df, final BigDecimal dt, final BigDecimal gl, final int gu )
+  public SobekProfileDefTabulatedCrossSection( final BigDecimal wm, final BigDecimal w1, final BigDecimal w2, final BigDecimal sw, final SobekProfileHeight[] profileHeights, final int dk, final BigDecimal dc, final BigDecimal db, final BigDecimal df, final BigDecimal dt, final BigDecimal gl, final int gu )
   {
     m_wm = wm;
     m_w1 = w1;
     m_w2 = w2;
     m_sw = sw;
-    m_profileHeights = profileHeights;
+    m_profileHeights.addAll( Arrays.asList( profileHeights ) );
     m_dk = dk;
     m_dc = dc;
     m_db = db;
@@ -211,9 +218,9 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
    * 
    * @return The data for the heights of a tabulated sobek profile.
    */
-  public List<SobekProfileHeight> getProfileHeights( )
+  public SobekProfileHeight[] getProfileHeights( )
   {
-    return m_profileHeights;
+    return m_profileHeights.toArray( new SobekProfileHeight[m_profileHeights.size()] );
   }
 
   /**

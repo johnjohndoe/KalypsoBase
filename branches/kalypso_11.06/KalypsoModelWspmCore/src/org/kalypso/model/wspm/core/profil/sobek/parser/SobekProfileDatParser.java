@@ -41,8 +41,16 @@
 package org.kalypso.model.wspm.core.profil.sobek.parser;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDat;
 
 /**
@@ -50,14 +58,59 @@ import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDat;
  */
 public class SobekProfileDatParser
 {
+  private static final String TOKEN_CRSN = "CRSN"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_ID = "id";
+
+  private static final String ATTRIBUTE_DI = "di";
+
+  private static final String ATTRIBUTE_RL = "rl";
+
+  private static final String ATTRIBUTE_LL = "ll";
+
+  private static final String ATTRIBUTE_RS = "rs";
+
+  private static final String ATTRIBUTE_LS = "ls";
+
+  private final Collection<SobekProfileDat> m_profiles = new ArrayList<SobekProfileDat>();
+
+  private final File m_profileDatFile;
+
   public SobekProfileDatParser( final File profileDatFile )
   {
-    // TODO Auto-generated constructor stub
+    m_profileDatFile = profileDatFile;
   }
 
-  public SobekProfileDat[] read( final IProgressMonitor monitor )
+  public SobekProfileDat[] read( final IProgressMonitor monitor ) throws IOException, CoreException
   {
-    // TODO Auto-generated method stub
-    return null;
+    final LineNumberReader reader = new LineNumberReader( new FileReader( m_profileDatFile ) );
+    while( reader.ready() )
+    {
+      final SobekProfileDat profile = readCRSN( reader );
+      if( profile != null )
+        m_profiles.add( profile );
+    }
+
+    ProgressUtilities.done( monitor );
+
+    return m_profiles.toArray( new SobekProfileDat[m_profiles.size()] );
+  }
+
+  // CRSN id '115.4835_SE' di '115.4835_SE' rl 0 rs 107.19 ls 108.00 crsn
+  private SobekProfileDat readCRSN( final LineNumberReader reader ) throws CoreException, IOException
+  {
+    final SobekLineParser lineParser = new SobekLineParser( reader );
+    lineParser.expectToken( TOKEN_CRSN );
+
+    final String id = lineParser.nextStringToken( ATTRIBUTE_ID );
+    final String di = lineParser.nextStringToken( ATTRIBUTE_DI );
+    final BigDecimal rl = lineParser.nextDecimalToken( ATTRIBUTE_RL );
+    final BigDecimal ll = lineParser.nextOptionalDecimalToken( ATTRIBUTE_LL, null );
+    final BigDecimal rs = lineParser.nextOptionalDecimalToken( ATTRIBUTE_RS, null );
+    final BigDecimal ls = lineParser.nextOptionalDecimalToken( ATTRIBUTE_LS, null );
+
+    lineParser.expectToken( TOKEN_CRSN.toLowerCase() );
+
+    return new SobekProfileDat( id, di, rl, ll, rs, ls );
   }
 }

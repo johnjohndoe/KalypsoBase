@@ -42,6 +42,9 @@ package org.kalypso.model.wspm.core.profil.sobek.parser;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -51,6 +54,7 @@ import org.kalypso.model.wspm.core.profil.sobek.ISobekConstants;
 import org.kalypso.model.wspm.core.profil.sobek.SobekModel;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekNetworkD12;
+import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfile;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDat;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDef;
 
@@ -59,6 +63,9 @@ import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDef;
  */
 public class SobekModelParser
 {
+  /* definition-id -> profile */
+  private final Map<String, SobekProfile> m_profileIndex = new HashMap<String, SobekProfile>();
+
   private final File m_sobekProjectDir;
 
   public SobekModelParser( final File sobekProjectDir )
@@ -92,7 +99,7 @@ public class SobekModelParser
     return parser.read( monitor );
   }
 
-  private SobekProfileDat[] readProfileDat( final IProgressMonitor monitor )
+  private SobekProfileDat[] readProfileDat( final IProgressMonitor monitor ) throws IOException, CoreException
   {
     final File profileDatFile = new File( m_sobekProjectDir, ISobekConstants.PROFILE_DAT );
     if( !profileDatFile.isFile() )
@@ -124,7 +131,37 @@ public class SobekModelParser
 
   private SobekModel createModel( final SobekProfileDef[] profileDefs, final SobekProfileDat[] profileDats, final SobekFrictionDat[] frictionDats, final SobekNetworkD12 network )
   {
-    // TODO Auto-generated method stub
-    return new SobekModel();
+    for( final SobekProfileDef profileDef : profileDefs )
+    {
+      final String defId = profileDef.getId();
+      final SobekProfile profile = createOrGetProfile( defId );
+      final SobekProfile profileWithDef = profile.setDefinition( profileDef );
+      m_profileIndex.put( defId, profileWithDef );
+    }
+
+    for( final SobekProfileDat profileDat : profileDats )
+    {
+      final String defId = profileDat.getDi();
+      final SobekProfile profile = createOrGetProfile( defId );
+      final SobekProfile profileWithDat = profile.setData( profileDat );
+      m_profileIndex.put( defId, profileWithDat );
+    }
+
+    /* Create the SOBEK model */
+    final SobekModel sobekModel = new SobekModel();
+
+    final Collection<SobekProfile> profiles = m_profileIndex.values();
+    for( final SobekProfile profile : profiles )
+      sobekModel.addProfile( profile );
+
+    return sobekModel;
+  }
+
+  private SobekProfile createOrGetProfile( final String definitionId )
+  {
+    if( !m_profileIndex.containsKey( definitionId ) )
+      m_profileIndex.put( definitionId, new SobekProfile( null, null ) );
+
+    return m_profileIndex.get( definitionId );
   }
 }
