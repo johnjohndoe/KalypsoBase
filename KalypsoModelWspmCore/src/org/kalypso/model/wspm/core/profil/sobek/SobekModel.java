@@ -64,6 +64,11 @@ public class SobekModel implements ISobekConstants
 {
   private final List<SobekProfile> m_profiles = new ArrayList<SobekProfile>();
 
+  public void addProfile( final SobekProfile profile )
+  {
+    m_profiles.add( profile );
+  }
+
   /**
    * This function initializes this model with help of the given provider.
    * 
@@ -150,5 +155,10 @@ public class SobekModel implements ISobekConstants
       IOUtils.closeQuietly( datWriter );
       IOUtils.closeQuietly( defWriter );
     }
+  }
+
+  public SobekProfile[] getProfiles( )
+  {
+    return m_profiles.toArray( new SobekProfile[m_profiles.size()] );
   }
 }

@@ -122,4 +122,19 @@ public class SobekProfile
   {
     m_profileDef.serialize( w );
   }
+
+  public SobekProfile setDefinition( final SobekProfileDef profileDef )
+  {
+    return new SobekProfile( m_profileDat, profileDef );
+  }
+
+  public SobekProfile setData( final SobekProfileDat profileDat )
+  {
+    return new SobekProfile( profileDat, m_profileDef );
+  }
+
+  public SobekProfileDef getProfileDef( )
+  {
+    return m_profileDef;
+  }
 }
