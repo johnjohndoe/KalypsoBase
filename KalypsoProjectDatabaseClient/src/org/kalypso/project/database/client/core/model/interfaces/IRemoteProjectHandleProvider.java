@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,24 +38,17 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.projecthandle;
+package org.kalypso.project.database.client.core.model.interfaces;
 
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.core.projecthandle.IProjectHandleProvider;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public interface IProjectHandleProvder
+public interface IRemoteProjectHandleProvider extends IProjectHandleProvider
 {
-  IProjectHandle[] getProjects( );
+  IRemoteWorkspaceModel getRemoteWorkspaceModel( );
 
-  IProjectHandle findProject( String uniqueName );
-
-  void addProviderChangedListener( IProjectHandlesChangedListener listener );
-
-  void removeProviderChangedListener( IProjectHandlesChangedListener listener );
-
-  String getID( );
-
-  void dispose( );
-
+  IStatus getConnectionState( );
 }

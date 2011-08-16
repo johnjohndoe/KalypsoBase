@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.IExecutableExtension;
 /**
  * @author Gernot Belger
  */
-public abstract class AbstractProjectHandleProvider implements IProjectHandleProvder, IExecutableExtension
+public abstract class AbstractProjectHandleProvider implements IProjectHandleProvider, IExecutableExtension
 {
   private final Set<IProjectHandlesChangedListener> m_listeners = new HashSet<IProjectHandlesChangedListener>();
 

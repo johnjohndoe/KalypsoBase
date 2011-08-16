@@ -54,8 +54,10 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChang
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.projecthandle.IProjectHandleProvider;
 import org.kalypso.core.projecthandle.IProjectOpenAction;
 import org.kalypso.core.projecthandle.LocalProjectHandle;
+import org.kalypso.core.projecthandle.ProjectHandleExtensions;
 import org.kalypso.core.projecthandle.local.ProjectDeleteAction;
 import org.kalypso.core.projecthandle.local.ProjectExportAction;
 import org.kalypso.core.projecthandle.local.ProjectInfoAction;
@@ -65,7 +67,7 @@ import org.kalypso.module.nature.ModuleNature;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.base.actions.EmptyProjectAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectUploadAction;
-import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
+import org.kalypso.project.database.client.core.model.interfaces.IRemoteProjectHandleProvider;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.local.WorkspaceResourceManager;
@@ -195,14 +197,14 @@ public class LocalProjectHandler extends LocalProjectHandle implements ILocalPro
         int count = 0;
         while( job.getState() != Job.NONE && count < 100 )
           try
-        {
+          {
             Thread.sleep( 200 );
             count += 1;
-        }
-        catch( final InterruptedException e )
-        {
-          KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        }
+          }
+          catch( final InterruptedException e )
+          {
+            KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+          }
       }
 
       final RemoteProjectNature myNature = (RemoteProjectNature) m_project.getNature( RemoteProjectNature.NATURE_ID );
@@ -255,24 +257,25 @@ public class LocalProjectHandler extends LocalProjectHandle implements ILocalPro
      * special case: the project database is offline and this project exists onto the database -> the project is not
      * editable and locked!!!
      */
-    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
-    final IRemoteWorkspaceModel remote = model.getRemoteWorkspaceModel();
-
-    // FIXME: NPE below for Demo-Lokal. Check if this check and return value is ok.
-    // FIXME: be sure that no throwable escapes this methods, as else the user interface
-    // if completely broken
-    if( remote == null )
-      return false;
-
-    if( !remote.isDatabaseOnline() )
-      try
+    final IProjectHandleProvider[] providers = ProjectHandleExtensions.getProviders();
+    for( final IProjectHandleProvider provider : providers )
     {
-        if( getRemotePreferences().isOnServer() )
-          return false;
-    }
-    catch( final CoreException e )
-    {
-      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      if( !(provider instanceof IRemoteProjectHandleProvider) )
+        continue;
+
+      final IRemoteProjectHandleProvider remote = (IRemoteProjectHandleProvider) provider;
+      final IRemoteWorkspaceModel model = remote.getRemoteWorkspaceModel();
+
+      if( !model.isDatabaseOnline() )
+        try
+        {
+          if( getRemotePreferences().isOnServer() )
+            return false;
+        }
+        catch( final CoreException e )
+        {
+          KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+        }
     }
 
     return true;
@@ -321,34 +324,36 @@ public class LocalProjectHandler extends LocalProjectHandle implements ILocalPro
 
   private IAction createDatabaseAction( )
   {
-    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
-    final IRemoteWorkspaceModel remote = model.getRemoteWorkspaceModel();
 
-    if( remote != null && remote.isDatabaseOnline() )
-      return new ProjectUploadAction( this, m_module );
+    final IProjectHandleProvider provider = m_module.getProjectProvider();
+    if( provider instanceof IRemoteProjectHandleProvider )
+    {
+      final IRemoteProjectHandleProvider remote = (IRemoteProjectHandleProvider) provider;
+      if( remote != null )
+        return new ProjectUploadAction( this, m_module );
+
+    }
 
     return new EmptyProjectAction();
   }
 
   private IAction createDeleteAction( )
   {
-    final IProjectDatabaseModel model = KalypsoProjectDatabaseClient.getModel();
-    final IRemoteWorkspaceModel remote = model.getRemoteWorkspaceModel();
-
-    try
+    final IProjectHandleProvider provider = m_module.getProjectProvider();
+    if( provider instanceof IRemoteProjectHandleProvider )
     {
-      if( remote != null && !remote.isDatabaseOnline() )
+      try
       {
         final IRemoteProjectPreferences preferences = getRemotePreferences();
         if( preferences == null || preferences.isLocked() )
           return new EmptyProjectAction();
       }
+      catch( final CoreException e )
+      {
+        e.printStackTrace();
+      }
 
       return new ProjectDeleteAction( this );
-    }
-    catch( final CoreException e )
-    {
-      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
     return new EmptyProjectAction();

@@ -67,9 +67,9 @@ public final class ProjectHandleExtensions
 
   public static final String ATTRIBUTE_ID = "id";//$NON-NLS-1$
 
-  private static IProjectHandleProvder GLOBAL_PROVIDER = null;
+  private static IProjectHandleProvider GLOBAL_PROVIDER = null;
 
-  private static IProjectHandleProvder[] PROVIDERS = null;
+  private static IProjectHandleProvider[] PROVIDERS = null;
 
   private ProjectHandleExtensions( )
   {
@@ -79,7 +79,7 @@ public final class ProjectHandleExtensions
   /**
    * Returns the global handle provider.
    */
-  public static synchronized IProjectHandleProvder getGlobalProvider( )
+  public static synchronized IProjectHandleProvider getGlobalProvider( )
   {
     if( GLOBAL_PROVIDER == null )
       GLOBAL_PROVIDER = new LocalWorkspaceItemProvider();
@@ -88,7 +88,7 @@ public final class ProjectHandleExtensions
     return GLOBAL_PROVIDER;
   }
 
-  public static synchronized IProjectHandleProvder[] getProviders( )
+  public static synchronized IProjectHandleProvider[] getProviders( )
   {
     if( PROVIDERS == null )
       PROVIDERS = loadItemProviders();
@@ -96,12 +96,12 @@ public final class ProjectHandleExtensions
     return PROVIDERS;
   }
 
-  private static IProjectHandleProvder[] loadItemProviders( )
+  private static IProjectHandleProvider[] loadItemProviders( )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( NAMESPACE, PROJECT_HANDLE_EXTENSION_POINT );
 
-    final Collection<IProjectHandleProvder> providers = new ArrayList<IProjectHandleProvder>( elements.length );
+    final Collection<IProjectHandleProvider> providers = new ArrayList<IProjectHandleProvider>( elements.length );
 
     for( final IConfigurationElement element : elements )
     {
@@ -109,7 +109,7 @@ public final class ProjectHandleExtensions
       {
         if( element.getName().equals( PROVIDER_ELEMENT ) )
         {
-          final IProjectHandleProvder provider = (IProjectHandleProvder) element.createExecutableExtension( ATTRIBUTE_CLASS );
+          final IProjectHandleProvider provider = (IProjectHandleProvider) element.createExecutableExtension( ATTRIBUTE_CLASS );
           providers.add( provider );
         }
       }
@@ -119,13 +119,13 @@ public final class ProjectHandleExtensions
       }
     }
 
-    return providers.toArray( new IProjectHandleProvder[providers.size()] );
+    return providers.toArray( new IProjectHandleProvider[providers.size()] );
   }
 
-  public static synchronized IProjectHandleProvder getProvider( final String id )
+  public static synchronized IProjectHandleProvider getProvider( final String id )
   {
-    final IProjectHandleProvder[] providers = getProviders();
-    for( final IProjectHandleProvder provider : providers )
+    final IProjectHandleProvider[] providers = getProviders();
+    for( final IProjectHandleProvider provider : providers )
     {
       if( provider.getID().equals( id ) )
         return provider;

@@ -48,7 +48,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -56,9 +55,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.swt.browser.OpenExternalLocationAdapter;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.controls.ScrolledSection;
-import org.kalypso.core.projecthandle.IProjectHandleProvder;
-import org.kalypso.core.projecthandle.ProjectHandleExtensions;
+import org.kalypso.core.projecthandle.IProjectHandleFilter;
 import org.kalypso.core.projecthandle.ProjectHandlesComposite;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.internal.i18n.Messages;
@@ -81,21 +80,20 @@ public class ProjectListViewer
 
   public void createProjectList( final Composite parent )
   {
-    final IProjectHandleProvder model = ProjectHandleExtensions.getGlobalProvider();
-    final ModuleHandleFilter filter = new ModuleHandleFilter( m_module );
+    createProjectList( parent, new ModuleHandleFilter( m_module ) );
+  }
 
+  public void createProjectList( final Composite parent, final IProjectHandleFilter filter )
+  {
     final ScrolledSection sectionProjects = new ScrolledSection( parent, m_toolkit, ExpandableComposite.TITLE_BAR, true );
-    final Composite bodyProjects = sectionProjects.setup( Messages.getString("org.kalypso.module.welcome.ProjectListViewer.0"), new GridData( GridData.FILL, GridData.FILL, true, true ), new GridData( GridData.FILL, GridData.FILL, true, true ) ); //$NON-NLS-1$
-    final GridLayout layout = new GridLayout( 2, true );
-    layout.verticalSpacing = layout.marginWidth = 0;
-    bodyProjects.setLayout( layout );
+    final Composite bodyProjects = sectionProjects.setup( Messages.getString( "org.kalypso.module.welcome.ProjectListViewer.0" ), new GridData( GridData.FILL, GridData.FILL, true, true ), new GridData( GridData.FILL, GridData.FILL, true, true ) ); //$NON-NLS-1$
+    bodyProjects.setLayout( Layouts.createGridLayout( 2, true ) );
     bodyProjects.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final ProjectHandlesComposite projects = new ProjectHandlesComposite( bodyProjects, m_toolkit );
-    projects.setFilter( filter );
-    projects.setModel( model );
-
     projects.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true, 2, 0 ) );
+    projects.setFilter( filter );
+    projects.setModel( m_module.getProjectProvider() );
 
     renderProjectActions( bodyProjects );
   }
@@ -154,6 +152,5 @@ public class ProjectListViewer
 
     return projectActions;
   }
-
 
 }
