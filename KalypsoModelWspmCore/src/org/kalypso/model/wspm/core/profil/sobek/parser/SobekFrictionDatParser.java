@@ -41,8 +41,15 @@
 package org.kalypso.model.wspm.core.profil.sobek.parser;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.util.ArrayList;
+import java.util.Collection;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat;
 
 /**
@@ -50,14 +57,87 @@ import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekFrictionDat;
  */
 public class SobekFrictionDatParser
 {
+  private static final String TOKEN_GLFR = "GLFR"; //$NON-NLS-1$
+
+  private static final String TOKEN_BDFR = "BDFR"; //$NON-NLS-1$
+
+  private static final String TOKEN_STFR = "STFR"; //$NON-NLS-1$
+
+  private static final String TOKEN_CRFR = "CRFR"; //$NON-NLS-1$
+
+  private static final String TOKEN_D2FR = "D2FR"; //$NON-NLS-1$
+
+  private final Collection<SobekFrictionDat> m_profiles = new ArrayList<SobekFrictionDat>();
+
+  private final File m_frictionDatFile;
+
   public SobekFrictionDatParser( final File frictionDatFile )
   {
-    // TODO Auto-generated constructor stub
+    m_frictionDatFile = frictionDatFile;
   }
 
-  public SobekFrictionDat[] read( final IProgressMonitor monitor )
+  public SobekFrictionDat[] read( final IProgressMonitor monitor ) throws CoreException, IOException
   {
-    // TODO Auto-generated method stub
+    final LineNumberReader reader = new LineNumberReader( new FileReader( m_frictionDatFile ) );
+    while( reader.ready() )
+    {
+      final SobekFrictionDat profile = readFriction( reader );
+      if( profile != null )
+        m_profiles.add( profile );
+    }
+
+    ProgressUtilities.done( monitor );
+
+    return m_profiles.toArray( new SobekFrictionDat[m_profiles.size()] );
+  }
+
+  private SobekFrictionDat readFriction( final LineNumberReader reader ) throws IOException, CoreException
+  {
+    final SobekLineParser startLine = new SobekLineParser( reader );
+    final String token = startLine.nextTokenOrNull();
+    if( token == null )
+      return null;
+
+    if( TOKEN_GLFR.equals( token ) )
+      return readGLFR( startLine, reader );
+    if( TOKEN_BDFR.equals( token ) )
+      return readBDFR( startLine, reader );
+    if( TOKEN_STFR.equals( token ) )
+      return readSTFR( startLine, reader );
+    if( TOKEN_CRFR.equals( token ) )
+      return readCRFR( startLine, reader );
+    if( TOKEN_D2FR.equals( token ) )
+      return readD2FR( startLine, reader );
+
+    throw startLine.throwError( "unexpected token '%s'", token );
+  }
+
+  private SobekFrictionDat readGLFR( final SobekLineParser startLine, final LineNumberReader reader ) throws IOException, CoreException
+  {
+    SobekParsing.searchForEndToken( TOKEN_GLFR, startLine, reader );
     return null;
+  }
+
+  private SobekFrictionDat readBDFR( final SobekLineParser startLine, final LineNumberReader reader ) throws IOException, CoreException
+  {
+    SobekParsing.searchForEndToken( TOKEN_BDFR, startLine, reader );
+    return null;
+  }
+
+  private SobekFrictionDat readSTFR( final SobekLineParser startLine, final LineNumberReader reader ) throws IOException, CoreException
+  {
+    SobekParsing.searchForEndToken( TOKEN_STFR, startLine, reader );
+    return null;
+  }
+
+  private SobekFrictionDat readD2FR( final SobekLineParser startLine, final LineNumberReader reader ) throws IOException, CoreException
+  {
+    SobekParsing.searchForEndToken( TOKEN_D2FR, startLine, reader );
+    return null;
+  }
+
+  private SobekFrictionDat readCRFR( final SobekLineParser startLine, final LineNumberReader reader ) throws IOException, CoreException
+  {
+    return new SobekFrictionDatCRFRParser( startLine, reader ).read();
   }
 }

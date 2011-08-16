@@ -40,29 +40,40 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.sobek.profiles;
 
+import java.math.BigDecimal;
+
 /**
  * @author Gernot Belger
  */
-public class SobekFrictionDat
+public class SobekFrictionDatCRFRSection
 {
-  private final String m_id;
+  private final BigDecimal m_start;
 
-  private final String m_name;
+  private final BigDecimal m_end;
 
-  private final String m_csID;
+  private int m_positiveType;
 
-  private final SobekFrictionDatCRFRSection[] m_sections;
+  private BigDecimal m_positiveValue;
 
-  public SobekFrictionDat( final String id, final String name, final String csID, final SobekFrictionDatCRFRSection[] sections )
+  private int m_negativeType;
+
+  private BigDecimal m_negativeValue;
+
+  public SobekFrictionDatCRFRSection( final BigDecimal start, final BigDecimal end )
   {
-    m_id = id;
-    m_name = name;
-    m_csID = csID;
-    m_sections = sections;
+    m_start = start;
+    m_end = end;
   }
 
-  public String getCsID( )
+  public void setPositiveValue( final int type, final BigDecimal value )
   {
-    return m_csID;
+    m_positiveType = type;
+    m_positiveValue = value;
+  }
+
+  public void setNegativeValue( final int type, final BigDecimal value )
+  {
+    m_negativeType = type;
+    m_negativeValue = value;
   }
 }

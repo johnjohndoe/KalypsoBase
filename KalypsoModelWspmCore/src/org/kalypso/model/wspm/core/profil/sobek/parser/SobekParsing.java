@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.sobek.parser;
 
+import java.io.IOException;
+import java.io.LineNumberReader;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -66,5 +69,19 @@ public final class SobekParsing
   {
     final IStatus status = new Status( severity, KalypsoModelWspmCorePlugin.getID(), message );
     return new CoreException( status );
+  }
+
+  public static void searchForEndToken( final String token, final SobekLineParser line, final LineNumberReader reader ) throws IOException, CoreException
+  {
+    SobekLineParser currentLine = line;
+    while( true )
+    {
+      final String nextToken = currentLine.nextTokenOrNull();
+      if( nextToken == null )
+        currentLine = new SobekLineParser( reader );
+
+      if( token.toLowerCase().equals( nextToken ) )
+        return;
+    }
   }
 }

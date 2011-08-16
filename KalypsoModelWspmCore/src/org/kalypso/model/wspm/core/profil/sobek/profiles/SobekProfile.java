@@ -65,6 +65,8 @@ public class SobekProfile
    */
   private final SobekProfileDef m_profileDef;
 
+  private final SobekFrictionDat m_frictionDat;
+
   /**
    * The constructor.
    * 
@@ -73,10 +75,11 @@ public class SobekProfile
    * @param profileDef
    *          The data for the file 'profile.def'.
    */
-  public SobekProfile( final SobekProfileDat profileDat, final SobekProfileDef profileDef )
+  public SobekProfile( final SobekProfileDat profileDat, final SobekProfileDef profileDef, final SobekFrictionDat frictionDat )
   {
     m_profileDat = profileDat;
     m_profileDef = profileDef;
+    m_frictionDat = frictionDat;
   }
 
   public IStatus validate( )
@@ -125,12 +128,12 @@ public class SobekProfile
 
   public SobekProfile setDefinition( final SobekProfileDef profileDef )
   {
-    return new SobekProfile( m_profileDat, profileDef );
+    return new SobekProfile( m_profileDat, profileDef, m_frictionDat );
   }
 
   public SobekProfile setData( final SobekProfileDat profileDat )
   {
-    return new SobekProfile( profileDat, m_profileDef );
+    return new SobekProfile( profileDat, m_profileDef, m_frictionDat );
   }
 
   public SobekProfileDef getProfileDef( )
@@ -141,5 +144,10 @@ public class SobekProfile
   public SobekProfileDat getProfileDat( )
   {
     return m_profileDat;
+  }
+
+  public SobekProfile setFriction( final SobekFrictionDat frictionDat )
+  {
+    return new SobekProfile( m_profileDat, m_profileDef, frictionDat );
   }
 }
