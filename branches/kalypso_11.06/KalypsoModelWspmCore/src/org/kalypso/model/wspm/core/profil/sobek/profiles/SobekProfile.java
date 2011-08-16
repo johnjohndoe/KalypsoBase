@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.sobek.profiles;
 
+import java.io.IOException;
+import java.io.Writer;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
@@ -115,8 +118,8 @@ public class SobekProfile
    * 
    * @return The data for the file 'profile.def'.
    */
-  public String serializeProfileDef( )
+  public void serializeProfileDef( final Writer w ) throws IOException
   {
-    return m_profileDef.serialize();
+    m_profileDef.serialize( w );
   }
 }

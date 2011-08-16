@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.core.profil.sobek.parser;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -65,7 +66,7 @@ public class SobekModelParser
     m_sobekProjectDir = sobekProjectDir;
   }
 
-  public SobekModel read( final IProgressMonitor monitor ) throws CoreException
+  public SobekModel read( final IProgressMonitor monitor ) throws CoreException, IOException
   {
     monitor.beginTask( "Reading SOBEK project", 100 );
 
@@ -81,7 +82,7 @@ public class SobekModelParser
     return sobekModel;
   }
 
-  private SobekProfileDef[] readProfileDef( final IProgressMonitor monitor )
+  private SobekProfileDef[] readProfileDef( final IProgressMonitor monitor ) throws IOException, CoreException
   {
     final File profileDefFile = new File( m_sobekProjectDir, ISobekConstants.PROFILE_DEF );
     if( !profileDefFile.isFile() )

@@ -41,7 +41,13 @@
 package org.kalypso.model.wspm.core.profil.sobek.parser;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.util.ArrayList;
+import java.util.Collection;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDef;
 
@@ -50,6 +56,16 @@ import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfileDef;
  */
 public class SobekProfileDefParser
 {
+  private static final String TOKEN_CRDS = "CRDS"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_NAME = "nm"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_TYPE = "ty"; //$NON-NLS-1$
+
+  private final Collection<SobekProfileDef> m_profiles = new ArrayList<SobekProfileDef>();
+
   private final File m_profileDefFile;
 
   public SobekProfileDefParser( final File profileDefFile )
@@ -57,8 +73,58 @@ public class SobekProfileDefParser
     m_profileDefFile = profileDefFile;
   }
 
-  public SobekProfileDef[] read( final IProgressMonitor monitor )
+  public SobekProfileDef[] read( final IProgressMonitor monitor ) throws IOException, CoreException
   {
+    final LineNumberReader reader = new LineNumberReader( new FileReader( m_profileDefFile ) );
+    while( reader.ready() )
+    {
+      final SobekProfileDef profile = readCRDS( reader );
+      if( profile != null )
+        m_profiles.add( profile );
+    }
+
+    monitor.done();
+
+    return null;
+  }
+
+  private SobekProfileDef readCRDS( final LineNumberReader reader ) throws CoreException, IOException
+  {
+    final SobekLineParser lineParser = new SobekLineParser( reader );
+    lineParser.expectToken( TOKEN_CRDS );
+
+    final String id = lineParser.nextStringToken( ATTRIBUTE_ID );
+    final String name = lineParser.nextStringToken( ATTRIBUTE_NAME );
+    final int type = lineParser.nextIntToken( ATTRIBUTE_TYPE );
+    switch( type )
+    {
+      case 10: // yz table
+        return readYZTable( id, name );
+
+      case 0: // tabulated
+      case 1: // trapezoidal
+      case 2: // open circle
+      case 3: // sedredge (2D morfology)
+      case 4: // closed circle
+      case 6: // egg shaped (width)
+      case 11: // asymmetrical trapeziodal
+        throw lineParser.throwError( "Sorry, parsing type '%d' is not yet supported." );
+
+      case 5: //
+      case 9: //
+      case 7: // egg shaped 2 (radius) not implemented
+      case 8: // closed rectangular not implemented
+        throw lineParser.throwError( "Type '%d' not implemented by SOBEK, parsing not possible.", type );
+
+      default:
+        throw lineParser.throwError( "Unknown type '%d'", type );
+    }
+  }
+
+  private SobekProfileDef readYZTable( final String id, final String name )
+  {
+    // FIXME: we should distinguish the types by creating a sub-structure under the class SobekProfileDef
+
     // TODO Auto-generated method stub
     return null;
   }
