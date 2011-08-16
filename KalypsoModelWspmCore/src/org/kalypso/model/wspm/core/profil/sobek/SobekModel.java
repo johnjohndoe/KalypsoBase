@@ -131,11 +131,9 @@ public class SobekModel implements ISobekConstants
 
         /* Serialize the data of the profile. */
         final String profileDat = profile.serializeProfileDat();
-        final String profileDef = profile.serializeProfileDef();
-
-        /* Write the data of the profiles to the files. */
         datWriter.write( profileDat );
-        defWriter.write( profileDef );
+
+        profile.serializeProfileDef( defWriter );
 
         /* Make a new line. */
         datWriter.newLine();
