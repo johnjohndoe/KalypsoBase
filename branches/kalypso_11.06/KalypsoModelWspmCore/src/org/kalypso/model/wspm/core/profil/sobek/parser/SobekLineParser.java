@@ -61,11 +61,11 @@ public class SobekLineParser
 
   private final int m_lineNumber;
 
-  public SobekLineParser( final LineNumberReader reader ) throws IOException
+  public SobekLineParser( final LineNumberReader reader ) throws IOException, CoreException
   {
     final String line = reader.readLine();
     if( line == null )
-      SobekParsing.throwError( format( "unexpected end of file" ) );
+      throw SobekParsing.throwError( format( "unexpected end of file" ) );
 
     m_tokenizer = new StrTokenizer( line, StrMatcher.spaceMatcher(), StrMatcher.singleQuoteMatcher() );
     m_lineNumber = reader.getLineNumber();
@@ -231,4 +231,11 @@ public class SobekLineParser
     return decimal;
   }
 
+  public String nextTokenOrNull( )
+  {
+    if( m_tokenizer.hasNext() )
+      return m_tokenizer.nextToken();
+
+    return null;
+  }
 }

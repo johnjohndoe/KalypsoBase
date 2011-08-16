@@ -109,7 +109,7 @@ public class SobekModelParser
     return parser.read( monitor );
   }
 
-  private SobekFrictionDat[] readFrictionDat( final IProgressMonitor monitor )
+  private SobekFrictionDat[] readFrictionDat( final IProgressMonitor monitor ) throws CoreException, IOException
   {
     final File frictionDatFile = new File( m_sobekProjectDir, ISobekConstants.FRICTION_DAT );
     if( !frictionDatFile.isFile() )
@@ -147,6 +147,14 @@ public class SobekModelParser
       m_profileIndex.put( defId, profileWithDat );
     }
 
+    for( final SobekFrictionDat frictionDat : frictionDats )
+    {
+      final String defId = frictionDat.getCsID();
+      final SobekProfile profile = createOrGetProfile( defId );
+      final SobekProfile profileWithDat = profile.setFriction( frictionDat );
+      m_profileIndex.put( defId, profileWithDat );
+    }
+
     /* Create the SOBEK model */
     final SobekModel sobekModel = new SobekModel();
 
@@ -160,7 +168,7 @@ public class SobekModelParser
   private SobekProfile createOrGetProfile( final String definitionId )
   {
     if( !m_profileIndex.containsKey( definitionId ) )
-      m_profileIndex.put( definitionId, new SobekProfile( null, null ) );
+      m_profileIndex.put( definitionId, new SobekProfile( null, null, null ) );
 
     return m_profileIndex.get( definitionId );
   }

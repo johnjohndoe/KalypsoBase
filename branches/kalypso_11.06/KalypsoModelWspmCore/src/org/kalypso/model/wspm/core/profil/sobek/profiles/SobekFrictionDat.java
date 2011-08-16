@@ -45,5 +45,24 @@ package org.kalypso.model.wspm.core.profil.sobek.profiles;
  */
 public class SobekFrictionDat
 {
+  private final String m_id;
 
+  private final String m_name;
+
+  private final String m_csID;
+
+  private final SobekFrictionDatCRFRSection[] m_sections;
+
+  public SobekFrictionDat( final String id, final String name, final String csID, final SobekFrictionDatCRFRSection[] sections )
+  {
+    m_id = id;
+    m_name = name;
+    m_csID = csID;
+    m_sections = sections;
+  }
+
+  public String getCsID( )
+  {
+    return m_csID;
+  }
 }
