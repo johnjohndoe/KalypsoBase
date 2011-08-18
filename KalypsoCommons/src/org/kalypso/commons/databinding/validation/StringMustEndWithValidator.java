@@ -40,46 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.validation;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 
 /**
  * @author Gernot Belger
  */
-public class StringToUrlValidator extends TypedValidator<String>
+public class StringMustEndWithValidator extends TypedValidator<String>
 {
-  private final String m_fieldName;
+  private final String[] m_endsWith;
 
-  public StringToUrlValidator( final String fieldName )
+  public StringMustEndWithValidator( final int severity, final String message, final String[] endsWithOneOf )
   {
-    super( String.class, IStatus.ERROR, StringUtils.EMPTY );
+    super( String.class, severity, message );
 
-    m_fieldName = fieldName;
+    m_endsWith = endsWithOneOf;
   }
 
   @Override
-  protected IStatus doValidate( final String value )
+  protected IStatus doValidate( final String value ) throws CoreException
   {
-    if( StringUtils.isEmpty( value ) )
-      return ValidationStatus.error( String.format( "'%s' is empty", m_fieldName ) );
+    if( value == null )
+      fail();
 
-    try
+    for( final String endsWith : m_endsWith )
     {
-      final URL url = new URL( value );
-      final String host = url.getHost();
-      if( StringUtils.isBlank( host ) )
-        return ValidationStatus.error( String.format( "'%s' has no host", m_fieldName ) );
-    }
-    catch( final MalformedURLException e )
-    {
-      return ValidationStatus.error( e.getLocalizedMessage(), e );
+      if( value.endsWith( endsWith ) )
+        return ValidationStatus.ok();
     }
 
-    return ValidationStatus.ok();
+    fail();
+    // dead code
+    return null;
   }
-
 }
