@@ -175,12 +175,4 @@ public abstract class AbstractKalypsoModule implements IKalypsoModule, IExecutab
     return ProjectHandleExtensions.getGlobalProvider();
   }
 
-  /**
-   * @see org.kalypso.module.IKalypsoModule#supportsProjectType(java.lang.String)
-   */
-  @Override
-  public boolean supportsProjectType( final String projectType )
-  {
-    return getId().equals( projectType );
-  }
 }

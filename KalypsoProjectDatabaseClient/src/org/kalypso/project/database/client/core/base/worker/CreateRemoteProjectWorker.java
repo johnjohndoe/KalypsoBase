@@ -131,6 +131,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       bean.setUnixName( project.getName() ); // TODO generate unixName
       bean.setProjectVersion( 0 );
       bean.setProjectType( m_commitType );
+      bean.setModuleIdentifier( m_commitType );
 
       service.createProject( bean, new URL( urlDestination ) );
 

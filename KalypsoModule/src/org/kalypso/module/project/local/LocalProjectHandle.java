@@ -42,7 +42,9 @@ package org.kalypso.module.project.local;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -151,6 +153,18 @@ public class LocalProjectHandle extends AbstractProjectHandle implements ILocalP
   @Override
   public String getModuleIdentifier( )
   {
+    /**
+     * refresh local workspace for a newly created / checkouted remote database project
+     */
+    try
+    {
+      m_project.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+    }
+
     final IKalypsoModule module = ModuleNature.findModule( m_project );
     if( Objects.isNotNull( module ) )
       return module.getId();

@@ -68,12 +68,16 @@ public class RemoteProjectHandler extends AbstractProjectHandle implements IRemo
 
   private IKalypsoModule findModule( final KalypsoProjectBean bean )
   {
-    final String projectType = bean.getProjectType();
+    String identifier = bean.getModuleIdentifier();
+    if( Strings.isEmpty( identifier ) ) // reverse combability to existing planer client project databases
+      identifier = bean.getProjectType();
+
     final IKalypsoModule[] modules = ModuleExtensions.getKalypsoModules();
     for( final IKalypsoModule module : modules )
     {
-      if( module.supportsProjectType( projectType ) )
+      if( identifier.equals( module.getId() ) )
         return module;
+
     }
 
     return null;
@@ -164,7 +168,9 @@ public class RemoteProjectHandler extends AbstractProjectHandle implements IRemo
 
     /** bad hack for backward compability of kalypso planer client! */
     final String projectType = m_bean.getProjectType();
-    if( "PlanerClientManagerProject".equals( projectType ) )
+    if( "PlanerClientProject".equals( projectType ) )
+      return "PlanerClientModule";
+    else if( "PlanerClientManagerProject".equals( projectType ) )
       return "PlanerClientManagerModule";
     else if( "KalypsRrmModel".equals( projectType ) )
       return "KalypsRrmModel";
