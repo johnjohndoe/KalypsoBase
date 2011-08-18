@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.base.actions;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -51,8 +50,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.module.IKalypsoModule;
-import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
+import org.kalypso.project.database.client.core.model.projects.ITranscendenceProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
@@ -87,16 +85,8 @@ public class ProjectUploadChangesAction extends Action
     final WizardDialog2 dialog = new WizardDialog2( null, wizard );
     dialog.open();
 
-    try
-    {
-      final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
-      preferences.setChangesCommited( true );
-
-    }
-    catch( final CoreException e1 )
-    {
-      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
-    }
+    final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
+    preferences.setChangesCommited( true );
 
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
     if( shell != null && !shell.isDisposed() && Window.OK != dialog.getReturnCode() )

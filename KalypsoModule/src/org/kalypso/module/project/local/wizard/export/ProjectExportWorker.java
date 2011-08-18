@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.projecthandle.local.exportwizard;
+package org.kalypso.module.project.local.wizard.export;
 
 import java.io.File;
 

@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.utils;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.projecthandle.IProjectHandle;
+import org.kalypso.module.project.IProjectHandle;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.core.model.projects.ITranscendenceProject;
 import org.kalypso.project.database.client.extension.database.IProjectDataBaseClientConstant;
-import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -90,31 +88,23 @@ public class ProjectDatabaseServerUtils
   {
     if( handler instanceof ITranscendenceProject )
     {
-      try
+      final ITranscendenceProject transcendence = (ITranscendenceProject) handler;
+
+      final IRemoteProjectPreferences preferences = transcendence.getRemotePreferences();
+      if( preferences == null )
+        return true;
+
+      final Integer localVersion = preferences.getVersion();
+
+      final KalypsoProjectBean bean = transcendence.getBean();
+      final Integer remoteVersion = bean.getProjectVersion();
+
+      if( localVersion.intValue() < remoteVersion.intValue() )
       {
-        final ITranscendenceProject transcendence = (ITranscendenceProject) handler;
-
-        final IRemoteProjectPreferences preferences = transcendence.getRemotePreferences();
-        if( preferences == null )
-          return true;
-
-        final Integer localVersion = preferences.getVersion();
-
-        final KalypsoProjectBean bean = transcendence.getBean();
-        final Integer remoteVersion = bean.getProjectVersion();
-
-        if( localVersion.intValue() < remoteVersion.intValue() )
-        {
-          return true;
-          // happens while proejct update action
+        return true;
+        // happens while proejct update action
 // else if( localVersion.intValue() > remoteVersion.intValue() )
 // throw new IllegalStateException( "Should never happen: localVersion.intValue() > remoteVersion.intValue()" );
-        }
-
-      }
-      catch( final CoreException e )
-      {
-        KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       }
     }
 

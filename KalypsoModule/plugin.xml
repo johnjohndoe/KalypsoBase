@@ -3,6 +3,7 @@
 <plugin>
      <extension-point id="kalypsoModule" name="Kalypso Module" schema="schema/kalypsoModule.exsd"/>
      <extension-point id="conversion" name="conversion" schema="schema/conversion.exsd"/>
+     <extension-point id="projecthandle" name="projecthandle" schema="schema/projecthandle.exsd"/>
 
 	 <extension
 	       id="org.kalypso.module.ModuleNature"
@@ -15,13 +16,13 @@
   <extension
         point="org.eclipse.core.runtime.adapters">
      <factory
-           adaptableType="org.kalypso.core.projecthandle.local.ILocalProjectHandle"
+           adaptableType="org.kalypso.module.project.local.ILocalProjectHandle"
            class="org.kalypso.module.internal.projecthandle.ModuleHandlerAdapterFactory">
         <adapter
               type="org.kalypso.module.IKalypsoModule">
         </adapter>
         <adapter
-              type="org.kalypso.core.projecthandle.IProjectOpenAction">
+              type="org.kalypso.module.project.local.IProjectOpenAction">
         </adapter>
      </factory>
   </extension>

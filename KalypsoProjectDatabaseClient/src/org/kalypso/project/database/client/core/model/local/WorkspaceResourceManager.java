@@ -49,10 +49,9 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.module.project.local.ILocalProject;
+import org.kalypso.project.database.client.core.model.projects.ITranscendenceProject;
 import org.kalypso.project.database.client.extension.database.handlers.implementation.LocalProjectHandler;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
@@ -99,24 +98,22 @@ public class WorkspaceResourceManager
             {
               try
               {
-                try
+                // FIXME: with this call, every(!) project automatically gets the remote-nature...
+                // this is not allowed!
+                if( project instanceof ITranscendenceProject )
                 {
-                  // FIXME: with this call, every(!) project automatically gets the remote-nature...
-                  // this is not allowed!
-                  final IRemoteProjectPreferences remotePreferences = project.getRemotePreferences();
-                  if( remotePreferences != null )
+                  final ITranscendenceProject transcendence = (ITranscendenceProject) project;
+
+                  final IRemoteProjectPreferences remotePreferences = transcendence.getRemotePreferences();
+                  if( Objects.isNotNull( remotePreferences ) )
                   {
                     remotePreferences.setModified( true );
+                    break;
                   }
-                  break;
-                }
-                catch( final IllegalStateException e )
-                {
                 }
               }
-              catch( final CoreException e )
+              catch( final IllegalStateException e )
               {
-                KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
               }
             }
           }

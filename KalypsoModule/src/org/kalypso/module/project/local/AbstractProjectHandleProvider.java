@@ -38,13 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.projecthandle;
+package org.kalypso.module.project.local;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.kalypso.module.project.IProjectHandle;
 
 /**
  * @author Gernot Belger

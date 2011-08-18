@@ -40,20 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.module.utils;
 
-import org.kalypso.core.projecthandle.IProjectHandle;
-import org.kalypso.core.projecthandle.IProjectHandleFilter;
-import org.kalypso.module.IKalypsoModule;
+import org.kalypso.commons.java.lang.Strings;
+import org.kalypso.module.project.IProjectHandle;
+import org.kalypso.module.project.local.IProjectHandleFilter;
 
 /**
  * @author Gernot Belger
  */
 public class ModuleHandleFilter implements IProjectHandleFilter
 {
-  private final String m_moduleID;
+  private final String m_module;
 
-  public ModuleHandleFilter( final IKalypsoModule module )
+  public ModuleHandleFilter( final String module )
   {
-    m_moduleID = module.getId();
+    m_module = module;
   }
 
   /**
@@ -62,11 +62,10 @@ public class ModuleHandleFilter implements IProjectHandleFilter
   @Override
   public boolean select( final IProjectHandle item )
   {
-    final IKalypsoModule module = (IKalypsoModule) item.getAdapter( IKalypsoModule.class );
-    if( module == null )
+    final String id = item.getModuleIdentifier();
+    if( Strings.isEmpty( id ) )
       return false;
 
-    final String projectModule = module.getId();
-    return m_moduleID.equals( projectModule );
+    return m_module.equals( id );
   }
 }

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,14 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.projecthandle;
+package org.kalypso.module.project.local;
 
-import org.eclipse.jface.action.IAction;
+import org.kalypso.module.project.IProjectHandle;
 
 /**
  * @author Gernot Belger
  */
-public interface IProjectOpenAction extends IAction
+public interface IProjectHandleFilter
 {
-
+  boolean select( IProjectHandle item );
 }

@@ -38,12 +38,16 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension.database.handlers;
+package org.kalypso.project.database.client.core.model.projects;
+
+import org.kalypso.module.project.local.ILocalProject;
+import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
 /**
  * @author Dirk Kuch
  */
 public interface ITranscendenceProject extends ILocalProject, IRemoteProject
 {
-  
+  IRemoteProjectPreferences getRemotePreferences( );
+
 }

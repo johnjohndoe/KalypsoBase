@@ -48,10 +48,10 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.core.projecthandle.IProjectHandleProvider;
-import org.kalypso.core.projecthandle.IProjectHandlesChangedListener;
-import org.kalypso.core.projecthandle.ProjectHandleExtensions;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.module.project.local.IProjectHandleProvider;
+import org.kalypso.module.project.local.IProjectHandlesChangedListener;
+import org.kalypso.module.project.local.ProjectHandleExtensions;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteProjectHandleProvider;
 import org.kalypso.project.database.client.i18n.Messages;
 

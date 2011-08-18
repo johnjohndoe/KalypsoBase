@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.projecthandle;
+package org.kalypso.module.project.local;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.projecthandle.local.LocalWorkspaceItemProvider;
+import org.kalypso.module.project.local.actions.LocalWorkspaceItemProvider;
 
 /**
  * Access to the workspace extension point.
@@ -57,7 +57,7 @@ import org.kalypso.core.projecthandle.local.LocalWorkspaceItemProvider;
  */
 public final class ProjectHandleExtensions
 {
-  private static final String NAMESPACE = "org.kalypso.core"; //$NON-NLS-1$
+  private static final String NAMESPACE = "org.kalypso.module"; //$NON-NLS-1$
 
   private static final String PROJECT_HANDLE_EXTENSION_POINT = "projecthandle"; //$NON-NLS-1$
 

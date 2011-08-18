@@ -101,6 +101,9 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   @Column(name = "project_changes")
   private String m_changes;
 
+  @Column(name = "module_identifier")
+  private String m_moduleIdentifier;
+
   /**
    * @return previous versions of this bean
    */
@@ -356,5 +359,15 @@ public class KalypsoProjectBean implements Comparable<KalypsoProjectBean>
   public String getChanges( )
   {
     return m_changes;
+  }
+
+  public String getModuleIdentifier( )
+  {
+    return m_moduleIdentifier;
+  }
+
+  public void setModuleIdentifier( final String moduleIdentifier )
+  {
+    m_moduleIdentifier = moduleIdentifier;
   }
 }

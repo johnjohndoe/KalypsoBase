@@ -43,12 +43,12 @@ package org.kalypso.project.database.client.extension.database.handlers.implemen
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.projecthandle.AbstractProjectHandle;
-import org.kalypso.core.projecthandle.local.ProjectExportAction;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.nature.ModuleNature;
-import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.module.project.local.AbstractProjectHandle;
+import org.kalypso.module.project.local.ILocalProject;
+import org.kalypso.module.project.local.actions.ProjectExportAction;
 import org.kalypso.project.database.client.core.base.actions.AquireProjectLockAction;
 import org.kalypso.project.database.client.core.base.actions.EmptyProjectAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectUpdateChangesAction;
@@ -56,10 +56,9 @@ import org.kalypso.project.database.client.core.base.actions.ProjectUploadChange
 import org.kalypso.project.database.client.core.base.actions.ReleaseProjectLockAction;
 import org.kalypso.project.database.client.core.base.actions.RemoteInfoAction;
 import org.kalypso.project.database.client.core.base.actions.TranscendenceDeleteAction;
+import org.kalypso.project.database.client.core.model.projects.IRemoteProject;
+import org.kalypso.project.database.client.core.model.projects.ITranscendenceProject;
 import org.kalypso.project.database.client.core.utils.ProjectDatabaseServerUtils;
-import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
-import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
-import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -68,7 +67,7 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
  */
 public class TranscendenceProjectHandler extends AbstractProjectHandle implements ITranscendenceProject
 {
-  private final ILocalProject m_local;
+  private final LocalProjectHandler m_local;
 
   private final IRemoteProject m_remote;
 
@@ -76,7 +75,7 @@ public class TranscendenceProjectHandler extends AbstractProjectHandle implement
 
   public TranscendenceProjectHandler( final ILocalProject local, final IRemoteProject remote )
   {
-    m_local = local;
+    m_local = (LocalProjectHandler) local;
     m_remote = remote;
 
     final IProject project = m_local.getProject();
@@ -105,9 +104,18 @@ public class TranscendenceProjectHandler extends AbstractProjectHandle implement
    * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.ILocalProjectHandler#getRemotePreferences()
    */
   @Override
-  public IRemoteProjectPreferences getRemotePreferences( ) throws CoreException
+  public IRemoteProjectPreferences getRemotePreferences( )
   {
-    return m_local.getRemotePreferences();
+    try
+    {
+      return m_local.getRemotePreferences();
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+    }
+
+    return null;
   }
 
   /**
@@ -155,18 +163,8 @@ public class TranscendenceProjectHandler extends AbstractProjectHandle implement
   @Override
   public boolean isLocked( )
   {
-    try
-    {
-      final IRemoteProjectPreferences preferences = getRemotePreferences();
-      return preferences.isLocked();
-    }
-    catch( final CoreException e )
-    {
-      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-
-    return false;
-
+    final IRemoteProjectPreferences preferences = getRemotePreferences();
+    return preferences.isLocked();
   }
 
   /**
@@ -204,31 +202,24 @@ public class TranscendenceProjectHandler extends AbstractProjectHandle implement
 
   private IAction createDatabaseAction( )
   {
-    try
+    // TODO refactor - *brrrr....**
+    final IRemoteProjectPreferences preferences = getRemotePreferences();
+    if( ProjectDatabaseServerUtils.isUpdateAvailable( this ) )
+      return new ProjectUpdateChangesAction( m_module, this );
+    else
     {
-      // TODO refactor - *brrrr....**
-      final IRemoteProjectPreferences preferences = getRemotePreferences();
-      if( ProjectDatabaseServerUtils.isUpdateAvailable( this ) )
-        return new ProjectUpdateChangesAction( m_module, this );
-      else
-      {
-        if( preferences == null )
-          return new EmptyProjectAction();
+      if( preferences == null )
+        return new EmptyProjectAction();
 
-        // FIXME: whynot always ask the remote preferences?
+      // FIXME: whynot always ask the remote preferences?
 // if( m_module.getDatabaseSettings().hasManagedDirtyState() )
-        {
-          if( !preferences.isModified() || preferences.getChangesCommited() )
-            return new EmptyProjectAction();
-        }
-
-        if( !preferences.isLocked() )
-          return new ProjectUploadChangesAction( m_module, this );
+      {
+        if( !preferences.isModified() || preferences.getChangesCommited() )
+          return new EmptyProjectAction();
       }
-    }
-    catch( final CoreException e )
-    {
-      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+
+      if( !preferences.isLocked() )
+        return new ProjectUploadChangesAction( m_module, this );
     }
 
     return new EmptyProjectAction();
@@ -236,29 +227,19 @@ public class TranscendenceProjectHandler extends AbstractProjectHandle implement
 
   private IAction createEditAction( )
   {
-    try
+    // FIXME: whynot always ask the remote preferences?
+    // if( ((IKalypsoModuleDatabaseSettings) m_module.getDatabaseSettings()).hasManagedDirtyState() )
     {
-      // FIXME: whynot always ask the remote preferences?
-      // if( ((IKalypsoModuleDatabaseSettings) m_module.getDatabaseSettings()).hasManagedDirtyState() )
-      {
-        final Boolean remoteLocked = getBean().hasEditLock();
-        final boolean localLocked = isLocked();
-        if( remoteLocked && !localLocked )
-          return new EmptyProjectAction();
+      final Boolean remoteLocked = getBean().hasEditLock();
+      final boolean localLocked = isLocked();
+      if( remoteLocked && !localLocked )
+        return new EmptyProjectAction();
 
-        if( getRemotePreferences().isLocked() )
-          return new ReleaseProjectLockAction( this, m_module );
-        else
-          return new AquireProjectLockAction( this, m_module );
-      }
-
+      if( getRemotePreferences().isLocked() )
+        return new ReleaseProjectLockAction( this, m_module );
+      else
+        return new AquireProjectLockAction( this, m_module );
     }
-    catch( final CoreException e )
-    {
-      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-
-    return new EmptyProjectAction();
   }
 
   /**
@@ -269,6 +250,19 @@ public class TranscendenceProjectHandler extends AbstractProjectHandle implement
   {
 
     return super.getAdapter( adapter );
+  }
+
+  /**
+   * @see org.kalypso.core.projecthandle.IProjectHandle#getModuleIdentifier()
+   */
+  @Override
+  public String getModuleIdentifier( )
+  {
+    final String local = m_local.getModuleIdentifier();
+    if( Strings.isNotEmpty( local ) )
+      return local;
+
+    return m_remote.getModuleIdentifier();
   }
 
 }

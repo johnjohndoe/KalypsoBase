@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.base.actions;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -48,10 +47,8 @@ import org.eclipse.jface.window.SameShellProvider;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.DeleteResourceAction;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
-import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
+import org.kalypso.project.database.client.core.model.projects.ITranscendenceProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
@@ -78,19 +75,12 @@ public class TranscendenceDeleteAction extends Action
   @Override
   public void runWithEvent( final Event event )
   {
-    try
+    final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
+    final boolean locked = preferences.isLocked();
+    if( locked )
     {
-      final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
-      final boolean locked = preferences.isLocked();
-      if( locked )
-      {
-        final ITranscendenceProject remote = m_handler;
-        ProjectDataBaseController.releaseProjectLock( remote.getBean(), true );
-      }
-    }
-    catch( final CoreException e1 )
-    {
-      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
+      final ITranscendenceProject remote = m_handler;
+      ProjectDataBaseController.releaseProjectLock( remote.getBean(), true );
     }
 
     final Shell shell = event.widget.getDisplay().getActiveShell();

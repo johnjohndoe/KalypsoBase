@@ -41,13 +41,14 @@
 package org.kalypso.project.database.client.extension.database.handlers.implementation;
 
 import org.eclipse.jface.action.IAction;
-import org.kalypso.core.projecthandle.AbstractProjectHandle;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.ModuleExtensions;
+import org.kalypso.module.project.local.AbstractProjectHandle;
 import org.kalypso.project.database.client.core.base.actions.EmptyProjectAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectDownloadAction;
 import org.kalypso.project.database.client.core.base.actions.RemoteInfoAction;
-import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
+import org.kalypso.project.database.client.core.model.projects.IRemoteProject;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
@@ -73,7 +74,6 @@ public class RemoteProjectHandler extends AbstractProjectHandle implements IRemo
     {
       if( module.supportsProjectType( projectType ) )
         return module;
-
     }
 
     return null;
@@ -137,7 +137,6 @@ public class RemoteProjectHandler extends AbstractProjectHandle implements IRemo
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
     // FIXME
-
 // if( adapter == IProjectOpenAction.class )
 // return new ListRemoteProjectAction( this );
 
@@ -153,4 +152,29 @@ public class RemoteProjectHandler extends AbstractProjectHandle implements IRemo
     return String.format( "Remote Project: %s", getName() );
   }
 
+  /**
+   * @see org.kalypso.core.projecthandle.IProjectHandle#getModuleIdentifier()
+   */
+  @Override
+  public String getModuleIdentifier( )
+  {
+    final String id = m_bean.getModuleIdentifier();
+    if( Strings.isNotEmpty( id ) )
+      return id;
+
+    /** bad hack for backward compability of kalypso planer client! */
+    final String projectType = m_bean.getProjectType();
+    if( "PlanerClientManagerProject".equals( projectType ) )
+      return "PlanerClientManagerModule";
+    else if( "KalypsRrmModel".equals( projectType ) )
+      return "KalypsRrmModel";
+    else if( "KalypsoWspmModel".equals( projectType ) )
+      return "KalypsoWspmModel";
+    else if( "KalypsoFloodModelType".equals( projectType ) )
+      return "KalypsoFloodModelType";
+    else if( "KalypsoRiskModel".equals( projectType ) )
+      return "KalypsoRiskModel";
+
+    throw new UnsupportedOperationException();
+  }
 }

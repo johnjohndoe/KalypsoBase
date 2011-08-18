@@ -45,10 +45,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.projecthandle.local.ILocalProjectHandle;
-import org.kalypso.core.projecthandle.local.ProjectOpenAction;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
+import org.kalypso.module.project.local.ILocalProjectHandle;
+import org.kalypso.module.project.local.actions.ProjectOpenAction;
 
 /**
  * @author Gernot Belger
@@ -59,9 +59,10 @@ public class OpenModuleProjectAction extends ProjectOpenAction
 
   private final ILocalProjectHandle m_item;
 
-  public OpenModuleProjectAction( final IKalypsoModule module , final ILocalProjectHandle item )
+  public OpenModuleProjectAction( final IKalypsoModule module, final ILocalProjectHandle item )
   {
     super( item );
+
     m_module = module;
     m_item = item;
   }

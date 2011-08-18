@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,45 +38,45 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.client.extension.database.handlers;
+package org.kalypso.module.project.local.actions;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.kalypso.module.project.IProjectHandle;
-import org.kalypso.module.project.local.IProjectHandleFilter;
-import org.kalypso.project.database.client.core.model.projects.IRemoteProject;
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.kalypso.module.internal.i18n.Messages;
+import org.kalypso.module.project.local.ILocalProjectHandle;
+import org.kalypso.module.project.local.wizard.export.WizardProjectExport;
 
 /**
  * @author Dirk Kuch
  */
-public class RemoteProjectFilter implements IProjectHandleFilter
+public class ProjectExportAction extends Action
 {
-  private final String[] m_projectIds;
+  private static final ImageDescriptor IMG_EXPORT = ImageDescriptor.createFromURL( ProjectExportAction.class.getResource( "images/action_export.gif" ) ); //$NON-NLS-1$
 
-  public RemoteProjectFilter( final String... projectIds )
+  protected final ILocalProjectHandle m_item;
+
+  public ProjectExportAction( final ILocalProjectHandle item )
   {
-    m_projectIds = projectIds;
+    m_item = item;
+
+    setImageDescriptor( IMG_EXPORT );
+    setToolTipText( Messages.getString( "org.kalypso.core.projecthandle.local.ProjectExportAction.1" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.core.projecthandle.IProjectHandleFilter#select(org.kalypso.core.projecthandle.IProjectHandle)
-   */
   @Override
-  public boolean select( final IProjectHandle item )
+  public void runWithEvent( final Event event )
   {
-    if( item instanceof IRemoteProject )
-    {
-      final IRemoteProject remote = (IRemoteProject) item;
-      final KalypsoProjectBean bean = remote.getBean();
-      final String type = bean.getProjectType();
+    final Shell shell = event.widget.getDisplay().getActiveShell();
 
-      if( ArrayUtils.contains( m_projectIds, type ) )
-        return true;
+    final WizardProjectExport wizard = new WizardProjectExport( m_item.getProject() );
+    wizard.init( PlatformUI.getWorkbench(), new StructuredSelection( m_item.getProject() ) );
 
-      return false;
-    }
-
-    return true;
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
+    dialog.open();
   }
-
 }

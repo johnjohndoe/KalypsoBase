@@ -49,8 +49,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.IKalypsoModule;
+import org.kalypso.module.project.local.ILocalProject;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
-import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.i18n.Messages;
 
 /**

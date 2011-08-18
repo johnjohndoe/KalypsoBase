@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.projecthandle.local;
+package org.kalypso.module.project.local.actions;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
@@ -48,9 +48,10 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.i18n.Messages;
-import org.kalypso.core.projecthandle.IProjectOpenAction;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.module.internal.i18n.Messages;
+import org.kalypso.module.project.local.ILocalProjectHandle;
+import org.kalypso.module.project.local.IProjectOpenAction;
 
 /**
  * @author Dirk Kuch
@@ -69,7 +70,6 @@ public class ProjectOpenAction extends Action implements IProjectOpenAction
     setImageDescriptor( IMG_PROJECT_LOCAL );
     setToolTipText( Messages.getString( "org.kalypso.core.projecthandle.local.ProjectOpenAction.10", m_item.getName() ) ); //$NON-NLS-1$
   }
-
 
   /**
    * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)

@@ -54,16 +54,17 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChang
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 import org.eclipse.jface.action.IAction;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.projecthandle.IProjectHandleProvider;
-import org.kalypso.core.projecthandle.IProjectOpenAction;
-import org.kalypso.core.projecthandle.LocalProjectHandle;
-import org.kalypso.core.projecthandle.ProjectHandleExtensions;
-import org.kalypso.core.projecthandle.local.ProjectDeleteAction;
-import org.kalypso.core.projecthandle.local.ProjectExportAction;
-import org.kalypso.core.projecthandle.local.ProjectInfoAction;
-import org.kalypso.core.projecthandle.local.ProjectOpenAction;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.nature.ModuleNature;
+import org.kalypso.module.project.local.ILocalProject;
+import org.kalypso.module.project.local.IProjectHandleProvider;
+import org.kalypso.module.project.local.IProjectOpenAction;
+import org.kalypso.module.project.local.LocalProjectHandle;
+import org.kalypso.module.project.local.ProjectHandleExtensions;
+import org.kalypso.module.project.local.actions.ProjectDeleteAction;
+import org.kalypso.module.project.local.actions.ProjectExportAction;
+import org.kalypso.module.project.local.actions.ProjectInfoAction;
+import org.kalypso.module.project.local.actions.ProjectOpenAction;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.base.actions.EmptyProjectAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectUploadAction;
@@ -71,7 +72,6 @@ import org.kalypso.project.database.client.core.model.interfaces.IRemoteProjectH
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
 import org.kalypso.project.database.client.core.model.local.LocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.local.WorkspaceResourceManager;
-import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
@@ -162,10 +162,6 @@ public class LocalProjectHandler extends LocalProjectHandle implements ILocalPro
     return m_project;
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.database.refactoring.handlers.ILocalProjectHandler#getRemotePreferences()
-   */
-  @Override
   public IRemoteProjectPreferences getRemotePreferences( ) throws CoreException
   {
     if( m_preferences == null )
@@ -179,12 +175,12 @@ public class LocalProjectHandler extends LocalProjectHandle implements ILocalPro
           @Override
           public IStatus runInWorkspace( final IProgressMonitor monitor ) throws CoreException
           {
-            final IProjectDescription description = m_project.getDescription();
+            final IProjectDescription description = getProject().getDescription();
             final String[] natureIds = description.getNatureIds();
             ArrayUtils.add( natureIds, RemoteProjectNature.NATURE_ID );
 
             description.setNatureIds( natureIds );
-            m_project.setDescription( description, new NullProgressMonitor() );
+            getProject().setDescription( description, new NullProgressMonitor() );
 
             return Status.OK_STATUS;
           }
