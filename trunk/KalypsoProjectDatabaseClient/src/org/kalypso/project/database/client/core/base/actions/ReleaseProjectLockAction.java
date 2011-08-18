@@ -44,7 +44,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -52,11 +51,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.module.IKalypsoModule;
-import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
-import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
+import org.kalypso.project.database.client.core.model.projects.ITranscendenceProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
@@ -109,15 +106,8 @@ public class ReleaseProjectLockAction extends Action
     if( !shell.isDisposed() )
       ErrorDialog.openError( shell, Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.28" ), Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.29" ), lockStatus ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    try
-    {
-      final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
-      preferences.setChangesCommited( false );
-    }
-    catch( final CoreException e1 )
-    {
-      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e1 ) );
-    }
+    final IRemoteProjectPreferences preferences = m_handler.getRemotePreferences();
+    preferences.setChangesCommited( false );
 
   }
 

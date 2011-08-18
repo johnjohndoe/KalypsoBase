@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.projecthandle.local;
+package org.kalypso.module.project.local.actions;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -57,7 +57,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.i18n.Messages;
+import org.kalypso.module.internal.i18n.Messages;
+import org.kalypso.module.project.local.ILocalProjectHandle;
 
 /**
  * @author Dirk Kuch

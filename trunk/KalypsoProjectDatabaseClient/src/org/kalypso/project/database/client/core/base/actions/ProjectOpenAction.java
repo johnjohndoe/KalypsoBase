@@ -54,13 +54,12 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.IKalypsoModuleProjectOpenAction;
+import org.kalypso.module.project.local.ILocalProject;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
-import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
+import org.kalypso.project.database.client.core.model.projects.ITranscendenceProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 
@@ -134,46 +133,48 @@ public class ProjectOpenAction implements IProjectAction
     m_module = module;
     m_handler = handler;
 
-    try
+    // try
+// {
+    if( handler instanceof ITranscendenceProject )
     {
-      if( handler instanceof ITranscendenceProject )
-      {
-        final ITranscendenceProject transcendence = (ITranscendenceProject) handler;
-        final IRemoteProjectPreferences remotePreferences = transcendence.getRemotePreferences();
-        if( remotePreferences == null )
-          m_type = OPEN_TYPE.eLocal;
-        else
-        {
-          final boolean localLock = remotePreferences.isLocked();
-          final Boolean serverLock = transcendence.getBean().hasEditLock();
-          if( localLock )
-            m_type = OPEN_TYPE.eTranscendenceWriteable;
-          else if( serverLock )
-            m_type = OPEN_TYPE.eTranscendenceReadableServerLocked;
-          else
-            m_type = OPEN_TYPE.eTranscendenceReadable;
-        }
-      }
+      final ITranscendenceProject transcendence = (ITranscendenceProject) handler;
+      final IRemoteProjectPreferences remotePreferences = transcendence.getRemotePreferences();
+      if( remotePreferences == null )
+        m_type = OPEN_TYPE.eLocal;
       else
       {
-        final IRemoteProjectPreferences remotePreferences = handler.getRemotePreferences();
-        if( remotePreferences == null )
-          m_type = OPEN_TYPE.eLocal;
+        final boolean localLock = remotePreferences.isLocked();
+        final Boolean serverLock = transcendence.getBean().hasEditLock();
+        if( localLock )
+          m_type = OPEN_TYPE.eTranscendenceWriteable;
+        else if( serverLock )
+          m_type = OPEN_TYPE.eTranscendenceReadableServerLocked;
         else
-        {
-          final boolean onServer = remotePreferences.isOnServer();
-          if( onServer )
-            m_type = OPEN_TYPE.eLocalOffline;
-          else
-            m_type = OPEN_TYPE.eLocal;
-        }
+          m_type = OPEN_TYPE.eTranscendenceReadable;
       }
-
     }
-    catch( final CoreException e )
+    else
     {
-      KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      throw new UnsupportedOperationException();
+//
+// final IRemoteProjectPreferences remotePreferences = handler.getRemotePreferences();
+// if( remotePreferences == null )
+// m_type = OPEN_TYPE.eLocal;
+// else
+// {
+// final boolean onServer = remotePreferences.isOnServer();
+// if( onServer )
+// m_type = OPEN_TYPE.eLocalOffline;
+// else
+// m_type = OPEN_TYPE.eLocal;
+// }
     }
+
+// }
+// catch( final CoreException e )
+// {
+// KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+// }
 
   }
 

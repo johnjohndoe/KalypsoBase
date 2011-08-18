@@ -47,9 +47,9 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.module.project.local.ILocalProject;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
-import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
-import org.kalypso.project.database.client.extension.database.handlers.ITranscendenceProject;
+import org.kalypso.project.database.client.core.model.projects.ITranscendenceProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.IProjectDatabase;
 
@@ -82,7 +82,8 @@ public class AcquireProjectLockWorker implements ICoreRunnableWithProgress
     if( !(m_handler instanceof ITranscendenceProject) )
       throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.project.lock.acquire.AcquireProjectLockWorker.2", m_handler.getName() ) ) ); //$NON-NLS-1$
 
-    m_handler.getRemotePreferences().setEditTicket( ticket );
+    final ITranscendenceProject trancendence = (ITranscendenceProject) m_handler;
+    trancendence.getRemotePreferences().setEditTicket( ticket );
 
     return Status.OK_STATUS;
   }

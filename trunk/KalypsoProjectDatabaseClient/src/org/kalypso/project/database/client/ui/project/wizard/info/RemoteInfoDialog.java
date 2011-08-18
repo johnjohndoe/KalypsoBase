@@ -71,11 +71,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.module.project.local.ILocalProject;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
+import org.kalypso.project.database.client.core.model.projects.IRemoteProject;
 import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
-import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
-import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 

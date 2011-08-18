@@ -51,7 +51,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.base.worker.RemoteImportWorker;
-import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
+import org.kalypso.project.database.client.core.model.projects.IRemoteProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 

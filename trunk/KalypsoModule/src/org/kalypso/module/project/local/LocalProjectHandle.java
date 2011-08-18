@@ -38,19 +38,21 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.projecthandle;
+package org.kalypso.module.project.local;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.projecthandle.local.ILocalProjectHandle;
-import org.kalypso.core.projecthandle.local.ProjectDeleteAction;
-import org.kalypso.core.projecthandle.local.ProjectExportAction;
-import org.kalypso.core.projecthandle.local.ProjectInfoAction;
-import org.kalypso.core.projecthandle.local.ProjectOpenAction;
+import org.kalypso.module.IKalypsoModule;
+import org.kalypso.module.nature.ModuleNature;
+import org.kalypso.module.project.local.actions.ProjectDeleteAction;
+import org.kalypso.module.project.local.actions.ProjectExportAction;
+import org.kalypso.module.project.local.actions.ProjectInfoAction;
+import org.kalypso.module.project.local.actions.ProjectOpenAction;
 
 /**
  * @author Dirk Kuch
@@ -98,7 +100,6 @@ public class LocalProjectHandle extends AbstractProjectHandle implements ILocalP
     return m_project;
   }
 
-
   /**
    * @see org.kalypso.project.database.client.extension.database.handlers.IProjectHandler#getDescription()
    */
@@ -145,5 +146,15 @@ public class LocalProjectHandle extends AbstractProjectHandle implements ILocalP
       return new ProjectOpenAction( this );
 
     return adapted;
+  }
+
+  @Override
+  public String getModuleIdentifier( )
+  {
+    final IKalypsoModule module = ModuleNature.findModule( m_project );
+    if( Objects.isNotNull( module ) )
+      return module.getId();
+
+    throw new UnsupportedOperationException();
   }
 }

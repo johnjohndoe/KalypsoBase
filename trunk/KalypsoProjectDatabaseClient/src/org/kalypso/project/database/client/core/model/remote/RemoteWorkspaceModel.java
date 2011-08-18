@@ -18,7 +18,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
-import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
+import org.kalypso.project.database.client.core.model.projects.IRemoteProject;
 import org.kalypso.project.database.client.extension.database.handlers.implementation.RemoteProjectHandler;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.IProjectDatabase;

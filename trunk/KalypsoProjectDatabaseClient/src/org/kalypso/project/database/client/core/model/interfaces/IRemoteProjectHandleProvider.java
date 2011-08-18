@@ -41,7 +41,7 @@
 package org.kalypso.project.database.client.core.model.interfaces;
 
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.core.projecthandle.IProjectHandleProvider;
+import org.kalypso.module.project.local.IProjectHandleProvider;
 
 /**
  * @author Dirk Kuch

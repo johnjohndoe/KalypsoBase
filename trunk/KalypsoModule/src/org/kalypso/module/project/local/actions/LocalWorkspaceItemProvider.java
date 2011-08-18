@@ -1,4 +1,4 @@
-package org.kalypso.core.projecthandle.local;
+package org.kalypso.module.project.local.actions;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,9 +11,9 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.kalypso.core.projecthandle.AbstractProjectHandleProvider;
-import org.kalypso.core.projecthandle.IProjectHandle;
-import org.kalypso.core.projecthandle.LocalProjectHandle;
+import org.kalypso.module.project.IProjectHandle;
+import org.kalypso.module.project.local.AbstractProjectHandleProvider;
+import org.kalypso.module.project.local.LocalProjectHandle;
 
 /**
  * @author Dirk Kuch

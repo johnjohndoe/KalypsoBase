@@ -46,7 +46,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
-import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
+import org.kalypso.project.database.client.core.model.projects.IRemoteProject;
 import org.kalypso.project.database.client.i18n.Messages;
 
 /**

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.model.interfaces;
 
-import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.module.project.local.ILocalProject;
 
 /**
  * @author Dirk Kuch

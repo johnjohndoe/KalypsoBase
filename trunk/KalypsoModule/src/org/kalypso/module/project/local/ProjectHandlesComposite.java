@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.projecthandle;
+package org.kalypso.module.project.local;
 
 import java.util.Arrays;
 
@@ -60,7 +60,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
-import org.kalypso.core.projecthandle.internal.ProjectHandleComparator;
+import org.kalypso.module.project.IProjectHandle;
+import org.kalypso.module.project.internal.ProjectHandleComparator;
 
 /**
  * Composite for rendering and handling remote and local projects

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.projecthandle.local.exportwizard;
+package org.kalypso.module.project.local.wizard.export;
 
 import java.io.File;
 
@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.core.i18n.Messages;
+import org.kalypso.module.internal.i18n.Messages;
 
 /**
  * FIXME: remember the last path (dialog settings)

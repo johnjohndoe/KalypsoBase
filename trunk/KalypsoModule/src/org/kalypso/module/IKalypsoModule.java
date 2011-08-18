@@ -46,7 +46,7 @@ import java.net.URL;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
-import org.kalypso.core.projecthandle.IProjectHandleProvider;
+import org.kalypso.module.project.local.IProjectHandleProvider;
 import org.osgi.framework.Version;
 
 /**

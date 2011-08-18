@@ -42,7 +42,7 @@ package org.kalypso.project.database.client.core.model.interfaces;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.core.projecthandle.IProjectHandle;
+import org.kalypso.module.project.IProjectHandle;
 import org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener;
 import org.kalypso.project.database.common.interfaces.IProjectDatabaseListener;
 

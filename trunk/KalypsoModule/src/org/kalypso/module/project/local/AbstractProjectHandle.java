@@ -1,8 +1,9 @@
-package org.kalypso.core.projecthandle;
+package org.kalypso.module.project.local;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.PlatformObject;
+import org.kalypso.module.project.IProjectHandle;
 
 public abstract class AbstractProjectHandle extends PlatformObject implements IProjectHandle, Comparable<IProjectHandle>
 {

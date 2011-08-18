@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.projecthandle.local.exportwizard;
+package org.kalypso.module.project.local.wizard.export;
 
 import java.io.File;
 
@@ -51,7 +51,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.i18n.Messages;
+import org.kalypso.module.internal.i18n.Messages;
 
 /**
  * Exports a given project as zip file into the file system.

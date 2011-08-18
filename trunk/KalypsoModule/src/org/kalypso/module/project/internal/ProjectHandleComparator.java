@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestra�e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,44 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.projecthandle.local;
+package org.kalypso.module.project.internal;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.window.SameShellProvider;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.actions.DeleteResourceAction;
-import org.kalypso.core.i18n.Messages;
+import java.util.Comparator;
+
+import org.kalypso.module.project.IProjectHandle;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public class ProjectDeleteAction extends Action
+public class ProjectHandleComparator implements Comparator<IProjectHandle>
 {
-  private static final ImageDescriptor IMG_DELETE = ImageDescriptor.createFromURL( ProjectInfoAction.class.getResource( "images/action_delete.gif" ) ); //$NON-NLS-1$
-
-  private final ILocalProjectHandle m_item;
-
-  public ProjectDeleteAction( final ILocalProjectHandle item )
-  {
-    m_item = item;
-
-    setImageDescriptor( IMG_DELETE );
-    setToolTipText( Messages.getString( "org.kalypso.core.projecthandle.local.ProjectDeleteAction.1" ) ); //$NON-NLS-1$
-  }
-
   /**
-   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
   @Override
-  public void runWithEvent( final Event event )
+  public int compare( final IProjectHandle h1, final IProjectHandle h2 )
   {
-    final Shell shell = event.widget.getDisplay().getActiveShell();
-
-    final DeleteResourceAction action = new DeleteResourceAction( new SameShellProvider( shell ) );
-    action.selectionChanged( new StructuredSelection( m_item.getProject() ) );
-    action.run();
+    return h1.getName().compareTo( h2.getName() );
   }
 }

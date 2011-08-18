@@ -43,12 +43,12 @@ package org.kalypso.module.internal.projecthandle;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.kalypso.core.projecthandle.IProjectOpenAction;
-import org.kalypso.core.projecthandle.local.ILocalProjectHandle;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.ModuleExtensions;
 import org.kalypso.module.internal.Module;
 import org.kalypso.module.nature.ModuleNature;
+import org.kalypso.module.project.local.ILocalProjectHandle;
+import org.kalypso.module.project.local.IProjectOpenAction;
 
 /**
  * @author Gernot Belger

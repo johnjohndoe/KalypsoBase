@@ -38,13 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.core.projecthandle.local;
+package org.kalypso.module.project.local.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.core.i18n.Messages;
+import org.kalypso.module.internal.i18n.Messages;
+import org.kalypso.module.project.local.ILocalProjectHandle;
 
 /**
  * @author Dirk Kuch
