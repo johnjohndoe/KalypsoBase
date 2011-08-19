@@ -47,8 +47,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -151,7 +150,7 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
         results.add( new AdvancedEditWidgetResult( feature, result ) );
       }
       else
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     m_results = results.toArray( new IAdvancedEditWidgetResult[] {} );

@@ -37,7 +37,6 @@ package org.kalypsodeegree_impl.graphics.displayelements.strokearrow;
 
 import java.awt.Graphics2D;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_ALIGNMENT;
@@ -63,7 +62,7 @@ public class StrokeArrowPaintDelegateSegment extends AbstractStrokeArrowPaintDel
   @Override
   public void paint( final Graphics2D g2, final GeoTransform projection, final GM_Curve curve, final UOM uom )
   {
-    throw (new NotImplementedException());
+    throw new UnsupportedOperationException();
   }
 
 }

@@ -47,8 +47,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -257,7 +256,7 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
         return symbolizer;
     }
 
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   /**

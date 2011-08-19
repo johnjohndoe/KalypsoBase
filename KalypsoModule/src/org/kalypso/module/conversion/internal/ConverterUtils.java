@@ -42,7 +42,6 @@ package org.kalypso.module.conversion.internal;
 
 import java.io.File;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.module.conversion.IProject2ProjectConverterFactory;
 import org.kalypso.module.conversion.IProjectConverter;
 import org.kalypso.module.conversion.IProjectConverterFactory;
@@ -74,6 +73,6 @@ public final class ConverterUtils
     if( factory instanceof IProjectConverterInPlaceFactory )
       return ((IProjectConverterInPlaceFactory) factory).createConverter( sourceVersion, targetDir );
 
-    throw new NotImplementedException( String.format( "Unknown factory type: %s", factory.getClass().getName() ) ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( String.format( "Unknown factory type: %s", factory.getClass().getName() ) ); //$NON-NLS-1$
   }
 }

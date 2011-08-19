@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.extension.database.handlers;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.module.project.IProjectHandle;
 import org.kalypso.module.project.local.IProjectHandleFilter;
 import org.kalypso.project.database.client.core.model.projects.IRemoteProject;

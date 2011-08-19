@@ -51,7 +51,7 @@ import java.util.Date;
 import junit.framework.Assert;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.CharEncoding;
+import org.apache.commons.lang3.CharEncoding;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

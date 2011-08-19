@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.om.table.handlers;
 
 import java.math.BigDecimal;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;

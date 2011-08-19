@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.ISHPParts;
 import org.kalypso.shape.geometry.ISHPPoint;
@@ -329,6 +328,6 @@ public final class SHP2GM_Object
       return null;
     }
 
-    throw new NotImplementedException( "Unknown shpe class: " + shpGeom );
+    throw new UnsupportedOperationException( "Unknown shpe class: " + shpGeom );
   }
 }

@@ -49,8 +49,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
@@ -198,7 +197,7 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
       return null;
 
     if( !(geometry instanceof Polygon) )
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
 
     final Polygon polygon = (Polygon) geometry;
     final LineString ring = polygon.getExteriorRing();

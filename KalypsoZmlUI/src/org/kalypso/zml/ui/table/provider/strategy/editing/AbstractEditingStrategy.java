@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider.strategy.editing;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.IAxis;
@@ -83,6 +82,6 @@ public abstract class AbstractEditingStrategy implements IZmlEditingStrategy
       return NumberUtils.parseDouble( value );
     }
     else
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
   }
 }

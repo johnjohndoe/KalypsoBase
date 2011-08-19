@@ -38,7 +38,6 @@ package org.kalypsodeegree_impl.graphics.displayelements.strokearrow.geometries;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.graphics.displayelements.LabelFactory;
@@ -134,7 +133,7 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
         return new OpenArrowGeometry( g2, projection, points, uom );
 
       default:
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
   }
 

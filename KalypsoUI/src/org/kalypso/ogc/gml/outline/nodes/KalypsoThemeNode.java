@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.outline.nodes;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;

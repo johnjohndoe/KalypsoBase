@@ -70,7 +70,7 @@ import net.opengeospatial.wps.StatusType;
 import net.opengeospatial.wps.SupportedComplexDataType;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.vfs.FileContent;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;

@@ -2,7 +2,7 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;

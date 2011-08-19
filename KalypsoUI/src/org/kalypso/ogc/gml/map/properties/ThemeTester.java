@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.map.properties;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.expressions.PropertyTester;
 import org.kalypso.contribs.eclipse.core.runtime.AdapterUtils;
 import org.kalypso.gmlschema.GMLSchemaUtilities;

@@ -10,7 +10,7 @@ import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;

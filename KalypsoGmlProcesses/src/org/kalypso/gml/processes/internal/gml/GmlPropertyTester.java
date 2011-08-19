@@ -44,7 +44,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.expressions.PropertyTester;
 import org.kalypso.core.catalog.FeatureTypePropertiesCatalog;
 import org.kalypso.gmlschema.GMLSchema;

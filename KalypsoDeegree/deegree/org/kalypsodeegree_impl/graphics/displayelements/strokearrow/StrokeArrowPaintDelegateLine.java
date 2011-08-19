@@ -37,7 +37,6 @@ package org.kalypsodeegree_impl.graphics.displayelements.strokearrow;
 
 import java.awt.Graphics2D;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -102,7 +101,7 @@ public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelega
         return calculateEndPoints( curve );
 
       case middle:
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     return null;

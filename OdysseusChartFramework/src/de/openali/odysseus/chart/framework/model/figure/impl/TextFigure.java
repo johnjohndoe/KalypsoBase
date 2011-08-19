@@ -1,6 +1,6 @@
 package de.openali.odysseus.chart.framework.model.figure.impl;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 

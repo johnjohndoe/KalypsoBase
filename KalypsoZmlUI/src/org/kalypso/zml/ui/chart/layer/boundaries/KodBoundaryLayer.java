@@ -43,7 +43,7 @@ package org.kalypso.zml.ui.chart.layer.boundaries;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.ogc.sensor.metadata.IMetadataBoundary;
 
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;

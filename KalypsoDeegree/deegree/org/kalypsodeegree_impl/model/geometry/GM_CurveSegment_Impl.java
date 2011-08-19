@@ -38,7 +38,6 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_LineString;
@@ -250,7 +249,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   @Override
   public boolean intersects( final GM_Object gmo )
   {
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -259,7 +258,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   @Override
   public GM_LineString getAsLineString( )
   {
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   /**

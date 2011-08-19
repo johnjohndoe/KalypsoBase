@@ -45,7 +45,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.model.feature.Feature;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -110,7 +109,7 @@ public class AdvancedEditWidgetSnapper
 
       }
       else
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     return myPoints.toArray( new IAdvancedEditWidgetSnappedPoint[] {} );

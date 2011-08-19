@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.base.actions;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -107,7 +106,7 @@ public class ProjectOpenAction implements IProjectAction
       else if( eTranscendenceWriteable.equals( type ) )
         return IMG_PROJECT_TRANSCENDENCE_LOCAL_LOCK;
 
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
     }
 
     public String getStatus( )
@@ -124,7 +123,7 @@ public class ProjectOpenAction implements IProjectAction
       else if( eTranscendenceWriteable.equals( type ) )
         return Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.9" ); //$NON-NLS-1$
 
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
     }
   }
 

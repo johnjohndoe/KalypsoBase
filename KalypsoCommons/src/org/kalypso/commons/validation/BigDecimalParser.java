@@ -43,7 +43,7 @@ package org.kalypso.commons.validation;
 import java.math.BigDecimal;
 import java.text.ParseException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**

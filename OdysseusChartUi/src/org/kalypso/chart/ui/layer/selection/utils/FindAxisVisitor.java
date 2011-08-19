@@ -43,7 +43,7 @@ package org.kalypso.chart.ui.layer.selection.utils;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;

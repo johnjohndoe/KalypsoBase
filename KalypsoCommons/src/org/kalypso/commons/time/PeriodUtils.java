@@ -91,7 +91,7 @@ public final class PeriodUtils
       case Calendar.AM_PM:
       case Calendar.ERA:
       default:
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
   }
 }

@@ -46,7 +46,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -206,7 +205,7 @@ public class ServiceRepositoryObservation implements IObservation
   @Deprecated
   public final void setValues( final ITupleModel values )
   {
-    throw new NotImplementedException( "Not used anymore. Use repository#setData instead" );
+    throw new UnsupportedOperationException( "Not used anymore. Use repository#setData instead" );
   }
 
   @Override

@@ -71,8 +71,7 @@ import ogc31.www.opengis.net.gml.SurfaceArrayPropertyType;
 import ogc31.www.opengis.net.gml.SurfacePatchArrayPropertyType;
 import ogc31.www.opengis.net.gml.SurfaceType;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -269,7 +268,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     final SurfacePatchArrayPropertyType surfacePatchArrayPropertyType = type.getPatches().getValue();
     final List<JAXBElement< ? extends AbstractSurfacePatchType>> patches = surfacePatchArrayPropertyType.getSurfacePatch();
     if( patches.size() > 1 )
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
 
     for( final JAXBElement< ? extends AbstractSurfacePatchType> patch : patches )
     {
@@ -287,10 +286,10 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
         return createSurface( abstractLinearRing, interior, co );
       }
       else
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
 // return GeometryFactory.createGM_Surface( exteriorRing, interiorRings, null, co );
       }
 

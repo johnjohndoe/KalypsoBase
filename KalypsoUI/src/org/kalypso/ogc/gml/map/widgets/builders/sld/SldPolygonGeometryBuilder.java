@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.map.widgets.builders.sld;
 
 import java.net.URL;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.gml.map.IMapPanel;

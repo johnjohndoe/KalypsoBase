@@ -37,8 +37,8 @@ package org.kalypsodeegree_impl.model.feature;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.deegree.model.spatialschema.GeometryException;
 import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.gmlschema.annotation.IAnnotation;

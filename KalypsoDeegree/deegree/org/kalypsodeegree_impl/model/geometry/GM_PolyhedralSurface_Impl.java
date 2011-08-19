@@ -42,7 +42,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -411,7 +410,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   protected GM_Envelope calculateEnvelope( )
   {
     // We overwrite getEnvelope, so this should never be called
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   /**

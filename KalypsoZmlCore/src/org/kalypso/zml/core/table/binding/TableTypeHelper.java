@@ -49,7 +49,6 @@ import javax.xml.namespace.QName;
 
 import jregex.RETokenizer;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.SWT;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
@@ -283,7 +282,7 @@ public final class TableTypeHelper
 
     final String url = reference.getUrl();
     if( Objects.isNotNull( url ) )
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
 
     return null;
   }
