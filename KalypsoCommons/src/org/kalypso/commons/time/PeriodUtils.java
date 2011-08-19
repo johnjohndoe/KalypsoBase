@@ -42,7 +42,6 @@ package org.kalypso.commons.time;
 
 import java.util.Calendar;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.joda.time.Period;
 
 /**

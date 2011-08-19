@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.property.value;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.databinding.observable.Realm;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.map.IObservableMap;
@@ -58,7 +57,7 @@ public abstract class TypedValueProperty<SOURCE, VALUE> extends ValueProperty
 
   private final Class<SOURCE> m_sourceType;
 
-  public TypedValueProperty( Class<SOURCE> sourceType, Class<VALUE> valueType )
+  public TypedValueProperty( final Class<SOURCE> sourceType, final Class<VALUE> valueType )
   {
     m_sourceType = sourceType;
     m_valueType = valueType;
@@ -78,7 +77,7 @@ public abstract class TypedValueProperty<SOURCE, VALUE> extends ValueProperty
    *      java.lang.Object)
    */
   @Override
-  public ITypedObservableValue<SOURCE, VALUE> observe( Realm realm, Object source )
+  public ITypedObservableValue<SOURCE, VALUE> observe( final Realm realm, final Object source )
   {
     return doObserve( realm, m_sourceType.cast( source ) );
   }
@@ -87,7 +86,7 @@ public abstract class TypedValueProperty<SOURCE, VALUE> extends ValueProperty
    * @see org.eclipse.core.databinding.property.value.IValueProperty#observeDetail(org.eclipse.core.databinding.observable.list.IObservableList)
    */
   @Override
-  public IObservableList observeDetail( IObservableList master )
+  public IObservableList observeDetail( final IObservableList master )
   {
     throw new UnsupportedOperationException();
   }
@@ -96,7 +95,7 @@ public abstract class TypedValueProperty<SOURCE, VALUE> extends ValueProperty
    * @see org.eclipse.core.databinding.property.value.IValueProperty#observeDetail(org.eclipse.core.databinding.observable.set.IObservableSet)
    */
   @Override
-  public IObservableMap observeDetail( IObservableSet master )
+  public IObservableMap observeDetail( final IObservableSet master )
   {
     throw new UnsupportedOperationException();
   }
@@ -105,7 +104,7 @@ public abstract class TypedValueProperty<SOURCE, VALUE> extends ValueProperty
    * @see org.eclipse.core.databinding.property.value.IValueProperty#observeDetail(org.eclipse.core.databinding.observable.map.IObservableMap)
    */
   @Override
-  public IObservableMap observeDetail( IObservableMap master )
+  public IObservableMap observeDetail( final IObservableMap master )
   {
     throw new UnsupportedOperationException();
   }
