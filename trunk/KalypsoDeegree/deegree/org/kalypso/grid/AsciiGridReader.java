@@ -47,7 +47,6 @@ import java.net.URL;
 import java.util.Scanner;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -150,7 +149,7 @@ public class AsciiGridReader
     if( "xllcenter".equals( m_headerKeys[2].toLowerCase() ) )
       return NumberUtils.parseDouble( m_headerData[2] );
 
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   private double getOriginCornerY( )
@@ -164,7 +163,7 @@ public class AsciiGridReader
     if( "yllcenter".equals( m_headerKeys[3].toLowerCase() ) )
       return NumberUtils.parseDouble( m_headerData[3] );
 
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   public double getCellSize( )

@@ -43,7 +43,7 @@ package org.kalypso.commons.java.lang;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Dirk Kuch

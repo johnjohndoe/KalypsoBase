@@ -45,7 +45,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.geotiff.image.jai.GeoTIFFDirectory;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.libtiff.jai.codec.XTIFFField;

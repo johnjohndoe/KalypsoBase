@@ -42,7 +42,6 @@ package org.kalypso.kml.export.convert;
 
 import java.awt.Color;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.GeometryDisplayElement;
 import org.kalypsodeegree.graphics.sld.Fill;
@@ -75,7 +74,7 @@ public final class StyleConverter
     else if( symbolizer instanceof TextSymbolizer )
       convert( (TextSymbolizer) symbolizer, element.getFeature(), style );
     else
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
   }
 
   private static void convert( final TextSymbolizer symbolizer, final Feature feature, final Style style ) throws FilterEvaluationException

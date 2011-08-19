@@ -45,9 +45,8 @@ import java.net.URL;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.eclipse.jface.viewers.ITabItem;
 import org.kalypso.contribs.java.net.IUrlResolver2;
@@ -108,7 +107,7 @@ public class GraphicElementsTabList extends AbstractTabList<Graphic>
     if( element instanceof ExternalGraphic )
       return new ExternalGraphicItem( new StyleInput<ExternalGraphic>( (ExternalGraphic) element, getInput() ) );
 
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   /**

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.base.widgets;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Control;
@@ -98,7 +97,7 @@ public class TextModifyListener implements ModifyListener
       return textField.getText();
     }
     else
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
   }
 
   private void setTooltip( final String message )

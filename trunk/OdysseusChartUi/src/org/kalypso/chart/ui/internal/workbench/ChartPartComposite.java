@@ -42,7 +42,7 @@ package org.kalypso.chart.ui.internal.workbench;
 
 import java.net.URL;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.IStatus;

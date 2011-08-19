@@ -1,6 +1,6 @@
 package org.kalypso.module.project.local;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.module.project.IProjectHandle;

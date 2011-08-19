@@ -52,8 +52,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.math.LinearEquation;
@@ -876,7 +875,7 @@ public final class JTSUtilities
       return factory.createLineString( myCoordinates.toArray( new Coordinate[] {} ) );
     }
 
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   /**

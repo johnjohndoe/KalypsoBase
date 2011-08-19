@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.base.worker;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -117,7 +116,7 @@ public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
       }
       else
       {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
       }
 
     }

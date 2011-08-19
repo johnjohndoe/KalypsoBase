@@ -46,8 +46,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.KalypsoZmlCore;
@@ -156,7 +155,7 @@ public class ZmlRule
       else if( abstractType instanceof MetadataDateRangeInstructionType )
         myInstructions.add( new ZmlMetadataDaterangeInstruction( abstractType ) );
       else
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     m_instructions = myInstructions.toArray( new AbstractZmlRuleInstructionType[] {} );

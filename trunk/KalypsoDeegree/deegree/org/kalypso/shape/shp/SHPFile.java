@@ -42,7 +42,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeHeader;
@@ -187,7 +186,7 @@ public class SHPFile
       case MULTIPOINTZ:
         return new SHPMultiPointz( recBuf );
       default:
-        throw new NotImplementedException( "Unknown shape type: " + shpType );
+        throw new UnsupportedOperationException( "Unknown shape type: " + shpType );
     }
   }
 

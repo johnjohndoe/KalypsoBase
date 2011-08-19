@@ -47,7 +47,6 @@ import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.geotiff.image.jai.GeoTIFFDirectory;
@@ -150,7 +149,7 @@ public class GridMetaReaderGeoTiff implements IGridMetaReader
       /* determine pixel is area or point */
       final RASTER_TYPE rasterType = RASTER_TYPE.getRasterType( directory );
       if( RASTER_TYPE.ePixelIsPoint.equals( rasterType ) )
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
 
       /* get tie points */
       m_tiepoints = directory.getTiepoints();
@@ -161,7 +160,7 @@ public class GridMetaReaderGeoTiff implements IGridMetaReader
       /* get transformationMatrix */
       final double[] transformationMatrix = directory.getTransformationMatrix();
       if( transformationMatrix != null )
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
 
       stream.close();
 

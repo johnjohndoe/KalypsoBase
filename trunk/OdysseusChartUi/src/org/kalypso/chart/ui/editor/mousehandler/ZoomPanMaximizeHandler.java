@@ -44,7 +44,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
@@ -181,7 +180,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
       getChart().setPanOffset( null, end, otherStart );
     }
     else
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
   }
 
   protected void doMouseMoveSelection( final Point start, final Point end )

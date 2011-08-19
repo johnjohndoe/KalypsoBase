@@ -42,8 +42,8 @@ package org.kalypso.ui.editor.styleeditor.style;
 
 import java.net.URL;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.editor.styleeditor.IStyleEditorConfig;

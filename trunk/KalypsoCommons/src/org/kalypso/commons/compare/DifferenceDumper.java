@@ -42,7 +42,7 @@ package org.kalypso.commons.compare;
 
 import junit.framework.Assert;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.compare.structuremergeviewer.IDiffElement;
 
 /**

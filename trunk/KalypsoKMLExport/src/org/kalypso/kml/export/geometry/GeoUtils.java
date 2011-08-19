@@ -3,7 +3,6 @@
  */
 package org.kalypso.kml.export.geometry;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -42,7 +41,7 @@ public class GeoUtils
     else if( gmo instanceof GM_Point )
       return GEOMETRY_TYPE.ePoint;
 
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
 }

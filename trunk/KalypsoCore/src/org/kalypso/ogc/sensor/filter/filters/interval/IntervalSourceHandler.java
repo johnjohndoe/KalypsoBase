@@ -44,7 +44,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 import org.kalypso.repository.IDataSourceItem;
 

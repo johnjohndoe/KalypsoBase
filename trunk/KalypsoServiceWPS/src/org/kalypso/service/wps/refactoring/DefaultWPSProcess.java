@@ -70,8 +70,7 @@ import net.opengeospatial.wps.ProcessStartedType;
 import net.opengeospatial.wps.StatusType;
 import net.opengeospatial.wps.SupportedComplexDataType;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileSystemManager;
@@ -651,7 +650,7 @@ public class DefaultWPSProcess implements IWPSProcess
     if( "boolean".equals( dataType ) ) //$NON-NLS-1$
       return DatatypeConverter.parseBoolean( value );
 
-    throw new NotImplementedException( "Unknown result type: " + dataType ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( "Unknown result type: " + dataType ); //$NON-NLS-1$
   }
 
   private static void addItem( final Map<String, Object[]> map, final String id, final Object value )

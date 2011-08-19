@@ -52,7 +52,7 @@ import java.util.concurrent.TimeUnit;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.eclipse.core.runtime.CoreException;

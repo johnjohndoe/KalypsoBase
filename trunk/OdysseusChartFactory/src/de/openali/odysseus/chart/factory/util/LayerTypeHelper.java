@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.util;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.xmlbeans.XmlException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -180,7 +179,7 @@ public final class LayerTypeHelper
       OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
 
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   public static ILayerProvider getLayerTypeProvider( final IExtensionLoader loader, final LayerType layerType )

@@ -43,7 +43,7 @@ package org.kalypso.simulation.core.util;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.i18n.Messages;

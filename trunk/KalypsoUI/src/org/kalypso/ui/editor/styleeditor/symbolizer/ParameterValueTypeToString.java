@@ -40,8 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizer;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.databinding.conversion.TypedConverter;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
@@ -80,7 +79,7 @@ public class ParameterValueTypeToString extends TypedConverter<ParameterValueTyp
       return (String) component;
 
     if( !(component instanceof Expression) )
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
 
     final Expression expr = (Expression) component;
 

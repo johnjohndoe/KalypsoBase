@@ -90,7 +90,6 @@ import de.openali.odysseus.chartconfig.x020.ReferencingType;
 import de.openali.odysseus.chartconfig.x020.ScreenAxisType;
 import de.openali.odysseus.chartconfig.x020.TextStyleType;
 import de.openali.odysseus.chartconfig.x020.TitleType;
-import de.openali.odysseus.chartconfig.x020.TitleTypes;
 
 /**
  * @author Dirk Kuch

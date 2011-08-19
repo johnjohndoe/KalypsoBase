@@ -39,7 +39,6 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.Font;
@@ -165,7 +164,7 @@ public class Font_Impl implements Font, Marshallable
   @Override
   public void setStyle( final int style )
   {
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
 
     // TODO: this is not correct, see getStyle
     // final CssParameter fontStyle = StyleFactory.createCssParameter( "font-style", "" + style );

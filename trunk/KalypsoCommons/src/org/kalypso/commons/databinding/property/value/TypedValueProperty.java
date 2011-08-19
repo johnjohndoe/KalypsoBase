@@ -89,7 +89,7 @@ public abstract class TypedValueProperty<SOURCE, VALUE> extends ValueProperty
   @Override
   public IObservableList observeDetail( IObservableList master )
   {
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -98,7 +98,7 @@ public abstract class TypedValueProperty<SOURCE, VALUE> extends ValueProperty
   @Override
   public IObservableMap observeDetail( IObservableSet master )
   {
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -107,7 +107,7 @@ public abstract class TypedValueProperty<SOURCE, VALUE> extends ValueProperty
   @Override
   public IObservableMap observeDetail( IObservableMap master )
   {
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 
   protected abstract ITypedObservableValue<SOURCE, VALUE> doObserve( Realm realm, SOURCE source );

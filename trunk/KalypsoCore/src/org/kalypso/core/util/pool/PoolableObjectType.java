@@ -42,7 +42,7 @@ package org.kalypso.core.util.pool;
 
 import java.net.URL;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.eclipse.core.runtime.Assert;
 
 /**

@@ -44,7 +44,7 @@ public class ArrayContentAxis extends AbstractAxis
   @Override
   public int normalizedToScreen( final double d )
   {
-    throw new NotImplementedException( "use numericToScreen instead" );
+    throw new UnsupportedOperationException( "use numericToScreen instead" );
   }
 
   /**
@@ -70,7 +70,7 @@ public class ArrayContentAxis extends AbstractAxis
   @Override
   public double screenToNormalized( final int value )
   {
-    throw new NotImplementedException( "use screenToNumeric instead" );
+    throw new UnsupportedOperationException( "use screenToNumeric instead" );
   }
 
   /**

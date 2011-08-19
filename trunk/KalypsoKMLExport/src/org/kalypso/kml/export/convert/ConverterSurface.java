@@ -5,8 +5,7 @@ package org.kalypso.kml.export.convert;
 
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.kml.export.utils.GoogleEarthUtils;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
@@ -36,7 +35,7 @@ public class ConverterSurface
   {
     /* handling of multigeometries not implemented at the moment */
     if( gmo.size() > 1 )
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
 
     final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( GoogleEarthUtils.GOOGLE_EARTH_CS );
 
@@ -95,6 +94,6 @@ public class ConverterSurface
       return polygoneType;
     }
 
-    throw new NotImplementedException();
+    throw new UnsupportedOperationException();
   }
 }
