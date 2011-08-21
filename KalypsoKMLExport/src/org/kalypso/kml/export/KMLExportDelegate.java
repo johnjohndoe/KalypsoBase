@@ -9,9 +9,9 @@ import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.ogc.gml.painter.IStylePaintable;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.GeometryDisplayElement;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
 
 import de.micromata.opengis.kml.v_2_2_0.Folder;
 
@@ -36,10 +36,6 @@ public class KMLExportDelegate implements IStylePaintable
     m_bbox = bbox;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.ogc.gml.IPaintDelegate#paint(org.kalypsodeegree.graphics.displayelements.DisplayElement)
-   */
   @Override
   public void paint( final DisplayElement displayElement, final IProgressMonitor monitor )
   {
@@ -47,7 +43,6 @@ public class KMLExportDelegate implements IStylePaintable
     if( displayElement instanceof GeometryDisplayElement )
     {
       final GeometryDisplayElement element = (GeometryDisplayElement) displayElement;
-      final Symbolizer symbolizer = element.getSymbolizer();
 
       try
       {
@@ -67,30 +62,32 @@ public class KMLExportDelegate implements IStylePaintable
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IPaintDelegate#getScale()
-   */
   @Override
   public Double getScale( )
   {
     return m_scale;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IPaintDelegate#getBoundingBox()
-   */
   @Override
   public GM_Envelope getBoundingBox( )
   {
     return m_bbox;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.painter.IStylePaintable#shouldPaintFeature(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public boolean shouldPaintFeature( final Feature feature )
   {
     return true;
+  }
+
+  @Override
+  public ILabelPlacementStrategy createLabelStrategy( )
+  {
+    return null;
+  }
+
+  @Override
+  public void paintLabels( final ILabelPlacementStrategy strategy )
+  {
   }
 }

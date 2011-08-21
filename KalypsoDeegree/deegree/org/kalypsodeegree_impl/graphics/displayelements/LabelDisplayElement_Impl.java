@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -72,6 +72,8 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
 
   private ParameterValueType m_label = null;
 
+  private final ILabelPlacementStrategy m_strategy;
+
   /**
    * Creates a new LabelDisplayElement_Impl object.
    * <p>
@@ -83,9 +85,12 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    * @param symbolizer
    *          associated <tt>TextSymbolizer</tt>
    */
-  LabelDisplayElement_Impl( final Feature feature, final GM_Object[] geometry, final TextSymbolizer symbolizer )
+  LabelDisplayElement_Impl( final Feature feature, final GM_Object[] geometry, final TextSymbolizer symbolizer, final ILabelPlacementStrategy strategy )
   {
     super( feature, geometry, symbolizer );
+
+    m_strategy = strategy;
+
     setLabel( symbolizer.getLabel() );
   }
 
@@ -95,7 +100,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
   @Override
   public void setLabel( final ParameterValueType label )
   {
-    this.m_label = label;
+    m_label = label;
   }
 
   /**
@@ -127,14 +132,26 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
         return;
 
       final Graphics2D g2D = (Graphics2D) g;
-      final Label[] labels = LabelFactory.createLabels( this, projection, g2D );
-      for( final Label label : labels )
-        label.paint( g2D );
+      final Label[] labels = new LabelFactory( this, projection, g2D ).createLabels();
+
+      if( m_strategy == null )
+      {
+        for( final Label label : labels )
+          label.paint( g2D );
+      }
+      else
+        m_strategy.add( labels );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       throw new CoreException( new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), "Failed to paint labels", e ) );
     }
+  }
+
+  @Override
+  public TextSymbolizer getSymbolizer( )
+  {
+    return (TextSymbolizer) super.getSymbolizer();
   }
 }
