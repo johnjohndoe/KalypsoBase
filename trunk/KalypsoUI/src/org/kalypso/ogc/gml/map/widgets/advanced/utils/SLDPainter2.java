@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.advanced.utils;
 
@@ -75,7 +75,7 @@ public class SLDPainter2
       try
       {
         final Symbolizer symbolizer = loadSymbolizer( symbolizerLocation );
-        final DisplayElement lde = DisplayElementFactory.buildDisplayElement( null, symbolizer, geometry );
+        final DisplayElement lde = DisplayElementFactory.buildDisplayElement( null, symbolizer, geometry, null );
         lde.paint( g, projection, new NullProgressMonitor() );
       }
       catch( final Exception e )

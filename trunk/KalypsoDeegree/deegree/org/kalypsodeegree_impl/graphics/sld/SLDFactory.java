@@ -2063,5 +2063,4 @@ public final class SLDFactory
 
     return null;
   }
-
 }

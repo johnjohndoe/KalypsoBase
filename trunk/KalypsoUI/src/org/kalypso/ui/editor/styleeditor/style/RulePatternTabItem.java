@@ -59,14 +59,11 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
-import org.kalypso.ui.editor.styleeditor.dialogs.StyleEditorErrorDialog;
 import org.kalypso.ui.editor.styleeditor.panels.AddFilterPropertyPanel;
 import org.kalypso.ui.editor.styleeditor.panels.EditSymbolizerPanel;
 import org.kalypso.ui.editor.styleeditor.panels.PanelEvent;
 import org.kalypso.ui.editor.styleeditor.panels.PanelListener;
 import org.kalypso.ui.editor.styleeditor.panels.RulePatternInputPanel;
-import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel;
-import org.kalypso.ui.editor.styleeditor.panels.TextInputPanel.ModifyListener;
 import org.kalypso.ui.editor.styleeditor.rule.AddSymbolizerComposite;
 import org.kalypso.ui.editor.styleeditor.rule.SymbolizerType;
 import org.kalypso.ui.editor.styleeditor.symbolizer.FilterPatternSymbolizerTabItemBuilder;
@@ -180,57 +177,57 @@ public class RulePatternTabItem implements ITabItem
     final TabFolder symbolizerTabFolder;
     RulePatternInputPanel rulePatternInputPanel = null;
 
-    final TextInputPanel rowBuilder = new TextInputPanel( toolkit, composite );
+//    final TextInputPanel rowBuilder = new TextInputPanel( toolkit, composite );
 
-    rowBuilder.createTextRow( MessageBundle.STYLE_EDITOR_TITLE, rulePatternName, new ModifyListener()
-    {
-      /**
-       * @see org.kalypso.ui.editor.styleeditor.panels.TextInputPanel.ModifyListener#textModified(java.lang.String)
-       */
-      @Override
-      public String textModified( final String newValue )
-      {
-        if( newValue == null || newValue.trim().length() == 0 )
-        {
-          final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NO_TITLE );
-          errorDialog.showError();
-        }
-        else
-        {
-          for( int counter6 = 0; counter6 < getRuleCollection().size(); counter6++ )
-          {
-            getRuleCollection().get( counter6 ).setTitle( newValue );
-          }
-          fireStyleChanged();
-        }
-//        tabItem.setText( MessageBundle.STYLE_EDITOR_PATTERN + " " + newValue ); //$NON-NLS-1$
-// setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
+//    rowBuilder.createTextRow( MessageBundle.STYLE_EDITOR_TITLE, rulePatternName, new ModifyListener()
+//    {
+//      /**
+//       * @see org.kalypso.ui.editor.styleeditor.panels.TextInputPanel.ModifyListener#textModified(java.lang.String)
+//       */
+//      @Override
+//      public String textModified( final String newValue )
+//      {
+//        if( newValue == null || newValue.trim().length() == 0 )
+//        {
+//          final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_NO_TITLE );
+//          errorDialog.showError();
+//        }
+//        else
+//        {
+//          for( int counter6 = 0; counter6 < getRuleCollection().size(); counter6++ )
+//          {
+//            getRuleCollection().get( counter6 ).setTitle( newValue );
+//          }
+//          fireStyleChanged();
+//        }
+////        tabItem.setText( MessageBundle.STYLE_EDITOR_PATTERN + " " + newValue ); //$NON-NLS-1$
+//// setFocusedRuleItem( getRuleTabFolder().getSelectionIndex() );
+//
+//        return null;
+//      }
+//    } );
 
-        return null;
-      }
-    } );
-
-    rowBuilder.createDenominatorRow( MessageBundle.STYLE_EDITOR_MIN_DENOM, rulePatternMinDenom, new ModifyListener()
-    {
-      @Override
-      public String textModified( final String newValue )
-      {
-        final double min = new Double( newValue );
-        final double max = tmpRule.getMaxScaleDenominator();
-        // verify that min<=max
-        if( min > max )
-        {
-          final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MIN_DENOM_BIG );
-          errorDialog.showError();
-          return "" + tmpRule.getMinScaleDenominator(); //$NON-NLS-1$
-        }
-
-        for( int i = 0; i < getRuleCollection().size(); i++ )
-          getRuleCollection().get( i ).setMinScaleDenominator( min );
-        fireStyleChanged();
-        return null;
-      }
-    } );
+//    rowBuilder.createDenominatorRow( MessageBundle.STYLE_EDITOR_MIN_DENOM, rulePatternMinDenom, new ModifyListener()
+//    {
+//      @Override
+//      public String textModified( final String newValue )
+//      {
+//        final double min = new Double( newValue );
+//        final double max = tmpRule.getMaxScaleDenominator();
+//        // verify that min<=max
+//        if( min > max )
+//        {
+//          final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MIN_DENOM_BIG );
+//          errorDialog.showError();
+//          return "" + tmpRule.getMinScaleDenominator(); //$NON-NLS-1$
+//        }
+//
+//        for( int i = 0; i < getRuleCollection().size(); i++ )
+//          getRuleCollection().get( i ).setMinScaleDenominator( min );
+//        fireStyleChanged();
+//        return null;
+//      }
+//    } );
 
     // max denominator cannot be 0.0 as this would imply that the min
     // denominator needs to be smaller than 0.0 -> does not make sense
@@ -239,32 +236,32 @@ public class RulePatternTabItem implements ITabItem
     if( tmpRule.getMaxScaleDenominator() == 0.0 )
       tmpRule.setMaxScaleDenominator( Double.MAX_VALUE );
 
-    rowBuilder.createDenominatorRow( MessageBundle.STYLE_EDITOR_MAX_DENOM, rulePatternMaxDenom, new ModifyListener()
-    {
-      @Override
-      public String textModified( final String newValue )
-      {
-        double max = new Double( newValue );
-        final double min = tmpRule.getMinScaleDenominator();
-        // verify that min<=max
-        if( min > max )
-        {
-          final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MAX_DENOM_SMALL );
-          errorDialog.showError();
-          return "" + tmpRule.getMaxScaleDenominator(); //$NON-NLS-1$
-        }
-
-        // add a minimum to max in order to be a little bit larger than the
-        // current scale and
-        // to keep the current view -> otherwise the rule would automatically
-        // exculde this configuration
-        max += 0.01;
-        for( int counter8 = 0; counter8 < getRuleCollection().size(); counter8++ )
-          getRuleCollection().get( counter8 ).setMaxScaleDenominator( max );
-        fireStyleChanged();
-        return null;
-      }
-    } );
+//    rowBuilder.createDenominatorRow( MessageBundle.STYLE_EDITOR_MAX_DENOM, rulePatternMaxDenom, new ModifyListener()
+//    {
+//      @Override
+//      public String textModified( final String newValue )
+//      {
+//        double max = new Double( newValue );
+//        final double min = tmpRule.getMinScaleDenominator();
+//        // verify that min<=max
+//        if( min > max )
+//        {
+//          final StyleEditorErrorDialog errorDialog = new StyleEditorErrorDialog( composite.getShell(), MessageBundle.STYLE_EDITOR_ERROR_INVALID_INPUT, MessageBundle.STYLE_EDITOR_ERROR_MAX_DENOM_SMALL );
+//          errorDialog.showError();
+//          return "" + tmpRule.getMaxScaleDenominator(); //$NON-NLS-1$
+//        }
+//
+//        // add a minimum to max in order to be a little bit larger than the
+//        // current scale and
+//        // to keep the current view -> otherwise the rule would automatically
+//        // exculde this configuration
+//        max += 0.01;
+//        for( int counter8 = 0; counter8 < getRuleCollection().size(); counter8++ )
+//          getRuleCollection().get( counter8 ).setMaxScaleDenominator( max );
+//        fireStyleChanged();
+//        return null;
+//      }
+//    } );
 
     final AddFilterPropertyPanel addFilterPropertyPanel = new AddFilterPropertyPanel( composite, MessageBundle.STYLE_EDITOR_FILTER_PROPERTY, getNumericFeatureTypePropertylist() );
     // necessary if focus had been changed and rule-pattern is redrawn
