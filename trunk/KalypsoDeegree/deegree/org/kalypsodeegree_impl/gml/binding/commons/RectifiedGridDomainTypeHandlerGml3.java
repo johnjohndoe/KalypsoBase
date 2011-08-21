@@ -266,5 +266,4 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
   {
     return false;
   }
-
 }

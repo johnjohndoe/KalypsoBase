@@ -8,8 +8,6 @@
 	<property name="gen.srcbind" value="srcbind" />
 
    	<fileset id="binding.fileset" dir="${basedir}">
-      <include name="etc/schemas/**/*.xsd"/>
-        <include name="etc/schemas/sld/*.xsd"/>
       <include name="deegree/org/kalypsodeegree_impl/gml/schema/schemata/obslink/obslink.xsd"/>
     </fileset>
 	
