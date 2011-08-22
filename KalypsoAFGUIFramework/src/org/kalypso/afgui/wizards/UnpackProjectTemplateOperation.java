@@ -106,13 +106,13 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       unpackProjectData( dataLocation, destinationDir );
       ProgressUtilities.worked( progress, 30 );
 
+      /* Reset project to its own value, else we get the name from the zip, which leads to problems later. */
+      ProjectUtilities.setProjectName( project, project.getName() );
+
       project.open( progress.newChild( 10 ) );
 
       /* Necessary to remove all build specs from the data projects (we have at least the manifest builder now) */
       removeBuildspec( project );
-
-      /* Reset project to its own value, else we get the name from the zip, which leads to problems later. */
-      ProjectUtilities.setProjectName( project, project.getName() );
 
       // IMPORTANT: As the project was already open once before, we need to refresh here, else
       // not all resources are up-to-date
