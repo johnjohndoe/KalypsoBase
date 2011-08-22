@@ -40,9 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.tokenreplace;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
-import org.apache.commons.lang.text.StrSubstitutor;
+import org.apache.commons.lang3.text.StrSubstitutor;
 
 /**
  * @author Gernot Belger
@@ -51,7 +55,25 @@ public class PropertiesStringResolver implements IStringResolver
 {
   private final StrSubstitutor m_substitutor;
 
+  /**
+   * @deprecated use PropertiesStringResolver( final Map<String, Object> properties, final String prefix, final String
+   *             suffix )
+   */
+  @Deprecated
   public PropertiesStringResolver( final Properties properties, final String prefix, final String suffix )
+  {
+    final Map<String, Object> map = new HashMap<String, Object>();
+
+    final Set<Entry<Object, Object>> entries = properties.entrySet();
+    for( final Entry<Object, Object> entry : entries )
+    {
+      map.put( (String) entry.getKey(), entry.getValue() );
+    }
+
+    m_substitutor = new StrSubstitutor( map, prefix, suffix );
+  }
+
+  public PropertiesStringResolver( final Map<String, Object> properties, final String prefix, final String suffix )
   {
     m_substitutor = new StrSubstitutor( properties, prefix, suffix );
   }
