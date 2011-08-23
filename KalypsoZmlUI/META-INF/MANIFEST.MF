@@ -9,8 +9,7 @@ Require-Bundle: org.kalypso.zml.core;visibility:=reexport,
  de.openali.odysseus.chart.ext.base,
  org.kalypso.ui,
  de.openali.odysseus.chart.framework,
- de.openali.odysseus.chart.ui,
- org.kalypso.core
+ de.openali.odysseus.chart.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: kalypsobase.sourceforge.net

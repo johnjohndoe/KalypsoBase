@@ -65,6 +65,8 @@ public interface IWspmConstants extends IWspmPhenomenonConstants
 
   String NS_WSPM_BOUNDARY = "org.kalypso.model.wspmboundary"; //$NON-NLS-1$
 
+  String NS_WSPM_CLASSIFICATIONS = "org.kalypso.model.wspm.classifications"; //$NON-NLS-1$
+
   String POINT_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#"; //$NON-NLS-1$
 
   String POINT_PROPERTY_BEWUCHS = POINT_PROPERTY + "BEWUCHS"; //$NON-NLS-1$
