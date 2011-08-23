@@ -38,21 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.gml.classifications;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+package org.kalypso.model.wspm.core;
 
 /**
  * @author Dirk Kuch
  */
-public class VegetationClass extends Feature_Impl implements IVegetationClass
+public interface IWspmNamespaces
 {
+  String NS_WSPM = "org.kalypso.model.wspm"; //$NON-NLS-1$
 
-  public VegetationClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
+  String NS_WSPMCOMMONS = "org.kalypso.model.wspmcommon"; //$NON-NLS-1$
 
+  String NS_WSPMPROF = "org.kalypso.model.wspmprofile"; //$NON-NLS-1$
+
+  String NS_WSPMPROF_ASSIGNMENT = "org.kalypso.model.wspmprofile.assignment"; //$NON-NLS-1$
+
+  String NS_WSPMRUNOFF = "org.kalypso.model.wspmrunoff"; //$NON-NLS-1$
+
+  String NS_WSPMPROJ = "org.kalypso.model.wspmproj"; //$NON-NLS-1$
+
+  String NS_NA_WSPM = "org.kalypso.model.wspm.nawspm"; //$NON-NLS-1$
+
+  String NS_WSPM_BREAKLINE = "org.kalypso.model.wspmbreakline"; //$NON-NLS-1$
+
+  String NS_WSPM_BOUNDARY = "org.kalypso.model.wspmboundary"; //$NON-NLS-1$
+
+  String NS_WSPM_CLASSIFICATIONS = "org.kalypso.model.wspm.classifications"; //$NON-NLS-1$
 }

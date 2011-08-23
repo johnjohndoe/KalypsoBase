@@ -38,21 +38,23 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.gml.classifications;
-
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+package org.kalypso.model.wspm.core;
 
 /**
  * @author Dirk Kuch
  */
-public class VegetationClass extends Feature_Impl implements IVegetationClass
+public interface IWspmLayers
 {
+  /* Layer */
+  String PROFILE_LAYER = "org.kalypso.model.wspm.ui.view.chart.layer.LAYER_"; //$NON-NLS-1$
 
-  public VegetationClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
+  String LAYER_GEOKOORDINATEN = PROFILE_LAYER + "GEOKOORDINATEN"; //$NON-NLS-1$
 
+  String LAYER_GELAENDE = PROFILE_LAYER + "GELAENDE"; //$NON-NLS-1$
+
+  String LAYER_WASSERSPIEGEL = PROFILE_LAYER + "WASSERSPIEGEL"; //$NON-NLS-1$
+
+  String LAYER_WASSERSPIEGEL_FIXIERUNG = PROFILE_LAYER + "WASSERSPIEGEL_FIXIERUNG"; //$NON-NLS-1$
+
+  String LAYER_WASSERSPIEGEL2D = PROFILE_LAYER + "WASSERPIEGEL2D"; //$NON-NLS-1$
 }

@@ -219,7 +219,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     if( parent instanceof WspmWaterBody )
     {
       final WspmWaterBody waterBody = (WspmWaterBody) parent;
-      profil.setProperty( IWspmConstants.PROFIL_PROPERT_WATERBODY_SRC, waterBody.getId() );
+      profil.setProperty( IWspmConstants.PROFIL_PROPERTY_WATERBODY_SRC, waterBody.getId() );
     }
 
     /* profile objects of profile */
