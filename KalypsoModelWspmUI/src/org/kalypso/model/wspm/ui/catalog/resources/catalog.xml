@@ -42,6 +42,17 @@
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:WaterBody:sld:default" uri="org.kalypso.model.wspm.WaterBody.sld" />
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:WaterBody:uiproperties:default" uri="org.kalypso.model.wspm.WaterBody.properties" />
 
+    <!--  org.kalypso.model.wspm.classification -->
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.classifications:WspmClassification:swtimage:default" uri="org.kalypso.model.wspm.classification.png" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.classifications:classificationMember:swtimage:default" uri="org.kalypso.model.wspm.classification.png" />
+    
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.classifications:roughnessClasses:swtimage:default" uri="org.kalypso.model.wspm.classification.class.roughnesses.png" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.classifications:RoughnessClass:swtimage:default" uri="org.kalypso.model.wspm.classification.class.roughnesses.png" />
+    
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.classifications:vegetationClasses:swtimage:default" uri="org.kalypso.model.wspm.classification.class.vegetation.png" />
+    <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm.classifications:VegetationClass:swtimage:default" uri="org.kalypso.model.wspm.classification.class.vegetation.png" />
+    
+
     <!-- {org.kalypso.model.wspm}calculationMember -->
     <catalog:system systemId="urn:ogc:gml:featuretype:org.kalypso.model.wspm:calculationMember:swtimage:default" uri="org.kalypso.model.wspm.tuhh.CalculationWspmTuhhSteadyState.gif" />
         
