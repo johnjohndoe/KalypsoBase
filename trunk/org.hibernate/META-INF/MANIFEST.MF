@@ -6,7 +6,7 @@ Bundle-Version: 3.6.4.qualifier
 Bundle-Activator: org.hibernate.internal.Activator
 Bundle-Vendor: http://www.hibernate.org
 Require-Bundle: org.eclipse.core.runtime,
- org.junit4,
+ org.junit4;resolution:=optional,
  com.vividsolutions.jts
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
