@@ -50,7 +50,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 public class VegetationClass extends Feature_Impl implements IVegetationClass
 {
 
-  protected VegetationClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public VegetationClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }

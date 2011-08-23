@@ -66,7 +66,7 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
 // }
 //
 
-  protected WspmClassification( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public WspmClassification( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }

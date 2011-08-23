@@ -49,7 +49,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class RoughnessClass extends Feature_Impl implements IRoughnessClass
 {
-  protected RoughnessClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public RoughnessClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
