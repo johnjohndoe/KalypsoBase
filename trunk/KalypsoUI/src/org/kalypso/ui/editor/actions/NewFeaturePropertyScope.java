@@ -47,6 +47,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.core.catalog.FeatureTypePropertiesCatalog;
 import org.kalypso.core.catalog.IFeatureTypePropertiesConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -85,6 +87,7 @@ class NewFeaturePropertyScope implements INewScope
     m_parentFeature = parentFeature;
     m_workspace = workspace;
   }
+
   private boolean isValid( )
   {
     return m_targetRelation != null && m_workspace != null;
@@ -121,6 +124,8 @@ class NewFeaturePropertyScope implements INewScope
       return;
 
     final IFeatureType featureType = m_targetRelation.getTargetFeatureType();
+    if( Objects.isNull( featureType ) )
+      return;
 
     final IGMLSchema contextSchema = m_parentFeature.getWorkspace().getGMLSchema();
     final IFeatureType[] featureTypes = GMLSchemaUtilities.getSubstituts( featureType, contextSchema, false, true );
@@ -164,7 +169,7 @@ class NewFeaturePropertyScope implements INewScope
   {
     final Properties uiProperties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), featureType.getQName() );
     final String depthStr = uiProperties.getProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH );
-    final int depth = Integer.parseInt( depthStr );
+    final int depth = NumberUtils.parseQuietInt( depthStr, 0 );
 
     final ICommand command = new AddFeatureCommand( m_workspace, featureType, m_parentFeature, m_targetRelation, 0, null, m_selectionManager, depth );
     m_workspace.postCommand( command );

@@ -11,4 +11,5 @@
 	<uri name="org.kalypso.model.wspm" uri="schemata/wspm.xsd" />
 	<uri name="org.kalypso.model.wspmcommon" uri="schemata/wspmCommons.xsd" />
 	<uri name="org.kalypso.model.wspmproj" uri="schemata/wspmProject.xsd" />
+    <uri name="org.kalypso.model.wspm.classifications" uri="schemata/wspmClassifications.xsd" />
 </catalog>

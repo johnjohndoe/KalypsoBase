@@ -80,6 +80,8 @@ public class NewFeatureAction extends Action
     }
     catch( final Exception e )
     {
+      e.printStackTrace();
+
       final IStatus status = StatusUtilities.statusFromThrowable( e );
       ErrorDialog.openError( event.widget.getDisplay().getActiveShell(), getText(), Messages.getString( "org.kalypso.ui.editor.gmleditor.part.NewFeatureAction.0" ), status ); //$NON-NLS-1$
     }
