@@ -47,8 +47,6 @@
     </complexContent>
   </complexType>
 
-
-
   <complexType name="VegetationClassPropertyType">
     <sequence minOccurs="0">
       <element ref="wspmClasses:VegetationClass" minOccurs="0" maxOccurs="1" />
