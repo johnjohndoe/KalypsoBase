@@ -29,3 +29,4 @@ Export-Package: org.kalypso.zml.core,
  org.kalypso.zml.core.table.rules,
  org.kalypso.zml.core.table.rules.impl.grenzwert,
  org.kalypso.zml.core.table.schema
+Bundle-Vendor: kalypsobase.sourceforge.net
