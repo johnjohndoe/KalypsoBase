@@ -83,4 +83,6 @@ public interface IKalypsoStyle extends INamedStyleElement
   boolean isResetable( );
 
   IStatus reset( Shell shell );
+
+  boolean isCatalogStyle( );
 }

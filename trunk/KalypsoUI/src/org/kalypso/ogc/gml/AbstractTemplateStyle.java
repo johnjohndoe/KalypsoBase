@@ -487,5 +487,14 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     return Status.OK_STATUS;
   }
 
+  @Override
+  public boolean isCatalogStyle( )
+  {
+    final KeyInfo info = getPoolInfo();
+    final IPoolableObjectType key = info.getKey();
+    final String location = key.getLocation();
+    return CatalogUtilities.isCatalogResource( location );
+  }
+
   abstract protected String getStyleName( );
 }

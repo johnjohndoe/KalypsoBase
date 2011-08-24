@@ -174,9 +174,13 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
 
     final Point size = new Point( SWT.DEFAULT, 32 );
     m_preview = createPreview( section, size, m_input );
-    toolkit.adapt( m_preview );
 
-    section.setClient( m_preview );
+    if( m_preview != null )
+    {
+      toolkit.adapt( m_preview );
+      section.setClient( m_preview );
+    }
+
     return section;
   }
 
@@ -189,7 +193,8 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
 
     doUpdateControl();
 
-    m_preview.updateControl();
+    if( m_preview != null )
+      m_preview.updateControl();
   }
 
   protected abstract void doUpdateControl( );

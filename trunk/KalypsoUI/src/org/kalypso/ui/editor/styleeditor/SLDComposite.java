@@ -176,10 +176,22 @@ public class SLDComposite extends Composite
       return null;
 
     /* Use config with default values */
-    final IStyleEditorConfig config = new StyleEditorConfig();
+    final IStyleEditorConfig config = createConfiguration( style );
 
     final FeatureTypeStyle fts = findFeatureTypeStyle( style, styleToSelect );
     return new FeatureTypeStyleInput( fts, style, styleToSelect, featureType, config );
+  }
+
+  private StyleEditorConfig createConfiguration( final IKalypsoStyle style )
+  {
+    final StyleEditorConfig config = new StyleEditorConfig();
+
+    if( style.isCatalogStyle() )
+    {
+      config.setFeatureTypeStyleCompositeShowProperties( false );
+    }
+
+    return config;
   }
 
   private FeatureTypeStyle findFeatureTypeStyle( final IKalypsoStyle style, final int styleToSelect )
@@ -206,8 +218,16 @@ public class SLDComposite extends Composite
   {
     updateActions();
 
-    final String formTitle = m_style == null ? MessageBundle.STYLE_EDITOR_NO_STYLE_FOR_EDITOR : m_style.getTitle();
-    m_form.setText( formTitle );
+    if( m_style == null )
+      m_form.setText( MessageBundle.STYLE_EDITOR_NO_STYLE_FOR_EDITOR );
+    else
+    {
+      final String formTitle = m_style.getTitle();
+      if( formTitle == null )
+        m_form.setText( "<Unknown Title>" );
+      else
+        m_form.setText( formTitle );
+    }
 
     if( m_styleComposite != null )
       m_styleComposite.updateControl();
