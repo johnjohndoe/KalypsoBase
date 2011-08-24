@@ -42,6 +42,8 @@ package org.kalypso.model.wspm.ui.view.table.handler;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 
@@ -52,7 +54,7 @@ import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
-import org.kalypso.model.wspm.core.IWspmProperties;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.ui.view.table.ComponentUiProblemHandler;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -90,8 +92,8 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
   {
     Assert.isTrue( tupleResult == m_profile.getResult() );
 
-    final Map<Integer, IComponentUiHandler> handlers = new LinkedHashMap<Integer, IComponentUiHandler>();
-    handlers.put( -1, new ComponentUiProblemHandler( m_profile ) );
+    final Set<ComponentHandlerSortContainer> handlers = new TreeSet<ComponentHandlerSortContainer>( new ComponentHandlerContainerSorter() );
+    handlers.add( new ComponentHandlerSortContainer( "unknown", -1, new ComponentUiProblemHandler( m_profile ) ) );
 
     final IComponent[] pointMarkerTypes = m_profile.getPointMarkerTypes();
     final IComponent[] components = m_profile.getPointProperties();
@@ -104,10 +106,18 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
         continue;
 
       final IComponentUiHandler handler = createHandler( index, component, spacing );
-      handlers.put( index, handler );
+      handlers.add( new ComponentHandlerSortContainer( component.getId(), index, handler ) );
     }
 
-    return handlers;
+    final Map<Integer, IComponentUiHandler> map = new LinkedHashMap<Integer, IComponentUiHandler>();
+
+    final ComponentHandlerSortContainer[] sorted = handlers.toArray( new ComponentHandlerSortContainer[] {} );
+    for( final ComponentHandlerSortContainer handler : sorted )
+    {
+      map.put( handler.getIndex(), handler.getHandler() );
+    }
+
+    return map;
   }
 
   private boolean isPointMarker( final IComponent[] pointMarkerTypes, final IComponent component )
@@ -127,7 +137,7 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
       return new ComponentUiEnumerationHandler( index, true, true, true, label, SWT.LEFT, DEFAULT_SPACING, spacing, "%s", "<not set>", items ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    if( component.getId().equals( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) )
+    if( component.getId().equals( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) )
       return new RoughnessClassUiHandler( index, true, true, true, label, DEFAULT_SPACING, spacing, m_profile ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     else if( XmlTypes.XS_DATETIME.equals( valueTypeName ) )
       return new ComponentUiDateHandler( index, true, true, true, label, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

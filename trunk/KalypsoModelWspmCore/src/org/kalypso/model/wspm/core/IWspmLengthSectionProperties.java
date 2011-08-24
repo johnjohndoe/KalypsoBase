@@ -43,49 +43,8 @@ package org.kalypso.model.wspm.core;
 /**
  * @author Dirk Kuch
  */
-public interface IWspmProperties
+public interface IWspmLengthSectionProperties
 {
-  String POINT_PROPERTY = "urn:ogc:gml:dict:kalypso:model:wspm:profilePointComponents#"; //$NON-NLS-1$
-
-  String POINT_PROPERTY_BEWUCHS = POINT_PROPERTY + "BEWUCHS"; //$NON-NLS-1$
-
-  String POINT_PROPERTY_BEWUCHS_AX = POINT_PROPERTY_BEWUCHS + "_AX"; //$NON-NLS-1$
-
-  String POINT_PROPERTY_BEWUCHS_AY = POINT_PROPERTY_BEWUCHS + "_AY"; //$NON-NLS-1$
-
-  String POINT_PROPERTY_BEWUCHS_DP = POINT_PROPERTY_BEWUCHS + "_DP"; //$NON-NLS-1$
-
-  String POINT_PROPERTY_BREITE = POINT_PROPERTY + "BREITE"; //$NON-NLS-1$
-
-  String POINT_PROPERTY_HOCHWERT = POINT_PROPERTY + "HOCHWERT"; //$NON-NLS-1$
-
-  String POINT_PROPERTY_HOEHE = POINT_PROPERTY + "HOEHE"; //$NON-NLS-1$
-
-  String POINT_PROPERTY_COMMENT = POINT_PROPERTY + "COMMENT"; //$NON-NLS-1$
-
-  /**
-   * An (optional) (, arbitrary string-) code any profile point can have<br/>
-   * Meant to be some kind of (elsewhere defined) classification of a point.
-   */
-  String POINT_PROPERTY_CODE = POINT_PROPERTY + "CODE"; //$NON-NLS-1$
-
-  /**
-   * An (optional) (, arbitrary string-) id any profile point can have.<br/>
-   * Meant to be some kind of (possibly unique) identifier of a point.
-   */
-  String POINT_PROPERTY_ID = POINT_PROPERTY + "ID"; //$NON-NLS-1$
-
-  String POINT_PROPERTY_RAUHEIT = POINT_PROPERTY + "RAUHEIT"; //$NON-NLS-1$
-
-// Die Id im Dictionary bleibt "Rauheit" wird aber im IProfil als Typ "ks" interpretiert
-  String POINT_PROPERTY_RAUHEIT_KS = POINT_PROPERTY_RAUHEIT; //$NON-NLS-1$
-
-  String POINT_PROPERTY_RAUHEIT_KST = POINT_PROPERTY_RAUHEIT + "_KST"; //$NON-NLS-1$
-
-  String POINT_PROPERTY_ROUGHNESS_CLASS = POINT_PROPERTY_RAUHEIT + "_CLASS"; //$NON-NLS-1$
-
-  String POINT_PROPERTY_RECHTSWERT = POINT_PROPERTY + "RECHTSWERT"; //$NON-NLS-1$
-
   String URN_OGC_GML_DICT_KALYPSO_MODEL_WSPM_COMPONENTS = "urn:ogc:gml:dict:kalypso:model:wspm:components"; //$NON-NLS-1$
 
   String LENGTH_SECTION_PROPERTY = URN_OGC_GML_DICT_KALYPSO_MODEL_WSPM_COMPONENTS + "#";//$NON-NLS-1$
