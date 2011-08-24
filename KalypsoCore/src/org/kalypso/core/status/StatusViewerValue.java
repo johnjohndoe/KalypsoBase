@@ -46,22 +46,34 @@ import org.kalypso.commons.databinding.observable.value.TypedObservableValue;
 /**
  * @author Gernot Belger
  */
-public class StatusCompositeValue extends TypedObservableValue<StatusComposite, IStatus>
+public class StatusViewerValue extends TypedObservableValue<StatusViewer, IStatus>
 {
-  public StatusCompositeValue( final StatusComposite source )
+  public StatusViewerValue( final StatusViewer source )
   {
     super( source, IStatus.class );
   }
 
   @Override
-  public void doSetValueTyped( final StatusComposite source, final IStatus value )
+  public void doSetValueTyped( final StatusViewer source, final IStatus value )
   {
-    source.setStatus( value );
+    final IStatus[] input = findInput( value );
+    source.setInput( input );
+  }
+
+  private IStatus[] findInput( final IStatus value )
+  {
+    if( value == null )
+      return null;
+
+    if( value.isMultiStatus() )
+      return value.getChildren();
+
+    return new IStatus[] { value };
   }
 
   @Override
-  public IStatus doGetValueTyped( final StatusComposite source )
+  public IStatus doGetValueTyped( final StatusViewer source )
   {
-    return source.getStatus();
+    return null;
   }
 }

@@ -40,28 +40,39 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.status;
 
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.databinding.observable.value.TypedObservableValue;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
 
 /**
  * @author Gernot Belger
  */
-public class StatusCompositeValue extends TypedObservableValue<StatusComposite, IStatus>
+public class StatusTableViewer extends StatusViewer
 {
-  public StatusCompositeValue( final StatusComposite source )
+  private final TableViewer m_tableViewer;
+
+  public StatusTableViewer( final Composite parent, final int style )
   {
-    super( source, IStatus.class );
+    m_tableViewer = new TableViewer( parent, style | SWT.V_SCROLL | SWT.H_SCROLL );
+
+    final Table table = m_tableViewer.getTable();
+    table.setHeaderVisible( true );
+    table.setLinesVisible( true );
+
+    addSeverityColumn( m_tableViewer );
+    addMessageColumn( m_tableViewer );
+
+    m_tableViewer.setContentProvider( new ArrayContentProvider() );
+
+    hookListener();
   }
 
   @Override
-  public void doSetValueTyped( final StatusComposite source, final IStatus value )
+  protected ColumnViewer getViewer( )
   {
-    source.setStatus( value );
-  }
-
-  @Override
-  public IStatus doGetValueTyped( final StatusComposite source )
-  {
-    return source.getStatus();
+    return m_tableViewer;
   }
 }

@@ -40,28 +40,54 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.status;
 
-import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.databinding.observable.value.TypedObservableValue;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerColumn;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Tree;
+import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 
 /**
  * @author Gernot Belger
  */
-public class StatusCompositeValue extends TypedObservableValue<StatusComposite, IStatus>
+public class StatusTreeViewer extends StatusViewer
 {
-  public StatusCompositeValue( final StatusComposite source )
+  private final TreeViewer m_treeViewer;
+
+  public StatusTreeViewer( final Composite parent, final int style )
   {
-    super( source, IStatus.class );
+    m_treeViewer = new TreeViewer( parent, style | SWT.V_SCROLL | SWT.H_SCROLL );
+
+    final Tree tree = m_treeViewer.getTree();
+    tree.setHeaderVisible( true );
+    tree.setLinesVisible( true );
+
+    addNavigationColumn( m_treeViewer );
+    addSeverityColumn( m_treeViewer );
+    addMessageColumn( m_treeViewer );
+
+    m_treeViewer.setContentProvider( new StatusTreeContentProvider() );
+
+    hookListener();
+  }
+
+  private void addNavigationColumn( final ColumnViewer columnViewer )
+  {
+    final ViewerColumn naviColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.LEFT );
+    final ViewerColumnItem naviCol = new ViewerColumnItem( naviColumn );
+    naviCol.setWidth( 50 );
+    naviCol.setResizable( true );
+    naviCol.setMoveable( false );
+    naviColumn.setLabelProvider( new StatusLabelProvider()
+    {
+    } );
   }
 
   @Override
-  public void doSetValueTyped( final StatusComposite source, final IStatus value )
+  protected ColumnViewer getViewer( )
   {
-    source.setStatus( value );
-  }
-
-  @Override
-  public IStatus doGetValueTyped( final StatusComposite source )
-  {
-    return source.getStatus();
+    return m_treeViewer;
   }
 }
