@@ -69,6 +69,8 @@ public class ElementsComposite extends Composite
 
   private final int m_style;
 
+  private boolean m_showComboViewer = false;
+
   public ElementsComposite( final Composite parent, final FormToolkit toolkit, final IElementPage[] pages )
   {
     this( parent, toolkit, pages, pages[0] );
@@ -141,7 +143,7 @@ public class ElementsComposite extends Composite
     m_body.setLayout( Layouts.createGridLayout() );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
-    if( m_pages.length > 1 && m_style != SWT.BOTTOM )
+    if( isComboEnabledHead() )
     {
       addCombo( m_body );
     }
@@ -158,6 +160,18 @@ public class ElementsComposite extends Composite
 
     this.layout();
     m_toolkit.adapt( this );
+  }
+
+  private boolean isComboEnabledHead( )
+  {
+    if( m_style == SWT.BOTTOM )
+      return false;
+    else if( m_pages.length > 1 )
+      return true;
+    else if( m_showComboViewer )
+      return true;
+
+    return false;
   }
 
   private void addCombo( final Composite body )
@@ -201,5 +215,10 @@ public class ElementsComposite extends Composite
         update();
       }
     } );
+  }
+
+  public void setShowAlwaysComboViewer( final boolean showComboViewer )
+  {
+    m_showComboViewer = showComboViewer;
   }
 }
