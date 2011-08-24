@@ -106,10 +106,19 @@ public abstract class AbstractProfil implements IProfil
 
   private MarkerIndex m_markerIndex;
 
-  public AbstractProfil( final String type, final TupleResult result )
+  private final Object m_source;
+
+  public AbstractProfil( final String type, final TupleResult result, final Object source )
   {
     m_type = type;
+    m_source = source;
     setResult( result );
+  }
+
+  @Override
+  public Object getSource( )
+  {
+    return m_source;
   }
 
   @Override

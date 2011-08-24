@@ -62,11 +62,11 @@ public final class ProfilFactory
     return provider.createProfil();
   }
 
-  public static IProfil createProfil( final String type, final IObservation<TupleResult> observation )
+  public static IProfil createProfil( final String type, final IObservation<TupleResult> observation, final Object source )
   {
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( type );
     Assert.isNotNull( provider, Messages.getString( "org.kalypso.model.wspm.core.profil.ProfilFactory.0", type ) ); //$NON-NLS-1$
-    final IProfil profile = provider.createProfil( observation.getResult() );
+    final IProfil profile = provider.createProfil( observation.getResult(), source );
 
     profile.setName( observation.getName() );
     profile.setDescription( observation.getDescription() );

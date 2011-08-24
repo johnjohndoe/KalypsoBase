@@ -67,6 +67,7 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
@@ -124,7 +125,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   private String m_registeredName;
 
-  private final static int MAX_OUTLINE_HEIGHT = 70;
+  private static final int MAX_OUTLINE_HEIGHT = 70;
 
   protected final UIJob m_markerRefreshJob = new UIJob( Messages.getString( "org.kalypso.model.wspm.ui.view.table.TableView.0" ) ) //$NON-NLS-1$
   {
@@ -274,14 +275,14 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
     m_view = new TupleResultTableViewer( m_form.getBody(), SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
 
-    final ExcelTableCursor m_cursor = new ExcelTableCursor( m_view, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
-    final ControlEditor m_controlEditor = new ControlEditor( m_cursor );
-    m_controlEditor.grabHorizontal = true;
-    m_controlEditor.grabVertical = true;
+    final ExcelTableCursor cursor = new ExcelTableCursor( m_view, SWT.BORDER_DASH, ADVANCE_MODE.DOWN, true );
+    final ControlEditor controlEditor = new ControlEditor( cursor );
+    controlEditor.grabHorizontal = true;
+    controlEditor.grabVertical = true;
 
     try
     {
-      m_cursor.setVisible( true );
+      cursor.setVisible( true );
     }
     catch( final Exception e )
     {
@@ -289,7 +290,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
     }
     try
     {
-      m_cursor.setEnabled( true );
+      cursor.setEnabled( true );
     }
     catch( final Exception e )
     {
@@ -321,7 +322,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
       }
     } );
 
-    m_cursor.addSelectionListener( new SelectionAdapter()
+    cursor.addSelectionListener( new SelectionAdapter()
     {
       /**
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
@@ -479,8 +480,9 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
 
   protected final void updateProblemView( )
   {
-    if( m_problemView == null || m_outlineContainer == null || m_outlineContainer.isDisposed() )
+    if( Objects.isNull( m_problemView, m_outlineContainer ) || m_outlineContainer.isDisposed() )
       return;
+
     final int height = m_problemView.updateSections( m_profile );
     if( height < 0 )
     {
@@ -504,7 +506,7 @@ public class TableView extends ViewPart implements IAdapterEater<IProfilProvider
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
-    if( adapter == ITupleResultViewerProvider.class )
+    if( ITupleResultViewerProvider.class == adapter )
       return this;
 
     return super.getAdapter( adapter );

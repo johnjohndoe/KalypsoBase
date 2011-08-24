@@ -200,7 +200,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
 
     /* observation of profile */
     final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( this );
-    final IProfil profil = ProfilFactory.createProfil( type, observation );
+    final IProfil profil = ProfilFactory.createProfil( type, observation, this );
 
     /* station of profile */
     final BigDecimal bigStation = (BigDecimal) getProperty( ProfileFeatureFactory.QNAME_STATION );

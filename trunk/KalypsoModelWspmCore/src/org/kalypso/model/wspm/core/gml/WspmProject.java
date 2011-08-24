@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -62,8 +61,6 @@ public abstract class WspmProject extends Feature_Impl implements IWspmProject
 {
   private IFeatureBindingCollection<WspmWaterBody> m_waterBodies = null;
 
-  private IFeatureBindingCollection<IWspmClassification> m_classifications = null;
-
   public WspmProject( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -78,17 +75,12 @@ public abstract class WspmProject extends Feature_Impl implements IWspmProject
     return m_waterBodies;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IWspmProject#getClassificationMember()
-   */
   @Override
   public IWspmClassification getClassificationMember( )
   {
-    if( Objects.isNull( m_classifications ) )
-      m_classifications = new FeatureBindingCollection<IWspmClassification>( this, IWspmClassification.class, QN_CLASSIFICATION_MEMBER );
-
-    if( m_classifications.isEmpty() )
-      return m_classifications.get( 0 );
+    final Object property = getProperty( QN_CLASSIFICATION_MEMBER );
+    if( property instanceof IWspmClassification )
+      return (IWspmClassification) property;
 
     return null;
   }

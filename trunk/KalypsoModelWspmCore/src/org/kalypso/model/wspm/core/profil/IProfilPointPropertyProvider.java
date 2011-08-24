@@ -56,7 +56,7 @@ public interface IProfilPointPropertyProvider
   /**
    * create a new IProfil object, takes given Observation as profile data
    */
-  IProfil createProfil( TupleResult observation );
+  IProfil createProfil( TupleResult observation, Object source );
 
   /**
    * FIXME: not used any more: either remove or use
