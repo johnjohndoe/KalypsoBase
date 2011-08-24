@@ -47,8 +47,8 @@ package org.kalypso.model.wspm.core;
  */
 public interface IWspmPhenomenonConstants
 {
-  public static final String PHENOMENON_COMMONS_BASE = "urn:ogc:gml:kalypso:dict:phenomenon:core#"; //$NON-NLS-1$
+  String PHENOMENON_COMMONS_BASE = "urn:ogc:gml:kalypso:dict:phenomenon:core#"; //$NON-NLS-1$
 
-  public static final String PHENOMENON_WATERLEVEL_2D = PHENOMENON_COMMONS_BASE + "wasserstand2d"; //$NON-NLS-1$
+  String PHENOMENON_WATERLEVEL_2D = PHENOMENON_COMMONS_BASE + "wasserstand2d"; //$NON-NLS-1$
 
 }

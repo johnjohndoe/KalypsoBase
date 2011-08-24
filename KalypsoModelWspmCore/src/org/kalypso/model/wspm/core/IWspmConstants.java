@@ -57,6 +57,8 @@ public interface IWspmConstants extends IWspmPhenomenonConstants, IWspmNamespace
 
   String PROFIL_PROPERTY_WATERBODY_SRC = "PROFIL_PROPERT_WATERBODY_SRC"; //$NON-NLS-1$
 
+  String PROFIL_PROPERTY_SRC_FEATURE = "PROFIL_PROPERTY_SRC_FEATURE"; //$NON-NLS-1$
+
   // needed by IObservation Interface
   String PROFIL_DESCRIPTION = NS_WSPMPROF + "_DESCRIPTION"; //$NON-NLS-1$
 

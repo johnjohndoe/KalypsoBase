@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view.table;
+package org.kalypso.model.wspm.ui.view.table.handler;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -52,7 +52,9 @@ import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
+import org.kalypso.model.wspm.core.IWspmProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.ui.view.table.ComponentUiProblemHandler;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -69,11 +71,13 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 /**
  * @author Dirk Kuch
  */
-public class GenericComponentUiHandlerProvider implements IComponentUiHandlerProvider
+public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
 {
+  private static final int DEFAULT_SPACING = 100;
+
   private final IProfil m_profile;
 
-  public GenericComponentUiHandlerProvider( final IProfil profile )
+  public WspmTableUiHandlerProvider( final IProfil profile )
   {
     m_profile = profile;
   }
@@ -86,64 +90,59 @@ public class GenericComponentUiHandlerProvider implements IComponentUiHandlerPro
   {
     Assert.isTrue( tupleResult == m_profile.getResult() );
 
+    final Map<Integer, IComponentUiHandler> handlers = new LinkedHashMap<Integer, IComponentUiHandler>();
+    handlers.put( -1, new ComponentUiProblemHandler( m_profile ) );
+
     final IComponent[] pointMarkerTypes = m_profile.getPointMarkerTypes();
     final IComponent[] components = m_profile.getPointProperties();
+    final int spacing = DEFAULT_SPACING / components.length;
 
-    final Map<Integer, IComponentUiHandler> handler = new LinkedHashMap<Integer, IComponentUiHandler>();
-
-    handler.put( -1, new ComponentUiProblemHandler( m_profile ) );
-
-    for( int i = 0; i < components.length; i++ )
+    for( int index = 0; index < components.length; index++ )
     {
-      final IComponent component = components[i];
-
-      /* marker?!? yes -> continue */
-      if( ArrayUtils.contains( pointMarkerTypes, component ) )
-      {
+      final IComponent component = components[index];
+      if( isPointMarker( pointMarkerTypes, component ) )
         continue;
-      }
 
-      final int spacing = 100 / components.length;
-
-      final IComponentUiHandler h = createHandler( i, component, spacing );
-      handler.put( i, h );
+      final IComponentUiHandler handler = createHandler( index, component, spacing );
+      handlers.put( index, handler );
     }
 
-    return handler;
+    return handlers;
+  }
+
+  private boolean isPointMarker( final IComponent[] pointMarkerTypes, final IComponent component )
+  {
+    return ArrayUtils.contains( pointMarkerTypes, component );
   }
 
   private IComponentUiHandler createHandler( final int index, final IComponent component, final int spacing )
   {
+    final String label = component.getName();
     final QName valueTypeName = component.getValueTypeName();
 
-    final String label = component.getName();
     final IRestriction[] restrictions = component.getRestrictions();
     if( ComponentUtilities.restrictionContainsEnumeration( restrictions ) )
     {
       final Map<Object, IAnnotation> items = RestrictionUtilities.getEnumerationItems( restrictions );
-      return new ComponentUiEnumerationHandler( index, true, true, true, label, SWT.LEFT, 100, spacing, "%s", "<not set>", items ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new ComponentUiEnumerationHandler( index, true, true, true, label, SWT.LEFT, DEFAULT_SPACING, spacing, "%s", "<not set>", items ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    if( XmlTypes.XS_DATETIME.equals( valueTypeName ) )
-      return new ComponentUiDateHandler( index, true, true, true, label, SWT.NONE, 100, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-    if( XmlTypes.XS_STRING.equals( valueTypeName ) )
-      return new ComponentUiStringHandler( index, true, true, true, label, SWT.NONE, 100, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-    if( XmlTypes.XS_INTEGER.equals( valueTypeName ) )
-      return new ComponentUiIntegerHandler( index, true, true, true, label, SWT.NONE, 100, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-    if( XmlTypes.XS_DECIMAL.equals( valueTypeName ) )
-      return new ComponentUiDecimalHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.04f", "", "%.04f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-    if( XmlTypes.XS_DOUBLE.equals( valueTypeName ) )
-      return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, 100, spacing, "%.04f", "", "%.04f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-    if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
-      return new ComponentUiBooleanHandler( index, true, true, true, label, SWT.CENTER, 100, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-    if( XmlTypes.XS_STRING.equals( valueTypeName ) )
-      return new ComponentUiStringHandler( index, true, true, true, label, SWT.CENTER, 100, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    if( component.getId().equals( IWspmProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) )
+      return new RoughnessClassUiHandler( index, true, true, true, label, DEFAULT_SPACING, spacing, m_profile ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    else if( XmlTypes.XS_DATETIME.equals( valueTypeName ) )
+      return new ComponentUiDateHandler( index, true, true, true, label, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    else if( XmlTypes.XS_STRING.equals( valueTypeName ) )
+      return new ComponentUiStringHandler( index, true, true, true, label, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    else if( XmlTypes.XS_INTEGER.equals( valueTypeName ) )
+      return new ComponentUiIntegerHandler( index, true, true, true, label, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    else if( XmlTypes.XS_DECIMAL.equals( valueTypeName ) )
+      return new ComponentUiDecimalHandler( index, true, true, true, label, SWT.RIGHT, DEFAULT_SPACING, spacing, "%.04f", "", "%.04f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    else if( XmlTypes.XS_DOUBLE.equals( valueTypeName ) )
+      return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, DEFAULT_SPACING, spacing, "%.04f", "", "%.04f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    else if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
+      return new ComponentUiBooleanHandler( index, true, true, true, label, SWT.CENTER, DEFAULT_SPACING, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    else if( XmlTypes.XS_STRING.equals( valueTypeName ) )
+      return new ComponentUiStringHandler( index, true, true, true, label, SWT.CENTER, DEFAULT_SPACING, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     throw new UnsupportedOperationException();
   }

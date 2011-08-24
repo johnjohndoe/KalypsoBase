@@ -57,7 +57,7 @@ public interface IWspmProject extends Feature
 
   QName QN_TYPE = new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" ); //$NON-NLS-1$
 
-  QName QN_CLASSIFICATION_MEMBER = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "ClassificationMember" ); //$NON-NLS-1$
+  QName QN_CLASSIFICATION_MEMBER = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "classificationMember" ); //$NON-NLS-1$
 
   IFeatureBindingCollection<WspmWaterBody> getWaterBodies( );
 

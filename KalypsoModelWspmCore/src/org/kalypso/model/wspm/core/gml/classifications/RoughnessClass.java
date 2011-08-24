@@ -54,4 +54,32 @@ public class RoughnessClass extends Feature_Impl implements IRoughnessClass
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#toString()
+   */
+  @Override
+  public String toString( )
+  {
+    return String.format( "Rauheit: %s\nks: %.3f, kst: %.3f", getName(), getKsValue(), getKstValue() );
+  }
+
+  @Override
+  public Double getKstValue( )
+  {
+    final Object property = getProperty( QN_KST_VALUE );
+    if( property instanceof Number )
+      return ((Number) property).doubleValue();
+
+    return null;
+  }
+
+  @Override
+  public Double getKsValue( )
+  {
+    final Object property = getProperty( QN_KS_VALUE );
+    if( property instanceof Number )
+      return ((Number) property).doubleValue();
+
+    return null;
+  }
 }
