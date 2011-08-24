@@ -114,6 +114,10 @@ public class ComponentHandlerSortContainer
     {
       return 520;
     }
+    else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR.equals( m_identifier ) )
+    {
+      return 530;
+    }
 
     else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX.equals( m_identifier ) )
     {

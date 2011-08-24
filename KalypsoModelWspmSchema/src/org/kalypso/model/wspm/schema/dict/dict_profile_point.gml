@@ -95,6 +95,23 @@
       </swe:representation>
     </swe:ItemDefinition>
   </gml:dictionaryEntry>
+  
+  <gml:dictionaryEntry>
+    <swe:ItemDefinition gml:id="RAUHEIT_FACTOR">
+      <gml:name>%rauheit_factor.item.name</gml:name>
+      <swe:property>
+        <swe:Phenomenon gml:id="Phenomenon_Rauheit">
+          <gml:description />
+          <gml:name>%rauheit_factor.item.name</gml:name>
+        </swe:Phenomenon>
+      </swe:property>
+      <swe:representation>
+        <swe:Number>
+          <gml:unitOfMeasure uom="" />
+        </swe:Number>
+      </swe:representation>
+    </swe:ItemDefinition>
+  </gml:dictionaryEntry>
 
   <gml:dictionaryEntry>
     <swe:ItemDefinition gml:id="HOCHWERT">
