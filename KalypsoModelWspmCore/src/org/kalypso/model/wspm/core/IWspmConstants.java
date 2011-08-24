@@ -45,7 +45,7 @@ package org.kalypso.model.wspm.core;
  * 
  * @author thuel2
  */
-public interface IWspmConstants extends IWspmPhenomenonConstants, IWspmNamespaces, IWspmLayers, IWspmProperties
+public interface IWspmConstants extends IWspmPhenomenonConstants, IWspmNamespaces, IWspmLayers, IWspmPointProperties, IWspmLengthSectionProperties
 {
 
   String LENGTH_SECTION_THEME = "org.kalypso.model.wspm.tuhh.ui.chart.LengthSectionLayerProvider#";//$NON-NLS-1$
