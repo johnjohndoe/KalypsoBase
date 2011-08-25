@@ -90,8 +90,12 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
   public void paint( final Double size )
   {
     // calculate screenpoints
-    final int[] p1 = LabelUtils.calcScreenCoordinates( getProjection(), getPoints()[0] );
-    final int[] p2 = LabelUtils.calcScreenCoordinates( getProjection(), getPoints()[1] );
+    final GM_Point[] points = getPoints();
+    if( points.length < 2 )
+      return;
+
+    final int[] p1 = LabelUtils.calcScreenCoordinates( getProjection(), points[0] );
+    final int[] p2 = LabelUtils.calcScreenCoordinates( getProjection(), points[1] );
 
     if( p1[0] == p2[0] && p1[1] == p2[1] )
       // point coordinates of p1 and p2 must differ
