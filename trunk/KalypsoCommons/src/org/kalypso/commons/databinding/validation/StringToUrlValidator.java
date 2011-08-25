@@ -52,20 +52,27 @@ import org.eclipse.core.runtime.IStatus;
  */
 public class StringToUrlValidator extends TypedValidator<String>
 {
-  public StringToUrlValidator( )
+  private final String m_fieldName;
+
+  public StringToUrlValidator( final String fieldName )
   {
     super( String.class, IStatus.ERROR, StringUtils.EMPTY );
+
+    m_fieldName = fieldName;
   }
 
   @Override
   protected IStatus doValidate( final String value )
   {
     if( StringUtils.isEmpty( value ) )
-      return ValidationStatus.error( "Location is empty" );
+      return ValidationStatus.error( String.format( "'%s' is empty", m_fieldName ) );
 
     try
     {
-      new URL( value );
+      final URL url = new URL( value );
+      final String host = url.getHost();
+      if( StringUtils.isBlank( host ) )
+        return ValidationStatus.error( String.format( "'%s' has no host", m_fieldName ) );
     }
     catch( final MalformedURLException e )
     {
