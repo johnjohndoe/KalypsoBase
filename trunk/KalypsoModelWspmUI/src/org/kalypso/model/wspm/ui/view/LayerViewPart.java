@@ -170,7 +170,9 @@ public class LayerViewPart extends AbstractChartModelViewPart
     if( panel != null )
     {
       panel.createControl( m_parent, getToolkit() );
+
       m_parent.layout();
+      m_form.reflow( true );
     }
   }
 

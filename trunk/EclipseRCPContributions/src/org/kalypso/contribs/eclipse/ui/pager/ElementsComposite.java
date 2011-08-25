@@ -158,8 +158,10 @@ public class ElementsComposite extends Composite
       addCombo( m_body );
     }
 
-    this.layout();
     m_toolkit.adapt( this );
+
+    m_body.layout();
+    this.layout();
   }
 
   private boolean isComboEnabledHead( )
