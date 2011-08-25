@@ -3,8 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Commons
 Bundle-SymbolicName: org.apache.commons
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+Require-Bundle: org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
  lib/codec/commons-codec-1.5.jar,
@@ -143,4 +142,4 @@ Export-Package: org.apache.commons.beanutils,
  org.apache.xml.resolver.helpers,
  org.apache.xml.resolver.readers,
  org.apache.xml.resolver.tools
-Bundle-Vendor: http://www.apache.org/
+Bundle-Vendor: http://commons.apache.org/
