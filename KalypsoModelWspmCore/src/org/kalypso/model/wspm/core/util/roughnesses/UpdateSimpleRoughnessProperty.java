@@ -113,16 +113,18 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
       }
 
       final Double value = roughness.getValue( m_property );
-      if( m_overwrite )
+      if( isWritable( point, property ) )
         point.setValue( property, value );
-      else
-      {
-        if( Objects.isNull( point.getValue( property ) ) )
-          point.setValue( property, value );
-      }
     }
 
     return StatusUtilities.createStatus( statis, String.format( "Updating of roughness from roughness classes for profile %.3f", m_profile.getStation() ) );
   }
 
+  private boolean isWritable( final IRecord point, final IComponent property )
+  {
+    if( m_overwrite )
+      return true;
+
+    return Objects.isNull( point.getValue( property ) );
+  }
 }
