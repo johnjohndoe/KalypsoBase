@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.actions;
 
@@ -47,7 +47,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.core.catalog.FeatureTypePropertiesCatalog;
 import org.kalypso.core.catalog.IFeatureTypePropertiesConstants;
@@ -124,7 +123,7 @@ class NewFeaturePropertyScope implements INewScope
       return;
 
     final IFeatureType featureType = m_targetRelation.getTargetFeatureType();
-    if( Objects.isNull( featureType ) )
+    if( featureType == null )
       return;
 
     final IGMLSchema contextSchema = m_parentFeature.getWorkspace().getGMLSchema();
@@ -132,8 +131,8 @@ class NewFeaturePropertyScope implements INewScope
     for( final IFeatureType ft : featureTypes )
       newMenuManager.add( new NewFeatureAction( this, ft ) );
 
-    /* Not yet implemented, makes no sense to show it for now ... */
-    // newMenuManager.add( new NewFeatureFromExternalSchemaAction() );
+        /* Not yet implemented, makes no sense to show it for now ... */
+        // newMenuManager.add( new NewFeatureFromExternalSchemaAction() );
   }
 
   private boolean checkFullList( final IMenuManager newMenuManager )
