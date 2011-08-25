@@ -62,4 +62,6 @@ public interface IWspmClassification extends Feature
   IFeatureBindingCollection<VegetationClass> getVegetationClassCollection( );
 
   IVegetationClass[] getVegetationClasses( );
+
+  IRoughnessClass findRoughnessClass( String name );
 }

@@ -60,4 +60,5 @@ public interface IRoughnessClass extends Feature
 
   Double getKsValue( );
 
+  Double getValue( String property );
 }
