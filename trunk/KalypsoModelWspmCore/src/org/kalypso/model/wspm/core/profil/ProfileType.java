@@ -55,7 +55,6 @@ public class ProfileType
 
   public final IProfilPointPropertyProvider m_pointProvider;
 
-  @SuppressWarnings("hiding")//$NON-NLS-1$
   public ProfileType( final String id, final String label, final String description, final IProfilPointPropertyProvider pointProvider )
   {
     m_id = id;
@@ -63,5 +62,4 @@ public class ProfileType
     m_description = description;
     m_pointProvider = pointProvider;
   }
-
 }

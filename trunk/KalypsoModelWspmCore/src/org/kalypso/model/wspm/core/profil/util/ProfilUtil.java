@@ -1205,4 +1205,18 @@ public final class ProfilUtil
     }
   }
 
+  /**
+   * Either gets and existing component, or creates it if it doesn't exist yet.
+   * 
+   * @return The index of the component
+   */
+  public static int getOrCreateComponent( final IProfil profil, final String componentID )
+  {
+    final int index = profil.indexOfProperty( componentID );
+    if( index != -1 )
+      return index;
+
+    profil.addPointProperty( ProfilUtil.getFeatureComponent( componentID ) );
+    return profil.indexOfProperty( componentID );
+  }
 }
