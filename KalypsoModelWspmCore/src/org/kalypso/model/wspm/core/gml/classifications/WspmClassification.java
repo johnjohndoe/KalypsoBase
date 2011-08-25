@@ -118,4 +118,20 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
     return collection.toArray( new VegetationClass[] {} );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.gml.classifications.IWspmClassification#findRoughnessClass(java.lang.String)
+   */
+  @Override
+  public IRoughnessClass findRoughnessClass( final String name )
+  {
+    final IRoughnessClass[] roughnesses = getRoughnessClasses();
+    for( final IRoughnessClass roughness : roughnesses )
+    {
+      if( roughness.getName().equals( name ) )
+        return roughness;
+    }
+
+    return null;
+  }
+
 }

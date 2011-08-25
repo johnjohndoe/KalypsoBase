@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.core.gml.classifications;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
@@ -81,5 +82,19 @@ public class RoughnessClass extends Feature_Impl implements IRoughnessClass
       return ((Number) property).doubleValue();
 
     return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass#getValue(java.lang.String)
+   */
+  @Override
+  public Double getValue( final String property )
+  {
+    if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( property ) )
+      return getKsValue();
+    else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( property ) )
+      return getKstValue();
+
+    throw new UnsupportedOperationException();
   }
 }
