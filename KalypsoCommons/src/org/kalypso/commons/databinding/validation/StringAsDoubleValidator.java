@@ -40,46 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.validation;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.validation.ValidationStatus;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
+ * Validates if a string can be parsed as a double.
+ * 
  * @author Gernot Belger
  */
-public class StringToUrlValidator extends TypedValidator<String>
+public class StringAsDoubleValidator extends TypedValidator<String>
 {
-  private final String m_fieldName;
-
-  public StringToUrlValidator( final String fieldName )
+  public StringAsDoubleValidator( final int severity, final String fieldName )
   {
-    super( String.class, IStatus.ERROR, StringUtils.EMPTY );
-
-    m_fieldName = fieldName;
+    super( String.class, severity, String.format( "'%s' must be a decimal value", fieldName ) );
   }
 
   @Override
-  protected IStatus doValidate( final String value )
+  protected IStatus doValidate( final String value ) throws CoreException
   {
-    if( StringUtils.isEmpty( value ) )
-      return ValidationStatus.error( String.format( "'%s' is empty", m_fieldName ) );
-
-    try
-    {
-      final URL url = new URL( value );
-      final String host = url.getHost();
-      if( StringUtils.isBlank( host ) )
-        return ValidationStatus.error( String.format( "'%s' has no host", m_fieldName ) );
-    }
-    catch( final MalformedURLException e )
-    {
-      return ValidationStatus.error( e.getLocalizedMessage(), e );
-    }
+    final double parsedValue = NumberUtils.parseQuietDouble( value );
+    if( Double.isNaN( parsedValue ) )
+      fail();
 
     return ValidationStatus.ok();
   }
-
 }
