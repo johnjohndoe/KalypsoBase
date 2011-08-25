@@ -51,14 +51,11 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
-import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * updates a "simple" ks / kst value from roughness class
@@ -94,7 +91,7 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
     if( Objects.isNull( clazz ) )
       return new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Can't update profile %.3f km. Missing point property: %s", m_profile.getStation(), IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) );
 
-    final IWspmClassification clazzes = getClassification();
+    final IWspmClassification clazzes = RoughnessClassHelper.getClassification( m_profile );
     if( Objects.isNull( clazzes ) )
       return new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing profile feature for profile %.3f km.", m_profile.getStation() ) );
 
@@ -128,20 +125,4 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
     return StatusUtilities.createStatus( statis, String.format( "Updating of roughness from roughness classes for profile %.3f", m_profile.getStation() ) );
   }
 
-  private IWspmClassification getClassification( )
-  {
-    final Object source = m_profile.getSource();
-    if( !(source instanceof Feature) )
-      return null;
-
-    final Feature feature = (Feature) source;
-    final GMLWorkspace workspace = feature.getWorkspace();
-    final Feature root = workspace.getRootFeature();
-    if( !(root instanceof WspmProject) )
-      return null;
-
-    final WspmProject project = (WspmProject) root;
-
-    return project.getClassificationMember();
-  }
 }
