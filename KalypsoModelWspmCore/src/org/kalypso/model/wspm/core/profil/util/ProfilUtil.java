@@ -140,6 +140,17 @@ public final class ProfilUtil
     return values;
   }
 
+  public static int getNextNonNull( final IRecord[] points, final int start, final int componentIndex )
+  {
+    for( int i = start + 1; i < points.length; i++ )
+    {
+
+      if( points[i] != null && points[i].getValue( componentIndex ) != null )
+        return i;
+    }
+    return -1;
+  }
+
   public static double getDoubleValueFor( final IComponent component, final IRecord point )
   {
     if( component == null )
