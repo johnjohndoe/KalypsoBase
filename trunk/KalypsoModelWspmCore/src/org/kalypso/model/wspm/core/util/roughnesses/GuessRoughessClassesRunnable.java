@@ -125,16 +125,19 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
         continue;
       }
 
-      if( m_overwriteValues )
+      if( isWritable( point, propertyClazz ) )
         point.setValue( propertyClazz, clazz.getName() );
-      else
-      {
-        if( Objects.isNull( point.getValue( propertyClazz ) ) )
-          point.setValue( propertyClazz, clazz.getName() );
-      }
     }
 
     return StatusUtilities.createStatus( statis, String.format( "Updated roughness classes from roughness values on profile %.3f", m_profile.getStation() ) );
+  }
+
+  private boolean isWritable( final IRecord point, final IComponent propertyClazz )
+  {
+    if( m_overwriteValues )
+      return true;
+
+    return Objects.isNull( point.getValue( propertyClazz ) );
   }
 
   private IRoughnessClass findMatchingClass( final IWspmClassification clazzes, final Double value )
