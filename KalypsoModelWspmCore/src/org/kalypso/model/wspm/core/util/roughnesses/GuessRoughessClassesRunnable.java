@@ -58,28 +58,33 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 /**
- * updates a "simple" ks / kst value from roughness class
+ * Guess roughness class from existing ks / kst value
  * 
  * @author Dirk Kuch
  */
-public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
+public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
 {
+
   private final IProfil m_profile;
 
   private final String m_property;
 
-  private final boolean m_overwrite;
+  private final boolean m_overwriteValues;
 
-  public UpdateSimpleRoughnessProperty( final IProfil profile, final String property, final boolean overwrite )
+  private final Double m_delta;
+
+  public GuessRoughessClassesRunnable( final IProfil profile, final String property, final boolean overwriteValues, final Double delta )
   {
     m_profile = profile;
     m_property = property;
-    m_overwrite = overwrite;
+    m_overwriteValues = overwriteValues;
+    m_delta = delta;
   }
 
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
+  @SuppressWarnings("deprecation")
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
@@ -87,8 +92,8 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
     if( Objects.isNull( property ) )
       return new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Can't update profile %.3f km. Missing point property: %s", m_profile.getStation(), m_property ) );
 
-    final IComponent clazz = m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
-    if( Objects.isNull( clazz ) )
+    final IComponent propertyClazz = m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+    if( Objects.isNull( propertyClazz ) )
       return new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Can't update profile %.3f km. Missing point property: %s", m_profile.getStation(), IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) );
 
     final IWspmClassification clazzes = RoughnessClassHelper.getClassification( m_profile );
@@ -100,29 +105,63 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
     final IRecord[] points = m_profile.getPoints();
     for( final IRecord point : points )
     {
-      final String lnkClazz = (String) point.getValue( clazz );
-      final IRoughnessClass roughness = clazzes.findRoughnessClass( lnkClazz );
-
-      if( Objects.isNull( roughness ) )
+      final Double value = (Double) point.getValue( property );
+      if( Objects.isNull( value ) )
       {
         final Double width = (Double) point.getValue( m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing roughness class - point: %.3f", width ) );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing ks value - point: %.3f", width ) );
         statis.add( status );
 
         continue;
       }
 
-      final Double value = roughness.getValue( m_property );
-      if( m_overwrite )
-        point.setValue( property, value );
+      final IRoughnessClass clazz = findMatchingClass( clazzes, value );
+      if( Objects.isNull( clazz ) )
+      {
+        final Double width = (Double) point.getValue( m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Didn't found matching roughness class for %s value %.3f on point: %.3f", m_property, value, width ) );
+        statis.add( status );
+
+        continue;
+      }
+
+      if( m_overwriteValues )
+        point.setValue( propertyClazz, clazz.getName() );
       else
       {
-        if( Objects.isNull( point.getValue( property ) ) )
-          point.setValue( property, value );
+        if( Objects.isNull( point.getValue( propertyClazz ) ) )
+          point.setValue( propertyClazz, clazz.getName() );
       }
     }
 
-    return StatusUtilities.createStatus( statis, String.format( "Updating of roughness from roughness classes for profile %.3f", m_profile.getStation() ) );
+    return StatusUtilities.createStatus( statis, String.format( "Updated roughness classes from roughness values on profile %.3f", m_profile.getStation() ) );
   }
 
+  private IRoughnessClass findMatchingClass( final IWspmClassification clazzes, final Double value )
+  {
+    IRoughnessClass ptr = null;
+    double ptrDiff = Double.MAX_VALUE;
+
+    final IRoughnessClass[] roughnesses = clazzes.getRoughnessClasses();
+    for( final IRoughnessClass roughness : roughnesses )
+    {
+      final Double v = roughness.getValue( m_property );
+
+      /* roughness is in range? */
+      final double delta = Math.abs( v - value );
+      if( delta == 0.0 )
+        return roughness;
+
+      if( delta > m_delta )
+        continue;
+
+      if( delta < ptrDiff )
+      {
+        ptrDiff = delta;
+        ptr = roughness;
+      }
+    }
+
+    return ptr;
+  }
 }
