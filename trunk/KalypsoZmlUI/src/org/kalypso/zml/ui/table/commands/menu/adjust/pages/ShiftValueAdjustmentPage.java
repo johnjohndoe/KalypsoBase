@@ -60,7 +60,7 @@ public class ShiftValueAdjustmentPage extends AbstractAdjustmentPage implements 
 
   public ShiftValueAdjustmentPage( final IAdjustmentPageProvider provider )
   {
-    super( provider );
+    super( provider, ShiftValueAdjustmentPage.class.getName() );
   }
 
   /**
