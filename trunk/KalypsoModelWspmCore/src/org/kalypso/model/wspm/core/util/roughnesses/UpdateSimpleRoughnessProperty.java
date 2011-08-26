@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.core.util.roughnesses;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -54,6 +55,9 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -81,21 +85,18 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final IComponent property = m_profile.hasPointProperty( m_property );
-    if( Objects.isNull( property ) )
-      return new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Can't update profile %.3f km. Missing point property: %s", m_profile.getStation(), m_property ) );
-
-    final IComponent clazz = m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
-    if( Objects.isNull( clazz ) )
-      return new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Can't update profile %.3f km. Missing point property: %s", m_profile.getStation(), IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) );
+    final IComponent property = getPropety( m_property );
+    final IComponent clazz = getPropety( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
 
     final IWspmClassification clazzes = RoughnessClassHelper.getClassification( m_profile );
     if( Objects.isNull( clazzes ) )
-      return new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing profile feature for profile %.3f km.", m_profile.getStation() ) );
+      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing profile feature for profile %.3f km.", m_profile.getStation() ) ) );
 
     final List<IStatus> statis = new ArrayList<IStatus>();
+
+    final ProfilOperation operation = new ProfilOperation( "updating roughness values", m_profile, true );
 
     final IRecord[] points = m_profile.getPoints();
     for( final IRecord point : points )
@@ -112,12 +113,25 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
         continue;
       }
 
-      final Double value = roughness.getValue( m_property );
       if( isWritable( point, property ) )
-        point.setValue( property, value );
+        operation.addChange( new PointPropertyEdit( point, property, roughness.getValue( m_property ) ) );
     }
 
+    new ProfilOperationJob( operation ).schedule();
+
     return StatusUtilities.createStatus( statis, String.format( "Updating of roughness from roughness classes for profile %.3f", m_profile.getStation() ) );
+  }
+
+  private IComponent getPropety( final String property ) throws CoreException
+  {
+    final IComponent ax = m_profile.hasPointProperty( property );
+    if( Objects.isNull( ax ) )
+    {
+      final Status status = new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Can't update profile %.3f km. Missing point property: %s", m_profile.getStation(), property ) );
+      throw new CoreException( status );
+    }
+
+    return ax;
   }
 
   private boolean isWritable( final IRecord point, final IComponent property )

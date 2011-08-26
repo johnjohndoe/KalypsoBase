@@ -134,4 +134,19 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
     return null;
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.gml.classifications.IWspmClassification#findVegetationClass(java.lang.String)
+   */
+  @Override
+  public IVegetationClass findVegetationClass( final String name )
+  {
+    final IVegetationClass[] vegetations = getVegetationClasses();
+    for( final IVegetationClass vegetation : vegetations )
+    {
+      if( vegetation.getName().equals( name ) )
+        return vegetation;
+    }
+
+    return null;
+  }
 }

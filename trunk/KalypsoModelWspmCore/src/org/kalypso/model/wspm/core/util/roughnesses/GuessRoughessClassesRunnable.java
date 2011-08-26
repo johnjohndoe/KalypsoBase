@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.core.util.roughnesses;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -54,6 +55,9 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -86,21 +90,18 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
    */
   @SuppressWarnings("deprecation")
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final IComponent property = m_profile.hasPointProperty( m_property );
-    if( Objects.isNull( property ) )
-      return new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Can't update profile %.3f km. Missing point property: %s", m_profile.getStation(), m_property ) );
-
-    final IComponent propertyClazz = m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
-    if( Objects.isNull( propertyClazz ) )
-      return new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Can't update profile %.3f km. Missing point property: %s", m_profile.getStation(), IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) );
+    final IComponent property = getPropety( m_property );
+    final IComponent propertyClazz = getPropety( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
 
     final IWspmClassification clazzes = RoughnessClassHelper.getClassification( m_profile );
     if( Objects.isNull( clazzes ) )
-      return new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing profile feature for profile %.3f km.", m_profile.getStation() ) );
+      throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing profile feature for profile %.3f km.", m_profile.getStation() ) ) );
 
     final List<IStatus> statis = new ArrayList<IStatus>();
+
+    final ProfilOperation operation = new ProfilOperation( "guessing roughness class values", m_profile, true );
 
     final IRecord[] points = m_profile.getPoints();
     for( final IRecord point : points )
@@ -126,8 +127,10 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
       }
 
       if( isWritable( point, propertyClazz ) )
-        point.setValue( propertyClazz, clazz.getName() );
+        operation.addChange( new PointPropertyEdit( point, propertyClazz, clazz.getName() ) );
     }
+
+    new ProfilOperationJob( operation ).schedule();
 
     return StatusUtilities.createStatus( statis, String.format( "Updated roughness classes from roughness values on profile %.3f", m_profile.getStation() ) );
   }
@@ -138,6 +141,18 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
       return true;
 
     return Objects.isNull( point.getValue( propertyClazz ) );
+  }
+
+  private IComponent getPropety( final String property ) throws CoreException
+  {
+    final IComponent ax = m_profile.hasPointProperty( property );
+    if( Objects.isNull( ax ) )
+    {
+      final Status status = new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Can't update profile %.3f km. Missing point property: %s", m_profile.getStation(), property ) );
+      throw new CoreException( status );
+    }
+
+    return ax;
   }
 
   private IRoughnessClass findMatchingClass( final IWspmClassification clazzes, final Double value )

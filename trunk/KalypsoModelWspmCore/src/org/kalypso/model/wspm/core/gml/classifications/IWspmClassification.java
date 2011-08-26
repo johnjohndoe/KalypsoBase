@@ -64,4 +64,6 @@ public interface IWspmClassification extends Feature
   IVegetationClass[] getVegetationClasses( );
 
   IRoughnessClass findRoughnessClass( String name );
+
+  IVegetationClass findVegetationClass( String name );
 }
