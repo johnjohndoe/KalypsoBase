@@ -38,38 +38,61 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
+package org.kalypso.contribs.eclipse.ui.pager;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.widgets.Display;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.pager.AbstractElementPage;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractAdjustmentPage extends AbstractElementPage
+public abstract class AbstractElementPage implements IElementPage
 {
-  public static final Font HEADING = new Font( Display.getDefault(), "Tahoma", 8, SWT.BOLD ); //$NON-NLS-1$
 
-  private final IAdjustmentPageProvider m_provider;
+  private final String m_identifier;
 
-  public AbstractAdjustmentPage( final IAdjustmentPageProvider provider, final String identifier )
+  public AbstractElementPage( final String identifier )
   {
-    super( identifier );
-
-    m_provider = provider;
+    m_identifier = identifier;
   }
 
-  protected IZmlTableColumn getColumn( )
+  /**
+   * @see org.kalypso.contribs.eclipse.ui.pager.IElementPage#getIdentifier()
+   */
+  @Override
+  public final String getIdentifier( )
   {
-    return m_provider.getColumn();
+    return m_identifier;
   }
 
-  public abstract ICoreRunnableWithProgress getRunnable( );
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public final int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( getIdentifier() );
 
-  public abstract boolean isValid( );
+    return builder.toHashCode();
+  }
 
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public final boolean equals( final Object obj )
+  {
+    if( obj instanceof IElementPage )
+    {
+      final IElementPage other = (IElementPage) obj;
+      final EqualsBuilder builder = new EqualsBuilder();
+      builder.append( getIdentifier(), other.getIdentifier() );
+
+      return builder.isEquals();
+    }
+
+    // TODO Auto-generated method stub
+    return super.equals( obj );
+  }
 }
