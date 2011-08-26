@@ -51,7 +51,6 @@ public final class Vegetations
 {
   private Vegetations( )
   {
-
   }
 
   public static boolean hasVegetationProperties( final IProfil profile )
@@ -64,6 +63,11 @@ public final class Vegetations
       return false;
 
     return true;
+  }
+
+  public static boolean hasVegetationClass( final IProfil profile )
+  {
+    return Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS ) );
   }
 
 }
