@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Cp1252" standalone="yes"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<Chart legend= "false" id="waterlevelChart">
+	<Chart legend="false" id="waterlevelChart">
 		<Title></Title>
 		<Description>Waterlevel Fixation</Description>
 		<Layers>
@@ -31,8 +31,8 @@
 
 					<PointStyle role="point">
 						<Title>Point</Title>
-						<Width>10</Width>
-						<Height>10</Height>
+						<Width>5</Width>
+						<Height>5</Height>
 						<Stroke>
 							<Width>1</Width>
 							<LineColor>0000aa</LineColor>
@@ -41,7 +41,40 @@
 					</PointStyle>
 				</Styles>
 			</Layer>
-
+			<Layer visible="true" legend="false" id="runoffGridLayer">
+				<Provider
+					epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
+					<Parameters>
+					</Parameters>
+				</Provider>
+				<Title>Gitterlinien</Title>
+				<Description />
+				<MapperRefs>
+					<DomainAxisRef ref="Station_Axis" />
+					<TargetAxisRef ref="nnAxis" />
+				</MapperRefs>
+				<Styles>
+					<LineStyle role="gridLineStyle">
+						<Width>1</Width>
+						<LineColor>CCCCCC</LineColor>
+						<DashOffset>0</DashOffset>
+						<DashArray>2 2 2</DashArray>
+						<LineCap>ROUND</LineCap>
+						<LineJoin>ROUND</LineJoin>
+						<MiterLimit>1</MiterLimit>
+					</LineStyle>
+					<!-- THIS IS THE STLYE OF THE BORDER... (even if it is a point style) -->
+					<PointStyle role="gridPointStyle">
+						<Stroke>
+							<Width>2</Width>
+							<LineColor>0000aa</LineColor>
+						</Stroke>
+						<FillColor isVisible="false">
+							<Color>000000</Color>
+						</FillColor>
+					</PointStyle>
+				</Styles>
+			</Layer>
 		</Layers>
 		<Mappers>
 			<Axis id="Station_Axis">
@@ -50,6 +83,9 @@
 				<Label>Station [km]</Label>
 				<Direction>NEGATIVE</Direction>
 				<Position>BOTTOM</Position>
+				<PreferredAdjustment before="3" range="94"
+					after="3">
+				</PreferredAdjustment>
 				<NumberRange>
 					<MinValue>0</MinValue>
 					<MaxValue>1</MaxValue>
