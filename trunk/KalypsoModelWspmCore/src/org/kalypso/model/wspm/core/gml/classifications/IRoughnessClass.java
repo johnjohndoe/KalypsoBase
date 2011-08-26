@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,12 +36,15 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.classifications;
 
+import java.math.BigDecimal;
+
 import javax.xml.namespace.QName;
 
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmNamespaces;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -56,9 +59,17 @@ public interface IRoughnessClass extends Feature
 
   QName QN_COLOR = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "color" );
 
-  Double getKstValue( );
+  BigDecimal getKstValue( );
 
-  Double getKsValue( );
+  void setKstValue( BigDecimal value );
 
-  Double getValue( String property );
+  BigDecimal getKsValue( );
+
+  void setKsValue( BigDecimal value );
+
+  BigDecimal getValue( String component );
+
+  void setColor( RGB color );
+
+  RGB getColor( );
 }

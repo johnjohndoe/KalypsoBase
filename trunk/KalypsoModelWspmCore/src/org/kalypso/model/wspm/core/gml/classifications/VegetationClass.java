@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,10 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.classifications;
 
+import java.math.BigDecimal;
+
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -49,49 +52,56 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class VegetationClass extends Feature_Impl implements IVegetationClass
 {
-
   public VegetationClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.classifications.IVegetationClass#getAx()
-   */
   @Override
-  public Double getAx( )
+  public BigDecimal getAx( )
   {
-    final Object property = getProperty( QN_PROPERTY_AX );
-    if( property instanceof Number )
-      return ((Number) property).doubleValue();
-
-    return null;
+    return getProperty( QN_PROPERTY_AX, BigDecimal.class );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.classifications.IVegetationClass#getAy()
-   */
   @Override
-  public Double getAy( )
+  public BigDecimal getAy( )
   {
-    final Object property = getProperty( QN_PROPERTY_AY );
-    if( property instanceof Number )
-      return ((Number) property).doubleValue();
-
-    return null;
+    return getProperty( QN_PROPERTY_AY, BigDecimal.class );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.classifications.IVegetationClass#getDp()
-   */
   @Override
-  public Double getDp( )
+  public BigDecimal getDp( )
   {
-    final Object property = getProperty( QN_PROPERTY_DP );
-    if( property instanceof Number )
-      return ((Number) property).doubleValue();
-
-    return null;
+    return getProperty( QN_PROPERTY_DP, BigDecimal.class );
   }
 
+  @Override
+  public void setAx( final BigDecimal value )
+  {
+    setProperty( QN_PROPERTY_AX, value );
+  }
+
+  @Override
+  public void setAy( final BigDecimal value )
+  {
+    setProperty( QN_PROPERTY_AY, value );
+  }
+
+  @Override
+  public void setDp( final BigDecimal value )
+  {
+    setProperty( QN_PROPERTY_DP, value );
+  }
+
+  @Override
+  public void setColor( final RGB color )
+  {
+    setProperty( QN_PROPERTY_COLOR, color );
+  }
+
+  @Override
+  public RGB getColor( )
+  {
+    return getProperty( QN_PROPERTY_COLOR, RGB.class );
+  }
 }

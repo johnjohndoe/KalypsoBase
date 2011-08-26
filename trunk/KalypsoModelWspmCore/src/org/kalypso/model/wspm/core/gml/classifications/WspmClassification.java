@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.classifications;
 
@@ -51,76 +51,49 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class WspmClassification extends Feature_Impl implements IWspmClassification
 {
+  private IFeatureBindingCollection<IRoughnessClass> m_roughnessClasses = null;
 
-  private IFeatureBindingCollection<RoughnessClass> m_roughnessClasses = null;
-
-  private IFeatureBindingCollection<VegetationClass> m_vegetationClasses = null;
-
-// @Override
-// public IFeatureBindingCollection<WspmWaterBody> getWaterBodies( )
-// {
-// if( m_waterBodies == null )
-// m_waterBodies = new FeatureBindingCollection<WspmWaterBody>( this, WspmWaterBody.class, QN_MEMBER_WATER_BODY );
-//
-// return m_waterBodies;
-// }
-//
+  private IFeatureBindingCollection<IVegetationClass> m_vegetationClasses = null;
 
   public WspmClassification( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.classifications.IWspmClassification#getRoughnessClassCollection()
-   */
   @Override
-  public IFeatureBindingCollection<RoughnessClass> getRoughnessClassCollection( )
+  public IFeatureBindingCollection<IRoughnessClass> getRoughnessClassCollection( )
   {
     if( m_roughnessClasses == null )
-      m_roughnessClasses = new FeatureBindingCollection<RoughnessClass>( this, RoughnessClass.class, QN_MEMBER_ROUGHNESS_CLASSES );
+      m_roughnessClasses = new FeatureBindingCollection<IRoughnessClass>( this, IRoughnessClass.class, QN_MEMBER_ROUGHNESS_CLASSES );
 
     return m_roughnessClasses;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.classifications.IWspmClassification#getRoughnessClasses()
-   */
   @Override
   public IRoughnessClass[] getRoughnessClasses( )
   {
-    final IFeatureBindingCollection<RoughnessClass> collection = getRoughnessClassCollection();
+    final IFeatureBindingCollection<IRoughnessClass> collection = getRoughnessClassCollection();
 
     return collection.toArray( new RoughnessClass[] {} );
-
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.classifications.IWspmClassification#getVegetationClassCollection()
-   */
   @Override
-  public IFeatureBindingCollection<VegetationClass> getVegetationClassCollection( )
+  public IFeatureBindingCollection<IVegetationClass> getVegetationClassCollection( )
   {
     if( m_vegetationClasses == null )
-      m_vegetationClasses = new FeatureBindingCollection<VegetationClass>( this, VegetationClass.class, QN_MEMBER_VEGETATION_CLASSES );
+      m_vegetationClasses = new FeatureBindingCollection<IVegetationClass>( this, IVegetationClass.class, QN_MEMBER_VEGETATION_CLASSES );
 
     return m_vegetationClasses;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.classifications.IWspmClassification#getVegetationClasses()
-   */
   @Override
   public IVegetationClass[] getVegetationClasses( )
   {
-    final IFeatureBindingCollection<VegetationClass> collection = getVegetationClassCollection();
+    final IFeatureBindingCollection<IVegetationClass> collection = getVegetationClassCollection();
 
     return collection.toArray( new VegetationClass[] {} );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.classifications.IWspmClassification#findRoughnessClass(java.lang.String)
-   */
   @Override
   public IRoughnessClass findRoughnessClass( final String name )
   {
@@ -134,9 +107,6 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
     return null;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.classifications.IWspmClassification#findVegetationClass(java.lang.String)
-   */
   @Override
   public IVegetationClass findVegetationClass( final String name )
   {

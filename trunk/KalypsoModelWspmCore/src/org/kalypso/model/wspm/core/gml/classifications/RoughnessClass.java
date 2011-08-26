@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,10 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.classifications;
 
+import java.math.BigDecimal;
+
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
@@ -55,9 +58,6 @@ public class RoughnessClass extends Feature_Impl implements IRoughnessClass
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.Feature_Impl#toString()
-   */
   @Override
   public String toString( )
   {
@@ -65,36 +65,49 @@ public class RoughnessClass extends Feature_Impl implements IRoughnessClass
   }
 
   @Override
-  public Double getKstValue( )
+  public BigDecimal getKstValue( )
   {
-    final Object property = getProperty( QN_KST_VALUE );
-    if( property instanceof Number )
-      return ((Number) property).doubleValue();
-
-    return null;
+    return getProperty( QN_KST_VALUE, BigDecimal.class );
   }
 
   @Override
-  public Double getKsValue( )
+  public void setKstValue( final BigDecimal value )
   {
-    final Object property = getProperty( QN_KS_VALUE );
-    if( property instanceof Number )
-      return ((Number) property).doubleValue();
-
-    return null;
+    setProperty( QN_KST_VALUE, value );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass#getValue(java.lang.String)
-   */
   @Override
-  public Double getValue( final String property )
+  public BigDecimal getKsValue( )
   {
-    if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( property ) )
+    return getProperty( QN_KS_VALUE, BigDecimal.class );
+  }
+
+  @Override
+  public void setKsValue( final BigDecimal value )
+  {
+    setProperty( QN_KS_VALUE, value );
+  }
+
+  @Override
+  public BigDecimal getValue( final String component )
+  {
+    if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( component ) )
       return getKsValue();
-    else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( property ) )
+    else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( component ) )
       return getKstValue();
 
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void setColor( final RGB color )
+  {
+    setProperty( QN_COLOR, color );
+  }
+
+  @Override
+  public RGB getColor( )
+  {
+    return getProperty( QN_COLOR, RGB.class );
   }
 }
