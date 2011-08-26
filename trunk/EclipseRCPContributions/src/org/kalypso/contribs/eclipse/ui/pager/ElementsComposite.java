@@ -40,6 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.ui.pager;
 
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -56,7 +60,7 @@ import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 /**
  * @author Dirk Kuch
  */
-public class ElementsComposite extends Composite
+public class ElementsComposite extends Composite implements IElementsComposite
 {
 
   private final FormToolkit m_toolkit;
@@ -70,6 +74,8 @@ public class ElementsComposite extends Composite
   private final int m_style;
 
   private boolean m_showComboViewer = false;
+
+  Set<IElementPageListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IElementPageListener>() );
 
   public ElementsComposite( final Composite parent, final FormToolkit toolkit, final IElementPage[] pages )
   {
@@ -212,15 +218,38 @@ public class ElementsComposite extends Composite
         if( element instanceof IElementPage )
         {
           m_selectedPage = (IElementPage) element;
+
+          fireSelectedPageChanged( m_selectedPage );
         }
 
         update();
       }
     } );
+
+    fireSelectedPageChanged( m_selectedPage );
   }
 
   public void setShowAlwaysComboViewer( final boolean showComboViewer )
   {
     m_showComboViewer = showComboViewer;
+  }
+
+  public void addPageListener( final IElementPageListener listener )
+  {
+    m_listeners.add( listener );
+  }
+
+  public void removePageListener( final IElementPageListener listener )
+  {
+    m_listeners.remove( listener );
+  }
+
+  protected void fireSelectedPageChanged( final IElementPage page )
+  {
+    final IElementPageListener[] listeners = m_listeners.toArray( new IElementPageListener[] {} );
+    for( final IElementPageListener listener : listeners )
+    {
+      listener.pageChanged( page.getIdentifier() );
+    }
   }
 }
