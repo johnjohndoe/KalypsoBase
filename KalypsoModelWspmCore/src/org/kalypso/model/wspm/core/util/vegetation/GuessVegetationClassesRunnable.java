@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,10 +36,11 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.util.vegetation;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -204,13 +205,12 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
 
   private Coordinate toCoordinate( final IVegetationClass vegetation )
   {
-    final Double ax = vegetation.getAx();
-    final Double ay = vegetation.getAy();
-    final Double dp = vegetation.getDp();
+    final BigDecimal ax = vegetation.getAx();
+    final BigDecimal ay = vegetation.getAy();
+    final BigDecimal dp = vegetation.getDp();
     if( Objects.isNull( ax, ay, dp ) )
       return null;
 
-    return new Coordinate( ax, ax, dp );
-
+    return new Coordinate( ax.doubleValue(), ax.doubleValue(), dp.doubleValue() );
   }
 }

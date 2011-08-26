@@ -40,8 +40,8 @@
     <complexContent>
       <extension base="gml:AbstractFeatureType">
         <sequence>
-          <element type="double" name="ksValue" />
-          <element type="double" name="kstValue" />
+          <element type="decimal" name="ksValue" />
+          <element type="decimal" name="kstValue" />
           <element type="common:color" name="color" />
         </sequence>
       </extension>
@@ -55,21 +55,18 @@
     <attributeGroup ref="gml:AssociationAttributeGroup" />
   </complexType>
 
-
   <element name="VegetationClass" type="wspmClasses:VegetationClassType" substitutionGroup="gml:_Feature" />
   <complexType name="VegetationClassType">
     <complexContent>
       <extension base="gml:AbstractFeatureType">
         <sequence>
-          <element type="double" name="ax" />
-          <element type="double" name="ay" />
-          <element type="double" name="dx" />
+          <element type="decimal" name="ax" />
+          <element type="decimal" name="ay" />
+          <element type="decimal" name="dx" />
           <element type="common:color" name="color" />
         </sequence>
       </extension>
     </complexContent>
   </complexType>
-
-
 
 </schema>

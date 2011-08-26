@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,12 +36,15 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.classifications;
 
+import java.math.BigDecimal;
+
 import javax.xml.namespace.QName;
 
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmNamespaces;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -56,9 +59,21 @@ public interface IVegetationClass extends Feature
 
   QName QN_PROPERTY_DP = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "dx" ); //$NON-NLS-1$
 
-  Double getAx( );
+  QName QN_PROPERTY_COLOR = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "color" ); //$NON-NLS-1$
 
-  Double getAy( );
+  BigDecimal getAx( );
 
-  Double getDp( );
+  void setAx( BigDecimal value );
+
+  BigDecimal getAy( );
+
+  void setAy( BigDecimal value );
+
+  BigDecimal getDp( );
+
+  void setDp( BigDecimal value );
+
+  void setColor( RGB color );
+
+  RGB getColor( );
 }

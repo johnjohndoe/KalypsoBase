@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,10 +36,11 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.util.roughnesses;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,10 +165,10 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
     final IRoughnessClass[] roughnesses = clazzes.getRoughnessClasses();
     for( final IRoughnessClass roughness : roughnesses )
     {
-      final Double v = roughness.getValue( m_property );
+      final BigDecimal v = roughness.getValue( m_property );
 
       /* roughness is in range? */
-      final double delta = Math.abs( v - value );
+      final double delta = Math.abs( v.doubleValue() - value );
       if( delta == 0.0 )
         return roughness;
 

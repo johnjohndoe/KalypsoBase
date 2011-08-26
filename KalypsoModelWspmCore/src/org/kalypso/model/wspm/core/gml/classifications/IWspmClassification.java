@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.classifications;
 
@@ -55,11 +55,11 @@ public interface IWspmClassification extends Feature
 
   QName QN_MEMBER_VEGETATION_CLASSES = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "vegetationClasses" ); //$NON-NLS-1$
 
-  IFeatureBindingCollection<RoughnessClass> getRoughnessClassCollection( );
+  IFeatureBindingCollection<IRoughnessClass> getRoughnessClassCollection( );
 
   IRoughnessClass[] getRoughnessClasses( );
 
-  IFeatureBindingCollection<VegetationClass> getVegetationClassCollection( );
+  IFeatureBindingCollection<IVegetationClass> getVegetationClassCollection( );
 
   IVegetationClass[] getVegetationClasses( );
 
