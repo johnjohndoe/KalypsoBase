@@ -119,17 +119,21 @@ public class ComponentHandlerSortContainer
       return 530;
     }
 
-    else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX.equals( m_identifier ) )
+    else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( m_identifier ) )
     {
       return 600;
     }
-    else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY.equals( m_identifier ) )
+    else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX.equals( m_identifier ) )
     {
       return 610;
     }
-    else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP.equals( m_identifier ) )
+    else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY.equals( m_identifier ) )
     {
       return 620;
+    }
+    else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP.equals( m_identifier ) )
+    {
+      return 630;
     }
 
     else if( IWspmPointProperties.POINT_PROPERTY_COMMENT.equals( m_identifier ) )
