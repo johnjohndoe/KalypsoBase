@@ -67,7 +67,7 @@
 					<PointStyle role="gridPointStyle">
 						<Stroke>
 							<Width>2</Width>
-							<LineColor>0000aa</LineColor>
+							<LineColor>000000</LineColor>
 						</Stroke>
 						<FillColor isVisible="false">
 							<Color>000000</Color>
@@ -120,6 +120,7 @@
 					<LineStyle role="axisLine">
 						<Title></Title>
 						<LineColor>000000</LineColor>
+						<Width>1</Width>
 					</LineStyle>
 					<TextStyle role="axisLabel">
 						<Title></Title>
@@ -147,7 +148,8 @@
 				<Styles>
 					<LineStyle role="axisLine">
 						<Title></Title>
-						<LineColor>0000aa</LineColor>
+						<LineColor>000000</LineColor>
+						<Width>1</Width>
 					</LineStyle>
 					<TextStyle role="axisLabel">
 						<Title></Title>
