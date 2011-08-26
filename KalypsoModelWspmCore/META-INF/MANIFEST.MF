@@ -34,7 +34,8 @@ Export-Package: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.core.strang,
  org.kalypso.model.wspm.core.util,
  org.kalypso.model.wspm.core.util.pointpropertycalculator,
- org.kalypso.model.wspm.core.util.roughnesses
+ org.kalypso.model.wspm.core.util.roughnesses,
+ org.kalypso.model.wspm.core.util.vegetation
 Require-Bundle: org.eclipse.ui.ide,
  org.junit;resolution:=optional,
  org.kalypso.core

@@ -55,4 +55,43 @@ public class VegetationClass extends Feature_Impl implements IVegetationClass
     super( parent, parentRelation, ft, id, propValues );
   }
 
+  /**
+   * @see org.kalypso.model.wspm.core.gml.classifications.IVegetationClass#getAx()
+   */
+  @Override
+  public Double getAx( )
+  {
+    final Object property = getProperty( QN_PROPERTY_AX );
+    if( property instanceof Number )
+      return ((Number) property).doubleValue();
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.classifications.IVegetationClass#getAy()
+   */
+  @Override
+  public Double getAy( )
+  {
+    final Object property = getProperty( QN_PROPERTY_AY );
+    if( property instanceof Number )
+      return ((Number) property).doubleValue();
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.classifications.IVegetationClass#getDp()
+   */
+  @Override
+  public Double getDp( )
+  {
+    final Object property = getProperty( QN_PROPERTY_DP );
+    if( property instanceof Number )
+      return ((Number) property).doubleValue();
+
+    return null;
+  }
+
 }

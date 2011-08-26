@@ -96,7 +96,7 @@ public final class ProfilOperation extends AbstractOperation
     m_changes.add( change );
   }
 
-  protected final IProfil getProfil( )
+  protected IProfil getProfil( )
   {
     return m_profile;
   }

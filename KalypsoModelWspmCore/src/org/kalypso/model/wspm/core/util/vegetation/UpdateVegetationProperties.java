@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.util.roughnesses;
+package org.kalypso.model.wspm.core.util.vegetation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,48 +52,43 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
-import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
+import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.util.roughnesses.RoughnessClassHelper;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
 /**
- * Guess roughness class from existing ks / kst value
+ * updates a "simple" ks / kst value from roughness class
  * 
  * @author Dirk Kuch
  */
-public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
+public class UpdateVegetationProperties implements ICoreRunnableWithProgress
 {
-
   private final IProfil m_profile;
 
-  private final String m_property;
+  private final boolean m_overwrite;
 
-  private final boolean m_overwriteValues;
-
-  private final Double m_delta;
-
-  public GuessRoughessClassesRunnable( final IProfil profile, final String property, final boolean overwriteValues, final Double delta )
+  public UpdateVegetationProperties( final IProfil profile, final boolean overwrite )
   {
     m_profile = profile;
-    m_property = property;
-    m_overwriteValues = overwriteValues;
-    m_delta = delta;
+    m_overwrite = overwrite;
   }
 
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
-  @SuppressWarnings("deprecation")
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final IComponent property = getPropety( m_property );
-    final IComponent propertyClazz = getPropety( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+    final IComponent ax = getPropety( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
+    final IComponent ay = getPropety( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
+    final IComponent dp = getPropety( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
+    final IComponent clazz = getPropety( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
 
     final IWspmClassification clazzes = RoughnessClassHelper.getClassification( m_profile );
     if( Objects.isNull( clazzes ) )
@@ -101,46 +96,34 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
 
     final List<IStatus> statis = new ArrayList<IStatus>();
 
-    final ProfilOperation operation = new ProfilOperation( "guessing roughness class values", m_profile, true );
+    final ProfilOperation operation = new ProfilOperation( "updating roughness values", m_profile, true );
 
     final IRecord[] points = m_profile.getPoints();
     for( final IRecord point : points )
     {
-      final Double value = (Double) point.getValue( property );
-      if( Objects.isNull( value ) )
+      final String lnkClazz = (String) point.getValue( clazz );
+      final IVegetationClass vegetation = clazzes.findVegetationClass( lnkClazz );
+
+      if( Objects.isNull( vegetation ) )
       {
         final Double width = (Double) point.getValue( m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing ks value - point: %.3f", width ) );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing vegetation class - point: %.3f", width ) );
         statis.add( status );
 
         continue;
       }
 
-      final IRoughnessClass clazz = findMatchingClass( clazzes, value );
-      if( Objects.isNull( clazz ) )
-      {
-        final Double width = (Double) point.getValue( m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Didn't found matching roughness class for %s value %.3f on point: %.3f", m_property, value, width ) );
-        statis.add( status );
-
-        continue;
-      }
-
-      if( isWritable( point, propertyClazz ) )
-        operation.addChange( new PointPropertyEdit( point, propertyClazz, clazz.getName() ) );
+      if( isWritable( point, ax ) )
+        operation.addChange( new PointPropertyEdit( point, ax, vegetation.getAx() ) );
+      if( isWritable( point, ay ) )
+        operation.addChange( new PointPropertyEdit( point, ay, vegetation.getAy() ) );
+      if( isWritable( point, dp ) )
+        operation.addChange( new PointPropertyEdit( point, dp, vegetation.getDp() ) );
     }
 
     new ProfilOperationJob( operation ).schedule();
 
-    return StatusUtilities.createStatus( statis, String.format( "Updated roughness classes from roughness values on profile %.3f", m_profile.getStation() ) );
-  }
-
-  private boolean isWritable( final IRecord point, final IComponent propertyClazz )
-  {
-    if( m_overwriteValues )
-      return true;
-
-    return Objects.isNull( point.getValue( propertyClazz ) );
+    return StatusUtilities.createStatus( statis, String.format( "Updating of roughness from roughness classes for profile %.3f", m_profile.getStation() ) );
   }
 
   private IComponent getPropety( final String property ) throws CoreException
@@ -155,31 +138,11 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
     return ax;
   }
 
-  private IRoughnessClass findMatchingClass( final IWspmClassification clazzes, final Double value )
+  private boolean isWritable( final IRecord point, final IComponent property )
   {
-    IRoughnessClass ptr = null;
-    double ptrDiff = Double.MAX_VALUE;
+    if( m_overwrite )
+      return true;
 
-    final IRoughnessClass[] roughnesses = clazzes.getRoughnessClasses();
-    for( final IRoughnessClass roughness : roughnesses )
-    {
-      final Double v = roughness.getValue( m_property );
-
-      /* roughness is in range? */
-      final double delta = Math.abs( v - value );
-      if( delta == 0.0 )
-        return roughness;
-
-      if( delta > m_delta )
-        continue;
-
-      if( delta < ptrDiff )
-      {
-        ptrDiff = delta;
-        ptr = roughness;
-      }
-    }
-
-    return ptr;
+    return Objects.isNull( point.getValue( property ) );
   }
 }

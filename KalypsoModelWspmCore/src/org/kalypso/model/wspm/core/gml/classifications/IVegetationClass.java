@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.classifications;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.model.wspm.core.IWspmNamespaces;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -47,5 +50,15 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IVegetationClass extends Feature
 {
+  QName QN_PROPERTY_AX = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "ax" ); //$NON-NLS-1$
 
+  QName QN_PROPERTY_AY = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "ay" ); //$NON-NLS-1$
+
+  QName QN_PROPERTY_DP = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "dx" ); //$NON-NLS-1$
+
+  Double getAx( );
+
+  Double getAy( );
+
+  Double getDp( );
 }
