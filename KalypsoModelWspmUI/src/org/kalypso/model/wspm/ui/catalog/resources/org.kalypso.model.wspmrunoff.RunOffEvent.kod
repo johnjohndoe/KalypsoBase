@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="Cp1252" standalone="yes"?>
-<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<Chart legend= "false" id="runoffChart">
+<ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Chart legend="false" id="runoffChart">
 		<Title></Title>
 		<Description>Discharge</Description>
 		<Layers>
 			<Layer visible="true" id="dischargeLayer">
-				<Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+				<Provider
+					epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
 					<Parameters>
 						<Parameter name="featureKey" value="runOffEventFeatureKey" />
-						<Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" />
-						<Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff" />
+						<Parameter name="domainComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" />
+						<Parameter name="valueComponentId"
+							value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff" />
 					</Parameters>
 				</Provider>
 				<Title>Abfluss</Title>
@@ -37,7 +41,7 @@
 					</PointStyle>
 				</Styles>
 			</Layer>
-					<Layer visible="true" legend="false" id="runoffGridLayer">
+			<Layer visible="true" legend="false" id="runoffGridLayer">
 				<Provider
 					epid="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
 					<Parameters>
@@ -63,7 +67,7 @@
 					<PointStyle role="gridPointStyle">
 						<Stroke>
 							<Width>2</Width>
-							<LineColor>00aa00</LineColor>
+							<LineColor>000000</LineColor>
 						</Stroke>
 						<FillColor isVisible="false">
 							<Color>000000</Color>
@@ -74,44 +78,58 @@
 		</Layers>
 		<Mappers>
 			<Axis id="Station_Axis">
-				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+				<Provider
+					epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
 				<Label>Station [km]</Label>
 				<Direction>NEGATIVE</Direction>
 				<Position>BOTTOM</Position>
-                <PreferredAdjustment before="3" range="94" after="3" />
+				<PreferredAdjustment before="3" range="94"
+					after="3" />
 				<RendererRef ref="NumberAxisRenderer" />
 			</Axis>
 			<Axis id="m3sAxis">
-				<Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+				<Provider
+					epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
 				<Label>Abfluss [m³/s]</Label>
 				<Direction>POSITIVE</Direction>
 				<Position>RIGHT</Position>
-				<PreferredAdjustment before="5" range="90" after="5" />
+				<PreferredAdjustment before="5" range="90"
+					after="5" />
 				<RendererRef ref="NumberDisAxisRenderer" />
 			</Axis>
 		</Mappers>
 		<Renderers>
 			<AxisRenderer id="NumberAxisRenderer">
-				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+				<Provider
+					epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
 					<Parameters>
 						<Parameter name="inset_tick" value="1" />
-                        <Parameter name="hide_cut" value="false" />
-                        <Parameter name="gap" value="0" />
-					</Parameters>
-				</Provider>
-			</AxisRenderer>
-			<AxisRenderer id="NumberDisAxisRenderer">
-				<Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
-					<Parameters>
-						<Parameter name="inset_tick" value="1" />
-                        <Parameter name="hide_cut" value="false" />
-                        <Parameter name="gap" value="0" />
+						<Parameter name="hide_cut" value="false" />
+						<Parameter name="gap" value="0" />
 					</Parameters>
 				</Provider>
 				<Styles>
 					<LineStyle role="axisLine">
 						<Title></Title>
-						<LineColor>00aa00</LineColor>
+						<LineColor>000000</LineColor>
+						<Width>1</Width>
+					</LineStyle>
+				</Styles>
+			</AxisRenderer>
+			<AxisRenderer id="NumberDisAxisRenderer">
+				<Provider
+					epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
+					<Parameters>
+						<Parameter name="inset_tick" value="1" />
+						<Parameter name="hide_cut" value="false" />
+						<Parameter name="gap" value="0" />
+					</Parameters>
+				</Provider>
+				<Styles>
+					<LineStyle role="axisLine">
+						<Title></Title>
+						<LineColor>000000</LineColor>
+						<Width>1</Width>
 					</LineStyle>
 					<TextStyle role="axisLabel">
 						<Title></Title>
