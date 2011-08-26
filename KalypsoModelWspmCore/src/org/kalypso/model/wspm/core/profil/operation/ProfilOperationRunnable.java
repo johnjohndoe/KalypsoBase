@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.operation;
+package org.kalypso.model.wspm.core.profil.operation;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.operations.IOperationHistory;
@@ -53,7 +53,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.swt.widgets.GetShellFromDisplay;
 import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
-import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.core.i18n.Messages;
 
 /**
  * @author Gernot

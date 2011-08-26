@@ -57,9 +57,9 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.changes.ProfilPropertyEdit;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.ui.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
@@ -137,7 +137,7 @@ public class GelaendePanel extends AbstractProfilView
 
   private void createComment( final Group cg, final FormToolkit toolkit )
   {
-    final HyperlinkStyledText hyperlinkStyledText = new HyperlinkStyledText( getProfil().getComment() );
+    final HyperlinkStyledText hyperlinkStyledText = new HyperlinkStyledText( getProfile().getComment() );
     m_comment = hyperlinkStyledText.createControl( cg, SWT.MULTI | SWT.BORDER | SWT.H_SCROLL );
     m_comment.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     toolkit.adapt( m_comment, true, true );
@@ -151,13 +151,13 @@ public class GelaendePanel extends AbstractProfilView
       public void focusLost( final FocusEvent e )
       {
         final String comment = m_comment.getText();
-        if( comment != null && !comment.equals( getProfil().getComment() ) )
+        if( comment != null && !comment.equals( getProfile().getComment() ) )
         {
           /*
            * we need both methods to stay synchronized with featureView
            */
-          getProfil().setComment( m_comment.getText() );
-          final ProfilOperation operation = new ProfilOperation( "", getProfil(), new ProfilPropertyEdit( getProfil(), IWspmConstants.PROFIL_PROPERTY_COMMENT, m_comment.getText() ), true ); //$NON-NLS-1$
+          getProfile().setComment( m_comment.getText() );
+          final ProfilOperation operation = new ProfilOperation( "", getProfile(), new ProfilPropertyEdit( getProfile(), IWspmConstants.PROFIL_PROPERTY_COMMENT, m_comment.getText() ), true ); //$NON-NLS-1$
           new ProfilOperationJob( operation ).schedule();
         }
       }
@@ -240,7 +240,7 @@ public class GelaendePanel extends AbstractProfilView
           @Override
           public void run( )
           {
-            m_comment.setText( getProfil().getComment() );
+            m_comment.setText( getProfile().getComment() );
           }
         } );
       }
