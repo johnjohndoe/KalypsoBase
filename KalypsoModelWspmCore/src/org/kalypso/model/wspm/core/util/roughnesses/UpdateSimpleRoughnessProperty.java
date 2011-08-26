@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
+import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
@@ -90,7 +91,7 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
     final IComponent property = getPropety( m_property );
     final IComponent clazz = getPropety( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
 
-    final IWspmClassification clazzes = RoughnessClassHelper.getClassification( m_profile );
+    final IWspmClassification clazzes = WspmClassifications.getClassification( m_profile );
     if( Objects.isNull( clazzes ) )
       throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing profile feature for profile %.3f km.", m_profile.getStation() ) ) );
 

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.util.roughnesses;
+package org.kalypso.model.wspm.core.util.vegetation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +50,10 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
-import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
+import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -62,26 +63,24 @@ import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
+import com.vividsolutions.jts.geom.Coordinate;
+
 /**
- * Guess roughness class from existing ks / kst value
+ * Guess vegatation classes from existing ax,ay,dp values
  * 
  * @author Dirk Kuch
  */
-public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
+public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
 {
-
   private final IProfil m_profile;
-
-  private final String m_property;
 
   private final boolean m_overwriteValues;
 
   private final Double m_maxDelta;
 
-  public GuessRoughessClassesRunnable( final IProfil profile, final String property, final boolean overwriteValues, final Double delta )
+  public GuessVegetationClassesRunnable( final IProfil profile, final boolean overwriteValues, final Double delta )
   {
     m_profile = profile;
-    m_property = property;
     m_overwriteValues = overwriteValues;
     m_maxDelta = delta;
   }
@@ -93,8 +92,10 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final IComponent property = getPropety( m_property );
-    final IComponent propertyClazz = getPropety( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+    final IComponent propertyAx = getPropety( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
+    final IComponent propertyAy = getPropety( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
+    final IComponent propertyDp = getPropety( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
+    final IComponent propertyClazz = getPropety( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
 
     final IWspmClassification clazzes = WspmClassifications.getClassification( m_profile );
     if( Objects.isNull( clazzes ) )
@@ -107,21 +108,24 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
     final IRecord[] points = m_profile.getPoints();
     for( final IRecord point : points )
     {
-      final Double value = (Double) point.getValue( property );
-      if( Objects.isNull( value ) )
+      final Double ax = getProperty( point, propertyAx );
+      final Double ay = getProperty( point, propertyAy );
+      final Double dp = getProperty( point, propertyDp );
+
+      if( Objects.isNull( ax, ay, dp ) )
       {
-        final Double width = (Double) point.getValue( m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
+        final Double width = getProperty( point, m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
         final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Missing ks value - point: %.3f", width ) );
         statis.add( status );
 
         continue;
       }
 
-      final IRoughnessClass clazz = findMatchingClass( clazzes, value );
+      final IVegetationClass clazz = findMatchingClass( clazzes, ax, ax, dp );
       if( Objects.isNull( clazz ) )
       {
         final Double width = (Double) point.getValue( m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE ) );
-        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Didn't found matching roughness class for %s value %.3f on point: %.3f", m_property, value, width ) );
+        final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmCorePlugin.getID(), String.format( "Didn't found matching vegation class on point: %.3f", width ) );
         statis.add( status );
 
         continue;
@@ -134,6 +138,15 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
     new ProfilOperationJob( operation ).schedule();
 
     return StatusUtilities.createStatus( statis, String.format( "Updated roughness classes from roughness values on profile %.3f", m_profile.getStation() ) );
+  }
+
+  private Double getProperty( final IRecord point, final IComponent property )
+  {
+    final Object value = point.getValue( property );
+    if( value instanceof Number )
+      return ((Number) value).doubleValue();
+
+    return null;
   }
 
   private boolean isWritable( final IRecord point, final IComponent propertyClazz )
@@ -156,31 +169,48 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
     return ax;
   }
 
-  private IRoughnessClass findMatchingClass( final IWspmClassification clazzes, final Double value )
+  private IVegetationClass findMatchingClass( final IWspmClassification clazzes, final Double ax, final Double ay, final Double dp )
   {
-    IRoughnessClass ptr = null;
-    double ptrDiff = Double.MAX_VALUE;
+    IVegetationClass ptr = null;
+    double ptrDistance = Double.MAX_VALUE;
 
-    final IRoughnessClass[] roughnesses = clazzes.getRoughnessClasses();
-    for( final IRoughnessClass roughness : roughnesses )
+    final Coordinate base = new Coordinate( ax, ay, dp );
+
+    final IVegetationClass[] vegetations = clazzes.getVegetationClasses();
+    for( final IVegetationClass vegetation : vegetations )
     {
-      final Double v = roughness.getValue( m_property );
-
-      /* roughness is in range? */
-      final double delta = Math.abs( v - value );
-      if( delta == 0.0 )
-        return roughness;
-
-      if( delta > m_maxDelta )
+      final Coordinate c = toCoordinate( vegetation );
+      if( Objects.isNull( c ) )
         continue;
 
-      if( delta < ptrDiff )
+      /* roughness is in range? */
+      final double distance = JTSUtilities.distanceZ( base, c );
+      if( distance == 0.0 )
+        return vegetation;
+
+      /* in range */
+      if( distance > m_maxDelta )
+        continue;
+
+      if( distance < ptrDistance )
       {
-        ptrDiff = delta;
-        ptr = roughness;
+        ptrDistance = distance;
+        ptr = vegetation;
       }
     }
 
     return ptr;
+  }
+
+  private Coordinate toCoordinate( final IVegetationClass vegetation )
+  {
+    final Double ax = vegetation.getAx();
+    final Double ay = vegetation.getAy();
+    final Double dp = vegetation.getDp();
+    if( Objects.isNull( ax, ay, dp ) )
+      return null;
+
+    return new Coordinate( ax, ax, dp );
+
   }
 }

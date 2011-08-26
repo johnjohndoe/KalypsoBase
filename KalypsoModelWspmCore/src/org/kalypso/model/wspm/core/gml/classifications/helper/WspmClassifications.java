@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.util.roughnesses;
+package org.kalypso.model.wspm.core.gml.classifications.helper;
 
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
@@ -49,9 +49,9 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Dirk Kuch
  */
-public final class RoughnessClassHelper
+public final class WspmClassifications
 {
-  private RoughnessClassHelper( )
+  private WspmClassifications( )
   {
   }
 
