@@ -40,10 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table.handler;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 
@@ -92,7 +93,7 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
   {
     Assert.isTrue( tupleResult == m_profile.getResult() );
 
-    final Set<ComponentHandlerSortContainer> handlers = new TreeSet<ComponentHandlerSortContainer>( new ComponentHandlerContainerSorter() );
+    final List<ComponentHandlerSortContainer> handlers = new ArrayList<ComponentHandlerSortContainer>();
     handlers.add( new ComponentHandlerSortContainer( "unknown", -1, new ComponentUiProblemHandler( m_profile ) ) );
 
     final IComponent[] pointMarkerTypes = m_profile.getPointMarkerTypes();
@@ -108,6 +109,8 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
       final IComponentUiHandler handler = createHandler( index, component, spacing );
       handlers.add( new ComponentHandlerSortContainer( component.getId(), index, handler ) );
     }
+
+    Collections.sort( handlers, new ComponentHandlerContainerSorter() );
 
     final Map<Integer, IComponentUiHandler> map = new LinkedHashMap<Integer, IComponentUiHandler>();
 
@@ -139,7 +142,7 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
 
     if( component.getId().equals( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) )
       return new RoughnessClassUiHandler( index, true, true, true, label, DEFAULT_SPACING, spacing, m_profile ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    if( component.getId().equals( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS ) )
+    else if( component.getId().equals( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS ) )
       return new VegetationClassUiHandler( index, true, true, true, label, DEFAULT_SPACING, spacing, m_profile ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     else if( XmlTypes.XS_DATETIME.equals( valueTypeName ) )
       return new ComponentUiDateHandler( index, true, true, true, label, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
