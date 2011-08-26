@@ -74,7 +74,7 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
   {
     final IFeatureBindingCollection<IRoughnessClass> collection = getRoughnessClassCollection();
 
-    return collection.toArray( new RoughnessClass[] {} );
+    return collection.toArray( new IRoughnessClass[] {} );
   }
 
   @Override
@@ -91,7 +91,7 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
   {
     final IFeatureBindingCollection<IVegetationClass> collection = getVegetationClassCollection();
 
-    return collection.toArray( new VegetationClass[] {} );
+    return collection.toArray( new IVegetationClass[] {} );
   }
 
   @Override
