@@ -60,48 +60,48 @@ public class VegetationClass extends Feature_Impl implements IVegetationClass
   @Override
   public BigDecimal getAx( )
   {
-    return getProperty( QN_PROPERTY_AX, BigDecimal.class );
+    return getProperty( PROPERTY_AX, BigDecimal.class );
   }
 
   @Override
   public BigDecimal getAy( )
   {
-    return getProperty( QN_PROPERTY_AY, BigDecimal.class );
+    return getProperty( PROPERTY_AY, BigDecimal.class );
   }
 
   @Override
   public BigDecimal getDp( )
   {
-    return getProperty( QN_PROPERTY_DP, BigDecimal.class );
+    return getProperty( PROPERTY_DP, BigDecimal.class );
   }
 
   @Override
   public void setAx( final BigDecimal value )
   {
-    setProperty( QN_PROPERTY_AX, value );
+    setProperty( PROPERTY_AX, value );
   }
 
   @Override
   public void setAy( final BigDecimal value )
   {
-    setProperty( QN_PROPERTY_AY, value );
+    setProperty( PROPERTY_AY, value );
   }
 
   @Override
   public void setDp( final BigDecimal value )
   {
-    setProperty( QN_PROPERTY_DP, value );
+    setProperty( PROPERTY_DP, value );
   }
 
   @Override
   public void setColor( final RGB color )
   {
-    setProperty( QN_PROPERTY_COLOR, color );
+    setProperty( PROPERTY_COLOR, color );
   }
 
   @Override
   public RGB getColor( )
   {
-    return getProperty( QN_PROPERTY_COLOR, RGB.class );
+    return getProperty( PROPERTY_COLOR, RGB.class );
   }
 }

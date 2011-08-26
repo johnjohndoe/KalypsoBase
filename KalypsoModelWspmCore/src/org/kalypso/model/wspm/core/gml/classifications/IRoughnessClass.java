@@ -53,11 +53,13 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IRoughnessClass extends Feature
 {
-  QName QN_KS_VALUE = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "ksValue" );
+  QName FEATURE_ROUGHNESS_CLASS = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "RoughnessClass" ); //$NON-NLS-1$
 
-  QName QN_KST_VALUE = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "kstValue" );
+  QName PROPERTY_KS_VALUE = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "ksValue" ); //$NON-NLS-1$
 
-  QName QN_COLOR = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "color" );
+  QName PROPERTY_KST_VALUE = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "kstValue" ); //$NON-NLS-1$
+
+  QName PROPERTY_COLOR = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "color" ); //$NON-NLS-1$
 
   BigDecimal getKstValue( );
 

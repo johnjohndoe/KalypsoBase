@@ -67,25 +67,25 @@ public class RoughnessClass extends Feature_Impl implements IRoughnessClass
   @Override
   public BigDecimal getKstValue( )
   {
-    return getProperty( QN_KST_VALUE, BigDecimal.class );
+    return getProperty( PROPERTY_KST_VALUE, BigDecimal.class );
   }
 
   @Override
   public void setKstValue( final BigDecimal value )
   {
-    setProperty( QN_KST_VALUE, value );
+    setProperty( PROPERTY_KST_VALUE, value );
   }
 
   @Override
   public BigDecimal getKsValue( )
   {
-    return getProperty( QN_KS_VALUE, BigDecimal.class );
+    return getProperty( PROPERTY_KS_VALUE, BigDecimal.class );
   }
 
   @Override
   public void setKsValue( final BigDecimal value )
   {
-    setProperty( QN_KS_VALUE, value );
+    setProperty( PROPERTY_KS_VALUE, value );
   }
 
   @Override
@@ -102,12 +102,12 @@ public class RoughnessClass extends Feature_Impl implements IRoughnessClass
   @Override
   public void setColor( final RGB color )
   {
-    setProperty( QN_COLOR, color );
+    setProperty( PROPERTY_COLOR, color );
   }
 
   @Override
   public RGB getColor( )
   {
-    return getProperty( QN_COLOR, RGB.class );
+    return getProperty( PROPERTY_COLOR, RGB.class );
   }
 }

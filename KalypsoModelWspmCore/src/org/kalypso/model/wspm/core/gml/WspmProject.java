@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
@@ -78,11 +78,7 @@ public abstract class WspmProject extends Feature_Impl implements IWspmProject
   @Override
   public IWspmClassification getClassificationMember( )
   {
-    final Object property = getProperty( QN_CLASSIFICATION_MEMBER );
-    if( property instanceof IWspmClassification )
-      return (IWspmClassification) property;
-
-    return null;
+    return getProperty( QN_CLASSIFICATION_MEMBER, IWspmClassification.class );
   }
 
   /**
@@ -136,5 +132,15 @@ public abstract class WspmProject extends Feature_Impl implements IWspmProject
     wspmWaterBody.setDirectionUpstreams( isDirectionUpstreams );
 
     return wspmWaterBody;
+  }
+
+  @Override
+  public IWspmClassification createClassificationMember( )
+  {
+    final IRelationType relation = (IRelationType) getFeatureType().getProperty( QN_CLASSIFICATION_MEMBER );
+    final IFeatureType type = relation.getTargetFeatureType();
+    final IWspmClassification classification = (IWspmClassification) getWorkspace().createFeature( this, relation, type );
+    setProperty( QN_CLASSIFICATION_MEMBER, classification );
+    return classification;
   }
 }

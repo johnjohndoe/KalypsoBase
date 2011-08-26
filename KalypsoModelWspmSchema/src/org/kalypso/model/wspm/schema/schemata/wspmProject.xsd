@@ -20,7 +20,7 @@
         <sequence>
           <element ref="wspm:waterBodyMember" minOccurs="0" maxOccurs="unbounded" />
           <element ref="wspm:calculationMember" minOccurs="0" maxOccurs="unbounded" />
-          <element ref="wspmClasses:classificationMember" minOccurs="0" maxOccurs="1" />
+          <element ref="wspmClasses:classificationMember" minOccurs="1" maxOccurs="1" />
         </sequence>
       </extension>
     </complexContent>
