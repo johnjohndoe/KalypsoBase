@@ -89,12 +89,23 @@ public class ColumnWidthInfo
   private int doCalculateMinimumWidth( )
   {
     if( m_minimumWidth == NOT_SET )
-      return NOT_SET;
+      return getWidth( m_column );
 
     if( m_minimumWidth >= 0 )
       return m_minimumWidth;
 
     return calculatePack( m_column );
+  }
+
+  private static int getWidth( final Item column )
+  {
+    if( column instanceof TableColumn )
+      return ((TableColumn) column).getWidth();
+
+    if( column instanceof TreeColumn )
+      return ((TreeColumn) column).getWidth();
+
+    throw new IllegalArgumentException();
   }
 
   private int calculatePack( final Item column )
