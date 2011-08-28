@@ -55,13 +55,20 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * A dialog showing a status in full details.
+ * A dialog showing a status in full details.<br>
+ * TODO:
+ * <ul>
+ * <li>Compactify exceptioncontrol, add details button for exceptions</li>
+ * <li>'send mail' button</li>
+ * <li>'copy to clipboard' button</li>
+ * <li>toolbar for tree: collapse all, expand all</li>
+ * </ul>
  * 
  * @author Gernot Belger
  */
 public class StatusDialog extends AbstractStatusDialog
 {
-  private boolean m_showAsTree;
+  private boolean m_showAsTree = true;
 
   public StatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle )
   {
@@ -134,7 +141,6 @@ public class StatusDialog extends AbstractStatusDialog
     stackLayoutData.heightHint = 100;
     stackText.setLayoutData( stackLayoutData );
     stackText.setText( sw.toString() );
-    stackText.setEnabled( true );
   }
 
   private void createStatusControl( final Composite parent, final IStatus status )
@@ -143,8 +149,20 @@ public class StatusDialog extends AbstractStatusDialog
     if( children == null || children.length == 0 )
       return;
 
+    if( children.length == 1 )
+    {
+      final StatusComposite statusPanel = new StatusComposite( parent, StatusComposite.DETAILS );
+      statusPanel.setStatus( children[0] );
+      statusPanel.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+      return;
+    }
+
     final StatusViewer viewer = createViewer( parent );
     final GridData viewerData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    // Protect against vanishing...
+    viewerData.minimumHeight = 100;
+    // ...and too many children
+    viewerData.heightHint = 100;
     viewer.getControl().setLayoutData( viewerData );
 
     final boolean showTimeColumn = StatusViewer.hasTime( children );
