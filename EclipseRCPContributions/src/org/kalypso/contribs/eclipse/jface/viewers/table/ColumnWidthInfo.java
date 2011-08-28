@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers.table;
 
@@ -49,15 +49,13 @@ import org.eclipse.swt.widgets.TreeColumn;
  * 
  * @author Gernot Belger
  */
-class ColumnWidthInfo
+public class ColumnWidthInfo
 {
   public static final int NOT_SET = -1;
 
   public static final int PACK = -2;
 
   private final Item m_column;
-
-  private int m_fixedWidth = NOT_SET;
 
   private int m_minimumWidth = NOT_SET;
 
@@ -66,19 +64,11 @@ class ColumnWidthInfo
   /* The width that will be finally set to the column */
   private int m_columnWidth;
 
+  private boolean m_autoResize;
+
   public ColumnWidthInfo( final Item column )
   {
     m_column = column;
-  }
-
-  public void setFixedWidth( final int fixedWidth )
-  {
-    m_fixedWidth = fixedWidth;
-  }
-
-  public int getFixedWidth( )
-  {
-    return m_fixedWidth;
   }
 
   public void setMinimumWidth( final int minimumWidth )
@@ -98,9 +88,6 @@ class ColumnWidthInfo
 
   private int doCalculateMinimumWidth( )
   {
-    if( m_fixedWidth != NOT_SET )
-      return m_fixedWidth;
-
     if( m_minimumWidth == NOT_SET )
       return NOT_SET;
 
@@ -152,13 +139,18 @@ class ColumnWidthInfo
     return m_calculatedMinimumWidth;
   }
 
-  public boolean hasFixedWidth( )
-  {
-    return getFixedWidth() != NOT_SET;
-  }
-
   public int getColumnWidth( )
   {
     return m_columnWidth;
+  }
+
+  public boolean isAutoResize( )
+  {
+    return m_autoResize;
+  }
+
+  public void setAutoResize( final boolean autoResize )
+  {
+    m_autoResize = autoResize;
   }
 }

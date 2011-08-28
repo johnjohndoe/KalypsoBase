@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers;
 
@@ -118,9 +118,10 @@ public final class ColumnViewerUtil
 
     nullItem.setResizable( false );
     nullItem.setMoveable( false );
+    nullItem.setWidth( 0 );
 
     final Item column = nullItem.getColumn();
-    ColumnsResizeControlListener.setFixedWidth( column, 0 );
+    ColumnsResizeControlListener.setWidthInfo( column, 0, false );
 
     /* Empty label provider, else jface whines */
     nullColumn.setLabelProvider( new ColumnLabelProvider() );
