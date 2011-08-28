@@ -42,12 +42,10 @@ package org.kalypso.core.status;
 
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
-import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
-import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 
 /**
  * @author Gernot Belger
@@ -62,9 +60,8 @@ public class StatusTreeViewer extends StatusViewer
 
     final Tree tree = m_treeViewer.getTree();
     tree.setHeaderVisible( true );
-    tree.setLinesVisible( true );
+    tree.setLinesVisible( false );
 
-    addNavigationColumn( m_treeViewer );
     addSeverityColumn( m_treeViewer );
     addMessageColumn( m_treeViewer );
 
@@ -73,15 +70,25 @@ public class StatusTreeViewer extends StatusViewer
     hookListener();
   }
 
-  private void addNavigationColumn( final ColumnViewer columnViewer )
+  @Override
+  protected void hookListener( )
   {
-    final ViewerColumn naviColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.LEFT );
-    final ViewerColumnItem naviCol = new ViewerColumnItem( naviColumn );
-    naviCol.setWidth( 50 );
-    naviCol.setResizable( true );
-    naviCol.setMoveable( false );
-    naviColumn.setLabelProvider( new StatusLabelProvider()
+    super.hookListener();
+
+    final Tree tree = m_treeViewer.getTree();
+    tree.addTreeListener( new TreeAdapter()
     {
+      @Override
+      public void treeCollapsed( final org.eclipse.swt.events.TreeEvent e )
+      {
+        updateColumnSizes();
+      }
+
+      @Override
+      public void treeExpanded( final org.eclipse.swt.events.TreeEvent e )
+      {
+        updateColumnSizes();
+      }
     } );
   }
 

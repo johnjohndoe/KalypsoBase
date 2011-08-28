@@ -64,6 +64,8 @@ import org.kalypso.core.i18n.Messages;
  */
 public abstract class StatusViewer
 {
+  ColumnsResizeControlListener m_resizeListener = new ColumnsResizeControlListener();
+
   protected abstract ColumnViewer getViewer( );
 
   public Control getControl( )
@@ -73,7 +75,7 @@ public abstract class StatusViewer
 
   protected void hookListener( )
   {
-    getControl().addControlListener( new ColumnsResizeControlListener() );
+    getControl().addControlListener( m_resizeListener );
 
     getViewer().addDoubleClickListener( new IDoubleClickListener()
     {
@@ -92,10 +94,15 @@ public abstract class StatusViewer
     } );
   }
 
+  protected void updateColumnSizes( )
+  {
+    m_resizeListener.updateColumnSizes();
+  }
+
   /**
    * Adds a column that shows the severity of a status.
    */
-  public static void addSeverityColumn( final ColumnViewer columnViewer )
+  public static ViewerColumnItem addSeverityColumn( final ColumnViewer columnViewer )
   {
     final ViewerColumn severityColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.CENTER );
     final ViewerColumnItem severityCol = new ViewerColumnItem( severityColumn );
@@ -105,6 +112,8 @@ public abstract class StatusViewer
     severityColumn.setLabelProvider( new StatusLabelSeverityProvider() );
 
     ColumnsResizeControlListener.setWidthInfo( severityCol.getColumn(), ColumnWidthInfo.PACK, false );
+
+    return severityCol;
   }
 
   /**
@@ -141,6 +150,11 @@ public abstract class StatusViewer
   public void addTimeColumn( )
   {
     addTimeColumn( getViewer() );
+  }
+
+  public final IStatus[] getInput( )
+  {
+    return (IStatus[]) getViewer().getInput();
   }
 
   public void setInput( final IStatus[] children )

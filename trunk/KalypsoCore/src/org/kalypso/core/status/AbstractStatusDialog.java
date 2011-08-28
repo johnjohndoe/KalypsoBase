@@ -42,6 +42,7 @@ package org.kalypso.core.status;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
@@ -68,14 +69,25 @@ public class AbstractStatusDialog extends MessageDialog
 
   public AbstractStatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle, final String[] dialogButtonLabels, final int defaultIndex )
   {
-    this( parentShell, status, dialogTitle, StringUtils.abbreviate( status.getMessage(), 512 ), toMessageType( status.getSeverity() ), dialogButtonLabels, defaultIndex );
+    this( parentShell, status, dialogTitle, StringUtils.abbreviate( tweakStatus( status ).getMessage(), 512 ), toMessageType( status.getSeverity() ), dialogButtonLabels, defaultIndex );
   }
 
   public AbstractStatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle, final String dialogMessage, final int severity, final String[] dialogButtonLabels, final int defaultIndex )
   {
     super( parentShell, dialogTitle, null, dialogMessage, severity, dialogButtonLabels, defaultIndex );
 
-    m_status = status;
+    m_status = tweakStatus( status );
+  }
+
+  /**
+   * Special handling for some special stati...
+   */
+  private static IStatus tweakStatus( final IStatus status )
+  {
+    if( status == Status.CANCEL_STATUS )
+      return new Status( IStatus.CANCEL, KalypsoCorePlugin.getID(), "Cancelled" );
+
+    return status;
   }
 
   @Override
@@ -109,7 +121,8 @@ public class AbstractStatusDialog extends MessageDialog
         return MessageDialog.ERROR;
 
       case IStatus.CANCEL:
-        return MessageDialog.WARNING;
+        // hm, better cancel icon?
+        return MessageDialog.NONE;
 
       default:
         return MessageDialog.NONE;
