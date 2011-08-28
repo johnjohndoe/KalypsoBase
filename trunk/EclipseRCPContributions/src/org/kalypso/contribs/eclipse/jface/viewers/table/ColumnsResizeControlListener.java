@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.viewers.table;
 
@@ -175,24 +175,19 @@ public class ColumnsResizeControlListener extends ControlAdapter
     throw new IllegalArgumentException();
   }
 
-  public static void setMinimumWidth( final Item column, final int minimumWidth )
+  public static void setWidthInfo( final Item column, final int minimumWidth, final boolean doAutoResize )
   {
     final ColumnWidthInfo info = new ColumnWidthInfo( column );
     info.setMinimumWidth( minimumWidth );
+    info.setAutoResize( doAutoResize );
     column.setData( DATA_WIDTH_INFO, info );
   }
 
+  /**
+   * Shortcut for {@link #setWidthInfo(Item, ColumnWidthInfo.PACK, true)}
+   */
   public static void setMinimumPackWidth( final Item column )
   {
-    final ColumnWidthInfo info = new ColumnWidthInfo( column );
-    info.setMinimumWidth( ColumnWidthInfo.PACK );
-    column.setData( DATA_WIDTH_INFO, info );
-  }
-
-  public static void setFixedWidth( final Item column, final int fixedWidth )
-  {
-    final ColumnWidthInfo info = new ColumnWidthInfo( column );
-    info.setFixedWidth( fixedWidth );
-    column.setData( DATA_WIDTH_INFO, info );
+    setWidthInfo( column, ColumnWidthInfo.PACK, true );
   }
 }
