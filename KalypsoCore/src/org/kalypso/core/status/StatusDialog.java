@@ -63,8 +63,6 @@ public class StatusDialog extends AbstractStatusDialog
 {
   private boolean m_showAsTree;
 
-  private boolean m_showTime = true;
-
   public StatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle )
   {
     super( parentShell, status, dialogTitle );
@@ -73,11 +71,6 @@ public class StatusDialog extends AbstractStatusDialog
   public StatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle, final String[] dialogButtonLabels, final int defaultIndex )
   {
     super( parentShell, status, dialogTitle, dialogButtonLabels, defaultIndex );
-  }
-
-  public void setShowTimeTime( final boolean showTime )
-  {
-    m_showTime = showTime;
   }
 
   /**
@@ -97,6 +90,9 @@ public class StatusDialog extends AbstractStatusDialog
     GridLayoutFactory.fillDefaults().applyTo( composite );
 
     final IStatus status = getStatus();
+
+    // TODO: the exception control is not nice for normal users -> put into popup
+    // TODO: Layout problem: table might suppress exception panel completely :-(
     createExceptionControl( composite, status );
 
     createStatusControl( composite, status );
@@ -151,7 +147,8 @@ public class StatusDialog extends AbstractStatusDialog
     final GridData viewerData = new GridData( SWT.FILL, SWT.FILL, true, true );
     viewer.getControl().setLayoutData( viewerData );
 
-    if( m_showTime )
+    final boolean showTimeColumn = StatusViewer.hasTime( children );
+    if( showTimeColumn )
       viewer.addTimeColumn();
 
     viewer.setInput( children );
