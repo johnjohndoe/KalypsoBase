@@ -49,11 +49,12 @@ import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusWithTime;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerUtil;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
+import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnWidthInfo;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
 import org.kalypso.core.i18n.Messages;
-
 
 /**
  * This viewer shows an array of {@link org.eclipse.core.runtime.IStatus} (or an
@@ -99,12 +100,11 @@ public abstract class StatusViewer
     final ViewerColumn severityColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.CENTER );
     final ViewerColumnItem severityCol = new ViewerColumnItem( severityColumn );
     severityCol.setText( Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.3" ) );
-    severityCol.setWidth( 30 );
-    severityCol.setResizable( true );
+    severityCol.setResizable( false );
     severityCol.setMoveable( false );
     severityColumn.setLabelProvider( new StatusLabelSeverityProvider() );
 
-    ColumnsResizeControlListener.setMinimumPackWidth( severityCol.getColumn() );
+    ColumnsResizeControlListener.setWidthInfo( severityCol.getColumn(), ColumnWidthInfo.PACK, false );
   }
 
   /**
@@ -115,8 +115,7 @@ public abstract class StatusViewer
     final ViewerColumn messageColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.LEFT );
     final ViewerColumnItem messageCol = new ViewerColumnItem( messageColumn );
     messageCol.setText( Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.4" ) );
-    messageCol.setWidth( 500 );
-    messageCol.setResizable( true );
+    messageCol.setResizable( false );
     messageCol.setMoveable( false );
     messageColumn.setLabelProvider( new StatusLabelMessageProvider() );
 
@@ -132,7 +131,6 @@ public abstract class StatusViewer
     final ViewerColumn timeColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.LEFT );
     final ViewerColumnItem timeCol = new ViewerColumnItem( timeColumn );
     timeCol.setText( Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.5" ) );
-    timeCol.setWidth( 150 );
     timeCol.setResizable( false );
     timeCol.setMoveable( false );
     timeColumn.setLabelProvider( new StatusLabelTimeProvider() );
@@ -165,19 +163,19 @@ public abstract class StatusViewer
 
 // private ViewerColumn findTimeColumn( )
 // {
-// // getViewer().get
+//   getViewer();
 // // TODO Auto-generated method stub
 // return null;
 // }
-//
-// private boolean hasTime( final IStatus[] children )
-// {
-// for( final IStatus status : children )
-// {
-// if( status instanceof IStatusWithTime )
-// return true;
-// }
-//
-// return false;
-// }
+
+  public static boolean hasTime( final IStatus[] children )
+  {
+    for( final IStatus status : children )
+    {
+      if( status instanceof IStatusWithTime )
+        return true;
+    }
+
+    return false;
+  }
 }
