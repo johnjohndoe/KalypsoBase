@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,64 +36,48 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.classifications;
 
-import java.math.BigDecimal;
-
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Dirk Kuch
  */
-public class RoughnessClass extends AbstractClassificationClass implements IRoughnessClass
+public class AbstractClassificationClass extends Feature_Impl implements IClassificationClass
 {
-  public RoughnessClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+
+  public AbstractClassificationClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
   @Override
-  public String toString( )
+  public final void setColor( final RGB color )
   {
-    return String.format( "Rauheit: %s\nks: %.3f, kst: %.3f", getName(), getKsValue(), getKstValue() );
+    setProperty( PROPERTY_COLOR, color );
   }
 
   @Override
-  public BigDecimal getKstValue( )
+  public final RGB getColor( )
   {
-    return getProperty( PROPERTY_KST_VALUE, BigDecimal.class );
+    return getProperty( PROPERTY_COLOR, RGB.class );
   }
 
   @Override
-  public void setKstValue( final BigDecimal value )
+  public final void setComment( final String comment )
   {
-    setProperty( PROPERTY_KST_VALUE, value );
+    setProperty( PROPERTY_COMMENT, comment );
   }
 
   @Override
-  public BigDecimal getKsValue( )
+  public final String getComment( )
   {
-    return getProperty( PROPERTY_KS_VALUE, BigDecimal.class );
+    return getProperty( PROPERTY_COLOR, String.class );
   }
 
-  @Override
-  public void setKsValue( final BigDecimal value )
-  {
-    setProperty( PROPERTY_KS_VALUE, value );
-  }
-
-  @Override
-  public BigDecimal getValue( final String component )
-  {
-    if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS.equals( component ) )
-      return getKsValue();
-    else if( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST.equals( component ) )
-      return getKstValue();
-
-    throw new UnsupportedOperationException();
-  }
 }

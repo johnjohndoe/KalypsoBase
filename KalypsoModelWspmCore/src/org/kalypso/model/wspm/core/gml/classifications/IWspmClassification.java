@@ -55,6 +55,8 @@ public interface IWspmClassification extends Feature
 
   QName QN_MEMBER_VEGETATION_CLASSES = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "vegetationClasses" ); //$NON-NLS-1$
 
+  QName QN_MEMBER_CODE_CLASSES = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "codeClasses" ); //$NON-NLS-1$
+
   IFeatureBindingCollection<IRoughnessClass> getRoughnessClassCollection( );
 
   IRoughnessClass[] getRoughnessClasses( );
@@ -66,4 +68,10 @@ public interface IWspmClassification extends Feature
   IRoughnessClass findRoughnessClass( String name );
 
   IVegetationClass findVegetationClass( String name );
+
+  IFeatureBindingCollection<ICodeClass> getCodeClassCollection( );
+
+  ICodeClass[] getCodeClasses( );
+
+  ICodeClass findCodeClass( String name );
 }
