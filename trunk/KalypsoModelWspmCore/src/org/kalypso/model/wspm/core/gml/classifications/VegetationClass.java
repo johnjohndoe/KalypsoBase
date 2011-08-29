@@ -45,6 +45,7 @@ import java.math.BigDecimal;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
@@ -103,5 +104,21 @@ public class VegetationClass extends Feature_Impl implements IVegetationClass
   public RGB getColor( )
   {
     return getProperty( PROPERTY_COLOR, RGB.class );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.classifications.IVegetationClass#getValue(java.lang.String)
+   */
+  @Override
+  public BigDecimal getValue( final String identifier )
+  {
+    if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX.equals( identifier ) )
+      return getAx();
+    else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY.equals( identifier ) )
+      return getAy();
+    else if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP.equals( identifier ) )
+      return getDp();
+
+    throw new UnsupportedOperationException();
   }
 }
