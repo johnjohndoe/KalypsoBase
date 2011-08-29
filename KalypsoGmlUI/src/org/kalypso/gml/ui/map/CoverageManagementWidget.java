@@ -64,13 +64,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -95,19 +93,17 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.jfree.util.ObjectUtils;
 import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
+import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
-import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gml.ui.commands.exportgrid.RectifiedGridCoverageExportWizard;
 import org.kalypso.gml.ui.commands.importgrid.AddRectifiedGridCoveragesWizard;
 import org.kalypso.gml.ui.i18n.Messages;
@@ -275,7 +271,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     }
   };
 
-  private final Set<CoverageManagementAction> m_actions = new HashSet<CoverageManagementAction>();
+  private final Set<IUpdateable> m_actions = new HashSet<IUpdateable>();
 
   private final IAction[] m_customActions;
 
@@ -451,9 +447,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     /* Coverage table + info pane */
     final Composite coveragePanel = toolkit.createComposite( panel, SWT.NONE );
-    final GridData coveragePanelData = new GridData( SWT.FILL, SWT.FILL, true, false );
-    coveragePanelData.heightHint = 200;
-    coveragePanel.setLayoutData( coveragePanelData );
+    // REMEARK: no height hint needed: we never need more height than the toolbar on the left.
+    coveragePanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     coveragePanel.setLayout( Layouts.createGridLayout( 2 ) );
 
     m_coverageViewer = new ListViewer( coveragePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
@@ -697,17 +692,14 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   protected void updateButtons( )
   {
     /* Let actions update themselves */
-    final IFeatureBindingCollection<ICoverage> coverages = m_coverages == null ? null : m_coverages.getCoverages();
-    final ICoverage[] allCoverages = coverages == null ? null : coverages.toArray( new ICoverage[coverages.size()] );
-    final ICoverage[] selectedCoverages = m_selectedCoverage == null ? new ICoverage[0] : new ICoverage[] { m_selectedCoverage };
-    for( final CoverageManagementAction action : m_actions )
+    for( final IUpdateable action : m_actions )
     {
       SafeRunnable.run( new SafeRunnable()
       {
         @Override
         public void run( ) throws Exception
         {
-          action.update( allCoverages, selectedCoverages );
+          action.update();
         }
       } );
     }
@@ -777,30 +769,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    */
   private void initalizeColorMapActions( final IToolBarManager manager )
   {
-    // We are reusing images of KalypsoGmlUi here
-    final ImageDescriptor generateID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.STYLE_EDIT );
-
-    createButton( manager, new CoverageManagementAction( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.4" ), "", generateID ) //$NON-NLS-1$ //$NON-NLS-2$
-    {
-      /**
-       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-       */
-      @Override
-      public void runWithEvent( final Event event )
-      {
-        handleGenerateColorMap( event );
-      }
-
-      /**
-       * @see org.kalypso.gml.ui.map.CoverageManagementAction#update(org.kalypsodeegree_impl.gml.binding.commons.ICoverage[],
-       *      org.kalypsodeegree_impl.gml.binding.commons.ICoverage[])
-       */
-      @Override
-      public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
-      {
-        setEnabled( allCoverages != null && allCoverages.length > 0 );
-      }
-    } );
+    addAction( manager, new CoverageColorRangeAction( this ) );
 
     manager.update( true );
   }
@@ -808,7 +777,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   /**
    * handles the creation of a RasterColorMap via a {@link GridStyleDialog}
    */
-  protected void handleGenerateColorMap( final Event event )
+  // TODO: move into action
+  void handleGenerateColorMap( final Event event )
   {
     final RasterSymbolizer symb = findRasterSymbolizer();
     if( symb == null )
@@ -903,187 +873,44 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private void initalizeCoverageActions( final IToolBarManager manager, final IAction[] customActions )
   {
-    final ImageDescriptor jumptoID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_JUMP );
-    final ImageDescriptor exportID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_EXPORT );
-
     if( m_showAddRemoveButtons )
     {
-      final ImageDescriptor addID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD );
-      final ImageDescriptor removeID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_REMOVE );
-
-      final Action addAction = new CoverageManagementAction( "Add Coverage", Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.11" ), addID ) //$NON-NLS-1$ //$NON-NLS-2$
-      {
-        /**
-         * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-         */
-        @Override
-        public void runWithEvent( final Event event )
-        {
-          handleCoverageAdd( event );
-        }
-
-        /**
-         * @see org.kalypso.gml.ui.CoverageManagementAction#update(org.kalypsodeegree_impl.gml.binding.commons.ICoverage[],
-         *      org.kalypsodeegree_impl.gml.binding.commons.ICoverage[])
-         */
-        @Override
-        public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
-        {
-          setEnabled( allCoverages != null );
-        }
-      };
-
-      final Action removeAction = new CoverageManagementAction( "Remove Coverage", Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.12" ), removeID ) //$NON-NLS-1$ //$NON-NLS-2$
-      {
-        /**
-         * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-         */
-        @Override
-        public void runWithEvent( final Event event )
-        {
-          handleCoverageRemove( event );
-        }
-
-        /**
-         * @see org.kalypso.gml.ui.CoverageManagementAction#update(org.kalypsodeegree_impl.gml.binding.commons.ICoverage[],
-         *      org.kalypsodeegree_impl.gml.binding.commons.ICoverage[])
-         */
-        @Override
-        public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
-        {
-          setEnabled( selectedCoverages.length > 0 );
-        }
-      };
-
-      createButton( manager, addAction );
-      createButton( manager, removeAction );
+      addAction( manager, new AddCoverageAction( this ) );
+      addAction( manager, new RemoveCoverageAction( this ) );
     }
 
-    final Action exportAction = new CoverageManagementAction( "Export Coverage", Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.13" ), exportID ) //$NON-NLS-1$ //$NON-NLS-2$
-    {
-      /**
-       * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-       */
-      @Override
-      public void runWithEvent( final Event event )
-      {
-        handleCoverageExport( event );
-      }
-
-      /**
-       * @see org.kalypso.gml.ui.CoverageManagementAction#update(org.kalypsodeegree_impl.gml.binding.commons.ICoverage[],
-       *      org.kalypsodeegree_impl.gml.binding.commons.ICoverage[])
-       */
-      @Override
-      public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
-      {
-        setEnabled( selectedCoverages.length > 0 );
-      }
-    };
-
-    createButton( manager, exportAction );
+    addAction( manager, new ExportCoverageAction( this ) );
 
     if( m_showAddRemoveButtons )
     {
       // Changeing the order of grids only makes sense, if the user is allowed to add/remove them.
-      final ImageDescriptor upID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_UP );
-      final ImageDescriptor downID = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN );
-
-      final Action moveUpAction = new CoverageManagementAction( "Move Coverage Up", Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.14" ), upID ) //$NON-NLS-1$ //$NON-NLS-2$
-      {
-        /**
-         * @see org.eclipse.jface.action.Action#run()
-         */
-        @Override
-        public void run( )
-        {
-          handleCoverageMove( -1 );
-        }
-
-        /**
-         * @see org.kalypso.gml.ui.CoverageManagementAction#update(org.kalypsodeegree_impl.gml.binding.commons.ICoverage[],
-         *      org.kalypsodeegree_impl.gml.binding.commons.ICoverage[])
-         */
-        @Override
-        public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
-        {
-          setEnabled( allCoverages != null && selectedCoverages.length > 0 && allCoverages.length > 0 && !ObjectUtils.equal( selectedCoverages[0], allCoverages[0] ) );
-        }
-      };
-
-      final Action moveDownAction = new CoverageManagementAction( "Move Coverage Down", Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.15" ), downID ) //$NON-NLS-1$ //$NON-NLS-2$
-      {
-        /**
-         * @see org.eclipse.jface.action.Action#run()
-         */
-        @Override
-        public void run( )
-        {
-          handleCoverageMove( 1 );
-        }
-
-        /**
-         * @see org.kalypso.gml.ui.CoverageManagementAction#update(org.kalypsodeegree_impl.gml.binding.commons.ICoverage[],
-         *      org.kalypsodeegree_impl.gml.binding.commons.ICoverage[])
-         */
-        @Override
-        public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
-        {
-          setEnabled( allCoverages != null && selectedCoverages.length > 0 && allCoverages.length > 0
-              && !ObjectUtils.equal( selectedCoverages[selectedCoverages.length - 1], allCoverages[allCoverages.length - 1] ) );
-        }
-      };
-
-      createButton( manager, moveUpAction );
-      createButton( manager, moveDownAction );
+      addAction( manager, new MoveCoverageUpAction( this ) );
+      addAction( manager, new MoveCoverageDownAction( this ) );
     }
 
-    final IAction jumpToAction = new CoverageManagementAction( "Jump To Coverage", Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.16" ), jumptoID ) //$NON-NLS-1$ //$NON-NLS-2$
-    {
-      /**
-       * @see org.eclipse.jface.action.Action#run()
-       */
-      @Override
-      public void run( )
-      {
-        handleCoverageJumpTo();
-      }
-
-      /**
-       * @see org.kalypso.gml.ui.CoverageManagementAction#update(org.kalypsodeegree_impl.gml.binding.commons.ICoverage[],
-       *      org.kalypsodeegree_impl.gml.binding.commons.ICoverage[])
-       */
-      @Override
-      public void update( final ICoverage[] allCoverages, final ICoverage[] selectedCoverages )
-      {
-        setEnabled( selectedCoverages.length > 0 );
-      }
-    };
-
-    createButton( manager, jumpToAction );
+    addAction( manager, new JumpToCoverageAction( this ) );
 
     /* Should some custom action be added. */
     if( customActions != null )
     {
       /* Add custom actions. */
       for( final IAction customAction : customActions )
-        createButton( manager, customAction );
+        addAction( manager, customAction );
     }
 
     manager.update( true );
   }
 
-  private void createButton( final IToolBarManager manager, final IAction action )
+  private void addAction( final IToolBarManager manager, final IAction action )
   {
-    if( action instanceof CoverageManagementAction )
-      m_actions.add( (CoverageManagementAction) action );
+    if( action instanceof IUpdateable )
+      m_actions.add( (IUpdateable) action );
 
-    final ActionContributionItem item = new ActionContributionItem( action );
-// item.setId( "" + System.currentTimeMillis() );
-    manager.add( item );
+    manager.add( action );
   }
 
-  protected void handleCoverageJumpTo( )
+  // TODO: move into action
+  void handleCoverageJumpTo( )
   {
     if( m_selectedCoverage == null )
       return;
@@ -1103,10 +930,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     {
       e.printStackTrace();
     }
-
   }
 
-  protected void handleCoverageMove( final int step )
+  // TODO: move into actions
+  void handleCoverageMove( final int step )
   {
     if( m_selectedCoverage == null )
       return;
@@ -1125,13 +952,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_theme.postCommand( command, m_refreshCoverageViewerRunnable );
   }
 
-  protected void handleCoverageAdd( final Event event )
+  // FIXME: move into action
+  void handleCoverageAdd( final Shell shell )
   {
     final IKalypsoFeatureTheme theme = m_theme;
     final ICoverageCollection coverages = m_coverages;
     final Runnable refreshRunnable = m_refreshCoverageViewerRunnable;
-
-    final Shell shell = event.display.getActiveShell();
 
     final IContainer gridFolder = determineGridFolder();
 
@@ -1233,7 +1059,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     }
   }
 
-  protected void handleCoverageExport( final Event event )
+  // TODO: move to action
+  void handleCoverageExport( final Event event )
   {
     if( m_selectedCoverage == null )
       return;
@@ -1246,7 +1073,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     wizardDialog.open();
   }
 
-  protected void handleCoverageRemove( final Event event )
+  // TODO: move into action
+  void handleCoverageRemove( final Shell shell )
   {
     if( m_selectedCoverage == null )
       return;
@@ -1302,7 +1130,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     };
 
     final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    ErrorDialog.openError( event.display.getActiveShell(), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.12" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.22" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.12" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.22" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private void initalizeCoverageViewer( final StructuredViewer viewer )
@@ -1444,12 +1272,29 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_themeCombo.setSelection( new StructuredSelection() );
   }
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#getPartName()
-   */
   @Override
   public String getPartName( )
   {
     return m_partName;
+  }
+
+  ICoverage[] getCoverages( )
+  {
+    if( m_coverages == null )
+      return new ICoverage[0];
+
+    final IFeatureBindingCollection<ICoverage> coverages = m_coverages.getCoverages();
+    if( coverages == null )
+      return new ICoverage[0];
+
+    return coverages.toArray( new ICoverage[coverages.size()] );
+  }
+
+  ICoverage[] getSelectedCoverages( )
+  {
+    if( m_selectedCoverage == null )
+      return new ICoverage[0];
+
+    return new ICoverage[] { m_selectedCoverage };
   }
 }
