@@ -40,9 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.classifications.helper;
 
+import java.math.BigDecimal;
+
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.commons.java.lang.Strings;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.WspmProject;
+import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
+import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -70,5 +79,55 @@ public final class WspmClassifications
     final WspmProject project = (WspmProject) root;
 
     return project.getClassificationMember();
+  }
+
+  public static Double findRoughnessValue( final IProfil profile, final IRecord point, final IComponent component, final Double plainValue )
+  {
+    final IComponent componentRoughnessClass = profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+    if( Objects.isNull( componentRoughnessClass ) )
+      return plainValue;
+
+    final IWspmClassification classification = WspmClassifications.getClassification( profile );
+    if( Objects.isNull( classification ) )
+      return plainValue;
+
+    final String clazzName = (String) point.getValue( componentRoughnessClass );
+    if( Strings.isEmpty( clazzName ) )
+      return plainValue;
+
+    final IRoughnessClass clazz = classification.findRoughnessClass( clazzName );
+    if( Objects.isNull( clazz ) )
+      return plainValue;
+
+    final BigDecimal value = clazz.getValue( component.getId() );
+    if( Objects.isNotNull( value ) )
+      return value.doubleValue();
+
+    return plainValue;
+  }
+
+  public static Double findVegetationValue( final IProfil profile, final IRecord point, final IComponent component, final Double plainValue )
+  {
+    final IComponent componentVegetationClass = profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
+    if( Objects.isNull( componentVegetationClass ) )
+      return plainValue;
+
+    final IWspmClassification classification = WspmClassifications.getClassification( profile );
+    if( Objects.isNull( classification ) )
+      return plainValue;
+
+    final String clazzName = (String) point.getValue( componentVegetationClass );
+    if( Strings.isEmpty( clazzName ) )
+      return plainValue;
+
+    final IVegetationClass clazz = classification.findVegetationClass( clazzName );
+    if( Objects.isNull( clazz ) )
+      return plainValue;
+
+    final BigDecimal value = clazz.getValue( component.getId() );
+    if( Objects.isNotNull( value ) )
+      return value.doubleValue();
+
+    return plainValue;
   }
 }
