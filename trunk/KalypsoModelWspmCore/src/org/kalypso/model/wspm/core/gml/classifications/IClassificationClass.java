@@ -44,11 +44,12 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmNamespaces;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
-public interface IClassificationClass
+public interface IClassificationClass extends Feature
 {
   QName PROPERTY_COLOR = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "color" ); //$NON-NLS-1$
 

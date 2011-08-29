@@ -43,19 +43,16 @@ package org.kalypso.model.wspm.ui.view.table.handler;
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
+import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 import org.kalypso.ogc.gml.om.table.handlers.AbstractComponentUiHandler;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Handles roughness class values.
@@ -78,38 +75,31 @@ public class RoughnessClassUiHandler extends AbstractComponentUiHandler
   @Override
   public CellEditor createCellEditor( final Table table )
   {
-    final LabelProvider provider = new LabelProvider()
-    {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
-      @Override
-      public String getText( final Object element )
-      {
-        if( element instanceof Feature )
-          return ((Feature) element).getName();
+    return new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), getRoughnessClasses(), table, SWT.READ_ONLY | SWT.DROP_DOWN );
+  }
 
-        return super.getText( element );
-      }
-    };
-    return new ComboBoxViewerCellEditor( new ArrayContentProvider(), provider, getRoughnessClasses(), table, SWT.READ_ONLY | SWT.DROP_DOWN );
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(org.kalypso.observation.result.IRecord)
+   */
+  @Override
+  public String getStringRepresentation( final IRecord record )
+  {
+    final Object value = record.getValue( getComponent() );
+    if( Objects.isNull( value ) )
+      return super.getStringRepresentation( record );
+
+    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    final IRoughnessClass clazz = classification.findRoughnessClass( value.toString() );
+    if( Objects.isNotNull( clazz ) )
+      return clazz.getDescription();
+
+    return super.getStringRepresentation( record );
   }
 
   private IRoughnessClass[] getRoughnessClasses( )
   {
-    final Object source = m_profile.getSource();
-    if( !(source instanceof Feature) )
-      return null;
-
-    final Feature profileFeature = (Feature) source;
-    final GMLWorkspace workspace = profileFeature.getWorkspace();
-    final Feature root = workspace.getRootFeature();
-    if( !(root instanceof WspmProject) )
-      return new IRoughnessClass[] {};
-
-    final WspmProject project = (WspmProject) root;
-    final IWspmClassification classes = project.getClassificationMember();
-    final IRoughnessClass[] roughnesses = classes.getRoughnessClasses();
+    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    final IRoughnessClass[] roughnesses = classification.getRoughnessClasses();
 
     return roughnesses;
   }

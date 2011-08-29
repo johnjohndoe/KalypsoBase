@@ -46,7 +46,7 @@ import org.kalypso.observation.result.IRecord;
 
 /**
  * Default implementation of {@link IComponentUiHandler}, implements most of the default behaviour.
- *
+ * 
  * @author Dirk Kuch
  * @author Gernot Belger
  */
@@ -103,9 +103,6 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
     return m_component;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(org.kalypso.observation.result.IRecord)
-   */
   @Override
   public String getStringRepresentation( final IRecord record )
   {
