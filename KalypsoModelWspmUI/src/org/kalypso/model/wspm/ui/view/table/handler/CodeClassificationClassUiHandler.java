@@ -47,7 +47,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
-import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
+import org.kalypso.model.wspm.core.gml.classifications.ICodeClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -56,15 +56,15 @@ import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 import org.kalypso.ogc.gml.om.table.handlers.AbstractComponentUiHandler;
 
 /**
- * Handles roughness class values.
+ * Handles profile point property "code" classifications
  * 
  * @author Dirk Kuch
  */
-public class RoughnessClassUiHandler extends AbstractComponentUiHandler
+public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
 {
   private final IProfil m_profile;
 
-  public RoughnessClassUiHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnWidth, final int columnWidthPercent, final IProfil profile )
+  public CodeClassificationClassUiHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnWidth, final int columnWidthPercent, final IProfil profile )
   {
     super( component, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     m_profile = profile;
@@ -76,7 +76,7 @@ public class RoughnessClassUiHandler extends AbstractComponentUiHandler
   @Override
   public CellEditor createCellEditor( final Table table )
   {
-    return new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), getRoughnessClasses(), table, SWT.READ_ONLY | SWT.DROP_DOWN );
+    return new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), getCodeClasses(), table, SWT.READ_ONLY | SWT.DROP_DOWN );
   }
 
   /**
@@ -90,19 +90,17 @@ public class RoughnessClassUiHandler extends AbstractComponentUiHandler
       return super.getStringRepresentation( record );
 
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
-    final IRoughnessClass clazz = classification.findRoughnessClass( value.toString() );
+    final ICodeClass clazz = classification.findCodeClass( value.toString() );
     if( Objects.isNotNull( clazz ) )
       return clazz.getDescription();
 
     return super.getStringRepresentation( record );
   }
 
-  private IRoughnessClass[] getRoughnessClasses( )
+  private ICodeClass[] getCodeClasses( )
   {
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
-    final IRoughnessClass[] roughnesses = classification.getRoughnessClasses();
-
-    return roughnesses;
+    return classification.getCodeClasses();
   }
 
   /**
@@ -116,7 +114,7 @@ public class RoughnessClassUiHandler extends AbstractComponentUiHandler
       return null; //$NON-NLS-1$
 
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
-    return classification.findRoughnessClass( (String) value );
+    return classification.findCodeClass( (String) value );
   }
 
   /**

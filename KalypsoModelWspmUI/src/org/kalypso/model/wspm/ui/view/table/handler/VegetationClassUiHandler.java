@@ -46,6 +46,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
@@ -65,7 +66,7 @@ public class VegetationClassUiHandler extends AbstractComponentUiHandler
 
   public VegetationClassUiHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnWidth, final int columnWidthPercent, final IProfil profile )
   {
-    super( component, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%s", "%s", "" );
+    super( component, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     m_profile = profile;
   }
 
@@ -114,14 +115,8 @@ public class VegetationClassUiHandler extends AbstractComponentUiHandler
     if( Objects.isNull( value ) )
       return null; //$NON-NLS-1$
 
-    final IVegetationClass[] vegetations = getVegetationClasses();
-    for( final IVegetationClass vegetation : vegetations )
-    {
-      if( vegetation.getName().equals( value ) )
-        return vegetation;
-    }
-
-    return null;
+    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    return classification.findVegetationClass( (String) value );
   }
 
   /**
@@ -131,10 +126,10 @@ public class VegetationClassUiHandler extends AbstractComponentUiHandler
   @Override
   public void doSetValue( final IRecord record, final Object value )
   {
-    if( value instanceof IVegetationClass )
+    if( value instanceof IClassificationClass )
     {
-      final IVegetationClass vegetation = (IVegetationClass) value;
-      setValue( record, vegetation.getName() );
+      final IClassificationClass clazz = (IClassificationClass) value;
+      setValue( record, clazz.getName() );
     }
   }
 
