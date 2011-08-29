@@ -78,4 +78,9 @@ public interface IVegetationClass extends Feature
   void setColor( RGB color );
 
   RGB getColor( );
+
+  /**
+   * @return value for tuple result component id
+   */
+  BigDecimal getValue( String identifier );
 }
