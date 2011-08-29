@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.classifications;
 
@@ -77,7 +77,6 @@ public class AbstractClassificationClass extends Feature_Impl implements IClassi
   @Override
   public final String getComment( )
   {
-    return getProperty( PROPERTY_COLOR, String.class );
+    return getProperty( PROPERTY_COMMENT, String.class );
   }
-
 }
