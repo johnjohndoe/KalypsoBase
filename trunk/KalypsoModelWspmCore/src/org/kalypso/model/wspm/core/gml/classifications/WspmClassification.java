@@ -55,6 +55,8 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
 
   private IFeatureBindingCollection<IVegetationClass> m_vegetationClasses = null;
 
+  private IFeatureBindingCollection<ICodeClass> m_codeClasses = null;
+
   public WspmClassification( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -115,6 +117,45 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
     {
       if( vegetation.getName().equals( name ) )
         return vegetation;
+    }
+
+    return null;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.classifications.IWspmClassification#getCodeClassCollection()
+   */
+  @Override
+  public IFeatureBindingCollection<ICodeClass> getCodeClassCollection( )
+  {
+    if( m_codeClasses == null )
+      m_codeClasses = new FeatureBindingCollection<ICodeClass>( this, ICodeClass.class, QN_MEMBER_CODE_CLASSES );
+
+    return m_codeClasses;
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.classifications.IWspmClassification#getCodeClasses()
+   */
+  @Override
+  public ICodeClass[] getCodeClasses( )
+  {
+    final IFeatureBindingCollection<ICodeClass> collection = getCodeClassCollection();
+
+    return collection.toArray( new ICodeClass[] {} );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.core.gml.classifications.IWspmClassification#findCodeClass(java.lang.String)
+   */
+  @Override
+  public ICodeClass findCodeClass( final String name )
+  {
+    final ICodeClass[] classes = getCodeClasses();
+    for( final ICodeClass clazz : classes )
+    {
+      if( clazz.getName().equals( name ) )
+        return clazz;
     }
 
     return null;

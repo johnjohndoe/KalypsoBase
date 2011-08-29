@@ -44,14 +44,13 @@ import java.math.BigDecimal;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmNamespaces;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
-public interface IVegetationClass extends Feature
+public interface IVegetationClass extends Feature, IClassificationClass
 {
   QName FEATURE_VEGETATION_CLASS = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "VegetationClass" ); //$NON-NLS-1$
 
@@ -60,8 +59,6 @@ public interface IVegetationClass extends Feature
   QName PROPERTY_AY = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "ay" ); //$NON-NLS-1$
 
   QName PROPERTY_DP = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "dx" ); //$NON-NLS-1$
-
-  QName PROPERTY_COLOR = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "color" ); //$NON-NLS-1$
 
   BigDecimal getAx( );
 
@@ -74,10 +71,6 @@ public interface IVegetationClass extends Feature
   BigDecimal getDp( );
 
   void setDp( BigDecimal value );
-
-  void setColor( RGB color );
-
-  RGB getColor( );
 
   /**
    * @return value for tuple result component id

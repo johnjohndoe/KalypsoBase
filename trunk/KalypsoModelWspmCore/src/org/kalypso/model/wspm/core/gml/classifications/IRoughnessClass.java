@@ -44,22 +44,19 @@ import java.math.BigDecimal;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmNamespaces;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
-public interface IRoughnessClass extends Feature
+public interface IRoughnessClass extends Feature, IClassificationClass
 {
   QName FEATURE_ROUGHNESS_CLASS = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "RoughnessClass" ); //$NON-NLS-1$
 
   QName PROPERTY_KS_VALUE = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "ksValue" ); //$NON-NLS-1$
 
   QName PROPERTY_KST_VALUE = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "kstValue" ); //$NON-NLS-1$
-
-  QName PROPERTY_COLOR = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "color" ); //$NON-NLS-1$
 
   BigDecimal getKstValue( );
 
@@ -71,7 +68,4 @@ public interface IRoughnessClass extends Feature
 
   BigDecimal getValue( String component );
 
-  void setColor( RGB color );
-
-  RGB getColor( );
 }

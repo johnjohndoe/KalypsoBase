@@ -39,6 +39,10 @@
             class="org.kalypso.model.wspm.core.gml.classifications.VegetationClass"
             qname="{org.kalypso.model.wspm.classifications}VegetationClass">
       </feature>
+      <feature
+            class="org.kalypso.model.wspm.core.gml.classifications.CodeClass"
+            qname="{org.kalypso.model.wspm.classifications}CodeClass">
+      </feature>
    </extension>
    
 </plugin>

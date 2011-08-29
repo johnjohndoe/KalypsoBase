@@ -42,16 +42,14 @@ package org.kalypso.model.wspm.core.gml.classifications;
 
 import java.math.BigDecimal;
 
-import org.eclipse.swt.graphics.RGB;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * @author Dirk Kuch
  */
-public class RoughnessClass extends Feature_Impl implements IRoughnessClass
+public class RoughnessClass extends AbstractClassificationClass implements IRoughnessClass
 {
   public RoughnessClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -97,17 +95,5 @@ public class RoughnessClass extends Feature_Impl implements IRoughnessClass
       return getKstValue();
 
     throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void setColor( final RGB color )
-  {
-    setProperty( PROPERTY_COLOR, color );
-  }
-
-  @Override
-  public RGB getColor( )
-  {
-    return getProperty( PROPERTY_COLOR, RGB.class );
   }
 }
