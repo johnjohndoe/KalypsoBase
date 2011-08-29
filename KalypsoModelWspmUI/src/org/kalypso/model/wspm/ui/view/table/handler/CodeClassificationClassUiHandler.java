@@ -103,9 +103,6 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
     return classification.getCodeClasses();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#formatValue(java.lang.Object)
-   */
   @Override
   public Object doGetValue( final IRecord record )
   {
@@ -117,10 +114,6 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
     return classification.findCodeClass( (String) value );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
-   */
   @Override
   public void doSetValue( final IRecord record, final Object value )
   {
@@ -131,19 +124,12 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#parseValue(java.lang.String)
-   */
   @Override
   public Object parseValue( final String text )
   {
     return text;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
-   */
   @Override
   public void setValue( final IRecord record, final Object value )
   {
