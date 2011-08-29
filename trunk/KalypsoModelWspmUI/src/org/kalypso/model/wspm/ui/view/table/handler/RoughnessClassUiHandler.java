@@ -46,6 +46,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
@@ -65,7 +66,7 @@ public class RoughnessClassUiHandler extends AbstractComponentUiHandler
 
   public RoughnessClassUiHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnWidth, final int columnWidthPercent, final IProfil profile )
   {
-    super( component, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%s", "%s", "" );
+    super( component, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     m_profile = profile;
   }
 
@@ -114,14 +115,8 @@ public class RoughnessClassUiHandler extends AbstractComponentUiHandler
     if( Objects.isNull( value ) )
       return null; //$NON-NLS-1$
 
-    final IRoughnessClass[] roughnesses = getRoughnessClasses();
-    for( final IRoughnessClass roughness : roughnesses )
-    {
-      if( roughness.getName().equals( value ) )
-        return roughness;
-    }
-
-    return null;
+    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    return classification.findRoughnessClass( (String) value );
   }
 
   /**
@@ -131,10 +126,10 @@ public class RoughnessClassUiHandler extends AbstractComponentUiHandler
   @Override
   public void doSetValue( final IRecord record, final Object value )
   {
-    if( value instanceof IRoughnessClass )
+    if( value instanceof IClassificationClass )
     {
-      final IRoughnessClass roughness = (IRoughnessClass) value;
-      setValue( record, roughness.getName() );
+      final IClassificationClass clazz = (IClassificationClass) value;
+      setValue( record, clazz.getName() );
     }
   }
 

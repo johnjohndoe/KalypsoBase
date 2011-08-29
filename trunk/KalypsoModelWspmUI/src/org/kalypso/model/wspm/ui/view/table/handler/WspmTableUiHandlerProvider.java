@@ -141,9 +141,11 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
     }
 
     if( component.getId().equals( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) )
-      return new RoughnessClassUiHandler( index, true, true, true, label, DEFAULT_SPACING, spacing, m_profile ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new RoughnessClassUiHandler( index, true, true, true, label, DEFAULT_SPACING, spacing, m_profile );
     else if( component.getId().equals( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS ) )
-      return new VegetationClassUiHandler( index, true, true, true, label, DEFAULT_SPACING, spacing, m_profile ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new VegetationClassUiHandler( index, true, true, true, label, DEFAULT_SPACING, spacing, m_profile );
+    else if( component.getId().equals( IWspmPointProperties.POINT_PROPERTY_CODE ) )
+      return new CodeClassificationClassUiHandler( index, true, true, true, label, DEFAULT_SPACING, spacing, m_profile );
     else if( XmlTypes.XS_DATETIME.equals( valueTypeName ) )
       return new ComponentUiDateHandler( index, true, true, true, label, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     else if( XmlTypes.XS_STRING.equals( valueTypeName ) )
