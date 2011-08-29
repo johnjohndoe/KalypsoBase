@@ -43,19 +43,16 @@ package org.kalypso.model.wspm.ui.view.table.handler;
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
+import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 import org.kalypso.ogc.gml.om.table.handlers.AbstractComponentUiHandler;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Handles vegetation class values.
@@ -78,38 +75,31 @@ public class VegetationClassUiHandler extends AbstractComponentUiHandler
   @Override
   public CellEditor createCellEditor( final Table table )
   {
-    final LabelProvider provider = new LabelProvider()
-    {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
-      @Override
-      public String getText( final Object element )
-      {
-        if( element instanceof Feature )
-          return ((Feature) element).getName();
-
-        return super.getText( element );
-      }
-    };
-    return new ComboBoxViewerCellEditor( new ArrayContentProvider(), provider, getVegetationClass(), table, SWT.READ_ONLY | SWT.DROP_DOWN );
+    return new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), getVegetationClasses(), table, SWT.READ_ONLY | SWT.DROP_DOWN );
   }
 
-  private IVegetationClass[] getVegetationClass( )
+  /**
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(org.kalypso.observation.result.IRecord)
+   */
+  @Override
+  public String getStringRepresentation( final IRecord record )
   {
-    final Object source = m_profile.getSource();
-    if( !(source instanceof Feature) )
-      return null;
+    final Object value = record.getValue( getComponent() );
+    if( Objects.isNull( value ) )
+      return super.getStringRepresentation( record );
 
-    final Feature profileFeature = (Feature) source;
-    final GMLWorkspace workspace = profileFeature.getWorkspace();
-    final Feature root = workspace.getRootFeature();
-    if( !(root instanceof WspmProject) )
-      return new IVegetationClass[] {};
+    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    final IVegetationClass clazz = classification.findVegetationClass( value.toString() );
+    if( Objects.isNotNull( clazz ) )
+      return clazz.getDescription();
 
-    final WspmProject project = (WspmProject) root;
-    final IWspmClassification classes = project.getClassificationMember();
-    final IVegetationClass[] vegetations = classes.getVegetationClasses();
+    return super.getStringRepresentation( record );
+  }
+
+  private IVegetationClass[] getVegetationClasses( )
+  {
+    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    final IVegetationClass[] vegetations = classification.getVegetationClasses();
 
     return vegetations;
   }
@@ -124,7 +114,7 @@ public class VegetationClassUiHandler extends AbstractComponentUiHandler
     if( Objects.isNull( value ) )
       return null; //$NON-NLS-1$
 
-    final IVegetationClass[] vegetations = getVegetationClass();
+    final IVegetationClass[] vegetations = getVegetationClasses();
     for( final IVegetationClass vegetation : vegetations )
     {
       if( vegetation.getName().equals( value ) )

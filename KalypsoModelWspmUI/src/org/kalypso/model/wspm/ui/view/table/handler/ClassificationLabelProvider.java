@@ -38,28 +38,29 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.gml.classifications;
+package org.kalypso.model.wspm.ui.view.table.handler;
 
-import javax.xml.namespace.QName;
-
-import org.eclipse.swt.graphics.RGB;
-import org.kalypso.model.wspm.core.IWspmNamespaces;
-import org.kalypsodeegree.model.feature.Feature;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 
 /**
  * @author Dirk Kuch
  */
-public interface IClassificationClass extends Feature
+public class ClassificationLabelProvider extends LabelProvider
 {
-  QName PROPERTY_COLOR = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "color" ); //$NON-NLS-1$
 
-  QName PROPERTY_COMMENT = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "comment" ); //$NON-NLS-1$
+  @Override
+  public String getText( final Object element )
+  {
 
-  void setColor( RGB color );
+    if( element instanceof IClassificationClass )
+    {
+      final IClassificationClass clazz = (IClassificationClass) element;
 
-  RGB getColor( );
+      return clazz.getDescription();
+    }
 
-  void setComment( String comment );
+    return super.getText( element );
+  }
 
-  String getComment( );
 }

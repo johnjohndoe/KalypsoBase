@@ -33,7 +33,7 @@
     <complexContent>
       <extension base="gml:AbstractFeatureType">
         <sequence>
-          <element type="string" name="comment" />
+          <element type="string" name="comment" minOccurs="0" />
           <element type="common:color" name="color" />
         </sequence>
       </extension>
