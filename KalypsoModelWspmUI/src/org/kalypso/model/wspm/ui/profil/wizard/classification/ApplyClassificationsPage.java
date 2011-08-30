@@ -42,8 +42,6 @@ package org.kalypso.model.wspm.ui.profil.wizard.classification;
 
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -51,28 +49,24 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
-import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 
 /**
  * @author Dirk Kuch
  */
-public class GuessClassificationPage extends WizardPage
+public class ApplyClassificationsPage extends WizardPage
 {
   protected String m_type = IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS;
 
   protected boolean m_overwrite = false;
 
-  protected Double m_delta = Double.MAX_VALUE;
-
-  protected GuessClassificationPage( )
+  protected ApplyClassificationsPage( )
   {
-    super( "GuessClassificationPage" ); //$NON-NLS-1$
+    super( "ApplyClassificationsPage" ); //$NON-NLS-1$
 
-    setTitle( "Guess Classification Classes" );
-    setDescription( "Which kind of classification classes you like to guess?" );
+    setTitle( "Apply Classification Class values" );
+    setDescription( "Select the kind of Classification you like to apply." );
   }
 
   /**
@@ -92,36 +86,11 @@ public class GuessClassificationPage extends WizardPage
 
   private void createPropertiesControl( final Composite body )
   {
+    new Label( body, SWT.NULL ).setText( "" ); // spacer
 
-    final Group group = new Group( body, SWT.NONE );
-    group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    group.setLayout( new GridLayout() );
-    group.setText( "Properties" );
-
-    new Label( group, SWT.NULL ).setText( "Fuziness (Max. Delta of class value)" );
-
-    // TODO validated text box
-    final Text text = new Text( group, SWT.BORDER );
-    text.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    text.setText( "9999" );
-
-    text.addModifyListener( new ModifyListener()
-    {
-      @Override
-      public void modifyText( final ModifyEvent e )
-      {
-        final double delta = NumberUtils.parseQuietDouble( text.getText() );
-        if( Double.isNaN( delta ) )
-          m_delta = Double.MAX_VALUE;
-        else
-          m_delta = delta;
-
-      }
-    } );
-
-    final Button buttonOverwrite = new Button( group, SWT.CHECK );
+    final Button buttonOverwrite = new Button( body, SWT.CHECK );
     buttonOverwrite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonOverwrite.setText( "Overwrite existing classes" );
+    buttonOverwrite.setText( "Overwrite existing values" );
 
     buttonOverwrite.addSelectionListener( new SelectionAdapter()
     {
@@ -144,7 +113,7 @@ public class GuessClassificationPage extends WizardPage
 
     final Button buttonVegetation = new Button( group, SWT.RADIO );
     buttonVegetation.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonVegetation.setText( "Guess Vegetation Classes" );
+    buttonVegetation.setText( "Apply Vegetation Classes" );
     buttonVegetation.setSelection( true );
 
     buttonVegetation.addSelectionListener( new SelectionAdapter()
@@ -159,7 +128,7 @@ public class GuessClassificationPage extends WizardPage
 
     final Button buttonRoughness = new Button( group, SWT.RADIO );
     buttonRoughness.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonRoughness.setText( "Guess Roughness Classes" );
+    buttonRoughness.setText( "Appy Roughness Classes" );
 
     buttonRoughness.addSelectionListener( new SelectionAdapter()
     {
@@ -182,8 +151,4 @@ public class GuessClassificationPage extends WizardPage
     return m_overwrite;
   }
 
-  public Double getDelta( )
-  {
-    return m_delta;
-  }
 }
