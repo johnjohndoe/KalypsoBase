@@ -526,6 +526,13 @@
              <description>Guessing of roughness / vegetation classes from profile point properties</description>
        </wizard>
        <wizard
+             class="org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard"
+             icon="icons/obj16/apply_classes.png"
+             name="Apply classification class vlaues">
+             <description>Apply mapped roughness / vegetation classification class values on selected profile point properties</description>
+       </wizard>
+       <wizard
              class="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard"
              id="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard"
              icon="icons/etool16/profile_property_edit.gif"
