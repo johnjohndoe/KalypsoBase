@@ -97,7 +97,7 @@ public class ApplyClassificationsWizard extends ManipulateProfileWizard
           if( !WspmClassifications.hasVegetationClass( profile ) )
             return;
 
-          if( WspmClassifications.hasVegetationProperties( profile ) )
+          if( !WspmClassifications.hasVegetationProperties( profile ) )
             addVegetationProperties( profile, monitor );
 
           try
@@ -116,7 +116,7 @@ public class ApplyClassificationsWizard extends ManipulateProfileWizard
           if( !WspmClassifications.hasRoughnessClass( profile ) )
             return;
 
-          if( WspmClassifications.hasRoughnessProperties( profile ) )
+          if( !WspmClassifications.hasRoughnessProperties( profile ) )
             addRoughnessProperties( profile, monitor );
 
           try
