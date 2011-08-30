@@ -68,8 +68,11 @@ public class BuildLanduseMappingPage extends WizardPage
   @Override
   public void createControl( final Composite parent )
   {
-    // TODO Auto-generated method stub
 
+    // - load shape file
+    // - choose property type
+    // - read properties
+    // - do mapping
   }
 
 }

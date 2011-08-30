@@ -602,7 +602,7 @@ public abstract class AbstractProfil implements IProfil
   {
     final Object oldValue = marker.getValue();
 
-    final IComponent id = marker.getId();
+    final IComponent id = marker.getComponent();
     final Object defaultValue = id.getDefaultValue();
     marker.setValue( defaultValue );
 

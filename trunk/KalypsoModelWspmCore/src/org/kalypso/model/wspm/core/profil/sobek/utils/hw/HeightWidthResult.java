@@ -136,7 +136,7 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
       final TopologyValidationError validationError = isValidOp.getValidationError();
       final String message = validationError.getMessage();
       final Coordinate coordinate = validationError.getCoordinate();
-      final String msg = String.format( "Invalid geometry: '%s' at ", message, coordinate ); //$NON-NLS-1$
+      final String msg = String.format( "Invalid geometry: '%s' at %s", message, coordinate ); //$NON-NLS-1$
       addStatus( IStatus.ERROR, msg, null );
       return;
     }
