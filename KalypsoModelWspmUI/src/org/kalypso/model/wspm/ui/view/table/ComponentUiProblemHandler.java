@@ -289,7 +289,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
     if( markers == null )
       return null;
 
-    return markers.length > 0 ? markers[0].getId() : null;
+    return markers.length > 0 ? markers[0].getComponent() : null;
   }
 
   /**
@@ -304,8 +304,8 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
     final HashSet<String> types = new HashSet<String>();
     for( final IProfilPointMarker marker : markers )
     {
-      final IComponent type = marker.getId();
-      if( !types.contains( type ) )
+      final IComponent type = marker.getComponent();
+      if( !types.contains( type.getId() ) )
       {
         types.add( type.getId() );
       }
