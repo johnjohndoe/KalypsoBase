@@ -130,4 +130,37 @@ public final class WspmClassifications
 
     return plainValue;
   }
+
+  public static boolean hasVegetationProperties( final IProfil profile )
+  {
+    if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX ) ) )
+      return false;
+    else if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY ) ) )
+      return false;
+    else if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP ) ) )
+      return false;
+
+    return true;
+  }
+
+  public static boolean hasVegetationClass( final IProfil profile )
+  {
+    return Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS ) );
+  }
+
+  public static boolean hasRoughnessProperties( final IProfil profile )
+  {
+    if( Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ) ) )
+      return true;
+    else if( Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST ) ) )
+      return true;
+
+    return false;
+  }
+
+  public static boolean hasRoughnessClass( final IProfil profile )
+  {
+    return Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) );
+  }
+
 }
