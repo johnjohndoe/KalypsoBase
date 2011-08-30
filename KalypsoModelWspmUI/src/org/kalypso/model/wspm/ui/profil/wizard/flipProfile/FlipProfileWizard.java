@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.profil.wizard.flipProfile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ManipulateProfileWizard;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
 
@@ -54,13 +53,13 @@ public class FlipProfileWizard extends ManipulateProfileWizard
 {
   public FlipProfileWizard( )
   {
-    setWindowTitle( Messages.getString( "org.kalypso.model.wspm.ui.action.FlipProfileActionDelegate.0" ) );//$NON-NLS-1$
+    setWindowTitle( "Guess classification classes from profile properties" );
   }
 
   @Override
   protected String getProfilePageMessage( )
   {
-    return Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard.2" ); //$NON-NLS-1$
+    return "Guess classification classes of profiles?";
   }
 
   @Override
