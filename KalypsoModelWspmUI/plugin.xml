@@ -431,7 +431,7 @@
                icon="icons/etool16/delete_layer.gif">
          </image>
       </extension>
-     
+
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected">
 			<with variable="selection">
@@ -519,6 +519,13 @@
              <description>%org.kalypso.model.wspm.ui.action.FlipProfileAction.description</description>
        </wizard>
        <wizard
+             class="org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard"
+             id="org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard"
+             icon="icons/obj16/guess_classes.png"
+             name="Guess classification classes">
+             <description>Guessing of roughness / vegetation classes from profile point properties</description>
+       </wizard>
+       <wizard
              class="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard"
              id="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard"
              icon="icons/etool16/profile_property_edit.gif"
@@ -536,7 +543,7 @@
              class="org.kalypso.model.wspm.ui.profil.wizard.createDivider.CreateProfileDeviderWizard"
              id="org.kalypso.model.wspm.ui.profil.wizard.createDivider.CreateProfileDeviderWizard"
              name="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction">
-             <description>%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description</description>  
+             <description>%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description</description>
        </wizard>
        <wizard
              class="org.kalypso.model.wspm.ui.profil.wizard.intersectRoughness.IntersectRoughnessWizard"
@@ -545,7 +552,7 @@
              <description>%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description</description>
        </wizard>
     </extension>
-    
+
     <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
        <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfileWizard">
           <enablement>
