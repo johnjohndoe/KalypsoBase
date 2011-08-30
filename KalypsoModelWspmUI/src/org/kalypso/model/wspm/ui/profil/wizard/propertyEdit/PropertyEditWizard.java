@@ -53,6 +53,7 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
@@ -227,34 +228,35 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
   {
     if( selectedPage == m_propertyChooserPage )
     {
+
       final Collection<IComponent> properties = new LinkedHashSet<IComponent>();
       final Object[] profiles = m_profile == null ? m_profileChooserPage.getChoosen() : new Object[] { m_profile };
       for( final Object object : profiles )
       {
-        final IProfil profile;
-        if( object instanceof IProfil )
-        {
-          profile = (IProfil) object;
-        }
-        else if( object instanceof ProfileFeatureBinding )
-        {
-          profile = ((ProfileFeatureBinding) object).getProfil();
-        }
-        else
-        {
+        final IProfil profile = getProfile( object );
+        if( Objects.isNull( profile ) )
           continue;
-        }
+
+        final PropertyFilter filter = new PropertyFilter( profile );
 
         for( final IComponent property : profile.getPointProperties() )
         {
-          if( !profile.isPointMarker( property.getId() ) )
-          {
+          if( filter.select( property ) )
             properties.add( property );
-          }
         }
       }
 
       m_propertyChooserPage.setInput( properties );
     }
+  }
+
+  private IProfil getProfile( final Object object )
+  {
+    if( object instanceof IProfil )
+      return (IProfil) object;
+    else if( object instanceof ProfileFeatureBinding )
+      return ((ProfileFeatureBinding) object).getProfil();
+
+    return null;
   }
 }
