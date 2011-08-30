@@ -578,6 +578,20 @@
              </reference>
           </enablement>
        </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard">
+          <enablement>
+             <reference
+                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+             </reference>
+          </enablement>
+       </wizardEnablement>
+       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard">
+          <enablement>
+             <reference
+                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
+             </reference>
+          </enablement>
+       </wizardEnablement>
        <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard">
           <enablement>
              <reference
