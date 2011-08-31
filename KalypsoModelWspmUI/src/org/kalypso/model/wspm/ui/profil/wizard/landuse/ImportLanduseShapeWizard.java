@@ -84,6 +84,10 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
 
   private LanduseShapeHandler m_handler;
 
+  private LanduseMappingPage m_roughnessPage;
+
+  private LanduseMappingPage m_vegetationPage;
+
   public ImportLanduseShapeWizard( )
   {
     setWindowTitle( "Import landuse shape" );
@@ -99,16 +103,29 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
 
     m_handler = new LanduseShapeHandler( m_pageShapeImport, m_project );
 
-    final LanduseMappingPage roughnessPage = new LanduseMappingPage( m_handler, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
-    final LanduseMappingPage vegetationPage = new LanduseMappingPage( m_handler, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
+    m_roughnessPage = new LanduseMappingPage( m_handler, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+    m_vegetationPage = new LanduseMappingPage( m_handler, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
 
-    addPage( roughnessPage );
-    addPage( vegetationPage );
+    addPage( m_roughnessPage );
+    addPage( m_vegetationPage );
   }
 
   @Override
   public boolean performFinish( )
   {
+    try
+    {
+      final ImportLanduseShapeRunnable runnable = new ImportLanduseShapeRunnable( m_handler, m_roughnessPage, m_vegetationPage );
+      getContainer().run( false, false, runnable );
+
+      // TODO
+      // return true;
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+    }
+
     return false;
   }
 

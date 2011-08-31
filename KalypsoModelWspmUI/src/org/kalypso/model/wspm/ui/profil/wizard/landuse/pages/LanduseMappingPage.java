@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
 
+import java.util.Properties;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -69,7 +71,7 @@ import org.kalypso.shape.dbf.IDBFField;
 /**
  * @author Dirk Kuch
  */
-public class LanduseMappingPage extends WizardPage implements IRefreshable
+public class LanduseMappingPage extends WizardPage implements IRefreshable, ILanduseMapping
 {
   protected final ILanduseShapeDataProvider m_provider;
 
@@ -197,6 +199,15 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable
     {
       ex.printStackTrace();
     }
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.ILanduseMapping#getProperties()
+   */
+  @Override
+  public Properties getProperties( )
+  {
+    return m_model.getMapping();
   }
 
 }

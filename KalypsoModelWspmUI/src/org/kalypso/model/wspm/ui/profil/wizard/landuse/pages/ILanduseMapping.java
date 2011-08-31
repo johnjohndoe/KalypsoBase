@@ -38,27 +38,14 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.landuse.utils;
+package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
 
-import java.io.IOException;
-
-import org.eclipse.core.resources.IProject;
-import org.kalypso.model.wspm.core.gml.IWspmProject;
-import org.kalypso.shape.ShapeFile;
-import org.kalypso.shape.dbf.DBaseException;
+import java.util.Properties;
 
 /**
  * @author Dirk Kuch
  */
-public interface ILanduseShapeDataProvider
+public interface ILanduseMapping
 {
-  ShapeFile getShapeFile( ) throws IOException, DBaseException;
-
-  IWspmProject getWspmModel( ) throws Exception;
-
-  void dispose( );
-
-  IProject getProject( );
-
-  String getLnkShapeFile( );
+  Properties getProperties( );
 }

@@ -38,27 +38,55 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.landuse.utils;
+package org.kalypso.model.wspm.ui.profil.wizard.landuse;
 
-import java.io.IOException;
-
-import org.eclipse.core.resources.IProject;
-import org.kalypso.model.wspm.core.gml.IWspmProject;
-import org.kalypso.shape.ShapeFile;
-import org.kalypso.shape.dbf.DBaseException;
+import org.apache.commons.io.FilenameUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public interface ILanduseShapeDataProvider
+public class ContainsFileNameVisitor implements IResourceVisitor
 {
-  ShapeFile getShapeFile( ) throws IOException, DBaseException;
+  private final String m_file;
 
-  IWspmProject getWspmModel( ) throws Exception;
+  private final IFolder m_base;
 
-  void dispose( );
+  private final boolean m_recursive;
 
-  IProject getProject( );
+  private boolean m_foundEqualName = false;
 
-  String getLnkShapeFile( );
+  public ContainsFileNameVisitor( final IFolder base, final String file, final boolean recursive )
+  {
+    m_base = base;
+    m_recursive = recursive;
+    m_file = FilenameUtils.removeExtension( FilenameUtils.getBaseName( file ) );
+  }
+
+  /**
+   * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
+   */
+  @Override
+  public boolean visit( final IResource resource )
+  {
+    if( resource instanceof IFile )
+    {
+      final String name = FilenameUtils.removeExtension( resource.getName() );
+      if( m_file.equals( name ) )
+        m_foundEqualName = true;
+    }
+
+    if( !m_recursive && resource instanceof IFolder )
+      return ((IFolder) resource).equals( m_base );
+
+    return false;
+  }
+
+  public boolean containsEqualFileName( )
+  {
+    return m_foundEqualName;
+  }
 }
