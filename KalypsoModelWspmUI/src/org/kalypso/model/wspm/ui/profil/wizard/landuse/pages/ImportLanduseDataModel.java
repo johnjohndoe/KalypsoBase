@@ -50,11 +50,11 @@ import org.kalypso.shape.dbf.IDBFField;
  */
 public class ImportLanduseDataModel extends AbstractModelObject
 {
-  public static final String PROPERTY_SHAPE_COLUMN = "shapeColumn";
+  public static final String PROPERTY_SHAPE_COLUMN = "shapeColumn"; //$NON-NLS-1$
 
   private IDBFField m_shapeColumn = null;
 
-  public static final String PROPERTY_MAPPING = "mapping";
+  public static final String PROPERTY_MAPPING = "mapping"; //$NON-NLS-1$
 
   private Properties m_mapping = new Properties();
 

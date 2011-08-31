@@ -60,7 +60,7 @@ import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.contribs.eclipse.jface.viewers.IRefreshable;
-import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShape;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.FieldType;
 import org.kalypso.shape.dbf.IDBFField;
@@ -70,7 +70,7 @@ import org.kalypso.shape.dbf.IDBFField;
  */
 public class LanduseMappingPage extends WizardPage implements IRefreshable
 {
-  protected final ILanduseShape m_shape;
+  protected final ILanduseShapeDataProvider m_provider;
 
   protected final ImportLanduseDataModel m_model = new ImportLanduseDataModel();
 
@@ -82,11 +82,11 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable
 
   private LanduseMappingTable m_table;
 
-  public LanduseMappingPage( final ILanduseShape shape, final String type )
+  public LanduseMappingPage( final ILanduseShapeDataProvider provider, final String type )
   {
     super( "LanduseMappingPage" );
 
-    m_shape = shape;
+    m_provider = provider;
     m_type = type;
   }
 
@@ -110,7 +110,7 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable
       {
         try
         {
-          final LanduseTableMappingHandler handler = new LanduseTableMappingHandler( m_shape, m_model );
+          final LanduseTableMappingHandler handler = new LanduseTableMappingHandler( m_provider, m_model );
           getContainer().run( false, false, handler );
 
           m_table.refresh();
@@ -125,7 +125,7 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable
     new Label( body, SWT.NULL ).setText( " " );// spacer //$NON-NLS-1$
 
     new Label( body, SWT.NULL ).setText( "Mapping Table" );
-    m_table = new LanduseMappingTable( body, m_model );
+    m_table = new LanduseMappingTable( body, m_model, m_provider, m_type );
     m_table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     setControl( body );
@@ -182,12 +182,12 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable
   @Override
   public void refresh( )
   {
-    if( !m_shape.hasChanged() )
+    if( !m_provider.hasChanged() )
       return;
 
     try
     {
-      final ShapeFile shape = m_shape.getShapeFile();
+      final ShapeFile shape = m_provider.getShapeFile();
       m_column.setInput( shape.getFields() );
     }
     catch( final Exception ex )

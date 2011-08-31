@@ -82,6 +82,8 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
 
   protected IProject m_project;
 
+  private LanduseShapeHandler m_handler;
+
   public ImportLanduseShapeWizard( )
   {
     setWindowTitle( "Import landuse shape" );
@@ -95,10 +97,10 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
     m_pageShapeImport = new SelectShapeFilePage( "shapePage" ); //$NON-NLS-1$
     addPage( m_pageShapeImport );
 
-    final LanduseShapeHandler handler = new LanduseShapeHandler( m_pageShapeImport );
+    m_handler = new LanduseShapeHandler( m_pageShapeImport, m_project );
 
-    final LanduseMappingPage roughnessPage = new LanduseMappingPage( handler, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
-    final LanduseMappingPage vegetationPage = new LanduseMappingPage( handler, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
+    final LanduseMappingPage roughnessPage = new LanduseMappingPage( m_handler, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+    final LanduseMappingPage vegetationPage = new LanduseMappingPage( m_handler, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
 
     addPage( roughnessPage );
     addPage( vegetationPage );
@@ -108,6 +110,17 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
   public boolean performFinish( )
   {
     return false;
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    m_handler.dispose();
+
+    super.dispose();
   }
 
   /**
