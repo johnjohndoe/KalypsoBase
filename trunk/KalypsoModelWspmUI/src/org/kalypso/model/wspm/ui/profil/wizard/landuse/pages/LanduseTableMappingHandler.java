@@ -47,7 +47,7 @@ import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShape;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 import org.kalypso.shape.IShapeFileVisitor;
 import org.kalypso.shape.ShapeFile;
 
@@ -57,11 +57,11 @@ import org.kalypso.shape.ShapeFile;
 public class LanduseTableMappingHandler implements IRunnableWithProgress
 {
 
-  private final ILanduseShape m_shape;
+  private final ILanduseShapeDataProvider m_shape;
 
   private final ImportLanduseDataModel m_model;
 
-  public LanduseTableMappingHandler( final ILanduseShape shape, final ImportLanduseDataModel model )
+  public LanduseTableMappingHandler( final ILanduseShapeDataProvider shape, final ImportLanduseDataModel model )
   {
     m_shape = shape;
     m_model = model;

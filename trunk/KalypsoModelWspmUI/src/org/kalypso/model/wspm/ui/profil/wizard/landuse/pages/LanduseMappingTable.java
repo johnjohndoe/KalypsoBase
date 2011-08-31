@@ -45,16 +45,16 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 
 /**
  * @author Dirk Kuch
@@ -66,18 +66,26 @@ public class LanduseMappingTable extends Composite
 
   private final ImportLanduseDataModel m_model;
 
-  public LanduseMappingTable( final Composite parent, final ImportLanduseDataModel model )
+  TableColumnLayout m_layout = new TableColumnLayout();
+
+  private final ILanduseShapeDataProvider m_provider;
+
+  private final String m_type;
+
+  public LanduseMappingTable( final Composite parent, final ImportLanduseDataModel model, final ILanduseShapeDataProvider provider, final String type )
   {
     super( parent, SWT.NULL );
     m_model = model;
-    setLayout( Layouts.createGridLayout() );
+    m_provider = provider;
+    m_type = type;
+    setLayout( m_layout );
 
     init();
   }
 
   private void init( )
   {
-    m_viewer = new TableViewer( this );
+    m_viewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_viewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     m_viewer.setContentProvider( new ArrayTreeContentProvider()
@@ -101,15 +109,12 @@ public class LanduseMappingTable extends Composite
       }
     } );
 
-    final IObservableValue viewerSelection = ViewersObservables.observeSingleSelection( m_viewer );
-
     m_viewer.getTable().setLinesVisible( true );
     m_viewer.getTable().setHeaderVisible( true );
-    m_viewer.setUseHashlookup( true );
 
     final TableViewerColumn shapeColumn = new TableViewerColumn( m_viewer, SWT.NONE );
     shapeColumn.getColumn().setText( "Property" );
-    shapeColumn.getColumn().setWidth( 200 );
+    m_layout.setColumnData( shapeColumn.getColumn(), new ColumnWeightData( 50 ) );
 
     shapeColumn.setLabelProvider( new ColumnLabelProvider()
     {
@@ -131,8 +136,9 @@ public class LanduseMappingTable extends Composite
 
     final TableViewerColumn clazzColumn = new TableViewerColumn( m_viewer, SWT.NONE );
     clazzColumn.getColumn().setText( "Classifiation" );
-    clazzColumn.getColumn().setWidth( 200 );
+    m_layout.setColumnData( clazzColumn.getColumn(), new ColumnWeightData( 50 ) );
 
+    clazzColumn.setEditingSupport( new ClassificationEditingSupport( m_viewer, m_provider, m_type ) );
     clazzColumn.setLabelProvider( new ColumnLabelProvider()
     {
       @Override
@@ -149,6 +155,7 @@ public class LanduseMappingTable extends Composite
 
         return super.getText( element );
       }
+
     } );
 
   }

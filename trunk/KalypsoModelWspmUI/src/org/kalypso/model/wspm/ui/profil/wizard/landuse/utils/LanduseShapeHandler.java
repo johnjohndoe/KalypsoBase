@@ -44,16 +44,21 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.FilenameUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.gml.IWspmProject;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.ui.wizard.shape.IShapeFileSelection;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Dirk Kuch
  */
-public class LanduseShapeHandler implements ILanduseShape
+public class LanduseShapeHandler implements ILanduseShapeDataProvider
 {
 
   private final IShapeFileSelection m_selection;
@@ -62,9 +67,14 @@ public class LanduseShapeHandler implements ILanduseShape
 
   private String m_lnk;
 
-  public LanduseShapeHandler( final IShapeFileSelection selection )
+  private final IProject m_project;
+
+  private GMLWorkspace m_workspace;
+
+  public LanduseShapeHandler( final IShapeFileSelection selection, final IProject project )
   {
     m_selection = selection;
+    m_project = project;
   }
 
   /**
@@ -76,6 +86,9 @@ public class LanduseShapeHandler implements ILanduseShape
     final String lnk = FilenameUtils.removeExtension( m_selection.getShapeFile() );
     if( Objects.notEqual( m_lnk, lnk ) )
     {
+      if( Objects.isNotNull( m_shapeFile ) )
+        m_shapeFile.close();
+
       m_shapeFile = new ShapeFile( lnk, Charset.defaultCharset(), FileMode.READ );
       m_lnk = lnk;
     }
@@ -92,6 +105,41 @@ public class LanduseShapeHandler implements ILanduseShape
     final String lnk = FilenameUtils.removeExtension( m_selection.getShapeFile() );
 
     return Objects.notEqual( m_lnk, lnk );
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider#getWspmModel()
+   */
+  @Override
+  public IWspmProject getWspmModel( ) throws Exception
+  {
+    if( Objects.isNotNull( m_workspace ) )
+      return (IWspmProject) m_workspace.getRootFeature();
+
+    final IFile file = m_project.getFile( "modell.gml" ); //$NON-NLS-1$
+    m_workspace = GmlSerializer.createGMLWorkspace( file );
+
+    return (IWspmProject) m_workspace.getRootFeature();
+  }
+
+  /**
+   * @see org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
+    if( Objects.isNotNull( m_shapeFile ) )
+      try
+      {
+        m_shapeFile.close();
+      }
+      catch( final IOException e )
+      {
+        e.printStackTrace();
+      }
+
+    if( Objects.isNotNull( m_workspace ) )
+      m_workspace.dispose();
   }
 
 }

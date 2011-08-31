@@ -42,15 +42,20 @@ package org.kalypso.model.wspm.ui.profil.wizard.landuse.utils;
 
 import java.io.IOException;
 
+import org.kalypso.model.wspm.core.gml.IWspmProject;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.DBaseException;
 
 /**
  * @author Dirk Kuch
  */
-public interface ILanduseShape
+public interface ILanduseShapeDataProvider
 {
   ShapeFile getShapeFile( ) throws IOException, DBaseException;
 
   boolean hasChanged( );
+
+  IWspmProject getWspmModel( ) throws Exception;
+
+  void dispose( );
 }
