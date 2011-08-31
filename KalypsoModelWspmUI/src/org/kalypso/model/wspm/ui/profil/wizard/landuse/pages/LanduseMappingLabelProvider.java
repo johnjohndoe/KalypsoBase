@@ -54,6 +54,8 @@ import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 public class LanduseMappingLabelProvider extends ColumnLabelProvider
 {
 
+  private static final String EMPTY_STRING = "< empty >";
+
   private final int m_column;
 
   private final IClassificationClass[] m_clazzes;
@@ -70,6 +72,7 @@ public class LanduseMappingLabelProvider extends ColumnLabelProvider
   @Override
   public String getText( final Object element )
   {
+    @SuppressWarnings("rawtypes")
     final Entry entry = toEntry( element );
     if( Objects.isNull( entry ) )
       return super.getText( element );
@@ -80,15 +83,15 @@ public class LanduseMappingLabelProvider extends ColumnLabelProvider
     {
       final Object value = entry.getValue();
       if( !(value instanceof String) )
-        return "<empty>";
+        return EMPTY_STRING;
 
       final String strValue = (String) value;
       if( StringUtils.isEmpty( strValue ) )
-        return "<empty>";
+        return EMPTY_STRING;
 
       final IClassificationClass clazz = findClass( strValue );
       if( Objects.isNull( clazz ) )
-        return "<missing class>";
+        return "< missing class >";
 
       return clazz.getDescription();
     }
@@ -106,6 +109,7 @@ public class LanduseMappingLabelProvider extends ColumnLabelProvider
     return null;
   }
 
+  @SuppressWarnings("rawtypes")
   public static Map.Entry toEntry( final Object element )
   {
     if( element instanceof Map.Entry )

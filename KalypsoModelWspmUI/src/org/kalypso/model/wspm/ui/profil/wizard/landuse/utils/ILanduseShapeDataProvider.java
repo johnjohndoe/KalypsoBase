@@ -53,8 +53,6 @@ public interface ILanduseShapeDataProvider
 {
   ShapeFile getShapeFile( ) throws IOException, DBaseException;
 
-  boolean hasChanged( );
-
   IWspmProject getWspmModel( ) throws Exception;
 
   void dispose( );
