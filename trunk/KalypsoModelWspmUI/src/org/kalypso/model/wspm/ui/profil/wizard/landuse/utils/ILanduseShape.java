@@ -38,41 +38,19 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.landuse;
+package org.kalypso.model.wspm.ui.profil.wizard.landuse.utils;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.widgets.Composite;
-import org.kalypso.ui.wizard.shape.IShapeFileSelection;
+import java.io.IOException;
+
+import org.kalypso.shape.ShapeFile;
+import org.kalypso.shape.dbf.DBaseException;
 
 /**
  * @author Dirk Kuch
  */
-public class BuildLanduseMappingPage extends WizardPage
+public interface ILanduseShape
 {
-  private final IShapeFileSelection m_selection;
+  ShapeFile getShapeFile( ) throws IOException, DBaseException;
 
-  private final IProject m_project;
-
-  public BuildLanduseMappingPage( final IProject project, final IShapeFileSelection selection )
-  {
-    super( "BuildLanduseMappingPage" );
-
-    m_project = project;
-    m_selection = selection;
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  public void createControl( final Composite parent )
-  {
-
-    // - load shape file
-    // - choose property type
-    // - read properties
-    // - do mapping
-  }
-
+  boolean hasChanged( );
 }

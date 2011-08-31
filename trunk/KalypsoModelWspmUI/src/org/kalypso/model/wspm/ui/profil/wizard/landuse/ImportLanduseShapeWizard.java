@@ -43,11 +43,20 @@ package org.kalypso.model.wspm.ui.profil.wizard.landuse;
 import java.net.URL;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.dialogs.IPageChangeProvider;
+import org.eclipse.jface.dialogs.IPageChangedListener;
+import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.jface.viewers.IRefreshable;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.ImportLanduseDataModel;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.LanduseMappingPage;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseShapeHandler;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
@@ -58,28 +67,43 @@ import org.kalypso.ui.wizard.shape.SelectShapeFilePage;
  */
 public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
 {
-  private SelectShapeFilePage m_pageShapeImport;
+  private final IPageChangedListener m_pageListener = new IPageChangedListener()
+  {
+    @Override
+    public void pageChanged( final PageChangedEvent event )
+    {
+      handlePageChanged( event.getSelectedPage() );
+    }
+  };
 
-  private IProject m_project;
+  ImportLanduseDataModel m_model = new ImportLanduseDataModel();
+
+  protected SelectShapeFilePage m_pageShapeImport;
+
+  protected IProject m_project;
 
   public ImportLanduseShapeWizard( )
   {
     setWindowTitle( "Import landuse shape" );
+
+    setNeedsProgressMonitor( true );
   }
 
   @Override
   public void addPages( )
   {
     m_pageShapeImport = new SelectShapeFilePage( "shapePage" ); //$NON-NLS-1$
-    new BuildLanduseMappingPage( m_project, m_pageShapeImport );
-
     addPage( m_pageShapeImport );
 
+    final LanduseShapeHandler handler = new LanduseShapeHandler( m_pageShapeImport );
+
+    final LanduseMappingPage roughnessPage = new LanduseMappingPage( handler, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
+    final LanduseMappingPage vegetationPage = new LanduseMappingPage( handler, IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
+
+    addPage( roughnessPage );
+    addPage( vegetationPage );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
@@ -110,6 +134,31 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
     }
     else
       throw new UnsupportedOperationException();
+  }
+
+  /**
+   * @see org.eclipse.jface.wizard.Wizard#setContainer(org.eclipse.jface.wizard.IWizardContainer)
+   */
+  @Override
+  public void setContainer( final IWizardContainer container )
+  {
+    final IWizardContainer oldContainer = getContainer();
+    if( oldContainer instanceof IPageChangeProvider )
+      ((IPageChangeProvider) oldContainer).removePageChangedListener( m_pageListener );
+
+    super.setContainer( container );
+
+    if( container instanceof IPageChangeProvider )
+      ((IPageChangeProvider) container).addPageChangedListener( m_pageListener );
+  }
+
+  protected void handlePageChanged( final Object selectedPage )
+  {
+    if( selectedPage instanceof IRefreshable )
+    {
+      final IRefreshable page = (IRefreshable) selectedPage;
+      page.refresh();
+    }
   }
 
 }
