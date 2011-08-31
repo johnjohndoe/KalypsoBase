@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
 
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
@@ -50,6 +49,7 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.ui.view.table.handler.ClassificationLabelProvider;
 import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
@@ -57,6 +57,7 @@ import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 /**
  * @author kuch
  */
+@SuppressWarnings("deprecation")
 public class LandUseMappingEditingSupport extends EditingSupport
 {
   private final ComboBoxViewerCellEditor m_editor;
@@ -97,6 +98,7 @@ public class LandUseMappingEditingSupport extends EditingSupport
   @Override
   protected Object getValue( final Object element )
   {
+    @SuppressWarnings("rawtypes")
     final Entry entry = LanduseMappingLabelProvider.toEntry( element );
 
     final Object objValue = entry.getValue();
@@ -119,22 +121,22 @@ public class LandUseMappingEditingSupport extends EditingSupport
   /**
    * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object, java.lang.Object)
    */
+  @SuppressWarnings("unchecked")
   @Override
   protected void setValue( final Object element, final Object value )
   {
+    @SuppressWarnings("rawtypes")
+    final Entry entry = LanduseMappingLabelProvider.toEntry( element );
+    if( Objects.isNull( entry ) )
+      return;
+
     if( !(value instanceof IClassificationClass) )
       return;
 
     final IClassificationClass clazz = (IClassificationClass) value;
+    entry.setValue( clazz.getName() );
 
-    if( element instanceof Map.Entry )
-    {
-      @SuppressWarnings("rawtypes")
-      final Map.Entry entry = (Map.Entry) element;
-      entry.setValue( clazz.getName() );
-
-      getViewer().refresh( entry );
-    }
+    getViewer().refresh( entry );
   }
 
 }

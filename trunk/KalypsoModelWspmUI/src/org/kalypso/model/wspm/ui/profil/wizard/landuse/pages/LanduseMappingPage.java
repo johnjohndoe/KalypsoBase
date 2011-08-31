@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.viewers.IRefreshable;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 import org.kalypso.shape.ShapeFile;
@@ -82,6 +83,8 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable
 
   private LanduseMappingTable m_table;
 
+  private ShapeFile m_shapeFile;
+
   public LanduseMappingPage( final ILanduseShapeDataProvider provider, final String type )
   {
     super( "LanduseMappingPage" );
@@ -99,7 +102,6 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable
     body.setLayout( new GridLayout() );
 
     new Label( body, SWT.NULL ).setText( "Shape Column" );
-
     m_column = getViewer( body );
 
     m_column.addSelectionChangedListener( new ISelectionChangedListener()
@@ -182,13 +184,14 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable
   @Override
   public void refresh( )
   {
-    if( !m_provider.hasChanged() )
-      return;
-
     try
     {
       final ShapeFile shape = m_provider.getShapeFile();
-      m_column.setInput( shape.getFields() );
+      if( Objects.notEqual( m_shapeFile, shape ) )
+      {
+        m_column.setInput( shape.getFields() );
+        m_shapeFile = shape;
+      }
     }
     catch( final Exception ex )
     {

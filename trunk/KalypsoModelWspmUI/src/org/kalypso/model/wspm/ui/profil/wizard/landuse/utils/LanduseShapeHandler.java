@@ -97,17 +97,6 @@ public class LanduseShapeHandler implements ILanduseShapeDataProvider
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.landuse.ILanduseShape#hasChanged()
-   */
-  @Override
-  public boolean hasChanged( )
-  {
-    final String lnk = FilenameUtils.removeExtension( m_selection.getShapeFile() );
-
-    return Objects.notEqual( m_lnk, lnk );
-  }
-
-  /**
    * @see org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider#getWspmModel()
    */
   @Override
