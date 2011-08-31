@@ -40,13 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
 
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.jface.layout.TableColumnLayout;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -54,6 +52,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.gml.IWspmProject;
+import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
+import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 
 /**
@@ -85,6 +87,8 @@ public class LanduseMappingTable extends Composite
 
   private void init( )
   {
+    final IClassificationClass[] clazzes = getClasses();
+
     m_viewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_viewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -115,49 +119,34 @@ public class LanduseMappingTable extends Composite
     final TableViewerColumn shapeColumn = new TableViewerColumn( m_viewer, SWT.NONE );
     shapeColumn.getColumn().setText( "Property" );
     m_layout.setColumnData( shapeColumn.getColumn(), new ColumnWeightData( 50 ) );
-
-    shapeColumn.setLabelProvider( new ColumnLabelProvider()
-    {
-      @Override
-      public String getText( final Object element )
-      {
-        if( element instanceof Map.Entry )
-        {
-          @SuppressWarnings("rawtypes")
-          final Map.Entry entry = (Map.Entry) element;
-          final Object key = entry.getKey();
-
-          return key.toString();
-        }
-
-        return super.getText( element );
-      }
-    } );
+    shapeColumn.setLabelProvider( new LanduseMappingLabelProvider( clazzes, 0 ) );
 
     final TableViewerColumn clazzColumn = new TableViewerColumn( m_viewer, SWT.NONE );
     clazzColumn.getColumn().setText( "Classifiation" );
     m_layout.setColumnData( clazzColumn.getColumn(), new ColumnWeightData( 50 ) );
 
-    clazzColumn.setEditingSupport( new ClassificationEditingSupport( m_viewer, m_provider, m_type ) );
-    clazzColumn.setLabelProvider( new ColumnLabelProvider()
+    clazzColumn.setLabelProvider( new LanduseMappingLabelProvider( clazzes, 1 ) );
+    clazzColumn.setEditingSupport( new LandUseMappingEditingSupport( m_viewer, clazzes ) );
+  }
+
+  private IClassificationClass[] getClasses( )
+  {
+    try
     {
-      @Override
-      public String getText( final Object element )
-      {
-        if( element instanceof Map.Entry )
-        {
-          @SuppressWarnings("rawtypes")
-          final Map.Entry entry = (Map.Entry) element;
-          final Object value = entry.getValue();
+      final IWspmProject project = m_provider.getWspmModel();
+      final IWspmClassification classification = project.getClassificationMember();
 
-          return value.toString();
-        }
+      if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( m_type ) )
+        return classification.getVegetationClasses();
+      else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( m_type ) )
+        return classification.getRoughnessClasses();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
 
-        return super.getText( element );
-      }
-
-    } );
-
+    throw new UnsupportedOperationException();
   }
 
   public void refresh( )

@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -49,58 +50,27 @@ import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.gml.IWspmProject;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
-import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
-import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 import org.kalypso.model.wspm.ui.view.table.handler.ClassificationLabelProvider;
 import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 
 /**
  * @author kuch
  */
-public class ClassificationEditingSupport extends EditingSupport
+public class LandUseMappingEditingSupport extends EditingSupport
 {
+  private final ComboBoxViewerCellEditor m_editor;
 
-  private final ILanduseShapeDataProvider m_provider;
-
-  private ComboBoxViewerCellEditor m_editor;
-
-  private IClassificationClass[] m_classes;
+  private final IClassificationClass[] m_classes;
 
   @SuppressWarnings("deprecation")
-  public ClassificationEditingSupport( final ColumnViewer viewer, final ILanduseShapeDataProvider provider, final String type )
+  public LandUseMappingEditingSupport( final ColumnViewer viewer, final IClassificationClass[] classes )
   {
     super( viewer );
+    final Composite parent = (Composite) viewer.getControl();
 
-    m_provider = provider;
-
-    try
-    {
-      final IWspmProject project = provider.getWspmModel();
-      final IWspmClassification classification = project.getClassificationMember();
-
-      final Composite parent = (Composite) viewer.getControl();
-
-      if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( type ) )
-      {
-        m_classes = classification.getVegetationClasses();
-        m_editor = new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), m_classes, parent, SWT.READ_ONLY | SWT.DROP_DOWN );
-      }
-      else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( type ) )
-      {
-        m_classes = classification.getRoughnessClasses();
-        m_editor = new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), m_classes, parent, SWT.READ_ONLY | SWT.DROP_DOWN );
-      }
-      else
-        throw new UnsupportedOperationException();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
+    m_classes = classes;
+    m_editor = new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), classes, parent, SWT.READ_ONLY | SWT.DROP_DOWN );
   }
 
   /**
@@ -127,22 +97,19 @@ public class ClassificationEditingSupport extends EditingSupport
   @Override
   protected Object getValue( final Object element )
   {
-    if( element instanceof Map.Entry )
-    {
-      @SuppressWarnings("rawtypes")
-      final Map.Entry entry = (Map.Entry) element;
-      final Object objValue = entry.getValue();
-      if( objValue instanceof String )
-      {
-        final String strValue = (String) objValue;
-        if( StringUtils.isEmpty( strValue ) )
-          return null;
+    final Entry entry = LanduseMappingLabelProvider.toEntry( element );
 
-        for( final IClassificationClass clazz : m_classes )
-        {
-          if( clazz.getName().equals( strValue ) )
-            return clazz;
-        }
+    final Object objValue = entry.getValue();
+    if( objValue instanceof String )
+    {
+      final String strValue = (String) objValue;
+      if( StringUtils.isEmpty( strValue ) )
+        return null;
+
+      for( final IClassificationClass clazz : m_classes )
+      {
+        if( clazz.getName().equals( strValue ) )
+          return clazz;
       }
     }
 
