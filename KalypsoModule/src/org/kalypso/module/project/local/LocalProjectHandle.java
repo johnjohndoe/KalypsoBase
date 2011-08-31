@@ -149,6 +149,6 @@ public class LocalProjectHandle extends AbstractProjectHandle implements ILocalP
     if( Objects.isNotNull( module ) )
       return module.getId();
 
-    throw new UnsupportedOperationException();
+    return null;
   }
 }
