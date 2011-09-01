@@ -42,10 +42,17 @@ package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
 
 import java.util.Properties;
 
+import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
+import org.kalypso.shape.dbf.IDBFField;
+
 /**
  * @author Dirk Kuch
  */
 public interface ILanduseMapping
 {
   Properties getProperties( );
+
+  IClassificationClass[] getClasses( );
+
+  IDBFField getSelectedColumn( );
 }
