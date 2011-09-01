@@ -70,7 +70,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.ILanduseMapping;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
 import org.kalypso.shape.dbf.IDBFField;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.Operation;
@@ -93,11 +93,11 @@ import org.xml.sax.SAXException;
 public class LanduseStyledLayerDescriptorBuilder implements ICoreRunnableWithProgress
 {
 
-  private final ILanduseMapping m_mapping;
+  private final ILanduseModel m_mapping;
 
   private final IFile m_sldFile;
 
-  public LanduseStyledLayerDescriptorBuilder( final ILanduseMapping mapping, final IFile sldFile )
+  public LanduseStyledLayerDescriptorBuilder( final ILanduseModel mapping, final IFile sldFile )
   {
     m_mapping = mapping;
     m_sldFile = sldFile;
@@ -112,11 +112,11 @@ public class LanduseStyledLayerDescriptorBuilder implements ICoreRunnableWithPro
     final FeatureTypeStyle style = StyleFactory.createFeatureTypeStyle();
     style.setName( Messages.getString( "LanduseStyledLayerDescriptorBuilder.0" ) ); //$NON-NLS-1$
 
-    final IDBFField column = m_mapping.getSelectedColumn();
+    final IDBFField column = m_mapping.getShapeColumn();
     if( Objects.isNull( column ) )
       return Status.OK_STATUS;
 
-    final Properties properties = m_mapping.getProperties();
+    final Properties properties = m_mapping.getMapping();
     final Set<Entry<Object, Object>> entries = properties.entrySet();
     for( final Entry<Object, Object> entry : entries )
     {

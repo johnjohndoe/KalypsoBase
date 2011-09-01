@@ -40,7 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
 
-import java.util.Properties;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.databinding.beans.BeansObservables;
@@ -48,8 +49,6 @@ import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
@@ -63,10 +62,9 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.viewers.IRefreshable;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.gml.IWspmProject;
-import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
-import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ImportLanduseDataModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseShapeLabelProvider;
 import org.kalypso.shape.ShapeFile;
@@ -76,19 +74,15 @@ import org.kalypso.shape.dbf.IDBFField;
 /**
  * @author Dirk Kuch
  */
-public class LanduseMappingPage extends WizardPage implements IRefreshable, ILanduseMapping
+public class LanduseMappingPage extends WizardPage implements IRefreshable
 {
   protected final ILanduseShapeDataProvider m_provider;
 
-  protected final ImportLanduseDataModel m_model = new ImportLanduseDataModel();
+  protected final ImportLanduseDataModel m_model;
 
   private DatabindingWizardPage m_binding;
 
   private ComboViewer m_column;
-
-  private final String m_type;
-
-  private LanduseMappingTable m_table;
 
   private ShapeFile m_shapeFile;
 
@@ -97,7 +91,7 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable, ILan
     super( "LanduseMappingPage" ); //$NON-NLS-1$
 
     m_provider = provider;
-    m_type = type;
+    m_model = new ImportLanduseDataModel( provider.getProject(), type );
 
     if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( type ) )
     {
@@ -119,34 +113,33 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable, ILan
     final Composite body = new Composite( parent, SWT.NULL );
     body.setLayout( new GridLayout() );
 
+    // shape column
     new Label( body, SWT.NULL ).setText( Messages.getString( "LanduseMappingPage.3" ) ); //$NON-NLS-1$
     m_column = getViewer( body );
 
-    m_column.addSelectionChangedListener( new ISelectionChangedListener()
+    new Label( body, SWT.NULL ).setText( "" );// spacer //$NON-NLS-1$
+
+    new Label( body, SWT.NULL ).setText( Messages.getString( "LanduseMappingPage.4" ) ); //$NON-NLS-1$
+    final LanduseMappingTable table = new LanduseMappingTable( body, m_model );
+    table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    m_model.addPropertyChangeListener( ILanduseModel.PROPERTY_SHAPE_COLUMN, new PropertyChangeListener()
     {
-      @SuppressWarnings("synthetic-access")
       @Override
-      public void selectionChanged( final SelectionChangedEvent event )
+      public void propertyChange( final PropertyChangeEvent evt )
       {
         try
         {
           final LanduseTableMappingHandler handler = new LanduseTableMappingHandler( m_provider.getShapeFile(), m_model.getShapeColumn(), m_model.getMapping() );
           getContainer().run( false, false, handler );
-
-          m_table.refresh();
         }
         catch( final Exception e )
         {
           e.printStackTrace();
         }
+
       }
     } );
-
-    new Label( body, SWT.NULL ).setText( " " );// spacer //$NON-NLS-1$
-
-    new Label( body, SWT.NULL ).setText( Messages.getString( "LanduseMappingPage.4" ) ); //$NON-NLS-1$
-    m_table = new LanduseMappingTable( body, this );
-    m_table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     setControl( body );
   }
@@ -178,7 +171,7 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable, ILan
     } );
 
     final IObservableValue viewerSelection = ViewersObservables.observeSingleSelection( viewer );
-    final IObservableValue modelValue = BeansObservables.observeValue( m_model, ImportLanduseDataModel.PROPERTY_SHAPE_COLUMN );
+    final IObservableValue modelValue = BeansObservables.observeValue( m_model, ILanduseModel.PROPERTY_SHAPE_COLUMN );
 
     m_binding.bindValue( new DataBinder( viewerSelection, modelValue ) );
 
@@ -203,39 +196,8 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable, ILan
     }
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.ILanduseMapping#getProperties()
-   */
-  @Override
-  public Properties getProperties( )
+  public ILanduseModel getModel( )
   {
-    return m_model.getMapping();
-  }
-
-  @Override
-  public IClassificationClass[] getClasses( )
-  {
-    try
-    {
-      final IWspmProject project = m_provider.getWspmModel();
-      final IWspmClassification classification = project.getClassificationMember();
-
-      if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( m_type ) )
-        return classification.getVegetationClasses();
-      else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( m_type ) )
-        return classification.getRoughnessClasses();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public IDBFField getSelectedColumn( )
-  {
-    return m_model.getShapeColumn();
+    return m_model;
   }
 }

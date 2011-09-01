@@ -38,50 +38,27 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
+package org.kalypso.model.wspm.ui.profil.wizard.landuse.model;
 
 import java.util.Properties;
 
-import org.kalypso.commons.java.util.AbstractModelObject;
+import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.shape.dbf.IDBFField;
 
 /**
  * @author Dirk Kuch
  */
-public class ImportLanduseDataModel extends AbstractModelObject
+public interface ILanduseModel
 {
-  public static final String PROPERTY_SHAPE_COLUMN = "shapeColumn"; //$NON-NLS-1$
+  String PROPERTY_SHAPE_COLUMN = "shapeColumn"; //$NON-NLS-1$
 
-  private IDBFField m_shapeColumn = null;
+  String PROPERTY_MAPPING = "mapping"; //$NON-NLS-1$
 
-  public static final String PROPERTY_MAPPING = "mapping"; //$NON-NLS-1$
+  Properties getMapping( );
 
-  private Properties m_mapping = new Properties();
+  IClassificationClass[] getClasses( );
 
-  public IDBFField getShapeColumn( )
-  {
-    return m_shapeColumn;
-  }
+  IDBFField getShapeColumn( );
 
-  public void setShapeColumn( final IDBFField shapeColumn )
-  {
-    final Object oldValue = m_shapeColumn;
-    m_shapeColumn = shapeColumn;
-
-    firePropertyChange( PROPERTY_SHAPE_COLUMN, oldValue, shapeColumn );
-  }
-
-  public Properties getMapping( )
-  {
-    return m_mapping;
-  }
-
-  public void setMapping( final Properties mapping )
-  {
-    final Object oldValue = m_mapping;
-    m_mapping = mapping;
-
-    firePropertyChange( PROPERTY_MAPPING, oldValue, mapping );
-  }
-
+  String getType( );
 }

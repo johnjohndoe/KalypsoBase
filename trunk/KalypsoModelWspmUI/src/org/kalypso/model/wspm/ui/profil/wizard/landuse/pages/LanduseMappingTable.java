@@ -54,23 +54,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ImportLanduseDataModel;
 
 /**
  * @author Dirk Kuch
  */
 public class LanduseMappingTable extends Composite
 {
-
   private TableViewer m_viewer;
 
   TableColumnLayout m_layout = new TableColumnLayout();
 
-  private final ILanduseMapping m_mapping;
+  private final ImportLanduseDataModel m_model;
 
-  public LanduseMappingTable( final Composite parent, final ILanduseMapping mapping )
+  public LanduseMappingTable( final Composite parent, final ImportLanduseDataModel model )
   {
     super( parent, SWT.NULL );
-    m_mapping = mapping;
+    m_model = model;
     setLayout( m_layout );
 
     init();
@@ -78,7 +78,7 @@ public class LanduseMappingTable extends Composite
 
   private void init( )
   {
-    final IClassificationClass[] clazzes = m_mapping.getClasses();
+    final IClassificationClass[] clazzes = m_model.getClasses();
 
     m_viewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_viewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -118,11 +118,6 @@ public class LanduseMappingTable extends Composite
 
     clazzColumn.setLabelProvider( new LanduseMappingLabelProvider( clazzes, 1 ) );
     clazzColumn.setEditingSupport( new LandUseMappingEditingSupport( m_viewer, clazzes ) );
-  }
-
-  public void refresh( )
-  {
-    m_viewer.setInput( m_mapping.getProperties() );
   }
 
 }

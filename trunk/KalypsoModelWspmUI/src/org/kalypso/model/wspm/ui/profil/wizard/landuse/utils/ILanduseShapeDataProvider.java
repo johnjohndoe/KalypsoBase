@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.profil.wizard.landuse.utils;
 import java.io.IOException;
 
 import org.eclipse.core.resources.IProject;
-import org.kalypso.model.wspm.core.gml.IWspmProject;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.DBaseException;
 
@@ -53,8 +52,6 @@ import org.kalypso.shape.dbf.DBaseException;
 public interface ILanduseShapeDataProvider
 {
   ShapeFile getShapeFile( ) throws IOException, DBaseException;
-
-  IWspmProject getWspmModel( ) throws Exception;
 
   void dispose( );
 
