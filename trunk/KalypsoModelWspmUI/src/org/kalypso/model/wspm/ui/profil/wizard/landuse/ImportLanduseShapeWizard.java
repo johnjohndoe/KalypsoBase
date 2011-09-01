@@ -123,8 +123,7 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
       final ImportLanduseShapeRunnable runnable = new ImportLanduseShapeRunnable( m_handler, m_roughnessPage, m_vegetationPage );
       getContainer().run( false, false, runnable );
 
-      // TODO
-      // return true;
+      return true;
     }
     catch( final Exception ex )
     {
