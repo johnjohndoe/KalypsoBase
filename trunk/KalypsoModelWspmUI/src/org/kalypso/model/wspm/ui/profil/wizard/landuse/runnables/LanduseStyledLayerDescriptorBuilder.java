@@ -110,7 +110,7 @@ public class LanduseStyledLayerDescriptorBuilder implements ICoreRunnableWithPro
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final FeatureTypeStyle style = StyleFactory.createFeatureTypeStyle();
-    style.setName( Messages.getString("LanduseStyledLayerDescriptorBuilder.0") ); //$NON-NLS-1$
+    style.setName( Messages.getString( "LanduseStyledLayerDescriptorBuilder.0" ) ); //$NON-NLS-1$
 
     final IDBFField column = m_mapping.getSelectedColumn();
     if( Objects.isNull( column ) )
@@ -183,7 +183,7 @@ public class LanduseStyledLayerDescriptorBuilder implements ICoreRunnableWithPro
     final Rule rule = StyleFactory.createRule( symbolizer );
     rule.setName( property );
     rule.setTitle( clazz.getDescription() );
-    rule.setAbstract( String.format( Messages.getString("LanduseStyledLayerDescriptorBuilder.1"), property, clazz.getName() ) ); //$NON-NLS-1$
+    rule.setAbstract( String.format( Messages.getString( "LanduseStyledLayerDescriptorBuilder.1" ), property, clazz.getName() ) ); //$NON-NLS-1$
 
     final Operation operation = new PropertyIsLikeOperation( new PropertyName( column, null ), new Literal( property ), '*', '$', '/' ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final Filter filter = new ComplexFilter( operation );

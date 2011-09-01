@@ -55,7 +55,7 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 public class LanduseMappingLabelProvider extends ColumnLabelProvider
 {
 
-  private static final String EMPTY_STRING = Messages.getString("LanduseMappingLabelProvider.0"); //$NON-NLS-1$
+  private static final String EMPTY_STRING = Messages.getString( "LanduseMappingLabelProvider.0" ); //$NON-NLS-1$
 
   private final int m_column;
 
@@ -92,7 +92,7 @@ public class LanduseMappingLabelProvider extends ColumnLabelProvider
 
       final IClassificationClass clazz = findClass( strValue );
       if( Objects.isNull( clazz ) )
-        return Messages.getString("LanduseMappingLabelProvider.1"); //$NON-NLS-1$
+        return Messages.getString( "LanduseMappingLabelProvider.1" ); //$NON-NLS-1$
 
       return clazz.getDescription();
     }

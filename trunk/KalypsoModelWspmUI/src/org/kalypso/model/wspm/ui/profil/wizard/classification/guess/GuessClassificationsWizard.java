@@ -66,13 +66,13 @@ public class GuessClassificationsWizard extends ManipulateProfileWizard
 
   public GuessClassificationsWizard( )
   {
-    setWindowTitle( Messages.getString("GuessClassificationsWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "GuessClassificationsWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
   protected String getProfilePageMessage( )
   {
-    return Messages.getString("GuessClassificationsWizard.1"); //$NON-NLS-1$
+    return Messages.getString( "GuessClassificationsWizard.1" ); //$NON-NLS-1$
   }
 
   @Override

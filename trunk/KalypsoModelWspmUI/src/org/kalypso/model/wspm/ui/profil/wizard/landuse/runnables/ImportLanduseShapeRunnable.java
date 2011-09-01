@@ -131,7 +131,7 @@ public class ImportLanduseShapeRunnable implements IRunnableWithProgress
   {
     if( fileExists( landuse, lnkShapeFile ) )
     {
-      final boolean overwrite = MessageDialog.openQuestion( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("ImportLanduseShapeRunnable.4"), Messages.getString("ImportLanduseShapeRunnable.5") ); //$NON-NLS-1$ //$NON-NLS-2$
+      final boolean overwrite = MessageDialog.openQuestion( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString( "ImportLanduseShapeRunnable.4" ), Messages.getString( "ImportLanduseShapeRunnable.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       if( overwrite )
       {
         FileUtilities.copyShapeFileToDirectory( lnkShapeFile, landuse.getLocation().toFile() );

@@ -108,12 +108,12 @@ public class LanduseMappingTable extends Composite
     m_viewer.getTable().setHeaderVisible( true );
 
     final TableViewerColumn shapeColumn = new TableViewerColumn( m_viewer, SWT.NONE );
-    shapeColumn.getColumn().setText( Messages.getString("LanduseMappingTable_0") ); //$NON-NLS-1$
+    shapeColumn.getColumn().setText( Messages.getString( "LanduseMappingTable_0" ) ); //$NON-NLS-1$
     m_layout.setColumnData( shapeColumn.getColumn(), new ColumnWeightData( 50 ) );
     shapeColumn.setLabelProvider( new LanduseMappingLabelProvider( clazzes, 0 ) );
 
     final TableViewerColumn clazzColumn = new TableViewerColumn( m_viewer, SWT.NONE );
-    clazzColumn.getColumn().setText( Messages.getString("LanduseMappingTable_1") ); //$NON-NLS-1$
+    clazzColumn.getColumn().setText( Messages.getString( "LanduseMappingTable_1" ) ); //$NON-NLS-1$
     m_layout.setColumnData( clazzColumn.getColumn(), new ColumnWeightData( 50 ) );
 
     clazzColumn.setLabelProvider( new LanduseMappingLabelProvider( clazzes, 1 ) );

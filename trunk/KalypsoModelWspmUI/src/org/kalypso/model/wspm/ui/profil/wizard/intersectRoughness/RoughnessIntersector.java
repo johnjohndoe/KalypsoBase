@@ -52,7 +52,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
@@ -123,9 +123,9 @@ public class RoughnessIntersector
 
       final IRecord[] points = profil.getPoints();
 
-      final int widthIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-      final int rwIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-      final int hwIndex = profil.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+      final int widthIndex = profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
+      final int rwIndex = profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
+      final int hwIndex = profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
 
       final double[] rws = TupleResultUtilities.getInterpolatedValues( profil, rwIndex, widthIndex );
       final double[] hws = TupleResultUtilities.getInterpolatedValues( profil, hwIndex, widthIndex );

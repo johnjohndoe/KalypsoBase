@@ -101,14 +101,14 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable, ILan
 
     if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( type ) )
     {
-      setTitle( Messages.getString("LanduseMappingPage.0") ); //$NON-NLS-1$
+      setTitle( Messages.getString( "LanduseMappingPage.0" ) ); //$NON-NLS-1$
     }
     else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( type ) )
     {
-      setTitle( Messages.getString("LanduseMappingPage.1") ); //$NON-NLS-1$
+      setTitle( Messages.getString( "LanduseMappingPage.1" ) ); //$NON-NLS-1$
     }
 
-    setDescription( Messages.getString("LanduseMappingPage.2") ); //$NON-NLS-1$
+    setDescription( Messages.getString( "LanduseMappingPage.2" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -119,7 +119,7 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable, ILan
     final Composite body = new Composite( parent, SWT.NULL );
     body.setLayout( new GridLayout() );
 
-    new Label( body, SWT.NULL ).setText( Messages.getString("LanduseMappingPage.3") ); //$NON-NLS-1$
+    new Label( body, SWT.NULL ).setText( Messages.getString( "LanduseMappingPage.3" ) ); //$NON-NLS-1$
     m_column = getViewer( body );
 
     m_column.addSelectionChangedListener( new ISelectionChangedListener()
@@ -144,7 +144,7 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable, ILan
 
     new Label( body, SWT.NULL ).setText( " " );// spacer //$NON-NLS-1$
 
-    new Label( body, SWT.NULL ).setText( Messages.getString("LanduseMappingPage.4") ); //$NON-NLS-1$
+    new Label( body, SWT.NULL ).setText( Messages.getString( "LanduseMappingPage.4" ) ); //$NON-NLS-1$
     m_table = new LanduseMappingTable( body, this );
     m_table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 

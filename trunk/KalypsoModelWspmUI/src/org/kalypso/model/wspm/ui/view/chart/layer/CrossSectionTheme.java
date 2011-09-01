@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart.layer;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -60,7 +60,7 @@ public class CrossSectionTheme extends AbstractProfilTheme
 
   public CrossSectionTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super( profil, IWspmConstants.LAYER_GELAENDE, TITLE, chartLayers, cm );
+    super( profil, IWspmLayers.LAYER_GELAENDE, TITLE, chartLayers, cm );
   }
 
   /**

@@ -65,13 +65,13 @@ public class ApplyClassificationsWizard extends ManipulateProfileWizard
 
   public ApplyClassificationsWizard( )
   {
-    setWindowTitle( Messages.getString("ApplyClassificationsWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "ApplyClassificationsWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
   protected String getProfilePageMessage( )
   {
-    return Messages.getString("ApplyClassificationsWizard.1"); //$NON-NLS-1$
+    return Messages.getString( "ApplyClassificationsWizard.1" ); //$NON-NLS-1$
   }
 
   @Override
