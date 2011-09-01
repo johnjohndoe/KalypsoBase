@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 
 import java.util.List;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
@@ -88,7 +88,7 @@ public class ProfilEndTarget extends AbstractPointsTarget
     for( final IComponent property : properties )
     {
       final int iProp = profile.indexOfProperty( property );
-      if( IWspmConstants.POINT_PROPERTY_BREITE.equals( property.getId() ) )
+      if( IWspmPointProperties.POINT_PROPERTY_BREITE.equals( property.getId() ) )
       {
         point.setValue( iProp, (Double) endPoint.getValue( iProp ) + 20 );
       }
@@ -104,12 +104,12 @@ public class ProfilEndTarget extends AbstractPointsTarget
   {
     final int pointsCount = points.size();
 
-    final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-    final int iHoehe = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final int iBreite = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
+    final int iHoehe = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE );
 
     final TupleResult owner = points.get( 0 ).getOwner();
-    final int iPointsBreite = owner.indexOfComponent( IWspmConstants.POINT_PROPERTY_BREITE );
-    final int iPointsHoehe = owner.indexOfComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final int iPointsBreite = owner.indexOfComponent( IWspmPointProperties.POINT_PROPERTY_BREITE );
+    final int iPointsHoehe = owner.indexOfComponent( IWspmPointProperties.POINT_PROPERTY_HOEHE );
 
     final IProfilChange[] changes = new IProfilChange[pointsCount];
     try
@@ -127,7 +127,7 @@ public class ProfilEndTarget extends AbstractPointsTarget
         newPoint.setValue( iBreite, (Double) point.getValue( iPointsBreite ) - deltaX );
         newPoint.setValue( iHoehe, (Double) point.getValue( iPointsHoehe ) - deltaY );
         for( final IComponent prop : owner.getComponents() )
-          if( !(IWspmConstants.POINT_PROPERTY_BREITE.equals( prop.getId() ) || IWspmConstants.POINT_PROPERTY_HOEHE.equals( prop.getId() )) )
+          if( !(IWspmPointProperties.POINT_PROPERTY_BREITE.equals( prop.getId() ) || IWspmPointProperties.POINT_PROPERTY_HOEHE.equals( prop.getId() )) )
           {
 
             final int index = profile.indexOfProperty( prop.getId() );

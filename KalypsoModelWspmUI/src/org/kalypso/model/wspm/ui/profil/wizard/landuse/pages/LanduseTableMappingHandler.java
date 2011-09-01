@@ -92,7 +92,7 @@ public class LanduseTableMappingHandler implements IRunnableWithProgress
       final Properties properties = m_model.getMapping();
       for( final Object value : shapeValues )
       {
-        properties.put( value, Messages.getString("LanduseTableMappingHandler.0") ); //$NON-NLS-1$
+        properties.put( value, Messages.getString( "LanduseTableMappingHandler.0" ) ); //$NON-NLS-1$
       }
     }
     catch( final Exception ex )

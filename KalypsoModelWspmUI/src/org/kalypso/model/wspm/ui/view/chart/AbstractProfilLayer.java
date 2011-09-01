@@ -47,7 +47,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -102,7 +102,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
     m_profil = profil;
     m_targetRangeProperty = targetRangeProperty;
-    m_domainComponent = IWspmConstants.POINT_PROPERTY_BREITE;
+    m_domainComponent = IWspmPointProperties.POINT_PROPERTY_BREITE;
     setIdentifier( id );
     createStyles( styleProvider, id );
   }

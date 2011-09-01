@@ -92,7 +92,7 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
 
   public ImportLanduseShapeWizard( )
   {
-    setWindowTitle( Messages.getString("ImportLanduseShapeWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "ImportLanduseShapeWizard.0" ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
   }
@@ -103,8 +103,8 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
     m_pageShapeImport = new SelectShapeFilePage( "shapePage" ); //$NON-NLS-1$
     addPage( m_pageShapeImport );
 
-    m_pageShapeImport.setTitle( Messages.getString("ImportLanduseShapeWizard.1") ); //$NON-NLS-1$
-    m_pageShapeImport.setDescription( Messages.getString("ImportLanduseShapeWizard.2") ); //$NON-NLS-1$
+    m_pageShapeImport.setTitle( Messages.getString( "ImportLanduseShapeWizard.1" ) ); //$NON-NLS-1$
+    m_pageShapeImport.setDescription( Messages.getString( "ImportLanduseShapeWizard.2" ) ); //$NON-NLS-1$
 
     m_handler = new LanduseShapeHandler( m_pageShapeImport, m_project );
 

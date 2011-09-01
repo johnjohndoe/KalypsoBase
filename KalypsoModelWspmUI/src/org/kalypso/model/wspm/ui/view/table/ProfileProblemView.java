@@ -124,18 +124,18 @@ public class ProfileProblemView
     for( final IMarker marker : markers )
       createMarkerControl( profil, sectionClient, color, marker );
 
-        final Boolean state = m_expansionState.get( severity );
-        final boolean expansionState = state == null ? false : state;
+    final Boolean state = m_expansionState.get( severity );
+    final boolean expansionState = state == null ? false : state;
 
-        section.setExpanded( expansionState );
-        section.addExpansionListener( new ExpansionAdapter()
-        {
-          @Override
-          public void expansionStateChanged( final ExpansionEvent e )
-          {
-            handleSectionExpanded( severity, e.getState() );
-          }
-        } );
+    section.setExpanded( expansionState );
+    section.addExpansionListener( new ExpansionAdapter()
+    {
+      @Override
+      public void expansionStateChanged( final ExpansionEvent e )
+      {
+        handleSectionExpanded( severity, e.getState() );
+      }
+    } );
   }
 
   protected void handleSectionExpanded( final int severity, final boolean state )

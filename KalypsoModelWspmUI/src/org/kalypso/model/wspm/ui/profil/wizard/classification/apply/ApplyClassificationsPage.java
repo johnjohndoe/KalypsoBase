@@ -66,8 +66,8 @@ public class ApplyClassificationsPage extends WizardPage
   {
     super( "ApplyClassificationsPage" ); //$NON-NLS-1$
 
-    setTitle( Messages.getString("ApplyClassificationsPage.0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("ApplyClassificationsPage.1") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "ApplyClassificationsPage.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "ApplyClassificationsPage.1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -91,7 +91,7 @@ public class ApplyClassificationsPage extends WizardPage
 
     final Button buttonOverwrite = new Button( body, SWT.CHECK );
     buttonOverwrite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonOverwrite.setText( Messages.getString("ApplyClassificationsPage.3") ); //$NON-NLS-1$
+    buttonOverwrite.setText( Messages.getString( "ApplyClassificationsPage.3" ) ); //$NON-NLS-1$
 
     buttonOverwrite.addSelectionListener( new SelectionAdapter()
     {
@@ -110,11 +110,11 @@ public class ApplyClassificationsPage extends WizardPage
     final Group group = new Group( body, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     group.setLayout( new GridLayout() );
-    group.setText( Messages.getString("ApplyClassificationsPage.4") ); //$NON-NLS-1$
+    group.setText( Messages.getString( "ApplyClassificationsPage.4" ) ); //$NON-NLS-1$
 
     final Button buttonVegetation = new Button( group, SWT.RADIO );
     buttonVegetation.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonVegetation.setText( Messages.getString("ApplyClassificationsPage.5") ); //$NON-NLS-1$
+    buttonVegetation.setText( Messages.getString( "ApplyClassificationsPage.5" ) ); //$NON-NLS-1$
     buttonVegetation.setSelection( true );
 
     buttonVegetation.addSelectionListener( new SelectionAdapter()
@@ -129,7 +129,7 @@ public class ApplyClassificationsPage extends WizardPage
 
     final Button buttonRoughness = new Button( group, SWT.RADIO );
     buttonRoughness.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonRoughness.setText( Messages.getString("ApplyClassificationsPage.6") ); //$NON-NLS-1$
+    buttonRoughness.setText( Messages.getString( "ApplyClassificationsPage.6" ) ); //$NON-NLS-1$
 
     buttonRoughness.addSelectionListener( new SelectionAdapter()
     {
