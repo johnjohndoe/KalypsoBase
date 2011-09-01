@@ -38,70 +38,41 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
+package org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model;
 
-import java.util.LinkedHashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.shape.IShapeFileVisitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.LanduseTableMappingHandler;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.IDBFField;
 
 /**
  * @author Dirk Kuch
  */
-public class LanduseTableMappingHandler implements IRunnableWithProgress
+public class ALSSelectedPropertyChanged implements PropertyChangeListener
 {
 
-  private final ShapeFile m_file;
-
-  private final Properties m_properties;
-
-  private final IDBFField m_field;
-
-  public LanduseTableMappingHandler( final ShapeFile file, final IDBFField field, final Properties properties )
-  {
-    m_file = file;
-    m_field = field;
-    m_properties = properties;
-  }
-
   /**
-   * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+   * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
    */
   @Override
-  public void run( final IProgressMonitor monitor )
+  public void propertyChange( final PropertyChangeEvent evt )
   {
+    final ApplyLanduseShapeModel model = (ApplyLanduseShapeModel) evt.getSource();
+    final ShapeFile shapeFile = model.getShapeFile();
+    final IDBFField property = (IDBFField) evt.getNewValue();
+
     try
     {
-      final Set<Object> shapeValues = new LinkedHashSet<Object>();
-      final int column = ArrayUtils.indexOf( m_file.getFields(), m_field );
-
-      m_file.accept( new IShapeFileVisitor()
-      {
-        @Override
-        public void visit( final Object[] row )
-        {
-          shapeValues.add( row[column] );
-        }
-      } );
-
-      for( final Object value : shapeValues )
-      {
-        // only add empty mappings
-        if( Objects.isNull( m_properties.getProperty( value.toString() ) ) )
-          m_properties.put( value, "" ); //$NON-NLS-1$
-      }
+      final LanduseTableMappingHandler handler = new LanduseTableMappingHandler( shapeFile, property, model.getMapping() );
+      handler.run( new NullProgressMonitor() );
     }
     catch( final Exception ex )
     {
       ex.printStackTrace();
     }
-
   }
+
 }
