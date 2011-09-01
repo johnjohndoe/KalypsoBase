@@ -49,7 +49,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.pages.ApplyLanduseShapePage;
-import org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.ImportLanduseDataModel;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
@@ -67,8 +66,6 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
 // handlePageChanged( event.getSelectedPage() );
 // }
 // };
-
-  ImportLanduseDataModel m_model = new ImportLanduseDataModel();
 
   protected IProject m_project;
 

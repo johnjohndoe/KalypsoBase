@@ -119,6 +119,19 @@ public class ApplyLanduseShapePage extends WizardPage
       }
     } );
 
+    // TODO refacor table
+// final LanduseMappingTable table = new LanduseMappingTable( body, this );
+// table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+// m_model.addPropertyChangeListener( ApplyLanduseShapeModel.PROPERTY_MAPPING, new PropertyChangeListener()
+// {
+// @Override
+// public void propertyChange( final PropertyChangeEvent evt )
+// {
+// table.refresh();
+// }
+// } );
+
     setControl( body );
   }
 

@@ -44,11 +44,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.FilenameUtils;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.gml.IWspmProject;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.DBaseException;
@@ -60,7 +57,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class LanduseShapeHandler implements ILanduseShapeDataProvider
 {
-
   private final IShapeFileSelection m_selection;
 
   private ShapeFile m_shapeFile;
@@ -94,21 +90,6 @@ public class LanduseShapeHandler implements ILanduseShapeDataProvider
     }
 
     return m_shapeFile;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider#getWspmModel()
-   */
-  @Override
-  public IWspmProject getWspmModel( ) throws Exception
-  {
-    if( Objects.isNotNull( m_workspace ) )
-      return (IWspmProject) m_workspace.getRootFeature();
-
-    final IFile file = m_project.getFile( "modell.gml" ); //$NON-NLS-1$
-    m_workspace = GmlSerializer.createGMLWorkspace( file );
-
-    return (IWspmProject) m_workspace.getRootFeature();
   }
 
   /**

@@ -55,7 +55,6 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.IRefreshable;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.ImportLanduseDataModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.LanduseMappingPage;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.runnables.ImportLanduseShapeRunnable;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseShapeHandler;
@@ -77,8 +76,6 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
       handlePageChanged( event.getSelectedPage() );
     }
   };
-
-  ImportLanduseDataModel m_model = new ImportLanduseDataModel();
 
   protected SelectShapeFilePage m_pageShapeImport;
 
@@ -120,7 +117,7 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
   {
     try
     {
-      final ImportLanduseShapeRunnable runnable = new ImportLanduseShapeRunnable( m_handler, m_roughnessPage, m_vegetationPage );
+      final ImportLanduseShapeRunnable runnable = new ImportLanduseShapeRunnable( m_handler, m_roughnessPage.getModel(), m_vegetationPage.getModel() );
       getContainer().run( false, false, runnable );
 
       return true;

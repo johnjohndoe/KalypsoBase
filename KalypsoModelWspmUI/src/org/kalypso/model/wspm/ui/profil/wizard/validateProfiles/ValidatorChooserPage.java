@@ -65,9 +65,9 @@ import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
  */
 public class ValidatorChooserPage extends WizardPage
 {
-  private final String SETTINGS_RULES_IDS = "validatorChooserPage.selectedrules"; //$NON-NLS-1$
+  private static final String SETTINGS_RULES_IDS = "validatorChooserPage.selectedrules"; //$NON-NLS-1$
 
-  private final String SETTINGS_QUICKFIX_IDS = "reparatorChooserPage.selectedfixes"; //$NON-NLS-1$
+  private static final String SETTINGS_QUICKFIX_IDS = "reparatorChooserPage.selectedfixes"; //$NON-NLS-1$
 
   private HashMap<String, IValidatorRule> m_rules = null;
 

@@ -57,7 +57,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.ILanduseMapping;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 
 /**
@@ -67,11 +67,11 @@ public class ImportLanduseShapeRunnable implements IRunnableWithProgress
 {
   private final ILanduseShapeDataProvider m_handler;
 
-  private final ILanduseMapping m_roughnessMapping;
+  private final ILanduseModel m_roughnessMapping;
 
-  private final ILanduseMapping m_vegetationMapping;
+  private final ILanduseModel m_vegetationMapping;
 
-  public ImportLanduseShapeRunnable( final ILanduseShapeDataProvider handler, final ILanduseMapping roughnessMapping, final ILanduseMapping vegetationMapping )
+  public ImportLanduseShapeRunnable( final ILanduseShapeDataProvider handler, final ILanduseModel roughnessMapping, final ILanduseModel vegetationMapping )
   {
     m_handler = handler;
     m_roughnessMapping = roughnessMapping;
@@ -105,19 +105,19 @@ public class ImportLanduseShapeRunnable implements IRunnableWithProgress
 
   }
 
-  private void buildStyledLayerDescriptor( final ILanduseMapping mapping, final IFolder landuse, final String fileName, final IProgressMonitor monitor ) throws CoreException
+  private void buildStyledLayerDescriptor( final ILanduseModel mapping, final IFolder landuse, final String fileName, final IProgressMonitor monitor ) throws CoreException
   {
     final LanduseStyledLayerDescriptorBuilder builder = new LanduseStyledLayerDescriptorBuilder( mapping, landuse.getFile( fileName ) );
     builder.execute( monitor );
   }
 
-  private void writePropertyMappings( final ILanduseMapping mapping, final IFolder folder, final String fileName, final IProgressMonitor monitor ) throws IOException, CoreException
+  private void writePropertyMappings( final ILanduseModel mapping, final IFolder folder, final String fileName, final IProgressMonitor monitor ) throws IOException, CoreException
   {
     final IFile iProperties = folder.getFile( fileName );
     final FileOutputStream outputStream = new FileOutputStream( iProperties.getLocation().toFile() );
     try
     {
-      final Properties properties = mapping.getProperties();
+      final Properties properties = mapping.getMapping();
       properties.store( outputStream, null );
     }
     finally

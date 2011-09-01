@@ -184,7 +184,7 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
 
     final Shell shell = getShell();
 
-    final ICoreRunnableWithProgress m_validateJob = new ICoreRunnableWithProgress()
+    final ICoreRunnableWithProgress validateJob = new ICoreRunnableWithProgress()
     {
       @Override
       public IStatus execute( final IProgressMonitor monitor )
@@ -296,7 +296,7 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
       @Override
       public void run( )
       {
-        RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, m_validateJob );
+        RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, validateJob );
 
         try
         {

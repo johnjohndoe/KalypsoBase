@@ -38,21 +38,28 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
+package org.kalypso.model.wspm.ui.profil.wizard.landuse.model;
 
-import java.util.Properties;
-
-import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
-import org.kalypso.shape.dbf.IDBFField;
+import org.eclipse.core.resources.IProject;
 
 /**
  * @author Dirk Kuch
  */
-public interface ILanduseMapping
+public class ImportLanduseDataModel extends AbstractLanduseModel implements ILanduseModel
 {
-  Properties getProperties( );
 
-  IClassificationClass[] getClasses( );
+  private final String m_type;
 
-  IDBFField getSelectedColumn( );
+  public ImportLanduseDataModel( final IProject project, final String type )
+  {
+    super( project );
+    m_type = type;
+  }
+
+  @Override
+  public String getType( )
+  {
+    return m_type;
+  }
+
 }
