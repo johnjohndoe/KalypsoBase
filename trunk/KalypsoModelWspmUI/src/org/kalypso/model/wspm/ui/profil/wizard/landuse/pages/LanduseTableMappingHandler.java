@@ -47,10 +47,10 @@ import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.shape.IShapeFileVisitor;
 import org.kalypso.shape.ShapeFile;
+import org.kalypso.shape.dbf.IDBFField;
 
 /**
  * @author Dirk Kuch
@@ -58,14 +58,17 @@ import org.kalypso.shape.ShapeFile;
 public class LanduseTableMappingHandler implements IRunnableWithProgress
 {
 
-  private final ILanduseShapeDataProvider m_shape;
+  private final ShapeFile m_file;
 
-  private final ImportLanduseDataModel m_model;
+  private final Properties m_properties;
 
-  public LanduseTableMappingHandler( final ILanduseShapeDataProvider shape, final ImportLanduseDataModel model )
+  private final IDBFField m_field;
+
+  public LanduseTableMappingHandler( final ShapeFile file, final IDBFField field, final Properties properties )
   {
-    m_shape = shape;
-    m_model = model;
+    m_file = file;
+    m_field = field;
+    m_properties = properties;
   }
 
   /**
@@ -76,11 +79,10 @@ public class LanduseTableMappingHandler implements IRunnableWithProgress
   {
     try
     {
-      final ShapeFile shapeFile = m_shape.getShapeFile();
       final Set<Object> shapeValues = new LinkedHashSet<Object>();
-      final int column = ArrayUtils.indexOf( shapeFile.getFields(), m_model.getShapeColumn() );
+      final int column = ArrayUtils.indexOf( m_file.getFields(), m_field );
 
-      shapeFile.accept( new IShapeFileVisitor()
+      m_file.accept( new IShapeFileVisitor()
       {
         @Override
         public void visit( final Object[] row )
@@ -89,10 +91,11 @@ public class LanduseTableMappingHandler implements IRunnableWithProgress
         }
       } );
 
-      final Properties properties = m_model.getMapping();
       for( final Object value : shapeValues )
       {
-        properties.put( value, Messages.getString( "LanduseTableMappingHandler.0" ) ); //$NON-NLS-1$
+        // only add empty mappings
+        if( Objects.isNull( m_properties.getProperty( value.toString() ) ) )
+          m_properties.put( value, "" ); //$NON-NLS-1$
       }
     }
     catch( final Exception ex )

@@ -49,7 +49,6 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -69,6 +68,7 @@ import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseShapeLabelProvider;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.FieldType;
 import org.kalypso.shape.dbf.IDBFField;
@@ -130,7 +130,7 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable, ILan
       {
         try
         {
-          final LanduseTableMappingHandler handler = new LanduseTableMappingHandler( m_provider, m_model );
+          final LanduseTableMappingHandler handler = new LanduseTableMappingHandler( m_provider.getShapeFile(), m_model.getShapeColumn(), m_model.getMapping() );
           getContainer().run( false, false, handler );
 
           m_table.refresh();
@@ -155,21 +155,7 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable, ILan
   {
     final ComboViewer viewer = new ComboViewer( body, SWT.BORDER );
     viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    viewer.setLabelProvider( new LabelProvider()
-    {
-      @Override
-      public String getText( final Object element )
-      {
-        if( element instanceof IDBFField )
-        {
-          final IDBFField field = (IDBFField) element;
-
-          return field.getName();
-        }
-
-        return super.getText( element );
-      }
-    } );
+    viewer.setLabelProvider( new LanduseShapeLabelProvider() );
     viewer.setContentProvider( new ArrayContentProvider() );
 
     final FieldType[] filter = new FieldType[] { FieldType.D, FieldType.F, FieldType.L, FieldType.M, FieldType.N };
