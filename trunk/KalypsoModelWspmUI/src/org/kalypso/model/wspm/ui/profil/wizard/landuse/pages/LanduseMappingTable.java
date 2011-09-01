@@ -53,6 +53,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -107,12 +108,12 @@ public class LanduseMappingTable extends Composite
     m_viewer.getTable().setHeaderVisible( true );
 
     final TableViewerColumn shapeColumn = new TableViewerColumn( m_viewer, SWT.NONE );
-    shapeColumn.getColumn().setText( "Property" );
+    shapeColumn.getColumn().setText( Messages.getString("LanduseMappingTable_0") ); //$NON-NLS-1$
     m_layout.setColumnData( shapeColumn.getColumn(), new ColumnWeightData( 50 ) );
     shapeColumn.setLabelProvider( new LanduseMappingLabelProvider( clazzes, 0 ) );
 
     final TableViewerColumn clazzColumn = new TableViewerColumn( m_viewer, SWT.NONE );
-    clazzColumn.getColumn().setText( "Classifiation" );
+    clazzColumn.getColumn().setText( Messages.getString("LanduseMappingTable_1") ); //$NON-NLS-1$
     m_layout.setColumnData( clazzColumn.getColumn(), new ColumnWeightData( 50 ) );
 
     clazzColumn.setLabelProvider( new LanduseMappingLabelProvider( clazzes, 1 ) );

@@ -54,8 +54,10 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.IRefreshable;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.ImportLanduseDataModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.LanduseMappingPage;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.runnables.ImportLanduseShapeRunnable;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseShapeHandler;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -90,7 +92,7 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
 
   public ImportLanduseShapeWizard( )
   {
-    setWindowTitle( "Import landuse shape" );
+    setWindowTitle( Messages.getString("ImportLanduseShapeWizard.0") ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
   }
@@ -100,6 +102,9 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
   {
     m_pageShapeImport = new SelectShapeFilePage( "shapePage" ); //$NON-NLS-1$
     addPage( m_pageShapeImport );
+
+    m_pageShapeImport.setTitle( Messages.getString("ImportLanduseShapeWizard.1") ); //$NON-NLS-1$
+    m_pageShapeImport.setDescription( Messages.getString("ImportLanduseShapeWizard.2") ); //$NON-NLS-1$
 
     m_handler = new LanduseShapeHandler( m_pageShapeImport, m_project );
 

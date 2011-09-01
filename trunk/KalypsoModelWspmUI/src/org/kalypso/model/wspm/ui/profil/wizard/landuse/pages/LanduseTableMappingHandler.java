@@ -47,6 +47,7 @@ import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 import org.kalypso.shape.IShapeFileVisitor;
 import org.kalypso.shape.ShapeFile;
@@ -91,7 +92,7 @@ public class LanduseTableMappingHandler implements IRunnableWithProgress
       final Properties properties = m_model.getMapping();
       for( final Object value : shapeValues )
       {
-        properties.put( value, "" );
+        properties.put( value, Messages.getString("LanduseTableMappingHandler.0") ); //$NON-NLS-1$
       }
     }
     catch( final Exception ex )

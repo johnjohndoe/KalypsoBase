@@ -51,6 +51,7 @@ import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.util.roughnesses.UpdateSimpleRoughnessProperty;
 import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ManipulateProfileWizard;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
 import org.kalypso.observation.result.IComponent;
@@ -64,13 +65,13 @@ public class ApplyClassificationsWizard extends ManipulateProfileWizard
 
   public ApplyClassificationsWizard( )
   {
-    setWindowTitle( "Apply classification class values on profiles" );
+    setWindowTitle( Messages.getString("ApplyClassificationsWizard.0") ); //$NON-NLS-1$
   }
 
   @Override
   protected String getProfilePageMessage( )
   {
-    return "Apply classification class values on profiles";
+    return Messages.getString("ApplyClassificationsWizard.1"); //$NON-NLS-1$
   }
 
   @Override

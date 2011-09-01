@@ -47,6 +47,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -54,7 +55,7 @@ import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 public class LanduseMappingLabelProvider extends ColumnLabelProvider
 {
 
-  private static final String EMPTY_STRING = "< empty >";
+  private static final String EMPTY_STRING = Messages.getString("LanduseMappingLabelProvider.0"); //$NON-NLS-1$
 
   private final int m_column;
 
@@ -91,7 +92,7 @@ public class LanduseMappingLabelProvider extends ColumnLabelProvider
 
       final IClassificationClass clazz = findClass( strValue );
       if( Objects.isNull( clazz ) )
-        return "< missing class >";
+        return Messages.getString("LanduseMappingLabelProvider.1"); //$NON-NLS-1$
 
       return clazz.getDescription();
     }

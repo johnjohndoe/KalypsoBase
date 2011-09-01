@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.landuse;
+package org.kalypso.model.wspm.ui.profil.wizard.landuse.runnables;
 
 import java.awt.Color;
 import java.io.FileWriter;
@@ -69,6 +69,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.ILanduseMapping;
 import org.kalypso.shape.dbf.IDBFField;
 import org.kalypsodeegree.filterencoding.Filter;
@@ -109,7 +110,7 @@ public class LanduseStyledLayerDescriptorBuilder implements ICoreRunnableWithPro
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final FeatureTypeStyle style = StyleFactory.createFeatureTypeStyle();
-    style.setName( "Kalypso Landuse" );
+    style.setName( Messages.getString("LanduseStyledLayerDescriptorBuilder.0") ); //$NON-NLS-1$
 
     final IDBFField column = m_mapping.getSelectedColumn();
     if( Objects.isNull( column ) )
@@ -182,7 +183,7 @@ public class LanduseStyledLayerDescriptorBuilder implements ICoreRunnableWithPro
     final Rule rule = StyleFactory.createRule( symbolizer );
     rule.setName( property );
     rule.setTitle( clazz.getDescription() );
-    rule.setAbstract( String.format( "Shape file property: \"%s\" Class: \"%s\"", property, clazz.getName() ) );
+    rule.setAbstract( String.format( Messages.getString("LanduseStyledLayerDescriptorBuilder.1"), property, clazz.getName() ) ); //$NON-NLS-1$
 
     final Operation operation = new PropertyIsLikeOperation( new PropertyName( column, null ), new Literal( property ), '*', '$', '/' ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final Filter filter = new ComplexFilter( operation );
