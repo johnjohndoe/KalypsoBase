@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.landuse;
+package org.kalypso.model.wspm.ui.profil.wizard.landuse.runnables;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;

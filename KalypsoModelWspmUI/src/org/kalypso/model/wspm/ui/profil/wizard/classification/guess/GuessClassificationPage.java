@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -71,8 +72,8 @@ public class GuessClassificationPage extends WizardPage
   {
     super( "GuessClassificationPage" ); //$NON-NLS-1$
 
-    setTitle( "Guess Classification Classes" );
-    setDescription( "Which kind of classification classes you like to guess?" );
+    setTitle( Messages.getString("GuessClassificationPage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("GuessClassificationPage.1") ); //$NON-NLS-1$
   }
 
   /**
@@ -96,14 +97,14 @@ public class GuessClassificationPage extends WizardPage
     final Group group = new Group( body, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     group.setLayout( new GridLayout() );
-    group.setText( "Properties" );
+    group.setText( Messages.getString("GuessClassificationPage.2") ); //$NON-NLS-1$
 
-    new Label( group, SWT.NULL ).setText( "Fuziness (Max. Delta of class value)" );
+    new Label( group, SWT.NULL ).setText( Messages.getString("GuessClassificationPage.3") ); //$NON-NLS-1$
 
     // TODO validated text box
     final Text text = new Text( group, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    text.setText( "9999" );
+    text.setText( "9999" ); //$NON-NLS-1$
 
     text.addModifyListener( new ModifyListener()
     {
@@ -121,7 +122,7 @@ public class GuessClassificationPage extends WizardPage
 
     final Button buttonOverwrite = new Button( group, SWT.CHECK );
     buttonOverwrite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonOverwrite.setText( "Overwrite existing classes" );
+    buttonOverwrite.setText( Messages.getString("GuessClassificationPage.5") ); //$NON-NLS-1$
 
     buttonOverwrite.addSelectionListener( new SelectionAdapter()
     {
@@ -140,11 +141,11 @@ public class GuessClassificationPage extends WizardPage
     final Group group = new Group( body, SWT.NONE );
     group.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     group.setLayout( new GridLayout() );
-    group.setText( "Type" );
+    group.setText( Messages.getString("GuessClassificationPage.6") ); //$NON-NLS-1$
 
     final Button buttonVegetation = new Button( group, SWT.RADIO );
     buttonVegetation.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonVegetation.setText( "Guess Vegetation Classes" );
+    buttonVegetation.setText( Messages.getString("GuessClassificationPage.7") ); //$NON-NLS-1$
     buttonVegetation.setSelection( true );
 
     buttonVegetation.addSelectionListener( new SelectionAdapter()
@@ -159,7 +160,7 @@ public class GuessClassificationPage extends WizardPage
 
     final Button buttonRoughness = new Button( group, SWT.RADIO );
     buttonRoughness.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    buttonRoughness.setText( "Guess Roughness Classes" );
+    buttonRoughness.setText( Messages.getString("GuessClassificationPage.8") ); //$NON-NLS-1$
 
     buttonRoughness.addSelectionListener( new SelectionAdapter()
     {

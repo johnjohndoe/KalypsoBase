@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
 import org.kalypso.model.wspm.core.util.roughnesses.GuessRoughessClassesRunnable;
 import org.kalypso.model.wspm.core.util.vegetation.GuessVegetationClassesRunnable;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ManipulateProfileWizard;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation.IProfileManipulator;
 import org.kalypso.observation.result.IComponent;
@@ -65,13 +66,13 @@ public class GuessClassificationsWizard extends ManipulateProfileWizard
 
   public GuessClassificationsWizard( )
   {
-    setWindowTitle( "Guess classification classes from profile properties" );
+    setWindowTitle( Messages.getString("GuessClassificationsWizard.0") ); //$NON-NLS-1$
   }
 
   @Override
   protected String getProfilePageMessage( )
   {
-    return "Guess classification classes of profiles";
+    return Messages.getString("GuessClassificationsWizard.1"); //$NON-NLS-1$
   }
 
   @Override

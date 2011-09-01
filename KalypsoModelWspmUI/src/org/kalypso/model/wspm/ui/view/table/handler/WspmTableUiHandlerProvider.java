@@ -94,7 +94,7 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
     Assert.isTrue( tupleResult == m_profile.getResult() );
 
     final List<ComponentHandlerSortContainer> handlers = new ArrayList<ComponentHandlerSortContainer>();
-    handlers.add( new ComponentHandlerSortContainer( "unknown", -1, new ComponentUiProblemHandler( m_profile ) ) );
+    handlers.add( new ComponentHandlerSortContainer( "unknown", -1, new ComponentUiProblemHandler( m_profile ) ) ); //$NON-NLS-1$
 
     final IComponent[] pointMarkerTypes = m_profile.getPointMarkerTypes();
     final IComponent[] components = m_profile.getPointProperties();

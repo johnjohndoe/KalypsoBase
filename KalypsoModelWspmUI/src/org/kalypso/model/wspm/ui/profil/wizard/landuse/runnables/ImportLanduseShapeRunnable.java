@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.landuse;
+package org.kalypso.model.wspm.ui.profil.wizard.landuse.runnables;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -56,6 +56,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.ILanduseMapping;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 
@@ -90,11 +91,11 @@ public class ImportLanduseShapeRunnable implements IRunnableWithProgress
       final String lnkShapeFile = FilenameUtils.removeExtension( m_handler.getLnkShapeFile() );
 
       final String baseName = importShapeFile( landuse, lnkShapeFile, monitor );
-      writePropertyMappings( m_roughnessMapping, landuse, String.format( "%s.roughness.properties", baseName ), monitor ); // $NON-NLS-1$
-      writePropertyMappings( m_vegetationMapping, landuse, String.format( "%s.vegetation.properties", baseName ), monitor ); // $NON-NLS-1$
+      writePropertyMappings( m_roughnessMapping, landuse, String.format( "%s.roughness.properties", baseName ), monitor ); // $NON-NLS-1$ //$NON-NLS-1$
+      writePropertyMappings( m_vegetationMapping, landuse, String.format( "%s.vegetation.properties", baseName ), monitor ); // $NON-NLS-1$ //$NON-NLS-1$
 
-      buildStyledLayerDescriptor( m_roughnessMapping, landuse, String.format( "%s.roughness.sld", baseName ), monitor );
-      buildStyledLayerDescriptor( m_vegetationMapping, landuse, String.format( "%s.vegetation.sld", baseName ), monitor );
+      buildStyledLayerDescriptor( m_roughnessMapping, landuse, String.format( "%s.roughness.sld", baseName ), monitor ); //$NON-NLS-1$
+      buildStyledLayerDescriptor( m_vegetationMapping, landuse, String.format( "%s.vegetation.sld", baseName ), monitor ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -130,7 +131,7 @@ public class ImportLanduseShapeRunnable implements IRunnableWithProgress
   {
     if( fileExists( landuse, lnkShapeFile ) )
     {
-      final boolean overwrite = MessageDialog.openQuestion( PlatformUI.getWorkbench().getDisplay().getActiveShell(), "Overwrite", "Landuse shape already exists. Overwirte?" );
+      final boolean overwrite = MessageDialog.openQuestion( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString("ImportLanduseShapeRunnable.4"), Messages.getString("ImportLanduseShapeRunnable.5") ); //$NON-NLS-1$ //$NON-NLS-2$
       if( overwrite )
       {
         FileUtilities.copyShapeFileToDirectory( lnkShapeFile, landuse.getLocation().toFile() );
@@ -155,11 +156,11 @@ public class ImportLanduseShapeRunnable implements IRunnableWithProgress
   private IFolder getLanduseFolder( final IProgressMonitor monitor ) throws CoreException
   {
     final IProject project = m_handler.getProject();
-    final IFolder dataFolder = project.getFolder( "data" ); // $NON-NLS-1$
+    final IFolder dataFolder = project.getFolder( "data" ); // $NON-NLS-1$ //$NON-NLS-1$
     if( !dataFolder.exists() )
       dataFolder.create( true, true, monitor );
 
-    final IFolder landuseFolder = dataFolder.getFolder( "landuse" ); // $NON-NLS-1$
+    final IFolder landuseFolder = dataFolder.getFolder( "landuse" ); // $NON-NLS-1$ //$NON-NLS-1$
     if( !landuseFolder.exists() )
       landuseFolder.create( true, true, monitor );
 

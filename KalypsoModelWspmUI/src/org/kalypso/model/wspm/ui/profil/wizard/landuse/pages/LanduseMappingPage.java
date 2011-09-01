@@ -67,6 +67,7 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.IWspmProject;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.FieldType;
@@ -93,10 +94,21 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable, ILan
 
   public LanduseMappingPage( final ILanduseShapeDataProvider provider, final String type )
   {
-    super( "LanduseMappingPage" );
+    super( "LanduseMappingPage" ); //$NON-NLS-1$
 
     m_provider = provider;
     m_type = type;
+
+    if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( type ) )
+    {
+      setTitle( Messages.getString("LanduseMappingPage.0") ); //$NON-NLS-1$
+    }
+    else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( type ) )
+    {
+      setTitle( Messages.getString("LanduseMappingPage.1") ); //$NON-NLS-1$
+    }
+
+    setDescription( Messages.getString("LanduseMappingPage.2") ); //$NON-NLS-1$
   }
 
   @Override
@@ -107,7 +119,7 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable, ILan
     final Composite body = new Composite( parent, SWT.NULL );
     body.setLayout( new GridLayout() );
 
-    new Label( body, SWT.NULL ).setText( "Shape Column" );
+    new Label( body, SWT.NULL ).setText( Messages.getString("LanduseMappingPage.3") ); //$NON-NLS-1$
     m_column = getViewer( body );
 
     m_column.addSelectionChangedListener( new ISelectionChangedListener()
@@ -132,7 +144,7 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable, ILan
 
     new Label( body, SWT.NULL ).setText( " " );// spacer //$NON-NLS-1$
 
-    new Label( body, SWT.NULL ).setText( "Mapping Table" );
+    new Label( body, SWT.NULL ).setText( Messages.getString("LanduseMappingPage.4") ); //$NON-NLS-1$
     m_table = new LanduseMappingTable( body, this );
     m_table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
