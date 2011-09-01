@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: KalypsoWPS-Server Plug-in
+Bundle-SymbolicName: org.kalypso.wps.server;singleton:=true
+Bundle-Version: 11.6.1.qualifier
+Bundle-Activator: org.kalypso.wps.server.Activator
+Bundle-Vendor: kalypsobase.sourceforge.net
+Require-Bundle: org.eclipse.core.runtime,
+ org.kalypso.ogc.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
