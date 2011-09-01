@@ -63,6 +63,10 @@ import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.viewers.IRefreshable;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.gml.IWspmProject;
+import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
+import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.FieldType;
@@ -129,7 +133,7 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable, ILan
     new Label( body, SWT.NULL ).setText( " " );// spacer //$NON-NLS-1$
 
     new Label( body, SWT.NULL ).setText( "Mapping Table" );
-    m_table = new LanduseMappingTable( body, m_model, m_provider, m_type );
+    m_table = new LanduseMappingTable( body, this );
     m_table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     setControl( body );
@@ -210,4 +214,30 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable, ILan
     return m_model.getMapping();
   }
 
+  @Override
+  public IClassificationClass[] getClasses( )
+  {
+    try
+    {
+      final IWspmProject project = m_provider.getWspmModel();
+      final IWspmClassification classification = project.getClassificationMember();
+
+      if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( m_type ) )
+        return classification.getVegetationClasses();
+      else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( m_type ) )
+        return classification.getRoughnessClasses();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public IDBFField getSelectedColumn( )
+  {
+    return m_model.getShapeColumn();
+  }
 }

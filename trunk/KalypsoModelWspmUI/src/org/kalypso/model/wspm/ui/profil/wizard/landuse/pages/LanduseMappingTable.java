@@ -52,11 +52,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.gml.IWspmProject;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
-import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
-import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 
 /**
  * @author Dirk Kuch
@@ -66,20 +62,14 @@ public class LanduseMappingTable extends Composite
 
   private TableViewer m_viewer;
 
-  private final ImportLanduseDataModel m_model;
-
   TableColumnLayout m_layout = new TableColumnLayout();
 
-  private final ILanduseShapeDataProvider m_provider;
+  private final ILanduseMapping m_mapping;
 
-  private final String m_type;
-
-  public LanduseMappingTable( final Composite parent, final ImportLanduseDataModel model, final ILanduseShapeDataProvider provider, final String type )
+  public LanduseMappingTable( final Composite parent, final ILanduseMapping mapping )
   {
     super( parent, SWT.NULL );
-    m_model = model;
-    m_provider = provider;
-    m_type = type;
+    m_mapping = mapping;
     setLayout( m_layout );
 
     init();
@@ -87,7 +77,7 @@ public class LanduseMappingTable extends Composite
 
   private void init( )
   {
-    final IClassificationClass[] clazzes = getClasses();
+    final IClassificationClass[] clazzes = m_mapping.getClasses();
 
     m_viewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_viewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -129,29 +119,9 @@ public class LanduseMappingTable extends Composite
     clazzColumn.setEditingSupport( new LandUseMappingEditingSupport( m_viewer, clazzes ) );
   }
 
-  private IClassificationClass[] getClasses( )
-  {
-    try
-    {
-      final IWspmProject project = m_provider.getWspmModel();
-      final IWspmClassification classification = project.getClassificationMember();
-
-      if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( m_type ) )
-        return classification.getVegetationClasses();
-      else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( m_type ) )
-        return classification.getRoughnessClasses();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    throw new UnsupportedOperationException();
-  }
-
   public void refresh( )
   {
-    m_viewer.setInput( m_model.getMapping() );
+    m_viewer.setInput( m_mapping.getProperties() );
   }
 
 }

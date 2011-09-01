@@ -90,8 +90,11 @@ public class ImportLanduseShapeRunnable implements IRunnableWithProgress
       final String lnkShapeFile = FilenameUtils.removeExtension( m_handler.getLnkShapeFile() );
 
       final String baseName = importShapeFile( landuse, lnkShapeFile, monitor );
-      writePropertyMappings( m_roughnessMapping, landuse, String.format( "%s.roughness.properties", baseName ), monitor );
-      writePropertyMappings( m_vegetationMapping, landuse, String.format( "%s.vegetation.properties", baseName ), monitor );
+      writePropertyMappings( m_roughnessMapping, landuse, String.format( "%s.roughness.properties", baseName ), monitor ); // $NON-NLS-1$
+      writePropertyMappings( m_vegetationMapping, landuse, String.format( "%s.vegetation.properties", baseName ), monitor ); // $NON-NLS-1$
+
+      buildStyledLayerDescriptor( m_roughnessMapping, landuse, String.format( "%s.roughness.sld", baseName ), monitor );
+      buildStyledLayerDescriptor( m_vegetationMapping, landuse, String.format( "%s.vegetation.sld", baseName ), monitor );
     }
     catch( final Exception e )
     {
@@ -99,6 +102,12 @@ public class ImportLanduseShapeRunnable implements IRunnableWithProgress
       throw new InvocationTargetException( e );
     }
 
+  }
+
+  private void buildStyledLayerDescriptor( final ILanduseMapping mapping, final IFolder landuse, final String fileName, final IProgressMonitor monitor ) throws CoreException
+  {
+    final LanduseStyledLayerDescriptorBuilder builder = new LanduseStyledLayerDescriptorBuilder( mapping, landuse.getFile( fileName ) );
+    builder.execute( monitor );
   }
 
   private void writePropertyMappings( final ILanduseMapping mapping, final IFolder folder, final String fileName, final IProgressMonitor monitor ) throws IOException, CoreException
