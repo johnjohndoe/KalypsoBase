@@ -6,7 +6,7 @@
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet
             alias="/ogc"
-            class="org.kalypso.ogc.core.service.internal.OGCServlet">
+            class="org.kalypso.ogc.core.service.OGCServlet">
       </servlet>
    </extension>
 

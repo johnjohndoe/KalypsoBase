@@ -41,6 +41,8 @@
 package org.kalypso.ogc.core.operations;
 
 import org.kalypso.ogc.core.exceptions.OWSException;
+import org.kalypso.ogc.core.service.OGCRequest;
+import org.kalypso.ogc.core.service.OGCResponse;
 
 /**
  * This interface should be implemented by classes, that should provide an OGC operation.
@@ -51,6 +53,11 @@ public interface IOGCOperation
 {
   /**
    * This function executes the OGC operation.
+   * 
+   * @param The
+   *          OGC request.
+   * @param The
+   *          OGC response.
    */
-  public void execute( ) throws OWSException;
+  public void execute( OGCRequest request, OGCResponse response ) throws OWSException;
 }
