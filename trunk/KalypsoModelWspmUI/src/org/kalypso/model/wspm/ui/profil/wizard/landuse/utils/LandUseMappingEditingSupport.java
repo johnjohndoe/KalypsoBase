@@ -59,12 +59,12 @@ import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
  * @author kuch
  */
 @SuppressWarnings("deprecation")
-public class LandUseMappingEditingSupport extends EditingSupport
+public class LanduseMappingEditingSupport extends EditingSupport
 {
   private final ILanduseModel m_model;
 
   @SuppressWarnings("deprecation")
-  public LandUseMappingEditingSupport( final ColumnViewer viewer, final ILanduseModel model )
+  public LanduseMappingEditingSupport( final ColumnViewer viewer, final ILanduseModel model )
   {
     super( viewer );
     m_model = model;
