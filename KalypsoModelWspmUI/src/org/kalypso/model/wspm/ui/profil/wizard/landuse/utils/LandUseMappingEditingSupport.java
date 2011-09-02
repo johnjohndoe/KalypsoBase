@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
+package org.kalypso.model.wspm.ui.profil.wizard.landuse.utils;
 
 import java.util.Map.Entry;
 
@@ -51,6 +51,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
 import org.kalypso.model.wspm.ui.view.table.handler.ClassificationLabelProvider;
 import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 
@@ -60,18 +61,15 @@ import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 @SuppressWarnings("deprecation")
 public class LandUseMappingEditingSupport extends EditingSupport
 {
-  private final ComboBoxViewerCellEditor m_editor;
-
-  private final IClassificationClass[] m_classes;
+  private final ILanduseModel m_model;
 
   @SuppressWarnings("deprecation")
-  public LandUseMappingEditingSupport( final ColumnViewer viewer, final IClassificationClass[] classes )
+  public LandUseMappingEditingSupport( final ColumnViewer viewer, final ILanduseModel model )
   {
     super( viewer );
+    m_model = model;
     final Composite parent = (Composite) viewer.getControl();
 
-    m_classes = classes;
-    m_editor = new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), classes, parent, SWT.READ_ONLY | SWT.DROP_DOWN );
   }
 
   /**
@@ -80,7 +78,10 @@ public class LandUseMappingEditingSupport extends EditingSupport
   @Override
   protected CellEditor getCellEditor( final Object element )
   {
-    return m_editor;
+
+    final Composite parent = (Composite) getViewer().getControl();
+    /** on-the-fly generation - because classification classes can change (roughness or vegetation classes!) */
+    return new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), m_model.getClasses(), parent, SWT.READ_ONLY | SWT.DROP_DOWN );
   }
 
   /**
@@ -108,7 +109,7 @@ public class LandUseMappingEditingSupport extends EditingSupport
       if( StringUtils.isEmpty( strValue ) )
         return null;
 
-      for( final IClassificationClass clazz : m_classes )
+      for( final IClassificationClass clazz : m_model.getClasses() )
       {
         if( clazz.getName().equals( strValue ) )
           return clazz;

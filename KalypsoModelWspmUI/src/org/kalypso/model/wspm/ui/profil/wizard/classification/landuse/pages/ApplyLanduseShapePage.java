@@ -137,7 +137,7 @@ public class ApplyLanduseShapePage extends WizardPage
 
   private ComboViewer getViewer( final Composite body, final String property )
   {
-    final ComboViewer viewer = new ComboViewer( body, SWT.BORDER );
+    final ComboViewer viewer = new ComboViewer( body, SWT.BORDER | SWT.READ_ONLY );
     viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     viewer.setLabelProvider( new LanduseShapeLabelProvider() );
     viewer.setContentProvider( new ArrayContentProvider() );

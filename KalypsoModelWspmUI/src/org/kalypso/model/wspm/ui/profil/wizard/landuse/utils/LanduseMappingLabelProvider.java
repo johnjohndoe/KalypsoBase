@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
+package org.kalypso.model.wspm.ui.profil.wizard.landuse.utils;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -48,22 +48,22 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
 
 /**
  * @author Dirk Kuch
  */
 public class LanduseMappingLabelProvider extends ColumnLabelProvider
 {
-
   private static final String EMPTY_STRING = Messages.getString( "LanduseMappingLabelProvider.0" ); //$NON-NLS-1$
 
   private final int m_column;
 
-  private final IClassificationClass[] m_clazzes;
+  private final ILanduseModel m_model;
 
-  public LanduseMappingLabelProvider( final IClassificationClass[] clazzes, final int column )
+  public LanduseMappingLabelProvider( final ILanduseModel model, final int column )
   {
-    m_clazzes = clazzes;
+    m_model = model;
     m_column = column;
   }
 
@@ -102,11 +102,13 @@ public class LanduseMappingLabelProvider extends ColumnLabelProvider
 
   private IClassificationClass findClass( final String name )
   {
-    for( final IClassificationClass clazz : m_clazzes )
+    final IClassificationClass[] clazzes = m_model.getClasses();
+    for( final IClassificationClass clazz : clazzes )
     {
       if( clazz.getName().equals( name ) )
         return clazz;
     }
+
     return null;
   }
 

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
+package org.kalypso.model.wspm.ui.profil.wizard.landuse.utils;
 
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -52,7 +52,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
-import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ImportLanduseDataModel;
 
@@ -78,8 +77,6 @@ public class LanduseMappingTable extends Composite
 
   private void init( )
   {
-    final IClassificationClass[] clazzes = m_model.getClasses();
-
     m_viewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
     m_viewer.getTable().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -110,14 +107,20 @@ public class LanduseMappingTable extends Composite
     final TableViewerColumn shapeColumn = new TableViewerColumn( m_viewer, SWT.NONE );
     shapeColumn.getColumn().setText( Messages.getString( "LanduseMappingTable_0" ) ); //$NON-NLS-1$
     m_layout.setColumnData( shapeColumn.getColumn(), new ColumnWeightData( 50 ) );
-    shapeColumn.setLabelProvider( new LanduseMappingLabelProvider( clazzes, 0 ) );
+    shapeColumn.setLabelProvider( new LanduseMappingLabelProvider( m_model, 0 ) );
 
     final TableViewerColumn clazzColumn = new TableViewerColumn( m_viewer, SWT.NONE );
     clazzColumn.getColumn().setText( Messages.getString( "LanduseMappingTable_1" ) ); //$NON-NLS-1$
     m_layout.setColumnData( clazzColumn.getColumn(), new ColumnWeightData( 50 ) );
 
-    clazzColumn.setLabelProvider( new LanduseMappingLabelProvider( clazzes, 1 ) );
-    clazzColumn.setEditingSupport( new LandUseMappingEditingSupport( m_viewer, clazzes ) );
+    clazzColumn.setLabelProvider( new LanduseMappingLabelProvider( m_model, 1 ) );
+    clazzColumn.setEditingSupport( new LandUseMappingEditingSupport( m_viewer, m_model ) );
+  }
+
+  public void refresh( )
+  {
+    m_viewer.setInput( m_model.getMapping() );
+// m_viewer.refresh();
   }
 
 }
