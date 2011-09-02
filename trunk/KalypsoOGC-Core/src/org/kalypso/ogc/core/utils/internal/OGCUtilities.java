@@ -56,6 +56,7 @@ import org.kalypso.ogc.core.exceptions.ExceptionCode;
 import org.kalypso.ogc.core.exceptions.OWSException;
 import org.kalypso.ogc.core.service.IOGCService;
 import org.kalypso.ogc.core.service.OGCRequest;
+import org.kalypso.ogc.core.utils.ExtensionUtilities;
 import org.kalypso.ogc.core.utils.OWSUtilities;
 import org.kalypso.ogc.core.utils.WPSUtilities;
 import org.kalypso.ogc.core.utils.internal.comparator.OGCServiceComparator;

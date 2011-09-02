@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.core.utils.internal;
+package org.kalypso.ogc.core.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,6 @@ import org.kalypso.ogc.core.exceptions.ExceptionCode;
 import org.kalypso.ogc.core.exceptions.OWSException;
 import org.kalypso.ogc.core.operations.IOGCOperation;
 import org.kalypso.ogc.core.service.IOGCService;
-import org.kalypso.ogc.core.utils.OWSUtilities;
 
 /**
  * This utilities class provides functions for reading the extension point <code>org.kalypso.ogc.core.service</code>.
@@ -140,6 +139,47 @@ public class ExtensionUtilities
     try
     {
       return (IOGCService) serviceElement.createExecutableExtension( SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_CLASS_ATTRIBUTE );
+    }
+    catch( Exception ex )
+    {
+      throw new OWSException( String.format( "Encountered an error while preparing the execution of the request. Cause: %s", ex.getMessage() ), ex, OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
+    }
+  }
+
+  /**
+   * This function returns all in the extension registry registered OGC operations.
+   * 
+   * @param serviceName
+   *          The name of the requested OGC service.
+   * @param serviceVersion
+   *          The version of the requested OGC service.
+   * @return All in the extension registry registered OGC operations.
+   */
+  public static IOGCOperation[] getOperations( String serviceName, String serviceVersion ) throws OWSException
+  {
+    try
+    {
+      /* Memory for the OGC operations. */
+      List<IOGCOperation> operations = new ArrayList<IOGCOperation>();
+
+      /* Get the service element. */
+      IConfigurationElement serviceElement = getServiceElement( serviceName, serviceVersion );
+      if( serviceElement == null )
+        throw new OWSException( String.format( "This server does not provide a service with the name '%s' and version '%s'.", serviceName, serviceVersion ), OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null );
+
+      /* Get all configuration elements. */
+      IConfigurationElement[] configurationElements = serviceElement.getChildren( SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT );
+      for( IConfigurationElement configurationElement : configurationElements )
+      {
+        /* If the configuration element is not the right one, continue. */
+        if( !SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT.equals( configurationElement.getName() ) )
+          continue;
+
+        /* Add the OGC operation. */
+        operations.add( (IOGCOperation) configurationElement.createExecutableExtension( SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT_CLASS_ATTRIBUTE ) );
+      }
+
+      return operations.toArray( new IOGCOperation[] {} );
     }
     catch( Exception ex )
     {

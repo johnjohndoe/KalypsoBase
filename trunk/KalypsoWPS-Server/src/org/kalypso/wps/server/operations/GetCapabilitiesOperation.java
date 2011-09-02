@@ -40,8 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.wps.server.operations;
 
-import org.kalypso.ogc.core.exceptions.OWSException;
 import org.kalypso.ogc.core.operations.IOGCOperation;
+import org.kalypso.ogc.core.service.OGCRequest;
+import org.kalypso.ogc.core.service.OGCResponse;
 
 /**
  * The GetCapabilities operation.
@@ -58,10 +59,11 @@ public class GetCapabilitiesOperation implements IOGCOperation
   }
 
   /**
-   * @see org.kalypso.ogc.core.operations.IOGCOperation#execute()
+   * @see org.kalypso.ogc.core.operations.IOGCOperation#execute(org.kalypso.ogc.core.service.OGCRequest,
+   *      org.kalypso.ogc.core.service.OGCResponse)
    */
   @Override
-  public void execute( ) throws OWSException
+  public void execute( OGCRequest request, OGCResponse response )
   {
   }
 }

@@ -53,6 +53,11 @@ import javax.servlet.http.HttpServletResponse;
 public class OGCResponse
 {
   /**
+   * The servlet response.
+   */
+  private HttpServletResponse m_response;
+
+  /**
    * The output stream.
    */
   private OutputStream m_outputStream = null;
@@ -65,9 +70,18 @@ public class OGCResponse
    */
   public OGCResponse( HttpServletResponse response )
   {
+    m_response = response;
     m_outputStream = null;
 
     init( response );
+  }
+
+  /**
+   * This function sets the content type.
+   */
+  public void setContentType( String contentType )
+  {
+    m_response.setContentType( contentType );
   }
 
   /**

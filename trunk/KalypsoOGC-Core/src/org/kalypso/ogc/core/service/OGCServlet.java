@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.core.service.internal;
+package org.kalypso.ogc.core.service;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -51,11 +51,8 @@ import org.apache.commons.io.IOUtils;
 import org.kalypso.ogc.core.exceptions.ExceptionCode;
 import org.kalypso.ogc.core.exceptions.OWSException;
 import org.kalypso.ogc.core.operations.IOGCOperation;
-import org.kalypso.ogc.core.service.IOGCService;
-import org.kalypso.ogc.core.service.OGCRequest;
-import org.kalypso.ogc.core.service.OGCResponse;
+import org.kalypso.ogc.core.utils.ExtensionUtilities;
 import org.kalypso.ogc.core.utils.OWSUtilities;
-import org.kalypso.ogc.core.utils.internal.ExtensionUtilities;
 import org.kalypso.ogc.core.utils.internal.OGCUtilities;
 import org.kalypso.ogc.core.utils.internal.parameter.OGCParameter;
 
