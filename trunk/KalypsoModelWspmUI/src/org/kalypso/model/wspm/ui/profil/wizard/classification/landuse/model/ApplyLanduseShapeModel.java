@@ -40,70 +40,51 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.contribs.eclipse.core.resources.CollectFilesWithExtensionVisitor;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.shape.ShapeFile;
-import org.kalypso.shape.dbf.IDBFField;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseModel;
 
 /**
  * @author Dirk Kuch
  */
-public class ApplyLanduseShapeModel extends AbstractModelObject
+public class ApplyLanduseShapeModel extends LanduseModel
 {
-
-  public static final String PROPERTY_LANDUSE_SHAPE = "landuseShape";
-
-  public static final String PROPERTY_SHAPE_FILE = "shapeFile";
-
-  public static final String PROPERTY_SHAPE_FILE_PROPERTY = "shapeFileProperty";
-
-  public static final String PROPERTY_MAPPING = "mapping";
-
-  public static final String PROPERTY_TYPE = "type";
-
-  private String m_type = IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS;
-
-  private IFile m_landuseShape;
-
   private IFile[] m_landuseShapeFiles;
-
-  private ShapeFile m_shapeFile;
-
-  private IDBFField m_shapeFileProperty;
 
   Properties m_mapping = new Properties();
 
   public ApplyLanduseShapeModel( final IProject project )
   {
+    super( project, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
 
     try
     {
-      init( project );
+      init();
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
     }
 
+    addPropertyChangeListener( ILanduseModel.PROPERTY_LANDUSE_SHAPE, new ALSSelectedShapeFileChangedListener() );
+    addPropertyChangeListener( ILanduseModel.PROPERTY_SHAPE_COLUMN, new ALSSelectedColumnChanged() );
   }
 
-  private void init( final IProject project ) throws CoreException
+  private void init( ) throws CoreException
   {
-    final IFolder landuses = project.getFolder( "data/landuse" );
+    final IFolder landuses = getProject().getFolder( "data/landuse" ); //$NON-NLS-1$
     if( !landuses.exists() )
       return;
 
     final CollectFilesWithExtensionVisitor visitor = new CollectFilesWithExtensionVisitor();
-    visitor.setExtension( "shp" );
+    visitor.setExtension( "shp" ); //$NON-NLS-1$
     landuses.accept( visitor );
 
     m_landuseShapeFiles = visitor.getFiles();
@@ -113,85 +94,4 @@ public class ApplyLanduseShapeModel extends AbstractModelObject
   {
     return m_landuseShapeFiles;
   }
-
-  public IFile getLanduseShape( )
-  {
-    return m_landuseShape;
-  }
-
-  public void setLanduseShape( final IFile shapeFile )
-  {
-    final Object oldValue = m_landuseShape;
-    m_landuseShape = shapeFile;
-
-    firePropertyChange( PROPERTY_LANDUSE_SHAPE, oldValue, shapeFile );
-  }
-
-  public ShapeFile getShapeFile( )
-  {
-    return m_shapeFile;
-  }
-
-  public void setShapeFile( final ShapeFile file )
-  {
-    final Object oldValue = m_shapeFile;
-    if( Objects.isNotNull( m_shapeFile ) )
-      try
-      {
-        m_shapeFile.close();
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-
-    m_shapeFile = file;
-
-    firePropertyChange( PROPERTY_SHAPE_FILE, oldValue, file );
-  }
-
-  public IDBFField getShapeFileProperty( )
-  {
-    return m_shapeFileProperty;
-  }
-
-  public void setShapeFileProperty( final IDBFField property )
-  {
-    final Object oldValue = m_shapeFileProperty;
-    m_shapeFileProperty = property;
-
-    firePropertyChange( PROPERTY_SHAPE_FILE_PROPERTY, oldValue, property );
-  }
-
-  public Properties getMapping( )
-  {
-    return m_mapping;
-  }
-
-  public void setMapping( final Properties mapping )
-  {
-    final Object oldValue = m_mapping;
-    m_mapping = mapping;
-
-    firePropertyChange( PROPERTY_MAPPING, oldValue, mapping );
-  }
-
-  public void fireMappingChanged( )
-  {
-    firePropertyChange( PROPERTY_MAPPING, m_mapping, m_mapping );
-  }
-
-  public String getType( )
-  {
-    return m_type;
-  }
-
-  public void setType( final String type )
-  {
-    final Object oldValue = m_type;
-    m_type = type;
-
-    firePropertyChange( PROPERTY_TYPE, oldValue, type );
-  }
-
 }

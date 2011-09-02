@@ -40,10 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.utils;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
@@ -53,7 +56,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ImportLanduseDataModel;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseMappingUpdater;
 
 /**
  * @author Dirk Kuch
@@ -64,9 +68,9 @@ public class LanduseMappingTable extends Composite
 
   TableColumnLayout m_layout = new TableColumnLayout();
 
-  private final ImportLanduseDataModel m_model;
+  protected final ILanduseModel m_model;
 
-  public LanduseMappingTable( final Composite parent, final ImportLanduseDataModel model )
+  public LanduseMappingTable( final Composite parent, final ILanduseModel model )
   {
     super( parent, SWT.NULL );
     m_model = model;
@@ -114,13 +118,32 @@ public class LanduseMappingTable extends Composite
     m_layout.setColumnData( clazzColumn.getColumn(), new ColumnWeightData( 50 ) );
 
     clazzColumn.setLabelProvider( new LanduseMappingLabelProvider( m_model, 1 ) );
-    clazzColumn.setEditingSupport( new LandUseMappingEditingSupport( m_viewer, m_model ) );
+    clazzColumn.setEditingSupport( new LandUseMappingEditingSupport( m_viewer, m_model ) ); //$NON-NLS-1$
+
+    m_model.addPropertyChangeListener( ILanduseModel.PROPERTY_SHAPE_COLUMN, new PropertyChangeListener()
+    {
+      @Override
+      public void propertyChange( final PropertyChangeEvent evt )
+      {
+        try
+        {
+          final LanduseMappingUpdater handler = new LanduseMappingUpdater( m_model.getShapeFile(), m_model.getShapeColumn(), m_model.getMapping() );
+          handler.run( new NullProgressMonitor() );
+
+          refresh();
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+        }
+
+      }
+    } );
   }
 
-  public void refresh( )
+  protected void refresh( )
   {
     m_viewer.setInput( m_model.getMapping() );
-// m_viewer.refresh();
   }
 
 }

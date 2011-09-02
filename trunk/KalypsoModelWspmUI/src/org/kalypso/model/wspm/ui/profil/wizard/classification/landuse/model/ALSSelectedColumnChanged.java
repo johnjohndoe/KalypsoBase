@@ -38,28 +38,41 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.landuse.model;
+package org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model;
 
-import org.eclipse.core.resources.IProject;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseMappingUpdater;
+import org.kalypso.shape.ShapeFile;
+import org.kalypso.shape.dbf.IDBFField;
 
 /**
  * @author Dirk Kuch
  */
-public class ImportLanduseDataModel extends AbstractLanduseModel implements ILanduseModel
+public class ALSSelectedColumnChanged implements PropertyChangeListener
 {
 
-  private final String m_type;
-
-  public ImportLanduseDataModel( final IProject project, final String type )
-  {
-    super( project );
-    m_type = type;
-  }
-
+  /**
+   * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+   */
   @Override
-  public String getType( )
+  public void propertyChange( final PropertyChangeEvent evt )
   {
-    return m_type;
+    final ApplyLanduseShapeModel model = (ApplyLanduseShapeModel) evt.getSource();
+    final ShapeFile shapeFile = model.getShapeFile();
+    final IDBFField property = (IDBFField) evt.getNewValue();
+
+    try
+    {
+      final LanduseMappingUpdater handler = new LanduseMappingUpdater( shapeFile, property, model.getMapping() );
+      handler.run( new NullProgressMonitor() );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+    }
   }
 
 }

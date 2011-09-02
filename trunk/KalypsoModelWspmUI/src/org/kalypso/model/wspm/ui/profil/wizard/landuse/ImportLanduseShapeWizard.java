@@ -131,17 +131,6 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
   }
 
   /**
-   * @see org.eclipse.jface.wizard.Wizard#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    m_handler.dispose();
-
-    super.dispose();
-  }
-
-  /**
    * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
    *      org.eclipse.jface.viewers.IStructuredSelection)
    */
