@@ -40,8 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.model;
 
+import java.nio.charset.Charset;
 import java.util.Properties;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.kalypso.commons.java.lang.Objects;
@@ -51,31 +53,45 @@ import org.kalypso.model.wspm.core.gml.IWspmProject;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.shape.FileMode;
+import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.IDBFField;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractLanduseModel extends AbstractModelObject implements ILanduseModel
+public class LanduseModel extends AbstractModelObject implements ILanduseModel
 {
   private Properties m_mapping = new Properties();
 
   private IDBFField m_shapeColumn = null;
 
+  private ShapeFile m_shapeFile;
+
+  private IFile m_landuseShape;
+
   private final IProject m_project;
 
   private GMLWorkspace m_workspace;
 
-  public AbstractLanduseModel( final IProject project )
+  private String m_type;
+
+  public LanduseModel( final IProject project, final String type )
   {
     m_project = project;
+    m_type = type;
   }
 
   @Override
   public final Properties getMapping( )
   {
     return m_mapping;
+  }
+
+  protected IProject getProject( )
+  {
+    return m_project;
   }
 
   public final void setMapping( final Properties mapping )
@@ -130,5 +146,58 @@ public abstract class AbstractLanduseModel extends AbstractModelObject implement
     m_shapeColumn = shapeColumn;
 
     firePropertyChange( PROPERTY_SHAPE_COLUMN, oldValue, shapeColumn );
+  }
+
+  @Override
+  public ShapeFile getShapeFile( )
+  {
+    return m_shapeFile;
+  }
+
+  public void updateShapeFile( final String location )
+  {
+    try
+    {
+      final String base = FilenameUtils.removeExtension( location );
+      final ShapeFile shapeFile = new ShapeFile( base, Charset.defaultCharset(), FileMode.READ );
+      if( Objects.isNotNull( m_shapeFile ) )
+        m_shapeFile.close();
+
+      m_shapeFile = shapeFile;
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+    }
+  }
+
+  @Override
+  public IFile getLanduseShape( )
+  {
+    return m_landuseShape;
+  }
+
+  public void setLanduseShape( final IFile shapeFile )
+  {
+    final Object oldValue = m_landuseShape;
+    m_landuseShape = shapeFile;
+
+    updateShapeFile( shapeFile.getLocation().toOSString() );
+
+    firePropertyChange( PROPERTY_LANDUSE_SHAPE, oldValue, shapeFile );
+  }
+
+  @Override
+  public String getType( )
+  {
+    return m_type;
+  }
+
+  public void setType( final String type )
+  {
+    final Object oldValue = m_type;
+    m_type = type;
+
+    firePropertyChange( PROPERTY_TYPE, oldValue, type );
   }
 }

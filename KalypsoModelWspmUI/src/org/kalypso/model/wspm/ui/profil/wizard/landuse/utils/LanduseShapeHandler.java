@@ -40,17 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.utils;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-
-import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IProject;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.shape.FileMode;
-import org.kalypso.shape.ShapeFile;
-import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.ui.wizard.shape.IShapeFileSelection;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Dirk Kuch
@@ -59,57 +50,12 @@ public class LanduseShapeHandler implements ILanduseShapeDataProvider
 {
   private final IShapeFileSelection m_selection;
 
-  private ShapeFile m_shapeFile;
-
-  private String m_lnk;
-
   private final IProject m_project;
-
-  private GMLWorkspace m_workspace;
 
   public LanduseShapeHandler( final IShapeFileSelection selection, final IProject project )
   {
     m_selection = selection;
     m_project = project;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.landuse.ILanduseShape#getShapeFile()
-   */
-  @Override
-  public ShapeFile getShapeFile( ) throws IOException, DBaseException
-  {
-    final String lnk = FilenameUtils.removeExtension( m_selection.getShapeFile() );
-    if( Objects.notEqual( m_lnk, lnk ) )
-    {
-      if( Objects.isNotNull( m_shapeFile ) )
-        m_shapeFile.close();
-
-      m_shapeFile = new ShapeFile( lnk, Charset.defaultCharset(), FileMode.READ );
-      m_lnk = lnk;
-    }
-
-    return m_shapeFile;
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    if( Objects.isNotNull( m_shapeFile ) )
-      try
-      {
-        m_shapeFile.close();
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
-
-    if( Objects.isNotNull( m_workspace ) )
-      m_workspace.dispose();
   }
 
   /**

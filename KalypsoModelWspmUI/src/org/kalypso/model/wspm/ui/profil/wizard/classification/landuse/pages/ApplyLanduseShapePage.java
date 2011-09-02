@@ -59,9 +59,9 @@ import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model.ALSSelectedPropertyChanged;
-import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model.ALSSelectedShapeFileChangedListener;
 import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model.ApplyLanduseShapeModel;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseMappingTable;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseShapeLabelProvider;
 import org.kalypso.shape.ShapeFile;
 
@@ -79,8 +79,6 @@ public class ApplyLanduseShapePage extends WizardPage
     super( "ApplyLanduseShapePage" ); //$NON-NLS-1$
 
     m_model = new ApplyLanduseShapeModel( project );
-    m_model.addPropertyChangeListener( ApplyLanduseShapeModel.PROPERTY_LANDUSE_SHAPE, new ALSSelectedShapeFileChangedListener() );
-    m_model.addPropertyChangeListener( ApplyLanduseShapeModel.PROPERTY_SHAPE_FILE_PROPERTY, new ALSSelectedPropertyChanged() );
   }
 
   /**
@@ -106,7 +104,7 @@ public class ApplyLanduseShapePage extends WizardPage
 
     /** select shape file property */
     new Label( body, SWT.NULL ).setText( "Shape File Property" ); //$NON-NLS-1$
-    final ComboViewer shapeFileProperty = getViewer( body, ApplyLanduseShapeModel.PROPERTY_SHAPE_FILE_PROPERTY );
+    final ComboViewer shapeFileProperty = getViewer( body, ILanduseModel.PROPERTY_SHAPE_COLUMN );
 
     m_model.addPropertyChangeListener( ApplyLanduseShapeModel.PROPERTY_LANDUSE_SHAPE, new PropertyChangeListener()
     {
@@ -119,18 +117,8 @@ public class ApplyLanduseShapePage extends WizardPage
       }
     } );
 
-    // TODO refacor table
-// final LanduseMappingTable table = new LanduseMappingTable( body, this );
-// table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
-// m_model.addPropertyChangeListener( ApplyLanduseShapeModel.PROPERTY_MAPPING, new PropertyChangeListener()
-// {
-// @Override
-// public void propertyChange( final PropertyChangeEvent evt )
-// {
-// table.refresh();
-// }
-// } );
+    final LanduseMappingTable table = new LanduseMappingTable( body, m_model );
+    table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     setControl( body );
   }

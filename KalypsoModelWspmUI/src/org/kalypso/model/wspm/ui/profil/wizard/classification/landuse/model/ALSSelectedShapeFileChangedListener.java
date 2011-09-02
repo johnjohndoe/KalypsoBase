@@ -45,7 +45,6 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.Properties;
 
 import org.apache.commons.io.FilenameUtils;
@@ -53,8 +52,7 @@ import org.eclipse.core.resources.IFile;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.util.PropertiesUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.shape.FileMode;
-import org.kalypso.shape.ShapeFile;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
 
 /**
  * @author Dirk Kuch
@@ -78,14 +76,12 @@ public class ALSSelectedShapeFileChangedListener implements PropertyChangeListen
 
     try
     {
-      final String base = FilenameUtils.removeExtension( file.getLocation().toOSString() );
-      final ShapeFile shapeFile = new ShapeFile( base, Charset.defaultCharset(), FileMode.READ );
-      model.setShapeFile( shapeFile );
+      final String base = FilenameUtils.removeExtension( model.getLanduseShape().getLocation().toOSString() );
 
       final Properties shapeFileProperties = getProperties( model, base );
       PropertiesUtilities.merge( model.getMapping(), shapeFileProperties );
 
-      model.fireMappingChanged();
+      model.firePropertyChange( ILanduseModel.PROPERTY_MAPPING, model.getMapping(), model.getMapping() );
       m_file = file;
     }
     catch( final Exception ex )

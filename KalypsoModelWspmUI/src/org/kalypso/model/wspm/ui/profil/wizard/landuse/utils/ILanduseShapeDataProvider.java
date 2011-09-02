@@ -40,21 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.utils;
 
-import java.io.IOException;
-
 import org.eclipse.core.resources.IProject;
-import org.kalypso.shape.ShapeFile;
-import org.kalypso.shape.dbf.DBaseException;
 
 /**
  * @author Dirk Kuch
  */
 public interface ILanduseShapeDataProvider
 {
-  ShapeFile getShapeFile( ) throws IOException, DBaseException;
-
-  void dispose( );
-
   IProject getProject( );
 
   String getLnkShapeFile( );

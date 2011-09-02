@@ -42,17 +42,24 @@ package org.kalypso.model.wspm.ui.profil.wizard.landuse.model;
 
 import java.util.Properties;
 
+import org.eclipse.core.resources.IFile;
+import org.kalypso.commons.java.util.IModelObject;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
+import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.IDBFField;
 
 /**
  * @author Dirk Kuch
  */
-public interface ILanduseModel
+public interface ILanduseModel extends IModelObject
 {
+  String PROPERTY_TYPE = "type"; //$NON-NLS-1$
+
   String PROPERTY_SHAPE_COLUMN = "shapeColumn"; //$NON-NLS-1$
 
   String PROPERTY_MAPPING = "mapping"; //$NON-NLS-1$
+
+  String PROPERTY_LANDUSE_SHAPE = "landuseShape"; //$NON-NLS-1$
 
   Properties getMapping( );
 
@@ -61,4 +68,8 @@ public interface ILanduseModel
   IDBFField getShapeColumn( );
 
   String getType( );
+
+  IFile getLanduseShape( );
+
+  ShapeFile getShapeFile( );
 }

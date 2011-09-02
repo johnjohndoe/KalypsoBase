@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
@@ -64,12 +61,10 @@ import org.kalypso.contribs.eclipse.jface.viewers.IRefreshable;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
-import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ImportLanduseDataModel;
-import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseMappingUpdater;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseMappingTable;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseShapeLabelProvider;
-import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.FieldType;
 import org.kalypso.shape.dbf.IDBFField;
 
@@ -80,20 +75,20 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable
 {
   protected final ILanduseShapeDataProvider m_provider;
 
-  protected final ImportLanduseDataModel m_model;
+  protected final LanduseModel m_model;
 
   private DatabindingWizardPage m_binding;
 
   private ComboViewer m_column;
 
-  private ShapeFile m_shapeFile;
+  private String m_lnkShapeFile;
 
   public LanduseMappingPage( final ILanduseShapeDataProvider provider, final String type )
   {
     super( "LanduseMappingPage" ); //$NON-NLS-1$
 
     m_provider = provider;
-    m_model = new ImportLanduseDataModel( provider.getProject(), type );
+    m_model = new LanduseModel( provider.getProject(), type );
 
     if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( type ) )
     {
@@ -124,26 +119,6 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable
     new Label( body, SWT.NULL ).setText( Messages.getString( "LanduseMappingPage.4" ) ); //$NON-NLS-1$
     final LanduseMappingTable table = new LanduseMappingTable( body, m_model );
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-
-    m_model.addPropertyChangeListener( ILanduseModel.PROPERTY_SHAPE_COLUMN, new PropertyChangeListener()
-    {
-      @Override
-      public void propertyChange( final PropertyChangeEvent evt )
-      {
-        try
-        {
-          final LanduseMappingUpdater handler = new LanduseMappingUpdater( m_provider.getShapeFile(), m_model.getShapeColumn(), m_model.getMapping() );
-          getContainer().run( false, false, handler );
-
-          table.refresh();
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-        }
-
-      }
-    } );
 
     setControl( body );
   }
@@ -187,11 +162,13 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable
   {
     try
     {
-      final ShapeFile shape = m_provider.getShapeFile();
-      if( Objects.notEqual( m_shapeFile, shape ) )
+      final String lnkShapeFile = m_provider.getLnkShapeFile();
+      if( Objects.notEqual( m_lnkShapeFile, lnkShapeFile ) )
       {
-        m_column.setInput( shape.getFields() );
-        m_shapeFile = shape;
+        m_model.updateShapeFile( lnkShapeFile );
+        m_column.setInput( m_model.getShapeFile().getFields() );
+
+        m_lnkShapeFile = lnkShapeFile;
       }
     }
     catch( final Exception ex )
