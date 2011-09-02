@@ -8,3 +8,10 @@ Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypso.chart.ext.test.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: kalypsobase.sourceforge.net
+Export-Package: org.kalypso.chart.ext.test,
+ org.kalypso.chart.ext.test.data,
+ org.kalypso.chart.ext.test.layer,
+ org.kalypso.chart.ext.test.layer.provider,
+ org.kalypso.chart.ext.test.mapper,
+ org.kalypso.chart.ext.test.mapper.provider,
+ org.kalypso.chart.ext.test.view

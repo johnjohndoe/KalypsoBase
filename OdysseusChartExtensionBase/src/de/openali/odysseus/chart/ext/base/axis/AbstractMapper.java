@@ -110,5 +110,4 @@ public abstract class AbstractMapper implements IMapper
   {
     m_dataOperators.put( clazz, dataOperator );
   }
-
 }

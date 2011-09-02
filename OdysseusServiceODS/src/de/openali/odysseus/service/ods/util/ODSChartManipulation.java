@@ -3,6 +3,11 @@ package de.openali.odysseus.service.ods.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypso.ogc.core.exceptions.ExceptionCode;
+import org.kalypso.ogc.core.exceptions.OWSException;
+import org.kalypso.ogc.core.service.OGCRequest;
+import org.kalypso.ogc.core.utils.OWSUtilities;
+
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
@@ -11,17 +16,15 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.service.ows.exception.OWSException;
-import de.openali.odysseus.service.ows.exception.OWSException.ExceptionCode;
-import de.openali.odysseus.service.ows.request.RequestBean;
 
 /**
- * @author alibu Helper class for chart stuff concerning request parameters
+ * Helper class for chart stuff concerning request parameters.
+ * 
+ * @author Alexander Burtscher
  */
 public class ODSChartManipulation
 {
-
-  public static void manipulateChart( final IChartModel model, final RequestBean request ) throws OWSException
+  public static void manipulateChart( IChartModel model, OGCRequest request ) throws OWSException
   {
     setLayerVisibility( model.getLayerManager(), request );
     setAxesRanges( model.getMapperRegistry(), request );
@@ -31,34 +34,34 @@ public class ODSChartManipulation
    * sets the layers visibility and position from the request parameter LAYERS - if the parameter is not empty, all
    * those layers which are not mentioned in the comma separated list are set invisible
    */
-  private static void setLayerVisibility( final ILayerManager manager, final RequestBean request )
+  private static void setLayerVisibility( ILayerManager manager, OGCRequest request )
   {
-    final String reqLayerString = request.getParameterValue( "LAYERS" );
+    String reqLayerString = request.getParameterValue( "LAYERS" );
     String[] reqLayers = null;
     if( (reqLayerString != null) && !reqLayerString.trim().equals( "" ) )
       reqLayers = reqLayerString.trim().split( "," );
-    // herausfinden, welche von den angeforderten Layers wirklich existieren
 
-    final List<String> realReqLayers = new ArrayList<String>();
+    /* Herausfinden, welche von den angeforderten Layers wirklich existieren. */
+    List<String> realReqLayers = new ArrayList<String>();
     if( reqLayers != null )
-      for( final String layerId : reqLayers )
+      for( String layerId : reqLayers )
         if( manager.findLayer( layerId ) != null )
           realReqLayers.add( layerId );
     if( (realReqLayers != null) && (realReqLayers.size() > 0) )
     {
       for( int i = 0; i < realReqLayers.size(); i++ )
       {
-        final IChartLayer layer = manager.findLayer( realReqLayers.get( i ) );
+        IChartLayer layer = manager.findLayer( realReqLayers.get( i ) );
         if( layer != null )
         {
           manager.moveLayerToPosition( layer, i );
           layer.setVisible( true );
         }
       }
-      final IChartLayer[] layers = manager.getLayers();
+      IChartLayer[] layers = manager.getLayers();
       for( int i = realReqLayers.size(); i < layers.length; i++ )
       {
-        final IChartLayer layer = layers[i];
+        IChartLayer layer = layers[i];
         layer.setVisible( false );
       }
 
@@ -66,40 +69,35 @@ public class ODSChartManipulation
 
   }
 
-  private static void setAxesRanges( final IMapperRegistry ar, final RequestBean request ) throws OWSException
+  private static void setAxesRanges( IMapperRegistry ar, OGCRequest request ) throws OWSException
   {
     setAxesRanges( ar, request.getParameterValue( "AXES" ), request.getParameterValue( "AXES_MIN" ), request.getParameterValue( "AXES_MAX" ) );
   }
 
-  private static void setAxesRanges( final IMapperRegistry mr, final String axesString, final String minsString, final String maxsString ) throws OWSException
+  private static void setAxesRanges( IMapperRegistry mr, String axesString, String minsString, String maxsString ) throws OWSException
   {
-    // falls der AXES-Parameter nicht angegeben ist, dann wird einfach
-    // abgebrochen
+    /* Falls der AXES-Parameter nicht angegeben ist, dann wird einfach abgebrochen. */
     if( axesString == null )
       return;
 
-    /*
-     * Zunächst AXISMIN- und AXISMAX-Parameter parsen und zu Min/MaxMap hinzufügen
-     */
-
-    final String[] axesStrArray = axesString.split( "," );
-    final String[] minStrArray = minsString.split( "," );
-    final String[] maxStrArray = maxsString.split( "," );
+    /* Zunächst AXISMIN- und AXISMAX-Parameter parsen und zu Min/MaxMap hinzufügen. */
+    String[] axesStrArray = axesString.split( "," );
+    String[] minStrArray = minsString.split( "," );
+    String[] maxStrArray = maxsString.split( "," );
 
     if( (axesStrArray.length != minStrArray.length) || (axesStrArray.length != maxStrArray.length) )
-      throw new OWSException( ExceptionCode.INVALID_PARAMETER_VALUE, "AXES, AXES_MIN and AXES_MAX must contain equal number of values", null );
+      throw new OWSException( "AXES, AXES_MIN and AXES_MAX must contain equal number of values", OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null );
 
     for( int i = 0; i < axesStrArray.length; i++ )
     {
-      final IAxis iaxis = mr.getAxis( axesStrArray[i] );
+      IAxis iaxis = mr.getAxis( axesStrArray[i] );
       if( iaxis != null )
       {
-        final String maxString = maxStrArray[i];
-        final String minString = minStrArray[i];
+        String maxString = maxStrArray[i];
+        String minString = minStrArray[i];
 
         setAxisRange2( iaxis, iaxis.getDataClass(), maxString, minString );
       }
-
     }
   }
 
@@ -116,29 +114,31 @@ public class ODSChartManipulation
    * @param maxString
    *          axis max value as string
    */
-  public static <T> void setAxisRange2( final IAxis iaxis, final Class<T> clazz, final String maxString, final String minString ) throws OWSException
+  public static <T> void setAxisRange2( IAxis iaxis, Class<T> clazz, String maxString, String minString ) throws OWSException
   {
-    final IDataOperator<T> da = iaxis.getDataOperator( clazz );
+    IDataOperator<T> da = iaxis.getDataOperator( clazz );
     Number min = null;
     Number max = null;
+
     try
     {
       min = da.logicalToNumeric( da.stringToLogical( minString ) );
     }
-    catch( final MalformedValueException e )
+    catch( MalformedValueException e )
     {
-      throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Value '" + minString + "' is not appropriate for Axis '" + iaxis.getIdentifier() + "'", null );
+      throw new OWSException( "Value '" + minString + "' is not appropriate for Axis '" + iaxis.getIdentifier() + "'", OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null );
     }
+
     try
     {
       max = da.logicalToNumeric( da.stringToLogical( maxString ) );
     }
-    catch( final MalformedValueException e )
+    catch( MalformedValueException e )
     {
-      throw new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "Value '" + maxString + "' is not appropriate for Axis '" + iaxis.getIdentifier() + "'", null );
+      throw new OWSException( "Value '" + maxString + "' is not appropriate for Axis '" + iaxis.getIdentifier() + "'", OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null );
     }
-    final DataRange<Number> dr = new DataRange<Number>( min, max );
+
+    DataRange<Number> dr = new DataRange<Number>( min, max );
     iaxis.setNumericRange( dr );
   }
-
 }

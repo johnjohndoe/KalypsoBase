@@ -10,7 +10,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -20,6 +19,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATI
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.util.InsetsHelper;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
@@ -439,8 +439,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
     // Testutensilien erzeugen
 
-    final Display dev = PlatformUI.getWorkbench().getDisplay();
-// final Display dev = Display.getCurrent();
+    final Display dev = ChartUtilities.getDisplay();
     final Image img = new Image( dev, 1, 1 );
     final GC gc = new GC( img );
 

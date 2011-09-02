@@ -5,23 +5,52 @@ import org.eclipse.swt.widgets.Display;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 
 /**
- * @author burtscher Helper class for accessing a Display from Server-Side Eclipse; at first, a new thread is created
- *         which is only running the Display; every object using graphics in server context should use the Display from
- *         this class
+ * Helper class for accessing a display from server-side Eclipse. At first, a new thread is created which is only
+ * running the Display. Every object using graphics in server context should use the Display from this class.
+ * 
+ * @author Alexander Burtscher, Holger Albert
  */
 public class DisplayHelper extends Thread
 {
-  private Display m_display = null;
+  /**
+   * The display.
+   */
+  private Display m_display;
 
-  private boolean m_runEventLoop = false;
+  /**
+   * True, if the event loop should keep running.
+   */
+  private boolean m_runEventLoop;
 
-  private static DisplayHelper m_dh = null;
+  /**
+   * The instance.
+   */
+  private static DisplayHelper INSTANCE = null;
 
+  /**
+   * The constructor.
+   */
   private DisplayHelper( )
   {
-    super( "ODS display thread" );
+    super( "ODS Display Thread" );
+
+    m_display = null;
+    m_runEventLoop = false;
 
     start();
+  }
+
+  /**
+   * This function returns the instance of the display helper.
+   * 
+   * @return The instance of the display helper.
+   */
+  public static synchronized DisplayHelper getInstance( )
+  {
+    if( INSTANCE == null )
+      INSTANCE = new DisplayHelper();
+
+    return INSTANCE;
   }
 
   /**
@@ -30,74 +59,79 @@ public class DisplayHelper extends Thread
   @Override
   public void run( )
   {
-    // create display
+    /* Create display. */
     if( Display.getCurrent() != null )
     {
       m_display = Display.getCurrent();
-      Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "using current display" );
+      Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Using current display." );
     }
 
     if( m_display == null )
     {
-      m_display = Display.getDefault();
-
+      m_display = new Display();
       if( m_display.getThread() != Thread.currentThread() )
-        Logger.logError( Logger.TOPIC_LOG_GENERAL, "Another thread has the display. Maybe you should check that the ods plugin is the first plugin to open the display. "
-            + m_display.getThread().getName() );
+        Logger.logError( Logger.TOPIC_LOG_GENERAL, String.format( "Another thread (%s) has the display. Maybe you should check that the ods plugin is the first plugin to open the display.", m_display.getThread().getName() ) );
     }
+
+    /* Run the event loop. */
     runEventLoop( m_display );
-
   }
 
-  public static synchronized DisplayHelper getInstance( )
+  /**
+   * This function returns the display.
+   * 
+   * @return The display.
+   */
+  public synchronized Display getDisplay( )
   {
-    if( m_dh == null )
-      m_dh = new DisplayHelper();
-
-    return m_dh;
-  }
-
-  public Display getDisplay( )
-  {
-    // Wait until display is initialized
-    // DIRTY?
+    /* Wait until display is initialized. */
     while( m_display == null )
+    {
       try
       {
         Thread.sleep( 10 );
       }
-      catch( final InterruptedException e )
+      catch( InterruptedException e )
       {
         e.printStackTrace();
       }
+    }
 
     return m_display;
   }
 
-  public void dispose( )
+  /**
+   * This function disposes the display helper.
+   */
+  public synchronized void dispose( )
   {
     m_runEventLoop = false;
 
     if( (m_display != null) && !m_display.isDisposed() )
       m_display.dispose();
+    m_display = null;
   }
 
-  /*
-   * Runs an event loop for the workbench.
+  /**
+   * This function runs an event loop for the workbench.
+   * 
+   * @param display
+   *          The display.
    */
-  private void runEventLoop( final Display display )
+  private void runEventLoop( Display display )
   {
     m_runEventLoop = true;
     while( m_runEventLoop )
+    {
       try
       {
         if( !display.readAndDispatch() )
           display.sleep();
       }
-      catch( final Throwable t )
+      catch( Throwable t )
       {
         t.printStackTrace();
       }
+    }
   }
-
 }

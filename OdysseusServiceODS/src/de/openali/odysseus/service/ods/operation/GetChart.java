@@ -7,6 +7,10 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
+import org.kalypso.ogc.core.exceptions.ExceptionCode;
+import org.kalypso.ogc.core.exceptions.OWSException;
+import org.kalypso.ogc.core.service.OGCRequest;
+import org.kalypso.ogc.core.utils.OWSUtilities;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
@@ -24,17 +28,13 @@ import de.openali.odysseus.service.ods.util.DisplayHelper;
 import de.openali.odysseus.service.ods.util.HeadlessChart;
 import de.openali.odysseus.service.ods.util.ImageOutput;
 import de.openali.odysseus.service.ods.util.ODSChartManipulation;
-import de.openali.odysseus.service.ows.exception.OWSException;
-import de.openali.odysseus.service.ows.request.RequestBean;
 
 /**
  * @author burtscher IODS operation to display an image containing a chart
  */
 public class GetChart extends AbstractODSDisplayOperation implements Runnable
 {
-
   /**
-   * @throws OWSException
    * @see java.lang.Runnable#run()
    */
   @Override
@@ -44,7 +44,7 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
 
     int width = 500;
     int height = 400;
-    final RequestBean req = getRequest();
+    final OGCRequest req = getRequest();
     final String reqWidth = req.getParameterValue( "WIDTH" );
     final String reqHeight = req.getParameterValue( "HEIGHT" );
     final String reqName = req.getParameterValue( "NAME" );
@@ -79,7 +79,7 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
       }
       catch( final ConfigChartNotFoundException e )
       {
-        setException( new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, e.getMessage(), "No chart available by NAME '" + reqName + "'" ) );
+        setException( new OWSException( "No chart available by NAME '" + reqName + "'", OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null ) );
         return;
       }
       catch( final ConfigurationException e )
@@ -93,7 +93,7 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
 
       // FIXME: create empty model instead
       final HeadlessChart hc = new HeadlessChart( model, new RGB( 255, 255, 255 ) );
-      final IChartComposite chart = hc.getChart();
+      final IChartComposite chart = hc.getChartComposite();
 
       if( chart != null )
       {
@@ -101,18 +101,19 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
         {
           ODSChartManipulation.manipulateChart( chart.getChartModel(), req );
         }
-        catch( final OWSException e )
+        catch( OWSException e )
         {
           setException( e );
           return;
         }
-        final ChartPainter chartPainter = new ChartPainter( chart.getChartModel(), new Rectangle(0,0, width, height ) );
-        final ImageData id = chartPainter.getImageData();//ChartImageFactory.createChartImage( chart.getChartModel(), new Point( width, height ) );
+        final ChartPainter chartPainter = new ChartPainter( chart.getChartModel(), new Rectangle( 0, 0, width, height ) );
+        final ImageData id = chartPainter.getImageData();// ChartImageFactory.createChartImage( chart.getChartModel(),
+        // new Point( width, height ) );
         if( id != null )
           ImageOutput.imageResponse( req, getResponse(), id );
         else
         {
-          setException( new OWSException( OWSException.ExceptionCode.INVALID_PARAMETER_VALUE, "", "" ) );
+          setException( new OWSException( "", OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null ) );
           return;
         }
       }
@@ -120,7 +121,7 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
     }
     else
     {
-      setException( new OWSException( OWSException.ExceptionCode.MISSING_PARAMETER_VALUE, "Missing mandatory parameter 'NAME'", getRequest().getUrl() ) );
+      setException( new OWSException( "Missing mandatory parameter 'NAME'", OWSUtilities.OWS_VERSION, "en", ExceptionCode.MISSING_PARAMETER_VALUE, null ) );
       return;
     }
   }

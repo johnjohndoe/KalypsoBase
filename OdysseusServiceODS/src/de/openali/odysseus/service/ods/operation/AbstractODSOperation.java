@@ -1,17 +1,16 @@
 package de.openali.odysseus.service.ods.operation;
 
-import javax.servlet.ServletContext;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.ogc.core.exceptions.ExceptionCode;
+import org.kalypso.ogc.core.exceptions.OWSException;
+import org.kalypso.ogc.core.operations.IOGCOperation;
+import org.kalypso.ogc.core.service.OGCRequest;
+import org.kalypso.ogc.core.service.OGCResponse;
+import org.kalypso.ogc.core.utils.OWSUtilities;
 
 import de.openali.odysseus.service.ods.environment.IODSEnvironment;
 import de.openali.odysseus.service.ods.environment.ODSEnvironment;
-import de.openali.odysseus.service.ows.exception.OWSException;
-import de.openali.odysseus.service.ows.exception.OWSException.ExceptionCode;
-import de.openali.odysseus.service.ows.extension.IOWSOperation;
-import de.openali.odysseus.service.ows.request.RequestBean;
-import de.openali.odysseus.service.ows.request.ResponseBean;
 
 /**
  * abstract class for preprocessing of all ODS stuff; creating the ODSEnvironment is the initialization step that shall
@@ -21,27 +20,31 @@ import de.openali.odysseus.service.ows.request.ResponseBean;
  * 
  * @author burtscher1
  */
-public abstract class AbstractODSOperation implements IOWSOperation
+public abstract class AbstractODSOperation implements IOGCOperation
 {
-
-  private ResponseBean m_responseBean;
+  private OGCResponse m_responseBean;
 
   private IODSEnvironment m_env;
 
-  private RequestBean m_requestBean;
+  private OGCRequest m_requestBean;
 
+  /**
+   * @see org.kalypso.ogc.core.operations.IOGCOperation#execute(org.kalypso.ogc.core.service.OGCRequest,
+   *      org.kalypso.ogc.core.service.OGCResponse)
+   */
   @Override
-  public final void checkAndExecute( final RequestBean requestBean, final ResponseBean responseBean, final ServletContext context ) throws OWSException
+  public final void execute( final OGCRequest requestBean, final OGCResponse responseBean ) throws OWSException
   {
     boolean reset = false;
     if( "TRUE".equals( requestBean.getParameterValue( "RESET" ) ) )
       reset = true;
-    final ODSEnvironment env = ODSEnvironment.getInstance( context, reset );
+
+    final ODSEnvironment env = ODSEnvironment.getInstance( reset );
     final Status stat = env.getStatus();
     if( stat.getSeverity() == IStatus.ERROR )
     {
       stat.getException().printStackTrace();
-      throw new OWSException( ExceptionCode.NO_APPLICABLE_CODE, "Error initializing service.", env.getStatus().getMessage() );
+      throw new OWSException( "Error initializing service.", OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, env.getStatus().getMessage() );
     }
 
     m_env = env;
@@ -58,14 +61,13 @@ public abstract class AbstractODSOperation implements IOWSOperation
     return m_env;
   }
 
-  public ResponseBean getResponse( )
+  public OGCResponse getResponse( )
   {
     return m_responseBean;
   }
 
-  public RequestBean getRequest( )
+  public OGCRequest getRequest( )
   {
     return m_requestBean;
   }
-
 }

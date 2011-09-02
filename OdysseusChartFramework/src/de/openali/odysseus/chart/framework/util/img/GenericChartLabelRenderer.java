@@ -57,11 +57,11 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
  * @author kimwerner
@@ -187,7 +187,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
   private Point getImageSize( final String imageURL )
   {
-    final Device device = PlatformUI.getWorkbench().getDisplay();
+    final Device device = ChartUtilities.getDisplay();
     final ImageData imageData = loadImage( device, imageURL.substring( 4 ) );
     if( imageData == null )
       return new Point( 0, 0 );
@@ -281,7 +281,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   @Override
   public Rectangle getSize( )
   {
-    final Device device = PlatformUI.getWorkbench().getDisplay();
+    final Device device = ChartUtilities.getDisplay();
     final Image image = new Image( device, 1, 1 );
     final GC gc = new GC( image );
     try

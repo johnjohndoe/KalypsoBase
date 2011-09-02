@@ -38,46 +38,61 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.service.ods.operation;
+package de.openali.odysseus.service.ods.service;
 
-import org.eclipse.swt.widgets.Display;
 import org.kalypso.ogc.core.exceptions.OWSException;
-
-import de.openali.odysseus.service.ods.util.DisplayHelper;
+import org.kalypso.ogc.core.operations.IOGCOperation;
+import org.kalypso.ogc.core.service.IOGCService;
+import org.kalypso.ogc.core.service.OGCRequest;
+import org.kalypso.ogc.core.service.OGCResponse;
 
 /**
- * Abstract class for operations making use of the SWT-Display; we have to secure that these operations run in the
- * display thread, so thats what this abstract implementation handles; OWSException handling differs a bit, as we can
- * not declare throws for the Runnable's run operation: Instead of being thrown, the exception is announced via
- * setException() and will be thrown by the execute operation
+ * The ODS service.
  * 
- * @author burtscher1
+ * @author Holger Albert
  */
-public abstract class AbstractODSDisplayOperation extends AbstractODSOperation implements Runnable
+public class ODSService implements IOGCService
 {
-  private OWSException m_exception = null;
+  /**
+   * The constructor.
+   */
+  public ODSService( )
+  {
+  }
 
   /**
-   * @see de.openali.odysseus.service.ods.operation.AbstractODSOperation#execute()
+   * @see org.kalypso.ogc.core.service.IOGCService#getName()
    */
   @Override
-  public void execute( ) throws OWSException
+  public String getName( )
   {
-    final DisplayHelper dh = DisplayHelper.getInstance();
-    final Display d = dh.getDisplay();
-    d.syncExec( this );
-    final OWSException e = getException();
-    if( e != null )
-      throw e;
+    return "ODS";
   }
 
-  public void setException( final OWSException e )
+  /**
+   * @see org.kalypso.ogc.core.service.IOGCService#getVersion()
+   */
+  @Override
+  public String getVersion( )
   {
-    m_exception = e;
+    return "0.2.0";
   }
 
-  public OWSException getException( )
+  /**
+   * @see org.kalypso.ogc.core.service.IOGCService#execute(org.kalypso.ogc.core.service.OGCRequest,
+   *      org.kalypso.ogc.core.service.OGCResponse, org.kalypso.ogc.core.operations.IOGCOperation)
+   */
+  @Override
+  public void execute( OGCRequest request, OGCResponse response, IOGCOperation operation ) throws OWSException
   {
-    return m_exception;
+    operation.execute( request, response );
+  }
+
+  /**
+   * @see org.kalypso.ogc.core.service.IOGCService#dispose()
+   */
+  @Override
+  public void dispose( )
+  {
   }
 }
