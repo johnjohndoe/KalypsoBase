@@ -118,7 +118,7 @@ public class LanduseMappingTable extends Composite
     m_layout.setColumnData( clazzColumn.getColumn(), new ColumnWeightData( 50 ) );
 
     clazzColumn.setLabelProvider( new LanduseMappingLabelProvider( m_model, 1 ) );
-    clazzColumn.setEditingSupport( new LandUseMappingEditingSupport( m_viewer, m_model ) ); //$NON-NLS-1$
+    clazzColumn.setEditingSupport( new LanduseMappingEditingSupport( m_viewer, m_model ) ); //$NON-NLS-1$
 
     m_model.addPropertyChangeListener( ILanduseModel.PROPERTY_SHAPE_COLUMN, new PropertyChangeListener()
     {
@@ -139,6 +139,8 @@ public class LanduseMappingTable extends Composite
 
       }
     } );
+
+    m_viewer.addFilter( new LanduseMappingFilter( m_model ) );
   }
 
   protected void refresh( )
