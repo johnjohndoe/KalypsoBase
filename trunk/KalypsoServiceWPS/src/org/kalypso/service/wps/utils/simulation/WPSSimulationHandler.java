@@ -57,7 +57,7 @@ import net.opengeospatial.wps.ProcessFailedType;
 import net.opengeospatial.wps.ProcessStartedType;
 import net.opengeospatial.wps.StatusType;
 
-import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs2.FileObject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.io.VFSUtilities;

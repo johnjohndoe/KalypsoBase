@@ -43,8 +43,8 @@ package org.kalypso.project.database.client.core.base.worker;
 import java.io.File;
 import java.net.URL;
 
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -119,7 +119,6 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
 
       monitor.subTask( Messages.getString( "org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.7" ) ); //$NON-NLS-1$
 
-
       final FileObject destination = manager.resolveFile( urlDestination );
       VFSUtilities.copy( source, destination );
 
@@ -141,7 +140,7 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
         // add local project lock
         preferences.setEditTicket( ticket );
       }
-      catch( final Throwable t ) 
+      catch( final Throwable t )
       {
         t.printStackTrace();
       }

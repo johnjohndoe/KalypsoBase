@@ -40,9 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.server;
 
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.kalypso.commons.io.VFSUtilities;
@@ -87,7 +87,7 @@ class ProjectDatabaseHelper
       {
         parentFolder.delete();
       }
-      
+
       /* delete database entry */
       final Transaction tx = session.beginTransaction();
       session.delete( bean );

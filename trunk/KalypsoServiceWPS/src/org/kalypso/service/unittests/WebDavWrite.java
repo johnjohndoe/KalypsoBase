@@ -46,15 +46,15 @@ import java.io.IOException;
 import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileUtil;
-import org.apache.commons.vfs.cache.DefaultFilesCache;
-import org.apache.commons.vfs.impl.DefaultFileReplicator;
-import org.apache.commons.vfs.impl.DefaultFileSystemManager;
-import org.apache.commons.vfs.provider.local.DefaultLocalFileProvider;
-import org.apache.commons.vfs.provider.temp.TemporaryFileProvider;
-import org.apache.commons.vfs.provider.url.UrlFileProvider;
-import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileUtil;
+import org.apache.commons.vfs2.cache.DefaultFilesCache;
+import org.apache.commons.vfs2.impl.DefaultFileReplicator;
+import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
+import org.apache.commons.vfs2.provider.local.DefaultLocalFileProvider;
+import org.apache.commons.vfs2.provider.temp.TemporaryFileProvider;
+import org.apache.commons.vfs2.provider.url.UrlFileProvider;
+import org.apache.commons.vfs2.provider.webdav.WebdavFileProvider;
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
 

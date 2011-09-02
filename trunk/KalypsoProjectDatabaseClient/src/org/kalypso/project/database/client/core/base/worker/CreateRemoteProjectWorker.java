@@ -44,9 +44,9 @@ import java.io.File;
 import java.net.URL;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.cache.OnCallRefreshFileObject;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.cache.OnCallRefreshFileObject;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.WorkspaceJob;
