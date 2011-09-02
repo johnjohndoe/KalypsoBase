@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.simulation.core.ISimulationResultEater;
 import org.kalypso.simulation.core.SimulationDataPath;
@@ -154,7 +155,7 @@ public class DefaultResultEater implements ISimulationResultEater
 
         final File targetFile = new File( targetDir, relativeTargetPath );
         // try to move file/directory to destination
-        FileUtilities.moveContents( resultFile, targetFile );
+        VFSUtilities.moveContents( resultFile, targetFile );
 
         if( targetFolder != null )
         {

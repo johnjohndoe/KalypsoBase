@@ -42,8 +42,8 @@ package org.kalypso.project.database.server.trigger;
 
 import java.lang.reflect.Constructor;
 
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemManager;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.commons.io.VFSUtilities;

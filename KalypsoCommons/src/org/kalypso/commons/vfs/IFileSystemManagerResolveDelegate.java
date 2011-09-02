@@ -38,34 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.common.interfaces;
+package org.kalypso.commons.vfs;
+
+import java.io.File;
 
 import org.apache.commons.vfs2.FileObject;
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.FileSystemOptions;
 
 /**
- * Description see https://dev.bjoernsen.de/planerclient/wiki/Modelldatendienst/Trigger
- * 
  * @author Dirk Kuch
  */
-public interface IProjectDatabaseTrigger
+public interface IFileSystemManagerResolveDelegate
 {
-  /**
-   * @param bean
-   *          newly create bean
-   * @param projectDestinationFolder
-   *          global destination folder to share common informations for all instances of this project bean!
-   */
-  void handleProjectData( KalypsoProjectBean bean, FileObject projectDestinationFolder ) throws CoreException;
+  FileObject resolveFile( FileSystemManager manager, File baseFile, String name ) throws FileSystemException;
 
-  /**
-   * handle common informations for all projects!
-   * 
-   * @param bean
-   *          newly create bean
-   * @param globalCommonDestinationFolder
-   *          global destination folder to share informations for all project
-   */
-  public void handleCommonData( KalypsoProjectBean bean, FileObject destinationFolder ) throws CoreException;
+  FileObject resolveFile( FileSystemManager manager, FileObject baseFile, String name ) throws FileSystemException;
+
+  FileObject resolveFile( FileSystemManager manager, String name, FileSystemOptions fileSystemOptions ) throws FileSystemException;
+
+  FileObject resolveFile( FileSystemManager manager, String name ) throws FileSystemException;
 }

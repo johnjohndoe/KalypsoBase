@@ -53,13 +53,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.apache.commons.vfs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.kalypso.commons"
          download-size="0"
          install-size="0"
@@ -399,21 +392,21 @@
          id="org.kalypso.mapserver"
          download-size="0"
          install-size="0"
-         version="11.4.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.zml.core"
          download-size="0"
          install-size="0"
-         version="11.4.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.kalypso.zml.ui"
          download-size="0"
          install-size="0"
-         version="11.4.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
@@ -427,11 +420,18 @@
          id="com.vividsolutions.jts"
          download-size="0"
          install-size="0"
-         version="11.4.0.qualifier"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.apache.commons"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.commons.vfs2"
          download-size="0"
          install-size="0"
          version="0.0.0"

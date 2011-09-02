@@ -38,34 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.project.database.common.interfaces;
+package org.kalypso.commons.vfs;
 
-import org.apache.commons.vfs2.FileObject;
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.provider.FileProvider;
 
-/**
- * Description see https://dev.bjoernsen.de/planerclient/wiki/Modelldatendienst/Trigger
- * 
- * @author Dirk Kuch
- */
-public interface IProjectDatabaseTrigger
+public interface VFSProviderExtension
 {
-  /**
-   * @param bean
-   *          newly create bean
-   * @param projectDestinationFolder
-   *          global destination folder to share common informations for all instances of this project bean!
-   */
-  void handleProjectData( KalypsoProjectBean bean, FileObject projectDestinationFolder ) throws CoreException;
+  public FileProvider getProvider( );
 
-  /**
-   * handle common informations for all projects!
-   * 
-   * @param bean
-   *          newly create bean
-   * @param globalCommonDestinationFolder
-   *          global destination folder to share informations for all project
-   */
-  public void handleCommonData( KalypsoProjectBean bean, FileObject destinationFolder ) throws CoreException;
+  public void init( final FileSystemManager manager );
 }

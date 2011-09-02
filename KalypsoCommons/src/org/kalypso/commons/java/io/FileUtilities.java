@@ -50,28 +50,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.vfs.AllFileSelector;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.FileSystemException;
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.FileSystemManagerWrapper;
-import org.apache.commons.vfs.FileType;
-import org.apache.commons.vfs.NameScope;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -79,8 +67,6 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.internal.i18n.Messages;
-import org.kalypso.commons.io.VFSUtilities;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.io.FileVisitor;
 import org.kalypso.contribs.java.io.StreamUtilities;
@@ -469,7 +455,7 @@ public class FileUtilities
 
       final String back = basePath.substring( index );
       // TODO change regExp to "everything except fileseparator"
-      final String x = back.replaceAll("([a-zA-Z0-9_-]|\\.)+", ".."); //$NON-NLS-1$ //$NON-NLS-2$
+      final String x = back.replaceAll( "([a-zA-Z0-9_-]|\\.)+", ".." ); //$NON-NLS-1$ //$NON-NLS-2$
       if( x.length() > 0 )
         // return x + "/" + difference; //$NON-NLS-1$
         return x + difference;
@@ -707,36 +693,6 @@ public class FileUtilities
   }
 
   /**
-   * Moves the complete content of one directory into another.
-   * 
-   * @throws IOException
-   *           If the move failed.
-   */
-  public static void moveContents( final File sourceDir, final File dest ) throws IOException
-  {
-    final FileSystemManager vfsManager = VFSUtilities.getManager();
-    final FileObject source = vfsManager.toFileObject( sourceDir );
-    final FileObject destDir = vfsManager.toFileObject( dest );
-
-    final FileObject[] findFiles = source.findFiles( new AllFileSelector() );
-    // Might happen, if source does not exists... shouldn't we check this?
-    if( findFiles == null )
-      return;
-
-    for( final FileObject fileObject : findFiles )
-    {
-      if( FileType.FILE.equals( fileObject.getType() ) )
-      {
-        final String relPath = source.getName().getRelativeName( fileObject.getName() );
-        final FileObject destFile = destDir.resolveFile( relPath, NameScope.DESCENDENT_OR_SELF );
-        final FileObject folder = destFile.getParent();
-        folder.createFolder();
-        fileObject.moveTo( destFile );
-      }
-    }
-  }
-
-  /**
    * Replaces all invalid characters from the given fileName so that it is valid against the OS-rules for naming files.
    * and looks if file already exists in baseFolder
    * 
@@ -865,120 +821,6 @@ public class FileUtilities
     {
       KalypsoCommonsPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), e.getLocalizedMessage(), e ) );
     }
-  }
-
-  /**
-   * resolves the input stream from given {@link FileObject} based on the file extention, known types are gz and zip, in
-   * case of zip archiv the first file will be taken.
-   */
-  public static InputStream getInputStreamFromFileObject( final FileObject file )
-  {
-    InputStream inContentStream = null;
-
-    /* open stream */
-    try
-    {
-      if( "gz".equalsIgnoreCase( file.getName().getExtension() ) )//$NON-NLS-1$
-      {
-        inContentStream = new GZIPInputStream( new BufferedInputStream( file.getContent().getInputStream() ) );
-      }
-      else if( "zip".equalsIgnoreCase( file.getName().getExtension() ) )//$NON-NLS-1$
-      {
-        inContentStream = ZipUtilities.getInputStreamForFirstFile( file.getURL() );
-      }
-      else
-      {
-        inContentStream = new BufferedInputStream( file.getContent().getInputStream() );
-      }
-    }
-    catch( final FileSystemException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
-    return inContentStream;
-  }
-
-  /**
-   * Compress the given by sourceFileURL {@link URL} file into given by outputDirURL directory with compression
-   * specified by compressKind. Supported compression is "gz", with null or empty string provided as compressKind the
-   * file will be just copied.
-   */
-  public static FileObject compressFileContent( final URL sourceFileURL, final URL outputDirURL, final String compressKind )
-  {
-    return proceedFileCompressOperation( sourceFileURL, outputDirURL, compressKind, true );
-  }
-
-  /**
-   * uncompress(unzip ungzip) or/and compress using by @param compressKind given type of compression the source
-   * {@link URL} to the output {@link URL}
-   */
-  private static FileObject proceedFileCompressOperation( final URL sourceFileURL, final URL outputDirURL, final String compressKind, final boolean doCompress )
-  {
-    if( sourceFileURL == null || outputDirURL == null )
-      return null;
-
-    OutputStream outStream = null;
-    InputStream inStream = null;
-    String lComressKind = compressKind;
-    if( lComressKind == null || !doCompress )
-    {
-      lComressKind = "";
-    }
-    try
-    {
-      final FileSystemManagerWrapper vfsManager = VFSUtilities.getNewManager();
-      final FileObject fileObjectIn = vfsManager.resolveFile( sourceFileURL.toExternalForm() );
-      final FileObject fileObjectOut = vfsManager.resolveFile( outputDirURL.toExternalForm() );
-      inStream = getInputStreamFromFileObject( fileObjectIn );
-
-      final File sourceFile = new File( sourceFileURL.toURI() );
-      final String sourceFileName = sourceFile.getName();
-      final boolean sourceIsKnownArchiv = sourceFileName.toLowerCase().endsWith( ".gz" ) || sourceFileName.endsWith( ".zip" ); //$NON-NLS-1$  //$NON-NLS-2$  
-      final String sourceFileNameWithoutExt = sourceFileName.substring( 0, sourceIsKnownArchiv ? sourceFileName.lastIndexOf( "." ) : sourceFileName.length() ); //$NON-NLS-1$
-      final File outputFile = new File( outputDirURL.getPath(), sourceFileNameWithoutExt + ("".equals( lComressKind ) ? "" : ".") + lComressKind ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      if( doCompress && "gz".equalsIgnoreCase( lComressKind ) ) { //$NON-NLS-1$
-        outStream = new GZIPOutputStream( new FileOutputStream( outputFile ) );
-      }
-      else if( doCompress && "zip".equalsIgnoreCase( lComressKind ) ) { //$NON-NLS-1$
-        outStream = new ZipOutputStream( new FileOutputStream( outputFile ) );
-        final ZipEntry newEntry = new ZipEntry( sourceFileName );
-        ((ZipOutputStream) outStream).putNextEntry( newEntry );
-      }
-      else
-      {
-        outStream = new BufferedOutputStream( new FileOutputStream( outputFile ) );
-      }
-      IOUtils.copy( inStream, outStream );
-      return vfsManager.resolveFile( fileObjectOut, outputFile.getName() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( inStream );
-      IOUtils.closeQuietly( outStream );
-    }
-    return null;
-
-  }
-
-  /**
-   * uncompress the given by sourceFileURL {@link URL} file into given by outputDirURL {@link URL} directory supported
-   * compression are: "gz". If the compressKind parametr is set, the content will be recompress according to this
-   * parameter after uncompressing.
-   */
-  public static FileObject uncompressFileContent( final URL sourceFileURL, final URL outputDirURL, final String compressKind )
-  {
-    if( compressKind == null || "".equals( compressKind ) )
-      return proceedFileCompressOperation( sourceFileURL, outputDirURL, compressKind, false );
-
-    return proceedFileCompressOperation( sourceFileURL, outputDirURL, compressKind, true );
   }
 
   /**
