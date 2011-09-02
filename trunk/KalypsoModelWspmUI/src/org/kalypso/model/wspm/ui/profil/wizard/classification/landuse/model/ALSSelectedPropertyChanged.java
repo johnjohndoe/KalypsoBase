@@ -44,7 +44,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.model.wspm.ui.profil.wizard.landuse.pages.LanduseTableMappingHandler;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseMappingUpdater;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.IDBFField;
 
@@ -66,7 +66,7 @@ public class ALSSelectedPropertyChanged implements PropertyChangeListener
 
     try
     {
-      final LanduseTableMappingHandler handler = new LanduseTableMappingHandler( shapeFile, property, model.getMapping() );
+      final LanduseMappingUpdater handler = new LanduseMappingUpdater( shapeFile, property, model.getMapping() );
       handler.run( new NullProgressMonitor() );
     }
     catch( final Exception ex )

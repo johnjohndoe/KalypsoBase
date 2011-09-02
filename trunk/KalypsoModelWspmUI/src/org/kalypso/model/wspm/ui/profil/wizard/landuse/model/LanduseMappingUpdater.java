@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
+package org.kalypso.model.wspm.ui.profil.wizard.landuse.model;
 
 import java.util.LinkedHashSet;
 import java.util.Properties;
@@ -55,16 +55,15 @@ import org.kalypso.shape.dbf.IDBFField;
 /**
  * @author Dirk Kuch
  */
-public class LanduseTableMappingHandler implements IRunnableWithProgress
+public class LanduseMappingUpdater implements IRunnableWithProgress
 {
-
   private final ShapeFile m_file;
 
   private final Properties m_properties;
 
   private final IDBFField m_field;
 
-  public LanduseTableMappingHandler( final ShapeFile file, final IDBFField field, final Properties properties )
+  public LanduseMappingUpdater( final ShapeFile file, final IDBFField field, final Properties properties )
   {
     m_file = file;
     m_field = field;
@@ -102,6 +101,5 @@ public class LanduseTableMappingHandler implements IRunnableWithProgress
     {
       ex.printStackTrace();
     }
-
   }
 }

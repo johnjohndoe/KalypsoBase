@@ -65,7 +65,9 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ImportLanduseDataModel;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseMappingUpdater;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseMappingTable;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseShapeLabelProvider;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.FieldType;
@@ -130,8 +132,10 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable
       {
         try
         {
-          final LanduseTableMappingHandler handler = new LanduseTableMappingHandler( m_provider.getShapeFile(), m_model.getShapeColumn(), m_model.getMapping() );
+          final LanduseMappingUpdater handler = new LanduseMappingUpdater( m_provider.getShapeFile(), m_model.getShapeColumn(), m_model.getMapping() );
           getContainer().run( false, false, handler );
+
+          table.refresh();
         }
         catch( final Exception e )
         {
@@ -146,7 +150,7 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable
 
   private ComboViewer getViewer( final Composite body )
   {
-    final ComboViewer viewer = new ComboViewer( body, SWT.BORDER );
+    final ComboViewer viewer = new ComboViewer( body, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
     viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     viewer.setLabelProvider( new LanduseShapeLabelProvider() );
     viewer.setContentProvider( new ArrayContentProvider() );
