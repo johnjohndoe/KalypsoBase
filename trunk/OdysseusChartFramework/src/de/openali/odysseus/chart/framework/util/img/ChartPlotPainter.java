@@ -48,11 +48,11 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Transform;
-import org.eclipse.ui.PlatformUI;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
  * @author kimwerner
@@ -73,12 +73,12 @@ public class ChartPlotPainter
   {
     if( m_size == null || m_size.x < 1 || m_size.y < 1 )
       return null;
-    final Device dev = PlatformUI.getWorkbench().getDisplay();
+    final Device dev = ChartUtilities.getDisplay();
     final Image image = new Image( dev, m_size.x, m_size.y );
     final GC gc = new GC( image );
     try
     {
-      paint( gc,new Insets(0,0,0,0) );
+      paint( gc, new Insets( 0, 0, 0, 0 ) );
     }
     finally
     {
@@ -99,13 +99,13 @@ public class ChartPlotPainter
     return m_size;
   }
 
-  public void paint( final GC gc,final Insets plotInsets )
+  public void paint( final GC gc, final Insets plotInsets )
   {
     final IChartLayer[] layers = getChartLayers();
     ArrayUtils.reverse( layers );
     final Transform transform = new Transform( gc.getDevice() );
     gc.getTransform( transform );
-    transform.translate(  plotInsets.left, plotInsets.top); 
+    transform.translate( plotInsets.left, plotInsets.top );
     gc.setTransform( transform );
     try
     {
@@ -117,9 +117,9 @@ public class ChartPlotPainter
     }
     finally
     {
-     transform.translate( -plotInsets.left, -plotInsets.top); 
-     gc.setTransform( transform );
-     transform.dispose();
+      transform.translate( -plotInsets.left, -plotInsets.top );
+      gc.setTransform( transform );
+      transform.dispose();
     }
   }
 

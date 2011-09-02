@@ -50,7 +50,6 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -58,6 +57,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.util.img.legend.ChartLegendCanvas;
 import de.openali.odysseus.chart.framework.util.img.legend.config.DefaultChartLegendConfig;
 
@@ -111,7 +111,7 @@ public class ChartPainter
 
     final Insets plotInsets = getPlotInsets();
     setAxesHeight( plotInsets, m_size );
-    final Device dev = PlatformUI.getWorkbench().getDisplay();
+    final Device dev = ChartUtilities.getDisplay();
     final Image image = new Image( dev, m_size.width, m_size.height );
     final GC gc = new GC( image );
     final Image legendImage = m_legendPainter.createImage();
@@ -185,7 +185,7 @@ public class ChartPainter
       final int axisRightWidth = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ) );
       final int axisTopWidth = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ) );
       final int axisBottomWidth = getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ) );
-      final int top = m_titlePainter.getSize( m_clientRect.width ).y + axisTopWidth ;
+      final int top = m_titlePainter.getSize( m_clientRect.width ).y + axisTopWidth;
       final int bottom = m_legendPainter.getSize().height + axisBottomWidth;
       m_plotInsets = new Insets( top + m_chartInsets.top, axisLeftWidth + m_chartInsets.left, bottom + m_chartInsets.bottom, axisRightWidth + m_chartInsets.right );
     }

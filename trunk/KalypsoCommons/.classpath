@@ -18,7 +18,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/jsr173_1.0_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/resolver.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xbean_xpath.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xbean.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xbean.jar" sourcepath="lib/xmlbeans-2.5/src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xmlbeans-qname.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xmlpublic.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-3.6-20091214.jar" sourcepath="lib/poi-2.6/poi-src-3.6-20091214.zip"/>

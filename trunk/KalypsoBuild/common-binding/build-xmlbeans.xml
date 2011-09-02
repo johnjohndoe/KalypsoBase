@@ -57,8 +57,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 	<!-- REMARK: This is a speciality of xml-beans: xml-beans generates a lot of non-class files, that are needed for the binding stuff to run. Among them are files with extension '.class'., that are NOT automatically copied by eclipse into the binary folder while compilation. So we need to copy them ourselfes.-->
 	<target name="copyClassStuff">
 		<copy todir="${xmlbean.copyClassStuffTarget}">
-			<fileset dir="${xmlbean.srcgendir}" includes="**/*.class">
-			</fileset>
+			<fileset dir="${xmlbean.srcgendir}" includes="**/*.class" />
+			<fileset dir="${xmlbean.srcgendir}" includes="**/*.xsb" />
 		</copy>
 	</target>
 </project>

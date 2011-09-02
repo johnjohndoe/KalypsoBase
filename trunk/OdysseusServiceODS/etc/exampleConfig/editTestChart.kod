@@ -5,12 +5,12 @@
     <Description>Längsschnitt</Description>
     <Layers>
       <Layer id="editTest2" visible="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.chart.ext.test.EditableLineLayerProvider"/>
+        <Provider epid="org.kalypso.chart.ext.test.layer.provider.EditableLineLayerProvider" />
         <Title>Ein Test-Layer 2</Title>
-        <Description/>
+        <Description />
         <MapperRefs>
-          <DomainAxisRef ref="Bottom_Axis"/>
-          <TargetAxisRef ref="Left_Axis"/>
+          <DomainAxisRef ref="Bottom_Axis" />
+          <TargetAxisRef ref="Left_Axis" />
         </MapperRefs>
         <Styles>
           <LineStyle role="line">
@@ -22,12 +22,12 @@
         </Styles>
       </Layer>
       <Layer id="editTest" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.chart.ext.test.EditableLineLayerProvider"/>
+        <Provider epid="org.kalypso.chart.ext.test.layer.provider.EditableLineLayerProvider" />
         <Title>Ein Test-Layer</Title>
-        <Description/>
+        <Description />
         <MapperRefs>
-          <DomainAxisRef ref="Top_Axis"/>
-          <TargetAxisRef ref="Right_Axis"/>
+          <DomainAxisRef ref="Top_Axis" />
+          <TargetAxisRef ref="Right_Axis" />
         </MapperRefs>
         <Styles>
           <LineStyle role="line">
@@ -39,12 +39,12 @@
         </Styles>
       </Layer>
       <Layer id="gridLayer" visible="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="de.openali.odysseus.chart.ext.layer.provider.Grid"/>
+        <Provider epid="de.openali.odysseus.chart.ext.base.layer.provider.GridLayerProvider" />
         <Title>Ein Grid-Layer</Title>
-        <Description/>
+        <Description />
         <MapperRefs>
-          <DomainAxisRef ref="Bottom_Axis"/>
-          <TargetAxisRef ref="Left_Axis"/>
+          <DomainAxisRef ref="Bottom_Axis" />
+          <TargetAxisRef ref="Left_Axis" />
         </MapperRefs>
         <Styles>
           <LineStyle role="gridLine">
@@ -55,7 +55,7 @@
     </Layers>
     <Mappers>
       <Axis id="Left_Axis">
-        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear"/>
+        <Provider epid="de.openali.odysseus.chart.ext.base.axis.provider.GenericLinearAxisProvider" />
         <Label>uk</Label>
         <Direction>POSITIVE</Direction>
         <Position>LEFT</Position>
@@ -63,10 +63,10 @@
           <MinValue>0.5362538609598998</MinValue>
           <MaxValue>0.5587423004602012</MaxValue>
         </NumberRange>
-        <RendererRef ref="NumberAxisRenderer"/>
+        <RendererRef ref="NumberAxisRenderer" />
       </Axis>
       <Axis id="Right_Axis">
-        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear"/>
+        <Provider epid="de.openali.odysseus.chart.ext.base.axis.provider.GenericLinearAxisProvider" />
         <Label>Pel</Label>
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
@@ -74,10 +74,10 @@
           <MinValue>6.629402799883666E-4</MinValue>
           <MaxValue>0.9991032812657581</MaxValue>
         </NumberRange>
-        <RendererRef ref="NumberAxisRenderer"/>
+        <RendererRef ref="NumberAxisRenderer" />
       </Axis>
       <Axis id="Top_Axis">
-        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear"/>
+        <Provider epid="de.openali.odysseus.chart.ext.base.axis.provider.GenericLinearAxisProvider" />
         <Label>right</Label>
         <Direction>NEGATIVE</Direction>
         <Position>TOP</Position>
@@ -85,10 +85,10 @@
           <MinValue>0.0</MinValue>
           <MaxValue>1999.0</MaxValue>
         </NumberRange>
-        <RendererRef ref="NumberAxisRenderer"/>
+        <RendererRef ref="NumberAxisRenderer" />
       </Axis>
       <Axis id="Bottom_Axis">
-        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear"/>
+        <Provider epid="de.openali.odysseus.chart.ext.base.axis.provider.GenericLinearAxisProvider" />
         <Label>unten</Label>
         <Direction>POSITIVE</Direction>
         <Position>BOTTOM</Position>
@@ -96,19 +96,19 @@
           <MinValue>672.1292004610237</MinValue>
           <MaxValue>840.6376712470542</MaxValue>
         </NumberRange>
-        <RendererRef ref="NumberAxisRenderer"/>
+        <RendererRef ref="NumberAxisRenderer" />
       </Axis>
     </Mappers>
     <Renderers>
       <AxisRenderer id="NumberAxisRenderer">
-        <Provider epid="de.openali.odysseus.chart.ext.test.axisrenderer.provider.GenericNumberAxisRendererProvider">
+        <Provider epid="de.openali.odysseus.chart.ext.base.axisrenderer.provider.GenericNumberAxisRendererProvider">
           <Parameters>
-            <Parameter name="inset_label" value="2"/>
-            <Parameter name="inset_tick" value="2"/>
-            <Parameter name="tick_length" value="5"/>
-            <Parameter name="hide_cut" value="true"/>
-            <Parameter name="gap" value="0"/>
-            <Parameter name="tick_label_formater" value="%s"/>
+            <Parameter name="inset_label" value="2" />
+            <Parameter name="inset_tick" value="2" />
+            <Parameter name="tick_length" value="5" />
+            <Parameter name="hide_cut" value="true" />
+            <Parameter name="gap" value="0" />
+            <Parameter name="tick_label_formater" value="%s" />
           </Parameters>
         </Provider>
       </AxisRenderer>

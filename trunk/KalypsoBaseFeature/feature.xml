@@ -256,13 +256,6 @@
          unpack="false"/>
 
    <plugin
-         id="de.openali.odysseus.service.ows"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="de.openali.odysseus.chart.ext.base"
          download-size="0"
          install-size="0"
@@ -432,6 +425,34 @@
 
    <plugin
          id="org.apache.commons.vfs2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.ogc.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.wps.adapter"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.wps.client"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.kalypso.wps.server"
          download-size="0"
          install-size="0"
          version="0.0.0"

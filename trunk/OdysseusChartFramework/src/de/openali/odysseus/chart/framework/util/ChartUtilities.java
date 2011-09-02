@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -120,6 +121,17 @@ public final class ChartUtilities
         max = rect.y + rect.height;
       }
     }
+
     return new ComparableDataRange<Integer>( new Integer[] { min, max } );
+  }
+
+  /**
+   * This function returns the display.
+   * 
+   * @return The display.
+   */
+  public static Display getDisplay( )
+  {
+    return Display.getCurrent();
   }
 }
