@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -671,35 +672,16 @@ public class VFSUtilities
    * resolves the input stream from given {@link FileObject} based on the file extention, known types are gz and zip, in
    * case of zip archiv the first file will be taken.
    */
-  public static InputStream getInputStreamFromFileObject( final FileObject file )
+  public static InputStream getInputStreamFromFileObject( final FileObject file ) throws FileSystemException, IOException, URISyntaxException
   {
-    InputStream inContentStream = null;
-
     /* open stream */
-    try
-    {
-      if( "gz".equalsIgnoreCase( file.getName().getExtension() ) )//$NON-NLS-1$
-      {
-        inContentStream = new GZIPInputStream( new BufferedInputStream( file.getContent().getInputStream() ) );
-      }
-      else if( "zip".equalsIgnoreCase( file.getName().getExtension() ) )//$NON-NLS-1$
-      {
-        inContentStream = ZipUtilities.getInputStreamForFirstFile( file.getURL() );
-      }
-      else
-      {
-        inContentStream = new BufferedInputStream( file.getContent().getInputStream() );
-      }
-    }
-    catch( final FileSystemException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
-    return inContentStream;
+    if( "gz".equalsIgnoreCase( file.getName().getExtension() ) )//$NON-NLS-1$
+      return new GZIPInputStream( new BufferedInputStream( file.getContent().getInputStream() ) );
+
+    if( "zip".equalsIgnoreCase( file.getName().getExtension() ) )//$NON-NLS-1$
+      return ZipUtilities.getInputStreamForFirstFile( file.getURL() );
+
+    return new BufferedInputStream( file.getContent().getInputStream() );
   }
 
   /**
@@ -737,7 +719,7 @@ public class VFSUtilities
 
       final File sourceFile = new File( sourceFileURL.toURI() );
       final String sourceFileName = sourceFile.getName();
-      final boolean sourceIsKnownArchiv = sourceFileName.toLowerCase().endsWith( ".gz" ) || sourceFileName.endsWith( ".zip" ); //$NON-NLS-1$  //$NON-NLS-2$  
+      final boolean sourceIsKnownArchiv = sourceFileName.toLowerCase().endsWith( ".gz" ) || sourceFileName.endsWith( ".zip" ); //$NON-NLS-1$  //$NON-NLS-2$
       final String sourceFileNameWithoutExt = sourceFileName.substring( 0, sourceIsKnownArchiv ? sourceFileName.lastIndexOf( "." ) : sourceFileName.length() ); //$NON-NLS-1$
       final File outputFile = new File( outputDirURL.getPath(), sourceFileNameWithoutExt + ("".equals( lComressKind ) ? "" : ".") + lComressKind ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       if( doCompress && "gz".equalsIgnoreCase( lComressKind ) ) { //$NON-NLS-1$
