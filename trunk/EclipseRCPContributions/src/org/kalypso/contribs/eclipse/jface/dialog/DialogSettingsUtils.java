@@ -169,12 +169,12 @@ public final class DialogSettingsUtils
   /**
    * Gets a string value of a setting's property, but returns a default value if this property is not set.
    */
-  public static String getString( final IDialogSettings settings, final String property, final String defaultValue )
+  public static String getString( final IDialogSettings settings, final String key, final String defaultValue )
   {
     if( settings == null )
       return defaultValue;
 
-    final String value = settings.get( property );
+    final String value = settings.get( key );
     if( value == null )
       return defaultValue;
 
