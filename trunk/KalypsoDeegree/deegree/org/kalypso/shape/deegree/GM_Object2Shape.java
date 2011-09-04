@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.deegree;
 
@@ -120,6 +120,10 @@ public class GM_Object2Shape
         else
         {
           final GM_Curve[] curves = orientCurves( surfacePatches );
+          // FIXME: better error handling?
+          if( curves == null )
+            return new SHPNullShape();
+
           return new SHPPolygon( toPolyline( curves ) );
         }
       }
@@ -284,6 +288,7 @@ public class GM_Object2Shape
       catch( final Exception e )
       {
         System.out.println( "SHPPolygon::" + e );
+        return null;
       }
     }
     return curveList.toArray( new GM_Curve[curveList.size()] );
@@ -303,6 +308,8 @@ public class GM_Object2Shape
 
     final GM_SurfacePatch[] patches = new GM_SurfacePatch[] { transformedPatch };
     final GM_Curve[] curves = orientCurves( patches );
+    if( curves == null )
+      return new SHPNullShape();
 
     switch( m_shapeType )
     {
