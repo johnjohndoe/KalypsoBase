@@ -53,6 +53,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.util.PropertiesUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseProperties;
 
 /**
  * @author Dirk Kuch
@@ -61,6 +62,8 @@ public class ALSSelectedShapeFileChangedListener implements PropertyChangeListen
 {
 
   private IFile m_file;
+
+  private String m_type;
 
   public ALSSelectedShapeFileChangedListener( )
   {
@@ -71,17 +74,22 @@ public class ALSSelectedShapeFileChangedListener implements PropertyChangeListen
   {
     final ApplyLanduseShapeModel model = (ApplyLanduseShapeModel) evt.getSource();
     final IFile file = (IFile) evt.getNewValue();
-    if( Objects.equal( m_file, file ) )
+    if( Objects.equal( m_file, file ) && Objects.equal( model.getType(), m_type ) )
       return;
 
     try
     {
       final String base = FilenameUtils.removeExtension( model.getLanduseShape().getLocation().toOSString() );
 
+      /* Properties are displayed in landuse mapping table. don't assign a new property member - merge! */
       final Properties shapeFileProperties = getProperties( model, base );
-      PropertiesUtilities.merge( model.getMapping(), shapeFileProperties );
+      final LanduseProperties modelProperties = model.getMapping();
+      modelProperties.clear();
 
-      model.firePropertyChange( ILanduseModel.PROPERTY_MAPPING, model.getMapping(), model.getMapping() );
+      PropertiesUtilities.merge( modelProperties, shapeFileProperties );
+
+      model.firePropertyChange( ILanduseModel.PROPERTY_MAPPING, null, modelProperties );
+      m_type = model.getType();
       m_file = file;
     }
     catch( final Exception ex )
@@ -90,7 +98,7 @@ public class ALSSelectedShapeFileChangedListener implements PropertyChangeListen
     }
   }
 
-  private Properties getProperties( final ApplyLanduseShapeModel model, final String base ) throws IOException
+  private LanduseProperties getProperties( final ApplyLanduseShapeModel model, final String base ) throws IOException
   {
     File file;
     if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( model.getType() ) )
@@ -108,7 +116,7 @@ public class ALSSelectedShapeFileChangedListener implements PropertyChangeListen
 
     try
     {
-      final Properties properties = new Properties();
+      final LanduseProperties properties = new LanduseProperties( model );
       properties.load( inputStream );
 
       return properties;

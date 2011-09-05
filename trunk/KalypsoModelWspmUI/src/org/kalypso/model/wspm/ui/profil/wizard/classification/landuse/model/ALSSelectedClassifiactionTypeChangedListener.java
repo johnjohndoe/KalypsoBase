@@ -43,9 +43,9 @@ package org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import org.eclipse.core.resources.IFile;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
-import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.IDBFField;
 
 /**
@@ -59,13 +59,13 @@ public class ALSSelectedClassifiactionTypeChangedListener implements PropertyCha
   {
     final ApplyLanduseShapeModel model = (ApplyLanduseShapeModel) evt.getSource();
 
-    final ShapeFile shapeFile = model.getShapeFile();
+    final IFile shapeFile = model.getLanduseShape();
     if( Objects.isNotNull( shapeFile ) )
-      model.firePropertyChange( ILanduseModel.PROPERTY_LANDUSE_SHAPE, shapeFile, shapeFile );
+      model.firePropertyChange( ILanduseModel.PROPERTY_LANDUSE_SHAPE, null, shapeFile );
 
     final IDBFField column = model.getShapeColumn();
     if( Objects.isNotNull( column ) )
-      model.firePropertyChange( ILanduseModel.PROPERTY_SHAPE_COLUMN, column, column );
+      model.firePropertyChange( ILanduseModel.PROPERTY_SHAPE_COLUMN, null, column );
   }
 
 }
