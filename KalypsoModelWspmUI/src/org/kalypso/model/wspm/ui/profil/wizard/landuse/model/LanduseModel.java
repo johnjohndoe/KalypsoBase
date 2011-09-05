@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.profil.wizard.landuse.model;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.kalypso.commons.java.lang.Objects;
@@ -75,6 +76,8 @@ public class LanduseModel extends AbstractModelObject implements ILanduseModel
   private GMLWorkspace m_workspace;
 
   private String m_type;
+
+  private String m_shapeFileBase;
 
   public LanduseModel( final IProject project, final String type )
   {
@@ -158,11 +161,15 @@ public class LanduseModel extends AbstractModelObject implements ILanduseModel
     try
     {
       final String base = FilenameUtils.removeExtension( location );
+      if( StringUtils.equalsIgnoreCase( m_shapeFileBase, base ) )
+        return;
+
       final ShapeFile shapeFile = new ShapeFile( base, Charset.defaultCharset(), FileMode.READ );
       if( Objects.isNotNull( m_shapeFile ) )
         m_shapeFile.close();
 
       m_shapeFile = shapeFile;
+      m_shapeFileBase = base;
     }
     catch( final Exception ex )
     {

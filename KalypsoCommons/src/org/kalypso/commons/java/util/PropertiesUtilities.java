@@ -54,6 +54,7 @@ import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.commons.java.lang.Strings;
 
 /**
  * This class provides functions for dealing with {@link java.util.Properties}.
@@ -138,7 +139,8 @@ public class PropertiesUtilities
     final Set<Entry<Object, Object>> entries = extension.entrySet();
     for( final Entry<Object, Object> entry : entries )
     {
-      if( Objects.isNull( base.getProperty( entry.getKey().toString() ) ) )
+      final String property = base.getProperty( entry.getKey().toString() );
+      if( Objects.isNull( property ) || Strings.isEmpty( property ) )
         base.setProperty( entry.getKey().toString(), entry.getValue().toString() );
     }
   }
