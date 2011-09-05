@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.profil.wizard.landuse.utils;
 
 import java.util.HashSet;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -52,6 +51,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseMappingUpdater;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseProperties;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.IDBFField;
 
@@ -104,7 +104,7 @@ public class LanduseMappingFilter extends ViewerFilter
     if( Objects.equal( m_shapeFile, shapeFile ) && Objects.equal( m_column, column ) )
       return m_properties;
 
-    final Properties properties = new Properties();
+    final LanduseProperties properties = new LanduseProperties( m_model );
     final LanduseMappingUpdater updater = new LanduseMappingUpdater( shapeFile, column, properties );
     updater.run( new NullProgressMonitor() );
 

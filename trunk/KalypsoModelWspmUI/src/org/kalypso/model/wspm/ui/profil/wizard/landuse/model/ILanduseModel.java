@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.model;
 
-import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.kalypso.commons.java.util.IModelObject;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
@@ -61,7 +59,7 @@ public interface ILanduseModel extends IModelObject
 
   String PROPERTY_LANDUSE_SHAPE = "landuseShape"; //$NON-NLS-1$
 
-  Properties getMapping( );
+  LanduseProperties getMapping( );
 
   IClassificationClass[] getClasses( );
 

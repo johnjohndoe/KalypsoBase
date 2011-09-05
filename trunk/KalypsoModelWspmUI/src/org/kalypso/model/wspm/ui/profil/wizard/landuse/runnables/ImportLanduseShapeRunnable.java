@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.profil.wizard.landuse.runnables;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Properties;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;
@@ -58,6 +57,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseProperties;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 
 /**
@@ -117,7 +117,7 @@ public class ImportLanduseShapeRunnable implements IRunnableWithProgress
     final FileOutputStream outputStream = new FileOutputStream( iProperties.getLocation().toFile() );
     try
     {
-      final Properties properties = mapping.getMapping();
+      final LanduseProperties properties = mapping.getMapping();
       properties.store( outputStream, null );
     }
     finally

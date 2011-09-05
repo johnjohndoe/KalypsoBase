@@ -40,14 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.pages;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -64,9 +61,8 @@ import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseMappingTable;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LandusePropertyFilter;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseShapeLabelProvider;
-import org.kalypso.shape.dbf.FieldType;
-import org.kalypso.shape.dbf.IDBFField;
 
 /**
  * @author Dirk Kuch
@@ -129,25 +125,7 @@ public class LanduseMappingPage extends WizardPage implements IRefreshable
     viewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     viewer.setLabelProvider( new LanduseShapeLabelProvider() );
     viewer.setContentProvider( new ArrayContentProvider() );
-
-    final FieldType[] filter = new FieldType[] { FieldType.D, FieldType.F, FieldType.L, FieldType.M, FieldType.N };
-    viewer.addFilter( new ViewerFilter()
-    {
-
-      @Override
-      public boolean select( final Viewer v, final Object parentElement, final Object element )
-      {
-        if( element instanceof IDBFField )
-        {
-          final IDBFField field = (IDBFField) element;
-          final FieldType type = field.getType();
-          if( ArrayUtils.contains( filter, type ) )
-            return false;
-        }
-
-        return true;
-      }
-    } );
+    viewer.addFilter( new LandusePropertyFilter() );
 
     final IObservableValue viewerSelection = ViewersObservables.observeSingleSelection( viewer );
     final IObservableValue modelValue = BeansObservables.observeValue( m_model, ILanduseModel.PROPERTY_SHAPE_COLUMN );

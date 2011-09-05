@@ -54,18 +54,15 @@ import org.kalypso.shape.dbf.IDBFField;
 public class ALSSelectedColumnChanged implements PropertyChangeListener
 {
 
-  /**
-   * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
-   */
   @Override
   public void propertyChange( final PropertyChangeEvent evt )
   {
-    final ApplyLanduseShapeModel model = (ApplyLanduseShapeModel) evt.getSource();
-    final ShapeFile shapeFile = model.getShapeFile();
-    final IDBFField property = (IDBFField) evt.getNewValue();
-
     try
     {
+      final ApplyLanduseShapeModel model = (ApplyLanduseShapeModel) evt.getSource();
+      final ShapeFile shapeFile = model.getShapeFile();
+      final IDBFField property = (IDBFField) evt.getNewValue();
+
       final LanduseMappingUpdater handler = new LanduseMappingUpdater( shapeFile, property, model.getMapping() );
       handler.run( new NullProgressMonitor() );
     }
