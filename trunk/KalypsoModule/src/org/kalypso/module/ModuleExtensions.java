@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.module;
 
@@ -64,10 +64,14 @@ public class ModuleExtensions
 
   public static IKalypsoModule getKalypsoModule( final String moduleId )
   {
+    if( moduleId == null )
+      return null;
+
     final IKalypsoModule[] modules = getKalypsoModules();
     for( final IKalypsoModule module : modules )
     {
-      if( moduleId.equals( module.getId() ) )
+      final String id = module == null ? null : module.getId();
+      if( moduleId.equals( id ) )
         return module;
     }
 
