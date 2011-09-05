@@ -127,4 +127,9 @@ public class ApplyLanduseShapePage extends WizardPage
     return viewer;
   }
 
+  public ILanduseModel getModel( )
+  {
+    return m_model;
+  }
+
 }

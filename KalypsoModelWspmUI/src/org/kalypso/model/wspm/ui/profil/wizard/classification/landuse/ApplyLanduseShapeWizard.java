@@ -49,6 +49,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.pages.ApplyLanduseShapePage;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
@@ -58,16 +59,9 @@ import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
  */
 public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
 {
-// private final IPageChangedListener m_pageListener = new IPageChangedListener()
-// {
-// @Override
-// public void pageChanged( final PageChangedEvent event )
-// {
-// handlePageChanged( event.getSelectedPage() );
-// }
-// };
-
   protected IProject m_project;
+
+  private ApplyLanduseShapePage m_page;
 
   public ApplyLanduseShapeWizard( )
   {
@@ -79,21 +73,27 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
   @Override
   public void addPages( )
   {
-    addPage( new ApplyLanduseShapePage( m_project ) );
+    m_page = new ApplyLanduseShapePage( m_project );
+    addPage( m_page );
   }
 
   @Override
   public boolean performFinish( )
   {
+    final ILanduseModel model = m_page.getModel();
 
-    return false;
-  }
+    /**
+     * <pre>
+     * how to continue?`
+     * 
+     * - use existing RoughnessIntersector implementation and
+     *    - import selected shape file into a gml workspace
+     *    - new pseudo FeatureList implementation
+     *    - or refactor existing code -> RoughnessIntersector will run against a new interface
+     * </pre>
+     */
 
-  @Override
-  public void dispose( )
-  {
-
-    super.dispose();
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -117,27 +117,5 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
     else
       throw new UnsupportedOperationException();
   }
-
-// @Override
-// public void setContainer( final IWizardContainer container )
-// {
-// final IWizardContainer oldContainer = getContainer();
-// if( oldContainer instanceof IPageChangeProvider )
-// ((IPageChangeProvider) oldContainer).removePageChangedListener( m_pageListener );
-//
-// super.setContainer( container );
-//
-// if( container instanceof IPageChangeProvider )
-// ((IPageChangeProvider) container).addPageChangedListener( m_pageListener );
-// }
-//
-// protected void handlePageChanged( final Object selectedPage )
-// {
-// if( selectedPage instanceof IRefreshable )
-// {
-// final IRefreshable page = (IRefreshable) selectedPage;
-// page.refresh();
-// }
-// }
 
 }
