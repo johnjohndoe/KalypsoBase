@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.model;
 
 import java.util.LinkedHashSet;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -59,11 +58,11 @@ public class LanduseMappingUpdater implements IRunnableWithProgress
 {
   private final ShapeFile m_file;
 
-  private final Properties m_properties;
+  private final LanduseProperties m_properties;
 
   private final IDBFField m_field;
 
-  public LanduseMappingUpdater( final ShapeFile file, final IDBFField field, final Properties properties )
+  public LanduseMappingUpdater( final ShapeFile file, final IDBFField field, final LanduseProperties properties )
   {
     m_file = file;
     m_field = field;

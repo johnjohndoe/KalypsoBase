@@ -61,7 +61,9 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model.ApplyLanduseShapeModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseProperties;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseMappingTable;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LandusePropertyFilter;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseShapeLabelProvider;
 import org.kalypso.shape.ShapeFile;
 
@@ -93,20 +95,21 @@ public class ApplyLanduseShapePage extends WizardPage
     body.setLayout( new GridLayout() );
 
     /** select landuse shape file */
-    new Label( body, SWT.NULL ).setText( "Shape File" ); //$NON-NLS-1$
-    final ComboViewer type = getViewer( body, ApplyLanduseShapeModel.PROPERTY_TYPE );
+    new Label( body, SWT.NULL ).setText( "Classification Type" );
+    final ComboViewer type = getViewer( body, ILanduseModel.PROPERTY_TYPE );
     type.setInput( new String[] { IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS } );
 
     /** select landuse shape file */
-    new Label( body, SWT.NULL ).setText( "Shape File" ); //$NON-NLS-1$
-    final ComboViewer landuseShapeFile = getViewer( body, ApplyLanduseShapeModel.PROPERTY_LANDUSE_SHAPE );
+    new Label( body, SWT.NULL ).setText( "Shape File" );
+    final ComboViewer landuseShapeFile = getViewer( body, ILanduseModel.PROPERTY_LANDUSE_SHAPE );
     landuseShapeFile.setInput( m_model.getLanduseShapeFiles() );
 
     /** select shape file property */
-    new Label( body, SWT.NULL ).setText( "Shape File Property" ); //$NON-NLS-1$
+    new Label( body, SWT.NULL ).setText( "Shape File Property" );
     final ComboViewer shapeFileProperty = getViewer( body, ILanduseModel.PROPERTY_SHAPE_COLUMN );
+    shapeFileProperty.addFilter( new LandusePropertyFilter() );
 
-    m_model.addPropertyChangeListener( ApplyLanduseShapeModel.PROPERTY_LANDUSE_SHAPE, new PropertyChangeListener()
+    m_model.addPropertyChangeListener( ILanduseModel.PROPERTY_LANDUSE_SHAPE, new PropertyChangeListener()
     {
       @Override
       public void propertyChange( final PropertyChangeEvent evt )
@@ -114,6 +117,11 @@ public class ApplyLanduseShapePage extends WizardPage
         final ShapeFile shapeFile = m_model.getShapeFile();
         if( Objects.isNotNull( shapeFile ) )
           shapeFileProperty.setInput( shapeFile.getFields() );
+
+        final LanduseProperties mapping = m_model.getMapping();
+
+        final int asdsdf = 0;
+
       }
     } );
 

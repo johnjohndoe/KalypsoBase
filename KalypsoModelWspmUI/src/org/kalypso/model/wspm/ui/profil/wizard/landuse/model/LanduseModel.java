@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.model;
 
 import java.nio.charset.Charset;
-import java.util.Properties;
 
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;
@@ -63,7 +62,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class LanduseModel extends AbstractModelObject implements ILanduseModel
 {
-  private Properties m_mapping = new Properties();
+  private LanduseProperties m_mapping = new LanduseProperties( this );
 
   private IDBFField m_shapeColumn = null;
 
@@ -84,7 +83,7 @@ public class LanduseModel extends AbstractModelObject implements ILanduseModel
   }
 
   @Override
-  public final Properties getMapping( )
+  public final LanduseProperties getMapping( )
   {
     return m_mapping;
   }
@@ -94,7 +93,7 @@ public class LanduseModel extends AbstractModelObject implements ILanduseModel
     return m_project;
   }
 
-  public final void setMapping( final Properties mapping )
+  public final void setMapping( final LanduseProperties mapping )
   {
     final Object oldValue = m_mapping;
     m_mapping = mapping;

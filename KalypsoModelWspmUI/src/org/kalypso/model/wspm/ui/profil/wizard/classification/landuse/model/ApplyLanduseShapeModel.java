@@ -73,6 +73,7 @@ public class ApplyLanduseShapeModel extends LanduseModel
       e.printStackTrace();
     }
 
+    addPropertyChangeListener( ILanduseModel.PROPERTY_TYPE, new ALSSelectedClassifiactionTypeChangedListener() );
     addPropertyChangeListener( ILanduseModel.PROPERTY_LANDUSE_SHAPE, new ALSSelectedShapeFileChangedListener() );
     addPropertyChangeListener( ILanduseModel.PROPERTY_SHAPE_COLUMN, new ALSSelectedColumnChanged() );
   }

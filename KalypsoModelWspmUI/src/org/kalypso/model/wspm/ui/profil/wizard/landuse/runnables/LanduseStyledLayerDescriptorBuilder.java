@@ -46,7 +46,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.Set;
 
 import javax.xml.transform.OutputKeys;
@@ -71,6 +70,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseProperties;
 import org.kalypso.shape.dbf.IDBFField;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.Operation;
@@ -116,7 +116,7 @@ public class LanduseStyledLayerDescriptorBuilder implements ICoreRunnableWithPro
     if( Objects.isNull( column ) )
       return Status.OK_STATUS;
 
-    final Properties properties = m_mapping.getMapping();
+    final LanduseProperties properties = m_mapping.getMapping();
     final Set<Entry<Object, Object>> entries = properties.entrySet();
     for( final Entry<Object, Object> entry : entries )
     {
