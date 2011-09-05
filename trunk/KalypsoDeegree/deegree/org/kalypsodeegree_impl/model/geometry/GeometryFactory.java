@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -404,10 +404,10 @@ final public class GeometryFactory
    * @param patch
    *          patches that build the surface
    */
-  public static GM_Surface< ? extends GM_SurfacePatch> createGM_Surface( final GM_SurfacePatch patch ) throws GM_Exception
-      {
+  public static GM_Surface<GM_SurfacePatch> createGM_Surface( final GM_SurfacePatch patch ) throws GM_Exception
+  {
     return new GM_Surface_Impl<GM_SurfacePatch>( patch );
-      }
+  }
 
   /**
    * creates a GM_Surface from a wkb.
@@ -1084,7 +1084,7 @@ final public class GeometryFactory
     for( final GM_Position position : positions )
       myList.add( (GM_Position) position.clone() );
 
-    return myList.toArray( new GM_Position[myList.size()] );
+        return myList.toArray( new GM_Position[myList.size()] );
   }
 
   public static GM_Triangle createGM_Triangle( final GM_Position[] pos, final String crs ) throws GM_Exception
@@ -1139,7 +1139,7 @@ final public class GeometryFactory
     for( final GM_Position[] positions : rings )
       ringList.add( createGM_Ring( positions, crs ) );
 
-    return ringList.toArray( new GM_Ring[ringList.size()] );
+        return ringList.toArray( new GM_Ring[ringList.size()] );
   }
 
   public static GM_Ring_Impl createGM_Ring( final GM_Position[] positions, final String crs ) throws GM_Exception
@@ -1154,7 +1154,7 @@ final public class GeometryFactory
     for( final GM_Triangle triangle : triangles )
       triangulatedSurface.add( triangle );
 
-    return triangulatedSurface;
+        return triangulatedSurface;
   }
 
   public static GM_TriangulatedSurface createGM_TriangulatedSurface( final List<GM_Triangle> triangles, final String crs ) throws GM_Exception
@@ -1169,6 +1169,6 @@ final public class GeometryFactory
     for( final GM_Polygon triangle : polygons )
       triangulatedSurface.add( triangle );
 
-    return triangulatedSurface;
+        return triangulatedSurface;
   }
 }

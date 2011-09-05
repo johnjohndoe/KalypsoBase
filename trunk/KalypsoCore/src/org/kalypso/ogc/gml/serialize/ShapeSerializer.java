@@ -64,6 +64,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
@@ -92,7 +93,7 @@ public final class ShapeSerializer
 
   private static final QName PROPERTY_NAME = new QName( SHP_NAMESPACE_URI, "name" ); //$NON-NLS-1$
 
-  private static final QName PROPERTY_TYPE = new QName( SHP_NAMESPACE_URI, "type" ); //$NON-NLS-1$ 
+  private static final QName PROPERTY_TYPE = new QName( SHP_NAMESPACE_URI, "type" ); //$NON-NLS-1$
 
   public static final String PROPERTY_GEOM = "GEOM";//$NON-NLS-1$
 
@@ -123,7 +124,8 @@ public final class ShapeSerializer
   @Deprecated
   public static void serialize( final GMLWorkspace workspace, final String filenameBase, final IShapeDataProvider shapeDataProvider ) throws GmlSerializeException
   {
-    serialize( workspace, filenameBase, shapeDataProvider );
+    final String defaultSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    serialize( workspace, filenameBase, shapeDataProvider, defaultSrs );
   }
 
   /**
