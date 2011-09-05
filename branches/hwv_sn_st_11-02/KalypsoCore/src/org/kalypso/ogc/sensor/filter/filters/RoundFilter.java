@@ -42,8 +42,6 @@ package org.kalypso.ogc.sensor.filter.filters;
 
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.Calendar;
-import java.util.Date;
 
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
@@ -55,7 +53,6 @@ import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.proxy.AutoProxyFactory;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.zml.filters.RoundFilterType;
 
 /**
@@ -136,64 +133,31 @@ public class RoundFilter extends AbstractObservationFilter
   @Override
   public ITupleModel getValues( final IRequest request ) throws SensorException
   {
-    final Date from;
-    final Date to;
-    final IRequest bufferedRequest;
-    if( request != null && request.getDateRange() != null )
-    {
-      from = request.getDateRange().getFrom();
-      to = request.getDateRange().getTo();
-
-      // BUGIFX: fixes the problem with the first value:
-      // the first value was always ignored, because the intervall
-      // filter cannot handle the first value of the source observation
-      // FIX: we just make the request a big bigger in order to get a new first value
-      final int bufferField = Calendar.DAY_OF_MONTH;
-      final int bufferAmount = 2;
-
-      final Calendar bufferedFrom = Calendar.getInstance();
-      bufferedFrom.setTime( from );
-      bufferedFrom.add( bufferField, -bufferAmount );
-
-      final Calendar bufferedTo = Calendar.getInstance();
-      bufferedTo.setTime( to );
-      bufferedTo.add( bufferField, bufferAmount );
-
-      bufferedRequest = new ObservationRequest( bufferedFrom.getTime(), bufferedTo.getTime() );
-    }
-    else
-    {
-      from = null;
-      to = null;
-
-      bufferedRequest = null;
-    }
-
+    /* Create a proxied observation. */
     final IObservation proxiedObservation = AutoProxyFactory.getInstance().proxyObservation( m_baseobservation );
+    final ITupleModel proxiedValues = proxiedObservation.getValues( request );
 
-    final ITupleModel values = proxiedObservation.getValues( bufferedRequest );
-
-    // get all non-virtual Double-Axises
-    final IAxis axis = ObservationUtilities.findAxisByTypeNoEx( values.getAxes(), m_type );
-    if( axis == null )
+    /* Get all non-virtual Double-Axises. */
+    final IAxis proxiedAxis = ObservationUtilities.findAxisByTypeNoEx( proxiedValues.getAxes(), m_type );
+    if( proxiedAxis == null )
       throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.RoundFilter.1" ) + m_type ); //$NON-NLS-1$
 
-    final int valueCount = values.size();
+    /* Apply the filter. */
+    final int valueCount = proxiedValues.size();
     for( int j = 0; j < valueCount; j++ )
     {
-      final Double value = (Double) values.get( j, axis );
-      if( value != null && !value.isNaN() )
+      final Double proxiedValue = (Double) proxiedValues.get( j, proxiedAxis );
+      if( proxiedValue != null && !proxiedValue.isNaN() )
       {
-        final double factoredValue = value.doubleValue() / m_factor;
+        final double factoredValue = proxiedValue.doubleValue() / m_factor;
         final BigDecimal decimal = new BigDecimal( factoredValue );
         final BigDecimal roundedDecimal = decimal.setScale( 0, m_mode );
         final double newValue = roundedDecimal.doubleValue() * m_factor;
-        values.set( j, axis, new Double( newValue ) );
+        proxiedValues.set( j, proxiedAxis, new Double( newValue ) );
       }
     }
 
-    final ITupleModel orgValues = m_baseobservation.getValues( bufferedRequest );
-
+    final ITupleModel orgValues = m_baseobservation.getValues( request );
     final SimpleTupleModel simpleTuppleModel = new SimpleTupleModel( orgValues );
     return simpleTuppleModel;
   }
