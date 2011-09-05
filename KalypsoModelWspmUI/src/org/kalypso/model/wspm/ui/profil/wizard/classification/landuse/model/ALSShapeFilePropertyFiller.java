@@ -43,29 +43,47 @@ package org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.viewers.ComboViewer;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
-import org.kalypso.shape.dbf.IDBFField;
+import org.kalypso.shape.ShapeFile;
 
 /**
  * @author Dirk Kuch
  */
-public class ALSSelectedClassifiactionTypeChangedListener implements PropertyChangeListener
+public class ALSShapeFilePropertyFiller implements PropertyChangeListener
 {
 
+  private final ComboViewer m_viewer;
+
+  private ShapeFile m_file;
+
+  public ALSShapeFilePropertyFiller( final ComboViewer viewer )
+  {
+    m_viewer = viewer;
+  }
+
+  /**
+   * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+   */
   @Override
   public void propertyChange( final PropertyChangeEvent evt )
   {
-    final ApplyLanduseShapeModel model = (ApplyLanduseShapeModel) evt.getSource();
+    final ILanduseModel model = (ILanduseModel) evt.getSource();
+    final ShapeFile file = model.getShapeFile();
+    if( Objects.isNull( file ) )
+      return;
 
-    final IFile shapeFile = model.getLanduseShape();
-    if( Objects.isNotNull( shapeFile ) )
-      model.firePropertyChange( ILanduseModel.PROPERTY_LANDUSE_SHAPE, null, shapeFile );
+    if( Objects.notEqual( file, m_file ) )
+    {
+      m_viewer.setInput( file.getFields() );
+      m_file = file;
+    }
 
-    final IDBFField column = model.getShapeColumn();
-    if( Objects.isNotNull( column ) )
-      model.firePropertyChange( ILanduseModel.PROPERTY_SHAPE_COLUMN, null, column );
+// final LanduseProperties mapping = m_model.getMapping();
+
+    // TODO Auto-generated method stub
+
   }
 
 }
