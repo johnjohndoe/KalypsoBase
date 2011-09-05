@@ -40,26 +40,6 @@ public class EclipseRCPContributionsPlugin extends AbstractUIPlugin
   private CronJobMutexCache m_cronJobMutexCache;
 
   /**
-   * The constructor.
-   */
-  public EclipseRCPContributionsPlugin( )
-  {
-  }
-
-  /**
-   * This function returns the ID of the plug-in.
-   * 
-   * @return The plug-in id.
-   */
-  public static String getID( )
-  {
-    // return getDefault().getBundle().getSymbolicName();
-    // TRICKY: directly return the ID because this plugin is sometimes used outside of the eclipse framework (server
-    // side for calc service...)
-    return ID;
-  }
-
-  /**
    * Returns the shared instance.
    */
   public static EclipseRCPContributionsPlugin getDefault( )
@@ -116,7 +96,9 @@ public class EclipseRCPContributionsPlugin extends AbstractUIPlugin
       {
         try
         {
-          CronJobUtilities.startAllCronJobs();
+          // REMARK: check if plug-in is still started...
+          if( getDefault() != null )
+            CronJobUtilities.startAllCronJobs();
           return Status.OK_STATUS;
         }
         catch( final CoreException e )

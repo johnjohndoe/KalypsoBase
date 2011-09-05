@@ -195,7 +195,7 @@ public final class StatusUtilities
   {
     if( message != null )
     {
-      final MultiStatus status = new MultiStatus( EclipseRCPContributionsPlugin.getID(), 0, String.format( message, args ), null );
+      final MultiStatus status = new MultiStatus( EclipseRCPContributionsPlugin.ID, 0, String.format( message, args ), null );
       status.add( statusFromThrowable( t ) );
       return status;
     }
@@ -216,7 +216,7 @@ public final class StatusUtilities
       msg = t.toString();// "<Keine weitere Information vorhanden>";
     }
 
-    return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.getID(), 0, msg, t );
+    return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.ID, 0, msg, t );
   }
 
   public static String messageFromThrowable( final Throwable t )
@@ -246,7 +246,7 @@ public final class StatusUtilities
     if( stati.size() == 1 )
       return stati.get( 0 );
 
-    return new MultiStatus( EclipseRCPContributionsPlugin.getID(), 0, stati.toArray( new IStatus[stati.size()] ), String.format( message, args ), null );
+    return new MultiStatus( EclipseRCPContributionsPlugin.ID, 0, stati.toArray( new IStatus[stati.size()] ), String.format( message, args ), null );
   }
 
   /**
@@ -267,7 +267,7 @@ public final class StatusUtilities
    */
   public static IStatus createStatus( final int severity, final String message, final Throwable t )
   {
-    return new Status( severity, EclipseRCPContributionsPlugin.getID(), -1, message, t );
+    return new Status( severity, EclipseRCPContributionsPlugin.ID, -1, message, t );
   }
 
   /**
@@ -275,7 +275,7 @@ public final class StatusUtilities
    */
   public static IStatus createStatus( final int severity, final int code, final String message, final Throwable t )
   {
-    return new Status( severity, EclipseRCPContributionsPlugin.getID(), code, message, t );
+    return new Status( severity, EclipseRCPContributionsPlugin.ID, code, message, t );
   }
 
   public static IStatus createExceptionalErrorStatus( final String errorMessage, final Throwable t )
