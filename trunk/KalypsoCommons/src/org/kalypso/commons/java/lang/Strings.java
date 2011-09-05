@@ -87,12 +87,18 @@ public final class Strings
     return StringUtils.chop( s );
   }
 
+  /**
+   * @deprecated use {@link StringUtils}.equals()
+   */
   @Deprecated
   public static boolean isEqual( final String s1, final String s2 )
   {
     return StringUtils.equals( s1, s2 );
   }
 
+  /**
+   * @deprecated use {@link StringUtils}.equalsIgnoreCase()
+   */
   @Deprecated
   public static boolean isEqualIgnoreCase( final String s1, final String s2 )
   {

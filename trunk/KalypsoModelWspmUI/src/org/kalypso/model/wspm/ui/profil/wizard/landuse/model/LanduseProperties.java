@@ -125,4 +125,9 @@ public class LanduseProperties extends Properties
   {
     throw new UnsupportedOperationException();
   }
+
+  public String getColumn( )
+  {
+    return m_shapeProperty;
+  }
 }
