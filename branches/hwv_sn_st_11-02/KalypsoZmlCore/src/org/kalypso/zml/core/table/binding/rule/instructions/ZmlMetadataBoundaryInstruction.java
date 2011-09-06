@@ -131,7 +131,11 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
     if( Objects.isNull( delegate ) )
       return null;
 
-    final double value = delegate.getValue( metadata, property ) * factor;
+    final Double v = delegate.getValue( metadata, property );
+    if( Objects.isNull( v ) )
+      return null;
+
+    final double value = v * factor;
 
     return new MetadataBoundary( property, BigDecimal.valueOf( value ) );
   }
