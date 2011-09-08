@@ -568,7 +568,7 @@ public class FileUtilities
 
     for( final File file : files )
     {
-      if( file.isFile() || (file.isDirectory() && recurse) )
+      if( file.isFile() || file.isDirectory() && recurse )
         accept( file, visitor, recurse );
     }
   }
@@ -974,6 +974,16 @@ public class FileUtilities
       return proceedFileCompressOperation( sourceFileURL, outputDirURL, compressKind, false );
 
     return proceedFileCompressOperation( sourceFileURL, outputDirURL, compressKind, true );
+  }
+
+  public static void cleanDirectory( final File dir, final IFileFilter filter )
+  {
+    final File[] files = dir.listFiles();
+    for( final File file : files )
+    {
+      if( filter.select( file ) )
+        FileUtilities.deleteQuietly( file );
+    }
   }
 
 }
