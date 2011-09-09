@@ -50,7 +50,9 @@ import org.apache.commons.lang.StringUtils;
  */
 public final class Strings
 {
-  public static String LINE_SEPARATOR = System.getProperties().getProperty( "line.separator", "\n\r" );
+  public static final String EMPTY = ""; //$NON-NLS-1$
+
+  public static String LINE_SEPARATOR = System.getProperties().getProperty( "line.separator", "\n\r" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   private Strings( )
   {

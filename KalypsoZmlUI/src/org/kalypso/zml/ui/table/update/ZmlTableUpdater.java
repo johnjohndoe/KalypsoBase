@@ -94,6 +94,7 @@ public class ZmlTableUpdater implements Runnable
         update( link, identifier, index );
       }
     }
+
   }
 
   private void update( final TSLinkWithName link, final String identifier, final int index )
