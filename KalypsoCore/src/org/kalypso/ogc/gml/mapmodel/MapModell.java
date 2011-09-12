@@ -243,9 +243,7 @@ public class MapModell implements IMapModell
     fireThemeAdded( theme );
 
     if( m_activeTheme == null )
-    {
       activateTheme( theme );
-    }
   }
 
   /**
