@@ -161,7 +161,7 @@ public final class PluginUtilities
       throw new ClassNotFoundException( msg );
     }
 
-    return (Class<T>) bundle.loadClass( className );
+    return bundle.loadClass( className );
   }
 
   /**

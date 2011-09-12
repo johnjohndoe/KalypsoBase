@@ -4,7 +4,9 @@ import org.kalypso.contribs.eclipse.swt.widgets.ITextCompositeEventListener.MODI
 
 public interface ITextCompositeValidator
 {
-  boolean check( String string, MODIFY_EVENT e );
 
-  String getToolTip( );
+  public boolean check( String string, MODIFY_EVENT e );
+
+  public String getToolTip( );
+
 }

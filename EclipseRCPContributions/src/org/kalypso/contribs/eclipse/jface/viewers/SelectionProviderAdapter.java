@@ -62,7 +62,7 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
 
   private final List<ISelectionChangedListener> m_postListeners = new ArrayList<ISelectionChangedListener>();
 
-  private ISelection m_selection = StructuredSelection.EMPTY;
+  private ISelection m_selection = null;
 
   @Override
   public final void addSelectionChangedListener( final ISelectionChangedListener listener )
@@ -79,11 +79,7 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
   @Override
   public void setSelection( final ISelection selection )
   {
-    if( selection == null )
-      m_selection = StructuredSelection.EMPTY;
-    else
-      m_selection = selection;
-
+    m_selection = selection;
     fireSelectionChanged();
   }
 
@@ -93,6 +89,8 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
   @Override
   public ISelection getSelection( )
   {
+    if( m_selection == null )
+      m_selection = StructuredSelection.EMPTY;
     return m_selection;
   }
 

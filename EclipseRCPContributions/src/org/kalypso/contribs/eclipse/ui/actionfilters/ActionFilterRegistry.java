@@ -48,8 +48,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IActionFilter;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
 
 /**
  * A registry of IActionFilterEx instances which are configured for a specific object type. This registry is itself an
@@ -60,7 +60,7 @@ import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
  */
 public class ActionFilterRegistry implements IActionFilter
 {
-  public static final String ID = "org.kalypso.contribs.eclipsercp.actionFilters";
+  public final static String ID = "org.kalypso.contribs.eclipsercp.actionFilters";
 
   private static final String ATT_TARGET_TYPE = "targetType";
 
@@ -81,7 +81,7 @@ public class ActionFilterRegistry implements IActionFilter
    * @see org.eclipse.ui.IActionFilter#testAttribute(java.lang.Object, java.lang.String, java.lang.String)
    */
   @Override
-  public boolean testAttribute( final Object target, final String name, final String value )
+  public boolean testAttribute( Object target, String name, String value )
   {
     final Map<IActionFilterEx, String[]> list = getList();
     for(final Map.Entry<IActionFilterEx, String[]> entry : list.entrySet() )

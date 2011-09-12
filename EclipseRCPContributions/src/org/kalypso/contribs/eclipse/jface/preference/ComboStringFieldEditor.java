@@ -86,7 +86,7 @@ public class ComboStringFieldEditor extends FieldEditor
    * @see org.eclipse.jface.preference.FieldEditor#adjustForNumColumns(int)
    */
   @Override
-  protected void adjustForNumColumns( final int numColumns )
+  protected void adjustForNumColumns( int numColumns )
   {
     if( m_combo != null )
       ((GridData) m_combo.getLayoutData()).horizontalSpan = numColumns - 1;
@@ -96,7 +96,7 @@ public class ComboStringFieldEditor extends FieldEditor
    * @see org.eclipse.jface.preference.FieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite, int)
    */
   @Override
-  protected void doFillIntoGrid( final Composite parent, final int numColumns )
+  protected void doFillIntoGrid( Composite parent, int numColumns )
   {
     final Label lbl = getLabelControl( parent );
     lbl.setToolTipText( m_tooltipText );
