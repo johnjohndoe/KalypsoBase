@@ -1,0 +1,5 @@
+# Debug output
+org.kalypso.deegree/debug/transformation = false
+org.kalypso.deegree/debug/operation = false
+org.kalypso.deegree/debug/grid_ops = false
+org.kalypso.deegree/debug/feature/propertyCaching = false
