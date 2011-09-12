@@ -528,7 +528,6 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
   public void insertTheme( final IKalypsoTheme theme, final int position )
   {
     m_modell.insertTheme( theme, position );
-
   }
 
   /**
