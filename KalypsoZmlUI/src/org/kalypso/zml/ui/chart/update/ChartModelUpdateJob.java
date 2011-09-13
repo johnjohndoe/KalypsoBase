@@ -62,11 +62,11 @@ public class ChartModelUpdateJob extends UIJob
 
   private final IChartModel m_model;
 
-  private final ICommandExecutorTrigger m_trigger;
+  private final ICommandExecutionTrigger m_trigger;
 
   private boolean m_firstRun = true;
 
-  public ChartModelUpdateJob( final ICommandExecutorTrigger trigger, final IChartModel model )
+  public ChartModelUpdateJob( final ICommandExecutionTrigger trigger, final IChartModel model )
   {
     super( "Aktualisiere Diagramm" );
 
