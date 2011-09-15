@@ -100,6 +100,9 @@ public class VegetationClassUiHandler extends AbstractComponentUiHandler
   private IVegetationClass[] getVegetationClasses( )
   {
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    if( Objects.isNull( classification ) )
+      return new IVegetationClass[] {};
+
     final IVegetationClass[] vegetations = classification.getVegetationClasses();
 
     return vegetations;
