@@ -100,6 +100,9 @@ public class RoughnessClassUiHandler extends AbstractComponentUiHandler
   private IRoughnessClass[] getRoughnessClasses( )
   {
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    if( Objects.isNull( classification ) )
+      return new IRoughnessClass[] {};
+
     final IRoughnessClass[] roughnesses = classification.getRoughnessClasses();
 
     return roughnesses;
