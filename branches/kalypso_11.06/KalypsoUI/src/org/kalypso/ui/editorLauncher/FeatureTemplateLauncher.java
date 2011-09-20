@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editorLauncher;
 
@@ -107,7 +107,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
       final ObjectFactory factory = new ObjectFactory();
       final JAXBContext jc = JaxbUtilities.createQuiet( ObjectFactory.class );
       final Layer layer = factory.createFeaturetemplateLayer();
-      LayerTypeUtilities.initLayerType( layer, file );
+      LayerTypeUtilities.initLayerType( layer, file, null );
 
       final Featuretemplate featuretemplate = factory.createFeaturetemplate();
       featuretemplate.setLayer( layer );

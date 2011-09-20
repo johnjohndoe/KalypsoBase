@@ -113,7 +113,7 @@ public class GisMapEditorTemplateLauncher implements IDefaultTemplateLauncher
         throw new CoreException( StatusUtilities.createWarningStatus( Messages.getString("org.kalypso.ui.editorLauncher.GisMapEditorTemplateLauncher.3") ) ); //$NON-NLS-1$
 
       final StyledLayerType layer = new ObjectFactory().createStyledLayerType();
-      LayerTypeUtilities.initLayerType( layer, file );
+      LayerTypeUtilities.initLayerType( layer, file, null );
       layer.setVisible( true );
       layer.setName( file.getName() );
       layer.setFeaturePath( "featureMember" ); //$NON-NLS-1$
