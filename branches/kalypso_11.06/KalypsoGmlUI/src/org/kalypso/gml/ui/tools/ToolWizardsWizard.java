@@ -59,7 +59,7 @@ public class ToolWizardsWizard extends GenericWizardsWizard
   {
     super( selection, registry );
 
-    setWindowTitle( Messages.getString("ToolWizardsWizard_0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "ToolWizardsWizard_0" ) ); //$NON-NLS-1$
 
     final ImageDescriptor toolImage = KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.TOOLS_WIZ );
     setDefaultPageImageDescriptor( toolImage );
@@ -70,12 +70,12 @@ public class ToolWizardsWizard extends GenericWizardsWizard
   @Override
   protected String getWizardsPageMessage( )
   {
-    return Messages.getString("ToolWizardsWizard_1"); //$NON-NLS-1$
+    return Messages.getString( "ToolWizardsWizard_1" ); //$NON-NLS-1$
   }
 
   @Override
   protected String getWizardsPageDescription( )
   {
-    return Messages.getString("ToolWizardsWizard_2"); //$NON-NLS-1$
+    return Messages.getString( "ToolWizardsWizard_2" ); //$NON-NLS-1$
   }
 }
