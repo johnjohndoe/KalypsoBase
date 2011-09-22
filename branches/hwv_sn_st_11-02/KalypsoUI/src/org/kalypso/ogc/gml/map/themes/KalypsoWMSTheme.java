@@ -79,17 +79,17 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   /**
    * The source string. Do not remove this, because it is needed, when the template is saved.
    */
-  private String m_source;
+  private final String m_source;
 
   /**
    * The layer.
    */
-  private LayerType m_layer;
+  private final LayerType m_layer;
 
   /**
    * This variable stores the image provider.
    */
-  private IKalypsoImageProvider m_provider;
+  private final IKalypsoImageProvider m_provider;
 
   /**
    * This variable stores the legend, if any.
@@ -161,7 +161,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     final int width = (int) p.getDestWidth();
     final int height = (int) p.getDestHeight();
     final GM_Envelope extent = p.getSourceRect();
+
+    // FIXME: no job needed here, directly call image provider
     final KalypsoImageLoader loader = new KalypsoImageLoader( getLabel(), m_provider, width, height, extent );
+
     final IStatus status = loader.run( monitor );
     if( status.isOK() )
     {
@@ -321,14 +324,14 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     return ((AbstractDeegreeImageProvider) m_provider).getLastRequest();
   }
 
-  public org.eclipse.swt.graphics.Image getLegendGraphic( Font font ) throws CoreException
+  public org.eclipse.swt.graphics.Image getLegendGraphic( final Font font ) throws CoreException
   {
     if( m_provider == null || !(m_provider instanceof ILegendProvider) )
       return null;
 
     if( m_legend == null )
     {
-      ILegendProvider legendProvider = (ILegendProvider) m_provider;
+      final ILegendProvider legendProvider = (ILegendProvider) m_provider;
       m_legend = legendProvider.getLegendGraphic( null, false, font );
     }
 
@@ -343,7 +346,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     if( !(m_layer instanceof StyledLayerType) )
       return new Style[] {};
 
-    StyledLayerType styledLayer = (StyledLayerType) m_layer;
+    final StyledLayerType styledLayer = (StyledLayerType) m_layer;
     return styledLayer.getStyle().toArray( new Style[] {} );
   }
 }
