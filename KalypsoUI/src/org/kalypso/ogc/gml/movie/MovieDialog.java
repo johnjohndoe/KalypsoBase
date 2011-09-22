@@ -48,8 +48,8 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -69,7 +69,7 @@ public class MovieDialog extends Dialog
   /**
    * The movie player.
    */
-  private MoviePlayer m_player;
+  private final MoviePlayer m_player;
 
   /**
    * The movie composite.
@@ -85,7 +85,7 @@ public class MovieDialog extends Dialog
    * @param player
    *          The movie player.
    */
-  public MovieDialog( Shell parentShell, MoviePlayer player )
+  public MovieDialog( final Shell parentShell, final MoviePlayer player )
   {
     super( parentShell );
 
@@ -101,7 +101,7 @@ public class MovieDialog extends Dialog
    * @param player
    *          The movie player.
    */
-  public MovieDialog( IShellProvider parentShell, MoviePlayer player )
+  public MovieDialog( final IShellProvider parentShell, final MoviePlayer player )
   {
     super( parentShell );
 
@@ -109,30 +109,24 @@ public class MovieDialog extends Dialog
     m_movieComposite = null;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
     /* Set the title. */
     getShell().setText( "Film" );
 
     /* Create the main composite. */
-    Composite main = (Composite) super.createDialogArea( parent );
-    main.setLayout( new GridLayout( 1, false ) );
+    final Composite main = (Composite) super.createDialogArea( parent );
+    main.setLayout( new FillLayout() );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the movie composite. */
     m_movieComposite = new MovieComposite( main, SWT.NONE, m_player );
-    m_movieComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    // m_movieComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     m_movieComposite.addControlListener( new ControlAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-       */
       @Override
-      public void controlResized( ControlEvent e )
+      public void controlResized( final ControlEvent e )
       {
         m_movieComposite.pack();
         MovieDialog.this.getContents().pack();
@@ -159,12 +153,12 @@ public class MovieDialog extends Dialog
    * @see org.eclipse.jface.dialogs.Dialog#createButtonBar(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createButtonBar( Composite parent )
+  protected Control createButtonBar( final Composite parent )
   {
-    Composite buttonComposite = m_movieComposite.createButtonControls( parent );
+    final Composite buttonComposite = m_movieComposite.createButtonControls( parent );
     buttonComposite.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, false ) );
 
-    Button cancelButton = createButton( buttonComposite, CANCEL, "Schlieﬂen", true );
+    final Button cancelButton = createButton( buttonComposite, CANCEL, "Schlieﬂen", true );
     final Image cancelImage = KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.MOVIE_PLAYER_EJECT ).createImage();
     cancelButton.setImage( cancelImage );
     cancelButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
@@ -174,7 +168,7 @@ public class MovieDialog extends Dialog
        * @see org.eclipse.swt.events.DisposeListener#widgetDisposed(org.eclipse.swt.events.DisposeEvent)
        */
       @Override
-      public void widgetDisposed( DisposeEvent e )
+      public void widgetDisposed( final DisposeEvent e )
       {
         cancelImage.dispose();
       }
