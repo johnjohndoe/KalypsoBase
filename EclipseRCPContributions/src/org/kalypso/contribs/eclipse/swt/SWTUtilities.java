@@ -163,6 +163,9 @@ public final class SWTUtilities
 
   public static Point calcTextSize( final String label, final Font font )
   {
+    if( label == null )
+      return new Point( 0, 0 );
+
     final org.eclipse.swt.graphics.Image tmpImage = new org.eclipse.swt.graphics.Image( font.getDevice(), 1, 1 );
     final GC tmpGC = new GC( tmpImage );
     tmpGC.setFont( font );
@@ -173,8 +176,8 @@ public final class SWTUtilities
   }
 
   /**
-   * Enables/disables all controls in a hirarchy of controls.<br>
-   * Composite are not disabled (but their chidlren are), so we still get mouse events on them.
+   * Enables/disables all controls in a hierarchy of controls.<br>
+   * Composite are not disabled (but their children are), so we still get mouse events on them.
    */
   public static void enableControlNoComposites( final Control control, final boolean enabled )
   {

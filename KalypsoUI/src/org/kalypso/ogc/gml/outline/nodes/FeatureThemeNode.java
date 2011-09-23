@@ -264,7 +264,9 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
       }
 
       /* Draw the text. */
-      gc.drawString( legendElement.getText(), BORDER + (ICON_SIZE + GAP) + legendElement.getLevel() * (ICON_SIZE + GAP), heightSoFar, true );
+      final String legendText = legendElement.getText();
+      if( legendText != null )
+        gc.drawString( legendText, BORDER + (ICON_SIZE + GAP) + legendElement.getLevel() * (ICON_SIZE + GAP), heightSoFar, true );
 
       // TODO:
       // Images should be disposed here.
