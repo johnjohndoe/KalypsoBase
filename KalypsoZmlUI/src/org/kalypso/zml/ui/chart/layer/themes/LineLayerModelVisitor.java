@@ -153,7 +153,6 @@ public class LineLayerModelVisitor implements IObservationVisitor
     }
   }
 
-
   private boolean isFiltered( final IObservationValueContainer container )
   {
     if( ArrayUtils.isEmpty( m_filters ) )

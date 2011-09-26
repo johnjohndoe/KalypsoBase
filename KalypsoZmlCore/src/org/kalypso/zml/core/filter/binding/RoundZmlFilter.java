@@ -77,7 +77,7 @@ public class RoundZmlFilter extends AbstractZmlFilter
    * @param id
    * @param propValues
    */
-  public RoundZmlFilter( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public RoundZmlFilter( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
