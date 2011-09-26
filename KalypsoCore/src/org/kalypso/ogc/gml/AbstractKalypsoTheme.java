@@ -316,6 +316,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   @Override
   public String getLabel( )
   {
+    // TODO does caching the value improve performance further?
     return getName().getValue();
   }
 
