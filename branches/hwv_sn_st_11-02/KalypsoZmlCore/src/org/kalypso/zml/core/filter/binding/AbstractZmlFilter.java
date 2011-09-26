@@ -60,7 +60,7 @@ public class AbstractZmlFilter extends Feature_Impl
    * @param id
    * @param propValues
    */
-  public AbstractZmlFilter( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public AbstractZmlFilter( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
