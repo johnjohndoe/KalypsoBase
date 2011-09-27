@@ -287,7 +287,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       m_updateJob = new ZmlTableUiUpdateJob( this );
       m_updateJob.setRule( MUTEX_TABLE_UPDATE );
 
-      m_updateJob.schedule( 100 );
+      m_updateJob.schedule( 200 );
     }
   }
 
