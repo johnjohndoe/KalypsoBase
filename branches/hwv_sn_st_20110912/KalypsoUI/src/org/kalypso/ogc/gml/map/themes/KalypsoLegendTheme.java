@@ -92,21 +92,27 @@ public class KalypsoLegendTheme extends AbstractImageTheme
   protected String[] m_themeIds;
 
   /**
+   * The font size.
+   */
+  protected int m_fontSize;
+
+  /**
    * The constructor
    * 
    * @param name
    *          The name of the theme.
-   * @param mapModell
-   *          The map modell to use.
+   * @param mapModel
+   *          The map model to use.
    */
-  public KalypsoLegendTheme( I10nString name, IMapModell mapModell )
+  public KalypsoLegendTheme( I10nString name, IMapModell mapModel )
   {
-    super( name, "legend", mapModell ); //$NON-NLS-1$
+    super( name, "legend", mapModel ); //$NON-NLS-1$
 
     /* Initialize. */
     m_backgroundColor = null;
     m_insets = -1;
     m_themeIds = null;
+    m_fontSize = -1;
   }
 
   /**
@@ -167,7 +173,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
 
             /* Create the legend. */
             LegendExporter legendExporter = new LegendExporter();
-            image[0] = legendExporter.exportLegends( m_themeIds, nodes, display, new Insets( m_insets, m_insets, m_insets, m_insets ), m_backgroundColor.getRGB(), -1, -1, true, subMonitor );
+            image[0] = legendExporter.exportLegends( m_themeIds, nodes, display, new Insets( m_insets, m_insets, m_insets, m_insets ), m_backgroundColor.getRGB(), -1, -1, true, m_fontSize, subMonitor );
           }
           catch( CoreException ex )
           {
@@ -229,6 +235,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     m_backgroundColor = null;
     m_insets = -1;
     m_themeIds = null;
+    m_fontSize = -1;
 
     super.dispose();
   }
@@ -243,6 +250,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     m_backgroundColor = new org.eclipse.swt.graphics.Color( Display.getCurrent(), 255, 255, 255 );
     m_insets = 10;
     m_themeIds = new String[] {};
+    m_fontSize = 10;
 
     /* Get the properties. */
     String horizontalProperty = getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, null );
@@ -250,6 +258,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     String backgroundColorProperty = getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, null );
     String insetsProperty = getProperty( LegendUtilities.THEME_PROPERTY_INSETS, null );
     String themeIdsProperty = getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS, null );
+    String fontSizeProperty = getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE, null );
 
     /* Check the horizontal and vertical position. */
     int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
@@ -274,5 +283,10 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     List<String> themeIds = LegendUtilities.verifyThemeIds( getMapModell(), themeIdsProperty );
     if( themeIds != null && themeIds.size() > 0 )
       m_themeIds = themeIds.toArray( new String[] {} );
+
+    /* Check the font size. */
+    int fontSize = LegendUtilities.checkFontSize( fontSizeProperty );
+    if( fontSize >= 1 && fontSize <= 25 )
+      m_fontSize = fontSize;
   }
 }
