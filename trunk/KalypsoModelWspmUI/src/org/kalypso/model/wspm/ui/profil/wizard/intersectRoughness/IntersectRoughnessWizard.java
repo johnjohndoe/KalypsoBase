@@ -179,7 +179,7 @@ public class IntersectRoughnessWizard extends Wizard implements IWorkbenchWizard
 
           final RoughnessIntersector intersector = new RoughnessIntersector( choosen, polygoneFeatures, polygoneGeomType, polygoneValueType, assignment, pointFilters );
           final FeatureChange[] changes = intersector.intersect( new SubProgressMonitor( monitor, choosen.length ) );
-          if( changes.length > 0 )
+          if(!ArrayUtils.isEmpty( changes ))
           {
             final GMLWorkspace gmlworkspace = changes[0].getFeature().getWorkspace();
             final ICommand command = new ChangeFeaturesCommand( gmlworkspace, changes );

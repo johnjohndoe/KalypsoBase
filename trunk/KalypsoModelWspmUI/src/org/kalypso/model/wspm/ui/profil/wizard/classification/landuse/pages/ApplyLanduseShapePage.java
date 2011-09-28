@@ -48,13 +48,16 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.profil.filter.ProfilePointFilterComposite;
 import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model.ALSShapeFilePropertyFiller;
 import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model.ApplyLanduseShapeModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
@@ -108,6 +111,14 @@ public class ApplyLanduseShapePage extends WizardPage
 
     final LanduseMappingTable table = new LanduseMappingTable( body, m_model );
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    /** profile point filter */
+    final Group group = new Group( body, SWT.NONE );
+    group.setLayout( new FillLayout() );
+    group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    group.setText( ProfilePointFilterComposite.STR_GROUP_TEXT );
+
+    m_model.getFilter().createControl( group, SWT.NULL );
 
     setControl( body );
   }

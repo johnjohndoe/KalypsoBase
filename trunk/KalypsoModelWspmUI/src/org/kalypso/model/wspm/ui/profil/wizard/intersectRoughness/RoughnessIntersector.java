@@ -45,10 +45,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.namespace.QName;
-
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.commons.xml.NS;
+import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -210,7 +208,7 @@ public class RoughnessIntersector
                   final IComponent component = provider.getPointProperty( componentId );
 
                   Object defaultValue = component.getDefaultValue();
-                  if( defaultValue == null && component.getValueTypeName().equals( new QName( NS.XSD_SCHEMA, "double" ) ) ) //$NON-NLS-1$
+                  if( defaultValue == null && XmlTypes.XS_DOUBLE.equals( component.getValueTypeName() ) ) //$NON-NLS-1$
                   {
                     defaultValue = 0.0;
                   }
