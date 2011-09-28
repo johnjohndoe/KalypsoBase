@@ -177,11 +177,6 @@ public class SplitSortContainer
       return;
     }
 
-    if( new Exception().getStackTrace().length > 100 )
-    {
-      System.out.println();
-    }
-
     // HACK:
     if( createSubContainers() )
     {

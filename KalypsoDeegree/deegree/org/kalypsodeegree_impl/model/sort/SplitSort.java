@@ -309,8 +309,6 @@ public class SplitSort implements FeatureList
         return null;
 
       final KalypsoDeegreePlugin plugin = KalypsoDeegreePlugin.getDefault();
-      if( plugin == null )
-        System.out.println();
       return JTSAdapter.wrap( bbox, plugin.getCoordinateSystem() );
     }
   }

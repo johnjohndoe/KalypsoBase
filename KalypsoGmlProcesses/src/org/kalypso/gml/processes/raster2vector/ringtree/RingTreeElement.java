@@ -91,11 +91,6 @@ public class RingTreeElement
     if( Double.isNaN( lineValue ) )
       return null;
 
-    if( innerCrd == null )
-    {
-// System.out.println();
-    }
-
     if( !isInnerCrdInChild() )
     {
       // get interval from value of the inner coordinate
