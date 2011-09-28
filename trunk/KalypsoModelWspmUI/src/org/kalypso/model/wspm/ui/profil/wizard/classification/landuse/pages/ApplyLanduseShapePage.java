@@ -58,6 +58,7 @@ import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.filter.ProfilePointFilterComposite;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model.ALSShapeFilePropertyFiller;
 import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model.ApplyLanduseShapeModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
@@ -79,6 +80,9 @@ public class ApplyLanduseShapePage extends WizardPage
     super( "ApplyLanduseShapePage" ); //$NON-NLS-1$
 
     m_model = new ApplyLanduseShapeModel( project );
+
+    setTitle( Messages.getString("ApplyLanduseShapePage_0") ); //$NON-NLS-1$
+    setMessage( Messages.getString("ApplyLanduseShapePage_1") ); //$NON-NLS-1$
   }
 
   /**
@@ -93,17 +97,17 @@ public class ApplyLanduseShapePage extends WizardPage
     body.setLayout( new GridLayout() );
 
     /** select landuse shape file */
-    new Label( body, SWT.NULL ).setText( "Classification Type" );
+    new Label( body, SWT.NULL ).setText( Messages.getString("ApplyLanduseShapePage_2") ); //$NON-NLS-1$
     final ComboViewer type = getViewer( body, ILanduseModel.PROPERTY_TYPE );
     type.setInput( new String[] { IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS, IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS } );
 
     /** select landuse shape file */
-    new Label( body, SWT.NULL ).setText( "Shape File" );
+    new Label( body, SWT.NULL ).setText( Messages.getString("ApplyLanduseShapePage_3") ); //$NON-NLS-1$
     final ComboViewer landuseShapeFile = getViewer( body, ILanduseModel.PROPERTY_LANDUSE_SHAPE );
     landuseShapeFile.setInput( m_model.getLanduseShapeFiles() );
 
     /** select shape file property */
-    new Label( body, SWT.NULL ).setText( "Shape File Property" );
+    new Label( body, SWT.NULL ).setText( Messages.getString("ApplyLanduseShapePage_4") ); //$NON-NLS-1$
     final ComboViewer properties = getViewer( body, ILanduseModel.PROPERTY_SHAPE_COLUMN );
     properties.addFilter( new LandusePropertyFilter() );
 
