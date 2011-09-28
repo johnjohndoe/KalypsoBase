@@ -75,7 +75,7 @@ public class SLDPainter2
       try
       {
         final Symbolizer symbolizer = loadSymbolizer( symbolizerLocation );
-        final DisplayElement lde = DisplayElementFactory.buildDisplayElement( null, symbolizer, geometry );
+        final DisplayElement lde = DisplayElementFactory.buildDisplayElement( null, symbolizer, geometry, null );
         lde.paint( g, projection, new NullProgressMonitor() );
       }
       catch( final Exception e )

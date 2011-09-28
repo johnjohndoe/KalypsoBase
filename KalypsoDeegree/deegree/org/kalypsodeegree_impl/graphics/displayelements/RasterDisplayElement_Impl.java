@@ -408,12 +408,12 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
     // First Slope ...
     final double x = z * //
-        (values[i - 1][j - 1] + values[i - 1][j] + values[i - 1][j] + values[i - 1][j + 1] - values[i + 1][j - 1] - values[i + 1][j] - values[i + 1][j] - values[i + 1][j + 1]) //
-        / (8.0 * xres * scale);
+    (values[i - 1][j - 1] + values[i - 1][j] + values[i - 1][j] + values[i - 1][j + 1] - values[i + 1][j - 1] - values[i + 1][j] - values[i + 1][j] - values[i + 1][j + 1]) //
+    / (8.0 * xres * scale);
 
     final double y = z * //
-        (values[i - 1][j + 1] + values[i][j + 1] + values[i][j + 1] + values[i + 1][j + 1] - values[i - 1][j - 1] - values[i][j - 1] - values[i][j - 1] - values[i + 1][j - 1]) //
-        / (8.0 * yres * scale);
+    (values[i - 1][j + 1] + values[i][j + 1] + values[i][j + 1] + values[i + 1][j + 1] - values[i - 1][j - 1] - values[i][j - 1] - values[i][j - 1] - values[i + 1][j - 1]) //
+    / (8.0 * yres * scale);
 
     final double slope = 90.0 - Math.toDegrees( Math.atan( Math.sqrt( x * x + y * y ) ) );
 
@@ -422,8 +422,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
     // ... then the shade value
     final double cang = Math.sin( Math.toRadians( alt ) ) * Math.sin( Math.toRadians( slope ) ) + //
-        Math.cos( Math.toRadians( alt ) ) * Math.cos( Math.toRadians( slope ) ) //
-        * Math.cos( Math.toRadians( az - 90.0 ) - aspect );
+    Math.cos( Math.toRadians( alt ) ) * Math.cos( Math.toRadians( slope ) ) //
+    * Math.cos( Math.toRadians( az - 90.0 ) - aspect );
 
     if( cang <= 0.0 )
       return 1.0;
@@ -516,7 +516,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
         return;
 
       final Feature feature = getFeature();
-      final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, imageOutline, gridSurface );
+      final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, imageOutline, gridSurface, null );
       if( displayElement != null )
         displayElement.paint( g, projection, monitor );
     }
@@ -611,33 +611,33 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       // WRONG!! There is no minimum, as "quantity" defines the upper boundary value!
       return m_colors.length > 0 ? m_colors[0] : null;
 
-    if( value > m_max )
-      return null;
+      if( value > m_max )
+        return null;
 
-    final int binarySearch = Arrays.binarySearch( m_values, value );
-    if( binarySearch >= 0 )
-      return m_colors[binarySearch];
+      final int binarySearch = Arrays.binarySearch( m_values, value );
+      if( binarySearch >= 0 )
+        return m_colors[binarySearch];
 
-    final int index = Math.abs( binarySearch ) - 1;
-    if( index == m_colors.length )
-      return null;
+      final int index = Math.abs( binarySearch ) - 1;
+      if( index == m_colors.length )
+        return null;
 
-    // Experimental: set to true to linearly interpolate the color
-    // Using colormaps with many entries produces the same result
-    final boolean interpolate = false;
+      // Experimental: set to true to linearly interpolate the color
+      // Using colormaps with many entries produces the same result
+      final boolean interpolate = false;
 
-    if( interpolate )
-    {
-      if( index == 0 )
-        return m_colors[index];
+      if( interpolate )
+      {
+        if( index == 0 )
+          return m_colors[index];
 
-      final Color lower = m_colors[index - 1];
-      final Color upper = m_colors[index];
+        final Color lower = m_colors[index - 1];
+        final Color upper = m_colors[index];
 
-      return interpolate( lower, upper, m_values[index - 1], m_values[index], value );
-    }
+        return interpolate( lower, upper, m_values[index - 1], m_values[index], value );
+      }
 
-    return m_colors[index];
+      return m_colors[index];
   }
 
   private float getOpacity( ) throws FilterEvaluationException

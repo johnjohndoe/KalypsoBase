@@ -160,7 +160,7 @@ public class SLDPainter
   {
     try
     {
-      final DisplayElement lde = DisplayElementFactory.buildDisplayElement( null, symbolizer, gmo );
+      final DisplayElement lde = DisplayElementFactory.buildDisplayElement( null, symbolizer, gmo, null );
       lde.paint( g, m_projection, new NullProgressMonitor() );
     }
     catch( final IncompatibleGeometryTypeException e )

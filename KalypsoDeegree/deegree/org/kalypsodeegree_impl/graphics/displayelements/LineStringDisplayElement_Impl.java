@@ -129,7 +129,7 @@ class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implemen
 
   private void paintCurve( final Graphics2D g2, final GeoTransform projection, final GM_Curve curve, final StrokePainter painter ) throws GM_Exception
   {
-    final int[][] pos = LabelFactory.calcScreenCoordinates( projection, curve );
+    final int[][] pos = LabelUtils.calcScreenCoordinates( projection, curve );
     painter.paintPoses( g2, pos );
     painter.paintAdditionals( g2, curve, pos );
   }

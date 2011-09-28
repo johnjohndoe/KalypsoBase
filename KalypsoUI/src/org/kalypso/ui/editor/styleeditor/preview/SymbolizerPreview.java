@@ -88,6 +88,6 @@ public abstract class SymbolizerPreview<S extends Symbolizer> extends Preview<S>
 
   protected DisplayElement createDisplayElement( final GM_Object geom ) throws IncompatibleGeometryTypeException
   {
-    return DisplayElementFactory.buildDisplayElement( null, getInputData(), geom );
+    return DisplayElementFactory.buildDisplayElement( null, getInputData(), geom, null );
   }
 }

@@ -169,7 +169,7 @@ public class DisplayElementFactory
 
               for( final Symbolizer symbolizer : symbolizers )
               {
-                final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
+                final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer, null );
                 if( displayElement != null )
                   list.add( displayElement );
               }
@@ -204,7 +204,7 @@ public class DisplayElementFactory
    *           if the selected geometry of the <tt>Feature</tt> is not compatible with the <tt>Symbolizer</tt>
    * @return constructed <tt>DisplayElement</tt>
    */
-  public static DisplayElement buildDisplayElement( final Feature feature, final Symbolizer symbolizer ) throws IncompatibleGeometryTypeException, FilterEvaluationException
+  public static DisplayElement buildDisplayElement( final Feature feature, final Symbolizer symbolizer, final ILabelPlacementStrategy strategy ) throws IncompatibleGeometryTypeException, FilterEvaluationException
   {
     // determine the geometry property to be used
     final Object geoObject = findGeometryObject( feature, symbolizer );
@@ -214,7 +214,7 @@ public class DisplayElementFactory
     if( geoObject == null && !(symbolizer instanceof RasterSymbolizer) )
       return null;
 
-    final DisplayElement displayElement = buildDisplayElement( feature, symbolizer, geoObject );
+    final DisplayElement displayElement = buildDisplayElement( feature, symbolizer, geoObject, strategy );
     if( displayElement == null )
       return null;
 
@@ -235,7 +235,7 @@ public class DisplayElementFactory
   /**
    * Internally build the display element, without decoration and other stuff.
    */
-  public static DisplayElement buildDisplayElement( final Feature feature, final Symbolizer symbolizer, final Object geoObject ) throws IncompatibleGeometryTypeException
+  public static DisplayElement buildDisplayElement( final Feature feature, final Symbolizer symbolizer, final Object geoObject, final ILabelPlacementStrategy strategy ) throws IncompatibleGeometryTypeException
   {
     if( symbolizer instanceof PointSymbolizer )
       return buildPointDisplayElement( feature, geoObject, (PointSymbolizer) symbolizer );
@@ -247,7 +247,7 @@ public class DisplayElementFactory
       return buildPolygonDisplayElement( feature, geoObject, (PolygonSymbolizer) symbolizer );
 
     if( symbolizer instanceof TextSymbolizer )
-      return buildLabelDisplayElement( feature, geoObject, (TextSymbolizer) symbolizer );
+      return buildLabelDisplayElement( feature, geoObject, (TextSymbolizer) symbolizer, strategy );
 
     if( symbolizer instanceof RasterSymbolizer )
       return buildRasterDisplayElement( feature, geoObject, (RasterSymbolizer) symbolizer );
@@ -490,13 +490,13 @@ public class DisplayElementFactory
    *           if the geometry property is not a <tt>GM_Point</tt>, a <tt>GM_Surface</tt> or <tt>GM_MultiSurface</tt>
    * @return constructed <tt>PolygonDisplayElement</tt>
    */
-  public static LabelDisplayElement buildLabelDisplayElement( final Feature feature, final Object geomOrList, final TextSymbolizer sym )
+  public static LabelDisplayElement buildLabelDisplayElement( final Feature feature, final Object geomOrList, final TextSymbolizer sym, final ILabelPlacementStrategy strategy )
   {
     final GM_Object[] objects = findPoints( geomOrList, EMPTY_GEOMS );
     if( objects == null )
       return null;
 
-    return new LabelDisplayElement_Impl( feature, objects, sym );
+    return new LabelDisplayElement_Impl( feature, objects, sym, strategy );
   }
 
   /**
