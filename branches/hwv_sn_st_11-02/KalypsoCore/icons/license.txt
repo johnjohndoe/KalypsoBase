@@ -1,0 +1,7 @@
+Icon Licenses
+=============
+
+email.png
+---------
+Source: http://www.iconfinder.com/icondetails/43881/16/email_envelope_mail_message_icon
+License: Creative Commons (Attribution 3.0 Unported)
