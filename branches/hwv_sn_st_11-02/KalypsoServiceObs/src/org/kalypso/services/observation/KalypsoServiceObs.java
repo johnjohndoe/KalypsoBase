@@ -27,6 +27,8 @@ import org.osgi.service.url.URLStreamHandlerService;
  */
 public class KalypsoServiceObs extends Plugin
 {
+  public static final String ID = "org.kalypso.services.observation";
+
   public static final String SYSPROP_CONFIGURATION_LOCATION = "kalypso.hwv.observation.service.configuration.location"; //$NON-NLS-1$
 
   public static final String SYSPROP_REINIT_SERVICE = "kalypso.hwv.observation.service.reinit.interval"; //$NON-NLS-1$
