@@ -83,14 +83,11 @@ public class ObservationServiceRepository extends AbstractRepository implements 
       throw new RepositoryException( "Could not find Repository Service" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.repository.AbstractRepository#getStatus()
-   */
   @Override
-  public IStatus getStatus( )
+  public IStatus getStatus( final String type )
   {
     final IObservationService service = getService();
-    final StatusBean bean = service.getStatus();
+    final StatusBean bean = service.getStatus( type );
 
     return new Status( bean.getSeverity(), bean.getPlugin(), bean.getMessage() );
   }

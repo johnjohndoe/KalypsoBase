@@ -58,7 +58,7 @@ public interface IRepositoryService
   /**
    * @return status of remote repository service
    */
-  StatusBean getStatus( );
+  StatusBean getStatus( String type );
 
   /**
    * @param parent

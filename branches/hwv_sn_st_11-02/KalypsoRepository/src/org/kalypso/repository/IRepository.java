@@ -82,7 +82,7 @@ public interface IRepository extends IRepositoryItem
   /**
    * @return status of repository.
    */
-  IStatus getStatus( );
+  IStatus getStatus( String type );
 
   /**
    * Returns true when this repository is in readonly mode. What this really means, depends on the client
