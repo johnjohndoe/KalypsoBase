@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -52,12 +52,12 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * 14.08.2000 ap: import clause added <BR>
  * 16.08.2000 ap: constructor SHPMultiPoint(GM_Point[] gm_points) modified <BR>
  * <!---------------------------------------------------------------------------->
- * 
+ *
  * @version 16.08.2000
  * @author Andreas Poth
  */
 
-public class SHPMultiPoint implements ISHPGeometry
+public class SHPMultiPoint implements ISHPMultiPoint
 {
   private final SHPPoint[] m_points;
 
@@ -95,6 +95,7 @@ public class SHPMultiPoint implements ISHPGeometry
     }
   }
 
+  @Override
   public SHPPoint[] getPoints( )
   {
     return m_points;
