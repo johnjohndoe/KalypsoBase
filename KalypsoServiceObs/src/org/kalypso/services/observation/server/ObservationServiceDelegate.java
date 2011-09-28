@@ -749,12 +749,12 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   }
 
   @Override
-  public StatusBean getStatus( )
+  public StatusBean getStatus( final String type )
   {
     final Set<IStatus> stati = new LinkedHashSet<IStatus>();
     for( final IRepository repository : m_repositories )
     {
-      stati.add( repository.getStatus() );
+      stati.add( repository.getStatus( type ) );
     }
 
     final IStatus status = StatusUtilities.createStatus( stati, "Repository states" );

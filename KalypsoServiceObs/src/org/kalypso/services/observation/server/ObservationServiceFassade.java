@@ -494,7 +494,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   }
 
   @Override
-  public StatusBean getStatus( )
+  public StatusBean getStatus( final String type )
   {
     return new StatusBean( IStatus.OK, KalypsoServiceObs.ID, "" );
   }

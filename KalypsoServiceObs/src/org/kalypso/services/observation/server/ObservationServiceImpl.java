@@ -390,11 +390,11 @@ public class ObservationServiceImpl implements IObservationService
   }
 
   @Override
-  public StatusBean getStatus( )
+  public StatusBean getStatus( final String type )
   {
     final IObservationService delegate = getDelegate();
     if( Objects.isNotNull( delegate ) )
-      return delegate.getStatus();
+      return delegate.getStatus( type );
 
     return new StatusBean( IStatus.ERROR, KalypsoServiceObs.ID, "Service not available. IObservationService delegate is null." );
   }

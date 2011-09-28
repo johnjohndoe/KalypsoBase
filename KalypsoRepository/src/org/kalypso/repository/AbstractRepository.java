@@ -92,7 +92,7 @@ public abstract class AbstractRepository implements IRepository
   }
 
   @Override
-  public IStatus getStatus( )
+  public IStatus getStatus( final String type )
   {
     return Status.OK_STATUS;
   }
