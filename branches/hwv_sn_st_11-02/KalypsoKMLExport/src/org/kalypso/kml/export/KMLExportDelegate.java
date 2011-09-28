@@ -13,6 +13,7 @@ import org.kalypsodeegree.graphics.displayelements.GeometryDisplayElement;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
 
 import de.micromata.opengis.kml.v_2_2_0.Folder;
 import de.micromata.opengis.kml.v_2_2_0.Style;
@@ -98,5 +99,16 @@ public class KMLExportDelegate implements IStylePaintable
   public boolean shouldPaintFeature( final Feature feature )
   {
     return true;
+  }
+
+  @Override
+  public ILabelPlacementStrategy createLabelStrategy( )
+  {
+    return null;
+  }
+
+  @Override
+  public void paintLabels( final ILabelPlacementStrategy strategy )
+  {
   }
 }

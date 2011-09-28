@@ -41,7 +41,7 @@ import java.awt.geom.AffineTransform;
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.graphics.displayelements.LabelFactory;
+import org.kalypsodeegree_impl.graphics.displayelements.LabelUtils;
 import org.kalypsodeegree_impl.graphics.displayelements.strokearrow.StrokeArrowHelper.ARROW_WIDGET;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 
@@ -91,8 +91,8 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
   public void paint( final Double size )
   {
     // calculate screenpoints
-    final int[] p1 = LabelFactory.calcScreenCoordinates( getProjection(), getPoints()[0] );
-    final int[] p2 = LabelFactory.calcScreenCoordinates( getProjection(), getPoints()[1] );
+    final int[] p1 = LabelUtils.calcScreenCoordinates( getProjection(), getPoints()[0] );
+    final int[] p2 = LabelUtils.calcScreenCoordinates( getProjection(), getPoints()[1] );
 
     if( p1[0] == p2[0] && p1[1] == p2[1] )
       // point coordinates of p1 and p2 must differ
@@ -143,7 +143,7 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
     final double dx = m_points[0].getPosition().getX() - m_points[1].getPosition().getX();
     final double dy = m_points[0].getPosition().getY() - m_points[1].getPosition().getY();
 
-    double atan = Math.atan( dy / dx );
+    final double atan = Math.atan( dy / dx );
 
     if( dx >= 0 )
       return -atan;

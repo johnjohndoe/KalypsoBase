@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -37,6 +37,8 @@ package org.kalypsodeegree.graphics.displayelements;
 
 import java.awt.Graphics2D;
 
+import com.vividsolutions.jts.geom.Geometry;
+
 /**
  * This is a label with style information and screen coordinates, ready to be rendered to a view.
  * <p>
@@ -46,7 +48,6 @@ import java.awt.Graphics2D;
  */
 public interface Label
 {
-
   /**
    * Renders the label (including halo and other style information) to the submitted <tt>Graphics2D</tt> context.
    * <p>
@@ -54,7 +55,7 @@ public interface Label
    * @param g
    *          <tt>Graphics2D</tt> context to be used
    */
-  public void paint( Graphics2D g );
+  void paint( Graphics2D g );
 
   /**
    * Renders the label's boundaries to the submitted <tt>Graphics2D</tt> context. Immensely useful for testing.
@@ -63,7 +64,7 @@ public interface Label
    * @param g
    *          <tt>Graphics2D</tt> context to be used
    */
-  public void paintBoundaries( Graphics2D g );
+  void paintBoundaries( Graphics2D g );
 
   /**
    * Determines if the label intersects with another label.
@@ -73,41 +74,7 @@ public interface Label
    *          label to test
    * @return true if the labels intersect
    */
-  public boolean intersects( Label that );
+  boolean intersects( Label that );
 
-  /**
-   * Returns the x-coordinate of the label.
-   * <p>
-   * 
-   */
-  public int getX();
-
-  /**
-   * Returns the y-coordinate of the label.
-   * <p>
-   */
-  public int getY();
-
-  /**
-   * Returns the rightmost x-coordinate of the label's bounding box.
-   * <p>
-   */
-  public int getMaxX();
-
-  /**
-   * Returns the lowermost y-coordinate of the label's bounding box.
-   * <p>
-   */
-  public int getMaxY();
-
-  /**
-   * Returns the leftmost x-coordinate of the label's bounding box.
-   * <p>
-   */
-  public int getMinX();
-
-  /**
-   * Returns the uppermost x-coordinate of the label's bounding box.
-   */
-  public int getMinY();
+  Geometry getBoundary( );
 }

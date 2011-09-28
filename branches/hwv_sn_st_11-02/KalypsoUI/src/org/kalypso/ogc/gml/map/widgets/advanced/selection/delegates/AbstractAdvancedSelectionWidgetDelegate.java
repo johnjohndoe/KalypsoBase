@@ -158,7 +158,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
 
       for( final Feature feature : features )
       {
-        final DisplayElement lde = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
+        final DisplayElement lde = DisplayElementFactory.buildDisplayElement( feature, symbolizer, null );
         lde.paint( g, projection, new NullProgressMonitor() );
       }
     }
