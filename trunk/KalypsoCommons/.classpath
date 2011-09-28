@@ -9,12 +9,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="srcext"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/activation.jar" sourcepath="KalypsoCommonssrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/jaxb-api.jar" sourcepath="KalypsoCommonssrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/jaxb-impl.jar" sourcepath="lib/jaxb_2_1_7/jaxb-impl.src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/jaxb-xjc.jar" sourcepath="lib/jaxb_2_1_7/jaxb-xjc.src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/jaxb1-impl.jar" sourcepath="KalypsoCommonssrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/jsr173_1.0_api.jar" sourcepath="KalypsoCommonssrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/jsr173_1.0_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/resolver.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xbean_xpath.jar"/>
@@ -46,5 +40,11 @@
 	<classpathentry exported="true" kind="lib" path="lib/jgraph/jgraphx_1_5_1_11.jar" sourcepath="lib/jgraph/jpgrahpx_1_5_1_11-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/guava/guava-r09.jar" sourcepath="lib/guava/guava-src-r09.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/opencsv/opencsv-2.3.jar" sourcepath="lib/opencsv/opencsv-2.3.src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-xjc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb1-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jsr173_1.0_api.jar"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>
