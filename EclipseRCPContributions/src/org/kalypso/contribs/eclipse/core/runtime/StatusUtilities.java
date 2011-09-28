@@ -44,7 +44,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
@@ -238,13 +237,13 @@ public final class StatusUtilities
    * @param message
    *          only used when creating the MultiStatus
    */
-  public static IStatus createStatus( final List<IStatus> stati, final String message, final Object... args )
+  public static IStatus createStatus( final Collection<IStatus> stati, final String message, final Object... args )
   {
     if( stati.size() == 0 )
       return Status.OK_STATUS;
 
     if( stati.size() == 1 )
-      return stati.get( 0 );
+      return stati.iterator().next();
 
     return new MultiStatus( EclipseRCPContributionsPlugin.ID, 0, stati.toArray( new IStatus[stati.size()] ), String.format( message, args ), null );
   }
@@ -315,6 +314,7 @@ public final class StatusUtilities
 
   /**
    * Creates a warning-status with given message and null throwable.
+   * 
    * @deprecated
    */
   @Deprecated

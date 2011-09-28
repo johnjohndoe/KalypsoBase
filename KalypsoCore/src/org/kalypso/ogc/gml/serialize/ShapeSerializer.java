@@ -83,7 +83,7 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 public final class ShapeSerializer
 {
   /** The default charset of a shape (really the .dbf) is IBM850. */
-  private static final String SHAPE_DEFAULT_CHARSET_IBM850 = "IBM850";
+  private static final String SHAPE_DEFAULT_CHARSET_IBM850 = "IBM850"; //$NON-NLS-1$
 
   public static final String SHP_NAMESPACE_URI = DBaseFile.SHP_NAMESPACE_URI;
 

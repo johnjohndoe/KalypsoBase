@@ -42,17 +42,29 @@ package org.kalypso.model.wspm.ui.profil.wizard.classification.landuse;
 
 import java.net.URL;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
+import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
 import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.pages.ApplyLanduseShapePage;
+import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.worker.ApplyLanduseWorker;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
+import org.kalypso.model.wspm.ui.profil.wizard.utils.FeatureThemeWizardUtilitites;
+import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
+import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * @author Dirk Kuch
@@ -62,6 +74,12 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
   protected IProject m_project;
 
   private ApplyLanduseShapePage m_page;
+
+  private ProfilesChooserPage m_profileChooserPage;
+
+  private ProfileSelection m_profileSelection;
+
+  private IKalypsoFeatureTheme m_theme;
 
   public ApplyLanduseShapeWizard( )
   {
@@ -74,7 +92,15 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
   public void addPages( )
   {
     m_page = new ApplyLanduseShapePage( m_project );
+
+    final String msg = Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.2" ); //$NON-NLS-1$
+    final String title = Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.1" ); //$NON-NLS-1$
+
+    m_profileChooserPage = new ProfilesChooserPage( msg, m_profileSelection, false );
+    m_profileChooserPage.setTitle( title );
+
     addPage( m_page );
+    addPage( m_profileChooserPage );
   }
 
   @Override
@@ -82,18 +108,35 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
   {
     final ILanduseModel model = m_page.getModel();
 
-    /**
-     * <pre>
-     * how to continue?`
-     * 
-     * - use existing RoughnessIntersector implementation and
-     *    - import selected shape file into a gml workspace
-     *    - new pseudo FeatureList implementation
-     *    - or refactor existing code -> RoughnessIntersector will run against a new interface
-     * </pre>
-     */
+    try
+    {
+      final ApplyLanduseDelegate delegate = new ApplyLanduseDelegate( model, m_profileChooserPage );
+      try
+      {
+        final ApplyLanduseWorker worker = new ApplyLanduseWorker( delegate );
+        getContainer().run( false, true, worker );
 
-    throw new UnsupportedOperationException();
+        final FeatureChange[] changes = worker.getChanges();
+        if( !ArrayUtils.isEmpty( changes ) )
+        {
+          final GMLWorkspace gmlworkspace = changes[0].getFeature().getWorkspace();
+          final ICommand command = new ChangeFeaturesCommand( gmlworkspace, changes );
+          m_theme.postCommand( command, null );
+        }
+
+        return true;
+      }
+      finally
+      {
+        delegate.dispose();
+      }
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    return false;
   }
 
   @Override
@@ -116,6 +159,11 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
     }
     else
       throw new UnsupportedOperationException();
+
+    m_theme = FeatureThemeWizardUtilitites.findTheme( selection );
+
+    final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
+    m_profileSelection = profileSelection;
   }
 
 }

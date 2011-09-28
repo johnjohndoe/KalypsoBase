@@ -48,8 +48,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.resources.CollectFilesWithExtensionVisitor;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.profil.filter.ProfilePointFilterComposite;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseModel;
+import org.kalypso.model.wspm.ui.profil.wizard.utils.IWspmWizardConstants;
 
 /**
  * @author Dirk Kuch
@@ -59,6 +61,8 @@ public class ApplyLanduseShapeModel extends LanduseModel
   private IFile[] m_landuseShapeFiles;
 
   Properties m_mapping = new Properties();
+
+  final ProfilePointFilterComposite m_filter = new ProfilePointFilterComposite( IWspmWizardConstants.FILTER_USAGE_SECTION );
 
   public ApplyLanduseShapeModel( final IProject project )
   {
@@ -94,5 +98,10 @@ public class ApplyLanduseShapeModel extends LanduseModel
   public IFile[] getLanduseShapeFiles( )
   {
     return m_landuseShapeFiles;
+  }
+
+  public ProfilePointFilterComposite getFilter( )
+  {
+    return m_filter;
   }
 }
