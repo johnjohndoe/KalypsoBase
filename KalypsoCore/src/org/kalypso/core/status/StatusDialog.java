@@ -44,6 +44,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -56,11 +58,14 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * A dialog showing a status in full details.
@@ -72,6 +77,16 @@ public class StatusDialog extends AbstractStatusDialog
   private boolean m_showAsTree;
 
   private boolean m_showTime = true;
+
+  public static void open( final Shell parentShell, final IStatus status, final String dialogTitle )
+  {
+    new StatusDialog( parentShell, status, dialogTitle ).open();
+  }
+
+  public static void open( final Shell parentShell, final IStatus status, final String dialogTitle, final String[] dialogButtonLabels, final int defaultIndex )
+  {
+    new StatusDialog( parentShell, status, dialogTitle, dialogButtonLabels, defaultIndex ).open();
+  }
 
   public StatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle )
   {
@@ -97,9 +112,27 @@ public class StatusDialog extends AbstractStatusDialog
     m_showAsTree = showAsTree;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
-   */
+  @Override
+  protected Control createMessageArea( final Composite parent )
+  {
+    final Composite panel = new Composite( parent, SWT.NONE );
+    panel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    GridLayoutFactory.fillDefaults().numColumns( 3 ).applyTo( panel );
+
+    super.createMessageArea( panel );
+
+    final ToolBarManager toolBarManager = new ToolBarManager( SWT.HORIZONTAL );
+    final ToolBar toolBar = toolBarManager.createControl( panel );
+    toolBar.setLayoutData( new GridData( SWT.FILL, SWT.TOP, false, false ) );
+
+    // FIXME
+    // toolBarManager.add( new MailStatusAction( getStatus() ) );
+    toolBarManager.add( new CopyStatusClipboardAction( getStatus() ) );
+    toolBarManager.update( true );
+
+    return panel;
+  }
+
   @Override
   protected Control createCustomArea( final Composite parent )
   {
@@ -108,16 +141,13 @@ public class StatusDialog extends AbstractStatusDialog
     composite.setLayout( new GridLayout() );
 
     final IStatus status = getStatus();
-    createExceptionControl( parent, status );
+    createExceptionControl( composite, status );
 
-    createStatusControl( parent, status );
+    createStatusControl( composite, status );
 
     return composite;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#isResizable()
-   */
   @Override
   protected boolean isResizable( )
   {
@@ -130,29 +160,32 @@ public class StatusDialog extends AbstractStatusDialog
     if( exception == null )
       return;
 
+    final String shortException = exception.toString();
+
     final StringWriter sw = new StringWriter();
-    exception.printStackTrace( new PrintWriter( sw ) );
+    final PrintWriter pw = new PrintWriter( sw );
+    exception.printStackTrace( pw );
+    pw.flush();
 
-    final Group exceptionGroup = new Group( parent, SWT.NONE );
+    final Section exceptionGroup = new Section( parent, Section.TREE_NODE );
     exceptionGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    exceptionGroup.setLayout( new GridLayout() );
-    exceptionGroup.setText( "Exception" ); //$NON-NLS-1$
-
-    final String excMsg = exception.getLocalizedMessage();
-    if( excMsg != null )
-    {
-      final Text msgLabel = new Text( exceptionGroup, SWT.READ_ONLY );
-      msgLabel.setLayoutData( new GridData( SWT.FILL, SWT.NONE, true, false ) );
-      msgLabel.setText( excMsg );
-    }
+    exceptionGroup.setText( "Exception: " + shortException ); 
 
     final Text stackText = new Text( exceptionGroup, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL );
-    final GridData stackLayoutData = new GridData( SWT.FILL, SWT.FILL, true, true );
-    stackLayoutData.widthHint = 100;
-    stackLayoutData.heightHint = 100;
-    stackText.setLayoutData( stackLayoutData );
     stackText.setText( sw.toString() );
     stackText.setEnabled( true );
+
+    exceptionGroup.setClient( stackText );
+
+    exceptionGroup.addExpansionListener( new ExpansionAdapter()
+    {
+      @Override
+      public void expansionStateChanged( final ExpansionEvent e )
+      {
+        // TODO: maybe more intelligent behaviour?
+        getShell().pack();
+      }
+    } );
   }
 
   private void createStatusControl( final Composite parent, final IStatus status )
@@ -164,10 +197,7 @@ public class StatusDialog extends AbstractStatusDialog
     final ColumnViewer columnViewer = createViewer( parent );
 
     final Control viewerControl = columnViewer.getControl();
-    final GridData viewerData = new GridData( SWT.FILL, SWT.FILL, true, true );
-// viewerData.widthHint = 200;
-// viewerData.heightHint = 100;
-    viewerControl.setLayoutData( viewerData );
+    viewerControl.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     if( columnViewer instanceof TreeViewer )
       StatusLabelProvider.addNavigationColumn( columnViewer );
