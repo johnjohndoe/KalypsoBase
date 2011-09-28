@@ -54,7 +54,7 @@ import org.kalypso.shape.dbf.IDBFField;
  */
 public class LanduseProperties extends Properties
 {
-  private static final String SELECTION = "SHAPE_PROPERTY";
+  private static final String SELECTION = "SHAPE_PROPERTY"; //$NON-NLS-1$
 
   private final ILanduseModel m_model;
 

@@ -83,7 +83,7 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
 
   public ApplyLanduseShapeWizard( )
   {
-    setWindowTitle( "Apply landuse shape" );
+    setWindowTitle( Messages.getString( "ApplyLanduseShapeWizard_0" ) ); //$NON-NLS-1$
 
     setNeedsProgressMonitor( true );
   }
@@ -93,8 +93,8 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
   {
     m_page = new ApplyLanduseShapePage( m_project );
 
-    final String msg = Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.2" ); //$NON-NLS-1$
-    final String title = Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.1" ); //$NON-NLS-1$
+    final String msg = Messages.getString( "ApplyLanduseShapeWizard_1" ); //$NON-NLS-1$
+    final String title = Messages.getString( "ApplyLanduseShapeWizard_2" ); //$NON-NLS-1$
 
     m_profileChooserPage = new ProfilesChooserPage( msg, m_profileSelection, false );
     m_profileChooserPage.setTitle( title );

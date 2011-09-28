@@ -134,11 +134,11 @@ public class ALSSelectedShapeFileChangedListener implements PropertyChangeListen
     File file;
     if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( model.getType() ) )
     {
-      file = new File( String.format( "%s.vegetation.properties", base ) );
+      file = new File( String.format( "%s.vegetation.properties", base ) ); //$NON-NLS-1$
     }
     else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( model.getType() ) )
     {
-      file = new File( String.format( "%s.roughness.properties", base ) );
+      file = new File( String.format( "%s.roughness.properties", base ) ); //$NON-NLS-1$
     }
     else
       throw new IllegalStateException();
