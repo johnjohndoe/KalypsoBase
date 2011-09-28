@@ -41,43 +41,33 @@
 package org.kalypso.model.wspm.ui.profil.wizard.intersectRoughness;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.model.wspm.core.gml.assignment.AssignmentBinder;
-import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
+import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.worker.ApplyLanduseWorker;
 import org.kalypso.model.wspm.ui.profil.wizard.utils.FeatureThemeWizardUtilitites;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -89,7 +79,7 @@ public class IntersectRoughnessWizard extends Wizard implements IWorkbenchWizard
 
   private ArrayChooserPage m_profileChooserPage;
 
-  private IntersectRoughnessPage m_roughnessIntersectPage;
+  protected IntersectRoughnessPage m_roughnessIntersectPage;
 
   private ProfileSelection m_profileSelection;
 
@@ -151,12 +141,6 @@ public class IntersectRoughnessWizard extends Wizard implements IWorkbenchWizard
     if( ArrayUtils.isEmpty( choosen ) )
       return true;
 
-    final FeatureList polygoneFeatures = m_roughnessIntersectPage.getPolygoneFeatures();
-    final IPropertyType polygoneGeomType = m_roughnessIntersectPage.getPolygoneGeomProperty();
-    final IPropertyType polygoneValueType = m_roughnessIntersectPage.getPolygoneValueProperty();
-    final IPath assignmentPath = m_roughnessIntersectPage.getAssignmentPath();
-    final IProfilePointFilter pointFilters = m_roughnessIntersectPage.getSelectedPointFilter();
-
     final IKalypsoFeatureTheme theme = m_theme;
     final ICoreRunnableWithProgress runnable = new ICoreRunnableWithProgress()
     {
@@ -167,19 +151,15 @@ public class IntersectRoughnessWizard extends Wizard implements IWorkbenchWizard
 
         try
         {
-          /* Load assignment */
-          monitor.subTask( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.4" ) ); //$NON-NLS-1$
-          final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-          final IFile assignmentFile = workspace.getRoot().getFile( assignmentPath );
-          final URL assignmentUrl = ResourceUtilities.createURL( assignmentFile );
-
-          final GMLWorkspace assignmentWorkspace = GmlSerializer.createGMLWorkspace( assignmentUrl, null );
-          final AssignmentBinder assignment = new AssignmentBinder( assignmentWorkspace );
           monitor.worked( 1 );
 
-          final RoughnessIntersector intersector = new RoughnessIntersector( choosen, polygoneFeatures, polygoneGeomType, polygoneValueType, assignment, pointFilters );
-          final FeatureChange[] changes = intersector.intersect( new SubProgressMonitor( monitor, choosen.length ) );
-          if(!ArrayUtils.isEmpty( changes ))
+          final IntersectRoughnessesLanduseDelegate delegate = new IntersectRoughnessesLanduseDelegate( m_roughnessIntersectPage, (IProfileFeature[]) choosen );
+
+          final ApplyLanduseWorker worker = new ApplyLanduseWorker( delegate );
+          getContainer().run( false, false, worker );
+
+          final FeatureChange[] changes = worker.getChanges();
+          if( !ArrayUtils.isEmpty( changes ) )
           {
             final GMLWorkspace gmlworkspace = changes[0].getFeature().getWorkspace();
             final ICommand command = new ChangeFeaturesCommand( gmlworkspace, changes );
