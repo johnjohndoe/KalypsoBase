@@ -114,7 +114,7 @@ public class MovieFrame implements IMovieFrame
       final File imageDirectory = getImageDirectory( width, height );
 
       /* The image file. */
-      final File imageFile = new File( imageDirectory, getLabel() + ".PNG" );
+      final File imageFile = new File( imageDirectory, getLabel() + m_themeID + ".PNG" );
       if( imageFile.exists() )
         return JAI.create( "fileload", imageFile.getAbsolutePath() );
 
