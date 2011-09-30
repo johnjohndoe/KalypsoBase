@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,36 +38,28 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.util.themes.legend.listener;
+package org.kalypso.contribs.eclipse.swt.widgets;
 
-import java.util.Properties;
-
-import org.eclipse.swt.graphics.Color;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 
 /**
- * This interface provides functions for listener, which would like to be notified if a legend property has changed.
+ * Inverts a given other {@link ViewerComparator}.
  * 
- * @author Holger Albert
+ * @author Gernot Belger
  */
-public interface ILegendChangedListener
+public class InverseComparator extends ViewerComparator
 {
-  /**
-   * This function is notified, if a legend property has changed.
-   * 
-   * @param properties
-   *          A up to date properties object, containing all serialized legend properties.
-   * @param horizontal
-   *          The horizontal position.
-   * @param vertical
-   *          The vertical position.
-   * @param backgroundColor
-   *          The background color.
-   * @param insets
-   *          The insets.
-   * @param themeIds
-   *          The ids of the selected themes.
-   * @param fontSize
-   *          The font size.
-   */
-  public void legendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, String[] themeIds, int fontSize );
+  private final ViewerComparator m_delegate;
+
+  public InverseComparator( final ViewerComparator delegate )
+  {
+    m_delegate = delegate;
+  }
+
+  @Override
+  public int compare( final Viewer viewer, final Object e1, final Object e2 )
+  {
+    return m_delegate.compare( viewer, e1, e2 ) * -1;
+  }
 }
