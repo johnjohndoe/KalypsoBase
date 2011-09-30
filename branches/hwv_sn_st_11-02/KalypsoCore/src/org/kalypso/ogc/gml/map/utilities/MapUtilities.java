@@ -304,14 +304,14 @@ public final class MapUtilities
    *          The map model.
    * @return All used ids.
    */
-  public static List<String> getUsedIds( IMapModell mapModell )
+  public static List<String> getUsedIds( final IMapModell mapModell )
   {
     /* Memory for the used ids. */
-    List<String> usedIds = new ArrayList<String>();
+    final List<String> usedIds = new ArrayList<String>();
 
     /* Loop all themes and collect their ids. */
-    IKalypsoTheme[] themes = mapModell.getAllThemes();
-    for( IKalypsoTheme theme : themes )
+    final IKalypsoTheme[] themes = mapModell.getAllThemes();
+    for( final IKalypsoTheme theme : themes )
       usedIds.add( theme.getId() );
 
     return usedIds;
@@ -326,7 +326,7 @@ public final class MapUtilities
    *          The list of used ids.
    * @return The new id. It is made certain, that it was not contained in the list of used ids, thus that it is unique.
    */
-  public static String getNewId( List<String> usedIds )
+  public static String getNewId( final List<String> usedIds )
   {
     int count = 0;
     String newId = "ID_" + count++;

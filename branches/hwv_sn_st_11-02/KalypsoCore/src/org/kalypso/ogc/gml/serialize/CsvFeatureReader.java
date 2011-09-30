@@ -49,10 +49,10 @@ public final class CsvFeatureReader
 
     public CSVInfo( final String frmt, final int[] cols, final boolean ignoreFrmtExceptions, final boolean handleEmptyAsNill )
     {
-      this.m_format = frmt;
-      this.m_columns = cols;
-      this.m_ignoreFormatExceptions = ignoreFrmtExceptions;
-      this.m_handleEmptyAsNull = handleEmptyAsNill;
+      m_format = frmt;
+      m_columns = cols;
+      m_ignoreFormatExceptions = ignoreFrmtExceptions;
+      m_handleEmptyAsNull = handleEmptyAsNill;
     }
   }
 

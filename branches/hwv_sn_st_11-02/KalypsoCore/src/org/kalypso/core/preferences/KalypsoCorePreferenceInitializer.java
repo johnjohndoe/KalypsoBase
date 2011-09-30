@@ -53,6 +53,6 @@ public class KalypsoCorePreferenceInitializer extends AbstractPreferenceInitiali
   @Override
   public void initializeDefaultPreferences( )
   {
-    //Moved to deegree
+    // Moved to deegree
   }
 }

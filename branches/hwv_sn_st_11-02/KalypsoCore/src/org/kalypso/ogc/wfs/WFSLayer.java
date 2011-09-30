@@ -102,7 +102,7 @@ public class WFSLayer implements IWFSLayer
       {
         m_gmlSchema = GMLSchemaFactory.createGMLSchema( null, m_describeFeatureTypeURL );
       }
-      catch( GMLSchemaException e )
+      catch( final GMLSchemaException e )
       {
         // TODO Auto-generated catch block
         e.printStackTrace();

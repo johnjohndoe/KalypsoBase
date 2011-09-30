@@ -291,7 +291,6 @@ public class Interval
     m_sources = mergeSources( sourceInterval );
   }
 
-
   private double calcFactorIntersect( final Interval other, final MODE mode )
   {
     switch( mode )

@@ -23,7 +23,7 @@ public class GmlConvertFactoryTest extends Assert
   private final UrlUtilities m_urlUtilities = new UrlUtilities();
 
   // Invalid test, depends on KalypsoModelSaale
-//  @Test
+// @Test
   public void testConvertXml( ) throws IOException, JAXBException, GmlConvertException
   {
     final File tmpdir = FileUtilities.createNewTempDir( getClass().getName() );

@@ -117,7 +117,7 @@ public abstract class AbstractComponent implements IComponent
 
       final IComponent comp = (IComponent) obj;
 
-      return this.getId().equals( comp.getId() );
+      return getId().equals( comp.getId() );
     }
     else
     {

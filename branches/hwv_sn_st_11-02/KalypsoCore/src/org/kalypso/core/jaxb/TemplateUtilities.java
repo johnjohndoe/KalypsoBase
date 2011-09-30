@@ -64,7 +64,7 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
  * Utility class for handling with the 'template' binding schemata.
- *
+ * 
  * @author Gernot Belger
  */
 public final class TemplateUtilities
@@ -108,8 +108,6 @@ public final class TemplateUtilities
   {
     return SCHEMA_CACHE.getSchema( "featureview.xsd" ); //$NON-NLS-1$
   }
-
-
 
   public static synchronized Schema getGismapviewSchema( )
   {

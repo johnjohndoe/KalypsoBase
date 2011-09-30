@@ -405,7 +405,7 @@ public abstract class AbstractWidget implements IWidget
    * @see org.kalypso.ogc.gml.widgets.IWidget#setParameter(java.util.Map)
    */
   @Override
-  public void setParameter( Map<String, String> parameter )
+  public void setParameter( final Map<String, String> parameter )
   {
     m_parameter = parameter;
   }

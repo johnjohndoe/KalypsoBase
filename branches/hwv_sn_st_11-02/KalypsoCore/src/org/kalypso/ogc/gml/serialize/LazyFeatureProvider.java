@@ -60,7 +60,6 @@ public class LazyFeatureProvider extends AbstractXLinkFeatureProvider implements
 
   private final IFeatureProviderFactory m_factory;
 
-
   public LazyFeatureProvider( final GMLWorkspace context, final String uri, final IFeatureProviderFactory factory )
   {
     super( context, uri );

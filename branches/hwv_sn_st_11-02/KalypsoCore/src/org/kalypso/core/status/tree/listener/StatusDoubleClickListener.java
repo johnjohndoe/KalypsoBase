@@ -58,7 +58,7 @@ public class StatusDoubleClickListener implements IDoubleClickListener
   /**
    * The title of the dialog.
    */
-  private String m_title;
+  private final String m_title;
 
   /**
    * The constructor.
@@ -66,7 +66,7 @@ public class StatusDoubleClickListener implements IDoubleClickListener
    * @param title
    *          The title of the dialog.
    */
-  public StatusDoubleClickListener( String title )
+  public StatusDoubleClickListener( final String title )
   {
     m_title = title;
   }
@@ -75,26 +75,26 @@ public class StatusDoubleClickListener implements IDoubleClickListener
    * @see org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org.eclipse.jface.viewers.DoubleClickEvent)
    */
   @Override
-  public void doubleClick( DoubleClickEvent event )
+  public void doubleClick( final DoubleClickEvent event )
   {
     /* Get the source. */
-    TreeViewer source = (TreeViewer) event.getSource();
+    final TreeViewer source = (TreeViewer) event.getSource();
 
     /* Get the selection. */
-    ISelection selection = source.getSelection();
+    final ISelection selection = source.getSelection();
     if( selection == null || selection.isEmpty() || !(selection instanceof IStructuredSelection) )
       return;
 
     /* Cast. */
-    IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+    final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 
     /* Get the first element. */
-    Object firstElement = structuredSelection.getFirstElement();
+    final Object firstElement = structuredSelection.getFirstElement();
     if( !(firstElement instanceof IStatus) )
       return;
 
     /* Create the dialog. */
-    StatusDialog dialog = new StatusDialog( source.getTree().getShell(), m_title, (IStatus) firstElement );
+    final StatusDialog dialog = new StatusDialog( source.getTree().getShell(), m_title, (IStatus) firstElement );
 
     /* Open the dialog. */
     dialog.open();

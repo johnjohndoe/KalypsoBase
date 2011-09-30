@@ -131,7 +131,7 @@ public class CsvSourceHandler implements ISourceHandler
       final Object anyType = m_type.getFilter();
       if( anyType == null )
         return;
-      
+
       final Filter filter = AbstractFilter.buildFromAnyType( anyType );
       reader.setFilter( filter );
     }

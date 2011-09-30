@@ -44,7 +44,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Empty default implementation of {@link IKalypsoThemeListener}.
- *
+ * 
  * @author Gernot Belger
  */
 public class KalypsoThemeAdapter implements IKalypsoThemeListener

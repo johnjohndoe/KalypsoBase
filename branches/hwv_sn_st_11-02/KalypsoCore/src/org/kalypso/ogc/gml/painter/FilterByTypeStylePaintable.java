@@ -51,7 +51,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
 
-
 /**
  * @author Gernot Belger
  */

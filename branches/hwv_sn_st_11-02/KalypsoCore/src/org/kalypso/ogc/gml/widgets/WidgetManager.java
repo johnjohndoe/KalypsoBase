@@ -140,7 +140,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedLeft( e.getPoint() );
         }
-        break;
+          break;
 
         case MouseEvent.BUTTON2:
           m_middleWidget.leftClicked( e.getPoint() );
@@ -153,7 +153,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedRight( e.getPoint() );
         }
-        break;
+          break;
 
         default:
           break;

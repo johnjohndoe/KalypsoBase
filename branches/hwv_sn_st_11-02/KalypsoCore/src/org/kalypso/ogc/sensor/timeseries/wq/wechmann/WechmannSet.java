@@ -86,10 +86,10 @@ public class WechmannSet
     m_mapW = new TreeMap<Double, WechmannParams>();
     m_mapQ = new TreeMap<Double, WechmannParams>();
 
-    for( int i = 0; i < wps.length; i++ )
+    for( final WechmannParams wp : wps )
     {
-      m_mapW.put( new Double( wps[i].getWGR() ), wps[i] );
-      m_mapQ.put( new Double( wps[i].getQ4WGR() ), wps[i] );
+      m_mapW.put( new Double( wp.getWGR() ), wp );
+      m_mapQ.put( new Double( wp.getQ4WGR() ), wp );
     }
   }
 
@@ -114,12 +114,12 @@ public class WechmannSet
 
   /**
    * @param W
-   * @return the WechmannParams that are relevant for the given Waterlevel.
+   * @return the WechmannParams that are relevant for the given water level.
    */
-  public WechmannParams getForW( final double W )
+  public WechmannParams getForW( final double w )
   {
     final Double[] ds = m_mapW.keySet().toArray( new Double[0] );
-    int i = Arrays.binarySearch( ArrayUtils.toPrimitive( ds ), W );
+    int i = Arrays.binarySearch( ArrayUtils.toPrimitive( ds ), w );
 
     if( i < 0 )
       i = -i - 1;
@@ -128,17 +128,17 @@ public class WechmannSet
       return m_mapW.get( ds[i] );
 
     // W was too big for current parameters, just use last branch of Wechmann-Set
-    return m_mapW.get( ds[ds.length-1]);
+    return m_mapW.get( ds[ds.length - 1] );
   }
 
   /**
    * @param Q
-   * @return the WechmannParams that are relevant for the given Runoff.
+   * @return the WechmannParams that are relevant for the given discharge.
    */
-  public WechmannParams getForQ( final double Q )
+  public WechmannParams getForQ( final double q )
   {
     final Double[] ds = m_mapQ.keySet().toArray( new Double[0] );
-    int i = Arrays.binarySearch( ArrayUtils.toPrimitive( ds ), Q );
+    int i = Arrays.binarySearch( ArrayUtils.toPrimitive( ds ), q );
 
     if( i < 0 )
       i = -i - 1;

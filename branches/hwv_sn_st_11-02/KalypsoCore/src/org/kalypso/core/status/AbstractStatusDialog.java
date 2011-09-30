@@ -71,7 +71,7 @@ public class AbstractStatusDialog extends MessageDialog
   public AbstractStatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle, final String dialogMessage, final int severity, final String[] dialogButtonLabels, final int defaultIndex )
   {
     super( parentShell, dialogTitle, null, dialogMessage, severity, dialogButtonLabels, defaultIndex );
-    
+
     m_status = status;
   }
 

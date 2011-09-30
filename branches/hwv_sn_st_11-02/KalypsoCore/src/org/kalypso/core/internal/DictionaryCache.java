@@ -96,8 +96,8 @@ public class DictionaryCache
       throw new IllegalArgumentException( "Unknown dictionary: " + urn );
     }
 
-      final URL url = new URI( uri ).toURL();
-      return GmlSerializer.createGMLWorkspace( url, m_factory );
+    final URL url = new URI( uri ).toURL();
+    return GmlSerializer.createGMLWorkspace( url, m_factory );
   }
 
   public GMLWorkspace get( final String urn )

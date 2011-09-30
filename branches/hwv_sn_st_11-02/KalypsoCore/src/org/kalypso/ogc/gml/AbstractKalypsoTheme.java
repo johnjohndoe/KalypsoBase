@@ -550,7 +550,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * @see org.kalypso.ogc.gml.IKalypsoTheme#setId(java.lang.String)
    */
   @Override
-  public void setId( String id )
+  public void setId( final String id )
   {
     m_id = id;
   }

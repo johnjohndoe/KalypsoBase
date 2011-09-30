@@ -52,7 +52,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
  * implementation (which it is not)
  * <p>
  * This visitor collects all IKalypsoThemes with the property specified with a predicate
- *
+ * 
  * @author Thomas Jung
  */
 public class KalypsoThemeVisitor implements IKalypsoThemeVisitor

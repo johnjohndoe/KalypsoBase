@@ -65,6 +65,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
@@ -167,9 +168,9 @@ public class StatusDialog extends AbstractStatusDialog
     exception.printStackTrace( pw );
     pw.flush();
 
-    final Section exceptionGroup = new Section( parent, Section.TREE_NODE );
+    final Section exceptionGroup = new Section( parent, ExpandableComposite.TREE_NODE );
     exceptionGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    exceptionGroup.setText( "Exception: " + shortException ); 
+    exceptionGroup.setText( "Exception: " + shortException );
 
     final Text stackText = new Text( exceptionGroup, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL );
     stackText.setText( sw.toString() );
