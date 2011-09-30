@@ -50,7 +50,7 @@ import org.kalypso.core.i18n.Messages;
 /**
  * @author doemming
  */
-public class CatalogUtilities
+public final class CatalogUtilities
 {
   /**
    * contract: a catalog URN is builded like this:<br>
@@ -60,7 +60,7 @@ public class CatalogUtilities
    */
   private static final String CATALOG_URN = "_catalog"; //$NON-NLS-1$
 
-  public static String CATALOG_FILE_NAME = "catalog.xml"; //$NON-NLS-1$
+  public static final String CATALOG_FILE_NAME = "catalog.xml"; //$NON-NLS-1$
 
   // TODO find out XML namespace
   public static final QName BASE = new QName( "xml", "base" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -69,7 +69,7 @@ public class CatalogUtilities
   {
     if( !catalogURN.endsWith( ":" ) ) //$NON-NLS-1$
       throw new UnsupportedOperationException( Messages.getString( "org.kalypso.core.catalog.CatalogUtilities.5" ) + catalogURN ); //$NON-NLS-1$
-    if( catalogURN.equals( ":" ) ) //$NON-NLS-1$
+    if( ":".equals( catalogURN ) ) //$NON-NLS-1$
       return CATALOG_FILE_NAME;
     final String path = catalogURN.replace( ':', File.separator.charAt( 0 ) );
     if( path.endsWith( File.separator ) )
