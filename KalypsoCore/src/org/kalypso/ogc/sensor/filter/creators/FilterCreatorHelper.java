@@ -69,8 +69,7 @@ public final class FilterCreatorHelper
    * @return the filtered observation
    * @throws SensorException
    */
-  public static IObservation resolveFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context )
-      throws SensorException
+  public static IObservation resolveFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context ) throws SensorException
   {
     if( aft != null )
     {
@@ -79,7 +78,7 @@ public final class FilterCreatorHelper
       {
         creator = FilterFactory.getCreatorInstance( aft );
       }
-      catch( FactoryException e )
+      catch( final FactoryException e )
       {
         e.printStackTrace();
         throw new SensorException( e );
@@ -98,8 +97,7 @@ public final class FilterCreatorHelper
    * 
    * @return array of filtered observations
    */
-  public static IObservation[] resolveFilters( final List<JAXBElement< ? extends AbstractFilterType>> afts, final IObservation baseObs, final URL context )
-      throws SensorException
+  public static IObservation[] resolveFilters( final List<JAXBElement< ? extends AbstractFilterType>> afts, final IObservation baseObs, final URL context ) throws SensorException
   {
     final IObservation[] obs = new IObservation[afts.size()];
 

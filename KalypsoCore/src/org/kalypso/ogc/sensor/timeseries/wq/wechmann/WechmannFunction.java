@@ -73,9 +73,9 @@ public final class WechmannFunction
   /**
    * @see WechmannFunction#computeQ(double, double, double, double)
    */
-  public static double computeQ( final WechmannParams wp, final double W ) throws WQException
+  public static double computeQ( final WechmannParams wp, final double w ) throws WQException
   {
-    return computeQ( wp.getLNK1(), W, wp.getW1(), wp.getK2() );
+    return computeQ( wp.getLNK1(), w, wp.getW1(), wp.getK2() );
   }
 
   /**
@@ -88,15 +88,15 @@ public final class WechmannFunction
    * @throws WQException
    *           if (W - W1) < 0
    */
-  public static double computeQ( final double LNK1, final double W, final double W1, final double K2 ) throws WQException
+  public static double computeQ( final double lnk1, final double w, final double w1, final double k2 ) throws WQException
   {
-    if( W - W1 < 0 )
+    if( w - w1 < 0 )
     {
-      final String msg = String.format( "W < W1, ln( W - W1 ) nicht möglich. Werte sind: W=%f  W1=%f. QGrenz wird ersetzt durch: %f", W, W1, Double.MAX_VALUE ); //$NON-NLS-1$
+      final String msg = String.format( "W < W1, ln( W - W1 ) nicht möglich. Werte sind: W=%f  W1=%f. QGrenz wird ersetzt durch: %f", w, w1, Double.MAX_VALUE ); //$NON-NLS-1$
       throw new WQException( msg );
     }
 
-    return Math.exp( LNK1 + Math.log( W - W1 ) * K2 );
+    return Math.exp( lnk1 + Math.log( w - w1 ) * k2 );
   }
 
   /**

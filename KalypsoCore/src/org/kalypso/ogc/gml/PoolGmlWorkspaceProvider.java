@@ -138,7 +138,6 @@ public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider imple
     setWorkspace( null, new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), Messages.getString( "org.kalypso.ogc.gml.PoolGmlWorkspaceProvider.2" ) ) ); //$NON-NLS-1$
   }
 
-
   public IPoolableObjectType getPoolKey( )
   {
     return m_poolKey;

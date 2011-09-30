@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * Abstract implementation of {@link IMapLayer}.<br>
  * Contains the standard reusable code (standard getters etc.).
- *
+ * 
  * @author Gernot Belger
  */
 public abstract class AbstractMapLayer implements IMapLayer
@@ -116,7 +116,7 @@ public abstract class AbstractMapLayer implements IMapLayer
 
   /**
    * If overridden, this method must be called in a super-call.
-   *
+   * 
    * @see org.kalypso.ogc.gml.map.IMapLayer#dispose()
    */
   @Override
@@ -151,7 +151,7 @@ public abstract class AbstractMapLayer implements IMapLayer
 
   protected final void handeRepaintRequested( final GM_Envelope extent )
   {
-    // TODO: This is a main entry point for a potentially great number of events. 
+    // TODO: This is a main entry point for a potentially great number of events.
     if( isVisible() )
       invalidate( extent );
     else
@@ -175,7 +175,6 @@ public abstract class AbstractMapLayer implements IMapLayer
 
     return true;
   }
-
 
   /**
    * Called, when the extent of the map has changed.<br>

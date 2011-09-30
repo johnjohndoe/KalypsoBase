@@ -67,9 +67,9 @@ public class WechmannFactoryTest extends TestCase
   @Override
   protected void setUp( ) throws Exception
   {
-    WechmannParams wp1 = new WechmannParams( -38.12, -7.87274, 2.25925, 170 );
-    WechmannParams wp2 = new WechmannParams( -43.32, -7.24065, 2.131 );
-    WechmannSet ws = new WechmannSet( new Date(), new WechmannParams[] { wp1, wp2 } );
+    final WechmannParams wp1 = new WechmannParams( -38.12, -7.87274, 2.25925, 170 );
+    final WechmannParams wp2 = new WechmannParams( -43.32, -7.24065, 2.131 );
+    final WechmannSet ws = new WechmannSet( new Date(), new WechmannParams[] { wp1, wp2 } );
 
     m_wg = new WechmannGroup( new WechmannSet[] { ws, ws } );
   }

@@ -63,18 +63,18 @@ public class DefaultLoaderFactory implements ILoaderFactory
    * @see org.kalypso.loader.ILoaderFactory#getLoaderInstance(java.lang.String)
    */
   @Override
-  public ILoader getLoaderInstance( String type ) throws FactoryException
+  public ILoader getLoaderInstance( final String type ) throws FactoryException
   {
     /* Memory for the loader. */
     ILoader loader = null;
 
     try
     {
-      IExtensionRegistry registry = Platform.getExtensionRegistry();
-      IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.poolLoader" ); //$NON-NLS-1$
-      for( IConfigurationElement element : elements )
+      final IExtensionRegistry registry = Platform.getExtensionRegistry();
+      final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.core.poolLoader" ); //$NON-NLS-1$
+      for( final IConfigurationElement element : elements )
       {
-        String elementType = element.getAttribute( "type" ); //$NON-NLS-1$
+        final String elementType = element.getAttribute( "type" ); //$NON-NLS-1$
         if( type.equals( elementType ) )
           loader = (ILoader) element.createExecutableExtension( "class" ); //$NON-NLS-1$
       }
@@ -85,7 +85,7 @@ public class DefaultLoaderFactory implements ILoaderFactory
 
       return loader;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new FactoryException( "Could not instantiate the loader type: " + type, ex ); //$NON-NLS-1$
     }

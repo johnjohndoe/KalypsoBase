@@ -76,11 +76,11 @@ public class StatusContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   @Override
-  public Object[] getChildren( Object parentElement )
+  public Object[] getChildren( final Object parentElement )
   {
     if( parentElement instanceof IStatus )
     {
-      IStatus status = (IStatus) parentElement;
+      final IStatus status = (IStatus) parentElement;
       if( !status.isMultiStatus() )
         return null;
 
@@ -94,14 +94,14 @@ public class StatusContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
    */
   @Override
-  public Object getParent( Object element )
+  public Object getParent( final Object element )
   {
     if( m_input == null || m_parents == null )
       return null;
 
     if( element instanceof IStatus )
     {
-      IStatus status = (IStatus) element;
+      final IStatus status = (IStatus) element;
 
       return m_parents.get( status );
     }
@@ -113,7 +113,7 @@ public class StatusContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
   @Override
-  public boolean hasChildren( Object element )
+  public boolean hasChildren( final Object element )
   {
     if( element instanceof IStatus )
       return ((IStatus) element).isMultiStatus();
@@ -125,11 +125,11 @@ public class StatusContentProvider implements ITreeContentProvider
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
   @Override
-  public Object[] getElements( Object inputElement )
+  public Object[] getElements( final Object inputElement )
   {
     if( inputElement instanceof IStatus )
     {
-      IStatus status = (IStatus) inputElement;
+      final IStatus status = (IStatus) inputElement;
       if( !status.isMultiStatus() )
         return null;
 
@@ -154,7 +154,7 @@ public class StatusContentProvider implements ITreeContentProvider
    *      java.lang.Object)
    */
   @Override
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     /* Reset the old input. */
     m_input = null;
@@ -181,7 +181,7 @@ public class StatusContentProvider implements ITreeContentProvider
       return null;
 
     /* Create the parents hash map. */
-    WeakHashMap<IStatus, IStatus> parents = new WeakHashMap<IStatus, IStatus>();
+    final WeakHashMap<IStatus, IStatus> parents = new WeakHashMap<IStatus, IStatus>();
 
     /* If it is only a single status, no parents exist. */
     if( !m_input.isMultiStatus() )
@@ -200,14 +200,11 @@ public class StatusContentProvider implements ITreeContentProvider
    * @param parentNode
    *          The parent node.
    */
-  private void addChildren( WeakHashMap<IStatus, IStatus> parents, IStatus parentNode )
+  private void addChildren( final WeakHashMap<IStatus, IStatus> parents, final IStatus parentNode )
   {
-    IStatus[] children = parentNode.getChildren();
-    for( int i = 0; i < children.length; i++ )
+    final IStatus[] children = parentNode.getChildren();
+    for( final IStatus childNode : children )
     {
-      /* Get the status. */
-      IStatus childNode = children[i];
-
       /* Add this status and its parent. */
       parents.put( childNode, parentNode );
 

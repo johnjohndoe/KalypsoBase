@@ -80,7 +80,7 @@ public interface IComponent extends Comparator<Object>
 
   IPhenomenon getPhenomenon( );
 
-  /** 
+  /**
    * @return a precision to compare numeric values
    */
   Double getPrecision( );

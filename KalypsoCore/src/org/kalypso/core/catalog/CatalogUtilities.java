@@ -68,7 +68,7 @@ public class CatalogUtilities
   public static String getPathForCatalog( final String catalogURN )
   {
     if( !catalogURN.endsWith( ":" ) ) //$NON-NLS-1$
-      throw new UnsupportedOperationException( Messages.getString("org.kalypso.core.catalog.CatalogUtilities.5") + catalogURN ); //$NON-NLS-1$
+      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.core.catalog.CatalogUtilities.5" ) + catalogURN ); //$NON-NLS-1$
     if( catalogURN.equals( ":" ) ) //$NON-NLS-1$
       return CATALOG_FILE_NAME;
     final String path = catalogURN.replace( ':', File.separator.charAt( 0 ) );
@@ -83,7 +83,7 @@ public class CatalogUtilities
   public static String createCatalogURN( final String baseURN )
   {
     if( !baseURN.endsWith( ":" ) ) //$NON-NLS-1$
-      throw new UnsupportedOperationException( Messages.getString("org.kalypso.core.catalog.CatalogUtilities.8") + baseURN ); //$NON-NLS-1$
+      throw new UnsupportedOperationException( Messages.getString( "org.kalypso.core.catalog.CatalogUtilities.8" ) + baseURN ); //$NON-NLS-1$
     // replace last ':' with catalog suffix, that is the contract
     return baseURN.substring( 0, baseURN.length() - 1 ) + CATALOG_URN;
   }
@@ -94,7 +94,7 @@ public class CatalogUtilities
    * 
    * @return part of urn
    */
-  public static String getUrnSection( final String urn, int level )
+  public static String getUrnSection( final String urn, final int level )
   {
     if( level == 0 )
       return ":"; //$NON-NLS-1$
@@ -103,7 +103,7 @@ public class CatalogUtilities
       final String[] urnParts = urn.split( ":" ); //$NON-NLS-1$
       return urnParts[level - 1];
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return null;
     }

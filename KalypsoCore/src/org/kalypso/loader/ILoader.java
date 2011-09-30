@@ -62,7 +62,7 @@ public interface ILoader
    * Load an object from somewhere
    * 
    * @param monitor
-   *            monitors the progress of loading
+   *          monitors the progress of loading
    * @return object
    * @throws LoaderException
    */

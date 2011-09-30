@@ -60,14 +60,14 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
   private final List<Object> m_values = new ArrayList<Object>();
 
   private List<IComponent> m_components = new ArrayList<IComponent>();
-  
+
   private TupleResult m_owner;
 
   Record( final TupleResult result, final IComponent[] components )
   {
     m_owner = result;
     m_components = Arrays.asList( components );
-    
+
     for( final IComponent component : components )
       m_values.add( component.getDefaultValue() );
   }
@@ -181,7 +181,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
     final Record record = new Record( result, components );
     for( int i = 0; i < components.length; i++ )
-      record.setValue( i, getValue( i ),true );
+      record.setValue( i, getValue( i ), true );
 
     return record;
   }
@@ -202,17 +202,17 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     }
   }
 
-  void setOwner( final TupleResult owner, List<IComponent> components )
+  void setOwner( final TupleResult owner, final List<IComponent> components )
   {
     m_owner = owner;
     m_components = components;
   }
-  
+
   /**
    * @see org.kalypso.observation.result.IRecord#indexOfComponent(java.lang.String)
    */
   @Override
-  public int indexOfComponent( String componentID )
+  public int indexOfComponent( final String componentID )
   {
     for( int i = 0; i < m_components.size(); i++ )
     {

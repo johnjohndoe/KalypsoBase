@@ -80,7 +80,6 @@ public class PoolFeaturesProvider extends AbstractFeaturesProvider implements IL
 
   private IFeaturesProvider m_delegate = null;
 
-
   public PoolFeaturesProvider( final IPoolableObjectType poolKey, final String featurePath )
   {
     m_workspaceProvider = new PoolGmlWorkspaceProvider( poolKey );

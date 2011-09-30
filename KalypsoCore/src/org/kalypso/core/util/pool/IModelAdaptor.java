@@ -46,7 +46,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * TODO: please comment
- *
+ * 
  * @author kurzbach
  */
 public interface IModelAdaptor

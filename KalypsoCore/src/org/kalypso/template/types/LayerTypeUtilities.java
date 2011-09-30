@@ -68,7 +68,6 @@ public final class LayerTypeUtilities
 
   private static final String EXT_GML = "gml"; //$NON-NLS-1$
 
-
   private LayerTypeUtilities( )
   {
   }

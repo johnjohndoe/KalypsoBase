@@ -54,7 +54,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 
 /**
  * Helper class to read and cache
- *
+ * 
  * @author Stefan Kurzbach
  */
 public class ModelAdapterExtension

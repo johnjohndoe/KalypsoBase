@@ -78,22 +78,22 @@ public final class KeyComparator implements Comparator<IPoolableObjectType>
     return source1.compareTo( source2 );
   }
 
-  private String resolveUri( final IPoolableObjectType key ) 
+  private String resolveUri( final IPoolableObjectType key )
   {
     final String location = key.getLocation();
     final URL context = key.getContext();
     try
     {
-      if( location.startsWith( "urn:" )) //$NON-NLS-1$
+      if( location.startsWith( "urn:" ) ) //$NON-NLS-1$
         return location;
-      
+
       final URL sourceURL = m_urlResolver.resolveURL( context, location );
       return sourceURL.toExternalForm();
     }
-    catch( final  MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      
+
       return context.toExternalForm() + "#" + location; //$NON-NLS-1$
     }
   }

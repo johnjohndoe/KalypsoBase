@@ -77,7 +77,7 @@ public class Source
 
   public final void setProperty( final String prop )
   {
-    this.m_property = prop;
+    m_property = prop;
   }
 
   public final Date getFrom( )
@@ -107,7 +107,7 @@ public class Source
 
   public final void setFilter( final String filt )
   {
-    this.m_filter = filt;
+    m_filter = filt;
   }
 
   public final DateRange getDateRange( )

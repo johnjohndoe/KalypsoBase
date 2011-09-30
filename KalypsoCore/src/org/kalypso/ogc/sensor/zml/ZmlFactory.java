@@ -572,7 +572,7 @@ public final class ZmlFactory
       // sort axes, this is not needed from a XML view, but very useful when comparing marshaled files (e.g.
       // JUnit-Test)
       final TreeSet<IAxis> sortedAxis = new TreeSet<IAxis>( new Comparator<IAxis>()
-          {
+      {
         @Override
         public int compare( final IAxis a1, final IAxis a2 )
         {
@@ -594,7 +594,7 @@ public final class ZmlFactory
           }
           return type1.compareTo( type2 );
         }
-          } );
+      } );
 
       for( final IAxis axis : obs.getAxes() )
       {

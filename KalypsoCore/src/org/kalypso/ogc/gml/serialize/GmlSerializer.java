@@ -159,8 +159,9 @@ public final class GmlSerializer
   /**
    * REMARK: This method closes the given writer, which is VERY bad. Every caller should close the write on its own
    * 
-   * @deprecated Because this method closes it writer. Change to {@link #serializeWorkspace(Writer, GMLWorkspace,
-   *             String, false)}, rewrite your code, then we can get rid of this method and the flag.
+   * @deprecated Because this method closes it writer. Change to
+   *             {@link #serializeWorkspace(Writer, GMLWorkspace, String, false)}, rewrite your code, then we can get
+   *             rid of this method and the flag.
    */
   @Deprecated
   public static void serializeWorkspace( final Writer writer, final GMLWorkspace gmlWorkspace, final String charsetEncoding ) throws GmlSerializeException
@@ -226,6 +227,7 @@ public final class GmlSerializer
 
   /**
    * Same as {@link #createGMLWorkspace(URL, IFeatureProviderFactory, null )
+
    */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IFeatureProviderFactory factory ) throws Exception
   {
@@ -241,7 +243,8 @@ public final class GmlSerializer
   }
 
   /**
-   * @param context If set, this context is used instead of the gmlUrl where the workspace is loaded from.
+   * @param context
+   *          If set, this context is used instead of the gmlUrl where the workspace is loaded from.
    */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final URL context, final IFeatureProviderFactory factory, final IProgressMonitor monitor ) throws Exception
   {

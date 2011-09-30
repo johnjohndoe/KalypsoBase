@@ -47,7 +47,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Dieser Source-Handler holt den Workspace über eine ID aus der externen-data-map.
- *
+ * 
  * @author belger
  */
 public class RegisterSourceHandler implements ISourceHandler
