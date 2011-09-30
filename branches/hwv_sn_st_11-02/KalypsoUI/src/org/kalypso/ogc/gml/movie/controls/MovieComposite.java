@@ -52,10 +52,7 @@ import java.awt.image.Raster;
 import java.awt.image.RenderedImage;
 import java.awt.image.WritableRaster;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -69,7 +66,6 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -82,7 +78,6 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
-import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.ogc.gml.movie.IMovieControls;
 import org.kalypso.ogc.gml.movie.IMovieImageProvider;
 import org.kalypso.ogc.gml.movie.utils.IMovieFrame;
@@ -166,6 +161,9 @@ public class MovieComposite extends Composite
     ControlUtils.addDisposeListener( this );
   }
 
+  /**
+   * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
+   */
   @Override
   public void setLayout( final Layout layout )
   {
@@ -197,22 +195,82 @@ public class MovieComposite extends Composite
    */
   private void createControls( )
   {
-    super.setLayout( new FillLayout() );
+    /* Create the layout. */
+    final GridLayout layout = new GridLayout( 1, false );
+    layout.marginHeight = 0;
+    layout.marginWidth = 0;
+    super.setLayout( layout );
+
+    /* The content. */
+    final Composite content = new Composite( this, SWT.NONE );
+    final GridLayout contentLayout = new GridLayout( 1, false );
+    contentLayout.marginHeight = 0;
+    contentLayout.marginWidth = 0;
+    content.setLayout( contentLayout );
+    content.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* A form. */
-    m_form = new Form( this, SWT.NONE );
+    m_form = new Form( content, SWT.NONE );
+    m_form.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Get the body of the form. */
-    m_content = m_form.getBody();
+    final Composite body = m_form.getBody();
 
     /* Set the properties for the body of the form. */
-    GridLayoutFactory.fillDefaults().applyTo( m_content );
+    final GridLayout bodyLayout = new GridLayout( 1, false );
+    bodyLayout.marginHeight = 0;
+    bodyLayout.marginWidth = 0;
+    body.setLayout( bodyLayout );
 
     /* Create the content. */
-    createScreenControls( m_content );
+    m_content = createContentComposite( body );
+    m_content.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Do a reflow. */
     m_form.layout( true, true );
+  }
+
+  /**
+   * This function creates the content composite.
+   * 
+   * @param parent
+   *          The parent composite.
+   * @return The content composite.
+   */
+  private Composite createContentComposite( final Composite parent )
+  {
+    /* Create a composite. */
+    final Composite contentComposite = new Composite( parent, SWT.NONE );
+    final GridLayout contentLayout = new GridLayout( 1, false );
+    contentLayout.marginHeight = 0;
+    contentLayout.marginWidth = 0;
+    contentComposite.setLayout( contentLayout );
+
+    /* Create the content internal composite. */
+    final Composite contentInternalComposite = createContentInternalComposite( contentComposite );
+    contentInternalComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    return contentComposite;
+  }
+
+  /**
+   * This function creates the content internal composite.
+   * 
+   * @param parent
+   *          The parent composite.
+   * @return The content internal composite.
+   */
+  private Composite createContentInternalComposite( final Composite parent )
+  {
+    /* Create a composite. */
+    final Composite contentInternalComposite = new Composite( parent, SWT.NONE );
+    contentInternalComposite.setLayout( new GridLayout( 2, false ) );
+
+    /* Create the default screen. */
+    final Composite screenComposite = createScreenControls( contentInternalComposite );
+    screenComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
+    return contentInternalComposite;
   }
 
   /**
@@ -224,9 +282,16 @@ public class MovieComposite extends Composite
    */
   private Composite createScreenControls( final Composite parent )
   {
+    /* Create a composite. */
+    final Composite composite = new Composite( parent, SWT.NONE );
+    final GridLayout layout = new GridLayout( 3, false );
+    layout.marginHeight = 0;
+    layout.marginWidth = 0;
+    composite.setLayout( layout );
+
     /* Create the image composite. */
-    final Composite imageComposite = new Composite( parent, SWT.EMBEDDED | SWT.NO_BACKGROUND );
-    final GridData imageData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    final Composite imageComposite = new Composite( composite, SWT.EMBEDDED | SWT.NO_BACKGROUND );
+    final GridData imageData = new GridData( SWT.FILL, SWT.FILL, true, true, 3, 1 );
     imageData.widthHint = m_resolution.getWidth();
     imageData.heightHint = m_resolution.getHeight();
     imageComposite.setLayoutData( imageData );
@@ -237,25 +302,20 @@ public class MovieComposite extends Composite
     m_displayJAI = new DisplayJAI( createEmptyImage( m_resolution.getWidth(), m_resolution.getHeight() ) );
     virtualFrame.add( m_displayJAI, new GridBagConstraints( 0, 0, 1, 1, 100, 100, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets( 0, 0, 0, 0 ), 0, 0 ) );
 
-    /* Lower panel */
-    final Composite lowerPanel = new Composite( parent, SWT.NONE );
-    lowerPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    GridLayoutFactory.swtDefaults().numColumns( 3 ).applyTo( lowerPanel );
-
     /* Create a progress bar. */
-    m_progressBar = new ProgressBar( lowerPanel, SWT.NONE );
+    m_progressBar = new ProgressBar( composite, SWT.NONE );
     m_progressBar.setMinimum( 0 );
     m_progressBar.setMaximum( m_player.getEndStep() );
     m_progressBar.setSelection( m_player.getCurrentStep() );
     m_progressBar.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false, 3, 1 ) );
 
     /* Create the progress label. */
-    m_progressLabel = new Label( lowerPanel, SWT.NONE );
+    m_progressLabel = new Label( composite, SWT.NONE );
     m_progressLabel.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false ) );
     m_progressLabel.setText( "" );
 
     /* Create a combo box. */
-    final ComboViewer resolutionViewer = new ComboViewer( lowerPanel, SWT.READ_ONLY );
+    final ComboViewer resolutionViewer = new ComboViewer( composite, SWT.READ_ONLY );
     resolutionViewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.TOP, false, false ) );
     resolutionViewer.setContentProvider( new ArrayContentProvider() );
     resolutionViewer.setLabelProvider( new ResolutionLabelProvider() );
@@ -264,6 +324,9 @@ public class MovieComposite extends Composite
     resolutionViewer.setSelection( new StructuredSelection( input[1] ) );
     resolutionViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
+      /**
+       * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+       */
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
@@ -284,7 +347,7 @@ public class MovieComposite extends Composite
     } );
 
     /* Create a spinner. */
-    final Spinner spinner = new Spinner( lowerPanel, SWT.BORDER );
+    final Spinner spinner = new Spinner( composite, SWT.BORDER );
     spinner.setLayoutData( new GridData( SWT.FILL, SWT.TOP, false, false ) );
     spinner.setMinimum( 100 );
     spinner.setIncrement( 50 );
@@ -309,7 +372,7 @@ public class MovieComposite extends Composite
       }
     } );
 
-    return parent;
+    return composite;
   }
 
   /**
@@ -480,38 +543,16 @@ public class MovieComposite extends Composite
    */
   public void updateControls( )
   {
+    updateImageCanvas( m_resolution.getWidth(), m_resolution.getHeight() );
+
     final Display display = getDisplay();
     display.asyncExec( new Runnable()
     {
-      /**
-       * @see java.lang.Runnable#run()
-       */
       @Override
       public void run( )
       {
-        updateImageCanvas( m_resolution.getWidth(), m_resolution.getHeight() );
         updateProgressBar();
-        updateStatus( null );
       }
     } );
-  }
-
-  /**
-   * This function updates the status.
-   * 
-   * @param status
-   *          A status, containing a message, which should be displayed in the upper area of the view. May be null.
-   */
-  public void updateStatus( final IStatus status )
-  {
-    if( m_form == null || m_form.isDisposed() || m_content == null || m_content.isDisposed() )
-      return;
-
-    if( status != null && !status.isOK() )
-      m_form.setMessage( status.getMessage(), MessageUtilitites.convertStatusSeverity( status.getSeverity() ) );
-    else
-      m_form.setMessage( null, IMessageProvider.NONE );
-
-    m_form.layout( true, true );
   }
 }

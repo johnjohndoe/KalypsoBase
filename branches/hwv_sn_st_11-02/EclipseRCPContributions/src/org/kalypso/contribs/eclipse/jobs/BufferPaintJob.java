@@ -91,6 +91,17 @@ public class BufferPaintJob extends Job
   }
 
   /**
+   * Needed because we use {@link java.lang.ref.SoftReference}'s.
+   * 
+   * @see java.lang.Object#finalize()
+   */
+  @Override
+  protected void finalize( ) throws Throwable
+  {
+    dispose();
+  }
+
+  /**
    * Cancels the job and releases the buffered image.
    */
   public void dispose( )

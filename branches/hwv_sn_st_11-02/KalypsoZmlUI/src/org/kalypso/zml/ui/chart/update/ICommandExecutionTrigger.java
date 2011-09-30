@@ -46,7 +46,7 @@ import org.eclipse.ui.services.IEvaluationService;
 /**
  * @author Dirk Kuch
  */
-public interface ICommandExecutorTrigger
+public interface ICommandExecutionTrigger
 {
   IEvaluationService getEvaluatonService( );
 

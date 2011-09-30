@@ -112,7 +112,7 @@ public class LegendExporter
         insets = new Insets( 5, 5, 5, 5 );
 
       /* Create the legend image. */
-      image = exportLegends( null, nodes, device, insets, null, sizeWidth, sizeHeight, onlyVisible, progress.newChild( 50 ) );
+      image = exportLegends( null, nodes, device, insets, null, sizeWidth, sizeHeight, onlyVisible, -1, progress.newChild( 50 ) );
 
       /* Monitor. */
       ProgressUtilities.worked( progress, 50 );
@@ -163,21 +163,27 @@ public class LegendExporter
    *          If one of sizeWidth or sizeHeight is <=0 the width and height of the image is determined automatically.
    * @param onlyVisible
    *          True, if only visible theme nodes should be asked.
+   * @param fontSize
+   *          The font size. If <=0, the font size will be 10.
    * @param monitor
    *          A progress monitor.
    * @return The newly created image, must be disposed by the caller.
    */
-  public Image exportLegends( String[] whiteList, IThemeNode[] nodes, Device device, Insets insets, RGB backgroundRGB, int sizeWidth, int sizeHeight, boolean onlyVisible, IProgressMonitor monitor ) throws CoreException
+  public Image exportLegends( String[] whiteList, IThemeNode[] nodes, Device device, Insets insets, RGB backgroundRGB, int sizeWidth, int sizeHeight, boolean onlyVisible, int fontSize, IProgressMonitor monitor ) throws CoreException
   {
     /* Set default insets, if none are given. */
     if( insets == null )
       insets = new Insets( 5, 5, 5, 5 );
 
+    /* Set the default size, if none is given. */
+    if( fontSize <= 0 )
+      fontSize = 10;
+
     /* Monitor. */
     SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.ogc.gml.map.utilities.MapUtilities.0" ), nodes.length * 100 + 100 ); //$NON-NLS-1$
 
     /* This font will be used to generate the legend. */
-    Font font = new Font( device, JFaceResources.DIALOG_FONT, 10, SWT.NORMAL );
+    Font font = new Font( device, JFaceResources.DIALOG_FONT, fontSize, SWT.NORMAL );
 
     /* Memory for the legends. */
     List<Image> legends = new ArrayList<Image>();

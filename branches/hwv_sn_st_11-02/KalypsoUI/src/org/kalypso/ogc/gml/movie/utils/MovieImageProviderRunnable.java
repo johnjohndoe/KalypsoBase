@@ -42,9 +42,7 @@ package org.kalypso.ogc.gml.movie.utils;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.movie.IMovieImageProvider;
@@ -61,12 +59,12 @@ public class MovieImageProviderRunnable implements ICoreRunnableWithProgress
   /**
    * The gis template map model.
    */
-  private GisTemplateMapModell m_mapModel;
+  private final GisTemplateMapModell m_mapModel;
 
   /**
    * The bounding box.
    */
-  private GM_Envelope m_envelope;
+  private final GM_Envelope m_envelope;
 
   /**
    * The movie image provider.
@@ -81,7 +79,7 @@ public class MovieImageProviderRunnable implements ICoreRunnableWithProgress
    * @param boundingBox
    *          The bounding box.
    */
-  public MovieImageProviderRunnable( GisTemplateMapModell mapModel, GM_Envelope envelope )
+  public MovieImageProviderRunnable( final GisTemplateMapModell mapModel, final GM_Envelope envelope )
   {
     m_mapModel = mapModel;
     m_envelope = envelope;
@@ -92,36 +90,23 @@ public class MovieImageProviderRunnable implements ICoreRunnableWithProgress
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus execute( IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor )
   {
-    /* Monitor. */
-    if( monitor == null )
-      monitor = new NullProgressMonitor();
-
     try
     {
-      /* Monitor. */
-      monitor.beginTask( "Initialisiere den Film...", 1000 );
-      monitor.subTask( "Initialisiere den Film..." );
-
       /* Create the image provider. */
-      m_imageProvider = MovieUtilities.getImageProvider( m_mapModel, m_envelope, new SubProgressMonitor( monitor, 1000 ) );
+      m_imageProvider = MovieUtilities.getImageProvider( m_mapModel, m_envelope, monitor );
 
       return new Status( IStatus.OK, KalypsoGisPlugin.getId(), "OK" );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex );
-    }
-    finally
-    {
-      /* Monitor. */
-      monitor.done();
     }
   }
 
   /**
-   * This function returns the initialized movie image provider or null, if an error has occured or this runnable was
+   * This function returns the initialised movie image provider or null, if an error has occured or this runnable was
    * never started once.
    * 
    * @return The movie image provider or null.

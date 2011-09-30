@@ -50,8 +50,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.movie.standard.DefaultMovieControls;
 import org.kalypso.ogc.gml.movie.utils.IMovieFrame;
@@ -106,7 +106,7 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
    *      org.kalypsodeegree.model.geometry.GM_Envelope, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public void initialize( GisTemplateMapModell mapModel, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
+  public void initialize( final GisTemplateMapModell mapModel, final GM_Envelope boundingBox, final IProgressMonitor monitor ) throws Exception
   {
     /* Create a temporary directory. */
     m_tmpDirectory = FileUtilities.createNewTempDir( "mov" );
@@ -133,7 +133,7 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
    * @see org.kalypso.ogc.gml.movie.IMovieImageProvider#stepTo(int)
    */
   @Override
-  public void stepTo( int step )
+  public void stepTo( final int step )
   {
     if( step >= m_frames.length )
     {
@@ -154,13 +154,13 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
    * @see org.kalypso.ogc.gml.movie.IMovieImageProvider#stepAndWait(int, int, int)
    */
   @Override
-  public void stepAndWait( int step, int width, int height )
+  public void stepAndWait( final int step, final int width, final int height )
   {
     /* Step to step. */
     stepTo( step );
 
     /* Get the current frame. */
-    IMovieFrame currentFrame = getCurrentFrame();
+    final IMovieFrame currentFrame = getCurrentFrame();
     if( currentFrame == null )
       return;
 
@@ -195,88 +195,51 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
     if( m_tmpDirectory != null )
       FileUtilities.deleteQuietly( m_tmpDirectory );
 
-    if( m_frames != null )
-    {
-      for( IMovieFrame frame : m_frames )
-        frame.dispose();
-    }
-
     m_tmpDirectory = null;
     m_frames = null;
     m_currentFrame = -1;
   }
 
-  private IMovieFrame[] preProcess( GisTemplateMapModell mapModel, GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
+  private IMovieFrame[] preProcess( final GisTemplateMapModell mapModel, final GM_Envelope boundingBox, IProgressMonitor monitor ) throws Exception
   {
     /* Monitor. */
     if( monitor == null )
       monitor = new NullProgressMonitor();
 
     /* Memory for the results. */
-    List<IMovieFrame> results = new ArrayList<IMovieFrame>();
+    final List<IMovieFrame> results = new ArrayList<IMovieFrame>();
 
     try
     {
+      /* Clone the map model. */
+      final GisTemplateMapModell newMapModel = MovieUtilities.cloneMapModel( mapModel, boundingBox );
+
       /* Deactivate all themes. */
-      mapModel.activateTheme( null );
+      newMapModel.activateTheme( null );
 
       /* Find the movie theme. */
-      AbstractCascadingLayerTheme movieTheme = MovieUtilities.findMovieTheme( mapModel );
-
-      /* For each of these themes we need a map model to create a movie frame with it. */
-      movieTheme.setVisible( true );
-      IKalypsoTheme[] themes = movieTheme.getAllThemes();
-      for( IKalypsoTheme theme : themes )
-        theme.setVisible( false );
+      final IKalypsoLayerModell movieTheme = MovieUtilities.findMovieTheme( newMapModel );
+      final IKalypsoTheme[] themes = movieTheme.getAllThemes();
 
       /* Monitor. */
-      monitor.beginTask( "Bereite Kartenthemen vor...", 200 * themes.length );
+      monitor.beginTask( "Initialisiere den Film...", themes.length );
+      monitor.subTask( "Bereite Kartenthemen vor" );
 
-      /* Clone the map model. */
-      GisTemplateMapModell[] newMapModels = MovieUtilities.duplicateMapModel( mapModel, boundingBox, themes.length );
-
-      for( int i = 0; i < themes.length; i++ )
+      for( final IKalypsoTheme theme : themes )
       {
-        /* Monitor. */
-        monitor.subTask( "Bereite das Filmbild vor..." );
         if( monitor.isCanceled() )
           throw new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), "Der Film wurde abgebrochen..." ) );
 
-        /* Get the theme. */
-        IKalypsoTheme theme = themes[i];
-
-        /* Get the new map model. */
-        GisTemplateMapModell newMapModel = newMapModels[i];
-
-        /* Monitor. */
-        monitor.worked( 100 );
-        monitor.subTask( "Erzeuge das Filmbild..." );
-
-        /* Find the movie theme. */
-        AbstractCascadingLayerTheme newMovieTheme = MovieUtilities.findMovieTheme( newMapModel );
-        if( !newMovieTheme.getId().equals( movieTheme.getId() ) )
-          throw new Exception( "Zuordnung des Filmthemas ist fehlerhaft..." );
-
-        /* Deactivate all themes except the movie theme. */
-        IKalypsoTheme[] allThemes = newMovieTheme.getAllThemes();
-        for( IKalypsoTheme oneTheme : allThemes )
-        {
-          /* All themes should already be set invisible. */
-          if( oneTheme.getId().equals( theme.getId() ) )
-          {
-            oneTheme.setVisible( true );
-            break;
-          }
-        }
-
         /* Create the frame. */
-        IMovieFrame frame = new MovieFrame( newMapModel, theme.getLabel(), boundingBox, m_tmpDirectory );
+        final String label = theme.getLabel();
+        final String themeID = theme.getId();
+        final IMovieFrame frame = new MovieFrame( newMapModel, label, themeID, boundingBox, m_tmpDirectory );
 
         /* Add the frame. */
         results.add( frame );
 
         /* Monitor. */
-        monitor.worked( 100 );
+        monitor.worked( 1 );
       }
 
       return results.toArray( new IMovieFrame[] {} );

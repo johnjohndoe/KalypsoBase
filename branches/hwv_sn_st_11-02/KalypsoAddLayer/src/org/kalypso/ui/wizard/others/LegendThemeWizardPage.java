@@ -133,10 +133,10 @@ public class LegendThemeWizardPage extends WizardPage
     {
       /**
        * @see org.kalypso.util.themes.legend.listener.ILegendChangedListener#legendPropertyChanged(java.util.Properties,
-       *      int, int, org.eclipse.swt.graphics.Color, int, java.lang.String[])
+       *      int, int, org.eclipse.swt.graphics.Color, int, java.lang.String[], int)
        */
       @Override
-      public void legendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, String[] themeIds )
+      public void legendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, String[] themeIds, int fontSize )
       {
         /* Store the properties. */
         m_properties.clear();
@@ -147,6 +147,7 @@ public class LegendThemeWizardPage extends WizardPage
         String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
         String insetsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
         String themeIdsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
+        String fontSizeProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE );
 
         /* Set the properties. */
         m_properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
@@ -154,6 +155,7 @@ public class LegendThemeWizardPage extends WizardPage
         m_properties.put( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
         m_properties.put( LegendUtilities.THEME_PROPERTY_INSETS, insetsProperty );
         m_properties.put( LegendUtilities.THEME_PROPERTY_THEME_IDS, themeIdsProperty );
+        m_properties.put( LegendUtilities.THEME_PROPERTY_FONT_SIZE, fontSizeProperty );
       }
     } );
 
