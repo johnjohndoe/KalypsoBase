@@ -49,25 +49,29 @@ import ogc31.www.opengis.net.gml.AbstractRingPropertyType;
 import ogc31.www.opengis.net.gml.AbstractRingType;
 import ogc31.www.opengis.net.gml.AbstractSurfacePatchType;
 import ogc31.www.opengis.net.gml.AbstractSurfaceType;
+import ogc31.www.opengis.net.gml.Coord;
 import ogc31.www.opengis.net.gml.CoordType;
+import ogc31.www.opengis.net.gml.Coordinates;
 import ogc31.www.opengis.net.gml.CoordinatesType;
 import ogc31.www.opengis.net.gml.DirectPositionListType;
 import ogc31.www.opengis.net.gml.DirectPositionType;
 import ogc31.www.opengis.net.gml.EnvelopeType;
-import ogc31.www.opengis.net.gml.LineStringPropertyType;
+import ogc31.www.opengis.net.gml.LineStringMember;
 import ogc31.www.opengis.net.gml.LineStringType;
 import ogc31.www.opengis.net.gml.LinearRingType;
 import ogc31.www.opengis.net.gml.MultiLineStringType;
 import ogc31.www.opengis.net.gml.MultiPointType;
 import ogc31.www.opengis.net.gml.MultiPolygonType;
 import ogc31.www.opengis.net.gml.MultiSurfaceType;
-import ogc31.www.opengis.net.gml.PointArrayPropertyType;
-import ogc31.www.opengis.net.gml.PointPropertyType;
+import ogc31.www.opengis.net.gml.PointMember;
+import ogc31.www.opengis.net.gml.PointMembers;
 import ogc31.www.opengis.net.gml.PointType;
+import ogc31.www.opengis.net.gml.PolygonMember;
 import ogc31.www.opengis.net.gml.PolygonPatchType;
-import ogc31.www.opengis.net.gml.PolygonPropertyType;
 import ogc31.www.opengis.net.gml.PolygonType;
-import ogc31.www.opengis.net.gml.SurfaceArrayPropertyType;
+import ogc31.www.opengis.net.gml.Pos;
+import ogc31.www.opengis.net.gml.PosList;
+import ogc31.www.opengis.net.gml.SurfaceMembers;
 import ogc31.www.opengis.net.gml.SurfacePatchArrayPropertyType;
 import ogc31.www.opengis.net.gml.SurfaceType;
 
@@ -102,24 +106,24 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
 
   private GM_Envelope createGM_Envelope( final EnvelopeType bindingEnvelope )
   {
-    final List<CoordType> coord = bindingEnvelope.getCoord();
+    final List<Coord> coord = bindingEnvelope.getCoord();
     final String bindingSrsName = bindingEnvelope.getSrsName();
     // REMARK: backwards compablity: use kalypso-srs if no srs was found
     final String srsName = bindingSrsName == null ? KalypsoDeegreePlugin.getDefault().getCoordinateSystem() : bindingSrsName;
 
     if( coord != null && !coord.isEmpty() )
     {
-      final CoordType min = coord.get( 0 );
-      final CoordType max = coord.get( 1 );
+      final CoordType min = coord.get( 0 ).getValue();
+      final CoordType max = coord.get( 1 ).getValue();
       final GM_Position minPos = createGM_Position( min );
       final GM_Position maxPos = createGM_Position( max );
       return GeometryFactory.createGM_Envelope( minPos, maxPos, srsName );
     }
-    final CoordinatesType coordinates = bindingEnvelope.getCoordinates();
+    final Coordinates coordinates = bindingEnvelope.getCoordinates();
     if( coordinates != null )
     {
 
-      final GM_Position[] positions = createGM_Positions( coordinates );
+      final GM_Position[] positions = createGM_Positions( coordinates.getValue() );
       return GeometryFactory.createGM_Envelope( positions[0], positions[1], srsName );
     }
 
@@ -136,11 +140,11 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
       return GeometryFactory.createGM_Envelope( minPos, maxPos, srsName );
     }
 
-    final List<DirectPositionType> pos = bindingEnvelope.getPos();
+    final List<Pos> pos = bindingEnvelope.getPos();
     if( pos != null && !pos.isEmpty() )
     {
-      final List<Double> min = pos.get( 0 ).getValue();
-      final List<Double> max = pos.get( 1 ).getValue();
+      final List<Double> min = pos.get( 0 ).getValue().getValue();
+      final List<Double> max = pos.get( 1 ).getValue().getValue();
       final GM_Position minPos = GeometryFactory.createGM_Position( min.get( 0 ), min.get( 1 ) );
       final GM_Position maxPos = GeometryFactory.createGM_Position( max.get( 0 ), max.get( 1 ) );
       return GeometryFactory.createGM_Envelope( minPos, maxPos, srsName );
@@ -156,16 +160,16 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     int size = 0;
 
     // pointMember
-    final List<PointPropertyType> pointMember = type.getPointMember();
+    final List<PointMember> pointMember = type.getPointMember();
     if( pointMember != null )
       size += pointMember.size();
 
     // pointMembers
     List<PointType> pointList = null;
-    final PointArrayPropertyType pointMembers = type.getPointMembers();
+    final PointMembers pointMembers = type.getPointMembers();
     if( pointMembers != null )
     {
-      pointList = pointMembers.getPoint();
+      pointList = pointMembers.getValue().getPoint();
       if( pointList != null )
         size += pointList.size();
     }
@@ -173,11 +177,11 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     final GM_Point[] resultPoints = new GM_Point[size];
 
     // pointMember
-    final Iterator<PointPropertyType> iterator = pointMember.iterator();
+    final Iterator<PointMember> iterator = pointMember.iterator();
     while( iterator.hasNext() )
     {
-      final PointPropertyType pointPropType = iterator.next();
-      final PointType pointType = pointPropType.getPoint();
+      final PointMember pointPropType = iterator.next();
+      final PointType pointType = pointPropType.getValue().getPoint();
       resultPoints[i] = createGM_Point( pointType, co );
       i++;
     }
@@ -199,14 +203,14 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
   private GM_MultiCurve createGM_MultiLineString( final MultiLineStringType type, final String cs ) throws GM_Exception
   {
     final String co = getCS_CoordinateSystem( cs, type );
-    final List<LineStringPropertyType> lineStringMember = type.getLineStringMember();
+    final List<LineStringMember> lineStringMember = type.getLineStringMember();
     final GM_Curve[] curves = new GM_Curve[lineStringMember.size()];
-    final Iterator<LineStringPropertyType> iterator = lineStringMember.iterator();
+    final Iterator<LineStringMember> iterator = lineStringMember.iterator();
     int i = 0;
     while( iterator.hasNext() )
     {
-      final LineStringPropertyType lineStringPropType = iterator.next();
-      final LineStringType lineString = lineStringPropType.getLineString();
+      final LineStringMember lineStringPropType = iterator.next();
+      final LineStringType lineString = lineStringPropType.getValue().getLineString();
       curves[i] = createGM_LineString( lineString, co );
       i++;
     }
@@ -216,13 +220,13 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
   private GM_MultiSurface createGM_MultiSurface( final MultiPolygonType type, final String cs ) throws GM_Exception
   {
     final String co = getCS_CoordinateSystem( cs, type );
-    final List<PolygonPropertyType> polygonMember = type.getPolygonMember();
+    final List<PolygonMember> polygonMember = type.getPolygonMember();
 
     final GM_Surface< ? extends GM_SurfacePatch>[] surfaces = new GM_Surface< ? >[polygonMember.size()];
     int i = 0;
-    for( final PolygonPropertyType polygonPropertyType : polygonMember )
+    for( final PolygonMember polygonPropertyType : polygonMember )
     {
-      final PolygonType polyType = polygonPropertyType.getPolygon();
+      final PolygonType polyType = polygonPropertyType.getValue().getPolygon();
       surfaces[i] = createGM_Surface( polyType, co );
       i++;
     }
@@ -236,8 +240,8 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
 
     final List<GM_Surface< ? extends GM_SurfacePatch>> mySurfaces = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>();
 
-    final SurfaceArrayPropertyType surfaceArrayPropertType = type.getSurfaceMembers();
-    final List<JAXBElement< ? extends AbstractSurfaceType>> surfaces = surfaceArrayPropertType.getSurface();
+    final SurfaceMembers surfaceArrayPropertType = type.getSurfaceMembers();
+    final List<JAXBElement< ? extends AbstractSurfaceType>> surfaces = surfaceArrayPropertType.getValue().getSurface();
 
     for( final JAXBElement< ? extends AbstractSurfaceType> surface : surfaces )
     {
@@ -249,7 +253,7 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
   }
 
   private GM_Surface< ? extends GM_SurfacePatch> createGM_Surface( final PolygonType type, final String cs ) throws GM_Exception
-      {
+  {
     final String co = getCS_CoordinateSystem( cs, type );
     final AbstractRingPropertyType ringType = type.getExterior().getValue();
 
@@ -259,10 +263,10 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
     final List<JAXBElement<AbstractRingPropertyType>> interior = type.getInterior();
 
     return createSurface( abstractLinearRing, interior, co );
-      }
+  }
 
   private GM_Surface< ? extends GM_SurfacePatch> createGM_Surface( final SurfaceType type, final String cs ) throws GM_Exception
-      {
+  {
     final String co = getCS_CoordinateSystem( cs, type );
 
     final SurfacePatchArrayPropertyType surfacePatchArrayPropertyType = type.getPatches().getValue();
@@ -291,10 +295,10 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
 
     throw new UnsupportedOperationException();
 // return GeometryFactory.createGM_Surface( exteriorRing, interiorRings, null, co );
-      }
+  }
 
   private GM_Surface< ? extends GM_SurfacePatch> createSurface( final AbstractRingType abstractLinearRing, final List<JAXBElement<AbstractRingPropertyType>> interior, final String co ) throws GM_Exception
-      {
+  {
     final GM_Position[] exteriorRing = createGM_Positions( abstractLinearRing );
 
     final List<GM_Position[]> interiorList = new ArrayList<GM_Position[]>();
@@ -308,23 +312,23 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
 
     final GM_Position[][] interiorRings = interiorList.toArray( new GM_Position[interiorList.size()][] );
     return GeometryFactory.createGM_Surface( exteriorRing, interiorRings, co );
-      }
+  }
 
   private GM_Position[] createGM_Positions( final AbstractRingType abstractRingType )
   {
     if( abstractRingType instanceof LinearRingType )
     {
       final LinearRingType linearRingType = (LinearRingType) abstractRingType;
-      final CoordinatesType coordinates = linearRingType.getCoordinates();
+      final Coordinates coordinates = linearRingType.getCoordinates();
       if( coordinates != null )
-        return createGM_Positions( coordinates );
+        return createGM_Positions( coordinates.getValue() );
 
       final List<JAXBElement< ? >> posList = linearRingType.getPosOrPointPropertyOrPointRep();
       if( posList != null )
       {
-        final DirectPositionListType directPositionListType = linearRingType.getPosList();
+        final PosList directPositionListType = linearRingType.getPosList();
         if( posList.size() == 0 && directPositionListType != null )
-          return createGM_Positions( directPositionListType );
+          return createGM_Positions( directPositionListType.getValue() );
 
         return createGM_Positions( posList );
       }
@@ -344,9 +348,9 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
 
   private GM_Position[] create_GM_Positions( final LineStringType lineString )
   {
-    final CoordinatesType coordinates = lineString.getCoordinates();
+    final Coordinates coordinates = lineString.getCoordinates();
     if( coordinates != null )
-      return createGM_Positions( coordinates );
+      return createGM_Positions( coordinates.getValue() );
 
     final List<JAXBElement< ? >> posList = lineString.getPosOrPointPropertyOrPointRep();
     if( posList != null )
@@ -358,24 +362,24 @@ public class AdapterBindingToValue_GML31 implements AdapterBindingToValue
   private GM_Point createGM_Point( final PointType type, final String cs )
   {
     final String co = getCS_CoordinateSystem( cs, type );
-    final CoordType coord = type.getCoord();
+    final Coord coord = type.getCoord();
     if( coord != null )
     {
-      final GM_Position position = createGM_Position( coord );
+      final GM_Position position = createGM_Position( coord.getValue() );
       return GeometryFactory.createGM_Point( position, co );
     }
 
-    final DirectPositionType pos = type.getPos();
+    final Pos pos = type.getPos();
 
     final GM_Position position;
     if( pos != null )
-      position = createGM_Position( pos );
+      position = createGM_Position( pos.getValue() );
     else
     {
-      final CoordinatesType coordinates = type.getCoordinates();
+      final Coordinates coordinates = type.getCoordinates();
       if( coordinates == null )
         throw new UnsupportedOperationException( "Either pos or coordinates must be set." );
-      final GM_Position[] positions = createGM_Positions( coordinates );
+      final GM_Position[] positions = createGM_Positions( coordinates.getValue() );
       position = positions[0];
     }
 

@@ -47,4 +47,4 @@ Export-Package: org.kalypso.model.wspm.ui,
  org.kalypso.model.wspm.ui.view.map,
  org.kalypso.model.wspm.ui.view.table,
  org.kalypso.model.wspm.ui.view.table.handler
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

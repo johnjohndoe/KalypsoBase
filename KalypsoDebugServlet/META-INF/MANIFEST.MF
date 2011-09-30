@@ -10,4 +10,4 @@ Bundle-ActivationPolicy: lazy
 Import-Package: javax.servlet,
  javax.servlet.http
 Bundle-Activator: org.kalypso.debug.servlet.Activator
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

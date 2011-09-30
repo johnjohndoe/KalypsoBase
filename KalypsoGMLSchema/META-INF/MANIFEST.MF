@@ -43,4 +43,4 @@ Export-Package: org.kalypso.gmlschema,
  org.shiftone.cache.util.reaper
 Bundle-Activator: org.kalypso.gmlschema.KalypsoGMLSchemaPlugin
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

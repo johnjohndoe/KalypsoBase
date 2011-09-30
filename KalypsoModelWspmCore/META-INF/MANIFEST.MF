@@ -40,5 +40,5 @@ Require-Bundle: org.eclipse.ui.ide,
  org.junit;resolution:=optional,
  org.kalypso.core
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 

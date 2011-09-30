@@ -438,4 +438,4 @@ Require-Bundle: org.junit4;resolution:=optional,
  org.kalypso.contribs.java;visibility:=reexport,
  org.kalypso.deegree2;visibility:=reexport
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

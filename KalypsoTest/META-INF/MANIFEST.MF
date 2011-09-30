@@ -14,5 +14,5 @@ Require-Bundle: org.junit4;resolution:=optional,
  org.kalypso.simulation.core,
  org.kalypso.ui,
  org.kalypso.contribs.ogc31
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.kalypso.test.util

@@ -21,4 +21,4 @@ Export-Package: org.kalypso.simulation.core,
  org.kalypso.simulation.core.refactoring.local,
  org.kalypso.simulation.core.simspec,
  org.kalypso.simulation.core.util
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

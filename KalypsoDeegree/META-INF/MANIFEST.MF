@@ -116,4 +116,4 @@ Export-Package: org.kalypso.deegree.binding.gml,
  org.kalypsodeegree_impl.tools,
  org.kalypsodeegree_impl.tools.refinement,
  org.openjump.core.graph.delauneySimplexInsert
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

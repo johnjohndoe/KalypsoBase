@@ -12,7 +12,7 @@ Require-Bundle: org.junit4;bundle-version="4.3.1";resolution:=optional,
  org.kalypso.module;visibility:=reexport,
  org.kalypso.afgui;bundle-version="11.6.1"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.kalypso.project.database.client,
  org.kalypso.project.database.client.core,
  org.kalypso.project.database.client.core.model,
