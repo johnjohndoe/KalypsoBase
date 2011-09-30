@@ -48,9 +48,9 @@ import org.kalypso.contribs.java.net.UrlResolver;
 
 public final class KeyComparator implements Comparator<IPoolableObjectType>
 {
-  private final static KeyComparator m_instance = new KeyComparator();
+  private static final KeyComparator m_instance = new KeyComparator();
 
-  public final static KeyComparator getInstance( )
+  public static KeyComparator getInstance( )
   {
     return m_instance;
   }

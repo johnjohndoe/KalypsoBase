@@ -59,7 +59,7 @@ import org.kalypso.core.KalypsoCorePlugin;
  */
 public class ModelAdapterExtension
 {
-  private final static String MODEL_ADAPTER_EXTENSION_POINT = "org.kalypso.ui.modelAdapter"; //$NON-NLS-1$
+  private static final String MODEL_ADAPTER_EXTENSION_POINT = "org.kalypso.ui.modelAdapter"; //$NON-NLS-1$
 
   private static final String ATTRIBUTE_ADAPTER_CLASS = "adapterClass"; //$NON-NLS-1$
 

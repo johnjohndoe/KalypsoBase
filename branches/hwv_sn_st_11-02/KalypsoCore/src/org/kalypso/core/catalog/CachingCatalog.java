@@ -66,7 +66,7 @@ public class CachingCatalog implements ICatalog
 
   private long m_failed = 0;
 
-  private final static class CacheKey
+  private static final class CacheKey
   {
     private final String m_publicID;
 

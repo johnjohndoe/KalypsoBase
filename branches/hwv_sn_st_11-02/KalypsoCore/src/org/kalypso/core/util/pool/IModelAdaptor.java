@@ -54,7 +54,7 @@ public interface IModelAdaptor
   /**
    * Adapt the workspace if needed.
    */
-  public GMLWorkspace adapt( final GMLWorkspace workspace, final IProgressMonitor monitor );
+  GMLWorkspace adapt( final GMLWorkspace workspace, final IProgressMonitor monitor );
 
-  public IStatus getResult( );
+  IStatus getResult( );
 }
