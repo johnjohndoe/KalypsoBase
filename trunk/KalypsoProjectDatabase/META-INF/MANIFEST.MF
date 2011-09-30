@@ -8,7 +8,7 @@ Bundle-Vendor: kalypsobase.sourceforge.net
 Require-Bundle: org.eclipse.equinox.http.registry,
  javax.servlet,
  org.kalypso.core;bundle-version="11.6.1"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.project.database;uses:="org.eclipse.core.runtime,org.osgi.framework",
  org.kalypso.project.database.common.interfaces;uses:="org.apache.commons.vfs,org.kalypso.project.database.sei.beans",

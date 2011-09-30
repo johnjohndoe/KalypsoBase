@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.commons,
  org.kalypso.deegree
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: kalypsobase.sourceforge.net
 Export-Package: org.kalypso.mapserver,
  org.kalypso.mapserver.servlets,

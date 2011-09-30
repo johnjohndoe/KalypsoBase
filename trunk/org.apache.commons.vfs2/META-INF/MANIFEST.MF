@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.apache.commons.vfs2
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: http://commons.apache.org/
 Require-Bundle: org.eclipse.core.runtime
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: lib/commons-collections-3.1/commons-collections-3.1.jar,
  lib/commons-httpclient-3.0/commons-httpclient-3.0.jar,
  lib/commons-logging-1.1.1/commons-logging-1.1.1.jar,

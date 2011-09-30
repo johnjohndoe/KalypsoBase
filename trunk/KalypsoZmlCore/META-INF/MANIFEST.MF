@@ -8,7 +8,7 @@ Require-Bundle: org.kalypso.core;visibility:=reexport,
  de.openali.odysseus.chart.framework;visibility:=reexport,
  de.openali.odysseus.chart.factory;visibility:=reexport
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.kalypso.zml.core,
  org.kalypso.zml.core.diagram.base,
  org.kalypso.zml.core.diagram.base.provider.observation,

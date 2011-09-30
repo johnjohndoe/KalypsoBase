@@ -6,7 +6,7 @@ Bundle-Version: 11.6.1.qualifier
 Bundle-Activator: org.kalypso.module.internal.Module
 Bundle-Vendor: kalypso.sourceforge.net
 Require-Bundle: org.kalypso.ui;bundle-version="2.3.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.module,
  org.kalypso.module.conversion,

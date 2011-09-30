@@ -54,4 +54,4 @@ Require-Bundle: org.eclipse.core.expressions,
  org.kalypso.contribs.java;visibility:=reexport,
  org.apache.commons;visibility:=reexport
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
