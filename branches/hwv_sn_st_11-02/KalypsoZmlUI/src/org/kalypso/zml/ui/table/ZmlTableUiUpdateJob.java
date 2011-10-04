@@ -55,7 +55,7 @@ public class ZmlTableUiUpdateJob extends UIJob
 
   public ZmlTableUiUpdateJob( final ZmlTableComposite table )
   {
-    super( "ZmlTableUiUpdateJob" ); //$NON-NLS-1$
+    super( "Aktualisiere Zeitreihen-Tabelle" );
     m_table = table;
   }
 
