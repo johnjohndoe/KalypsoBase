@@ -115,7 +115,6 @@ public class SingleGridVisibilityVisitor extends AbstractChartLayerVisitor
 
       if( layer instanceof IZmlLayer )
         return (IZmlLayer) layer;
-
     }
 
     return null;

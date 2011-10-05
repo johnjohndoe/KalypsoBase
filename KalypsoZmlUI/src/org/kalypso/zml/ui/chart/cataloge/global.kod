@@ -1183,6 +1183,7 @@
       <Layer id="W_CALC">
         <Title>Ergebnisse</Title>
         <Layers>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
           <Layer id="W_CALC_OBSERVED">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
             <Title>Beobachtung</Title>
@@ -1190,7 +1191,6 @@
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#calc_observed</StyleReference>
             </Styles>
           </Layer>
-
           <Layer id="W_CALC_CALCULATION">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
             <Title>Rechnung</Title>
@@ -1198,7 +1198,6 @@
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#calc_calculation</StyleReference>
             </Styles>
           </Layer>
-
           <Layer id="W_CALC_FORECAST">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
             <Title>Vorhersage</Title>
@@ -1206,7 +1205,6 @@
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#calc_forecast</StyleReference>
             </Styles>
           </Layer>
-
           <Layer id="W_CALC_LOWER_FORECAST_CURVE">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
             <Title>untere Umhüllende</Title>
