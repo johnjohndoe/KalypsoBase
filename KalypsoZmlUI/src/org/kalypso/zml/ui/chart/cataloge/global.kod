@@ -874,6 +874,27 @@
           <LineColor>000040</LineColor>
         </Stroke>
       </AreaStyle>
+      <LineStyle role="calc_observed">
+        <Width>2</Width>
+        <LineColor>0000FF</LineColor>
+      </LineStyle>
+      <LineStyle role="calc_calculation">
+        <Width>2</Width>
+        <LineColor>FF0000</LineColor>
+      </LineStyle>
+      <LineStyle role="calc_forecast">
+        <Width>2</Width>
+        <LineColor>008040</LineColor>
+      </LineStyle>
+      <LineStyle role="calc_forecast_curve">
+        <Width>1</Width>
+        <LineColor>008040</LineColor>
+        <DashArray>16 6</DashArray>
+        <LineCap>ROUND</LineCap>
+        <LineJoin>ROUND</LineJoin>
+      </LineStyle>
+
+
     </Styles>
     <Layers>
       <Layer id="W">
@@ -1112,6 +1133,100 @@
           </AreaStyle>
         </Styles>
       </Layer>
+      <Layer id="Q_CALC">
+        <Title>Ergebnisse</Title>
+        <Layers>
+          <Layer id="Q_CALC_OBSERVED">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>Beobachtung</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#calc_observed</StyleReference>
+            </Styles>
+          </Layer>
+
+          <Layer id="Q_CALC_CALCULATION">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>Rechnung</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#calc_calculation</StyleReference>
+            </Styles>
+          </Layer>
+
+          <Layer id="Q_CALC_FORECAST">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>Vorhersage</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#calc_forecast</StyleReference>
+            </Styles>
+          </Layer>
+
+          <Layer id="Q_CALC_LOWER_FORECAST_CURVE">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>untere Umhüllende</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#calc_forecast_curve</StyleReference>
+            </Styles>
+          </Layer>
+          <Layer id="Q_CALC_UPPER_FORECAST_CURVE">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>obere Umhüllende</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#calc_forecast_curve</StyleReference>
+            </Styles>
+          </Layer>
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#Q" />
+        </MapperRefs>
+      </Layer>
+      <Layer id="W_CALC">
+        <Title>Ergebnisse</Title>
+        <Layers>
+          <Layer id="W_CALC_OBSERVED">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>Beobachtung</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#calc_observed</StyleReference>
+            </Styles>
+          </Layer>
+
+          <Layer id="W_CALC_CALCULATION">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>Rechnung</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#calc_calculation</StyleReference>
+            </Styles>
+          </Layer>
+
+          <Layer id="W_CALC_FORECAST">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>Vorhersage</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#calc_forecast</StyleReference>
+            </Styles>
+          </Layer>
+
+          <Layer id="W_CALC_LOWER_FORECAST_CURVE">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>untere Umhüllende</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#calc_forecast_curve</StyleReference>
+            </Styles>
+          </Layer>
+          <Layer id="W_CALC_UPPER_FORECAST_CURVE">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>obere Umhüllende</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:global#calc_forecast_curve</StyleReference>
+            </Styles>
+          </Layer>
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#W" />
+        </MapperRefs>
+      </Layer>
     </Layers>
     <Mappers>
       <Axis id="W" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -1164,7 +1279,7 @@
         <PreferredAdjustment before="0" range="100" after="0" />
         <RendererRef ref="DateAxisRenderer" />
         <!-- <AxisNumberRangeRestriction minRange="86400000" /> -->
-        <AxisNumberRangeRestriction minRange="1000"  />
+        <AxisNumberRangeRestriction minRange="1000" />
       </Axis>
       <ScreenAxis id="screenAxisX">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
