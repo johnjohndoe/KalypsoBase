@@ -45,6 +45,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -60,6 +61,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gml.ui.i18n.Messages;
@@ -68,6 +70,8 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -107,10 +111,11 @@ public class SortFeaturesHandler extends AbstractHandler
     if( ptToSort == null )
       return null;
 
+    final CommandableWorkspace commandTarget = findCommandTarget( selection, parentFeature );
     final FeatureList profiles = (FeatureList) parentFeature.getProperty( rt );
     try
     {
-      sort( profiles, ptToSort );
+      sort( profiles, ptToSort, commandTarget );
     }
     catch( final Throwable e )
     {
@@ -118,7 +123,17 @@ public class SortFeaturesHandler extends AbstractHandler
       ErrorDialog.openError( shell, title, Messages.getString( "org.kalypso.ui.editor.actions.SortFeaturesActionDelegate.1" ), status ); //$NON-NLS-1$
     }
 
-    // TODO Auto-generated method stub
+    return null;
+  }
+
+  private CommandableWorkspace findCommandTarget( final ISelection selection, final Feature parentFeature )
+  {
+    if( selection instanceof IFeatureSelection )
+    {
+      final IFeatureSelection fs = (IFeatureSelection) selection;
+      return fs.getWorkspace( parentFeature );
+    }
+
     return null;
   }
 
@@ -147,9 +162,6 @@ public class SortFeaturesHandler extends AbstractHandler
     dialog.setContentProvider( new ArrayContentProvider() );
     dialog.setLabelProvider( new LabelProvider()
     {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
       @Override
       public String getText( final Object element )
       {
@@ -172,12 +184,10 @@ public class SortFeaturesHandler extends AbstractHandler
     return (IPropertyType) result[0];
   }
 
-  private void sort( final FeatureList list, final IPropertyType propertyToSort )
+  private void sort( final FeatureList list, final IPropertyType propertyToSort, final CommandableWorkspace commandTarget )
   {
     if( !(propertyToSort instanceof IValuePropertyType) )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ui.editor.actions.SortFeaturesActionDelegate.5" ) ); //$NON-NLS-1$
-
-    // TODO: undoable!
 
     final Comparator<Object> featureComparator = new FeatureComparator( list.getParentFeature(), propertyToSort );
     Collections.sort( list, featureComparator );
@@ -185,5 +195,20 @@ public class SortFeaturesHandler extends AbstractHandler
     final Feature parentFeature = list.getParentFeature();
     final GMLWorkspace workspace = parentFeature.getWorkspace();
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, parentFeature, (Feature[]) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE ) );
+
+    /* Make workspace dirty */
+    if( commandTarget != null )
+    {
+      try
+      {
+        // TODO: undoable!
+        final EmptyCommand command = new EmptyCommand( StringUtils.EMPTY, false );
+        commandTarget.postCommand( command );
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
   }
 }
