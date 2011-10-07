@@ -194,9 +194,11 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
             final IFeatureSelection currentSelection = (IFeatureSelection) tableSelection;
             final Feature[] currentFeatures = FeatureSelectionHelper.getFeatures( currentSelection );
             if( !org.kalypso.contribs.java.util.Arrays.equalsUnordered( globalFeatures, currentFeatures ) )
+              // FIXME: probably setting the selection that we got from outside is wron here -> we need to translate
+// into our own kind of selection (KalypsoTheme...Selection), else we sometimes have no focus feature
               setSelection( selection );
             else
-              fireSelectionChanged( new SelectionChangedEvent( LayerTableViewer.this, selection ) );
+              fireSelectionChanged( new SelectionChangedEvent( LayerTableViewer.this, tableSelection ) );
           }
         }
       } );

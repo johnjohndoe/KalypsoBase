@@ -42,6 +42,7 @@ package org.kalypso.ui.editorLauncher;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URL;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -58,6 +59,7 @@ import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.resources.StringStorage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
@@ -109,8 +111,10 @@ public class GmlEditorTemplateLauncher implements IDefaultTemplateLauncher
     {
       final ObjectFactory typesFac = new ObjectFactory();
 
+      final URL context = ResourceUtilities.createURL( file.getParent() );
+
       final LayerType type = typesFac.createLayerType();
-      LayerTypeUtilities.initLayerType( type, file );
+      LayerTypeUtilities.initLayerType( type, file, context );
 
       final Gistreeview gistreeview = TemplateUtilities.OF_GISTREEVIEW.createGistreeview();
       gistreeview.setInput( type );
