@@ -183,7 +183,7 @@ public final class GenericShapeDataFactory
     if( pos < 0 )
       return localPart;
 
-    return localPart.substring( pos + 1 );
+    return localPart.substring( pos + 1, Math.min( pos + 12, localPart.length() ) );
   }
 
   public static GMLXPath findGeometry( final IFeatureType type )
