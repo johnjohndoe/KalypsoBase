@@ -40,20 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.view.observationDialog;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceListSelectionDialogExt;
 
 /**
@@ -97,22 +98,37 @@ public abstract class ChooseZmlAction extends Action
     if( !(result[0] instanceof IFile) )
       return;
 
-    try
-    {
-      final IFile r = (IFile) result[0];
-      final URL url2 = ResourceUtilities.createURL( r );
+    final IFile resultFile = (IFile) result[0];
 
-      final String url1 = context == null ? StringUtils.EMPTY : context.toExternalForm();
+    final IPath resultPath = resultFile.getFullPath();
 
-      final String href = FileUtilities.getRelativePathTo( url1, url2.toExternalForm() );
+    final IPath contextPath = findContextPath( context );
+
+    final IPath relativePath = PathUtils.makeRelativ( contextPath, resultPath );
+
       final String filterText = m_viewer.getFilter();
+
+    final String href = relativePath.toString();
+
       m_viewer.setInput( href, filterText, m_viewer.getShow() );
     }
-    catch( final MalformedURLException e )
+
+  private IPath findContextPath( final URL context )
     {
-      e.printStackTrace();
-      MessageDialog.openError( shell, m_dialogTitle, e.getLocalizedMessage() );
-    }
+    final IPath contextPath = ResourceUtilities.findPathFromURL( context );
+
+    final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+    final IResource contextResource = root.findMember( contextPath, false );
+    // No valid context, return null so we get an absolute path
+    if( contextResource == null )
+      return null;
+
+    /* If it is a file, return the parent else we get ../ as relative path to this file. */
+    if( contextResource instanceof IFile )
+      return ((IFile) contextResource).getParent().getFullPath();
+
+    /* It is a container, just return it's path */
+    return contextPath;
   }
 
   protected abstract IContainer getBaseDir( );
