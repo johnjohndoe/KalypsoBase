@@ -135,7 +135,7 @@ public class EditFeaturePropertiesData extends AbstractModelObject
     firePropertyChange( PROPERTY_ISNUMERIC, oldIsNumericValue, getNumeric() );
     firePropertyChange( PROPERTY_VALUE_LABEL, oldValueLabel, getValueLabel() );
 
-    if( m_focusedFeature != null && property != null )
+    if( m_focusedFeature != null && EditFeaturePropertiesFilter.canEditProperty( property ) )
       setValue( m_focusedFeature.getProperty( property ) );
     else
       setValue( null );

@@ -62,25 +62,31 @@ public class EditFeaturePropertiesFilter extends ViewerFilter
     if( element == null )
       return false;
 
-    if( element instanceof IRelationType )
+    if( !(element instanceof IPropertyType) )
       return false;
 
-    if( element instanceof IPropertyType )
-    {
-      final IPropertyType propertyType = (IPropertyType) element;
-      final QName qName = propertyType.getQName();
-      if( Feature.QN_BOUNDED_BY.equals( qName ) )
-        return false;
+    final IPropertyType propertyType = (IPropertyType) element;
+    return canEditProperty( propertyType );
+  }
 
-      // TODO: special handling for 'gml:name'
-      if( propertyType.isList() )
-        return false;
+  static boolean canEditProperty( final IPropertyType propertyType )
+  {
+    if( propertyType == null )
+      return false;
 
-      final ITypeRegistry<IGuiTypeHandler> registry = GuiTypeRegistrySingleton.getTypeRegistry();
-      final IGuiTypeHandler handler = registry.getTypeHandlerFor( propertyType );
-      return handler != null;
-    }
+    if( propertyType instanceof IRelationType )
+      return false;
 
-    return false;
+    final QName qName = propertyType.getQName();
+    if( Feature.QN_BOUNDED_BY.equals( qName ) )
+      return false;
+
+    // TODO: special handling for 'gml:name'
+    if( propertyType.isList() )
+      return false;
+
+    final ITypeRegistry<IGuiTypeHandler> registry = GuiTypeRegistrySingleton.getTypeRegistry();
+    final IGuiTypeHandler handler = registry.getTypeHandlerFor( propertyType );
+    return handler != null;
   }
 }
