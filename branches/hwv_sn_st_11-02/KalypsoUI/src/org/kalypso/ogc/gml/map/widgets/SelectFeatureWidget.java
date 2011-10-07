@@ -450,7 +450,7 @@ public class SelectFeatureWidget extends AbstractWidget
     m_geometryBuilder = createGeometryBuilder();
   }
 
-  private IGeometryBuilder createGeometryBuilder( )
+  protected IGeometryBuilder createGeometryBuilder( )
   {
     final IMapPanel mapPanel = getMapPanel();
     Assert.isNotNull( mapPanel );

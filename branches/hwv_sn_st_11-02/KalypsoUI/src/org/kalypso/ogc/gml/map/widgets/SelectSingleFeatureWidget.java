@@ -377,4 +377,9 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
 
     return sb.toString();
   }
+  
+  public void setThemes( final IKalypsoFeatureTheme[] themes )
+  {
+    m_themes = themes;
+  }
 }
