@@ -41,12 +41,17 @@ v.doemming@tuhh.de
 
 package org.kalypso.template.types;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.URIUtil;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 
@@ -73,36 +78,63 @@ public final class LayerTypeUtilities
   {
   }
 
-  public static void initLayerType( final LayerType layer, final IFile file ) throws CoreException
+  public static void initLayerType( final LayerType layer, final IFile file, final URL context ) throws CoreException
   {
     final IPath projectRelativePath = file.getProjectRelativePath();
 
     final String fileext = projectRelativePath.getFileExtension().toLowerCase();
-    final String contentType;
 
     final String projectURL = PlatformURLResourceConnection.RESOURCE_URL_STRING + "/" + file.getProject().getName() + "/"; //$NON-NLS-1$ //$NON-NLS-2$
 
-    final String href;
-    if( EXT_GML.equals( fileext ) || EXT_GMLZ.equals( fileext ) )
-    {
-      href = projectURL + projectRelativePath;
-      contentType = TYPE_GML;
-    }
-    else if( EXT_SHP.equalsIgnoreCase( fileext ) )
-    {
-      contentType = TYPE_SHAPE;
-      href = projectURL + projectRelativePath.removeFileExtension();
-    }
-    else
-    {
-      final String msg = Messages.getString( "org.kalypso.template.types.LayerTypeUtilities.8" ) + fileext; //$NON-NLS-1$
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), msg ) );
-    }
+    final String contentType = findContentType( fileext );
+
+    final URI href = findHref( projectRelativePath, projectURL, contentType, context );
 
     layer.setId( file.getName() );
     layer.setFeaturePath( "" ); //$NON-NLS-1$
-    layer.setHref( href );
+    layer.setHref( href.toString() );
     layer.setLinktype( contentType );
     layer.setType( "simple" ); //$NON-NLS-1$
+  }
+
+  private static URI findHref( final IPath projectRelativePath, final String projectURL, final String contentType, final URL context ) throws CoreException
+  {
+    final String href = createHref( projectRelativePath, projectURL, contentType );
+
+    try
+    {
+      final URI hrefURI = new URI( href );
+      if( context == null )
+        return hrefURI;
+
+      return URIUtil.makeRelative( hrefURI, context.toURI() );
+    }
+    catch( final URISyntaxException e )
+    {
+      e.printStackTrace();
+      final String message = String.format( "Illegal identifier: %s", href );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message, e );
+      throw new CoreException( status );
+    }
+  }
+
+  private static String createHref( final IPath projectRelativePath, final String projectURL, final String contentType )
+  {
+    if( contentType == TYPE_SHAPE )
+      return projectURL + projectRelativePath.removeFileExtension();
+    else
+      return projectURL + projectRelativePath;
+  }
+
+  protected static String findContentType( final String fileext ) throws CoreException
+  {
+    if( EXT_GML.equals( fileext ) || EXT_GMLZ.equals( fileext ) )
+      return TYPE_GML;
+
+    if( EXT_SHP.equalsIgnoreCase( fileext ) )
+      return TYPE_SHAPE;
+
+    final String msg = Messages.getString( "org.kalypso.template.types.LayerTypeUtilities.8" ) + fileext; //$NON-NLS-1$
+    throw new CoreException( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), msg ) );
   }
 }
