@@ -9,7 +9,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.kalypso.chart.ui.IChartPart;
+import org.eclipse.core.runtime.Status;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -20,6 +20,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
+import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * This handler sets all axis ranges in a way that all relations which were set up by a user - e.g. by panning or
@@ -37,11 +38,12 @@ public class MaximizeViewHandler extends AbstractHandler
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IChartPart chartPart = ChartHandlerUtilities.findChartComposite( context );
-    if( chartPart == null )
-      return null;
 
-    final IChartModel model = chartPart.getChartComposite().getChartModel();
+    final IChartComposite chart = ChartHandlerUtilities.getChart( context );
+    if( chart == null )
+      return Status.CANCEL_STATUS;
+
+    final IChartModel model = chart.getChartModel();
     final Set<IAxis> horAxes = new HashSet<IAxis>();
     final Set<IAxis> vertAxes = new HashSet<IAxis>();
     final IAxis[] axes = model.getMapperRegistry().getAxes();
@@ -53,7 +55,7 @@ public class MaximizeViewHandler extends AbstractHandler
     final Set<Number> screenMaxsVert = new HashSet<Number>();
     for( final IAxis axis : axes )
     {
-      final IChartLayer[] layers = model.getLayerManager().getLayers( axis,false );
+      final IChartLayer[] layers = model.getLayerManager().getLayers( axis, false );
       if( ArrayUtils.isEmpty( layers ) )
         continue;
 
