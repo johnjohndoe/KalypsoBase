@@ -12,6 +12,7 @@
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:info" uri="info.kod" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:stuetzstellen" uri="stuetzstellen.kod" />
 
+  <catalog:system systemId="urn:org:kalypso:zml:ui:calculation:results:diagramm" uri="calculation_results.kod" />
 
 </catalog:catalog>
 
