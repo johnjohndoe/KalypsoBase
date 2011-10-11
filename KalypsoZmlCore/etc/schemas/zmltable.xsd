@@ -41,6 +41,7 @@
       <element ref="zmltable:Columns" minOccurs="0" maxOccurs="1" />
       <element ref="zmltable:DataSources" minOccurs="0" maxOccurs="1" />
     </sequence>
+    <attribute name="cleanModelOnRefresh" type="boolean" default="true" />
   </complexType>
 
   <!-- column types -->

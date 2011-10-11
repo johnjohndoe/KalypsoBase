@@ -49,11 +49,13 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.core.table.model.loader.ZmlColumnLoadCommand;
 import org.kalypso.zml.core.table.model.loader.ZmlModelBuilder;
+import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 
 /**
@@ -121,7 +123,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     m_listeners.add( listener );
   }
 
-  public void clean( )
+  public void purge( )
   {
     final ZmlModelColumn[] columns;
     final ZmlColumnLoadCommand[] commands;
@@ -255,5 +257,16 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   public URL getContext( )
   {
     return m_context;
+  }
+
+  public void setIgnoreTypes( final String[] ignoreTypes )
+  {
+    for( final IZmlModelColumn column : m_columns )
+    {
+      final DataColumnType columnType = column.getDataColumn().getType();
+      final String type = columnType.getValueAxis();
+
+      column.setIsIgnoreType( ArrayUtils.contains( ignoreTypes, type ) );
+    }
   }
 }

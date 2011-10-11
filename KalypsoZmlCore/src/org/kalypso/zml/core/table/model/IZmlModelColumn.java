@@ -90,4 +90,7 @@ public interface IZmlModelColumn
 
   void update( int index, Object value, final String source, final Integer status ) throws SensorException;
 
+  void setIsIgnoreType( boolean ignore );
+
+  boolean isIgnoreType( );
 }
