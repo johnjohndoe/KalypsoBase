@@ -7,7 +7,7 @@ Require-Bundle: org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
  lib/codec/commons-codec-1.5.jar,
- lib/io/commons-io-2.0.1.jar,
+ lib/io/commons-io-2.1.jar,
  lib/lang/commons-lang-2.6.jar,
  lib/lang/commons-lang3-3.0.1.jar,
  lib/sanselan/sanselan-0.97-incubator.jar,
