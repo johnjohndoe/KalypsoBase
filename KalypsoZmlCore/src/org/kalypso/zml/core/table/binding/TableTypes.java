@@ -70,11 +70,11 @@ import org.kalypso.zml.core.table.schema.ZmlTableType;
 /**
  * @author Dirk Kuch
  */
-public final class TableTypeHelper
+public final class TableTypes
 {
   private static final QName PROPERTY_NAME = new QName( "name" ); //$NON-NLS-1$
 
-  private TableTypeHelper( )
+  private TableTypes( )
   {
   }
 
@@ -198,7 +198,7 @@ public final class TableTypeHelper
     final List<StylePropertyType> properties = style.getProperty();
     for( final StylePropertyType prop : properties )
     {
-      final String propertyName = TableTypeHelper.getPropertyName( prop );
+      final String propertyName = TableTypes.getPropertyName( prop );
       if( property.value().equals( propertyName ) )
         return prop.getValue();
     }
@@ -211,7 +211,7 @@ public final class TableTypeHelper
     final List<StylePropertyType> properties = style.getProperty();
     for( final StylePropertyType prop : properties )
     {
-      final String propertyName = TableTypeHelper.getPropertyName( prop );
+      final String propertyName = TableTypes.getPropertyName( prop );
       if( property.value().equals( propertyName ) )
         return prop;
     }
@@ -224,7 +224,7 @@ public final class TableTypeHelper
     final List<ColumnHeaderPropertyType> properties = type.getProperty();
     for( final ColumnHeaderPropertyType prop : properties )
     {
-      final String propertyName = TableTypeHelper.getPropertyName( prop );
+      final String propertyName = TableTypes.getPropertyName( prop );
       if( property.value().equals( propertyName ) )
         return prop.getValue();
     }

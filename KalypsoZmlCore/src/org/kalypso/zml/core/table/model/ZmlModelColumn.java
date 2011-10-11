@@ -71,7 +71,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   private final DataColumn m_type;
 
-  private final IColumnLabelProvider m_label;
+  private final String m_label;
 
   private final IZmlModelColumnDataHandler m_handler;
 
@@ -79,7 +79,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   private final IZmlModel m_model;
 
-  public ZmlModelColumn( final IZmlModel model, final String identifier, final IColumnLabelProvider label, final DataColumn type, final IZmlModelColumnDataHandler dataHandler )
+  public ZmlModelColumn( final IZmlModel model, final String identifier, final String label, final DataColumn type, final IZmlModelColumnDataHandler dataHandler )
   {
     m_model = model;
     m_identifier = identifier;
@@ -92,14 +92,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   public ZmlModelColumn( final IZmlModel model, final DataColumn column, final ObservationZmlColumnDataHandler handler )
   {
-    this( model, column.getIdentifier(), new IColumnLabelProvider()
-    {
-      @Override
-      public String getLabel( )
-      {
-        return column.getLabel();
-      }
-    }, column, handler );
+    this( model, column.getIdentifier(), column.getLabel(), column, handler );
   }
 
   @Override
@@ -220,7 +213,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public String getLabel( )
   {
-    return m_label.getLabel();
+    return m_label;
   }
 
   @Override

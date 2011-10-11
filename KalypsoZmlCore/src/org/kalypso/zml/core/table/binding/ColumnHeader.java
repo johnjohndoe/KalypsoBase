@@ -67,7 +67,7 @@ public class ColumnHeader
 
   public Image getIcon( ) throws MalformedURLException
   {
-    final String urlString = TableTypeHelper.findProperty( m_type, ColumnHeaderPropertyName.ICON );
+    final String urlString = TableTypes.findProperty( m_type, ColumnHeaderPropertyName.ICON );
     if( urlString == null )
       return null;
 
@@ -88,7 +88,7 @@ public class ColumnHeader
 
   public String getLabel( )
   {
-    return TableTypeHelper.findProperty( m_type, ColumnHeaderPropertyName.LABEL );
+    return TableTypes.findProperty( m_type, ColumnHeaderPropertyName.LABEL );
   }
 
   public String getIdentifier( )

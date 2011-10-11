@@ -48,7 +48,7 @@ import org.kalypso.zml.core.diagram.base.zml.MultipleTsLink;
 import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.IClonedColumn;
-import org.kalypso.zml.core.table.binding.TableTypeHelper;
+import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.core.element.ZmlLinkDiagramElement;
 import org.kalypso.zml.ui.table.IZmlTable;
@@ -139,8 +139,8 @@ public class ZmlTableUpdater implements Runnable
         return multipleIdentifier;
     }
 
-    final AbstractColumnType base = TableTypeHelper.finColumn( m_part.getModel().getTableType(), identifier );
-    final AbstractColumnType clone = TableTypeHelper.cloneColumn( base );
+    final AbstractColumnType base = TableTypes.finColumn( m_part.getModel().getTableType(), identifier );
+    final AbstractColumnType clone = TableTypes.cloneColumn( base );
     clone.setId( multipleIdentifier );
 
     /** only one rule / style set! */

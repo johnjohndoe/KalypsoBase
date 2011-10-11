@@ -132,67 +132,70 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private void setup( final FormToolkit toolkit )
   {
-    final ZmlTableType tableType = m_model.getTableType();
-
-    Composite toolbar = null;
-    if( hasToolbar( tableType ) )
+    synchronized( this )
     {
-      toolbar = toolkit.createComposite( this );
-      toolbar.setLayout( LayoutHelper.createGridLayout() );
-      toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    }
+      final ZmlTableType tableType = m_model.getTableType();
 
-    m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
-    m_tableViewer.getTable().setLinesVisible( true );
-    m_tableViewer.setUseHashlookup( true );
-
-    m_focus = new ZmlTableFocusCellHandler( this );
-    m_selection = new ZmlTableSelectionHandler( this );
-
-    addListener( m_focus );
-
-    ColumnViewerToolTipSupport.enableFor( m_tableViewer, ToolTip.NO_RECREATE );
-
-    m_tableViewer.setContentProvider( new ArrayTreeContentProvider()
-    {
-      /**
-       * @see org.eclipse.jface.viewers.ITreeContentProvider#getElements(java.lang.Object)
-       */
-      @Override
-      public Object[] getElements( final Object inputElement )
+      Composite toolbar = null;
+      if( hasToolbar( tableType ) )
       {
-        if( inputElement instanceof ZmlModel )
-        {
-          final ZmlModel model = (ZmlModel) inputElement;
-          return model.getRows();
-        }
-
-        return new Object[] {};
+        toolbar = toolkit.createComposite( this );
+        toolbar.setLayout( LayoutHelper.createGridLayout() );
+        toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       }
-    } );
 
-    addEmptyColumn();
+      m_tableViewer = new TableViewer( this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION );
+      m_tableViewer.getTable().setLinesVisible( true );
+      m_tableViewer.setUseHashlookup( true );
 
-    final List<JAXBElement< ? extends AbstractColumnType>> columnTypes = tableType.getColumns().getAbstractColumn();
-    for( final JAXBElement< ? extends AbstractColumnType> columnType : columnTypes )
-    {
-      final AbstractColumnType column = columnType.getValue();
+      m_focus = new ZmlTableFocusCellHandler( this );
+      m_selection = new ZmlTableSelectionHandler( this );
 
-      final ZmlTableColumnBuilder builder = new ZmlTableColumnBuilder( this, new BaseColumn( column ) );
-      builder.execute( new NullProgressMonitor() );
+      addListener( m_focus );
+
+      ColumnViewerToolTipSupport.enableFor( m_tableViewer, ToolTip.NO_RECREATE );
+
+      m_tableViewer.setContentProvider( new ArrayTreeContentProvider()
+      {
+        /**
+         * @see org.eclipse.jface.viewers.ITreeContentProvider#getElements(java.lang.Object)
+         */
+        @Override
+        public Object[] getElements( final Object inputElement )
+        {
+          if( inputElement instanceof ZmlModel )
+          {
+            final ZmlModel model = (ZmlModel) inputElement;
+            return model.getRows();
+          }
+
+          return new Object[] {};
+        }
+      } );
+
+      addEmptyColumn();
+
+      final List<JAXBElement< ? extends AbstractColumnType>> columnTypes = tableType.getColumns().getAbstractColumn();
+      for( final JAXBElement< ? extends AbstractColumnType> columnType : columnTypes )
+      {
+        final AbstractColumnType column = columnType.getValue();
+
+        final ZmlTableColumnBuilder builder = new ZmlTableColumnBuilder( this, new BaseColumn( column ) );
+        builder.execute( new NullProgressMonitor() );
+      }
+
+      m_tableViewer.setInput( m_model );
+
+      addBasicFilters();
+
+      /** layout stuff */
+      final Table table = m_tableViewer.getTable();
+      table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
+      table.setHeaderVisible( true );
+
+      if( hasToolbar( tableType ) )
+        initToolbar( tableType, toolbar, toolkit );
     }
-
-    m_tableViewer.setInput( m_model );
-
-    addBasicFilters();
-
-    /** layout stuff */
-    final Table table = m_tableViewer.getTable();
-    table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    table.setHeaderVisible( true );
-
-    if( hasToolbar( tableType ) )
-      initToolbar( tableType, toolbar, toolkit );
 
     refresh();
   }
