@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -72,9 +73,20 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
   private final ZmlTableType m_type;
 
-  public ZmlModel( final ZmlTableType type )
+  private final URL m_context;
+
+  public ZmlModel( final ZmlTableType type, final URL context )
   {
     m_type = type;
+    m_context = context;
+
+    init();
+  }
+
+  private void init( )
+  {
+    final ZmlModelInitializer initializer = new ZmlModelInitializer( this );
+    initializer.execute( new NullProgressMonitor() );
   }
 
   @Override
@@ -238,5 +250,10 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   public void modelColumnChangedEvent( )
   {
     fireModelChanged();
+  }
+
+  public URL getContext( )
+  {
+    return m_context;
   }
 }

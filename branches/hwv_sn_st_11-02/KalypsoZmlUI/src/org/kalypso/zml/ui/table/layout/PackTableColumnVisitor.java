@@ -166,7 +166,6 @@ public class PackTableColumnVisitor implements IZmlTableColumnVisitor
     {
       try
       {
-
         if( rule.hasHeaderIcon() )
         {
           final CellStyle style = rule.getCellStyle();

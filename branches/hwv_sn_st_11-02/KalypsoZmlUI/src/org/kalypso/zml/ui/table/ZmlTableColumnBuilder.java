@@ -47,7 +47,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.binding.TableTypeHelper;
+import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
@@ -77,7 +77,7 @@ public class ZmlTableColumnBuilder implements ICoreRunnableWithProgress
   {
     final TableViewer viewer = m_table.getTableViewer();
     final int index = viewer.getTable().getColumnCount();
-    final TableViewerColumn viewerColumn = new TableViewerColumn( viewer, TableTypeHelper.toSWT( m_column.getAlignment() ) );
+    final TableViewerColumn viewerColumn = new TableViewerColumn( viewer, TableTypes.toSWT( m_column.getAlignment() ) );
 
     final ExtendedZmlTableColumn column = new ExtendedZmlTableColumn( m_table, viewerColumn, m_column, index );
     m_table.add( column );

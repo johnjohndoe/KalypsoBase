@@ -250,7 +250,7 @@ public class BaseColumn
     final List<ColumnPropertyType> properties = m_type.getProperty();
     for( final ColumnPropertyType prop : properties )
     {
-      final String propertyName = TableTypeHelper.getPropertyName( prop );
+      final String propertyName = TableTypes.getPropertyName( prop );
       if( property.value().equals( propertyName ) )
         return prop.getValue();
     }
