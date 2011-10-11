@@ -74,6 +74,11 @@ public class IndexFeaturesVisitor implements FeatureVisitor
     else
       property = f.getProperty( m_indexProperty );
 
+    if( m_index.containsKey( property ) )
+    {
+      System.err.println( String.format( "Duplicate feature index: %s", property ) );
+    }
+    
     m_index.put( property, f );
 
     return true;
