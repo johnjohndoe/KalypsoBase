@@ -45,9 +45,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Formatter;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -300,10 +301,11 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
     try
     {
       /* just snap to grabbed feature */
-      if( m_hoverFeature != null )
+      if( m_hoverFeature != null && m_hoverTheme != null )
       {
-        final List<Feature> selectedFeatures = new ArrayList<Feature>();
-        selectedFeatures.add( m_hoverFeature );
+        final List<Feature> selectedFeature = Collections.singletonList( m_hoverFeature );
+        final Map<IKalypsoFeatureTheme, List<Feature>> selection = Collections.singletonMap( m_hoverTheme, selectedFeature );
+
         final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
 
         final boolean toggle = event.isControlDown();
@@ -314,7 +316,7 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
             return;
         }
 
-        SelectFeatureWidget.changeSelection( selectionManager, selectedFeatures, m_themes, false, toggle );
+        SelectFeatureWidget.changeSelection( selectionManager, selection, false, toggle );
       }
     }
     catch( final Exception e )
@@ -377,7 +379,7 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
 
     return sb.toString();
   }
-  
+
   public void setThemes( final IKalypsoFeatureTheme[] themes )
   {
     m_themes = themes;

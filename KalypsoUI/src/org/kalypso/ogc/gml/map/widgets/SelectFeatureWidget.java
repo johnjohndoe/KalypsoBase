@@ -45,15 +45,18 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -208,6 +211,7 @@ public class SelectFeatureWidget extends AbstractWidget
     final IMapPanel mapPanel = getMapPanel();
     final IMapModell mapModell = mapPanel.getMapModell();
     mapPanel.repaintMap();
+
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
@@ -306,10 +310,12 @@ public class SelectFeatureWidget extends AbstractWidget
         /* just snap to grabbed feature */
         if( m_hoverFeature != null )
         {
-          final List<Feature> selectedFeatures = new ArrayList<Feature>();
-          selectedFeatures.add( m_hoverFeature );
+          final List<Feature> selectedFeature = Collections.singletonList( m_hoverFeature );
+          final Map<IKalypsoFeatureTheme, List<Feature>> selection = Collections.singletonMap( m_hoverTheme, selectedFeature );
+
           final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
-          changeSelection( selectionManager, selectedFeatures, m_themes, m_addMode, m_toggleMode );
+
+          doChangeSelection( selectionManager, selection, m_addMode, m_toggleMode );
         }
         m_geometryBuilder.reset();
       }
@@ -539,7 +545,7 @@ public class SelectFeatureWidget extends AbstractWidget
     if( m_themes == null )
       return;
 
-    final List<Feature> selectedFeatures = new ArrayList<Feature>();
+    final Map<IKalypsoFeatureTheme, List<Feature>> selection = new HashMap<IKalypsoFeatureTheme, List<Feature>>();
 
     for( final IKalypsoFeatureTheme theme : m_themes )
     {
@@ -554,11 +560,17 @@ public class SelectFeatureWidget extends AbstractWidget
 
       final Collection<Feature> selectedSubList = selectFeatures( featureList, selectGeometry, m_qnamesToSelect, geomQNames, m_intersectMode );
       if( selectedSubList != null )
+      {
+        if( !selection.containsKey( theme ) )
+          selection.put( theme, new ArrayList<Feature>( selectedSubList.size() ) );
+
+        final List<Feature> selectedFeatures = selection.get( theme );
         selectedFeatures.addAll( selectedSubList );
+      }
     }
 
     final IFeatureSelectionManager selectionManager = getMapPanel().getSelectionManager();
-    changeSelection( selectionManager, selectedFeatures, m_themes, m_addMode, m_toggleMode );
+    doChangeSelection( selectionManager, selection, m_addMode, m_toggleMode );
   }
 
   /**
@@ -615,26 +627,28 @@ public class SelectFeatureWidget extends AbstractWidget
     return result;
   }
 
-  public static void changeSelection( final IFeatureSelectionManager selectionManager, final List<Feature> selectedFeatures, final IKalypsoFeatureTheme[] themes, final boolean add, final boolean toggle )
+  /**
+   * Overwritten, so sub classes can overwrite.
+   */
+  protected void doChangeSelection( final IFeatureSelectionManager selectionManager, final Map<IKalypsoFeatureTheme, List<Feature>> selection, final boolean add, final boolean toggle )
   {
-    if( selectedFeatures.size() == 0 )
+    changeSelection( selectionManager, selection, add, toggle );
+  }
+
+  public static void changeSelection( final IFeatureSelectionManager selectionManager, final Map<IKalypsoFeatureTheme, List<Feature>> selection, final boolean add, final boolean toggle )
+  {
+    if( selection.size() == 0 )
       selectionManager.clear();
 
     final List<Feature> toRemove = new ArrayList<Feature>();
     final List<EasyFeatureWrapper> toAdd = new ArrayList<EasyFeatureWrapper>();
 
-    // FIXME: This only works, because there is mostly one theme, hence one workspace.
-    // The selected features comes from this theme (normally the active one on the map).
-    //
-    // If once there are features of different themes (and workspaces) selected,
-    // they will all be added with the workspace of the first theme,
-    // then they will all be added again with the workspace of the second theme, and so on.
-    // So all features will be multiple selected with their right and wrong workspaces.
-    for( final IKalypsoFeatureTheme theme : themes )
+    for( final IKalypsoFeatureTheme theme : selection.keySet() )
     {
       /* consider the selection modes */
       final CommandableWorkspace workspace = theme.getWorkspace();
 
+      final List<Feature> selectedFeatures = selection.get( theme );
       for( final Feature feature : selectedFeatures )
       {
         if( add )
@@ -757,7 +771,6 @@ public class SelectFeatureWidget extends AbstractWidget
 
   private IDialogSettings getSettings( )
   {
-    return PluginUtilities.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
+    return DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
   }
-
 }
