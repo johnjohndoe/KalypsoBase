@@ -266,7 +266,10 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
       final DataColumnType columnType = column.getDataColumn().getType();
       final String type = columnType.getValueAxis();
 
-      column.setIsIgnoreType( ArrayUtils.contains( ignoreTypes, type ) );
+      final boolean ignore = ArrayUtils.contains( ignoreTypes, type );
+      column.setIsIgnoreType( ignore );
     }
+
+    fireModelChanged();
   }
 }
