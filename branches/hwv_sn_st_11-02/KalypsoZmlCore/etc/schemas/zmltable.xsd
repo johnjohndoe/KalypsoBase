@@ -137,7 +137,8 @@
     <sequence>
     </sequence>
     <attribute name="href" type="string" use="required" />
-    <attribute name="column" type="IDREF" use="required"/>
+    <attribute name="column" type="IDREF" use="required" />
+    <attribute name="label" type="string" use="required" />
   </complexType>
 
 

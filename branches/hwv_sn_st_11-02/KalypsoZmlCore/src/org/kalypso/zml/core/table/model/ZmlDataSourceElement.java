@@ -41,10 +41,15 @@
 package org.kalypso.zml.core.table.model;
 
 import java.net.URL;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.zml.core.table.IZmlTableElement;
@@ -62,11 +67,16 @@ public class ZmlDataSourceElement implements IZmlTableElement
 
   private final URL m_context;
 
-  public ZmlDataSourceElement( final String identifier, final String href, final URL context )
+  private final String m_labeling;
+
+  private String m_label;
+
+  public ZmlDataSourceElement( final String identifier, final String href, final URL context, final String labeling )
   {
     m_identifier = identifier;
     m_href = href;
     m_context = context;
+    m_labeling = labeling;
   }
 
   /**
@@ -108,7 +118,43 @@ public class ZmlDataSourceElement implements IZmlTableElement
   @Override
   public String getTitle( final IAxis axis )
   {
-    return axis.getName();
+    if( Strings.isNotEmpty( m_label ) )
+      return m_label;
+
+    final IObservation observation = getObsProvider().getObservation();
+    final MetadataList metadata = observation.getMetadataList();
+
+    final String[] properties = findProperties( m_labeling );
+    m_label = m_labeling;
+
+    for( final String property : properties )
+    {
+      final String value = metadata.getProperty( property );
+
+      m_label = m_label.replaceAll( "%" + property + "%", value ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    return m_label;
+  }
+
+  private String[] findProperties( final String labeling )
+  {
+    final Set<String> properties = new LinkedHashSet<String>();
+
+    int ptr = 0;
+    while( ptr >= 0 )
+    {
+      final int index = labeling.indexOf( '%', ptr ) + 1; //$NON-NLS-1$
+      if( index <= 0 )
+        break;
+
+      final int index2 = labeling.substring( index ).indexOf( '%' ) + 1; //$NON-NLS-1$
+      properties.add( labeling.substring( index, index2 ) );
+
+      ptr = index2 + 1;
+    }
+
+    return properties.toArray( new String[] {} );
   }
 
 }
