@@ -49,16 +49,17 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.tokenreplace.ITokenReplacer;
 import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -122,20 +123,29 @@ public final class FeatureHelper
       if( strings.length == 0 )
         return "No argument for property. Must be _qname_;[null-value];[format-string]";
 
-      final String propName = strings[0];
+      final String propertyPath = strings[0];
+      final NamespaceContext namespaceContext = feature.getWorkspace().getNamespaceContext();
+      final GMLXPath gmlxPath = new GMLXPath( propertyPath, namespaceContext );
+
       final String nullValue = strings.length > 1 ? strings[1] : null;
       final String formatString = strings.length > 2 ? strings[2] : null;
 
-      final QName qname = QNameUtilities.createQName( propName );
-      final Object property = FeatureHelper.getPropertyLax( feature, qname );
+      try
+      {
+        final Object property = GMLXPathUtilities.query( gmlxPath, feature );
 
-      if( property == null )
-        return "" + nullValue;
+        if( property == null )
+          return "" + nullValue;
 
-      if( formatString != null )
-        return String.format( formatString, property );
+        if( formatString != null )
+          return String.format( formatString, property );
 
-      return "" + property;
+        return "" + property;
+      }
+      catch( final GMLXPathException e )
+      {
+        return String.format( "Illegal XPath: %s", propertyPath );
+      }
     }
 
     @Override
@@ -156,20 +166,37 @@ public final class FeatureHelper
       if( strings.length < 2 )
         return "Wrong argument for listProperty. Must be _qname_;listindex;[null-Value]";
 
-      final QName qname = QNameUtilities.createQName( strings[0] );
-      final int listindex = Integer.parseInt( strings[1] );
-      final String nullValue = strings.length > 2 ? strings[2] : null;
+      final NamespaceContext namespaceContext = feature.getWorkspace().getNamespaceContext();
+      final String propertyPath = strings[0];
+      final GMLXPath gmlxPath = new GMLXPath( propertyPath, namespaceContext );
 
-      final List< ? > list = (List< ? >) FeatureHelper.getPropertyLax( feature, qname );
+      try
+      {
+        final Object listObject = GMLXPathUtilities.query( gmlxPath, feature );
+        final int listindex = Integer.parseInt( strings[1] );
+        final String nullValue = strings.length > 2 ? strings[2] : StringUtils.EMPTY;
 
-      if( listindex >= list.size() )
-        return "" + nullValue;
+        if( listObject == null )
+          return nullValue;
 
-      final Object propertyValue = list.get( listindex );
-      if( propertyValue == null )
-        return "" + nullValue;
+        if( !(listObject instanceof List) )
+          return String.format( "Value object is not a list: %s", listObject );
 
-      return "" + propertyValue;
+        final List< ? > list = (List< ? >) listObject;
+
+        if( listindex >= list.size() )
+          return "" + nullValue;
+
+        final Object propertyValue = list.get( listindex );
+        if( propertyValue == null )
+          return "" + nullValue;
+
+        return "" + propertyValue;
+      }
+      catch( final GMLXPathException e )
+      {
+        return String.format( "Illegal XPath: %s", propertyPath );
+      }
     }
 
     @Override
