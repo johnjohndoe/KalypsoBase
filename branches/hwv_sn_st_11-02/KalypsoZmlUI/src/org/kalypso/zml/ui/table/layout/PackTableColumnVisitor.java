@@ -114,12 +114,14 @@ public class PackTableColumnVisitor implements IZmlTableColumnVisitor
 
   private boolean isVisible( final IZmlModelColumn column )
   {
+    if( column.isIgnoreType() )
+      return false;
+
     final boolean visible = Objects.isNotNull( column.getObservation() );
     if( visible )
       m_indexVisibility = true;
 
     return visible;
-
   }
 
   public void packIndexColumns( )

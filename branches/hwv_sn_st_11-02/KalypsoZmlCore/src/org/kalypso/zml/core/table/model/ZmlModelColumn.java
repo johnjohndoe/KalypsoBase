@@ -79,6 +79,8 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   private final IZmlModel m_model;
 
+  private boolean m_ignore = false;
+
   public ZmlModelColumn( final IZmlModel model, final String identifier, final String label, final DataColumn type, final IZmlModelColumnDataHandler dataHandler )
   {
     m_model = model;
@@ -322,6 +324,24 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public IZmlModel getModel( )
   {
     return m_model;
+  }
+
+  /**
+   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#setIsIgnoreType(boolean)
+   */
+  @Override
+  public void setIsIgnoreType( final boolean ignore )
+  {
+    m_ignore = ignore;
+  }
+
+  /**
+   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#isIgnoreType()
+   */
+  @Override
+  public boolean isIgnoreType( )
+  {
+    return m_ignore;
   }
 
 }
