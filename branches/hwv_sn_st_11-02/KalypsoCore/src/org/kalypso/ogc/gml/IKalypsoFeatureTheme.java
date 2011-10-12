@@ -54,19 +54,19 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public interface IKalypsoFeatureTheme extends IKalypsoTheme, ICommandTarget
 {
   /**
-   * (Comma separated) qnames of the properties which determines the qname of the selectable geometry of features in
+   * (Comma separated) gml-xpathes of the properties which determines the path to the selectable geometry of features in
    * this theme.<br>
    * Should be interpreted by selection widgets.<br>
    * 
-   * @see QName#toString()
+   * @see org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath#toString()
    */
   String PROPERTY_SELECTABLE_GEOMETRIES = "selectableGeometries"; //$NON-NLS-1$
 
   /**
-   * (Comma separated) qnames of the properties that shall be painted when hovering over a feature in this theme.<br>
+   * (Comma separated) gml-xpathes of the properties that shall be painted when hovering over a feature in this theme.<br>
    * Should be interpreted by selection widgets.<br>
    * 
-   * @see QName#toString()
+   * @see org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath#toString()
    */
   String PROPERTY_HOVER_GEOMETRIES = "hoverGeometries"; //$NON-NLS-1$
 

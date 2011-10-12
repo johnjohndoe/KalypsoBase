@@ -73,6 +73,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -244,11 +245,11 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
       return null;
 
     /* Grab next feature */
-    final QName[] geomQNames = SelectFeatureWidget.findGeomQName( theme, m_geomQName, IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
+    final GMLXPath[] geometryPathes = SelectFeatureWidget.findGeometryPathes( theme, m_geomQName, IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
 
     final FeatureList visibleFeatures = theme.getFeatureListVisible( requestEnvelope );
 
-    return GeometryUtilities.findNearestFeature( currentPoint, grabDistance, visibleFeatures, geomQNames, m_qnamesToSelect );
+    return GeometryUtilities.findNearestFeature( currentPoint, grabDistance, visibleFeatures, geometryPathes, m_qnamesToSelect );
   }
 
   private void setHoverFeature( final Feature feature, final IKalypsoFeatureTheme theme, final GM_Position position )

@@ -36,7 +36,6 @@
 package org.kalypsodeegree_impl.model.feature;
 
 import java.lang.reflect.Array;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -49,11 +48,9 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.tokenreplace.ITokenReplacer;
 import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
@@ -83,6 +80,9 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
+import org.kalypsodeegree_impl.model.feature.tokenreplace.FeatureIdTokenReplacer;
+import org.kalypsodeegree_impl.model.feature.tokenreplace.ListPropertyTokenReplacer;
+import org.kalypsodeegree_impl.model.feature.tokenreplace.PropertyTokenReplacer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -97,114 +97,11 @@ public final class FeatureHelper
     throw new UnsupportedOperationException( "Helper class, do not instantiate" );
   }
 
-  private static ITokenReplacer TR_FEATUREID = new ITokenReplacer()
-  {
-    @Override
-    public String replaceToken( final Object value, final String argument )
-    {
-      return ((Feature) value).getId();
-    }
+  private static ITokenReplacer TR_FEATUREID = new FeatureIdTokenReplacer();
 
-    @Override
-    public String getToken( )
-    {
-      return "id";
-    }
-  };
+  private static ITokenReplacer TR_PROPERTYVALUE = new PropertyTokenReplacer();
 
-  private static ITokenReplacer TR_PROPERTYVALUE = new ITokenReplacer()
-  {
-    @Override
-    public String replaceToken( final Object value, final String argument )
-    {
-      final Feature feature = (Feature) value;
-
-      final String[] strings = argument.split( ";" );
-      if( strings.length == 0 )
-        return "No argument for property. Must be _qname_;[null-value];[format-string]";
-
-      final String propertyPath = strings[0];
-      final NamespaceContext namespaceContext = feature.getWorkspace().getNamespaceContext();
-      final GMLXPath gmlxPath = new GMLXPath( propertyPath, namespaceContext );
-
-      final String nullValue = strings.length > 1 ? strings[1] : null;
-      final String formatString = strings.length > 2 ? strings[2] : null;
-
-      try
-      {
-        final Object property = GMLXPathUtilities.query( gmlxPath, feature );
-
-        if( property == null )
-          return "" + nullValue;
-
-        if( formatString != null )
-          return String.format( formatString, property );
-
-        return "" + property;
-      }
-      catch( final GMLXPathException e )
-      {
-        return String.format( "Illegal XPath: %s", propertyPath );
-      }
-    }
-
-    @Override
-    public String getToken( )
-    {
-      return "property";
-    }
-  };
-
-  private static ITokenReplacer TR_LISTPROPERTYVALUE = new ITokenReplacer()
-  {
-    @Override
-    public String replaceToken( final Object value, final String argument )
-    {
-      final Feature feature = (Feature) value;
-
-      final String[] strings = argument.split( ";" );
-      if( strings.length < 2 )
-        return "Wrong argument for listProperty. Must be _qname_;listindex;[null-Value]";
-
-      final NamespaceContext namespaceContext = feature.getWorkspace().getNamespaceContext();
-      final String propertyPath = strings[0];
-      final GMLXPath gmlxPath = new GMLXPath( propertyPath, namespaceContext );
-
-      try
-      {
-        final Object listObject = GMLXPathUtilities.query( gmlxPath, feature );
-        final int listindex = Integer.parseInt( strings[1] );
-        final String nullValue = strings.length > 2 ? strings[2] : StringUtils.EMPTY;
-
-        if( listObject == null )
-          return nullValue;
-
-        if( !(listObject instanceof List) )
-          return String.format( "Value object is not a list: %s", listObject );
-
-        final List< ? > list = (List< ? >) listObject;
-
-        if( listindex >= list.size() )
-          return "" + nullValue;
-
-        final Object propertyValue = list.get( listindex );
-        if( propertyValue == null )
-          return "" + nullValue;
-
-        return "" + propertyValue;
-      }
-      catch( final GMLXPathException e )
-      {
-        return String.format( "Illegal XPath: %s", propertyPath );
-      }
-    }
-
-    @Override
-    public String getToken( )
-    {
-      return "listProperty";
-    }
-  };
+  private static ITokenReplacer TR_LISTPROPERTYVALUE = new ListPropertyTokenReplacer();
 
   private static TokenReplacerEngine FEATURE_TOKEN_REPLACE = new TokenReplacerEngine( new ITokenReplacer[] { FeatureHelper.TR_FEATUREID, FeatureHelper.TR_PROPERTYVALUE,
       FeatureHelper.TR_LISTPROPERTYVALUE } );
@@ -226,57 +123,12 @@ public final class FeatureHelper
     return null;
   }
 
-  /**
-   * @deprecated use booleanIsTrue( Feature feature, QName propQName, boolean defaultStatus )
-   */
-  @Deprecated
-  public static boolean booleanIsTrue( final Feature feature, final String propName, final boolean defaultStatus )
-  {
-    final Object property = feature.getProperty( propName );
-    if( (property != null) && (property instanceof Boolean) )
-      return ((Boolean) property).booleanValue();
-    return defaultStatus;
-  }
-
   public static boolean booleanIsTrue( final Feature feature, final QName propQName, final boolean defaultStatus )
   {
     final Object property = feature.getProperty( propQName );
     if( (property != null) && (property instanceof Boolean) )
       return ((Boolean) property).booleanValue();
     return defaultStatus;
-  }
-
-  /**
-   * @deprecated Do not use: code that uses this stuff is probably not correct: it is allways defined, which type a
-   *             property has, so trying to parse this or that is forbidden!
-   */
-  @Deprecated
-  public static double getAsDouble( final Feature feature, final QName propQName, final double defaultValue )
-  {
-    final Object value = feature.getProperty( propQName );
-    if( value == null )
-      return defaultValue;
-    if( value instanceof String )
-      return Double.valueOf( (String) value ).doubleValue();
-    // should be a Double
-    if( value instanceof BigDecimal )
-      return ((BigDecimal) value).doubleValue();
-    return ((Double) value).doubleValue();
-  }
-
-  /**
-   * @deprecated use instead of propName the QName of the property
-   */
-  @Deprecated
-  public static double getAsDouble( final Feature feature, final String propName, final double defaultValue )
-  {
-    final Object value = feature.getProperty( propName );
-    if( value == null )
-      return defaultValue;
-    if( value instanceof String )
-      return Double.valueOf( (String) value ).doubleValue();
-    // should be a Double
-    return ((Double) value).doubleValue();
   }
 
   public static String getAsString( final Feature feature, final String propName )

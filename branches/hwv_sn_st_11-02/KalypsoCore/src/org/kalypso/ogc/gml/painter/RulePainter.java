@@ -51,11 +51,9 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
 
 /**
@@ -118,12 +116,7 @@ class RulePainter implements IStylePainter
       {
         final Symbolizer[] symbolizers = m_rule.getSymbolizers();
         for( final Symbolizer symbolizer : symbolizers )
-        {
-          final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer, strategy );
-          // TODO: should'nt there be at least some debug output if this happens?
-          if( displayElement != null )
-            paintable.paint( displayElement, progress.newChild( 100 ) );
-        }
+          paintable.paint( feature, symbolizer, progress.newChild( 100 ) );
       }
     }
     catch( final CoreException e )
