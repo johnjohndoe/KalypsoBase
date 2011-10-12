@@ -83,10 +83,8 @@ public class AdaptValuesVisitor implements IObservationVisitor, IZmlModelColumnV
     }
     catch( final SensorException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
   }
 
   /**
