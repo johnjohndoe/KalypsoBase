@@ -100,7 +100,6 @@ import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.FeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionListener;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -545,8 +544,9 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     if( mapModell == null )
       return StructuredSelection.EMPTY;
 
-    final EasyFeatureWrapper[] allFeatures = m_selectionManager.getAllFeatures();
-    return new FeatureSelection( m_selectionManager, allFeatures );
+    // REMARK: we need an own implementation, as the feature selection
+    // did return 'Feature' objects (whereas the FeatureSelection return sEasyFeatureWrappers)
+    return new MapPanelSelection( m_selectionManager );
 
 // final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
 // if( activeTheme instanceof IKalypsoFeatureTheme )
