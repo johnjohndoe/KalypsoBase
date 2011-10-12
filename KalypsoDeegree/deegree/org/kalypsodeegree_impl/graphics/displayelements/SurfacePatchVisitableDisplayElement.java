@@ -62,7 +62,7 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
 {
   public interface IVisitorFactory<P2 extends GM_SurfacePatch>
   {
-    public ISurfacePatchVisitor<P2> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model );
+    ISurfacePatchVisitor<P2> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model );
   }
 
   private final IElevationColorModel m_colorModel;

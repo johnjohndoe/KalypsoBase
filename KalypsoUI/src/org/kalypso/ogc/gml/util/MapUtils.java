@@ -69,7 +69,11 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * @author Thomas Jung
@@ -120,7 +124,7 @@ public class MapUtils
     workspace.postCommand( compositeCommand );
   }
 
-  public static void paintGrabbedFeature( final Graphics g, final IMapPanel panel, final Feature feature, final QName geomQName )
+  public static void paintGrabbedFeature( final Graphics g, final IMapPanel panel, final Feature feature, final GMLXPath geometryPath )
   {
     final Graphics2D g2 = (Graphics2D) g;
     final BasicStroke oldStroke = (BasicStroke) g2.getStroke();
@@ -136,16 +140,23 @@ public class MapUtils
 
     try
     {
-      final GM_Object geom = (GM_Object) feature.getProperty( geomQName );
-      if( geom == null )
-        return;
-      paintGrabbedGeometry( panel, g2, geom );
+      final Object value = GMLXPathUtilities.query( geometryPath, feature );
+      final GM_Object[] geometries = GeometryUtilities.findGeometries( value, GM_Object.class );
+
+      for( final GM_Object geom : geometries )
+      {
+        paintGrabbedGeometry( panel, g2, geom );
+      }
     }
-    catch(IllegalArgumentException e)
+    catch(final IllegalArgumentException e)
     {
       e.printStackTrace();
     }
     catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+    }
+    catch( final GMLXPathException e )
     {
       e.printStackTrace();
     }

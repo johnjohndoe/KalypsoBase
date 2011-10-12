@@ -173,7 +173,7 @@ public interface IKalypsoTheme extends IAdaptable
    * 
    * @return The ID of this theme.
    */
-  public String getId( );
+  String getId( );
 
   /**
    * This function sets the id of this theme.
@@ -181,5 +181,5 @@ public interface IKalypsoTheme extends IAdaptable
    * @param id
    *          The id of this theme.
    */
-  public void setId( String id );
+  void setId( String id );
 }

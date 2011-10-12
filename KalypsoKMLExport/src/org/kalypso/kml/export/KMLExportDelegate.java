@@ -8,11 +8,11 @@ import org.kalypso.kml.export.convert.ConvertFacade;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.kml.export.utils.GoogleEarthExportUtils;
 import org.kalypso.ogc.gml.painter.IStylePaintable;
-import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.displayelements.GeometryDisplayElement;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
 
 import de.micromata.opengis.kml.v_2_2_0.Folder;
@@ -39,38 +39,29 @@ public class KMLExportDelegate implements IStylePaintable
     m_bbox = bbox;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.ogc.gml.IPaintDelegate#paint(org.kalypsodeegree.graphics.displayelements.DisplayElement)
-   */
   @Override
-  public void paint( final DisplayElement displayElement, final IProgressMonitor monitor )
+  public void paint( final Feature feature, final Symbolizer symbolizer, final IProgressMonitor monitor )
   {
     final Style style = m_folder.createAndAddStyle();
 
-    if( displayElement instanceof GeometryDisplayElement )
+    try
     {
-      final GeometryDisplayElement element = (GeometryDisplayElement) displayElement;
-      final Symbolizer symbolizer = element.getSymbolizer();
+      final GM_Object[] geometries = DisplayElementFactory.findGeometries( feature, symbolizer );
 
-      try
+      if( !GoogleEarthExportUtils.updateStyle( style, symbolizer ) )
+        return;
+
+      for( final IKMLAdapter adapter : m_provider )
       {
-        if( !GoogleEarthExportUtils.updateStyle( style, symbolizer ) )
-          return;
-
-        final Feature feature = displayElement.getFeature();
-        for( final IKMLAdapter adapter : m_provider )
-        {
-          adapter.registerExportedFeature( feature );
-        }
-
-        // TODO perhaps, get rendered GM_Point geometry from symbolizer
-        ConvertFacade.convert( m_provider, m_folder, element.getGeometry(), style, feature );
+        adapter.registerExportedFeature( feature );
       }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
+
+      // TODO perhaps, get rendered GM_Point geometry from symbolizer
+      ConvertFacade.convert( m_provider, m_folder, geometries, style, feature );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
     }
   }
 

@@ -46,7 +46,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.javax.xml.namespace.QNameUnique;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypsodeegree.graphics.displayelements.DisplayElement;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
@@ -82,9 +82,9 @@ public class FilterByTypeStylePaintable implements IStylePaintable
   }
 
   @Override
-  public void paint( final DisplayElement displayElement, final IProgressMonitor monitor ) throws CoreException
+  public void paint( final Feature feature, final Symbolizer symbolizer, final IProgressMonitor monitor ) throws CoreException
   {
-    m_paintable.paint( displayElement, monitor );
+    m_paintable.paint( feature, symbolizer, monitor );
   }
 
   @Override

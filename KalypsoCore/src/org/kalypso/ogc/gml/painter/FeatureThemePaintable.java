@@ -5,12 +5,15 @@ import java.awt.Rectangle;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.Label;
+import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -48,11 +51,16 @@ public final class FeatureThemePaintable implements IStylePaintable
   }
 
   @Override
-  public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor ) throws CoreException
+  public void paint( final Feature feature, final Symbolizer symbolizer, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
-      displayElement.paint( m_graphics, m_p, paintMonitor );
+      final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer, m_strategy );
+      // TODO: should'nt there be at least some debug output if this happens?
+      if( displayElement == null )
+        return;
+
+      displayElement.paint( m_graphics, m_p, monitor );
     }
     catch( final CoreException e )
     {
@@ -61,6 +69,7 @@ public final class FeatureThemePaintable implements IStylePaintable
     catch( final Throwable e )
     {
       e.printStackTrace();
+      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
 
     // DEBUG output to show feature envelope: TODO: put into tracing option
