@@ -21,8 +21,10 @@
         <LineCap>ROUND</LineCap>
         <LineJoin>ROUND</LineJoin>
       </LineStyle>
-
-
+      <LineStyle role="calc_handover">
+        <Width>3</Width>
+        <LineColor>00a2e8</LineColor>
+      </LineStyle>
     </Styles>
     <Layers>
       <DerivedLayer id="W_CALC_OBSERVED">
@@ -51,7 +53,6 @@
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_calculation</StyleReference>
             </Styles>
           </Layer>
-
           <Layer id="Q_CALC_FORECAST">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
             <Title>Vorhersage</Title>
@@ -59,7 +60,6 @@
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast</StyleReference>
             </Styles>
           </Layer>
-
           <Layer id="Q_CALC_LOWER_FORECAST_CURVE">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
             <Title>untere Umhüllende</Title>
@@ -72,6 +72,13 @@
             <Title>obere Umhüllende</Title>
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_curve</StyleReference>
+            </Styles>
+          </Layer>
+          <Layer id="Q_CALC_HANDOVER">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>Übergabe</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_handover</StyleReference>
             </Styles>
           </Layer>
         </Layers>
@@ -109,6 +116,13 @@
             <Title>obere Umhüllende</Title>
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_curve</StyleReference>
+            </Styles>
+          </Layer>
+          <Layer id="W_CALC_HANDOVER">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>Übergabe</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_handover</StyleReference>
             </Styles>
           </Layer>
         </Layers>
