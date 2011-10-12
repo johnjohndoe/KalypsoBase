@@ -19,9 +19,6 @@ public class LineLayerProvider extends AbstractLayerProvider
     return new TupleResultLineLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) );
   }
 
-  /**
-   * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
-   */
   protected TupleResultDomainValueData<Calendar, Double> getDataContainer( )
   {
     final String href = getParameterContainer().getParameterValue( "href", null ); // $NON-NLS-1$

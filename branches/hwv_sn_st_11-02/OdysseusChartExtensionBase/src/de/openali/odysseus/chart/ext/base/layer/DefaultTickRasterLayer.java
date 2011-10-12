@@ -98,7 +98,6 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
   {
     final IAxis targetAxis = getTargetAxis();
     final IAxis domainAxis = getDomainAxis();
-
     if( !domainAxis.isVisible() || !targetAxis.isVisible() )
       return;
 
@@ -106,7 +105,6 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
     final IAxisRenderer targetRenderer = targetAxis.getRenderer();
 
     final Number[] domTicks = domainRenderer.getTicks( domainAxis, gc );
-
     final Number[] valTicks = targetRenderer.getTicks( targetAxis, gc );
 
     final int width = gc.getClipping().width;

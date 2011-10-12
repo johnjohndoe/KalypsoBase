@@ -1,5 +1,7 @@
 package de.openali.odysseus.chart.framework.model;
 
+import java.util.Properties;
+
 import de.openali.odysseus.chart.framework.model.impl.IChartBehaviour;
 import de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -22,6 +24,8 @@ public interface IChartModel extends ILayerContainer
   IMapperRegistry getMapperRegistry( );
 
   IBasicChartSettings getSettings( );
+
+  Properties getProperties( );
 
   // IChartModelState getState( );
 }

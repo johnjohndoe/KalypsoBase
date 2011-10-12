@@ -90,6 +90,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   public ZmlLineLayer( final IZmlLayerProvider provider, final IStyleSet styleSet, final URL context )
   {
     super( provider, styleSet );
+
     setup( context );
   }
 

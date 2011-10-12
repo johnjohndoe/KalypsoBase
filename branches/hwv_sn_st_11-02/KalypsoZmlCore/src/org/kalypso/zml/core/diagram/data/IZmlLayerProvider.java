@@ -47,7 +47,5 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
  */
 public interface IZmlLayerProvider extends ILayerProvider
 {
-
   IRequestHandler getRequestHandler( );
-
 }
