@@ -61,6 +61,8 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class ZoomToFeaturesPart
 {
+  private static final double BUFFER = 100;
+
   /**
    * The list of features, to zoom to.
    */
@@ -129,7 +131,14 @@ public class ZoomToFeaturesPart
     double max_y = envelope.getMax().getY();
 
     /* Recalculate the envelope. */
-    if( m_percent > 0 )
+    if( min_x == max_x || min_y == max_y )
+    {
+      min_x = min_x - BUFFER;
+      max_x = max_x + BUFFER;
+      min_y = min_y - BUFFER;
+      max_y = max_y + BUFFER;
+    }
+    else if( m_percent > 0 )
     {
       /* The dimensions of the envelope. */
       final double width = max_x - min_x;
