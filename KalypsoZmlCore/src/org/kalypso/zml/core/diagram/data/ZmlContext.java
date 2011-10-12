@@ -38,45 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.diagram.base.visitors;
+package org.kalypso.zml.core.diagram.data;
 
-import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
-import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
-import org.kalypso.zml.core.diagram.layer.IZmlLayer;
+import java.net.URL;
+import java.util.Properties;
 
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
+import org.kalypso.commons.java.lang.Objects;
+
+import de.openali.odysseus.chart.framework.model.IChartModel;
 
 /**
  * @author Dirk Kuch
  */
-public class ResetZmlLayerVisitor extends AbstractChartLayerVisitor
+public final class ZmlContext
 {
+  public static final String PROPERTY_CALC_CASE_CONTEXT = "calcCaseContext"; //$NON-NLS-1$
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
-  @Override
-  public void visit( final IChartLayer layer )
+  public static final String KOD_PROPERTY_CALC_CASE_FOLDER = "{$calcCaseFolder}"; //$NON-NLS-1$
+
+  private ZmlContext( )
   {
-    if( !layer.isCleanedOnRefresh() )
-      return;
-
-    if( layer instanceof IZmlLayer )
-      reset( (IZmlLayer) layer );
-
-    layer.getLayerManager().accept( this );
   }
 
-  private void reset( final IZmlLayer layer )
+  public static URL resolveContext( final IChartModel model, final String href, final URL context )
   {
-
-    final IZmlLayerDataHandler handler = layer.getDataHandler();
-    if( handler instanceof ZmlObsProviderDataHandler )
+    if( href.startsWith( KOD_PROPERTY_CALC_CASE_FOLDER ) )
     {
-      final ZmlObsProviderDataHandler obsHandler = (ZmlObsProviderDataHandler) handler;
-      obsHandler.setObsProvider( null );
+      final Properties properties = model.getProperties();
+      return (URL) Objects.firstNonNull( properties.get( PROPERTY_CALC_CASE_CONTEXT ), context );
     }
+
+    return context;
   }
 
+  public static String resolvePlainHref( final String href )
+  {
+    if( href.startsWith( KOD_PROPERTY_CALC_CASE_FOLDER ) )
+      return href.substring( KOD_PROPERTY_CALC_CASE_FOLDER.length() );
+
+    return href;
+  }
 }

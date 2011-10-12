@@ -1,5 +1,7 @@
 package de.openali.odysseus.chart.framework.model.impl;
 
+import java.util.Properties;
+
 import org.kalypso.commons.java.lang.Arrays;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -26,6 +28,8 @@ public class ChartModel implements IChartModel
   private final IMapperRegistry m_mapperRegistry = new MapperRegistry();
 
   protected final BasicChartSettings m_settings = new BasicChartSettings();
+
+  private final Properties m_properties = new Properties();
 
   public ChartModel( )
   {
@@ -133,7 +137,7 @@ public class ChartModel implements IChartModel
   public void maximize( )
   {
     autoscale();
-   }
+  }
 
   /**
    * @see de.openali.odysseus.chart.framework.model.IChartModel#setId()
@@ -151,6 +155,11 @@ public class ChartModel implements IChartModel
   public IChartModel getModel( )
   {
     return this;
+  }
+
+  public Properties getProperties( )
+  {
+    return m_properties;
   }
 
 }
