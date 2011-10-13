@@ -27,30 +27,14 @@
       </LineStyle>
     </Styles>
     <Layers>
-      <DerivedLayer id="W_CALC_OBSERVED">
-        <LayerReference url="urn:org:kalypso:zml:ui:diagramm:global#W" />
-        <ChildLayer ref="Wasserstand">
-          <Styles>
-            <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_observed</StyleReference>
-          </Styles>
-        </ChildLayer>
-      </DerivedLayer>
-      <DerivedLayer id="Q_CALC_OBSERVED">
-        <LayerReference url="urn:org:kalypso:zml:ui:diagramm:global#Q" />
-        <ChildLayer ref="Abfluss">
-          <Styles>
-            <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_observed</StyleReference>
-          </Styles>
-        </ChildLayer>
-      </DerivedLayer>
       <Layer id="Q_CALC">
-        <Title>Ergebnisse</Title>
+        <Title>Abfluss</Title>
         <Layers>
-          <Layer id="Q_CALC_CALCULATION">
+          <Layer id="Q_CALC_OBSERVED">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
-            <Title>Rechnung</Title>
+            <Title>Beobachtung</Title>
             <Styles>
-              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_calculation</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_observed</StyleReference>
             </Styles>
           </Layer>
           <Layer id="Q_CALC_FORECAST">
@@ -87,14 +71,34 @@
           <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#Q" />
         </MapperRefs>
       </Layer>
-      <Layer id="W_CALC">
-        <Title>Ergebnisse</Title>
+
+      <Layer id="Q_CALC_CALCULATION">
+        <Title>Abfluss</Title>
         <Layers>
-          <Layer id="W_CALC_CALCULATION">
+          <Layer id="Q_CALCULATION">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
             <Title>Rechnung</Title>
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_calculation</StyleReference>
+            </Styles>
+          </Layer>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#Q" />
+        </MapperRefs>
+      </Layer>
+
+
+      <Layer id="W_CALC">
+        <Title>Wasserstand</Title>
+        <Layers>
+          <Layer id="W_CALC_OBSERVED">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>Beobachtung</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_observed</StyleReference>
             </Styles>
           </Layer>
           <Layer id="W_CALC_FORECAST">
@@ -126,11 +130,32 @@
             </Styles>
           </Layer>
         </Layers>
+
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
           <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#W" />
         </MapperRefs>
       </Layer>
+      
+      <Layer id="W_CALC_CALCULATION">
+        <Title>Wasserstand</Title>
+        <Layers>
+          <Layer id="W_CALCULATION">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>Rechnung</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_calculation</StyleReference>
+            </Styles>
+          </Layer>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+        </Layers>
+
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#W" />
+        </MapperRefs>
+      </Layer>
+      
     </Layers>
   </Chart>
 </ChartConfiguration>
