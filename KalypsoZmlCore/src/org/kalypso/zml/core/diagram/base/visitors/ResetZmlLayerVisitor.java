@@ -40,11 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.diagram.base.visitors;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 
 /**
@@ -59,13 +62,26 @@ public class ResetZmlLayerVisitor extends AbstractChartLayerVisitor
   @Override
   public void visit( final IChartLayer layer )
   {
-    if( !layer.isCleanedOnRefresh() )
+    if( !isCleanedOnRefresh( layer ) )
       return;
 
     if( layer instanceof IZmlLayer )
       reset( (IZmlLayer) layer );
 
     layer.getLayerManager().accept( this );
+  }
+
+  private boolean isCleanedOnRefresh( final IChartLayer layer )
+  {
+    final ILayerProvider provider = layer.getProvider();
+    if( Objects.isNull( provider ) )
+      return true;
+
+    final IParameterContainer container = provider.getParameterContainer();
+    if( Objects.isNull( container ) )
+      return true;
+
+    return Boolean.valueOf( container.getParameterValue( "cleanLayerOnRefresh", "true" ) );
   }
 
   private void reset( final IZmlLayer layer )
