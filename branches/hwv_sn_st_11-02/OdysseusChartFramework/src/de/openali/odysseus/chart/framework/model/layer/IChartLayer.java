@@ -103,8 +103,4 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
   void setFilter( IChartLayerFilter... filters );
 
   IChartLayerFilter[] getFilters( );
-
-  void setCleanOnRefresh( boolean clean );
-
-  boolean isCleanedOnRefresh( );
 }

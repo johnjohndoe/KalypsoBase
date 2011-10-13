@@ -253,7 +253,6 @@
             <documentation>display layer in chart legend</documentation>
           </annotation>
         </attribute>
-        <attribute name="cleanLayerOnRefresh" type="boolean" default="true" />
       </extension>
     </complexContent>
   </complexType>

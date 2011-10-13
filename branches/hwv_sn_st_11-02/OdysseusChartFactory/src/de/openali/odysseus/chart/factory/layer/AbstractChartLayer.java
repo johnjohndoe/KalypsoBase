@@ -113,8 +113,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     }
   };
 
-  private boolean m_cleanOnRefresh = true;
-
   public AbstractChartLayer( final ILayerProvider provider )
   {
     m_provider = provider;
@@ -542,15 +540,4 @@ public abstract class AbstractChartLayer implements IChartLayer
     return getParent().getModel();
   }
 
-  @Override
-  public final void setCleanOnRefresh( final boolean clean )
-  {
-    m_cleanOnRefresh = clean;
-  }
-
-  @Override
-  public final boolean isCleanedOnRefresh( )
-  {
-    return m_cleanOnRefresh;
-  }
 }
