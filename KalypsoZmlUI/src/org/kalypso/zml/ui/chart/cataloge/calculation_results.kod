@@ -7,15 +7,15 @@
         <LineColor>0000FF</LineColor>
       </LineStyle>
       <LineStyle role="calc_calculation">
-        <Width>2</Width>
+        <Width>4</Width>
         <LineColor>FF0000</LineColor>
       </LineStyle>
       <LineStyle role="calc_forecast">
-        <Width>2</Width>
+        <Width>3</Width>
         <LineColor>008040</LineColor>
       </LineStyle>
       <LineStyle role="calc_forecast_curve">
-        <Width>1</Width>
+        <Width>2</Width>
         <LineColor>008040</LineColor>
         <DashArray>16 6</DashArray>
         <LineCap>ROUND</LineCap>
