@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -67,6 +67,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -112,9 +113,8 @@ public class FeatureCompositeGFTWrapper
 
     final CachedFeatureviewFactory cfvFactory = new CachedFeatureviewFactory( fvFactory );
 
-    final Reader r;
-
-    r = new InputStreamReader( file.getContents(), ((IEncodedStorage) file).getCharset() );
+    // FIXME: never closed!
+    final Reader r = new InputStreamReader( file.getContents(), file.getCharset() );
 
     final InputSource is = new InputSource( r );
     final Unmarshaller unmarshaller = FeatureCompositeGFTWrapper.JC.createUnmarshaller();
@@ -122,10 +122,15 @@ public class FeatureCompositeGFTWrapper
     // TODO close reader and stream!
 
     final Featuretemplate m_template = (Featuretemplate) unmarshaller.unmarshal( is );
+
+    // FIXME: close on exception!
+
+    final URL context = ResourceUtilities.createQuietURL( file );
+
     final List<FeatureviewType> view = m_template.getView();
 
     for( final FeatureviewType featureviewType : view )
-      cfvFactory.addView( featureviewType );
+      cfvFactory.addView( featureviewType, context );
 
     m_compFeature = new FeatureComposite( feature, KalypsoCorePlugin.getDefault().getSelectionManager(), cfvFactory );
     m_compFeature.setFormToolkit( toolkit );

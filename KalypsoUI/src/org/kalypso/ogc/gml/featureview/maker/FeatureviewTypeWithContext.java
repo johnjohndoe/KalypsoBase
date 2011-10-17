@@ -38,30 +38,37 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.featureview.control;
+package org.kalypso.ogc.gml.featureview.maker;
 
 import java.net.URL;
 
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.template.featureview.FeatureviewType;
 
 /**
+ * A wrapper around a {@link FeatureviewType} that adds a context {@link URL}, which is usually the location from where
+ * the view was loaded.
+ * 
  * @author Gernot Belger
  */
-public interface IFeatureComposite
+public class FeatureviewTypeWithContext
 {
-  IFeatureSelectionManager getSelectionManager( );
+  private final FeatureviewType m_view;
 
-  IFeatureviewFactory getFeatureviewFactory( );
+  private final URL m_context;
 
-  FormToolkit getFormToolkit( );
+  public FeatureviewTypeWithContext( final FeatureviewType view, final URL context )
+  {
+    m_view = view;
+    m_context = context;
+  }
 
-  boolean isShowOk( );
+  public URL getContext( )
+  {
+    return m_context;
+  }
 
-  /**
-   * Returns the context, i.e. the resource location, where the feature view template was loaded from. Feature controls
-   * might need to resolve relative paths against this context.
-   */
-  URL getFeatureviewContext( );
+  public FeatureviewType getView( )
+  {
+    return m_view;
+  }
 }

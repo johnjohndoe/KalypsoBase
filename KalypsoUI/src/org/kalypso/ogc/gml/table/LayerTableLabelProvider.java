@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.table;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.BaseLabelProvider;
-import org.eclipse.jface.viewers.IColorProvider;
+import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -54,23 +54,17 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
- * @author Belger
+ * @author Gernot Belger
  */
-public class LayerTableLabelProvider extends BaseLabelProvider implements ITableLabelProvider, IColorProvider
+public class LayerTableLabelProvider extends BaseLabelProvider implements ITableLabelProvider, ITableColorProvider
 {
   private final LayerTableViewer m_viewer;
-
-  private final Color m_noSelectionColor;
 
   public LayerTableLabelProvider( final LayerTableViewer layerTable )
   {
     m_viewer = layerTable;
-    m_noSelectionColor = m_viewer.getControl().getBackground();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
-   */
   @Override
   public Image getColumnImage( final Object element, final int columnIndex )
   {
@@ -87,9 +81,6 @@ public class LayerTableLabelProvider extends BaseLabelProvider implements ITable
     return modifier.getImage( feature );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
-   */
   @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
@@ -120,31 +111,26 @@ public class LayerTableLabelProvider extends BaseLabelProvider implements ITable
   }
 
   @Override
-  public Color getForeground( final Object element )
+  public Color getForeground( final Object element, final int columnIndex )
   {
-    return null;
+    final Feature feature = (Feature) element;
+
+    final LayerTableStyle style = m_viewer.getStyle( columnIndex );
+    if( style == null )
+      return null;
+
+    return style.getForeground( feature );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
-   */
   @Override
-  public Color getBackground( final Object element )
+  public Color getBackground( final Object element, final int columnIndex )
   {
-// if( element instanceof Feature )
-// {
-// final ISelection selection = m_viewer.getSelection();
-// if( selection instanceof IStructuredSelection )
-// {
-// final Iterator iterator = ( (IStructuredSelection)selection ).iterator();
-// while( iterator.hasNext() )
-// {
-// final Object object = iterator.next();
-// if( element == object )
-// return m_selectionColor;
-// }
-// }
-// }
-    return m_noSelectionColor;
+    final Feature feature = (Feature) element;
+
+    final LayerTableStyle style = m_viewer.getStyle( columnIndex );
+    if( style == null )
+      return null;
+
+    return style.getBackground( feature );
   }
 }

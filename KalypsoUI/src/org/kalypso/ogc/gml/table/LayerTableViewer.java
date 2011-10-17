@@ -50,6 +50,7 @@ import javax.xml.namespace.NamespaceContext;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -109,6 +110,7 @@ import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.Gistableview.Layer;
 import org.kalypso.template.gistableview.Gistableview.Layer.Column;
 import org.kalypso.template.gistableview.Gistableview.Layer.Sort;
+import org.kalypso.template.gistableview.StyleType;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.KalypsoUIExtensions;
@@ -126,27 +128,31 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
  */
 public class LayerTableViewer extends TableViewer implements ICellModifier
 {
+  // FIXME: should not be visible
   public static final String COLUMN_PROP_PATH = "columnProperty"; //$NON-NLS-1$
 
   /**
    * Label Property. Feature-Annotation style format string. The context-feature in this case is the paretn feature of
    * the shown list.
    */
-  public static final String COLUMN_PROP_LABEL = "columnLabel"; //$NON-NLS-1$
+  private static final String COLUMN_PROP_LABEL = "columnLabel"; //$NON-NLS-1$
 
   /**
    * Tooltip Property. Feature-Annotation style format string. The context-feature in this case is the paretn feature of
    * the shown list.
    */
-  public static final String COLUMN_PROP_TOOLTIP = "columnTooltip"; //$NON-NLS-1$
+  private static final String COLUMN_PROP_TOOLTIP = "columnTooltip"; //$NON-NLS-1$
 
-  public static final String COLUMN_PROP_EDITABLE = "columnEditable"; //$NON-NLS-1$
+  private static final String COLUMN_PROP_EDITABLE = "columnEditable"; //$NON-NLS-1$
 
+  // FIXME: should not be visible
   public static final String COLUMN_PROP_WIDTH = "columnWidth"; //$NON-NLS-1$
 
-  public static final String COLUMN_PROP_FORMAT = "columnFormat"; //$NON-NLS-1$
+  private static final String COLUMN_PROP_FORMAT = "columnFormat"; //$NON-NLS-1$
 
-  public static final String COLUMN_PROP_MODIFIER = "columnModifier"; //$NON-NLS-1$
+  private static final String COLUMN_PROP_MODIFIER = "columnModifier"; //$NON-NLS-1$
+
+  private static final String COLUMN_PROP_STYLE = "columnStyle"; //$NON-NLS-1$
 
   private final IFeatureModifierFactory m_featureModiferFactory;
 
@@ -226,9 +232,6 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
   private final ControlListener m_headerControlListener = new ControlAdapter()
   {
-    /**
-     * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-     */
     @Override
     public void controlResized( final ControlEvent e )
     {
@@ -306,9 +309,6 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     super.handleDispose( event );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ContentViewer#getInput()
-   */
   @Override
   public ILayerTableInput getInput( )
   {
@@ -335,7 +335,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
   }
 
   /** Configures the table accordingly to the template. Does NOT change the input element. */
-  public void applyLayer( final Layer layer )
+  public void applyLayer( final Layer layer, final URL context )
   {
     // FIXME: get namepsace context from outside
     m_namespaceContext = null;
@@ -345,11 +345,15 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     {
       clearColumns();
 
+      final StyleType styleRef = layer.getStyle();
+
+      final LayerTableStyle globalStyle = LayerTableStyleUtils.parseStyle( styleRef, new LayerTableStyle( null ), context );
+
       setFilters( new ViewerFilter[0] );
 
       final Sort sort = layer.getSort();
       final List<Column> columnList = layer.getColumn();
-      setSortAndColumns( sort, columnList );
+      setSortAndColumns( sort, columnList, globalStyle, context );
 
       applyFilter( layer );
     }
@@ -377,7 +381,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     }
   }
 
-  private void setSortAndColumns( final Sort sort, final List<Column> columnList )
+  private void setSortAndColumns( final Sort sort, final List<Column> columnList, final LayerTableStyle globalStyle, final URL context )
   {
     if( sort != null )
     {
@@ -392,7 +396,16 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       final String propertyName = ct.getName();
       final GMLXPath propertyPath = parseQuietXPath( propertyName );
 
-      addColumn( propertyPath, ct.getLabel(), ct.getTooltip(), ct.isEditable(), ct.getWidth(), ct.getAlignment(), ct.getFormat(), ct.getModifier(), false );
+      final String label = ct.getLabel();
+      final String tooltip = ct.getTooltip();
+      final boolean editable = ct.isEditable();
+      final int width = ct.getWidth();
+      final String alignment = ct.getAlignment();
+      final String format = ct.getFormat();
+      final String modifier = ct.getModifier();
+      final LayerTableStyle style = LayerTableStyleUtils.parseStyle( ct.getStyle(), globalStyle, context );
+
+      addColumn( propertyPath, label, tooltip, editable, width, alignment, format, modifier, false, style );
     }
   }
 
@@ -411,12 +424,14 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       return;
 
     final TableColumn[] columns = table.getColumns();
-    for( final TableColumn element : columns )
-      element.dispose();
+    for( final TableColumn column : columns )
+      column.dispose();
   }
 
-  public void addColumn( final GMLXPath propertyPath, final String label, final String tooltip, final boolean isEditable, final int width, final String alignment, final String format, final String modifier, final boolean bRefreshColumns )
+  public void addColumn( final GMLXPath propertyPath, final String label, final String tooltip, final boolean isEditable, final int width, final String alignment, final String format, final String modifier, final boolean bRefreshColumns, final LayerTableStyle style )
   {
+    Assert.isNotNull( style );
+
     final Table table = getTable();
 
     final int alignmentInt = SWTUtilities.createStyleFromString( alignment );
@@ -431,6 +446,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
     tc.setData( COLUMN_PROP_FORMAT, format );
     tc.setData( COLUMN_PROP_MODIFIER, modifier );
+    tc.setData( COLUMN_PROP_STYLE, style );
     tc.setToolTipText( tooltip );
     tc.setWidth( width );
     setColumnText( tc );
@@ -1072,5 +1088,15 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
   public IFeatureSelectionManager getSelectionManager( )
   {
     return m_selectionManager;
+  }
+
+  public LayerTableStyle getStyle( final int columnIndex )
+  {
+    final TableColumn[] columns = getTable().getColumns();
+    if( columnIndex < 0 || columnIndex > columns.length - 1 )
+      return null;
+
+    final TableColumn column = columns[columnIndex];
+    return (LayerTableStyle) column.getData( COLUMN_PROP_STYLE );
   }
 }

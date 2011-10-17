@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.table.command;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.table.LayerTableStyle;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
@@ -98,27 +99,18 @@ public class SetColumnVisibleCommand implements ICommand
     doIt( m_viewer, m_propertyPath, m_bVisible, 100, m_alignment, m_format, m_modifier, true );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
     doIt( m_viewer, m_propertyPath, m_bVisible, 100, m_alignment, m_format, m_modifier, true );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
     doIt( m_viewer, m_propertyPath, !m_bVisible, m_oldWidth, m_alignment, m_format, m_modifier, m_wasEditable );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
@@ -133,7 +125,7 @@ public class SetColumnVisibleCommand implements ICommand
       public void run( )
       {
         if( bVisible )
-          viewer.addColumn( propertyPath, null, null, editable, width, alignment, format, modifier, true );
+          viewer.addColumn( propertyPath, null, null, editable, width, alignment, format, modifier, true, new LayerTableStyle( null ) );
         else
           viewer.removeColumn( propertyPath );
       }

@@ -1,5 +1,6 @@
 package org.kalypso.ogc.gml.featureview.control;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,6 +43,7 @@ import org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler;
 import org.kalypso.ogc.gml.featureview.toolbar.ToolbarHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ogc.gml.table.LayerTableStyle;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.template.featureview.Toolbar;
@@ -97,10 +99,13 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
 
   private CommandableWorkspace m_workspace;
 
-  public TableFeatureControl( final IPropertyType ftp, final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final Toolbar toolbar, final boolean showToolbar, final boolean showContextMenu )
+  private final URL m_templateContext;
+
+  public TableFeatureControl( final IPropertyType ftp, final IFeatureModifierFactory factory, final IFeatureSelectionManager selectionManager, final Toolbar toolbar, final boolean showToolbar, final boolean showContextMenu, final URL templateContext )
   {
     super( ftp, showToolbar, SWT.VERTICAL | SWT.FLAT );
     m_showToolbar = showToolbar;
+    m_templateContext = templateContext;
 
     Assert.isNotNull( ftp );
 
@@ -272,7 +277,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
 
       if( m_tableView != null )
       {
-        m_viewer.applyLayer( m_tableView.getLayer() );
+        m_viewer.applyLayer( m_tableView.getLayer(), m_templateContext );
       }
       else
       {
@@ -282,7 +287,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
         {
           final IPropertyType ftp = properties[i];
           final GMLXPath columnPath = new GMLXPath( ftp.getQName() );
-          m_viewer.addColumn( columnPath, null, null, true, 100, "SWT.CENTER", null, null, i == properties.length - 1 ); //$NON-NLS-1$
+          m_viewer.addColumn( columnPath, null, null, true, 100, "SWT.CENTER", null, null, i == properties.length - 1, new LayerTableStyle( null ) ); //$NON-NLS-1$
         }
       }
     }

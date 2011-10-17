@@ -194,7 +194,7 @@ public class FeatureTemplateviewer
 
     final List<FeatureviewType> view = template.getView();
     for( final FeatureviewType featureviewType : view )
-      m_fvFactory.addView( featureviewType );
+      m_fvFactory.addView( featureviewType, context );
 
     final Layer layer = template.getLayer();
 

@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -77,6 +78,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ogc.gml.featureview.maker.FeatureviewTypeWithContext;
 import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.Button;
@@ -214,13 +216,13 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   public Control createControl( final Composite parent, final int defaultStyle, final IFeatureType ft )
   {
-    final FeatureviewType view = m_featureviewFactory.get( ft, getFeature() );
+    final FeatureviewTypeWithContext view = m_featureviewFactory.get( ft, getFeature() );
 
-    // TODO: dubious we shoudn't need to adapt the parent, that should already have beend done by the calling code
+    // TODO: dubious we shoudn't need to adapt the parent, that should already have been done by the calling code
     if( m_formToolkit != null )
       m_formToolkit.adapt( parent );
 
-    m_control = createControl( parent, defaultStyle, view );
+    m_control = createControl( parent, defaultStyle, view.getView() );
 
     /* If a toolkit is set, use it. */
     if( m_formToolkit != null )
@@ -762,10 +764,11 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     if( feature == null )
       return;
 
-    final FeatureviewType type = m_featureviewFactory.get( feature.getFeatureType(), feature );
-    types.add( type );
+    final FeatureviewTypeWithContext type = m_featureviewFactory.get( feature.getFeatureType(), feature );
+    types.add( type.getView() );
 
     for( final IFeatureControl control : m_featureControls )
+    {
       if( control instanceof FeatureComposite )
         ((FeatureComposite) control).collectViewTypes( types );
       else if( control instanceof SubFeatureControl )
@@ -774,6 +777,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
         if( fc instanceof FeatureComposite )
           ((FeatureComposite) fc).collectViewTypes( types );
       }
+    }
   }
 
   /**
@@ -826,5 +830,21 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   public boolean isShowOk( )
   {
     return m_showOk;
+  }
+
+  @Override
+  public URL getFeatureviewContext( )
+  {
+    final Feature feature = getFeature();
+    if( feature == null )
+      return null;
+
+    final IFeatureType featureType = feature.getFeatureType();
+
+    final FeatureviewTypeWithContext featureviewWithContext = m_featureviewFactory.get( featureType, feature );
+    if( featureviewWithContext == null )
+      return null;
+
+    return featureviewWithContext.getContext();
   }
 }
