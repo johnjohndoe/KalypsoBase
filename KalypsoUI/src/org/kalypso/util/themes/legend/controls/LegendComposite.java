@@ -453,7 +453,7 @@ public class LegendComposite extends Composite
     /* Create a spinner. */
     final Spinner fontSizeSpinner = new Spinner( legendGroup, SWT.BORDER );
     fontSizeSpinner.setValues( m_fontSize, 1, 25, 0, 1, 5 );
-    fontSizeSpinner.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    fontSizeSpinner.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     fontSizeSpinner.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -468,11 +468,6 @@ public class LegendComposite extends Composite
     } );
 
     /* Create a label. */
-    Label emptyLabel = new Label( legendGroup, SWT.NONE );
-    emptyLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    emptyLabel.setText( "" );
-
-    /* Create a label. */
     Label insetsLabel = new Label( legendGroup, SWT.NONE );
     insetsLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     insetsLabel.setText( "Zwischenraum" );
@@ -481,7 +476,7 @@ public class LegendComposite extends Composite
     /* Create a spinner. */
     final Spinner insetsSpinner = new Spinner( legendGroup, SWT.BORDER );
     insetsSpinner.setValues( m_insets, 1, 25, 0, 1, 5 );
-    insetsSpinner.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    insetsSpinner.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
     insetsSpinner.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -494,11 +489,6 @@ public class LegendComposite extends Composite
         fireLegendPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_insets, m_themeIds.toArray( new String[] {} ), m_fontSize );
       }
     } );
-
-    /* Create a label. */
-    Label emptyLabel1 = new Label( legendGroup, SWT.NONE );
-    emptyLabel1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    emptyLabel1.setText( "" );
 
     /* Create a label. */
     Label availableThemesLabel = new Label( legendGroup, SWT.NONE );

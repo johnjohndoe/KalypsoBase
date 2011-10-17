@@ -120,10 +120,10 @@ public class TextThemeWizardPage extends WizardPage
     {
       /**
        * @see org.kalypso.util.themes.text.listener.ITextChangedListener#textPropertyChanged(java.util.Properties, int,
-       *      int, org.eclipse.swt.graphics.Color, java.lang.String)
+       *      int, org.eclipse.swt.graphics.Color, java.lang.String, int, boolean)
        */
       @Override
-      public void textPropertyChanged( Properties properties, int horizontal, int vertical, org.eclipse.swt.graphics.Color backgroundColor, String text )
+      public void textPropertyChanged( Properties properties, int horizontal, int vertical, org.eclipse.swt.graphics.Color backgroundColor, String text, int fontSize, boolean transparency )
       {
         /* Store the properties. */
         m_properties.clear();
@@ -133,12 +133,16 @@ public class TextThemeWizardPage extends WizardPage
         String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
         String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
         String textProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT );
+        String fontSizeProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_FONT_SIZE );
+        String transparencyProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_TRANSPARENCY );
 
         /* Set the properties. */
         m_properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
         m_properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
         m_properties.put( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
         m_properties.put( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
+        m_properties.put( TextUtilities.THEME_PROPERTY_FONT_SIZE, fontSizeProperty );
+        m_properties.put( TextUtilities.THEME_PROPERTY_TRANSPARENCY, transparencyProperty );
 
         /* Check if the page can be completed. */
         checkPageComplete();
