@@ -52,10 +52,14 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface Fill extends Drawing
 {
-  // default values
-  public static final Color FILL_DEFAULT = Color.decode( "#808080" );
+  String CSS_FILL = "fill"; //$NON-NLS-1$
 
-  public static final double OPACITY_DEFAULT = 1.0;
+  String CSS_OPACITY = "fill-opacity"; //$NON-NLS-1$
+
+  // default values
+  Color FILL_DEFAULT = Color.decode( "#808080" );
+
+  double OPACITY_DEFAULT = 1.0;
 
   /**
    * Returns the (evaluated) value of the fill's CssParameter 'fill'.
