@@ -52,20 +52,15 @@ import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Belger
  */
 public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
 {
-  /**
-   * @see org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory#createFeatureModifier(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.IPropertyType, java.lang.String,
-   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
-   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
-   */
   @Override
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final String format, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
+  public IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final String format, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl )
   {
     if( ftp == null )
       return null;
@@ -74,20 +69,20 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
     {
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
       if( vpt.isGeometry() || (!vpt.getQName().equals( Feature.QN_NAME ) && vpt.isList()) )
-        return new ButtonModifier( vpt, fcl );
+        return new ButtonModifier( propertyPath, vpt, fcl );
 
       final IGuiTypeHandler typeHandler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( vpt );
       if( typeHandler != null )
-        return typeHandler.createFeatureModifier( ftp, selectionManager, fcl, format );
-      return new StringModifier( vpt, format );
+        return typeHandler.createFeatureModifier( propertyPath, ftp, selectionManager, fcl, format );
+      return new StringModifier( propertyPath, vpt, format );
     }
     if( ftp instanceof IRelationType )
     {
       final IRelationType rpt = (IRelationType) ftp;
       if( !rpt.isInlineAble() && rpt.isLinkAble() && !rpt.isList() )
-        return new ComboBoxModifier( rpt );
+        return new ComboBoxModifier( propertyPath, rpt );
       else
-        return new ButtonModifier( rpt, fcl );
+        return new ButtonModifier( propertyPath, rpt, fcl );
     }
     throw new UnsupportedOperationException();
   }

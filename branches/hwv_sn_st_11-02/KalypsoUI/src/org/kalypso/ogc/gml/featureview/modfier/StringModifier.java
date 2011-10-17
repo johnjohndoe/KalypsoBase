@@ -48,55 +48,37 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Gernot Belger
  */
-public class StringModifier implements IFeatureModifier
+public class StringModifier extends AbstractFeatureModifier
 {
-  private final IValuePropertyType m_ftp;
-
   private final IGuiTypeHandler m_guiTypeHandler;
 
   private final String m_format;
 
-  public StringModifier( final IValuePropertyType ftp, final String format )
+  public StringModifier( final GMLXPath propertyPath, final IValuePropertyType ftp, final String format )
   {
-    m_ftp = ftp;
+    init( propertyPath, ftp );
+
     m_format = format;
 
     // we need both registered type handler types
     final ITypeRegistry<IGuiTypeHandler> guiTypeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-    m_guiTypeHandler = guiTypeRegistry.getTypeHandlerFor( m_ftp );
+    m_guiTypeHandler = guiTypeRegistry.getTypeHandlerFor( ftp );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
-   */
   @Override
-  public void dispose( )
+  public Object getProperty( final Feature feature )
   {
-    // nix zu tun
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getValue(org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public Object getValue( final Feature f )
-  {
-    if( m_ftp == null )
-      return null;
-
-    final Object data = f.getProperty( m_ftp );
-
+    final Object data = super.getProperty( feature );
     return toText( data );
   }
 
@@ -129,21 +111,14 @@ public class StringModifier implements IFeatureModifier
     return value == null ? "" : value.toString(); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.Object)
-   */
   @Override
   public Object parseInput( final Feature f, final Object editedStringValue )
   {
-    Object result = null;
     final String text = editedStringValue == null ? "" : editedStringValue.toString(); //$NON-NLS-1$
-    // if( text.length() == 0 )
-    // return null;
 
     try
     {
-      result = parseData( text );
+      return parseData( text );
     }
     catch( final NumberFormatException e )
     {
@@ -153,7 +128,7 @@ public class StringModifier implements IFeatureModifier
     {
       e.printStackTrace();
     }
-    return result;
+    return null;
   }
 
   private Object parseData( final String text ) throws ParseException
@@ -167,7 +142,7 @@ public class StringModifier implements IFeatureModifier
       // get deleted when edited. This is ok for example for the gml:name property, where
       // we normally only want to edit the first entry.
       // For other list-properties, where this behaviour is not intended, this string-modifier should not be used.
-      if( m_ftp.isList() )
+      if( getPropertyType().isList() )
       {
         final List<Object> list = new ArrayList<Object>( 1 );
         list.add( value );
@@ -211,22 +186,10 @@ public class StringModifier implements IFeatureModifier
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
-   */
-  @Override
-  public IPropertyType getFeatureTypeProperty( )
-  {
-    return m_ftp;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getLabel(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public String getLabel( final Feature f )
   {
-    final Object data = f.getProperty( m_ftp );
+    final Object data = getProperty( f );
 
     // We should probably use a null-format string here
     if( data == null )
@@ -235,7 +198,7 @@ public class StringModifier implements IFeatureModifier
     if( m_format != null && m_format.length() > 0 )
       return String.format( m_format, data );
 
-    final Object value = getValue( f );
+    final Object value = getProperty( f );
 
     // HACK
     final Object result;
@@ -258,29 +221,12 @@ public class StringModifier implements IFeatureModifier
     return result.toString();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getImage(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public Image getImage( final Feature f )
   {
     if( m_guiTypeHandler != null )
-      return m_guiTypeHandler.getImage( getValue( f ) );
+      return m_guiTypeHandler.getImage( getProperty( f ) );
 
     return null;
-  }
-
-  /**
-   * Zwei Objekte sind gleich, wenn ihre String-Representation gleich sind.<br>
-   * TODO: remove, not used any more.
-   * 
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#equals(java.lang.Object, java.lang.Object)
-   * @deprecated Do not use.
-   */
-  @Override
-  @Deprecated
-  public boolean equals( final Object newData, final Object oldData )
-  {
-    return toText( newData ).equals( toText( oldData ) );
   }
 }

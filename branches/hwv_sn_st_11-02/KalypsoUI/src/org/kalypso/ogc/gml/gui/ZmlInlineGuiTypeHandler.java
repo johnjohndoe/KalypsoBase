@@ -50,6 +50,7 @@ import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author kuepfer
@@ -87,22 +88,14 @@ public class ZmlInlineGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     return factory.createButton( button );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
-   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
-   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
-   */
   @Override
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
+  public IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
-    return new ButtonModifier( ftp, fcl );
+    return new ButtonModifier( propertyPath, ftp, fcl );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.extension.ITypeHandler#getClassName()
-   */
   @Override
-  public Class getValueClass( )
+  public Class< ? > getValueClass( )
   {
     return m_typeHandler.getValueClass();
   }

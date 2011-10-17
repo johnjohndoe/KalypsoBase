@@ -66,6 +66,7 @@ import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author bce
@@ -82,11 +83,8 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
     return new TimeserieLinkFeatureDialog( feature, ftp );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.extension.IMarshallingTypeHandler#getClassName()
-   */
   @Override
-  public Class getValueClass( )
+  public Class< ? > getValueClass( )
   {
     return TimeseriesLinkType.class;
   }
@@ -155,20 +153,12 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
     return factory.createComposite( composite );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
-   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
-   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
-   */
   @Override
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
+  public IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
-    return new ButtonModifier( ftp, fcl );
+    return new ButtonModifier( propertyPath, ftp, fcl );
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
-   */
   @Override
   public boolean isGeometry( )
   {

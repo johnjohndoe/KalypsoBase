@@ -67,6 +67,7 @@ import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypso.template.featureview.Text;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Gernot Belger
@@ -136,13 +137,8 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
     return factory.createText( editor );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureModifier(org.kalypso.gmlschema.property.IPropertyType,
-   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager,
-   *      org.kalypso.ogc.gml.featureview.IFeatureChangeListener, java.lang.String)
-   */
   @Override
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
+  public IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
     final IValuePropertyType vpt = (IValuePropertyType) ftp;
@@ -150,13 +146,13 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
     final Class< ? > valueClass = getValueClass();
 
     if( Boolean.class == valueClass )
-      return new BooleanModifier( vpt );
+      return new BooleanModifier( propertyPath, vpt );
 
     final Map<Object, String> comboEntries = PropertyUtils.createComboEntries( vpt );
     if( comboEntries.size() > 0 )
-      return new ComboModifier( vpt );
+      return new ComboModifier( propertyPath, vpt );
 
-    return new StringModifier( vpt, format );
+    return new StringModifier( propertyPath, vpt, format );
   }
 
   /**

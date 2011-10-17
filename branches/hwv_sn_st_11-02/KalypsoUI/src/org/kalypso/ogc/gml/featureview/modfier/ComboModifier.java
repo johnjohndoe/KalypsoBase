@@ -47,33 +47,30 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * A modifier which handles feature-value-properties which are enumerations: shows a combo-box as cell-editor.
  * 
  * @author Gernot Belger
  */
-public class ComboModifier implements IFeatureModifier
+public class ComboModifier extends AbstractFeatureModifier
 {
   public static final String NO_LINK_STRING = Messages.getString( "org.kalypso.ogc.gml.featureview.modfier.ComboModifier.0" ); //$NON-NLS-1$
 
   private final Map<Object, String> m_comboEntries;
 
-  private final IValuePropertyType m_vpt;
-
   private ComboBoxViewerCellEditor m_comboBoxCellEditor;
 
-  public ComboModifier( final IValuePropertyType ftp )
+  public ComboModifier( final GMLXPath propertyPath, final IValuePropertyType ftp )
   {
-    m_vpt = ftp;
+    init( propertyPath, ftp );
 
     m_comboEntries = createComboEntries( ftp );
   }
@@ -93,28 +90,6 @@ public class ComboModifier implements IFeatureModifier
     return m_comboEntries;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getValue(org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public Object getValue( final Feature f )
-  {
-    return f.getProperty( m_vpt );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.Object)
-   */
-  @Override
-  public Object parseInput( final Feature f, final Object value )
-  {
-    return value;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#createCellEditor(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public CellEditor createCellEditor( final Composite parent )
   {
@@ -175,57 +150,17 @@ public class ComboModifier implements IFeatureModifier
     return null; // null means vaild
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
-   */
-  @Override
-  public IPropertyType getFeatureTypeProperty( )
-  {
-    return m_vpt;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getLabel(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public String getLabel( final Feature f )
   {
     // TODO: GUITypeHandler konsequent einsetzen
     // besser: abhängig vom IPropertyType etwas machen
-    final IPropertyType ftp = getFeatureTypeProperty();
+    final IPropertyType ftp = getPropertyType();
     final Object fprop = f.getProperty( ftp );
 
     if( fprop == null )
       return NO_LINK_STRING;
 
     return m_comboEntries.get( fprop );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getImage(org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public Image getImage( final Feature f )
-  {
-    // Todo: button image
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    // nichts zu tun
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#equals(java.lang.Object, java.lang.Object)
-   */
-  @Override
-  public boolean equals( final Object newData, final Object oldData )
-  {
-    return newData.equals( oldData );
   }
 }

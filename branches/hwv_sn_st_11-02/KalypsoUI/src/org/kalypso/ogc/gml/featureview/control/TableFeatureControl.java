@@ -55,6 +55,7 @@ import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Gernot Belger
@@ -280,7 +281,8 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
         for( int i = 0; i < properties.length; i++ )
         {
           final IPropertyType ftp = properties[i];
-          m_viewer.addColumn( ftp.getQName().getLocalPart(), null, null, true, 100, "SWT.CENTER", null, null, i == properties.length - 1 ); //$NON-NLS-1$
+          final GMLXPath columnPath = new GMLXPath( ftp.getQName() );
+          m_viewer.addColumn( columnPath, null, null, true, 100, "SWT.CENTER", null, null, i == properties.length - 1 ); //$NON-NLS-1$
         }
       }
     }
