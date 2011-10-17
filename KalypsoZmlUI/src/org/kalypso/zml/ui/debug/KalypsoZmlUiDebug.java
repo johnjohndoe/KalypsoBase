@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,32 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model;
+package org.kalypso.zml.ui.debug;
 
-import org.eclipse.jface.viewers.ViewerCell;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.contribs.eclipse.core.runtime.Debug;
+import org.kalypso.zml.ui.KalypsoZmlUI;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableCell extends IZmlTableObject
+public final class KalypsoZmlUiDebug
 {
-  IZmlTableColumn getColumn( );
+  public static final Debug DEBUG_TABLE = new Debug( KalypsoZmlUI.getDefault(), "/debug/table/rendering" ); //$NON-NLS-1$
 
-  IZmlTableRow getRow( );
-
-  IZmlValueReference getValueReference( );
-
-  /**
-   * @return row index
-   */
-  int getIndex( );
-
-  IZmlTableCell findPreviousCell( );
-
-  IZmlTableCell findNextCell( );
-
-  int findIndex( );
-
-  ViewerCell getViewerCell( );
+  private KalypsoZmlUiDebug( )
+  {
+  }
 }

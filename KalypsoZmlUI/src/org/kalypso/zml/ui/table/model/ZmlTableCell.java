@@ -69,9 +69,6 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     m_row = row;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals( final Object obj )
   {
@@ -85,9 +82,6 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     return super.equals( obj );
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {
@@ -97,45 +91,30 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     return builder.toHashCode();
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableCell#getColumn()
-   */
   @Override
   public IZmlTableColumn getColumn( )
   {
     return m_column;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableCell#getRow()
-   */
   @Override
   public IZmlTableRow getRow( )
   {
     return m_row;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableCell#getValueReference()
-   */
   @Override
   public IZmlValueReference getValueReference( )
   {
     return m_row.getValueReference( m_column );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableCell#getIndex()
-   */
   @Override
   public int getIndex( )
   {
     return m_row.getIndex();
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableCell#findPreviousCell()
-   */
   @Override
   public IZmlTableCell findPreviousCell( )
   {
@@ -149,9 +128,6 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     return new ZmlTableCell( previousRow, m_column );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableCell#findNextCell()
-   */
   @Override
   public IZmlTableCell findNextCell( )
   {
@@ -185,9 +161,6 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     return 2;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.IZmlTableCell#getCell()
-   */
   @Override
   public ViewerCell getViewerCell( )
   {

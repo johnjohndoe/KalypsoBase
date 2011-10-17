@@ -50,6 +50,7 @@ import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
+import org.kalypso.zml.ui.table.provider.PlainLabelProvider;
 import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
@@ -82,13 +83,13 @@ public class ZmlTableColumnBuilder implements ICoreRunnableWithProgress
     final ExtendedZmlTableColumn column = new ExtendedZmlTableColumn( m_table, viewerColumn, m_column, index );
     m_table.add( column );
 
-    final ZmlLabelProvider labelProvider = new ZmlLabelProvider( column );
-    viewerColumn.setLabelProvider( labelProvider );
+    viewerColumn.setLabelProvider( new PlainLabelProvider() );
     viewerColumn.getColumn().setText( m_column.getLabel() );
 
     /** edit support */
     if( m_column.getType() instanceof DataColumnType && m_column.isEditable() )
     {
+      final ZmlLabelProvider labelProvider = new ZmlLabelProvider( column );
       final ZmlTableEditingSupport editingSupport = new ZmlTableEditingSupport( column, labelProvider, m_table.getFocusHandler() );
       column.setEditingSupport( editingSupport );
     }

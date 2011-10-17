@@ -155,6 +155,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
       ColumnViewerToolTipSupport.enableFor( m_tableViewer, ToolTip.NO_RECREATE );
 
+      // test implementation of content provider - background: rendering of our own table header
+// m_tableViewer.setContentProvider( new ZmlTreeContentProvider() );
+
       m_tableViewer.setContentProvider( new ArrayTreeContentProvider()
       {
         /**
@@ -188,11 +191,15 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
       addBasicFilters();
 
-      /** layout stuff */
       final Table table = m_tableViewer.getTable();
+      final ZmlTablePaintListener paintListener = new ZmlTablePaintListener( this );
+      table.addListener( SWT.EraseItem, paintListener );
+      table.addListener( SWT.MeasureItem, paintListener );
+      table.addListener( SWT.PaintItem, paintListener );
+
+      /** layout stuff */
       table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
       table.setHeaderVisible( true );
-
       if( hasToolbar( tableType ) )
         initToolbar( tableType, toolbar, toolkit );
     }

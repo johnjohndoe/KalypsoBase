@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,32 +38,40 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model;
+package org.kalypso.zml.ui.table.provider;
 
-import org.eclipse.jface.viewers.ViewerCell;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.ZmlModel;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableCell extends IZmlTableObject
+public class ZmlTreeContentProvider extends ArrayTreeContentProvider
 {
-  IZmlTableColumn getColumn( );
 
-  IZmlTableRow getRow( );
+  public ZmlTreeContentProvider( )
+  {
+  }
 
-  IZmlValueReference getValueReference( );
+  @Override
+  public Object[] getElements( final Object inputElement )
+  {
+    if( inputElement instanceof ZmlModel )
+    {
+      final ZmlModel model = (ZmlModel) inputElement;
 
-  /**
-   * @return row index
-   */
-  int getIndex( );
+      final List<IZmlModelRow> collection = new ArrayList<IZmlModelRow>();
+      collection.add( new ZmlHeaderRow( model ) );
+      Collections.addAll( collection, model.getRows() );
 
-  IZmlTableCell findPreviousCell( );
+      return collection.toArray();
+    }
 
-  IZmlTableCell findNextCell( );
-
-  int findIndex( );
-
-  ViewerCell getViewerCell( );
+    return new Object[] {};
+  }
 }

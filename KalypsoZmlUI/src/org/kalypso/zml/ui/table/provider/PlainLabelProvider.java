@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,32 +38,70 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.model;
+package org.kalypso.zml.ui.table.provider;
 
-import org.eclipse.jface.viewers.ViewerCell;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableCell extends IZmlTableObject
+public class PlainLabelProvider extends ColumnLabelProvider
 {
-  IZmlTableColumn getColumn( );
 
-  IZmlTableRow getRow( );
-
-  IZmlValueReference getValueReference( );
+  @Override
+  public String getText( final Object element )
+  {
+    return null;
+  }
 
   /**
-   * @return row index
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getFont(java.lang.Object)
    */
-  int getIndex( );
+  @Override
+  public Font getFont( final Object element )
+  {
+    return null;
+  }
 
-  IZmlTableCell findPreviousCell( );
+  /**
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
+   */
+  @Override
+  public Image getImage( final Object element )
+  {
+    return null;
+  }
 
-  IZmlTableCell findNextCell( );
+  /**
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getBackground(java.lang.Object)
+   */
+  @Override
+  public Color getBackground( final Object element )
+  {
+    return null;
+  }
 
-  int findIndex( );
+  /**
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getForeground(java.lang.Object)
+   */
+  @Override
+  public Color getForeground( final Object element )
+  {
+    return null;
+  }
 
-  ViewerCell getViewerCell( );
+  /**
+   * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
+   */
+  @Override
+  public String getToolTipText( final Object element )
+  {
+    // FIXME should return tooltip
+    // TODO Auto-generated method stub
+    return super.getToolTipText( element );
+  }
+
 }
