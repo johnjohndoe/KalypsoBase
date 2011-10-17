@@ -43,11 +43,13 @@ package org.kalypso.zml.ui.table.provider.strategy;
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
@@ -164,7 +166,11 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
 
   public ZmlRule[] findActiveRules( final IZmlModelRow row )
   {
-    return m_mapper.findActiveRules( row.get( getColumnType().getType() ) );
+    final IZmlValueReference reference = row.get( getColumnType().getType() );
+    if( Objects.isNull( reference ) )
+      return new ZmlRule[] {};
+
+    return m_mapper.findActiveRules( reference );
   }
 
   public boolean isVisible( )

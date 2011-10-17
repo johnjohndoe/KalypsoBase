@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.SWT;
@@ -48,7 +47,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
@@ -118,19 +116,12 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     final ZmlRule[] activeRules = m_column.findActiveRules( row );
     for( final ZmlRule rule : activeRules )
     {
-      try
+      final CellStyle style = resolveRuleStyle( rule, reference );
+      if( Objects.isNotNull( style ) )
       {
-        final CellStyle style = resolveRuleStyle( rule, reference );
-        if( Objects.isNotNull( style ) )
-        {
-          final Color color = style.getBackgroundColor();
-          if( Objects.isNotNull( color ) )
-            return color;
-        }
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
+        final Color color = style.getBackgroundColor();
+        if( Objects.isNotNull( color ) )
+          return color;
       }
     }
 
@@ -195,45 +186,47 @@ public class ZmlLabelProvider extends ColumnLabelProvider
   @Override
   public Image getImage( final Object element )
   {
-    if( !m_column.isVisible() )
-      return null;
+    return null;
 
-    if( element instanceof IZmlModelRow )
-    {
-      try
-      {
-        final ZmlTableImageMerger iconMerger = new ZmlTableImageMerger( 2 );
-
-        final IZmlModelRow row = (IZmlModelRow) element;
-        final ZmlRule[] rules = m_column.findActiveRules( row );
-        if( ArrayUtils.isNotEmpty( rules ) )
-        {
-          final IZmlValueReference reference = row.get( m_column.getModelColumn() );
-
-          for( final ZmlRule rule : rules )
-          {
-            final CellStyle style = resolveRuleStyle( rule, reference );
-            if( Objects.isNull( style ) )
-              continue;
-
-            final Image image = style.getImage();
-            if( Objects.isNotNull( image ) )
-              iconMerger.addImage( new ZmlTableImage( style.getIdentifier(), image ) );
-          }
-        }
-
-        return iconMerger.createImage( PlatformUI.getWorkbench().getDisplay() );
-      }
-      catch( final Exception e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
-    }
-
-    return super.getImage( element );
+// if( !m_column.isVisible() )
+// return null;
+//
+// if( element instanceof IZmlModelRow )
+// {
+// try
+// {
+// final ZmlTableImageMerger iconMerger = new ZmlTableImageMerger( 2 );
+//
+// final IZmlModelRow row = (IZmlModelRow) element;
+// final ZmlRule[] rules = m_column.findActiveRules( row );
+// if( ArrayUtils.isNotEmpty( rules ) )
+// {
+// final IZmlValueReference reference = row.get( m_column.getModelColumn() );
+//
+// for( final ZmlRule rule : rules )
+// {
+// final CellStyle style = resolveRuleStyle( rule, reference );
+// if( Objects.isNull( style ) )
+// continue;
+//
+// final Image image = style.getImage();
+// if( Objects.isNotNull( image ) )
+// iconMerger.addImage( new ZmlTableImage( style.getIdentifier(), image ) );
+// }
+// }
+//
+// return iconMerger.createImage( PlatformUI.getWorkbench().getDisplay() );
+// }
+// catch( final Exception e )
+// {
+// KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+// }
+// }
+//
+// return super.getImage( element );
   }
 
-  private CellStyle resolveRuleStyle( final ZmlRule rule, final IZmlValueReference reference ) throws CoreException
+  private CellStyle resolveRuleStyle( final ZmlRule rule, final IZmlValueReference reference )
   {
     if( Objects.isNull( reference ) )
       return null;
