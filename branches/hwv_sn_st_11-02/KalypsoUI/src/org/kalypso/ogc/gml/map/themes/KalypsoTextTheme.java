@@ -85,6 +85,16 @@ public class KalypsoTextTheme extends AbstractImageTheme
   protected String m_text;
 
   /**
+   * The font size.
+   */
+  protected int m_fontSize;
+
+  /**
+   * True, if the transparency is switched on.
+   */
+  protected boolean m_transparency;
+
+  /**
    * The constructor
    * 
    * @param name
@@ -99,6 +109,8 @@ public class KalypsoTextTheme extends AbstractImageTheme
     /* Initialize. */
     m_backgroundColor = null;
     m_text = null;
+    m_fontSize = -1;
+    m_transparency = false;
   }
 
   /**
@@ -176,6 +188,8 @@ public class KalypsoTextTheme extends AbstractImageTheme
   public void dispose( )
   {
     m_text = null;
+    m_fontSize = -1;
+    m_transparency = false;
 
     super.dispose();
   }
@@ -189,12 +203,16 @@ public class KalypsoTextTheme extends AbstractImageTheme
     updatePosition( PositionUtilities.RIGHT, PositionUtilities.BOTTOM );
     m_backgroundColor = new org.eclipse.swt.graphics.Color( Display.getCurrent(), 255, 255, 255 );
     m_text = null;
+    m_fontSize = 10;
+    m_transparency = false;
 
     /* Get the properties. */
     String horizontalProperty = getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, null );
     String verticalProperty = getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, null );
     String backgroundColorProperty = getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, null );
     String textProperty = getProperty( TextUtilities.THEME_PROPERTY_TEXT, null );
+    String fontSizeProperty = getProperty( TextUtilities.THEME_PROPERTY_FONT_SIZE, null );
+    String transparencyProperty = getProperty( TextUtilities.THEME_PROPERTY_TRANSPARENCY, null );
 
     /* Check the horizontal and vertical position. */
     int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
@@ -213,6 +231,14 @@ public class KalypsoTextTheme extends AbstractImageTheme
     /* Check the text. */
     if( textProperty != null && textProperty.length() > 0 )
       m_text = TextUtilities.checkText( textProperty );
+
+    /* Check the font size. */
+    int fontSize = TextUtilities.checkFontSize( fontSizeProperty );
+    if( fontSize >= 1 && fontSize <= 35 )
+      m_fontSize = fontSize;
+
+    /* Check the transparency. */
+    m_transparency = TextUtilities.checkTransparency( transparencyProperty );
   }
 
   /**
@@ -228,7 +254,7 @@ public class KalypsoTextTheme extends AbstractImageTheme
 
     /* Get the font. */
     Font smallFont = JFaceResources.getFont( JFaceResources.DIALOG_FONT );
-    Font bigFont = FontUtilities.changeHeightAndStyle( smallFont.getDevice(), smallFont, 35, SWT.BOLD );
+    Font bigFont = FontUtilities.changeHeightAndStyle( smallFont.getDevice(), smallFont, m_fontSize, SWT.BOLD );
 
     /* Create a helper image. */
     org.eclipse.swt.graphics.Image helperImage = new org.eclipse.swt.graphics.Image( bigFont.getDevice(), 100, 100 );
@@ -244,19 +270,27 @@ public class KalypsoTextTheme extends AbstractImageTheme
     helperImage.dispose();
     helperGC.dispose();
 
+    /* Create the palette. */
     Color white = bigFont.getDevice().getSystemColor( SWT.COLOR_WHITE );
     Color black = bigFont.getDevice().getSystemColor( SWT.COLOR_BLACK );
-    PaletteData palette = new PaletteData( new RGB[] { white.getRGB(), m_backgroundColor.getRGB(), black.getRGB() } );
+    PaletteData palette = new PaletteData( new RGB[] { m_backgroundColor.getRGB(), black.getRGB() } );
+    if( m_transparency )
+      palette = new PaletteData( new RGB[] { white.getRGB(), black.getRGB() } );
+
+    /* Create a new image data. */
+    ImageData newImageData = new ImageData( width, height, 2, palette );
+    if( m_transparency )
+      newImageData.transparentPixel = 0;
 
     /* Create a new image. */
-    ImageData newImageData = new ImageData( width, height, 32, palette );
-    newImageData.transparentPixel = 0;
     org.eclipse.swt.graphics.Image newImage = new org.eclipse.swt.graphics.Image( bigFont.getDevice(), newImageData );
     GC newGC = new GC( newImage );
     newGC.setFont( bigFont );
 
     /* Draw the text. */
-    newGC.setBackground( m_backgroundColor );
+    if( !m_transparency )
+      newGC.setBackground( m_backgroundColor );
+
     newGC.setForeground( black );
     newGC.drawText( m_text, 0, 0 );
 

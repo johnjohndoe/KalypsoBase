@@ -162,6 +162,8 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
     String verticalProperty = m_properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
     String backgroundColorProperty = m_properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
     String textProperty = m_properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT );
+    String fontSizeProperty = m_properties.getProperty( TextUtilities.THEME_PROPERTY_FONT_SIZE );
+    String transparencyProperty = m_properties.getProperty( TextUtilities.THEME_PROPERTY_TRANSPARENCY );
 
     /* Set the properties. */
     if( horizontalProperty != null && horizontalProperty.length() > 0 )
@@ -172,6 +174,10 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
       m_theme.setProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
     if( textProperty != null && textProperty.length() > 0 )
       m_theme.setProperty( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
+    if( fontSizeProperty != null && fontSizeProperty.length() > 0 )
+      m_theme.setProperty( TextUtilities.THEME_PROPERTY_FONT_SIZE, fontSizeProperty );
+    if( transparencyProperty != null && transparencyProperty.length() > 0 )
+      m_theme.setProperty( TextUtilities.THEME_PROPERTY_TRANSPARENCY, transparencyProperty );
 
     return super.performOk();
   }
@@ -202,10 +208,10 @@ public class TextPropertyPage extends PropertyPage implements IWorkbenchProperty
     {
       /**
        * @see org.kalypso.util.themes.text.listener.ITextChangedListener#textPropertyChanged(java.util.Properties, int,
-       *      int, org.eclipse.swt.graphics.Color, java.lang.String)
+       *      int, org.eclipse.swt.graphics.Color, java.lang.String, int, boolean)
        */
       @Override
-      public void textPropertyChanged( Properties properties, int horizontal, int vertical, org.eclipse.swt.graphics.Color backgroundColor, String text )
+      public void textPropertyChanged( Properties properties, int horizontal, int vertical, org.eclipse.swt.graphics.Color backgroundColor, String text, int fontSize, boolean transparency )
       {
         /* Update the properties object. */
         m_properties = properties;

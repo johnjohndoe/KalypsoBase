@@ -63,6 +63,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
@@ -114,6 +115,16 @@ public class TextComposite extends Composite
    * The text, which should be shown.
    */
   protected String m_text;
+
+  /**
+   * The font size.
+   */
+  protected int m_fontSize;
+
+  /**
+   * True, if the transparency is switched on.
+   */
+  protected boolean m_transparency;
 
   /**
    * The constructor.
@@ -179,6 +190,8 @@ public class TextComposite extends Composite
     m_vertical = PositionUtilities.BOTTOM;
     m_backgroundColor = new Color( getDisplay(), 255, 255, 255 );
     m_text = null;
+    m_fontSize = 10;
+    m_transparency = false;
 
     /* Do not change the default values, if no new properties are set. */
     if( properties == null )
@@ -203,6 +216,8 @@ public class TextComposite extends Composite
     String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
     String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
     String textProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_TEXT, null );
+    String fontSizeProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_FONT_SIZE );
+    String transparencyProperty = properties.getProperty( TextUtilities.THEME_PROPERTY_TRANSPARENCY );
 
     /* Check the horizontal position. */
     int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
@@ -222,6 +237,14 @@ public class TextComposite extends Composite
     /* Check the text. */
     if( textProperty != null && textProperty.length() > 0 )
       m_text = TextUtilities.checkText( textProperty );
+
+    /* Check the font size. */
+    int fontSize = TextUtilities.checkFontSize( fontSizeProperty );
+    if( fontSize >= 1 && fontSize <= 35 )
+      m_fontSize = fontSize;
+
+    /* Check the transparency. */
+    m_transparency = TextUtilities.checkTransparency( transparencyProperty );
   }
 
   /**
@@ -333,7 +356,7 @@ public class TextComposite extends Composite
         m_horizontal = horizontal;
         m_vertical = vertical;
 
-        fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_text );
+        fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_text, m_fontSize, m_transparency );
       }
     } );
 
@@ -365,12 +388,14 @@ public class TextComposite extends Composite
     final Label backgroundLabel = new Label( textGroup, SWT.BORDER );
     backgroundLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     backgroundLabel.setText( "Hintergrundfarbe" );
+    backgroundLabel.setEnabled( !m_transparency );
     backgroundLabel.setBackground( m_backgroundColor );
 
     /* Create a button. */
-    Button backgroundColorButton = new Button( textGroup, SWT.PUSH );
+    final Button backgroundColorButton = new Button( textGroup, SWT.PUSH );
     backgroundColorButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
     backgroundColorButton.setText( "..." );
+    backgroundColorButton.setEnabled( !m_transparency );
     backgroundColorButton.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -391,7 +416,51 @@ public class TextComposite extends Composite
         m_backgroundColor = new Color( shell.getDisplay(), rgb );
         backgroundLabel.setBackground( m_backgroundColor );
 
-        fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_text );
+        fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_text, m_fontSize, m_transparency );
+      }
+    } );
+
+    /* Create a button. */
+    Button transparencyButton = new Button( textGroup, SWT.CHECK );
+    transparencyButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
+    transparencyButton.setText( "Hintergrund transparent" );
+    transparencyButton.setSelection( m_transparency );
+    transparencyButton.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        Button source = (Button) e.getSource();
+        backgroundLabel.setEnabled( !source.getSelection() );
+        backgroundColorButton.setEnabled( !source.getSelection() );
+        m_transparency = source.getSelection();
+        fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_text, m_fontSize, m_transparency );
+      }
+    } );
+
+    /* Create a label. */
+    Label fontSizeLabel = new Label( textGroup, SWT.NONE );
+    fontSizeLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
+    fontSizeLabel.setText( "Schriftgrad" );
+    fontSizeLabel.setAlignment( SWT.LEFT );
+
+    /* Create a spinner. */
+    final Spinner fontSizeSpinner = new Spinner( textGroup, SWT.BORDER );
+    fontSizeSpinner.setValues( m_fontSize, 1, 25, 0, 1, 5 );
+    fontSizeSpinner.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+    fontSizeSpinner.addSelectionListener( new SelectionAdapter()
+    {
+      /**
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected( SelectionEvent e )
+      {
+        m_fontSize = fontSizeSpinner.getSelection();
+        fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_text, m_fontSize, m_transparency );
       }
     } );
 
@@ -422,7 +491,7 @@ public class TextComposite extends Composite
         Text source = (Text) e.getSource();
         m_text = source.getText();
 
-        fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_text );
+        fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_text, m_fontSize, m_transparency );
       }
     } );
 
@@ -471,11 +540,15 @@ public class TextComposite extends Composite
    *          The vertical position.
    * @param text
    *          The text, which should be shown.
+   * @param fontSize
+   *          The font size.
+   * @param transparency
+   *          True, if the transparency is switched on.
    */
-  protected void fireTextPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, String text )
+  protected void fireTextPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, String text, int fontSize, boolean transparency )
   {
     for( ITextChangedListener listener : m_listener )
-      listener.textPropertyChanged( properties, horizontal, vertical, backgroundColor, text );
+      listener.textPropertyChanged( properties, horizontal, vertical, backgroundColor, text, fontSize, transparency );
   }
 
   /**
@@ -519,6 +592,8 @@ public class TextComposite extends Composite
     String textProperty = null;
     if( m_text != null )
       textProperty = String.format( Locale.PRC, "%s", m_text );
+    String fontSizeProperty = String.format( Locale.PRC, "%d", m_fontSize );
+    String transparencyProperty = Boolean.toString( m_transparency );
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
@@ -527,6 +602,8 @@ public class TextComposite extends Composite
     properties.put( TextUtilities.THEME_PROPERTY_TEXT, "" );
     if( textProperty != null )
       properties.put( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
+    properties.put( TextUtilities.THEME_PROPERTY_FONT_SIZE, fontSizeProperty );
+    properties.put( TextUtilities.THEME_PROPERTY_TRANSPARENCY, transparencyProperty );
 
     return properties;
   }
