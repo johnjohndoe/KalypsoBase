@@ -58,6 +58,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
 /**
  * A modifier which handles feature-relations: shows a combo-box as cell-editor.
@@ -101,7 +102,8 @@ public class ComboBoxModifier extends AbstractFeatureModifier
 
       final GMLWorkspace workspace = feature.getWorkspace();
 
-      final Feature[] features = ComboFeatureControl.collectReferencableFeatures( workspace, m_feature, rt );
+      final IReferenceCollectorStrategy strategy = ComboFeatureControl.createSearchStrategy( workspace, m_feature, rt );
+      final Feature[] features = strategy.collectReferences();
 
       final GMLLabelProvider labelProvider = new GMLLabelProvider();
 
