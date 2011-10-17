@@ -60,5 +60,4 @@ public class FeatureTypeFunctionExpression extends AbstractFunctionExpression
   {
     return feature.getFeatureType().getQName().toString();
   }
-
 }

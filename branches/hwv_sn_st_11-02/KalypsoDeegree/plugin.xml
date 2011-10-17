@@ -124,7 +124,6 @@
                type="org.kalypsodeegree_impl.gml.binding.commons.ICoverage">
          </adapter>
       </factory>
-      
    </extension>
    <extension
          point="org.kalypso.deegree.functionExpression">
@@ -132,6 +131,11 @@
             class="org.kalypsodeegree_impl.filterencoding.FeatureTypeFunctionExpression"
             label="FeatureType-Name"
             name="org.kalypso.deeegree.functionExpression.featureTypeName">
+      </function>
+      <function
+            class="org.kalypsodeegree_impl.filterencoding.ParentFeatureFunctionExpression"
+            label="Parent Feature"
+            name="parentFeature">
       </function>
       <function
             class="org.kalypsodeegree_impl.filterencoding.ListPropertyToStringExpression"
