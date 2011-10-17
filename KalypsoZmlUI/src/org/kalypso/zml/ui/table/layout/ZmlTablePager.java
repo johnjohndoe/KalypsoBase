@@ -76,7 +76,7 @@ public class ZmlTablePager
 
   public void update( )
   {
-    final TableViewer viewer = m_table.getTableViewer();
+    final TableViewer viewer = m_table.getViewer();
     setIndex( viewer );
     setSelection( viewer );
   }
@@ -149,7 +149,7 @@ public class ZmlTablePager
 
   public void reveal( )
   {
-    final TableViewer viewer = m_table.getTableViewer();
+    final TableViewer viewer = m_table.getViewer();
     if( !m_selection.isEmpty() )
       viewer.setSelection( m_selection );
 

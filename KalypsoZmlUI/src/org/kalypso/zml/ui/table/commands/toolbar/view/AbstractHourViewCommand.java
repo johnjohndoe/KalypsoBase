@@ -97,14 +97,14 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
     final ZmlViewResolutionFilter filter = resolveFilter( table );
     filter.add2Offset( number );
 
-    table.getTableViewer().refresh();
+    table.getViewer().refresh();
 
     return Status.OK_STATUS;
   }
 
   public static ZmlViewResolutionFilter resolveFilter( final IZmlTable table )
   {
-    final TableViewer viewer = table.getTableViewer();
+    final TableViewer viewer = table.getViewer();
     final ViewerFilter[] filters = viewer.getFilters();
     for( final ViewerFilter filter : filters )
     {

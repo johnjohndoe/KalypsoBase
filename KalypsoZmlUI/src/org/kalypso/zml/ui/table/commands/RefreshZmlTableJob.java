@@ -66,7 +66,7 @@ public class RefreshZmlTableJob extends UIJob
   @Override
   public IStatus runInUIThread( final IProgressMonitor monitor )
   {
-    final TableViewer viewer = m_table.getTableViewer();
+    final TableViewer viewer = m_table.getViewer();
     if( viewer.getControl().isDisposed() )
       return Status.CANCEL_STATUS;
 
