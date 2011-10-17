@@ -41,9 +41,7 @@
 
 package org.kalypso.ogc.gml.featureview.control;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -57,20 +55,17 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
-import org.kalypso.gmlschema.property.relation.IDocumentReference;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
-import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
-import org.kalypsodeegree_impl.model.feature.visitors.FeatureSubstitutionVisitor;
+import org.kalypsodeegree_impl.model.feature.search.DefaultReferenceCollectorStrategy;
+import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
 /**
  * This feature control is a combo box, which just sets the feature-value to the given value when selected.
@@ -152,7 +147,8 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
         final GMLWorkspace workspace = feature.getWorkspace();
 
-        final Feature[] features = collectReferencableFeatures( workspace, feature, rt );
+        final IReferenceCollectorStrategy strategy = createSearchStrategy( workspace, feature, rt );
+        final Feature[] features = strategy.collectReferences();
 
         final GMLLabelProvider labelProvider = new GMLLabelProvider();
 
@@ -168,6 +164,15 @@ public class ComboFeatureControl extends AbstractFeatureControl
   }
 
   /**
+   * Creates the search strategy that determines the list of features for display.<br/>
+   * We might later implement an extension-point in order to implement different strategies.
+   */
+  public static IReferenceCollectorStrategy createSearchStrategy( final GMLWorkspace workspace, final Feature parentFeature, final IRelationType parentRelation )
+  {
+    return new DefaultReferenceCollectorStrategy( workspace, parentFeature, parentRelation );
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl#dispose()
    */
   @Override
@@ -177,9 +182,6 @@ public class ComboFeatureControl extends AbstractFeatureControl
       m_comboViewer.removeSelectionChangedListener( m_listener );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {
@@ -190,9 +192,6 @@ public class ComboFeatureControl extends AbstractFeatureControl
     final Map<Object, String> entries = m_entries;
     m_comboViewer.setLabelProvider( new LabelProvider()
     {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
       @Override
       public String getText( final Object element )
       {
@@ -240,9 +239,6 @@ public class ComboFeatureControl extends AbstractFeatureControl
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
-   */
   @Override
   public void updateControl( )
   {
@@ -274,76 +270,11 @@ public class ComboFeatureControl extends AbstractFeatureControl
     return getFeature().getProperty( getFeatureTypeProperty() );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
-   */
   @Override
   public boolean isValid( )
   {
     // a radio button is always valid
     return true;
-  }
-
-  public static Feature[] collectReferencableFeatures( final GMLWorkspace localWorkspace, final Feature parentFeature, final IRelationType rt )
-  {
-    final IFeatureType targetFeatureType = rt.getTargetFeatureType();
-
-    final List<Feature> foundFeatures = new ArrayList<Feature>();
-
-    final IDocumentReference[] refs = rt.getDocumentReferences();
-    for( final IDocumentReference ref : refs )
-      collectFromDocument( localWorkspace, parentFeature, rt, targetFeatureType, foundFeatures, ref );
-
-    /* Special case: if we already have a link, we may guess the referenced document */
-    final Object value = parentFeature.getProperty( rt );
-    if( value instanceof XLinkedFeature_Impl )
-    {
-      final XLinkedFeature_Impl xlink = (XLinkedFeature_Impl) value;
-      final String href = xlink.getHref();
-      final int indexOfHref = href.indexOf( '#' );
-      final String uri = indexOfHref == -1 ? null : href.substring( 0, indexOfHref );
-      final Feature linkedFeature = xlink.getFeature();
-      if( linkedFeature != null && uri != null )
-        collectFromWorkspace( localWorkspace, parentFeature, rt, targetFeatureType, foundFeatures, uri, linkedFeature.getWorkspace() );
-    }
-
-    return foundFeatures.toArray( new Feature[foundFeatures.size()] );
-  }
-
-  private static void collectFromDocument( final GMLWorkspace localWorkspace, final Feature parentFeature, final IRelationType rt, final IFeatureType targetFeatureType, final List<Feature> foundFeatures, final IDocumentReference ref )
-  {
-    final String uri = ref.getReference();
-    final GMLWorkspace workspace;
-    if( ref == IDocumentReference.SELF_REFERENCE )
-      workspace = localWorkspace;
-    else
-      workspace = localWorkspace.getLinkedWorkspace( uri );
-
-    collectFromWorkspace( localWorkspace, parentFeature, rt, targetFeatureType, foundFeatures, uri, workspace );
-  }
-
-  private static void collectFromWorkspace( final GMLWorkspace localWorkspace, final Feature parentFeature, final IRelationType rt, final IFeatureType targetFeatureType, final List<Feature> foundFeatures, final String uri, final GMLWorkspace workspace )
-  {
-    if( workspace == null )
-      return;
-
-    final CollectorVisitor collectorVisitor = new CollectorVisitor();
-    final FeatureVisitor fv = new FeatureSubstitutionVisitor( collectorVisitor, targetFeatureType );
-
-    workspace.accept( fv, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
-
-    final Feature[] features = collectorVisitor.getResults( true );
-    for( final Feature feature : features )
-    {
-      if( workspace == localWorkspace )
-        foundFeatures.add( feature );
-      else
-      {
-        final String href = uri + "#" + feature.getId(); //$NON-NLS-1$
-        final XLinkedFeature_Impl linkedFeature = new XLinkedFeature_Impl( parentFeature, rt, targetFeatureType, href, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-        foundFeatures.add( linkedFeature );
-      }
-    }
   }
 
   protected ComboViewer getComboViewer( )
