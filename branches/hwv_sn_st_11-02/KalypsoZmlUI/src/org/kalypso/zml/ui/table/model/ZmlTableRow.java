@@ -155,7 +155,7 @@ public class ZmlTableRow extends ZmlTableElement implements IZmlTableRow
   @Override
   public int getIndex( )
   {
-    final TableViewer viewer = getTable().getTableViewer();
+    final TableViewer viewer = getTable().getViewer();
     final Table table = viewer.getTable();
     final TableItem[] items = table.getItems();
     for( final TableItem item : items )

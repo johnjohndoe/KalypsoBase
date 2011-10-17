@@ -76,7 +76,7 @@ public class ZmlTableColumnBuilder implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final TableViewer viewer = m_table.getTableViewer();
+    final TableViewer viewer = m_table.getViewer();
     final int index = viewer.getTable().getColumnCount();
     final TableViewerColumn viewerColumn = new TableViewerColumn( viewer, TableTypes.toSWT( m_column.getAlignment() ) );
 

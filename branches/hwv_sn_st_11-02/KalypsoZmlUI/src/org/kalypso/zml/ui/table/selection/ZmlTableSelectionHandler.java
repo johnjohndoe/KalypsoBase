@@ -104,7 +104,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
   private void init( )
   {
-    final TableViewer viewer = m_table.getTableViewer();
+    final TableViewer viewer = m_table.getViewer();
 
     viewer.getTable().addMouseMoveListener( this );
     viewer.getTable().addListener( SWT.MenuDetect, this );
@@ -154,7 +154,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   {
     m_contextMenuManager.removeAll();
 
-    final Table table = m_table.getTableViewer().getTable();
+    final Table table = m_table.getViewer().getTable();
     if( table.isDisposed() )
       return;
 
@@ -198,7 +198,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
   private int findColumnIndex( final int x )
   {
-    final Table table = m_table.getTableViewer().getTable();
+    final Table table = m_table.getViewer().getTable();
     final TableColumn[] columns = table.getColumns();
     final int[] columnOrder = table.getColumnOrder();
 
@@ -257,7 +257,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     if( Objects.isNull( m_position ) )
       return null;
 
-    final ViewerCell viewerCell = m_table.getTableViewer().getCell( m_position );
+    final ViewerCell viewerCell = m_table.getViewer().getCell( m_position );
     if( Objects.isNull( viewerCell ) )
       return null;
 
@@ -277,7 +277,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   @Override
   public IZmlTableRow[] getSelectedRows( )
   {
-    final TableViewer viewer = m_table.getTableViewer();
+    final TableViewer viewer = m_table.getViewer();
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 
     final List<IZmlTableRow> rows = new ArrayList<IZmlTableRow>();
@@ -297,7 +297,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   private ViewerCell findCell( final IZmlTableColumn column, final int y )
   {
     final IZmlTable table = column.getTable();
-    final TableViewer viewer = table.getTableViewer();
+    final TableViewer viewer = table.getViewer();
 
     /** focus on the same row and column of the old table cell */
     final int ptrX = Tables.getX( viewer.getTable(), column.getTableViewerColumn().getColumn() );
@@ -330,7 +330,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
   public ViewerCell toViewerCell( final IZmlTableCell cell )
   {
     final IZmlTable zml = cell.getTable();
-    final Table table = zml.getTableViewer().getTable();
+    final Table table = zml.getViewer().getTable();
     final TableItem[] items = table.getItems();
     for( final TableItem item : items )
     {

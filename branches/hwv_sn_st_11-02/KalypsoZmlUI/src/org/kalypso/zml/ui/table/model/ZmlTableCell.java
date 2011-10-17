@@ -147,7 +147,7 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
   {
     final TableColumn base = getColumn().getTableViewerColumn().getColumn();
 
-    final TableViewer tableViewer = getTable().getTableViewer();
+    final TableViewer tableViewer = getTable().getViewer();
     final Table table = tableViewer.getTable();
     final TableColumn[] columns = table.getColumns();
     for( final TableColumn col : columns )

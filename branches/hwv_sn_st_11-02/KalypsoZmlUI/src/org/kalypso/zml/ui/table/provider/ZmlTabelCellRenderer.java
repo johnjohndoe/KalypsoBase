@@ -42,6 +42,7 @@ package org.kalypso.zml.ui.table.provider;
 
 import java.io.IOException;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
@@ -90,12 +91,12 @@ public class ZmlTabelCellRenderer
     try
     {
       final String text = m_provider.getText();
-      initGc( event.gc );
+      initGc( event );
 
       final Point ptr = drawImage( event.gc, new Rectangle( 0, 0, 1, 1 ) );
       add( ptr, event.gc.textExtent( text ) );
 
-      resetGc( event.gc );
+      resetGc( event );
 
       return ptr;
     }
@@ -154,6 +155,7 @@ public class ZmlTabelCellRenderer
 
   public Point drawText( final GC gc, final Rectangle bounds )
   {
+
     try
     {
       final String label = m_provider.getText();
@@ -166,7 +168,7 @@ public class ZmlTabelCellRenderer
       final int x1 = Math.max( bounds.x, bounds.x + bounds.width - extend.x ) - 1;
       final int offset = Math.max( 0, (bounds.height - extend.y) / 2 );
 
-      gc.drawText( label, x1, bounds.y + offset );
+      gc.drawText( label, x1, bounds.y + offset, true );
 
       return new Point( Math.abs( x1 + extend.x - bounds.x ), bounds.y );
     }
@@ -196,30 +198,30 @@ public class ZmlTabelCellRenderer
     throw new UnsupportedOperationException();
   }
 
-  public void initGc( final GC gc )
+  public void initGc( final Event event )
   {
-    m_background = gc.getBackground();
-    m_foreground = gc.getForeground();
-    m_font = gc.getFont();
+    m_background = event.gc.getBackground();
+    m_foreground = event.gc.getForeground();
+    m_font = event.gc.getFont();
 
     final Color background = m_provider.getBackground();
-    if( Objects.isNotNull( background ) )
-      gc.setBackground( background );
+    if( Objects.isNotNull( background ) && (event.detail & SWT.SELECTED) == 0 )
+      event.gc.setBackground( background );
 
     final Color foreground = m_provider.getForeground();
     if( Objects.isNotNull( foreground ) )
-      gc.setForeground( foreground );
+      event.gc.setForeground( foreground );
 
     final Font font = m_provider.getFont();
     if( Objects.isNotNull( font ) )
-      gc.setFont( font );
+      event.gc.setFont( font );
   }
 
-  public void resetGc( final GC gc )
+  public void resetGc( final Event event )
   {
-    gc.setBackground( m_background );
-    gc.setForeground( m_foreground );
-    gc.setFont( m_font );
+    event.gc.setBackground( m_background );
+    event.gc.setForeground( m_foreground );
+    event.gc.setFont( m_font );
   }
 
   public void drawBackground( final Event event )

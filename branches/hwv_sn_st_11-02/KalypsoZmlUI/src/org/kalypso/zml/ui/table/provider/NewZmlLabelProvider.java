@@ -45,10 +45,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
@@ -164,25 +162,11 @@ public class NewZmlLabelProvider
 
   public String getText( ) throws SensorException, CoreException
   {
-    if( m_row instanceof ZmlHeaderRow )
-      return getHeader();
-
     final IZmlLabelStrategy strategy = m_column.getLabelingStrategy();
     if( strategy == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     return strategy.getText( m_row );
-  }
-
-  private String getHeader( )
-  {
-    final IZmlModelColumn column = m_column.getModelColumn();
-    if( Objects.isNotNull( column ) )
-      return m_column.getModelColumn().getLabel();
-
-    // date column
-    final BaseColumn base = m_column.getColumnType();
-    return base.getLabel();
   }
 
   public Object getPlainValue( final IZmlModelRow row ) throws SensorException

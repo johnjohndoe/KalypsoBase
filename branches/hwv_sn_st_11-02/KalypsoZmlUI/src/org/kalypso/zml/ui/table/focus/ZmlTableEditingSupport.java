@@ -101,11 +101,11 @@ public class ZmlTableEditingSupport extends EditingSupport
 
   public ZmlTableEditingSupport( final ExtendedZmlTableColumn column, final ZmlLabelProvider labelProvider, final IZmlTableFocusHandler handler )
   {
-    super( column.getTable().getTableViewer() );
+    super( column.getTable().getViewer() );
     m_column = column;
     m_labelProvider = labelProvider;
     m_handler = handler;
-    final TableViewer viewer = column.getTable().getTableViewer();
+    final TableViewer viewer = column.getTable().getViewer();
 
     m_cellEditor = new ZmlTextCellEditor( (Composite) viewer.getControl(), SWT.NONE );
 

@@ -98,7 +98,7 @@ public class ZmlTableLayoutHandler
 
     visitor.packIndexColumns();
 
-    final TableViewer viewer = m_table.getTableViewer();
+    final TableViewer viewer = m_table.getViewer();
     if( m_table.isEmpty() )
     {
       viewer.getControl().setBackground( COLOR_TABLE_DISABLED );

@@ -155,14 +155,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
       ColumnViewerToolTipSupport.enableFor( m_tableViewer, ToolTip.NO_RECREATE );
 
-      // test implementation of content provider - background: rendering of our own table header
-// m_tableViewer.setContentProvider( new ZmlTreeContentProvider() );
-
       m_tableViewer.setContentProvider( new ArrayTreeContentProvider()
       {
-        /**
-         * @see org.eclipse.jface.viewers.ITreeContentProvider#getElements(java.lang.Object)
-         */
         @Override
         public Object[] getElements( final Object inputElement )
         {
@@ -283,9 +277,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     }
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.IZmlColumnModelListener#modelChanged()
-   */
   @Override
   public void modelChanged( )
   {
@@ -326,50 +317,35 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   }
 
   @Override
-  public TableViewer getTableViewer( )
+  public TableViewer getViewer( )
   {
     return m_tableViewer;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getDataModel()
-   */
   @Override
   public IZmlModel getDataModel( )
   {
     return m_model;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableComposite#addListener(org.kalypso.zml.ui.table.IZmlTableListener)
-   */
   @Override
   public void addListener( final IZmlTableListener listener )
   {
     m_listeners.add( listener );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableComposite#removeListener(org.kalypso.zml.ui.table.IZmlTableListener)
-   */
   @Override
   public void removeListener( final IZmlTableListener listener )
   {
     m_listeners.remove( listener );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableComposite#getResoltion()
-   */
   @Override
   public int getResolution( )
   {
     return m_filter.getResolution();
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTable#findColumn(org.kalypso.zml.ui.table.binding.BaseColumn)
-   */
   @Override
   public IZmlTableColumn findColumn( final BaseColumn column )
   {
@@ -383,9 +359,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     return null;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTable#getRows()
-   */
   @Override
   public IZmlTableRow[] getRows( )
   {
@@ -402,9 +375,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     return rows.toArray( new IZmlTableRow[] {} );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTable#getRow(int)
-   */
   @Override
   public IZmlTableRow getRow( final int index )
   {

@@ -122,7 +122,7 @@ public class ZmlTablePaintListener implements Listener
     KalypsoZmlUiDebug.DEBUG_TABLE.printf( "column %s;row %d;%s;width: %d;height: %d\n", columnLabel, row, msg, event.width, event.height );
   }
 
-  private void doPaintBackground( final Event event )
+  public void doPaintBackground( final Event event )
   {
     if( (event.detail & SWT.SELECTED) == 1 )
       return; /* item selected */
@@ -131,9 +131,12 @@ public class ZmlTablePaintListener implements Listener
     if( Objects.isNull( renderer ) )
       return;
 
-    renderer.initGc( event.gc );
-    renderer.drawBackground( event );
-    renderer.resetGc( event.gc );
+    renderer.initGc( event );
+
+    if( (event.detail & SWT.SELECTED) == 0 )
+      renderer.drawBackground( event );
+
+    renderer.resetGc( event );
 
     event.detail &= ~SWT.BACKGROUND; // default cell background should not be drawn
 // event.detail &= ~SWT.SELECTED; // default swt selection style should not be drawn
@@ -142,13 +145,13 @@ public class ZmlTablePaintListener implements Listener
     printDebug( renderer.getCell(), event, "doPaintBackground()" );
   }
 
-  private void doPaintItem( final Event event )
+  public void doPaintItem( final Event event )
   {
     final ZmlTabelCellRenderer renderer = findCell( event );
     if( Objects.isNull( renderer ) )
       return;
 
-    renderer.initGc( event.gc );
+    renderer.initGc( event );
 
     final Rectangle bounds = event.getBounds();
     bounds.width = getTableColumnWidth( renderer );
@@ -156,7 +159,9 @@ public class ZmlTablePaintListener implements Listener
     apply( bounds, renderer.drawImage( event.gc, bounds ) );
     apply( bounds, renderer.drawText( event.gc, bounds ) );
 
-    renderer.resetGc( event.gc );
+    renderer.resetGc( event );
+
+    event.detail &= ~SWT.FOREGROUND;
 
     printDebug( renderer.getCell(), event, "doPaintItem()" );
   }

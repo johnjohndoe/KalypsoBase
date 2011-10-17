@@ -56,7 +56,7 @@ public interface IZmlTable
 
   IZmlTableColumn findColumn( BaseColumn column );
 
-  TableViewer getTableViewer( );
+  TableViewer getViewer( );
 
   IZmlModel getDataModel( );
 
