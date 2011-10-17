@@ -160,9 +160,8 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
 
   private Gistableview m_tableTemplate;
 
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
-   */
+  private URL m_tableContext;
+
   @Override
   public void dispose( )
   {
@@ -255,7 +254,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
       {
         final Layer layer = m_tableTemplate.getLayer();
         m_layerTable.setInput( layer, context );
-        m_layerTable.applyLayer( layer );
+        m_layerTable.applyLayer( layer, m_tableContext );
         m_layerTable.getInput().addFeaturesProviderListener( m_featuresProviderListener );
       }
     }
@@ -292,8 +291,21 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
 
     final IStorage storage = input.getStorage();
     m_tableTemplate = GisTemplateHelper.loadGisTableview( storage );
+    m_tableContext = findContext( storage );
 
     monitor.worked( 1000 );
+  }
+
+  private URL findContext( final IStorage storage )
+  {
+    if( storage == null )
+      return null;
+
+    final IFile file = (IFile) storage.getAdapter( IFile.class );
+    if( file == null )
+      return null;
+
+    return ResourceUtilities.createQuietURL( file );
   }
 
   public LayerTableViewer getLayerTable( )

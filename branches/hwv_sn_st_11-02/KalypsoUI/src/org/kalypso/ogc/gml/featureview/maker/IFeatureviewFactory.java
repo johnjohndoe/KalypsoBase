@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.featureview.maker;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -58,5 +57,5 @@ public interface IFeatureviewFactory
    * @throws NullPointerException
    *           If <code>featureType</code> is null.
    */
-  public FeatureviewType get( final IFeatureType featureType, final Feature feature );
+  public FeatureviewTypeWithContext get( final IFeatureType featureType, final Feature feature );
 }
