@@ -91,7 +91,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
   {
     Color awtColor = FILL_DEFAULT;
 
-    final CssParameter cssParam = getParameter( "fill" );
+    final CssParameter cssParam = getParameter( CSS_FILL );
 
     if( cssParam != null )
     {
@@ -150,7 +150,7 @@ public class Fill_Impl extends Drawing_Impl implements Fill, Marshallable
   {
     double opacity = OPACITY_DEFAULT;
 
-    final CssParameter cssParam = getParameter( "fill-opacity" );
+    final CssParameter cssParam = getParameter( CSS_OPACITY );
 
     if( cssParam != null )
     {
