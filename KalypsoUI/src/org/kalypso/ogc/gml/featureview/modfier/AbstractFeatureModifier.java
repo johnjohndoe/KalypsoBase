@@ -38,48 +38,87 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ogc.gml.featureview.control;
+package org.kalypso.ogc.gml.featureview.modfier;
 
-import javax.xml.namespace.QName;
-
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.gmlschema.annotation.AnnotationUtilities;
-import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.eclipse.swt.graphics.Image;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.template.featureview.Checkbox;
-import org.kalypso.template.featureview.ControlType;
-import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ogc.gml.featureview.IFeatureModifierExtension;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * @author Gernot Belger
  */
-public class CheckboxFeatureControlFactory implements IFeatureControlFactory
+public abstract class AbstractFeatureModifier implements IFeatureModifierExtension
 {
+  private IPropertyType m_propertyType;
+
+  private GMLXPath m_propertyPath;
+
+  /**
+   * Does nothing by default, overwrite to implement.
+   */
   @Override
-  public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
+  public void dispose( )
   {
-    final Checkbox checkboxType = (Checkbox) controlType;
+  }
 
-    final String checkboxControlText = checkboxType.getText();
-    final String text = AnnotationUtilities.getAnnotation( annotation, checkboxControlText, IAnnotation.ANNO_LABEL );
+  /**
+   * Returns <code>null</code> by default.
+   */
+  @Override
+  public Image getImage( final Feature f )
+  {
+    return null;
+  }
 
-    final IValuePropertyType vpt = (IValuePropertyType) pt;
+  @Override
+  public void init( final GMLXPath propertyPath, final IPropertyType pt )
+  {
+    m_propertyPath = propertyPath;
+    m_propertyType = pt;
+  }
 
-    // TODO: this check should be made for (almost) all feature controls
-    if( vpt == null )
+  @Override
+  public final IPropertyType getPropertyType( )
+  {
+    return m_propertyType;
+  }
+
+  @Override
+  public GMLXPath getPropertyPath( )
+  {
+    return m_propertyPath;
+  }
+
+  /**
+   * Returns the property value denoted by the xpath.
+   */
+  @Override
+  public Object getProperty( final Feature feature )
+  {
+    if( m_propertyType == null || m_propertyPath == null )
+      return null;
+
+    try
     {
-      final QName property = checkboxType.getProperty();
-      final String message = String.format( "Unknown property: %s", property );
-      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message );
-      return new StatusFeatureControl( status );
+      return GMLXPathUtilities.query( m_propertyPath, feature );
     }
+    catch( final GMLXPathException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
 
-    final GMLXPath propertyPath = new GMLXPath( vpt.getQName() );
-
-    return new CheckboxFeatureControl( feature, propertyPath, vpt, text );
+  /**
+   * Default implementation, just returns the unchanged value.
+   */
+  @Override
+  public Object parseInput( final Feature f, final Object value )
+  {
+    return value;
   }
 }

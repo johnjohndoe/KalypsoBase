@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
@@ -128,6 +129,16 @@ public final class GMLXPathUtilities
       if( resultList.size() == 1 )
         return resultList.get( 0 );
       return resultList;
+    }
+
+    if( newContext instanceof IFeatureType )
+      return getResultForSegment( xPath, newContext, segmentIndex + 1, !isFeatureTypeLevel );
+
+    if( newContext instanceof IRelationType )
+    {
+      final IRelationType rt = (IRelationType) newContext;
+      final IFeatureType targetFeatureType = rt.getTargetFeatureType();
+      return getResultForSegment( xPath, targetFeatureType, segmentIndex + 1, !isFeatureTypeLevel );
     }
 
     // everything else is an error, as only feaures and featurelists can have subelements

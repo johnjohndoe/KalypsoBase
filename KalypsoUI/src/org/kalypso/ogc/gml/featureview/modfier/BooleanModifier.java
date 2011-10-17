@@ -45,58 +45,39 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author belger
  */
-public class BooleanModifier implements IFeatureModifier
+public class BooleanModifier extends AbstractFeatureModifier
 {
   private Image m_checkedImage = null;
 
   private Image m_uncheckedImage = null;
 
-  private final IPropertyType m_ftp;
-
-  public BooleanModifier( final IValuePropertyType ftp )
+  public BooleanModifier( final GMLXPath propertyPath, final IValuePropertyType ftp )
   {
-    m_ftp = ftp;
+    init( propertyPath, ftp );
 
     if( !(java.lang.Boolean.class == ftp.getValueClass()) )
       throw new IllegalArgumentException( "Only Booleans accepted by this Modifier" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getValue(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
-  public Object getValue( final Feature f )
+  public Object getProperty( final Feature feature )
   {
-    final Object property = f.getProperty( m_ftp );
+    final Object property = super.getProperty( feature );
     if( property == null )
       return Boolean.FALSE;
 
     return property;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.Object)
-   */
-  @Override
-  public Object parseInput( final Feature f, final Object value )
-  {
-    return value;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#createCellEditor(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public CellEditor createCellEditor( final Composite parent )
   {
@@ -115,18 +96,6 @@ public class BooleanModifier implements IFeatureModifier
     return Messages.getString( "org.kalypso.ogc.gml.featureview.modfier.BooleanModifier.bool" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
-   */
-  @Override
-  public IPropertyType getFeatureTypeProperty( )
-  {
-    return m_ftp;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getLabel(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public String getLabel( final Feature f )
   {
@@ -135,13 +104,10 @@ public class BooleanModifier implements IFeatureModifier
 //    return String.valueOf( b );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getImage(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public Image getImage( final Feature f )
   {
-    final Boolean b = (Boolean) getValue( f );
+    final Boolean b = (Boolean) getProperty( f );
     if( b == null || !b.booleanValue() )
     {
       if( m_uncheckedImage == null )
@@ -172,14 +138,5 @@ public class BooleanModifier implements IFeatureModifier
       m_checkedImage.dispose();
     if( m_uncheckedImage != null )
       m_uncheckedImage.dispose();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#equals(java.lang.Object, java.lang.Object)
-   */
-  @Override
-  public boolean equals( final Object newData, final Object oldData )
-  {
-    return newData.equals( oldData );
   }
 }

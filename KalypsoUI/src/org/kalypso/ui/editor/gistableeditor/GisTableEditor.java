@@ -105,6 +105,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * <p>
@@ -349,8 +350,8 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
     final IPropertyType[] ftps = featureType.getProperties();
     for( final IPropertyType element : ftps )
     {
-      final String columnName = element.getQName().getLocalPart();
-      manager.add( new ColumnAction( this, m_layerTable, columnName, element.getAnnotation() ) );
+      final GMLXPath columnPath = new GMLXPath( element.getQName() );
+      manager.add( new ColumnAction( this, m_layerTable, columnPath, element.getAnnotation() ) );
     }
   }
 

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
 
@@ -44,67 +44,29 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColorCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author belger
  */
-public class ColorModifier implements IFeatureModifier
+public class ColorModifier extends AbstractFeatureModifier
 {
-  private final IValuePropertyType m_ftp;
-
   private final IGuiTypeHandler m_guiTypeHandler;
 
-  public ColorModifier( final IValuePropertyType ftp )
+  public ColorModifier( final GMLXPath propertyPath, final IValuePropertyType ftp )
   {
-    m_ftp = ftp;
+    init( propertyPath, ftp );
 
     // we need both registered type handler types
     final ITypeRegistry<IGuiTypeHandler> guiTypeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
-    m_guiTypeHandler = guiTypeRegistry.getTypeHandlerFor( m_ftp );
+    m_guiTypeHandler = guiTypeRegistry.getTypeHandlerFor( ftp );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    // nix zu tun
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getValue(org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public Object getValue( final Feature f )
-  {
-    if( m_ftp == null )
-      return null;
-
-    final Object rgbValue = f.getProperty( m_ftp );
-    return rgbValue;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.Object)
-   */
-  @Override
-  public Object parseInput( final Feature f, final Object rgbValue )
-  {
-    return rgbValue;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#createCellEditor(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public CellEditor createCellEditor( final Composite parent )
   {
@@ -133,43 +95,17 @@ public class ColorModifier implements IFeatureModifier
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
-   */
-  @Override
-  public IPropertyType getFeatureTypeProperty( )
-  {
-    return m_ftp;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getLabel(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public String getLabel( final Feature f )
   {
-    final Object value = getValue( f );
+    final Object value = getProperty( f );
     return value == null ? "" : m_guiTypeHandler.getText( value ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getImage(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public Image getImage( final Feature f )
   {
-    final Object value = getValue( f );
+    final Object value = getProperty( f );
     return m_guiTypeHandler.getImage( value );
-  }
-
-  /**
-   * Zwei Objekte sind gleich, wenn ihre String-Representation gleich sind.
-   * 
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#equals(java.lang.Object, java.lang.Object)
-   */
-  @Override
-  public boolean equals( final Object newData, final Object oldData )
-  {
-    return m_guiTypeHandler.getText( newData ).equals( m_guiTypeHandler.getText( oldData ) );
   }
 }

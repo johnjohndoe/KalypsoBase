@@ -46,26 +46,25 @@ import java.util.List;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.control.ComboFeatureControl;
 import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * A modifier which handles feature-relations: shows a combo-box as cell-editor.
  * 
  * @author Gernot Belger
  */
-public class ComboBoxModifier implements IFeatureModifier
+public class ComboBoxModifier extends AbstractFeatureModifier
 {
   private static final String NO_LINK_STRING = Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ComboBoxModifier.0"); //$NON-NLS-1$
 
@@ -73,42 +72,36 @@ public class ComboBoxModifier implements IFeatureModifier
 
   private final ComboBoxCellEditor m_comboBoxCellEditor = new ComboBoxCellEditor();
 
-  private final IRelationType m_rt;
-
   private Feature m_feature;
 
-  public ComboBoxModifier( final IRelationType ftp )
+  public ComboBoxModifier( final GMLXPath propertyPath, final IRelationType ftp )
   {
-    m_rt = ftp;
+    init( propertyPath, ftp );
+
     m_comboBoxCellEditor.setStyle( SWT.READ_ONLY | SWT.DROP_DOWN );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getValue(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
-  public Object getValue( final Feature f )
+  public Object getProperty( final Feature feature )
   {
-    m_feature = f;
+    m_feature = feature;
     m_entries.clear();
 
     final List<String> labels = new ArrayList<String>();
 
-    if( !m_rt.isInlineAble() && m_rt.isLinkAble() )
+    final IRelationType rt = (IRelationType) getPropertyType();
+    if( !rt.isInlineAble() && rt.isLinkAble() )
     {
       /* Null entry to delete link if this is allowed */
-      if( m_rt.isNillable() )
+      if( rt.isNillable() )
       {
         m_entries.add( null );
         labels.add( NO_LINK_STRING );
       }
 
-      /* Find all substituting features. */
-      final Feature feature = getFeature();
-
       final GMLWorkspace workspace = feature.getWorkspace();
 
-      final Feature[] features = ComboFeatureControl.collectReferencableFeatures( workspace, m_feature, m_rt );
+      final Feature[] features = ComboFeatureControl.collectReferencableFeatures( workspace, m_feature, rt );
 
       final GMLLabelProvider labelProvider = new GMLLabelProvider();
 
@@ -128,14 +121,10 @@ public class ComboBoxModifier implements IFeatureModifier
     }
     m_comboBoxCellEditor.setItems( labels.toArray( new String[labels.size()] ) );
 
-    final Object property = f.getProperty( m_rt );
+    final Object property = super.getProperty( feature );
     return m_entries.indexOf( property );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.Object)
-   */
   @Override
   public Object parseInput( final Feature f, final Object value )
   {
@@ -157,36 +146,16 @@ public class ComboBoxModifier implements IFeatureModifier
     return m_comboBoxCellEditor;
   }
 
-  protected Feature getFeature( )
-  {
-    return m_feature;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
-   */
   @Override
   public String isValid( final Object value )
   {
     return null; // null means vaild
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
-   */
-  @Override
-  public IPropertyType getFeatureTypeProperty( )
-  {
-    return m_rt;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getLabel(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public String getLabel( final Feature f )
   {
-    final IPropertyType ftp = getFeatureTypeProperty();
+    final IPropertyType ftp = getPropertyType();
     final Object fprop = f.getProperty( ftp );
 
     if( fprop == null )
@@ -194,7 +163,7 @@ public class ComboBoxModifier implements IFeatureModifier
 
     if( ftp instanceof IRelationType )
     {
-      Feature resolvedFeature = FeatureHelper.resolveLinkedFeature( f.getWorkspace(), fprop );
+      final Feature resolvedFeature = FeatureHelper.resolveLinkedFeature( f.getWorkspace(), fprop );
       if( resolvedFeature == null )
         return NO_LINK_STRING;
 
@@ -203,33 +172,5 @@ public class ComboBoxModifier implements IFeatureModifier
 
     // we should never reach this code, as the ComboBoxModifier is only used for relation types
     return fprop.toString();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getImage(org.kalypsodeegree.model.feature.Feature)
-   */
-  @Override
-  public Image getImage( final Feature f )
-  {
-    // Todo: button image
-    return null;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    // nichts zu tun
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#equals(java.lang.Object, java.lang.Object)
-   */
-  @Override
-  public boolean equals( final Object newData, final Object oldData )
-  {
-    return newData.equals( oldData );
   }
 }

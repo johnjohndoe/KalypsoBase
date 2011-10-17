@@ -54,6 +54,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.ObjectFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Provides editors and visualisation for {@link org.kalypsodeegree.model.feature.Feature}s.
@@ -62,11 +63,11 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
 {
-  public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp );
+  IFeatureDialog createFeatureDialog( Feature feature, IPropertyType ftp );
 
-  public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory );
+  JAXBElement< ? extends ControlType> createFeatureviewControl( IPropertyType property, ObjectFactory factory );
 
-  public IFeatureModifier createFeatureModifier( final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format );
+  IFeatureModifier createFeatureModifier( GMLXPath propertyPath, IPropertyType ftp, IFeatureSelectionManager selectionManager, IFeatureChangeListener fcl, String format );
 
   /**
    * Inverse operation to {@link ILabelProvider#getText(java.lang.Object)}. Must return an object of the type for which
@@ -81,5 +82,5 @@ public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler
    *            supported. For example for the date-handler, DateFormat format string can be used. May be
    *            <code>null</code>.
    */
-  public Object parseText( final String text, final String formatHint ) throws ParseException;
+  Object parseText( String text, String formatHint ) throws ParseException;
 }

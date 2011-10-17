@@ -68,17 +68,19 @@ public class SubFeatureControl extends AbstractFeatureControl
 
       // FIXME: actually we'd like to use a FillLayout, but there are still buggy Feature-Controls out
       // there that set their own layoutData to grid-data....
+      // ACTUALLY; the layout element of the corresponding view-element is used...
       final GridLayout layout = new GridLayout( 1, false );
       layout.marginWidth = 0;
       layout.marginHeight = 0;
       m_container.setLayout( layout );
+      // m_container.setLayout( new FillLayout() );
     }
 
     try
     {
       final Feature featureToSet = findFeatuereToSet();
 
-      /* crerate the control */
+      /* create the control */
       if( featureToSet == null )
       {
         // TODO: If selector is present, just create an empty control
@@ -120,7 +122,7 @@ public class SubFeatureControl extends AbstractFeatureControl
     } );
 
     m_fc.createControl( m_container, SWT.NONE );
-    // FIXME we should set the layout here, but the FeatureComposite does it itself, which it shouldn't
+
     return m_container;
   }
 
@@ -147,9 +149,6 @@ public class SubFeatureControl extends AbstractFeatureControl
     return featureToSet;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -175,6 +174,11 @@ public class SubFeatureControl extends AbstractFeatureControl
 
     // Is updateControl always necessary?
     m_fc.updateControl();
+
+    // FIXME we should set the layout here, but the FeatureComposite does it itself, which it shouldn't
+
+    // FIXME:
+
   }
 
   /**

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table;
 
@@ -47,6 +47,9 @@ import java.util.List;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * @author belger
@@ -54,7 +57,7 @@ import org.kalypsodeegree.model.feature.Feature;
 public class LayerTableSorter extends ViewerSorter
 {
   /** Die Features werden nach dieser Property sortiert */
-  private String m_propertyName = null;
+  private GMLXPath m_propertyPath = null;
 
   private boolean m_bInverse = false;
 
@@ -68,9 +71,9 @@ public class LayerTableSorter extends ViewerSorter
     super( cola );
   }
 
-  public final String getPropertyName( )
+  public final GMLXPath getPropertyPath( )
   {
-    return m_propertyName;
+    return m_propertyPath;
   }
 
   public final boolean isInverse( )
@@ -78,14 +81,14 @@ public class LayerTableSorter extends ViewerSorter
     return m_bInverse;
   }
 
-  public final void setInverse( boolean bInverse )
+  public final void setInverse( final boolean bInverse )
   {
     m_bInverse = bInverse;
   }
 
-  public final void setPropertyName( String propertyName )
+  public final void setPropertyPath( final GMLXPath propertyPath )
   {
-    m_propertyName = propertyName;
+    m_propertyPath = propertyPath;
   }
 
   @Override
@@ -94,22 +97,12 @@ public class LayerTableSorter extends ViewerSorter
     final Feature kf1 = (Feature) e1;
     final Feature kf2 = (Feature) e2;
 
-    final String propertyName = getPropertyName();
-    if( propertyName == null )
+    final GMLXPath propertyPath = getPropertyPath();
+    if( propertyPath == null )
       return 0;
 
-    final Object o1;
-    final Object o2;
-    if( kf1.getFeatureType().getProperty( propertyName ) == null )
-    {
-      o1 = kf1.getId();
-      o2 = kf2.getId();
-    }
-    else
-    {
-      o1 = kf1.getProperty( propertyName );
-      o2 = kf2.getProperty( propertyName );
-    }
+    final Object o1 = getProperty( kf1, propertyPath );
+    final Object o2 = getProperty( kf2, propertyPath );
 
     final int sign = isInverse() ? -1 : 1;
     if( o1 == o2 )
@@ -119,6 +112,22 @@ public class LayerTableSorter extends ViewerSorter
     if( o2 == null )
       return -sign;
     return sign * compareObjects( o1, o2 );
+  }
+
+  private Object getProperty( final Feature feature, final GMLXPath propertyPath )
+  {
+    try
+    {
+      final Object value = GMLXPathUtilities.query( propertyPath, feature );
+      if( value != null )
+        return value;
+    }
+    catch( final GMLXPathException e )
+    {
+      e.printStackTrace();
+    }
+
+    return feature.getId();
   }
 
   private int compareObjects( final Object o1, final Object o2 )
@@ -144,8 +153,8 @@ public class LayerTableSorter extends ViewerSorter
     else if( o1 instanceof List && o2 instanceof List )
     {
       // hack: compare the first two items of the lists (e.g. for name or description properties)
-      final List l1 = (List) o1;
-      final List l2 = (List) o2;
+      final List< ? > l1 = (List< ? >) o1;
+      final List< ? > l2 = (List< ? >) o2;
       return compareObjects( l1.get( 0 ), l2.get( 0 ) );
     }
     else
@@ -153,8 +162,8 @@ public class LayerTableSorter extends ViewerSorter
   }
 
   @Override
-  public boolean isSorterProperty( Object element, String property )
+  public boolean isSorterProperty( final Object element, final String property )
   {
-    return property.equals( m_propertyName );
+    return property.equals( m_propertyPath );
   }
 }
