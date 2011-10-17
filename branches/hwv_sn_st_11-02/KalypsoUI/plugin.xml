@@ -1523,11 +1523,6 @@
            label="Text Theme"
            type="text">
      </factory>
-     <factory
-           class="org.kalypso.ogc.gml.movie.KalypsoMovieThemeFactory"
-           label="Movie Theme"
-           type="movie">
-     </factory>
 	 </extension>
   <extension
         point="org.kalypso.core.featureviewFilter">
