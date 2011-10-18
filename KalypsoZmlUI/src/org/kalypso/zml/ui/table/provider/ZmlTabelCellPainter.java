@@ -55,6 +55,7 @@ import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.schema.AlignmentType;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
@@ -62,7 +63,7 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 /**
  * @author Dirk Kuch
  */
-public class ZmlTabelCellRenderer
+public class ZmlTabelCellPainter
 {
   private final IZmlTableCell m_cell;
 
@@ -74,7 +75,7 @@ public class ZmlTabelCellRenderer
 
   private Font m_font;
 
-  public ZmlTabelCellRenderer( final IZmlTableCell cell )
+  public ZmlTabelCellPainter( final IZmlTableCell cell )
   {
     m_cell = cell;
 
@@ -164,13 +165,16 @@ public class ZmlTabelCellRenderer
 
       final Point extend = gc.textExtent( label );
 
-      /** SWT.RIGHT */
-      final int x1 = Math.max( bounds.x, bounds.x + bounds.width - extend.x ) - 1;
-      final int offset = Math.max( 0, (bounds.height - extend.y) / 2 );
+      final AlignmentType alignment = m_cell.getColumn().getColumnType().getAlignment();
+      if( AlignmentType.LEFT.equals( alignment ) )
+        return drawLeftText( gc, label, bounds, extend );
+      else if( AlignmentType.CENTER.equals( alignment ) )
+        return drawCenterText( gc, label, bounds, extend );
+      else if( AlignmentType.RIGHT.equals( alignment ) )
+        return drawRightText( gc, label, bounds, extend );
 
-      gc.drawText( label, x1, bounds.y + offset, true );
+      return new Point( 0, 0 );
 
-      return new Point( Math.abs( x1 + extend.x - bounds.x ), bounds.y );
     }
     catch( final Exception e )
     {
@@ -178,6 +182,47 @@ public class ZmlTabelCellRenderer
     }
 
     return new Point( 0, 0 );
+  }
+
+  private Point drawLeftText( final GC gc, final String label, final Rectangle bounds, final Point extend )
+  {
+    final int offset = getOffsetY( bounds, extend );
+    gc.drawText( label, bounds.x, bounds.y + offset, true );
+
+    return extend;
+  }
+
+  private Point drawCenterText( final GC gc, final String label, final Rectangle bounds, final Point extend )
+  {
+    final int x1 = Math.max( bounds.x, bounds.x + (bounds.width - extend.x) / 2 );
+    final int offset = getOffsetY( bounds, extend );
+
+    gc.drawText( label, x1, bounds.y + offset, true );
+
+    return new Point( Math.abs( bounds.x - x1 ) + extend.x, bounds.y );
+  }
+
+  private Point drawRightText( final GC gc, final String label, final Rectangle bounds, final Point extend )
+  {
+    int x1 = Math.max( bounds.x, bounds.x + bounds.width - extend.x ) - 1;
+    final int offset = getOffsetY( bounds, extend );
+
+    // "buffer" right border
+    if( x1 != bounds.x )
+    {
+      final int x0 = x1 - 7;
+      if( x0 > bounds.x )
+        x1 = x0;
+    }
+
+    gc.drawText( label, x1, bounds.y + offset, true );
+
+    return new Point( Math.abs( bounds.x - x1 ) + extend.x, bounds.y );
+  }
+
+  private int getOffsetY( final Rectangle bounds, final Point extend )
+  {
+    return Math.max( 0, (bounds.height - extend.y) / 2 );
   }
 
   public boolean isVisble( )
