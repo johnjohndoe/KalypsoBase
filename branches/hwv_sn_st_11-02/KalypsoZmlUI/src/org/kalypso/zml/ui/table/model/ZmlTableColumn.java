@@ -80,9 +80,6 @@ public class ZmlTableColumn extends ZmlTableElement implements IZmlTableColumn
     return m_type.getType() instanceof IndexColumnType;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals( final Object obj )
   {
@@ -99,9 +96,6 @@ public class ZmlTableColumn extends ZmlTableElement implements IZmlTableColumn
     return super.equals( obj );
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {
@@ -137,9 +131,6 @@ public class ZmlTableColumn extends ZmlTableElement implements IZmlTableColumn
     return model.getColumn( m_type.getIdentifier() );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn#getCells()
-   */
   @Override
   public IZmlTableCell[] getCells( )
   {
@@ -162,9 +153,6 @@ public class ZmlTableColumn extends ZmlTableElement implements IZmlTableColumn
     return cells.toArray( new IZmlTableCell[] {} );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn#getSelectedCells()
-   */
   @Override
   public IZmlTableCell[] getSelectedCells( )
   {
@@ -180,9 +168,6 @@ public class ZmlTableColumn extends ZmlTableElement implements IZmlTableColumn
     return selected.toArray( new IZmlTableCell[] {} );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn#findCell(org.kalypso.zml.ui.table.model.IZmlModelRow)
-   */
   @Override
   public IZmlTableCell findCell( final IZmlModelRow row )
   {
