@@ -54,13 +54,13 @@ public class FlipProfileWizard extends ManipulateProfileWizard
 {
   public FlipProfileWizard( )
   {
-    setWindowTitle( Messages.getString( "FlipProfileWizard.0" ) ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.model.wspm.ui.action.FlipProfileActionDelegate.0" ) );//$NON-NLS-1$
   }
 
   @Override
   protected String getProfilePageMessage( )
   {
-    return Messages.getString( "FlipProfileWizard.1" ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard.2" ); //$NON-NLS-1$
   }
 
   @Override

@@ -50,21 +50,18 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.binding.FeatureWrapperCollection;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection;
 
 /**
  * The feature based implementation of {@link IGeoStatus}.
  * 
  * @author Thomas Jung
  */
-public class GeoStatus extends Feature_Impl implements IGeoStatus
+public class GeoStatus extends FeatureWrapperCollection<IGeoStatus> implements IGeoStatus
 {
-
   private enum SEVERITYTYPE
   {
     ok,
@@ -74,18 +71,17 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
     cancel
   }
 
-  private final IFeatureBindingCollection<IGeoStatus> m_children = new FeatureBindingCollection<IGeoStatus>( this, IGeoStatus.class, QNAME_PROP_STATUS_CHILD_MEMBER );
+  private final IFeatureWrapperCollection<IGeoStatus> m_children = new FeatureWrapperCollection<IGeoStatus>( getFeature(), IGeoStatus.class, QNAME_PROP_STATUS_CHILD_MEMBER );
 
-  public GeoStatus( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public GeoStatus( final Feature featureToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, IGeoStatus.class, QNAME_PROP_STATUS_CHILD_MEMBER );
   }
 
   /**
    * @see org.kalypsodeegree_impl.gml.binding.commons.IStatus#getChildrenCollection()
    */
-  @Override
-  public IFeatureBindingCollection<IGeoStatus> getChildrenCollection( )
+  public IFeatureWrapperCollection<IGeoStatus> getChildrenCollection( )
   {
     return m_children;
   }
@@ -118,7 +114,7 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
 
     try
     {
-      final String encodedString = (String) getProperty( QNAME_PROP_STATUS_EXCEPTION );
+      final String encodedString = (String) getFeature().getProperty( QNAME_PROP_STATUS_EXCEPTION );
       if( encodedString == null || encodedString.isEmpty() )
         return null;
 
@@ -214,7 +210,7 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
 
   private SEVERITYTYPE getSeverityType( )
   {
-    final String value = (String) getProperty( QNAME_PROP_STATUS_SEVERITY );
+    final String value = (String) getFeature().getProperty( QNAME_PROP_STATUS_SEVERITY );
 
     return SEVERITYTYPE.valueOf( value );
   }

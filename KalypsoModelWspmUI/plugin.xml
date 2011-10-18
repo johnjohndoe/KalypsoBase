@@ -431,7 +431,7 @@
                icon="icons/etool16/delete_layer.gif">
          </image>
       </extension>
-
+     
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.kalypso.model.wspm.ui.definition.oneProfileThemeSelected">
 			<with variable="selection">
@@ -519,20 +519,6 @@
              <description>%org.kalypso.model.wspm.ui.action.FlipProfileAction.description</description>
        </wizard>
        <wizard
-             class="org.kalypso.model.wspm.ui.profil.wizard.classification.guess.GuessClassificationsWizard"
-             id="org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard"
-             icon="icons/obj16/guess_classes.png"
-             name="Guess classification classes">
-             <description>Guessing of roughness / vegetation classes from profile point properties</description>
-       </wizard>
-       <wizard
-             class="org.kalypso.model.wspm.ui.profil.wizard.classification.apply.ApplyClassificationsWizard"
-             id="org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard"
-             icon="icons/obj16/apply_classes.png"
-             name="Apply classification class vlaues">
-             <description>Apply mapped roughness / vegetation classification class values on selected profile point properties</description>
-       </wizard>
-       <wizard
              class="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard"
              id="org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard"
              icon="icons/etool16/profile_property_edit.gif"
@@ -550,7 +536,7 @@
              class="org.kalypso.model.wspm.ui.profil.wizard.createDivider.CreateProfileDeviderWizard"
              id="org.kalypso.model.wspm.ui.profil.wizard.createDivider.CreateProfileDeviderWizard"
              name="%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction">
-             <description>%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description</description>
+             <description>%org.kalypso.model.wspm.ui.action.CreateDeviderMapThemeAction.description</description>  
        </wizard>
        <wizard
              class="org.kalypso.model.wspm.ui.profil.wizard.intersectRoughness.IntersectRoughnessWizard"
@@ -558,21 +544,8 @@
              name="%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction">
              <description>%org.kalypso.model.wspm.ui.action.IntersectRoughnessMapThemeAction.description</description>
        </wizard>
-        <wizard
-              class="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard"
-              icon="icons/obj16/landuse.import.png"
-              id="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard"
-              name="Import landuse shape">
-             <description>Landuse shapes can be used to assign roughness and vegetation classes on profiles</description>
-       </wizard>
-        <wizard
-              class="org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard"
-              icon="icons/obj16/landuse.apply.png"
-              id="org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.ApplyLanduseShapeWizard"
-              name="Apply lanuse shape">
-        </wizard>
     </extension>
-
+    
     <extension point="org.kalypso.contribs.eclipsercp.wizardEnablement">
        <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.importProfile.ImportProfileWizard">
           <enablement>
@@ -585,20 +558,6 @@
           </enablement>
        </wizardEnablement>
        <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.flipProfile.FlipProfileWizard">
-          <enablement>
-             <reference
-                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-             </reference>
-          </enablement>
-       </wizardEnablement>
-       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.classification.GuessClassificationsWizard">
-          <enablement>
-             <reference
-                   definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
-             </reference>
-          </enablement>
-       </wizardEnablement>
-       <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard">
           <enablement>
              <reference
                    definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">

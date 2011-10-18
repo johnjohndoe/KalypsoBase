@@ -41,8 +41,8 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kalypso.commons.xml.NSUtilities;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
@@ -80,7 +80,6 @@ public final class GMLXPathSegment
     if( trimmedPath.length() == 0 )
       return new GMLXPathSegment[] {};
 
-    // FIXME: we need to be able to escape '/' somehow in order to read fully quantified qnames (http://xxx.org)
     final String[] segments = trimmedPath.split( "/" );
     final GMLXPathSegment[] xSegments = new GMLXPathSegment[segments.length];
     for( int i = 0; i < segments.length; i++ )

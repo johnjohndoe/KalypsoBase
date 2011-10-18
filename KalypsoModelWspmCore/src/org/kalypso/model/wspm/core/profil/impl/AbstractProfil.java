@@ -48,7 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
@@ -106,19 +106,10 @@ public abstract class AbstractProfil implements IProfil
 
   private MarkerIndex m_markerIndex;
 
-  private final Object m_source;
-
-  public AbstractProfil( final String type, final TupleResult result, final Object source )
+  public AbstractProfil( final String type, final TupleResult result )
   {
     m_type = type;
-    m_source = source;
     setResult( result );
-  }
-
-  @Override
-  public Object getSource( )
-  {
-    return m_source;
   }
 
   @Override
@@ -442,7 +433,6 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public IRecord[] getPoints( final int startPoint, final int endPoint )
   {
-    // TODO visitor pattern
     final int size = endPoint - startPoint + 1;
     final IRecord[] subList = new IRecord[size];
     for( int i = 0; i < size; i++ )
@@ -477,7 +467,6 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public <T extends IProfileObject> T[] getProfileObjects( final Class<T> clazz )
   {
-    // TODO visitor
     final List<T> objects = new ArrayList<T>();
     for( final IProfileObject object : m_profileObjects )
     {
@@ -602,7 +591,7 @@ public abstract class AbstractProfil implements IProfil
   {
     final Object oldValue = marker.getValue();
 
-    final IComponent id = marker.getComponent();
+    final IComponent id = marker.getId();
     final Object defaultValue = id.getDefaultValue();
     marker.setValue( defaultValue );
 

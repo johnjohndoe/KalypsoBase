@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates;
 
@@ -45,7 +45,7 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -158,7 +158,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
 
       for( final Feature feature : features )
       {
-        final DisplayElement lde = DisplayElementFactory.buildDisplayElement( feature, symbolizer, null );
+        final DisplayElement lde = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
         lde.paint( g, projection, new NullProgressMonitor() );
       }
     }

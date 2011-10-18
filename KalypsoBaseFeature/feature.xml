@@ -53,6 +53,13 @@
          unpack="false"/>
 
    <plugin
+         id="org.apache.commons.vfs"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.kalypso.commons"
          download-size="0"
          install-size="0"
@@ -256,6 +263,13 @@
          unpack="false"/>
 
    <plugin
+         id="de.openali.odysseus.service.ows"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="de.openali.odysseus.chart.ext.base"
          download-size="0"
          install-size="0"
@@ -382,6 +396,27 @@
          unpack="false"/>
 
    <plugin
+         id="org.junit"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.junit4"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.hamcrest.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.kalypso.mapserver"
          download-size="0"
          install-size="0"
@@ -411,48 +446,6 @@
 
    <plugin
          id="com.vividsolutions.jts"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.commons"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.commons.vfs2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.ogc.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.wps.adapter"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.wps.client"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.kalypso.wps.server"
          download-size="0"
          install-size="0"
          version="0.0.0"

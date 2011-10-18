@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.eclipse.jface.viewers;
 
+import org.kalypso.commons.eclipse.jface.viewers.ITabList;
 
 /**
  * @author Gernot Belger

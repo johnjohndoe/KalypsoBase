@@ -8,6 +8,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.project.database.client.core.model.ProjectDatabaseModel;
+import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.extension.database.IProjectDataBaseClientConstant;
 import org.kalypso.project.database.sei.IProjectDatabase;
 import org.kalypso.project.database.sei.ProjectDatabaseServiceLocator;
@@ -20,14 +21,13 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
 {
   public static final Color COLOR_WELCOME_PAGE_HEADING = new Color( null, 0x99, 0xB4, 0xCE );
 
-  // FIXME: bad static font/colors... never disposed: we should use an eclipse font in any case...
   static public final Font WELCOME_PAGE_HEADING = new Font( Display.getDefault(), "Tahoma", 28, SWT.BOLD ); //$NON-NLS-1$
 
   static public final Font WELCOME_PAGE_MODULE = new Font( Display.getDefault(), "Tahoma", 14, SWT.BOLD ); //$NON-NLS-1$
 
   static public final Font HEADING = new Font( Display.getDefault(), "Tahoma", 8, SWT.BOLD ); //$NON-NLS-1$
 
-  private final ProjectDatabaseModel PROJECT_DATABASE_MODEL = null;
+  private ProjectDatabaseModel PROJECT_DATABASE_MODEL = null;
 
   private static IProjectDatabase m_service = null;
 
@@ -57,6 +57,11 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
     return m_service;
   }
 
+  public static IProjectDatabaseModel getModel( )
+  {
+    return getDefault().getProjectDatabaseModel();
+  }
+
   /**
    * Returns the database-service.<br>
    * Does not block but returns the current available service. If the service is not yet available (see
@@ -75,6 +80,17 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
   // The shared instance
   private static KalypsoProjectDatabaseClient plugin;
 
+  /**
+   * The constructor
+   */
+  public KalypsoProjectDatabaseClient( )
+  {
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
+   */
   @Override
   public void start( final BundleContext context ) throws Exception
   {
@@ -82,11 +98,17 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
     plugin = this;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+   */
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
     if( PROJECT_DATABASE_MODEL != null )
+    {
       PROJECT_DATABASE_MODEL.stop();
+    }
     plugin = null;
 
     super.stop( context );
@@ -102,4 +124,14 @@ public class KalypsoProjectDatabaseClient extends AbstractUIPlugin
     return plugin;
   }
 
+  private IProjectDatabaseModel getProjectDatabaseModel( )
+  {
+    /* don't implement ProjectdatabaseModel() as Singleton, perhaps we have to flexibilise the model in future */
+    if( PROJECT_DATABASE_MODEL == null )
+    {
+      PROJECT_DATABASE_MODEL = new ProjectDatabaseModel();
+    }
+
+    return PROJECT_DATABASE_MODEL;
+  }
 }

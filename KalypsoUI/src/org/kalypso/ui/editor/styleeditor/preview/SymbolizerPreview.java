@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.preview;
 
@@ -88,6 +88,6 @@ public abstract class SymbolizerPreview<S extends Symbolizer> extends Preview<S>
 
   protected DisplayElement createDisplayElement( final GM_Object geom ) throws IncompatibleGeometryTypeException
   {
-    return DisplayElementFactory.buildDisplayElement( null, getInputData(), geom, null );
+    return DisplayElementFactory.buildDisplayElement( null, getInputData(), geom );
   }
 }

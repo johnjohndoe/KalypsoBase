@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.gml.processes.i18n.Messages;
 
 import com.vividsolutions.jts.algorithm.RobustCGAlgorithms;

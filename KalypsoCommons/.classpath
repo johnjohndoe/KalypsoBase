@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/joda-time/joda-time-2.0.jar" sourcepath="lib/joda-time/joda-time-2.0-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/KalypsoCommons/lib/joda-time/joda-time-2.0-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="srcext"/>
+	<classpathentry exported="true" kind="lib" path="lib/apache/lang/commons-lang-2.6.jar" sourcepath="lib/apache/lang/commons-lang-2.6-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/modified-httpclient-contribs.jar" sourcepath="lib/modified-httpclient-contribs-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/activation.jar" sourcepath="KalypsoCommonssrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/jaxb-api.jar" sourcepath="KalypsoCommonssrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/jaxb-impl.jar" sourcepath="lib/jaxb_2_1_7/jaxb-impl.src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/jaxb-xjc.jar" sourcepath="lib/jaxb_2_1_7/jaxb-xjc.src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/jaxb1-impl.jar" sourcepath="KalypsoCommonssrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_1_7/jsr173_1.0_api.jar" sourcepath="KalypsoCommonssrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-collections-3.2.1.jar" sourcepath="lib/commons-collections-3.2.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.1.1.jar" sourcepath="lib/commons-logging-1.1.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-logging-adapters-1.1.1.jar" sourcepath="lib/commons-logging-1.1.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-logging-api-1.1.1.jar" sourcepath="lib/commons-logging-1.1.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-net-ftp-2.0.jar" sourcepath="lib/commons-net-2.0-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xml-commons-resolver-1.2.jar" sourcepath="lib/xml-commons-resolver-1.2-src.jar.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-httpclient-3.1.jar" sourcepath="lib/commons-httpclient-3.1-src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-net-2.0.jar" sourcepath="lib/commons-net-2.0-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/jsr173_1.0_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/resolver.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xbean_xpath.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xbean.jar" sourcepath="lib/xmlbeans-2.5/src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xbean.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xmlbeans-qname.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xmlpublic.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-3.6-20091214.jar" sourcepath="lib/poi-2.6/poi-src-3.6-20091214.zip"/>
@@ -32,6 +43,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/xalan-j/serializer.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xalan-j/xercesImpl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xalan-j/xml-apis.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/apache/sanselan-0_97/sanselan-0.97-incubator.jar" sourcepath="lib/apache/sanselan-0_97/sanselan-0.97-incubator-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j_1_6_1/slf4j-api-1.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j_1_6_1/slf4j-ext-1.6.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j_1_6_1/slf4j-jdk14-1.6.1.jar"/>
@@ -39,12 +51,9 @@
 	<classpathentry exported="true" kind="lib" path="lib/pdf-renderer/PDFRenderer.jar" sourcepath="lib/pdf-renderer/PDFRenderer-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jgraph/jgraphx_1_5_1_11.jar" sourcepath="lib/jgraph/jpgrahpx_1_5_1_11-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/guava/guava-r09.jar" sourcepath="lib/guava/guava-src-r09.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/apache/commons-io-2_0/commons-io-2.0.1.jar" sourcepath="lib/apache/commons-io-2_0/commons-io-2.0.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/apache/codec/commons-codec-1.5.jar" sourcepath="lib/apache/codec/commons-codec-1.5-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/opencsv/opencsv-2.3.jar" sourcepath="lib/opencsv/opencsv-2.3.src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/activation.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-impl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-xjc.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb1-impl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jsr173_1.0_api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/joda-time/joda-time-1.6.2.jar" sourcepath="lib/joda-time/joda-time-1.6.2-sources.jar"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>

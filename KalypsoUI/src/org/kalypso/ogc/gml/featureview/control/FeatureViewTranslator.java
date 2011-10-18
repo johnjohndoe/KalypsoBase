@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
+import java.net.URL;
 import java.util.List;
 
 import org.kalypso.commons.i18n.ITranslator;
-import org.kalypso.commons.i18n.ITranslatorContext;
 import org.w3c.dom.Element;
 
 /**
@@ -70,7 +70,7 @@ public class FeatureViewTranslator implements ITranslator
   }
 
   @Override
-  public void configure( final ITranslatorContext context, final List<Element> elements )
+  public void configure( final URL context, final List<Element> elements )
   {
     m_delegate.configure( context, elements );
   }

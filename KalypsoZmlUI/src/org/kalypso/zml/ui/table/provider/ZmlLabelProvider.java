@@ -2,45 +2,44 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.SWT;
@@ -120,15 +119,12 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     {
       try
       {
-        final CellStyle style = resolveRuleStyle( rule, reference );
-        if( Objects.isNotNull( style ) )
-        {
-          final Color color = style.getBackgroundColor();
-          if( Objects.isNotNull( color ) )
-            return color;
-        }
+        final IZmlRuleImplementation implemenation = rule.getImplementation();
+        final Color color = implemenation.getBackground( reference );
+        if( Objects.isNotNull( color ) )
+          return color;
       }
-      catch( final CoreException e )
+      catch( final SensorException e )
       {
         e.printStackTrace();
       }
@@ -206,18 +202,13 @@ public class ZmlLabelProvider extends ColumnLabelProvider
 
         final IZmlModelRow row = (IZmlModelRow) element;
         final ZmlRule[] rules = m_column.findActiveRules( row );
-        if( ArrayUtils.isNotEmpty( rules ) )
+        if( rules != null )
         {
-          final IZmlValueReference reference = row.get( m_column.getModelColumn() );
-
           for( final ZmlRule rule : rules )
           {
-            final CellStyle style = resolveRuleStyle( rule, reference );
-            if( Objects.isNull( style ) )
-              continue;
-
+            final CellStyle style = rule.getPlainStyle();
             final Image image = style.getImage();
-            if( Objects.isNotNull( image ) )
+            if( image != null )
               iconMerger.addImage( new ZmlTableImage( style.getIdentifier(), image ) );
           }
         }
@@ -231,26 +222,6 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     }
 
     return super.getImage( element );
-  }
-
-  private CellStyle resolveRuleStyle( final ZmlRule rule, final IZmlValueReference reference ) throws CoreException
-  {
-    if( Objects.isNull( reference ) )
-      return null;
-
-    try
-    {
-      final IZmlRuleImplementation implementation = rule.getImplementation();
-      final CellStyle style = implementation.getCellStyle( rule, reference );
-      if( Objects.isNotNull( style ) )
-        return style;
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
-    return null;
   }
 
   /**

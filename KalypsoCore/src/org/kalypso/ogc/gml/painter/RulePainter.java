@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.painter;
 
@@ -56,7 +56,6 @@ import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
-import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
 
 /**
  * @author Gernot Belger
@@ -82,11 +81,9 @@ class RulePainter implements IStylePainter
   {
     final SubMonitor progress = SubMonitor.convert( monitor, STRING_PAINTING_RULE, 100 ); //$NON-NLS-1$
 
-    ProgressUtilities.worked( progress, 5 );
+    ProgressUtilities.worked( progress, 15 );
 
     final SubMonitor loopProgress = progress.newChild( 85 ).setWorkRemaining( m_features.size() );
-
-    final ILabelPlacementStrategy strategy = paintable.createLabelStrategy();
 
     for( final Feature feature : m_features )
     {
@@ -94,18 +91,14 @@ class RulePainter implements IStylePainter
       // However: be careful, too many exceptions are a performance problem, so we should stop after some dozens
 
       final SubMonitor childProgress = loopProgress.newChild( 1 );
-      paintFeature( paintable, feature, childProgress, strategy );
+      paintFeature( paintable, feature, childProgress );
       ProgressUtilities.done( childProgress );
     }
-
-    if( strategy != null )
-      paintable.paintLabels( strategy );
-    progress.worked( 10 );
 
     ProgressUtilities.done( progress );
   }
 
-  private void paintFeature( final IStylePaintable paintable, final Feature feature, final IProgressMonitor monitor, final ILabelPlacementStrategy strategy ) throws CoreException
+  private void paintFeature( final IStylePaintable paintable, final Feature feature, final IProgressMonitor monitor ) throws CoreException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, STRING_PAINTING_FEATURES, 100 ); //$NON-NLS-1$
 
@@ -119,7 +112,7 @@ class RulePainter implements IStylePainter
         final Symbolizer[] symbolizers = m_rule.getSymbolizers();
         for( final Symbolizer symbolizer : symbolizers )
         {
-          final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer, strategy );
+          final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
           // TODO: should'nt there be at least some debug output if this happens?
           if( displayElement != null )
             paintable.paint( displayElement, progress.newChild( 100 ) );

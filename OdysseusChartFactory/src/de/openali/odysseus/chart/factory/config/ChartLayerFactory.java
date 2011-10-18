@@ -47,8 +47,9 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.lang.Objects;
@@ -170,7 +171,7 @@ public class ChartLayerFactory extends AbstractChartFactory
       return buildDerivedLayerTypes( derivedLayerType, baseTypes );
     }
     else
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
   }
 
   private IChartLayer buildLayerReferenceType( final LayerRefernceType reference, final ReferencableType... baseTypes ) throws CoreException, ConfigurationException

@@ -46,9 +46,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.text.StrMatcher;
-import org.apache.commons.lang3.text.StrTokenizer;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.text.StrMatcher;
+import org.apache.commons.lang.text.StrTokenizer;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.java.lang.NumberUtils;
 
@@ -125,6 +125,7 @@ public class SobekLineParser
 
     return expectIntValue( attributeName );
   }
+
 
   public void nextIntToken( final String attributeName, final int expectedValue ) throws CoreException
   {

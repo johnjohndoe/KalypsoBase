@@ -49,7 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
@@ -138,17 +138,6 @@ public final class ProfilUtil
       i++;
     }
     return values;
-  }
-
-  public static int getNextNonNull( final IRecord[] points, final int start, final int componentIndex )
-  {
-    for( int i = start + 1; i < points.length; i++ )
-    {
-
-      if( points[i] != null && points[i].getValue( componentIndex ) != null )
-        return i;
-    }
-    return -1;
   }
 
   public static double getDoubleValueFor( final IComponent component, final IRecord point )

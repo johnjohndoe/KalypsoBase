@@ -111,7 +111,8 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
 
     final int width = gc.getClipping().width;
     final int heigth = gc.getClipping().height;
-
+// final int width = domainAxis.getScreenHeight();
+// final int heigth = targetAxis.getScreenHeight();
     for( final Number domTick : domTicks )
     {
       final Point p1 = new Point( domainAxis.numericToScreen( domTick ), 0 );

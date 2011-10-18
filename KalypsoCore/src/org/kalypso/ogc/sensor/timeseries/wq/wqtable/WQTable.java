@@ -130,15 +130,14 @@ public class WQTable
     final SortedSet<WQPair> headSet = m_qSortedPairs.headSet( p );
     final SortedSet<WQPair> tailSet = m_qSortedPairs.tailSet( p );
 
+    if( headSet.isEmpty() || tailSet.isEmpty() )
+      throw CANNOT_INTERPOLATE_EXCEPTION; // should exception be thrown or a value returned?
+
+    final WQPair p1 = headSet.last();
+    final WQPair p2 = tailSet.first();
+
     try
     {
-      // FIXME: extrapolate
-      if( headSet.isEmpty() || tailSet.isEmpty() )
-        return getInterpolatedWFor( q );
-
-      final WQPair p1 = headSet.last();
-      final WQPair p2 = tailSet.first();
-
       m_eq.setPoints( p1.getW(), p1.getQ(), p2.getW(), p2.getQ() );
     }
     catch( final SameXValuesException e )
@@ -149,78 +148,26 @@ public class WQTable
     return m_eq.computeX( q );
   }
 
-  private double getInterpolatedWFor( final double q ) throws WQException, SameXValuesException
-  {
-    final WQPair[] pairs = m_qSortedPairs.toArray( new WQPair[] {} );
-    if( pairs.length < 2 )
-      throw CANNOT_INTERPOLATE_EXCEPTION; // should exception be thrown or a value returned?
-
-    final WQPair p1 = pairs[0];
-    final WQPair p2 = pairs[1];
-
-    final WQPair pm = pairs[pairs.length - 2];
-    final WQPair pn = pairs[pairs.length - 1];
-
-    if( q < p1.getQ() )
-    {
-      m_eq.setPoints( p2.getW(), p2.getQ(), p1.getW(), p1.getQ() );
-    }
-    else if( q > pn.getQ() )
-    {
-      m_eq.setPoints( pm.getW(), pm.getQ(), pn.getW(), pn.getQ() );
-    }
-    else
-      throw CANNOT_INTERPOLATE_EXCEPTION;
-
-    return m_eq.computeX( q );
-  }
-
   public double getQFor( final double w ) throws WQException
   {
     final WQPair p = new WQPair( w, 0 );
     final SortedSet<WQPair> headSet = m_wSortedPairs.headSet( p );
     final SortedSet<WQPair> tailSet = m_wSortedPairs.tailSet( p );
 
+    if( headSet.isEmpty() || tailSet.isEmpty() )
+      throw CANNOT_INTERPOLATE_EXCEPTION; // should exception be thrown or a value returned?
+
+    final WQPair p1 = headSet.last();
+    final WQPair p2 = tailSet.first();
+
     try
     {
-      if( headSet.isEmpty() || tailSet.isEmpty() )
-        return getInterpolatedQFor( w ); //
-
-      final WQPair p1 = headSet.last();
-      final WQPair p2 = tailSet.first();
-
       m_eq.setPoints( p1.getW(), p1.getQ(), p2.getW(), p2.getQ() );
     }
     catch( final SameXValuesException e )
     {
       throw new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.2" ) + w, e ); //$NON-NLS-1$
     }
-
-    return m_eq.computeY( w );
-  }
-
-  private double getInterpolatedQFor( final double w ) throws WQException, SameXValuesException
-  {
-    final WQPair[] pairs = m_qSortedPairs.toArray( new WQPair[] {} );
-    if( pairs.length < 2 )
-      throw CANNOT_INTERPOLATE_EXCEPTION; // should exception be thrown or a value returned?
-
-    final WQPair p1 = pairs[0];
-    final WQPair p2 = pairs[1];
-
-    final WQPair pm = pairs[pairs.length - 2];
-    final WQPair pn = pairs[pairs.length - 1];
-
-    if( w < p1.getW() )
-    {
-      m_eq.setPoints( p2.getW(), p2.getQ(), p1.getW(), p1.getQ() );
-    }
-    else if( w > pn.getW() )
-    {
-      m_eq.setPoints( pm.getW(), pm.getQ(), pn.getW(), pn.getQ() );
-    }
-    else
-      throw CANNOT_INTERPOLATE_EXCEPTION;
 
     return m_eq.computeY( w );
   }
@@ -251,37 +198,4 @@ public class WQTable
   {
     return m_wSortedPairs.toArray( new WQPair[m_wSortedPairs.size()] );
   }
-
-  public Double getQMax( )
-  {
-    if( m_qSortedPairs.isEmpty() )
-      return null;
-
-    return m_qSortedPairs.last().getQ();
-  }
-
-  public Double getQMin( )
-  {
-    if( m_qSortedPairs.isEmpty() )
-      return null;
-
-    return m_qSortedPairs.first().getQ();
-  }
-
-  public Double getWMin( )
-  {
-    if( m_qSortedPairs.isEmpty() )
-      return null;
-
-    return m_qSortedPairs.first().getW();
-  }
-
-  public Double getWMax( )
-  {
-    if( m_qSortedPairs.isEmpty() )
-      return null;
-
-    return m_qSortedPairs.last().getW();
-  }
-
 }

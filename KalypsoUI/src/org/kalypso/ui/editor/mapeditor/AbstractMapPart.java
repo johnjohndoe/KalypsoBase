@@ -47,7 +47,7 @@ import java.net.URL;
 
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -325,11 +325,12 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
       monitor.worked( 1 );
 
       final URL context = findContext( input );
+      final IProject project = findProject( input );
 
       if( !m_disposed )
       {
         final GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
-        final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), m_selectionManager );
+        final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), project, m_selectionManager );
         mapModell.createFromTemplate( gisview );
         setMapModell( mapModell, env );
       }

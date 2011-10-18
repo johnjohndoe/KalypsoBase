@@ -43,10 +43,10 @@ package org.kalypso.project.database.client.core.base.worker;
 import java.io.File;
 import java.net.URL;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.cache.OnCallRefreshFileObject;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.cache.OnCallRefreshFileObject;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -57,10 +57,10 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.module.project.local.ILocalProject;
-import org.kalypso.module.project.local.wizard.export.ProjectExportWorker;
+import org.kalypso.core.projecthandle.local.exportwizard.ProjectExportWorker;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.extension.database.IProjectDataBaseClientConstant;
+import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.IRemoteProjectPreferences;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
@@ -131,7 +131,6 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       bean.setUnixName( project.getName() ); // TODO generate unixName
       bean.setProjectVersion( 0 );
       bean.setProjectType( m_commitType );
-      bean.setModuleIdentifier( m_commitType );
 
       service.createProject( bean, new URL( urlDestination ) );
 

@@ -134,7 +134,7 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   /**
    * @see org.kalypso.model.wspm.ui.profil.view.IProfilView#getProfil()
    */
-  public final IProfil getProfile( )
+  public final IProfil getProfil( )
   {
     return m_profile;
   }

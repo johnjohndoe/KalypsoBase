@@ -13,6 +13,7 @@ Export-Package: org.kalypso.binding.ratingtable,
  org.kalypso.core.gml.provider,
  org.kalypso.core.jaxb,
  org.kalypso.core.preferences,
+ org.kalypso.core.projecthandle.local.exportwizard,
  org.kalypso.core.repository,
  org.kalypso.core.status,
  org.kalypso.core.status.tree,
@@ -98,9 +99,7 @@ Export-Package: org.kalypso.binding.ratingtable,
  org.kalypso.zml.request,
  org.w3._1999.xlinkext,
  org.w3._2001.xmlschema
-Require-Bundle: org.junit4;bundle-version="4.3.0";resolution:=optional,
- org.eclipse.ui.ide;bundle-version="3.6.1",
- org.eclipse.core.expressions,
+Require-Bundle: org.eclipse.core.expressions,
  org.eclipse.wst.xml.core;resolution:=optional,
  org.kalypso.contribs.ogc31,
  org.kalypso.deegree;visibility:=reexport,
@@ -108,4 +107,4 @@ Require-Bundle: org.junit4;bundle-version="4.3.0";resolution:=optional,
  org.eclipse.ui.ide,
  org.junit4;resolution:=optional
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

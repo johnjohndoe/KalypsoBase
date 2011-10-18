@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.focus;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -202,7 +203,7 @@ public class ZmlTableEditingSupport extends EditingSupport
     else if( Integer.class.equals( dataClass ) )
       m_cellEditor.setValidator( DefaultCellValidators.INTEGER_VALIDATOR );
     else
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
 
     m_cellEditor.addListener( new ValidateCellEditorListener( m_cellEditor, COLOR_ERROR ) );
   }

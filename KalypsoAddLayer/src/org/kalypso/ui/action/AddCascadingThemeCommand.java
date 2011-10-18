@@ -48,7 +48,7 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.CascadingLayerKalypsoTheme;
@@ -156,7 +156,7 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
   {
     final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
 
-    final GisTemplateMapModell mapModell = new GisTemplateMapModell( m_mapModell.getContext(), m_mapModell.getCoordinatesSystem(), selectionManager );
+    final GisTemplateMapModell mapModell = new GisTemplateMapModell( m_mapModell.getContext(), m_mapModell.getCoordinatesSystem(), m_mapModell.getProject(), selectionManager );
     for( final ICommand command : layerCommands )
       if( command instanceof AddThemeCommand )
       {
@@ -311,5 +311,6 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
 
     return layer;
   }
+
 
 }

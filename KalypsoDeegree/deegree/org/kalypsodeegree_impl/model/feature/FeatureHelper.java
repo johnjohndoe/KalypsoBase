@@ -41,6 +41,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ import java.util.Properties;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.tokenreplace.ITokenReplacer;
 import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
@@ -74,6 +75,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.binding.IFeatureWrapper2;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -1008,6 +1010,19 @@ public final class FeatureHelper
     }
   }
 
+  public static <T> T resolveLink( final IFeatureWrapper2 featureWrapper, final QName propertyQName, final Class<T> adapterTargetClass )
+  {
+    if( featureWrapper == null || propertyQName == null || adapterTargetClass == null )
+    {
+      final String message = String.format( "All argument must not be null:" + "\n\tfeatureWrapper=%s" + "\n\tpropertyQname = %s" + "\n\tadapterTargetClass = %s", featureWrapper, propertyQName, adapterTargetClass );
+      throw new IllegalArgumentException( message );
+    }
+
+    final Feature wrappedFeature = featureWrapper.getFeature();
+    final T resolvedLink = FeatureHelper.resolveLink( wrappedFeature, propertyQName, adapterTargetClass );
+    return resolvedLink;
+  }
+
   public static void addChild( final Feature parentFE, final IRelationType rt, final Feature childFE )
   {
     if( rt.isList() )
@@ -1509,6 +1524,26 @@ public final class FeatureHelper
   }
 
   /**
+   * Converts a list of {@link IFeatureWrapper2}s to a list of features.
+   */
+  public static List<Feature> toFeatureList( final Collection< ? extends IFeatureWrapper2> c )
+  {
+    final List<Feature> fl = new ArrayList<Feature>();
+    if( c != null )
+    {
+      Feature f;
+      for( final IFeatureWrapper2 fw : c )
+      {
+        f = fw.getFeature();
+        if( f == null )
+          throw new IllegalArgumentException( "All feature wrapper must wrapp a non null feature:" + c );
+        fl.add( f );
+      }
+    }
+    return fl;
+  }
+
+  /**
    * Converts a feature list into an array, and resolves all links while dooing this.<br>
    * The size of the resulting array may be smaller than the given list, if contained links cannot be resolved.
    */
@@ -1547,6 +1582,32 @@ public final class FeatureHelper
     }
 
     return properties;
+  }
+
+  /**
+   * Calculates the minimal envelope containing all envelopes of the given features.
+   * 
+   * @return <code>null</code> if none of the given features contains a valid envelope.
+   */
+  public static GM_Envelope getEnvelope( final IFeatureWrapper2[] features )
+  {
+    GM_Envelope result = null;
+
+    for( final IFeatureWrapper2 feature : features )
+    {
+      final GM_Envelope envelope = feature.getFeature().getEnvelope();
+      if( envelope != null )
+        if( result == null )
+        {
+          result = envelope;
+        }
+        else
+        {
+          result = result.getMerged( envelope );
+        }
+    }
+
+    return result;
   }
 
   /**

@@ -1,26 +1,21 @@
 package org.kalypso.ogc.gml.painter;
 
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.Graphics;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.displayelements.Label;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
-
-import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * @author Gernot Belger
  */
 public final class FeatureThemePaintable implements IStylePaintable
 {
-  private final Graphics2D m_graphics;
+  private final Graphics m_graphics;
 
   private final Boolean m_paintSelected;
 
@@ -32,9 +27,7 @@ public final class FeatureThemePaintable implements IStylePaintable
 
   private final GeoTransform m_p;
 
-  private final ILabelPlacementStrategy m_strategy;
-
-  public FeatureThemePaintable( final GeoTransform worldToScreen, final Graphics2D graphics, final IFeatureSelectionManager selectionManager, final Boolean paintSelected, final ILabelPlacementStrategy strategy )
+  public FeatureThemePaintable( final GeoTransform worldToScreen, final Graphics graphics, final IFeatureSelectionManager selectionManager, final Boolean paintSelected )
   {
     m_p = worldToScreen;
     m_graphics = graphics;
@@ -44,7 +37,6 @@ public final class FeatureThemePaintable implements IStylePaintable
     // Performance: get scale and bbox once, else they will be costly recalculated very often
     m_scale = worldToScreen.getScale();
     m_boundingBox = worldToScreen.getSourceRect();
-    m_strategy = strategy;
   }
 
   @Override
@@ -112,21 +104,5 @@ public final class FeatureThemePaintable implements IStylePaintable
       return true;
 
     return false;
-  }
-
-  @Override
-  public ILabelPlacementStrategy createLabelStrategy( )
-  {
-    return m_strategy;
-  }
-
-  @Override
-  public void paintLabels( final ILabelPlacementStrategy strategy )
-  {
-    final Rectangle bounds = m_graphics.getClipBounds();
-    final Envelope screenRect = new Envelope( bounds.getMinX(), bounds.getMaxX(), bounds.getMinY(), bounds.getMaxY() );
-    final Label[] labelsForPaint = strategy.getLabels( screenRect );
-    for( final Label label : labelsForPaint )
-      label.paint( m_graphics );
   }
 }

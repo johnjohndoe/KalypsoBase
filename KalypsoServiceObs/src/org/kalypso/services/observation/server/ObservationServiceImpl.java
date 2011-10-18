@@ -43,8 +43,10 @@ package org.kalypso.services.observation.server;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
+import javax.activation.DataHandler;
 import javax.jws.WebService;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
@@ -192,6 +194,21 @@ public class ObservationServiceImpl implements IObservationService
       return delegate.readData( href );
 
     return null;
+  }
+
+  /**
+   * @see org.kalypso.services.observation.sei.IObservationService#writeData(org.kalypso.services.observation.sei.ObservationBean,
+   *      javax.activation.DataHandler)
+   */
+  @Override
+  public void writeData( final ObservationBean observation, final DataHandler data ) throws SensorException
+  {
+    /* Get the observation service delegate. */
+    final IObservationService delegate = getDelegate();
+
+    /* If it is existing, delegate to it. */
+    if( delegate != null )
+      delegate.writeData( observation, data );
   }
 
   /**
@@ -357,7 +374,7 @@ public class ObservationServiceImpl implements IObservationService
       getDelegate().setItemData( identifier, serializable );
     }
     else
-      throw new UnsupportedOperationException();
+      throw new NotImplementedException();
 
   }
 

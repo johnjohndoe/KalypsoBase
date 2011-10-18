@@ -3,7 +3,7 @@ package org.kalypso.afgui;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;

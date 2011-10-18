@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.swt;
 
@@ -67,20 +67,19 @@ import org.kalypso.commons.databinding.validation.FileIsDirectoryValidator;
  */
 public class DirectoryBinding
 {
+  private final IDataBinding m_binding;
+
   private final IObservableValue m_directoryValue;
 
   private final int m_style;
-
-  private DataBinder m_historyBinder;
-
-  private DataBinder m_historyInputBinder;
 
   /**
    * @param style
    *          of the directory chooser. Either {@link SWT#OPEN} or {@link SWT#SAVE}.
    */
-  public DirectoryBinding( final IObservableValue directoryValue, final int style )
+  public DirectoryBinding( final IDataBinding binding, final IObservableValue directoryValue, final int style )
   {
+    m_binding = binding;
     m_directoryValue = directoryValue;
     m_style = style;
   }
@@ -99,25 +98,24 @@ public class DirectoryBinding
     viewer.setLabelProvider( new LabelProvider() );
 
     final IObservableValue targetInput = ViewersObservables.observeInput( viewer );
-    m_historyInputBinder = new DataBinder( targetInput, historyValue );
+    m_binding.bindValue( targetInput, historyValue );
 
     final ISWTObservableValue targetText = SWTObservables.observeText( viewer.getControl() );
-    m_historyBinder = new DataBinder( targetText, m_directoryValue );
-    m_historyBinder.setModelToTargetConverter( new FileToStringConverter() );
-    m_historyBinder.setTargetToModelConverter( new StringToFileConverter() );
+    final DataBinder binder = new DataBinder( targetText, m_directoryValue );
+    binder.setModelToTargetConverter( new FileToStringConverter() );
+    binder.setTargetToModelConverter( new StringToFileConverter() );
 
     // FIXME: better validation and depending on save or load
-    m_historyBinder.addTargetAfterConvertValidator( new FileIsDirectoryValidator( IStatus.ERROR ) );
+    binder.addTargetAfterConvertValidator( new FileIsDirectoryValidator( IStatus.ERROR ) );
 
     if( m_style == SWT.SAVE )
-      m_historyBinder.addTargetAfterConvertValidator( new FileAlreadyExistsValidator( IStatus.WARNING, "Directory already exists" ) );
+      binder.addTargetAfterConvertValidator( new FileAlreadyExistsValidator( IStatus.WARNING, "Directory already exists" ) );
+// else
+// binder.addTargetAfterConvertValidator( new File
+
+    m_binding.bindValue( binder );
 
     return viewer.getControl();
-  }
-
-  public DataBinder getHistoryBinder( )
-  {
-    return m_historyBinder;
   }
 
   public Button createDirectorySearchButton( final Composite parent, final Control directoryTextControl, final String dialogTitle, final String dialogMessage )
@@ -130,15 +128,5 @@ public class DirectoryBinding
     browseButton.addSelectionListener( new DirectoryValueSelectionListener( directoryTextControl, dialogTitle, dialogMessage ) );
 
     return browseButton;
-  }
-
-  /**
-   * Must be called after {@link #createDirectoryFieldWithHistory(Composite, IObservableValue)} was called.<br/>
-   * Before this is called, the client may add validators to the binding via {@link #getHistoryBinder()}.
-   */
-  public void applyBinding( final IDataBinding binding )
-  {
-    binding.bindValue( m_historyInputBinder );
-    binding.bindValue( m_historyBinder );
   }
 }

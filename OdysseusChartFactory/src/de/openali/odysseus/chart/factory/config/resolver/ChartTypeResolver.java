@@ -52,7 +52,7 @@ import java.util.concurrent.TimeUnit;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.eclipse.core.runtime.CoreException;
@@ -128,9 +128,6 @@ public final class ChartTypeResolver implements IReferenceResolver
   {
     try
     {
-      if( reference == null || reference.length() == 0 )
-        return null;
-
       final String plainUrl = getUrl( reference, context );
       final String identifier = getAnchor( reference );
 
@@ -301,7 +298,7 @@ public final class ChartTypeResolver implements IReferenceResolver
 
   private String getAnchor( final String url )
   {
-    if( Strings.isNullOrEmpty( url ) )
+    if (Strings.isNullOrEmpty( url ))
       return null;
 
     final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), url ); //$NON-NLS-1$

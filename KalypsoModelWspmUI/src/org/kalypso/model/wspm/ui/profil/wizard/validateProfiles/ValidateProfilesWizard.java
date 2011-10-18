@@ -44,7 +44,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -184,7 +184,7 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
 
     final Shell shell = getShell();
 
-    final ICoreRunnableWithProgress validateJob = new ICoreRunnableWithProgress()
+    final ICoreRunnableWithProgress m_validateJob = new ICoreRunnableWithProgress()
     {
       @Override
       public IStatus execute( final IProgressMonitor monitor )
@@ -296,7 +296,7 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
       @Override
       public void run( )
       {
-        RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, validateJob );
+        RunnableContextHelper.execute( new ProgressMonitorDialog( shell ), true, true, m_validateJob );
 
         try
         {

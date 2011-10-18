@@ -47,14 +47,14 @@ import org.kalypso.ogc.gml.widgets.IWidget;
 
 public interface IWidgetWithOptions extends IWidget
 {
-  Control createControl( Composite parent, FormToolkit toolkit );
+  public Control createControl( final Composite parent, final FormToolkit toolkit );
 
-  void disposeControl( );
+  public void disposeControl( );
 
   /**
    * This function returns the part name, this widget desires to be set into the view, it is called from.
-   *
+   * 
    * @return The part name will be used in the calling view (e.g. {@link MapWidgetView}) to set its part name.
    */
-  String getPartName( );
+  public String getPartName( );
 }

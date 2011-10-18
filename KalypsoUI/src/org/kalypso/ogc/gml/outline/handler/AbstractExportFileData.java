@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.outline.handler;
 
 import java.io.File;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.java.util.AbstractModelObject;
 

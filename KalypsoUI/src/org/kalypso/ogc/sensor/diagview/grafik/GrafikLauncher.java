@@ -76,8 +76,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.io.ProcessWraper;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.MultiStatus;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.DoubleComparator;
@@ -274,7 +273,7 @@ public class GrafikLauncher
 
       final Process proc = Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath() + '"', null, grafikExe.getParentFile() ); //$NON-NLS-1$
 
-      final IStatusCollector stati = new StatusCollector( KalypsoGisPlugin.getId() );
+      final MultiStatus ms = new MultiStatus( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.7" ) ); //$NON-NLS-1$
 
       final ProcessWraper wraper = new ProcessWraper( proc, null )
       {
@@ -304,17 +303,16 @@ public class GrafikLauncher
             {
               e.printStackTrace();
 
-              final String msg = Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.8" ) + rfs.getDatFile().getName() + Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.9" ) + rfs.getZmlFile().getName(); //$NON-NLS-1$ //$NON-NLS-2$
-              stati.add( IStatus.ERROR, msg, e );
+              ms.addMessage( Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.8" ) + rfs.getDatFile().getName() + Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.9" ) + rfs.getZmlFile().getName(), e ); //$NON-NLS-1$ //$NON-NLS-2$
             }
           }
         }
       };
 
-      // wait for grafik to finish and eventually synchronize data
+      // wait for grafik to finish and eventually synchronise data
       wraper.waitForProcess();
 
-      return stati.asMultiStatusOrOK( Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.7" ) ); //$NON-NLS-1$
+      return ms;
     }
     catch( final Exception e )
     {
@@ -379,7 +377,7 @@ public class GrafikLauncher
 
     final Logger logger = Logger.getLogger( GrafikLauncher.class.getName() );
 
-    final IStatusCollector stati = new StatusCollector( KalypsoGisPlugin.getId() );
+    final MultiStatus multiStatus = new MultiStatus( IStatus.WARNING, KalypsoGisPlugin.getId(), 0, Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.17" ) ); //$NON-NLS-1$
 
     int cc = 1;
     final TypeObservation[] tobs = odt.getObservation().toArray( new TypeObservation[0] );
@@ -398,7 +396,7 @@ public class GrafikLauncher
       {
         final String msg = Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.18" ) + url.toExternalForm(); //$NON-NLS-1$
         logger.warning( msg );
-        stati.add( IStatus.WARNING, msg );
+        multiStatus.addMessage( msg );
         continue;
       }
 
@@ -417,7 +415,7 @@ public class GrafikLauncher
       {
         final String msg = Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.19" ) + zmlFile.getName() + Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.20" ) + e.getLocalizedMessage(); //$NON-NLS-1$ //$NON-NLS-2$
         logger.warning( msg );
-        stati.add( IStatus.WARNING, msg, e );
+        multiStatus.addMessage( msg, e );
         continue;
       }
       finally
@@ -558,7 +556,7 @@ public class GrafikLauncher
     }
     yLines.clear();
 
-    return stati.asMultiStatusOrOK( Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.17" ) ); //$NON-NLS-1$
+    return multiStatus;
   }
 
   /**

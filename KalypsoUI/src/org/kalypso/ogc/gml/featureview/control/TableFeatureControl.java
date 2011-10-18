@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
@@ -67,8 +64,6 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
  */
 public class TableFeatureControl extends AbstractToolbarFeatureControl implements ModellEventListener
 {
-  private static final QName[] DEFAULT_INVISIBLE_PROPERTIES = new QName[] { Feature.QN_BOUNDED_BY, Feature.QN_LOCATION };
-
   private final IFeatureModifierFactory m_factory;
 
   private LayerTableViewer m_viewer;
@@ -281,22 +276,14 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
         m_viewer.addColumn( null, null, null, false, 0, "SWT.CENTER", null, null, false ); //$NON-NLS-1$
 
         final IFeatureType featureType = m_viewer.getInput().getFeatureType();
-        addDefaultColumns( featureType );
-      }
-    }
-  }
+        final IPropertyType[] properties = featureType == null ? new IPropertyType[0] : featureType.getProperties();
+        for( int i = 0; i < properties.length; i++ )
+        {
+          final IPropertyType ftp = properties[i];
+          final String columnAlignment = findDefaultColumnAlignment( ftp );
 
-  private void addDefaultColumns( final IFeatureType featureType )
-  {
-    final IPropertyType[] properties = featureType == null ? new IPropertyType[0] : featureType.getProperties();
-    for( int i = 0; i < properties.length; i++ )
-    {
-      final IPropertyType ftp = properties[i];
-      final QName qName = ftp.getQName();
-      if( !ArrayUtils.contains( DEFAULT_INVISIBLE_PROPERTIES, qName ) )
-      {
-        final String columnAlignment = findDefaultColumnAlignment( ftp );
-        m_viewer.addColumn( ftp.getQName().getLocalPart(), null, null, true, 100, columnAlignment, null, null, i == properties.length - 1 ); //$NON-NLS-1$
+          m_viewer.addColumn( ftp.getQName().getLocalPart(), null, null, true, 100, columnAlignment, null, null, i == properties.length - 1 ); //$NON-NLS-1$
+        }
       }
     }
   }

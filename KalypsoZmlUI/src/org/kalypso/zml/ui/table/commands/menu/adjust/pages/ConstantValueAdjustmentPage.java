@@ -63,7 +63,7 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
 
   public ConstantValueAdjustmentPage( final IAdjustmentPageProvider provider )
   {
-    super( provider, ConstantValueAdjustmentPage.class.getName() );
+    super( provider );
   }
 
   /**

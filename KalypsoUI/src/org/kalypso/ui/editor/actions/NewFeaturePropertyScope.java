@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.actions;
 
@@ -86,7 +86,6 @@ class NewFeaturePropertyScope implements INewScope
     m_parentFeature = parentFeature;
     m_workspace = workspace;
   }
-
   private boolean isValid( )
   {
     return m_targetRelation != null && m_workspace != null;
@@ -123,16 +122,14 @@ class NewFeaturePropertyScope implements INewScope
       return;
 
     final IFeatureType featureType = m_targetRelation.getTargetFeatureType();
-    if( featureType == null )
-      return;
 
     final IGMLSchema contextSchema = m_parentFeature.getWorkspace().getGMLSchema();
     final IFeatureType[] featureTypes = GMLSchemaUtilities.getSubstituts( featureType, contextSchema, false, true );
     for( final IFeatureType ft : featureTypes )
       newMenuManager.add( new NewFeatureAction( this, ft ) );
 
-        /* Not yet implemented, makes no sense to show it for now ... */
-        // newMenuManager.add( new NewFeatureFromExternalSchemaAction() );
+    /* Not yet implemented, makes no sense to show it for now ... */
+    // newMenuManager.add( new NewFeatureFromExternalSchemaAction() );
   }
 
   private boolean checkFullList( final IMenuManager newMenuManager )
@@ -168,6 +165,7 @@ class NewFeaturePropertyScope implements INewScope
   {
     final Properties uiProperties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), featureType.getQName() );
     final String depthStr = uiProperties.getProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH );
+    // TODO: move 0 into constants
     final int depth = NumberUtils.parseQuietInt( depthStr, 0 );
 
     final ICommand command = new AddFeatureCommand( m_workspace, featureType, m_parentFeature, m_targetRelation, 0, null, m_selectionManager, depth );

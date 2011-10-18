@@ -88,7 +88,7 @@ import org.kalypso.observation.result.IRecord;
  */
 public class OperationChooserPage extends WizardPage
 {
-  private static class PropertyCalculator
+  private class PropertyCalculator
   {
     public final String m_id;
 

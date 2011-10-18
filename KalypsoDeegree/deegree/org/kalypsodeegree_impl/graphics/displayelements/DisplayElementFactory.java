@@ -40,6 +40,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
@@ -49,15 +54,18 @@ import org.kalypsodeegree.graphics.displayelements.LineStringDisplayElement;
 import org.kalypsodeegree.graphics.displayelements.PointDisplayElement;
 import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
 import org.kalypsodeegree.graphics.displayelements.RasterDisplayElement;
+import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Geometry;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
+import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.SurfaceLineSymbolizer;
 import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree.graphics.sld.UserStyle;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -99,89 +107,89 @@ public class DisplayElementFactory
 
   private static final GM_Surface< ? >[] EMPTY_SURFACES = new GM_Surface[0];
 
-// /**
-// * returns the display elements associated to a feature
-// */
-// public static DisplayElement[] createDisplayElement( final Feature feature, final UserStyle style )
-// {
-// final ArrayList<DisplayElement> list = new ArrayList<DisplayElement>();
-//
-// try
-// {
-// final IFeatureType featureType = feature.getFeatureType();
-// final QName featureTypeQName = featureType.getQName();
-//
-// if( style == null )
-// {
-// // create display element from default style
-// final DisplayElement de = buildDisplayElement( feature );
-// if( de != null )
-// list.add( de );
-// }
-// else
-// {
-// final FeatureTypeStyle[] fts = style.getFeatureTypeStyles();
-//
-// for( final FeatureTypeStyle element : fts )
-// {
-// final QName styleFTQName = element.getFeatureTypeName();
-// if( styleFTQName == null //
-// // || featureTypeQName.equals( styleFTQName ) //
-// || GMLSchemaUtilities.substitutes( featureType, styleFTQName ) //
-// || featureTypeQName.getLocalPart().equals( styleFTQName.getLocalPart() ) )
-// {
-// final Rule[] rules = element.getRules();
-//
-// for( final Rule element2 : rules )
-// {
-// // does the filter rule apply?
-// final Filter filter = element2.getFilter();
-//
-// if( filter != null )
-// {
-// try
-// {
-// if( !filter.evaluate( feature ) )
-// continue;
-// }
-// catch( final FilterEvaluationException e )
-// {
-// System.out.println( "Error evaluating filter: " + e );
-//
-// continue;
-// }
-// }
-//
-// // Filter expression is true for this
-// // feature, so a
-// // corresponding DisplayElement has to be
-// // added to the
-// // list
-// final Symbolizer[] symbolizers = element2.getSymbolizers();
-//
-// for( final Symbolizer symbolizer : symbolizers )
-// {
-// final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
-// if( displayElement != null )
-// list.add( displayElement );
-// }
-// }
-// }
-// }
-// }
-// }
-// catch( final IncompatibleGeometryTypeException e )
-// {
-// System.out.println( "wrong style ?:" + e.getLocalizedMessage() );
-// e.printStackTrace();
-// }
-// catch( final Throwable t )
-// {
-// t.printStackTrace();
-// }
-//
-// return list.toArray( new DisplayElement[list.size()] );
-// }
+  /**
+   * returns the display elements associated to a feature
+   */
+  public static DisplayElement[] createDisplayElement( final Feature feature, final UserStyle style )
+  {
+    final ArrayList<DisplayElement> list = new ArrayList<DisplayElement>();
+
+    try
+    {
+      final IFeatureType featureType = feature.getFeatureType();
+      final QName featureTypeQName = featureType.getQName();
+
+      if( style == null )
+      {
+        // create display element from default style
+        final DisplayElement de = buildDisplayElement( feature );
+        if( de != null )
+          list.add( de );
+      }
+      else
+      {
+        final FeatureTypeStyle[] fts = style.getFeatureTypeStyles();
+
+        for( final FeatureTypeStyle element : fts )
+        {
+          final QName styleFTQName = element.getFeatureTypeName();
+          if( styleFTQName == null //
+              // || featureTypeQName.equals( styleFTQName ) //
+              || GMLSchemaUtilities.substitutes( featureType, styleFTQName ) //
+              || featureTypeQName.getLocalPart().equals( styleFTQName.getLocalPart() ) )
+          {
+            final Rule[] rules = element.getRules();
+
+            for( final Rule element2 : rules )
+            {
+              // does the filter rule apply?
+              final Filter filter = element2.getFilter();
+
+              if( filter != null )
+              {
+                try
+                {
+                  if( !filter.evaluate( feature ) )
+                    continue;
+                }
+                catch( final FilterEvaluationException e )
+                {
+                  System.out.println( "Error evaluating filter: " + e );
+
+                  continue;
+                }
+              }
+
+              // Filter expression is true for this
+              // feature, so a
+              // corresponding DisplayElement has to be
+              // added to the
+              // list
+              final Symbolizer[] symbolizers = element2.getSymbolizers();
+
+              for( final Symbolizer symbolizer : symbolizers )
+              {
+                final DisplayElement displayElement = DisplayElementFactory.buildDisplayElement( feature, symbolizer );
+                if( displayElement != null )
+                  list.add( displayElement );
+              }
+            }
+          }
+        }
+      }
+    }
+    catch( final IncompatibleGeometryTypeException e )
+    {
+      System.out.println( "wrong style ?:" + e.getLocalizedMessage() );
+      e.printStackTrace();
+    }
+    catch( final Throwable t )
+    {
+      t.printStackTrace();
+    }
+
+    return list.toArray( new DisplayElement[list.size()] );
+  }
 
   /**
    * Builds a <tt>DisplayElement</tt> using the given <tt>Feature</tt> or raster and <tt>Symbolizer</tt>.
@@ -196,7 +204,7 @@ public class DisplayElementFactory
    *           if the selected geometry of the <tt>Feature</tt> is not compatible with the <tt>Symbolizer</tt>
    * @return constructed <tt>DisplayElement</tt>
    */
-  public static DisplayElement buildDisplayElement( final Feature feature, final Symbolizer symbolizer, final ILabelPlacementStrategy stratgey ) throws IncompatibleGeometryTypeException, FilterEvaluationException
+  public static DisplayElement buildDisplayElement( final Feature feature, final Symbolizer symbolizer ) throws IncompatibleGeometryTypeException, FilterEvaluationException
   {
     // determine the geometry property to be used
     final Object geoObject = findGeometryObject( feature, symbolizer );
@@ -206,7 +214,7 @@ public class DisplayElementFactory
     if( geoObject == null && !(symbolizer instanceof RasterSymbolizer) )
       return null;
 
-    final DisplayElement displayElement = buildDisplayElement( feature, symbolizer, geoObject, stratgey );
+    final DisplayElement displayElement = buildDisplayElement( feature, symbolizer, geoObject );
     if( displayElement == null )
       return null;
 
@@ -227,7 +235,7 @@ public class DisplayElementFactory
   /**
    * Internally build the display element, without decoration and other stuff.
    */
-  public static DisplayElement buildDisplayElement( final Feature feature, final Symbolizer symbolizer, final Object geoObject, final ILabelPlacementStrategy stratgey ) throws IncompatibleGeometryTypeException
+  public static DisplayElement buildDisplayElement( final Feature feature, final Symbolizer symbolizer, final Object geoObject ) throws IncompatibleGeometryTypeException
   {
     if( symbolizer instanceof PointSymbolizer )
       return buildPointDisplayElement( feature, geoObject, (PointSymbolizer) symbolizer );
@@ -239,7 +247,7 @@ public class DisplayElementFactory
       return buildPolygonDisplayElement( feature, geoObject, (PolygonSymbolizer) symbolizer );
 
     if( symbolizer instanceof TextSymbolizer )
-      return buildLabelDisplayElement( feature, geoObject, (TextSymbolizer) symbolizer, stratgey );
+      return buildLabelDisplayElement( feature, geoObject, (TextSymbolizer) symbolizer );
 
     if( symbolizer instanceof RasterSymbolizer )
       return buildRasterDisplayElement( feature, geoObject, (RasterSymbolizer) symbolizer );
@@ -294,16 +302,16 @@ public class DisplayElementFactory
     final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) geoProperty;
 
     final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
-        {
+    {
       @Override
       public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
       {
         final UOM uom = symbolizer.getUom();
         return new SurfacePaintIsolinesVisitor( g, projection, new ColorMapConverter( colorMap, feature, uom, projection ) );
       }
-        };
+    };
 
-        return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, null, visitorFactory );
+    return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, null, visitorFactory );
   }
 
   public static DisplayElement buildSurfacePolygonDisplayElement( final Feature feature, final Object geoProperty, final SurfacePolygonSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
@@ -312,18 +320,18 @@ public class DisplayElementFactory
       throw new IncompatibleGeometryTypeException( "Tried to create a SurfaceDisplayElement from a geometry with an incompatible / unsupported type: '" + geoProperty.getClass().getName() + "'!" );
 
     final PolygonColorMap colorMap = symbolizer.getColorMap();
-    final GM_Surface<GM_Polygon> tin = (GM_Surface<GM_Polygon>) geoProperty;
+    final GM_Surface tin = (GM_Surface) geoProperty;
     final IVisitorFactory<GM_Polygon> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Polygon>()
-        {
+    {
       @Override
       public ISurfacePatchVisitor<GM_Polygon> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
       {
         final UOM uom = symbolizer.getUom();
         return new SurfacePaintPolygonVisitor( g, new ColorMapConverter( colorMap, feature, uom, projection ) );
       }
-        };
+    };
 
-        return new SurfacePatchVisitableDisplayElement<GM_Polygon>( feature, tin, null, visitorFactory );
+    return new SurfacePatchVisitableDisplayElement<GM_Polygon>( feature, tin, null, visitorFactory );
   }
 
   /**
@@ -482,13 +490,13 @@ public class DisplayElementFactory
    *           if the geometry property is not a <tt>GM_Point</tt>, a <tt>GM_Surface</tt> or <tt>GM_MultiSurface</tt>
    * @return constructed <tt>PolygonDisplayElement</tt>
    */
-  public static LabelDisplayElement buildLabelDisplayElement( final Feature feature, final Object geomOrList, final TextSymbolizer sym, final ILabelPlacementStrategy strategy )
+  public static LabelDisplayElement buildLabelDisplayElement( final Feature feature, final Object geomOrList, final TextSymbolizer sym )
   {
     final GM_Object[] objects = findPoints( geomOrList, EMPTY_GEOMS );
     if( objects == null )
       return null;
 
-    return new LabelDisplayElement_Impl( feature, objects, sym, strategy );
+    return new LabelDisplayElement_Impl( feature, objects, sym );
   }
 
   /**

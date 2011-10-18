@@ -43,7 +43,7 @@ package org.kalypsodeegree_impl.model.feature.visitors;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypsodeegree.model.feature.Feature;

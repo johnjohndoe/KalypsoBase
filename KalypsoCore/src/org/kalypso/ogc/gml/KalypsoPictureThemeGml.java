@@ -45,6 +45,7 @@ import java.net.URL;
 
 import ogc31.www.opengis.net.gml.FileType;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -87,7 +88,7 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
       m_coverages = (ICoverageCollection) fRoot.getAdapter( ICoverageCollection.class );
       final IFeatureBindingCollection<ICoverage> coverages = m_coverages.getCoverages();
       if( coverages.size() != 1 )
-        throw new UnsupportedOperationException( Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureThemeGml.0" ) ); //$NON-NLS-1$
+        throw new NotImplementedException( Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureThemeGml.0" ) ); //$NON-NLS-1$
 
       for( final ICoverage coverage : coverages )
       {

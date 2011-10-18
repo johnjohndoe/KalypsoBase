@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -311,6 +312,6 @@ public class SHP2WKS
       return null;
     }
 
-    throw new UnsupportedOperationException( "Unknown shpe class: " + shpGeom );
+    throw new NotImplementedException( "Unknown shpe class: " + shpGeom );
   }
 } // end of class WKB2WKS

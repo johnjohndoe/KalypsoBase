@@ -69,9 +69,6 @@ public final class QueryUtilities
 
     for( final String param : parts )
     {
-      if( param.length() == 0 )
-        continue;
-
       final String[] paramParts = param.split( "=", 2 ); //$NON-NLS-1$
       if( paramParts.length != 2 )
         throw new IllegalArgumentException( "URL contains incorect query part: " + param );

@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.ui.adapter;
 
 import java.net.URL;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.ISelection;

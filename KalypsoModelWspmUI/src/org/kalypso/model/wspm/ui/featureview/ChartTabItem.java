@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.featureview;
 
-import java.awt.Insets;
 import java.util.Map;
 
 import org.eclipse.jface.action.ToolBarManager;
@@ -83,7 +82,7 @@ public class ChartTabItem extends Composite implements IChartPart
     final ToolBar toolBar = manager.createControl( this );
 
     final IChartModel chartModel = new ChartModel();
-    m_chartComposite = new ChartImageComposite( this, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ), new Insets( 10, 10, 10, 10 ) );
+    m_chartComposite = new ChartImageComposite( this, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ) );
     m_chartComposite.getPlot().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final IWorkbench sourceLocator = PlatformUI.getWorkbench();

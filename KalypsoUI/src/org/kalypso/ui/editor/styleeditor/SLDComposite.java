@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -176,22 +176,10 @@ public class SLDComposite extends Composite
       return null;
 
     /* Use config with default values */
-    final IStyleEditorConfig config = createConfiguration( style );
+    final IStyleEditorConfig config = new StyleEditorConfig();
 
     final FeatureTypeStyle fts = findFeatureTypeStyle( style, styleToSelect );
     return new FeatureTypeStyleInput( fts, style, styleToSelect, featureType, config );
-  }
-
-  private StyleEditorConfig createConfiguration( final IKalypsoStyle style )
-  {
-    final StyleEditorConfig config = new StyleEditorConfig();
-
-    if( style.isCatalogStyle() )
-    {
-      config.setFeatureTypeStyleCompositeShowProperties( false );
-    }
-
-    return config;
   }
 
   private FeatureTypeStyle findFeatureTypeStyle( final IKalypsoStyle style, final int styleToSelect )
@@ -218,16 +206,8 @@ public class SLDComposite extends Composite
   {
     updateActions();
 
-    if( m_style == null )
-      m_form.setText( MessageBundle.STYLE_EDITOR_NO_STYLE_FOR_EDITOR );
-    else
-    {
-      final String formTitle = m_style.getTitle();
-      if( formTitle == null )
-        m_form.setText( "<Unknown Title>" );
-      else
-        m_form.setText( formTitle );
-    }
+    final String formTitle = m_style == null ? MessageBundle.STYLE_EDITOR_NO_STYLE_FOR_EDITOR : m_style.getTitle();
+    m_form.setText( formTitle );
 
     if( m_styleComposite != null )
       m_styleComposite.updateControl();

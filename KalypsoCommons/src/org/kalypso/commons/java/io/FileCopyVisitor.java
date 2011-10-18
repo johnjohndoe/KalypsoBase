@@ -60,7 +60,7 @@ public class FileCopyVisitor implements FileVisitor
   /** if true, target file is always replaced by source file */
   private final boolean m_overwrite;
 
-  private final String[] m_excludeDirWithFile;
+  private final String m_excludeDirWithFile;
 
   public FileCopyVisitor( final File fromDir, final File toDir, final boolean overwrite )
   {
@@ -68,10 +68,10 @@ public class FileCopyVisitor implements FileVisitor
   }
 
   /**
-   * @param overwrite
-   *          Zieldatei immer überschreiben, auch wenn sie schon existiert
+   * @param overwrite Zieldatei immer überschreiben, auch wenn sie schon existiert
    */
-  public FileCopyVisitor( final File fromDir, final File toDir, final boolean overwrite, final String[] excludeDirWithFile )
+  public FileCopyVisitor( final File fromDir, final File toDir, final boolean overwrite,
+      final String excludeDirWithFile )
   {
     m_fromDir = fromDir;
     m_toDir = toDir;
@@ -91,17 +91,13 @@ public class FileCopyVisitor implements FileVisitor
       final File targetFile = new File( m_toDir, relativePathTo );
 
       final boolean isDir = file.isDirectory();
-
-      // falls es ein Verzeichnis ist und das Ausschlussfile enthält, hier abbrechen
+      
+      // falls es ein Verzeichnis ist und das Auschlussfile enthält, hier abbrechen
       if( m_excludeDirWithFile != null && isDir )
       {
-        /* If one of the exclude files exists, return false. */
-        for( String excludeDirWithFile : m_excludeDirWithFile )
-        {
-          final File excludeFile = new File( file, excludeDirWithFile );
-          if( excludeFile.exists() )
-            return false;
-        }
+        final File excludeFile = new File( file, m_excludeDirWithFile );
+        if( excludeFile.exists() )
+          return false;
       }
 
       if( isDir )
@@ -110,6 +106,7 @@ public class FileCopyVisitor implements FileVisitor
       {
         // falls die Zieldatei neuer ist und das überschreiben neuerer verboten wurde
         // einfach abbrechen
+//        if( !m_overwrite && targetFile.exists() )
         if( targetFile.exists() )
         {
           // falls neuer überschreiben oder nicht?
@@ -119,7 +116,7 @@ public class FileCopyVisitor implements FileVisitor
             return false;
 
           // falls die Dateien wirklich gleich sind, nichts tun
-          if( targetLastModified == lastModified /* && targetFile.length() == file.length() */)
+          if( targetLastModified == lastModified /*&& targetFile.length() == file.length()*/ )
             return false;
         }
 

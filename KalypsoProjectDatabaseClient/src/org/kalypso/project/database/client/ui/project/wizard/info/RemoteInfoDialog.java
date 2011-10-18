@@ -71,11 +71,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.module.project.local.ILocalProject;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.ProjectDataBaseController;
-import org.kalypso.project.database.client.core.model.projects.IRemoteProject;
 import org.kalypso.project.database.client.core.utils.KalypsoProjectBeanHelper;
+import org.kalypso.project.database.client.extension.database.IProjectDatabaseUiLocker;
+import org.kalypso.project.database.client.extension.database.handlers.ILocalProject;
+import org.kalypso.project.database.client.extension.database.handlers.IRemoteProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
@@ -90,10 +91,13 @@ public class RemoteInfoDialog extends TitleAreaDialog
 
   protected final IRemoteProject m_handler;
 
-  public RemoteInfoDialog( final IRemoteProject handler, final Shell parentShell, final boolean isExpert )
+  protected final IProjectDatabaseUiLocker m_locker;
+
+  public RemoteInfoDialog( final IRemoteProject handler, final Shell parentShell, final IProjectDatabaseUiLocker locker, final boolean isExpert )
   {
     super( parentShell );
     m_handler = handler;
+    m_locker = locker;
     m_isExpert = isExpert;
 
     setBlockOnOpen( true );
@@ -154,7 +158,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
     final Group groupVersions = new Group( parent, SWT.NULL );
     groupVersions.setLayout( new GridLayout() );
     groupVersions.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    groupVersions.setText( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.1", m_handler.getBean().getName() ) ); //$NON-NLS-1$
+    groupVersions.setText( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.1" , m_handler.getBean().getName() ) ); //$NON-NLS-1$
 
     final ComboViewer viewerVersions = new ComboViewer( groupVersions );
     viewerVersions.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -171,7 +175,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
         {
           final KalypsoProjectBean project = (KalypsoProjectBean) element;
 
-          return Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.2", project.getProjectVersion(), project.getCreationDate() ); //$NON-NLS-1$
+          return  Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.2" , project.getProjectVersion(), project.getCreationDate() ); //$NON-NLS-1$
         }
 
         return super.getText( element );
@@ -221,17 +225,17 @@ public class RemoteInfoDialog extends TitleAreaDialog
 
           if( element instanceof KalypsoProjectBean )
             try
-          {
+            {
               final KalypsoProjectBean project = (KalypsoProjectBean) element;
 
               type.setText( project.getProjectType() );
               unix.setText( project.getUnixName() );
               url.setText( project.getUrl().toExternalForm() );
-          }
-          catch( final Exception e )
-          {
-            KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-          }
+            }
+            catch( final Exception e )
+            {
+              KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+            }
         }
       } );
     }
@@ -239,7 +243,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
     final Group groupChanges = new Group( parent, SWT.NULL );
     groupChanges.setLayout( new GridLayout() );
     groupChanges.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    groupChanges.setText( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.8" ) ); //$NON-NLS-1$
+    groupChanges.setText(  Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.8"  ) ); //$NON-NLS-1$
 
     final Text changes = new Text( groupChanges, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.SCROLL_PAGE );
     changes.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
@@ -259,7 +263,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
         {
           final KalypsoProjectBean project = (KalypsoProjectBean) element;
 
-          version.setText( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.9", project.getProjectVersion(), project.getCreationDate() ) ); //$NON-NLS-1$
+          version.setText( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.9" , project.getProjectVersion(), project.getCreationDate() ) ); //$NON-NLS-1$
 
           if( project.getChanges() != null )
             changes.setText( m_handler.getBean().getChanges() );
@@ -292,7 +296,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
 
     /* change description */
     final Button changeDescription = new Button( parent, SWT.PUSH );
-    changeDescription.setText( Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.30" ) ); //$NON-NLS-1$
+    changeDescription.setText( Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.30") ); //$NON-NLS-1$
 
     changeDescription.addSelectionListener( new SelectionAdapter()
     {
@@ -302,7 +306,7 @@ public class RemoteInfoDialog extends TitleAreaDialog
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final InputDialog input = new InputDialog( changeDescription.getShell(), Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.31" ), Messages.getString( "org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.32" ), m_handler.getBean().getDescription(), null ); //$NON-NLS-1$ //$NON-NLS-2$
+        final InputDialog input = new InputDialog( changeDescription.getShell(), Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.31"), Messages.getString("org.kalypso.project.database.client.ui.project.wizard.info.RemoteInfoDialog.32"), m_handler.getBean().getDescription(), null ); //$NON-NLS-1$ //$NON-NLS-2$
         if( input.open() == Window.OK )
         {
           final String inputDescription = input.getValue();
@@ -324,12 +328,21 @@ public class RemoteInfoDialog extends TitleAreaDialog
             }
           }
 
-          final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+          try
+          {
+            m_locker.acquireUiUpdateLock();
 
-          final IStatus lockStatus = ProjectDataBaseController.updateProjectDescription( m_handler, inputDescription );
-          if( !shell.isDisposed() )
-            ErrorDialog.openError( shell, Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.28" ), Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.29" ), lockStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+            final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 
+            final IStatus lockStatus = ProjectDataBaseController.updateProjectDescription( m_handler, inputDescription );
+            if( !shell.isDisposed() )
+              ErrorDialog.openError( shell, Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.28" ), Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.29" ), lockStatus ); //$NON-NLS-1$ //$NON-NLS-2$
+          }
+          finally
+          {
+            m_locker.releaseUiUpdateLock();
+          }
+          
           description.setText( inputDescription );
         }
       }

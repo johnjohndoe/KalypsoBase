@@ -176,11 +176,7 @@
   <complexType name="AbstractRuleInstructionType" abstract="true">
     <sequence>
       <element name="styleReference" type="zmltable:StyleReferenceType" minOccurs="0" maxOccurs="1" />
-
     </sequence>
-
-    <attribute name="severity" type="double" use="required" />
-    <attribute name="tooltip" type="string" use="optional" default="%s" />
   </complexType>
 
 
@@ -200,12 +196,8 @@
     <complexContent>
       <extension base="zmltable:AbstractRuleInstructionType">
         <attribute name="from" type="string" use="optional" />
-        <attribute name="fromExtensionPoint" type="string" use="optional" />
-        <attribute name="factorFrom" type="double" use="optional" default="1.0" />
         <attribute name="opFrom" type="zmltable:operatorFromType" use="optional" default="&gt;" />
         <attribute name="to" type="string" use="optional" />
-        <attribute name="toExtensionPoint" type="string" use="optional" />
-        <attribute name="factorTo" type="double" use="optional" default="1.0" />
         <attribute name="opTo" type="zmltable:operatorToType" use="optional" default="&lt;" />
         <attribute name="label" type="string" use="optional" />
       </extension>
@@ -272,8 +264,6 @@
 
   <simpleType name="operatorFromType">
     <restriction base="string">
-      <enumeration value="&lt;"></enumeration>
-      <enumeration value="&lt;="></enumeration>
       <enumeration value="&gt;"></enumeration>
       <enumeration value="&gt;="></enumeration>
     </restriction>
@@ -283,8 +273,6 @@
     <restriction base="string">
       <enumeration value="&lt;"></enumeration>
       <enumeration value="&lt;="></enumeration>
-      <enumeration value="&gt;"></enumeration>
-      <enumeration value="&gt;="></enumeration>
     </restriction>
   </simpleType>
 

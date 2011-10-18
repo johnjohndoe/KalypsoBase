@@ -44,7 +44,6 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
-import java.util.Map;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommand;
@@ -61,7 +60,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public abstract class AbstractWidget implements IWidget
 {
-  private IMapPanel m_mapPanel;
+  private IMapPanel m_mapPanel = null;
 
   private ICommandTarget m_commandPoster;
 
@@ -69,18 +68,10 @@ public abstract class AbstractWidget implements IWidget
 
   private final String m_toolTip;
 
-  /**
-   * The map of all parameter. May be null.
-   */
-  private Map<String, String> m_parameter;
-
   public AbstractWidget( final String name, final String toolTip )
   {
-    m_mapPanel = null;
-    m_commandPoster = null;
     m_name = name;
     m_toolTip = toolTip;
-    m_parameter = null;
   }
 
   /**
@@ -176,21 +167,6 @@ public abstract class AbstractWidget implements IWidget
   {
     final GeoTransform gt = m_mapPanel.getProjection();
     return GeometryFactory.createGM_Envelope( gt.getSourceX( x ), gt.getSourceY( y ), gt.getSourceX( x2 ), gt.getSourceY( y2 ), m_mapPanel.getMapModell().getCoordinatesSystem() );
-  }
-
-  /**
-   * This function returns the parameter value for the given paramater key.
-   * 
-   * @param key
-   *          The parameter key.
-   * @return The parameter value, or null, if the parameter does not exist.
-   */
-  protected final String getParameter( final String key )
-  {
-    if( m_parameter == null )
-      return null;
-
-    return m_parameter.get( key );
   }
 
   /**
@@ -399,11 +375,5 @@ public abstract class AbstractWidget implements IWidget
   public void keyTyped( final KeyEvent e )
   {
     // not implemented by default
-  }
-
-  @Override
-  public void setParameter( final Map<String, String> parameter )
-  {
-    m_parameter = parameter;
   }
 }

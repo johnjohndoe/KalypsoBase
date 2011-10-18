@@ -60,7 +60,6 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -457,7 +456,7 @@ public class ZipUtilities
   /**
    * returns the {@link InputStream} for the first found file in the given zipped file
    */
-  public static InputStream getInputStreamForFirstFile( final URL zipFileURL ) throws IOException, URISyntaxException
+  public static InputStream getInputStreamForFirstFile( final URL zipFileURL ) throws IOException
   {
     return getInputStreamForSingleFile( zipFileURL, null );
   }
@@ -465,18 +464,33 @@ public class ZipUtilities
   /**
    * returns the {@link InputStream} for the file with given name in the given zipped file
    */
-  public static InputStream getInputStreamForSingleFile( final URL zipFileURL, final String zippedFile ) throws IOException, URISyntaxException
+  public static InputStream getInputStreamForSingleFile( final URL zipFileURL, final String zippedFile ) throws IOException
   {
-    final ZipFile zf = new ZipFile( new File( zipFileURL.toURI() ) );
-
+    ZipFile zf = null;
+    try
+    {
+      zf = new ZipFile( new File( zipFileURL.toURI() ) );
+    }
+    catch( final URISyntaxException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final ZipException e )
+    {
+      e.printStackTrace();
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+    }
     final Enumeration< ? > entries = zf.entries();
+    ZipEntry ze;
     while( entries.hasMoreElements() )
     {
-      final ZipEntry ze = (ZipEntry) entries.nextElement();
-      if( !ze.isDirectory() && (StringUtils.isBlank( zippedFile ) || zippedFile.equalsIgnoreCase( ze.getName() )) )
+      ze = (ZipEntry) entries.nextElement();
+      if( !ze.isDirectory() && (zippedFile == null || "".equals( zippedFile ) || zippedFile.equalsIgnoreCase( ze.getName() )) ) //$NON-NLS-1$
       {
         final long size = ze.getSize();
-        // FIXME: why this size check: dubios!
         if( size > 0 )
         {
           return zf.getInputStream( ze );

@@ -52,7 +52,8 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.math.LinearEquation;
@@ -146,7 +147,7 @@ public final class JTSUtilities
     for( int i = 0; i < coordinates.length - 1; i++ )
     {
       /* Get the coordinates to the current one + 1. */
-      final Coordinate[] coords = ArrayUtils.subarray( coordinates, 0, i + 2 );
+      final Coordinate[] coords = (Coordinate[]) ArrayUtils.subarray( coordinates, 0, i + 2 );
 
       /* Create a new line with the coordinates. */
       final LineString ls = factory.createLineString( coords );
@@ -875,7 +876,7 @@ public final class JTSUtilities
       return factory.createLineString( myCoordinates.toArray( new Coordinate[] {} ) );
     }
 
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -1521,17 +1522,5 @@ public final class JTSUtilities
     }
 
     return replaced.toArray( new Coordinate[] {} );
-  }
-
-  public static double distanceZ( final Coordinate c1, final Coordinate c2 )
-  {
-    if( Double.isNaN( c1.z ) || Double.isNaN( c2.z ) )
-      throw new IllegalStateException();
-
-    final double dx = c1.x - c2.x;
-    final double dy = c1.y - c2.y;
-    final double dz = c1.z - c2.z;
-
-    return Math.sqrt( dx * dx + dy * dy + dz * dz );
   }
 }

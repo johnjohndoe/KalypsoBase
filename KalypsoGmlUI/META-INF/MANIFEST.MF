@@ -13,7 +13,7 @@ Require-Bundle: org.junit;resolution:=optional,
  org.eclipse.core.expressions,
  org.kalypso.featureview
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.gml.ui,
  org.kalypso.gml.ui.commands.exportshape,
  org.kalypso.gml.ui.commands.importshape,

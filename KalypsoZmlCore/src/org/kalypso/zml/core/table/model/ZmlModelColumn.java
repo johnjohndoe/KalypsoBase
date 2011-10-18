@@ -154,15 +154,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     return getTupleModel().size();
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
-  @Override
-  public String toString( )
-  {
-    return getIdentifier();
-  }
-
   @Override
   public void update( final int index, final Object value, final String source, final Integer status ) throws SensorException
   {

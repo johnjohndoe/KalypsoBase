@@ -261,9 +261,4 @@ public interface IProfil extends IObservation<TupleResult>
    */
   void setProblemMarker( IMarker[] markers );
 
-  /**
-   * @return source of the profile
-   */
-  Object getSource( );
-
 }

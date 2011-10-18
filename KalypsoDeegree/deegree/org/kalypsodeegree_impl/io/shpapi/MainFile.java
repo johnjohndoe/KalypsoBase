@@ -40,6 +40,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
@@ -202,7 +203,7 @@ public class MainFile
       case ShapeConst.SHAPE_TYPE_MULTIPOINTZ:
         return new SHPMultiPointz( recBuf );
       default:
-        throw new UnsupportedOperationException( "Unknown shape type: " + shpType );
+        throw new NotImplementedException( "Unknown shape type: " + shpType );
     }
   }
 

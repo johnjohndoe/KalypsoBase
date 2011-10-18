@@ -51,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
@@ -119,7 +119,7 @@ public class LogAnalyzer
           msg.toString(), t );
 
       return new IStatus[]
-                         { status };
+      { status };
     }
     finally
     {
@@ -207,26 +207,21 @@ public class LogAnalyzer
 
       switch( status.getCode() )
       {
-        case LoggerUtilities.CODE_CANCEL:
-          createNewSub();
-          m_currentStatus = Status.CANCEL_STATUS;
-          break;
+      case LoggerUtilities.CODE_NEW_MSGBOX:
+        createNewSub();
+        m_currentStatus = status;
+        break;
 
-        case LoggerUtilities.CODE_NEW_MSGBOX:
-          createNewSub();
-          m_currentStatus = status;
-          break;
+      case LoggerUtilities.CODE_SHOW_DETAILS:
+      case LoggerUtilities.CODE_SHOW_MSGBOX:
+        addToCurrent( status );
+        break;
 
-        case LoggerUtilities.CODE_SHOW_DETAILS:
-        case LoggerUtilities.CODE_SHOW_MSGBOX:
-          addToCurrent( status );
-          break;
-
-        case LoggerUtilities.CODE_NONE:
-          // fall through
-        default:
-          // Stati with unknown codes don't get grouped.
-          break;
+      case LoggerUtilities.CODE_NONE:
+      // fall through
+      default:
+        // Stati with unknown codes don't get grouped.
+        break;
       }
     }
 

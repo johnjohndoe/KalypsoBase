@@ -48,6 +48,7 @@ import java.util.Properties;
 
 import javax.xml.bind.JAXBElement;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -150,6 +151,6 @@ public class WmsThemeFactory implements IKalypsoThemeFactory
   @Override
   public JAXBElement< ? extends StyledLayerType> configureLayer( IKalypsoTheme theme, String id, GM_Envelope bbox, String srsName )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 }

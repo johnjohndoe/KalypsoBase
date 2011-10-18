@@ -44,7 +44,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.ogc.sensor.IAxis;

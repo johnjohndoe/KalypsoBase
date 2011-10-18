@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.advanced.utils;
 
@@ -176,7 +176,7 @@ public class SLDPainter
   {
     try
     {
-      final DisplayElement lde = DisplayElementFactory.buildDisplayElement( null, symbolizer, gmo, null );
+      final DisplayElement lde = DisplayElementFactory.buildDisplayElement( null, symbolizer, gmo );
       lde.paint( g, m_projection, new NullProgressMonitor() );
     }
     catch( final IncompatibleGeometryTypeException e )

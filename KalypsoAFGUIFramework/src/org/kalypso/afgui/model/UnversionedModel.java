@@ -40,20 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.model;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import javax.xml.namespace.QName;
+
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractFeatureBinder;
 
 /**
  * @author kurzbach
  * 
  */
-public class UnversionedModel extends Feature_Impl implements IModel
+public class UnversionedModel extends AbstractFeatureBinder implements IModel
 {
-
-  public UnversionedModel( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public UnversionedModel( final Feature featureToBind, final QName qnameToBind )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    super( featureToBind, qnameToBind );
   }
 
   @Override

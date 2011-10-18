@@ -234,18 +234,4 @@ public class UrlUtilities
 
     return new URL( String.format( "%s://%s", protocol, host ) );
   }
-
-  public static long getContentLength( URL url ) throws IOException
-  {
-    final File file = FileUtils.toFile( url );
-    if( file != null )
-      return file.length();
-
-    final File platformFile = ResourceUtilities.findJavaFileFromURL( url );
-    if( platformFile != null )
-      return platformFile.length();
-
-    final URLConnection connection = url.openConnection();
-    return connection.getContentLength();
-  }
 }

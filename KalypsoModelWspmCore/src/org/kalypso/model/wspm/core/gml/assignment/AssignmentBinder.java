@@ -71,7 +71,7 @@ public class AssignmentBinder
 
   private final GMLWorkspace m_assignmentWorkspace;
 
-  private Map<String, Map<String, Object>> m_valueToAssignment = null;
+  private Map<String, Map<String, Double>> m_valueToAssignment = null;
 
   public AssignmentBinder( final GMLWorkspace assignmentWorkspace )
   {
@@ -79,30 +79,30 @@ public class AssignmentBinder
   }
 
   @SuppressWarnings("unchecked")//$NON-NLS-1$
-  public Map<String, Object> getAssignmentsFor( final String value )
+  public Map<String, Double> getAssignmentsFor( final String value )
   {
-    final Map<String, Object> map = getValueToAssignment().get( value );
+    final Map<String, Double> map = getValueToAssignment().get( value );
     if( map == null )
       return Collections.EMPTY_MAP;
 
     return map;
   }
 
-  private Map<String, Map<String, Object>> getValueToAssignment( )
+  private Map<String, Map<String, Double>> getValueToAssignment( )
   {
     if( m_valueToAssignment != null )
       return m_valueToAssignment;
 
     final Feature rootFeature = m_assignmentWorkspace.getRootFeature();
     final FeatureList assignmentMembers = (FeatureList) rootFeature.getProperty( QNAME_ASSIGNMENT_MEMBER );
-    m_valueToAssignment = new HashMap<String, Map<String, Object>>();
+    m_valueToAssignment = new HashMap<String, Map<String, Double>>();
     for( final Object o : assignmentMembers )
     {
       final Feature assignmentMember = (Feature) o;
       final String sourceId = (String) assignmentMember.getProperty( QNAME_SOURCE_ID );
 
       final FeatureList pointAssignments = (FeatureList) assignmentMember.getProperty( QNAME_POINT_ASSIGNMENT_MEMBER );
-      final Map<String, Object> values = new HashMap<String, Object>( pointAssignments.size() );
+      final Map<String, Double> values = new HashMap<String, Double>( pointAssignments.size() );
       for( final Object o2 : pointAssignments )
       {
         final Feature pointFeature = (Feature) o2;

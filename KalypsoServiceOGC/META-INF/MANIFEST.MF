@@ -15,4 +15,4 @@ Export-Package: net.opengeospatial.ows,
 Import-Package: javax.servlet,
  javax.servlet.http
 Bundle-Vendor: kalypsobase.sourceforge.net
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

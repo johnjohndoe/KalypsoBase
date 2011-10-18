@@ -45,8 +45,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.IWspmLayers;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
@@ -107,7 +106,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   @Override
   protected IStatus doInvalidateChart( )
   {
-    final IChartLayer layer = getChartModel().getLayerManager().findLayer( IWspmLayers.LAYER_GELAENDE );
+    final IChartLayer layer = getChartModel().getLayerManager().findLayer( IWspmConstants.LAYER_GELAENDE );
 
     final IRecord point = getSelectedPoint( layer );
     if( point != null )
@@ -165,8 +164,8 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
 
     for( final IRecord point : getProfil().getPoints() )
     {
-      final Double hoehe = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, point );
-      final Double breite = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point );
+      final Double hoehe = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, point );
+      final Double breite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, point );
       if( hoehe.isNaN() || breite.isNaN() )
       {
         continue;
@@ -215,12 +214,9 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   }
 
   @Override
-  public void setProfil( final IProfil profile, final Object result )
+  public synchronized void setProfil( final IProfil profile, final Object result )
   {
-    synchronized( this )
-    {
-      invalidate( profile, result );
-    }
+    invalidate( profile, result );
   }
 
 }

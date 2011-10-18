@@ -10,4 +10,4 @@ Require-Bundle: org.kalypso.core;visibility:=reexport,
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.model.wspm.schema,
  org.kalypso.model.wspm.schema.gml
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

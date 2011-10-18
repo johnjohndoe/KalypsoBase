@@ -49,6 +49,7 @@ import java.util.Map;
 import jregex.Pattern;
 import jregex.RETokenizer;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Point;
@@ -248,7 +249,7 @@ public final class StyleFactory
       return createTextStyle( (TextStyleType) styleType );
     }
 
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   public static IPointStyle createPointStyle( final PointStyleType pst, final URL context )

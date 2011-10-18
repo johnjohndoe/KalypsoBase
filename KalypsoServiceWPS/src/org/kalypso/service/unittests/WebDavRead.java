@@ -49,10 +49,10 @@ import junit.framework.Assert;
 import junit.framework.JUnit4TestAdapter;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
-import org.apache.commons.vfs2.provider.local.DefaultLocalFileProvider;
-import org.apache.commons.vfs2.provider.webdav.WebdavFileProvider;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.impl.DefaultFileSystemManager;
+import org.apache.commons.vfs.provider.local.DefaultLocalFileProvider;
+import org.apache.commons.vfs.provider.webdav.WebdavFileProvider;
 import org.junit.Test;
 import org.kalypso.commons.java.io.FileUtilities;
 

@@ -31,7 +31,7 @@ package org.kalypso.repository;
 
 import junit.framework.TestCase;
 
-import org.kalypso.repository.utils.Repositories;
+import org.kalypso.repository.utils.RepositoryUtils;
 
 /**
  * RepositoryTest
@@ -43,11 +43,11 @@ public class RepositoryTest extends TestCase
 {
   public void testRepositoryUtils()
   {
-    assertEquals( Repositories.getRepositoryId( "test://foo.bar" ), "test://" ); //$NON-NLS-1$ //$NON-NLS-2$
+    assertEquals( RepositoryUtils.getRepositoryId( "test://foo.bar" ), "test://" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     try
     {
-      Repositories.getRepositoryId( "test:foo.bar" ); //$NON-NLS-1$
+      RepositoryUtils.getRepositoryId( "test:foo.bar" ); //$NON-NLS-1$
       fail( "Exception should be thrown" ); //$NON-NLS-1$
     }
     catch( IllegalArgumentException e )

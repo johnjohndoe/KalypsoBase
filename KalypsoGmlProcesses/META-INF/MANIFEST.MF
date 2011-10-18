@@ -35,4 +35,4 @@ Export-Package: com.bce.apps.wspfli,
  org.kalypso.gml.processes.raster2vector,
  org.kalypso.gml.processes.raster2vector.collector,
  org.kalypso.gml.processes.schemata
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

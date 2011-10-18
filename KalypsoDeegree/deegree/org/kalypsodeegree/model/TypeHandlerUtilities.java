@@ -104,7 +104,7 @@ public final class TypeHandlerUtilities
     {
       // FIXE/HACK: force to use the jdk-implementation of DataFactory, else the one in org.apache.xerces is used.
       // If we do not do this, two different implementations of XMLGregorianCalendar will be used, which will cause
-      // exceptions when comparing them (this is a xerces bug...)
+// exceptions when comparaing them (this is a xerces bug...)
       final DatatypeFactory dataTypeFactory = DatatypeFactory.newInstance( "com.sun.org.apache.xerces.internal.jaxp.datatype.DatatypeFactoryImpl", TypeHandlerUtilities.class.getClassLoader() );
       // final DatatypeFactory dataTypeFactory = DatatypeFactory.newInstance();
 
@@ -252,7 +252,6 @@ public final class TypeHandlerUtilities
     };
 
     // Basic GML 3 types
-    // TODO: implements as sax handlers
     registry.registerTypeHandler( new GM_EnvelopeBindingTypeHandler( jaxbContextProvider, new QName( NS.GML3, "BoundingShapeType" ), GM_Envelope.class, false ) );
 
     // Geometries

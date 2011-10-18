@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.services.observation.server;
 
@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,7 @@ import javax.activation.FileDataSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.eclipse.ui.services.IDisposable;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -80,8 +82,8 @@ import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
-import org.kalypso.repository.utils.Repositories;
 import org.kalypso.repository.utils.RepositoryItems;
+import org.kalypso.repository.utils.RepositoryUtils;
 import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.ObservationServiceUtils;
 import org.kalypso.services.observation.i18n.Messages;
@@ -91,6 +93,7 @@ import org.kalypso.services.observation.sei.ItemBean;
 import org.kalypso.services.observation.sei.ObservationBean;
 import org.kalypso.services.observation.sei.RepositoryBean;
 import org.kalypso.zml.request.Request;
+import org.xml.sax.InputSource;
 
 /**
  * Kalypso Observation Service.
@@ -99,7 +102,7 @@ import org.kalypso.zml.request.Request;
  * manipulate the observation before it is delivered. ObservationManipulators are configured within the
  * IObservationService configuration file. All entries that begin with "MANIPULATOR_" are defining such manipulators.
  * The syntax of the configuration is as follows: MANIPULATOR_&lt;repository_id&gt;=&lt;manipulator_class_name&gt;.
- *
+ * 
  * @author Marc Schlienger
  * @author Gernot Belger
  * @author Holger Albert
@@ -207,7 +210,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
 
   /**
    * Initialise the Service according to configuration.
-   *
+   * 
    * @throws RemoteException
    */
   protected final synchronized void init( ) throws RepositoryException
@@ -408,6 +411,38 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       m_logger.warning( Messages.getString( "org.kalypso.services.observation.server.ObservationServiceDelegate.1", dataId ) ); //$NON-NLS-1$
   }
 
+  @Override
+  public final void writeData( final ObservationBean obean, final DataHandler odb ) throws SensorException
+  {
+    try
+    {
+      init();
+
+      final IRepositoryItem item = itemFromBean( obean );
+
+      final IObservation obs = (IObservation) item.getAdapter( IObservation.class );
+
+      if( obs == null )
+      {
+        final RemoteException e = new RemoteException( "No observation for " + obean.getId() ); //$NON-NLS-1$
+        m_logger.throwing( getClass().getName(), "writeData", e ); //$NON-NLS-1$
+        throw e;
+      }
+
+      final IObservation zml = ZmlFactory.parseXML( new InputSource( odb.getInputStream() ), null );
+
+      synchronized( obs )
+      {
+        obs.setValues( zml.getValues( null ) );
+      }
+    }
+    catch( final Throwable e ) // generic exception caught for simplicity
+    {
+      m_logger.throwing( getClass().getName(), "writeData", e ); //$NON-NLS-1$
+      throw new SensorException( e.getLocalizedMessage(), e );
+    }
+  }
+
   /**
    * @throws NoSuchElementException
    *           if item and/or repository not found
@@ -427,7 +462,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
       return m_mapBeanId2Item.get( id );
 
     // try with repository id
-    final String repId = Repositories.getRepositoryId( id );
+    final String repId = RepositoryItems.getProtocol( id );
     if( m_mapRepId2Rep.containsKey( repId ) )
     {
       final IRepository rep = m_mapRepId2Rep.get( repId );
@@ -646,7 +681,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
 
   /**
    * FIXME at the moment we assume that an new item should be created in all sub repositories
-   *
+   * 
    * @see org.kalypso.services.observation.sei.IRepositoryService#makeItem(java.lang.String)
    */
   @Override
@@ -664,7 +699,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
 
   /**
    * FIXME at the moment we assume that an item should be deleted in all sub repositories
-   *
+   * 
    * @see org.kalypso.services.observation.sei.IRepositoryService#deleteItem(java.lang.String)
    */
   @Override
@@ -699,7 +734,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
             modifyable.setData( (Serializable) serializable );
           }
           else
-            throw new UnsupportedOperationException();
+            throw new NotImplementedException();
 
         }
       }
@@ -734,7 +769,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   {
     for( final IRepository repository : m_repositories )
     {
-      final IRepositoryItem item = Repositories.findEquivalentItem( repository, identifier );
+      final IRepositoryItem item = RepositoryUtils.findEquivalentItem( repository, identifier );
       if( item != null )
         return item.isMultipleSourceItem();
     }

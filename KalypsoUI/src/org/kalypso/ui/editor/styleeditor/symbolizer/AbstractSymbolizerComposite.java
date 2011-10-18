@@ -40,8 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizer;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -174,13 +174,9 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
 
     final Point size = new Point( SWT.DEFAULT, 32 );
     m_preview = createPreview( section, size, m_input );
+    toolkit.adapt( m_preview );
 
-    if( m_preview != null )
-    {
-      toolkit.adapt( m_preview );
-      section.setClient( m_preview );
-    }
-
+    section.setClient( m_preview );
     return section;
   }
 
@@ -193,8 +189,7 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
 
     doUpdateControl();
 
-    if( m_preview != null )
-      m_preview.updateControl();
+    m_preview.updateControl();
   }
 
   protected abstract void doUpdateControl( );

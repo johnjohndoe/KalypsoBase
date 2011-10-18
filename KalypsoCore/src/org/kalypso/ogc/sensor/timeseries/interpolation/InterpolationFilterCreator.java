@@ -81,11 +81,4 @@ public class InterpolationFilterCreator implements IFilterCreator
 
     return filter;
   }
-
-  public static IObservationFilter createFilter( int calendarAmount, String calendarField, int defaultStatus, String defaultValue, boolean forceFill, IObservation baseObs, URL context ) throws SensorException
-  {
-    InterpolationFilter interpolationFilter = new InterpolationFilter( CalendarUtilities.getCalendarField( calendarField ), calendarAmount, forceFill, defaultValue, defaultStatus );
-    interpolationFilter.initFilter( baseObs, baseObs, context );
-    return interpolationFilter;
-  }
 }

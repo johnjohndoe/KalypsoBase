@@ -45,7 +45,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
 
 /**
  * @author Dirk Kuch
@@ -59,8 +58,4 @@ public interface IStylePaintable
   Double getScale( );
 
   boolean shouldPaintFeature( Feature feature );
-
-  ILabelPlacementStrategy createLabelStrategy( );
-
-  void paintLabels( ILabelPlacementStrategy strategy );
 }

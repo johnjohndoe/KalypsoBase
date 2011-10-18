@@ -7,7 +7,7 @@
 	-->
 
 	<import file="../../KalypsoBuild/common-binding/buildExtraAntJAR.xml" />
-	
+
 	<target name="main" depends="init">
 		<path id="build.classpath">
 			<dirset dir="${basedir}/..">
@@ -24,7 +24,6 @@
 				<include name="KalypsoSimulationUI/build/bin" />
 			</dirset>
 			<fileset dir="${basedir}/..">
-				<include name="org.apache.commons/lib/**/*.jar" />
 				<include name="KalypsoCommons/lib/**/*.jar" />
 				<include name="KalypsoDeegree/lib/**/*.jar" />
 			</fileset>
@@ -39,8 +38,8 @@
 				<include name="plugins/org.eclipse.core.jobs*.jar" />
 			</fileset>
 		</path>
-		
-		<antcall target="buildAntJar" inheritrefs="true"/>
+
+		<antcall target="buildAntJar" inheritrefs="true" />
 	</target>
 
 </project>

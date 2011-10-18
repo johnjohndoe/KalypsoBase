@@ -3,6 +3,7 @@
  */
 package org.kalypso.kml.export.convert;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.kml.export.geometry.GeoUtils;
 import org.kalypso.kml.export.geometry.GeoUtils.GEOMETRY_TYPE;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
@@ -118,7 +119,7 @@ public class ConvertFacade
 // }
       }
       else
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
 
     }
   }

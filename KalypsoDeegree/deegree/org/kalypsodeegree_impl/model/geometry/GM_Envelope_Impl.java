@@ -38,7 +38,7 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;

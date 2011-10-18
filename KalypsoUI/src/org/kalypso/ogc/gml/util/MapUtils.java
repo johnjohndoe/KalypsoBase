@@ -70,6 +70,7 @@ import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * @author Thomas Jung
@@ -102,13 +103,13 @@ public class MapUtils
 
   public static void removeFeature( final CommandableWorkspace workspace, final IMapPanel panel, final Feature[] selectedFeatures ) throws Exception
   {
-    if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString("org.kalypso.ogc.gml.util.MapUtils.0"), Messages.getString("org.kalypso.ogc.gml.util.MapUtils.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !SWT_AWT_Utilities.showSwtMessageBoxConfirm( Messages.getString( "org.kalypso.ogc.gml.util.MapUtils.0" ), Messages.getString( "org.kalypso.ogc.gml.util.MapUtils.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return;
 
     /* Select the feature */
     final IFeatureSelectionManager selectionManager = panel.getSelectionManager();
 
-    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString("org.kalypso.ogc.gml.util.MapUtils.2") ); //$NON-NLS-1$
+    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.ogc.gml.util.MapUtils.2" ) ); //$NON-NLS-1$
     for( final Feature featureToRemove : selectedFeatures )
     {
       selectionManager.changeSelection( new Feature[] { featureToRemove }, new EasyFeatureWrapper[] {} );
@@ -136,12 +137,12 @@ public class MapUtils
 
     try
     {
-      final GM_Object geom = (GM_Object) feature.getProperty( geomQName );
+      final GM_Object geom = (GM_Object) feature.getProperty( geomQName != null ? geomQName : GMLConstants.QN_LOCATION );
       if( geom == null )
         return;
       paintGrabbedGeometry( panel, g2, geom );
     }
-    catch(IllegalArgumentException e)
+    catch( IllegalArgumentException e )
     {
       e.printStackTrace();
     }

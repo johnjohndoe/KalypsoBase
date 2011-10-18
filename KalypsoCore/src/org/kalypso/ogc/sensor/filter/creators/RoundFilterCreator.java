@@ -55,9 +55,10 @@ import org.kalypso.zml.filters.RoundFilterType;
 public class RoundFilterCreator implements IFilterCreator
 {
   @Override
-  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context ) throws SensorException
+  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context )
+  throws SensorException
   {
-    final RoundFilterType filter = (RoundFilterType) aft;
+    final RoundFilterType filter = (RoundFilterType)aft;
     final RoundFilter roundFilter = new RoundFilter( filter );
 
     final JAXBElement< ? extends AbstractFilterType> filter2 = filter.getFilter();
@@ -68,10 +69,4 @@ public class RoundFilterCreator implements IFilterCreator
     return roundFilter;
   }
 
-  public static IObservationFilter createFilter( int factor, String mode, String type, IObservation baseObs, URL context ) throws SensorException
-  {
-    RoundFilter roundFilter = new RoundFilter( factor, mode, type );
-    roundFilter.initFilter( baseObs, baseObs, context );
-    return roundFilter;
-  }
 }

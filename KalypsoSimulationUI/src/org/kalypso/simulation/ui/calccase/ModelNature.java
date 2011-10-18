@@ -109,8 +109,6 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   private static final String METADATA_FILE = ".metadata"; //$NON-NLS-1$
 
-  public static final String LOCAL_NAME = ".local"; //$NON-NLS-1$
-
   public static final String CONTROL_NAME = ".calculation"; //$NON-NLS-1$
 
   public static final String CONTROL_TEMPLATE_NAME = ".calculation.template"; //$NON-NLS-1$

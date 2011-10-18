@@ -45,8 +45,8 @@ import java.io.InputStream;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileContent;
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileContent;
+import org.apache.commons.vfs.FileObject;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.service.ogc.RequestBean;
 import org.kalypso.service.ogc.exception.OWSException;

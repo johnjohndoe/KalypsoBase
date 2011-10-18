@@ -4,7 +4,7 @@ Bundle-Name: com.vividsolutions.jts
 Bundle-SymbolicName: com.vividsolutions.jts
 Bundle-Version: 1.12
 Bundle-Vendor: http://sourceforge.net/projects/jts-topo-suite/
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/jts-1.12.jar,
  lib/jtsio-1.12.jar,
  .

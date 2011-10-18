@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -54,10 +55,10 @@ import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.eclipse.ui.services.IDisposable;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -75,8 +76,8 @@ import org.kalypso.repository.RepositoryRegistry;
 import org.kalypso.repository.conf.RepositoryConfigUtils;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.factory.IRepositoryFactory;
-import org.kalypso.repository.utils.Repositories;
 import org.kalypso.repository.utils.RepositoryItems;
+import org.kalypso.repository.utils.RepositoryUtils;
 import org.kalypso.services.observation.KalypsoServiceObs;
 import org.kalypso.services.observation.ObservationServiceUtils;
 import org.kalypso.services.observation.sei.DataBean;
@@ -85,6 +86,7 @@ import org.kalypso.services.observation.sei.ItemBean;
 import org.kalypso.services.observation.sei.ObservationBean;
 import org.kalypso.services.observation.sei.RepositoryBean;
 import org.kalypso.zml.request.Request;
+import org.xml.sax.InputSource;
 
 /**
  * Kalypso Observation Service Fassade.
@@ -96,7 +98,7 @@ import org.kalypso.zml.request.Request;
 @SuppressWarnings("restriction")
 public class ObservationServiceFassade implements IObservationService, IDisposable
 {
-  public static final String DESTINATION_REPOSITORY = "org.kalypso.services.observation.server.fassade.destination.repository.name"; //$NON-NLS-1$
+  public static final String DESTINATION_REPOSITORY = "org.kalypso.services.observation.server.fassade.destination.repository.name";
 
   private IRepository m_repository = null;
 
@@ -268,6 +270,36 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
     }
   }
 
+  @Override
+  public final void writeData( final ObservationBean obean, final DataHandler odb ) throws SensorException
+  {
+    try
+    {
+      final IRepositoryItem item = itemFromBean( obean );
+
+      final IObservation obs = (IObservation) item.getAdapter( IObservation.class );
+
+      if( obs == null )
+      {
+        final RemoteException e = new RemoteException( "No observation for " + obean.getId() ); //$NON-NLS-1$
+        m_logger.throwing( getClass().getName(), "writeData", e ); //$NON-NLS-1$
+        throw e;
+      }
+
+      final IObservation zml = ZmlFactory.parseXML( new InputSource( odb.getInputStream() ), null );
+
+      synchronized( obs )
+      {
+        obs.setValues( zml.getValues( null ) );
+      }
+    }
+    catch( final Throwable e ) // generic exception caught for simplicity
+    {
+      m_logger.throwing( getClass().getName(), "writeData", e ); //$NON-NLS-1$
+      throw new SensorException( e.getLocalizedMessage(), e );
+    }
+  }
+
   /**
    * @throws NoSuchElementException
    *           if item and/or repository not found
@@ -289,10 +321,6 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   @Override
   public final boolean hasChildren( final ItemBean parent ) throws RepositoryException
   {
-    // root item?
-    if( Objects.isNull( parent ) )
-      return m_repository.hasChildren();
-
     final String id = parent.getId();
     final IRepositoryItem item = m_repository.findItem( id );
 
@@ -397,7 +425,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   @Override
   public final ItemBean findItem( final String id ) throws RepositoryException
   {
-    final IRepositoryItem item = Repositories.findEquivalentItem( m_repository, id );
+    final IRepositoryItem item = RepositoryUtils.findEquivalentItem( m_repository, id );
     if( item != null )
     {
       final Boolean modifyable = item instanceof IWriteableRepositoryItem;
@@ -442,7 +470,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   {
     if( m_repository instanceof IModifyableRepository )
     {
-      final IRepositoryItem item = Repositories.findEquivalentItem( m_repository, identifier );
+      final IRepositoryItem item = RepositoryUtils.findEquivalentItem( m_repository, identifier );
       if( item instanceof IWriteableRepositoryItem )
       {
         if( serializable instanceof Serializable )
@@ -452,7 +480,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
         }
         else
         {
-          throw new UnsupportedOperationException();
+          throw new NotImplementedException();
         }
       }
     }
@@ -481,7 +509,7 @@ public class ObservationServiceFassade implements IObservationService, IDisposab
   @Override
   public boolean isMultipleSourceItem( final String identifier ) throws RepositoryException
   {
-    final IRepositoryItem item = Repositories.findEquivalentItem( m_repository, identifier );
+    final IRepositoryItem item = RepositoryUtils.findEquivalentItem( m_repository, identifier );
     if( item != null )
     {
       return item.isMultipleSourceItem();

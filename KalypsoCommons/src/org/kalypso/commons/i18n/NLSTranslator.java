@@ -41,6 +41,7 @@
 package org.kalypso.commons.i18n;
 
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
@@ -88,10 +89,10 @@ public class NLSTranslator implements ITranslator, IExecutableExtension
   }
 
   /**
-   * @see org.kalypso.commons.i18n.ITranslator#configure(org.kalypso.commons.i18n.ITranslatorContext, java.util.List)
+   * @see org.kalypso.contribs.java.lang.I10nTranslator#configure(java.util.List)
    */
   @Override
-  public void configure( ITranslatorContext context, List<Element> configuration )
+  public void configure( final URL context, final List<Element> configuration )
   {
     m_configuration = configuration;
 
@@ -101,15 +102,14 @@ public class NLSTranslator implements ITranslator, IExecutableExtension
       try
       {
         final String[] split = msgClass.split( ":" ); //$NON-NLS-1$
-        Assert.isTrue( split.length == 2, Messages.getString( "org.kalypso.commons.i18n.NLSTranslator.2", msgClass ) ); //$NON-NLS-1$
+        Assert.isTrue( split.length == 2, Messages.getString("org.kalypso.commons.i18n.NLSTranslator.2", msgClass )); //$NON-NLS-1$
         final Bundle bundle = Platform.getBundle( split[0] );
-         m_nls = bundle.loadClass( split[1] );
-         
+        m_nls = bundle.loadClass( split[1] );
         return;
       }
       catch( final ClassNotFoundException e )
       {
-        final Status status = new Status( IStatus.ERROR, JavaApiContributionsPlugin.getDefault().getBundle().getSymbolicName(), -1, Messages.getString( "org.kalypso.commons.i18n.NLSTranslator.3", msgClass ), e ); //$NON-NLS-1$
+        final Status status = new Status( IStatus.ERROR, JavaApiContributionsPlugin.getDefault().getBundle().getSymbolicName(), -1, Messages.getString("org.kalypso.commons.i18n.NLSTranslator.3", msgClass), e ); //$NON-NLS-1$
         JavaApiContributionsPlugin.getDefault().getLog().log( status );
         return;
       }
@@ -130,7 +130,7 @@ public class NLSTranslator implements ITranslator, IExecutableExtension
   public String get( final String key )
   {
     if( m_nls == null )
-      return Messages.getString( "org.kalypso.commons.i18n.NLSTranslator.4", key ); //$NON-NLS-1$
+      return Messages.getString("org.kalypso.commons.i18n.NLSTranslator.4", key); //$NON-NLS-1$
 
     try
     {
@@ -141,22 +141,22 @@ public class NLSTranslator implements ITranslator, IExecutableExtension
     {
       e.printStackTrace();
 
-      return Messages.getString( "org.kalypso.commons.i18n.NLSTranslator.5", key, e.toString() ); //$NON-NLS-1$
+      return Messages.getString("org.kalypso.commons.i18n.NLSTranslator.5", key , e.toString()); //$NON-NLS-1$
     }
     catch( final NoSuchFieldException e )
     {
       e.printStackTrace();
-      return Messages.getString( "org.kalypso.commons.i18n.NLSTranslator.5", key, e.toString() ); //$NON-NLS-1$
+      return Messages.getString("org.kalypso.commons.i18n.NLSTranslator.5", key , e.toString()); //$NON-NLS-1$
     }
     catch( final IllegalArgumentException e )
     {
       e.printStackTrace();
-      return Messages.getString( "org.kalypso.commons.i18n.NLSTranslator.5", key, e.toString() ); //$NON-NLS-1$
+      return Messages.getString("org.kalypso.commons.i18n.NLSTranslator.5", key , e.toString()); //$NON-NLS-1$
     }
     catch( final IllegalAccessException e )
     {
       e.printStackTrace();
-      return Messages.getString( "org.kalypso.commons.i18n.NLSTranslator.5", key, e.toString() ); //$NON-NLS-1$
+      return Messages.getString("org.kalypso.commons.i18n.NLSTranslator.5", key , e.toString()); //$NON-NLS-1$
     }
   }
 }

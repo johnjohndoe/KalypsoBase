@@ -47,7 +47,7 @@ import java.io.InputStream;
 import junit.framework.Assert;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs.FileObject;
 import org.junit.Test;
 import org.kalypso.commons.io.VFSUtilities;
 import org.kalypso.commons.java.io.FileUtilities;

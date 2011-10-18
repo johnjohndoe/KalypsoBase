@@ -88,24 +88,21 @@ public class LoggerUtilities
   /** This message will be shown inside the details part of the message box. */
   public static final int CODE_NEW_MSGBOX = 102;
 
-  /** Create a new cancel sub-status */
-  public static final int CODE_CANCEL = 103;
-
   private LoggerUtilities()
   {
     throw new UnsupportedOperationException( "Utility class" );
   }
 
   /**
-   * Formats a log-message similar to java.util.logging.Logger's do it.<br/>
-   */
-  public static String formatLogStylish( final IStatus status, final int code )
+  * Formats a log-message similar to java.util.logging.Logger's do it.<br/>
+  */
+  public static String formatLogStylish( IStatus status, int code )
   {
-    final Level level = levelFromStatus( status );
+    Level level = levelFromStatus( status );
     return formatLogStylish( level, code, status.getMessage() );
   }
 
-
+  
   /**
    * Formats a log-message similar to java.util.logging.Logger's do it.<br/>
    * Example:
@@ -141,7 +138,7 @@ public class LoggerUtilities
   public static IStatus lineToStatus( final String line )
   {
     final String LEVEL = "(" + Level.SEVERE + "|" + Level.WARNING + "|" + Level.INFO + "|" + Level.CONFIG + "|"
-    + Level.FINE + "|" + Level.FINER + "|" + Level.FINEST + ")";
+        + Level.FINE + "|" + Level.FINER + "|" + Level.FINEST + ")";
 
     final String CODE = "((\\[\\d+\\])|())";
 
@@ -180,10 +177,10 @@ public class LoggerUtilities
   {
     if( status.matches( IStatus.ERROR ) )
       return Level.SEVERE;
-
+    
     if( status.matches( IStatus.WARNING ) )
       return Level.WARNING;
-
+    
     if( status.matches( IStatus.INFO ) )
       return Level.INFO;
 
@@ -192,10 +189,10 @@ public class LoggerUtilities
 
     if( status.isOK() )
       return Level.FINE;
-
+    
     return Level.FINE;
   }
-
+  
   /**
    * Converts a Level into a IStatus-severity.
    */
@@ -218,7 +215,7 @@ public class LoggerUtilities
 
     if( level == Level.FINER )
       return IStatus.OK;
-
+    
     if( level == Level.FINEST )
       return IStatus.OK;
 

@@ -114,7 +114,7 @@ public interface ITimeseriesConstants extends IMetadataConstants
 
   String MD_UNSICHERE_VORHERSAGE_ENDE = "unsichere Vorhersage Ende"; //$NON-NLS-1$
 
-  String MD_WQ_TABLE = "WQ-Tabelle"; //$NON-NLS-1$
+  String MD_WQTABLE = "WQ-Tabelle"; //$NON-NLS-1$
 
   String MD_WQWECHMANN = "WQ-Parameter"; //$NON-NLS-1$
 

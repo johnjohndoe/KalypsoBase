@@ -176,6 +176,7 @@ public class IntersectRoughnessPage extends WizardPage implements IUpdateable, I
     group.setText( ProfilePointFilterComposite.STR_GROUP_TEXT );
 
     m_filterChooser.createControl( group, SWT.BORDER );
+
     m_filterChooser.setDialogSettings( getDialogSettings() );
 
     m_filterChooser.addCheckStateListener( new ICheckStateListener()

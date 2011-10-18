@@ -83,6 +83,7 @@ public class TextPreview extends SymbolizerPreview<TextSymbolizer>
   protected DisplayElement createDisplayElement( final GM_Object geom ) throws IncompatibleGeometryTypeException
   {
     final LabelDisplayElement displayElement = (LabelDisplayElement) super.createDisplayElement( geom );
+// displayElement.setLabel( displayElement.getLabel() );
     final String label = new ParameterValueTypeToString().convert( displayElement.getLabel() );
     displayElement.setLabel( StyleFactory.createParameterValueType( label ) );
     return displayElement;

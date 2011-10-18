@@ -58,9 +58,9 @@ import java.util.TreeSet;
 
 import javax.jws.WebService;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.FileSystemManager;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

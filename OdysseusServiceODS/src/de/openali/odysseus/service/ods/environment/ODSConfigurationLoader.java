@@ -20,13 +20,14 @@ import de.openali.odysseus.service.odsimpl.x020.ScenesType;
 import de.openali.odysseus.service.odsimpl.x020.ServiceParametersType;
 
 /**
- * Class which handles the configurations for the service and the individual scenes; if a scene does not define its own
- * ServiceProvider- and ServiceIdentification-Elements, they are inherited from the global configuration.
+ * class which handles the configurations for the service and the individual scenes; if a scene does not define its own
+ * ServiceProvider- and ServiceIdentification-Elements, they are inherited from the global configuration
  * 
- * @author Alexander Burtscher
+ * @author burtscher1
  */
 public class ODSConfigurationLoader
 {
+
   private ODSConfigurationDocument m_ocd = null;
 
   private String m_defaultSceneId;
@@ -37,9 +38,9 @@ public class ODSConfigurationLoader
 
   private Map<String, String> m_serviceParameters = null;
 
-  private File m_configFile;
+  private final File m_configFile;
 
-  private File m_configDir;
+  private final File m_configDir;
 
   private ServiceProvider m_serviceProvider;
 
@@ -51,7 +52,7 @@ public class ODSConfigurationLoader
    * @throws IOException
    * @throws XmlException
    */
-  public ODSConfigurationLoader( File configDir, File configFile ) throws XmlException, IOException, ConfigurationException
+  public ODSConfigurationLoader( final File configDir, final File configFile ) throws XmlException, IOException, ConfigurationException
   {
     m_configFile = configFile;
     m_configDir = configDir;
@@ -67,7 +68,7 @@ public class ODSConfigurationLoader
     if( m_configFile.exists() )
     {
       m_ocd = ODSConfigurationDocument.Factory.parse( m_configFile );
-      ODSConfigurationType configuration = m_ocd.getODSConfiguration();
+      final ODSConfigurationType configuration = m_ocd.getODSConfiguration();
       m_serviceIdentification = configuration.getServiceIdentification();
       m_serviceProvider = configuration.getServiceProvider();
       createServiceParameterMap( configuration.getServiceParameters() );
@@ -84,14 +85,14 @@ public class ODSConfigurationLoader
    * @param scenes
    * @throws ConfigurationException
    */
-  private void createODSScenes( ScenesType scenes ) throws ConfigurationException
+  private void createODSScenes( final ScenesType scenes ) throws ConfigurationException
   {
     m_scenes = new HashMap<String, ChartConfigurationDocument>();
-    SceneType defaultScene = scenes.getDefaultScene();
+    final SceneType defaultScene = scenes.getDefaultScene();
     m_defaultSceneId = defaultScene.getId();
     createODSScene( defaultScene );
-    SceneType[] sceneArray = scenes.getSceneArray();
-    for( SceneType sceneRef : sceneArray )
+    final SceneType[] sceneArray = scenes.getSceneArray();
+    for( final SceneType sceneRef : sceneArray )
       createODSScene( sceneRef );
   }
 
@@ -102,24 +103,25 @@ public class ODSConfigurationLoader
    * @param sceneRef
    * @throws ConfigurationException
    */
-  private void createODSScene( SceneType sceneRef ) throws ConfigurationException
+  private void createODSScene( final SceneType sceneRef ) throws ConfigurationException
   {
-    String sceneId = sceneRef.getId();
+    final String sceneId = sceneRef.getId();
     ChartConfigurationDocument chartConfigDoc = null;
     try
     {
-      File chartFile = new File( m_configDir, sceneRef.getPath() );
+      final File chartFile = new File( m_configDir, sceneRef.getPath() );
       chartConfigDoc = ChartConfigurationDocument.Factory.parse( chartFile );
     }
-    catch( XmlException e )
+    catch( final XmlException e )
     {
+      // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
+      // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
     if( chartConfigDoc != null )
       m_scenes.put( sceneId, chartConfigDoc );
   }
@@ -141,12 +143,11 @@ public class ODSConfigurationLoader
     return m_defaultSceneId;
   }
 
-  public synchronized ChartConfigurationDocument getSceneById( String sceneId )
+  public synchronized ChartConfigurationDocument getSceneById( final String sceneId )
   {
     String usedSceneId = sceneId;
     if( (sceneId == null) || sceneId.trim().equals( "" ) )
       usedSceneId = m_defaultSceneId;
-
     return m_scenes.get( usedSceneId );
   }
 
@@ -155,11 +156,11 @@ public class ODSConfigurationLoader
     return m_ocd;
   }
 
-  private void createServiceParameterMap( ServiceParametersType serviceParameters )
+  private void createServiceParameterMap( final ServiceParametersType serviceParameters )
   {
     m_serviceParameters = new HashMap<String, String>();
-    ParameterType[] parameterArray = serviceParameters.getParameterArray();
-    for( ParameterType param : parameterArray )
+    final ParameterType[] parameterArray = serviceParameters.getParameterArray();
+    for( final ParameterType param : parameterArray )
       m_serviceParameters.put( param.getName(), param.getValue() );
   }
 
@@ -182,4 +183,5 @@ public class ODSConfigurationLoader
   {
     return m_serviceProvider;
   }
+
 }

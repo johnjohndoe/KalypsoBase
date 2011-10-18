@@ -52,6 +52,7 @@ import javax.media.jai.TiledImage;
 import ogc31.www.opengis.net.gml.FileType;
 import ogc31.www.opengis.net.gml.FileValueModelType;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.math.Range;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -1216,7 +1217,7 @@ public final class GeoGridUtilities
       @Override
       public boolean containsNumber( final Number number )
       {
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
       }
 
       @Override

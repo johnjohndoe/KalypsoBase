@@ -56,9 +56,7 @@ public final class KalypsoCoreImages
 
   public static enum DESCRIPTORS implements ImageKey
   {
-    STATUS_IMAGE_OK("icons/status/ok.gif"), //$NON-NLS-1$
-    STATUS_IMAGE_OK_32("icons/status/ok_32.png"), //$NON-NLS-1$
-    STATUS_IMAGE_OK_48("icons/status/ok_48.png"); //$NON-NLS-1$
+    STATUS_IMAGE_OK("icons/status/ok.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 

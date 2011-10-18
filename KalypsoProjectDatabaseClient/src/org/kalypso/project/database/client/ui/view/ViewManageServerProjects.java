@@ -79,8 +79,6 @@ public class ViewManageServerProjects extends ViewPart
 
   private ManageRemoteProjects m_manager;
 
-  private FormToolkit m_toolkit;
-
   /**
    * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
@@ -88,8 +86,6 @@ public class ViewManageServerProjects extends ViewPart
   public void createPartControl( final Composite parent )
   {
     m_parent = parent;
-    m_toolkit = ToolkitUtils.createToolkit( parent );
-
     update();
   }
 
@@ -106,7 +102,9 @@ public class ViewManageServerProjects extends ViewPart
       }
     }
 
-    m_body = m_toolkit.createComposite( m_parent );
+    final FormToolkit toolkit = ToolkitUtils.createToolkit( m_parent );
+
+    m_body = toolkit.createComposite( m_parent );
     m_body.setLayout( new GridLayout() );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
@@ -114,7 +112,7 @@ public class ViewManageServerProjects extends ViewPart
     grModelType.setText( Messages.getString("org.kalypso.project.database.client.ui.view.ViewManageServerProjects.1") ); //$NON-NLS-1$
     grModelType.setLayout( new GridLayout() );
     grModelType.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    m_toolkit.adapt( grModelType );
+    toolkit.adapt( grModelType );
 
     final ComboViewer viewerType = new ComboViewer( grModelType, SWT.BORDER | SWT.READ_ONLY );
     viewerType.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -124,7 +122,7 @@ public class ViewManageServerProjects extends ViewPart
     final IProjectDatabase service = KalypsoProjectDatabaseClient.getService();
     if( service == null )
     {
-      m_toolkit.createLabel( m_body, Messages.getString( "org.kalypso.project.database.client.ui.view.ViewManageServerProjects.2" ) ); //$NON-NLS-1$
+      toolkit.createLabel( m_body, Messages.getString("org.kalypso.project.database.client.ui.view.ViewManageServerProjects.2") ); //$NON-NLS-1$
       return;
     }
 
@@ -140,14 +138,14 @@ public class ViewManageServerProjects extends ViewPart
       grDetails.setText( Messages.getString("org.kalypso.project.database.client.ui.view.ViewManageServerProjects.3") ); //$NON-NLS-1$
       grDetails.setLayout( new GridLayout() );
       grDetails.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-      m_toolkit.adapt( grDetails );
+      toolkit.adapt( grDetails );
 
       if( m_manager != null )
       {
         m_manager.dispose();
       }
 
-      m_manager = new ManageRemoteProjects( m_toolkit, grDetails, m_selectedType );
+      m_manager = new ManageRemoteProjects( toolkit, grDetails, m_selectedType );
       m_manager.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     }
 

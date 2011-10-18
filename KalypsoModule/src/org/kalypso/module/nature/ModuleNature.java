@@ -42,7 +42,7 @@ package org.kalypso.module.nature;
 
 import java.io.File;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
@@ -52,8 +52,6 @@ import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.module.IKalypsoModule;
-import org.kalypso.module.ModuleExtensions;
 import org.kalypso.module.internal.Module;
 import org.kalypso.module.internal.nature.ModuleFilePreferences;
 import org.kalypso.module.internal.nature.ModulePreferences;
@@ -209,28 +207,28 @@ public class ModuleNature implements IProjectNature
     return new ModuleFilePreferences( projectDir );
   }
 
-  /**
-   * For backwards compatibility: let module decide, we ask each module if this project belongs to it.
-   * 
-   * @return <code>null</code>, if no module accepts the gien project.
-   */
-  public static IKalypsoModule findModule( final IProject project )
-  {
-    final IKalypsoModule[] kalypsoModules = ModuleExtensions.getKalypsoModules();
-    for( final IKalypsoModule module : kalypsoModules )
-    {
-      try
-      {
-        if( module.acceptProject( project ) )
-          return module;
-      }
-      catch( final CoreException e )
-      {
-        Module.getDefault().getLog().log( e.getStatus() );
-      }
-    }
-
-    return null;
-  }
+// /**
+// * For backwards compatibility: let module decide, we ask each module if this project belongs to it.
+// *
+// * @return <code>null</code>, if no module accepts the gien project.
+// */
+// public static IKalypsoModule findModule( final IProject project )
+// {
+// final IKalypsoModule[] kalypsoModules = ModuleExtensions.getKalypsoModules();
+// for( final IKalypsoModule module : kalypsoModules )
+// {
+// try
+// {
+// if( module.acceptProject( project ) )
+// return module;
+// }
+// catch( final CoreException e )
+// {
+// Module.getDefault().getLog().log( e.getStatus() );
+// }
+// }
+//
+// return null;
+// }
 
 }

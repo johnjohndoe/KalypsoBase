@@ -1,7 +1,5 @@
 package de.openali.odysseus.chart.framework.view.impl;
 
-import java.awt.Insets;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -77,8 +75,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   private EditInfo m_editInfo = null;
 
   private EditInfo m_tooltipInfo = null;
-
-  private final Insets m_insets;
 
   private final ChartTooltipPainter m_tooltipPainter = new ChartTooltipPainter();
 
@@ -172,16 +168,13 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     }
   };
 
+
+
   private final InvalidateChartJob m_invalidateChartJob = new InvalidateChartJob( "" );
 
   private final ChartImagePlotHandler m_plotHandler = new ChartImagePlotHandler( this );
 
   public ChartImageComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
-  {
-    this( parent, style, model, backgroundRGB, new Insets( 3, 3, 3, 3 ) );
-  }
-
-  public ChartImageComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB, final Insets insets )
   {
     super( parent, style | SWT.DOUBLE_BUFFERED );
 
@@ -212,8 +205,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       }
     } );
 
-    m_insets = insets;
-
     setBackground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
     setChartModel( model );
   }
@@ -226,8 +217,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   {
     unregisterListener();
 
-// if( m_tooltipHandler != null )
-// m_tooltipHandler.dispose();
+//    if( m_tooltipHandler != null )
+//      m_tooltipHandler.dispose();
 
     if( m_image != null )
       m_image.dispose();
@@ -298,7 +289,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       return Status.OK_STATUS;
 
     final Rectangle panel = getClientArea();
-    final ChartPainter chartPainter = new ChartPainter( model, panel, m_insets );// ,new Insets(25,25,25,25));
+    final ChartPainter chartPainter = new ChartPainter( model, panel );// ,new Insets(25,25,25,25));
     m_plotRect = RectangleUtils.inflateRect( panel, chartPainter.getPlotInsets() );
     m_image = chartPainter.createImage( m_panOffset );
 

@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.core.i18n.Messages;
@@ -109,7 +110,7 @@ public class KalypsoCascadingThemeSelection extends AbstractFeatureSelection
   @Override
   public IFeatureSelectionManager getSelectionManager( )
   {
-    throw new UnsupportedOperationException();
+    throw (new NotImplementedException());
   }
 
   /**

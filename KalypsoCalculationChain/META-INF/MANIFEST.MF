@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.kalypso.calculation.chain;singleton:=true
 Bundle-Version: 11.6.2.qualifier
 Bundle-Activator: org.kalypso.calculation.chain.KalypsoCalculationChain
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.kalypso.calculation.chain,
  org.kalypso.calculation.chain.binding
 Require-Bundle: org.kalypso.contribs.java,

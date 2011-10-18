@@ -43,6 +43,8 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 import java.net.URL;
 
+import org.apache.commons.lang.NotImplementedException;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -221,7 +223,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   }
 
   /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getContext()
+   * @see org.kalypso.ogc.gml.IKalypsoLayerModell#getContext()
    */
   @Override
   public URL getContext( )
@@ -255,7 +257,7 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   @Override
   public String getCoordinatesSystem( )
   {
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
@@ -292,6 +294,16 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   public GisTemplateMapModell getInnerMapModel( )
   {
     return m_innerMapModel;
+  }
+
+  /**
+   * @return
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
+   */
+  @Override
+  public IProject getProject( )
+  {
+    return m_innerMapModel.getProject();
   }
 
   /**
@@ -472,16 +484,5 @@ public abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme i
   public String getLabel( )
   {
     return m_innerMapModel.getLabel();
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#setName(org.kalypso.contribs.java.lang.I10nString)
-   */
-  @Override
-  public void setName( final I10nString name )
-  {
-    m_innerMapModel.setName( name );
-
-    super.setName( name );
   }
 }

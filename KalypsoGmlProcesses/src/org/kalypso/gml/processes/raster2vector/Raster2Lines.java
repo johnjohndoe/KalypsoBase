@@ -280,6 +280,13 @@ public class Raster2Lines implements IGeoGridWalker
         {
           final Coordinate innerLeft = interpolateForInnerCrd( prevprev, prev );
           final Coordinate innerRight = interpolateForInnerCrd( prev, crd );
+          if( innerLeft != null )
+          {
+            if( (innerLeft.x == 85937.5 && innerLeft.y == 407071.25) )
+            {
+              // System.out.println();
+            }
+          }
           currentLC.setInnerCrds( new Coordinate[] { innerLeft, innerRight } );
         }
       }

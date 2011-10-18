@@ -56,7 +56,7 @@ public class Sleak
 
   public void open( )
   {
-    display = ChartUtilities.getDisplay();
+    display = Display.getCurrent();
     shell = new Shell( display );
     shell.setText( "S-Leak" );
     list = new List( shell, SWT.BORDER | SWT.V_SCROLL );

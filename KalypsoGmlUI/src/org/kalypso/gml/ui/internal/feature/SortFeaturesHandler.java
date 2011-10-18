@@ -45,7 +45,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -105,6 +105,7 @@ public class SortFeaturesHandler extends AbstractHandler
 
     final Feature parentFeature = fate.getParentFeature();
     final IRelationType rt = fate.getPropertyType();
+
 
     final IFeatureType targetFeatureType = rt.getTargetFeatureType();
     final IPropertyType ptToSort = askForPropertyToSort( shell, targetFeatureType, title );

@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -87,11 +86,7 @@ import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
-import org.kalypsodeegree_impl.graphics.displayelements.SimpleLabelPlacementStrategy;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-
-import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * @author Andreas von Dömming
@@ -166,16 +161,16 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     for( final IKalypsoStyle element : styles )
       removeStyle( element );
 
-        if( m_workspace != null )
-        {
-          m_workspace.removeModellListener( this );
-          m_workspace = null;
-        }
+    if( m_workspace != null )
+    {
+      m_workspace.removeModellListener( this );
+      m_workspace = null;
+    }
 
-        if( m_featureThemeIcon != null )
-          m_featureThemeIcon.dispose();
+    if( m_featureThemeIcon != null )
+      m_featureThemeIcon.dispose();
 
-        super.dispose();
+    super.dispose();
   }
 
   @Override
@@ -209,9 +204,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     try
     {
-      final ILabelPlacementStrategy strategy = createStrategy( g, selected );
-
-      final IStylePaintable paintDelegate = new FeatureThemePaintable( p, (Graphics2D) graphics, m_selectionManager, selected, strategy );
+      final IStylePaintable paintDelegate = new FeatureThemePaintable( p, graphics, m_selectionManager, selected );
       final IStylePainter painter = StylePainterFactory.create( this, selected );
       painter.paint( paintDelegate, monitor );
 
@@ -224,18 +217,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
 
     return Status.OK_STATUS;
-  }
-
-  private ILabelPlacementStrategy createStrategy( final Graphics g, final Boolean selected )
-  {
-    if( selected != null && selected == true )
-      return null;
-
-    // FIXME: create strategy depending on theme property
-    // FIXME: give additional parameters into strategy
-    final Rectangle bounds = g.getClipBounds();
-    final Envelope screenRect = new Envelope( bounds.getMinX(), bounds.getMaxX(), bounds.getMinY(), bounds.getMaxY() );
-    return new SimpleLabelPlacementStrategy( screenRect );
   }
 
   /**
@@ -451,17 +432,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       public boolean shouldPaintFeature( final Feature feature )
       {
         return true;
-      }
-
-      @Override
-      public ILabelPlacementStrategy createLabelStrategy( )
-      {
-        return null;
-      }
-
-      @Override
-      public void paintLabels( final ILabelPlacementStrategy strategy )
-      {
       }
     };
 

@@ -63,13 +63,13 @@ import org.kalypso.template.types.StyledLayerType;
 // themes.
 public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
 {
-  public CascadingLayerKalypsoTheme( final I10nString layerName, final CascadingLayer layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws CoreException
+  public CascadingLayerKalypsoTheme( final I10nString layerName, final CascadingLayer layerType, final URL context, final IFeatureSelectionManager selectionManager, final IMapModell mapModel ) throws CoreException 
   {
     super( layerName, layerType.getLinktype(), mapModel );
 
     GisTemplateFeatureTheme.configureProperties( this, layerType );
 
-    final GisTemplateMapModell innerMapModell = new GisTemplateMapModell( context, mapModel.getCoordinatesSystem(), selectionManager )
+    final GisTemplateMapModell innerMapModell = new GisTemplateMapModell( context, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager )
     {
       /**
        * @see org.kalypso.ogc.gml.GisTemplateMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.painter;
 
@@ -49,7 +49,6 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
 
 
 /**
@@ -98,15 +97,4 @@ public class FilterByTypeStylePaintable implements IStylePaintable
     return m_paintable.shouldPaintFeature( feature );
   }
 
-  @Override
-  public ILabelPlacementStrategy createLabelStrategy( )
-  {
-    return m_paintable.createLabelStrategy();
-  }
-
-  @Override
-  public void paintLabels( final ILabelPlacementStrategy strategy )
-  {
-    m_paintable.paintLabels( strategy );
-  }
 }

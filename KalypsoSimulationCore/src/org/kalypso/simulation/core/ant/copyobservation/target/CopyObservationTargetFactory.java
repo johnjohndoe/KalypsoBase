@@ -43,6 +43,7 @@ package org.kalypso.simulation.core.ant.copyobservation.target;
 import java.io.File;
 import java.net.URL;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.ogc.sensor.DateRange;
 
 /**
@@ -74,7 +75,7 @@ public final class CopyObservationTargetFactory
       return getLink( context, targetObservationDir, targetRange, forecastRange );
     }
 
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   public static ICopyObservationTarget getLink( final URL context, final File targetObservationDir, final DateRange targetRange, final DateRange forecastRange )

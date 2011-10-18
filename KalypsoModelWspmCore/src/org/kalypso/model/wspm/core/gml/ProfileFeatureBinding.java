@@ -179,6 +179,30 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     setBigStation( bigStation );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getFeature()
+   * @Deprecated: Implementation of {@link org.kalypsodeegree.model.feature.binding.IFeatureWrapper2}, do not use any
+   *              more. This object already is a feature.
+   */
+  @Override
+  @Deprecated
+  public Feature getFeature( )
+  {
+    return this;
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapper2#getGmlID()
+   * @Deprecated: Implementation of {@link org.kalypsodeegree.model.feature.binding.IFeatureWrapper2}, do not use any
+   *              more. This object already is a feature.
+   */
+  @Override
+  @Deprecated
+  public String getGmlID( )
+  {
+    return getId();
+  }
+
   @Override
   public String getProfileType( )
   {
@@ -200,7 +224,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
 
     /* observation of profile */
     final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( this );
-    final IProfil profil = ProfilFactory.createProfil( type, observation, this );
+    final IProfil profil = ProfilFactory.createProfil( type, observation );
 
     /* station of profile */
     final BigDecimal bigStation = (BigDecimal) getProperty( ProfileFeatureFactory.QNAME_STATION );
@@ -219,7 +243,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     if( parent instanceof WspmWaterBody )
     {
       final WspmWaterBody waterBody = (WspmWaterBody) parent;
-      profil.setProperty( IWspmConstants.PROFIL_PROPERTY_WATERBODY_SRC, waterBody.getId() );
+      profil.setProperty( IWspmConstants.PROFIL_PROPERT_WATERBODY_SRC, waterBody.getId() );
     }
 
     /* profile objects of profile */
@@ -230,9 +254,13 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     {
       final IProfileObject profileObject = ProfileObjectFactory.createProfileObject( profil, obs );
       if( profileObject == null )
+      {
         System.out.println( "failed to create Object: " + obs.getName() ); //$NON-NLS-1$
+      }
       else
+      {
         profil.addProfileObjects( profileObject );
+      }
     }
 
     return profil;

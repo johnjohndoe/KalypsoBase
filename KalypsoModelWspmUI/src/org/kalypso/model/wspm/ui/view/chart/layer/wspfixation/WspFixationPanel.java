@@ -40,12 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart.layer.wspfixation;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
@@ -76,11 +74,8 @@ public class WspFixationPanel extends AbstractProfilView
   @Override
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
-    final Composite body = toolkit.createComposite( parent, SWT.FLAT );
-    body.setLayout( Layouts.createGridLayout() );
-
-    final WaterLevelResultTree tree = new WaterLevelResultTree( body, m_layer, toolkit );
-    tree.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    final WaterLevelResultTree tree = new WaterLevelResultTree( parent, m_layer, toolkit );
+    tree.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     tree.addFilter( new WaterLevelFixationFilter() );
 
     return tree;

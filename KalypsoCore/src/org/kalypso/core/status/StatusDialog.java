@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.status;
 
@@ -45,6 +45,13 @@ import java.io.StringWriter;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -52,23 +59,20 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
 
 /**
- * A dialog showing a status in full details.<br>
- * TODO:
- * <ul>
- * <li>Compactify exceptioncontrol, add details button for exceptions</li>
- * <li>'send mail' button</li>
- * <li>'copy to clipboard' button</li>
- * <li>toolbar for tree: collapse all, expand all</li>
- * </ul>
+ * A dialog showing a status in full details.
  * 
  * @author Gernot Belger
  */
 public class StatusDialog extends AbstractStatusDialog
 {
-  private boolean m_showAsTree = true;
+  private boolean m_showAsTree;
+
+  private boolean m_showTime = true;
 
   public StatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle )
   {
@@ -78,6 +82,11 @@ public class StatusDialog extends AbstractStatusDialog
   public StatusDialog( final Shell parentShell, final IStatus status, final String dialogTitle, final String[] dialogButtonLabels, final int defaultIndex )
   {
     super( parentShell, status, dialogTitle, dialogButtonLabels, defaultIndex );
+  }
+
+  public void setShowTimeTime( final boolean showTime )
+  {
+    m_showTime = showTime;
   }
 
   /**
@@ -97,9 +106,6 @@ public class StatusDialog extends AbstractStatusDialog
     GridLayoutFactory.fillDefaults().applyTo( composite );
 
     final IStatus status = getStatus();
-
-    // TODO: the exception control is not nice for normal users -> put into popup
-    // TODO: Layout problem: table might suppress exception panel completely :-(
     createExceptionControl( composite, status );
 
     createStatusControl( composite, status );
@@ -107,6 +113,9 @@ public class StatusDialog extends AbstractStatusDialog
     return composite;
   }
 
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#isResizable()
+   */
   @Override
   protected boolean isResizable( )
   {
@@ -141,6 +150,7 @@ public class StatusDialog extends AbstractStatusDialog
     stackLayoutData.heightHint = 100;
     stackText.setLayoutData( stackLayoutData );
     stackText.setText( sw.toString() );
+    stackText.setEnabled( true );
   }
 
   private void createStatusControl( final Composite parent, final IStatus status )
@@ -149,34 +159,62 @@ public class StatusDialog extends AbstractStatusDialog
     if( children == null || children.length == 0 )
       return;
 
-    if( children.length == 1 )
-    {
-      final StatusComposite statusPanel = new StatusComposite( parent, StatusComposite.DETAILS );
-      statusPanel.setStatus( children[0] );
-      statusPanel.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-      return;
-    }
+    final ColumnViewer columnViewer = createViewer( parent );
 
-    final StatusViewer viewer = createViewer( parent );
+    final Control viewerControl = columnViewer.getControl();
     final GridData viewerData = new GridData( SWT.FILL, SWT.FILL, true, true );
-    // Protect against vanishing...
-    viewerData.minimumHeight = 100;
-    // ...and too many children
-    viewerData.heightHint = 100;
-    viewer.getControl().setLayoutData( viewerData );
+// viewerData.widthHint = 200;
+// viewerData.heightHint = 100;
+    viewerControl.setLayoutData( viewerData );
 
-    final boolean showTimeColumn = StatusViewer.hasTime( children );
-    if( showTimeColumn )
-      viewer.addTimeColumn();
+    if( columnViewer instanceof TreeViewer )
+      StatusLabelProvider.addNavigationColumn( columnViewer );
+    StatusLabelProvider.addSeverityColumn( columnViewer );
+    StatusLabelProvider.addMessageColumn( columnViewer );
+    if( m_showTime )
+      StatusLabelProvider.addTimeColumn( columnViewer );
 
-    viewer.setInput( children );
+    if( columnViewer instanceof TreeViewer )
+      columnViewer.setContentProvider( new StatusTreeContentProvider() );
+    else
+      columnViewer.setContentProvider( new ArrayContentProvider() );
+    columnViewer.setInput( children );
+
+    columnViewer.addDoubleClickListener( new IDoubleClickListener()
+    {
+      @Override
+      public void doubleClick( final DoubleClickEvent event )
+      {
+        final IStructuredSelection sel = (IStructuredSelection) event.getSelection();
+        final IStatus selection = (IStatus) sel.getFirstElement();
+        if( selection != null )
+        {
+          final StatusDialog dialog = new StatusDialog( getShell(), selection, "Details" ); //$NON-NLS-1$
+          dialog.open();
+        }
+      }
+    } );
   }
 
-  private StatusViewer createViewer( final Composite parent )
+  private ColumnViewer createViewer( final Composite parent )
   {
+    final int viewerStyle = SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL;
+
     if( m_showAsTree )
-      return new StatusTreeViewer( parent, SWT.BORDER | SWT.FULL_SELECTION );
+    {
+      final TreeViewer treeViewer = new TreeViewer( parent, viewerStyle );
+      final Tree tree = treeViewer.getTree();
+      tree.setHeaderVisible( true );
+      tree.setLinesVisible( true );
+      return treeViewer;
+    }
     else
-      return new StatusTableViewer( parent, SWT.BORDER | SWT.FULL_SELECTION );
+    {
+      final TableViewer tableViewer = new TableViewer( parent, viewerStyle );
+      final Table table = tableViewer.getTable();
+      table.setHeaderVisible( true );
+      table.setLinesVisible( true );
+      return tableViewer;
+    }
   }
 }

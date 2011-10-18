@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml.outline.nodes;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -126,7 +126,7 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
           public void run( )
           {
             externIcon.dispose();
-          }
+          } 
         } );
       }
     }
@@ -275,9 +275,6 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.nodes.IThemeNode#getLabel()
-   */
   @Override
   public String getLabel( )
   {

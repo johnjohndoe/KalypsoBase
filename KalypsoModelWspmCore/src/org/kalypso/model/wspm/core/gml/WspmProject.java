@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,14 +36,16 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
+
+import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -57,8 +59,12 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * 
  * @author Gernot Belger
  */
-public abstract class WspmProject extends Feature_Impl implements IWspmProject
+public abstract class WspmProject extends Feature_Impl implements IWspmConstants
 {
+  public static final QName QNAME_MEMBER_WATER_BODY = new QName( NS_WSPM, "waterBodyMember" ); //$NON-NLS-1$
+
+  public static final QName QNAME = new QName( IWspmConstants.NS_WSPMPROJ, "WspmProject" ); //$NON-NLS-1$
+
   private IFeatureBindingCollection<WspmWaterBody> m_waterBodies = null;
 
   public WspmProject( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
@@ -66,25 +72,17 @@ public abstract class WspmProject extends Feature_Impl implements IWspmProject
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  @Override
   public IFeatureBindingCollection<WspmWaterBody> getWaterBodies( )
   {
     if( m_waterBodies == null )
-      m_waterBodies = new FeatureBindingCollection<WspmWaterBody>( this, WspmWaterBody.class, QN_MEMBER_WATER_BODY );
+      m_waterBodies = new FeatureBindingCollection<WspmWaterBody>( this, WspmWaterBody.class, QNAME_MEMBER_WATER_BODY );
 
     return m_waterBodies;
-  }
-
-  @Override
-  public IWspmClassification getClassificationMember( )
-  {
-    return getProperty( QN_CLASSIFICATION_MEMBER, IWspmClassification.class );
   }
 
   /**
    * Returns the {@link WspmWaterBody} with the given name.
    */
-  @Override
   public WspmWaterBody findWater( final String waterName )
   {
     final IFeatureBindingCollection<WspmWaterBody> waters = getWaterBodies();
@@ -97,7 +95,6 @@ public abstract class WspmProject extends Feature_Impl implements IWspmProject
     return null;
   }
 
-  @Override
   public WspmWaterBody findWaterByRefNr( final String refNr )
   {
     final IFeatureBindingCollection<WspmWaterBody> waters = getWaterBodies();
@@ -116,14 +113,13 @@ public abstract class WspmProject extends Feature_Impl implements IWspmProject
    * If a waterBody with the same name is already present, this will be retuned instead.
    * </p>
    */
-  @Override
   public WspmWaterBody createWaterBody( final String name, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
     final WspmWaterBody water = findWater( name );
     if( water != null )
       return water;
 
-    final WspmWaterBody wspmWaterBody = (WspmWaterBody) FeatureHelper.addFeature( this, QN_MEMBER_WATER_BODY, null );
+    final WspmWaterBody wspmWaterBody = (WspmWaterBody) FeatureHelper.addFeature( this, QNAME_MEMBER_WATER_BODY, null );
 
     // set default values
     wspmWaterBody.setName( name );
@@ -132,15 +128,5 @@ public abstract class WspmProject extends Feature_Impl implements IWspmProject
     wspmWaterBody.setDirectionUpstreams( isDirectionUpstreams );
 
     return wspmWaterBody;
-  }
-
-  @Override
-  public IWspmClassification createClassificationMember( )
-  {
-    final IRelationType relation = (IRelationType) getFeatureType().getProperty( QN_CLASSIFICATION_MEMBER );
-    final IFeatureType type = relation.getTargetFeatureType();
-    final IWspmClassification classification = (IWspmClassification) getWorkspace().createFeature( this, relation, type );
-    setProperty( QN_CLASSIFICATION_MEMBER, classification );
-    return classification;
   }
 }

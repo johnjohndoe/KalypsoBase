@@ -25,7 +25,6 @@ import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -37,8 +36,6 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
  */
 public class EditableLineLayer extends AbstractLineLayer implements IEditableChartLayer
 {
-  // FIXME: Aaarg, what is that?! MUST be an implementation details of the mapper/axes
-  final private DataOperatorHelper m_dataOpertatorHelper = new DataOperatorHelper();
 
   private final EditableTestDataContainer m_data;
 
@@ -108,13 +105,8 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     final ArrayList<Point> path = new ArrayList<Point>();
     final IAxis domAxis = getDomainAxis();
     final IAxis tarAxis = getTargetAxis();
-
-    final IDataOperator dopDom = m_dataOpertatorHelper.getDataOperator( getTargetAxis().getDataClass() );
-    final IDataOperator dopTar = m_dataOpertatorHelper.getDataOperator( getDomainAxis().getDataClass() );
-
-    // FIXME: Kim sagen
-    // final IDataOperator dopDom = domAxis.getDataOperator( m_domainData.get( 0 ).getClass() );
-    // final IDataOperator dopTar = tarAxis.getDataOperator( m_targetData.get( 0 ).getClass() );
+    final IDataOperator dopDom = domAxis.getDataOperator( m_domainData.get( 0 ).getClass() );
+    final IDataOperator dopTar = tarAxis.getDataOperator( m_targetData.get( 0 ).getClass() );
 
     final Comparator comp = dopDom.getComparator();
 

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.i18n;
 
+import java.net.URL;
 import java.util.List;
 
 import org.w3c.dom.Element;
@@ -58,7 +59,7 @@ public class NullTranslator implements ITranslator
   }
 
   @Override
-  public void configure( final ITranslatorContext context, final List<Element> any )
+  public void configure( final URL context, final List<Element> any )
   {
   }
 

@@ -42,7 +42,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -187,7 +188,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   protected GM_Envelope calculateEnvelope( )
   {
     // as we overwrite getEnvelope, this should never be called
-    throw new UnsupportedOperationException();
+    throw new NotImplementedException();
   }
 
   /**
