@@ -65,12 +65,11 @@ public class ZmlLabelProvider
 
   private final ZmlRule[] m_activeRules;
 
-  public ZmlLabelProvider( final IZmlModelRow row, final ExtendedZmlTableColumn column )
+  public ZmlLabelProvider( final IZmlModelRow row, final ExtendedZmlTableColumn column, final ZmlRule[] activeRules )
   {
     m_row = row;
     m_column = column;
-
-    m_activeRules = column.findActiveRules( row );
+    m_activeRules = activeRules;
   }
 
   public Color getBackground( )

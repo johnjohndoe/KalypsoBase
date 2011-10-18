@@ -43,11 +43,12 @@ package org.kalypso.zml.ui.table.layout;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 
 /**
@@ -55,26 +56,15 @@ import org.kalypso.zml.ui.table.ZmlTableComposite;
  */
 public class ZmlTableLayoutHandler
 {
+  private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "updating of time series table layout" ); // $NON-NLS-1$
+
   private static final Color COLOR_TABLE_DISABLED = new Color( null, new RGB( 0xea, 0xea, 0xea ) );
 
   private static final Color COLOR_TABLE_ENABLED = new Color( null, new RGB( 0xff, 0xff, 0xff ) );
 
   protected final ZmlTableComposite m_table;
 
-  private final UIJob m_job = new UIJob( "Aktualisiere Tabellen-Layout" )
-  {
-
-    @Override
-    public IStatus runInUIThread( final IProgressMonitor monitor )
-    {
-      if( m_table.isDisposed() )
-        return Status.CANCEL_STATUS;
-
-      updateColumns();
-
-      return Status.OK_STATUS;
-    }
-  };
+  private UIJob m_job;
 
   public ZmlTableLayoutHandler( final ZmlTableComposite table )
   {
@@ -83,13 +73,32 @@ public class ZmlTableLayoutHandler
 
   public void tableChanged( )
   {
-    if( m_job.getState() == Job.SLEEPING || m_job.getState() == Job.WAITING || m_job.getState() == Job.RUNNING )
-      m_job.cancel();
 
-    m_job.schedule();
+    synchronized( this )
+    {
+      if( Objects.isNotNull( m_job ) )
+        m_job.cancel();
+
+      m_job = new UIJob( "Aktualisiere Tabellen-Layout" )
+      {
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
+        {
+          if( m_table.isDisposed() )
+            return Status.CANCEL_STATUS;
+
+          doUpdateColumns();
+
+          return Status.OK_STATUS;
+        }
+      };
+
+      m_job.setRule( MUTEX_TABLE_UPDATE );
+      m_job.schedule( 100 );
+    }
   }
 
-  protected void updateColumns( )
+  protected void doUpdateColumns( )
   {
     final PackTableColumnVisitor visitor = new PackTableColumnVisitor();
     m_table.accept( visitor );
