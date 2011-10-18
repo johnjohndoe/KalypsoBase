@@ -57,7 +57,7 @@ import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
 import org.kalypso.zml.core.table.model.references.ZmlValueReferenceFactory;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
+import org.kalypso.zml.ui.table.provider.ZmlTooltipProvider;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
@@ -65,9 +65,9 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
  */
 public class SumValueEditingStrategy extends AbstractEditingStrategy
 {
-  private final ZmlLabelProvider m_labelProvider;
+  private final ZmlTooltipProvider m_labelProvider;
 
-  public SumValueEditingStrategy( final ExtendedZmlTableColumn column, final ZmlLabelProvider labelProvider )
+  public SumValueEditingStrategy( final ExtendedZmlTableColumn column, final ZmlTooltipProvider labelProvider )
   {
     super( column );
     m_labelProvider = labelProvider;

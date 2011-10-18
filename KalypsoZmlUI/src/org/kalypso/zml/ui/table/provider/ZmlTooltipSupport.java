@@ -66,7 +66,7 @@ import com.google.common.base.Strings;
  */
 public class ZmlTooltipSupport
 {
-  private static final Image IMG = new Image( null, ZmlLabelProvider.class.getResourceAsStream( "icons/help_hint_48.png" ) ); //$NON-NLS-1$
+  private static final Image IMG = new Image( null, ZmlTooltipProvider.class.getResourceAsStream( "icons/help_hint_48.png" ) ); //$NON-NLS-1$
 
   private final ExtendedZmlTableColumn m_column;
 
