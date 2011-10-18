@@ -120,7 +120,7 @@ public class ZmlTableCellPaintListener implements Listener
 
   public void doPaintBackground( final Event event )
   {
-    if( (event.detail & SWT.SELECTED) == 1 )
+    if( (event.detail & SWT.SELECTED) != 0 )
       return; /* item selected */
 
     final ZmlTableCellPainter renderer = findCell( event );

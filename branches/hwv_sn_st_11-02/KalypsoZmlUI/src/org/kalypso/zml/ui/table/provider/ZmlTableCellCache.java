@@ -63,7 +63,7 @@ import com.google.common.collect.MapMaker;
 public class ZmlTableCellCache
 {
 
-  class CacheEntry
+  static class CacheEntry
   {
     private final IZmlModelRow m_row;
 
@@ -190,6 +190,11 @@ public class ZmlTableCellCache
       e.printStackTrace();
     }
 
+  }
+
+  public synchronized void clear( )
+  {
+    m_cache.clear();
   }
 
 }

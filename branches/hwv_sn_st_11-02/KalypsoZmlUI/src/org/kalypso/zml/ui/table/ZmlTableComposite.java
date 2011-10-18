@@ -201,8 +201,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       if( hasToolbar( tableType ) )
         initToolbar( tableType, toolbar, toolkit );
     }
-
-    refresh();
   }
 
   private boolean hasToolbar( final ZmlTableType tableType )
@@ -289,10 +287,13 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       if( Objects.isNotNull( m_updateJob ) )
         m_updateJob.cancel();
 
+      m_cache.clear();
+
       m_updateJob = new ZmlTableUiUpdateJob( this );
       m_updateJob.setRule( MUTEX_TABLE_UPDATE );
 
       m_updateJob.schedule( 200 );
+
     }
   }
 
@@ -355,12 +356,15 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   {
     final List<IZmlTableRow> rows = new ArrayList<IZmlTableRow>();
 
-    final Table table = m_tableViewer.getTable();
-    final TableItem[] items = table.getItems();
-    for( final TableItem item : items )
+    synchronized( this )
     {
-      final IZmlModelRow row = (IZmlModelRow) item.getData();
-      rows.add( new ZmlTableRow( this, row ) );
+      final Table table = m_tableViewer.getTable();
+      final TableItem[] items = table.getItems();
+      for( final TableItem item : items )
+      {
+        final IZmlModelRow row = (IZmlModelRow) item.getData();
+        rows.add( new ZmlTableRow( this, row ) );
+      }
     }
 
     return rows.toArray( new IZmlTableRow[] {} );

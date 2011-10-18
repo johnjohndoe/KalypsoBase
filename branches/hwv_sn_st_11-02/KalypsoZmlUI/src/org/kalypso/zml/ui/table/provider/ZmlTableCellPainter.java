@@ -75,11 +75,17 @@ public class ZmlTableCellPainter
 
   private Font m_font;
 
+  private final ZmlRule[] m_activeRules;
+
   public ZmlTableCellPainter( final IZmlTableCell cell )
   {
     m_cell = cell;
 
-    m_provider = new ZmlLabelProvider( cell.getRow().getModelRow(), getColumn() );
+    final ExtendedZmlTableColumn column = getColumn();
+
+    final IZmlModelRow modelRow = cell.getRow().getModelRow();
+    m_activeRules = column.findActiveRules( modelRow );
+    m_provider = new ZmlLabelProvider( modelRow, column, m_activeRules );
   }
 
   public IZmlTableCell getCell( )
@@ -120,13 +126,11 @@ public class ZmlTableCellPainter
     final Point ptr = new Point( 0, 0 );
 
     final IZmlModelRow row = m_cell.getRow().getModelRow();
-    final ExtendedZmlTableColumn column = getColumn();
-    final ZmlRule[] rules = column.findActiveRules( row );
-    final IZmlValueReference reference = row.get( column.getModelColumn() );
+    final IZmlValueReference reference = row.get( getColumn().getModelColumn() );
     if( Objects.isNull( reference ) )
       return ptr;
 
-    for( final ZmlRule rule : rules )
+    for( final ZmlRule rule : m_activeRules )
     {
       try
       {
