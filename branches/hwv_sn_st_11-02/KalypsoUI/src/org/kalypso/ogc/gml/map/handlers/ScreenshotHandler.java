@@ -82,8 +82,11 @@ public class ScreenshotHandler extends AbstractHandler
       /* Get the shell. */
       Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
+      /* Get the map panel. */
+      IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
+
       /* Create the dialog for asking the user for information, regarding the image target and format. */
-      ScreenshotDialog dialog = new ScreenshotDialog( shell );
+      ScreenshotDialog dialog = new ScreenshotDialog( shell, mapPanel.getWidth(), mapPanel.getHeight() );
 
       /* Open the dialog. */
       int open = dialog.open();
@@ -105,9 +108,6 @@ public class ScreenshotHandler extends AbstractHandler
 
       /* Create the output stream. */
       os = new BufferedOutputStream( new FileOutputStream( targetFile ) );
-
-      /* Get the map panel. */
-      IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
       /* Export the image. */
       MapExportableObject export = new MapExportableObject( mapPanel, targetFile.getName(), width, height, insets, hasBorder ? 1 : -1, format );

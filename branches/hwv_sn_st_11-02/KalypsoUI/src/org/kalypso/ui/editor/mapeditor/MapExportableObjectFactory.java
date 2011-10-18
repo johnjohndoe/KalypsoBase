@@ -81,8 +81,8 @@ public class MapExportableObjectFactory implements IExportableObjectFactory
   public IExportableObject[] createExportableObjects( Configuration conf )
   {
     String preferredDocumentName = m_mapPanel.getMapModell().getName().getValue();
-    int width = conf.getInt( ImagePropertiesWizardPage.CONFIG_IMAGE_WIDTH, 640 );
-    int height = conf.getInt( ImagePropertiesWizardPage.CONFIG_IMAGE_HEIGHT, 480 );
+    int width = conf.getInt( ImagePropertiesWizardPage.CONFIG_IMAGE_WIDTH, m_mapPanel.getWidth() );
+    int height = conf.getInt( ImagePropertiesWizardPage.CONFIG_IMAGE_HEIGHT, m_mapPanel.getHeight() );
     Insets insets = (Insets) conf.getProperty( ImagePropertiesWizardPage.CONFIG_INSETS );
     boolean border = conf.getBoolean( ImagePropertiesWizardPage.CONFIG_HAS_BORDER, false );
     int borderWidth = border ? 1 : 0;
