@@ -81,9 +81,6 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     m_areaStyle = areaStyle;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
-   */
   @Override
   public void paint( final GC gc )
   {
@@ -189,27 +186,18 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     getEventHandler().fireLayerContentChanged( this );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
-   */
   @Override
   public IDataRange<Number> getDomainRange( )
   {
     return null;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
-   */
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
     return null;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#createLegendEntries()
-   */
   @Override
   protected ILegendEntry[] createLegendEntries( )
   {

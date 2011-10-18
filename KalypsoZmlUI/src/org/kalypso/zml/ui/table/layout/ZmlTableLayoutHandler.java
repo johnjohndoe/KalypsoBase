@@ -59,11 +59,9 @@ public class ZmlTableLayoutHandler
 
   private static final Color COLOR_TABLE_ENABLED = new Color( null, new RGB( 0xff, 0xff, 0xff ) );
 
-  protected boolean m_firstChange = true;
-
   protected final ZmlTableComposite m_table;
 
-  private final UIJob m_job = new UIJob( "" )
+  private final UIJob m_job = new UIJob( "Aktualisiere Tabellen-Layout" )
   {
 
     @Override

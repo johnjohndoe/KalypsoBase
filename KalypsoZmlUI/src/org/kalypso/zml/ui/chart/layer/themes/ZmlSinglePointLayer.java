@@ -83,9 +83,6 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
     setup( context );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getProvider()
-   */
   @Override
   public IZmlLayerProvider getProvider( )
   {
@@ -108,9 +105,6 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
     setDataHandler( handler );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -120,18 +114,12 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
     super.dispose();
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#onObservationChanged()
-   */
   @Override
   public void onObservationChanged( )
   {
     getEventHandler().fireLayerContentChanged( this );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
-   */
   @Override
   public IDataRange<Number> getDomainRange( )
   {
@@ -152,9 +140,6 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
     return new DataRange<Number>( min, max );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
-   */
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
   {
@@ -173,9 +158,6 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
     return new DataRange<Number>( min, max );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
-   */
   @Override
   public void paint( final GC gc )
   {
@@ -204,18 +186,12 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
     }
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#getDataHandler()
-   */
   @Override
   public IZmlLayerDataHandler getDataHandler( )
   {
     return m_handler;
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setDataHandler(org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler)
-   */
   @Override
   public void setDataHandler( final IZmlLayerDataHandler handler )
   {
@@ -267,9 +243,6 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
     return visitor.getValue();
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setLabelDescriptor(java.lang.String)
-   */
   @Override
   public void setLabelDescriptor( final String labelDescriptor )
   {

@@ -60,18 +60,12 @@ public class ZmlConstantLineLayerProvider extends AbstractLayerProvider implemen
 {
   public static final String ID = "org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider"; //$NON-NLS-1$
 
-  /**
-   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
-   */
   @Override
   public IZmlLayer getLayer( final URL context )
   {
     return new ZmlConstantLineLayer( this, getStyleSet(), false, context );
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.data.IZmlLayerProvider#getRequestHandler()
-   */
   @Override
   public IRequestHandler getRequestHandler( )
   {

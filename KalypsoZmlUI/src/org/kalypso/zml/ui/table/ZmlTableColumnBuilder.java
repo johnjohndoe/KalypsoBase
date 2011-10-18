@@ -72,9 +72,6 @@ public class ZmlTableColumnBuilder implements ICoreRunnableWithProgress
     m_column = column;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {

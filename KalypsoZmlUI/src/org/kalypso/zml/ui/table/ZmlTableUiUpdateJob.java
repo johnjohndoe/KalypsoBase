@@ -59,9 +59,6 @@ public class ZmlTableUiUpdateJob extends UIJob
     m_table = table;
   }
 
-  /**
-   * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus runInUIThread( final IProgressMonitor monitor )
   {
