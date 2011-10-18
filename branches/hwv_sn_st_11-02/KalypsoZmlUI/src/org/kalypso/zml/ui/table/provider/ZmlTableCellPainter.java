@@ -63,7 +63,7 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 /**
  * @author Dirk Kuch
  */
-public class ZmlTabelCellPainter
+public class ZmlTableCellPainter
 {
   private final IZmlTableCell m_cell;
 
@@ -75,7 +75,7 @@ public class ZmlTabelCellPainter
 
   private Font m_font;
 
-  public ZmlTabelCellPainter( final IZmlTableCell cell )
+  public ZmlTableCellPainter( final IZmlTableCell cell )
   {
     m_cell = cell;
 
@@ -227,7 +227,7 @@ public class ZmlTabelCellPainter
 
   public boolean isVisble( )
   {
-    final ExtendedZmlTableColumn column = getColumn();
+    final IZmlTableColumn column = m_cell.getColumn();
 
     return column.isVisible();
   }
@@ -273,4 +273,5 @@ public class ZmlTabelCellPainter
   {
     event.gc.fillRectangle( new Rectangle( event.x, event.y, event.width, event.height ) );
   }
+
 }

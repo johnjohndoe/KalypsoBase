@@ -84,6 +84,7 @@ import org.kalypso.zml.ui.table.layout.ZmlTablePager;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.provider.ZmlTableCellCache;
 import org.kalypso.zml.ui.table.provider.ZmlTableCellPaintListener;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
@@ -114,6 +115,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   protected ZmlTableSelectionHandler m_selection;
 
   final ZmlTablePager m_pager = new ZmlTablePager( this );
+
+  private final ZmlTableCellCache m_cache = new ZmlTableCellCache();
 
   public ZmlTableComposite( final IZmlModel model, final Composite parent, final FormToolkit toolkit )
   {
@@ -428,5 +431,11 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public IZmlTableFocusHandler getFocusHandler( )
   {
     return m_focus;
+  }
+
+  @Override
+  public ZmlTableCellCache getCache( )
+  {
+    return m_cache;
   }
 }

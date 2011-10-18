@@ -66,4 +66,6 @@ public interface IZmlTableColumn extends IZmlTableObject
   IZmlTableCell findCell( IZmlModelRow row );
 
   boolean isIndexColumn( );
+
+  boolean isVisible( );
 }

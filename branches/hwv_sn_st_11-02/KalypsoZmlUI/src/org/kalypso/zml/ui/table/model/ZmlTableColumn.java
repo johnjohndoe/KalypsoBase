@@ -132,6 +132,15 @@ public class ZmlTableColumn extends ZmlTableElement implements IZmlTableColumn
   }
 
   @Override
+  public boolean isVisible( )
+  {
+    if( isIndexColumn() )
+      return true;
+
+    return getModelColumn() != null;
+  }
+
+  @Override
   public IZmlTableCell[] getCells( )
   {
     final TableViewer viewer = (TableViewer) m_column.getViewer();

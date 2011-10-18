@@ -51,9 +51,6 @@ import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.ZmlTableCell;
-import org.kalypso.zml.ui.table.model.ZmlTableRow;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -91,7 +88,7 @@ public class ZmlTableCellPaintListener implements Listener
    */
   private void doMeasureItem( final Event event )
   {
-    final ZmlTabelCellPainter renderer = findCell( event );
+    final ZmlTableCellPainter renderer = findCell( event );
     if( Objects.isNull( renderer ) )
       return;
 
@@ -127,7 +124,7 @@ public class ZmlTableCellPaintListener implements Listener
     if( (event.detail & SWT.SELECTED) == 1 )
       return; /* item selected */
 
-    final ZmlTabelCellPainter renderer = findCell( event );
+    final ZmlTableCellPainter renderer = findCell( event );
     if( Objects.isNull( renderer ) )
       return;
 
@@ -147,7 +144,7 @@ public class ZmlTableCellPaintListener implements Listener
 
   public void doPaintItem( final Event event )
   {
-    final ZmlTabelCellPainter renderer = findCell( event );
+    final ZmlTableCellPainter renderer = findCell( event );
     if( Objects.isNull( renderer ) )
       return;
 
@@ -173,13 +170,13 @@ public class ZmlTableCellPaintListener implements Listener
     bounds.height = Math.max( bounds.height, extend.y );
   }
 
-  private int getTableColumnWidth( final ZmlTabelCellPainter renderer )
+  private int getTableColumnWidth( final ZmlTableCellPainter renderer )
   {
     return renderer.getCell().getColumn().getTableViewerColumn().getColumn().getWidth();
   }
 
   // FIXME caching
-  private ZmlTabelCellPainter findCell( final Event event )
+  private ZmlTableCellPainter findCell( final Event event )
   {
     final IZmlModelRow row = (IZmlModelRow) event.item.getData();
     final IZmlTableColumn[] columns = m_table.getColumns();
@@ -188,12 +185,9 @@ public class ZmlTableCellPaintListener implements Listener
       return null;
 
     final IZmlTableColumn column = columns[index];
-    if( column instanceof ExtendedZmlTableColumn )
-      if( !((ExtendedZmlTableColumn) column).isVisible() )
-        return null;
+    if( !column.isVisible() )
+      return null;
 
-    final ZmlTableCell cell = new ZmlTableCell( new ZmlTableRow( m_table, row ), column );
-
-    return new ZmlTabelCellPainter( cell );
+    return m_table.getCache().getPainter( row, column );
   }
 }

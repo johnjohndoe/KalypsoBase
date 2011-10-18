@@ -75,7 +75,6 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     if( obj instanceof ZmlTableCell )
     {
       final ZmlTableCell other = (ZmlTableCell) obj;
-
       return getValueReference() == other.getValueReference();
     }
 

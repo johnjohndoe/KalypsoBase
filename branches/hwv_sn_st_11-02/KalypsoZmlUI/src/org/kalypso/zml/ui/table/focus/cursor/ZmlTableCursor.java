@@ -26,10 +26,7 @@ import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.model.ZmlTableCell;
-import org.kalypso.zml.ui.table.model.ZmlTableRow;
-import org.kalypso.zml.ui.table.provider.ZmlTabelCellPainter;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.ZmlTableCellPainter;
 
 public class ZmlTableCursor extends AbstractZmlCellCursor
 {
@@ -52,21 +49,21 @@ public class ZmlTableCursor extends AbstractZmlCellCursor
     if( Objects.isNull( cell ) || cell.getControl().isDisposed() )
       return;
 
-    final ZmlTabelCellPainter renderer = new ZmlTabelCellPainter( findCell( cell ) );
-    if( Objects.isNull( renderer ) )
+    final ZmlTableCellPainter painter = getPainter( cell );
+    if( Objects.isNull( painter ) )
       return;
 
     try
     {
       drawBackground( event );
 
-      renderer.initGc( event );
+      painter.initGc( event );
 
       final Rectangle bounds = event.getBounds();
-      apply( bounds, renderer.drawImage( event.gc, bounds ) );
-      apply( bounds, renderer.drawText( event.gc, bounds ) );
+      apply( bounds, painter.drawImage( event.gc, bounds ) );
+      apply( bounds, painter.drawText( event.gc, bounds ) );
 
-      renderer.resetGc( event );
+      painter.resetGc( event );
 
       event.detail &= ~SWT.SELECTED;
       event.detail &= ~SWT.FOREGROUND;
@@ -106,7 +103,7 @@ public class ZmlTableCursor extends AbstractZmlCellCursor
     bounds.height = Math.max( bounds.height, extend.y );
   }
 
-  private IZmlTableCell findCell( final ViewerCell cell )
+  private ZmlTableCellPainter getPainter( final ViewerCell cell )
   {
     final IZmlModelRow row = (IZmlModelRow) cell.getElement();
     final IZmlTableColumn[] columns = m_table.getColumns();
@@ -115,11 +112,10 @@ public class ZmlTableCursor extends AbstractZmlCellCursor
       return null;
 
     final IZmlTableColumn column = columns[index];
-    if( column instanceof ExtendedZmlTableColumn )
-      if( !((ExtendedZmlTableColumn) column).isVisible() )
-        return null;
+    if( !column.isVisible() )
+      return null;
 
-    return new ZmlTableCell( new ZmlTableRow( m_table, row ), column );
+    return m_table.getCache().getPainter( row, column );
   }
 
   @Override
