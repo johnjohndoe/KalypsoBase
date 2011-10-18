@@ -173,14 +173,6 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
     return m_mapper.findActiveRules( reference );
   }
 
-  public boolean isVisible( )
-  {
-    if( isIndexColumn() )
-      return true;
-
-    return getModelColumn() != null;
-  }
-
   public void reset( )
   {
     m_mapper.reset();

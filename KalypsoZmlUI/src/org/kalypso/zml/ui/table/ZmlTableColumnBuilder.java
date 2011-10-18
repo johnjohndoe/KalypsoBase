@@ -47,11 +47,13 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.provider.ZmlTooltipProvider;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
@@ -99,13 +101,23 @@ public class ZmlTableColumnBuilder implements ICoreRunnableWithProgress
       @Override
       public void controlResized( final ControlEvent e )
       {
-        m_table.getFocusHandler().getCursor().redraw();
+        doRedraw();
       }
 
       @Override
       public void controlMoved( final ControlEvent e )
       {
-        m_table.getFocusHandler().getCursor().redraw();
+        doRedraw();
+      }
+
+      private void doRedraw( )
+      {
+        final IZmlTableCell cell = m_table.getFocusHandler().getFocusTableCell();
+        if( Objects.isNull( cell ) )
+          return;
+
+        if( Objects.equal( cell.getColumn(), column ) )
+          m_table.getFocusHandler().getCursor().redraw();
       }
     } );
 
