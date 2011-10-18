@@ -58,6 +58,7 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.provider.ZmlTooltipProvider;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
@@ -217,12 +218,20 @@ public class ZmlTableEditingSupport extends EditingSupport
     return m_cellEditor;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
-   */
   @Override
   protected boolean canEdit( final Object element )
   {
+    if( !m_column.getColumnType().isEditable() )
+      return false;
+
+    if( element instanceof IZmlModelRow )
+    {
+      final IZmlModelRow row = (IZmlModelRow) element;
+      final IZmlValueReference reference = row.get( m_column.getModelColumn() );
+
+      return reference != null;
+    }
+
     return true;
   }
 
