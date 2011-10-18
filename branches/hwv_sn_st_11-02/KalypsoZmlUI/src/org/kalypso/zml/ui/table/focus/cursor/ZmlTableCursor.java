@@ -28,7 +28,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.ZmlTableCell;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
-import org.kalypso.zml.ui.table.provider.ZmlTabelCellRenderer;
+import org.kalypso.zml.ui.table.provider.ZmlTabelCellPainter;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 public class ZmlTableCursor extends AbstractZmlCellCursor
@@ -56,7 +56,7 @@ public class ZmlTableCursor extends AbstractZmlCellCursor
     {
       if( cell.getControl().isDisposed() )
         return;
-      final ZmlTabelCellRenderer renderer = new ZmlTabelCellRenderer( findCell( cell ) );
+      final ZmlTabelCellPainter renderer = new ZmlTabelCellPainter( findCell( cell ) );
       if( Objects.isNull( renderer ) )
         return;
 

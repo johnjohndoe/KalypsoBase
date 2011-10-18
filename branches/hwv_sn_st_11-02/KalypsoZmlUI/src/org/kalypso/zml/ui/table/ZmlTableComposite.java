@@ -84,6 +84,7 @@ import org.kalypso.zml.ui.table.layout.ZmlTablePager;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.provider.ZmlTableCellPaintListener;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
 
@@ -186,7 +187,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       addBasicFilters();
 
       final Table table = m_tableViewer.getTable();
-      final ZmlTablePaintListener paintListener = new ZmlTablePaintListener( this );
+      final ZmlTableCellPaintListener paintListener = new ZmlTableCellPaintListener( this );
       table.addListener( SWT.EraseItem, paintListener );
       table.addListener( SWT.MeasureItem, paintListener );
       table.addListener( SWT.PaintItem, paintListener );

@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.provider;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -48,21 +48,21 @@ import org.eclipse.swt.widgets.Listener;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
+import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.ZmlTableCell;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
-import org.kalypso.zml.ui.table.provider.ZmlTabelCellRenderer;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTablePaintListener implements Listener
+public class ZmlTableCellPaintListener implements Listener
 {
   private final IZmlTable m_table;
 
-  public ZmlTablePaintListener( final IZmlTable table )
+  public ZmlTableCellPaintListener( final IZmlTable table )
   {
     m_table = table;
   }
@@ -91,7 +91,7 @@ public class ZmlTablePaintListener implements Listener
    */
   private void doMeasureItem( final Event event )
   {
-    final ZmlTabelCellRenderer renderer = findCell( event );
+    final ZmlTabelCellPainter renderer = findCell( event );
     if( Objects.isNull( renderer ) )
       return;
 
@@ -127,7 +127,7 @@ public class ZmlTablePaintListener implements Listener
     if( (event.detail & SWT.SELECTED) == 1 )
       return; /* item selected */
 
-    final ZmlTabelCellRenderer renderer = findCell( event );
+    final ZmlTabelCellPainter renderer = findCell( event );
     if( Objects.isNull( renderer ) )
       return;
 
@@ -147,7 +147,7 @@ public class ZmlTablePaintListener implements Listener
 
   public void doPaintItem( final Event event )
   {
-    final ZmlTabelCellRenderer renderer = findCell( event );
+    final ZmlTabelCellPainter renderer = findCell( event );
     if( Objects.isNull( renderer ) )
       return;
 
@@ -173,13 +173,13 @@ public class ZmlTablePaintListener implements Listener
     bounds.height = Math.max( bounds.height, extend.y );
   }
 
-  private int getTableColumnWidth( final ZmlTabelCellRenderer renderer )
+  private int getTableColumnWidth( final ZmlTabelCellPainter renderer )
   {
     return renderer.getCell().getColumn().getTableViewerColumn().getColumn().getWidth();
   }
 
   // FIXME caching
-  private ZmlTabelCellRenderer findCell( final Event event )
+  private ZmlTabelCellPainter findCell( final Event event )
   {
     final IZmlModelRow row = (IZmlModelRow) event.item.getData();
     final IZmlTableColumn[] columns = m_table.getColumns();
@@ -194,6 +194,6 @@ public class ZmlTablePaintListener implements Listener
 
     final ZmlTableCell cell = new ZmlTableCell( new ZmlTableRow( m_table, row ), column );
 
-    return new ZmlTabelCellRenderer( cell );
+    return new ZmlTabelCellPainter( cell );
   }
 }
