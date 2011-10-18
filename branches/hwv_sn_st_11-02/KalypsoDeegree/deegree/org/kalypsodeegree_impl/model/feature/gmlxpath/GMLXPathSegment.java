@@ -89,11 +89,11 @@ public final class GMLXPathSegment
     return xSegments;
   }
 
-  private final static XElementFactory m_fac = new XElementFactory();
+  private static final XElementFactory m_fac = new XElementFactory();
 
-  private transient final IXElement m_addressXElement;
+  private final transient IXElement m_addressXElement;
 
-  private transient final IXElement m_conditionXElement;
+  private final transient IXElement m_conditionXElement;
 
   private final String m_segment;
 
