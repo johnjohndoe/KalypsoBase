@@ -41,7 +41,6 @@
 package org.kalypso.zml.ui.table;
 
 import org.eclipse.jface.viewers.TableViewer;
-import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
@@ -54,41 +53,38 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
  */
 public interface IZmlTable
 {
-
-  IZmlTableColumn findColumn( BaseColumn column );
-
-  TableViewer getViewer( );
-
-  IZmlModel getDataModel( );
-
-  IZmlTableColumn[] getColumns( );
-
-  IZmlTableRow[] getRows( );
-
-  IZmlTableRow getRow( int index );
-
-  /**
-   * @return time resolution of displayed time series (one hour spacing or six hour spaceing, aso)
-   */
-  int getResolution( );
-
-  void refresh( );
-
-  void addListener( IZmlTableListener listener );
-
-  void removeListener( IZmlTableListener mListener );
-
-  void add( ExtendedZmlTableColumn column );
-
-  IZmlTableSelectionHandler getSelectionHandler( );
-
-  IZmlTableFocusHandler getFocusHandler( );
-
   void accept( IZmlTableColumnVisitor visitor );
 
   void accept( IZmlTableRowVisitor visitor );
 
+  void add( ExtendedZmlTableColumn column );
+
+  void addListener( IZmlTableListener listener );
+
   IZmlTableColumn findColumn( int columnIndex );
 
   ZmlTableCellCache getCache( );
+
+  IZmlTableColumn[] getColumns( );
+
+  IZmlModel getDataModel( );
+
+  IZmlTableFocusHandler getFocusHandler( );
+
+  /**
+   * @return time resolution of displayed time series (one hour spacing or six hour spacing, aso)
+   */
+  int getResolution( );
+
+  IZmlTableRow getRow( int index );
+
+  IZmlTableRow[] getRows( );
+
+  IZmlTableSelectionHandler getSelectionHandler( );
+
+  TableViewer getViewer( );
+
+  void refresh( );
+
+  void removeListener( IZmlTableListener mListener );
 }

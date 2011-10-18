@@ -351,19 +351,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   }
 
   @Override
-  public IZmlTableColumn findColumn( final BaseColumn column )
-  {
-    final IZmlTableColumn[] tableColumns = getColumns();
-    for( final IZmlTableColumn tableColumn : tableColumns )
-    {
-      if( tableColumn.getColumnType().equals( column ) )
-        return tableColumn;
-    }
-
-    return null;
-  }
-
-  @Override
   public IZmlTableRow[] getRows( )
   {
     final List<IZmlTableRow> rows = new ArrayList<IZmlTableRow>();
@@ -401,18 +388,12 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     return null;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTable#add(org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn)
-   */
   @Override
   public void add( final ExtendedZmlTableColumn column )
   {
     m_columns.add( column );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTable#getSelectionHandler()
-   */
   @Override
   public IZmlTableSelectionHandler getSelectionHandler( )
   {
@@ -424,9 +405,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     return ArrayUtils.isEmpty( getRows() );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTable#getFocusHandler()
-   */
   @Override
   public IZmlTableFocusHandler getFocusHandler( )
   {

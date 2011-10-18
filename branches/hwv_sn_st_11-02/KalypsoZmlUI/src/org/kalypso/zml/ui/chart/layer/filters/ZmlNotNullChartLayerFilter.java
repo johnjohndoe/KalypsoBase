@@ -50,18 +50,12 @@ public class ZmlNotNullChartLayerFilter extends AbstractZmlChartLayerFilter
 {
   public static final String ID = "org.kalypso.chart.layer.filter.not.null"; // $NON-NLS-1$
 
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayerFilter#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
     return ID;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter#isFiltered(java.lang.Object)
-   */
   @Override
   protected boolean filter( final IObservationValueContainer container )
   {

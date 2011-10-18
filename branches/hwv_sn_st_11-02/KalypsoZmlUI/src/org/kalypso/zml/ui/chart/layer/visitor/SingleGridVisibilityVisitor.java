@@ -59,9 +59,6 @@ public class SingleGridVisibilityVisitor extends AbstractChartLayerVisitor
 {
   private boolean m_visibility = true;
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
   @Override
   public void visit( final IChartLayer layer )
   {

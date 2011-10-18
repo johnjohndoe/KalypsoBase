@@ -78,7 +78,6 @@ public class ZmlTableCellPaintListener implements Listener
       case SWT.EraseItem:
         doPaintBackground( event );
         break;
-
     }
   }
 
@@ -175,7 +174,6 @@ public class ZmlTableCellPaintListener implements Listener
     return renderer.getCell().getColumn().getTableViewerColumn().getColumn().getWidth();
   }
 
-  // FIXME caching
   private ZmlTableCellPainter findCell( final Event event )
   {
     final IZmlModelRow row = (IZmlModelRow) event.item.getData();

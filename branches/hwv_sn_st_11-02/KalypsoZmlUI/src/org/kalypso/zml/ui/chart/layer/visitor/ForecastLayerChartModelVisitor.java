@@ -59,9 +59,6 @@ public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
 
   private IZmlLayerDataHandler m_handler;
 
-  /**
-   * @see org.kalypso.zml.core.diagram.base.AbstractExternalChartModelVisitor#accept(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
   @Override
   public void visit( final IChartLayer layer )
   {
@@ -82,9 +79,6 @@ public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
     layer.getLayerManager().accept( this );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#doFinialize()
-   */
   @Override
   public void doFinialize( )
   {

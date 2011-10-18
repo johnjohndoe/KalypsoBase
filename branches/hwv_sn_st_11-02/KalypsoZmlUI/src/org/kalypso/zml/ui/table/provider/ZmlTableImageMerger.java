@@ -108,9 +108,6 @@ public final class ZmlTableImageMerger
 
       final OverlayIcon overlay = new OverlayIcon( ImageDescriptor.createFromImageData( base ), ImageDescriptor.createFromImage( tile.getIcon() ), size )
       {
-        /**
-         * @see org.eclipse.ui.internal.OverlayIcon#drawTopRight(org.eclipse.jface.resource.ImageDescriptor)
-         */
         @Override
         protected void drawTopRight( final ImageDescriptor ov )
         {
@@ -128,9 +125,6 @@ public final class ZmlTableImageMerger
     {
       final OverlayIcon overlay = new OverlayIcon( ImageDescriptor.createFromImageData( base ), ImageDescriptor.createFromImageData( IMG_ADDITIONAL ), size )
       {
-        /**
-         * @see org.eclipse.ui.internal.OverlayIcon#drawTopRight(org.eclipse.jface.resource.ImageDescriptor)
-         */
         @Override
         protected void drawTopRight( final ImageDescriptor ov )
         {

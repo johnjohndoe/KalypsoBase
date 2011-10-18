@@ -133,7 +133,7 @@ public class ZmlTableCellCache
     }
   }
 
-  final Map<CacheEntry, ZmlTableCellPainter> m_cache;
+  private final Map<CacheEntry, ZmlTableCellPainter> m_cache;
 
   public ZmlTableCellCache( )
   {

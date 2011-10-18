@@ -80,9 +80,6 @@ public class KodBoundaryLayer implements IMetadataLayerBoundary
     return m_boundary;
   }
 
-  /**
-   * @see org.kalypso.hwv.core.chart.provider.style.boundary.IMetadataLayerBoundary#getLabel()
-   */
   @Override
   public String getLabel( )
   {
@@ -97,9 +94,6 @@ public class KodBoundaryLayer implements IMetadataLayerBoundary
     return String.format( m_label, tokenizer.nextToken() );
   }
 
-  /**
-   * @see org.kalypso.hwv.core.chart.provider.style.boundary.IMetadataLayerBoundary#getLineStyle()
-   */
   @Override
   public ILineStyle getLineStyle( )
   {
@@ -127,9 +121,6 @@ public class KodBoundaryLayer implements IMetadataLayerBoundary
     return visitor.visit( m_styles, ILineStyle.class, 0 );
   }
 
-  /**
-   * @see org.kalypso.hwv.core.chart.provider.style.boundary.IMetadataLayerBoundary#getTextStyle()
-   */
   @Override
   public ITextStyle getTextStyle( )
   {
