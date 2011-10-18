@@ -59,7 +59,7 @@ import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
 import org.kalypso.zml.ui.table.provider.RuleMapper;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
+import org.kalypso.zml.ui.table.provider.ZmlTooltipProvider;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.editing.InterpolatedValueEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.editing.SumValueEditingStrategy;
@@ -95,7 +95,7 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
     m_mapper = new RuleMapper( type );
   }
 
-  public IZmlEditingStrategy getEditingStrategy( final ZmlLabelProvider labelProvider )
+  public IZmlEditingStrategy getEditingStrategy( final ZmlTooltipProvider labelProvider )
   {
     if( m_editing != null )
       return m_editing;

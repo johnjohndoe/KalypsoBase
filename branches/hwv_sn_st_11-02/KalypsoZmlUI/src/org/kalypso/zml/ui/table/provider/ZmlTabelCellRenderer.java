@@ -66,7 +66,7 @@ public class ZmlTabelCellRenderer
 {
   private final IZmlTableCell m_cell;
 
-  private final NewZmlLabelProvider m_provider;
+  private final ZmlLabelProvider m_provider;
 
   private Color m_background;
 
@@ -78,7 +78,7 @@ public class ZmlTabelCellRenderer
   {
     m_cell = cell;
 
-    m_provider = new NewZmlLabelProvider( cell.getRow().getModelRow(), getColumn() );
+    m_provider = new ZmlLabelProvider( cell.getRow().getModelRow(), getColumn() );
   }
 
   public IZmlTableCell getCell( )
