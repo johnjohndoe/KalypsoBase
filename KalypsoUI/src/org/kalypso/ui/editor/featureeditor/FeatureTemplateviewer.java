@@ -188,28 +188,28 @@ public class FeatureTemplateviewer
     }
   }
 
-  public void setTemplate( final Featuretemplate template, final URL context, final String defaultFeaturePath, final String href, final String linkType )
+  public void setTemplate( final Featuretemplate template, final IPoolableObjectType dataKey, final String defaultFeaturePath, final URL templateContext )
   {
     m_template = template;
 
     final List<FeatureviewType> view = template.getView();
     for( final FeatureviewType featureviewType : view )
-      m_fvFactory.addView( featureviewType, context );
+      m_fvFactory.addView( featureviewType, templateContext );
 
     final Layer layer = template.getLayer();
-
-    final IPoolableObjectType key = getKey( layer, href, linkType, context );
     final String featurePath = layer == null ? defaultFeaturePath : layer.getFeaturePath();
 
     // only load, if href non null; in this case, the feature must be set via setFeature()
-    if( key == null )
+    if( dataKey == null )
       setFeaturesProvider( null );
     else
-      setFeaturesProvider( new PoolFeaturesProvider( key, featurePath ) );
+      setFeaturesProvider( new PoolFeaturesProvider( dataKey, featurePath ) );
   }
 
-  private IPoolableObjectType getKey( final Layer layer, final String defaultHref, final String defaultLinkType, final URL context )
+  public static IPoolableObjectType createKey( final Featuretemplate template, final String defaultHref, final String defaultLinkType, final URL context )
   {
+    final Layer layer = template.getLayer();
+
     final String source = layer == null ? defaultHref : layer.getHref();
     final String linktype = layer == null ? defaultLinkType : layer.getLinktype();
 

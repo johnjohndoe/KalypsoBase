@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.featureeditor;
 
@@ -68,6 +68,7 @@ import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.featureview.Featuretemplate;
@@ -269,10 +270,13 @@ public class FeatureEditor extends EditorPart
       final IStorage storage = input.getStorage();
 
       final IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile( storage.getFullPath() );
-      final URL context = ResourceUtilities.createURL( file );
+      final URL templateContext = ResourceUtilities.createURL( file );
 
       final Featuretemplate template = GisTemplateHelper.loadGisFeatureTemplate( storage );
-      m_viewer.setTemplate( template, context, null, null, null );
+
+      final IPoolableObjectType key = FeatureTemplateviewer.createKey( template, null, null, templateContext );
+
+      m_viewer.setTemplate( template, key, null, templateContext );
     }
     catch( final MalformedURLException e )
     {
