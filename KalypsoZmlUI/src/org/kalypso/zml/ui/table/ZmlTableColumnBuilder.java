@@ -45,6 +45,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
@@ -58,8 +60,7 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
  */
 public class ZmlTableColumnBuilder implements ICoreRunnableWithProgress
 {
-
-  private final IZmlTable m_table;
+  protected final IZmlTable m_table;
 
   private final BaseColumn m_column;
 
@@ -92,6 +93,21 @@ public class ZmlTableColumnBuilder implements ICoreRunnableWithProgress
       final ZmlTableEditingSupport editingSupport = new ZmlTableEditingSupport( column, labelProvider, m_table.getFocusHandler() );
       column.setEditingSupport( editingSupport );
     }
+
+    viewerColumn.getColumn().addControlListener( new ControlListener()
+    {
+      @Override
+      public void controlResized( final ControlEvent e )
+      {
+        m_table.getFocusHandler().getCursor().redraw();
+      }
+
+      @Override
+      public void controlMoved( final ControlEvent e )
+      {
+        m_table.getFocusHandler().getCursor().redraw();
+      }
+    } );
 
     return Status.OK_STATUS;
   }

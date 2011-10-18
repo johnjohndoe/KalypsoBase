@@ -84,7 +84,6 @@ public class ZmlTableFocusCellHandler implements IZmlTableListener, IZmlTableFoc
     final ZmlCellNavigationStrategy navigationStrategy = new ZmlCellNavigationStrategy();
 
     m_cellManager = new ZmlTableFocusCellManager( m_table, highlighter, navigationStrategy );
-
     m_cursor.setCellManager( m_cellManager );
 
     final ColumnViewerEditorActivationStrategy activationSupport = new ZmlTableEditorActivationStrategy( viewer, m_cellManager );

@@ -49,17 +49,15 @@ public class ZmlTableCursor extends AbstractZmlCellCursor
   protected void paint( final Event event )
   {
     final ViewerCell cell = getFocusCell();
-    if( Objects.isNull( cell ) )
+    if( Objects.isNull( cell ) || cell.getControl().isDisposed() )
+      return;
+
+    final ZmlTabelCellPainter renderer = new ZmlTabelCellPainter( findCell( cell ) );
+    if( Objects.isNull( renderer ) )
       return;
 
     try
     {
-      if( cell.getControl().isDisposed() )
-        return;
-      final ZmlTabelCellPainter renderer = new ZmlTabelCellPainter( findCell( cell ) );
-      if( Objects.isNull( renderer ) )
-        return;
-
       drawBackground( event );
 
       renderer.initGc( event );

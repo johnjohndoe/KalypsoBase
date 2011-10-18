@@ -197,9 +197,6 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
     return m_tableColumnIndex;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
