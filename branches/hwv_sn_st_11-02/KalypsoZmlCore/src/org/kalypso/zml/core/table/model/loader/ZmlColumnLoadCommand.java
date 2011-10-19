@@ -168,9 +168,6 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     return Objects.isNotNull( AxisUtils.findAxis( axes, type.getValueAxis() ) );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsProviderListener#observationChangedX(java.lang.Object)
-   */
   @Override
   public void observationChanged( final Object source )
   {

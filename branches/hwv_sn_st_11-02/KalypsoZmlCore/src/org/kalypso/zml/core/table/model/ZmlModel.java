@@ -176,11 +176,11 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   @Override
   public IZmlModelRow getRow( final Date index )
   {
-    if( m_rows.isEmpty() )
-      getRows();
-
     synchronized( this )
     {
+      if( m_rows.isEmpty() )
+        getRows();
+
       final ZmlRowBuilder builder = new ZmlRowBuilder( this );
       m_rows = builder.execute();
     }

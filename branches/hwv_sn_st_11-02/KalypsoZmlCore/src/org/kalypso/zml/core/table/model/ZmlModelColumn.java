@@ -205,8 +205,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
       else if( AxisUtils.isStatusAxis( axis ) )
       {
         if( Objects.isNull( status ) )
-          if( Objects.notEqual( existing, KalypsoStati.BIT_OK ) )
-            model.set( index, axis, KalypsoStati.BIT_OK );
+          model.set( index, axis, KalypsoStati.BIT_OK );
 
         if( Objects.notEqual( existing, status ) )
           model.set( index, axis, status );
@@ -214,8 +213,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
       else if( isTargetAxis( axis ) )
       {
         if( Objects.isNull( value ) )
-          if( Objects.notEqual( existing, Double.NaN ) )
-            model.set( index, axis, Double.NaN );
+          model.set( index, axis, Double.NaN );
 
         if( Objects.notEqual( existing, value ) )
           model.set( index, axis, value );
@@ -229,7 +227,9 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public MetadataList getMetadata( )
   {
-    return m_handler.getObservation().getMetadataList();
+    final IObservation observation = m_handler.getObservation();
+
+    return observation.getMetadataList();
   }
 
   @Override
@@ -256,7 +256,8 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public IAxis[] getAxes( )
   {
-    return m_handler.getObservation().getAxes();
+    final IObservation observation = m_handler.getObservation();
+    return observation.getAxes();
   }
 
   @Override
