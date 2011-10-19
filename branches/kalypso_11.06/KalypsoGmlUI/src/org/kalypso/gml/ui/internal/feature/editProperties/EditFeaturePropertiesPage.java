@@ -151,25 +151,34 @@ public class EditFeaturePropertiesPage extends WizardPage
     m_binding.bindValue( binder );
   }
 
+  // FIXME: we cannot always assume that the property is editable with a text control
   private void createValueControl( final Composite parent )
   {
     final Label label = new Label( parent, SWT.NONE );
 
+    /* Label binding */
     final ISWTObservableValue targetLabel = SWTObservables.observeText( label );
     final IObservableValue modelLabel = BeansObservables.observeValue( m_data, EditFeaturePropertiesData.PROPERTY_VALUE_LABEL );
     m_binding.bindValue( targetLabel, modelLabel );
 
+    /* Value binding */
     final Text text = new Text( parent, SWT.BORDER );
     text.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     final ISWTObservableValue targetValue = SWTObservables.observeText( text, SWT.Modify );
     final IObservableValue modelValue = BeansObservables.observeValue( m_data, EditFeaturePropertiesData.PROPERTY_VALUE );
-    final DataBinder binder = new DataBinder( targetValue, modelValue );
 
-    binder.setTargetToModelConverter( new StringToFeaturePropertyConverter( m_data ) );
-    binder.setModelToTargetConverter( new FeaturePropertyToStringConverter( m_data ) );
+    final DataBinder valueBinder = new DataBinder( targetValue, modelValue );
+    valueBinder.setTargetToModelConverter( new StringToFeaturePropertyConverter( m_data ) );
+    valueBinder.setModelToTargetConverter( new FeaturePropertyToStringConverter( m_data ) );
+    m_binding.bindValue( valueBinder );
 
-    m_binding.bindValue( binder );
+    /* Enabled only, if the current property can be edited as a string */
+    final ISWTObservableValue targetEnabled = SWTObservables.observeEnabled( text );
+    final IObservableValue modelEnabled = BeansObservables.observeValue( m_data, EditFeaturePropertiesData.PROPERTY_ENABLED );
+    final DataBinder enabledBinder = new DataBinder( targetEnabled, modelEnabled );
+    m_binding.bindValue( enabledBinder );
+
   }
 
   private void createRadioGroup( final Composite parent )

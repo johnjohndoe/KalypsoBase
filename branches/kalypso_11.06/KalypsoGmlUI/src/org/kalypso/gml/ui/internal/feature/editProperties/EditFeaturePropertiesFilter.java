@@ -75,7 +75,7 @@ public class EditFeaturePropertiesFilter extends ViewerFilter
       return false;
 
     if( propertyType instanceof IRelationType )
-      return false;
+      return true;
 
     final QName qName = propertyType.getQName();
     if( Feature.QN_BOUNDED_BY.equals( qName ) )
