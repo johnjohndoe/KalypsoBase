@@ -40,12 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.internal.feature.editProperties;
 
+import java.text.ParseException;
+
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.ogc.gml.command.RelativeFeatureChange;
+import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
+import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -67,6 +74,8 @@ public class EditFeaturePropertiesData extends AbstractModelObject
   public static final String PROPERTY_ISNUMERIC = "numeric"; //$NON-NLS-1$
 
   public static final String PROPERTY_VALUE_LABEL = "valueLabel"; //$NON-NLS-1$
+
+  public static final String PROPERTY_ENABLED = "enabled"; //$NON-NLS-1$
 
   private Object m_value = null;
 
@@ -127,6 +136,7 @@ public class EditFeaturePropertiesData extends AbstractModelObject
   {
     final Object oldIsNumericValue = getNumeric();
     final Object oldValueLabel = getValueLabel();
+    final boolean oldEnabled = getEnabled();
     final Object oldValue = m_property;
 
     m_property = property;
@@ -134,6 +144,7 @@ public class EditFeaturePropertiesData extends AbstractModelObject
     firePropertyChange( PROPERTY_PROPERTY, oldValue, property );
     firePropertyChange( PROPERTY_ISNUMERIC, oldIsNumericValue, getNumeric() );
     firePropertyChange( PROPERTY_VALUE_LABEL, oldValueLabel, getValueLabel() );
+    firePropertyChange( PROPERTY_ENABLED, oldEnabled, getEnabled() );
 
     if( m_focusedFeature != null && EditFeaturePropertiesFilter.canEditProperty( property ) )
       setValue( m_focusedFeature.getProperty( property ) );
@@ -190,5 +201,37 @@ public class EditFeaturePropertiesData extends AbstractModelObject
       return Messages.getString("EditFeaturePropertiesData_0"); //$NON-NLS-1$
     else
       return Messages.getString("EditFeaturePropertiesData_1"); //$NON-NLS-1$
+  }
+
+  public boolean getEnabled( )
+  {
+    final ITypeRegistry<IGuiTypeHandler> uiRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
+
+    if( m_property == null )
+      return false;
+
+    if( m_property instanceof IRelationType )
+      return false;
+
+    final IGuiTypeHandler typeHandler = uiRegistry.getTypeHandlerFor( m_property );
+    if( typeHandler == null )
+      return false;
+
+    try
+    {
+      // Crude test, if we can edit this with a Text-Control: ttry to parse the empty string,
+      typeHandler.parseText( StringUtils.EMPTY, null );
+      return true;
+    }
+    catch( final ParseException e )
+    {
+      // Parse-Error, but parsing seems to be supported
+      return true;
+    }
+    catch( final UnsupportedOperationException e )
+    {
+      // parsing not supported
+      return false;
+    }
   }
 }

@@ -44,6 +44,7 @@ import java.text.ParseException;
 
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
@@ -82,6 +83,9 @@ public class StringToFeaturePropertyConverter implements IConverter
     if( property == null )
       return null;
 
+    if( property instanceof IRelationType )
+      return null;
+
     final IGuiTypeHandler typeHandler = registry.getTypeHandlerFor( property );
     if( typeHandler == null )
       return null;
@@ -93,6 +97,11 @@ public class StringToFeaturePropertyConverter implements IConverter
     catch( final ParseException e )
     {
       e.printStackTrace();
+      return null;
+    }
+    catch( final UnsupportedOperationException e )
+    {
+      // ignore, this case is handled elsewhere
       return null;
     }
   }
