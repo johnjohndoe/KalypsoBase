@@ -168,6 +168,7 @@ class NewFeaturePropertyScope implements INewScope
   {
     final Properties uiProperties = FeatureTypePropertiesCatalog.getProperties( m_workspace.getContext(), featureType.getQName() );
     final String depthStr = uiProperties.getProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH );
+    // TODO: move 0 into constants
     final int depth = NumberUtils.parseQuietInt( depthStr, 0 );
 
     final ICommand command = new AddFeatureCommand( m_workspace, featureType, m_parentFeature, m_targetRelation, 0, null, m_selectionManager, depth );
