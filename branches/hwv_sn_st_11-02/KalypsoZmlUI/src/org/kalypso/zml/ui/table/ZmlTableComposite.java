@@ -301,6 +301,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     }
   }
 
+  @Override
   public void fireTableChanged( final String type, final IZmlModelColumn... columns )
   {
     final IZmlTableListener[] listeners = m_listeners.toArray( new IZmlTableListener[] {} );
@@ -329,7 +330,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
         }
       };
       m_updateJob.setRule( MUTEX_TABLE_UPDATE );
-      m_updateJob.schedule( 250 );
+      m_updateJob.schedule( 100 );
     }
   }
 

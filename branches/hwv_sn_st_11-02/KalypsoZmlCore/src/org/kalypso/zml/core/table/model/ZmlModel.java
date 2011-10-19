@@ -147,8 +147,6 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   @Override
   public void fireModelChanged( final IZmlModelColumn... columns )
   {
-    m_rows.clear();
-
     final IZmlColumnModelListener[] listeners = m_listeners.toArray( new IZmlColumnModelListener[] {} );
     for( final IZmlColumnModelListener listener : listeners )
     {

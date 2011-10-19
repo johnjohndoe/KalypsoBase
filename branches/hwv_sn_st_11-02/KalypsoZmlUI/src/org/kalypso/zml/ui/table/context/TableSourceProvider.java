@@ -92,7 +92,8 @@ public class TableSourceProvider extends AbstractSourceProvider
     @Override
     public void eventTableChanged( final String type, final IZmlModelColumn... columns )
     {
-      refreshUIelements();
+      if( IZmlTableListener.TYPE_REFRESH.equals( type ) )
+        refreshUIelements();
     }
   };
 

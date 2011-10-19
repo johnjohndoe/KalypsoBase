@@ -92,7 +92,7 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
     super( table, column, type );
     m_tableColumnIndex = tableColumnIndex;
 
-    m_mapper = new RuleMapper( type );
+    m_mapper = new RuleMapper( table, type );
   }
 
   public IZmlEditingStrategy getEditingStrategy( final ZmlTooltipProvider labelProvider )

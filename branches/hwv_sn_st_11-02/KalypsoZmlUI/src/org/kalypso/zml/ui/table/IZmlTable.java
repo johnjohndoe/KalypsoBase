@@ -91,4 +91,6 @@ public interface IZmlTable
   void refresh( final IZmlModelColumn... columns );
 
   void removeListener( IZmlTableListener mListener );
+
+  void fireTableChanged( String type, IZmlModelColumn... columns );
 }
