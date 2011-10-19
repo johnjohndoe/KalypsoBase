@@ -46,11 +46,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTableColumnVisitor;
 
@@ -59,14 +57,6 @@ import org.kalypso.zml.ui.table.IZmlTableColumnVisitor;
  */
 public abstract class AbstractTableColumnPackVisitor implements IZmlTableColumnVisitor
 {
-  protected boolean isVisible( final IZmlModelColumn column )
-  {
-    if( column.isIgnoreType() )
-      return false;
-
-    return Objects.isNotNull( column.getObservation() );
-  }
-
   protected void pack( final TableColumn column, final BaseColumn base, final String label, final boolean visible )
   {
     if( !visible )

@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.layout;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TableColumn;
@@ -63,7 +60,6 @@ import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
  */
 public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
 {
-  Set<IExtendedZmlTableColumn> m_indexColumns = new HashSet<IExtendedZmlTableColumn>();
 
   /**
    * @see org.kalypso.zml.ui.table.IZmlTableColumnVisitor#visit(org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn)
@@ -73,7 +69,6 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
   {
     if( column.isIndexColumn() )
     {
-      m_indexColumns.add( column );
       return;
     }
 
@@ -82,7 +77,7 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
     final TableColumn tableColumn = tableViewerColumn.getColumn();
 
     final IZmlModelColumn modelColumn = column.getModelColumn();
-    if( Objects.isNull( modelColumn ) || !isVisible( modelColumn ) )
+    if( Objects.isNull( modelColumn ) || !modelColumn.isActive() )
     {
       hide( tableColumn );
     }
@@ -94,7 +89,7 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
         final String label = modelColumn.getLabel();
         tableColumn.setText( label );
 
-        pack( tableColumn, columnType, label, isVisible( modelColumn ) );
+        pack( tableColumn, columnType, label, modelColumn.isActive() );
       }
     }
   }
