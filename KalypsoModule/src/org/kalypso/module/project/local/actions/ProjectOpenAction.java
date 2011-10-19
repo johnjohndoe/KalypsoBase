@@ -56,7 +56,7 @@ import org.kalypso.module.project.local.IProjectOpenAction;
 /**
  * @author Dirk Kuch
  */
-public class ProjectOpenAction extends Action implements IProjectOpenAction
+public abstract class ProjectOpenAction extends Action implements IProjectOpenAction
 {
   protected static final ImageDescriptor IMG_PROJECT_LOCAL = ImageDescriptor.createFromURL( ProjectOpenAction.class.getResource( "images/project_local.gif" ) ); //$NON-NLS-1$
 
@@ -90,7 +90,7 @@ public class ProjectOpenAction extends Action implements IProjectOpenAction
     }
 
     final IStatus openStatus = doOpenProject();
-    if( status.isOK() || status.matches( IStatus.CANCEL ) )
+    if( openStatus.isOK() || openStatus.matches( IStatus.CANCEL ) )
       return;
 
     new StatusDialog( shell, openStatus, getText() ).open();
@@ -120,9 +120,6 @@ public class ProjectOpenAction extends Action implements IProjectOpenAction
     return Status.OK_STATUS;
   }
 
-  protected IStatus doOpenProject( )
-  {
-    return Status.OK_STATUS;
-  }
+  protected abstract IStatus doOpenProject( );
 
 }

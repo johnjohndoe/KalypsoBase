@@ -52,7 +52,6 @@ import org.kalypso.module.nature.ModuleNature;
 import org.kalypso.module.project.local.actions.ProjectDeleteAction;
 import org.kalypso.module.project.local.actions.ProjectExportAction;
 import org.kalypso.module.project.local.actions.ProjectInfoAction;
-import org.kalypso.module.project.local.actions.ProjectOpenAction;
 
 /**
  * @author Dirk Kuch
@@ -126,20 +125,6 @@ public class LocalProjectHandle extends AbstractProjectHandle implements ILocalP
     actions[1] = new ProjectDeleteAction( this );
     actions[2] = new ProjectExportAction( this );
     return actions;
-  }
-
-  @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
-  {
-    /* Allow others to override own behavior (via extension.point) */
-    final Object adapted = super.getAdapter( adapter );
-    if( adapted != null )
-      return adapted;
-
-    if( adapter == IProjectOpenAction.class )
-      return new ProjectOpenAction( this );
-
-    return adapted;
   }
 
   @Override
