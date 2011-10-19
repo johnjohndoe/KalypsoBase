@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.focus.cursor.ITableCursor;
@@ -91,11 +92,8 @@ public class ZmlTableFocusCellHandler implements IZmlTableListener, IZmlTableFoc
     TableViewerEditor.create( viewer, m_cellManager, activationSupport, ColumnViewerEditor.KEYBOARD_ACTIVATION );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableListener#eventTableChanged()
-   */
   @Override
-  public void eventTableChanged( )
+  public void eventTableChanged( final String type, final IZmlModelColumn... columns )
   {
     new UIJob( "" )
     {

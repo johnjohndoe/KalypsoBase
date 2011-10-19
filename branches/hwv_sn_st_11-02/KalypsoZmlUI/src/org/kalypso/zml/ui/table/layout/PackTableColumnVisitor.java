@@ -107,7 +107,6 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
   private void updateHeader( final IExtendedZmlTableColumn column )
   {
     final TableColumn tableColumn = column.getTableViewerColumn().getColumn();
-
     final ZmlTableImageMerger provider = new ZmlTableImageMerger( 1 );
 
     final BaseColumn columnType = column.getColumnType();

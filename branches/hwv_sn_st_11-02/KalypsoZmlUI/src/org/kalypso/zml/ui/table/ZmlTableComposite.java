@@ -114,8 +114,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private final ZmlViewResolutionFilter m_filter = new ZmlViewResolutionFilter( this );
 
-  private final ZmlTableLayoutHandler m_layout;
-
   private ZmlTableFocusCellHandler m_focus;
 
   protected ZmlTableSelectionHandler m_selection;
@@ -128,8 +126,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   {
     super( parent, SWT.NULL );
     m_model = model;
-
-    m_layout = new ZmlTableLayoutHandler( this );
 
     final GridLayout layout = LayoutHelper.createGridLayout();
     layout.verticalSpacing = 0;
@@ -158,10 +154,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       m_tableViewer.getTable().setLinesVisible( true );
       m_tableViewer.setUseHashlookup( true );
 
-      m_focus = new ZmlTableFocusCellHandler( this );
       m_selection = new ZmlTableSelectionHandler( this );
-
-      addListener( m_focus );
 
       ColumnViewerToolTipSupport.enableFor( m_tableViewer, ToolTip.NO_RECREATE );
 
@@ -206,6 +199,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       table.setHeaderVisible( true );
       if( hasToolbar( tableType ) )
         initToolbar( tableType, toolbar, toolkit );
+
+      m_focus = new ZmlTableFocusCellHandler( this );
+      addListener( m_focus );
+      addListener( new ZmlTableLayoutHandler( this ) );
     }
   }
 
@@ -271,12 +268,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       }
 
       m_tableViewer.refresh( true, true );
-      m_layout.tableChanged( tableColumns );
-
       m_pager.reveal();
     }
 
-    fireTableChanged();
+    fireTableChanged( IZmlTableListener.TYPE_REFRESH, columns );
   }
 
   private ExtendedZmlTableColumn[] findColumns( final IZmlModelColumn... columns )
@@ -306,12 +301,12 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     }
   }
 
-  public void fireTableChanged( )
+  public void fireTableChanged( final String type, final IZmlModelColumn... columns )
   {
     final IZmlTableListener[] listeners = m_listeners.toArray( new IZmlTableListener[] {} );
     for( final IZmlTableListener listener : listeners )
     {
-      listener.eventTableChanged();
+      listener.eventTableChanged( type, columns );
     }
   }
 

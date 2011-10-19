@@ -53,6 +53,7 @@ import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 
 /**
@@ -190,7 +191,7 @@ public class ZmlViewResolutionFilter extends ViewerFilter
     m_resolution = resolution;
     m_stuetzstellenMode = mode;
 
-    m_table.fireTableChanged();
+    m_table.fireTableChanged( IZmlTableListener.TYPE_REFRESH );
   }
 
   public int getResolution( )

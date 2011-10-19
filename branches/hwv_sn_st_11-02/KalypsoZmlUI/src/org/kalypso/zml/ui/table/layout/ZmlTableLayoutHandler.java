@@ -54,87 +54,89 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.model.ZmlTableColumns;
 import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableLayoutHandler
+public class ZmlTableLayoutHandler implements IZmlTableListener
 {
-  private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "updating of time series table layout" ); // $NON-NLS-1$
-
   private static final Color COLOR_TABLE_DISABLED = new Color( null, new RGB( 0xea, 0xea, 0xea ) );
 
   private static final Color COLOR_TABLE_ENABLED = new Color( null, new RGB( 0xff, 0xff, 0xff ) );
 
   protected final ZmlTableComposite m_table;
 
-  private UIJob m_job;
-
   public ZmlTableLayoutHandler( final ZmlTableComposite table )
   {
     m_table = table;
   }
 
-  /**
-   * assert all columns will be updated an not disposed before update!
-   */
-  protected final Set<IExtendedZmlTableColumn> m_columnStack = Collections.synchronizedSet( new LinkedHashSet<IExtendedZmlTableColumn>() );
+  @Override
+  public void eventTableChanged( final String type, final IZmlModelColumn... columns )
+  {
+    if( IZmlTableListener.TYPE_REFRESH.equals( type ) )
+    {
+      doRefreshColumns( ZmlTableColumns.toTableColumns( m_table, true, columns ) );
+    }
 
-  public void tableChanged( final IExtendedZmlTableColumn[] update )
+  }
+
+  final Set<IExtendedZmlTableColumn> m_stackRefreshColumns = Collections.synchronizedSet( new LinkedHashSet<IExtendedZmlTableColumn>() );
+
+  private final MutexRule m_refreshTableRule = new MutexRule( "updating column layout of zml table" );
+
+  UIJob m_refreshColumnsJob;
+
+  private void doRefreshColumns( final IExtendedZmlTableColumn... columns )
   {
     synchronized( this )
     {
-      if( Objects.isNotNull( m_job ) )
-        m_job.cancel();
+      Collections.addAll( m_stackRefreshColumns, columns );
+      if( Objects.isNotNull( m_refreshColumnsJob ) )
+        m_refreshColumnsJob.cancel();
 
-      Collections.addAll( m_columnStack, update );
-
-      m_job = new UIJob( "Aktualisiere Tabellen-Layout" )
+      m_refreshColumnsJob = new UIJob( "Aktualisiere Tablellenspalten" )
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )
         {
-          if( m_table.isDisposed() )
-            return Status.CANCEL_STATUS;
-
           synchronized( this )
           {
-            final IExtendedZmlTableColumn[] columns = m_columnStack.toArray( new IExtendedZmlTableColumn[] {} );
-            m_columnStack.clear();
-            doUpdateColumns( columns );
+            final IExtendedZmlTableColumn[] cols = m_stackRefreshColumns.toArray( new IExtendedZmlTableColumn[] {} );
+            m_stackRefreshColumns.clear();
+
+            final PackTableColumnVisitor data = new PackTableColumnVisitor();
+            final PackIndexColumnsVisitor index = new PackIndexColumnsVisitor( !ArrayUtils.isEmpty( m_table.getRows() ) );
+
+            for( final IExtendedZmlTableColumn col : cols )
+            {
+              index.visit( col );
+              data.visit( col );
+            }
+          }
+
+          final TableViewer viewer = m_table.getViewer();
+          if( m_table.isEmpty() )
+          {
+            viewer.getControl().setBackground( COLOR_TABLE_DISABLED );
+          }
+          else
+          {
+            viewer.getControl().setBackground( COLOR_TABLE_ENABLED );
           }
 
           return Status.OK_STATUS;
         }
       };
 
-      m_job.setRule( MUTEX_TABLE_UPDATE );
-      m_job.schedule( 200 );
-    }
-  }
-
-  protected void doUpdateColumns( final IExtendedZmlTableColumn[] columns )
-  {
-    final PackTableColumnVisitor data = new PackTableColumnVisitor();
-    final PackIndexColumnsVisitor index = new PackIndexColumnsVisitor( !ArrayUtils.isEmpty( m_table.getRows() ) );
-
-    for( final IExtendedZmlTableColumn column : columns )
-    {
-      data.visit( column );
-      index.visit( column );
+      m_refreshColumnsJob.setRule( m_refreshTableRule );
+      m_refreshColumnsJob.schedule( 100 );
     }
 
-    final TableViewer viewer = m_table.getViewer();
-
-    if( m_table.isEmpty() )
-    {
-      viewer.getControl().setBackground( COLOR_TABLE_DISABLED );
-    }
-    else
-    {
-      viewer.getControl().setBackground( COLOR_TABLE_ENABLED );
-    }
   }
 }
