@@ -81,6 +81,8 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   private boolean m_ignore = false;
 
+  private boolean m_active = true;
+
   public ZmlModelColumn( final IZmlModel model, final String identifier, final DataColumn type )
   {
     m_model = model;
@@ -123,6 +125,8 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
       m_handler = handler;
       m_handler.addListener( this );
+
+      setActive( true );
     }
 
   }
@@ -130,6 +134,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public void purge( )
   {
     m_handler.dispose();
+    setActive( false );
   }
 
   @Override
@@ -177,10 +182,13 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public void update( final int index, final Object value, final String source, final Integer status ) throws SensorException
   {
     final ITupleModel model = getTupleModel();
+
     final IAxis[] axes = model.getAxes();
 
     for( final IAxis axis : axes )
     {
+      final Object existing = model.get( index, axis );
+
       if( AxisUtils.isDataSrcAxis( axis ) )
       {
         // FIXME - user modified triggered interpolated state?!?
@@ -191,28 +199,31 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
         else
           sourceIndex = handler.addDataSource( source, source );
 
-        model.set( index, axis, sourceIndex );
+        if( Objects.notEqual( existing, sourceIndex ) )
+          model.set( index, axis, sourceIndex );
       }
       else if( AxisUtils.isStatusAxis( axis ) )
       {
         if( Objects.isNull( status ) )
-          model.set( index, axis, KalypsoStati.BIT_OK );
+          if( Objects.notEqual( existing, KalypsoStati.BIT_OK ) )
+            model.set( index, axis, KalypsoStati.BIT_OK );
 
-        model.set( index, axis, status );
+        if( Objects.notEqual( existing, status ) )
+          model.set( index, axis, status );
       }
       else if( isTargetAxis( axis ) )
       {
         if( Objects.isNull( value ) )
-          model.set( index, axis, Double.NaN );
+          if( Objects.notEqual( existing, Double.NaN ) )
+            model.set( index, axis, Double.NaN );
 
-        model.set( index, axis, value );
+        if( Objects.notEqual( existing, value ) )
+          model.set( index, axis, value );
       }
     }
 
-    // FIXME improve update value handling
     final IObservation observation = m_handler.getObservation();
-    observation.setValues( model );
-    observation.fireChangedEvent( this );
+    observation.fireChangedEvent( source );
   }
 
   @Override
@@ -248,9 +259,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     return m_handler.getObservation().getAxes();
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.IZmlModelColumn#getObservation()
-   */
   @Override
   public IObservation getObservation( )
   {
@@ -269,9 +277,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     return AxisUtils.findAxis( getAxes(), m_type.getValueAxis() );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.IZmlModelColumn#getStatusAxis()
-   */
   @Override
   public IAxis getStatusAxis( )
   {
@@ -282,21 +287,17 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     return KalypsoStatusUtils.findStatusAxisFor( getAxes(), valueAxis );
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener#eventObservationChanged()
-   */
   @Override
   public void eventObservationChanged( )
   {
     fireColumnChanged();
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.data.IZmlModelColumnDataListener#eventObservationLoaded()
-   */
   @Override
   public void eventObservationLoaded( )
   {
+    setActive( true );
+
     fireColumnChanged();
   }
 
@@ -310,9 +311,6 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#accept(org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor)
-   */
   @Override
   public void accept( final IZmlModelColumnVisitor visitor ) throws SensorException
   {
@@ -335,31 +333,32 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
     }
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#getModel()
-   */
   @Override
   public IZmlModel getModel( )
   {
     return m_model;
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#setIsIgnoreType(boolean)
-   */
   @Override
   public void setIsIgnoreType( final boolean ignore )
   {
     m_ignore = ignore;
+
+    fireColumnChanged();
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.model.IZmlModelColumn#isIgnoreType()
-   */
   @Override
-  public boolean isIgnoreType( )
+  public boolean isActive( )
   {
-    return m_ignore;
+    if( m_ignore )
+      return false;
+
+    return m_active;
+  }
+
+  public void setActive( final boolean active )
+  {
+    m_active = active;
   }
 
 }

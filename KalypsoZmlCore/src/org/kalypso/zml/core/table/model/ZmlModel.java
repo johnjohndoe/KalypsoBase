@@ -134,6 +134,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     for( final ZmlModelColumn column : columns )
     {
       column.purge();
+      column.setActive( false );
     }
 
     for( final ZmlColumnLoadCommand command : commands )
@@ -254,8 +255,6 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
         final boolean ignore = ArrayUtils.contains( ignoreTypes, type );
         column.setIsIgnoreType( ignore );
       }
-
-      fireModelChanged( columns );
     }
 
   }

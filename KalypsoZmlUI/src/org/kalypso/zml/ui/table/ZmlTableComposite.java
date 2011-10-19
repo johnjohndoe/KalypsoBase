@@ -176,6 +176,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
       addEmptyColumn();
 
+      m_focus = new ZmlTableFocusCellHandler( this );
+      addListener( m_focus );
+      addListener( new ZmlTableLayoutHandler( this ) );
+
       final List<JAXBElement< ? extends AbstractColumnType>> columnTypes = tableType.getColumns().getAbstractColumn();
       for( final JAXBElement< ? extends AbstractColumnType> columnType : columnTypes )
       {
@@ -200,10 +204,6 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
       table.setHeaderVisible( true );
       if( hasToolbar( tableType ) )
         initToolbar( tableType, toolbar, toolkit );
-
-      m_focus = new ZmlTableFocusCellHandler( this );
-      addListener( m_focus );
-      addListener( new ZmlTableLayoutHandler( this ) );
     }
   }
 

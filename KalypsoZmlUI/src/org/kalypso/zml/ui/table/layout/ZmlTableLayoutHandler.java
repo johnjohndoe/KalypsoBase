@@ -71,6 +71,12 @@ public class ZmlTableLayoutHandler implements IZmlTableListener
 
   protected final ZmlTableComposite m_table;
 
+  final Set<IExtendedZmlTableColumn> m_stackColumns = Collections.synchronizedSet( new LinkedHashSet<IExtendedZmlTableColumn>() );
+
+  private final MutexRule m_rule = new MutexRule( "updating column layout of zml table" );
+
+  UIJob m_job;
+
   public ZmlTableLayoutHandler( final ZmlTableComposite table )
   {
     m_table = table;
@@ -85,84 +91,36 @@ public class ZmlTableLayoutHandler implements IZmlTableListener
     }
     else if( IZmlTableListener.TYPE_ACTIVE_RULE_CHANGED.equals( type ) )
     {
-      doRefreshHeader( ZmlTableColumns.toTableColumns( m_table, false, columns ) );
+      doRefreshColumns( ZmlTableColumns.toTableColumns( m_table, false, columns ) );
     }
 
   }
-
-  final Set<IExtendedZmlTableColumn> m_stackHeaderColumns = Collections.synchronizedSet( new LinkedHashSet<IExtendedZmlTableColumn>() );
-
-  private final MutexRule m_refreshHeaderRule = new MutexRule( "updating column header" );
-
-  UIJob m_refreshColumnHeaderJob;
-
-  private void doRefreshHeader( final IExtendedZmlTableColumn... columns )
-  {
-
-    synchronized( this )
-    {
-      Collections.addAll( m_stackHeaderColumns, columns );
-      if( Objects.isNotNull( m_refreshColumnHeaderJob ) )
-        m_refreshColumnHeaderJob.cancel();
-
-      m_refreshColumnHeaderJob = new UIJob( "Aktualisiere Tablellenspalten" )
-      {
-        @Override
-        public IStatus runInUIThread( final IProgressMonitor monitor )
-        {
-          synchronized( this )
-          {
-            final IExtendedZmlTableColumn[] cols = m_stackHeaderColumns.toArray( new IExtendedZmlTableColumn[] {} );
-            m_stackHeaderColumns.clear();
-
-            final PackTableColumnVisitor data = new PackTableColumnVisitor();
-            for( final IExtendedZmlTableColumn col : cols )
-            {
-              data.visit( col );
-            }
-          }
-
-          return Status.OK_STATUS;
-        }
-      };
-
-      m_refreshColumnHeaderJob.setRule( m_refreshHeaderRule );
-      m_refreshColumnHeaderJob.schedule( 500 );
-
-    }
-  }
-
-  final Set<IExtendedZmlTableColumn> m_stackRefreshColumns = Collections.synchronizedSet( new LinkedHashSet<IExtendedZmlTableColumn>() );
-
-  private final MutexRule m_refreshTableRule = new MutexRule( "updating column layout of zml table" );
-
-  UIJob m_refreshColumnsJob;
 
   private void doRefreshColumns( final IExtendedZmlTableColumn... columns )
   {
     synchronized( this )
     {
-      Collections.addAll( m_stackRefreshColumns, columns );
-      if( Objects.isNotNull( m_refreshColumnsJob ) )
-        m_refreshColumnsJob.cancel();
+      Collections.addAll( m_stackColumns, columns );
+      if( Objects.isNotNull( m_job ) )
+        m_job.cancel();
 
-      m_refreshColumnsJob = new UIJob( "Aktualisiere Tablellenspalten" )
+      m_job = new UIJob( "Aktualisiere Tablellenspalten" )
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )
         {
           synchronized( this )
           {
-            final IExtendedZmlTableColumn[] cols = m_stackRefreshColumns.toArray( new IExtendedZmlTableColumn[] {} );
-            m_stackRefreshColumns.clear();
+            final IExtendedZmlTableColumn[] stack = m_stackColumns.toArray( new IExtendedZmlTableColumn[] {} );
+            m_stackColumns.clear();
 
             final PackTableColumnVisitor data = new PackTableColumnVisitor();
             final PackIndexColumnsVisitor index = new PackIndexColumnsVisitor( !ArrayUtils.isEmpty( m_table.getRows() ) );
 
-            for( final IExtendedZmlTableColumn col : cols )
+            for( final IExtendedZmlTableColumn column : stack )
             {
-              index.visit( col );
-              data.visit( col );
+              index.visit( column );
+              data.visit( column );
             }
           }
 
@@ -180,8 +138,8 @@ public class ZmlTableLayoutHandler implements IZmlTableListener
         }
       };
 
-      m_refreshColumnsJob.setRule( m_refreshTableRule );
-      m_refreshColumnsJob.schedule( 250 );
+      m_job.setRule( m_rule );
+      m_job.schedule( 100 );
     }
 
   }

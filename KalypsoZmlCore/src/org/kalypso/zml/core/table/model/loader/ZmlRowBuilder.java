@@ -76,6 +76,9 @@ public class ZmlRowBuilder
 
     for( final IZmlModelColumn column : m_model.getColumns() )
     {
+      if( !column.isActive() )
+        continue;
+
       final DataColumn type = column.getDataColumn();
       final IAxis[] axes = column.getAxes();
       final IAxis indexAxis = AxisUtils.findAxis( axes, type.getIndexAxis() );
@@ -104,5 +107,4 @@ public class ZmlRowBuilder
 
     return rows;
   }
-
 }
