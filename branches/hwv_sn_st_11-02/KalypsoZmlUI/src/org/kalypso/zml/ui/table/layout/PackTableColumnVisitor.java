@@ -56,7 +56,6 @@ import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ColumnHeader;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTableColumnVisitor;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
@@ -71,45 +70,40 @@ public class PackTableColumnVisitor implements IZmlTableColumnVisitor
 {
   Set<IExtendedZmlTableColumn> m_indexColumns = new HashSet<IExtendedZmlTableColumn>();
 
-  private boolean m_indexVisibility = false;
-
   /**
    * @see org.kalypso.zml.ui.table.IZmlTableColumnVisitor#visit(org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn)
    */
   @Override
   public void visit( final IExtendedZmlTableColumn column )
   {
+    if( column.isIndexColumn() )
+    {
+      m_indexColumns.add( column );
+      return;
+    }
+
     final BaseColumn columnType = column.getColumnType();
     final TableViewerColumn tableViewerColumn = column.getTableViewerColumn();
     final TableColumn tableColumn = tableViewerColumn.getColumn();
 
     /** only update headers of data column types */
-    if( columnType.getType() instanceof DataColumnType )
+    updateHeader( column );
+
+    final IZmlModelColumn modelColumn = column.getModelColumn();
+    if( Objects.isNull( modelColumn ) )
     {
-      updateHeader( column );
-
-      final IZmlModelColumn modelColumn = column.getModelColumn();
-      if( modelColumn == null )
-      {
-        final String label = columnType.getLabel();
-
-        tableColumn.setWidth( 0 );
-        tableColumn.setText( label );
-        tableColumn.setResizable( false );
-        tableColumn.setMoveable( false );
-      }
-      else
-      {
-        final String label = modelColumn.getLabel();
-        tableColumn.setText( label );
-
-        pack( tableColumn, columnType, label, isVisible( modelColumn ) );
-      }
+      tableColumn.setWidth( 0 );
+      tableColumn.setResizable( false );
+      tableColumn.setMoveable( false );
     }
     else
     {
-      m_indexColumns.add( column );
+      final String label = modelColumn.getLabel();
+      tableColumn.setText( label );
+
+      pack( tableColumn, columnType, label, isVisible( modelColumn ) );
     }
+
   }
 
   private boolean isVisible( final IZmlModelColumn column )
@@ -117,14 +111,10 @@ public class PackTableColumnVisitor implements IZmlTableColumnVisitor
     if( column.isIgnoreType() )
       return false;
 
-    final boolean visible = Objects.isNotNull( column.getObservation() );
-    if( visible )
-      m_indexVisibility = true;
-
-    return visible;
+    return Objects.isNotNull( column.getObservation() );
   }
 
-  public void packIndexColumns( )
+  public void packIndexColumns( final boolean visble )
   {
     final IExtendedZmlTableColumn[] columns = m_indexColumns.toArray( new IExtendedZmlTableColumn[] {} );
     for( final IExtendedZmlTableColumn column : columns )
@@ -133,12 +123,17 @@ public class PackTableColumnVisitor implements IZmlTableColumnVisitor
       final TableViewerColumn tableViewerColumn = column.getTableViewerColumn();
       final TableColumn tableColumn = tableViewerColumn.getColumn();
 
-      updateHeader( column );
+      if( !visble )
+        tableColumn.setWidth( 0 );
+      else
+      {
+        updateHeader( column );
 
-      final String label = columnType.getLabel();
+        final String label = columnType.getLabel();
 
-      tableColumn.setText( label );
-      pack( tableColumn, columnType, label, m_indexVisibility );
+        tableColumn.setText( label );
+        pack( tableColumn, columnType, label, true );
+      }
     }
   }
 

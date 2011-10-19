@@ -48,7 +48,10 @@ import java.util.Set;
 import javax.xml.bind.JAXBElement;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -64,6 +67,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
@@ -72,6 +76,7 @@ import org.kalypso.contribs.eclipse.swt.layout.LayoutHelper;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
@@ -87,6 +92,7 @@ import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.provider.ZmlTableCellCache;
 import org.kalypso.zml.ui.table.provider.ZmlTableCellPaintListener;
 import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
 
 /**
@@ -102,7 +108,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   private final IZmlModel m_model;
 
-  private ZmlTableUiUpdateJob m_updateJob;
+  private UIJob m_updateJob;
 
   private final Set<IZmlTableListener> m_listeners = new LinkedHashSet<IZmlTableListener>();
 
@@ -250,24 +256,54 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   }
 
   @Override
-  public void refresh( )
+  public void refresh( final IZmlModelColumn... columns )
   {
     if( m_tableViewer.getTable().isDisposed() )
       return;
 
-    m_pager.update();
-
-    for( final ExtendedZmlTableColumn column : m_columns )
+    synchronized( this )
     {
-      column.reset();
+      m_pager.update();
+      final ExtendedZmlTableColumn[] tableColumns = findColumns( columns );
+      for( final ExtendedZmlTableColumn column : tableColumns )
+      {
+        column.reset();
+      }
+
+      m_tableViewer.refresh( true, true );
+      m_layout.tableChanged( tableColumns );
+
+      m_pager.reveal();
     }
 
-    m_tableViewer.refresh( true, true );
-    m_layout.tableChanged();
-
     fireTableChanged();
+  }
 
-    m_pager.reveal();
+  private ExtendedZmlTableColumn[] findColumns( final IZmlModelColumn... columns )
+  {
+    if( ArrayUtils.isEmpty( columns ) )
+      return m_columns.toArray( new ExtendedZmlTableColumn[] {} );
+
+    synchronized( this )
+    {
+      final Set<ExtendedZmlTableColumn> myColumns = new LinkedHashSet<ExtendedZmlTableColumn>();
+      for( final IZmlModelColumn column : columns )
+      {
+        for( final ExtendedZmlTableColumn extended : m_columns )
+        {
+          if( extended.isIndexColumn() )
+            myColumns.add( extended );
+          else
+          {
+            final IZmlModelColumn modelColumn = extended.getModelColumn();
+            if( Objects.equal( modelColumn, column ) )
+              myColumns.add( extended );
+          }
+        }
+      }
+
+      return myColumns.toArray( new ExtendedZmlTableColumn[] {} );
+    }
   }
 
   public void fireTableChanged( )
@@ -280,20 +316,25 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   }
 
   @Override
-  public void modelChanged( )
+  public void modelChanged( final IZmlModelColumn... columns )
   {
     synchronized( this )
     {
       if( Objects.isNotNull( m_updateJob ) )
         m_updateJob.cancel();
 
-      m_cache.clear();
+      m_updateJob = new UIJob( "Aktualisiere Zeitreihen-Tabelle" )
+      {
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
+        {
+          refresh( columns );
 
-      m_updateJob = new ZmlTableUiUpdateJob( this );
+          return Status.OK_STATUS;
+        }
+      };
       m_updateJob.setRule( MUTEX_TABLE_UPDATE );
-
-      m_updateJob.schedule( 200 );
-
+      m_updateJob.schedule( 250 );
     }
   }
 
@@ -419,5 +460,23 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   public ZmlTableCellCache getCache( )
   {
     return m_cache;
+  }
+
+  public void reset( )
+  {
+    getCache().clear();
+
+    accept( new IZmlTableColumnVisitor()
+    {
+      @Override
+      public void visit( final IExtendedZmlTableColumn column )
+      {
+        if( column.isIndexColumn() )
+          return;
+
+        final TableViewerColumn viewerColumn = column.getTableViewerColumn();
+        viewerColumn.getColumn().setWidth( 0 );
+      }
+    } );
   }
 }

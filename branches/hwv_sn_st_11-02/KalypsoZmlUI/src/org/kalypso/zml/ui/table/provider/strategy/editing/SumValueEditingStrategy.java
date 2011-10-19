@@ -51,10 +51,8 @@ import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
-import org.kalypso.zml.core.table.model.references.ZmlValueReferenceFactory;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.provider.ZmlTooltipProvider;
@@ -142,8 +140,7 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
   {
     final ZmlDataValueReference reference = (ZmlDataValueReference) previousCell.getValueReference();
 
-    final ZmlValueReferenceFactory factory = ZmlValueReferenceFactory.getInstance();
-    return factory.createReference( (ZmlModelRow) reference.getRow(), reference.getColumn(), reference.getModelIndex() + 1 );
+    return new ZmlDataValueReference( reference.getRow(), reference.getColumn(), reference.getModelIndex() + 1 );
   }
 
   private void updateAggregatedValue( final IZmlValueReference start, final IZmlValueReference end, final Number targetValue ) throws SensorException

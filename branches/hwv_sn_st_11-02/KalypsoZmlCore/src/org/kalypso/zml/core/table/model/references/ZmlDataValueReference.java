@@ -67,7 +67,7 @@ public class ZmlDataValueReference implements IZmlValueReference
 
   private final IZmlModelRow m_row;
 
-  protected ZmlDataValueReference( final IZmlModelRow row, final IZmlModelColumn column, final int tupleModelIndex )
+  public ZmlDataValueReference( final IZmlModelRow row, final IZmlModelColumn column, final int tupleModelIndex )
   {
     m_row = row;
     m_column = column;

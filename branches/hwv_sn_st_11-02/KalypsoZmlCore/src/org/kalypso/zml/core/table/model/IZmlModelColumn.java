@@ -93,4 +93,8 @@ public interface IZmlModelColumn
   void setIsIgnoreType( boolean ignore );
 
   boolean isIgnoreType( );
+
+  void setDataHandler( IZmlModelColumnDataHandler dataHandler );
+
+  void setLabel( String label );
 }

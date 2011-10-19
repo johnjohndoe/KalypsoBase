@@ -42,6 +42,7 @@ package org.kalypso.zml.ui.table;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.kalypso.zml.core.table.model.IZmlModel;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
@@ -84,7 +85,10 @@ public interface IZmlTable
 
   TableViewer getViewer( );
 
-  void refresh( );
+  /**
+   * columns = null means 'refresh all columns'
+   */
+  void refresh( final IZmlModelColumn... columns );
 
   void removeListener( IZmlTableListener mListener );
 }

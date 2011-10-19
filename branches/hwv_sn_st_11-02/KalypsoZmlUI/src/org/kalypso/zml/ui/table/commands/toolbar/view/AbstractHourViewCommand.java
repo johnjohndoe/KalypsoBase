@@ -71,7 +71,6 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
     doOffsetAdjustment( table, filter );
 
     filter.setParameters( resultion, mode );
-
     table.refresh();
 
     return Status.OK_STATUS;

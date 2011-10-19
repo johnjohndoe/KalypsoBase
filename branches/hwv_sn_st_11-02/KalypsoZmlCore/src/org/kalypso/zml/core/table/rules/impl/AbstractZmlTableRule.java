@@ -73,9 +73,10 @@ public abstract class AbstractZmlTableRule implements IZmlRuleImplementation
   {
     try
     {
-      if( !rule.isEnabled() )
+      if( reference == null )
         return false;
-      else if( reference == null )
+
+      if( !rule.isEnabled() )
         return false;
 
       return doApply( rule, reference );

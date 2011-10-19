@@ -40,6 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.layout;
 
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -50,6 +55,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -71,13 +77,20 @@ public class ZmlTableLayoutHandler
     m_table = table;
   }
 
-  public void tableChanged( )
+  /**
+   * assert all columns will be updated an not disposed before update!
+   */
+  protected final Set<IExtendedZmlTableColumn> m_columnStack = Collections.synchronizedSet( new LinkedHashSet<IExtendedZmlTableColumn>() );
+
+  public void tableChanged( final IExtendedZmlTableColumn[] update )
   {
 
     synchronized( this )
     {
       if( Objects.isNotNull( m_job ) )
         m_job.cancel();
+
+      Collections.addAll( m_columnStack, update );
 
       m_job = new UIJob( "Aktualisiere Tabellen-Layout" )
       {
@@ -87,7 +100,12 @@ public class ZmlTableLayoutHandler
           if( m_table.isDisposed() )
             return Status.CANCEL_STATUS;
 
-          doUpdateColumns();
+          synchronized( this )
+          {
+            final IExtendedZmlTableColumn[] columns = m_columnStack.toArray( new IExtendedZmlTableColumn[] {} );
+            m_columnStack.clear();
+            doUpdateColumns( columns );
+          }
 
           return Status.OK_STATUS;
         }
@@ -98,14 +116,18 @@ public class ZmlTableLayoutHandler
     }
   }
 
-  protected void doUpdateColumns( )
+  protected void doUpdateColumns( final IExtendedZmlTableColumn[] columns )
   {
     final PackTableColumnVisitor visitor = new PackTableColumnVisitor();
-    m_table.accept( visitor );
+    for( final IExtendedZmlTableColumn column : columns )
+    {
+      visitor.visit( column );
+    }
 
-    visitor.packIndexColumns();
+    visitor.packIndexColumns( !ArrayUtils.isEmpty( m_table.getRows() ) );
 
     final TableViewer viewer = m_table.getViewer();
+
     if( m_table.isEmpty() )
     {
       viewer.getControl().setBackground( COLOR_TABLE_DISABLED );
