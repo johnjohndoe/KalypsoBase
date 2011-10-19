@@ -38,18 +38,44 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy;
+package org.kalypso.zml.ui.table.layout;
 
-import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
-import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.AppliedRule;
+import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.swt.widgets.TableColumn;
+import org.kalypso.zml.core.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public interface IExtendedZmlTableColumn extends IZmlTableColumn
+public class PackIndexColumnsVisitor extends AbstractTableColumnPackVisitor
 {
-  ZmlTableEditingSupport getEditingSupport( );
+  private final boolean m_visible;
 
-  AppliedRule[] getAppliedRules( );
+  public PackIndexColumnsVisitor( final boolean visible )
+  {
+    m_visible = visible;
+  }
+
+  @Override
+  public void visit( final IExtendedZmlTableColumn column )
+  {
+    if( !column.isIndexColumn() )
+      return;
+
+    final BaseColumn columnType = column.getColumnType();
+    final TableViewerColumn tableViewerColumn = column.getTableViewerColumn();
+    final TableColumn tableColumn = tableViewerColumn.getColumn();
+
+    final String label = columnType.getLabel();
+    tableColumn.setText( label );
+
+    if( !m_visible )
+    {
+      hide( tableColumn );
+    }
+    else
+      pack( tableColumn, columnType, label, true );
+  }
+
 }
