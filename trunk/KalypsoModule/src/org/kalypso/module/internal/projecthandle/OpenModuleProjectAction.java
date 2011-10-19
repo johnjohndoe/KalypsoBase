@@ -76,7 +76,7 @@ public class OpenModuleProjectAction extends ProjectOpenAction
     try
     {
       if( m_module == null )
-        return super.doOpenProject();
+        return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Miss-configured module" );
 
       final IKalypsoModuleProjectOpenAction action = m_module.getProjectOpenAction();
       final IProject project = m_item.getProject();
