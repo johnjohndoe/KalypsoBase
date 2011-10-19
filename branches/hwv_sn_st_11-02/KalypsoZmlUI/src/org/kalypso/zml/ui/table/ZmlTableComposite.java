@@ -88,6 +88,7 @@ import org.kalypso.zml.ui.table.layout.ZmlTableLayoutHandler;
 import org.kalypso.zml.ui.table.layout.ZmlTablePager;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.ZmlTableColumns;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.provider.ZmlTableCellCache;
 import org.kalypso.zml.ui.table.provider.ZmlTableCellPaintListener;
@@ -255,49 +256,41 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   @Override
   public void refresh( final IZmlModelColumn... columns )
   {
-    if( m_tableViewer.getTable().isDisposed() )
-      return;
-
     synchronized( this )
     {
-      m_pager.update();
-      final ExtendedZmlTableColumn[] tableColumns = findColumns( columns );
-      for( final ExtendedZmlTableColumn column : tableColumns )
+      if( Objects.isNotNull( m_updateJob ) )
+        m_updateJob.cancel();
+
+      m_updateJob = new UIJob( "Aktualisiere Zeitreihen-Tabelle" )
       {
-        column.reset();
-      }
-
-      m_tableViewer.refresh( true, true );
-      m_pager.reveal();
-    }
-
-    fireTableChanged( IZmlTableListener.TYPE_REFRESH, columns );
-  }
-
-  private ExtendedZmlTableColumn[] findColumns( final IZmlModelColumn... columns )
-  {
-    if( ArrayUtils.isEmpty( columns ) )
-      return m_columns.toArray( new ExtendedZmlTableColumn[] {} );
-
-    synchronized( this )
-    {
-      final Set<ExtendedZmlTableColumn> myColumns = new LinkedHashSet<ExtendedZmlTableColumn>();
-      for( final IZmlModelColumn column : columns )
-      {
-        for( final ExtendedZmlTableColumn extended : m_columns )
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
         {
-          if( extended.isIndexColumn() )
-            myColumns.add( extended );
-          else
-          {
-            final IZmlModelColumn modelColumn = extended.getModelColumn();
-            if( Objects.equal( modelColumn, column ) )
-              myColumns.add( extended );
-          }
-        }
-      }
+          if( m_tableViewer.getTable().isDisposed() )
+            return Status.OK_STATUS;
 
-      return myColumns.toArray( new ExtendedZmlTableColumn[] {} );
+          synchronized( this )
+          {
+            m_pager.update();
+
+            final IExtendedZmlTableColumn[] tableColumns = ZmlTableColumns.toTableColumns( ZmlTableComposite.this, true, columns );
+            for( final IExtendedZmlTableColumn column : tableColumns )
+            {
+              column.reset();
+            }
+
+            m_tableViewer.refresh( true, true );
+            m_pager.reveal();
+          }
+
+          fireTableChanged( IZmlTableListener.TYPE_REFRESH, columns );
+
+          return Status.OK_STATUS;
+        }
+      };
+
+      m_updateJob.setRule( MUTEX_TABLE_UPDATE );
+      m_updateJob.schedule( 100 );
     }
   }
 
@@ -314,24 +307,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   @Override
   public void modelChanged( final IZmlModelColumn... columns )
   {
-    synchronized( this )
-    {
-      if( Objects.isNotNull( m_updateJob ) )
-        m_updateJob.cancel();
-
-      m_updateJob = new UIJob( "Aktualisiere Zeitreihen-Tabelle" )
-      {
-        @Override
-        public IStatus runInUIThread( final IProgressMonitor monitor )
-        {
-          refresh( columns );
-
-          return Status.OK_STATUS;
-        }
-      };
-      m_updateJob.setRule( MUTEX_TABLE_UPDATE );
-      m_updateJob.schedule( 100 );
-    }
+    refresh( columns );
   }
 
   @Override

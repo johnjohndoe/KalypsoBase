@@ -79,6 +79,8 @@ public class BaseColumn
 
   private ColumnHeader[] m_headers;
 
+  private String m_headerImage;
+
   public BaseColumn( final AbstractColumnType type )
   {
     m_type = type;
@@ -316,5 +318,18 @@ public class BaseColumn
     m_cellStyle = null;
     m_editingCellStyle = null;
     m_headers = null;
+    m_headerImage = null;
+  }
+
+  public String getHeaderImageReference( )
+  {
+
+    return m_headerImage;
+  }
+
+  public void setHeaderImageReference( final String reference )
+  {
+    m_headerImage = reference;
+
   }
 }

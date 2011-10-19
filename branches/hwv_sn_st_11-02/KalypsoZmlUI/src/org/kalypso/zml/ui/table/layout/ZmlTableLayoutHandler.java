@@ -65,9 +65,9 @@ import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
  */
 public class ZmlTableLayoutHandler implements IZmlTableListener
 {
-  private static final Color COLOR_TABLE_DISABLED = new Color( null, new RGB( 0xea, 0xea, 0xea ) );
+  protected static final Color COLOR_TABLE_DISABLED = new Color( null, new RGB( 0xea, 0xea, 0xea ) );
 
-  private static final Color COLOR_TABLE_ENABLED = new Color( null, new RGB( 0xff, 0xff, 0xff ) );
+  protected static final Color COLOR_TABLE_ENABLED = new Color( null, new RGB( 0xff, 0xff, 0xff ) );
 
   protected final ZmlTableComposite m_table;
 
@@ -90,14 +90,46 @@ public class ZmlTableLayoutHandler implements IZmlTableListener
 
   }
 
+  final Set<IExtendedZmlTableColumn> m_stackHeaderColumns = Collections.synchronizedSet( new LinkedHashSet<IExtendedZmlTableColumn>() );
+
+  private final MutexRule m_refreshHeaderRule = new MutexRule( "updating column header" );
+
+  UIJob m_refreshColumnHeaderJob;
+
   private void doRefreshHeader( final IExtendedZmlTableColumn... columns )
   {
-    final PackTableColumnVisitor data = new PackTableColumnVisitor();
-    for( final IExtendedZmlTableColumn column : columns )
-    {
-      data.visit( column );
-    }
 
+    synchronized( this )
+    {
+      Collections.addAll( m_stackHeaderColumns, columns );
+      if( Objects.isNotNull( m_refreshColumnHeaderJob ) )
+        m_refreshColumnHeaderJob.cancel();
+
+      m_refreshColumnHeaderJob = new UIJob( "Aktualisiere Tablellenspalten" )
+      {
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
+        {
+          synchronized( this )
+          {
+            final IExtendedZmlTableColumn[] cols = m_stackHeaderColumns.toArray( new IExtendedZmlTableColumn[] {} );
+            m_stackHeaderColumns.clear();
+
+            final PackTableColumnVisitor data = new PackTableColumnVisitor();
+            for( final IExtendedZmlTableColumn col : cols )
+            {
+              data.visit( col );
+            }
+          }
+
+          return Status.OK_STATUS;
+        }
+      };
+
+      m_refreshColumnHeaderJob.setRule( m_refreshHeaderRule );
+      m_refreshColumnHeaderJob.schedule( 500 );
+
+    }
   }
 
   final Set<IExtendedZmlTableColumn> m_stackRefreshColumns = Collections.synchronizedSet( new LinkedHashSet<IExtendedZmlTableColumn>() );
@@ -149,7 +181,7 @@ public class ZmlTableLayoutHandler implements IZmlTableListener
       };
 
       m_refreshColumnsJob.setRule( m_refreshTableRule );
-      m_refreshColumnsJob.schedule( 100 );
+      m_refreshColumnsJob.schedule( 250 );
     }
 
   }

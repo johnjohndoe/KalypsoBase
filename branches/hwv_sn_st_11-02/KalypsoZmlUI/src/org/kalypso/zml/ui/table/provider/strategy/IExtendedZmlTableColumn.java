@@ -52,4 +52,6 @@ public interface IExtendedZmlTableColumn extends IZmlTableColumn
   ZmlTableEditingSupport getEditingSupport( );
 
   AppliedRule[] getAppliedRules( );
+
+  void reset( );
 }
