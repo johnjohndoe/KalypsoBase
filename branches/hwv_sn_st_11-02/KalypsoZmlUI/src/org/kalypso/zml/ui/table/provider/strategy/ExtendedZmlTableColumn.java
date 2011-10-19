@@ -173,8 +173,11 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
     return m_mapper.findActiveRules( reference );
   }
 
+  @Override
   public void reset( )
   {
+    super.reset();
+
     m_mapper.reset();
   }
 

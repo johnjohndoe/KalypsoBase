@@ -309,4 +309,12 @@ public class BaseColumn
   {
     return m_type.isTooltip();
   }
+
+  public void reset( )
+  {
+    m_rules = null;
+    m_cellStyle = null;
+    m_editingCellStyle = null;
+    m_headers = null;
+  }
 }

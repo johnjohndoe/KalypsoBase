@@ -111,16 +111,14 @@ public class ZmlTableLayoutHandler
       };
 
       m_job.setRule( MUTEX_TABLE_UPDATE );
-      m_job.schedule( 50 );
+      m_job.schedule( 200 );
     }
   }
 
   protected void doUpdateColumns( final IExtendedZmlTableColumn[] columns )
   {
-    final boolean visible = !ArrayUtils.isEmpty( m_table.getRows() );
-
     final PackTableColumnVisitor data = new PackTableColumnVisitor();
-    final PackIndexColumnsVisitor index = new PackIndexColumnsVisitor( visible );
+    final PackIndexColumnsVisitor index = new PackIndexColumnsVisitor( !ArrayUtils.isEmpty( m_table.getRows() ) );
 
     for( final IExtendedZmlTableColumn column : columns )
     {

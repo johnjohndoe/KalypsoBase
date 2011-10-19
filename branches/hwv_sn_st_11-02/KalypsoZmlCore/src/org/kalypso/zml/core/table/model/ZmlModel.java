@@ -125,17 +125,15 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     synchronized( this )
     {
       columns = m_columns.toArray( new ZmlModelColumn[] {} );
-// m_columns.clear();
-
       commands = m_commandRegister.toArray( new ZmlColumnLoadCommand[] {} );
-      m_commandRegister.clear();
 
+      m_commandRegister.clear();
       m_rows.clear();
     }
 
     for( final ZmlModelColumn column : columns )
     {
-      column.reset();
+      column.purge();
     }
 
     for( final ZmlColumnLoadCommand command : commands )
