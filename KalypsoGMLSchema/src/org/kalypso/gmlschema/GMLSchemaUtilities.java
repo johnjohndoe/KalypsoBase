@@ -81,6 +81,7 @@ import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.contribs.javax.xml.namespace.ListQName;
 import org.kalypso.contribs.javax.xml.namespace.MixedQName;
 import org.kalypso.contribs.javax.xml.namespace.QNameUnique;
+import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -159,14 +160,15 @@ public class GMLSchemaUtilities
    * @param substitueeName
    *          Name of the type which may or may not be substituted by type
    */
-  public static synchronized boolean substitutes( final IFeatureType featureType, final QNameUnique pQName, final QNameUnique localQName )
+  public static synchronized boolean substitutes( final IFeatureType featureType, final QNameUnique substitueeName, final QNameUnique localQName )
   {
-    if( featureType.getQName() == pQName )
+    // everyone is substituting himself
+    if( featureType.getQName() == substitueeName )
       return true;
 
-    // everyone is substituting himself
-    // FIXME: this is just wrong! Who did this!??
-    if( featureType.getLocalQName() == localQName )
+    // HACK/BUGFIX: FilteredFeatureLists with non-qualified namespaces need this. Fixes
+    // the bug, that bridges/weirs are not visible in 1D2D.
+    if( substitueeName.getNamespaceURI().isEmpty() && QNameUtilities.equalsLocal( featureType.getQName(), substitueeName ) )
       return true;
 
     // this comparison comes up as one of the very often used operations
@@ -182,15 +184,15 @@ public class GMLSchemaUtilities
       final QNameUnique substQName = substitutionGroupFT.getQName();
       final Map<QNameUnique, Boolean> substitutesMap = getSubsitutesMap( substQName );
 
-      final Boolean cachedResult = substitutesMap.get( pQName );
+      final Boolean cachedResult = substitutesMap.get( substitueeName );
       if( cachedResult != null )
       {
         substitutesResult = cachedResult;
       }
       else
       {
-        substitutesResult = substitutes( substitutionGroupFT, pQName, localQName );
-        substitutesMap.put( pQName, substitutesResult );
+        substitutesResult = substitutes( substitutionGroupFT, substitueeName, localQName );
+        substitutesMap.put( substitueeName, substitutesResult );
       }
     }
 
