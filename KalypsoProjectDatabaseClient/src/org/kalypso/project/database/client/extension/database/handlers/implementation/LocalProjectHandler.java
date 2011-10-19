@@ -58,13 +58,11 @@ import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.nature.ModuleNature;
 import org.kalypso.module.project.local.ILocalProject;
 import org.kalypso.module.project.local.IProjectHandleProvider;
-import org.kalypso.module.project.local.IProjectOpenAction;
 import org.kalypso.module.project.local.LocalProjectHandle;
 import org.kalypso.module.project.local.ProjectHandleExtensions;
 import org.kalypso.module.project.local.actions.ProjectDeleteAction;
 import org.kalypso.module.project.local.actions.ProjectExportAction;
 import org.kalypso.module.project.local.actions.ProjectInfoAction;
-import org.kalypso.module.project.local.actions.ProjectOpenAction;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.base.actions.EmptyProjectAction;
 import org.kalypso.project.database.client.core.base.actions.ProjectUploadAction;
@@ -354,17 +352,4 @@ public class LocalProjectHandler extends LocalProjectHandle implements ILocalPro
 
     return new EmptyProjectAction();
   }
-
-  /**
-   * @see org.kalypso.core.projecthandle.LocalProjectHandle#getAdapter(java.lang.Class)
-   */
-  @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
-  {
-    if( adapter == IProjectOpenAction.class )
-      return new ProjectOpenAction( this );
-
-    return super.getAdapter( adapter );
-  }
-
 }
