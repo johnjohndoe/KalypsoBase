@@ -172,9 +172,6 @@ public class ZmlDataValueReference implements IZmlValueReference
     return null;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.references.IZmlValueReference#getHref()
-   */
   @Override
   public String getHref( )
   {
@@ -189,6 +186,7 @@ public class ZmlDataValueReference implements IZmlValueReference
     }
     catch( final Throwable t )
     {
+      t.printStackTrace();
     }
 
     return href;

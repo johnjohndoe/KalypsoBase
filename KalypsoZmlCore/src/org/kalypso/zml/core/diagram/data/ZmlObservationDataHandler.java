@@ -97,9 +97,9 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
     {
       if( m_valueAxis == null )
         m_valueAxis = AxisUtils.findAxis( m_observation.getAxes(), m_targetAxisId );
-    }
 
-    return m_valueAxis;
+      return m_valueAxis;
+    }
   }
 
   /**

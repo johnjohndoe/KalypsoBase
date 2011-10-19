@@ -433,22 +433,4 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   {
     return m_cache;
   }
-
-  public void reset( )
-  {
-    getCache().clear();
-
-    accept( new IZmlTableColumnVisitor()
-    {
-      @Override
-      public void visit( final IExtendedZmlTableColumn column )
-      {
-        if( column.isIndexColumn() )
-          return;
-
-        final TableViewerColumn viewerColumn = column.getTableViewerColumn();
-        viewerColumn.getColumn().setWidth( 0 );
-      }
-    } );
-  }
 }
