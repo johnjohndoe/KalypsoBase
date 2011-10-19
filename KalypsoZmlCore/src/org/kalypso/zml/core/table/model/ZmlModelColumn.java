@@ -116,6 +116,8 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   {
     synchronized( this )
     {
+      m_type.reset();
+
       if( Objects.isNotNull( m_handler ) )
         m_handler.removeListener( this );
 
@@ -125,7 +127,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   }
 
-  public void reset( )
+  public void purge( )
   {
     m_handler.dispose();
   }

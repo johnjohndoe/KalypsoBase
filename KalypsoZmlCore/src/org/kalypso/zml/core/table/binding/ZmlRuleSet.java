@@ -84,7 +84,10 @@ public class ZmlRuleSet
       if( objRule instanceof RuleType )
       {
         final RuleType ruleType = (RuleType) objRule;
-        rules.add( new ZmlRule( ruleType ) );
+        final ZmlRule rule = new ZmlRule( ruleType );
+        rule.reset();
+
+        rules.add( rule );
       }
       else if( objRule instanceof RuleRefernceType )
       {
@@ -93,7 +96,10 @@ public class ZmlRuleSet
           final RuleRefernceType reference = (RuleRefernceType) objRule;
           final ZmlRule rule = resolver.findRule( null, reference );
           if( rule != null )
+          {
+            rule.reset();
             rules.add( rule );
+          }
         }
         catch( final CoreException e )
         {
@@ -118,4 +124,5 @@ public class ZmlRuleSet
 
     return null;
   }
+
 }

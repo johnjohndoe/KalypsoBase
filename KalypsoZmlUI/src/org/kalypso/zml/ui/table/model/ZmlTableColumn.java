@@ -183,4 +183,9 @@ public class ZmlTableColumn extends ZmlTableElement implements IZmlTableColumn
     return new ZmlTableCell( new ZmlTableRow( getTable(), row ), this );
   }
 
+  public void reset( )
+  {
+    m_type.reset();
+  }
+
 }
