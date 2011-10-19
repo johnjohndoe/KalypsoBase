@@ -83,6 +83,20 @@ public class ZmlTableLayoutHandler implements IZmlTableListener
     {
       doRefreshColumns( ZmlTableColumns.toTableColumns( m_table, true, columns ) );
     }
+    else if( IZmlTableListener.TYPE_ACTIVE_RULE_CHANGED.equals( type ) )
+    {
+      doRefreshHeader( ZmlTableColumns.toTableColumns( m_table, false, columns ) );
+    }
+
+  }
+
+  private void doRefreshHeader( final IExtendedZmlTableColumn... columns )
+  {
+    final PackTableColumnVisitor data = new PackTableColumnVisitor();
+    for( final IExtendedZmlTableColumn column : columns )
+    {
+      data.visit( column );
+    }
 
   }
 
