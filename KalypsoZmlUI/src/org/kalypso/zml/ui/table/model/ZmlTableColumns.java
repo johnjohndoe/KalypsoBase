@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,19 +38,47 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableListener
+public final class ZmlTableColumns
 {
-  String TYPE_REFRESH = "refresh";
+  private ZmlTableColumns( )
+  {
+  }
 
-  String TYPE_ACTIVE_RULE_CHANGED = "rule";
+  public static IExtendedZmlTableColumn[] toTableColumns( final IZmlTable table, final boolean index, final IZmlModelColumn[] modelColumns )
+  {
+    final Set<IExtendedZmlTableColumn> columns = new HashSet<IExtendedZmlTableColumn>();
 
-  void eventTableChanged( String type, IZmlModelColumn... columns );
+    final ExtendedZmlTableColumn[] tableColumns = (ExtendedZmlTableColumn[]) table.getColumns();
+    for( final ExtendedZmlTableColumn tableColumn : tableColumns )
+    {
+      if( tableColumn.isIndexColumn() && index )
+        columns.add( tableColumn );
 
+      // columns empty? means refresh all columns
+      if( ArrayUtils.isEmpty( modelColumns ) )
+        columns.add( tableColumn );
+      else
+      {
+        final IZmlModelColumn modelColumn = tableColumn.getModelColumn();
+        if( ArrayUtils.contains( modelColumns, modelColumn ) )
+          columns.add( tableColumn );
+      }
+    }
+
+    return columns.toArray( new IExtendedZmlTableColumn[] {} );
+  }
 }
