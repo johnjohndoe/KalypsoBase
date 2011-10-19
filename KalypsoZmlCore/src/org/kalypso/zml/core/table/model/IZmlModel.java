@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model;
 
+import java.util.Date;
+
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 
 /**
@@ -52,13 +54,13 @@ public interface IZmlModel
 
   void addListener( IZmlColumnModelListener listener );
 
-  void fireModelChanged( );
+  void fireModelChanged( final IZmlModelColumn... columns );
 
   IZmlModelColumn getColumn( String id );
 
   IZmlModelColumn[] getColumns( );
 
-  IZmlModelRow getRow( final Object index );
+  IZmlModelRow getRow( final Date index );
 
   IZmlModelRow getRowAt( final int index );
 

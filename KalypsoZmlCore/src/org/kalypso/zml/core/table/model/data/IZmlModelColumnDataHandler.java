@@ -56,4 +56,6 @@ public interface IZmlModelColumnDataHandler
   ITupleModel getModel( ) throws SensorException;
 
   IObservation getObservation( );
+
+  void removeListener( IZmlModelColumnDataListener listener );
 }

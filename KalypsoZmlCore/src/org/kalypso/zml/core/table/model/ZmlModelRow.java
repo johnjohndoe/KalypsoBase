@@ -64,7 +64,7 @@ public class ZmlModelRow implements IZmlModelRow
 
   private final IZmlModel m_model;
 
-  protected ZmlModelRow( final IZmlModel model, final Date index )
+  public ZmlModelRow( final IZmlModel model, final Date index )
   {
     m_model = model;
     m_index = index;

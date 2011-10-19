@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.loader;
 
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
@@ -48,8 +49,10 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.model.ZmlModelColumn;
+import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.ObsProviderZmlColumnDataHandler;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 
@@ -64,17 +67,21 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
 
   private final ZmlModel m_model;
 
-  public ZmlColumnLoadCommand( final ZmlModel model, final IZmlTableElement column )
+  public ZmlColumnLoadCommand( final ZmlModel model, final IZmlTableElement element )
   {
     m_model = model;
-    m_element = column;
+    m_element = element;
 
+  }
+
+  public void execute( )
+  {
     synchronized( this )
     {
-      final IObsProvider provider = column.getObsProvider();
+      final IObsProvider provider = m_element.getObsProvider();
       if( provider.isLoaded() )
       {
-        execute();
+        doExcecute();
       }
       else
       {
@@ -96,12 +103,11 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     // final IObservation observation = m_element.getObsProvider().getObservation();
     // if( observation == null )
     // return;
-
     m_element.getObsProvider().removeListener( this );
 
     synchronized( this )
     {
-      execute();
+      doExcecute();
     }
   }
 
@@ -111,15 +117,38 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     m_element.dispose();
   }
 
-  private void execute( )
+  private void doExcecute( )
   {
-    /** base observation will be disposed by NewZmlTableLayoutPart (save table) */
-    final IObsProvider base = m_element.getObsProvider();
-
     try
     {
-      if( !m_canceled )
-        doExecute( base );
+      if( m_canceled )
+        return;
+      /** base observation will be disposed by NewZmlTableLayoutPart (save table) */
+      final IObsProvider base = m_element.getObsProvider();
+      final IObservation observation = base.getObservation();
+      if( Objects.isNull( observation ) )
+        return;
+
+      final DataColumnType type = (DataColumnType) TableTypes.findColumnType( m_model.getTableType(), m_element.getIdentifier() );
+      final IAxis[] axes = observation.getAxes();
+      if( !hasValueAxis( axes, type ) )
+        return;
+
+      final IObsProvider provider = base.copy();
+      final IZmlModelColumnDataHandler handler = new ObsProviderZmlColumnDataHandler( provider );
+
+      final DataColumn data = new DataColumn( type );
+
+      IZmlModelColumn column = m_model.getColumn( m_element.getIdentifier() );
+      if( Objects.isNull( column ) )
+      {
+        column = new ZmlModelColumn( m_model, m_element.getIdentifier(), data );
+        m_model.add( column );
+
+        doUpdateColumn( column, data, axes, handler );
+      }
+      else
+        doUpdateColumn( column, data, axes, handler );
     }
     finally
     {
@@ -127,31 +156,16 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     }
   }
 
-  private void doExecute( final IObsProvider base )
+  private void doUpdateColumn( final IZmlModelColumn column, final DataColumn type, final IAxis[] axes, final IZmlModelColumnDataHandler handler )
   {
-    final IObservation observation = base.getObservation();
-    if( observation == null )
-      return;
-
-    final DataColumnType type = (DataColumnType) TableTypes.findColumnType( m_model.getTableType(), m_element.getIdentifier() );
-    final IAxis[] axes = observation.getAxes();
-    if( !hasValueAxis( axes, type ) )
-      return;
-
-    final DataColumn data = new DataColumn( type );
-
-    final String label = m_element.getTitle( AxisUtils.findAxis( axes, data.getValueAxis() ) );
-
-    final IObsProvider clone = base.copy();
-    final ZmlModelColumn column = new ZmlModelColumn( m_model, m_element.getIdentifier(), label, data, new ObsProviderZmlColumnDataHandler( clone ) );
-    m_model.add( column );
+    final String label = m_element.getTitle( AxisUtils.findAxis( axes, type.getValueAxis() ) );
+    column.setLabel( label );
+    column.setDataHandler( handler );
   }
 
   private boolean hasValueAxis( final IAxis[] axes, final DataColumnType type )
   {
-    final IAxis axis = AxisUtils.findAxis( axes, type.getValueAxis() );
-
-    return axis != null;
+    return Objects.isNotNull( AxisUtils.findAxis( axes, type.getValueAxis() ) );
   }
 
   /**

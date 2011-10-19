@@ -102,7 +102,7 @@ public class ZmlTableUpdater implements Runnable
     final ZmlLinkDiagramElement element = createZmlDiagrammElement( link, identifier, index );
     final IObsProvider clonedProvider = element.getObsProvider().copy();
 
-    m_part.getModel().loadColumn( element );
+    m_part.getModel().load( element );
 
     final ILabeledObsProvider obsWithLabel = new TsLinkObsProvider( link, clonedProvider );
     final IPoolableObjectType poolKey = element.getPoolKey();
