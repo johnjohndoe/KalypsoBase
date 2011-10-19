@@ -82,35 +82,47 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
     final TableColumn tableColumn = tableViewerColumn.getColumn();
 
     final IZmlModelColumn modelColumn = column.getModelColumn();
-    if( Objects.isNull( modelColumn ) )
+    if( Objects.isNull( modelColumn ) || !isVisible( modelColumn ) )
     {
       hide( tableColumn );
     }
     else
     {
-      if( !isVisible( modelColumn ) )
-        hide( tableColumn );
-      else
+      /** only update headers of data column types */
+      if( updateHeader( column ) )
       {
-        /** only update headers of data column types */
-        updateHeader( column );
-
         final String label = modelColumn.getLabel();
         tableColumn.setText( label );
 
         pack( tableColumn, columnType, label, isVisible( modelColumn ) );
       }
     }
-
   }
 
-  private void updateHeader( final IExtendedZmlTableColumn column )
+  private boolean updateHeader( final IExtendedZmlTableColumn column )
   {
     final TableColumn tableColumn = column.getTableViewerColumn().getColumn();
     final ZmlTableImageMerger provider = new ZmlTableImageMerger( 1 );
 
-    final BaseColumn columnType = column.getColumnType();
-    for( final ColumnHeader header : columnType.getHeaders() )
+    final BaseColumn base = column.getColumnType();
+    fill( provider, column, base.getHeaders() );
+
+    final String reference = provider.getImageReference();
+    if( Objects.notEqual( base.getHeaderImageReference(), reference ) )
+    {
+      tableColumn.setImage( provider.createImage( tableColumn.getDisplay() ) );
+      base.setHeaderImageReference( reference );
+
+      return true;
+    }
+
+    return false;
+  }
+
+  private void fill( final ZmlTableImageMerger provider, final IExtendedZmlTableColumn column, final ColumnHeader[] columnHeaders )
+  {
+
+    for( final ColumnHeader header : columnHeaders )
     {
       try
       {
@@ -143,7 +155,6 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
       }
     }
 
-    tableColumn.setImage( provider.createImage( tableColumn.getDisplay() ) );
   }
 
 }

@@ -83,11 +83,16 @@ public final class ZmlTableImageMerger
 
   public Image createImage( final Display display )
   {
+    return createImage( display, getImageReference() );
+  }
+
+  public Image createImage( final Display display, final String imageReference )
+  {
     if( m_images.size() == 0 )
       return null;
 
     final ZmlTableImage[] images = m_images.toArray( new ZmlTableImage[] {} );
-    final String imageReference = buildImageReference( images );
+
     final Image registered = IMAGE_REGISTRY.get( imageReference );
     if( registered != null )
       return registered;
@@ -149,10 +154,10 @@ public final class ZmlTableImageMerger
       return m_numberOfIcons;
   }
 
-  private String buildImageReference( final ZmlTableImage[] images )
+  public String getImageReference( )
   {
     final StringBuffer buffer = new StringBuffer();
-    for( final ZmlTableImage image : images )
+    for( final ZmlTableImage image : m_images )
     {
       buffer.append( image.getHref() );
       buffer.append( ";" ); //$NON-NLS-1$
