@@ -84,7 +84,6 @@ public class ZmlTableLayoutHandler
 
   public void tableChanged( final IExtendedZmlTableColumn[] update )
   {
-
     synchronized( this )
     {
       if( Objects.isNotNull( m_job ) )
@@ -112,19 +111,22 @@ public class ZmlTableLayoutHandler
       };
 
       m_job.setRule( MUTEX_TABLE_UPDATE );
-      m_job.schedule( 100 );
+      m_job.schedule( 50 );
     }
   }
 
   protected void doUpdateColumns( final IExtendedZmlTableColumn[] columns )
   {
-    final PackTableColumnVisitor visitor = new PackTableColumnVisitor();
+    final boolean visible = !ArrayUtils.isEmpty( m_table.getRows() );
+
+    final PackTableColumnVisitor data = new PackTableColumnVisitor();
+    final PackIndexColumnsVisitor index = new PackIndexColumnsVisitor( visible );
+
     for( final IExtendedZmlTableColumn column : columns )
     {
-      visitor.visit( column );
+      data.visit( column );
+      index.visit( column );
     }
-
-    visitor.packIndexColumns( !ArrayUtils.isEmpty( m_table.getRows() ) );
 
     final TableViewer viewer = m_table.getViewer();
 
