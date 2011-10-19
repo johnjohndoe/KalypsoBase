@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart.layer.wsp;
 
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -66,15 +65,10 @@ public class WspPanel extends AbstractProfilView
     m_layer = layer;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
     final WaterLevelResultTree tree = new WaterLevelResultTree( parent, m_layer, toolkit );
-    tree.setLayoutData( new FillLayout() );
     tree.addFilter( new WaterLevelFilter() );
 
     return tree;
