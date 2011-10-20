@@ -103,8 +103,11 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   @Override
   public void accept( final IZmlModelRowVisitor visitor )
   {
-    if( m_rows.isEmpty() )
-      getRows();
+    synchronized( this )
+    {
+      if( m_rows.isEmpty() )
+        getRows();
+    }
 
     final Set<Entry<Date, IZmlModelRow>> entries = m_rows.entrySet();
     for( final Entry<Date, IZmlModelRow> entry : entries )
@@ -198,9 +201,6 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     {
       if( m_rows.isEmpty() )
         getRows();
-
-      final ZmlRowBuilder builder = new ZmlRowBuilder( this );
-      m_rows = builder.execute();
     }
 
     return m_rows.get( index );
