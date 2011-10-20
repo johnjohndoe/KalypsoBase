@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.layout;
 
-import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -49,7 +49,7 @@ public class HideInactiveColumnsVisitor extends AbstractTableColumnPackVisitor
 {
 
   @Override
-  public void visit( final IExtendedZmlTableColumn column )
+  public void visit( final IZmlTableColumn column )
   {
     if( !column.isVisible() )
       hide( column.getTableViewerColumn().getColumn() );

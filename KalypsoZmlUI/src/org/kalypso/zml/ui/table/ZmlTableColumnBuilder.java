@@ -54,8 +54,8 @@ import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.ZmlTooltipProvider;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -79,7 +79,7 @@ public class ZmlTableColumnBuilder implements ICoreRunnableWithProgress
     final int index = viewer.getTable().getColumnCount();
     final TableViewerColumn viewerColumn = new TableViewerColumn( viewer, TableTypes.toSWT( m_column.getAlignment() ) );
 
-    final ExtendedZmlTableColumn column = new ExtendedZmlTableColumn( m_table, viewerColumn, m_column, index );
+    final ZmlTableColumn column = new ZmlTableColumn( m_table, viewerColumn, m_column, index );
     m_table.add( column );
 
     viewerColumn.setLabelProvider( new ZmlTooltipProvider( column ) );

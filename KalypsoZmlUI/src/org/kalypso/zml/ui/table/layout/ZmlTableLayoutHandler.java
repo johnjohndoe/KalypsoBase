@@ -50,8 +50,8 @@ import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.ZmlTableColumns;
-import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -60,7 +60,7 @@ public class ZmlTableLayoutHandler implements IZmlTableListener
 {
   protected final ZmlTableComposite m_table;
 
-  final Set<IExtendedZmlTableColumn> m_stack = Collections.synchronizedSet( new LinkedHashSet<IExtendedZmlTableColumn>() );
+  final Set<IZmlTableColumn> m_stack = Collections.synchronizedSet( new LinkedHashSet<IZmlTableColumn>() );
 
   private final MutexRule m_rule = new MutexRule( "updating column layout of zml table" );
 
@@ -85,7 +85,7 @@ public class ZmlTableLayoutHandler implements IZmlTableListener
 
   }
 
-  private void doRefreshColumns( final IExtendedZmlTableColumn... columns )
+  private void doRefreshColumns( final IZmlTableColumn... columns )
   {
     synchronized( this )
     {

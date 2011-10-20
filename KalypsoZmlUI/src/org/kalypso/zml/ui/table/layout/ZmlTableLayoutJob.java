@@ -51,7 +51,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
-import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -64,9 +64,9 @@ public class ZmlTableLayoutJob extends UIJob
 
   private final ZmlTableComposite m_table;
 
-  private final Set<IExtendedZmlTableColumn> m_stack;
+  private final Set<IZmlTableColumn> m_stack;
 
-  public ZmlTableLayoutJob( final ZmlTableComposite table, final Set<IExtendedZmlTableColumn> stack )
+  public ZmlTableLayoutJob( final ZmlTableComposite table, final Set<IZmlTableColumn> stack )
   {
     super( "Aktualisiere Tabellen-Layout" );
     m_table = table;
@@ -81,7 +81,7 @@ public class ZmlTableLayoutJob extends UIJob
   {
     synchronized( this )
     {
-      final IExtendedZmlTableColumn[] stack = m_stack.toArray( new IExtendedZmlTableColumn[] {} );
+      final IZmlTableColumn[] stack = m_stack.toArray( new IZmlTableColumn[] {} );
       m_stack.clear();
 
       doVisitIndex( stack );
@@ -102,22 +102,22 @@ public class ZmlTableLayoutJob extends UIJob
     return Status.OK_STATUS;
   }
 
-  private void doVisitIndex( final IExtendedZmlTableColumn[] columns )
+  private void doVisitIndex( final IZmlTableColumn[] columns )
   {
     final PackIndexColumnsVisitor visitor = new PackIndexColumnsVisitor( !ArrayUtils.isEmpty( m_table.getRows() ) );
 
-    for( final IExtendedZmlTableColumn column : columns )
+    for( final IZmlTableColumn column : columns )
     {
       if( column.isIndexColumn() )
         visitor.visit( column );
     }
   }
 
-  private void doVisitHide( final IExtendedZmlTableColumn[] columns )
+  private void doVisitHide( final IZmlTableColumn[] columns )
   {
     final HideInactiveColumnsVisitor visitor = new HideInactiveColumnsVisitor();
 
-    for( final IExtendedZmlTableColumn column : columns )
+    for( final IZmlTableColumn column : columns )
     {
       if( !column.isVisible() )
         visitor.visit( column );
@@ -125,11 +125,11 @@ public class ZmlTableLayoutJob extends UIJob
 
   }
 
-  private void doVisitPack( final IExtendedZmlTableColumn[] columns )
+  private void doVisitPack( final IZmlTableColumn[] columns )
   {
     final PackTableColumnVisitor visitor = new PackTableColumnVisitor();
 
-    for( final IExtendedZmlTableColumn column : columns )
+    for( final IZmlTableColumn column : columns )
     {
       if( column.isIndexColumn() )
         continue;

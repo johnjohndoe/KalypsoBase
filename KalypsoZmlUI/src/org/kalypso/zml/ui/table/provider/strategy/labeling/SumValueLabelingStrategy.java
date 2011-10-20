@@ -53,7 +53,7 @@ import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -61,7 +61,7 @@ import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy implements IZmlLabelStrategy
 {
 
-  public SumValueLabelingStrategy( final ExtendedZmlTableColumn column )
+  public SumValueLabelingStrategy( final ZmlTableColumn column )
   {
     super( column );
   }
@@ -84,7 +84,7 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
 
   private String getAsAggregatedValue( final IZmlModelRow row ) throws CoreException, SensorException
   {
-    final ExtendedZmlTableColumn column = getColumn();
+    final ZmlTableColumn column = getColumn();
 
     final IZmlTableCell current = column.findCell( row );
     final IZmlTableCell previous = current.findPreviousCell();

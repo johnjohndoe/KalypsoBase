@@ -48,7 +48,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -57,7 +57,7 @@ public class ZmlTooltipProvider extends ColumnLabelProvider
 {
   private final ZmlTooltipSupport m_tooltip;
 
-  private final ExtendedZmlTableColumn m_column;
+  private final ZmlTableColumn m_column;
 
   @Override
   public String getText( final Object element )
@@ -65,7 +65,7 @@ public class ZmlTooltipProvider extends ColumnLabelProvider
     return null;
   }
 
-  public ZmlTooltipProvider( final ExtendedZmlTableColumn column )
+  public ZmlTooltipProvider( final ZmlTableColumn column )
   {
     m_column = column;
     m_tooltip = new ZmlTooltipSupport( column );
