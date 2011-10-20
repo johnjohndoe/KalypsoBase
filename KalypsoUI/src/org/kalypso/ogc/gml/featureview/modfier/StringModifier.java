@@ -189,7 +189,7 @@ public class StringModifier extends AbstractFeatureModifier
   @Override
   public String getLabel( final Feature f )
   {
-    final Object data = getProperty( f );
+    final Object data = super.getProperty( f );
 
     // We should probably use a null-format string here
     if( data == null )
