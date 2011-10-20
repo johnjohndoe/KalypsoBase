@@ -50,10 +50,10 @@ import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ColumnHeader;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
 import org.kalypso.zml.ui.table.provider.ZmlTableImage;
 import org.kalypso.zml.ui.table.provider.ZmlTableImageMerger;
-import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -65,7 +65,7 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
    * @see org.kalypso.zml.ui.table.IZmlTableColumnVisitor#visit(org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn)
    */
   @Override
-  public void visit( final IExtendedZmlTableColumn column )
+  public void visit( final IZmlTableColumn column )
   {
     if( column.isIndexColumn() )
     {
@@ -94,7 +94,7 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
     }
   }
 
-  private boolean updateHeader( final IExtendedZmlTableColumn column )
+  private boolean updateHeader( final IZmlTableColumn column )
   {
     final TableColumn tableColumn = column.getTableViewerColumn().getColumn();
     final ZmlTableImageMerger provider = new ZmlTableImageMerger( 1 );
@@ -114,7 +114,7 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
     return false;
   }
 
-  private void fill( final ZmlTableImageMerger provider, final IExtendedZmlTableColumn column, final ColumnHeader[] columnHeaders )
+  private void fill( final ZmlTableImageMerger provider, final IZmlTableColumn column, final ColumnHeader[] columnHeaders )
   {
 
     for( final ColumnHeader header : columnHeaders )

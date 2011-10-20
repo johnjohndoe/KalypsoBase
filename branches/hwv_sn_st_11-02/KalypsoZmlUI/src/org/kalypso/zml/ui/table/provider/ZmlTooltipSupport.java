@@ -57,7 +57,7 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand;
 import org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 
 import com.google.common.base.Strings;
 
@@ -68,11 +68,11 @@ public class ZmlTooltipSupport
 {
   private static final Image IMG = new Image( null, ZmlTooltipProvider.class.getResourceAsStream( "icons/help_hint_48.png" ) ); //$NON-NLS-1$
 
-  private final ExtendedZmlTableColumn m_column;
+  private final ZmlTableColumn m_column;
 
   private static boolean SHOW_TOOLTIPS = true;
 
-  public ZmlTooltipSupport( final ExtendedZmlTableColumn column )
+  public ZmlTooltipSupport( final ZmlTableColumn column )
   {
     m_column = column;
   }

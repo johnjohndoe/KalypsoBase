@@ -58,7 +58,7 @@ import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.schema.AlignmentType;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -81,7 +81,7 @@ public class ZmlTableCellPainter
   {
     m_cell = cell;
 
-    final ExtendedZmlTableColumn column = getColumn();
+    final ZmlTableColumn column = getColumn();
 
     final IZmlModelRow modelRow = cell.getRow().getModelRow();
     m_activeRules = column.findActiveRules( modelRow );
@@ -112,7 +112,7 @@ public class ZmlTableCellPainter
       e.printStackTrace();
     }
 
-    return new Point( 10, 10 );
+    return null;
   }
 
   private void add( final Point base, final Point add )
@@ -236,12 +236,12 @@ public class ZmlTableCellPainter
     return column.isVisible();
   }
 
-  private ExtendedZmlTableColumn getColumn( )
+  private ZmlTableColumn getColumn( )
   {
     final IZmlTableColumn column = m_cell.getColumn();
-    if( column instanceof ExtendedZmlTableColumn )
+    if( column instanceof ZmlTableColumn )
     {
-      return (ExtendedZmlTableColumn) column;
+      return (ZmlTableColumn) column;
     }
 
     throw new UnsupportedOperationException();

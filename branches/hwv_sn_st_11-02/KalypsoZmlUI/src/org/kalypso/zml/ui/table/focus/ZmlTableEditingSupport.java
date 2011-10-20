@@ -60,8 +60,8 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.ZmlTooltipProvider;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 
 import com.google.common.base.Objects;
@@ -94,13 +94,13 @@ public class ZmlTableEditingSupport extends EditingSupport
 
   private String m_lastEdited;
 
-  private final ExtendedZmlTableColumn m_column;
+  private final ZmlTableColumn m_column;
 
   private final ZmlTooltipProvider m_labelProvider;
 
   private final IZmlTableFocusHandler m_handler;
 
-  public ZmlTableEditingSupport( final ExtendedZmlTableColumn column, final ZmlTooltipProvider labelProvider, final IZmlTableFocusHandler handler )
+  public ZmlTableEditingSupport( final ZmlTableColumn column, final ZmlTooltipProvider labelProvider, final IZmlTableFocusHandler handler )
   {
     super( column.getTable().getViewer() );
     m_column = column;

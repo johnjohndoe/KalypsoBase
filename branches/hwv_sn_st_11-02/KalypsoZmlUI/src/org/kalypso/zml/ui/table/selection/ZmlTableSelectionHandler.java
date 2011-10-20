@@ -78,7 +78,6 @@ import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableCell;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
-import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
  * handles mouse move and menu detect events (active selection of table cells, columns and rows and updating of the
@@ -94,7 +93,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
 
   private final ZmlTableComposite m_table;
 
-  private IExtendedZmlTableColumn m_lastColumn;
+  private IZmlTableColumn m_lastColumn;
 
   public ZmlTableSelectionHandler( final ZmlTableComposite table )
   {
@@ -165,7 +164,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     final Point eventPoint = new Point( event.x + selection, event.y );
     final Point controlPoint = table.toControl( eventPoint );
 
-    IExtendedZmlTableColumn column = findColumn( controlPoint );
+    IZmlTableColumn column = findColumn( controlPoint );
     if( Objects.isNull( column ) )
       column = findColumn( eventPoint );
 
@@ -188,7 +187,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     }
   }
 
-  private IExtendedZmlTableColumn findColumn( final Point point )
+  private IZmlTableColumn findColumn( final Point point )
   {
     if( Objects.isNull( point ) )
       return null;
@@ -197,7 +196,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     if( columnIndex == -1 )
       return null;
 
-    return (IExtendedZmlTableColumn) m_table.findColumn( columnIndex );
+    return m_table.findColumn( columnIndex );
   }
 
   private int findColumnIndex( final int x )
@@ -237,7 +236,7 @@ public class ZmlTableSelectionHandler implements MouseMoveListener, Listener, IZ
     if( Objects.isNotNull( m_lastColumn ) )
       return m_lastColumn;
 
-    final IExtendedZmlTableColumn found = findColumn( m_position );
+    final IZmlTableColumn found = findColumn( m_position );
     if( Objects.isNotNull( found ) )
       m_lastColumn = found;
 

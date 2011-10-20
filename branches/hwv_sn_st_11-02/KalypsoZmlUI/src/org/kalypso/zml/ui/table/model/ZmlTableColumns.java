@@ -46,8 +46,6 @@ import java.util.Set;
 import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -58,12 +56,12 @@ public final class ZmlTableColumns
   {
   }
 
-  public static IExtendedZmlTableColumn[] toTableColumns( final IZmlTable table, final boolean index, final IZmlModelColumn[] modelColumns )
+  public static IZmlTableColumn[] toTableColumns( final IZmlTable table, final boolean index, final IZmlModelColumn[] modelColumns )
   {
-    final Set<IExtendedZmlTableColumn> columns = new HashSet<IExtendedZmlTableColumn>();
+    final Set<IZmlTableColumn> columns = new HashSet<IZmlTableColumn>();
 
-    final ExtendedZmlTableColumn[] tableColumns = (ExtendedZmlTableColumn[]) table.getColumns();
-    for( final ExtendedZmlTableColumn tableColumn : tableColumns )
+    final ZmlTableColumn[] tableColumns = (ZmlTableColumn[]) table.getColumns();
+    for( final ZmlTableColumn tableColumn : tableColumns )
     {
       if( tableColumn.isIndexColumn() && index )
         columns.add( tableColumn );
@@ -79,6 +77,6 @@ public final class ZmlTableColumns
       }
     }
 
-    return columns.toArray( new IExtendedZmlTableColumn[] {} );
+    return columns.toArray( new IZmlTableColumn[] {} );
   }
 }

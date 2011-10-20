@@ -95,6 +95,8 @@ public class ZmlTableCellPaintListener implements Listener
       return;
 
     final Point extend = renderer.getExtend( event );
+    if( Objects.isNull( extend ) )
+      return;
 
     event.width = Math.max( event.width, extend.x );
     event.height = Math.max( event.height, extend.y + 2 );

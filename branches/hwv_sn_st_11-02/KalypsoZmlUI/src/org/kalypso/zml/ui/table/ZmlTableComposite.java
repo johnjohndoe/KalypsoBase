@@ -89,12 +89,11 @@ import org.kalypso.zml.ui.table.layout.ZmlTableLayoutHandler;
 import org.kalypso.zml.ui.table.layout.ZmlTablePager;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.model.ZmlTableColumns;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
 import org.kalypso.zml.ui.table.provider.ZmlTableCellCache;
 import org.kalypso.zml.ui.table.provider.ZmlTableCellPaintListener;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
 
 /**
@@ -106,7 +105,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
   protected TableViewer m_tableViewer;
 
-  private final Set<ExtendedZmlTableColumn> m_columns = new LinkedHashSet<ExtendedZmlTableColumn>();
+  private final Set<ZmlTableColumn> m_columns = new LinkedHashSet<ZmlTableColumn>();
 
   private final IZmlModel m_model;
 
@@ -281,8 +280,8 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
             final IZmlModelColumn[] stack = m_stackColumns.toArray( new IZmlModelColumn[] {} );
             m_stackColumns.clear();
 
-            final IExtendedZmlTableColumn[] tableColumns = ZmlTableColumns.toTableColumns( ZmlTableComposite.this, true, stack );
-            for( final IExtendedZmlTableColumn column : tableColumns )
+            final IZmlTableColumn[] tableColumns = ZmlTableColumns.toTableColumns( ZmlTableComposite.this, true, stack );
+            for( final IZmlTableColumn column : tableColumns )
             {
               column.reset();
             }
@@ -319,15 +318,15 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   }
 
   @Override
-  public ExtendedZmlTableColumn[] getColumns( )
+  public ZmlTableColumn[] getColumns( )
   {
-    return m_columns.toArray( new ExtendedZmlTableColumn[] {} );
+    return m_columns.toArray( new ZmlTableColumn[] {} );
   }
 
   @Override
   public void accept( final IZmlTableColumnVisitor visitor )
   {
-    for( final ExtendedZmlTableColumn column : getColumns() )
+    for( final ZmlTableColumn column : getColumns() )
     {
       visitor.visit( column );
     }
@@ -407,7 +406,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   @Override
   public IZmlTableColumn findColumn( final int columnIndex )
   {
-    for( final ExtendedZmlTableColumn column : m_columns )
+    for( final ZmlTableColumn column : m_columns )
     {
       if( column.getTableColumnIndex() == columnIndex )
         return column;
@@ -417,7 +416,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   }
 
   @Override
-  public void add( final ExtendedZmlTableColumn column )
+  public void add( final ZmlTableColumn column )
   {
     m_columns.add( column );
   }

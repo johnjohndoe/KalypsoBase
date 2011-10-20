@@ -216,9 +216,6 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     return rows[index];
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.IZmlDataModel#getRows()
-   */
   @Override
   public IZmlModelRow[] getRows( )
   {
@@ -274,6 +271,5 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
         column.setIsIgnoreType( ignore );
       }
     }
-
   }
 }

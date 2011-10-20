@@ -46,8 +46,8 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.ZmlTableCellCache;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -58,7 +58,7 @@ public interface IZmlTable
 
   void accept( IZmlTableRowVisitor visitor );
 
-  void add( ExtendedZmlTableColumn column );
+  void add( ZmlTableColumn column );
 
   void addListener( IZmlTableListener listener );
 

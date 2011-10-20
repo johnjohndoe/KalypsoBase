@@ -13,7 +13,6 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
@@ -55,9 +54,9 @@ final class ZmlTableEditorActivationStrategy extends ColumnViewerEditorActivatio
         viewer.editElement( cell.getRow().getModelRow(), cell.findIndex() );
 
         final IZmlTableColumn column = cell.getColumn();
-        if( column instanceof IExtendedZmlTableColumn )
+        if( column instanceof IZmlTableColumn )
         {
-          final IExtendedZmlTableColumn extended = (IExtendedZmlTableColumn) column;
+          final IZmlTableColumn extended = column;
           final ZmlTableEditingSupport support = extended.getEditingSupport();
           if( support != null )
           {

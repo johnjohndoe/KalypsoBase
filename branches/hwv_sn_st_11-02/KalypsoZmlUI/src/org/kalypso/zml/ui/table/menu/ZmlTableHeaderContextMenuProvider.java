@@ -52,15 +52,15 @@ import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.ColumnHeader;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
-import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableHeaderContextMenuProvider
 {
-  public void fillMenu( final IExtendedZmlTableColumn column, final MenuManager menuManager )
+  public void fillMenu( final IZmlTableColumn column, final MenuManager menuManager )
   {
     if( column == null )
       return;
@@ -77,7 +77,7 @@ public class ZmlTableHeaderContextMenuProvider
     addAdditionalItems( column, menuManager );
   }
 
-  private void addAdditionalItems( final IExtendedZmlTableColumn column, final MenuManager menuManager )
+  private void addAdditionalItems( final IZmlTableColumn column, final MenuManager menuManager )
   {
     menuManager.add( new Separator() );
 
