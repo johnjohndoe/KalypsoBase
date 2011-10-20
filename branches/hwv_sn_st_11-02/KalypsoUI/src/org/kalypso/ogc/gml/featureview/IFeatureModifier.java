@@ -55,9 +55,9 @@ public interface IFeatureModifier extends ICellEditorValidator
 {
   void dispose( );
 
-  String getLabel( final Feature f );
+  String getLabel( Feature f );
 
-  Image getImage( final Feature f );
+  Image getImage( Feature f );
 
   /**
    * Returns the feature's value edited by this modifier. This object will be given to the cell modifier.
@@ -65,7 +65,7 @@ public interface IFeatureModifier extends ICellEditorValidator
    * @param f
    * @return object
    */
-  Object getProperty( final Feature f );
+  Object getProperty( Feature f );
 
   IPropertyType getPropertyType( );
 
@@ -78,7 +78,7 @@ public interface IFeatureModifier extends ICellEditorValidator
    * @param value
    * @return object
    */
-  Object parseInput( final Feature f, final Object value );
+  Object parseInput( Feature f, Object value );
 
-  CellEditor createCellEditor( final Composite parent );
+  CellEditor createCellEditor( Composite parent );
 }
