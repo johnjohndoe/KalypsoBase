@@ -394,6 +394,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
   @Override
   public IZmlTableRow getRow( final int index )
   {
+    if( index < 0 )
+      return null;
+
     final IZmlTableRow[] rows = getRows();
     if( index < rows.length )
       return rows[index];

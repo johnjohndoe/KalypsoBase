@@ -42,12 +42,13 @@ package org.kalypso.zml.ui.table.provider.strategy.labeling;
 
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModel;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
-import org.kalypso.zml.core.table.model.walker.ZmlModelWalker;
 import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
@@ -97,21 +98,24 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy impl
       previousReference = baseRow.get( column.getModelColumn() );
     }
     else
-      previousReference = previous.getValueReference();
+    {
+      final Integer index = previous.getValueReference().getModelIndex();
+      final IZmlModel model = row.getModel();
+      final IZmlModelRow baseRow = model.getRowAt( index + 1 );
+      previousReference = baseRow.get( column.getModelColumn() );
+    }
 
     final IZmlValueReference currentReference = current.getValueReference();
     if( previousReference == null || currentReference == null )
       return null;
 
-    final int startIndex = previousReference.getModelIndex();
-    final int endIndex = currentReference.getModelIndex();
+    final DateRange daterange = new DateRange( previousReference.getIndexValue(), currentReference.getIndexValue() );
 
-    final SumOperation operation = new SumOperation();
+    final IZmlModelColumn modelColumn = column.getModelColumn();
+    final SumValuesVisitor visitor = new SumValuesVisitor();
+    modelColumn.accept( visitor, daterange );
 
-    final ZmlModelWalker walker = new ZmlModelWalker( column.getModelColumn() );
-    walker.walk( operation, startIndex, endIndex );
-
-    final Double value = operation.getValue();
+    final Double value = visitor.getValue();
 
     String text = format( row, value );
 
