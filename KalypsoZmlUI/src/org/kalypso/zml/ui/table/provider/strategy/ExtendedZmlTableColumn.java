@@ -209,7 +209,6 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
     IZmlValueReference previousReference = null;
     if( previous == null )
     {
-
       previousReference = new ZmlDataValueReference( row, modelColumn, 0 );
     }
     else
