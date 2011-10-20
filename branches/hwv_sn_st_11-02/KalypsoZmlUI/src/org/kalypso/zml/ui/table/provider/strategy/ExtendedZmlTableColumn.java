@@ -44,18 +44,24 @@ import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
 import org.kalypso.zml.ui.table.provider.RuleMapper;
@@ -166,11 +172,72 @@ public class ExtendedZmlTableColumn extends ZmlTableColumn implements IExtendedZ
 
   public ZmlRule[] findActiveRules( final IZmlModelRow row )
   {
+    final int resolution = getTable().getResolution();
+
+    if( isIndexColumn() )
+      return findSimpleActiveRules( row );
+
+    if( resolution == 0 )
+      return findSimpleActiveRules( row );
+    else
+    {
+      final DataColumn type = getModelColumn().getDataColumn();
+      if( ITimeseriesConstants.TYPE_RAINFALL.equals( type.getValueAxis() ) )
+        return findAggregatedActiveRules( row );
+
+      return findSimpleActiveRules( row );
+    }
+
+  }
+
+  private ZmlRule[] findSimpleActiveRules( final IZmlModelRow row )
+  {
     final IZmlValueReference reference = row.get( getColumnType().getType() );
     if( Objects.isNull( reference ) )
       return new ZmlRule[] {};
 
     return m_mapper.findActiveRules( reference );
+  }
+
+  private ZmlRule[] findAggregatedActiveRules( final IZmlModelRow row )
+  {
+    final IZmlTableCell current = findCell( row );
+    final IZmlTableCell previous = current.findPreviousCell();
+
+    final IZmlModelColumn modelColumn = current.getColumn().getModelColumn();
+
+    IZmlValueReference previousReference = null;
+    if( previous == null )
+    {
+
+      previousReference = new ZmlDataValueReference( row, modelColumn, 0 );
+    }
+    else
+    {
+      final IZmlValueReference reference = previous.getValueReference();
+      final Integer index = reference.getModelIndex();
+
+      previousReference = new ZmlDataValueReference( row, modelColumn, index + 1 );
+    }
+
+    final IZmlValueReference currentReference = current.getValueReference();
+    if( Objects.isNull( previousReference, currentReference ) )
+      return new ZmlRule[] {};
+
+    try
+    {
+      final DateRange daterange = new DateRange( previousReference.getIndexValue(), currentReference.getIndexValue() );
+      final ZmlCollectRulesVisitor visitor = new ZmlCollectRulesVisitor( m_mapper );
+      getModelColumn().accept( visitor, daterange );
+
+      return visitor.getRules();
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+    }
+
+    return new ZmlRule[] {};
   }
 
   @Override

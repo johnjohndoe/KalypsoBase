@@ -118,7 +118,7 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
   public IZmlTableCell findPreviousCell( )
   {
     final int index = getIndex();
-    if( index == 0 )
+    if( index <= 0 )
       return null;
 
     final IZmlTable table = getTable();

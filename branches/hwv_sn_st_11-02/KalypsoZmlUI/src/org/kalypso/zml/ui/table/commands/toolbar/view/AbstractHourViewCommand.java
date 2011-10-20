@@ -81,8 +81,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
     if( ArrayUtils.isEmpty( rows ) )
       return;
 
-    final IZmlModelRow row = rows[0];
-    filter.resetOffset( row );
+    filter.resetOffset();
   }
 
   protected IStatus updateOffset( final ExecutionEvent event, final int number )

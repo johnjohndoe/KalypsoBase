@@ -46,6 +46,7 @@ import java.util.Set;
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -325,6 +326,36 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
         try
         {
           visitor.visit( reference );
+        }
+        catch( final CancelVisitorException e )
+        {
+          return;
+        }
+      }
+    }
+  }
+
+  @Override
+  public void accept( final IZmlModelColumnVisitor visitor, final DateRange daterange ) throws SensorException
+  {
+    if( Objects.isNull( daterange ) )
+    {
+      accept( visitor );
+      return;
+    }
+
+    final IZmlModel model = getModel();
+    final IZmlModelRow[] rows = model.getRows();
+    for( final IZmlModelRow row : rows )
+    {
+      final IZmlValueReference reference = row.get( this );
+
+      if( Objects.isNotNull( reference ) )
+      {
+        try
+        {
+          if( daterange.containsInclusive( reference.getIndexValue() ) )
+            visitor.visit( reference );
         }
         catch( final CancelVisitorException e )
         {
