@@ -44,13 +44,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
@@ -65,13 +58,9 @@ import org.kalypso.zml.ui.table.provider.strategy.IExtendedZmlTableColumn;
  */
 public class ZmlTableLayoutHandler implements IZmlTableListener
 {
-  protected static final Color COLOR_TABLE_DISABLED = new Color( null, new RGB( 0xea, 0xea, 0xea ) );
-
-  protected static final Color COLOR_TABLE_ENABLED = new Color( null, new RGB( 0xff, 0xff, 0xff ) );
-
   protected final ZmlTableComposite m_table;
 
-  final Set<IExtendedZmlTableColumn> m_stackColumns = Collections.synchronizedSet( new LinkedHashSet<IExtendedZmlTableColumn>() );
+  final Set<IExtendedZmlTableColumn> m_stack = Collections.synchronizedSet( new LinkedHashSet<IExtendedZmlTableColumn>() );
 
   private final MutexRule m_rule = new MutexRule( "updating column layout of zml table" );
 
@@ -100,43 +89,11 @@ public class ZmlTableLayoutHandler implements IZmlTableListener
   {
     synchronized( this )
     {
-      Collections.addAll( m_stackColumns, columns );
+      Collections.addAll( m_stack, columns );
       if( Objects.isNotNull( m_job ) )
         m_job.cancel();
 
-      m_job = new UIJob( "Aktualisiere Tablellenspalten" )
-      {
-        @Override
-        public IStatus runInUIThread( final IProgressMonitor monitor )
-        {
-          synchronized( this )
-          {
-            final IExtendedZmlTableColumn[] stack = m_stackColumns.toArray( new IExtendedZmlTableColumn[] {} );
-            m_stackColumns.clear();
-
-            final PackTableColumnVisitor data = new PackTableColumnVisitor();
-            final PackIndexColumnsVisitor index = new PackIndexColumnsVisitor( !ArrayUtils.isEmpty( m_table.getRows() ) );
-
-            for( final IExtendedZmlTableColumn column : stack )
-            {
-              index.visit( column );
-              data.visit( column );
-            }
-          }
-
-          final TableViewer viewer = m_table.getViewer();
-          if( m_table.isEmpty() )
-          {
-            viewer.getControl().setBackground( COLOR_TABLE_DISABLED );
-          }
-          else
-          {
-            viewer.getControl().setBackground( COLOR_TABLE_ENABLED );
-          }
-
-          return Status.OK_STATUS;
-        }
-      };
+      m_job = new ZmlTableLayoutJob( m_table, m_stack );
 
       m_job.setRule( m_rule );
       m_job.schedule( 100 );

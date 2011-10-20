@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.table;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -253,13 +254,17 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     column.getColumn().setMoveable( false );
   }
 
+  final Set<IZmlModelColumn> m_stackColumns = Collections.synchronizedSet( new LinkedHashSet<IZmlModelColumn>() );
+
   @Override
-  public void refresh( final IZmlModelColumn... columns )
+  public void refresh( final IZmlModelColumn... cols )
   {
     synchronized( this )
     {
       if( Objects.isNotNull( m_updateJob ) )
         m_updateJob.cancel();
+
+      Collections.addAll( m_stackColumns, cols );
 
       m_updateJob = new UIJob( "Aktualisiere Zeitreihen-Tabelle" )
       {
@@ -273,7 +278,10 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
           {
             m_pager.update();
 
-            final IExtendedZmlTableColumn[] tableColumns = ZmlTableColumns.toTableColumns( ZmlTableComposite.this, true, columns );
+            final IZmlModelColumn[] stack = m_stackColumns.toArray( new IZmlModelColumn[] {} );
+            m_stackColumns.clear();
+
+            final IExtendedZmlTableColumn[] tableColumns = ZmlTableColumns.toTableColumns( ZmlTableComposite.this, true, stack );
             for( final IExtendedZmlTableColumn column : tableColumns )
             {
               column.reset();
@@ -281,9 +289,9 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
             m_tableViewer.refresh( true, true );
             m_pager.reveal();
-          }
 
-          fireTableChanged( IZmlTableListener.TYPE_REFRESH, columns );
+            fireTableChanged( IZmlTableListener.TYPE_REFRESH, stack );
+          }
 
           return Status.OK_STATUS;
         }

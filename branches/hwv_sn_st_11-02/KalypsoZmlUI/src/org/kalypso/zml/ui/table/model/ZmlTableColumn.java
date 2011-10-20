@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
@@ -137,7 +138,11 @@ public class ZmlTableColumn extends ZmlTableElement implements IZmlTableColumn
     if( isIndexColumn() )
       return true;
 
-    return getModelColumn() != null;
+    final IZmlModelColumn column = getModelColumn();
+    if( Objects.isNull( column ) )
+      return false;
+
+    return column.isActive();
   }
 
   @Override
