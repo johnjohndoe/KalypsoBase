@@ -94,7 +94,9 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
 
         if( index == 0 )
         {
-          m_model.load( new ZmlDataSourceElement( base.getId(), source.getHref(), m_model.getContext(), source.getLabel() ) );
+          final ZmlDataSourceElement element = new ZmlDataSourceElement( base.getId(), source.getHref(), m_model.getContext(), source.getLabel(), m_model.getMemento() );
+          m_model.load( element );
+
         }
         else if( index > 0 )
         {
@@ -104,7 +106,8 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
 
           appendColumnType( clone );
 
-          m_model.load( new ZmlDataSourceElement( identifier, source.getHref(), m_model.getContext(), source.getLabel() ) );
+          final ZmlDataSourceElement element = new ZmlDataSourceElement( identifier, source.getHref(), m_model.getContext(), source.getLabel(), m_model.getMemento() );
+          m_model.load( element );
         }
       }
 

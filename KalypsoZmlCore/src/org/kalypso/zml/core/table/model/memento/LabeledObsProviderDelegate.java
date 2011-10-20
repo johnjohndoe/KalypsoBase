@@ -38,37 +38,83 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.core.table.model.memento;
 
-import java.util.Date;
-
-import org.kalypso.zml.core.table.model.memento.IZmlMemento;
-import org.kalypso.zml.core.table.schema.ZmlTableType;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.ogc.sensor.provider.IObsProviderListener;
+import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModel
+public class LabeledObsProviderDelegate implements ILabeledObsProvider
 {
-  ZmlTableType getTableType( );
 
-  void addListener( IZmlColumnModelListener listener );
+  private final IObsProvider m_provider;
 
-  void fireModelChanged( final IZmlModelColumn... columns );
+  private final String m_label;
 
-  IZmlModelColumn getColumn( String id );
+  public LabeledObsProviderDelegate( final IObsProvider provider, final String label )
+  {
+    m_provider = provider;
+    m_label = label;
 
-  IZmlModelColumn[] getColumns( );
+  }
 
-  IZmlModelRow getRow( final Date index );
+  @Override
+  public void addListener( final IObsProviderListener listener )
+  {
+    m_provider.addListener( listener );
 
-  IZmlModelRow getRowAt( final int index );
+  }
 
-  IZmlModelRow[] getRows( );
+  @Override
+  public void removeListener( final IObsProviderListener listener )
+  {
+    m_provider.removeListener( listener );
+  }
 
-  void accept( IZmlModelRowVisitor visitor );
+  @Override
+  public IObsProvider copy( )
+  {
+    return m_provider.copy();
+  }
 
-  void dispose( );
+  @Override
+  public void dispose( )
+  {
+    m_provider.dispose();
+  }
 
-  IZmlMemento getMemento( );
+  @Override
+  public IRequest getArguments( )
+  {
+    return m_provider.getArguments();
+  }
+
+  @Override
+  public IObservation getObservation( )
+  {
+    return m_provider.getObservation();
+  }
+
+  @Override
+  public boolean isLoaded( )
+  {
+    return m_provider.isLoaded();
+  }
+
+  @Override
+  public boolean isValid( )
+  {
+    return m_provider.isValid();
+  }
+
+  @Override
+  public String getLabel( )
+  {
+    return m_label;
+  }
+
 }

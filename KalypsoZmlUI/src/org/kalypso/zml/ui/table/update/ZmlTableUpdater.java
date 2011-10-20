@@ -49,11 +49,11 @@ import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
 import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.IClonedColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
+import org.kalypso.zml.core.table.model.memento.ILabeledObsProvider;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.ui.core.element.ZmlLinkDiagramElement;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.ZmlTableColumnBuilder;
-import org.kalypso.zml.ui.table.memento.ILabeledObsProvider;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
@@ -106,7 +106,7 @@ public class ZmlTableUpdater implements Runnable
 
     final ILabeledObsProvider obsWithLabel = new TsLinkObsProvider( link, clonedProvider );
     final IPoolableObjectType poolKey = element.getPoolKey();
-    m_part.getMemento().register( poolKey, obsWithLabel );
+    m_part.getModel().getMemento().register( poolKey, obsWithLabel );
   }
 
   private ZmlLinkDiagramElement createZmlDiagrammElement( final TSLinkWithName link, final String identifier, final int index )

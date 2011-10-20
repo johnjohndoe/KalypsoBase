@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestra�e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,37 +38,25 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.core.table.model.memento;
 
-import java.util.Date;
-
-import org.kalypso.zml.core.table.model.memento.IZmlMemento;
-import org.kalypso.zml.core.table.schema.ZmlTableType;
+import org.eclipse.core.runtime.CoreException;
+import org.kalypso.core.util.pool.IPoolableObjectType;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModel
+public interface IZmlMemento
 {
-  ZmlTableType getTableType( );
-
-  void addListener( IZmlColumnModelListener listener );
-
-  void fireModelChanged( final IZmlModelColumn... columns );
-
-  IZmlModelColumn getColumn( String id );
-
-  IZmlModelColumn[] getColumns( );
-
-  IZmlModelRow getRow( final Date index );
-
-  IZmlModelRow getRowAt( final int index );
-
-  IZmlModelRow[] getRows( );
-
-  void accept( IZmlModelRowVisitor visitor );
+  void register( IPoolableObjectType poolKey, ILabeledObsProvider observationProvider );
 
   void dispose( );
 
-  IZmlMemento getMemento( );
+  void store( ) throws CoreException;
+
+  ILabeledObsProvider[] findDirtyElements( );
+
+  void addListener( IZmlMementoListener listener );
+
+  void removeListener( IZmlMementoListener listener );
 }

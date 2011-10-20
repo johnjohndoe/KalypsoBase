@@ -56,6 +56,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.core.table.model.loader.ZmlColumnLoadCommand;
 import org.kalypso.zml.core.table.model.loader.ZmlRowBuilder;
+import org.kalypso.zml.core.table.model.memento.IZmlMemento;
+import org.kalypso.zml.core.table.model.memento.ZmlMemento;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 
@@ -64,6 +66,8 @@ import org.kalypso.zml.core.table.schema.ZmlTableType;
  */
 public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 {
+  private final IZmlMemento m_memento = new ZmlMemento();
+
   private final List<IZmlModelColumn> m_columns = Collections.synchronizedList( new ArrayList<IZmlModelColumn>() );
 
   private final Set<ZmlColumnLoadCommand> m_commandRegister = Collections.synchronizedSet( new HashSet<ZmlColumnLoadCommand>() );
@@ -82,6 +86,12 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     m_context = context;
 
     init();
+  }
+
+  @Override
+  public IZmlMemento getMemento( )
+  {
+    return m_memento;
   }
 
   private void init( )
@@ -143,6 +153,14 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     }
 
     fireModelChanged();
+  }
+
+  @Override
+  public void dispose( )
+  {
+    purge();
+
+    m_memento.dispose();
   }
 
   @Override

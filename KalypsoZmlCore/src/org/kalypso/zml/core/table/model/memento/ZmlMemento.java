@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,16 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.memento;
+package org.kalypso.zml.core.table.model.memento;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyInfo;
@@ -59,34 +62,38 @@ import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableMemento implements IZmlTableMemento
+public class ZmlMemento implements IZmlMemento
 {
   private final Map<IPoolableObjectType, ILabeledObsProvider> m_elements = Collections.synchronizedMap( new HashMap<IPoolableObjectType, ILabeledObsProvider>() );
 
-  private final IObsProviderListener m_providerListener;
+  Set<IZmlMementoListener> m_listener = Collections.synchronizedSet( new LinkedHashSet<IZmlMementoListener>() );
 
-  /**
-   * @param obsProviderListener
-   *          This listener will be added to all registered obs-provider of this memento.
-   */
-  public ZmlTableMemento( final IObsProviderListener obsProviderListener )
+  private final IObsProviderListener m_obsListener = new IObsProviderListener()
   {
-    m_providerListener = obsProviderListener;
-  }
+    @Override
+    public void observationReplaced( )
+    {
+      handleObservationChanged();
+    }
 
-  /**
-   * @see org.kalypso.zml.ui.table.memento.IZmlTableMemento#dispose()
-   */
+    @Override
+    public void observationChanged( final Object source )
+    {
+      handleObservationChanged();
+    }
+  };
+
   @Override
   public void dispose( )
   {
     cleanup();
+
   }
 
   @Override
   public synchronized void register( final IPoolableObjectType poolKey, final ILabeledObsProvider provider )
   {
-    provider.addListener( m_providerListener );
+    provider.addListener( m_obsListener );
 
     final ILabeledObsProvider oldObsProvider = m_elements.get( poolKey );
     if( oldObsProvider != null )
@@ -95,9 +102,6 @@ public class ZmlTableMemento implements IZmlTableMemento
     m_elements.put( poolKey, provider );
   }
 
-  /**
-   * @see org.kalypso.hwv.ui.wizards.calculation.modelpages.layout.ILayoutPart#saveData(boolean)
-   */
   @Override
   public synchronized void store( ) throws CoreException
   {
@@ -125,7 +129,6 @@ public class ZmlTableMemento implements IZmlTableMemento
   public synchronized ILabeledObsProvider[] findDirtyElements( )
   {
     final Collection<ILabeledObsProvider> result = new ArrayList<ILabeledObsProvider>();
-
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 
     for( final ILabeledObsProvider provider : m_elements.values() )
@@ -134,11 +137,40 @@ public class ZmlTableMemento implements IZmlTableMemento
       if( observation != null )
       {
         final KeyInfo info = pool.getInfo( observation );
-        if( info.isDirty() )
-          result.add( provider );
+        if( Objects.isNotNull( info ) )
+          if( info.isDirty() )
+            result.add( provider );
       }
     }
 
     return result.toArray( new ILabeledObsProvider[result.size()] );
+  }
+
+  protected void handleObservationChanged( )
+  {
+    fireMementoChanged();
+
+  }
+
+  private void fireMementoChanged( )
+  {
+    final IZmlMementoListener[] listeners = m_listener.toArray( new IZmlMementoListener[] {} );
+    for( final IZmlMementoListener listener : listeners )
+    {
+      listener.mementoChanged();
+    }
+
+  }
+
+  @Override
+  public void addListener( final IZmlMementoListener listener )
+  {
+    m_listener.add( listener );
+  }
+
+  @Override
+  public void removeListener( final IZmlMementoListener listener )
+  {
+    m_listener.remove( listener );
   }
 }
