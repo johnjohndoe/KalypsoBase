@@ -343,6 +343,9 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   @Override
   public void setIsIgnoreType( final boolean ignore )
   {
+    if( Objects.equal( m_ignore, ignore ) )
+      return;
+
     m_ignore = ignore;
 
     fireColumnChanged();
@@ -359,7 +362,12 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
 
   public void setActive( final boolean active )
   {
+    if( Objects.equal( m_active, active ) )
+      return;
+
     m_active = active;
+
+    fireColumnChanged();
   }
 
 }

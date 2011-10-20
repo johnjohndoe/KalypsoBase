@@ -149,7 +149,6 @@ public class PackTableColumnVisitor extends AbstractTableColumnPackVisitor
         KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
       }
     }
-
   }
 
 }

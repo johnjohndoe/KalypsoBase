@@ -142,7 +142,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
       command.cancel();
     }
 
-    fireModelChanged( new ZmlModelColumn[] {} );
+    fireModelChanged();
   }
 
   @Override

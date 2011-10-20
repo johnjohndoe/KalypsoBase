@@ -99,6 +99,9 @@ public abstract class AbstractTableColumnPackVisitor implements IZmlTableColumnV
 
   protected void hide( final TableColumn column )
   {
+    if( column.getWidth() == 0 )
+      return;
+
     column.setWidth( 0 );
     column.setResizable( false );
     column.setMoveable( false );
