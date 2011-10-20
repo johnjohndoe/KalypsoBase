@@ -42,6 +42,7 @@ package org.kalypso.zml.core.table.model;
 
 import java.util.Date;
 
+import org.kalypso.zml.core.table.model.memento.IZmlMemento;
 import org.kalypso.zml.core.table.schema.ZmlTableType;
 
 /**
@@ -49,7 +50,6 @@ import org.kalypso.zml.core.table.schema.ZmlTableType;
  */
 public interface IZmlModel
 {
-
   ZmlTableType getTableType( );
 
   void addListener( IZmlColumnModelListener listener );
@@ -67,4 +67,8 @@ public interface IZmlModel
   IZmlModelRow[] getRows( );
 
   void accept( IZmlModelRowVisitor visitor );
+
+  void dispose( );
+
+  IZmlMemento getMemento( );
 }

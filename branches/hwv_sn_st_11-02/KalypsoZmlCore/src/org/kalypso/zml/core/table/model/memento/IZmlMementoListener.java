@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,14 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.memento;
-
-import org.kalypso.ogc.sensor.provider.IObsProvider;
+package org.kalypso.zml.core.table.model.memento;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public interface ILabeledObsProvider extends IObsProvider
+public interface IZmlMementoListener
 {
-  String getLabel( );
+  void mementoChanged( );
 }

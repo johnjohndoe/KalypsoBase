@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,21 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.memento;
+package org.kalypso.zml.core.table.model.memento;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public interface IZmlTableMemento
+public interface ILabeledObsProvider extends IObsProvider
 {
-  void register( IPoolableObjectType poolKey, ILabeledObsProvider observationProvider );
-
-  void dispose( );
-
-  void store( ) throws CoreException;
-
-  ILabeledObsProvider[] findDirtyElements( );
+  String getLabel( );
 }

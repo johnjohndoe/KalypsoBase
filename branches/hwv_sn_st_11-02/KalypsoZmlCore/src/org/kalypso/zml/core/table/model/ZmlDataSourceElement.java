@@ -53,6 +53,8 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.zml.core.table.IZmlTableElement;
+import org.kalypso.zml.core.table.model.memento.IZmlMemento;
+import org.kalypso.zml.core.table.model.memento.LabeledObsProviderDelegate;
 
 /**
  * @author Dirk Kuch
@@ -71,17 +73,17 @@ public class ZmlDataSourceElement implements IZmlTableElement
 
   private String m_label;
 
-  public ZmlDataSourceElement( final String identifier, final String href, final URL context, final String labeling )
+  private final IZmlMemento m_memento;
+
+  public ZmlDataSourceElement( final String identifier, final String href, final URL context, final String labeling, final IZmlMemento memento )
   {
     m_identifier = identifier;
     m_href = href;
     m_context = context;
     m_labeling = labeling;
+    m_memento = memento;
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.IZmlTableElement#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -97,9 +99,6 @@ public class ZmlDataSourceElement implements IZmlTableElement
     return m_identifier;
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.IZmlTableElement#getObsProvider()
-   */
   @Override
   public IObsProvider getObsProvider( )
   {
@@ -108,6 +107,7 @@ public class ZmlDataSourceElement implements IZmlTableElement
 
     final PoolableObjectType type = new PoolableObjectType( "zml", m_href, m_context, true ); //$NON-NLS-1$
     m_provider = new PooledObsProvider( type );
+    m_memento.register( type, new LabeledObsProviderDelegate( m_provider, m_labeling ) );
 
     return m_provider;
   }
