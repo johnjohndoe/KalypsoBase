@@ -7,7 +7,7 @@
         <LineColor>0000FF</LineColor>
       </LineStyle>
       <LineStyle role="calc_calculation">
-        <Width>4</Width>
+        <Width>3</Width>
         <LineColor>FF0000</LineColor>
       </LineStyle>
       <LineStyle role="calc_forecast">
@@ -65,6 +65,7 @@
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_handover</StyleReference>
             </Styles>
           </Layer>
+           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
@@ -82,6 +83,10 @@
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_calculation</StyleReference>
             </Styles>
           </Layer>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_1" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_2" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_3" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />          
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
@@ -129,6 +134,7 @@
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_handover</StyleReference>
             </Styles>
           </Layer>
+           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
 
         <MapperRefs>
@@ -147,6 +153,10 @@
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_calculation</StyleReference>
             </Styles>
           </Layer>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_1" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_2" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_3" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />          
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
 
