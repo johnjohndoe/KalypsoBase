@@ -204,13 +204,12 @@ public class ZmlViewResolutionFilter extends ViewerFilter
     return m_stuetzstellenMode;
   }
 
-  public void resetOffset( final IZmlModelRow row, final int startHour )
+  public void resetOffset( final IZmlModelRow row )
   {
-    final String type = getType( row );
-    if( ITimeseriesConstants.TYPE_RAINFALL.equals( type ) )
+    if( ITimeseriesConstants.TYPE_RAINFALL.equals( getType( row ) ) )
       m_offset = 0;
     else
-      m_offset -= m_offset % startHour - 1;
+      m_offset = 1;
   }
 
   private String getType( final IZmlModelRow row )

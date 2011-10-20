@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.commands.toolbar.view;
 
-import java.util.Date;
 import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -76,7 +75,6 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
     return Status.OK_STATUS;
   }
 
-  @SuppressWarnings("deprecation")
   private void doOffsetAdjustment( final IZmlTable table, final ZmlViewResolutionFilter filter )
   {
     final IZmlModelRow[] rows = table.getDataModel().getRows();
@@ -84,9 +82,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
       return;
 
     final IZmlModelRow row = rows[0];
-    final Date value = row.getIndexValue();
-    final int hours = value.getHours();
-    filter.resetOffset( row, hours );
+    filter.resetOffset( row );
   }
 
   protected IStatus updateOffset( final ExecutionEvent event, final int number )
