@@ -207,6 +207,14 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
     }
   }
 
+  @Override
+  public void dispose( )
+  {
+    m_cache.clear();
+
+    super.dispose();
+  }
+
   private boolean hasToolbar( final ZmlTableType tableType )
   {
     final List<String> toolbar = tableType.getToolbar();
