@@ -40,51 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.ui.project.wizard.create;
 
-import org.kalypso.afgui.wizards.INewProjectWizard;
-import org.kalypso.afgui.wizards.INewProjectWizardProvider;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
-import org.kalypso.module.IKalypsoModule;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public class WizardCreateProjectProvider implements INewProjectWizardProvider
+public interface IProjectTemplateDelegate
 {
-
-  private final String[] m_natures;
-
-  private final IKalypsoModule m_module;
-
-  private final IProjectTemplateDelegate m_delegate;
-
-  public WizardCreateProjectProvider( final IProjectTemplateDelegate delegate, final String[] natures, final IKalypsoModule module )
-  {
-    m_delegate = delegate;
-    m_natures = natures;
-    m_module = module;
-
-  }
-
-  public WizardCreateProjectProvider( final ProjectTemplate[] templates, final String[] natures, final IKalypsoModule module )
-  {
-    this( new IProjectTemplateDelegate()
-    {
-      @Override
-      public ProjectTemplate[] getTemplates( )
-      {
-        return templates;
-      }
-    }, natures, module );
-
-  }
-
-  /**
-   * @see org.kalypso.afgui.wizards.INewProjectWizardProvider#createWizard()
-   */
-  @Override
-  public INewProjectWizard createWizard( )
-  {
-    return new WizardCreateProject( m_delegate.getTemplates(), m_natures, m_module );
-  }
-
+  ProjectTemplate[] getTemplates( );
 }
