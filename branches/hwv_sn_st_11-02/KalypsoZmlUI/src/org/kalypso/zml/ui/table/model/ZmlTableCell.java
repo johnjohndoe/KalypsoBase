@@ -137,6 +137,8 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
       return null;
 
     final IZmlTableRow nextRow = table.getRow( index + 1 );
+    if( nextRow == null )
+      return null;
 
     return new ZmlTableCell( nextRow, m_column );
   }
