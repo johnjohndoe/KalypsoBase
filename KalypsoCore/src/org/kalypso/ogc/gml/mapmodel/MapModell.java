@@ -284,8 +284,7 @@ public class MapModell implements IMapModell
         children[i - 1] = Status.OK_STATUS;
     }
 
-    final MultiStatus multiStatus = new MultiStatus( KalypsoCorePlugin.getID(), -1, children, "", null ); //$NON-NLS-1$
-    return multiStatus;
+    return new MultiStatus( KalypsoCorePlugin.getID(), -1, children, "", null ); //$NON-NLS-1$
   }
 
   @Override

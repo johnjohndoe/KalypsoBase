@@ -92,7 +92,7 @@ public interface IMapModell
 
   /**
    * Directly paints all themes contained inside this model. <br>
-   * Blocks until all themes are painted. .
+   * Blocks until all themes are painted.
    */
   IStatus paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor );
 
