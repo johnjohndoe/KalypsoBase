@@ -80,6 +80,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
+import org.kalypsodeegree_impl.model.feature.tokenreplace.AnnotationTokenReplacer;
 import org.kalypsodeegree_impl.model.feature.tokenreplace.FeatureIdTokenReplacer;
 import org.kalypsodeegree_impl.model.feature.tokenreplace.ListPropertyTokenReplacer;
 import org.kalypsodeegree_impl.model.feature.tokenreplace.PropertyTokenReplacer;
@@ -103,8 +104,10 @@ public final class FeatureHelper
 
   private static ITokenReplacer TR_LISTPROPERTYVALUE = new ListPropertyTokenReplacer();
 
+  private static ITokenReplacer TR_ANNOTATION_VALUE = new AnnotationTokenReplacer();
+
   private static TokenReplacerEngine FEATURE_TOKEN_REPLACE = new TokenReplacerEngine( new ITokenReplacer[] { FeatureHelper.TR_FEATUREID, FeatureHelper.TR_PROPERTYVALUE,
-      FeatureHelper.TR_LISTPROPERTYVALUE } );
+      FeatureHelper.TR_LISTPROPERTYVALUE, TR_ANNOTATION_VALUE } );
 
   /**
    * @deprecated Do not use strings as property names. Use {@link IFeatureType#getProperty(QName)} instead.
@@ -1077,6 +1080,13 @@ public final class FeatureHelper
    */
   public static String getAnnotationValue( final Feature feature, final String annotationKey )
   {
+    if( feature instanceof XLinkedFeature_Impl )
+    {
+      // BUGFIX: access the feature here once, before the annotation is fetched.
+      // This is necessary in order to force the featureType to be known.
+      ((XLinkedFeature_Impl) feature).getFeature();
+    }
+
     final IFeatureType featureType = feature.getFeatureType();
     final IAnnotation annotation = featureType.getAnnotation();
 
