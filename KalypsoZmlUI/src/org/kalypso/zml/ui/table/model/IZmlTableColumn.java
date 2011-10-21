@@ -40,13 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.kalypso.zml.core.table.binding.BaseColumn;
+import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
+import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
 
 /**
  * @author Dirk Kuch
@@ -79,4 +82,8 @@ public interface IZmlTableColumn
   void reset( );
 
   IZmlTable getTable( );
+
+  CellStyle findStyle( IZmlModelRow row ) throws CoreException;
+
+  IZmlLabelStrategy getLabelingStrategy( );
 }

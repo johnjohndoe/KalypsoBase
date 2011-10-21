@@ -68,7 +68,7 @@ public class ChartModelUpdateJob extends UIJob
 
   public ChartModelUpdateJob( final ICommandExecutionTrigger trigger, final IChartModel model )
   {
-    super( "Aktualisiere Diagramm" );
+    super( "Diagramm wird aktualisiert" );
 
     m_trigger = trigger;
     m_model = model;
