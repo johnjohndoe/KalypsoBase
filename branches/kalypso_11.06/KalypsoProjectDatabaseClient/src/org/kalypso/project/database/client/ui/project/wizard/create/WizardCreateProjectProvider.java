@@ -50,17 +50,32 @@ import org.kalypso.module.IKalypsoModule;
  */
 public class WizardCreateProjectProvider implements INewProjectWizardProvider
 {
-  private final ProjectTemplate[] m_templates;
 
   private final String[] m_natures;
 
   private final IKalypsoModule m_module;
 
-  public WizardCreateProjectProvider( final ProjectTemplate[] templates, final String[] natures, final IKalypsoModule module )
+  private final IProjectTemplateDelegate m_delegate;
+
+  public WizardCreateProjectProvider( final IProjectTemplateDelegate delegate, final String[] natures, final IKalypsoModule module )
   {
-    m_templates = templates;
+    m_delegate = delegate;
     m_natures = natures;
     m_module = module;
+
+  }
+
+  public WizardCreateProjectProvider( final ProjectTemplate[] templates, final String[] natures, final IKalypsoModule module )
+  {
+    this( new IProjectTemplateDelegate()
+    {
+      @Override
+      public ProjectTemplate[] getTemplates( )
+      {
+        return templates;
+      }
+    }, natures, module );
+
   }
 
   /**
@@ -69,7 +84,7 @@ public class WizardCreateProjectProvider implements INewProjectWizardProvider
   @Override
   public INewProjectWizard createWizard( )
   {
-    return new WizardCreateProject( m_templates, m_natures, m_module );
+    return new WizardCreateProject( m_delegate.getTemplates(), m_natures, m_module );
   }
 
 }
