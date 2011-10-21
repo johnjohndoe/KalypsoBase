@@ -68,7 +68,7 @@ public class ZmlTableLayoutJob extends UIJob
 
   public ZmlTableLayoutJob( final ZmlTableComposite table, final Set<IZmlTableColumn> stack )
   {
-    super( "Aktualisiere Tabellen-Layout" );
+    super( "Tabellen-Layout wird aktualisiert" );
     m_table = table;
     m_stack = stack;
   }

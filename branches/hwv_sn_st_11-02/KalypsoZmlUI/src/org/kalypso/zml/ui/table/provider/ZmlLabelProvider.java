@@ -50,7 +50,7 @@ import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
-import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
 
 /**
@@ -58,14 +58,13 @@ import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
  */
 public class ZmlLabelProvider
 {
-
-  private final ZmlTableColumn m_column;
+  private final IZmlTableColumn m_column;
 
   private final IZmlModelRow m_row;
 
   private final ZmlRule[] m_activeRules;
 
-  public ZmlLabelProvider( final IZmlModelRow row, final ZmlTableColumn column, final ZmlRule[] activeRules )
+  public ZmlLabelProvider( final IZmlModelRow row, final IZmlTableColumn column, final ZmlRule[] activeRules )
   {
     m_row = row;
     m_column = column;

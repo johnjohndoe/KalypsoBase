@@ -265,7 +265,7 @@ public class ZmlTableComposite extends Composite implements IZmlColumnModelListe
 
       Collections.addAll( m_stackColumns, cols );
 
-      m_updateJob = new UIJob( "Aktualisiere Zeitreihen-Tabelle" )
+      m_updateJob = new UIJob( "Zeitreihen-Tabelle wird aktualisiert" )
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )
