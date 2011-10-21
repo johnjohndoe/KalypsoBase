@@ -50,13 +50,17 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
+import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.interpolation.ZmlInterpolationWorker;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
+import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 
 /**
  * @author Dirk Kuch
@@ -73,14 +77,33 @@ public class ZmlCommandSetAllValues extends AbstractHandler
       final IZmlTableCell active = selection.findActiveCellByPosition();
 
       final IZmlValueReference base = active.getValueReference();
-      final Number targetValue = base.getValue();
-
       final IZmlTableColumn column = active.getColumn();
-      final IZmlTableCell[] visibleCells = column.getCells();
-      for( final IZmlTableCell cell : visibleCells )
+
+      final IZmlEditingStrategy strategy = column.getEditingStrategy();
+      if( strategy.isAggregated() )
       {
-        final IZmlValueReference ref = cell.getValueReference();
-        ref.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+        final ZmlLabelProvider provider = new ZmlLabelProvider( base.getRow(), column, new ZmlRule[] {} );
+        final String targetValue = provider.getText();
+
+        final IZmlTableCell[] visibleCells = column.getCells();
+        for( final IZmlTableCell cell : visibleCells )
+        {
+          strategy.setValue( cell.getRow().getModelRow(), targetValue );
+        }
+      }
+      else
+      {
+        final IZmlValueReference reference = active.getValueReference();
+        final Number targetValue = reference.getValue();
+
+        column.getModelColumn().accept( new IZmlModelColumnVisitor()
+        {
+          @Override
+          public void visit( final IZmlValueReference ref ) throws SensorException
+          {
+            ref.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+          }
+        } );
       }
 
       try
@@ -99,7 +122,7 @@ public class ZmlCommandSetAllValues extends AbstractHandler
 
       return Status.OK_STATUS;
     }
-    catch( final SensorException e )
+    catch( final Exception e )
     {
       throw new ExecutionException( "Aktualisieren der Werte fehlgeschlagen.", e );
     }

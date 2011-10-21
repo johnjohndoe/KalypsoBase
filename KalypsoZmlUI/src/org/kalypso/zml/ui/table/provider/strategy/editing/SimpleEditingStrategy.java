@@ -105,4 +105,13 @@ public class SimpleEditingStrategy extends AbstractEditingStrategy
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
   }
+
+  /**
+   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#isAggregated()
+   */
+  @Override
+  public boolean isAggregated( )
+  {
+    return false;
+  }
 }
