@@ -17,7 +17,7 @@ import org.kalypso.ogc.gml.convert.GmlConvertFactory;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class RefSourceHandler implements ISourceHandler
 {
@@ -37,10 +37,6 @@ public class RefSourceHandler implements ISourceHandler
     m_href = source.getHref();
   }
 
-  /**
-   * @throws GmlConvertException
-   * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
-   */
   @Override
   public GMLWorkspace getWorkspace( ) throws GmlConvertException
   {
@@ -64,5 +60,4 @@ public class RefSourceHandler implements ISourceHandler
       throw new GmlConvertException( message, e );
     }
   }
-
 }
