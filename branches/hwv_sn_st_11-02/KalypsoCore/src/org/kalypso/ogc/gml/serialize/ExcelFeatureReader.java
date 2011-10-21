@@ -2,6 +2,7 @@ package org.kalypso.ogc.gml.serialize;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 
 import org.apache.commons.lang.StringUtils;
@@ -141,7 +142,13 @@ public final class ExcelFeatureReader extends AbstractTabularFeatureReader
         return cell.getStringCellValue();
 
       case Cell.CELL_TYPE_NUMERIC:
-        return Double.toString( cell.getNumericCellValue() );
+      {
+        // TODO: strange: we get numeric even if the cell is marked as 'Text';
+        // regardless of the real type (int,...) we always get a double.
+        final double numericCellValue = cell.getNumericCellValue();
+        final BigDecimal asDecimal = new BigDecimal( numericCellValue );
+        return asDecimal.toPlainString();
+      }
 
       case Cell.CELL_TYPE_STRING:
         return cell.getStringCellValue();
