@@ -167,4 +167,10 @@ public class ZmlLabelProvider
     return strategy.getText( m_row );
   }
 
+  public Object getPlainValue( final IZmlModelRow row ) throws SensorException
+  {
+    final IZmlValueReference reference = row.get( m_column.getModelColumn() );
+
+    return reference.getValue();
+  }
 }

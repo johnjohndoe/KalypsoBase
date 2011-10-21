@@ -63,7 +63,6 @@ import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
 import org.kalypso.zml.ui.table.provider.RuleMapper;
-import org.kalypso.zml.ui.table.provider.ZmlTooltipProvider;
 import org.kalypso.zml.ui.table.provider.strategy.ZmlCollectRulesVisitor;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.editing.InterpolatedValueEditingStrategy;
@@ -100,7 +99,8 @@ public class ZmlTableColumn extends AbstractZmlTableColumn implements IZmlTableC
     m_mapper = new RuleMapper( table, type );
   }
 
-  public IZmlEditingStrategy getEditingStrategy( final ZmlTooltipProvider labelProvider )
+  @Override
+  public IZmlEditingStrategy getEditingStrategy( )
   {
     if( m_editing != null )
       return m_editing;
@@ -112,7 +112,7 @@ public class ZmlTableColumn extends AbstractZmlTableColumn implements IZmlTableC
     {
       final DataColumnType dataColumnType = (DataColumnType) type;
       if( ITimeseriesConstants.TYPE_RAINFALL.equals( dataColumnType.getValueAxis() ) )
-        m_editing = new SumValueEditingStrategy( this, labelProvider );
+        m_editing = new SumValueEditingStrategy( this );
       else
         m_editing = new InterpolatedValueEditingStrategy( this );
     }
@@ -120,6 +120,7 @@ public class ZmlTableColumn extends AbstractZmlTableColumn implements IZmlTableC
     return m_editing;
   }
 
+  @Override
   public IZmlLabelStrategy getLabelingStrategy( )
   {
     if( m_labeling != null )
@@ -142,6 +143,7 @@ public class ZmlTableColumn extends AbstractZmlTableColumn implements IZmlTableC
     return m_labeling;
   }
 
+  @Override
   public CellStyle findStyle( final IZmlModelRow row ) throws CoreException
   {
     if( m_lastRow == row )

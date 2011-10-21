@@ -53,14 +53,12 @@ import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -82,16 +80,17 @@ public class ZmlCommandPasteValue extends AbstractHandler
 
       IZmlTableCell ptr = cell;
 
+      final IZmlTableColumn column = cell.getColumn();
+      final IZmlEditingStrategy strategy = column.getEditingStrategy();
+
       final String[] data = getData();
       for( final String value : data )
       {
         if( Objects.isNull( ptr ) )
           break;
 
-        final double v = NumberUtils.parseDouble( value );
+        strategy.setValue( ptr.getRow().getModelRow(), value );
 
-        final IZmlValueReference reference = ptr.getValueReference();
-        reference.update( v, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
         ptr = ptr.findNextCell();
       }
 

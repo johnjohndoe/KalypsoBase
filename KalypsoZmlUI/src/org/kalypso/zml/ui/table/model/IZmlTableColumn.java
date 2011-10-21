@@ -49,6 +49,7 @@ import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
 import org.kalypso.zml.ui.table.provider.AppliedRule;
+import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
 
 /**
@@ -86,4 +87,6 @@ public interface IZmlTableColumn
   CellStyle findStyle( IZmlModelRow row ) throws CoreException;
 
   IZmlLabelStrategy getLabelingStrategy( );
+
+  IZmlEditingStrategy getEditingStrategy( );
 }

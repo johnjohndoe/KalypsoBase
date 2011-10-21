@@ -48,6 +48,7 @@ import org.kalypso.ogc.sensor.filter.filters.interval.IntervalSourceHandler;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.binding.CellStyle;
+import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
@@ -56,30 +57,25 @@ import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.ZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.ZmlTooltipProvider;
+import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
 
 /**
  * @author Dirk Kuch
  */
 public class SumValueEditingStrategy extends AbstractEditingStrategy
 {
-  private final ZmlTooltipProvider m_labelProvider;
-
-  public SumValueEditingStrategy( final ZmlTableColumn column, final ZmlTooltipProvider labelProvider )
+  public SumValueEditingStrategy( final ZmlTableColumn column )
   {
     super( column );
-    m_labelProvider = labelProvider;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#getValue(java.lang.Object)
-   */
   @Override
   public String getValue( final IZmlModelRow row )
   {
     try
     {
-      final Object plain = m_labelProvider.getPlainValue( row );
+      final ZmlLabelProvider provider = new ZmlLabelProvider( row, getColumn(), new ZmlRule[] {} );
+      final Object plain = provider.getPlainValue( row );
       if( Objects.isNull( plain ) )
         return null;
 
@@ -96,10 +92,6 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
     return null;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy#setValue(org.kalypso.zml.ui.table.model.IZmlModelRow,
-   *      java.lang.String)
-   */
   @Override
   public void setValue( final IZmlModelRow row, final String value )
   {
