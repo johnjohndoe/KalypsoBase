@@ -154,10 +154,11 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
         for( final Feature foundFeature : features )
         {
+          final String featureLabel = labelProvider.getText( foundFeature );
           if( foundFeature instanceof XLinkedFeature_Impl )
-            m_entries.put( foundFeature, labelProvider.getText( foundFeature ) );
+            m_entries.put( foundFeature, featureLabel );
           else
-            m_entries.put( foundFeature.getId(), labelProvider.getText( foundFeature ) );
+            m_entries.put( foundFeature.getId(), featureLabel );
         }
       }
     }
