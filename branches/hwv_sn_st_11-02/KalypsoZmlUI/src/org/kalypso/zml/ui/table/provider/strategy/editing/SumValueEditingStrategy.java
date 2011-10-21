@@ -75,7 +75,7 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
     try
     {
       final ZmlLabelProvider provider = new ZmlLabelProvider( row, getColumn(), new ZmlRule[] {} );
-      final Object plain = provider.getPlainValue( row );
+      final Object plain = provider.getPlainValue();
       if( Objects.isNull( plain ) )
         return null;
 
@@ -154,5 +154,11 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
   private void updateOriginValue( final IZmlValueReference reference, final Number targetValue ) throws SensorException
   {
     reference.update( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
+  }
+
+  @Override
+  public boolean isAggregated( )
+  {
+    return true;
   }
 }

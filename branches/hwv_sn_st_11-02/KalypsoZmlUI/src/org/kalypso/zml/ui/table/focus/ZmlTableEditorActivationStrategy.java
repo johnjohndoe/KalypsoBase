@@ -54,15 +54,12 @@ final class ZmlTableEditorActivationStrategy extends ColumnViewerEditorActivatio
         viewer.editElement( cell.getRow().getModelRow(), cell.findIndex() );
 
         final IZmlTableColumn column = cell.getColumn();
-        if( column instanceof IZmlTableColumn )
+        final IZmlTableColumn extended = column;
+        final ZmlTableEditingSupport support = extended.getEditingSupport();
+        if( support != null )
         {
-          final IZmlTableColumn extended = column;
-          final ZmlTableEditingSupport support = extended.getEditingSupport();
-          if( support != null )
-          {
-            final TextCellEditor editor = support.getCellEditor();
-            ((Text) editor.getControl()).insert( String.valueOf( character ) );
-          }
+          final TextCellEditor editor = support.getCellEditor();
+          ((Text) editor.getControl()).insert( String.valueOf( character ) );
         }
       }
     } );

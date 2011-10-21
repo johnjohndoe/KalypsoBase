@@ -159,4 +159,10 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
       ZmlInterpolation.interpolate( column, before, current );
   }
 
+  @Override
+  public boolean isAggregated( )
+  {
+    return false;
+  }
+
 }
