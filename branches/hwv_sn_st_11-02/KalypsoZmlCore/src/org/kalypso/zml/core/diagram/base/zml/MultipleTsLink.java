@@ -74,9 +74,6 @@ public class MultipleTsLink
     return m_identifier;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals( final Object obj )
   {
@@ -117,15 +114,18 @@ public class MultipleTsLink
     return identifiers.toArray( new String[] {} );
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {
     final HashCodeBuilder builder = new HashCodeBuilder();
     builder.append( MultipleTsLink.class.getName() );
     builder.append( getIdentifier() );
+
+    final TSLinkWithName[] links = getLinks();
+    for( final TSLinkWithName link : links )
+    {
+      builder.append( link.getHref() );
+    }
 
     return builder.toHashCode();
   }

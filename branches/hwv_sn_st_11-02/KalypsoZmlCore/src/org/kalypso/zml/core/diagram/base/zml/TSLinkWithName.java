@@ -158,9 +158,6 @@ public class TSLinkWithName
     m_context = context;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals( final Object obj )
   {
