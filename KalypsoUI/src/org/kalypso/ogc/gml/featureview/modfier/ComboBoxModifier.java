@@ -41,10 +41,13 @@
 package org.kalypso.ogc.gml.featureview.modfier;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
+import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -67,28 +70,43 @@ import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
  */
 public class ComboBoxModifier extends AbstractFeatureModifier
 {
-  private static final String NO_LINK_STRING = Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ComboBoxModifier.0"); //$NON-NLS-1$
+  private static final String NO_LINK_STRING = Messages.getString( "org.kalypso.ogc.gml.featureview.modfier.ComboBoxModifier.0" ); //$NON-NLS-1$
 
-  private final List<Object> m_entries = new ArrayList<Object>();
+  final GMLLabelProvider m_cellEditorLabelProvider = new GMLLabelProvider();
 
-  private final ComboBoxCellEditor m_comboBoxCellEditor = new ComboBoxCellEditor();
+  private ComboBoxViewerCellEditor m_comboBoxCellEditor = null;
 
   private Feature m_feature;
 
   public ComboBoxModifier( final GMLXPath propertyPath, final IRelationType ftp )
   {
     init( propertyPath, ftp );
-
-    m_comboBoxCellEditor.setStyle( SWT.READ_ONLY | SWT.DROP_DOWN );
   }
 
   @Override
   public Object getProperty( final Feature feature )
   {
     m_feature = feature;
-    m_entries.clear();
 
-    final List<String> labels = new ArrayList<String>();
+    final Object property = super.getProperty( feature );
+
+    // HACK/BUGFIX: the xpath resolved value is always a feasture, not the 'stirng' reference id for local featurr
+    // references.
+    // Revert the value to the string reference for this case.
+    if( property instanceof Feature )
+    {
+      final GMLWorkspace workspace = ((Feature) property).getWorkspace();
+      if( workspace == m_feature.getWorkspace() )
+        return ((Feature) property).getId();
+    }
+
+    return property;
+  }
+
+  protected Object refreshInput( )
+  {
+    /* update input */
+    final Collection<Object> input = new ArrayList<Object>();
 
     final IRelationType rt = (IRelationType) getPropertyType();
     if( !rt.isInlineAble() && rt.isLinkAble() )
@@ -96,56 +114,91 @@ public class ComboBoxModifier extends AbstractFeatureModifier
       /* Null entry to delete link if this is allowed */
       if( rt.isNillable() )
       {
-        m_entries.add( null );
-        labels.add( NO_LINK_STRING );
+        input.add( null );
       }
 
-      final GMLWorkspace workspace = feature.getWorkspace();
+      final GMLWorkspace workspace = m_feature.getWorkspace();
 
       final IReferenceCollectorStrategy strategy = ComboFeatureControl.createSearchStrategy( workspace, m_feature, rt );
       final Feature[] features = strategy.collectReferences();
 
-      final GMLLabelProvider labelProvider = new GMLLabelProvider();
-
       for( final Feature foundFeature : features )
       {
         if( foundFeature instanceof XLinkedFeature_Impl )
-        {
-          m_entries.add( foundFeature );
-        }
+          input.add( foundFeature );
         else
-        {
-          m_entries.add( foundFeature.getId() );
-        }
-
-        labels.add( labelProvider.getText( foundFeature ) );
+          input.add( foundFeature.getId() );
       }
     }
-    m_comboBoxCellEditor.setItems( labels.toArray( new String[labels.size()] ) );
 
-    final Object property = super.getProperty( feature );
-    return m_entries.indexOf( property );
+    return input;
   }
 
-  @Override
-  public Object parseInput( final Feature f, final Object value )
-  {
-    final int counter = ((Integer) value).intValue();
-    if( counter >= 0 )
-      return m_entries.get( counter );
-    else
-      // TODO: catch -1 and return null feature, is this correct?
-      return null;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#createCellEditor(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public CellEditor createCellEditor( final Composite parent )
   {
-    m_comboBoxCellEditor.create( parent );
+    m_comboBoxCellEditor = new ComboBoxViewerCellEditor( parent, SWT.READ_ONLY | SWT.DROP_DOWN )
+    {
+      @Override
+      public void activate( )
+      {
+        final Object input = refreshInput();
+        setInput( input );
+      }
+
+      @Override
+      public void setInput( final Object input )
+      {
+        super.setInput( input );
+
+        final Object selected = doGetValue();
+        doSetValue( selected );
+      }
+    };
+
+    m_comboBoxCellEditor.setActivationStyle( ComboBoxViewerCellEditor.DROP_DOWN_ON_KEY_ACTIVATION | ComboBoxViewerCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION
+        | ComboBoxViewerCellEditor.DROP_DOWN_ON_PROGRAMMATIC_ACTIVATION | ComboBoxViewerCellEditor.DROP_DOWN_ON_TRAVERSE_ACTIVATION );
+
+    m_comboBoxCellEditor.setContenProvider( new ArrayContentProvider() );
+
+    final ViewerFilter filter = createFilter();
+    if( filter != null )
+      m_comboBoxCellEditor.getViewer().setFilters( new ViewerFilter[] { filter } );
+
+    m_comboBoxCellEditor.setLabelProvider( new LabelProvider()
+    {
+      @Override
+      public String getText( final Object element )
+      {
+        return getCellEditorLabel( element );
+      }
+    } );
+
     return m_comboBoxCellEditor;
+  }
+
+  protected String getCellEditorLabel( final Object element )
+  {
+    if( element == null )
+      return NO_LINK_STRING;
+
+    final Feature foundFeature = findFeature( element );
+
+    return m_cellEditorLabelProvider.getText( foundFeature );
+  }
+
+  private Feature findFeature( final Object element )
+  {
+    if( element instanceof Feature )
+      return (Feature) element;
+
+    if( element instanceof String )
+    {
+      final GMLWorkspace workspace = m_feature.getWorkspace();
+      return workspace.getFeature( (String) element );
+    }
+
+    throw new IllegalStateException();
   }
 
   @Override
@@ -174,5 +227,13 @@ public class ComboBoxModifier extends AbstractFeatureModifier
 
     // we should never reach this code, as the ComboBoxModifier is only used for relation types
     return fprop.toString();
+  }
+
+  /**
+   * No filter on combo entries by default. Override to implement.
+   */
+  protected ViewerFilter createFilter( )
+  {
+    return null;
   }
 }
