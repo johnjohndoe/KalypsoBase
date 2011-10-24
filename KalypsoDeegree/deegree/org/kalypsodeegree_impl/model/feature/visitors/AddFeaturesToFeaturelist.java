@@ -37,7 +37,6 @@ package org.kalypsodeegree_impl.model.feature.visitors;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.xml.namespace.QName;
 
@@ -66,7 +65,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
 {
   private final FeatureList m_list;
 
-  private final Properties m_propertyMap;
+  private final List<PropertyMapping> m_propertyMap;
 
   private final IFeatureType m_featureType;
 
@@ -95,11 +94,11 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
    *          <li>count</li>
    *          </ul>
    */
-  public AddFeaturesToFeaturelist( final FeatureList list, final Properties propertyMap, final IFeatureType featureType, final String fromID, final String toID, final String handleExisting, final String fid, final String targetFeatureType )
+  public AddFeaturesToFeaturelist( final FeatureList list, final List<PropertyMapping> mappings, final IFeatureType featureType, final String fromID, final String toID, final String handleExisting, final String fid, final String targetFeatureType )
   {
     m_list = list;
     m_featureType = featureType;
-    m_propertyMap = propertyMap;
+    m_propertyMap = mappings;
     m_fromID = fromID;
     m_handleExisting = handleExisting;
     m_fid = fid;
@@ -172,7 +171,7 @@ public class AddFeaturesToFeaturelist implements FeatureVisitor
   {
     if( "#FID#".equals( fromID ))
       return sourceFeature.getId();
-    
+
     final IFeatureType sourceFT = sourceFeature.getFeatureType();
     final IPropertyType idPT = sourceFT.getProperty( fromID );
     final Object property = sourceFeature.getProperty( idPT );

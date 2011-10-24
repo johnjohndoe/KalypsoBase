@@ -35,9 +35,8 @@
  */
 package org.kalypsodeegree_impl.model.feature;
 
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -52,6 +51,7 @@ import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypsodeegree.model.TypeHandlerUtilities;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.visitors.PropertyMapping;
 
 /**
  * @author belger
@@ -92,7 +92,7 @@ public final class FeatureHelperTest extends TestCase
 
     final QName sourceFeatureQName = new QName( NAMESPACE, "sourceFT" );
     final IPropertyType[] sourceProps = new IPropertyType[] {
-    // GMLSchemaFactory.createValuePropertyType(name, valueQName, typeHandler, countTestCases(), countTestCases())
+        // GMLSchemaFactory.createValuePropertyType(name, valueQName, typeHandler, countTestCases(), countTestCases())
         GMLSchemaFactory.createValuePropertyType( SOURCE_STRING_PROP, stringTH, 1, 1, false ), //
         GMLSchemaFactory.createValuePropertyType( SOURCE_DOUBLE_PROP, doubleTH, 1, 1, false ), //
         GMLSchemaFactory.createValuePropertyType( SOURCE_INT_PROP, integerTH, 1, 1, false ) };
@@ -104,22 +104,21 @@ public final class FeatureHelperTest extends TestCase
     final Feature targetfeature = FeatureFactory.createFeature( null, null, "test", sourceFTP, true );
 
     // mapping erzeugen
-    final Properties mapping = new Properties();
-    mapping.setProperty( SOURCE_STRING_PROP.getLocalPart(), SOURCE_STRING_PROP.getLocalPart() );
-    mapping.setProperty( SOURCE_DOUBLE_PROP.getLocalPart(), SOURCE_DOUBLE_PROP.getLocalPart() );
+    final List<PropertyMapping> mapping = new ArrayList<PropertyMapping>();
+    mapping.add( new PropertyMapping( SOURCE_STRING_PROP.getLocalPart(), SOURCE_STRING_PROP.getLocalPart() ) );
+    mapping.add( new PropertyMapping( SOURCE_DOUBLE_PROP.getLocalPart(), SOURCE_DOUBLE_PROP.getLocalPart() ) );
 
     // mappen
     FeatureHelper.copyProperties( sourcefeature, targetfeature, mapping );
     compareByMapping( sourcefeature, targetfeature, mapping );
   }
 
-  private void compareByMapping( final Feature sourcefeature, final Feature targetfeature, final Properties mapping )
+  private void compareByMapping( final Feature sourcefeature, final Feature targetfeature, final List<PropertyMapping> mappings )
   {
-    for( final Object element : mapping.entrySet() )
+    for( final PropertyMapping mapping : mappings )
     {
-      final Map.Entry entry = (Entry) element;
-      final String sourceProp = (String) entry.getKey();
-      final String targetProp = (String) entry.getValue();
+      final String sourceProp = mapping.getFrom();
+      final String targetProp = mapping.getTo();
 
       // TODO: was ist mit deep-copy?
 
