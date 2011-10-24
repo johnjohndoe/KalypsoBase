@@ -142,6 +142,10 @@ public class ComboBoxModifier extends AbstractFeatureModifier
       @Override
       public void activate( )
       {
+        final ViewerFilter filter = createFilter();
+        if( filter != null )
+          getViewer().setFilters( new ViewerFilter[] { filter } );
+
         final Object input = refreshInput();
         setInput( input );
       }
@@ -160,10 +164,6 @@ public class ComboBoxModifier extends AbstractFeatureModifier
         | ComboBoxViewerCellEditor.DROP_DOWN_ON_PROGRAMMATIC_ACTIVATION | ComboBoxViewerCellEditor.DROP_DOWN_ON_TRAVERSE_ACTIVATION );
 
     m_comboBoxCellEditor.setContenProvider( new ArrayContentProvider() );
-
-    final ViewerFilter filter = createFilter();
-    if( filter != null )
-      m_comboBoxCellEditor.getViewer().setFilters( new ViewerFilter[] { filter } );
 
     m_comboBoxCellEditor.setLabelProvider( new LabelProvider()
     {
