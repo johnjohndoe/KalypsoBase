@@ -74,8 +74,9 @@ public final class LayerTableStyleUtils
 
     final String styleRef = style.getHref();
 
+    /* If defined by not set, return empty style. Allows to switch off the global for a single column */
     if( StringUtils.isBlank( styleRef ) )
-      return fallback;
+      return new LayerTableStyle( null );
 
     final IPoolableObjectType key = createKey( "sld", styleRef, context ); //$NON-NLS-1$
     return new LayerTableStyle( key );
