@@ -51,6 +51,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * @author Dirk Kuch
@@ -63,6 +64,8 @@ public class MultipleTsLink
 
   public MultipleTsLink( final String identifier )
   {
+    Assert.isNotNull( identifier );
+
     m_identifier = identifier;
   }
 
