@@ -48,5 +48,5 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 public interface IMultipleTsLinkSelection extends IStructuredSelection
 {
   @Override
-  public MultipleTsLink getFirstElement( );
+  MultipleTsLink getFirstElement( );
 }
