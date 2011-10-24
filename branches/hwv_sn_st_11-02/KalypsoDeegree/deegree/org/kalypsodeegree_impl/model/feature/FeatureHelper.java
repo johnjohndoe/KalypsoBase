@@ -44,7 +44,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.xml.XMLConstants;
@@ -84,6 +83,7 @@ import org.kalypsodeegree_impl.model.feature.tokenreplace.AnnotationTokenReplace
 import org.kalypsodeegree_impl.model.feature.tokenreplace.FeatureIdTokenReplacer;
 import org.kalypsodeegree_impl.model.feature.tokenreplace.ListPropertyTokenReplacer;
 import org.kalypsodeegree_impl.model.feature.tokenreplace.PropertyTokenReplacer;
+import org.kalypsodeegree_impl.model.feature.visitors.PropertyMapping;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -164,15 +164,16 @@ public final class FeatureHelper
    * @throws UnsupportedOperationException
    *           Noch sind nicht alle Typen implementiert
    */
-  public static void copyProperties( final Feature sourceFeature, final Feature targetFeature, final Properties propertyMap ) throws Exception
+  public static void copyProperties( final Feature sourceFeature, final Feature targetFeature, final List<PropertyMapping> propertyMap ) throws Exception
   {
     final GMLWorkspace workspace = sourceFeature.getWorkspace();
     final IGMLSchema gmlSchema = workspace == null ? null : workspace.getGMLSchema();
     final String gmlVersion = gmlSchema == null ? null : gmlSchema.getGMLVersion();
-    for( final Entry< ? , ? > entry : propertyMap.entrySet() )
+
+    for( final PropertyMapping mapping : propertyMap )
     {
-      final String sourceProp = (String) entry.getKey();
-      final String targetProp = (String) entry.getValue();
+      final String sourceProp = mapping.getFrom();
+      final String targetProp = mapping.getTo();
       copyProperty( sourceFeature, targetFeature, gmlVersion, sourceProp, targetProp );
     }
   }
