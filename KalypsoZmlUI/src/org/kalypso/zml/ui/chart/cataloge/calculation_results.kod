@@ -14,6 +14,28 @@
         <Width>3</Width>
         <LineColor>008040</LineColor>
       </LineStyle>
+      
+      <LineStyle role="calc_forecast_other_1">
+        <Width>2</Width>
+        <LineColor>84FFB5</LineColor>
+      </LineStyle>
+      <LineStyle role="calc_forecast_other_2">
+        <Width>2</Width>
+        <LineColor>BFFF84</LineColor>
+      </LineStyle>
+      <LineStyle role="calc_forecast_other_3">
+        <Width>2</Width>
+        <LineColor>A2FF30</LineColor>
+      </LineStyle>
+      <LineStyle role="calc_forecast_other_4">
+        <Width>2</Width>
+        <LineColor>44FFB4</LineColor>
+      </LineStyle>
+      <LineStyle role="calc_forecast_other_5">
+        <Width>2</Width>
+        <LineColor>A0D9FF</LineColor>
+      </LineStyle>
+      
       <LineStyle role="calc_forecast_curve">
         <Width>2</Width>
         <LineColor>008040</LineColor>
@@ -44,6 +66,17 @@
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast</StyleReference>
             </Styles>
           </Layer>
+          <Layer id="Q_CALC_OTHER_FORECAST">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>Vorhersage (Variante)</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_other_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_other_2</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_other_3</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_other_4</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_other_5</StyleReference>
+            </Styles>
+          </Layer>
           <Layer id="Q_CALC_LOWER_FORECAST_CURVE">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
             <Title>untere Umhüllende</Title>
@@ -65,7 +98,7 @@
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_handover</StyleReference>
             </Styles>
           </Layer>
-           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
@@ -86,7 +119,7 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_1" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_2" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_3" />
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />          
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
@@ -113,6 +146,17 @@
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast</StyleReference>
             </Styles>
           </Layer>
+          <Layer id="W_CALC_OTHER_FORECAST">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Title>Vorhersage (Variante)</Title>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_other_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_other_2</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_other_3</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_other_4</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_other_5</StyleReference>
+            </Styles>
+          </Layer>
           <Layer id="W_CALC_LOWER_FORECAST_CURVE">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
             <Title>untere Umhüllende</Title>
@@ -134,7 +178,7 @@
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_handover</StyleReference>
             </Styles>
           </Layer>
-           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
 
         <MapperRefs>
@@ -142,7 +186,7 @@
           <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#W" />
         </MapperRefs>
       </Layer>
-      
+
       <Layer id="W_CALC_CALCULATION">
         <Title>Wasserstand</Title>
         <Layers>
@@ -156,7 +200,7 @@
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_1" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_2" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_3" />
-          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />          
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:alarmstufen#alarmstufe_4" />
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
 
@@ -165,7 +209,7 @@
           <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#W" />
         </MapperRefs>
       </Layer>
-      
+
     </Layers>
   </Chart>
 </ChartConfiguration>
