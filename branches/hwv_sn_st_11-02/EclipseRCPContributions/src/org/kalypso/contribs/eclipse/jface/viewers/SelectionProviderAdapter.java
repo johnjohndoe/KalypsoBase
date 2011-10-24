@@ -80,32 +80,25 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
   public void setSelection( final ISelection selection )
   {
     m_selection = selection;
+
     fireSelectionChanged();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
   @Override
   public ISelection getSelection( )
   {
     if( m_selection == null )
       m_selection = StructuredSelection.EMPTY;
+
     return m_selection;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IPostSelectionProvider#addPostSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
   @Override
   public void addPostSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_postListeners.add( listener );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IPostSelectionProvider#removePostSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
   @Override
   public void removePostSelectionChangedListener( final ISelectionChangedListener listener )
   {
@@ -126,16 +119,16 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
     fireSelectionChanged( new SelectionChangedEvent( this, getSelection() ), listenersArray );
   }
 
-  private void fireSelectionChanged( final SelectionChangedEvent e, final ISelectionChangedListener[] listenersArray )
+  private void fireSelectionChanged( final SelectionChangedEvent event, final ISelectionChangedListener[] listeners )
   {
-    for( final ISelectionChangedListener l : listenersArray )
+    for( final ISelectionChangedListener listener : listeners )
     {
       final SafeRunnable safeRunnable = new SafeRunnable()
       {
         @Override
         public void run( )
         {
-          l.selectionChanged( e );
+          listener.selectionChanged( event );
         }
       };
 
