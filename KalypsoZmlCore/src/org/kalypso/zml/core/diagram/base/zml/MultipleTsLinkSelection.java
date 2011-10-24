@@ -40,13 +40,61 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.diagram.base.zml;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
  * @author Dirk Kuch
  */
-public interface IMultipleTsLinkSelection extends IStructuredSelection
+public class MultipleTsLinkSelection implements IMultipleTsLinkSelection
 {
+  private final IStructuredSelection m_selection;
+
+  public MultipleTsLinkSelection( final IStructuredSelection selection )
+  {
+    m_selection = selection;
+  }
+
+  @SuppressWarnings("unchecked")
   @Override
-  MultipleTsLink getFirstElement( );
+  public Iterator<MultipleTsLink> iterator( )
+  {
+    return m_selection.iterator();
+  }
+
+  /**
+   * @see org.eclipse.jface.viewers.IStructuredSelection#size()
+   */
+  @Override
+  public int size( )
+  {
+    return m_selection.size();
+  }
+
+  @Override
+  public Object[] toArray( )
+  {
+    return m_selection.toArray();
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<MultipleTsLink> toList( )
+  {
+    return m_selection.toList();
+  }
+
+  @Override
+  public boolean isEmpty( )
+  {
+    return m_selection.isEmpty();
+  }
+
+  @Override
+  public MultipleTsLink getFirstElement( )
+  {
+    return (MultipleTsLink) m_selection.getFirstElement();
+  }
 }
