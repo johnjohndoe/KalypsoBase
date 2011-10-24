@@ -40,18 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.diagram.base.zml;
 
-import java.util.Iterator;
-
-import org.eclipse.jface.viewers.IStructuredSelection;
-
 /**
  * @author Dirk Kuch
  */
-public interface IMultipleTsLinkSelection extends IStructuredSelection
+public interface IMultipleTsLinkBuilderSource
 {
-  @Override
-  MultipleTsLink getFirstElement( );
-
-  @Override
-  Iterator<MultipleTsLink> iterator( );
+  TSLinkWithName[] getLinks( );
 }
