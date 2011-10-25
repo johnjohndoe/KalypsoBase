@@ -53,7 +53,11 @@
         <Title>Abfluss</Title>
         <Layers>
           <Layer id="Q_CALC_OBSERVED">
-            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="content.messwerte" value="true" />
+              </Parameters>
+            </Provider>
             <Title>Beobachtung</Title>
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_observed</StyleReference>
@@ -95,6 +99,7 @@
                 <Parameter name="start" value="metadata:Vorhersage Start" />
                 <Parameter name="end" value="metadata:Vorhersage Ende" />
                 <Parameter name="supportsMultiSelect" value="true" />
+                <Parameter name="content.umhuellend" value="true" />
               </Parameters>
             </Provider>
             <Title>untere Umhüllende</Title>
@@ -108,6 +113,7 @@
                 <Parameter name="start" value="metadata:Vorhersage Start" />
                 <Parameter name="end" value="metadata:Vorhersage Ende" />
                 <Parameter name="supportsMultiSelect" value="true" />
+                <Parameter name="content.umhuellend" value="true" />
               </Parameters>
             </Provider>
             <Title>obere Umhüllende</Title>
@@ -157,7 +163,11 @@
         <Title>Wasserstand</Title>
         <Layers>
           <Layer id="W_CALC_OBSERVED">
-            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="content.messwerte" value="true" />
+              </Parameters>
+            </Provider>
             <Title>Beobachtung</Title>
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_observed</StyleReference>
@@ -199,6 +209,7 @@
                 <Parameter name="start" value="metadata:Vorhersage Start" />
                 <Parameter name="end" value="metadata:Vorhersage Ende" />
                 <Parameter name="supportsMultiSelect" value="true" />
+                <Parameter name="content.umhuellend" value="true" />
               </Parameters>
             </Provider>
             <Title>untere Umhüllende</Title>
@@ -212,6 +223,7 @@
                 <Parameter name="start" value="metadata:Vorhersage Start" />
                 <Parameter name="end" value="metadata:Vorhersage Ende" />
                 <Parameter name="supportsMultiSelect" value="true" />
+                <Parameter name="content.umhuellend" value="true" />
               </Parameters>
             </Provider>
             <Title>obere Umhüllende</Title>
