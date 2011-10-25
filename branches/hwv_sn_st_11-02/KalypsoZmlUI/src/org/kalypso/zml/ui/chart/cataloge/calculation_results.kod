@@ -14,7 +14,7 @@
         <Width>3</Width>
         <LineColor>008040</LineColor>
       </LineStyle>
-      
+
       <LineStyle role="calc_forecast_other_1">
         <Width>2</Width>
         <LineColor>84FFB5</LineColor>
@@ -35,7 +35,7 @@
         <Width>2</Width>
         <LineColor>A0D9FF</LineColor>
       </LineStyle>
-      
+
       <LineStyle role="calc_forecast_curve">
         <Width>2</Width>
         <LineColor>008040</LineColor>
@@ -60,14 +60,26 @@
             </Styles>
           </Layer>
           <Layer id="Q_CALC_FORECAST">
-            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="start" value="metadata:Vorhersage Start" />
+                <Parameter name="end" value="metadata:Vorhersage Ende" />
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
             <Title>Vorhersage</Title>
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast</StyleReference>
             </Styles>
           </Layer>
           <Layer id="Q_CALC_OTHER_FORECAST">
-            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="start" value="metadata:Vorhersage Start" />
+                <Parameter name="end" value="metadata:Vorhersage Ende" />
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
             <Title>Vorhersage (Variante)</Title>
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_other_1</StyleReference>
@@ -78,14 +90,26 @@
             </Styles>
           </Layer>
           <Layer id="Q_CALC_LOWER_FORECAST_CURVE">
-            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="start" value="metadata:Vorhersage Start" />
+                <Parameter name="end" value="metadata:Vorhersage Ende" />
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
             <Title>untere Umhüllende</Title>
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_curve</StyleReference>
             </Styles>
           </Layer>
           <Layer id="Q_CALC_UPPER_FORECAST_CURVE">
-            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="start" value="metadata:Vorhersage Start" />
+                <Parameter name="end" value="metadata:Vorhersage Ende" />
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
             <Title>obere Umhüllende</Title>
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_curve</StyleReference>
@@ -140,14 +164,26 @@
             </Styles>
           </Layer>
           <Layer id="W_CALC_FORECAST">
-            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="start" value="metadata:Vorhersage Start" />
+                <Parameter name="end" value="metadata:Vorhersage Ende" />
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
             <Title>Vorhersage</Title>
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast</StyleReference>
             </Styles>
           </Layer>
           <Layer id="W_CALC_OTHER_FORECAST">
-            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="start" value="metadata:Vorhersage Start" />
+                <Parameter name="end" value="metadata:Vorhersage Ende" />
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
             <Title>Vorhersage (Variante)</Title>
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_other_1</StyleReference>
@@ -158,14 +194,26 @@
             </Styles>
           </Layer>
           <Layer id="W_CALC_LOWER_FORECAST_CURVE">
-            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="start" value="metadata:Vorhersage Start" />
+                <Parameter name="end" value="metadata:Vorhersage Ende" />
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
             <Title>untere Umhüllende</Title>
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_curve</StyleReference>
             </Styles>
           </Layer>
           <Layer id="W_CALC_UPPER_FORECAST_CURVE">
-            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider" />
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
+              <Parameters>
+                <Parameter name="start" value="metadata:Vorhersage Start" />
+                <Parameter name="end" value="metadata:Vorhersage Ende" />
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
             <Title>obere Umhüllende</Title>
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:calculation:results:diagramm#calc_forecast_curve</StyleReference>
