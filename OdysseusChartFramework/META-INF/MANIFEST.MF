@@ -5,9 +5,7 @@ Bundle-SymbolicName: de.openali.odysseus.chart.framework;singleton:=true
 Bundle-Version: 11.6.2.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.swt;visibility:=reexport,
- org.kalypso.commons,
- org.kalypso.metadoc,
- org.kalypso.ui
+ org.kalypso.commons
 Export-Package: de.openali.odysseus.chart.framework,
  de.openali.odysseus.chart.framework.exception,
  de.openali.odysseus.chart.framework.logging,
