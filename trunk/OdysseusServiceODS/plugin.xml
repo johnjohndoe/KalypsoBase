@@ -118,13 +118,6 @@
       </provider>
    </extension>
    <extension
-         point="org.eclipse.equinox.http.registry.servlets">
-      <servlet
-            alias="/ows"
-            class="org.kalypso.ogc.core.service.OGCServlet">
-      </servlet>
-   </extension>
-   <extension
          point="org.kalypso.ogc.core.service">
       <service
             class="de.openali.odysseus.service.ods.service.ODSService"
