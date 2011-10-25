@@ -2,7 +2,7 @@ package org.kalypso.ogc.gml;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -23,7 +23,7 @@ import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
  */
 final class VisibleFeaturesPaintable implements IStylePaintable
 {
-  private final Set<Feature> m_features = new HashSet<Feature>();
+  private final Set<Feature> m_features = new LinkedHashSet<Feature>();
 
   private final GM_Envelope m_env;
 
