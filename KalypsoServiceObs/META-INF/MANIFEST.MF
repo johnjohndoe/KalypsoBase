@@ -33,7 +33,8 @@ Bundle-ClassPath: lib/jax-ws-2.2.5/activation.jar,
  lib/jax-ws-2.2.5/saaj-impl.jar,
  lib/jax-ws-2.2.5/stax-ex.jar,
  lib/jax-ws-2.2.5/streambuffer.jar,
- lib/jax-ws-2.2.5/woodstox.jar
+ lib/jax-ws-2.2.5/woodstox.jar,
+ .
 Export-Package: org.kalypso.services.observation,
  org.kalypso.services.observation.client,
  org.kalypso.services.observation.sei
