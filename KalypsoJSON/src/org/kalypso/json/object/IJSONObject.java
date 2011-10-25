@@ -51,6 +51,8 @@ public interface IJSONObject
 {
   /**
    * This function returns the JSON representation of this object.
+   * 
+   * @return The JSON representation.
    */
   public JSONObject toJSONObject( );
 }
