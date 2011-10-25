@@ -38,6 +38,8 @@ package org.kalypsodeegree_impl.model.feature.visitors;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
@@ -61,27 +63,41 @@ public class IndexFeaturesVisitor implements FeatureVisitor
     m_indexProperty = indexProperty;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public boolean visit( final Feature f )
   {
-    final Object property;
-
-    if( m_indexProperty == null )
-      property = f.getId();
-    else
-      property = f.getProperty( m_indexProperty );
+    final Object property = getProperty( f );
 
     if( m_index.containsKey( property ) )
     {
       System.err.println( String.format( "Duplicate feature index: %s", property ) );
     }
-    
+
     m_index.put( property, f );
 
     return true;
+  }
+
+  private Object getProperty( final Feature feature )
+  {
+    if( m_indexProperty == null )
+      return feature.getId();
+
+    final IFeatureType featureType = feature.getFeatureType();
+    final IPropertyType pt = featureType.getProperty( m_indexProperty );
+    if( pt == null )
+    {
+      System.err.println( String.format( "Unknown feature property: ", m_indexProperty ) );
+      return null;
+    }
+
+    final Object value = feature.getProperty( pt );
+
+    /* Special handling for gml:name */
+    if( Feature.QN_NAME.equals( pt.getQName() ) )
+      return feature.getName();
+
+    return value;
   }
 
   public Map<Object, Feature> getIndex( )
