@@ -7,5 +7,5 @@ Bundle-Activator: org.kalypso.wps.adapter.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.kalypso.ogc.core
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: kalypsobase.sourceforge.net
