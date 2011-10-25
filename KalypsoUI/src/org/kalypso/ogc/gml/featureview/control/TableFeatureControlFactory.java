@@ -64,7 +64,7 @@ public class TableFeatureControlFactory implements IFeatureControlFactory
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
     final Table tableType = (Table) controlType;
 
-    final IFeatureModifierFactory featureTypeCellEditorFactory = plugin.createFeatureTypeCellEditorFactory();
+    final IFeatureModifierFactory featureTypeCellEditorFactory = plugin.getFeatureTypeCellEditorFactory();
 
     final IFeatureSelectionManager selectionManager = parentComposite.getSelectionManager();
 

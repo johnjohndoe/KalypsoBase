@@ -262,7 +262,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   {
   }
 
-  public IFeatureModifierFactory createFeatureTypeCellEditorFactory( )
+  public synchronized IFeatureModifierFactory getFeatureTypeCellEditorFactory( )
   {
     if( m_defaultFeatureControlFactory == null )
     {

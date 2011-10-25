@@ -227,7 +227,7 @@ public class GisTableEditor extends AbstractEditorPart implements IEditorPart, I
     super.createPartControl( parent );
 
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-    final IFeatureModifierFactory factory = plugin.createFeatureTypeCellEditorFactory();
+    final IFeatureModifierFactory factory = plugin.getFeatureTypeCellEditorFactory();
     m_layerTable = new LayerTableViewer( parent, SWT.BORDER, this, factory, KalypsoCorePlugin.getDefault().getSelectionManager(), m_fcl );
 
     final MenuManager menuManager = new MenuManager();
