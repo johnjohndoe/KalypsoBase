@@ -104,5 +104,6 @@ Export-Package: com.sun.jersey.api,
  javax.ws.rs.core,
  javax.ws.rs.ext,
  org.kalypso.jaxrs,
+ org.kalypso.jaxrs.servlet,
  org.objectweb.asm,
  org.objectweb.asm.signature
