@@ -68,7 +68,7 @@ public class TextFeatureControlFactory implements IFeatureControlFactory
 
     final String format = getFormat( textType );
 
-    final GMLXPath propertyPath = new GMLXPath( vpt.getQName() );
+    final GMLXPath propertyPath = vpt == null ? null : new GMLXPath( vpt.getQName() );
 
     final TextFeatureControl tfc = new TextFeatureControl( feature, propertyPath, vpt, format );
     tfc.setEditable( textType.isEditable() );
