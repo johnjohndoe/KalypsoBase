@@ -129,7 +129,7 @@ public class ZmlLink
     m_linkPath = linkPath;
   }
 
-  private GMLXPath getPath( )
+  public GMLXPath getPath( )
   {
     return m_linkPath;
   }
