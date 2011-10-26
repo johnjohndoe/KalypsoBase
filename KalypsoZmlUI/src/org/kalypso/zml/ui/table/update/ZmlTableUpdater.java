@@ -140,6 +140,14 @@ public class ZmlTableUpdater implements Runnable
     }
 
     final AbstractColumnType base = TableTypes.finColumn( m_part.getModel().getTableType(), identifier );
+
+    if( base == null )
+    {
+      // FIXME: better error handling and error message!
+      // FIXME: better recovery
+      throw new IllegalStateException( "Faiuled to find base column for identifier: " + identifier );
+    }
+
     final AbstractColumnType clone = TableTypes.cloneColumn( base );
     clone.setId( multipleIdentifier );
 
