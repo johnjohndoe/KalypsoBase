@@ -48,6 +48,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -68,6 +69,8 @@ public class DataSourceProxyObservation implements IObservation
 
   private final String m_repositoryId;
 
+  private MetadataList m_metadata;
+
   public DataSourceProxyObservation( final IObservation observation, final String itemIdentifier, final String repositoryId )
   {
     m_observation = observation;
@@ -75,20 +78,23 @@ public class DataSourceProxyObservation implements IObservation
     m_repositoryId = repositoryId;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IObservation#getMetadataList()
-   */
   @Override
-  public MetadataList getMetadataList( )
+  public synchronized MetadataList getMetadataList( )
   {
-    final MetadataList metadata = m_observation.getMetadataList();
-    final DataSourceHandler handler = new DataSourceHandler( metadata );
-    if( !handler.containsDataSourceReferences() )
+    if( m_metadata == null )
     {
+      final MetadataList metadata = m_observation.getMetadataList();
+
+      m_metadata = MetadataHelper.clone( metadata );
+
+      final DataSourceHandler handler = new DataSourceHandler( m_metadata );
+      if( handler.containsDataSourceReferences() )
+        handler.removeAllDataSources();
+
       handler.addDataSource( m_itemIdentifier, m_repositoryId );
     }
 
-    return metadata;
+    return m_metadata;
   }
 
   /**
