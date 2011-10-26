@@ -107,7 +107,7 @@ public class ZmlCommandSetValuesAbove extends AbstractHandler
           @Override
           public void visit( final IZmlValueReference ref ) throws SensorException, CancelVisitorException
           {
-            final Date current = reference.getIndexValue();
+            final Date current = ref.getIndexValue();
             if( current.after( base ) || current.equals( base ) )
               throw new CancelVisitorException();
 
