@@ -67,6 +67,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -310,6 +311,10 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
     if( control instanceof Composite )
     {
       final Composite panel = (Composite) control;
+
+      if( panel instanceof Section )
+        return;
+
       m_formToolkit.adapt( panel );
 
       final Control[] children = panel.getChildren();

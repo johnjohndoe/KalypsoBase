@@ -79,6 +79,9 @@ public class ZmlTableLayoutJob extends UIJob
   @Override
   public IStatus runInUIThread( final IProgressMonitor monitor )
   {
+    if( m_table.isDisposed() )
+      return Status.CANCEL_STATUS;
+
     synchronized( this )
     {
       final IZmlTableColumn[] stack = m_stack.toArray( new IZmlTableColumn[] {} );
