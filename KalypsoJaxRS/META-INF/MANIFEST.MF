@@ -8,12 +8,10 @@ Require-Bundle: org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: kalypsobase.sourceforge.net
-Import-Package: javax.servlet;version="2.5.0",
- javax.servlet.http;version="2.5.0"
-Bundle-ClassPath: lib/asm-3.1.jar,
- lib/jersey-client-1.6.jar,
- lib/jersey-core-1.6.jar,
- lib/jersey-server-1.6.jar,
+Bundle-ClassPath: lib/jersey-client-1.9.1.jar,
+ lib/jersey-core-1.9.1.jar,
+ lib/jersey-json-1.9.1.jar,
+ lib/jersey-server-1.9.1.jar,
  .
 Export-Package: com.sun.jersey.api,
  com.sun.jersey.api.client,
@@ -24,6 +22,7 @@ Export-Package: com.sun.jersey.api,
  com.sun.jersey.api.container.filter,
  com.sun.jersey.api.container.httpserver,
  com.sun.jersey.api.core,
+ com.sun.jersey.api.json,
  com.sun.jersey.api.model,
  com.sun.jersey.api.provider.jaxb,
  com.sun.jersey.api.representation,
@@ -52,6 +51,10 @@ Export-Package: com.sun.jersey.api,
  com.sun.jersey.core.spi.scanning.uri,
  com.sun.jersey.core.util,
  com.sun.jersey.impl,
+ com.sun.jersey.json.impl,
+ com.sun.jersey.json.impl.provider.entity,
+ com.sun.jersey.json.impl.reader,
+ com.sun.jersey.json.impl.writer,
  com.sun.jersey.localization,
  com.sun.jersey.server.impl,
  com.sun.jersey.server.impl.application,
@@ -103,7 +106,6 @@ Export-Package: com.sun.jersey.api,
  javax.ws.rs,
  javax.ws.rs.core,
  javax.ws.rs.ext,
- org.kalypso.jaxrs,
- org.kalypso.jaxrs.servlet,
- org.objectweb.asm,
- org.objectweb.asm.signature
+ org.kalypso.jaxrs
+Import-Package: javax.servlet,
+ javax.servlet.http
