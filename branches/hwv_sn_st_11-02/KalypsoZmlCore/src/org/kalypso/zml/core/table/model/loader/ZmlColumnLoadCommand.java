@@ -130,6 +130,9 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
         return;
 
       final DataColumnType type = (DataColumnType) TableTypes.findColumnType( m_model.getTableType(), m_element.getIdentifier() );
+      if( Objects.isNull( type ) )
+        return;
+
       final IAxis[] axes = observation.getAxes();
       if( !hasValueAxis( axes, type ) )
         return;
