@@ -59,6 +59,7 @@ import org.kalypso.zml.core.diagram.layer.IZmlLayer;
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
+import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.TextFigure;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
@@ -133,7 +134,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     if( ArrayUtils.isEmpty( m_descriptors ) )
       return null;
@@ -156,7 +157,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     if( ArrayUtils.isEmpty( m_descriptors ) )
       return null;
@@ -186,10 +187,11 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
     {
       final Point centerPoint = getCoordinateMapper().numericToScreen( descriptor.getValue().getDomain(), descriptor.getValue().getTarget() );
 
-      getPointFigure().setStyle( descriptor.getPointStyle() );
-      getPointFigure().setPoints( new Point[] { centerPoint } );
+      final PointFigure pf = new PointFigure();
+      pf.setStyle( descriptor.getPointStyle() );
+      pf.setPoints( new Point[] { centerPoint } );
 
-      getPointFigure().paint( gc );
+      pf.paint( gc );
 
       if( descriptor.isShowLabel() )
       {

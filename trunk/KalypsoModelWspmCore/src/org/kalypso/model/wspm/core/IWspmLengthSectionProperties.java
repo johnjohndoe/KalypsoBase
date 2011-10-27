@@ -106,6 +106,8 @@ public interface IWspmLengthSectionProperties
   String LENGTH_SECTION_PROPERTY_Q_FL = LENGTH_SECTION_PROPERTY + "LengthSection_Q_fl";//$NON-NLS-1$
 
   String LENGTH_SECTION_PROPERTY_Q_RE = LENGTH_SECTION_PROPERTY + "LengthSection_Q_re";//$NON-NLS-1$
+  
+  String LENGTH_SECTION_PROPERTY_HEN = LENGTH_SECTION_PROPERTY + "LengthSection_hen";//$NON-NLS-1$
 
   String LENGTH_SECTION_PROPERTY_FROUDE = LENGTH_SECTION_PROPERTY + "LengthSection_froude";//$NON-NLS-1$
 }

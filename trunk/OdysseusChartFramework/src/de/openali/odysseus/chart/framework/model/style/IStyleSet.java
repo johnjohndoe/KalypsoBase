@@ -52,7 +52,7 @@ public interface IStyleSet
   void dispose( );
 
   IStyle getStyle( String identifier );
-
+ 
   /**
    * if no style is found, a default style is created, saved for later use and returned
    */

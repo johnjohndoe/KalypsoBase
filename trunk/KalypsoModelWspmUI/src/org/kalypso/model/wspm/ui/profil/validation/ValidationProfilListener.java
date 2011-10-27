@@ -50,6 +50,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.progress.IProgressConstants;
+import org.joda.time.DateTime;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
@@ -94,10 +95,13 @@ public class ValidationProfilListener implements IProfilListener
           collector.reset( featureID );
 
           // TODO: use monitor and check for cancel
+          System.out.println("(validation_performance_check)    startValidation :"+DateTime.now().toString( "mm:ss:" )+DateTime.now().getMillisOfSecond());
+
           final IStatus status = rules.validateProfile( profile, collector, validate, excludes.split( ";" ) ); //$NON-NLS-1$
 
           final IMarker[] markers = collector.getMarkers();
           profile.setProblemMarker( markers );
+          System.out.println("(validation_performance_check)    endValidation :"+DateTime.now().toString( "mm:ss:" )+DateTime.now().getMillisOfSecond());
 
           return status;
         }
@@ -136,6 +140,7 @@ public class ValidationProfilListener implements IProfilListener
 
   protected void revalidate( )
   {
+    System.out.println("(validation_performance_check)Revalidate :"+DateTime.now().toString( "mm:ss:" )+DateTime.now().getMillisOfSecond());
     m_validateJob.cancel(); // Just in case, to avoid too much validations
     m_validateJob.schedule( 100 );
   }

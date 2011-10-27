@@ -47,8 +47,7 @@ public class DefaultDoubleUnfilteredLineLayer extends DefaultDoubleLineLayer
       }
 
       // Zeichnen
-      drawLine( gc, path );
-      drawPoints( gc, path );
+      paint( gc, path.toArray( new Point[]{} ) );
 
     }
     else

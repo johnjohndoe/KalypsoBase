@@ -56,8 +56,7 @@ public class DefaultDoubleLineLayer extends AbstractLineLayer
     path.add( new Point( width, height / 2 ) );
 
     // Zeichnen
-    drawLine( gc, path );
-    drawPoints( gc, path );
+    paint( gc, path.toArray( new Point[] {} ) );
 
     gc.dispose();
   }
@@ -129,16 +128,10 @@ public class DefaultDoubleLineLayer extends AbstractLineLayer
       }
 
       // Zeichnen
-      final PolylineFigure lf = getPolylineFigure();
-      final PointFigure pf = getPointFigure();
+      final PolylineFigure lf = new PolylineFigure();
+      final PointFigure pf = new PointFigure();
 
-      final Point[] points = path.toArray( new Point[] {} );
-
-      lf.setPoints( points );
-      lf.paint( gc );
-
-      pf.setPoints( points );
-      pf.paint( gc );
+      paint( gc, path.toArray( new Point[] {} ) );
 
     }
     else
@@ -153,13 +146,13 @@ public class DefaultDoubleLineLayer extends AbstractLineLayer
   }
 
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     return new ComparableDataRange<Number>( getDataContainer().getDomainValues() );
   }
 
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return new ComparableDataRange<Number>( getDataContainer().getTargetValues() );
   }

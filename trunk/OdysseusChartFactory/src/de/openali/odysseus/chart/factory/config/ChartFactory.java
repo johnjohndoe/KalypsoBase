@@ -90,6 +90,8 @@ public final class ChartFactory
     final ChartLayerFactory layerFactory = new ChartLayerFactory( model, extendedResolver, extLoader, context, mapperFactory );
     layerFactory.build( chartType );
 
+    // TODO: restore zoom-Factor here, instead of maximise
+    model.autoscale( null );// null means maximise chart
     chartTypeResolver.clear();
   }
 }

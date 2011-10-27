@@ -314,14 +314,14 @@ public class ChartFeatureControl extends AbstractFeatureControl
     final IChartLayer[] layers = layerManager.getLayers();
     for( final IChartLayer layer : layers )
     {
-      final IDataRange<Number> domainRange = layer.getDomainRange();
-      final IDataRange<Number> targetRange = layer.getTargetRange( null );
+      final IDataRange< ? > domainRange = layer.getDomainRange();
+      final IDataRange< ? > targetRange = layer.getTargetRange( null );
       if( domainRange != null && targetRange != null )
       {
-        final Number domainMin = domainRange.getMin();
-        final Number domainMax = domainRange.getMax();
-        final Number targetMin = targetRange.getMin();
-        final Number targetMax = targetRange.getMax();
+        final Number domainMin = (Number) domainRange.getMin();
+        final Number domainMax = (Number) domainRange.getMax();
+        final Number targetMin = (Number) targetRange.getMin();
+        final Number targetMax = (Number) targetRange.getMax();
 
         if( domainMin.doubleValue() > Double.NEGATIVE_INFINITY )
           return true;

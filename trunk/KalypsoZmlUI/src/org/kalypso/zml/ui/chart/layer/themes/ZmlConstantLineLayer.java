@@ -183,7 +183,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     return null;
   }
@@ -192,7 +192,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     if( !m_calculateRange || ArrayUtils.isEmpty( m_descriptors ) )
     {

@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.joda.time.DateTime;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -79,7 +80,12 @@ public class ValidatorRuleSet
         {
           try
           {
+            System.out.print("(validation_performance_check)        rule: "+r.getID()+"start: "+DateTime.now().toString( "mm:ss:" )+DateTime.now().getMillisOfSecond());
+
             r.validate( profil, collector );
+            
+            System.out.println(" end: "+DateTime.now().toString( "mm:ss:" )+DateTime.now().getMillisOfSecond());
+
           }
           catch( final CoreException e )
           {

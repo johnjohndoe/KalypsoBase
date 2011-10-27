@@ -327,7 +327,8 @@
 		<attribute name="epid" type="string" use="required">
 			<annotation>
 				<documentation> ID der Extension, die den jeweiligen
-					Erweiterungspunkt implementiert</documentation>
+					Erweiterungspunkt implementiert
+				</documentation>
 			</annotation>
 		</attribute>
 	</complexType>
@@ -444,8 +445,11 @@
 	<element name="NumberRange" type="ods:AxisNumberRangeType"></element>
 
 	<complexType name="AxisNumberRangeRestrictionType">
-		<attribute name="absoluteMinValue" type="decimal" use="optional" /><!-- 
-			Grenze beim verschieben -->
+		<attribute name="absoluteMinValue" type="decimal" use="optional">
+			<annotation>
+				<documentation>Grenze beim verschieben</documentation>
+			</annotation>
+		</attribute>
 		<attribute name="absoluteMaxValue" type="decimal" use="optional" /><!-- 
 			Grenze beim verschieben -->
 		<attribute name="minRange" type="decimal" use="optional" /><!-- 

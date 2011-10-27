@@ -215,13 +215,13 @@ public class TortenLayer extends AbstractChartLayer
   }
 
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     return new ComparableDataRange<Number>( new Number[] { -100, 100 } );
   }
 
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return new ComparableDataRange<Number>( new Number[] { -100, 100 } );
   }

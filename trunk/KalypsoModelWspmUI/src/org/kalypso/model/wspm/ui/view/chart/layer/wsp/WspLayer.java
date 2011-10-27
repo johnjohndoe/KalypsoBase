@@ -326,7 +326,7 @@ public class WspLayer extends AbstractProfilTheme
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     if( m_data == null )
       return null;
