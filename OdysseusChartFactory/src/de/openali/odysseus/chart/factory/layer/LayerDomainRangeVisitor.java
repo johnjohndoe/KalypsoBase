@@ -50,7 +50,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 public class LayerDomainRangeVisitor extends AbstractLayerRangeVisitor
 {
   @Override
-  protected IDataRange<Number> getLayerRange( final IChartLayer layer )
+  protected IDataRange< ? > getLayerRange( final IChartLayer layer )
   {
     return layer.getDomainRange();
   }

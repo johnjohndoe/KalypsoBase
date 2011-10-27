@@ -101,7 +101,7 @@ public class ZmlLineLayerRangeHandler
     }
   }
 
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange<Number> getTargetRange( final IDataRange< ? > domainIntervall )
   {
     try
     {
@@ -159,7 +159,7 @@ public class ZmlLineLayerRangeHandler
   }
 
   @SuppressWarnings("unchecked")
-  private IPair<Number, Number>[] getClippedPoints( final IDataRange<Number> domainIntervall ) throws SensorException
+  private IPair<Number, Number>[] getClippedPoints( final IDataRange<?> domainIntervall ) throws SensorException
   {
     final IPair<Number, Number>[] filteredPoints = m_layer.getFilteredPoints( domainIntervall );
     final Rectangle2D clip = m_layer.getClip();

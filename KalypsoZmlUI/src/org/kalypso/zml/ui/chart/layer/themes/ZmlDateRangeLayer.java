@@ -126,7 +126,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     if( Objects.isNull( getDateRange() ) )
       return null;
@@ -144,7 +144,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return null;
   }

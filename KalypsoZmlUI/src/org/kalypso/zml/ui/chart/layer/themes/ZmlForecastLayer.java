@@ -182,7 +182,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     // TODO: all three parameters should eventually be set from outside
     final boolean shouldAutomax = true;
@@ -209,7 +209,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return null;
   }

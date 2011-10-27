@@ -161,8 +161,7 @@ public class GenericAxisLineLayer extends AbstractLineLayer
       }
     }
 
-    drawLine( gc, path );
-    drawPoints( gc, path );
+    paint( gc, path.toArray( new Point[]{} ) );
   }
 
   public IListDataContainer getDataContainer( )
@@ -174,7 +173,7 @@ public class GenericAxisLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     // TODO Auto-generated method stub
     return null;
@@ -184,7 +183,7 @@ public class GenericAxisLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     // TODO Auto-generated method stub
     return null;

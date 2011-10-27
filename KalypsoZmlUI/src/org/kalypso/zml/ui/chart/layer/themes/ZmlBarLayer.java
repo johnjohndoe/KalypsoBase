@@ -149,7 +149,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     return m_range.getDomainRange();
   }
@@ -158,7 +158,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return m_range.getTargetRange();
   }

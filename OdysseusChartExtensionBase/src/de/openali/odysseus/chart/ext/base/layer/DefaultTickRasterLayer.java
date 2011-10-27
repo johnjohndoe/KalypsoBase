@@ -46,6 +46,7 @@ import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
@@ -74,7 +75,7 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     // don't calculate
     return null;
@@ -84,7 +85,7 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     // don't calculate
     return null;
@@ -112,24 +113,27 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
     final int width = gc.getClipping().width;
     final int heigth = gc.getClipping().height;
 
+    final PolylineFigure pf = new PolylineFigure();
+    final ILineStyle lineStyle = (ILineStyle) getStyleSet().getStyle( "line" );
+    pf.setStyle( lineStyle );
+
     for( final Number domTick : domTicks )
     {
       final Point p1 = new Point( domainAxis.numericToScreen( domTick ), 0 );
       final Point p2 = new Point( domainAxis.numericToScreen( domTick ), heigth );
-
-      drawLine( gc, p1, p2 );
+      pf.setPoints( new Point[] { p1, p2 } );
+      pf.paint( gc );
     }
 
     for( final Number valTick : valTicks )
     {
       final Point p1 = new Point( 0, targetAxis.numericToScreen( valTick ) );
       final Point p2 = new Point( width, targetAxis.numericToScreen( valTick ) );
-
-      drawLine( gc, p1, p2 );
+      pf.setPoints( new Point[] { p1, p2 } );
+      pf.paint( gc );
     }
-
     final FullRectangleFigure figureRect = new FullRectangleFigure();
-    final IPointStyle pointStyle = getPointFigure().getStyle();
+    final IPointStyle pointStyle = (IPointStyle) getStyleSet().getStyle( "point" );
     if( pointStyle.isVisible() )
     {
       figureRect.setStyle( new AreaStyle( new ColorFill( pointStyle.getInlineColor() ), pointStyle.getAlpha(), pointStyle.getStroke(), pointStyle.isFillVisible() ) );

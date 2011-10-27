@@ -95,8 +95,7 @@ public class DefaultLineLayer extends AbstractLineLayer
             path.add( new Point( ori.getX( unswitched ), ori.getY( unswitched ) ) );
           }
         }
-        drawLine( gc, path );
-        drawPoints( gc, path );
+        paint( gc, path.toArray( new Point[] {} ) );
       }
       else
       {
@@ -119,7 +118,7 @@ public class DefaultLineLayer extends AbstractLineLayer
    */
   @Override
   @SuppressWarnings("unchecked")
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     final IDataRange domainRange = m_dataContainer.getDomainRange();
     final Object max = domainRange.getMax();
@@ -132,7 +131,7 @@ public class DefaultLineLayer extends AbstractLineLayer
    */
   @Override
   @SuppressWarnings("unchecked")
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     final IDataRange targetRange = m_dataContainer.getTargetRange();
     final Object max = targetRange.getMax();

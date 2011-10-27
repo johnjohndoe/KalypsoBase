@@ -48,8 +48,6 @@ import org.kalypso.chart.ext.observation.layer.TupleResultLineLayer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * @author Gernot Belger
@@ -63,7 +61,7 @@ public class DefaultTupleResultLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    return new TupleResultLineLayer( this, getDataContainer(), getStyleSet().getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); // $NON-NLS-1$
+     return new TupleResultLineLayer( this, getDataContainer(), getStyleSet());//.getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); // $NON-NLS-1$
 // // $NON-NLS-2$
   }
 
@@ -82,7 +80,7 @@ public class DefaultTupleResultLayerProvider extends AbstractLayerProvider
 
     if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )
     {
-      return new TupleResultDomainValueData( getContext(), href, observationId, domainComponentName, targetComponentName );
+      return new TupleResultDomainValueData<Object, Object>( getContext(), href, observationId, domainComponentName, targetComponentName );
     }
 
     return null;

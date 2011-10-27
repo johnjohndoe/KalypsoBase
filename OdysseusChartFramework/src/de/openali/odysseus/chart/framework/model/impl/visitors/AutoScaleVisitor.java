@@ -61,8 +61,7 @@ public class AutoScaleVisitor implements IAxisVisitor
 
   private final IChartModel m_model;
 
-
-  public AutoScaleVisitor( final IChartModel model)
+  public AutoScaleVisitor( final IChartModel model )
   {
     m_model = model;
   }
@@ -74,16 +73,16 @@ public class AutoScaleVisitor implements IAxisVisitor
   public void visit( final IAxis axis )
   {
     final IChartLayer[] layers = m_model.getLayerManager().getLayers( axis, true );
-    final List<IDataRange<Number>> ranges = new ArrayList<IDataRange<Number>>( layers.length );
+    final List<IDataRange< ? >> ranges = new ArrayList<IDataRange< ? >>( layers.length );
     final IAxisVisitorBehavior visitorBehavior = axis.getAxisVisitorBehavior();
     if( visitorBehavior != null && !visitorBehavior.isAutoscaleEnabled() )
       return;
 
     for( final IChartLayer layer : layers )
     {
-      if( layer.isVisible() && layer.isAutoScale())
+      if( layer.isVisible() && layer.isAutoScale() )
       {
-        final IDataRange<Number> range = getRangeFor( layer, axis );
+        final IDataRange< ? > range = getRangeFor( layer, axis );
         if( range != null )
         {
           ranges.add( range );
@@ -152,7 +151,7 @@ public class AutoScaleVisitor implements IAxisVisitor
   /**
    * @return DataRange of all domain or target data available in the given layer
    */
-  private IDataRange<Number> getRangeFor( final IChartLayer layer, final IAxis axis )
+  private IDataRange< ? > getRangeFor( final IChartLayer layer, final IAxis axis )
   {
     if( axis == layer.getCoordinateMapper().getDomainAxis() )
       return layer.getDomainRange();

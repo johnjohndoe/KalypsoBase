@@ -60,6 +60,10 @@ public interface IChartComposite
 
   IChartModel getChartModel( );
 
+  @Deprecated
+  /**
+   * the Implementation of IChartComposite should be a Canvas itself
+   */
   Canvas getPlot( );
 
   Rectangle getPlotRect( );

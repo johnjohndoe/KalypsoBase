@@ -235,7 +235,7 @@ public abstract class AbstractChartLayer implements IChartLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     final LayerDomainRangeVisitor rangeVisitor = new LayerDomainRangeVisitor();
     getLayerManager().accept( rangeVisitor );
@@ -254,7 +254,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   public String getIdentifier( )
   {
     return m_identifier;
-  } 
+  }
 
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
@@ -295,7 +295,7 @@ public abstract class AbstractChartLayer implements IChartLayer
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> intervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > intervall )
   {
     final LayerTargetRangeVisitor rangeVisitor = new LayerTargetRangeVisitor();
     getLayerManager().accept( rangeVisitor );
@@ -342,31 +342,31 @@ public abstract class AbstractChartLayer implements IChartLayer
   public boolean isVisible( )
   {
     return m_isVisible;
-//    if( !m_isVisible )
-//      return false;
+// if( !m_isVisible )
+// return false;
 //
-//    final ICoordinateMapper mapper = getCoordinateMapper();
-//    if( mapper == null )
-//      return true;
+// final ICoordinateMapper mapper = getCoordinateMapper();
+// if( mapper == null )
+// return true;
 //
-//    if( isNotVisible( mapper.getDomainAxis() ) )
-//      return false;
+// if( isNotVisible( mapper.getDomainAxis() ) )
+// return false;
 //
-//    if( isNotVisible( mapper.getTargetAxis() ) )
-//      return false;
+// if( isNotVisible( mapper.getTargetAxis() ) )
+// return false;
 //
-//    return true;
+// return true;
   }
 
-//  private boolean isNotVisible( final IAxis axis )
-//  {
-//    if( Objects.isNull( axis ) )
-//      return true;
-//    else if( axis instanceof IScreenAxis )
-//      return false;
+// private boolean isNotVisible( final IAxis axis )
+// {
+// if( Objects.isNull( axis ) )
+// return true;
+// else if( axis instanceof IScreenAxis )
+// return false;
 //
-//    return !axis.isVisible();
-//  }
+// return !axis.isVisible();
+// }
 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)

@@ -14,48 +14,19 @@ import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
+import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
 public class TupleResultLineLayer extends AbstractLineLayer
 {
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
-   */
-  @Override
-  public synchronized ILegendEntry[] getLegendEntries( )
-  {
-    // supress PointStyle LegendEntry if LineStyle is visible
-    final ILegendEntry[] le = super.getLegendEntries();
-    if( le.length < 2 )
-      return le;
-    return new ILegendEntry[] { le[0] };
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#init()
-   */
-  @Override
-  public void init( )
-  {
-    super.init();
-    if( getTargetAxis().getLabel() == null )
-      getTargetAxis().setLabel( getUnitFromComponent( m_data.getTargetComponentName() ) );
-    if( getDomainAxis().getLabel() == null )
-      getDomainAxis().setLabel( getUnitFromComponent( m_data.getDomainComponentName() ) );
-  }
-
-  protected TupleResultDomainValueData< ? , ? > m_data;
-
-  // FIXME: Aaarg, what is that?! MUST be an implementation details of the mapper/axes
-  final private DataOperatorHelper m_dataOpertatorHelper = new DataOperatorHelper();
+  private final TupleResultDomainValueData< ? , ? > valueData;
 
   final public static String TOOLTIP_FORMAT = "%-12s %s %n%-12s %s"; //$NON-NLS-1$
 
@@ -63,50 +34,32 @@ public class TupleResultLineLayer extends AbstractLineLayer
   {
     super( provider, lineStyle, pointStyle );
 
-    m_data = data;
+    valueData = data;
   }
 
-  public IObservation<TupleResult> getObservation( )
+  public TupleResultLineLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet )
   {
-    return m_data.getObservation();
+    super( provider, styleSet );
+
+    valueData = data;
   }
 
-  private String getUnitFromComponent( final String id )
-  {
-    if( m_data == null )
-      return null;
-    m_data.open();
-    final IObservation<TupleResult> obs = m_data.getObservation();
-    final TupleResult tr = obs == null ? null : obs.getResult();
-    if( tr != null )
-    {
-      final int index = tr.indexOfComponent( id );
-      if( index > -1 )
-        return tr.getComponent( index ).getName() + "[" + tr.getComponent( index ).getUnit() + "]";
-    }
-    return null;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
-   */
   @Override
-  public String getTitle( )
+  public void drawIcon( final GC gc, final Point size )
   {
+    final ArrayList<Point> path = new ArrayList<Point>();
 
-    if( super.getTitle() == null && m_data != null )
-    {
-      m_data.open();
-      final IObservation<TupleResult> obs = m_data.getObservation();
-      final TupleResult tr = obs == null ? null : obs.getResult();
-      if( tr != null )
-      {
-        final int targetComponentIndex = tr.indexOfComponent( m_data.getTargetComponentName() );
-        if( targetComponentIndex > -1 )
-          return tr.getComponent( targetComponentIndex ).getName();
-      }
-    }
-    return super.getTitle();
+    path.add( new Point( 0, size.y / 2 ) );
+    path.add( new Point( size.x / 5, size.y / 2 ) );
+    path.add( new Point( size.x / 5 * 2, size.y / 4 ) );
+    path.add( new Point( size.x / 5 * 3, size.y / 4 * 3 ) );
+    path.add( new Point( size.x / 5 * 4, size.y / 2 ) );
+    path.add( new Point( size.x, size.y / 2 ) );
+    final ILineStyle ls = getLineStyle();
+    final PolylineFigure lf = new PolylineFigure();
+    lf.setStyle( ls );
+    lf.setPoints( path.toArray( new Point[] {} ) );
+    lf.paint( gc );
   }
 
   @Override
@@ -116,116 +69,24 @@ public class TupleResultLineLayer extends AbstractLineLayer
     final int height = bounds.height;
     final int width = bounds.width;
     final GC gc = new GC( img );
-
-    final ArrayList<Point> path = new ArrayList<Point>();
-
-    path.add( new Point( 0, height / 2 ) );
-    path.add( new Point( width / 5, height / 2 ) );
-    path.add( new Point( width / 5 * 2, height / 4 ) );
-    path.add( new Point( width / 5 * 3, height / 4 * 3 ) );
-    path.add( new Point( width / 5 * 4, height / 2 ) );
-    path.add( new Point( width, height / 2 ) );
-
-    drawLine( gc, path );
+    drawIcon( gc, new Point( width, height ) );
     gc.dispose();
-
-  }
-
-  @Override
-  public void paint( final GC gc )
-  {
-    if( m_data == null )
-      return;
-
-    final List<Point> path = new ArrayList<Point>();
-
-    final IDataOperator targetDataOp = m_dataOpertatorHelper.getDataOperator( getTargetAxis().getDataClass() );
-    final IDataOperator domainDataOp = m_dataOpertatorHelper.getDataOperator( getDomainAxis().getDataClass() );
-    m_data.open();
-
-    final Object[] domainValues = m_data.getDomainValues();
-    final Object[] targetValues = m_data.getTargetValues();
-
-    if( domainValues.length > 0 && targetValues.length > 0 )
-    {
-      for( int i = 0; i < domainValues.length; i++ )
-      {
-        final Object domainValue = domainValues[i];
-        final Object targetValue = targetValues[i];
-
-        // we have to check if all values are correct - an incorrect value means a null value - the axis would return 0
-        // in that case
-        if( domainValue != null && targetValue != null )
-        {
-          // FIXME: this is really strange!
-          // FIXME: We should just call mapper.logicalToScreen, everything else is business of the framework!
-          final Point screen = getCoordinateMapper().numericToScreen( domainDataOp.logicalToNumeric( domainValue ), targetDataOp.logicalToNumeric( targetValue ) );
-          path.add( screen );
-        }
-      }
-    }
-
-    drawLine( gc, path );
-    drawPoints( gc, path );
   }
 
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
-    if( m_data == null || getDomainAxis() == null )
+    if( valueData == null || getDomainAxis() == null )
       return null;
-    final IDataOperator domainDataOp = m_dataOpertatorHelper.getDataOperator( getDomainAxis().getDataClass() );
-    final IDataRange< ? > dataRange = m_data.getDomainRange();
+    final IDataRange< ? > dataRange = valueData.getDomainRange();
     final Object min = dataRange.getMin();
     final Object max = dataRange.getMax();
     if( min == null || max == null )
       return null;
-
-    final IDataRange<Number> numRange = new DataRange<Number>( domainDataOp.logicalToNumeric( min ), domainDataOp.logicalToNumeric( max ) );
-    return numRange;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
-   */
-  @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
-  {
-    if( m_data == null || getTargetAxis() == null )
-      return null;
-    final IDataOperator targetDataOp = m_dataOpertatorHelper.getDataOperator( getTargetAxis().getDataClass() );
-    final IDataRange dataRange = m_data.getTargetRange();
-    final Object min = dataRange.getMin();
-    final Object max = dataRange.getMax();
-    if( min == null || max == null )
-      return null;
-
-    final IDataRange<Number> numRange = new DataRange<Number>( targetDataOp.logicalToNumeric( min ), targetDataOp.logicalToNumeric( max ) );
-    return numRange;
-  }
-
-  protected String getTooltip( final int index )
-  {
-    final TupleResult tr = m_data.getObservation().getResult();
-    final int targetComponentIndex = tr.indexOfComponent( m_data.getTargetComponentName() );
-    final int domainComponentIndex = tr.indexOfComponent( m_data.getDomainComponentName() );
-    final String targetComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( targetComponentIndex ) );
-    final String domainComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( domainComponentIndex ) );
-    final Object y = tr.get( index ).getValue( targetComponentIndex );
-    final Object x = tr.get( index ).getValue( domainComponentIndex );
-
-    final IDataOperator targetDataOp = m_dataOpertatorHelper.getDataOperator( getTargetAxis().getDataClass() );
-    final IDataOperator domainDataOp = m_dataOpertatorHelper.getDataOperator( getDomainAxis().getDataClass() );
-
-    return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, domainDataOp.getFormat( getDomainRange() ).format( x ), targetComponentLabel, targetDataOp.logicalToString( y ) } );
-  }
-
-  protected Rectangle getHoverRect( final Point screen, final int index )
-  {
-    return RectangleUtils.buffer( screen );
+    return dataRange;
   }
 
   /**
@@ -237,22 +98,20 @@ public class TupleResultLineLayer extends AbstractLineLayer
     if( !isVisible() )
       return null;
 
-    if( m_data == null )
+    if( valueData == null )
       return null;
 
-    final Object[] domainValues = m_data.getDomainValues();
-    final Object[] targetValues = m_data.getTargetValues();
-    final IDataOperator targetDataOp = m_dataOpertatorHelper.getDataOperator( getTargetAxis().getDataClass() );
-    final IDataOperator domainDataOp = m_dataOpertatorHelper.getDataOperator( getDomainAxis().getDataClass() );
+    final Object[] domainValues = valueData.getDomainValues();
+    final Object[] targetValues = valueData.getTargetValues();
     for( int i = 0; i < domainValues.length; i++ )
     {
-      if (domainValues.length != targetValues.length)
+      if( domainValues.length != targetValues.length )
         return null;
       final Object domainValue = domainValues[i];
       final Object targetValue = targetValues[i];
       if( targetValue == null )
         continue;
-      final Point pValue = getCoordinateMapper().numericToScreen( domainDataOp.logicalToNumeric( domainValue ), targetDataOp.logicalToNumeric( targetValue ) );
+      final Point pValue = getCoordinateMapper().logicalToScreen( domainValue, targetValue );
       final Rectangle hover = getHoverRect( pValue, i );
       if( hover == null )
         continue;
@@ -267,5 +126,146 @@ public class TupleResultLineLayer extends AbstractLineLayer
     }
 
     return null;
+  }
+
+  protected Rectangle getHoverRect( final Point screen, final int index )
+  {
+    return RectangleUtils.buffer( screen );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
+   */
+  @Override
+  public synchronized ILegendEntry[] getLegendEntries( )
+  {
+    // supress PointStyle LegendEntry if LineStyle is visible
+    final ILegendEntry[] le = super.getLegendEntries();
+    if( le.length < 2 )
+      return le;
+    return new ILegendEntry[] { le[0] };
+  }
+
+  public IObservation<TupleResult> getObservation( )
+  {
+    if( valueData == null )
+      return null;
+    return valueData.getObservation();
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
+   */
+  @Override
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  {
+    if( valueData == null || getTargetAxis() == null )
+      return null;
+    final IDataRange< ? > dataRange = valueData.getTargetRange();
+    final Object min = dataRange.getMin();
+    final Object max = dataRange.getMax();
+    if( min == null || max == null )
+      return null;
+    return dataRange;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getTitle()
+   */
+  @Override
+  public String getTitle( )
+  {
+
+    if( super.getTitle() == null && valueData != null )
+    {
+      valueData.open();
+      final IObservation<TupleResult> obs = valueData.getObservation();
+      final TupleResult tr = obs == null ? null : obs.getResult();
+      if( tr != null )
+      {
+        final int targetComponentIndex = tr.indexOfComponent( valueData.getTargetComponentName() );
+        if( targetComponentIndex > -1 )
+          return tr.getComponent( targetComponentIndex ).getName();
+      }
+    }
+    return super.getTitle();
+  }
+
+  protected String getTooltip( final int index )
+  {
+    final TupleResult tr = valueData.getObservation().getResult();
+    final int targetComponentIndex = tr.indexOfComponent( valueData.getTargetComponentName() );
+    final int domainComponentIndex = tr.indexOfComponent( valueData.getDomainComponentName() );
+    final String targetComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( targetComponentIndex ) );
+    final String domainComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( domainComponentIndex ) );
+    final Object y = tr.get( index ).getValue( targetComponentIndex );
+    final Object x = tr.get( index ).getValue( domainComponentIndex );
+
+    return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, x, targetComponentLabel, y } );
+  }
+
+  private String getUnitFromComponent( final String id )
+  {
+    if( valueData == null )
+      return null;
+    valueData.open();
+    final IObservation<TupleResult> obs = valueData.getObservation();
+    final TupleResult tr = obs == null ? null : obs.getResult();
+    if( tr != null )
+    {
+      final int index = tr.indexOfComponent( id );
+      if( index > -1 )
+        return tr.getComponent( index ).getName() + "[" + tr.getComponent( index ).getUnit() + "]";
+    }
+    return null;
+  }
+
+  public TupleResultDomainValueData< ? , ? > getValueData( )
+  {
+    return valueData;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#init()
+   */
+  @Override
+  public void init( )
+  {
+    super.init();
+    if( getTargetAxis().getLabels().length == 0 )
+      getTargetAxis().addLabel( new TitleTypeBean( getUnitFromComponent( valueData.getTargetComponentName() ) ) );
+    if( getDomainAxis().getLabels().length == 0 )
+      getDomainAxis().addLabel( new TitleTypeBean( getUnitFromComponent( valueData.getDomainComponentName() ) ) );
+  }
+
+  @Override
+  public void paint( final GC gc )
+  {
+    if( valueData == null )
+      return;
+
+    final List<Point> path = new ArrayList<Point>();
+    valueData.open();
+
+    final Object[] domainValues = valueData.getDomainValues();
+    final Object[] targetValues = valueData.getTargetValues();
+
+    if( domainValues.length > 0 && targetValues.length > 0 )
+    {
+      for( int i = 0; i < domainValues.length; i++ )
+      {
+        final Object domainValue = domainValues[i];
+        final Object targetValue = targetValues[i];
+
+        // we have to check if all values are correct - an incorrect value means a null value - the axis would return 0
+        // in that case
+        if( domainValue != null && targetValue != null )
+        {
+          final Point screen = getCoordinateMapper().logicalToScreen( domainValue, targetValue );
+          path.add( screen );
+        }
+      }
+    }
+    paint( gc, path.toArray( new Point[] {} ) );
   }
 }

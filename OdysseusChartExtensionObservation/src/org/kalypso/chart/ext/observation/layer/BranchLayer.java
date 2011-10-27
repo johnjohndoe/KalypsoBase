@@ -73,6 +73,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATI
 import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author burtscher1
@@ -110,15 +111,25 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
    * @param iconComponent
    *          the component which shall be mapped to an icon
    */
-  public BranchLayer( final ILayerProvider provider, final TupleResult data, final String domainComponentId, final String targetComponentId, final String iconComponentenId, final ILineStyle lineStyle, final IPointStyle pointStyle )
+  public BranchLayer( final ILayerProvider provider, final TupleResult data, final String domainComponentId, final String targetComponentId, final String iconComponentenId, final IStyleSet styleSet )
   {
-    super( provider, lineStyle, pointStyle );
+    super( provider, styleSet );
 
     m_data = data;
     m_domainComponentId = domainComponentId;
     m_targetComponentId = targetComponentId;
     m_iconComponentId = iconComponentenId;
   }
+
+// private final IPointStyle getPointStyle( )
+// {
+// return (IPointStyle) getStyleSet().getStyle( "point_style" );
+// }
+//
+// private final ILineStyle getLineStyle( )
+// {
+// return (ILineStyle) getStyleSet().getStyle( "line_style" );
+// }
 
   @Override
   @SuppressWarnings({ "unchecked", "deprecation" })
@@ -171,7 +182,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     if( m_isInited )
     {
@@ -186,7 +197,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     if( m_isInited )
     {
@@ -220,7 +231,8 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
         m_pointMarks.get( record.getValue( m_iconComponent ) ).add( point );
       }
 
-    final PolylineFigure polylineFigure = getPolylineFigure();
+    final PolylineFigure polylineFigure = new PolylineFigure();
+    polylineFigure.setStyle( getLineStyle() );
     polylineFigure.setPoints( path.toArray( new Point[] {} ) );
     polylineFigure.paint( gc );
 
@@ -228,7 +240,8 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
     for( final Entry<Object, ArrayList<Point>> e : m_pointMarks.entrySet() )
     {
       final ArrayList<Point> points = e.getValue();
-      final PointFigure pointFigure = getPointFigure();
+      final PointFigure pointFigure = new PointFigure();
+      pointFigure.setStyle( getPointStyle() );
       final Object nodeType = e.getKey();
       final IPointStyle iconStyle = m_mapping.get( nodeType );
 
@@ -281,7 +294,7 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
   {
 
     final ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
-    final ILineStyle ls = getPolylineFigure().getStyle();
+    final ILineStyle ls = getLineStyle();
     if( ls.isVisible() )
     {
 
@@ -301,7 +314,9 @@ public class BranchLayer extends AbstractLineLayer implements ITooltipChartLayer
           path.add( new Point( sizeX / 5 * 3, sizeY / 4 * 3 ) );
           path.add( new Point( sizeX / 5 * 4, sizeY / 2 ) );
           path.add( new Point( sizeX, sizeY / 2 ) );
-          drawLine( gc, path );
+          final PolylineFigure plf = new PolylineFigure();
+          plf.setStyle( getLineStyle() );
+          plf.paint( gc );
         }
 
       };

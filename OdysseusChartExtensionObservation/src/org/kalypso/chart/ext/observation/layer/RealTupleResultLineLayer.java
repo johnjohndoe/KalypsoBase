@@ -54,8 +54,6 @@ import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
-import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
-import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -112,7 +110,7 @@ public class RealTupleResultLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     if( m_isInited )
     {
@@ -127,7 +125,7 @@ public class RealTupleResultLineLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     if( m_isInited )
     {
@@ -148,20 +146,14 @@ public class RealTupleResultLineLayer extends AbstractLineLayer
     final List<Point> path = new ArrayList<Point>();
 
     if( m_isInited )
+    {
       for( int i = 0; i < m_data.size(); i++ )
       {
         final IRecord record = m_data.get( i );
         path.add( getCoordinateMapper().logicalToScreen( record.getValue( m_domainComponent ), record.getValue( m_targetComponent ) ) );
       }
-
-    final PolylineFigure polylineFigure = getPolylineFigure();
-    polylineFigure.setPoints( path.toArray( new Point[] {} ) );
-    polylineFigure.paint( gc );
-
-    final PointFigure pointFigure = getPointFigure();
-    pointFigure.setPoints( path.toArray( new Point[] {} ) );
-    pointFigure.paint( gc );
-
+      paint( gc, path.toArray( new Point[] {} ) );
+    }
   }
 
   private static IDataRange<Number> getRange( final TupleResult data, final IComponent comp, final IAxis axis )

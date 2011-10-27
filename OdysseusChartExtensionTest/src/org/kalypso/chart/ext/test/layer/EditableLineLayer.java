@@ -158,8 +158,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
         path.add( p );
       }
     }
-    drawLine( gc, path );
-    drawPoints( gc, path );
+    paint( gc, path.toArray( new Point[]{} ) );
   }
 
   /**
@@ -391,16 +390,16 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     if( m_editPointFigure == null )
     {
       m_editPointFigure = new PointFigure();
-      m_editPointStyle = getPointFigure().getStyle().clone();
-      m_editPointStyle.setAlpha( (int) (getPointFigure().getStyle().getAlpha() * 0.5) );
+      m_editPointStyle = (IPointStyle)getStyleSet().getStyle( "point_style" ).clone();
+      m_editPointStyle.setAlpha( (int) (m_editPointStyle.getAlpha() * 0.5) );
       m_editPointFigure.setStyle( m_editPointStyle );
     }
 
     if( m_editLineFigure == null )
     {
       m_editLineFigure = new PolylineFigure();
-      m_editLineStyle = getPolylineFigure().getStyle().clone();
-      m_editLineStyle.setAlpha( (int) (getPolylineFigure().getStyle().getAlpha() * 0.5) );
+      m_editLineStyle = (ILineStyle)getStyleSet().getStyle( "line_style" ).clone();
+      m_editLineStyle.setAlpha( (int) (m_editLineStyle.getAlpha() * 0.5) );
       m_editLineFigure.setStyle( m_editLineStyle );
     }
 
@@ -417,7 +416,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     if( m_hoverPointFigure == null )
     {
       m_hoverPointFigure = new PointFigure();
-      m_hoverPointStyle = getPointFigure().getStyle().clone();
+      m_hoverPointStyle = (IPointStyle)getStyleSet().getStyle( "point_style" ).clone();
       m_hoverPointFigure.setStyle( m_hoverPointStyle );
     }
 
@@ -432,9 +431,9 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     if( m_hoverLineFigure == null )
     {
       m_hoverLineFigure = new PolylineFigure();
-      m_hoverLineStyle = getPolylineFigure().getStyle().clone();
+      m_hoverLineStyle = (ILineStyle)getStyleSet().getStyle( "line_style" ).clone();
       m_hoverLineStyle.setColor( new RGB( 255, 0, 0 ) );
-      m_hoverLineStyle.setWidth( getPolylineFigure().getStyle().getWidth() + 2 );
+      m_hoverLineStyle.setWidth(m_hoverLineStyle.getWidth() + 2 );
       m_hoverLineFigure.setStyle( m_hoverLineStyle );
     }
 
@@ -462,7 +461,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
    */
   @Override
   @SuppressWarnings("unchecked")
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     final IDataRange logRange = getDataContainer().getDomainRange();
     final Object min = logRange.getMin();
@@ -479,7 +478,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
    */
   @Override
   @SuppressWarnings("unchecked")
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     final IDataRange logRange = getDataContainer().getTargetRange();
     final Object min = logRange.getMin();

@@ -249,6 +249,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   /**
    * @see de.openali.odysseus.chart.framework.view.IChartComposite#getPlot()
    */
+  @Deprecated
   @Override
   public Canvas getPlot( )
   {

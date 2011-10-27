@@ -50,7 +50,7 @@ public final class ChartUtilities
   /**
    * finds the smallest and biggest value of all ranges and creates a new DataRange with these values
    */
-  public static IDataRange<Number> mergeDataRanges( final IDataRange<Number>[] ranges )
+  public static IDataRange<Number> mergeDataRanges( final IDataRange< ? >[] ranges )
   {
 
     // if there are no input ranges, we return null
@@ -62,14 +62,14 @@ public final class ChartUtilities
     double min = Double.MAX_VALUE;
     double max = -Double.MAX_VALUE;
 
-    for( final IDataRange<Number> element : ranges )
+    for( final IDataRange< ? > element : ranges )
     {
       try
       {
-        final double eltMin = element.getMin().doubleValue();
+        final double eltMin = ((Number) element.getMin()).doubleValue();
         if( Double.isNaN( eltMin ) )
           continue;
-        final double eltMax = element.getMax().doubleValue();
+        final double eltMax = ((Number) element.getMax()).doubleValue();
         if( Double.isNaN( eltMax ) )
           continue;
 

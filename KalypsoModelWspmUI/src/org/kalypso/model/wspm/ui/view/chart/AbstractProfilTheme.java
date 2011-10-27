@@ -282,17 +282,17 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
    */
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange< ? > getDomainRange( )
   {
     Double min = null;
     Double max = null;
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
-      final IDataRange<Number> dr = layer.getDomainRange();
+      final IDataRange< ? > dr = layer.getDomainRange();
       if( dr != null )
       {
-        final double drMax = dr.getMax().doubleValue();
-        final double drMin = dr.getMin().doubleValue();
+        final double drMax = ((Number) dr.getMax()).doubleValue();
+        final double drMin = ((Number) dr.getMin()).doubleValue();
 
         max = max == null ? drMax : Math.max( max, drMax );
         min = min == null ? drMin : Math.min( min, drMin );
@@ -361,30 +361,30 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer implements
    * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
    */
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
+  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     Double min = null;
     Double max = null;
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
-      final IDataRange<Number> dr = layer.getTargetRange( null );
+      final IDataRange< ? > dr = layer.getTargetRange( null );
       if( dr != null )
       {
         if( max == null )
         {
-          max = dr.getMax().doubleValue();
+          max = ((Number) dr.getMax()).doubleValue();
         }
         else
         {
-          max = Math.max( max, dr.getMax().doubleValue() );
+          max = Math.max( max, ((Number) dr.getMax()).doubleValue() );
         }
         if( min == null )
         {
-          min = dr.getMin().doubleValue();
+          min = ((Number) dr.getMin()).doubleValue();
         }
         else
         {
-          min = Math.min( min, dr.getMin().doubleValue() );
+          min = Math.min( min, ((Number) dr.getMin()).doubleValue() );
         }
       }
     }
