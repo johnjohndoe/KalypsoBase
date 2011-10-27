@@ -43,21 +43,25 @@ package org.kalypso.simulation.core.ant.copyobservation.target;
 import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * @author Dirk Kuch
  */
 public class CopyObservationTarget extends AbstractObservationTarget implements ICopyObservationTarget
 {
-  private final String m_targetobservation;
+  private final GMLXPath m_targetobservation;
 
-  public CopyObservationTarget( final URL context, final String targetobservation, final DateRange targetRange, final DateRange forecastRange )
+  public CopyObservationTarget( final URL context, final GMLXPath targetobservation, final DateRange targetRange, final DateRange forecastRange )
   {
     super( context, targetRange, forecastRange );
 
@@ -70,22 +74,21 @@ public class CopyObservationTarget extends AbstractObservationTarget implements 
     final TimeseriesLinkType targetlink = getTargetLink( f );
     if( targetlink == null )
     {
-      throw new CoreException( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.1" ) + f.getId() ) );//$NON-NLS-1$
+      final IStatus status = new Status( IStatus.WARNING, KalypsoSimulationCorePlugin.getID(), Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.1" ) + f.getId() ); //$NON-NLS-1$
+      throw new CoreException( status );
     }
 
     // remove query part if present, href is also used as file name here!
-    final String href = ZmlURL.getIdentifierPart( targetlink.getHref() );
-    return href;
+    return ZmlURL.getIdentifierPart( targetlink.getHref() );
   }
 
   private TimeseriesLinkType getTargetLink( final Feature f )
   {
-    return (TimeseriesLinkType) f.getProperty( m_targetobservation );
+    return (TimeseriesLinkType) GMLXPathUtilities.queryQuiet( m_targetobservation, f );
   }
 
   public final boolean isSourceEqualTargetObservation( final String source )
   {
     return m_targetobservation.equals( source );
   }
-
 }

@@ -56,6 +56,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Helper class to generate a gml that can be used for converting time series. The generated gml includes a list map
@@ -160,7 +161,8 @@ public class CopyObservationMappingHelper
      */
     final DateRange completeRange = new DateRange( measuredRange.getFrom(), doNotOverwriteRange.getTo() );
 
-    final ICopyObservationTarget timeSeriesLink = CopyObservationTargetFactory.getLink( srcContext, RESULT_TS_OUT_PROP.getLocalPart(), null, completeRange, forecastRange );
+    final GMLXPath targetPath = new GMLXPath( RESULT_TS_OUT_PROP );
+    final ICopyObservationTarget timeSeriesLink = CopyObservationTargetFactory.getLink( srcContext, targetPath, null, completeRange, forecastRange );
     final ICopyObservationSource source = new FeatureCopyObservationSource( srcContext, sources, null );
 
     final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( source, timeSeriesLink, new MetadataList(), logger );

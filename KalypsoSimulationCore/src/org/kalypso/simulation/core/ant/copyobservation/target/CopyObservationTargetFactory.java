@@ -45,6 +45,7 @@ import java.net.URL;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Dirk Kuch
@@ -56,9 +57,9 @@ public final class CopyObservationTargetFactory
 
   }
 
-  public static ICopyObservationTarget getLink( final URL context, final String hrefTargetObservation, final File targetObservationDir, final DateRange targetRange, final DateRange forecastRange )
+  public static ICopyObservationTarget getLink( final URL context, final GMLXPath hrefTargetObservation, final File targetObservationDir, final DateRange targetRange, final DateRange forecastRange )
   {
-    if( hrefTargetObservation != null && !hrefTargetObservation.isEmpty() )
+    if( hrefTargetObservation != null )
     {
       /** brrr ugly code - necessary because of refactoring! don't assume it, proof it! */
       if( targetObservationDir != null )
@@ -83,7 +84,7 @@ public final class CopyObservationTargetFactory
     return new CopyObservationNATarget( context, targetObservationDir, targetRange, forecastRange );
   }
 
-  public static ICopyObservationTarget getLink( final URL context, final String hrefTargetObservation, final DateRange targetRange, final DateRange forecastRange )
+  public static ICopyObservationTarget getLink( final URL context, final GMLXPath hrefTargetObservation, final DateRange targetRange, final DateRange forecastRange )
   {
     return new CopyObservationTarget( context, hrefTargetObservation, targetRange, forecastRange );
   }
