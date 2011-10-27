@@ -61,4 +61,9 @@ public class Arrays
     return array[array.length - 1] == item;
   }
 
+  public static boolean isFirstItem( final Object[] array, final Object item )
+  {
+    return array[0] == item;
+  }
+
 }
