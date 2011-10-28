@@ -53,6 +53,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.zml.core.debug.KalypsoZmlCoreDebug;
 import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.core.table.model.loader.ZmlColumnLoadCommand;
 import org.kalypso.zml.core.table.model.loader.ZmlRowBuilder;
@@ -132,6 +133,8 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
   public void purge( )
   {
+    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - purge() model" );
+
     final ZmlModelColumn[] columns;
     final ZmlColumnLoadCommand[] commands;
 
@@ -239,10 +242,13 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
   public void load( final IZmlTableElement column )
   {
-    final ZmlColumnLoadCommand command = new ZmlColumnLoadCommand( this, column );
-    m_commandRegister.add( command );
+    synchronized( this )
+    {
+      final ZmlColumnLoadCommand command = new ZmlColumnLoadCommand( this, column );
+      m_commandRegister.add( command );
 
-    command.execute();
+      command.execute();
+    }
   }
 
   @Override
@@ -258,6 +264,8 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
   public void setIgnoreTypes( final String[] ignoreTypes )
   {
+    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Setting ignore types\n" );
+
     synchronized( this )
     {
       final IZmlModelColumn[] columns = m_columns.toArray( new IZmlModelColumn[] {} );

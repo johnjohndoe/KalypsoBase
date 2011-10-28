@@ -52,6 +52,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.PooledObsProvider;
+import org.kalypso.zml.core.debug.KalypsoZmlCoreDebug;
 import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.core.table.model.memento.IZmlMemento;
 import org.kalypso.zml.core.table.model.memento.LabeledObsProviderDelegate;
@@ -90,9 +91,6 @@ public class ZmlDataSourceElement implements IZmlTableElement
     m_provider.dispose();
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.IZmlTableElement#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
@@ -102,19 +100,23 @@ public class ZmlDataSourceElement implements IZmlTableElement
   @Override
   public IObsProvider getObsProvider( )
   {
-    if( Objects.isNotNull( m_provider ) )
-      return m_provider;
-
     final PoolableObjectType type = new PoolableObjectType( "zml", m_href, m_context, true ); //$NON-NLS-1$
-    m_provider = new PooledObsProvider( type );
+
+    synchronized( this )
+    {
+      if( Objects.isNotNull( m_provider ) )
+        return m_provider;
+
+//      KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "Creating new pooled obs provider - %s\n", type );
+
+      m_provider = new PooledObsProvider( type );
+    }
+
     m_memento.register( type, new LabeledObsProviderDelegate( m_provider, m_labeling ) );
 
     return m_provider;
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.IZmlTableElement#getTitle(org.kalypso.ogc.sensor.IAxis)
-   */
   @Override
   public String getTitle( final IAxis axis )
   {
