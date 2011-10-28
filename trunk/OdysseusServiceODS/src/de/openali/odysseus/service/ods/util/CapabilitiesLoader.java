@@ -84,7 +84,7 @@ public class CapabilitiesLoader
   /**
    * The ODS enverionment.
    */
-  private IODSEnvironment m_odsEnvironment;
+  private final IODSEnvironment m_odsEnvironment;
 
   /**
    * The constructor.
@@ -307,7 +307,11 @@ public class CapabilitiesLoader
       IDataRange<Number> numericRange = axis.getNumericRange();
       Class< ? > clazz = axis.getDataClass();
 
-      if( Number.class.isAssignableFrom( clazz ) )
+      if(numericRange==null||numericRange.getMin()==null||numericRange.getMax()==null)
+      {
+        //do nothing
+      }
+      else if( Number.class.isAssignableFrom( clazz ) )
       {
         NumberRange range = xmlAxis.addNewNumberRange();
         range.setMinValue( numericRange.getMin().doubleValue() );

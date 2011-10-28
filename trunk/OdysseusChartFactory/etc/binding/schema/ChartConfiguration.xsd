@@ -438,9 +438,17 @@
 			</annotation>
 		</attribute>
 		<attribute name="absoluteMaxValue" type="decimal" use="optional" /><!-- Grenze beim verschieben -->
-		<attribute name="minRange" type="decimal" use="optional" /><!-- Grenze beim verkleinern -->
+		<attribute name="minRange" type="decimal" use="optional">
+			<annotation>
+				<documentation>Grenze beim zoomen die nicht unterschritten wird</documentation>
+			</annotation>
+		</attribute>
 		<attribute name="maxRange" type="decimal" use="optional" /><!-- Grenze beim vergrößern -->
-		<attribute name="fixMinValue" type="boolean" use="optional" /><!-- fixiere absoluteMinValue -->
+		<attribute name="fixMinValue" type="boolean" use="optional">
+			<annotation>
+				<documentation>nimmt den absoluteMinValue als minValue unabhängig vom tatsächlichen Wert</documentation>
+			</annotation>
+		</attribute>
 		<attribute name="fixMaxValue" type="boolean" use="optional" /><!-- fixiere absoluteMaxValue -->
 	</complexType>
 

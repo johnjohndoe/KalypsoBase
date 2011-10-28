@@ -66,10 +66,10 @@ public final class ChartUtilities
     {
       try
       {
-        final double eltMin = ((Number) element.getMin()).doubleValue();
+        final double eltMin = element.getMin() == null ? Double.NaN : ((Number) element.getMin()).doubleValue();
         if( Double.isNaN( eltMin ) )
           continue;
-        final double eltMax = ((Number) element.getMax()).doubleValue();
+        final double eltMax = element.getMax() == null ? Double.NaN : ((Number) element.getMax()).doubleValue();
         if( Double.isNaN( eltMax ) )
           continue;
 

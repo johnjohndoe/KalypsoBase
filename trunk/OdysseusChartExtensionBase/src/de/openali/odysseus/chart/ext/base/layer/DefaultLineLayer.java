@@ -12,6 +12,7 @@ import de.openali.odysseus.chart.framework.model.data.ITabularDataContainer;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
@@ -81,8 +82,10 @@ public class DefaultLineLayer extends AbstractLineLayer
   {
 
     final IDataRange domainRange = m_dataContainer.getDomainRange();
+    if( domainRange == null )
+      return null;
     final Object max = domainRange.getMax();
-    final IDataOperator dop = getDomainAxis().getDataOperator( max.getClass() );
+    final IDataOperator dop = new DataOperatorHelper().getDataOperator( getDomainAxis().getDataClass() );
     return new DataRange<Number>( dop.logicalToNumeric( domainRange.getMin() ), dop.logicalToNumeric( domainRange.getMax() ) );
   }
 
@@ -94,8 +97,10 @@ public class DefaultLineLayer extends AbstractLineLayer
   {
 
     final IDataRange targetRange = m_dataContainer.getTargetRange();
+    if( targetRange == null )
+      return null;
     final Object max = targetRange.getMax();
-    final IDataOperator top = getTargetAxis().getDataOperator( max.getClass() );
+    final IDataOperator top = new DataOperatorHelper().getDataOperator( getTargetAxis().getDataClass() );
     return new DataRange<Number>( top.logicalToNumeric( targetRange.getMin() ), top.logicalToNumeric( targetRange.getMax() ) );
   }
 
