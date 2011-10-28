@@ -182,13 +182,17 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   @Override
   public IZmlModelColumn getColumn( final String id )
   {
-    for( final IZmlModelColumn column : m_columns )
+    synchronized( this )
     {
-      if( column.getIdentifier().equals( id ) )
-        return column;
-    }
+      final IZmlModelColumn[] columns = m_columns.toArray( new IZmlModelColumn[] {} );
+      for( final IZmlModelColumn column : columns )
+      {
+        if( column.getIdentifier().equals( id ) )
+          return column;
+      }
 
-    return null;
+      return null;
+    }
   }
 
   @Override
