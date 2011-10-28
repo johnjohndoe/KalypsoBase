@@ -107,7 +107,7 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
       if( Objects.isNotNull( m_provider ) )
       {
         m_provider.removeListener( m_observationProviderListener );
-        m_provider.dispose(); // TODO check - really dispose old provider?
+        m_provider.dispose();
       }
 
       m_provider = provider;

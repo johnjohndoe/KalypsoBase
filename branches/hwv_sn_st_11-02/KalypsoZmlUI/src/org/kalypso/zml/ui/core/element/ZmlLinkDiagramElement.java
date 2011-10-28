@@ -67,9 +67,6 @@ public class ZmlLinkDiagramElement extends AbstractTsLinkDiagramElement implemen
     super( link );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.IZmlTableColumn#getId()
-   */
   @Override
   public String getIdentifier( )
   {
@@ -106,9 +103,6 @@ public class ZmlLinkDiagramElement extends AbstractTsLinkDiagramElement implemen
     return styleSet;
   }
 
-  /**
-   * @see org.kalypso.hwv.core.chart.elements.IZmlDiagramElement#getTitle()
-   */
   @Override
   public String getTitle( final IAxis axis )
   {
