@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.zml.core.debug.KalypsoZmlCoreDebug;
 import org.kalypso.zml.core.table.binding.IClonedColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
@@ -75,42 +76,46 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
     m_model = model;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
     final Map<String, Set<DataSourcePropertyType>> map = getSources();
 
     final Set<Entry<String, Set<DataSourcePropertyType>>> entries = map.entrySet();
+
     for( final Entry<String, Set<DataSourcePropertyType>> entry : entries )
     {
-      final DataSourcePropertyType[] types = entry.getValue().toArray( new DataSourcePropertyType[] {} );
-      for( int index = 0; index < types.length; index++ )
+      synchronized( this )
       {
-        final DataSourcePropertyType source = types[index];
-        final AbstractColumnType base = (AbstractColumnType) source.getColumn();
-
-        if( index == 0 )
+        final DataSourcePropertyType[] types = entry.getValue().toArray( new DataSourcePropertyType[] {} );
+        for( int index = 0; index < types.length; index++ )
         {
-          final ZmlDataSourceElement element = new ZmlDataSourceElement( base.getId(), source.getHref(), m_model.getContext(), source.getLabel(), m_model.getMemento() );
-          m_model.load( element );
+          final DataSourcePropertyType source = types[index];
+          final AbstractColumnType base = (AbstractColumnType) source.getColumn();
 
-        }
-        else if( index > 0 )
-        {
-          final String identifier = String.format( IClonedColumn.CLONED_COLUMN_POSTFIX_FORMAT, base.getId(), index );
-          final AbstractColumnType clone = TableTypes.cloneColumn( base );
-          clone.setId( identifier );
+          final String href = source.getHref();
+          if( index == 0 )
+          {
+            final String identifier = base.getId();
+            KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Adding element: %s, %s\n", identifier, href );
 
-          appendColumnType( clone );
+            final ZmlDataSourceElement element = new ZmlDataSourceElement( identifier, href, m_model.getContext(), source.getLabel(), m_model.getMemento() );
+            m_model.load( element );
+          }
+          else if( index > 0 )
+          {
+            final String identifier = String.format( IClonedColumn.CLONED_COLUMN_POSTFIX_FORMAT, base.getId(), index );
+            final AbstractColumnType clone = TableTypes.cloneColumn( base );
+            clone.setId( identifier );
 
-          final ZmlDataSourceElement element = new ZmlDataSourceElement( identifier, source.getHref(), m_model.getContext(), source.getLabel(), m_model.getMemento() );
-          m_model.load( element );
+            appendColumnType( clone );
+
+            KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Adding element: %s, %s\n", identifier, href );
+            final ZmlDataSourceElement element = new ZmlDataSourceElement( identifier, href, m_model.getContext(), source.getLabel(), m_model.getMemento() );
+            m_model.load( element );
+          }
         }
       }
-
     }
 
     return Status.OK_STATUS;

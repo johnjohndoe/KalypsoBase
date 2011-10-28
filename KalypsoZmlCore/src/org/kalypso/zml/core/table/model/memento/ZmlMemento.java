@@ -87,18 +87,12 @@ public class ZmlMemento implements IZmlMemento
   public void dispose( )
   {
     cleanup();
-
   }
 
   @Override
   public synchronized void register( final IPoolableObjectType poolKey, final ILabeledObsProvider provider )
   {
     provider.addListener( m_obsListener );
-
-    final ILabeledObsProvider oldObsProvider = m_elements.get( poolKey );
-    if( oldObsProvider != null )
-      oldObsProvider.dispose();
-
     m_elements.put( poolKey, provider );
   }
 
@@ -119,9 +113,6 @@ public class ZmlMemento implements IZmlMemento
 
   private synchronized void cleanup( )
   {
-    for( final IObsProvider provider : m_elements.values() )
-      provider.dispose();
-
     m_elements.clear();
   }
 
@@ -159,7 +150,6 @@ public class ZmlMemento implements IZmlMemento
     {
       listener.mementoChanged();
     }
-
   }
 
   @Override
