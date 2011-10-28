@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider;
+package org.kalypso.zml.ui.table.provider.cache;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -54,6 +54,7 @@ import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.ZmlTableCell;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
+import org.kalypso.zml.ui.table.provider.ZmlTableCellPainter;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.MapMaker;
@@ -135,30 +136,7 @@ public class ZmlTableCellCache
 
   }
 
-  static class ValueItem
-  {
-    private final ZmlTableCellPainter m_painter;
-
-    private final Object m_value;
-
-    ValueItem( final ZmlTableCellPainter painter, final Object value )
-    {
-      m_painter = painter;
-      m_value = value;
-    }
-
-    public boolean isValid( final Object other )
-    {
-      return Objects.equal( m_value, other );
-    }
-
-    public ZmlTableCellPainter getPainter( )
-    {
-      return m_painter;
-    }
-  }
-
-  private final Map<IndexItem, ValueItem> m_cache;
+  private final Map<IndexItem, AbstractCacheItem> m_cache;
 
   public ZmlTableCellCache( )
   {
@@ -177,23 +155,22 @@ public class ZmlTableCellCache
       try
       {
         final IndexItem entry = new IndexItem( row, column.getModelColumn() );
-        final ValueItem item = m_cache.get( entry );
+        AbstractCacheItem item = m_cache.get( entry );
         if( item == null )
         {
-          final ZmlTableCellPainter painter = new ZmlTableCellPainter( cell );
+          item = AbstractCacheItem.toItem( cell );
+          m_cache.put( entry, item );
 
-          m_cache.put( entry, new ValueItem( painter, toValue( cell ) ) );
-
-          return painter;
+          return item.getPainter();
         }
 
         if( item.isValid( toValue( cell ) ) )
           return item.getPainter();
 
-        final ZmlTableCellPainter painter = new ZmlTableCellPainter( cell );
-        m_cache.put( entry, new ValueItem( painter, toValue( cell ) ) );
+        item = AbstractCacheItem.toItem( cell );
+        m_cache.put( entry, item );
 
-        return painter;
+        return item.getPainter();
       }
       catch( final SensorException e )
       {

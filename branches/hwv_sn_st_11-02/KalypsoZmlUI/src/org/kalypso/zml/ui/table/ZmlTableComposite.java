@@ -92,8 +92,8 @@ import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.model.ZmlTableColumns;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
-import org.kalypso.zml.ui.table.provider.ZmlTableCellCache;
 import org.kalypso.zml.ui.table.provider.ZmlTableCellPaintListener;
+import org.kalypso.zml.ui.table.provider.cache.ZmlTableCellCache;
 import org.kalypso.zml.ui.table.selection.ZmlTableSelectionHandler;
 
 /**
