@@ -47,9 +47,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.ui.debug.KalypsoZmlUiDebug;
 import org.kalypso.zml.ui.table.IZmlTable;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
@@ -87,7 +85,7 @@ public class ZmlTableCellPaintListener implements Listener
    */
   private void doMeasureItem( final Event event )
   {
-    final ZmlTableCellPainter renderer = findCell( event );
+    final ZmlTableCellPainter renderer = findCellPainter( event );
     if( Objects.isNull( renderer ) )
       return;
 
@@ -107,25 +105,26 @@ public class ZmlTableCellPaintListener implements Listener
      */
     event.detail &= ~SWT.FOREGROUND;
 
-    printDebug( renderer.getCell(), event, "doMeasureItem()" );
+// printDebug( renderer.getCell(), event, "doMeasureItem()" );
   }
 
-  private void printDebug( final IZmlTableCell cell, final Event event, final String msg )
-  {
-
-    final int row = cell.getIndex();
-    final IZmlTableColumn column = cell.getColumn();
-    final String columnLabel = column.getColumnType().getLabel();
-
-    KalypsoZmlUiDebug.DEBUG_TABLE.printf( "column %s;row %d;%s;width: %d;height: %d\n", columnLabel, row, msg, event.width, event.height );
-  }
+// private void printDebug( final IZmlTableCell cell, final Event event, final String msg )
+// {
+//
+// final int row = cell.getIndex();
+// final IZmlTableColumn column = cell.getColumn();
+// final String columnLabel = column.getColumnType().getLabel();
+//
+// KalypsoZmlUiDebug.DEBUG_TABLE.printf( "column %s;row %d;%s;width: %d;height: %d\n", columnLabel, row, msg,
+// event.width, event.height );
+// }
 
   public void doPaintBackground( final Event event )
   {
     if( (event.detail & SWT.SELECTED) != 0 )
       return; /* item selected */
 
-    final ZmlTableCellPainter renderer = findCell( event );
+    final ZmlTableCellPainter renderer = findCellPainter( event );
     if( Objects.isNull( renderer ) )
       return;
 
@@ -140,12 +139,12 @@ public class ZmlTableCellPaintListener implements Listener
 // event.detail &= ~SWT.SELECTED; // default swt selection style should not be drawn
 // event.detail &= ~SWT.HOT; // default swt mouse hover style (=hot) should not be draw
 
-    printDebug( renderer.getCell(), event, "doPaintBackground()" );
+// printDebug( renderer.getCell(), event, "doPaintBackground()" );
   }
 
   public void doPaintItem( final Event event )
   {
-    final ZmlTableCellPainter renderer = findCell( event );
+    final ZmlTableCellPainter renderer = findCellPainter( event );
     if( Objects.isNull( renderer ) )
       return;
 
@@ -161,7 +160,7 @@ public class ZmlTableCellPaintListener implements Listener
 
     event.detail &= ~SWT.FOREGROUND;
 
-    printDebug( renderer.getCell(), event, "doPaintItem()" );
+// printDebug( renderer.getCell(), event, "doPaintItem()" );
   }
 
   private void apply( final Rectangle bounds, final Point extend )
@@ -176,7 +175,7 @@ public class ZmlTableCellPaintListener implements Listener
     return renderer.getCell().getColumn().getTableViewerColumn().getColumn().getWidth();
   }
 
-  private ZmlTableCellPainter findCell( final Event event )
+  private ZmlTableCellPainter findCellPainter( final Event event )
   {
     final IZmlModelRow row = (IZmlModelRow) event.item.getData();
     final IZmlTableColumn[] columns = m_table.getColumns();

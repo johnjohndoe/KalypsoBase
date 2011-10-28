@@ -50,7 +50,6 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.references.ZmlIndexValueReference;
-import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.ZmlTableCell;
 import org.kalypso.zml.ui.table.model.ZmlTableRow;
@@ -70,8 +69,6 @@ public class ZmlTableCellCache
     private final IZmlModelRow m_row;
 
     private final IZmlModelColumn m_column;
-
-    private Object m_value;
 
     public IndexItem( final IZmlModelRow row, final IZmlModelColumn column )
     {
@@ -106,34 +103,10 @@ public class ZmlTableCellCache
       return builder.toHashCode();
     }
 
-    public boolean isValid( final IZmlTableCell cell )
-    {
-      try
-      {
-        if( cell.getColumn().isIndexColumn() )
-        {
-          return true;
-        }
-
-        final IZmlValueReference reference = cell.getValueReference();
-        if( reference == null )
-          return false;
-
-        return Objects.equal( m_value, reference.getValue() );
-      }
-      catch( final SensorException e )
-      {
-        e.printStackTrace();
-      }
-
-      return false;
-    }
-
     public boolean equals( final IZmlModelRow row, final IZmlModelColumn modelColumn )
     {
       return Objects.equal( m_row, row ) && Objects.equal( m_column, modelColumn );
     }
-
   }
 
   private final Map<IndexItem, AbstractCacheItem> m_cache;
@@ -159,6 +132,9 @@ public class ZmlTableCellCache
         if( item == null )
         {
           item = AbstractCacheItem.toItem( cell );
+          if( item == null )
+            return null;
+
           m_cache.put( entry, item );
 
           return item.getPainter();
@@ -168,6 +144,9 @@ public class ZmlTableCellCache
           return item.getPainter();
 
         item = AbstractCacheItem.toItem( cell );
+        if( item == null )
+          return null;
+
         m_cache.put( entry, item );
 
         return item.getPainter();

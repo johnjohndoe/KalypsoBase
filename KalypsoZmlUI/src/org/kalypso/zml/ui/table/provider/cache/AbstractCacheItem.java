@@ -136,7 +136,7 @@ public abstract class AbstractCacheItem
   {
     final IZmlValueReference reference = cell.getValueReference();
     if( reference == null )
-      throw new UnsupportedOperationException();
+      return null;
 
     if( reference instanceof ZmlIndexValueReference )
       return new IndexValueItem( new ZmlTableCellPainter( cell ), (ZmlIndexValueReference) reference );
