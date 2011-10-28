@@ -26,7 +26,7 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
 public class TupleResultLineLayer extends AbstractLineLayer
 {
-  private final TupleResultDomainValueData< ? , ? > valueData;
+  private final TupleResultDomainValueData< ? , ? > m_valueData;
 
   final public static String TOOLTIP_FORMAT = "%-12s %s %n%-12s %s"; //$NON-NLS-1$
 
@@ -34,14 +34,14 @@ public class TupleResultLineLayer extends AbstractLineLayer
   {
     super( provider, lineStyle, pointStyle );
 
-    valueData = data;
+    m_valueData = data;
   }
 
   public TupleResultLineLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet )
   {
     super( provider, styleSet );
 
-    valueData = data;
+    m_valueData = data;
   }
 
   @Override
@@ -79,9 +79,9 @@ public class TupleResultLineLayer extends AbstractLineLayer
   @Override
   public IDataRange< ? > getDomainRange( )
   {
-    if( valueData == null || getDomainAxis() == null )
+    if( getValueData() == null || getDomainAxis() == null )
       return null;
-    final IDataRange< ? > dataRange = valueData.getDomainRange();
+    final IDataRange< ? > dataRange = getValueData().getDomainRange();
     final Object min = dataRange.getMin();
     final Object max = dataRange.getMax();
     if( min == null || max == null )
@@ -98,11 +98,11 @@ public class TupleResultLineLayer extends AbstractLineLayer
     if( !isVisible() )
       return null;
 
-    if( valueData == null )
+    if( getValueData() == null )
       return null;
 
-    final Object[] domainValues = valueData.getDomainValues();
-    final Object[] targetValues = valueData.getTargetValues();
+    final Object[] domainValues = getValueData().getDomainValues();
+    final Object[] targetValues = getValueData().getTargetValues();
     for( int i = 0; i < domainValues.length; i++ )
     {
       if( domainValues.length != targetValues.length )
@@ -148,9 +148,9 @@ public class TupleResultLineLayer extends AbstractLineLayer
 
   public IObservation<TupleResult> getObservation( )
   {
-    if( valueData == null )
+    if( getValueData() == null )
       return null;
-    return valueData.getObservation();
+    return getValueData().getObservation();
   }
 
   /**
@@ -159,9 +159,9 @@ public class TupleResultLineLayer extends AbstractLineLayer
   @Override
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
-    if( valueData == null || getTargetAxis() == null )
+    if( getValueData() == null || getTargetAxis() == null )
       return null;
-    final IDataRange< ? > dataRange = valueData.getTargetRange();
+    final IDataRange< ? > dataRange = getValueData().getTargetRange();
     final Object min = dataRange.getMin();
     final Object max = dataRange.getMax();
     if( min == null || max == null )
@@ -176,14 +176,14 @@ public class TupleResultLineLayer extends AbstractLineLayer
   public String getTitle( )
   {
 
-    if( super.getTitle() == null && valueData != null )
+    if( super.getTitle() == null && getValueData() != null )
     {
-      valueData.open();
-      final IObservation<TupleResult> obs = valueData.getObservation();
+      getValueData().open();
+      final IObservation<TupleResult> obs = getValueData().getObservation();
       final TupleResult tr = obs == null ? null : obs.getResult();
       if( tr != null )
       {
-        final int targetComponentIndex = tr.indexOfComponent( valueData.getTargetComponentName() );
+        final int targetComponentIndex = tr.indexOfComponent( getValueData().getTargetComponentName() );
         if( targetComponentIndex > -1 )
           return tr.getComponent( targetComponentIndex ).getName();
       }
@@ -193,9 +193,11 @@ public class TupleResultLineLayer extends AbstractLineLayer
 
   protected String getTooltip( final int index )
   {
-    final TupleResult tr = valueData.getObservation().getResult();
-    final int targetComponentIndex = tr.indexOfComponent( valueData.getTargetComponentName() );
-    final int domainComponentIndex = tr.indexOfComponent( valueData.getDomainComponentName() );
+    if( getValueData() == null )
+      return "";
+    final TupleResult tr = getValueData().getObservation().getResult();
+    final int targetComponentIndex = tr.indexOfComponent( getValueData().getTargetComponentName() );
+    final int domainComponentIndex = tr.indexOfComponent( getValueData().getDomainComponentName() );
     final String targetComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( targetComponentIndex ) );
     final String domainComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( domainComponentIndex ) );
     final Object y = tr.get( index ).getValue( targetComponentIndex );
@@ -206,10 +208,10 @@ public class TupleResultLineLayer extends AbstractLineLayer
 
   private String getUnitFromComponent( final String id )
   {
-    if( valueData == null )
+    if( getValueData() == null )
       return null;
-    valueData.open();
-    final IObservation<TupleResult> obs = valueData.getObservation();
+    getValueData().open();
+    final IObservation<TupleResult> obs = getValueData().getObservation();
     final TupleResult tr = obs == null ? null : obs.getResult();
     if( tr != null )
     {
@@ -222,7 +224,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
 
   public TupleResultDomainValueData< ? , ? > getValueData( )
   {
-    return valueData;
+    return m_valueData;
   }
 
   /**
@@ -232,23 +234,26 @@ public class TupleResultLineLayer extends AbstractLineLayer
   public void init( )
   {
     super.init();
+    if( getValueData() == null )
+      return;
     if( getTargetAxis().getLabels().length == 0 )
-      getTargetAxis().addLabel( new TitleTypeBean( getUnitFromComponent( valueData.getTargetComponentName() ) ) );
+      getTargetAxis().addLabel( new TitleTypeBean( getUnitFromComponent( getValueData().getTargetComponentName() ) ) );
     if( getDomainAxis().getLabels().length == 0 )
-      getDomainAxis().addLabel( new TitleTypeBean( getUnitFromComponent( valueData.getDomainComponentName() ) ) );
+      getDomainAxis().addLabel( new TitleTypeBean( getUnitFromComponent( getValueData().getDomainComponentName() ) ) );
   }
 
   @Override
   public void paint( final GC gc )
   {
-    if( valueData == null )
+    TupleResultDomainValueData< ? , ? > data = getValueData();
+    if( data == null )
       return;
 
     final List<Point> path = new ArrayList<Point>();
-    valueData.open();
+    data.open();
 
-    final Object[] domainValues = valueData.getDomainValues();
-    final Object[] targetValues = valueData.getTargetValues();
+    final Object[] domainValues = data.getDomainValues();
+    final Object[] targetValues = data.getTargetValues();
 
     if( domainValues.length > 0 && targetValues.length > 0 )
     {

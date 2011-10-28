@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ods="http://www.openali.de/odysseus/chartconfig/0.2.0/"
-	targetNamespace="http://www.openali.de/odysseus/chartconfig/0.2.0/"
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ods="http://www.openali.de/odysseus/chartconfig/0.2.0/" targetNamespace="http://www.openali.de/odysseus/chartconfig/0.2.0/"
 	elementFormDefault="qualified" version="0.2.0">
 	<include schemaLocation="./StyleConfiguration.xsd" />
 
@@ -113,39 +112,26 @@
 		</keyref>
 
 		<!-- identische Mapper nur einmal pro layer -->
-		<!-- <unique name="mapperPerLayer"> <selector xpath="ods:Layer/ods:Mappers/*"/> 
-			<field xpath="@ref"/> </unique> -->
+		<!-- <unique name="mapperPerLayer"> <selector xpath="ods:Layer/ods:Mappers/*"/> <field xpath="@ref"/> </unique> -->
 
 		<!-- identische MapperRoles nur einmal pro layer -->
-		<!-- <unique name="mapperRolePerLayer"> <selector xpath="ods:Layer/ods:Mappers/*"/> 
-			<field xpath="@role"/> </unique> -->
+		<!-- <unique name="mapperRolePerLayer"> <selector xpath="ods:Layer/ods:Mappers/*"/> <field xpath="@role"/> </unique> -->
 
 		<!-- identische Styles nur einmal pro layer -->
-		<!-- <unique name="stylePerLayer"> <selector xpath="ods:Layer/ods:Styles/*"/> 
-			<field xpath="@ref"/> </unique> -->
+		<!-- <unique name="stylePerLayer"> <selector xpath="ods:Layer/ods:Styles/*"/> <field xpath="@ref"/> </unique> -->
 
 		<!-- identische StyleRoles nur einmal pro layer -->
-		<!-- <unique name="styleRolePerLayer"> <selector xpath="ods:Layer/ods:Styles/*"/> 
-			<field xpath="@role"/> </unique> -->
+		<!-- <unique name="styleRolePerLayer"> <selector xpath="ods:Layer/ods:Styles/*"/> <field xpath="@role"/> </unique> -->
 
 		<!-- identische Layer nur einmal pro chart -->
-		<!-- <unique name="layerPerChart"> <selector xpath="ods:Chart/ods:Layers/ods:LayerRef"/> 
-			<field xpath="@ref"/> </unique> -->
+		<!-- <unique name="layerPerChart"> <selector xpath="ods:Chart/ods:Layers/ods:LayerRef"/> <field xpath="@ref"/> </unique> -->
 
-		<!-- identischer Parametername nur einmal pro Provider; muss dummerweise 
-			für jedes Element individuell aufgeführt werden, da * auf alle Elemente wirkt 
-			und ein Parametername global nur einmal auftauchen dürfte Funktioniert leider 
-			nicht - müsste auch noch individuell für Parameter, ParameterList und ParameterMap 
-			aufgeführt werden. ISt aber nicht schlimm, weil dadurch keine essntiellen 
-			Fehler entstehen - bei mehrfach aufgerführten ParameterNamen werden halt 
-			vorherige von nachfolgenden überschrieben <unique name="parameterNamePerLayerProvider"> 
-			<selector xpath="ods:Layer/ods:Provider/ods:Parameters/*"/> <field xpath="@name"/> 
-			</unique> <unique name="parameterNamePerAxisProvider"> <selector xpath="ods:Axis/ods:Provider/ods:Parameters/*"/> 
-			<field xpath="@name"/> </unique> <unique name="parameterNamePerMapperProvider"> 
-			<selector xpath="ods:Mapper/ods:Provider/ods:Parameters/*"/> <field xpath="@name"/> 
-			</unique> <unique name="parameterNamePerAxisRendererProvider"> <selector 
-			xpath="ods:AxisRenderer/ods:Provider/ods:Parameters/*"/> <field xpath="@name"/> 
-			</unique> -->
+		<!-- identischer Parametername nur einmal pro Provider; muss dummerweise für jedes Element individuell aufgeführt werden, da * auf alle Elemente wirkt und ein Parametername global nur einmal auftauchen 
+			dürfte Funktioniert leider nicht - müsste auch noch individuell für Parameter, ParameterList und ParameterMap aufgeführt werden. ISt aber nicht schlimm, weil dadurch keine essntiellen Fehler entstehen 
+			- bei mehrfach aufgerführten ParameterNamen werden halt vorherige von nachfolgenden überschrieben <unique name="parameterNamePerLayerProvider"> <selector xpath="ods:Layer/ods:Provider/ods:Parameters/*"/> 
+			<field xpath="@name"/> </unique> <unique name="parameterNamePerAxisProvider"> <selector xpath="ods:Axis/ods:Provider/ods:Parameters/*"/> <field xpath="@name"/> </unique> <unique name="parameterNamePerMapperProvider"> 
+			<selector xpath="ods:Mapper/ods:Provider/ods:Parameters/*"/> <field xpath="@name"/> </unique> <unique name="parameterNamePerAxisRendererProvider"> <selector xpath="ods:AxisRenderer/ods:Provider/ods:Parameters/*"/> 
+			<field xpath="@name"/> </unique> -->
 
 	</element>
 
@@ -200,8 +186,7 @@
 		<complexContent>
 			<extension base="ods:ReferencableType">
 				<sequence>
-					<element name="Title" type="ods:TitleType" minOccurs="0"
-						maxOccurs="unbounded" />
+					<element name="Title" type="ods:TitleType" minOccurs="0" maxOccurs="unbounded" />
 					<element name="Description" type="string" minOccurs="0" />
 					<element ref="ods:Styles" minOccurs="0" />
 					<element ref="ods:Layers" minOccurs="0" />
@@ -224,12 +209,9 @@
 						</complexType>
 					</element>
 				</sequence>
-				<attribute name="legend" type="boolean" use="optional"
-					default="true" />
-				<attribute name="legendRenderer" type="string" use="optional"
-					default="de.openali.odysseus.chart.legend.render.combined" />
-				<attribute name="loader" type="ods:DataLoadingStrategy"
-					default="asynchrone" />
+				<attribute name="legend" type="boolean" use="optional" default="true" />
+				<attribute name="legendRenderer" type="string" use="optional" default="de.openali.odysseus.chart.legend.render.combined" />
+				<attribute name="loader" type="ods:DataLoadingStrategy" default="asynchrone" />
 			</extension>
 		</complexContent>
 	</complexType>
@@ -265,8 +247,7 @@
 							<sequence>
 								<element name="DomainAxisRef" type="ods:ReferencingType" />
 								<element name="TargetAxisRef" type="ods:ReferencingType" />
-								<element name="MapperRef" type="ods:RoleReferencingType"
-									minOccurs="0" maxOccurs="unbounded" />
+								<element name="MapperRef" type="ods:RoleReferencingType" minOccurs="0" maxOccurs="unbounded" />
 							</sequence>
 						</complexType>
 					</element>
@@ -293,15 +274,12 @@
 					<element name="Title" type="string" minOccurs="0" />
 					<element name="Description" type="string" minOccurs="0" />
 					<element ref="ods:LayerReference" minOccurs="1" />
-					<element name="Parameters" type="ods:ParametersType"
-						minOccurs="0" />
+					<element name="Parameters" type="ods:ParametersType" minOccurs="0" />
 					<element ref="ods:Styles" minOccurs="0" />
 					<element ref="ods:ChildLayer" minOccurs="0" maxOccurs="unbounded" />
 				</sequence>
-				<attribute name="legend" type="boolean" use="optional"
-					default="true" />
-				<attribute name="visible" type="boolean" use="optional"
-					default="true" />
+				<attribute name="legend" type="boolean" use="optional" default="true" />
+				<attribute name="visible" type="boolean" use="optional" default="true" />
 			</extension>
 		</complexContent>
 	</complexType>
@@ -310,19 +288,16 @@
 		<sequence>
 			<element name="Title" type="string" minOccurs="0" />
 			<element name="Description" type="string" minOccurs="0" />
-			<element name="Parameters" type="ods:ParametersType"
-				minOccurs="0" />
+			<element name="Parameters" type="ods:ParametersType" minOccurs="0" />
 			<element ref="ods:Styles" minOccurs="0" />
 		</sequence>
 		<attribute name="ref" type="anyURI" use="required" />
-		<attribute name="legend" type="boolean" use="optional"
-			default="true" />
+		<attribute name="legend" type="boolean" use="optional" default="true" />
 	</complexType>
 
 	<complexType name="ProviderType">
 		<sequence>
-			<element name="Parameters" type="ods:ParametersType"
-				minOccurs="0" />
+			<element name="Parameters" type="ods:ParametersType" minOccurs="0" />
 		</sequence>
 		<attribute name="epid" type="string" use="required">
 			<annotation>
@@ -402,8 +377,20 @@
 									</restriction>
 								</simpleType>
 							</attribute>
-							<attribute name="fixMinRange" type="decimal" use="optional" />
-							<attribute name="fixMaxRange" type="decimal" use="optional" />
+							<attribute name="fixMinRange" type="decimal" use="optional">
+								<annotation>
+									<documentation>der minimale angezeigte Bereich, unabhängig von der tatsächlich benötigten Grösse.</documentation>
+								</annotation>
+							</attribute>
+							<attribute name="fixMaxRange" type="decimal" use="optional">
+								<annotation>
+									<documentation>
+										<annotation>
+											<documentation>der maximale angezeigte Bereich, unabhängig von der tatsächlich benötigten Grösse.</documentation>
+										</annotation>
+									</documentation>
+								</annotation>
+							</attribute>
 						</complexType>
 					</element>
 					<element name="RendererRef" type="ods:ReferencingType" />
@@ -447,19 +434,14 @@
 	<complexType name="AxisNumberRangeRestrictionType">
 		<attribute name="absoluteMinValue" type="decimal" use="optional">
 			<annotation>
-				<documentation>Grenze beim verschieben</documentation>
+				<documentation>Grenze beim verschieben die nicht unterschritten wird</documentation>
 			</annotation>
 		</attribute>
-		<attribute name="absoluteMaxValue" type="decimal" use="optional" /><!-- 
-			Grenze beim verschieben -->
-		<attribute name="minRange" type="decimal" use="optional" /><!-- 
-			Grenze beim verkleinern -->
-		<attribute name="maxRange" type="decimal" use="optional" /><!-- 
-			Grenze beim vergrößern -->
-		<attribute name="fixMinValue" type="boolean" use="optional" /><!-- 
-			fixiere absoluteMinValue -->
-		<attribute name="fixMaxValue" type="boolean" use="optional" /><!-- 
-			fixiere absoluteMaxValue -->
+		<attribute name="absoluteMaxValue" type="decimal" use="optional" /><!-- Grenze beim verschieben -->
+		<attribute name="minRange" type="decimal" use="optional" /><!-- Grenze beim verkleinern -->
+		<attribute name="maxRange" type="decimal" use="optional" /><!-- Grenze beim vergrößern -->
+		<attribute name="fixMinValue" type="boolean" use="optional" /><!-- fixiere absoluteMinValue -->
+		<attribute name="fixMaxValue" type="boolean" use="optional" /><!-- fixiere absoluteMaxValue -->
 	</complexType>
 
 	<element name="AxisNumberRangeRestriction" type="ods:AxisNumberRangeRestrictionType"></element>
@@ -569,33 +551,23 @@
 			<restriction base="ods:StringType">
 				<attribute name="styleref" type="IDREF" />
 				<attribute name="label" type="string" />
-				<attribute name="horizontalAlignment" type="ods:AlignmentType"
-					use="optional" default="CENTER" />
-				<attribute name="horizontalPosition" type="ods:AlignmentType"
-					use="optional" default="CENTER" />
-				<attribute name="verticalPosition" type="ods:AlignmentType"
-					use="optional" default="CENTER" />
-				<attribute name="horizontalTextAnchor" type="ods:AlignmentType"
-					use="optional" default="LEFT" />
-				<attribute name="verticalTextAnchor" type="ods:AlignmentType"
-					use="optional" default="TOP" />
+				<attribute name="horizontalAlignment" type="ods:AlignmentType" use="optional" default="CENTER" />
+				<attribute name="horizontalPosition" type="ods:AlignmentType" use="optional" default="CENTER" />
+				<attribute name="verticalPosition" type="ods:AlignmentType" use="optional" default="CENTER" />
+				<attribute name="horizontalTextAnchor" type="ods:AlignmentType" use="optional" default="LEFT" />
+				<attribute name="verticalTextAnchor" type="ods:AlignmentType" use="optional" default="TOP" />
 
-				<attribute name="insetTop" type="int" use="optional"
-					default="0" />
-				<attribute name="insetLeft" type="int" use="optional"
-					default="0" />
-				<attribute name="insetBottom" type="int" use="optional"
-					default="0" />
-				<attribute name="insetRight" type="int" use="optional"
-					default="0" />
+				<attribute name="insetTop" type="int" use="optional" default="0" />
+				<attribute name="insetLeft" type="int" use="optional" default="0" />
+				<attribute name="insetBottom" type="int" use="optional" default="0" />
+				<attribute name="insetRight" type="int" use="optional" default="0" />
 			</restriction>
 		</simpleContent>
 	</complexType>
 
 	<complexType name="TitleTypes">
 		<sequence>
-			<element name="titleType" type="ods:TitleType" minOccurs="0"
-				maxOccurs="unbounded" />
+			<element name="titleType" type="ods:TitleType" minOccurs="0" maxOccurs="unbounded" />
 		</sequence>
 	</complexType>
 
@@ -607,10 +579,8 @@
 		</simpleContent>
 	</complexType>
 
-	<!-- <complexType name="StylesType"> <choice maxOccurs="unbounded"> <element 
-		name="LineStyleRef" type="ods:RoleReferencingType"/> <element name="PointStyleRef" 
-		type="ods:RoleReferencingType"/> <element name="AreaStyleRef" type="ods:RoleReferencingType"/> 
-		<element name="TextStyleRef" type="ods:RoleReferencingType"/> </choice> </complexType> -->
+	<!-- <complexType name="StylesType"> <choice maxOccurs="unbounded"> <element name="LineStyleRef" type="ods:RoleReferencingType"/> <element name="PointStyleRef" type="ods:RoleReferencingType"/> <element 
+		name="AreaStyleRef" type="ods:RoleReferencingType"/> <element name="TextStyleRef" type="ods:RoleReferencingType"/> </choice> </complexType> -->
 
 </schema>
 
