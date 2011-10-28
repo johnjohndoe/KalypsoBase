@@ -88,22 +88,22 @@ public final class ZmlTableImageMerger
 
   public Image createImage( final Display display, final String imageReference )
   {
-    if( m_images.size() == 0 )
-      return null;
+    final Point size = getSize();
 
-    final ZmlTableImage[] images = m_images.toArray( new ZmlTableImage[] {} );
+    ImageData base = new ImageData( size.x, size.y, 1, new PaletteData( new RGB[] { RGB_WHITE } ) );
+    base.transparentPixel = base.palette.getPixel( RGB_WHITE );
 
     final Image registered = IMAGE_REGISTRY.get( imageReference );
     if( registered != null )
       return registered;
 
-    final Point size = getSize();
+    if( m_images.isEmpty() )
+      return getImage( display, base, imageReference );
 
-    ImageData base = new ImageData( 1, 1, 1, new PaletteData( new RGB[] { RGB_WHITE } ) );
-    base.transparentPixel = base.palette.getPixel( RGB_WHITE );
+    final ZmlTableImage[] images = m_images.toArray( new ZmlTableImage[] {} );
 
-    final int range = getRange();
-    for( int index = 0; index < range; index++ )
+    final int icons = getNumberOfIcons();
+    for( int index = 0; index < icons; index++ )
     {
       if( index >= images.length )
         break;
@@ -126,7 +126,7 @@ public final class ZmlTableImageMerger
       base = overlay.getImageData();
     }
 
-    if( images.length > range )
+    if( images.length > icons )
     {
       final OverlayIcon overlay = new OverlayIcon( ImageDescriptor.createFromImageData( base ), ImageDescriptor.createFromImageData( IMG_ADDITIONAL ), size )
       {
@@ -140,13 +140,19 @@ public final class ZmlTableImageMerger
       base = overlay.getImageData();
     }
 
+    return getImage( display, base, imageReference );
+
+  }
+
+  private Image getImage( final Display display, final ImageData base, final String imageReference )
+  {
     final Image image = new Image( display, base );
     IMAGE_REGISTRY.put( imageReference, image );
 
     return image;
   }
 
-  private int getRange( )
+  private int getNumberOfIcons( )
   {
     if( m_numberOfIcons < m_images.size() )
       return m_numberOfIcons + 1;
