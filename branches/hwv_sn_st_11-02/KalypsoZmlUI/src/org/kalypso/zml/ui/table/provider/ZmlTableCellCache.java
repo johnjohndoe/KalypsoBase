@@ -49,6 +49,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.ZmlIndexValueReference;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.ZmlTableCell;
@@ -63,7 +64,7 @@ import com.google.common.collect.MapMaker;
 public class ZmlTableCellCache
 {
 
-  static class CacheEntry
+  static class IndexItem
   {
     private final IZmlModelRow m_row;
 
@@ -71,7 +72,7 @@ public class ZmlTableCellCache
 
     private Object m_value;
 
-    public CacheEntry( final IZmlModelRow row, final IZmlModelColumn column )
+    public IndexItem( final IZmlModelRow row, final IZmlModelColumn column )
     {
       m_row = row;
       m_column = column;
@@ -80,9 +81,9 @@ public class ZmlTableCellCache
     @Override
     public boolean equals( final Object obj )
     {
-      if( obj instanceof CacheEntry )
+      if( obj instanceof IndexItem )
       {
-        final CacheEntry other = (CacheEntry) obj;
+        final IndexItem other = (IndexItem) obj;
 
         final EqualsBuilder builder = new EqualsBuilder();
         builder.append( m_row, other.m_row );
@@ -102,11 +103,6 @@ public class ZmlTableCellCache
       builder.append( m_column );
 
       return builder.toHashCode();
-    }
-
-    public void setValue( final Object value )
-    {
-      m_value = value;
     }
 
     public boolean isValid( final IZmlTableCell cell )
@@ -131,9 +127,38 @@ public class ZmlTableCellCache
 
       return false;
     }
+
+    public boolean equals( final IZmlModelRow row, final IZmlModelColumn modelColumn )
+    {
+      return Objects.equal( m_row, row ) && Objects.equal( m_column, modelColumn );
+    }
+
   }
 
-  private final Map<CacheEntry, ZmlTableCellPainter> m_cache;
+  static class ValueItem
+  {
+    private final ZmlTableCellPainter m_painter;
+
+    private final Object m_value;
+
+    ValueItem( final ZmlTableCellPainter painter, final Object value )
+    {
+      m_painter = painter;
+      m_value = value;
+    }
+
+    public boolean isValid( final Object other )
+    {
+      return Objects.equal( m_value, other );
+    }
+
+    public ZmlTableCellPainter getPainter( )
+    {
+      return m_painter;
+    }
+  }
+
+  private final Map<IndexItem, ValueItem> m_cache;
 
   public ZmlTableCellCache( )
   {
@@ -148,48 +173,47 @@ public class ZmlTableCellCache
 
     synchronized( this )
     {
-      final CacheEntry entry = new CacheEntry( row, column.getModelColumn() );
-      ZmlTableCellPainter painter = m_cache.get( entry );
       final ZmlTableCell cell = new ZmlTableCell( new ZmlTableRow( column.getTable(), row ), column );
-
-      if( painter == null )
+      try
       {
-        painter = new ZmlTableCellPainter( cell );
-        m_cache.put( entry, painter );
-        updateEntry( entry, cell );
+        final IndexItem entry = new IndexItem( row, column.getModelColumn() );
+        final ValueItem item = m_cache.get( entry );
+        if( item == null )
+        {
+          final ZmlTableCellPainter painter = new ZmlTableCellPainter( cell );
+
+          m_cache.put( entry, new ValueItem( painter, toValue( cell ) ) );
+
+          return painter;
+        }
+
+        if( item.isValid( toValue( cell ) ) )
+          return item.getPainter();
+
+        final ZmlTableCellPainter painter = new ZmlTableCellPainter( cell );
+        m_cache.put( entry, new ValueItem( painter, toValue( cell ) ) );
 
         return painter;
       }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
 
-      if( entry.isValid( cell ) )
-        return painter;
-
-      painter = new ZmlTableCellPainter( cell );
-      m_cache.put( entry, painter );
-      updateEntry( entry, cell );
-
-      return painter;
+        return new ZmlTableCellPainter( cell );
+      }
     }
   }
 
-  private void updateEntry( final CacheEntry entry, final ZmlTableCell cell )
+  private Object toValue( final ZmlTableCell cell ) throws SensorException
   {
-    try
-    {
-      if( cell.getColumn().isIndexColumn() )
-        return;
+    final IZmlValueReference reference = cell.getValueReference();
+    if( reference == null )
+      return null;
 
-      final IZmlValueReference reference = cell.getValueReference();
-      if( reference == null )
-        return;
+    if( reference instanceof ZmlIndexValueReference )
+      return reference.getIndexValue();
 
-      entry.setValue( reference.getValue() );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-
+    return reference.getValue();
   }
 
   public synchronized void clear( )

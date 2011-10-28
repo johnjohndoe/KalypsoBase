@@ -41,7 +41,10 @@
 package org.kalypso.zml.ui.table.provider;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
@@ -77,6 +80,10 @@ public class ZmlTableCellPainter
 
   private final ZmlRule[] m_activeRules;
 
+  private Point m_ptr;
+
+  private Image[] m_images;
+
   public ZmlTableCellPainter( final IZmlTableCell cell )
   {
     m_cell = cell;
@@ -95,6 +102,9 @@ public class ZmlTableCellPainter
 
   public Point getExtend( final Event event )
   {
+    if( Objects.isNotNull( m_ptr ) )
+      return m_ptr;
+
     try
     {
       final String text = m_provider.getText();
@@ -105,7 +115,8 @@ public class ZmlTableCellPainter
 
       resetGc( event );
 
-      return ptr;
+      m_ptr = ptr;
+      return m_ptr;
     }
     catch( final Exception e )
     {
@@ -130,6 +141,27 @@ public class ZmlTableCellPainter
     if( Objects.isNull( reference ) )
       return ptr;
 
+    final Image[] images = findImages( reference );
+
+    for( final Image image : images )
+    {
+      final Rectangle rect = image.getBounds();
+      final int offset = Math.max( 0, (bounds.height - rect.height) / 2 );
+      gc.drawImage( image, bounds.x + ptr.x, bounds.y + offset );
+
+      ptr.x += rect.width;
+      ptr.y = Math.max( ptr.y, rect.height );
+    }
+
+    return ptr;
+  }
+
+  private Image[] findImages( final IZmlValueReference reference )
+  {
+    if( ArrayUtils.isNotEmpty( m_images ) )
+      return m_images;
+
+    final List<Image> images = new ArrayList<Image>();
     for( final ZmlRule rule : m_activeRules )
     {
       try
@@ -142,12 +174,7 @@ public class ZmlTableCellPainter
         if( Objects.isNull( image ) )
           continue;
 
-        final Rectangle rect = image.getBounds();
-        final int offset = Math.max( 0, (bounds.height - rect.height) / 2 );
-        gc.drawImage( image, bounds.x + ptr.x, bounds.y + offset );
-
-        ptr.x += rect.width;
-        ptr.y = Math.max( ptr.y, rect.height );
+        images.add( image );
       }
       catch( final IOException e )
       {
@@ -155,12 +182,13 @@ public class ZmlTableCellPainter
       }
     }
 
-    return ptr;
+    m_images = images.toArray( new Image[] {} );
+
+    return m_images;
   }
 
   public Point drawText( final GC gc, final Rectangle bounds )
   {
-
     try
     {
       final String label = m_provider.getText();
