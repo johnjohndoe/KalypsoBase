@@ -47,7 +47,7 @@ import org.kalypso.zml.ui.table.focus.IZmlTableFocusHandler;
 import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.model.IZmlTableRow;
 import org.kalypso.zml.ui.table.model.ZmlTableColumn;
-import org.kalypso.zml.ui.table.provider.ZmlTableCellCache;
+import org.kalypso.zml.ui.table.provider.cache.ZmlTableCellCache;
 
 /**
  * @author Dirk Kuch
