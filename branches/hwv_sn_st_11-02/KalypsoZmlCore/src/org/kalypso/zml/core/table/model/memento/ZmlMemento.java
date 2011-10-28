@@ -45,6 +45,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -64,6 +65,8 @@ import org.kalypso.ogc.sensor.provider.IObsProviderListener;
  */
 public class ZmlMemento implements IZmlMemento
 {
+  private final List<IObsProvider> m_provider = Collections.synchronizedList( new ArrayList<IObsProvider>() );
+
   private final Map<IPoolableObjectType, ILabeledObsProvider> m_elements = Collections.synchronizedMap( new HashMap<IPoolableObjectType, ILabeledObsProvider>() );
 
   Set<IZmlMementoListener> m_listener = Collections.synchronizedSet( new LinkedHashSet<IZmlMementoListener>() );
@@ -86,12 +89,14 @@ public class ZmlMemento implements IZmlMemento
   @Override
   public void dispose( )
   {
-    cleanup();
+    doCleanup();
   }
 
   @Override
   public synchronized void register( final IPoolableObjectType poolKey, final ILabeledObsProvider provider )
   {
+    m_provider.add( provider );
+
     provider.addListener( m_obsListener );
     m_elements.put( poolKey, provider );
   }
@@ -108,12 +113,23 @@ public class ZmlMemento implements IZmlMemento
         pool.saveObject( observation, new NullProgressMonitor() );
     }
 
-    cleanup();
+    doCleanup();
   }
 
-  private synchronized void cleanup( )
+  private synchronized void doCleanup( )
   {
-    m_elements.clear();
+    synchronized( this )
+    {
+      final IObsProvider[] providers = m_provider.toArray( new IObsProvider[] {} );
+      m_provider.clear();
+
+      for( final IObsProvider provider : providers )
+      {
+        provider.dispose();
+      }
+
+      m_elements.clear();
+    }
   }
 
   @Override
