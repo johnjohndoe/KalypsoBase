@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.references.ZmlIndexValueReference;
 import org.kalypso.zml.ui.table.IZmlTable;
 
 /**
@@ -64,12 +65,12 @@ public class ZmlTableRow extends ZmlTableElement implements IZmlTableRow
     m_row = row;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableRow#getValueReference(org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn)
-   */
   @Override
   public IZmlValueReference getValueReference( final IZmlTableColumn column )
   {
+    if( column.isIndexColumn() )
+      return new ZmlIndexValueReference( m_row );
+
     return m_row.get( column.getModelColumn() );
   }
 
@@ -113,9 +114,6 @@ public class ZmlTableRow extends ZmlTableElement implements IZmlTableRow
     return super.equals( obj );
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {
@@ -131,9 +129,6 @@ public class ZmlTableRow extends ZmlTableElement implements IZmlTableRow
     return builder.toHashCode();
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableRow#getValueReference(org.kalypso.zml.ui.table.viewmodel.IZmlTableColumn)
-   */
   @Override
   public IZmlTableCell getCell( final IZmlTableColumn column )
   {
