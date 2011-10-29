@@ -64,7 +64,7 @@ public class TranProLinFilterTest extends TestCase
 
     System.out.println( ObservationUtilities.dump( obs.getValues( null ), "   " ) ); //$NON-NLS-1$
 
-    final TranProLinFilter filter = new TranProLinFilter( null, null, "*", 1, 1.15, 0, null ); //$NON-NLS-1$
+    final TranProLinFilter filter = new TranProLinFilter( null, "*", 1, 1.15, 0, null ); //$NON-NLS-1$
     filter.initFilter( null, obs, null );
 
     assertEquals( 10, filter.getValues( null ).size() );
