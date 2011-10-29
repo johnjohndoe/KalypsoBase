@@ -572,7 +572,7 @@ public final class ZmlFactory
       // sort axes, this is not needed from a XML view, but very useful when comparing marshaled files (e.g.
       // JUnit-Test)
       final TreeSet<IAxis> sortedAxis = new TreeSet<IAxis>( new Comparator<IAxis>()
-      {
+          {
         @Override
         public int compare( final IAxis a1, final IAxis a2 )
         {
@@ -594,7 +594,7 @@ public final class ZmlFactory
           }
           return type1.compareTo( type2 );
         }
-      } );
+          } );
 
       for( final IAxis axis : obs.getAxes() )
       {
@@ -721,7 +721,18 @@ public final class ZmlFactory
    */
   public static void writeToFile( final IObservation obs, final IFile file ) throws SensorException, CoreException
   {
-    writeToFile( obs, file.getLocation().toFile(), null );
+    writeToFile( obs, file, null );
+  }
+
+  /**
+   * Helper method for simply writing the observation to an IFile
+   * 
+   * @throws SensorException
+   *           if an IOException or a FactoryException is thrown internally
+   */
+  public static void writeToFile( final IObservation obs, final IFile file, final IRequest request ) throws SensorException, CoreException
+  {
+    writeToFile( obs, file.getLocation().toFile(), request );
     file.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
   }
 
