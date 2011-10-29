@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -158,7 +159,10 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
       catch( final Throwable t )
       {
         final String msg = String.format( "Merging observation \"%s\" failed", srcObservation.getHref() );
-        statis.add( StatusUtilities.createStatus( IStatus.ERROR, msg, t ) );
+        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, msg, t );
+        // Log status here, because it is never seen again...
+        KalypsoCorePlugin.getDefault().getLog().log( status );
+        statis.add( status );
       }
     }
 
