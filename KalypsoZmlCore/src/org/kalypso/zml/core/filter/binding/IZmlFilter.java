@@ -40,28 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.filter.binding;
 
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * The base implementation of zml filters.
+ * GML-Encoding of ZML-Filter.
  * 
  * @author Holger Albert
  */
-public class AbstractZmlFilter extends Feature_Impl
+public interface IZmlFilter extends Feature
 {
-  /**
-   * The constructor.
-   * 
-   * @param parent
-   * @param parentRelation
-   * @param ft
-   * @param id
-   * @param propValues
-   */
-  public AbstractZmlFilter( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
 }

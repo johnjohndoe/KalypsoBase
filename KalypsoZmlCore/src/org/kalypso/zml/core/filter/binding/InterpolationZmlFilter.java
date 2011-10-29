@@ -45,13 +45,14 @@ import javax.xml.namespace.QName;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.zml.core.KalypsoZmlCoreConstants;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * The interpolation zml filter.
  * 
  * @author Holger Albert
  */
-public class InterpolationZmlFilter extends AbstractZmlFilter
+public class InterpolationZmlFilter extends Feature_Impl implements IZmlFilter
 {
   /**
    * The qname of the calendar amount.
@@ -77,6 +78,8 @@ public class InterpolationZmlFilter extends AbstractZmlFilter
    * The qname of the force fill flag.
    */
   public static final QName QNAME_FORCE_FILL = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "forceFill" );
+
+  public static final QName QNAME_INTERPOLATION_ZML_FILTER = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "InterpolationZmlFilter" );
 
   /**
    * The constructor.
