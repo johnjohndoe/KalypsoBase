@@ -61,7 +61,7 @@ public class WQPairTuppleModel extends AbstractTupleModel
 
   public WQPairTuppleModel( final WQPair[] pairs )
   {
-    super( new IAxis[] { TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_WATERLEVEL, true ), TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_RUNOFF, false ) } );
+    super( new IAxis[] { TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_WATERLEVEL, true ), TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_RUNOFF, false ) } );
 
     m_pairs = pairs;
     m_W = new Double[pairs.length];

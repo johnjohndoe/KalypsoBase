@@ -415,7 +415,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   /**
    * Create a default axis for the given type.
    */
-  public static IAxis createDefaulAxis( final String type )
+  public static IAxis createDefaultAxis( final String type )
   {
     return new DefaultAxis( getName( type ), type, getUnit( type ), getDataClass( type ), isKey( type ) );
   }
@@ -423,7 +423,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   /**
    * Create a default axis for the given type and the key flag.
    */
-  public static IAxis createDefaulAxis( final String type, final boolean isKey )
+  public static IAxis createDefaultAxis( final String type, final boolean isKey )
   {
     return new DefaultAxis( getName( type ), type, getUnit( type ), getDataClass( type ), isKey );
   }
@@ -525,10 +525,10 @@ public final class TimeseriesUtils implements ITimeseriesConstants
     final List<IAxis> axisList = new ArrayList<IAxis>();
     if( axisTypes != null && axisTypes.length > 0 )
     {
-      axisList.add( TimeseriesUtils.createDefaulAxis( axisTypes[0], firstWithKey ) );
+      axisList.add( TimeseriesUtils.createDefaultAxis( axisTypes[0], firstWithKey ) );
       for( int i = 1; i < axisTypes.length; i++ )
       {
-        axisList.add( TimeseriesUtils.createDefaulAxis( axisTypes[i], false ) );
+        axisList.add( TimeseriesUtils.createDefaultAxis( axisTypes[i], false ) );
       }
     }
     return axisList.toArray( new IAxis[axisList.size()] );
@@ -567,10 +567,10 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   public static IObservation createTestTimeserie( final String[] axisTypes, final int amountRows, final boolean allowNegativeValues ) throws SensorException
   {
     final IAxis[] axes = new IAxis[axisTypes.length + 1];
-    axes[0] = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_DATE, true );
+    axes[0] = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_DATE, true );
     for( int i = 0; i < axisTypes.length; i++ )
     {
-      axes[i + 1] = TimeseriesUtils.createDefaulAxis( axisTypes[i] );
+      axes[i + 1] = TimeseriesUtils.createDefaultAxis( axisTypes[i] );
     }
 
     final SimpleObservation obs = new SimpleObservation( axes );
