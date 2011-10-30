@@ -65,8 +65,6 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -267,11 +265,11 @@ public class ZmlLink
   {
     try
     {
-      final IFeatureType featureType = m_feature.getFeatureType();
-
-      final Object linkPT = GMLXPathUtilities.query( m_linkPath, featureType );
-      if( !(linkPT instanceof IPropertyType) )
-        return null;
+// final IFeatureType featureType = m_feature.getFeatureType();
+//
+// final Object linkPT = GMLXPathUtilities.query( m_linkPath, featureType );
+// if( !(linkPT instanceof IPropertyType) )
+// return null;
 
       final TimeseriesLinkType link = (TimeseriesLinkType) GMLXPathUtilities.query( m_linkPath, m_feature );
       if( link == null )
