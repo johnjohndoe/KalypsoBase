@@ -140,21 +140,29 @@ public class GMLXPath
     return new GMLXPath( segments );
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals( final Object obj )
   {
     return EqualsBuilder.reflectionEquals( this, obj );
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {
     return HashCodeBuilder.reflectionHashCode( this );
+  }
+
+  public GMLXPath append( final GMLXPath path )
+  {
+    GMLXPathSegment[] result = m_segments;
+
+    final int segmentCount = path.getSegmentSize();
+    for( int i = 0; i < segmentCount; i++ )
+    {
+      final GMLXPathSegment segment = path.getSegment( i );
+      result = GMLXPathSegment.addSegments( result, segment );
+    }
+
+    return new GMLXPath( result );
   }
 }
