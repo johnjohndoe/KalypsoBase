@@ -42,12 +42,16 @@ package org.kalypso.zml.core.filter;
 
 import java.net.URL;
 
+import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.creators.RoundFilterCreator;
+import org.kalypso.ogc.sensor.filter.filters.interval.IntervalDefinition;
+import org.kalypso.ogc.sensor.filter.filters.interval.IntervalFilter;
 import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilterCreator;
 import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypso.zml.core.filter.binding.InterpolationZmlFilter;
+import org.kalypso.zml.core.filter.binding.IntervalZmlFilter;
 import org.kalypso.zml.core.filter.binding.RoundZmlFilter;
 
 /**
@@ -96,6 +100,21 @@ public class ZmlFilterWorker
     {
       final InterpolationZmlFilter interpolationZmlFilter = (InterpolationZmlFilter) filter;
       return InterpolationFilterCreator.createFilter( interpolationZmlFilter.getCalendarAmount(), interpolationZmlFilter.getCalendarField(), interpolationZmlFilter.getDefaultStatus(), interpolationZmlFilter.getDefaultValue(), interpolationZmlFilter.isForceFill(), input, m_context );
+    }
+
+    if( filter instanceof IntervalZmlFilter )
+    {
+      final IntervalZmlFilter intervalZmlFilter = (IntervalZmlFilter) filter;
+
+      final String fieldText = intervalZmlFilter.getCalendarField();
+      final int field = CalendarUtilities.getCalendarField( fieldText );
+      final Integer amount = intervalZmlFilter.getCalendarAmount();
+
+      final double defaultValue = intervalZmlFilter.getDefaultValue();
+      final Integer defaultStatus = intervalZmlFilter.getDefaultStatus();
+
+      final IntervalDefinition definition = new IntervalDefinition( field, amount, defaultValue, defaultStatus );
+      return new IntervalFilter( IntervalFilter.MODE.eSum, definition );
     }
 
     if( filter instanceof RoundZmlFilter )
