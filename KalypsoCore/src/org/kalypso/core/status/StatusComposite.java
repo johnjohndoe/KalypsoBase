@@ -163,7 +163,7 @@ public class StatusComposite extends Composite
 
   private void createMessageText( )
   {
-    m_messageText = new Text( this, SWT.READ_ONLY );
+    m_messageText = new Text( this, SWT.READ_ONLY | SWT.WRAP );
     ControlUtils.adapt( m_messageText, m_toolkit );
 
     m_messageText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, true ) );
