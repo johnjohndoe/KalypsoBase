@@ -135,9 +135,14 @@ public class DefaultReferenceCollectorStrategy implements IReferenceCollectorStr
         foundFeatures.add( feature );
       else
       {
-        final String href = uri + "#" + feature.getId(); //$NON-NLS-1$
-        final XLinkedFeature_Impl linkedFeature = new XLinkedFeature_Impl( m_parentFeature, m_parentRelation, targetFeatureType, href, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-        foundFeatures.add( linkedFeature );
+        final String id = feature.getId();
+        // REMARK: id == null happens for xlinks, i.e. twice decending into xlinks does not work....
+        if( id != null )
+        {
+          final String href = uri + "#" + id; //$NON-NLS-1$
+          final XLinkedFeature_Impl linkedFeature = new XLinkedFeature_Impl( m_parentFeature, m_parentRelation, targetFeatureType, href, "", "", "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+          foundFeatures.add( linkedFeature );
+        }
       }
     }
   }
