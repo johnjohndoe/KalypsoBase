@@ -32,8 +32,8 @@
 	</complexType>
 
 	<!-- Interval Filter Element & Type -->
-	<element name="IntervalZmlFilter" type="zf:InterpolationZmlFilterType" substitutionGroup="zf:AbstractZmlFilter" />
-	<complexType name="InterpolationZmlFilterType">
+	<element name="IntervalZmlFilter" type="zf:IntervalZmlFilterType" substitutionGroup="zf:AbstractZmlFilter" />
+	<complexType name="IntervalZmlFilterType">
 		<complexContent>
 			<extension base="zf:AbstractZmlFilterType">
 				<sequence>
