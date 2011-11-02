@@ -284,9 +284,6 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
     return formatter.toString();
   }
 
-  /**
-   * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
-   */
   @Override
   public void mousePressed( final MouseEvent event )
   {
