@@ -114,9 +114,14 @@ public class VFSUtilities
   }
 
   /**
-   * This function returns a singleton FileSystemManager. Do not close this manager or any file systems it manages.
+   * This function returns a singleton FileSystemManager. Do not close this manager or any file systems it manages. <br/>
+   * <br/>
+   * HINT:<br/>
+   * The file system manager of VFS is a singleton. During configuration another part of code may request one and start
+   * configuring again. The configure function checks, if a filesystem provider is already configured, but there are
+   * still critical parts which needs to be synchronized.
    */
-  public static FileSystemManager getManager( ) throws FileSystemException
+  public static synchronized FileSystemManager getManager( ) throws FileSystemException
   {
     final DefaultFileSystemManager fsManager = (DefaultFileSystemManager) VFS.getManager();
     configureManager( fsManager );
