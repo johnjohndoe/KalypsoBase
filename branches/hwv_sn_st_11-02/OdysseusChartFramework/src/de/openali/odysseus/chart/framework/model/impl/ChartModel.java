@@ -21,7 +21,7 @@ public class ChartModel implements IChartModel
 {
   protected final ChartBehaviour m_behaviour = new ChartBehaviour( this );
 
-  private String m_identifier = "";
+  private String m_identifier = ""; //$NON-NLS-1$
 
   private final ILayerManager m_layerManager = new LayerManager( this );
 
@@ -50,9 +50,6 @@ public class ChartModel implements IChartModel
     }
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.IChartModel#clear()
-   */
   @Override
   public void clear( )
   {
@@ -157,6 +154,7 @@ public class ChartModel implements IChartModel
     return this;
   }
 
+  @Override
   public Properties getProperties( )
   {
     return m_properties;
