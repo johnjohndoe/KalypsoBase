@@ -45,6 +45,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -96,7 +97,7 @@ import com.vividsolutions.jts.geom.Envelope;
  */
 public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoStyleListener
 {
-  private final List<IKalypsoStyle> m_styles = new ArrayList<IKalypsoStyle>();
+  private final List<IKalypsoStyle> m_styles = Collections.synchronizedList( new ArrayList<IKalypsoStyle>() );
 
   private CommandableWorkspace m_workspace;
 
@@ -293,7 +294,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public IKalypsoStyle[] getStyles( )
   {
-    return m_styles.toArray( new IKalypsoStyle[m_styles.size()] );
+    // Use empty array here to be thread save
+    return m_styles.toArray( new IKalypsoStyle[0] );
   }
 
   /**
