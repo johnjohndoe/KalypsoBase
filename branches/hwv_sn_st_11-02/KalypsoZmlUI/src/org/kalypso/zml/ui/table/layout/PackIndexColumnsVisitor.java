@@ -76,6 +76,8 @@ public class PackIndexColumnsVisitor extends AbstractTableColumnPackVisitor
     }
     else
       pack( tableColumn, columnType, label, true );
+
+    tableColumn.setResizable( false );
   }
 
 }

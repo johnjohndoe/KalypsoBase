@@ -43,10 +43,8 @@ package org.kalypso.zml.core.table.model.memento;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -65,9 +63,7 @@ import org.kalypso.ogc.sensor.provider.IObsProviderListener;
  */
 public class ZmlMemento implements IZmlMemento
 {
-  private final List<IObsProvider> m_provider = Collections.synchronizedList( new ArrayList<IObsProvider>() );
-
-  private final Map<IPoolableObjectType, ILabeledObsProvider> m_elements = Collections.synchronizedMap( new HashMap<IPoolableObjectType, ILabeledObsProvider>() );
+  private final List<ILabeledObsProvider> m_provider = Collections.synchronizedList( new ArrayList<ILabeledObsProvider>() );
 
   Set<IZmlMementoListener> m_listener = Collections.synchronizedSet( new LinkedHashSet<IZmlMementoListener>() );
 
@@ -98,7 +94,6 @@ public class ZmlMemento implements IZmlMemento
     m_provider.add( provider );
 
     provider.addListener( m_obsListener );
-    m_elements.put( poolKey, provider );
   }
 
   @Override
@@ -128,7 +123,6 @@ public class ZmlMemento implements IZmlMemento
         provider.dispose();
       }
 
-      m_elements.clear();
     }
   }
 
@@ -138,7 +132,8 @@ public class ZmlMemento implements IZmlMemento
     final Collection<ILabeledObsProvider> result = new ArrayList<ILabeledObsProvider>();
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 
-    for( final ILabeledObsProvider provider : m_elements.values() )
+    final ILabeledObsProvider[] providers = m_provider.toArray( new ILabeledObsProvider[] {} );
+    for( final ILabeledObsProvider provider : providers )
     {
       final IObservation observation = provider.getObservation();
       if( observation != null )
