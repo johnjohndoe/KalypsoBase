@@ -229,6 +229,8 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   public MetadataList getMetadata( )
   {
     final IObservation observation = m_handler.getObservation();
+    if( Objects.isNull( observation ) )
+      return null;
 
     return observation.getMetadataList();
   }
