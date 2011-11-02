@@ -97,9 +97,6 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     m_direction = direction;
   }
 
-  /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#mouseDown(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseDown( final MouseEvent e )
   {

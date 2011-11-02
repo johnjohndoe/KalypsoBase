@@ -445,9 +445,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_title = title;
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setVisibility(boolean)
-   */
   @Override
   public void setVisible( final boolean isVisible )
   {
@@ -459,9 +456,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     }
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
@@ -480,9 +474,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_parent = parent;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getParent()
-   */
   @Override
   public ILayerContainer getParent( )
   {
