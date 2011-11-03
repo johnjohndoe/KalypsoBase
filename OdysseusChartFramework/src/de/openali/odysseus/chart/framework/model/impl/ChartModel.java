@@ -38,12 +38,14 @@ public class ChartModel implements IChartModel
 
   /**
    * automatically scales all given axes; scaling means here: show all available values
+   * 
+   * @param axes
+   *          axes == null -> update all chart model axes
    */
   @Override
   public void autoscale( final IAxis... axes )
   {
     final AutoScaleVisitor visitor = new AutoScaleVisitor( this, true );
-    // axes==null means all Axes
     for( final IAxis axis : Arrays.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes )
     {
       visitor.visit( axis );
@@ -80,29 +82,18 @@ public class ChartModel implements IChartModel
     return m_identifier;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.chart.framework.model.IChartModel#getLayerManager()
-   */
   @Override
   public ILayerManager getLayerManager( )
   {
     return m_layerManager;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.chart.framework.model.IChartModel#getAxisRegistry()
-   */
   @Override
   public IMapperRegistry getMapperRegistry( )
   {
     return m_mapperRegistry;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.ILayerContainer#getParent()
-   */
   @Override
   public ILayerContainer getParent( )
   {
@@ -119,9 +110,6 @@ public class ChartModel implements IChartModel
 // return new ChartModelState( getLayerManager() );
 // }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#getSettings()
-   */
   @Override
   public IBasicChartSettings getSettings( )
   {
@@ -136,18 +124,12 @@ public class ChartModel implements IChartModel
     autoscale();
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#setId()
-   */
   @Override
   public void setIdentifier( final String identifier )
   {
     m_identifier = identifier;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.ILayerContainer#getModel()
-   */
   @Override
   public IChartModel getModel( )
   {

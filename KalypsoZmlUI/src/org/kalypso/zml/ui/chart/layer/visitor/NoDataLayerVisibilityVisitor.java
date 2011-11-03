@@ -68,7 +68,6 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
   }
 
   // <Parameter name="hideOnMultiSelect" value="true" />
-
   @Override
   public void visit( final IChartLayer layer )
   {

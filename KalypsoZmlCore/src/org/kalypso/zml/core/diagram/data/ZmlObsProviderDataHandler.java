@@ -110,9 +110,11 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
         m_provider.dispose();
       }
 
-      m_provider = provider;
-      if( Objects.isNotNull( provider ) )
+      if( Objects.isNull( provider ) )
+        m_provider = null;
+      else
       {
+        m_provider = provider.copy();
         provider.addListener( m_observationProviderListener );
       }
     }
