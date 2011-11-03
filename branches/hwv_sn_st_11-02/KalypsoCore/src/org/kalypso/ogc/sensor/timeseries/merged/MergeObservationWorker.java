@@ -46,6 +46,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.Strings;
@@ -223,7 +224,9 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
         destValues[i] = getDestValue( srcObservation, srcModel, destMetaDataHandler, srcMetaDataHandler, defaultDataSourceIndex, index, srcAxis, destAxis );
       }
 
-      data.add( destValues );
+      // REMARK: prohibit adding corrupt data -> may result in an empty data set
+      if( !ArrayUtils.contains( destValues, null ) )
+        data.add( destValues );
     }
 
     return data.toArray( new Object[][] {} );
