@@ -115,7 +115,7 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
       else
       {
         m_provider = provider.copy();
-        provider.addListener( m_observationProviderListener );
+        m_provider.addListener( m_observationProviderListener );
       }
     }
 
