@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+     <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="org.kalypso.ui.importwizards.kalypso"
+            class="org.kalypso.ui.wizard.sensor.ImportObservationWizard"
+            icon="icons/sample.gif"
+            id="KalypsoNA_UI.wizard1"
+            name="%KalypsoNA_UI.wizard1.name"/>
+   </extension>
+
+</plugin>
