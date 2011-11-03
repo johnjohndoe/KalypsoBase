@@ -51,8 +51,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 
 /**
@@ -88,6 +88,17 @@ public class BufferPaintJob extends Job
 
     if( m_paintable != null )
       setName( m_paintable.toString() );
+  }
+
+  /**
+   * Needed because we use {@link java.lang.ref.SoftReference}'s.
+   * 
+   * @see java.lang.Object#finalize()
+   */
+  @Override
+  protected void finalize( ) throws Throwable
+  {
+    dispose();
   }
 
   /**

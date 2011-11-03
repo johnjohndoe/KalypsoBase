@@ -38,32 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.contribs.eclipse.jface.viewers;
+package org.kalypso.contribs.eclipse.swt.layout;
 
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.swt.layout.GridLayout;
 
 /**
- * Inverts another sorter.
- * 
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public final class InverseSorter extends ViewerSorter
+public final class LayoutHelper
 {
-  private final ViewerSorter m_sorter;
-
-  public InverseSorter( final ViewerSorter sorter )
+  private LayoutHelper( )
   {
-    m_sorter = sorter;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ViewerSorter#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
-  @Override
-  public int compare( final Viewer viewer, final Object e1, final Object e2 )
+  public static GridLayout createGridLayout( final int numColumns )
   {
-    return m_sorter.compare( viewer, e1, e2 ) * -1;
+    final GridLayout layout = new GridLayout( numColumns, false );
+    layout.marginHeight = layout.marginWidth = 0;
+
+    return layout;
   }
+
+  public static GridLayout createGridLayout( )
+  {
+    return createGridLayout( 1 );
+  }
+
 }

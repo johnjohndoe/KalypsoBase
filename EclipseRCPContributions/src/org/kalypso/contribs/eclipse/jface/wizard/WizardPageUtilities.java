@@ -47,7 +47,7 @@ import org.eclipse.jface.wizard.WizardPage;
  * 
  * @author Holger Albert
  */
-public final class WizardPageUtilities
+public class WizardPageUtilities
 {
   /**
    * Should not be instanziated.
@@ -64,10 +64,10 @@ public final class WizardPageUtilities
    * @param page
    *          The wizard page, which should display the warning.
    */
-  public static void appendWarning( final String message, final WizardPage page )
+  public static void appendWarning( String message, WizardPage page )
   {
     /* If the message should be resetted ... */
-    if( message == null || "".equals( message ) ) //$NON-NLS-1$
+    if( message == null || message.equals( "" ) )
     {
       /* ... do it! */
       page.setMessage( null );
@@ -88,10 +88,10 @@ public final class WizardPageUtilities
    * @param page
    *          The wizard page, which should display the error.
    */
-  public static void appendError( final String message, final WizardPage page )
+  public static void appendError( String message, WizardPage page )
   {
     /* If the message should be resetted ... */
-    if( message == null || "".equals( message ) ) //$NON-NLS-1$
+    if( message == null || message.equals( "" ) )
     {
       /* ... do it! */
       page.setErrorMessage( null );

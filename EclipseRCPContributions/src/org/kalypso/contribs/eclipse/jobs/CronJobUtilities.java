@@ -53,35 +53,35 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsDebug;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.utils.Debug;
 
 /**
  * This class provides functions for dealing with cron jobs.
  * 
  * @author Holger Albert
  */
-public class CronJobUtilities
+public final class CronJobUtilities
 {
   /**
    * The identifier attribute (string).
    */
-  private static final String IDENTIFIER = "identifier";
+  private static final String IDENTIFIER = "identifier"; //$NON-NLS-1$
 
   /**
    * The name attribute (string).
    */
-  private static final String NAME = "name";
+  private static final String NAME = "name"; //$NON-NLS-1$
 
   /**
    * The mutex attribute (string).
    */
-  private static final String MUTEX = "mutex";
+  private static final String MUTEX = "mutex"; //$NON-NLS-1$
 
   /**
    * The job attribute (class).
    */
-  private static final String JOB = "job";
+  private static final String JOB = "job"; //$NON-NLS-1$
 
   /**
    * This listener is responsible for rescheduling the cron jobs.
@@ -122,7 +122,7 @@ public class CronJobUtilities
       final IStatus status = CronJobUtilities.startCronJob( cronJob );
 
       /* Log the result. */
-      if( EclipseRCPContributionsDebug.CRON_JOB.isEnabled() )
+      if( Debug.CRON_JOB.isEnabled() )
         EclipseRCPContributionsPlugin.getDefault().getLog().log( status );
     }
   }

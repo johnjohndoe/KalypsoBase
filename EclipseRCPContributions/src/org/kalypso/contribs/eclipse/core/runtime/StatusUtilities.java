@@ -53,7 +53,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 
 /**
  * Helper methods for {@link org.eclipse.core.runtime.IStatus}.
@@ -194,7 +194,7 @@ public final class StatusUtilities
   {
     if( message != null )
     {
-      final MultiStatus status = new MultiStatus( EclipseRCPContributionsPlugin.ID, 0, String.format( message, args ), null );
+      final MultiStatus status = new MultiStatus( EclipseRCPContributionsPlugin.getID(), 0, String.format( message, args ), null );
       status.add( statusFromThrowable( t ) );
       return status;
     }
@@ -215,7 +215,7 @@ public final class StatusUtilities
       msg = t.toString();// "<Keine weitere Information vorhanden>";
     }
 
-    return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.ID, 0, msg, t );
+    return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.getID(), 0, msg, t );
   }
 
   public static String messageFromThrowable( final Throwable t )
@@ -239,13 +239,13 @@ public final class StatusUtilities
    */
   public static IStatus createStatus( final Collection<IStatus> stati, final String message, final Object... args )
   {
-    if( stati.size() == 0 )
+    if( stati.isEmpty() )
       return Status.OK_STATUS;
 
     if( stati.size() == 1 )
       return stati.iterator().next();
 
-    return new MultiStatus( EclipseRCPContributionsPlugin.ID, 0, stati.toArray( new IStatus[stati.size()] ), String.format( message, args ), null );
+    return new MultiStatus( EclipseRCPContributionsPlugin.getID(), 0, stati.toArray( new IStatus[stati.size()] ), String.format( message, args ), null );
   }
 
   /**
@@ -266,7 +266,7 @@ public final class StatusUtilities
    */
   public static IStatus createStatus( final int severity, final String message, final Throwable t )
   {
-    return new Status( severity, EclipseRCPContributionsPlugin.ID, -1, message, t );
+    return new Status( severity, EclipseRCPContributionsPlugin.getID(), -1, message, t );
   }
 
   /**
@@ -274,7 +274,7 @@ public final class StatusUtilities
    */
   public static IStatus createStatus( final int severity, final int code, final String message, final Throwable t )
   {
-    return new Status( severity, EclipseRCPContributionsPlugin.ID, code, message, t );
+    return new Status( severity, EclipseRCPContributionsPlugin.getID(), code, message, t );
   }
 
   public static IStatus createExceptionalErrorStatus( final String errorMessage, final Throwable t )
@@ -483,20 +483,13 @@ public final class StatusUtilities
   }
 
   /**
-   * Returns an (internationalized) string corresponding to the severity of the given status.<br/>
+   * Returns an (internationalized) string corresponding to the severity of the given status.
+   * <p>
+   * TODO: internationalize it
    */
   public static String getLocalizedSeverity( final IStatus status )
   {
-    return getLocalizedSeverity( status.getSeverity() );
-  }
-
-  /**
-   * Returns an (internationalized) string corresponding to the severity of the given status.<br/>
-   * TODO: translate
-   */
-  public static String getLocalizedSeverity( final int severity )
-  {
-    switch( severity )
+    switch( status.getSeverity() )
     {
       case IStatus.OK:
         return "OK";
