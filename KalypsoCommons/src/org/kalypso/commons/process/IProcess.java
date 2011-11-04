@@ -80,16 +80,16 @@ public interface IProcess
   /**
    * Executes the process and waits for it to end.
    * 
-   *@param stdOut
+   * @param stdOut
    *          Standard output of the process will be written into this stream.
-   *@param stdErr
+   * @param stdErr
    *          Standard error output of the process will be written into this stream.
-   *@param stdIn
+   * @param stdIn
    *          Contents of this stream will be piped into the standard input of the process.
-   *@param cancelable
+   * @param cancelable
    *          The process will be killed if {@link ICancelable#isCanceled()} returns <code>true</code>.
    * @return The exit code of the process.
-   *@throws ProcessTimeoutException
+   * @throws ProcessTimeoutException
    *           If a timeout was set (see {@link #setTimeout(long)}) and the process run longer than this specified time.
    */
   public int startProcess( final OutputStream stdOut, final OutputStream stdErr, final InputStream stdIn, final ICancelable cancelable ) throws IOException, ProcessTimeoutException, OperationCanceledException;

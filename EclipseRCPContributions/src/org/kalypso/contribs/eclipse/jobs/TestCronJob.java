@@ -85,7 +85,7 @@ public class TestCronJob extends CronJob
    * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  protected IStatus run( IProgressMonitor monitor )
+  protected IStatus run( final IProgressMonitor monitor )
   {
     /* Monitor. */
     monitor.beginTask( "Testing...", 100 );
@@ -99,7 +99,7 @@ public class TestCronJob extends CronJob
     {
       Thread.sleep( 2000 );
     }
-    catch( InterruptedException ex )
+    catch( final InterruptedException ex )
     {
       ex.printStackTrace();
     }

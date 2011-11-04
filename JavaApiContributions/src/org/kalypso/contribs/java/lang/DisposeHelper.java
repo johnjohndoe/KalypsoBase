@@ -65,9 +65,9 @@ public final class DisposeHelper
 {
   private final List<Object> m_candidates = new ArrayList<Object>( 20 );
 
-  public DisposeHelper()
+  public DisposeHelper( )
   {
-  // default
+    // default
   }
 
   public DisposeHelper( final Object[] disposeCandidates )
@@ -75,7 +75,7 @@ public final class DisposeHelper
     m_candidates.addAll( Arrays.asList( disposeCandidates ) );
   }
 
-  public DisposeHelper( final Collection<? extends Object> collection )
+  public DisposeHelper( final Collection< ? extends Object> collection )
   {
     m_candidates.addAll( collection );
   }
@@ -98,17 +98,17 @@ public final class DisposeHelper
   /**
    * Disposes all candidates by calling their dispose method (if they have one) and clears the candidates list
    */
-  public void dispose()
+  public void dispose( )
   {
     final Object[] objects = m_candidates.toArray();
-    for( int i = 0; i < objects.length; i++ )
+    for( final Object object : objects )
     {
       try
       {
-        if( objects[i] != null ) // ignore the null objects
+        if( object != null ) // ignore the null objects
         {
-          final Method disposeMethod = objects[i].getClass().getMethod( "dispose" );
-          disposeMethod.invoke( objects[i] );
+          final Method disposeMethod = object.getClass().getMethod( "dispose" );
+          disposeMethod.invoke( object );
         }
       }
       catch( final NoSuchMethodException ignored )

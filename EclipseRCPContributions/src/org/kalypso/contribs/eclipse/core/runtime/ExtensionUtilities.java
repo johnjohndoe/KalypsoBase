@@ -67,9 +67,9 @@ public class ExtensionUtilities
    * Finds all implementations of an extension-point and indexes them by one of its attributes.
    * 
    * @param extensionPointId
-   *            The id of the extension-point the elements come from.
+   *          The id of the extension-point the elements come from.
    * @param keyAttribute
-   *            The attribute name the elements get indexed by
+   *          The attribute name the elements get indexed by
    */
   public static Map<String, IConfigurationElement> getConfigurationElements( final String extensionPointId, final String keyAttribute )
   {

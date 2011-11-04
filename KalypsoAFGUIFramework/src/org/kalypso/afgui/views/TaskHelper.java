@@ -50,7 +50,7 @@ import de.renew.workflow.base.IWorkflow;
 
 /**
  * @author Stefan Kurzbach
- *
+ * 
  */
 public class TaskHelper
 {

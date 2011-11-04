@@ -38,41 +38,14 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.databinding.validation;
+package org.kalypso.commons.java.io;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import java.io.File;
 
 /**
- * This validator checks, if an array exists and contains at least one element.
- * 
- * @author Holger Albert
+ * @author Dirk Kuch
  */
-public class ArrayEmptyValidator extends TypedValidator<Object[]>
+public interface IFileFilter
 {
-  /**
-   * The constructor.
-   * 
-   * @param severity
-   *          Severity of IStatus, will be used to create validation failures.
-   * @param message
-   *          Will be used as message for a status, if validation fails.
-   */
-  public ArrayEmptyValidator( final int severity, final String message )
-  {
-    super( Object[].class, severity, message );
-  }
-
-  /**
-   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
-   */
-  @Override
-  protected IStatus doValidate( final Object[] value ) throws CoreException
-  {
-    if( value == null || value.length == 0 )
-      fail();
-
-    return Status.OK_STATUS;
-  }
+  boolean select( File file );
 }

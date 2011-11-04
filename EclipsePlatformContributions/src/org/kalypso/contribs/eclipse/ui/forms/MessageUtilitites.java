@@ -186,15 +186,15 @@ public final class MessageUtilitites
     switch( severity )
     {
       case IStatus.OK:
-        return IMessage.NONE;
+        return IMessageProvider.NONE;
       case IStatus.INFO:
-        return IMessage.INFORMATION;
+        return IMessageProvider.INFORMATION;
       case IStatus.WARNING:
-        return IMessage.WARNING;
+        return IMessageProvider.WARNING;
       case IStatus.ERROR:
-        return IMessage.ERROR;
+        return IMessageProvider.ERROR;
       case IStatus.CANCEL:
-        return IMessage.INFORMATION;
+        return IMessageProvider.INFORMATION;
 
       default:
         throw new IllegalArgumentException( "Unknown status severity: " + severity ); //$NON-NLS-1$

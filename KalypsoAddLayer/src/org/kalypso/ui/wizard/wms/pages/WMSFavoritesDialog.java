@@ -107,7 +107,7 @@ public class WMSFavoritesDialog extends Dialog
    * @param lastServices
    *          The last successfull used services. The favorites, to call them another way.
    */
-  public WMSFavoritesDialog( Shell shell, String lastService, List<String> lastServices )
+  public WMSFavoritesDialog( final Shell shell, final String lastService, final List<String> lastServices )
   {
     super( shell );
 
@@ -125,7 +125,7 @@ public class WMSFavoritesDialog extends Dialog
    * @param lastServices
    *          The last successfull used services. The favorites, to call them another way.
    */
-  public WMSFavoritesDialog( IShellProvider parentShell, String lastService, List<String> lastServices )
+  public WMSFavoritesDialog( final IShellProvider parentShell, final String lastService, final List<String> lastServices )
   {
     super( parentShell );
 
@@ -141,7 +141,7 @@ public class WMSFavoritesDialog extends Dialog
    * @param lastServices
    *          The last successfull used services. The favorites, to call them another way.
    */
-  private void init( String lastService, List<String> lastServices )
+  private void init( final String lastService, final List<String> lastServices )
   {
     /* Initialize. */
     m_lastService = lastService;
@@ -160,45 +160,45 @@ public class WMSFavoritesDialog extends Dialog
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
     /* Set the title. */
-    getShell().setText( Messages.getString("org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.0") ); //$NON-NLS-1$
+    getShell().setText( Messages.getString( "org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.0" ) ); //$NON-NLS-1$
 
     /* Create the main composite. */
-    Composite panel = (Composite) super.createDialogArea( parent );
+    final Composite panel = (Composite) super.createDialogArea( parent );
     panel.setLayout( new GridLayout( 1, false ) );
     panel.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
     /* Selection composite. */
-    Composite selectionComposite = new Composite( panel, SWT.NONE );
+    final Composite selectionComposite = new Composite( panel, SWT.NONE );
     selectionComposite.setLayout( new GridLayout( 2, false ) );
     selectionComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     /* The selection label. */
-    Label selectionLabel = new Label( selectionComposite, SWT.NONE );
+    final Label selectionLabel = new Label( selectionComposite, SWT.NONE );
     selectionLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
-    selectionLabel.setText( Messages.getString("org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.1") ); //$NON-NLS-1$
+    selectionLabel.setText( Messages.getString( "org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.1" ) ); //$NON-NLS-1$
 
     /* The selection service text. */
     final Text selectionServiceText = new Text( selectionComposite, SWT.BORDER );
-    GridData selectionServiceData = new GridData( SWT.FILL, SWT.CENTER, true, false );
+    final GridData selectionServiceData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     selectionServiceData.widthHint = 200;
     selectionServiceData.minimumWidth = 200;
     selectionServiceText.setLayoutData( selectionServiceData );
     selectionServiceText.setText( "" ); //$NON-NLS-1$
-    selectionServiceText.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.2") ); //$NON-NLS-1$
+    selectionServiceText.setToolTipText( Messages.getString( "org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.2" ) ); //$NON-NLS-1$
     selectionServiceText.setEditable( false );
 
     /* The service group. */
-    Group serviceGroup = new Group( panel, SWT.NONE );
+    final Group serviceGroup = new Group( panel, SWT.NONE );
     serviceGroup.setLayout( new GridLayout( 1, false ) );
     serviceGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    serviceGroup.setText( Messages.getString("org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.3") ); //$NON-NLS-1$
+    serviceGroup.setText( Messages.getString( "org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.3" ) ); //$NON-NLS-1$
 
     /* The service viewer. */
     final ListViewer serviceViewer = new ListViewer( serviceGroup, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL );
-    GridData serviceViewerData = new GridData( SWT.FILL, SWT.FILL, true, true );
+    final GridData serviceViewerData = new GridData( SWT.FILL, SWT.FILL, true, true );
     serviceViewerData.heightHint = 200;
     serviceViewerData.minimumHeight = 200;
     serviceViewerData.widthHint = 475;
@@ -215,9 +215,9 @@ public class WMSFavoritesDialog extends Dialog
        * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
        */
       @Override
-      public Image getImage( Object element )
+      public Image getImage( final Object element )
       {
-        Image image = ImageProvider.IMAGE_ICON_GMT.createImage();
+        final Image image = ImageProvider.IMAGE_ICON_GMT.createImage();
 
         return image;
       }
@@ -227,10 +227,10 @@ public class WMSFavoritesDialog extends Dialog
     serviceViewer.setInput( m_favoriteServices );
 
     /* The delete service button. */
-    Button deleteServiceButton = new Button( serviceGroup, SWT.NONE );
+    final Button deleteServiceButton = new Button( serviceGroup, SWT.NONE );
     deleteServiceButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, true, false ) );
-    deleteServiceButton.setText( Messages.getString("org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.4") ); //$NON-NLS-1$
-    deleteServiceButton.setToolTipText( Messages.getString("org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.5") ); //$NON-NLS-1$
+    deleteServiceButton.setText( Messages.getString( "org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.4" ) ); //$NON-NLS-1$
+    deleteServiceButton.setToolTipText( Messages.getString( "org.kalypso.ui.wizard.wms.pages.WMSFavoritesDialog.5" ) ); //$NON-NLS-1$
 
     /* Add the required listener here. */
 
@@ -241,10 +241,10 @@ public class WMSFavoritesDialog extends Dialog
        * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
        */
       @Override
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
-        Text source = (Text) e.getSource();
-        String text = source.getText();
+        final Text source = (Text) e.getSource();
+        final String text = source.getText();
 
         if( !text.equals( "" ) ) //$NON-NLS-1$
         {
@@ -263,20 +263,20 @@ public class WMSFavoritesDialog extends Dialog
        * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
        */
       @Override
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
-        ISelection selection = event.getSelection();
+        final ISelection selection = event.getSelection();
         if( !(selection instanceof StructuredSelection) )
           return;
 
-        StructuredSelection structuredSelection = (StructuredSelection) selection;
+        final StructuredSelection structuredSelection = (StructuredSelection) selection;
 
         /* There could be only one element selected. */
-        Object firstElement = structuredSelection.getFirstElement();
+        final Object firstElement = structuredSelection.getFirstElement();
         if( !(firstElement instanceof String) )
           return;
 
-        String selectedFavorite = (String) firstElement;
+        final String selectedFavorite = (String) firstElement;
 
         /* Set it as selected. */
         selectionServiceText.setText( selectedFavorite );
@@ -290,9 +290,9 @@ public class WMSFavoritesDialog extends Dialog
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
-        ISelection selection = serviceViewer.getSelection();
+        final ISelection selection = serviceViewer.getSelection();
         if( selection instanceof StructuredSelection )
         {
           /* There could be only one element selected. */
@@ -327,7 +327,7 @@ public class WMSFavoritesDialog extends Dialog
     for( int i = 0; i < m_lastServices.size(); i++ )
     {
       /* Get the service. */
-      String favorite = m_lastServices.get( i );
+      final String favorite = m_lastServices.get( i );
 
       /* If it is not on the modified list anymore, remove it from the original list. */
       if( !m_favoriteServices.contains( favorite ) )

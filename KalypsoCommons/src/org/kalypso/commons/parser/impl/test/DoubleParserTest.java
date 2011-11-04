@@ -51,7 +51,7 @@ import org.kalypso.commons.parser.impl.DoubleParser;
 public class DoubleParserTest extends TestCase
 {
 
-  public void testParse()
+  public void testParse( )
   {
     try
     {
@@ -59,19 +59,19 @@ public class DoubleParserTest extends TestCase
       test( "10.10", 10.1 ); //$NON-NLS-1$
       test( "10", 10 ); //$NON-NLS-1$
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
   }
 
-  private void test( String value, double result ) throws ParserException
+  private void test( final String value, final double result ) throws ParserException
   {
-    DoubleParser parser = new DoubleParser();
-    Double object = (Double)parser.parse( value );
+    final DoubleParser parser = new DoubleParser();
+    final Double object = (Double) parser.parse( value );
 
     System.out.println( value + " -> " + object.getClass().getName() + ": " + object.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
-    String string = parser.toStringInternal( object );
+    final String string = parser.toStringInternal( object );
     System.out.println( "= " + string + "\n\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     assertTrue( object.doubleValue() == result );
   }

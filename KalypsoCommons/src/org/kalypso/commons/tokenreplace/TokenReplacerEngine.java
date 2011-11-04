@@ -57,7 +57,7 @@ public class TokenReplacerEngine
   /** String with which the tokens end. */
   public static final String TOKEN_END = "}"; //$NON-NLS-1$
 
-  private Map<String, ITokenReplacer> m_trMap = new HashMap<String, ITokenReplacer>();
+  private final Map<String, ITokenReplacer> m_trMap = new HashMap<String, ITokenReplacer>();
 
   public TokenReplacerEngine( final ITokenReplacer[] trs )
   {

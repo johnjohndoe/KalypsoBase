@@ -54,7 +54,9 @@ import org.kalypso.contribs.eclipse.jobs.BufferPaintJob.IPaintable;
 public class TextPaintable implements IPaintable
 {
   private final Point m_size;
+
   private final String m_message;
+
   private final Color m_bgColor;
 
   public TextPaintable( final Point size, final String message, final Color bgColor )

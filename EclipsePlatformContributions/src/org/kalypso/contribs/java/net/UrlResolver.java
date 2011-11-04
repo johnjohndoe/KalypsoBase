@@ -132,11 +132,12 @@ public class UrlResolver implements IUrlResolver
 
       return new URL( relativeURL.substring( 7 ) );
     }
-    
-    if( relativeURL.startsWith( "/" ) ){
+
+    if( relativeURL.startsWith( "/" ) )
+    {
       return new URL( baseURL, relativeURL.substring( 1 ) );
     }
-    
+
     return new URL( baseURL, relativeURL );
   }
 

@@ -68,7 +68,7 @@ public class SystemOutLogger implements ILogger
     final StringBuffer sb = new StringBuffer( level.toString() );
     sb.append( ": " );
     // TODO: change this to a real number?
-    if( code == LoggerUtilities.CODE_NEW_MSGBOX  )
+    if( code == LoggerUtilities.CODE_NEW_MSGBOX )
       sb.append( '*' );
     sb.append( message );
 

@@ -58,7 +58,7 @@ public final class AWTSWTImageUtils
    */
   public static BufferedImage convertToAWT( final Image image )
   {
-    ImageData data = image.getImageData();
+    final ImageData data = image.getImageData();
     return convertToAWT( data );
   }
 
@@ -74,22 +74,22 @@ public final class AWTSWTImageUtils
   public static BufferedImage convertToAWT( final ImageData data )
   {
     ColorModel colorModel = null;
-    PaletteData palette = data.palette;
+    final PaletteData palette = data.palette;
     if( palette.isDirect )
     {
       // no alpha data?
       if( data.alphaData == null )
       {
         colorModel = new DirectColorModel( 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000 );
-        BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
-        WritableRaster raster = bufferedImage.getRaster();
-        int[] pixelArray = new int[4];
+        final BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
+        final WritableRaster raster = bufferedImage.getRaster();
+        final int[] pixelArray = new int[4];
         for( int y = 0; y < data.height; y++ )
         {
           for( int x = 0; x < data.width; x++ )
           {
-            int pixel = data.getPixel( x, y );
-            RGB rgb = palette.getRGB( pixel );
+            final int pixel = data.getPixel( x, y );
+            final RGB rgb = palette.getRGB( pixel );
             pixelArray[0] = rgb.red;
             pixelArray[1] = rgb.green;
             pixelArray[2] = rgb.blue;
@@ -104,14 +104,14 @@ public final class AWTSWTImageUtils
             raster.setPixels( x, y, 1, 1, pixelArray );
           }
         }
-        int w = bufferedImage.getWidth();
-        int h = bufferedImage.getHeight();
-        Raster ras = bufferedImage.getData();
+        final int w = bufferedImage.getWidth();
+        final int h = bufferedImage.getHeight();
+        final Raster ras = bufferedImage.getData();
         for( int i = 0; i < w; i++ )
         {
           for( int j = 0; j < h; j++ )
           {
-            double[] pixel = ras.getPixel( i, j, new double[4] );
+            final double[] pixel = ras.getPixel( i, j, new double[4] );
           }
         }
 
@@ -122,15 +122,15 @@ public final class AWTSWTImageUtils
       else
       {
         colorModel = new DirectColorModel( 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000 );
-        BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
-        WritableRaster raster = bufferedImage.getRaster();
-        int[] pixelArray = new int[4];
+        final BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
+        final WritableRaster raster = bufferedImage.getRaster();
+        final int[] pixelArray = new int[4];
         for( int y = 0; y < data.height; y++ )
         {
           for( int x = 0; x < data.width; x++ )
           {
-            int pixel = data.getPixel( x, y );
-            RGB rgb = palette.getRGB( pixel );
+            final int pixel = data.getPixel( x, y );
+            final RGB rgb = palette.getRGB( pixel );
             pixelArray[0] = rgb.red;
             pixelArray[1] = rgb.green;
             pixelArray[2] = rgb.blue;
@@ -167,13 +167,13 @@ public final class AWTSWTImageUtils
     }
     else
     {
-      RGB[] rgbs = palette.getRGBs();
-      byte[] red = new byte[rgbs.length];
-      byte[] green = new byte[rgbs.length];
-      byte[] blue = new byte[rgbs.length];
+      final RGB[] rgbs = palette.getRGBs();
+      final byte[] red = new byte[rgbs.length];
+      final byte[] green = new byte[rgbs.length];
+      final byte[] blue = new byte[rgbs.length];
       for( int i = 0; i < rgbs.length; i++ )
       {
-        RGB rgb = rgbs[i];
+        final RGB rgb = rgbs[i];
         red[i] = (byte) rgb.red;
         green[i] = (byte) rgb.green;
         blue[i] = (byte) rgb.blue;
@@ -186,14 +186,14 @@ public final class AWTSWTImageUtils
       {
         colorModel = new IndexColorModel( data.depth, rgbs.length, red, green, blue );
       }
-      BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
-      WritableRaster raster = bufferedImage.getRaster();
-      int[] pixelArray = new int[1];
+      final BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
+      final WritableRaster raster = bufferedImage.getRaster();
+      final int[] pixelArray = new int[1];
       for( int y = 0; y < data.height; y++ )
       {
         for( int x = 0; x < data.width; x++ )
         {
-          int pixel = data.getPixel( x, y );
+          final int pixel = data.getPixel( x, y );
           pixelArray[0] = pixel;
           raster.setPixel( x, y, pixelArray );
         }
@@ -211,7 +211,7 @@ public final class AWTSWTImageUtils
   public static Path convertToPath( final Shape shape, final Device device )
   {
     AWTSWTImageUtils.checkAccess();
-    PathIterator p = shape.getPathIterator( SWTGraphics.AFFINE_TRANSFORM );
+    final PathIterator p = shape.getPathIterator( SWTGraphics.AFFINE_TRANSFORM );
 
     return AWTSWTImageUtils.createPath( p, device );
   }
@@ -223,11 +223,11 @@ public final class AWTSWTImageUtils
       return null;
     }
 
-    float[] current = new float[6];
-    Path path = new Path( device );
+    final float[] current = new float[6];
+    final Path path = new Path( device );
     while( !p.isDone() )
     {
-      int result = p.currentSegment( current );
+      final int result = p.currentSegment( current );
       switch( result )
       {
         case PathIterator.SEG_CLOSE:
@@ -298,7 +298,7 @@ public final class AWTSWTImageUtils
     // swtdata.transparentPixel = -1;
     swtdata.alpha = -1;
     swtdata.alphaData = new byte[swtdata.data.length];
-    int j = 2;
+    final int j = 2;
     for( int i = 0; i < swtdata.alphaData.length; i++ )
     {
       swtdata.alphaData[i] = (byte) 255;
@@ -336,20 +336,20 @@ public final class AWTSWTImageUtils
     // AWTSWTImageUtils.checkAccess();
 
     ImageData swtdata = null;
-    int width = image.getWidth();
-    int height = image.getHeight();
+    final int width = image.getWidth();
+    final int height = image.getHeight();
     PaletteData palette;
     int depth;
 
     depth = 24;
     palette = new PaletteData( 0xFF, 0xFF00, 0xFF0000 );
     swtdata = new ImageData( width, height, depth, palette );
-    Raster raster = image.getData();
-    int numbands = raster.getNumBands();
-    int[] awtdata = raster.getPixels( 0, 0, width, height, new int[width * height * numbands] );
-    int step = swtdata.depth / 8;
+    final Raster raster = image.getData();
+    final int numbands = raster.getNumBands();
+    final int[] awtdata = raster.getPixels( 0, 0, width, height, new int[width * height * numbands] );
+    final int step = swtdata.depth / 8;
 
-    byte[] data = swtdata.data;
+    final byte[] data = swtdata.data;
     swtdata.transparentPixel = -1;
     int baseindex = 0;
     for( int y = 0; y < height; y++ )
@@ -358,7 +358,7 @@ public final class AWTSWTImageUtils
 
       for( int x = 0; x < width; x++ )
       {
-        int pixel = x + y * width;
+        final int pixel = x + y * width;
         baseindex = pixel * numbands;
 
         data[idx++] = (byte) awtdata[baseindex + 2];
@@ -379,6 +379,7 @@ public final class AWTSWTImageUtils
     return new ImageDescriptor()
     {
 
+      @Override
       public ImageData getImageData( )
       {
         return createImageData( image, transparent );
@@ -399,6 +400,7 @@ public final class AWTSWTImageUtils
     return new ImageDescriptor()
     {
 
+      @Override
       public ImageData getImageData( )
       {
         return AWTSWTImageUtils.createImageData( image );
@@ -442,12 +444,12 @@ public final class AWTSWTImageUtils
       return createImageData( image, image.getTransparency() != Transparency.OPAQUE );
     }
 
-    int width = image.getWidth();
-    int height = image.getHeight();
-    int bands = image.getColorModel().getColorSpace().getNumComponents();
-    int depth = 24;
-    byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-    ImageData data = new ImageData( width, height, depth, new PaletteData( 0x0000ff, 0x00ff00, 0xff0000 ), width * bands, pixels );
+    final int width = image.getWidth();
+    final int height = image.getHeight();
+    final int bands = image.getColorModel().getColorSpace().getNumComponents();
+    final int depth = 24;
+    final byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+    final ImageData data = new ImageData( width, height, depth, new PaletteData( 0x0000ff, 0x00ff00, 0xff0000 ), width * bands, pixels );
     return data;
   }
 
@@ -466,7 +468,7 @@ public final class AWTSWTImageUtils
   public static Image createSWTImage( final RenderedImage image )
   {
     AWTSWTImageUtils.checkAccess();
-    ImageData data = AWTSWTImageUtils.createImageData( image );
+    final ImageData data = AWTSWTImageUtils.createImageData( image );
 
     return new org.eclipse.swt.graphics.Image( Display.getDefault(), data );
   }
@@ -489,17 +491,17 @@ public final class AWTSWTImageUtils
     {
       return createImageData( (BufferedImage) image );
     }
-    int depth = 24;
-    int width = image.getWidth();
-    int height = image.getHeight();
-    byte[] pixels = ((DataBufferByte) image.getTile( 0, 0 ).getDataBuffer()).getData();
-    ImageData data = new ImageData( width, height, depth, new PaletteData( 0xff0000, 0x00ff00, 0x0000ff ), width, pixels );
+    final int depth = 24;
+    final int width = image.getWidth();
+    final int height = image.getHeight();
+    final byte[] pixels = ((DataBufferByte) image.getTile( 0, 0 ).getDataBuffer()).getData();
+    final ImageData data = new ImageData( width, height, depth, new PaletteData( 0xff0000, 0x00ff00, 0x0000ff ), width, pixels );
     return data;
   }
 
   public static java.awt.Color swtColor2awtColor( final GC gc, final Color swt )
   {
-    java.awt.Color awt = new java.awt.Color( swt.getRed(), swt.getGreen(), swt.getBlue(), gc.getAlpha() );
+    final java.awt.Color awt = new java.awt.Color( swt.getRed(), swt.getGreen(), swt.getBlue(), gc.getAlpha() );
     return awt;
   }
 
@@ -530,7 +532,7 @@ public final class AWTSWTImageUtils
       style |= java.awt.Font.ITALIC;
     }
 
-    java.awt.Font font = new java.awt.Font( fontData.getName(), style, fontData.getHeight() );
+    final java.awt.Font font = new java.awt.Font( fontData.getName(), style, fontData.getHeight() );
     return font;
   }
 
@@ -544,7 +546,7 @@ public final class AWTSWTImageUtils
    */
   public static org.eclipse.swt.graphics.Font awtFontToSwt( final java.awt.Font font, final FontRegistry fontRegistry )
   {
-    String fontName = font.getFontName();
+    final String fontName = font.getFontName();
     if( fontRegistry.hasValueFor( fontName ) )
     {
       return fontRegistry.get( fontName );
@@ -559,7 +561,7 @@ public final class AWTSWTImageUtils
     {
       style |= SWT.ITALIC;
     }
-    FontData data = new FontData( fontName, font.getSize(), style );
+    final FontData data = new FontData( fontName, font.getSize(), style );
     fontRegistry.put( fontName, new FontData[] { data } );
     return fontRegistry.get( fontName );
   }
@@ -587,24 +589,27 @@ public final class AWTSWTImageUtils
 
   public static Icon imageDescriptor2awtIcon( final ImageDescriptor imageDescriptor )
   {
-    Icon awtIcon = new Icon()
+    final Icon awtIcon = new Icon()
     {
 
       ImageData imageData = imageDescriptor.getImageData();
 
+      @Override
       public int getIconHeight( )
       {
         return imageData.width;
       }
 
+      @Override
       public int getIconWidth( )
       {
         return imageData.height;
       }
 
+      @Override
       public void paintIcon( final Component comp, final Graphics g, final int x, final int y )
       {
-        BufferedImage image = convertToAWT( imageData );
+        final BufferedImage image = convertToAWT( imageData );
         g.drawImage( image, x, y, null );
       }
 
@@ -621,14 +626,14 @@ public final class AWTSWTImageUtils
    */
   public static ImageDescriptor awtIcon2ImageDescriptor( final Icon icon )
   {
-    ImageDescriptor descriptor = new ImageDescriptor()
+    final ImageDescriptor descriptor = new ImageDescriptor()
     {
 
       @Override
       public ImageData getImageData( )
       {
-        BufferedImage image = createBufferedImage( icon.getIconWidth(), icon.getIconHeight() );
-        Graphics2D g = image.createGraphics();
+        final BufferedImage image = createBufferedImage( icon.getIconWidth(), icon.getIconHeight() );
+        final Graphics2D g = image.createGraphics();
         try
         {
           icon.paintIcon( null, g, 0, 0 );
@@ -637,7 +642,7 @@ public final class AWTSWTImageUtils
         {
           g.dispose();
         }
-        ImageData data = createImageData( image );
+        final ImageData data = createImageData( image );
         return data;
       }
 

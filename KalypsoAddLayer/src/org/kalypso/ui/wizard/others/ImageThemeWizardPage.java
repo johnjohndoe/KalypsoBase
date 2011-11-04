@@ -74,7 +74,7 @@ public class ImageThemeWizardPage extends WizardPage
    * @param pageName
    *          The name of the page.
    */
-  public ImageThemeWizardPage( String pageName )
+  public ImageThemeWizardPage( final String pageName )
   {
     super( pageName );
 
@@ -94,7 +94,7 @@ public class ImageThemeWizardPage extends WizardPage
    * @param titleImage
    *          The image descriptor for the title of this wizard page, or null if none.
    */
-  public ImageThemeWizardPage( String pageName, String title, ImageDescriptor titleImage )
+  public ImageThemeWizardPage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage );
 
@@ -107,14 +107,14 @@ public class ImageThemeWizardPage extends WizardPage
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     /* Create the main composite. */
-    Composite main = new Composite( parent, SWT.NONE );
+    final Composite main = new Composite( parent, SWT.NONE );
     main.setLayout( new GridLayout( 1, false ) );
 
     /* Create the image composite. */
-    ImageComposite imageComposite = new ImageComposite( main, SWT.NONE, null );
+    final ImageComposite imageComposite = new ImageComposite( main, SWT.NONE, null );
     imageComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     imageComposite.addImageChangedListener( new IImageChangedListener()
     {
@@ -123,16 +123,16 @@ public class ImageThemeWizardPage extends WizardPage
        *      int, int, org.eclipse.swt.graphics.Color, java.lang.String)
        */
       @Override
-      public void imagePropertyChanged( Properties properties, int horizontal, int vertical, org.eclipse.swt.graphics.Color backgroundColor, String imageUrl )
+      public void imagePropertyChanged( final Properties properties, final int horizontal, final int vertical, final org.eclipse.swt.graphics.Color backgroundColor, final String imageUrl )
       {
         /* Store the properties. */
         m_properties.clear();
 
         /* Get the properties. */
-        String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
-        String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
-        String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
-        String imageUrlProperty = properties.getProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL );
+        final String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+        final String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+        final String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
+        final String imageUrlProperty = properties.getProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL );
 
         /* Set the properties. */
         m_properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
@@ -163,7 +163,7 @@ public class ImageThemeWizardPage extends WizardPage
     setPageComplete( true );
 
     /* Get the URL of the image. */
-    String imageUrl = m_properties.get( ImageUtilities.THEME_PROPERTY_IMAGE_URL );
+    final String imageUrl = m_properties.get( ImageUtilities.THEME_PROPERTY_IMAGE_URL );
     if( imageUrl == null || imageUrl.length() == 0 )
     {
       setErrorMessage( "Bitte geben Sie die URL zu dem Bild an..." );

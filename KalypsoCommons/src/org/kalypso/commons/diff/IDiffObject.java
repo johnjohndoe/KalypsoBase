@@ -32,7 +32,6 @@ package org.kalypso.commons.diff;
 import java.io.IOException;
 
 /**
- * 
  * decorates a structure as compareable object <br>
  * the structure is a list of path elements <br>
  * each path element has a content and can be compared with other contents
@@ -49,14 +48,12 @@ public interface IDiffObject
   public boolean exists( String path );
 
   /**
-   * 
    * @param path
    * @return comparator
    */
   public IDiffComparator getDiffComparator( final String path );
 
   /**
-   * 
    * @param path
    * @return content that is assigned to this path
    * @throws IOException
@@ -66,5 +63,5 @@ public interface IDiffObject
   /**
    * @return all existing pathes
    */
-  public String[] getPathes();
+  public String[] getPathes( );
 }

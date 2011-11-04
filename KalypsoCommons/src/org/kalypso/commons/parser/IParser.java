@@ -45,28 +45,28 @@ package org.kalypso.commons.parser;
  * eine String Representation erzeugen.
  * <p>
  * Der Parser wird mit eine String konfiguriert was der Format der geparste Werte beschreibt.
- *
+ * 
  * @author schlienger
  */
 public interface IParser
 {
   /**
    * Liefert die Klasse der Objekte was dieser Parser unterstützt
-   *
+   * 
    * @return class
    */
   public Class< ? > getObjectClass( );
 
   /**
    * Liefert der Format was beschreibt wie die Werte formatiert sind
-   *
+   * 
    * @return format string
    */
-  public String getFormat();
+  public String getFormat( );
 
   /**
    * Liefert eine String Representation vom Objekt im gültigen Format
-   *
+   * 
    * @param obj
    * @return string representation
    * @throws ParserException
@@ -75,7 +75,7 @@ public interface IParser
 
   /**
    * Erzeugt einen Objekt aus der String Representation
-   *
+   * 
    * @param text
    * @return instance
    * @throws ParserException
@@ -84,7 +84,7 @@ public interface IParser
 
   /**
    * Compares the values
-   *
+   * 
    * @param value1
    * @param value2
    * @return -1, 0 or 1
@@ -94,7 +94,7 @@ public interface IParser
 
   /**
    * Compares the values
-   *
+   * 
    * @param value1
    * @param value2
    * @return -1, 0, 1

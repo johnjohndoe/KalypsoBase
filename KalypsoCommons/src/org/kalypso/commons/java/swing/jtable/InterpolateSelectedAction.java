@@ -9,15 +9,15 @@ import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * SetAllAction
- *
+ * 
  * @author schlienger
  */
 public class InterpolateSelectedAction extends AbstractObservationTableAction
 {
   public InterpolateSelectedAction( final JTable table )
   {
-    super( table, Messages.getString("org.kalypso.commons.java.swing.jtable.InterpolateSelectedAction0"), //$NON-NLS-1$
-        Messages.getString("org.kalypso.commons.java.swing.jtable.InterpolateSelectedAction1") ); //$NON-NLS-1$
+    super( table, Messages.getString( "org.kalypso.commons.java.swing.jtable.InterpolateSelectedAction0" ), //$NON-NLS-1$
+    Messages.getString( "org.kalypso.commons.java.swing.jtable.InterpolateSelectedAction1" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -37,13 +37,13 @@ public class InterpolateSelectedAction extends AbstractObservationTableAction
     final Object obj1 = table.getValueAt( minRow, col );
     final Object obj2 = table.getValueAt( maxRow, col );
 
-    if( !( obj1 instanceof Number ) || !( obj2 instanceof Number ) )
+    if( !(obj1 instanceof Number) || !(obj2 instanceof Number) )
       return;
 
-    final double v1 = ( (Number)obj1 ).doubleValue();
-    final double v2 = ( (Number)obj2 ).doubleValue();
+    final double v1 = ((Number) obj1).doubleValue();
+    final double v2 = ((Number) obj2).doubleValue();
 
-    final double step = ( v2 - v1 ) / ( maxRow - minRow );
+    final double step = (v2 - v1) / (maxRow - minRow);
 
     int i = 1;
     for( int row = minRow + 1; row < maxRow; row++ )

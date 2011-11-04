@@ -58,7 +58,7 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 /**
  * A {@link Job} that paints a IPaintable onto a {@link BufferedImage}.<br>
  * Its own paint method, paints the current state of the {@link BufferedImage}.<br>
- *
+ * 
  * @author Gernot Belger
  */
 public class BufferPaintJob extends Job
@@ -91,6 +91,17 @@ public class BufferPaintJob extends Job
   }
 
   /**
+   * Needed because we use {@link java.lang.ref.SoftReference}'s.
+   * 
+   * @see java.lang.Object#finalize()
+   */
+  @Override
+  protected void finalize( ) throws Throwable
+  {
+    dispose();
+  }
+
+  /**
    * Cancels the job and releases the buffered image.
    */
   public void dispose( )
@@ -114,7 +125,7 @@ public class BufferPaintJob extends Job
 
   /**
    * Returns the current state of the buffered image.
-   *
+   * 
    * @return The buffered image; <code>null</code>, if the job has not yet started.
    */
   public synchronized BufferedImage getImage( )
@@ -132,7 +143,7 @@ public class BufferPaintJob extends Job
 
     if( m_paintable == null )
     {
-      //System.out.println("BufferPaintJob: paintable was null");
+      // System.out.println("BufferPaintJob: paintable was null");
       return Status.OK_STATUS;
     }
 
@@ -151,7 +162,7 @@ public class BufferPaintJob extends Job
         // just return without comment
         if( gr == null )
         {
-          //    System.out.println("BufferPaintJob: image was null");
+          // System.out.println("BufferPaintJob: image was null");
           return Status.OK_STATUS;
         }
 

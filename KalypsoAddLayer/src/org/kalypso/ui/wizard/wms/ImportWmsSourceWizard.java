@@ -56,7 +56,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
-import org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
@@ -146,7 +145,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
     final IKalypsoLayerModell mapModell = m_modell;
     if( mapModell != null )
       try
-    {
+      {
         final boolean isMulti = m_page.isMultiLayer();
         if( isMulti )
         {
@@ -207,20 +206,20 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
               providerID = ""; //$NON-NLS-1$
 
             final String layerTitle = layer.getTitle();
-            source.append( "#" ).append( AbstractDeegreeImageProvider.KEY_LAYERS ).append( "=" ).append( layerName ); //$NON-NLS-1$ //$NON-NLS-2$
-            source.append( "#" ).append( AbstractDeegreeImageProvider.KEY_STYLES ).append( "=" ).append( styleName ); //$NON-NLS-1$ //$NON-NLS-2$
-            source.append( "#" ).append( AbstractDeegreeImageProvider.KEY_PROVIDER ).append( "=" ).append( providerID ); //$NON-NLS-1$ //$NON-NLS-2$
+            source.append( "#" ).append( IKalypsoImageProvider.KEY_LAYERS ).append( "=" ).append( layerName ); //$NON-NLS-1$ //$NON-NLS-2$
+            source.append( "#" ).append( IKalypsoImageProvider.KEY_STYLES ).append( "=" ).append( styleName ); //$NON-NLS-1$ //$NON-NLS-2$
+            source.append( "#" ).append( IKalypsoImageProvider.KEY_PROVIDER ).append( "=" ).append( providerID ); //$NON-NLS-1$ //$NON-NLS-2$
 
             final AddThemeCommand command = new AddThemeCommand( mapModell, layerTitle, "wms", source.toString() ); //$NON-NLS-1$
             m_outlineviewer.postCommand( command, null );
           }
 
         }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
     return true;
   }
 
@@ -252,7 +251,7 @@ public class ImportWmsSourceWizard extends Wizard implements IKalypsoDataImportW
   @Override
   public void addPages( )
   {
-    m_page = new ImportWmsWizardPage( "WmsImportPage", Messages.getString("org.kalypso.ui.wizard.wms.ImportWmsSourceWizard.0"), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_page = new ImportWmsWizardPage( "WmsImportPage", Messages.getString( "org.kalypso.ui.wizard.wms.ImportWmsSourceWizard.0" ), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
     addPage( m_page );
   }
 

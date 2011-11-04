@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.eclipse.jface.viewers;
 
-
 /**
  * @author Gernot Belger
  */

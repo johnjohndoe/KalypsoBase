@@ -68,7 +68,7 @@ public class LegendThemeWizardPage extends WizardPage
   /**
    * The map modell.
    */
-  private IKalypsoLayerModell m_mapModell;
+  private final IKalypsoLayerModell m_mapModell;
 
   /**
    * The selected properties.
@@ -83,7 +83,7 @@ public class LegendThemeWizardPage extends WizardPage
    * @param mapModell
    *          The map modell.
    */
-  public LegendThemeWizardPage( String pageName, IKalypsoLayerModell mapModell )
+  public LegendThemeWizardPage( final String pageName, final IKalypsoLayerModell mapModell )
   {
     super( pageName );
 
@@ -106,7 +106,7 @@ public class LegendThemeWizardPage extends WizardPage
    * @param mapModell
    *          The map modell.
    */
-  public LegendThemeWizardPage( String pageName, String title, ImageDescriptor titleImage, IKalypsoLayerModell mapModell )
+  public LegendThemeWizardPage( final String pageName, final String title, final ImageDescriptor titleImage, final IKalypsoLayerModell mapModell )
   {
     super( pageName, title, titleImage );
 
@@ -120,33 +120,34 @@ public class LegendThemeWizardPage extends WizardPage
    * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     /* Create the main composite. */
-    Composite main = new Composite( parent, SWT.NONE );
+    final Composite main = new Composite( parent, SWT.NONE );
     main.setLayout( new GridLayout( 1, false ) );
 
     /* Create the legend composite. */
-    LegendComposite legendComposite = new LegendComposite( main, SWT.NONE, m_mapModell, null );
+    final LegendComposite legendComposite = new LegendComposite( main, SWT.NONE, m_mapModell, null );
     legendComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     legendComposite.addLegendChangedListener( new ILegendChangedListener()
     {
       /**
        * @see org.kalypso.util.themes.legend.listener.ILegendChangedListener#legendPropertyChanged(java.util.Properties,
-       *      int, int, org.eclipse.swt.graphics.Color, int, java.lang.String[])
+       *      int, int, org.eclipse.swt.graphics.Color, int, java.lang.String[], int)
        */
       @Override
-      public void legendPropertyChanged( Properties properties, int horizontal, int vertical, Color backgroundColor, int insets, String[] themeIds )
+      public void legendPropertyChanged( final Properties properties, final int horizontal, final int vertical, final Color backgroundColor, final int insets, final String[] themeIds, final int fontSize )
       {
         /* Store the properties. */
         m_properties.clear();
 
         /* Get the properties. */
-        String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
-        String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
-        String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
-        String insetsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
-        String themeIdsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
+        final String horizontalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION );
+        final String verticalProperty = properties.getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION );
+        final String backgroundColorProperty = properties.getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR );
+        final String insetsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_INSETS );
+        final String themeIdsProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS );
+        final String fontSizeProperty = properties.getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE );
 
         /* Set the properties. */
         m_properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
@@ -154,6 +155,7 @@ public class LegendThemeWizardPage extends WizardPage
         m_properties.put( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
         m_properties.put( LegendUtilities.THEME_PROPERTY_INSETS, insetsProperty );
         m_properties.put( LegendUtilities.THEME_PROPERTY_THEME_IDS, themeIdsProperty );
+        m_properties.put( LegendUtilities.THEME_PROPERTY_FONT_SIZE, fontSizeProperty );
       }
     } );
 

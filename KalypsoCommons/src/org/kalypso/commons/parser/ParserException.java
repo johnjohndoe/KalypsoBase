@@ -47,22 +47,22 @@ package org.kalypso.commons.parser;
  */
 public class ParserException extends Exception
 {
-  public ParserException()
+  public ParserException( )
   {
     super();
   }
 
-  public ParserException( String message )
+  public ParserException( final String message )
   {
     super( message );
   }
 
-  public ParserException( Throwable cause )
+  public ParserException( final Throwable cause )
   {
     super( cause );
   }
 
-  public ParserException( String message, Throwable cause )
+  public ParserException( final String message, final Throwable cause )
   {
     super( message, cause );
   }

@@ -57,12 +57,11 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
-import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.editor.actions.FeatureActionUtilities;
-import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
+import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.IKalypsoDataImportWizard;
 import org.kalypsodeegree.model.feature.Feature;
@@ -85,7 +84,7 @@ public class KalypsoGmlImportWizard extends Wizard implements IKalypsoDataImport
   public void addPages( )
   {
     m_page = new GmlFileImportPage( "GML:importPage", Messages.getString( "org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard.0" ), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
-    m_page.setProjectSelection( MapUtilities.findProject( m_mapModel ) );
+    m_page.setProjectSelection( m_mapModel.getProject() );
 
     addPage( m_page );
   }

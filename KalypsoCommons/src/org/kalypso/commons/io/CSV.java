@@ -85,10 +85,8 @@ public class CSV extends AbstractCSV
    */
   public static void writeCSV( final String[][] data, final PrintWriter pw )
   {
-    for( int i = 0; i < data.length; i++ )
+    for( final String[] line : data )
     {
-      final String[] line = data[i];
-
       for( int j = 0; j < line.length; j++ )
       {
         if( j != 0 )

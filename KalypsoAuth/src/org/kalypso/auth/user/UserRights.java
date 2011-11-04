@@ -57,11 +57,7 @@ public final class UserRights
   public static final String[] NO_RIGHTS = {};
 
   // full list of rights
-  public static final String[] FULL_RIGHTS =
-  {
-      RIGHT_PROGNOSE,
-      RIGHT_EXPERT,
-      RIGHT_ADMIN };
+  public static final String[] FULL_RIGHTS = { RIGHT_PROGNOSE, RIGHT_EXPERT, RIGHT_ADMIN };
 
   // sort array because of call to binarySearch
   static

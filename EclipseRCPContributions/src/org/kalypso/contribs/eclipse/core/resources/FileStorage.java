@@ -24,7 +24,7 @@ public class FileStorage extends PlatformObject implements IStorage
   /**
    * The file associated with this storage.
    */
-  private File m_file;
+  private final File m_file;
 
   /**
    * The constructor.
@@ -32,7 +32,7 @@ public class FileStorage extends PlatformObject implements IStorage
    * @param file
    *          The file associated with this storage.
    */
-  public FileStorage( File file )
+  public FileStorage( final File file )
   {
     m_file = file;
   }
@@ -47,7 +47,7 @@ public class FileStorage extends PlatformObject implements IStorage
     {
       return new FileInputStream( m_file );
     }
-    catch( IOException ex )
+    catch( final IOException ex )
     {
       throw new CoreException( new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.ID, ex.getLocalizedMessage(), ex ) );
     }
@@ -63,7 +63,7 @@ public class FileStorage extends PlatformObject implements IStorage
     {
       return new Path( m_file.getCanonicalPath() );
     }
-    catch( IOException ex )
+    catch( final IOException ex )
     {
       ex.printStackTrace();
       return null;
@@ -101,7 +101,7 @@ public class FileStorage extends PlatformObject implements IStorage
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
-  public boolean equals( Object object )
+  public boolean equals( final Object object )
   {
     return object instanceof FileStorage && ((FileStorage) object).getFile().equals( m_file );
   }

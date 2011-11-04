@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Control;
 
 /**
  * @author gernot
- * 
  */
 public class DropdownContributionItem<T> extends ControlContribution
 {
@@ -33,7 +32,7 @@ public class DropdownContributionItem<T> extends ControlContribution
   {
     super( id );
 
-    setItems ( items );
+    setItems( items );
   }
 
   @Override
@@ -52,10 +51,10 @@ public class DropdownContributionItem<T> extends ControlContribution
 
     if( m_items != null )
       setItems( m_items );
-    
+
     if( m_item != null )
       setSelectedItem( m_item );
-    
+
     for( final SelectionListener l : m_listeners )
       m_combo.addSelectionListener( l );
     m_listeners.clear();
@@ -77,10 +76,10 @@ public class DropdownContributionItem<T> extends ControlContribution
       m_combo.removeAll();
       if( m_items != null )
       {
-        for( int i = 0; i < m_items.length; i++ )
-          m_combo.add( m_items[i].toString() );
+        for( final T m_item2 : m_items )
+          m_combo.add( m_item2.toString() );
       }
-      
+
       m_combo.setEnabled( m_items != null );
     }
   }
@@ -89,7 +88,7 @@ public class DropdownContributionItem<T> extends ControlContribution
   {
     if( m_combo == null || m_combo.isDisposed() )
       return null;
-    
+
     final int index = m_combo.getSelectionIndex();
     if( index == -1 )
       return null;
@@ -100,10 +99,10 @@ public class DropdownContributionItem<T> extends ControlContribution
   public void setSelectedItem( final T item )
   {
     m_item = item;
-    
+
     if( m_combo == null || m_combo.isDisposed() )
       return;
-    
+
     for( int i = 0; i < m_items.length; i++ )
     {
       if( item == m_items[i] )

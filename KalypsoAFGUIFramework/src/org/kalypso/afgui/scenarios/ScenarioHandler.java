@@ -110,7 +110,7 @@ public class ScenarioHandler extends CaseHandler implements IScenario
 
     final int level = parent.getHierarchicalLevel();
 
-    return (level + 1);
+    return level + 1;
   }
 
   /**

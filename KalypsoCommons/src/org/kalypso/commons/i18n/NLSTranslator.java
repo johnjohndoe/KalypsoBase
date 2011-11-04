@@ -42,6 +42,7 @@ package org.kalypso.commons.i18n;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -62,7 +63,7 @@ import org.w3c.dom.Element;
  */
 public class NLSTranslator implements ITranslator, IExecutableExtension
 {
-  private Class<?> m_nls;
+  private Class< ? > m_nls;
 
   private String m_id;
 
@@ -90,8 +91,9 @@ public class NLSTranslator implements ITranslator, IExecutableExtension
   /**
    * @see org.kalypso.commons.i18n.ITranslator#configure(org.kalypso.commons.i18n.ITranslatorContext, java.util.List)
    */
+  @SuppressWarnings("unchecked")
   @Override
-  public void configure( ITranslatorContext context, List<Element> configuration )
+  public void configure( final ITranslatorContext context, final List<Element> configuration )
   {
     m_configuration = configuration;
 
@@ -103,8 +105,7 @@ public class NLSTranslator implements ITranslator, IExecutableExtension
         final String[] split = msgClass.split( ":" ); //$NON-NLS-1$
         Assert.isTrue( split.length == 2, Messages.getString( "org.kalypso.commons.i18n.NLSTranslator.2", msgClass ) ); //$NON-NLS-1$
         final Bundle bundle = Platform.getBundle( split[0] );
-         m_nls = bundle.loadClass( split[1] );
-         
+        m_nls = bundle.loadClass( split[1] );
         return;
       }
       catch( final ClassNotFoundException e )
@@ -126,8 +127,14 @@ public class NLSTranslator implements ITranslator, IExecutableExtension
     return m_configuration;
   }
 
+  /**
+   * REMARK: locale is always ignored, as the language is determined whn the message class is loaded. It is always the
+   * current locale of the eclipse platform.
+   * 
+   * @see org.kalypso.contribs.java.lang.I10nTranslator#get(java.lang.String, java.util.Locale, java.lang.Object[])
+   */
   @Override
-  public String get( final String key )
+  public String get( final String key, final Locale locale, final Object[] context )
   {
     if( m_nls == null )
       return Messages.getString( "org.kalypso.commons.i18n.NLSTranslator.4", key ); //$NON-NLS-1$

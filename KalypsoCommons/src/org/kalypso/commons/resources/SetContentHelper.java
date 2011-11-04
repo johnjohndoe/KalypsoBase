@@ -70,15 +70,16 @@ import org.kalypso.contribs.java.lang.CatchRunnable;
 public abstract class SetContentHelper
 {
   private String m_newCharset;
+
   private final String m_title;
 
   private String m_oldCharset;
 
   private boolean m_doCompress;
 
-  public SetContentHelper()
+  public SetContentHelper( )
   {
-    this( Messages.getString("org.kalypso.commons.resources.SetContentHelper.0") ); //$NON-NLS-1$
+    this( Messages.getString( "org.kalypso.commons.resources.SetContentHelper.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -90,15 +91,13 @@ public abstract class SetContentHelper
     m_title = title;
   }
 
-  public void setFileContents( final IFile file, final boolean force, final boolean keepHistory,
-      final IProgressMonitor monitor ) throws CoreException
-      {
+  public void setFileContents( final IFile file, final boolean force, final boolean keepHistory, final IProgressMonitor monitor ) throws CoreException
+  {
     setFileContents( file, force, keepHistory, monitor, null );
-      }
+  }
 
-  public void setFileContents( final IFile file, final boolean force, final boolean keepHistory,
-      final IProgressMonitor monitor, final String charset ) throws CoreException
-      {
+  public void setFileContents( final IFile file, final boolean force, final boolean keepHistory, final IProgressMonitor monitor, final String charset ) throws CoreException
+  {
     m_oldCharset = findCurrentCharset( file );
     m_newCharset = findNewCharset( file, charset, m_oldCharset );
 
@@ -116,7 +115,7 @@ public abstract class SetContentHelper
       final CatchRunnable innerRunnable = new CatchRunnable()
       {
         @Override
-        protected void runIntern() throws Throwable
+        protected void runIntern( ) throws Throwable
         {
           OutputStreamWriter outputStreamWriter = null;
           try
@@ -166,7 +165,7 @@ public abstract class SetContentHelper
 
       final Throwable thrown = innerRunnable.getThrown();
       if( thrown != null )
-        throw new CoreException( StatusUtilities.statusFromThrowable( thrown, Messages.getString("org.kalypso.commons.resources.SetContentHelper.2") ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.statusFromThrowable( thrown, Messages.getString( "org.kalypso.commons.resources.SetContentHelper.2" ) ) ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
@@ -192,7 +191,7 @@ public abstract class SetContentHelper
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString("org.kalypso.commons.resources.SetContentHelper.3"), e ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.commons.resources.SetContentHelper.3" ), e ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -204,7 +203,7 @@ public abstract class SetContentHelper
 
     // enclose in finally?
     monitor.done();
-      }
+  }
 
   private String findNewCharset( final IFile file, final String charset, final String currentCharset ) throws CoreException
   {
@@ -233,7 +232,7 @@ public abstract class SetContentHelper
   /**
    * @return the charset used for encoding the file
    */
-  protected String getCharset()
+  protected String getCharset( )
   {
     return m_newCharset;
   }

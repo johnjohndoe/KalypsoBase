@@ -58,12 +58,12 @@ public class LogProgressMonitor implements IProgressMonitor
    * All requests will be relayed to this progress monitor. It is not allowed to be null, because this monitor only logs
    * messages and does not implement any other functionality concerning progress monitors.
    */
-  private IProgressMonitor m_monitor;
+  private final IProgressMonitor m_monitor;
 
   /**
    * The log, where the messages are logged to. It is not allowed to be null.
    */
-  private ILog m_log;
+  private final ILog m_log;
 
   /**
    * The constructor.
@@ -74,7 +74,7 @@ public class LogProgressMonitor implements IProgressMonitor
    * @param log
    *          The log, where the messages are logged to. It is not allowed to be null.
    */
-  public LogProgressMonitor( IProgressMonitor monitor, ILog log )
+  public LogProgressMonitor( final IProgressMonitor monitor, final ILog log )
   {
     /* The progress monitor and the log are not allowed to be null. */
     Assert.isNotNull( monitor );
@@ -89,7 +89,7 @@ public class LogProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#beginTask(java.lang.String, int)
    */
   @Override
-  public void beginTask( String name, int totalWork )
+  public void beginTask( final String name, final int totalWork )
   {
     /* Log. */
     m_log.log( new Status( IStatus.INFO, EclipseRCPContributionsPlugin.ID, name ) );
@@ -115,7 +115,7 @@ public class LogProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#internalWorked(double)
    */
   @Override
-  public void internalWorked( double work )
+  public void internalWorked( final double work )
   {
     /* Delegate to the progress monitor. */
     m_monitor.internalWorked( work );
@@ -135,7 +135,7 @@ public class LogProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#setCanceled(boolean)
    */
   @Override
-  public void setCanceled( boolean value )
+  public void setCanceled( final boolean value )
   {
     /* Log. */
     if( value )
@@ -149,7 +149,7 @@ public class LogProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#setTaskName(java.lang.String)
    */
   @Override
-  public void setTaskName( String name )
+  public void setTaskName( final String name )
   {
     /* Log. */
     m_log.log( new Status( IStatus.INFO, EclipseRCPContributionsPlugin.ID, name ) );
@@ -162,7 +162,7 @@ public class LogProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#subTask(java.lang.String)
    */
   @Override
-  public void subTask( String name )
+  public void subTask( final String name )
   {
     /* Delegate to the progress monitor. */
     m_monitor.subTask( name );
@@ -175,7 +175,7 @@ public class LogProgressMonitor implements IProgressMonitor
    * @see org.eclipse.core.runtime.IProgressMonitor#worked(int)
    */
   @Override
-  public void worked( int work )
+  public void worked( final int work )
   {
     /* Delegate to the progress monitor. */
     m_monitor.worked( work );

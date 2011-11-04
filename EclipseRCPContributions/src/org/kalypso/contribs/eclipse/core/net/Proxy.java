@@ -60,7 +60,7 @@ import org.osgi.framework.ServiceReference;
  * <li>getProxyUser()</li>
  * <li>getProxyPassword()</li>
  * </ul>
- * This functions will retrieve the data out of the java system properties. </li>
+ * This functions will retrieve the data out of the java system properties.</li>
  * <li>Or you can get an instance of the proxy service of Eclipse. This service will get its data from the Eclipse
  * preference page.</li>
  * </ol>
@@ -86,7 +86,7 @@ public class Proxy
    */
   public String getPassword( )
   {
-    String password = System.getProperty( "http.proxyPassword" );
+    final String password = System.getProperty( "http.proxyPassword" );
     if( password != null )
       return password;
 
@@ -100,7 +100,7 @@ public class Proxy
    */
   public String getProxyHost( )
   {
-    String proxyHost = System.getProperty( "http.proxyHost" );
+    final String proxyHost = System.getProperty( "http.proxyHost" );
     if( proxyHost != null )
       return proxyHost;
 
@@ -114,7 +114,7 @@ public class Proxy
    */
   public int getProxyPort( )
   {
-    String proxyPort = System.getProperty( "http.proxyPort" );
+    final String proxyPort = System.getProperty( "http.proxyPort" );
     if( proxyPort != null && Integer.valueOf( proxyPort ) > 0 )
       return Integer.valueOf( proxyPort );
 
@@ -128,7 +128,7 @@ public class Proxy
    */
   public boolean useProxy( )
   {
-    String proxySet = System.getProperty( "http.proxySet" );
+    final String proxySet = System.getProperty( "http.proxySet" );
     if( proxySet != null && proxySet.equals( "true" ) )
       return true;
 
@@ -142,7 +142,7 @@ public class Proxy
    */
   public String getUser( )
   {
-    String user = System.getProperty( "http.proxyUser" );
+    final String user = System.getProperty( "http.proxyUser" );
     if( user != null )
       return user;
 
@@ -157,15 +157,15 @@ public class Proxy
   public List<String> getNonProxyHosts( )
   {
     /* The list of all hosts, that should use no proxy. */
-    ArrayList<String> noneProxies = new ArrayList<String>();
+    final ArrayList<String> noneProxies = new ArrayList<String>();
 
     /* Get the system property. */
-    String noneProxyHosts = System.getProperty( "http.nonProxyHosts" );
+    final String noneProxyHosts = System.getProperty( "http.nonProxyHosts" );
     if( noneProxyHosts == null )
       return noneProxies;
 
     /* Collect the hosts. */
-    StringTokenizer tokenizer = new StringTokenizer( noneProxyHosts, "|" );
+    final StringTokenizer tokenizer = new StringTokenizer( noneProxyHosts, "|" );
     while( tokenizer.hasMoreElements() )
       noneProxies.add( tokenizer.nextToken() );
 
@@ -177,20 +177,20 @@ public class Proxy
    * The service will use the settings of the preference page in Eclipse.
    * 
    * @param plugin
-   *            The plugin, over which context the service will be taken.
+   *          The plugin, over which context the service will be taken.
    * @return The proxy service.
    */
-  public static IProxyService getProxyService( Plugin plugin )
+  public static IProxyService getProxyService( final Plugin plugin )
   {
-    BundleContext bundleContext = plugin.getBundle().getBundleContext();
+    final BundleContext bundleContext = plugin.getBundle().getBundleContext();
 
     /* Get the reference to the proxy service. */
-    ServiceReference serviceReference = bundleContext.getServiceReference( IProxyService.class.getName() );
+    final ServiceReference serviceReference = bundleContext.getServiceReference( IProxyService.class.getName() );
     if( serviceReference == null )
       return null;
 
     /* Get the proxy service. */
-    IProxyService service = (IProxyService) bundleContext.getService( serviceReference );
+    final IProxyService service = (IProxyService) bundleContext.getService( serviceReference );
 
     return service;
   }

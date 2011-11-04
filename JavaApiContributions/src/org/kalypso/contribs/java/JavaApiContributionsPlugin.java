@@ -68,7 +68,7 @@ public class JavaApiContributionsPlugin extends Plugin
     {
       resourceBundle = ResourceBundle.getBundle( "org.kalypso.contribs.java.JavaApiContributionsPluginResources" );
     }
-    catch( MissingResourceException x )
+    catch( final MissingResourceException x )
     {
       resourceBundle = null;
     }
@@ -78,7 +78,7 @@ public class JavaApiContributionsPlugin extends Plugin
    * This method is called upon plug-in activation
    */
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
   }
@@ -87,7 +87,7 @@ public class JavaApiContributionsPlugin extends Plugin
    * This method is called when the plug-in is stopped
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
     super.stop( context );
   }
@@ -103,14 +103,14 @@ public class JavaApiContributionsPlugin extends Plugin
   /**
    * Returns the string from the plugin's resource bundle, or 'key' if not found.
    */
-  public static String getResourceString( String key )
+  public static String getResourceString( final String key )
   {
-    ResourceBundle bundle = JavaApiContributionsPlugin.getDefault().getResourceBundle();
+    final ResourceBundle bundle = JavaApiContributionsPlugin.getDefault().getResourceBundle();
     try
     {
-      return (bundle != null) ? bundle.getString( key ) : key;
+      return bundle != null ? bundle.getString( key ) : key;
     }
-    catch( MissingResourceException e )
+    catch( final MissingResourceException e )
     {
       return key;
     }

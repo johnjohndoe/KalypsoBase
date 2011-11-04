@@ -59,7 +59,7 @@ public class ScaleThemeWizard extends AbstractOtherThemeWizard implements IKalyp
    */
   public ScaleThemeWizard( )
   {
-    super( new ThemeNameWizardPage( "themeNamePage", Messages.getString("org.kalypso.ui.wizard.others.ScaleThemeWizard.0"), ImageProvider.IMAGE_KALYPSO_ICON_BIG, Messages.getString("org.kalypso.ui.wizard.others.ScaleThemeWizard.1") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    super( new ThemeNameWizardPage( "themeNamePage", Messages.getString( "org.kalypso.ui.wizard.others.ScaleThemeWizard.0" ), ImageProvider.IMAGE_KALYPSO_ICON_BIG, Messages.getString( "org.kalypso.ui.wizard.others.ScaleThemeWizard.1" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   /**
@@ -67,7 +67,7 @@ public class ScaleThemeWizard extends AbstractOtherThemeWizard implements IKalyp
    *      java.lang.String)
    */
   @Override
-  protected ICommand createCommand( IKalypsoLayerModell mapModell, String themeName )
+  protected ICommand createCommand( final IKalypsoLayerModell mapModell, final String themeName )
   {
     return new AddThemeCommand( mapModell, themeName, "scale", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }

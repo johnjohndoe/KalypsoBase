@@ -80,7 +80,7 @@ public final class FileDiff implements IArrayDifferenceHandler
       return false;
     else
     {
-      final List<Difference> diffs = (new Diff<String>( m_aLines, m_bLines )).diff();
+      final List<Difference> diffs = new Diff<String>( m_aLines, m_bLines ).diff();
       for( final IDifferenceRule rule : rules )
       {
         if( !rule.isEqual( this, diffs ) )

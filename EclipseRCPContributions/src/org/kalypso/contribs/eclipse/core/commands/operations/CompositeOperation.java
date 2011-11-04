@@ -68,7 +68,8 @@ public class CompositeOperation extends AbstractOperation implements ICompositeO
   }
 
   /**
-   * @see org.eclipse.core.commands.operations.AbstractOperation#execute(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
+   * @see org.eclipse.core.commands.operations.AbstractOperation#execute(org.eclipse.core.runtime.IProgressMonitor,
+   *      org.eclipse.core.runtime.IAdaptable)
    */
   @Override
   public IStatus execute( final IProgressMonitor monitor, final IAdaptable info ) throws ExecutionException
@@ -90,7 +91,8 @@ public class CompositeOperation extends AbstractOperation implements ICompositeO
   }
 
   /**
-   * @see org.eclipse.core.commands.operations.AbstractOperation#redo(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
+   * @see org.eclipse.core.commands.operations.AbstractOperation#redo(org.eclipse.core.runtime.IProgressMonitor,
+   *      org.eclipse.core.runtime.IAdaptable)
    */
   @Override
   public IStatus redo( final IProgressMonitor monitor, final IAdaptable info ) throws ExecutionException
@@ -112,7 +114,8 @@ public class CompositeOperation extends AbstractOperation implements ICompositeO
   }
 
   /**
-   * @see org.eclipse.core.commands.operations.AbstractOperation#undo(org.eclipse.core.runtime.IProgressMonitor, org.eclipse.core.runtime.IAdaptable)
+   * @see org.eclipse.core.commands.operations.AbstractOperation#undo(org.eclipse.core.runtime.IProgressMonitor,
+   *      org.eclipse.core.runtime.IAdaptable)
    */
   @Override
   public IStatus undo( final IProgressMonitor monitor, final IAdaptable info ) throws ExecutionException

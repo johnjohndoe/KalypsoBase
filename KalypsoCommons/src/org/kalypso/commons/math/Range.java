@@ -15,8 +15,7 @@ public class Range
 {
   /**
    * unit factor if precision has another unit than from or to.<br>
-   * NOTE: the result of (m_factor x m_precision) has the same unit has from or to. Default value is
-   * 1.
+   * NOTE: the result of (m_factor x m_precision) has the same unit has from or to. Default value is 1.
    */
   private double m_factor = 1;
 
@@ -38,7 +37,7 @@ public class Range
    * @param from
    * @param to
    */
-  public Range( double from, double to )
+  public Range( final double from, final double to )
   {
     m_from = from;
     m_to = to;
@@ -47,11 +46,14 @@ public class Range
   /**
    * -
    * 
-   * @param from -
-   * @param to -
-   * @param precision -
+   * @param from
+   *          -
+   * @param to
+   *          -
+   * @param precision
+   *          -
    */
-  public Range( double from, double to, double precision )
+  public Range( final double from, final double to, final double precision )
   {
     this( from, to );
 
@@ -66,7 +68,7 @@ public class Range
    * @param precision
    * @param factor
    */
-  public Range( double from, double to, double precision, double factor )
+  public Range( final double from, final double to, final double precision, final double factor )
   {
     this( from, to );
 
@@ -79,14 +81,13 @@ public class Range
    * 
    * @param r
    */
-  public Range( Range r )
+  public Range( final Range r )
   {
     this( r.m_from, r.m_to, r.m_precision, r.m_factor );
   }
 
   /**
-   * Returns all the values from this range, begining with range.from, and incrementing by step
-   * up/down to range.to
+   * Returns all the values from this range, begining with range.from, and incrementing by step up/down to range.to
    * 
    * @return array of doubles
    * @throws IllegalStateException
@@ -100,10 +101,10 @@ public class Range
       throw new IllegalStateException( "Step = 0" ); //$NON-NLS-1$
 
     // estimate initial size
-    int count = (int)Math.round( Math.abs( m_to - m_from ) / step );
+    final int count = (int) Math.round( Math.abs( m_to - m_from ) / step );
 
     final ArrayList<Double> values = new ArrayList<Double>( count );
-//    TDoubleArrayList values = new TDoubleArrayList( count );
+// TDoubleArrayList values = new TDoubleArrayList( count );
 
     int sign = 1;
 
@@ -113,7 +114,7 @@ public class Range
     step *= sign;
 
     // create values that span the range
-    for( double d = m_from; (Double.compare( m_to, d ) == sign) || (Double.compare( m_to, d ) == 0); d += step )
+    for( double d = m_from; Double.compare( m_to, d ) == sign || Double.compare( m_to, d ) == 0; d += step )
       values.add( d );
 
     return Arrays.rawDoubles( values.toArray( new Double[values.size()] ) );
@@ -126,7 +127,7 @@ public class Range
    * @throws IllegalArgumentException
    *           if factor == 0
    */
-  public void setFactor( double d )
+  public void setFactor( final double d )
   {
     if( Double.compare( d, 0 ) == 0 )
       throw new IllegalArgumentException( "factor = 0" ); //$NON-NLS-1$
@@ -139,7 +140,7 @@ public class Range
     return m_factor;
   }
 
-  public void setFrom( double d )
+  public void setFrom( final double d )
   {
     m_from = d;
   }
@@ -149,7 +150,7 @@ public class Range
     return m_from;
   }
 
-  public void setPrecision( double d )
+  public void setPrecision( final double d )
   {
     m_precision = d;
   }
@@ -159,7 +160,7 @@ public class Range
     return m_precision;
   }
 
-  public void setTo( double d )
+  public void setTo( final double d )
   {
     m_to = d;
   }
@@ -178,13 +179,13 @@ public class Range
    */
   public String dump( )
   {
-    StringBuffer buf = new StringBuffer();
+    final StringBuffer buf = new StringBuffer();
 
     buf.append( toString() ).append( "\t[" ); //$NON-NLS-1$
 
-    double[] ds = getArray();
+    final double[] ds = getArray();
 
-    for( int i = 0; i < (ds.length - 1); i++ )
+    for( int i = 0; i < ds.length - 1; i++ )
       buf.append( ds[i] ).append( ", " ); //$NON-NLS-1$
 
     buf.append( ds[ds.length - 1] ).append( "]" ); //$NON-NLS-1$
@@ -193,18 +194,15 @@ public class Range
   }
 
   /**
-   * Merges both ranges so that the newly created one is as follows:
-   * 
-   * <code>
+   * Merges both ranges so that the newly created one is as follows: <code>
    *     r.from = r1.from &lt; r2.from ? r2.from : r1.from
    *     r.to   = r1.to   &gt; r2.to   ? r2.to   : r1.to 
    * </code>
-   * 
    * <p>
-   * Parameter Ranges can be null:<br> - one of them is null, then a new range copyied from the non
-   * null param is returned - if both Ranges are null, this method returns null. <br>
-   * If Ranges do not intersect, then merge is NOT possible and therefore it throws an
-   * IllegalArgumentException.
+   * Parameter Ranges can be null:<br>
+   * - one of them is null, then a new range copyied from the non null param is returned - if both Ranges are null, this
+   * method returns null. <br>
+   * If Ranges do not intersect, then merge is NOT possible and therefore it throws an IllegalArgumentException.
    * </p>
    * 
    * @param r1
@@ -215,15 +213,15 @@ public class Range
    * @throws IllegalArgumentException
    *           when ranges do not intersect
    */
-  public static Range mergeShort( Range r1, Range r2 )
+  public static Range mergeShort( final Range r1, final Range r2 )
   {
-    if( (r1 != null) && (r2 != null) )
+    if( r1 != null && r2 != null )
     {
       if( r1.m_to < r2.m_from )
-        throw new IllegalArgumentException( Messages.getString("org.kalypso.commons.math.Range.0") ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "org.kalypso.commons.math.Range.0" ) ); //$NON-NLS-1$
 
-      double from = (r1.m_from < r2.m_from) ? r2.m_from : r1.m_from;
-      double to = (r1.m_to > r2.m_to) ? r2.m_to : r1.m_to;
+      final double from = r1.m_from < r2.m_from ? r2.m_from : r1.m_from;
+      final double to = r1.m_to > r2.m_to ? r2.m_to : r1.m_to;
 
       return new Range( from, to, r1.m_precision, r1.m_factor );
     }
@@ -237,16 +235,14 @@ public class Range
   }
 
   /**
-   * Merges both ranges so that the newly created one is as follows:
-   * 
-   * <code>
+   * Merges both ranges so that the newly created one is as follows: <code>
    *     r.from = r1.from &lt; r2.from ? r1.from : r2.from
    *     r.to   = r1.to   &gt; r2.to   ? r1.to   : r2.to 
    * </code>
-   * 
    * <p>
-   * Parameter Ranges can be null:<br> - one of them is null, then a new range copyied from the non
-   * null param is returned - if both Ranges are null, this method returns null.
+   * Parameter Ranges can be null:<br>
+   * - one of them is null, then a new range copyied from the non null param is returned - if both Ranges are null, this
+   * method returns null.
    * </p>
    * 
    * @param r1
@@ -255,12 +251,12 @@ public class Range
    *          [can be null]
    * @return the newly created Range
    */
-  public static Range mergeWide( Range r1, Range r2 )
+  public static Range mergeWide( final Range r1, final Range r2 )
   {
-    if( (r1 != null) && (r2 != null) )
+    if( r1 != null && r2 != null )
     {
-      double from = (r1.m_from < r2.m_from) ? r1.m_from : r2.m_from;
-      double to = (r1.m_to > r2.m_to) ? r1.m_to : r2.m_to;
+      final double from = r1.m_from < r2.m_from ? r1.m_from : r2.m_from;
+      final double to = r1.m_to > r2.m_to ? r1.m_to : r2.m_to;
 
       return new Range( from, to, r1.m_precision, r1.m_factor );
     }
@@ -281,9 +277,9 @@ public class Range
    * @param value
    * @return
    */
-  public boolean contains( double value )
+  public boolean contains( final double value )
   {
-    if( (Double.compare( m_from, value ) <= 0) && (Double.compare( value, m_to ) <= 0) )
+    if( Double.compare( m_from, value ) <= 0 && Double.compare( value, m_to ) <= 0 )
       return true;
 
     return false;
@@ -300,8 +296,11 @@ public class Range
   }
 
   /**
-   * Returns true if ranges are the same:<br> - same from value<br> - same to value<br> - same
-   * precision<br> - same factor<br>
+   * Returns true if ranges are the same:<br>
+   * - same from value<br>
+   * - same to value<br>
+   * - same precision<br>
+   * - same factor<br>
    * <p>
    * The Double.compare() method is used to perform the comparison.
    * </p>
@@ -310,14 +309,12 @@ public class Range
    *          the other range to compare to
    * @return ?
    */
-  public boolean same( Range other )
+  public boolean same( final Range other )
   {
     if( other != null )
     {
-      if( (Double.compare( m_from, other.m_from ) == 0)
-          && (Double.compare( m_to, other.m_to ) == 0)
-          && (Double.compare( m_precision, other.m_precision ) == 0)
-          && (Double.compare( m_factor, other.m_factor ) == 0) )
+      if( Double.compare( m_from, other.m_from ) == 0 && Double.compare( m_to, other.m_to ) == 0 && Double.compare( m_precision, other.m_precision ) == 0
+          && Double.compare( m_factor, other.m_factor ) == 0 )
         return true;
 
       return false;
@@ -332,14 +329,14 @@ public class Range
   @Override
   public String toString( )
   {
-    NumberFormat f = NumberFormat.getInstance();
+    final NumberFormat f = NumberFormat.getInstance();
 
     return f.format( m_from ) + " - " + f.format( m_to ); //$NON-NLS-1$
   }
 
   /**
-   * Returns true if this range lies within the given range. That is, the from, to value of this
-   * range are between the from, to values of the given range:<br>
+   * Returns true if this range lies within the given range. That is, the from, to value of this range are between the
+   * from, to values of the given range:<br>
    * other.from &lt;= this.from &lt;= other.to<br>
    * and<br>
    * other.from &lt;= this.to &lt;= other.to
@@ -350,11 +347,9 @@ public class Range
    * @param other
    * @return
    */
-  public boolean within( Range other )
+  public boolean within( final Range other )
   {
-    if( (Double.compare( other.m_from, m_from ) <= 0)
-        && (Double.compare( m_from, other.m_to ) <= 0)
-        && (Double.compare( other.m_from, m_to ) <= 0) && (Double.compare( m_to, other.m_to ) <= 0) )
+    if( Double.compare( other.m_from, m_from ) <= 0 && Double.compare( m_from, other.m_to ) <= 0 && Double.compare( other.m_from, m_to ) <= 0 && Double.compare( m_to, other.m_to ) <= 0 )
       return true;
 
     return false;

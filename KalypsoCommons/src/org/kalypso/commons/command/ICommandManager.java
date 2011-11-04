@@ -46,7 +46,7 @@ package org.kalypso.commons.command;
  * koordiniert die Ausführung und den Undo-Mechanismus.
  * </p>
  * <p>
- * Ein Kommando wird mittels {@link ICommandManager#postCommand( ICommand)}dem CommandManager übergeben und von diesem
+ * Ein Kommando wird mittels {@link ICommandManager#postCommand(ICommand)}dem CommandManager übergeben und von diesem
  * ausgeführt. Das Runnable wird nach dem Kommando zusätzlich durchgeführt
  * </p>
  * Mittels {@link ICommandManager#canUndo()}und {@link ICommandManager#canRedo()}kann ermittelt werden, ob es möglich
@@ -68,25 +68,25 @@ public interface ICommandManager
    */
   public void postCommand( final ICommand command ) throws Exception;
 
-  public boolean canUndo();
+  public boolean canUndo( );
 
-  public void undo() throws Exception;
+  public void undo( ) throws Exception;
 
-  public String getUndoDescription();
+  public String getUndoDescription( );
 
-  public boolean canRedo();
+  public boolean canRedo( );
 
-  public void redo() throws Exception;
+  public void redo( ) throws Exception;
 
-  public String getRedoDescription();
+  public String getRedoDescription( );
 
   public void addCommandManagerListener( final ICommandManagerListener l );
 
   public void removeCommandManagerListener( final ICommandManagerListener l );
 
-  public boolean isDirty();
+  public boolean isDirty( );
 
-  public void resetDirty();
+  public void resetDirty( );
 
-  public void clear();
+  public void clear( );
 }

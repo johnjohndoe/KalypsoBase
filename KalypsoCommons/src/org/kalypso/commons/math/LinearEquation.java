@@ -53,8 +53,7 @@ import org.kalypso.commons.internal.i18n.Messages;
 public class LinearEquation
 {
   /** static exception for Speed-Up of Method solve */
-  private final static NoSuchElementException SOLVE_NO_SOLVE_EXCEPTION = new NoSuchElementException(
-      Messages.getString("org.kalypso.commons.math.LinearEquation.0") ); //$NON-NLS-1$
+  private final static NoSuchElementException SOLVE_NO_SOLVE_EXCEPTION = new NoSuchElementException( Messages.getString( "org.kalypso.commons.math.LinearEquation.0" ) ); //$NON-NLS-1$
 
   /** static exception for better speed when dealing with this class */
   private final static SameXValuesException SAME_X_EXCEPTION = new SameXValuesException();
@@ -68,7 +67,7 @@ public class LinearEquation
   /**
    * Creates a new LinearEquation object. Sets a default slope of 1 and an Y-coord of 0
    */
-  public LinearEquation()
+  public LinearEquation( )
   {
     m_a = 1;
     m_b = 0;
@@ -84,11 +83,11 @@ public class LinearEquation
    * @param slope
    *          directional coefficient
    */
-  public LinearEquation( double x, double y, double slope )
+  public LinearEquation( final double x, final double y, final double slope )
   {
     m_a = slope;
 
-    m_b = y - ( m_a * x );
+    m_b = y - m_a * x;
   }
 
   /**
@@ -102,11 +101,10 @@ public class LinearEquation
    *          second point's x
    * @param y2
    *          second point's y
-   * 
    * @throws SameXValuesException
    *           when x1 == x2
    */
-  public LinearEquation( double x1, double y1, double x2, double y2 ) throws SameXValuesException
+  public LinearEquation( final double x1, final double y1, final double x2, final double y2 ) throws SameXValuesException
   {
     setPoints( x1, y1, x2, y2 );
   }
@@ -118,11 +116,10 @@ public class LinearEquation
    *          first point
    * @param p2
    *          second point
-   * 
    * @throws SameXValuesException
    *           when x1 == x2
    */
-  public LinearEquation( Point2D p1, Point2D p2 ) throws SameXValuesException
+  public LinearEquation( final Point2D p1, final Point2D p2 ) throws SameXValuesException
   {
     setPoints( p1.getX(), p1.getY(), p2.getX(), p2.getY() );
   }
@@ -138,42 +135,39 @@ public class LinearEquation
    *          second point's x
    * @param y2
    *          second point's y
-   * 
    * @throws SameXValuesException
    *           when x1 == x2
    */
-  public void setPoints( double x1, double y1, double x2, double y2 ) throws SameXValuesException
+  public void setPoints( final double x1, final double y1, final double x2, final double y2 ) throws SameXValuesException
   {
     if( Double.compare( x2, x1 ) == 0 )
       throw SAME_X_EXCEPTION;
 
-    m_a = ( y2 - y1 ) / ( x2 - x1 );
+    m_a = (y2 - y1) / (x2 - x1);
 
-    m_b = y1 - ( m_a * x1 );
+    m_b = y1 - m_a * x1;
   }
 
   /**
    * Returns the X for a given Y
    * 
    * @param y
-   * 
    * @return X
    */
-  public double computeX( double y )
+  public double computeX( final double y )
   {
-    return ( y - m_b ) / m_a;
+    return (y - m_b) / m_a;
   }
 
   /**
    * Returns the Y for a given X
    * 
    * @param x
-   * 
    * @return Y
    */
-  public double computeY( double x )
+  public double computeY( final double x )
   {
-    return ( m_a * x ) + m_b;
+    return m_a * x + m_b;
   }
 
   /**
@@ -184,14 +178,14 @@ public class LinearEquation
    * @return point
    * @throws SameXValuesException
    */
-  public static Point2D segmentMiddle( Point2D p1, Point2D p2 ) throws SameXValuesException
+  public static Point2D segmentMiddle( final Point2D p1, final Point2D p2 ) throws SameXValuesException
   {
     double x = p1.getX() < p2.getX() ? p1.getX() : p2.getX();
     x += Math.abs( p2.getX() - p1.getX() ) / 2;
 
-    LinearEquation le = new LinearEquation( p1, p2 );
+    final LinearEquation le = new LinearEquation( p1, p2 );
 
-    double y = le.computeY( x );
+    final double y = le.computeY( x );
 
     return new Point2D.Double( x, y );
   }
@@ -200,7 +194,7 @@ public class LinearEquation
    * @see java.lang.Object#toString()
    */
   @Override
-  public String toString()
+  public String toString( )
   {
     return "Y = " + String.valueOf( m_a ) + "*X + " + String.valueOf( m_b ); //$NON-NLS-1$ //$NON-NLS-2$
   }
@@ -210,32 +204,29 @@ public class LinearEquation
    * 
    * @param le
    *          Die andere Lineare Gleichung
-   * 
    * @return die x-Koordinate der Lösungsmenge
-   * 
    * @throws NoSuchElementException
    *           wenn keine Lösung
    */
-  public double solve( LinearEquation le ) throws NoSuchElementException
+  public double solve( final LinearEquation le ) throws NoSuchElementException
   {
-    double divisor = le.m_a - m_a;
+    final double divisor = le.m_a - m_a;
 
     if( Double.compare( divisor, 0.0 ) == 0 )
       throw SOLVE_NO_SOLVE_EXCEPTION;
 
-    return ( m_b - le.m_b ) / divisor;
+    return (m_b - le.m_b) / divisor;
   }
 
   /**
    * Computes the (orthogonal) distance between the Point p and the line represented by this LinearEquation.
    * 
    * @param p
-   * 
    * @return distance
    */
-  public double distance( Point2D p )
+  public double distance( final Point2D p )
   {
-    return Math.abs( p.getY() - ( m_a * p.getX() ) - m_b ) / Math.sqrt( 1 + ( m_b * m_b ) );
+    return Math.abs( p.getY() - m_a * p.getX() - m_b ) / Math.sqrt( 1 + m_b * m_b );
   }
 
   /**
@@ -245,22 +236,22 @@ public class LinearEquation
    */
   public static class SameXValuesException extends Exception
   {
-    public SameXValuesException()
+    public SameXValuesException( )
     {
-      super( Messages.getString("org.kalypso.commons.math.LinearEquation.3") ); //$NON-NLS-1$
+      super( Messages.getString( "org.kalypso.commons.math.LinearEquation.3" ) ); //$NON-NLS-1$
     }
 
-    public SameXValuesException( String message )
+    public SameXValuesException( final String message )
     {
       super( message );
     }
 
-    public SameXValuesException( String message, Throwable cause )
+    public SameXValuesException( final String message, final Throwable cause )
     {
       super( message, cause );
     }
 
-    public SameXValuesException( Throwable cause )
+    public SameXValuesException( final Throwable cause )
     {
       super( cause );
     }

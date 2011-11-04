@@ -52,7 +52,7 @@ import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
 
 /**
  * Helper-Class for IRunnableContext
- *
+ * 
  * @author belger
  */
 public final class RunnableContextHelper
@@ -128,7 +128,7 @@ public final class RunnableContextHelper
 
   /**
    * Runs a runnable in a progress monitor dialog.
-   *
+   * 
    * @deprecated Use
    *             {@link org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities#busyCursorWhile(ICoreRunnableWithProgress)}
    *             instead.

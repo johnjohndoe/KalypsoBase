@@ -51,7 +51,7 @@ public class CascadingThemeWizard extends AbstractOtherThemeWizard implements IK
 {
   public CascadingThemeWizard( )
   {
-    super( new ThemeNameWizardPage( "themeNamePage", Messages.getString("org.kalypso.ui.wizard.others.CascadingThemeWizard.1"), ImageProvider.IMAGE_KALYPSO_ICON_BIG, "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    super( new ThemeNameWizardPage( "themeNamePage", Messages.getString( "org.kalypso.ui.wizard.others.CascadingThemeWizard.1" ), ImageProvider.IMAGE_KALYPSO_ICON_BIG, "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 
   @Override

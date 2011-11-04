@@ -37,9 +37,9 @@ public class MathUtils
   /**
    * @return f(x) on line (x1,y1) (x2,y2)
    */
-  public static double interpolate( long x1, long x2, double y1, double y2, long x )
+  public static double interpolate( final long x1, final long x2, final double y1, final double y2, final long x )
   {
-    return y1 + (y2 - y1) * (((double) (x - x1)) / ((double) (x2 - x1)));
+    return y1 + (y2 - y1) * ((double) (x - x1) / (double) (x2 - x1));
   }
 
   public static enum RoundMethod
@@ -118,9 +118,9 @@ public class MathUtils
   /**
    * Gibt die Anzahl der Stellen nach dem Komma bis zur ersten Zahl != 0
    */
-  public static int scale( double d )
+  public static int scale( final double d )
   {
-    double abs = Math.abs( d );
+    final double abs = Math.abs( d );
 
     if( abs > 1 )
       return 0;

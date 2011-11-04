@@ -50,5 +50,5 @@ public interface ITokenReplacer
   public String replaceToken( final Object value, final String argument );
 
   /** The name of the token which this replacer is able to replace. */
-  public String getToken();
+  public String getToken( );
 }

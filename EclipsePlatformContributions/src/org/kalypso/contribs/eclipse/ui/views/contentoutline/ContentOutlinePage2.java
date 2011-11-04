@@ -83,9 +83,9 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   }
 
   /**
-   * The <code>ContentOutlinePage</code> implementation of this <code>IContentOutlinePage</code> method creates a
-   * tree viewer using createTreeViewer( Composite ). Subclasses may override createTreeViewer to provide another
-   * TreeViewer than the default one.
+   * The <code>ContentOutlinePage</code> implementation of this <code>IContentOutlinePage</code> method creates a tree
+   * viewer using createTreeViewer( Composite ). Subclasses may override createTreeViewer to provide another TreeViewer
+   * than the default one.
    * <p>
    * Subclasses must extend this method to configure the tree viewer with a proper content provider, label provider, and
    * input element.
@@ -100,8 +100,8 @@ public abstract class ContentOutlinePage2 extends Page implements IContentOutlin
   }
 
   /**
-   * Creates an instance of TreeViewer. This default implementation creates a <code>TreeViewer</code>. You may choose
-   * to override it and create an instance of another subclass of TreeViewer.
+   * Creates an instance of TreeViewer. This default implementation creates a <code>TreeViewer</code>. You may choose to
+   * override it and create an instance of another subclass of TreeViewer.
    * 
    * @param parent
    * @return new instance of TreeViewer

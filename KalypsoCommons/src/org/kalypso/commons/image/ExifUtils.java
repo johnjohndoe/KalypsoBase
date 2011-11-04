@@ -46,8 +46,9 @@ import org.apache.sanselan.ImageReadException;
 import org.apache.sanselan.formats.tiff.TiffDirectory;
 import org.apache.sanselan.formats.tiff.TiffField;
 import org.apache.sanselan.formats.tiff.TiffImageMetadata;
+import org.apache.sanselan.formats.tiff.constants.ExifTagConstants;
+import org.apache.sanselan.formats.tiff.constants.GPSTagConstants;
 import org.apache.sanselan.formats.tiff.constants.TagInfo;
-import org.apache.sanselan.formats.tiff.constants.TiffConstants;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
@@ -158,16 +159,16 @@ public final class ExifUtils
    */
   public static Coordinate parseLocation( final TiffImageMetadata exif )
   {
-    final Double lat = ExifUtils.getQuietDouble( exif, TiffConstants.GPS_TAG_GPS_LATITUDE );
-    final String latRef = ExifUtils.getQuietString( exif, TiffConstants.GPS_TAG_GPS_LATITUDE_REF );
-    final Double lon = ExifUtils.getQuietDouble( exif, TiffConstants.GPS_TAG_GPS_LONGITUDE );
-    final String lonRef = ExifUtils.getQuietString( exif, TiffConstants.GPS_TAG_GPS_LATITUDE_REF );
-    final Double height = ExifUtils.getQuietDouble( exif, TiffConstants.GPS_TAG_GPS_ALTITUDE );
-    final Integer heightRef = ExifUtils.getQuietInteger( exif, TiffConstants.GPS_TAG_GPS_ALTITUDE_REF );
+    final Double lat = ExifUtils.getQuietDouble( exif, GPSTagConstants.GPS_TAG_GPS_LATITUDE );
+    final String latRef = ExifUtils.getQuietString( exif, GPSTagConstants.GPS_TAG_GPS_LATITUDE_REF );
+    final Double lon = ExifUtils.getQuietDouble( exif, GPSTagConstants.GPS_TAG_GPS_LONGITUDE );
+    final String lonRef = ExifUtils.getQuietString( exif, GPSTagConstants.GPS_TAG_GPS_LATITUDE_REF );
+    final Double height = ExifUtils.getQuietDouble( exif, GPSTagConstants.GPS_TAG_GPS_ALTITUDE );
+    final Integer heightRef = ExifUtils.getQuietInteger( exif, GPSTagConstants.GPS_TAG_GPS_ALTITUDE_REF );
 
-    final double latNormalized = normalizeLatLon( lat, latRef, TiffConstants.GPS_TAG_GPS_LATITUDE_REF_VALUE_SOUTH );
-    final double lonNormalized = normalizeLatLon( lon, lonRef, TiffConstants.GPS_TAG_GPS_LONGITUDE_REF_VALUE_WEST );
-    final double heightNormalized = normalizeLatLon( height, heightRef, TiffConstants.GPS_TAG_GPS_ALTITUDE_REF_VALUE_BELOW_SEA_LEVEL );
+    final double latNormalized = normalizeLatLon( lat, latRef, GPSTagConstants.GPS_TAG_GPS_LATITUDE_REF_VALUE_SOUTH );
+    final double lonNormalized = normalizeLatLon( lon, lonRef, GPSTagConstants.GPS_TAG_GPS_LONGITUDE_REF_VALUE_WEST );
+    final double heightNormalized = normalizeLatLon( height, heightRef, GPSTagConstants.GPS_TAG_GPS_ALTITUDE_REF_VALUE_BELOW_SEA_LEVEL );
 
     if( Double.isNaN( latNormalized ) || Double.isNaN( lonNormalized ) )
       return null;
@@ -195,15 +196,15 @@ public final class ExifUtils
 
   public static Double parseDirection( final TiffImageMetadata exif )
   {
-    final Double direction = getQuietDouble( exif, TiffConstants.GPS_TAG_GPS_IMG_DIRECTION );
+    final Double direction = getQuietDouble( exif, GPSTagConstants.GPS_TAG_GPS_IMG_DIRECTION );
     if( direction == null )
       return null;
 
-    final String reference = getQuietString( exif, TiffConstants.GPS_TAG_GPS_IMG_DIRECTION_REF );
+    final String reference = getQuietString( exif, GPSTagConstants.GPS_TAG_GPS_IMG_DIRECTION_REF );
     if( reference == null )
       return direction;
 
-    if( reference.toUpperCase().startsWith( TiffConstants.GPS_TAG_GPS_IMG_DIRECTION_REF_VALUE_TRUE_NORTH ) )
+    if( reference.toUpperCase().startsWith( GPSTagConstants.GPS_TAG_GPS_IMG_DIRECTION_REF_VALUE_TRUE_NORTH ) )
       return direction;
 
     // TODO: will this ever happen?
@@ -219,14 +220,14 @@ public final class ExifUtils
   // f = focal length in mm
   public static Double parseAngleOfView( final TiffImageMetadata exif )
   {
-    final Double width = getQuietDouble( exif, TiffConstants.EXIF_TAG_IMAGE_WIDTH );
-    final Double height = getQuietDouble( exif, TiffConstants.EXIF_TAG_IMAGE_HEIGHT );
-    final Double focalLength = getQuietDouble( exif, TiffConstants.EXIF_TAG_FOCAL_LENGTH );
+    final Double width = getQuietDouble( exif, ExifTagConstants.EXIF_TAG_IMAGE_WIDTH );
+    final Double height = getQuietDouble( exif, ExifTagConstants.EXIF_TAG_IMAGE_HEIGHT );
+    final Double focalLength = getQuietDouble( exif, ExifTagConstants.EXIF_TAG_FOCAL_LENGTH );
 
     if( width == null || height == null || focalLength == null )
       return null;
 
-    return 2 * Math.atan( (Math.sqrt( width * width + height * height ) / 2) / focalLength );
+    return 2 * Math.atan( Math.sqrt( width * width + height * height ) / 2 / focalLength );
   }
 
   public static Date getQuietDate( final TiffImageMetadata exif, final TagInfo tag )

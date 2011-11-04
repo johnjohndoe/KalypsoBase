@@ -56,9 +56,9 @@ import org.apache.tools.ant.filters.ReplaceTokens.Token;
 public class ReaderUtilities
 {
   /** do not instantiate this class */
-  private ReaderUtilities()
+  private ReaderUtilities( )
   {
-  //
+    //
   }
 
   public final static String readStringFromReader( final Reader r ) throws IOException
@@ -72,7 +72,7 @@ public class ReaderUtilities
 
   /**
    * Kopiert den Inhalt eines Readers in einen Writer. Beide werden nach Ende der Operation geschlossen.
-   *
+   * 
    * @param r
    * @param w
    * @throws IOException
@@ -101,11 +101,10 @@ public class ReaderUtilities
    * <p>
    * Performance schlecht: nur für Reader mit wenig Inhalt verwenden
    * </p>
-   *
+   * 
    * @param r
    * @param replaceProps
    * @return string with replaced substrings
-   *
    * @throws IOException
    */
   public static final String readAndReplace( final Reader r, final Properties replaceProps ) throws IOException
@@ -162,7 +161,7 @@ public class ReaderUtilities
   {
     while( reader.ready() )
     {
-      final char c = (char)reader.read();
+      final char c = (char) reader.read();
       System.out.print( c );
     }
   }

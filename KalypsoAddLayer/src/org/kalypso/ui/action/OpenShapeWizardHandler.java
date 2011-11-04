@@ -73,41 +73,41 @@ public class OpenShapeWizardHandler extends AbstractHandler
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( ExecutionEvent event )
+  public Object execute( final ExecutionEvent event )
   {
     /* Get the context. */
-    IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
     /* Get the shell. */
-    Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
     /* Get the map outline. */
-    GisMapOutlinePage mapOutline = MapHandlerUtils.getMapOutline( context );
+    final GisMapOutlinePage mapOutline = MapHandlerUtils.getMapOutline( context );
 
     /* GEt the map model. */
-    IMapModell mapModel = mapOutline.getMapPanel().getMapModell();
+    final IMapModell mapModel = mapOutline.getMapPanel().getMapModell();
     if( mapModel == null )
       return null;
 
     /* Get the active theme. */
-    IKalypsoTheme activeTheme = mapModel.getActiveTheme();
+    final IKalypsoTheme activeTheme = mapModel.getActiveTheme();
 
     /* Create the wizard. */
-    ImportShapeSourceWizard wizard = new ImportShapeSourceWizard();
+    final ImportShapeSourceWizard wizard = new ImportShapeSourceWizard();
 
     /* Configure the wizard. */
     wizard.setMapModel( (IKalypsoLayerModell) mapModel );
     wizard.setCommandTarget( mapOutline );
 
     /* Create the dialog. */
-    WizardDialog dialog = new WizardDialog( shell, wizard );
+    final WizardDialog dialog = new WizardDialog( shell, wizard );
 
     /* Open the dialog. */
     if( dialog.open() != Window.OK )
       return null;
 
     /* Reactivate the last theme. */
-    ActivateThemeCommand command = new ActivateThemeCommand( mapModel, activeTheme );
+    final ActivateThemeCommand command = new ActivateThemeCommand( mapModel, activeTheme );
     mapOutline.postCommand( command, null );
 
     return null;

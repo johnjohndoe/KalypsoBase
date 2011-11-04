@@ -41,13 +41,12 @@ import javax.swing.JTable;
  */
 public class TableUtils
 {
-  private TableUtils()
+  private TableUtils( )
   {
-  // empty
+    // empty
   }
 
-  public static void dump( final JTable table, final String columnSeparator, final BufferedWriter writer )
-      throws IOException
+  public static void dump( final JTable table, final String columnSeparator, final BufferedWriter writer ) throws IOException
   {
     final int rowCount = table.getRowCount();
     final int colCount = table.getColumnCount();

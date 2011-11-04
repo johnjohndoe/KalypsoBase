@@ -46,8 +46,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A configurable <code>URLStreamHandlerFactory</code>. You can set various <code>URLStreamHandler</code> that
- * match specific protocols.
+ * A configurable <code>URLStreamHandlerFactory</code>. You can set various <code>URLStreamHandler</code> that match
+ * specific protocols.
  * 
  * @author schlienger
  */

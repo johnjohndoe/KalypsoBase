@@ -58,21 +58,21 @@ public class LoggerUtilities
 {
   public static final String PLUGIN_ID = JavaApiContributionsPlugin.getDefault().getBundle().getSymbolicName();
 
-  //  private final static String LEVEL = "(" +
-  //  Level.SEVERE + "|" +
-  //  Level.WARNING + "|" +
-  //  Level.INFO + "|" +
-  //  Level.CONFIG + "|" +
-  //  Level.FINE + "|" +
-  //  Level.FINER + "|" +
-  //  Level.FINEST +
-  //  ")";
+  // private final static String LEVEL = "(" +
+  // Level.SEVERE + "|" +
+  // Level.WARNING + "|" +
+  // Level.INFO + "|" +
+  // Level.CONFIG + "|" +
+  // Level.FINE + "|" +
+  // Level.FINER + "|" +
+  // Level.FINEST +
+  // ")";
   //
-  //  private final static String CODE = "\\[(\\d+)\\]|()";
+  // private final static String CODE = "\\[(\\d+)\\]|()";
   //
-  //  private final static String MSG = "(.+)";
+  // private final static String MSG = "(.+)";
   //
-  //  private final static Pattern LOG_LINE_PATTERN = Pattern.compile( LEVEL + CODE + ": " + MSG );
+  // private final static Pattern LOG_LINE_PATTERN = Pattern.compile( LEVEL + CODE + ": " + MSG );
 
   // Constants for the msgCode parameter. Will get interpretated by the LogfileAnalyser
 
@@ -91,7 +91,7 @@ public class LoggerUtilities
   /** Create a new cancel sub-status */
   public static final int CODE_CANCEL = 103;
 
-  private LoggerUtilities()
+  private LoggerUtilities( )
   {
     throw new UnsupportedOperationException( "Utility class" );
   }
@@ -104,7 +104,6 @@ public class LoggerUtilities
     final Level level = levelFromStatus( status );
     return formatLogStylish( level, code, status.getMessage() );
   }
-
 
   /**
    * Formats a log-message similar to java.util.logging.Logger's do it.<br/>
@@ -140,8 +139,7 @@ public class LoggerUtilities
    */
   public static IStatus lineToStatus( final String line )
   {
-    final String LEVEL = "(" + Level.SEVERE + "|" + Level.WARNING + "|" + Level.INFO + "|" + Level.CONFIG + "|"
-    + Level.FINE + "|" + Level.FINER + "|" + Level.FINEST + ")";
+    final String LEVEL = "(" + Level.SEVERE + "|" + Level.WARNING + "|" + Level.INFO + "|" + Level.CONFIG + "|" + Level.FINE + "|" + Level.FINER + "|" + Level.FINEST + ")";
 
     final String CODE = "((\\[\\d+\\])|())";
 

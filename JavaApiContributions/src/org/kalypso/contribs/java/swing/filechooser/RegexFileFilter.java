@@ -54,7 +54,8 @@ import javax.swing.filechooser.FileFilter;
 public class RegexFileFilter extends FileFilter
 {
   private final String m_description;
-  private Pattern m_pattern;
+
+  private final Pattern m_pattern;
 
   public RegexFileFilter( final String description, final String regex )
   {
@@ -79,7 +80,7 @@ public class RegexFileFilter extends FileFilter
    * @see javax.swing.filechooser.FileFilter#getDescription()
    */
   @Override
-  public String getDescription()
+  public String getDescription( )
   {
     return m_description;
   }

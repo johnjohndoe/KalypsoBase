@@ -66,7 +66,7 @@ public class WFSTest extends TestCase
   // {
   // URL url = new URL( base + "?SERVICE=WFS&VERSION=1.0.0&REQUEST=DescribeFeatureType&typeName=" + layer );
   // IGMLSchema schema = GMLSchemaFactory.createGMLSchema( null, url );
-  //    
+  //
   // final IFeatureType[] featureTypes = schema.getAllFeatureTypes();
   // for( int i = 0; i < featureTypes.length; i++ )
   // {

@@ -55,8 +55,9 @@ import javax.xml.datatype.Duration;
  * </p>
  * <p>
  * Call #showElapsedTime( String ) to print a message, indicating how long it took since construction
- * </p>.
- *
+ * </p>
+ * .
+ * 
  * @author Belger
  */
 public class TimeLogger
@@ -121,11 +122,11 @@ public class TimeLogger
 
   public void printCurrentTotal( final String message )
   {
-    printDuration( message, m_currentTotalDuration, FIELDS_HOURS);
+    printDuration( message, m_currentTotalDuration, FIELDS_HOURS );
   }
 
   /**
-   *  @deprecated Use {@link #takeInterimTime()} and {@link #printCurrentInterim(String)} instead.
+   * @deprecated Use {@link #takeInterimTime()} and {@link #printCurrentInterim(String)} instead.
    */
   @Deprecated
   public void showElapsedTime( final String message )

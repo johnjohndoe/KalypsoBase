@@ -59,10 +59,10 @@ public class DatatypeFactoryHelper
    */
   public static Duration getDuration( final GregorianCalendar start, final GregorianCalendar end ) throws DatatypeConfigurationException
   {
-    long s = start.getTimeInMillis();
-    long e = end.getTimeInMillis();
+    final long s = start.getTimeInMillis();
+    final long e = end.getTimeInMillis();
 
-    long diffSeconds = (e - s);
+    final long diffSeconds = e - s;
     Assert.isTrue( diffSeconds >= 0 );
 
     return getDurationFromMilliSeconds( diffSeconds );
@@ -80,7 +80,7 @@ public class DatatypeFactoryHelper
 
   public static Duration getDurationFromMilliSeconds( final long milliseconds ) throws DatatypeConfigurationException
   {
-    DatatypeFactory factory = DatatypeFactory.newInstance();
+    final DatatypeFactory factory = DatatypeFactory.newInstance();
 
     return factory.newDuration( milliseconds );
   }

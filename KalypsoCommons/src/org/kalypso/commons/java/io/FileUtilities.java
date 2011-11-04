@@ -559,7 +559,7 @@ public class FileUtilities
 
     for( final File file : files )
     {
-      if( file.isFile() || (file.isDirectory() && recurse) )
+      if( file.isFile() || file.isDirectory() && recurse )
         accept( file, visitor, recurse );
     }
   }
@@ -747,7 +747,7 @@ public class FileUtilities
     }
 
     /* List for success or error messages. */
-    final MultiStatus stati = new MultiStatus( KalypsoCommonsPlugin.getID(), Status.OK, Messages.getString( "org.kalypso.commons.java.io.FileUtilities.1", String.valueOf( days ) ), null ); //$NON-NLS-1$
+    final MultiStatus stati = new MultiStatus( KalypsoCommonsPlugin.getID(), IStatus.OK, Messages.getString( "org.kalypso.commons.java.io.FileUtilities.1", String.valueOf( days ) ), null ); //$NON-NLS-1$
 
     /* Delete these files. */
     for( int i = 0; i < filesToDelete.size(); i++ )
@@ -764,7 +764,7 @@ public class FileUtilities
         FileUtilities.deleteRecursive( fileToDelete );
 
         /* Add the success message. */
-        stati.add( new Status( Status.OK, KalypsoCommonsPlugin.getID(), fileToDelete.getName() + ": OK" ) ); //$NON-NLS-1$
+        stati.add( new Status( IStatus.OK, KalypsoCommonsPlugin.getID(), fileToDelete.getName() + ": OK" ) ); //$NON-NLS-1$
       }
       catch( final Exception ex )
       {
@@ -808,7 +808,7 @@ public class FileUtilities
     return files;
   }
 
-  public static void deleteQuitly( final File file )
+  public static void deleteQuietly( final File file )
   {
     try
     {
@@ -844,4 +844,15 @@ public class FileUtilities
 
     return -1;
   }
+
+  public static void cleanDirectory( final File dir, final IFileFilter filter )
+  {
+    final File[] files = dir.listFiles();
+    for( final File file : files )
+    {
+      if( filter.select( file ) )
+        FileUtilities.deleteQuietly( file );
+    }
+  }
+
 }

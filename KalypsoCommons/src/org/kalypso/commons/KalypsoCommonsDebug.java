@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons;
 
-
 /**
  * This class is a helper for debugging.
  * 

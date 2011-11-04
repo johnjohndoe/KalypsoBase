@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 
 /**
  * Prints a {@link IStatus} nd all of it's children into a {@link PrintWriter}.
- *
+ * 
  * @author Gernot Belger
  */
 public class StatusPrinter

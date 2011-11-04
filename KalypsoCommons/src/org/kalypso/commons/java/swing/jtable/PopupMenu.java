@@ -3,10 +3,8 @@ package org.kalypso.commons.java.swing.jtable;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 
-
 /**
  * TODO: this makes no sense here, move back to observation stuff.<br>
- * 
  * Simple PopupMenu with a predefined list of actions:
  * <ul>
  * <li>SetAllAction
@@ -22,7 +20,7 @@ public class PopupMenu extends JPopupMenu
 {
   private final JTable m_table;
 
-  public PopupMenu( JTable table )
+  public PopupMenu( final JTable table )
   {
     super();
     m_table = table;
@@ -30,7 +28,7 @@ public class PopupMenu extends JPopupMenu
     prepareMenu();
   }
 
-  private void prepareMenu()
+  private void prepareMenu( )
   {
     add( new SetAllAction( m_table ) );
     add( new SetSelectedAction( m_table ) );

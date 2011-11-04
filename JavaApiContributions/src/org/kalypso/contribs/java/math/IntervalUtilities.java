@@ -57,15 +57,15 @@ public class IntervalUtilities
   {
   }
 
-  public static double getSumOfIntervals( Interval[] intervals )
+  public static double getSumOfIntervals( final Interval[] intervals )
   {
     double sum = 0.0;
-    for( int i = 0; i < intervals.length; i++ )
+    for( final Interval interval2 : intervals )
     {
-      Interval interval = intervals[i];
+      final Interval interval = interval2;
       if( !interval.isEmptyInterval() )
       {
-        double width = interval.getWidth();
+        final double width = interval.getWidth();
         sum += width;
       }
     }
@@ -73,7 +73,7 @@ public class IntervalUtilities
     return sum;
   }
 
-  public static Interval[] difference( Interval[] intervals, Interval[] diffIntervals )
+  public static Interval[] difference( final Interval[] intervals, final Interval[] diffIntervals )
   {
     /* Memory for the results. */
     /* There will be new intervals for each diff interval. */
@@ -81,11 +81,8 @@ public class IntervalUtilities
     Interval[] results = intervals;
 
     /* Make the difference with all given diff intervals. */
-    for( int i = 0; i < diffIntervals.length; i++ )
+    for( final Interval diffInterval : diffIntervals )
     {
-      /* Get the diff interval. */
-      Interval diffInterval = diffIntervals[i];
-
       /* Make the difference with the last results and the diff interval. */
       /* The returned intervals will be the new results. */
       results = difference( results, diffInterval );
@@ -94,23 +91,20 @@ public class IntervalUtilities
     return results;
   }
 
-  public static Interval[] difference( Interval[] intervals, Interval diffInterval )
+  public static Interval[] difference( final Interval[] intervals, final Interval diffInterval )
   {
     /* Memory for the results. */
-    List<Interval> results = new ArrayList<Interval>();
+    final List<Interval> results = new ArrayList<Interval>();
 
     /* Go through all intervals. */
-    for( int i = 0; i < intervals.length; i++ )
+    for( final Interval interval : intervals )
     {
-      /* Get the interval. */
-      Interval interval = intervals[i];
-
       /* Make the difference with the diff interval. */
-      Interval[] differences = interval.difference( diffInterval );
-      for( int j = 0; j < differences.length; j++ )
+      final Interval[] differences = interval.difference( diffInterval );
+      for( final Interval difference2 : differences )
       {
         /* Get the difference. */
-        Interval difference = differences[j];
+        final Interval difference = difference2;
         if( !difference.isEmptyInterval() )
           results.add( difference );
       }

@@ -17,7 +17,7 @@ public class FindFirstFileVisitor implements IResourceVisitor
     m_name = name;
     m_ignoreCase = ignoreCase;
   }
-  
+
   public IFile getFile( )
   {
     return m_result;
@@ -30,8 +30,7 @@ public class FindFirstFileVisitor implements IResourceVisitor
     {
       final IFile file = (IFile) resource;
       final String name = file.getName();
-      if( m_ignoreCase && name.equalsIgnoreCase( m_name )
-          || (!m_ignoreCase && name.equals( m_name )) )
+      if( m_ignoreCase && name.equalsIgnoreCase( m_name ) || !m_ignoreCase && name.equals( m_name ) )
         m_result = file;
     }
 

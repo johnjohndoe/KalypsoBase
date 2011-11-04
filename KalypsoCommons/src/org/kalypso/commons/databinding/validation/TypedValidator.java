@@ -112,7 +112,6 @@ public abstract class TypedValidator<T> implements IValidator
     throw new CoreException( status );
   }
 
-
   /**
    * Validate the given value.<br/>
    * This method can either return an {@link IStatus} or throw an {@link CoreException} whose status will be returned to

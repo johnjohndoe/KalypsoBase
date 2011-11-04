@@ -77,9 +77,6 @@ public abstract class AbstractElementPage implements IElementPage
     return builder.toHashCode();
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public final boolean equals( final Object obj )
   {

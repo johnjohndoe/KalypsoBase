@@ -16,12 +16,12 @@ public class IntegerModifyListener implements ModifyListener
   /**
    * The good color.
    */
-  private Color m_goodColor;
+  private final Color m_goodColor;
 
   /**
    * The bad color.
    */
-  private Color m_badColor;
+  private final Color m_badColor;
 
   /**
    * The constructor.
@@ -31,7 +31,7 @@ public class IntegerModifyListener implements ModifyListener
    * @param badColor
    *          The bad color.
    */
-  public IntegerModifyListener( Color goodColor, Color badColor )
+  public IntegerModifyListener( final Color goodColor, final Color badColor )
   {
     m_goodColor = goodColor;
     m_badColor = badColor;
@@ -41,12 +41,12 @@ public class IntegerModifyListener implements ModifyListener
    * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
    */
   @Override
-  public void modifyText( ModifyEvent e )
+  public void modifyText( final ModifyEvent e )
   {
     if( e.widget instanceof Text )
     {
-      Text text = (Text) e.widget;
-      String number = text.getText();
+      final Text text = (Text) e.widget;
+      final String number = text.getText();
 
       if( NumberUtils.isInteger( number ) )
         text.setForeground( m_goodColor );

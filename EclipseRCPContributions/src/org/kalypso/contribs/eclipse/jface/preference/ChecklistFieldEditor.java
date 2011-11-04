@@ -42,9 +42,7 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
 
   private Group m_group;
 
-  public ChecklistFieldEditor( final Object[] content, final String idMethod,
-      final ILabelProvider labelProvider, final String name, final String labelText,
-      final Composite parent )
+  public ChecklistFieldEditor( final Object[] content, final String idMethod, final ILabelProvider labelProvider, final String name, final String labelText, final Composite parent )
   {
     super( name, labelText, parent );
 
@@ -56,20 +54,19 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
     }
 
     // hash id -> element
-    final Class<?>[] noclasses = new Class[] {};
+    final Class< ? >[] noclasses = new Class[] {};
     final Object[] noobjects = new Object[] {};
-    for( int i = 0; i < content.length; i++ )
+    for( final Object element : content )
     {
       try
       {
-        final Object element = content[i];
         final Class< ? extends Object> klass = element.getClass();
         final Method method = klass.getMethod( idMethod, noclasses );
-        final String id = (String)method.invoke( element, noobjects );
+        final String id = (String) method.invoke( element, noobjects );
         m_idMap.put( id, element );
         m_contentMap.put( element, id );
       }
-      catch( Exception e )
+      catch( final Exception e )
       {
         e.printStackTrace();
       }
@@ -80,17 +77,16 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
    * @see org.eclipse.jface.preference.FieldEditor#adjustForNumColumns(int)
    */
   @Override
-  protected void adjustForNumColumns( int numColumns )
+  protected void adjustForNumColumns( final int numColumns )
   {
-    ((GridData)m_group.getLayoutData()).horizontalSpan = numColumns;
+    ((GridData) m_group.getLayoutData()).horizontalSpan = numColumns;
   }
 
   /**
-   * @see org.eclipse.jface.preference.FieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite,
-   *      int)
+   * @see org.eclipse.jface.preference.FieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite, int)
    */
   @Override
-  protected void doFillIntoGrid( final Composite parent, int numColumns )
+  protected void doFillIntoGrid( final Composite parent, final int numColumns )
   {
     if( m_group == null )
     {
@@ -146,14 +142,13 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
       final List<Object> elementsToCheck = new ArrayList<Object>( strings.length );
       Collections.addAll( elementsToCheck, m_content );
 
-      for( int i = 0; i < strings.length; i++ )
+      for( final String string : strings )
       {
-        final Object object = m_idMap.get( strings[i] );
+        final Object object = m_idMap.get( string );
         elementsToCheck.remove( object );
       }
 
-      m_checklist
-          .setCheckedElements( elementsToCheck.toArray( new Object[elementsToCheck.size()] ) );
+      m_checklist.setCheckedElements( elementsToCheck.toArray( new Object[elementsToCheck.size()] ) );
     }
   }
 
@@ -167,8 +162,7 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
     {
       final StringBuffer selection = new StringBuffer();
 
-      final List<Object> checked = m_checkedElements == null ? new ArrayList<Object>() : Arrays
-          .asList( m_checkedElements );
+      final List<Object> checked = m_checkedElements == null ? new ArrayList<Object>() : Arrays.asList( m_checkedElements );
 
       for( final Object element : m_content )
       {

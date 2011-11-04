@@ -520,7 +520,7 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
     if( openDropDownMenu( event ) )
       return;
 
-    if( ((event.type & SWT.MouseDown) != 0) )
+    if( (event.type & SWT.MouseDown) != 0 )
     {
       if( m_currentCommand == null || !m_currentCommand.isEnabled() )
         return;

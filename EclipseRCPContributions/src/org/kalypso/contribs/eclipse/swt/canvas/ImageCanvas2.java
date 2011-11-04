@@ -69,7 +69,7 @@ public class ImageCanvas2 extends Canvas
 
   public ImageCanvas2( final Composite parent, final int style )
   {
-    super( parent, style | SWT.DOUBLE_BUFFERED);
+    super( parent, style | SWT.DOUBLE_BUFFERED );
 
     final Canvas myCanvas = this;
 
@@ -88,66 +88,66 @@ public class ImageCanvas2 extends Canvas
         }
       }
     };
-    this.addPaintListener( m_paintListener );
+    addPaintListener( m_paintListener );
 
     /* handle mouse move events */
-    final Cursor cursorHand = new Cursor( this.getDisplay(), SWT.CURSOR_HAND );
-    final Cursor cursorDefault = new Cursor( this.getDisplay(), SWT.CURSOR_ARROW );
+    final Cursor cursorHand = new Cursor( getDisplay(), SWT.CURSOR_HAND );
+    final Cursor cursorDefault = new Cursor( getDisplay(), SWT.CURSOR_ARROW );
 
     m_mouseMoveListener = new MouseMoveListener()
     {
       @Override
       public void mouseMove( final MouseEvent e )
       {
-          if( myCanvas.isDisposed() )
-            return;
+        if( myCanvas.isDisposed() )
+          return;
 
-          boolean changed = false;
+        boolean changed = false;
 
-          Cursor cursor = cursorDefault;
-          String tooltip = null;
+        Cursor cursor = cursorDefault;
+        String tooltip = null;
 
-          for( final IContentArea area : m_contents )
+        for( final IContentArea area : m_contents )
+        {
+          if( area.hasMouseListener() && area.isEnabled() )
           {
-            if( area.hasMouseListener() && area.isEnabled() )
+            final Rectangle boundingBox = area.getBoundingBox();
+            if( boundingBox.contains( e.x, e.y ) )
             {
-              final Rectangle boundingBox = area.getBoundingBox();
-              if( boundingBox.contains( e.x, e.y ) )
+              final boolean hoverStateChanged = area.hover( true );
+              if( hoverStateChanged )
               {
-                final boolean hoverStateChanged = area.hover( true );
-                if( hoverStateChanged )
-                {
-                  changed = true;
-                }
-
-                cursor = cursorHand;
-                tooltip = area.getTooltip();
+                changed = true;
               }
-              else
+
+              cursor = cursorHand;
+              tooltip = area.getTooltip();
+            }
+            else
+            {
+              final boolean hoverStateChanged = area.hover( false );
+              if( hoverStateChanged )
               {
-                final boolean hoverStateChanged = area.hover( false );
-                if( hoverStateChanged )
-                {
-                  changed = true;
-                }
+                changed = true;
               }
             }
           }
+        }
 
-          if( changed )
-          {
-            redraw();
-          }
+        if( changed )
+        {
+          redraw();
+        }
 
-          myCanvas.setCursor( cursor );
-          myCanvas.setToolTipText( tooltip );
+        myCanvas.setCursor( cursor );
+        myCanvas.setToolTipText( tooltip );
       }
     };
 
-    this.addMouseMoveListener( m_mouseMoveListener );
+    addMouseMoveListener( m_mouseMoveListener );
 
     /* mouse listener */
-    this.addMouseListener( new MouseAdapter()
+    addMouseListener( new MouseAdapter()
     {
       /**
        * @see org.eclipse.swt.events.MouseAdapter#mouseUp(org.eclipse.swt.events.MouseEvent)
@@ -217,8 +217,8 @@ public class ImageCanvas2 extends Canvas
   @Override
   public void dispose( )
   {
-    this.removePaintListener( m_paintListener );
-    this.removeMouseMoveListener( m_mouseMoveListener );
+    removePaintListener( m_paintListener );
+    removeMouseMoveListener( m_mouseMoveListener );
 
     super.dispose();
   }

@@ -137,7 +137,7 @@ public class ZipResourceVisitor implements IResourceVisitor
       }
       catch( final IOException e )
       {
-        final IStatus status = new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString("org.kalypso.commons.java.util.zip.ZipResourceVisitor0") + relativePathTo, e ); //$NON-NLS-1$
+        final IStatus status = new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.commons.java.util.zip.ZipResourceVisitor0" ) + relativePathTo, e ); //$NON-NLS-1$
         throw new CoreException( status );
       }
     }

@@ -44,9 +44,8 @@ import java.util.ArrayList;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
- *
  */
 public interface IKalypsoImportWMSWizard
 {
-  public ArrayList<String> getCatalog();
+  public ArrayList<String> getCatalog( );
 }

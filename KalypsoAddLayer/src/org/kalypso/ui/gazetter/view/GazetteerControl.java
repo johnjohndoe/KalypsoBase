@@ -145,7 +145,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
     }
     else
       return; // never happens
-    final Job job = new Job( Messages.getString("org.kalypso.ui.gazetter.view.GazetteerControl.0") + featureTypeToLoad.getLocalPart() ) //$NON-NLS-1$
+    final Job job = new Job( Messages.getString( "org.kalypso.ui.gazetter.view.GazetteerControl.0" ) + featureTypeToLoad.getLocalPart() ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -162,7 +162,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
           e.printStackTrace();
           setContent( null );
           setEnable( false );
-          return StatusUtilities.createErrorStatus( Messages.getString("org.kalypso.ui.gazetter.view.GazetteerControl.1") ); //$NON-NLS-1$
+          return StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ui.gazetter.view.GazetteerControl.1" ) ); //$NON-NLS-1$
         }
         return Status.OK_STATUS;
       }
@@ -280,7 +280,7 @@ public class GazetteerControl implements ISelectionChangedListener, IStructuredC
       return result;
     }
     else
-      return new String[] { Messages.getString("org.kalypso.ui.gazetter.view.GazetteerControl.2") }; //$NON-NLS-1$
+      return new String[] { Messages.getString( "org.kalypso.ui.gazetter.view.GazetteerControl.2" ) }; //$NON-NLS-1$
   }
 
   /**

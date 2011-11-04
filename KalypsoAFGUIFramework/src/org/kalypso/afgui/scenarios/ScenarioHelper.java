@@ -50,7 +50,7 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.ui.IWorkbench;
@@ -141,7 +141,7 @@ public class ScenarioHelper
     {
       if( nature != null && nature.getProject().hasNature( "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature" ) )
       {
-        ProjectTemplate[] lTemplate = EclipsePlatformContributionsExtensions.getProjectTemplates( "org.kalypso.kalypso1d2d.pjt.projectTemplate" );
+        final ProjectTemplate[] lTemplate = EclipsePlatformContributionsExtensions.getProjectTemplates( "org.kalypso.kalypso1d2d.pjt.projectTemplate" );
         try
         {
           /* Unpack project from template */
@@ -167,13 +167,13 @@ public class ScenarioHelper
             {
               return false;
             }
-            IOFileFilter lFileFilter = new WildcardFileFilter( new String[] { "wind.gml" } );
-            IOFileFilter lDirFilter = TrueFileFilter.INSTANCE;
+            final IOFileFilter lFileFilter = new WildcardFileFilter( new String[] { "wind.gml" } );
+            final IOFileFilter lDirFilter = TrueFileFilter.INSTANCE;
             final Collection< ? > windFiles = FileUtils.listFiles( destinationDir, lFileFilter, lDirFilter );
-            
-            if( dataDir.isDirectory() && (windFiles == null || windFiles.size() == 0 ) )
+
+            if( dataDir.isDirectory() && (windFiles == null || windFiles.size() == 0) )
             {
-              WildcardFileFilter lCopyFilter = new WildcardFileFilter( new String[] { "*asis", "models", "wind.gml" } );
+              final WildcardFileFilter lCopyFilter = new WildcardFileFilter( new String[] { "*asis", "models", "wind.gml" } );
               FileUtils.copyDirectory( dataDir, destinationDir, lCopyFilter );
             }
             else
@@ -187,10 +187,10 @@ public class ScenarioHelper
           t.printStackTrace();
           return false;
         }
-        nature.getProject().refreshLocal( IProject.DEPTH_INFINITE, null );
+        nature.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
       }
     }
-    catch( CoreException e )
+    catch( final CoreException e )
     {
       KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( e.getStatus() );
       e.printStackTrace();
