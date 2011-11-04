@@ -67,8 +67,8 @@ public class SSLUtilities
    */
   public static void acceptSelfSignedCertificatesSSL( )
   {
-    ProtocolSocketFactory easyfactory = new EasySSLProtocolSocketFactory();
-    Protocol easyhttps = new Protocol( "https", easyfactory, 443 ); //$NON-NLS-1$
+    final ProtocolSocketFactory easyfactory = new EasySSLProtocolSocketFactory();
+    final Protocol easyhttps = new Protocol( "https", easyfactory, 443 ); //$NON-NLS-1$
     Protocol.registerProtocol( "https", easyhttps ); //$NON-NLS-1$
   }
 
@@ -76,17 +76,17 @@ public class SSLUtilities
    * This function configures the whole thing, provided a key- and truststore are available.
    * 
    * @param keyStore
-   *            The keystore.
+   *          The keystore.
    * @param keyPassphrase
-   *            The passphrase of the client certificate.
+   *          The passphrase of the client certificate.
    * @param trustStore
-   *            The truststore.
+   *          The truststore.
    * @param trustPassphrase
    */
-  public static void configureWhole( URL keyStore, String keyPassphrase, URL trustStore, String trustPassphrase ) throws Exception
+  public static void configureWhole( final URL keyStore, final String keyPassphrase, final URL trustStore, final String trustPassphrase ) throws Exception
   {
-    ProtocolSocketFactory authfactory = new AuthSSLProtocolSocketFactory( keyStore, keyPassphrase, trustStore, trustPassphrase );
-    Protocol authhttps = new Protocol( "https", authfactory, 443 ); //$NON-NLS-1$
+    final ProtocolSocketFactory authfactory = new AuthSSLProtocolSocketFactory( keyStore, keyPassphrase, trustStore, trustPassphrase );
+    final Protocol authhttps = new Protocol( "https", authfactory, 443 ); //$NON-NLS-1$
     Protocol.registerProtocol( "https", authhttps ); //$NON-NLS-1$
   }
 }

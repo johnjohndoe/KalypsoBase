@@ -62,7 +62,7 @@ public class EclipsePlatformContributionsPlugin extends Plugin
     final ResourceBundle bundle = EclipsePlatformContributionsPlugin.getDefault().getResourceBundle();
     try
     {
-      return (bundle != null) ? bundle.getString( key ) : key;
+      return bundle != null ? bundle.getString( key ) : key;
     }
     catch( final MissingResourceException e )
     {

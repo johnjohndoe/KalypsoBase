@@ -89,13 +89,13 @@ public class TextThemeWizard extends AbstractOtherThemeWizard implements IKalyps
    *      java.lang.String)
    */
   @Override
-  protected ICommand createCommand( IKalypsoLayerModell mapModell, String themeName )
+  protected ICommand createCommand( final IKalypsoLayerModell mapModell, final String themeName )
   {
     /* Create the add theme command. */
-    AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "text", "", "" );
+    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "text", "", "" );
 
     /* Add the selected properties. */
-    Map<String, String> properties = m_textThemeWizardPage.getProperties();
+    final Map<String, String> properties = m_textThemeWizardPage.getProperties();
     if( properties != null && properties.size() > 0 )
       command.addProperties( properties );
 

@@ -247,7 +247,7 @@ public final class StringUtilities
           && !Character.isWhitespace( str.charAt( i + lineLength ) ) )
       {
         curLineLength = lineLength - 3;
-        while( (curLineLength > 0) && !Character.isWhitespace( str.charAt( i + curLineLength ) ) )
+        while( curLineLength > 0 && !Character.isWhitespace( str.charAt( i + curLineLength ) ) )
           curLineLength--;
 
         if( curLineLength == 0 )

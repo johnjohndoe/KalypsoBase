@@ -55,7 +55,7 @@ import org.eclipse.core.resources.IResourceVisitor;
  */
 public class RegexResourceVisitor implements IResourceVisitor
 {
-  private Pattern m_pattern;
+  private final Pattern m_pattern;
 
   private final boolean m_recurseIntoNonMatched;
 

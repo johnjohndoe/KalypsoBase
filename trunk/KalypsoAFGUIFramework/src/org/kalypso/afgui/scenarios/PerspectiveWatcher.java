@@ -29,11 +29,11 @@ public class PerspectiveWatcher
 
   /**
    * This function cleans up the perspective.
-   *
+   * 
    * @param workbench
-   *            The workbench.
+   *          The workbench.
    * @param partsToKeep
-   *            This parts will be kept, aside of the important parts.
+   *          This parts will be kept, aside of the important parts.
    */
   public static void cleanPerspective( final IWorkbench workbench, final Collection<String> partsToKeep )
   {
@@ -82,7 +82,7 @@ public class PerspectiveWatcher
           return true;
         else if( SCENARIO_VIEW_ID.equals( viewId ) )
           return true;
-        else if( reference.getPartName().equals( Messages.getString("org.kalypso.afgui.scenarios.PerspectiveWatcher.1") ) ) //$NON-NLS-1$
+        else if( reference.getPartName().equals( Messages.getString( "org.kalypso.afgui.scenarios.PerspectiveWatcher.1" ) ) ) //$NON-NLS-1$
           return true;
         else
           return false;
@@ -95,10 +95,10 @@ public class PerspectiveWatcher
   /**
    * This function checks each tasks parent, until a perspective context is found. Than the id of the perspecive
    * configured there will be returned.
-   *
+   * 
    * @param context
-   *            The context, to start the search with.
-   *
+   *          The context, to start the search with.
+   * 
    * @return The perspective id.
    */
   public static String getPerspectiveID( final ITask task )

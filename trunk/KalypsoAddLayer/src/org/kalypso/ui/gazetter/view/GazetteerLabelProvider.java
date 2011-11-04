@@ -53,7 +53,7 @@ public class GazetteerLabelProvider extends LabelProvider
 {
   private final QName m_labelProperty;
 
-  public GazetteerLabelProvider( QName labelProperty )
+  public GazetteerLabelProvider( final QName labelProperty )
   {
     super();
     m_labelProperty = labelProperty;
@@ -63,17 +63,17 @@ public class GazetteerLabelProvider extends LabelProvider
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     if( element == GazetteerConstants.NO_SELECTION_IN_COMBO )
-      return Messages.getString("org.kalypso.ui.gazetter.view.GazetteerLabelProvider.0"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ui.gazetter.view.GazetteerLabelProvider.0" ); //$NON-NLS-1$
     if( element instanceof Feature )
     {
       final Feature feature = (Feature) element;
       final Object text = feature.getProperty( m_labelProperty );
       if( text != null )
         return text.toString();
-      return Messages.getString("org.kalypso.ui.gazetter.view.GazetteerLabelProvider.1"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ui.gazetter.view.GazetteerLabelProvider.1" ); //$NON-NLS-1$
     }
     return super.getText( element );
   }

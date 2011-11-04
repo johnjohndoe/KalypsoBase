@@ -125,16 +125,16 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
     m_properties = properties;
   }
 
-  public void addProperties( Map<String, String> map )
+  public void addProperties( final Map<String, String> map )
   {
-    Set<Entry<String, String>> entries = map.entrySet();
-    for( Entry<String, String> entry : entries )
+    final Set<Entry<String, String>> entries = map.entrySet();
+    for( final Entry<String, String> entry : entries )
     {
-      Property property = new Property();
+      final Property property = new Property();
       property.setName( entry.getKey() );
       property.setValue( entry.getValue() );
 
-      m_properties = (Property[]) ArrayUtils.add( m_properties, property );
+      m_properties = ArrayUtils.add( m_properties, property );
     }
   }
 
@@ -156,7 +156,7 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
   {
     final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
 
-    final GisTemplateMapModell mapModell = new GisTemplateMapModell( m_mapModell.getContext(), m_mapModell.getCoordinatesSystem(), selectionManager );
+    final GisTemplateMapModell mapModell = new GisTemplateMapModell( m_mapModell.getContext(), m_mapModell.getCoordinatesSystem(), m_mapModell.getProject(), selectionManager );
     for( final ICommand command : layerCommands )
       if( command instanceof AddThemeCommand )
       {

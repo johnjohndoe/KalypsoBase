@@ -41,9 +41,9 @@ public class ComponentRepaintJob extends Job
 
   /**
    * @param component
-   *            The component that get reainted.
+   *          The component that get reainted.
    * @param repaintMillis
-   *            Time in milliseconds between two calls to repaint.
+   *          Time in milliseconds between two calls to repaint.
    */
   public ComponentRepaintJob( final Component component, final int repaintMillis )
   {

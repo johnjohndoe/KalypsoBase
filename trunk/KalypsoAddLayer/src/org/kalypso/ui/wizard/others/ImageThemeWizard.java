@@ -89,13 +89,13 @@ public class ImageThemeWizard extends AbstractOtherThemeWizard implements IKalyp
    *      java.lang.String)
    */
   @Override
-  protected ICommand createCommand( IKalypsoLayerModell mapModell, String themeName )
+  protected ICommand createCommand( final IKalypsoLayerModell mapModell, final String themeName )
   {
     /* Create the add theme command. */
-    AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "image", "", "" );
+    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "image", "", "" );
 
     /* Add the selected properties. */
-    Map<String, String> properties = m_imageThemeWizardPage.getProperties();
+    final Map<String, String> properties = m_imageThemeWizardPage.getProperties();
     if( properties != null && properties.size() > 0 )
       command.addProperties( properties );
 

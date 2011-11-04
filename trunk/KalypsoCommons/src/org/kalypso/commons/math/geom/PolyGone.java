@@ -2,18 +2,19 @@ package org.kalypso.commons.math.geom;
 
 /**
  * Represents a geometrical Polygone (points are stored in double format)
- *
+ * 
  * @author schlienger
  */
 public class PolyGone
 {
   private double[] m_x;
+
   private double[] m_y;
 
   /**
    * Default constructor, members are set to empty array.
    */
-  public PolyGone(  )
+  public PolyGone( )
   {
     m_x = new double[0];
     m_y = m_x;
@@ -21,9 +22,8 @@ public class PolyGone
 
   /**
    * constructor, points must be sorted (arbitrary).
-   *
    */
-  public PolyGone( double[] x, double[] y )
+  public PolyGone( final double[] x, final double[] y )
   {
     m_x = x;
     m_y = y;
@@ -31,26 +31,28 @@ public class PolyGone
 
   /**
    * adds points from the PolyLine after members (order is specified by bInvert)
-   *
+   * 
    * @param line
-   * @param bInvert when true, takes the points from line in the opposite direction (on X)
+   * @param bInvert
+   *          when true, takes the points from line in the opposite direction (on X)
    */
-  public void addPoints( PolyLine line, boolean bInvert )
+  public void addPoints( final PolyLine line, final boolean bInvert )
   {
-    addPoints( line.getX(  ), line.getY(  ), bInvert );
+    addPoints( line.getX(), line.getY(), bInvert );
   }
 
   /**
    * adds points after members (order is specified by bInvert)
-   *
+   * 
    * @param x
-   * @param y 
-   * @param bInvert when true, takes the points from line in the opposite direction (on X)
+   * @param y
+   * @param bInvert
+   *          when true, takes the points from line in the opposite direction (on X)
    */
-  public void addPoints( double[] x, double[] y, boolean bInvert )
+  public void addPoints( final double[] x, final double[] y, final boolean bInvert )
   {
-    double[] newX = new double[m_x.length + x.length];
-    double[] newY = new double[newX.length];
+    final double[] newX = new double[m_x.length + x.length];
+    final double[] newY = new double[newX.length];
 
     // copy members
     System.arraycopy( m_x, 0, newX, 0, m_x.length );
@@ -64,7 +66,7 @@ public class PolyGone
       // copy line ones, but beginning from the end
       for( int i = x.length - 1; i >= 0; i-- )
       {
-        int pos = newX.length - i - 1;
+        final int pos = newX.length - i - 1;
         newX[pos] = x[i];
         newY[pos] = y[i];
       }
@@ -80,24 +82,24 @@ public class PolyGone
     m_y = newY;
   }
 
-  public double[] getX(  )
+  public double[] getX( )
   {
     return m_x;
   }
 
-  public double[] getY(  )
+  public double[] getY( )
   {
     return m_y;
   }
 
   @Override
-  public String toString(  )
+  public String toString( )
   {
-    StringBuffer b = new StringBuffer(  );
+    final StringBuffer b = new StringBuffer();
 
     for( int i = 0; i < m_x.length; i++ )
       b.append( m_x[i] ).append( " - " ).append( m_y[i] ).append( "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    return b.toString(  );
+    return b.toString();
   }
 }

@@ -77,7 +77,7 @@ public class DeleteObsoleteFilesVisitor implements FileVisitor
     if( m_excludeDirWithFile != null && file.isDirectory() )
     {
       /* If one of the exclude files exists, return false. */
-      for( String excludeDirWithFile : m_excludeDirWithFile )
+      for( final String excludeDirWithFile : m_excludeDirWithFile )
       {
         final File excludeFile = new File( file, excludeDirWithFile );
         if( excludeFile.exists() )

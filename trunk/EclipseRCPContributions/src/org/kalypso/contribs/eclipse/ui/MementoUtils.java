@@ -110,7 +110,7 @@ public class MementoUtils
 
       ins.close();
     }
-    catch( UnsupportedEncodingException e )
+    catch( final UnsupportedEncodingException e )
     {
       e.printStackTrace();
       // ignored
@@ -121,22 +121,22 @@ public class MementoUtils
     }
   }
 
-  public static MementoWithUrlResolver createMementoWithUrlResolver( IMemento memento, Properties properties, IUrlResolver2 resolver )
+  public static MementoWithUrlResolver createMementoWithUrlResolver( final IMemento memento, final Properties properties, final IUrlResolver2 resolver )
   {
     return new MementoWithUrlResolver( memento, properties, resolver );
   }
 
-  public static void restoreWorkbenchPage( IMemento stateMemento )
+  public static void restoreWorkbenchPage( final IMemento stateMemento )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IPerspectiveRegistry registry = workbench.getPerspectiveRegistry();
     final IWorkbenchWindow activeWindow = workbench.getActiveWorkbenchWindow();
     // get the actual size of the active Window
     final Rectangle bounds = activeWindow.getShell().getDisplay().getBounds();
-    int heigth = bounds.height;
-    int width = bounds.width;
-    int x = bounds.x;
-    int y = bounds.y;
+    final int heigth = bounds.height;
+    final int width = bounds.width;
+    final int x = bounds.x;
+    final int y = bounds.y;
 
     // do the memento business
     final IMemento windowMemento = stateMemento.getChild( IWorkbenchConstants.TAG_WINDOW );
@@ -157,7 +157,7 @@ public class MementoUtils
     final String perspectiveID = descMemento.getString( IWorkbenchConstants.TAG_ID );
     final PerspectiveDescriptor realDesc = (PerspectiveDescriptor) registry.findPerspectiveWithId( perspectiveID );
 
-    WorkbenchWindow page = ((WorkbenchWindow) activeWindow);
+    final WorkbenchWindow page = (WorkbenchWindow) activeWindow;
     final WorkbenchPage activePage = (WorkbenchPage) activeWindow.getActivePage();
     if( activePage != null )
     {

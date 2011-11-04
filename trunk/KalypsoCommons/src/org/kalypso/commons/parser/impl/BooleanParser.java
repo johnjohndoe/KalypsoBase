@@ -44,7 +44,7 @@ import org.kalypso.commons.parser.AbstractParser;
 
 /**
  * Ein Parser für Integer, Long, und Short Objekte.
- *
+ * 
  * @author schlienger
  */
 public class BooleanParser extends AbstractParser
@@ -54,7 +54,7 @@ public class BooleanParser extends AbstractParser
   /**
    * Default Constructor
    */
-  public BooleanParser()
+  public BooleanParser( )
   {
     this( "" ); //$NON-NLS-1$
   }
@@ -81,7 +81,7 @@ public class BooleanParser extends AbstractParser
    * @see org.kalypso.commons.parser.IParser#getFormat()
    */
   @Override
-  public String getFormat()
+  public String getFormat( )
   {
     return m_format;
   }
@@ -102,7 +102,7 @@ public class BooleanParser extends AbstractParser
   @Override
   public String toStringInternal( final Object obj )
   {
-    return ((Boolean)obj).toString();
+    return ((Boolean) obj).toString();
   }
 
   /**
@@ -111,11 +111,11 @@ public class BooleanParser extends AbstractParser
   @Override
   public int compare( final Object value1, final Object value2 )
   {
-    if( value1.equals(value2) )
-        return 0;
+    if( value1.equals( value2 ) )
+      return 0;
 
-    if( value1.equals(Boolean.FALSE ) )
-        return 1;
+    if( value1.equals( Boolean.FALSE ) )
+      return 1;
 
     return -1;
   }

@@ -112,8 +112,8 @@ public class WizardDialog2 extends WizardDialog
 
   /**
    * Executes the given runnable in this dialog (similar to
-   * {@link org.eclipse.jface.operation.IRunnableContext#run(boolean, boolean, org.eclipse.jface.operation.IRunnableWithProgress)},
-   * but does NOT block the user interface while the operation is running.
+   * {@link org.eclipse.jface.operation.IRunnableContext#run(boolean, boolean, org.eclipse.jface.operation.IRunnableWithProgress)}
+   * , but does NOT block the user interface while the operation is running.
    */
   public IStatus executeUnblocked( final boolean cancelable, final boolean enablePageNavigation, final ICoreRunnableWithProgress runnable )
   {

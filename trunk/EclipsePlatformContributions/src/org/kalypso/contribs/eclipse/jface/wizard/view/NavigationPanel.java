@@ -216,9 +216,9 @@ public class NavigationPanel extends Composite
       final String pageNavigationId = getPageNavigationID( page );
 
       final String script = //
-        "elements = document.getElementsByName('%s');" + //
-        "for (i = 0; i < elements.length; i++)" + //
-        "elements[i].className+=' activ';";
+      "elements = document.getElementsByName('%s');" + //
+          "for (i = 0; i < elements.length; i++)" + //
+          "elements[i].className+=' activ';";
       final String executeScript = String.format( script, pageNavigationId );
 
       final Browser browser = m_browser;
@@ -278,7 +278,6 @@ public class NavigationPanel extends Composite
       if( wizard instanceof IHtmlWizard )
         return ((IHtmlWizard) wizard).getHtmlURL();
     }
-
 
     return null; //$NON-NLS-1$
   }

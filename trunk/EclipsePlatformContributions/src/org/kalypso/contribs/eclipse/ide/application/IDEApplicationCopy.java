@@ -58,8 +58,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -140,7 +140,7 @@ public abstract class IDEApplicationCopy implements IApplication, IExecutableExt
         // the task bar and without these calls you'd have the default icon
         // with no message.
         shell.setText( ChooseWorkspaceDialog.getWindowTitle() );
-        shell.setImages( Dialog.getDefaultImages() );
+        shell.setImages( Window.getDefaultImages() );
       }
 
       if( !checkInstanceLocation( shell ) )
@@ -185,6 +185,7 @@ public abstract class IDEApplicationCopy implements IApplication, IExecutableExt
 
   /** Implementors should decide which advisor to use */
   protected abstract WorkbenchAdvisor createWorkbenchAdvisor( final DelayedEventsProcessor processor );
+
 // Original return value:
 // {
 // return new IDEWorkbenchAdvisor( processor );
@@ -449,8 +450,8 @@ public abstract class IDEApplicationCopy implements IApplication, IExecutableExt
     catch( final IOException e )
     {
       IDEWorkbenchPlugin.log( "Could not read version file", new Status( //$NON-NLS-1$
-          IStatus.ERROR, IDEWorkbenchPlugin.IDE_WORKBENCH, IStatus.ERROR, e.getMessage() == null ? "" : e.getMessage(), //$NON-NLS-1$, 
-              e ) );
+      IStatus.ERROR, IDEWorkbenchPlugin.IDE_WORKBENCH, IStatus.ERROR, e.getMessage() == null ? "" : e.getMessage(), //$NON-NLS-1$, 
+      e ) );
       return null;
     }
   }

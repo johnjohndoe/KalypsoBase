@@ -162,7 +162,6 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
     }
   }
 
-
   private void removeBuildspec( final IProject project ) throws CoreException
   {
     final IProjectDescription description = project.getDescription();
@@ -180,7 +179,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
     description.setName( project.getName() );
     final String[] natureIds = description.getNatureIds();
     /* Also remove the PDE-nature, if it is present. This is needed for self-hosted project templates. */
-    final String[] cleanedNatureIds = (String[]) ArrayUtils.removeElement( natureIds, NewProjectWizard.PDE_NATURE_ID );
+    final String[] cleanedNatureIds = ArrayUtils.removeElement( natureIds, NewProjectWizard.PDE_NATURE_ID );
     description.setNatureIds( cleanedNatureIds );
 
     project.setDescription( description, IResource.FORCE /* | IResource.AVOID_NATURE_CONFIG */, progress.newChild( 10 ) );

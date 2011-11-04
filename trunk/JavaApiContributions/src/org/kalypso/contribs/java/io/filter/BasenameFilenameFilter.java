@@ -13,7 +13,7 @@ public class BasenameFilenameFilter implements FilenameFilter
   /**
    * The basename.
    */
-  private String m_basename;
+  private final String m_basename;
 
   /**
    * The constructor.
@@ -21,7 +21,7 @@ public class BasenameFilenameFilter implements FilenameFilter
    * @param basename
    *          The basename of the file.
    */
-  public BasenameFilenameFilter( String basename )
+  public BasenameFilenameFilter( final String basename )
   {
     m_basename = basename;
   }
@@ -30,13 +30,13 @@ public class BasenameFilenameFilter implements FilenameFilter
    * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
    */
   @Override
-  public boolean accept( File dir, String name )
+  public boolean accept( final File dir, final String name )
   {
-    File file = new File( dir, name );
+    final File file = new File( dir, name );
     if( !file.exists() || file.isDirectory() )
       return false;
 
-    String baseName = nameWithoutExtension( name );
+    final String baseName = nameWithoutExtension( name );
     if( baseName == null )
       return false;
 
@@ -45,7 +45,7 @@ public class BasenameFilenameFilter implements FilenameFilter
 
     return false;
   }
-  
+
   private static String nameWithoutExtension( final String fileName )
   {
     final int lastIndexOf = fileName.lastIndexOf( '.' );

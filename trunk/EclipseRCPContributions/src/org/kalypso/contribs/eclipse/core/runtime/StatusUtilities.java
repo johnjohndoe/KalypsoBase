@@ -239,7 +239,7 @@ public final class StatusUtilities
    */
   public static IStatus createStatus( final Collection<IStatus> stati, final String message, final Object... args )
   {
-    if( stati.size() == 0 )
+    if( stati.isEmpty() )
       return Status.OK_STATUS;
 
     if( stati.size() == 1 )

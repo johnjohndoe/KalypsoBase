@@ -60,15 +60,15 @@ import org.eclipse.core.runtime.Status;
 public class LogStatus extends Status
 {
   private final File m_logFile;
+
   private final String m_charsetName;
 
   private IStatus[] m_children = null;
 
-  public LogStatus( final int severity, final String pluginId, final int code, final String message,
-      final Throwable exception, final File logFile, final String charsetName )
+  public LogStatus( final int severity, final String pluginId, final int code, final String message, final Throwable exception, final File logFile, final String charsetName )
   {
     super( severity, pluginId, code, message, exception );
-    
+
     m_logFile = logFile;
     m_charsetName = charsetName;
   }
@@ -77,7 +77,7 @@ public class LogStatus extends Status
    * @see org.eclipse.core.runtime.Status#isMultiStatus()
    */
   @Override
-  public boolean isMultiStatus()
+  public boolean isMultiStatus( )
   {
     return true;
   }
@@ -86,7 +86,7 @@ public class LogStatus extends Status
    * @see org.eclipse.core.runtime.Status#getChildren()
    */
   @Override
-  public IStatus[] getChildren()
+  public IStatus[] getChildren( )
   {
     if( m_children == null )
     {

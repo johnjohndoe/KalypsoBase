@@ -181,7 +181,7 @@ public class AddThemeCommand implements IThemeCommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ui.action.AddThemeCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ui.action.AddThemeCommand.0" ); //$NON-NLS-1$
   }
 
   private StyledLayerType init( )

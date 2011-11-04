@@ -57,7 +57,7 @@ public class PasswordDialog extends InputDialog
   }
 
   @Override
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
     final Control composite = super.createDialogArea( parent );
 

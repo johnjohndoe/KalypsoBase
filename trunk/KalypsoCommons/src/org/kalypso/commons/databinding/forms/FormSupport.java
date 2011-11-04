@@ -302,7 +302,7 @@ public class FormSupport
         final ValidationStatusProvider validationStatusProvider = (ValidationStatusProvider) it.next();
         final IObservableList targets = validationStatusProvider.getTargets();
         targets.removeListChangeListener( m_validationStatusProviderTargetsListener );
-        for( final Iterator<?> iter = targets.iterator(); iter.hasNext(); )
+        for( final Iterator< ? > iter = targets.iterator(); iter.hasNext(); )
         {
           ((IObservable) iter.next()).removeChangeListener( m_uiChangeListener );
         }

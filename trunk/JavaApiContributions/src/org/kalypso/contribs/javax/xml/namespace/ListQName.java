@@ -49,7 +49,7 @@ import javax.xml.namespace.QName;
  */
 public class ListQName extends QName
 {
-  public ListQName( QName qname )
+  public ListQName( final QName qname )
   {
     super( qname.getNamespaceURI(), qname.getLocalPart(), qname.getPrefix() );
   }

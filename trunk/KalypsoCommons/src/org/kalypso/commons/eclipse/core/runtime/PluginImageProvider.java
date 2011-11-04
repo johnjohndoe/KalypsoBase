@@ -66,7 +66,7 @@ import org.kalypso.contribs.java.io.StreamUtilities;
  * <p>
  * This class is not intended to be sub-classed. Each UI-plug-in should have one instance.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class PluginImageProvider
@@ -103,7 +103,7 @@ public class PluginImageProvider
 
   /**
    * Utility method for image re-use Plug-in.
-   *
+   * 
    * @param key
    * @return
    */
@@ -136,9 +136,9 @@ public class PluginImageProvider
 
   /**
    * Returns an image descriptor for the image file at the given plug-in relative path.
-   *
+   * 
    * @param path
-   *            the path
+   *          the path
    * @return the image descriptor
    */
   public ImageDescriptor getImageDescriptor( final String path )
@@ -160,7 +160,7 @@ public class PluginImageProvider
 
   /**
    * @param decorators
-   *            Must be an array of size 5: top-left, top-right, bottom-left, bottom-right, underlay
+   *          Must be an array of size 5: top-left, top-right, bottom-left, bottom-right, underlay
    */
   public Image getDecoratedImage( final ImageKey baseImageKey, final ImageKey[] decorators )
   {
@@ -191,7 +191,7 @@ public class PluginImageProvider
 
   /**
    * @param decorators
-   *            Must be an array of size 5: top-left, top-right, bottom-left, bottom-right, underlay
+   *          Must be an array of size 5: top-left, top-right, bottom-left, bottom-right, underlay
    */
   public ImageDescriptor getDecoratedImageDescriptor( final ImageKey baseImageKey, final ImageKey[] decorators )
   {
@@ -218,11 +218,11 @@ public class PluginImageProvider
 
   /**
    * Copies a resource-file into the tmp-directory and returns a (file-)url to it.
-   *
+   * 
    * @param clazz
-   *            The class to which the resource path will be resolved
+   *          The class to which the resource path will be resolved
    * @param path
-   *            Path into the java-resources
+   *          Path into the java-resources
    * @see Class#getResource(java.lang.String)
    */
   public URL getTmpUrl( final Class< ? > clazz, final String path )

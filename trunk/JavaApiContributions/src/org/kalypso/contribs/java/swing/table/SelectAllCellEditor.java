@@ -67,7 +67,7 @@ import javax.swing.text.JTextComponent;
  */
 public class SelectAllCellEditor implements TableCellEditor
 {
-  private TableCellEditor m_editor;
+  private final TableCellEditor m_editor;
 
   public SelectAllCellEditor( final TableCellEditor editor )
   {
@@ -79,12 +79,12 @@ public class SelectAllCellEditor implements TableCellEditor
    *      int, int)
    */
   @Override
-  public Component getTableCellEditorComponent( JTable table, Object value, boolean isSelected, int row, int column )
+  public Component getTableCellEditorComponent( final JTable table, final Object value, final boolean isSelected, final int row, final int column )
   {
     final Component c = m_editor.getTableCellEditorComponent( table, value, isSelected, row, column );
 
     if( c instanceof JTextComponent )
-      ( (JTextComponent)c ).selectAll();
+      ((JTextComponent) c).selectAll();
 
     return c;
   }
@@ -93,7 +93,7 @@ public class SelectAllCellEditor implements TableCellEditor
    * @see javax.swing.CellEditor#cancelCellEditing()
    */
   @Override
-  public void cancelCellEditing()
+  public void cancelCellEditing( )
   {
     m_editor.cancelCellEditing();
   }
@@ -102,7 +102,7 @@ public class SelectAllCellEditor implements TableCellEditor
    * @see javax.swing.CellEditor#stopCellEditing()
    */
   @Override
-  public boolean stopCellEditing()
+  public boolean stopCellEditing( )
   {
     return m_editor.stopCellEditing();
   }
@@ -111,7 +111,7 @@ public class SelectAllCellEditor implements TableCellEditor
    * @see javax.swing.CellEditor#getCellEditorValue()
    */
   @Override
-  public Object getCellEditorValue()
+  public Object getCellEditorValue( )
   {
     return m_editor.getCellEditorValue();
   }
@@ -120,7 +120,7 @@ public class SelectAllCellEditor implements TableCellEditor
    * @see javax.swing.CellEditor#isCellEditable(java.util.EventObject)
    */
   @Override
-  public boolean isCellEditable( EventObject anEvent )
+  public boolean isCellEditable( final EventObject anEvent )
   {
     return m_editor.isCellEditable( anEvent );
   }
@@ -129,7 +129,7 @@ public class SelectAllCellEditor implements TableCellEditor
    * @see javax.swing.CellEditor#shouldSelectCell(java.util.EventObject)
    */
   @Override
-  public boolean shouldSelectCell( EventObject anEvent )
+  public boolean shouldSelectCell( final EventObject anEvent )
   {
     return m_editor.shouldSelectCell( anEvent );
   }
@@ -138,7 +138,7 @@ public class SelectAllCellEditor implements TableCellEditor
    * @see javax.swing.CellEditor#addCellEditorListener(javax.swing.event.CellEditorListener)
    */
   @Override
-  public void addCellEditorListener( CellEditorListener l )
+  public void addCellEditorListener( final CellEditorListener l )
   {
     m_editor.addCellEditorListener( l );
   }
@@ -147,7 +147,7 @@ public class SelectAllCellEditor implements TableCellEditor
    * @see javax.swing.CellEditor#removeCellEditorListener(javax.swing.event.CellEditorListener)
    */
   @Override
-  public void removeCellEditorListener( CellEditorListener l )
+  public void removeCellEditorListener( final CellEditorListener l )
   {
     m_editor.removeCellEditorListener( l );
   }

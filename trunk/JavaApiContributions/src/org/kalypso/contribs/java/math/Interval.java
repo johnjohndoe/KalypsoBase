@@ -71,7 +71,7 @@ public class Interval
    * @param interval
    *          The values will be copied from this interval.
    */
-  public Interval( Interval interval )
+  public Interval( final Interval interval )
   {
     this( interval.getMin(), interval.getMax() );
   }
@@ -84,7 +84,7 @@ public class Interval
    * @param max
    *          The maximum value of the interval.
    */
-  public Interval( double min, double max )
+  public Interval( final double min, final double max )
   {
     m_min = min;
     m_max = max;
@@ -132,7 +132,7 @@ public class Interval
    *          Another interval.
    * @return True, if the given interval overlaps this interval.
    */
-  public boolean overlaps( Interval interval )
+  public boolean overlaps( final Interval interval )
   {
     return overlaps( interval.getMin(), interval.getMax() );
   }
@@ -146,7 +146,7 @@ public class Interval
    *          Another maximum value.
    * @return True, if the interval determined by the given values overlaps this interval.
    */
-  public boolean overlaps( double min, double max )
+  public boolean overlaps( final double min, final double max )
   {
     if( m_min > max || m_max < min )
       return false;
@@ -161,7 +161,7 @@ public class Interval
    *          Another interval.
    * @return True, if the given interval is contained within this interval.
    */
-  public boolean contains( Interval interval )
+  public boolean contains( final Interval interval )
   {
     return contains( interval.getMin(), interval.getMax() );
   }
@@ -175,9 +175,9 @@ public class Interval
    *          Another maximum value.
    * @return True, if the interval determined by the given values is contained within this interval.
    */
-  public boolean contains( double min, double max )
+  public boolean contains( final double min, final double max )
   {
-    return (min >= m_min && max <= m_max);
+    return min >= m_min && max <= m_max;
   }
 
   /**
@@ -187,7 +187,7 @@ public class Interval
    *          Another interval.
    * @return The difference between the given interval and this interval.
    */
-  public Interval[] difference( Interval interval )
+  public Interval[] difference( final Interval interval )
   {
     return difference( interval.getMin(), interval.getMax() );
   }
@@ -201,7 +201,7 @@ public class Interval
    *          Another maximum value.
    * @return The difference between the interval determined by the given values and this interval.
    */
-  public Interval[] difference( double min, double max )
+  public Interval[] difference( final double min, final double max )
   {
     /* Only if this and the given interval overlaps each other in one way, we can do the difference operation. */
     if( !overlaps( min, max ) )

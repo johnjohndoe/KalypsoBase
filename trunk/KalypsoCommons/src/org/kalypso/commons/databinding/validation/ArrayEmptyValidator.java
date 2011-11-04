@@ -59,7 +59,7 @@ public class ArrayEmptyValidator extends TypedValidator<Object[]>
    * @param message
    *          Will be used as message for a status, if validation fails.
    */
-  public ArrayEmptyValidator( int severity, String message )
+  public ArrayEmptyValidator( final int severity, final String message )
   {
     super( Object[].class, severity, message );
   }
@@ -68,7 +68,7 @@ public class ArrayEmptyValidator extends TypedValidator<Object[]>
    * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
    */
   @Override
-  protected IStatus doValidate( Object[] value ) throws CoreException
+  protected IStatus doValidate( final Object[] value ) throws CoreException
   {
     if( value == null || value.length == 0 )
       fail();

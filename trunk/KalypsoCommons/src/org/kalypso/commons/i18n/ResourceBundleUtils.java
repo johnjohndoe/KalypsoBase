@@ -52,7 +52,7 @@ import org.kalypso.commons.KalypsoCommonsDebug;
 
 /**
  * Helper class for {@link java.util.ResourceBundle}
- *
+ * 
  * @author Gernot Belger
  */
 public final class ResourceBundleUtils
@@ -93,7 +93,7 @@ public final class ResourceBundleUtils
           try
           {
             // The ResourceBundle replaces all '.' by '/' (assuming it is a classname)
-            // but we know better. The name can never contain a real '/', because we 
+            // but we know better. The name can never contain a real '/', because we
             // truncated it (see above).
             final String resourceName = name.replace( '/', '.' );
             return new URL( _baseURL, resourceName );
@@ -135,7 +135,7 @@ public final class ResourceBundleUtils
    * returned.<br>
    * If the given string starts with '%', but the bundle does not contain a corresponding entry, the original string is
    * returned.
-   *
+   * 
    * @param translatableString
    *          If <code>null</code>, <code>null</code> is returned.
    * @param resourceBundle

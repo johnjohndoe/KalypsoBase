@@ -81,10 +81,10 @@ public class KalypsoContextHandlerFactory implements IContextHandlerFactory
       properties.put( parameter.getName(), parameter.getValue() );
 
     final String type = properties.getProperty( PARAM_TYPE, null );
-    Assert.isNotNull( type, Messages.getString("org.kalypso.afgui.handlers.KalypsoContextHandlerFactory.0") ); //$NON-NLS-1$
+    Assert.isNotNull( type, Messages.getString( "org.kalypso.afgui.handlers.KalypsoContextHandlerFactory.0" ) ); //$NON-NLS-1$
 
     final IHandler handler = createHander( type, properties );
-    Assert.isNotNull( handler, Messages.getString("org.kalypso.afgui.handlers.KalypsoContextHandlerFactory.1") + type ); //$NON-NLS-1$
+    Assert.isNotNull( handler, Messages.getString( "org.kalypso.afgui.handlers.KalypsoContextHandlerFactory.1" ) + type ); //$NON-NLS-1$
     return handler;
   }
 

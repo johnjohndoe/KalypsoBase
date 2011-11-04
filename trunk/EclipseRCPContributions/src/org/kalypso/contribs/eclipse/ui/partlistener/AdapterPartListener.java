@@ -63,7 +63,7 @@ import org.eclipse.ui.IWorkbenchPartReference;
  * What to do when the curent part we are adapting to is closed.
  * </p>
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class AdapterPartListener<C> implements IPartListener2
@@ -121,7 +121,6 @@ public class AdapterPartListener<C> implements IPartListener2
   public void partBroughtToTop( final IWorkbenchPartReference partRef )
   {
   }
-  
 
   /**
    * @see org.eclipse.ui.IPartListener2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
@@ -182,7 +181,7 @@ public class AdapterPartListener<C> implements IPartListener2
 
   /**
    * Tries to find the adapter for the given part. If one is found, return true.
-   *
+   * 
    * @return If an adapter for this partRef is found return true, false otherwise.
    */
   public boolean adaptPartReference( final IWorkbenchPartReference partRef )

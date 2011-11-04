@@ -46,8 +46,7 @@ import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.contribs.ogc31.KalypsoOGC31JAXBcontext;
 
 /**
- * Running: > 5400 ms
- * Debugging: > 25000 ms
+ * Running: > 5400 ms Debugging: > 25000 ms
  * 
  * @author Gernot
  */

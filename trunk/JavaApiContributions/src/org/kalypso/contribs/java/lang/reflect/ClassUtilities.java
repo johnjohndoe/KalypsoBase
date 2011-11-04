@@ -122,7 +122,7 @@ public class ClassUtilities
       // TODO: change parameter to Class<?>
       final Class< ? > t = target;
 
-      if( (t == null) || t.isAssignableFrom( c ) )
+      if( t == null || t.isAssignableFrom( c ) )
       {
         if( arguments == null )
           return c.newInstance();

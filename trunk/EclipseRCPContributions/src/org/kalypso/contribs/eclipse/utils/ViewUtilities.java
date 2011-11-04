@@ -83,34 +83,34 @@ public class ViewUtilities
    *          The secondary id. May be null.
    * @return The views in the active workbench window or a empty list.
    */
-  public static IViewPart[] findViewsInActiveWindow( String primaryId, String secondaryId )
+  public static IViewPart[] findViewsInActiveWindow( final String primaryId, final String secondaryId )
   {
     /* Get the active workbench. */
-    IWorkbench workbench = PlatformUI.getWorkbench();
+    final IWorkbench workbench = PlatformUI.getWorkbench();
     if( workbench == null )
       return new IViewPart[] {};
 
     /* Get the active workbench window. */
-    IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
     if( window == null )
       return new IViewPart[] {};
 
     /* Get all pages. */
-    IWorkbenchPage[] pages = window.getPages();
+    final IWorkbenchPage[] pages = window.getPages();
     if( pages == null || pages.length == 0 )
       return new IViewPart[] {};
 
     /* Collect the views. */
-    List<IViewPart> views = new ArrayList<IViewPart>();
+    final List<IViewPart> views = new ArrayList<IViewPart>();
 
     /* Loop the pages. */
-    for( IWorkbenchPage page : pages )
+    for( final IWorkbenchPage page : pages )
     {
       /* Get all view references. */
-      IViewReference[] references = page.getViewReferences();
+      final IViewReference[] references = page.getViewReferences();
 
       /* Loop the view references. */
-      for( IViewReference reference : references )
+      for( final IViewReference reference : references )
       {
         /* Does the primary id match? */
         if( reference.getId().equals( primaryId ) )
@@ -136,16 +136,16 @@ public class ViewUtilities
    * @param secondaryId
    *          The secondary id. If omitted, every view with the given primary id will be hidden. May be null.
    */
-  public static void hideView( String primaryId, String secondaryId )
+  public static void hideView( final String primaryId, final String secondaryId )
   {
-    IViewPart[] views = findViewsInActiveWindow( primaryId, secondaryId );
+    final IViewPart[] views = findViewsInActiveWindow( primaryId, secondaryId );
     if( views == null || views.length == 0 )
       return;
 
-    for( IViewPart view : views )
+    for( final IViewPart view : views )
     {
-      IWorkbenchPartSite site = view.getSite();
-      IWorkbenchPage page = site.getPage();
+      final IWorkbenchPartSite site = view.getSite();
+      final IWorkbenchPage page = site.getPage();
       page.hideView( view );
     }
   }

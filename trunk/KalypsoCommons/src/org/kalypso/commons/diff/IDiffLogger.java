@@ -36,7 +36,7 @@ public interface IDiffLogger
 {
   public void log( int status, String message );
 
-  public void block();
+  public void block( );
 
   public void unblock( boolean keepLastLog );
 }

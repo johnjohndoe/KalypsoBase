@@ -44,55 +44,55 @@ public class AddLayerTest extends TestCase
   {
     // TODO: this test depends on external data. Please never do such a thing
     // If you want to test something for yourself, please write a main() Method
-    
-//    String source = "c:\\temp\\35725992H.TIF";
-//    File worldFile = new File( "c:\\temp\\35725992H.tfw" );
-//    URL worldFileURL = null;
-//    double dx = 0;
-//    // double rx = 0;
-//    double dy = 0;
-//    // double ry = 0;
-//    double ulcx = 0;
-//    double ulcy = 0;
-//    // read worldfile
-//    try
-//    {
-//      worldFileURL = worldFile.toURL();
-//      URLConnection con = worldFileURL.openConnection();
+
+// String source = "c:\\temp\\35725992H.TIF";
+// File worldFile = new File( "c:\\temp\\35725992H.tfw" );
+// URL worldFileURL = null;
+// double dx = 0;
+// // double rx = 0;
+// double dy = 0;
+// // double ry = 0;
+// double ulcx = 0;
+// double ulcy = 0;
+// // read worldfile
+// try
+// {
+// worldFileURL = worldFile.toURL();
+// URLConnection con = worldFileURL.openConnection();
 //
-//      // TODO remove println?
-//      System.out.println( con.getContentEncoding() );
-//      InputStream is = worldFileURL.openStream();
-//      BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
-//      // pixel size and rotation in x and y direction (units of cs)
-//      // TODO units are not included in the worldfile and hence it is assumed
-//      // the units are compatible
-//      dx = (new Double( br.readLine() )).doubleValue();
-//      /** rx = */
-//      (new Double( br.readLine() )).doubleValue();
-//      /** ry = */
-//      (new Double( br.readLine() )).doubleValue();
-//      dy = (new Double( br.readLine() )).doubleValue();
-//      ulcx = (new Double( br.readLine() )).doubleValue();
-//      ulcy = (new Double( br.readLine() )).doubleValue();
-//    }
-//    catch( MalformedURLException e )
-//    {
-//      e.printStackTrace();
-//    }
-//    catch( IOException e )
-//    {
-//      e.printStackTrace();
-//    }
+// // TODO remove println?
+// System.out.println( con.getContentEncoding() );
+// InputStream is = worldFileURL.openStream();
+// BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
+// // pixel size and rotation in x and y direction (units of cs)
+// // TODO units are not included in the worldfile and hence it is assumed
+// // the units are compatible
+// dx = (new Double( br.readLine() )).doubleValue();
+// /** rx = */
+// (new Double( br.readLine() )).doubleValue();
+// /** ry = */
+// (new Double( br.readLine() )).doubleValue();
+// dy = (new Double( br.readLine() )).doubleValue();
+// ulcx = (new Double( br.readLine() )).doubleValue();
+// ulcy = (new Double( br.readLine() )).doubleValue();
+// }
+// catch( MalformedURLException e )
+// {
+// e.printStackTrace();
+// }
+// catch( IOException e )
+// {
+// e.printStackTrace();
+// }
 //
-//    RenderedImage image = JAI.create( "fileload", source );
-//    int height = image.getHeight();
-//    int width = image.getWidth();
-//    // double minx = ulcx;
-//    // double miny = ulcy + ( height * dy );
-//    // double maxx = ulcx + ( width * dx );
-//    // double maxy = ulcy;
-//    GM_Envelope bbox = GeometryFactory.createGM_Envelope( ulcx, ulcy + (height * dy), ulcx + (width * dx), ulcy );
-//    System.out.println( bbox );
+// RenderedImage image = JAI.create( "fileload", source );
+// int height = image.getHeight();
+// int width = image.getWidth();
+// // double minx = ulcx;
+// // double miny = ulcy + ( height * dy );
+// // double maxx = ulcx + ( width * dx );
+// // double maxy = ulcy;
+// GM_Envelope bbox = GeometryFactory.createGM_Envelope( ulcx, ulcy + (height * dy), ulcx + (width * dx), ulcy );
+// System.out.println( bbox );
   }
 }

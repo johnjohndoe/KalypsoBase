@@ -79,7 +79,7 @@ class ColumnResizeUpdater
     for( final ColumnWidthInfo info : m_infos )
       info.calculateMinimumWidth();
 
-        control.setRedraw( true );
+    control.setRedraw( true );
   }
 
   private void calculateWidths( )
@@ -109,7 +109,7 @@ class ColumnResizeUpdater
       if( info.isAutoResize() )
       {
         final int width = info.getColumnWidth();
-        info.setColumnWidth( width  + additionalWidth);
+        info.setColumnWidth( width + additionalWidth );
       }
     }
   }

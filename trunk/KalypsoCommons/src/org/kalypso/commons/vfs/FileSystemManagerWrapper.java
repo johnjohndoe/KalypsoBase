@@ -356,7 +356,7 @@ public class FileSystemManagerWrapper implements FileSystemManager
    * @see org.apache.commons.vfs2.FileSystemManager#hasProvider(java.lang.String)
    */
   @Override
-  public boolean hasProvider( String scheme )
+  public boolean hasProvider( final String scheme )
   {
     return m_manager.hasProvider( scheme );
   }

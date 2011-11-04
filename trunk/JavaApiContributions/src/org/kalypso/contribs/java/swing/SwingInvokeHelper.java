@@ -51,9 +51,9 @@ import org.kalypso.contribs.java.lang.CatchRunnable;
  */
 public class SwingInvokeHelper
 {
-  private SwingInvokeHelper()
+  private SwingInvokeHelper( )
   {
-  // not intended to be instanciated
+    // not intended to be instanciated
   }
 
   /**

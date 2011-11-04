@@ -50,6 +50,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 public class FindParentTreeVisitor implements ITreeVisitor
 {
   private final Object m_element;
+
   private Object m_parent;
 
   public FindParentTreeVisitor( final Object element )
@@ -82,5 +83,5 @@ public class FindParentTreeVisitor implements ITreeVisitor
   {
     return m_parent;
   }
-  
+
 }

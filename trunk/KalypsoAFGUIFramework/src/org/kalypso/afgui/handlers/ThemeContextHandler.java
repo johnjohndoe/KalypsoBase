@@ -21,6 +21,7 @@ import org.kalypso.ogc.gml.mapmodel.ActivateThemeJob;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.views.map.MapView;
+
 /**
  * Activates a given theme in the current map view.
  * 
@@ -36,7 +37,7 @@ public class ThemeContextHandler extends AbstractHandler
   {
     m_featureType = properties.getProperty( KalypsoContextHandlerFactory.PARAM_INPUT );
 
-    Assert.isNotNull( m_featureType, Messages.getString("org.kalypso.afgui.handlers.ThemeContextHandler.0") ); //$NON-NLS-1$
+    Assert.isNotNull( m_featureType, Messages.getString( "org.kalypso.afgui.handlers.ThemeContextHandler.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -72,7 +73,7 @@ public class ThemeContextHandler extends AbstractHandler
       final MapView mapView = (MapView) view;
       final IMapPanel mapPanel = mapView.getMapPanel();
 
-      MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString("org.kalypso.afgui.handlers.ThemeContextHandler.1"), Messages.getString("org.kalypso.afgui.handlers.ThemeContextHandler.2") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MapModellHelper.waitForAndErrorDialog( shell, mapPanel, Messages.getString( "org.kalypso.afgui.handlers.ThemeContextHandler.1" ), Messages.getString( "org.kalypso.afgui.handlers.ThemeContextHandler.2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final IMapModell mapModell = mapPanel.getMapModell();
 

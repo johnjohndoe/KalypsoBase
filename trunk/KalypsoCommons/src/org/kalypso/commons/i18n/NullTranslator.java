@@ -41,6 +41,7 @@
 package org.kalypso.commons.i18n;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.w3c.dom.Element;
 
@@ -69,7 +70,7 @@ public class NullTranslator implements ITranslator
   }
 
   @Override
-  public String get( final String key )
+  public String get( final String key, final Locale locale, final Object[] context )
   {
     return key;
   }

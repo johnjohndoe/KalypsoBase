@@ -89,7 +89,7 @@ public class CharsetViewer extends ComboViewer
     final SortedMap<String, Charset> availableCharsets = Charset.availableCharsets();
     final Collection<Charset> charsets = availableCharsets.values();
     setInput( charsets );
-    
+
     addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
@@ -98,9 +98,9 @@ public class CharsetViewer extends ComboViewer
         handleSelectionChanged( (IStructuredSelection) event.getSelection() );
       }
     } );
-    
+
     final Charset defaultCharset = Charset.defaultCharset();
-    final String defaultCharsetLabel = String.format( "%s (platform default)", defaultCharset.displayName());
+    final String defaultCharsetLabel = String.format( "%s (platform default)", defaultCharset.displayName() );
     addLabelMapping( defaultCharset, defaultCharsetLabel );
   }
 

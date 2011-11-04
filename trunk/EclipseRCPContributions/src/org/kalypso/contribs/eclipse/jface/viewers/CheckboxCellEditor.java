@@ -50,7 +50,7 @@ public class CheckboxCellEditor extends CellEditor
    * @param parent
    *          the parent control
    */
-  public CheckboxCellEditor( Composite parent )
+  public CheckboxCellEditor( final Composite parent )
   {
     this( parent, defaultStyle );
   }
@@ -64,7 +64,7 @@ public class CheckboxCellEditor extends CellEditor
    * @param style
    *          The style bits.
    */
-  public CheckboxCellEditor( Composite parent, int style )
+  public CheckboxCellEditor( final Composite parent, final int style )
   {
     super( parent, style );
     setValueValid( true );
@@ -74,7 +74,7 @@ public class CheckboxCellEditor extends CellEditor
    * @see org.eclipse.jface.viewers.CellEditor#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createControl( Composite parent )
+  protected Control createControl( final Composite parent )
   {
     button = new Button( parent, getStyle() );
     button.addSelectionListener( new SelectionAdapter()
@@ -83,7 +83,7 @@ public class CheckboxCellEditor extends CellEditor
        * @see org.eclipse.swt.events.SelectionAdapter#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetDefaultSelected( SelectionEvent e )
+      public void widgetDefaultSelected( final SelectionEvent e )
       {
         handleDefaultSelection();
       }
@@ -94,7 +94,7 @@ public class CheckboxCellEditor extends CellEditor
        * @see org.eclipse.swt.events.TraverseListener#keyTraversed(org.eclipse.swt.events.TraverseEvent)
        */
       @Override
-      public void keyTraversed( TraverseEvent e )
+      public void keyTraversed( final TraverseEvent e )
       {
         if( e.detail == SWT.TRAVERSE_ESCAPE || e.detail == SWT.TRAVERSE_RETURN )
           e.doit = false;
@@ -107,7 +107,7 @@ public class CheckboxCellEditor extends CellEditor
        */
       @SuppressWarnings("synthetic-access")
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         CheckboxCellEditor.this.focusLost();
       }
@@ -148,9 +148,9 @@ public class CheckboxCellEditor extends CellEditor
    * @see org.eclipse.jface.viewers.CellEditor#doSetValue(java.lang.Object)
    */
   @Override
-  protected void doSetValue( Object value )
+  protected void doSetValue( final Object value )
   {
-    Assert.isTrue( button != null && (value instanceof Boolean) );
+    Assert.isTrue( button != null && value instanceof Boolean );
     button.removeSelectionListener( getSelectionListener() );
     button.setSelection( (Boolean) value );
     button.addSelectionListener( getSelectionListener() );
@@ -162,9 +162,9 @@ public class CheckboxCellEditor extends CellEditor
   @Override
   public LayoutData getLayoutData( )
   {
-    LayoutData layoutData = super.getLayoutData();
+    final LayoutData layoutData = super.getLayoutData();
 
-    if( (button != null) && (!button.isDisposed()) )
+    if( button != null && !button.isDisposed() )
     {
       layoutData.minimumWidth = 25;
       layoutData.horizontalAlignment = SWT.CENTER;
@@ -188,7 +188,7 @@ public class CheckboxCellEditor extends CellEditor
          */
         @SuppressWarnings("synthetic-access")
         @Override
-        public void widgetSelected( SelectionEvent e )
+        public void widgetSelected( final SelectionEvent e )
         {
           valueChanged( true, true );
         }

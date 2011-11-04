@@ -49,12 +49,12 @@ import org.eclipse.core.runtime.Plugin;
 
 /**
  * Utilities for temp files stored within work directories of plugins
- *
+ * 
  * @author schlienger
  */
 public class TempFileUtilities
 {
-  private TempFileUtilities()
+  private TempFileUtilities( )
   {
     // not intended to be instanciated
   }
@@ -71,7 +71,7 @@ public class TempFileUtilities
   {
     if( prefix.length() < 3 )
       prefix += "___";
-    
+
     final IPath path = plugin.getStateLocation();
     final File dir = new File( path.toFile(), subDirName );
     if( !dir.exists() )
@@ -95,7 +95,7 @@ public class TempFileUtilities
     if( dir.exists() )
       cleanDirectory( dir );
   }
-  
+
   private static void cleanDirectory( final File dir )
   {
     final File[] files = dir.listFiles();
@@ -106,7 +106,7 @@ public class TempFileUtilities
       else
         file.delete();
     }
-    
+
     dir.delete();
   }
 

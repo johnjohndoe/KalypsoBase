@@ -52,7 +52,8 @@ import javax.xml.datatype.Duration;
  * </p>
  * <p>
  * Use only for large grained benchmarking
- * </p>.
+ * </p>
+ * .
  * 
  * @author Gernot Belger
  */

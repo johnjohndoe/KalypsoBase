@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.validation;
 
-
 /**
  * @author Gernot Belger
  */

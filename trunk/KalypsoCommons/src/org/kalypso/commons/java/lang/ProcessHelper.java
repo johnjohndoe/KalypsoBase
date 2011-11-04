@@ -173,7 +173,7 @@ public class ProcessHelper
       IOUtils.closeQuietly( outStream );
     }
 
-    if( (procCtrlThread != null) && procCtrlThread.procDestroyed() )
+    if( procCtrlThread != null && procCtrlThread.procDestroyed() )
       throw new ProcessTimeoutException( Messages.getString( "org.kalypso.commons.java.lang.ProcessHelper.1", sCmd ) ); //$NON-NLS-1$
 
     return iRetVal;
@@ -285,7 +285,7 @@ public class ProcessHelper
       IOUtils.closeQuietly( outStream );
     }
 
-    if( (procCtrlThread != null) && procCtrlThread.procDestroyed() )
+    if( procCtrlThread != null && procCtrlThread.procDestroyed() )
       throw new ProcessTimeoutException( Messages.getString( "org.kalypso.commons.java.lang.ProcessHelper.1", sCmd[0] ) ); //$NON-NLS-1$
 
     return iRetVal;

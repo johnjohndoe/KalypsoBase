@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
  * @author doemming
  */
 public class DiffComparatorRegistry
@@ -42,12 +41,12 @@ public class DiffComparatorRegistry
 
   private final Map<String, IDiffComparator> m_comparators = new HashMap<String, IDiffComparator>();
 
-  private DiffComparatorRegistry()
+  private DiffComparatorRegistry( )
   {
-  // singelton
+    // singelton
   }
 
-  public static DiffComparatorRegistry getInstance()
+  public static DiffComparatorRegistry getInstance( )
   {
     if( m_instance == null )
       m_instance = new DiffComparatorRegistry();

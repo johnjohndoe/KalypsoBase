@@ -60,7 +60,7 @@ public class FormatterUtils
    * If yes, the io-exception will be thrown.
    * 
    * @throws IOException
-   *             If the given formatter has an attached {@link IOException}.
+   *           If the given formatter has an attached {@link IOException}.
    */
   public static void checkIoException( final Formatter format ) throws IOException
   {

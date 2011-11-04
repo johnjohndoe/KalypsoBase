@@ -82,9 +82,9 @@ public class LogStatusWrapper
   public LogStatusWrapper( final File logFile, final String charsetName )
   {
     if( logFile == null )
-      throw new IllegalStateException( Messages.getString("org.kalypso.commons.runtime.LogStatusWrapper.1") ); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.commons.runtime.LogStatusWrapper.1" ) ); //$NON-NLS-1$
     if( !logFile.exists() )
-      throw new IllegalStateException( Messages.getString("org.kalypso.commons.runtime.LogStatusWrapper.2",logFile.toString() )); //$NON-NLS-1$
+      throw new IllegalStateException( Messages.getString( "org.kalypso.commons.runtime.LogStatusWrapper.2", logFile.toString() ) ); //$NON-NLS-1$
 
     m_logFile = logFile;
     m_charsetName = charsetName;
@@ -95,8 +95,7 @@ public class LogStatusWrapper
     LineNumberReader reader = null;
     try
     {
-      reader = new LineNumberReader( new InputStreamReader( new BufferedInputStream( new FileInputStream( logFile ) ),
-          charsetName ) );
+      reader = new LineNumberReader( new InputStreamReader( new BufferedInputStream( new FileInputStream( logFile ) ), charsetName ) );
       while( reader.ready() )
       {
         final String line = reader.readLine();
@@ -134,7 +133,7 @@ public class LogStatusWrapper
   /**
    * @return true if there are some messages for the user
    */
-  public boolean hasMessages()
+  public boolean hasMessages( )
   {
     return m_summary.length() > 0;
   }
@@ -142,7 +141,7 @@ public class LogStatusWrapper
   /**
    * @return Returns the logFile.
    */
-  public File getLogFile()
+  public File getLogFile( )
   {
     return m_logFile;
   }
@@ -150,7 +149,7 @@ public class LogStatusWrapper
   /**
    * @return an IStatus representation of this result.
    */
-  public IStatus toStatus()
+  public IStatus toStatus( )
   {
     if( !hasMessages() )
       return Status.OK_STATUS;
@@ -161,7 +160,7 @@ public class LogStatusWrapper
     // a look at the log file using the 'details' button in the ErrorDialog
     final String truncatedSummary = StringUtils.left( m_summary, 512 );
     // '\r' verschwinden lassen, da sonst der Status-Dialog zuviele Umbrüche generiert
-    final String msg = truncatedSummary.replace( '\r', ' ' ) + "...\n" + Messages.getString("org.kalypso.commons.runtime.LogStatusWrapper.5") //$NON-NLS-1$ //$NON-NLS-2$
+    final String msg = truncatedSummary.replace( '\r', ' ' ) + "...\n" + Messages.getString( "org.kalypso.commons.runtime.LogStatusWrapper.5" ) //$NON-NLS-1$ //$NON-NLS-2$
         + m_logFile.toString();
 
     return new LogStatus( IStatus.WARNING, KalypsoCommonsPlugin.getID(), 0, msg, null, m_logFile, m_charsetName );

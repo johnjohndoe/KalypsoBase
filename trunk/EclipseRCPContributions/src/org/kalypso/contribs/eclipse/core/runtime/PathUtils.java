@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.Path;
 
 /**
  * Helper class for {@link org.eclipse.core.runtime.IPath}.
- *
+ * 
  * @author Gernot Belger
  */
 public final class PathUtils

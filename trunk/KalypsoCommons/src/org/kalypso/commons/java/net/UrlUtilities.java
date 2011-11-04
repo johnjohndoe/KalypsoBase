@@ -224,18 +224,18 @@ public class UrlUtilities
    *          The URL.
    * @return A URL in the format: http://localhost:8080
    */
-  public static URL removeRequest( URL sourceURL ) throws MalformedURLException
+  public static URL removeRequest( final URL sourceURL ) throws MalformedURLException
   {
-    String protocol = sourceURL.getProtocol();
-    String host = sourceURL.getHost();
-    int port = sourceURL.getPort();
+    final String protocol = sourceURL.getProtocol();
+    final String host = sourceURL.getHost();
+    final int port = sourceURL.getPort();
     if( port >= 1 )
       return new URL( String.format( "%s://%s:%d", protocol, host, port ) );
 
     return new URL( String.format( "%s://%s", protocol, host ) );
   }
 
-  public static long getContentLength( URL url ) throws IOException
+  public static long getContentLength( final URL url ) throws IOException
   {
     final File file = FileUtils.toFile( url );
     if( file != null )

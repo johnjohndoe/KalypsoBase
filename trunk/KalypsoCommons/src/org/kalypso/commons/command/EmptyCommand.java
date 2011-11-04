@@ -48,6 +48,7 @@ package org.kalypso.commons.command;
 public class EmptyCommand implements ICommand
 {
   private final String m_description;
+
   private final boolean m_isUndoable;
 
   public EmptyCommand( final String description, final boolean isUndoable )

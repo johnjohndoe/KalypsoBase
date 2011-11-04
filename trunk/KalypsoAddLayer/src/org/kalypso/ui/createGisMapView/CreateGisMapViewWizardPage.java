@@ -29,27 +29,27 @@ public class CreateGisMapViewWizardPage extends WizardPage
 
   private Text fileText;
 
-  private ISelection m_selection;
+  private final ISelection m_selection;
 
-  public CreateGisMapViewWizardPage( ISelection selection )
+  public CreateGisMapViewWizardPage( final ISelection selection )
   {
     super( "wizardPage" ); //$NON-NLS-1$
-    setTitle( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.0") ); //$NON-NLS-1$
-    setDescription( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.1") ); //$NON-NLS-1$
-    this.setImageDescriptor( ImageProvider.IMAGE_ICON_GMT );
+    setTitle( Messages.getString( "org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.0" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.1" ) ); //$NON-NLS-1$
+    setImageDescriptor( ImageProvider.IMAGE_ICON_GMT );
     m_selection = selection;
   }
 
   @Override
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
-    Composite container = new Composite( parent, SWT.NULL );
-    GridLayout layout = new GridLayout();
+    final Composite container = new Composite( parent, SWT.NULL );
+    final GridLayout layout = new GridLayout();
     container.setLayout( layout );
     layout.numColumns = 3;
     layout.verticalSpacing = 9;
     Label label = new Label( container, SWT.NULL );
-    label.setText( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.2") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.2" ) ); //$NON-NLS-1$
 
     containerText = new Text( container, SWT.BORDER | SWT.SINGLE );
     GridData gd = new GridData( GridData.FILL_HORIZONTAL );
@@ -57,24 +57,24 @@ public class CreateGisMapViewWizardPage extends WizardPage
     containerText.addModifyListener( new ModifyListener()
     {
       @Override
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         dialogChanged();
       }
     } );
 
-    Button button = new Button( container, SWT.PUSH );
-    button.setText( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.3") ); //$NON-NLS-1$
+    final Button button = new Button( container, SWT.PUSH );
+    button.setText( Messages.getString( "org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.3" ) ); //$NON-NLS-1$
     button.addSelectionListener( new SelectionAdapter()
     {
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         handleBrowse();
       }
     } );
     label = new Label( container, SWT.NULL );
-    label.setText( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.4") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.4" ) ); //$NON-NLS-1$
 
     fileText = new Text( container, SWT.BORDER | SWT.SINGLE );
     gd = new GridData( GridData.FILL_HORIZONTAL );
@@ -82,7 +82,7 @@ public class CreateGisMapViewWizardPage extends WizardPage
     fileText.addModifyListener( new ModifyListener()
     {
       @Override
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         dialogChanged();
       }
@@ -100,10 +100,10 @@ public class CreateGisMapViewWizardPage extends WizardPage
   {
     if( m_selection != null && m_selection.isEmpty() == false && m_selection instanceof IStructuredSelection )
     {
-      IStructuredSelection ssel = (IStructuredSelection) m_selection;
+      final IStructuredSelection ssel = (IStructuredSelection) m_selection;
       if( ssel.size() > 1 )
         return;
-      Object obj = ssel.getFirstElement();
+      final Object obj = ssel.getFirstElement();
       if( obj instanceof IResource )
       {
         IContainer container;
@@ -123,10 +123,10 @@ public class CreateGisMapViewWizardPage extends WizardPage
 
   void handleBrowse( )
   {
-    ContainerSelectionDialog dialog = new ContainerSelectionDialog( getShell(), ResourcesPlugin.getWorkspace().getRoot(), false, Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.5") ); //$NON-NLS-1$
+    final ContainerSelectionDialog dialog = new ContainerSelectionDialog( getShell(), ResourcesPlugin.getWorkspace().getRoot(), false, Messages.getString( "org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.5" ) ); //$NON-NLS-1$
     if( dialog.open() == Window.OK )
     {
-      Object[] result = dialog.getResult();
+      final Object[] result = dialog.getResult();
       if( result.length == 1 )
       {
         containerText.setText( ((Path) result[0]).toOSString() );
@@ -140,33 +140,33 @@ public class CreateGisMapViewWizardPage extends WizardPage
 
   void dialogChanged( )
   {
-    String container = getContainerName();
-    String fileName = getFileName();
+    final String container = getContainerName();
+    final String fileName = getFileName();
 
     if( container.length() == 0 )
     {
-      updateStatus( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.6") ); //$NON-NLS-1$
+      updateStatus( Messages.getString( "org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.6" ) ); //$NON-NLS-1$
       return;
     }
     if( fileName.length() == 0 )
     {
-      updateStatus( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.7") ); //$NON-NLS-1$
+      updateStatus( Messages.getString( "org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.7" ) ); //$NON-NLS-1$
       return;
     }
-    int dotLoc = fileName.lastIndexOf( '.' );
+    final int dotLoc = fileName.lastIndexOf( '.' );
     if( dotLoc != -1 )
     {
-      String ext = fileName.substring( dotLoc + 1 );
+      final String ext = fileName.substring( dotLoc + 1 );
       if( ext.equalsIgnoreCase( "gmt" ) == false ) //$NON-NLS-1$
       {
-        updateStatus( Messages.getString("org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.8") ); //$NON-NLS-1$
+        updateStatus( Messages.getString( "org.kalypso.ui.createGisMapView.CreateGisMapViewWizardPage.8" ) ); //$NON-NLS-1$
         return;
       }
     }
     updateStatus( null );
   }
 
-  private void updateStatus( String message )
+  private void updateStatus( final String message )
   {
     setErrorMessage( message );
     setPageComplete( message == null );

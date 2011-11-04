@@ -58,7 +58,7 @@ public interface IUrlResolver
   /**
    * An iterator over entries of a map (Map.Entry) Each entry represant a token , wich can be replaced
    */
-  public Iterator<Entry<Object, Object>> getReplaceEntries();
+  public Iterator<Entry<Object, Object>> getReplaceEntries( );
 
   /**
    * add a Replace token to the map, which can be accessed via getReplaceEntries()
