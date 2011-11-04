@@ -57,7 +57,7 @@ public class RewindAction extends Action
   /**
    * The movie player.
    */
-  private MoviePlayer m_player;
+  private final MoviePlayer m_player;
 
   /**
    * The constructor.
@@ -65,7 +65,7 @@ public class RewindAction extends Action
    * @param player
    *          The movie player.
    */
-  public RewindAction( MoviePlayer player )
+  public RewindAction( final MoviePlayer player )
   {
     m_player = player;
   }
@@ -74,9 +74,9 @@ public class RewindAction extends Action
    * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
    */
   @Override
-  public void runWithEvent( Event event )
+  public void runWithEvent( final Event event )
   {
-    int currentStep = m_player.getCurrentStep();
+    final int currentStep = m_player.getCurrentStep();
     m_player.stepTo( currentStep - 1 );
     m_player.updateControls();
   }

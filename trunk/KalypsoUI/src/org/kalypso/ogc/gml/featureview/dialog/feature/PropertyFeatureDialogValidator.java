@@ -67,23 +67,20 @@ public class PropertyFeatureDialogValidator implements IFeatureDialogValidator
    * @see org.kalypso.ogc.gml.featureview.dialog.feature.IFeatureDialogValidator#validate(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public IStatus validate( Feature feature )
+  public IStatus validate( final Feature feature )
   {
     /* Memory for the results. */
-    MultiStatus results = new MultiStatus( KalypsoGisPlugin.getId(), IStatus.OK, feature.getQualifiedName().toString(), null );
+    final MultiStatus results = new MultiStatus( KalypsoGisPlugin.getId(), IStatus.OK, feature.getQualifiedName().toString(), null );
 
     /* Get the feature type. */
-    IFeatureType featureType = feature.getFeatureType();
+    final IFeatureType featureType = feature.getFeatureType();
 
     /* Get all property types. */
-    IPropertyType[] pts = featureType.getProperties();
-    for( int i = 0; i < pts.length; i++ )
+    final IPropertyType[] pts = featureType.getProperties();
+    for( final IPropertyType pt : pts )
     {
-      /* Get the property type. */
-      IPropertyType pt = pts[i];
-
       /* Validate this property. */
-      IStatus result = validateProperty( feature, pt );
+      final IStatus result = validateProperty( feature, pt );
 
       /* Add the result. */
       results.add( result );
@@ -101,23 +98,20 @@ public class PropertyFeatureDialogValidator implements IFeatureDialogValidator
    *          The property type.
    * @return A status object, indicating the result of the validation.
    */
-  private IStatus validateProperty( Feature feature, IPropertyType pt )
+  private IStatus validateProperty( final Feature feature, final IPropertyType pt )
   {
     /* Memory for the results. */
-    MultiStatus results = new MultiStatus( KalypsoGisPlugin.getId(), IStatus.OK, pt.getQName().toString(), null );
+    final MultiStatus results = new MultiStatus( KalypsoGisPlugin.getId(), IStatus.OK, pt.getQName().toString(), null );
 
     /* Get the property. */
-    Object property = feature.getProperty( pt );
+    final Object property = feature.getProperty( pt );
 
     /* Get the rules, which should be applied for this property type. */
-    IRule[] rules = RuleFactory.getRules( pt );
-    for( int i = 0; i < rules.length; i++ )
+    final IRule[] rules = RuleFactory.getRules( pt );
+    for( final IRule rule : rules )
     {
-      /* Get the rule. */
-      IRule rule = rules[i];
-
       /* Validate. */
-      IStatus result = rule.isValid( property );
+      final IStatus result = rule.isValid( property );
 
       /* Add the result. */
       results.add( result );

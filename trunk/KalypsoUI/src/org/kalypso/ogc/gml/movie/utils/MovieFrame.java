@@ -47,8 +47,16 @@ import java.io.File;
 
 import javax.media.jai.JAI;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
+import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -59,82 +67,126 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 public class MovieFrame implements IMovieFrame
 {
   /**
-   * The map model.-
+   * The map model.
    */
-  private IMapModell m_mapModel;
+  private final GisTemplateMapModell m_mapModel;
 
   /**
    * The label.
    */
-  private String m_label;
+  private final String m_label;
+
+  /**
+   * The id of the theme.
+   */
+  private final String m_themeID;
 
   /**
    * The bounding box.
    */
-  private GM_Envelope m_boundingBox;
+  private final GM_Envelope m_boundingBox;
 
   /**
    * The temp directory for that movie.
    */
-  private File m_tmpDirectory;
+  private final File m_tmpDirectory;
 
-  /**
-   * The constructor.
-   */
-  public MovieFrame( IMapModell mapModel, String label, GM_Envelope boundingBox, File tmpDirectory )
+  public MovieFrame( final GisTemplateMapModell mapModel, final String label, final String themeID, final GM_Envelope boundingBox, final File tmpDirectory )
   {
     m_mapModel = mapModel;
     m_label = label;
+    m_themeID = themeID;
     m_boundingBox = boundingBox;
     m_tmpDirectory = tmpDirectory;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.movie.utils.IMovieFrame#getImage(int, int)
-   */
-  @Override
-  public RenderedImage getImage( int width, int height )
-  {
-    /* Get the directory of the images for this size. */
-    /* It will be created, if it does not already exist. */
-    File imageDirectory = getImageDirectory( width, height );
-
-    /* The image file. */
-    File imageFile = new File( imageDirectory, m_label + ".PNG" );
-    if( imageFile.exists() )
-      return JAI.create( "fileload", imageFile.getAbsolutePath() );
-
-    /* Create the image. */
-    BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapModel, width, height, new Insets( 1, 1, 1, 1 ), 0, m_boundingBox );
-
-    /* Save the image. */
-    JAI.create( "filestore", image, imageFile.getAbsolutePath(), "PNG" );
-
-    return image;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.movie.utils.IMovieFrame#getLabel()
-   */
   @Override
   public String getLabel( )
   {
     return m_label;
   }
 
+  @Override
+  public RenderedImage getImage( final int width, final int height )
+  {
+    try
+    {
+      /* Get the directory of the images for this size. */
+      /* It will be created, if it does not already exist. */
+      final File imageDirectory = getImageDirectory( width, height );
+
+      /* The image file. */
+      final File imageFile = new File( imageDirectory, getLabel() + m_themeID + ".PNG" );
+      if( imageFile.exists() )
+        return JAI.create( "fileload", imageFile.getAbsolutePath() );
+
+      /* Create the image. */
+      final IMapModell model = createModel();
+      final BufferedImage image = MapModellHelper.createWellFormedImageFromModel( model, width, height, new Insets( 1, 1, 1, 1 ), 0, m_boundingBox );
+      model.dispose();
+
+      /* Save the image. */
+      JAI.create( "filestore", image, imageFile.getAbsolutePath(), "PNG" );
+
+      return image;
+    }
+    catch( final Exception ex )
+    {
+      KalypsoGisPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) );
+      return null;
+    }
+  }
+
+  /**
+   * Initialise the model: Show my theme and hide all other themes.
+   * 
+   * @return The new map model.
+   */
+  private IMapModell createModel( ) throws Exception
+  {
+    /* Clone the map model. */
+    final GisTemplateMapModell newMapModel = MovieUtilities.cloneMapModel( m_mapModel, m_boundingBox );
+
+    /* Hide all themes except the movie theme. */
+    final IKalypsoLayerModell movieTheme = MovieUtilities.findMovieTheme( newMapModel );
+
+    /* Get all themes. */
+    final IKalypsoTheme[] allThemes = movieTheme.getAllThemes();
+    for( final IKalypsoTheme theme : allThemes )
+    {
+      if( theme.getId().equals( m_themeID ) )
+      {
+        /* Find/Add the legend theme. */
+        final IKalypsoTheme[] legendThemes = MapModellHelper.findThemeByProperty( newMapModel, LegendUtilities.THEME_PROPERTY_THEME_IDS, IKalypsoThemeVisitor.DEPTH_ZERO );
+        if( legendThemes != null && legendThemes.length > 0 )
+          legendThemes[0].setProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS, ((IKalypsoTheme) movieTheme).getId() + ";" + theme.getId() );
+
+        theme.setVisible( true );
+      }
+      else
+        theme.setVisible( false );
+    }
+
+    return newMapModel;
+  }
+
   /**
    * This function returns the directory, which contains the images of this size. If it does not exist, it will be
    * created.
    * 
+   * @param width
+   *          The width.
+   * @param height
+   *          The height.
    * @return The directory, which contains the images of this size.
    */
-  private File getImageDirectory( int width, int height )
+  private File getImageDirectory( final int width, final int height )
   {
     if( !m_tmpDirectory.exists() )
       m_tmpDirectory.mkdirs();
 
-    String sizeName = String.format( "%d_x_%d", width, height );
-    File sizeDirectory = new File( m_tmpDirectory, sizeName );
+    final String sizeName = String.format( "%d_x_%d", width, height );
+    final File sizeDirectory = new File( m_tmpDirectory, sizeName );
     if( !sizeDirectory.exists() )
       sizeDirectory.mkdirs();
 

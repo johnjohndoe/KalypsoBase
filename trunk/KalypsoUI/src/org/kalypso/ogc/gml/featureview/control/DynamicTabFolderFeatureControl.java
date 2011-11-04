@@ -152,7 +152,7 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
 
       final FeatureTabItem featureItem = getFeatureItem( count );
       final Object tabObject = featureItem == null ? null : featureItem.getFeatureObject();
-      
+
       if( object.equals( tabObject ) )
       {
         featureItem.updateControl();

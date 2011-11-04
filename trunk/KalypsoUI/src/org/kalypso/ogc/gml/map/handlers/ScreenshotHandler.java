@@ -51,7 +51,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -69,7 +69,7 @@ public class ScreenshotHandler extends AbstractHandler
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     /* The output stream. */
     BufferedOutputStream os = null;
@@ -77,45 +77,45 @@ public class ScreenshotHandler extends AbstractHandler
     try
     {
       /* Get the evaluation context. */
-      IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
       /* Get the shell. */
-      Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+      final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+
+      /* Get the map panel. */
+      final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
       /* Create the dialog for asking the user for information, regarding the image target and format. */
-      ScreenshotDialog dialog = new ScreenshotDialog( shell );
+      final ScreenshotDialog dialog = new ScreenshotDialog( shell, mapPanel.getWidth(), mapPanel.getHeight() );
 
       /* Open the dialog. */
-      int open = dialog.open();
-      if( open != Dialog.OK )
+      final int open = dialog.open();
+      if( open != Window.OK )
         return null;
 
       /* Get the path to the target file. */
-      String targetPath = dialog.getTargetPath();
+      final String targetPath = dialog.getTargetPath();
 
       /* Get the format information. */
-      int width = dialog.getImageWidth();
-      int height = dialog.getImageHeight();
-      Insets insets = dialog.getInsets();
-      boolean hasBorder = dialog.hasBorder();
-      String format = dialog.getImageFormat();
+      final int width = dialog.getImageWidth();
+      final int height = dialog.getImageHeight();
+      final Insets insets = dialog.getInsets();
+      final boolean hasBorder = dialog.hasBorder();
+      final String format = dialog.getImageFormat();
 
       /* The target file. */
-      File targetFile = new File( targetPath );
+      final File targetFile = new File( targetPath );
 
       /* Create the output stream. */
       os = new BufferedOutputStream( new FileOutputStream( targetFile ) );
 
-      /* Get the map panel. */
-      IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
-
       /* Export the image. */
-      MapExportableObject export = new MapExportableObject( mapPanel, targetFile.getName(), width, height, insets, hasBorder ? 1 : -1, format );
+      final MapExportableObject export = new MapExportableObject( mapPanel, targetFile.getName(), width, height, insets, hasBorder ? 1 : -1, format );
       export.exportObject( os, new NullProgressMonitor() );
 
       return targetFile;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new ExecutionException( ex.getMessage(), ex );
     }

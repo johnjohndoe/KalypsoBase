@@ -94,18 +94,18 @@ public class ExportTableOptionsPage extends WizardPage
     final GridLayout layout = new GridLayout();
     optionsGroup.setLayout( layout );
     optionsGroup.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    optionsGroup.setText( Messages.getString("org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage.0") ); //$NON-NLS-1$
+    optionsGroup.setText( Messages.getString( "org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage.0" ) ); //$NON-NLS-1$
     optionsGroup.setFont( parent.getFont() );
 
     m_radioAll = new Button( optionsGroup, SWT.RADIO );
-    m_radioAll.setText( Messages.getString("org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage.1") ); //$NON-NLS-1$
+    m_radioAll.setText( Messages.getString( "org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage.1" ) ); //$NON-NLS-1$
     m_radioAll.setSelection( true );
 
     m_radioSelection = new Button( optionsGroup, SWT.RADIO );
-    m_radioSelection.setText( Messages.getString("org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage.2") ); //$NON-NLS-1$
+    m_radioSelection.setText( Messages.getString( "org.kalypso.ogc.gml.table.wizard.ExportTableOptionsPage.2" ) ); //$NON-NLS-1$
   }
 
-  public boolean getOnlySelected()
+  public boolean getOnlySelected( )
   {
     return m_radioSelection.getSelection();
   }
@@ -113,7 +113,7 @@ public class ExportTableOptionsPage extends WizardPage
   /**
    * Hook method for restoring widget values to the values that they held last time this wizard was used to completion.
    */
-  protected void restoreWidgetValues()
+  protected void restoreWidgetValues( )
   {
     final IDialogSettings settings = getDialogSettings();
     if( settings != null )
@@ -124,7 +124,7 @@ public class ExportTableOptionsPage extends WizardPage
     }
   }
 
-  public void saveWidgetValues()
+  public void saveWidgetValues( )
   {
     final IDialogSettings settings = getDialogSettings();
     if( settings != null )

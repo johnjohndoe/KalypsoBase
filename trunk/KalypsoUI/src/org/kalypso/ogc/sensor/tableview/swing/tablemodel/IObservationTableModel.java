@@ -51,7 +51,7 @@ import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 public interface IObservationTableModel
 {
   static final RenderingRule[] EMPTY_RENDERING_RULES = new RenderingRule[0];
-  
+
   public RenderingRule[] findRules( int row, int column );
 
   public NumberFormat getNumberFormat( int column );

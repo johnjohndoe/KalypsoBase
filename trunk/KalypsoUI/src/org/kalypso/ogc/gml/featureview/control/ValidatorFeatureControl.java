@@ -72,12 +72,12 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
   /**
    * This variable stores the rules, that should be applied for the property_type.
    */
-  private IRule[] m_rules;
+  private final IRule[] m_rules;
 
   /**
    * This variable stores, if the ok_status should be shown.
    */
-  private boolean m_showok;
+  private final boolean m_showok;
 
   /* This creates the images once for the ValidatorFeature once, cause they are not disposed at this time. */
   // TODO: use Plugin-Imageprovider to handle life-cycle of images!
@@ -190,13 +190,13 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
       if( ftp != null )
       {
         /* Check for validation here. */
-        Vector<IStatus> status = new Vector<IStatus>();
+        final Vector<IStatus> status = new Vector<IStatus>();
 
-        for( int i = 0; i < m_rules.length; i++ )
-          status.add( m_rules[i].isValid( feature.getProperty( ftp ) ) );
+        for( final IRule m_rule : m_rules )
+          status.add( m_rule.isValid( feature.getProperty( ftp ) ) );
 
         /* Set the image and a tooltip. */
-        MultiStatus mstatus = new MultiStatus( Platform.PI_RUNTIME, Status.OK, status.toArray( new Status[] {} ), "", null ); //$NON-NLS-1$
+        final MultiStatus mstatus = new MultiStatus( Platform.PI_RUNTIME, IStatus.OK, status.toArray( new Status[] {} ), "", null ); //$NON-NLS-1$
         if( mstatus.isOK() == true )
         {
           if( m_showok == true )

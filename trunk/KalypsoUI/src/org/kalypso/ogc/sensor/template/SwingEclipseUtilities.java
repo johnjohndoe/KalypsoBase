@@ -55,23 +55,24 @@ import org.kalypso.i18n.Messages;
 
 /**
  * Swing Utilities when used within the Eclipse Framework
- *
+ * 
  * @author schlienger
  */
 public class SwingEclipseUtilities
 {
-  private SwingEclipseUtilities()
+  private SwingEclipseUtilities( )
   {
     // not intended to be instanciated
   }
 
   /**
-   * Invoke the runnable in the right way according to waitForSwing. In the case
-   * an exception occured, the user gets informed with an error-dialog.
+   * Invoke the runnable in the right way according to waitForSwing. In the case an exception occured, the user gets
+   * informed with an error-dialog.
    * 
-   * @param runnable the runnable to invoke
-   * @param waitForSwing if true, this method returns once runnable is done 
-   * 
+   * @param runnable
+   *          the runnable to invoke
+   * @param waitForSwing
+   *          if true, this method returns once runnable is done
    * @see SwingInvokeHelper
    */
   public static void invokeAndHandleError( final CatchRunnable runnable, final boolean waitForSwing )
@@ -87,9 +88,9 @@ public class SwingEclipseUtilities
       final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
       final Shell shell = activeWorkbenchWindow == null ? null : activeWorkbenchWindow.getShell();
       if( shell != null )
-        MessageDialog.openError( shell, Messages.getString("org.kalypso.ogc.sensor.template.SwingEclipseUtilities.0"), t.toString() ); //$NON-NLS-1$
+        MessageDialog.openError( shell, Messages.getString( "org.kalypso.ogc.sensor.template.SwingEclipseUtilities.0" ), t.toString() ); //$NON-NLS-1$
       else
-        JOptionPane.showMessageDialog( null, t.toString(), Messages.getString("org.kalypso.ogc.sensor.template.SwingEclipseUtilities.1"), JOptionPane.ERROR_MESSAGE ); //$NON-NLS-1$
+        JOptionPane.showMessageDialog( null, t.toString(), Messages.getString( "org.kalypso.ogc.sensor.template.SwingEclipseUtilities.1" ), JOptionPane.ERROR_MESSAGE ); //$NON-NLS-1$
     }
   }
 }

@@ -58,7 +58,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -66,15 +66,17 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.visitors.FindLinkedFeatureVisitor;
 
 /**
- * Utilities for handling feature lists in the table feature control.
+ * Uitls for handling feature lists in the table feature control.
  * 
  * @author Holger Albert
  */
-public final class TableFeatureControlUtils
+public class TableFeatureControlUtils
 {
+  /**
+   * The constructor.
+   */
   private TableFeatureControlUtils( )
   {
-    throw new UnsupportedOperationException();
   }
 
   /**
@@ -101,95 +103,61 @@ public final class TableFeatureControlUtils
       final FindLinkedFeatureVisitor visitor = new FindLinkedFeatureVisitor( gmlIds );
       workspace.accept( visitor, workspace.getRootFeature(), FeatureVisitor.DEPTH_INFINITE );
       final Map<Feature, Set<IRelationType>> linkedFeatures = visitor.getLinkedFeatures();
+      if( linkedFeatures.size() > 0 )
+      {
+        String msg;
+        if( allFeatures.length == 1 )
+          msg = Messages.getString( "org.kalypso.ui.editor.actions.TableFeatureControlUtils.0" ); //$NON-NLS-1$
+        else
+          msg = Messages.getString( "org.kalypso.ui.editor.actions.TableFeatureControlUtils.1" ); //$NON-NLS-1$
 
-      if( !askForDeletion( shell, allFeatures, linkedFeatures ) )
-        return null;
+        final MessageDialog dialog = new MessageDialog( shell, Messages.getString( "org.kalypso.ui.editor.actions.TableFeatureControlUtils.2" ), null, msg, MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 ) //$NON-NLS-1$
+        {
+          /**
+           * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
+           */
+          @Override
+          protected Control createCustomArea( final Composite dialogParent )
+          {
+            final TableViewer viewer = new TableViewer( dialogParent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.HIDE_SELECTION );
+            viewer.setContentProvider( new ArrayContentProvider() );
+            viewer.setLabelProvider( new GMLLabelProvider()
+            {
+              /**
+               * @see org.kalypso.ui.editor.gmleditor.ui.GMLEditorLabelProvider2#getText(java.lang.Object)
+               */
+              @Override
+              public String getText( final Object element )
+              {
+                if( element instanceof Feature )
+                  return FeatureHelper.getAnnotationValue( (Feature) element, IAnnotation.ANNO_NAME ) + ": <" + FeatureHelper.getAnnotationValue( (Feature) element, IAnnotation.ANNO_LABEL ) + ">"; //$NON-NLS-1$ //$NON-NLS-2$
 
-      return new DeleteFeatureCommand( allFeatures );
+                return super.getText( element );
+              }
+            } );
+            viewer.setInput( linkedFeatures.keySet() );
+
+            viewer.getTable();
+
+            final Control control = viewer.getControl();
+            final GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, true );
+            gridData.minimumHeight = 200;
+            gridData.widthHint = 200;
+            gridData.heightHint = 200;
+            control.setLayoutData( gridData );
+
+            return control;
+          }
+        };
+
+        if( dialog.open() == Window.CANCEL )
+          return null;
+      }
+
+      final DeleteFeatureCommand command = new DeleteFeatureCommand( allFeatures );
+      return command;
     }
 
     return null;
-  }
-
-  private static boolean askForDeletion( final Shell shell, final EasyFeatureWrapper[] allFeatures, final Map<Feature, Set<IRelationType>> linkedFeatures )
-  {
-    if( linkedFeatures.size() == 0 )
-      return askForDeletionNoReferences( shell, allFeatures );
-
-    return askForDeletionWithReferences( shell, allFeatures, linkedFeatures );
-  }
-
-  private static boolean askForDeletionNoReferences( final Shell shell, final EasyFeatureWrapper[] allFeatures )
-  {
-    final String message = getAskNoReferencesMessage( allFeatures );
-    return MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.ui.editor.actions.TableFeatureControlUtils.2" ), message ); //$NON-NLS-1$
-  }
-
-  private static boolean askForDeletionWithReferences( final Shell shell, final EasyFeatureWrapper[] allFeatures, final Map<Feature, Set<IRelationType>> linkedFeatures )
-  {
-    final String msg = getAskWithReferencesMessage( allFeatures );
-
-    final MessageDialog dialog = new MessageDialog( shell, Messages.getString( "org.kalypso.ui.editor.actions.TableFeatureControlUtils.2" ), null, msg, MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 ) //$NON-NLS-1$
-    {
-      @Override
-      protected Control createCustomArea( final Composite dialogParent )
-      {
-        final TableViewer viewer = new TableViewer( dialogParent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.HIDE_SELECTION );
-        viewer.setContentProvider( new ArrayContentProvider() );
-        viewer.setLabelProvider( new GMLLabelProvider()
-        {
-          @Override
-          public String getText( final Object element )
-          {
-            if( element instanceof Feature )
-              return getFeatureDeleteLabel( (Feature) element );
-
-            return super.getText( element );
-          }
-        } );
-        viewer.setInput( linkedFeatures.keySet() );
-
-        viewer.getTable();
-
-        final Control control = viewer.getControl();
-        final GridData gridData = new GridData( SWT.FILL, SWT.FILL, true, true );
-        gridData.minimumHeight = 200;
-        gridData.widthHint = 200;
-        gridData.heightHint = 200;
-        control.setLayoutData( gridData );
-
-        return control;
-      }
-    };
-
-    final int open = dialog.open();
-    // REMARK: this is not the same as != Window.CANCEL
-    return open == Window.OK;
-  }
-
-  private static String getAskWithReferencesMessage( final EasyFeatureWrapper[] allFeatures )
-  {
-    if( allFeatures.length == 1 )
-      return Messages.getString( "org.kalypso.ui.editor.actions.TableFeatureControlUtils.0" ); //$NON-NLS-1$
-    else
-      return Messages.getString( "org.kalypso.ui.editor.actions.TableFeatureControlUtils.1" ); //$NON-NLS-1$
-  }
-
-  private static String getAskNoReferencesMessage( final EasyFeatureWrapper[] allFeatures )
-  {
-    if( allFeatures.length == 1 )
-    {
-      final String label = getFeatureDeleteLabel( allFeatures[0].getFeature() );
-      return String.format( Messages.getString( "TableFeatureControlUtils.1" ), label ); //$NON-NLS-1$
-    }
-    else
-      return String.format( Messages.getString("TableFeatureControlUtils.2"), allFeatures.length ); //$NON-NLS-1$
-  }
-
-  protected static String getFeatureDeleteLabel( final Feature feature )
-  {
-    final String name = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_NAME );
-    final String label = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_LABEL );
-    return String.format( "%s: <%s>", name, label ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

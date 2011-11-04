@@ -54,7 +54,7 @@ public class DefaultHandlesProvider implements IHandlesProvider
   /**
    * This list contains all handle providers. Every provider will be asked for handles.
    */
-  private IHandlesProvider[] m_handlesProvider;
+  private final IHandlesProvider[] m_handlesProvider;
 
   public DefaultHandlesProvider( )
   {
@@ -71,13 +71,13 @@ public class DefaultHandlesProvider implements IHandlesProvider
    *      int)
    */
   @Override
-  public List<IHandle> collectHandles( Feature feature, int radius )
+  public List<IHandle> collectHandles( final Feature feature, final int radius )
   {
     /* Create a new list for the handles. */
-    ArrayList<IHandle> handles = new ArrayList<IHandle>();
+    final ArrayList<IHandle> handles = new ArrayList<IHandle>();
 
     /* Collect all handles from the handle providers. */
-    for( IHandlesProvider handlesProvider : m_handlesProvider )
+    for( final IHandlesProvider handlesProvider : m_handlesProvider )
       handles.addAll( handlesProvider.collectHandles( feature, radius ) );
 
     return handles;

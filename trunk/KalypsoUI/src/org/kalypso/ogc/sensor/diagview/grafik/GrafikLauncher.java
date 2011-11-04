@@ -608,9 +608,9 @@ public class GrafikLauncher
 
     public ValueAndColor( final String lbl, final double val, final Color col )
     {
-      this.label = lbl;
-      this.value = val;
-      this.color = col;
+      label = lbl;
+      value = val;
+      color = col;
     }
   }
 

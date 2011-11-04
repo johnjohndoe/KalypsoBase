@@ -68,5 +68,4 @@ public class FilterReader
     return AbstractFilter.buildFromDOM( element );
   }
 
-  
 }

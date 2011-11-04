@@ -61,9 +61,9 @@ public class PointHandlesProvider implements IHandlesProvider
    * @see org.kalypso.informdss.manager.util.widgets.providers.IHandlesProvider#collectHandles(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public List<IHandle> collectHandles( Feature feature, int radius )
+  public List<IHandle> collectHandles( final Feature feature, final int radius )
   {
-    ArrayList<IHandle> list = new ArrayList<IHandle>();
+    final ArrayList<IHandle> list = new ArrayList<IHandle>();
 
     final IValuePropertyType[] allGeomteryProperties = feature.getFeatureType().getAllGeomteryProperties();
     for( final IValuePropertyType type : allGeomteryProperties )
@@ -72,7 +72,7 @@ public class PointHandlesProvider implements IHandlesProvider
       /* Only handles for a point are returned. */
       if( object instanceof GM_Point )
       {
-        GM_Point point = (GM_Point) object;
+        final GM_Point point = (GM_Point) object;
 
         /* Add the point to the list of handles. */
         list.add( new Handle( point.getPosition(), feature, type, radius ) );

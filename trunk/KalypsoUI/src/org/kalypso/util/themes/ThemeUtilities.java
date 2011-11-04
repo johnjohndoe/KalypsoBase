@@ -65,14 +65,14 @@ public class ThemeUtilities
   {
   }
 
-  public static Color checkBackgroundColor( Display display, String backgroundColorProperty )
+  public static Color checkBackgroundColor( final Display display, final String backgroundColorProperty )
   {
-    String[] backgroundColor = StringUtils.split( backgroundColorProperty, ";" );
+    final String[] backgroundColor = StringUtils.split( backgroundColorProperty, ";" );
     if( backgroundColor != null && backgroundColor.length == 3 )
     {
-      Integer r = NumberUtils.parseQuietInteger( backgroundColor[0] );
-      Integer g = NumberUtils.parseQuietInteger( backgroundColor[1] );
-      Integer b = NumberUtils.parseQuietInteger( backgroundColor[2] );
+      final Integer r = NumberUtils.parseQuietInteger( backgroundColor[0] );
+      final Integer g = NumberUtils.parseQuietInteger( backgroundColor[1] );
+      final Integer b = NumberUtils.parseQuietInteger( backgroundColor[2] );
       if( r != null && g != null && b != null )
         return new Color( display, r.intValue(), g.intValue(), b.intValue() );
     }
@@ -80,9 +80,9 @@ public class ThemeUtilities
     return null;
   }
 
-  public static IKalypsoTheme findFirstVisible( IKalypsoTheme[] themes )
+  public static IKalypsoTheme findFirstVisible( final IKalypsoTheme[] themes )
   {
-    for( IKalypsoTheme theme : themes )
+    for( final IKalypsoTheme theme : themes )
     {
       /* Return the first visible theme. */
       if( theme.isVisible() )

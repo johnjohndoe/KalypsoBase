@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Composite;
 public class ComparisonFilterComboPanel extends FilterComboPanel
 {
 
-  public ComparisonFilterComboPanel( Composite parent )
+  public ComparisonFilterComboPanel( final Composite parent )
   {
     super( parent );
     items = new String[8];
@@ -78,7 +78,7 @@ public class ComparisonFilterComboPanel extends FilterComboPanel
    * @see org.kalypso.ui.editor.styleeditor.panels.StrokeComboPanel#setSelection(int)
    */
   @Override
-  public void setSelection( int index )
+  public void setSelection( final int index )
   {
     selection_index = index;
     comboBox.select( index );

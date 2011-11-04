@@ -156,7 +156,7 @@ public class DragPointsWidget extends AbstractWidget
   @Override
   public void leftReleased( final Point p )
   {
-    if( (m_handles == null) || (m_startPoint == null) || (m_currentPoint == null) )
+    if( m_handles == null || m_startPoint == null || m_currentPoint == null )
       return;
 
     /* Memory to collect all active handles. */

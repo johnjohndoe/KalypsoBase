@@ -56,7 +56,7 @@ public class RemoveThemeCommand implements ICommand
 
   private final ObsViewItem m_item;
 
-  public RemoveThemeCommand( ObsView template, ObsViewItem item )
+  public RemoveThemeCommand( final ObsView template, final ObsViewItem item )
   {
     m_template = template;
     m_item = item;
@@ -66,7 +66,7 @@ public class RemoveThemeCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
   @Override
-  public boolean isUndoable()
+  public boolean isUndoable( )
   {
     return true;
   }
@@ -75,7 +75,7 @@ public class RemoveThemeCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#process()
    */
   @Override
-  public void process() throws Exception
+  public void process( ) throws Exception
   {
     m_template.removeItem( m_item );
   }
@@ -84,7 +84,7 @@ public class RemoveThemeCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#redo()
    */
   @Override
-  public void redo() throws Exception
+  public void redo( ) throws Exception
   {
     process();
   }
@@ -93,7 +93,7 @@ public class RemoveThemeCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#undo()
    */
   @Override
-  public void undo() throws Exception
+  public void undo( ) throws Exception
   {
     m_template.addItem( m_item );
   }
@@ -102,8 +102,8 @@ public class RemoveThemeCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   @Override
-  public String getDescription()
+  public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ogc.sensor.commands.RemoveThemeCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.sensor.commands.RemoveThemeCommand.0" ); //$NON-NLS-1$
   }
 }

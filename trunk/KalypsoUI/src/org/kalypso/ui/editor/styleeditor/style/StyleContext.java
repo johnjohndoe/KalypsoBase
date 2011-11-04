@@ -80,6 +80,7 @@ public class StyleContext implements IStyleContext
 
     return null;
   }
+
   /**
    * @see org.kalypso.ui.editor.styleeditor.IStyleContext#fireStyleChanged()
    */

@@ -48,9 +48,9 @@ import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * A GUI oriented File- <code>RepositoryFactory</code>. Please note that this factory currently creates a
- * <code>ZmlObservationRepository</code>. This could be changed to some other subclass of <code>FileRepository</code>
- * as long as the constructor sticks to the arguments used here. To achieve more flexibility, this class could be
- * improved so that the concrete <code>FileRepository</code> class to instantiate could be parametrised.
+ * <code>ZmlObservationRepository</code>. This could be changed to some other subclass of <code>FileRepository</code> as
+ * long as the constructor sticks to the arguments used here. To achieve more flexibility, this class could be improved
+ * so that the concrete <code>FileRepository</code> class to instantiate could be parametrised.
  * 
  * @author schlienger
  */
@@ -65,7 +65,7 @@ public class SWTZmlRepositoryFactory extends HeadlessZmlRepositoryFactory
     final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
     final FileRepositoryConfigDialog dlg = new FileRepositoryConfigDialog( shell, "", "", "", KalypsoGisPlugin //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        .getDefault() );
+    .getDefault() );
 
     final int res = dlg.open();
 
@@ -77,7 +77,6 @@ public class SWTZmlRepositoryFactory extends HeadlessZmlRepositoryFactory
       setConfiguration( dlg.getLocation() + SEPARATOR + dlg.getFilters() );
 
       setRepositoryName( dlg.getIdentifier() );
-
 
       b = true;
     }

@@ -91,7 +91,7 @@ public class MapfunctionHelper
     for( final EasyFeatureWrapper wrapper : featureToSelectFrom )
       geoIndex.add( wrapper );
 
-    if( (rectangle.width < radius) && (rectangle.height < radius) )
+    if( rectangle.width < radius && rectangle.height < radius )
     {
       final double g1x = transform.getSourceX( rectangle.x );
       final double g1y = transform.getSourceY( rectangle.y );

@@ -56,14 +56,14 @@ public class LikeComparisonData extends AbstractComparisonData
 
   private char wildCard = '*';
 
-  public String getLiteral()
+  public String getLiteral( )
   {
     return literal;
   }
 
-  public void setLiteral( String m_literal )
+  public void setLiteral( final String m_literal )
   {
-    this.literal = m_literal.trim();
+    literal = m_literal.trim();
   }
 
   @Override
@@ -77,33 +77,33 @@ public class LikeComparisonData extends AbstractComparisonData
     return true;
   }
 
-  public char getEscapeChar()
+  public char getEscapeChar( )
   {
     return escapeChar;
   }
 
-  public void setEscapeChar( char m_escapeChar )
+  public void setEscapeChar( final char m_escapeChar )
   {
-    this.escapeChar = m_escapeChar;
+    escapeChar = m_escapeChar;
   }
 
-  public char getSingleChar()
+  public char getSingleChar( )
   {
     return singleChar;
   }
 
-  public void setSingleChar( char m_singleChar )
+  public void setSingleChar( final char m_singleChar )
   {
-    this.singleChar = m_singleChar;
+    singleChar = m_singleChar;
   }
 
-  public char getWildCard()
+  public char getWildCard( )
   {
     return wildCard;
   }
 
-  public void setWildCard( char m_wildCard )
+  public void setWildCard( final char m_wildCard )
   {
-    this.wildCard = m_wildCard;
+    wildCard = m_wildCard;
   }
 }

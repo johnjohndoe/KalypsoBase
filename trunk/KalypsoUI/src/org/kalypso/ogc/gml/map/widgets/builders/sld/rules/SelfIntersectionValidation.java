@@ -63,7 +63,7 @@ public class SelfIntersectionValidation
     {
       final Polygon polygon = (Polygon) geometry;
       Coordinate[] coordinates = polygon.getCoordinates();
-      coordinates = (Coordinate[]) ArrayUtils.remove( coordinates, coordinates.length - 1 );
+      coordinates = ArrayUtils.remove( coordinates, coordinates.length - 1 );
 
       final LineString lineString = JTSAdapter.jtsFactory.createLineString( coordinates );
       return isValid( lineString );

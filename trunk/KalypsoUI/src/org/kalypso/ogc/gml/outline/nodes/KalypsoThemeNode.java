@@ -118,8 +118,8 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
 
       if( display != null && !display.isDisposed() )
       {
-        //set to be asynchronously to prevent graphic is disposed exception. 
-        //indirectly was leading to a deadlock in some situations 
+        // set to be asynchronously to prevent graphic is disposed exception.
+        // indirectly was leading to a deadlock in some situations
         display.asyncExec( new Runnable()
         {
           @Override

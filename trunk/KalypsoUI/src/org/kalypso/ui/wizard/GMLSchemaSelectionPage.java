@@ -65,14 +65,15 @@ import org.kalypso.i18n.Messages;
 public class GMLSchemaSelectionPage extends WizardPage implements ISelectionChangedListener
 {
   private String m_namespace;
+
   private ListViewer m_viewer;
 
   public GMLSchemaSelectionPage( )
   {
-    super( "gmlschemaSelectionPage", Messages.getString("org.kalypso.ui.wizard.GMLSchemaSelectionPage.1"), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "gmlschemaSelectionPage", Messages.getString( "org.kalypso.ui.wizard.GMLSchemaSelectionPage.1" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     setPageComplete( false );
-    setMessage( Messages.getString("org.kalypso.ui.wizard.GMLSchemaSelectionPage.2") ); //$NON-NLS-1$
+    setMessage( Messages.getString( "org.kalypso.ui.wizard.GMLSchemaSelectionPage.2" ) ); //$NON-NLS-1$
   }
 
   /**

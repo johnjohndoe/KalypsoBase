@@ -60,7 +60,7 @@ public class ColorMapEntryCellModifier implements ICellModifier
   /**
    * The color map entry table.
    */
-  private ColorMapEntryTable m_table;
+  private final ColorMapEntryTable m_table;
 
   /**
    * The constructor.
@@ -68,7 +68,7 @@ public class ColorMapEntryCellModifier implements ICellModifier
    * @param table
    *          The color map entry table.
    */
-  public ColorMapEntryCellModifier( ColorMapEntryTable table )
+  public ColorMapEntryCellModifier( final ColorMapEntryTable table )
   {
     m_table = table;
   }
@@ -77,7 +77,7 @@ public class ColorMapEntryCellModifier implements ICellModifier
    * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
    */
   @Override
-  public boolean canModify( Object element, String property )
+  public boolean canModify( final Object element, final String property )
   {
     return true;
   }
@@ -86,13 +86,13 @@ public class ColorMapEntryCellModifier implements ICellModifier
    * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
    */
   @Override
-  public Object getValue( Object element, String property )
+  public Object getValue( final Object element, final String property )
   {
     /* Find the index of the column. */
-    int columnIndex = Arrays.asList( ColorMapEntryTable.COLUMN_NAMES ).indexOf( property );
+    final int columnIndex = Arrays.asList( ColorMapEntryTable.COLUMN_NAMES ).indexOf( property );
 
     /* Cast. */
-    ColorMapEntry entry = (ColorMapEntry) element;
+    final ColorMapEntry entry = (ColorMapEntry) element;
 
     switch( columnIndex )
     {
@@ -101,7 +101,7 @@ public class ColorMapEntryCellModifier implements ICellModifier
       case 1: // QUANTITY
         return String.format( "%.1f", entry.getQuantity() ); //$NON-NLS-1$
       case 2: // COLOR
-        java.awt.Color color = entry.getColor();
+        final java.awt.Color color = entry.getColor();
         return new RGB( color.getRed(), color.getGreen(), color.getBlue() );
       case 3: // OPACITY
         return String.format( "%.1f", entry.getOpacity() ); //$NON-NLS-1$
@@ -116,16 +116,16 @@ public class ColorMapEntryCellModifier implements ICellModifier
    * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
    */
   @Override
-  public void modify( Object element, String property, Object value )
+  public void modify( final Object element, final String property, final Object value )
   {
     /* Find the index of the column. */
-    int columnIndex = Arrays.asList( ColorMapEntryTable.COLUMN_NAMES ).indexOf( property );
+    final int columnIndex = Arrays.asList( ColorMapEntryTable.COLUMN_NAMES ).indexOf( property );
 
     /* Cast. */
-    TableItem item = (TableItem) element;
+    final TableItem item = (TableItem) element;
 
     /* Get the data. */
-    ColorMapEntry entry = (ColorMapEntry) item.getData();
+    final ColorMapEntry entry = (ColorMapEntry) item.getData();
 
     switch( columnIndex )
     {
@@ -136,10 +136,10 @@ public class ColorMapEntryCellModifier implements ICellModifier
         entry.setQuantity( NumberUtils.parseQuietDouble( ((String) value).trim() ) );
         break;
       case 2: // COLOR
-        entry.setColor( (new java.awt.Color( ((RGB) value).red, ((RGB) value).green, ((RGB) value).blue )) );
+        entry.setColor( new java.awt.Color( ((RGB) value).red, ((RGB) value).green, ((RGB) value).blue ) );
         break;
       case 3: // OPACITY
-        double opacity = NumberUtils.parseQuietDouble( ((String) value).trim() );
+        final double opacity = NumberUtils.parseQuietDouble( ((String) value).trim() );
         if( opacity <= 1 && opacity >= 0 )
           item.setBackground( 3, PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
         else

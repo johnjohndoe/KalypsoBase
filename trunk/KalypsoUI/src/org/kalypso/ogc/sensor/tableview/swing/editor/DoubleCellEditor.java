@@ -83,8 +83,7 @@ public class DoubleCellEditor extends DefaultCellEditor
    * @param replacementWhenNull
    *          [optional, ignored if null] if specified, null values are not allowed and they are replaced by this number
    */
-  public DoubleCellEditor( final NumberFormat nf, final boolean useGroupingAsDecimalSymbol,
-      final Double replacementWhenNull )
+  public DoubleCellEditor( final NumberFormat nf, final boolean useGroupingAsDecimalSymbol, final Double replacementWhenNull )
   {
     super( new JTextField() );
 
@@ -94,27 +93,27 @@ public class DoubleCellEditor extends DefaultCellEditor
 
     if( useGroupingAsDecimalSymbol && nf instanceof DecimalFormat )
     {
-      final DecimalFormat df = (DecimalFormat)nf;
+      final DecimalFormat df = (DecimalFormat) nf;
       final DecimalFormatSymbols bols = df.getDecimalFormatSymbols();
 
       m_replaceWhat = bols.getGroupingSeparator();
       m_replaceWith = bols.getDecimalSeparator();
     }
 
-    ( (JTextField)getComponent() ).setHorizontalAlignment( SwingConstants.RIGHT );
+    ((JTextField) getComponent()).setHorizontalAlignment( SwingConstants.RIGHT );
   }
 
   @Override
-  public Component getTableCellEditorComponent( JTable table, Object value, boolean isSelected, int row, int column )
+  public Component getTableCellEditorComponent( final JTable table, Object value, final boolean isSelected, final int row, final int column )
   {
     m_value = null;
-    ( (JComponent)getComponent() ).setBorder( new LineBorder( Color.black ) );
+    ((JComponent) getComponent()).setBorder( new LineBorder( Color.black ) );
 
     try
     {
       value = m_nf.format( value );
     }
-    catch( IllegalArgumentException e )
+    catch( final IllegalArgumentException e )
     {
       // ignored
     }
@@ -123,9 +122,9 @@ public class DoubleCellEditor extends DefaultCellEditor
   }
 
   @Override
-  public boolean stopCellEditing()
+  public boolean stopCellEditing( )
   {
-    String s = (String)super.getCellEditorValue();
+    String s = (String) super.getCellEditorValue();
 
     if( s == null || "".equals( s ) ) //$NON-NLS-1$
     {
@@ -142,9 +141,9 @@ public class DoubleCellEditor extends DefaultCellEditor
     {
       m_value = new Double( m_nf.parse( s ).doubleValue() );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
-      ( (JComponent)getComponent() ).setBorder( new LineBorder( Color.red ) );
+      ((JComponent) getComponent()).setBorder( new LineBorder( Color.red ) );
       return false;
     }
 
@@ -158,7 +157,7 @@ public class DoubleCellEditor extends DefaultCellEditor
    * @see javax.swing.DefaultCellEditor#cancelCellEditing()
    */
   @Override
-  public void cancelCellEditing()
+  public void cancelCellEditing( )
   {
     super.cancelCellEditing();
 

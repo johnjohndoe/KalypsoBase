@@ -82,7 +82,7 @@ public class ExtensionFeatureControlFactory extends AbstractFeatureControlFactor
     try
     {
       final IExtensionsFeatureControlFactory2 controlFactory = KalypsoUIExtensions.getFeatureviewControlFactory( extensionId );
-      FormToolkit toolkit = getToolkit();
+      final FormToolkit toolkit = getToolkit();
       return controlFactory.createFeatureControl( toolkit, feature, pt, parameters );
     }
     catch( final CoreException ce )

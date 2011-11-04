@@ -71,7 +71,7 @@ public class ZoomToActiveLayerHandler extends AbstractHandler implements IHandle
 
     final GM_Envelope zoomBox = activeTheme.getFullExtent();
     if( zoomBox == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler.3") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.map.handlers.ZoomToActiveLayerHandler.3" ) ); //$NON-NLS-1$
 
     GM_Envelope wishBBox = null;
 

@@ -53,7 +53,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.progress.UIJob;
+import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -120,7 +120,7 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
     GisTemplateFeatureTheme.configureProperties( this, layerType );
 
     final URL url = CascadingKalypsoTheme.resolveUrl( context, m_mapViewRefUrl );
-    setInnerMapModel( new GisTemplateMapModell( url, mapModel.getCoordinatesSystem(), selectionManager )
+    setInnerMapModel( new GisTemplateMapModell( url, mapModel.getCoordinatesSystem(), mapModel.getProject(), selectionManager )
     {
       /**
        * @see org.kalypso.ogc.gml.GisTemplateMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
@@ -260,10 +260,10 @@ public class CascadingKalypsoTheme extends AbstractCascadingLayerTheme
   {
     m_resolved = false;
     final IFile file = m_file;
-    final UIJob job = new UIJob( Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.5" ) + m_file.getName() ) //$NON-NLS-1$
+    final Job job = new Job( Messages.getString( "org.kalypso.ogc.gml.CascadingKalypsoTheme.5" ) + m_file.getName() ) //$NON-NLS-1$
     {
       @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
+      public IStatus run( final IProgressMonitor monitor )
       {
         return loadJob( file );
       }

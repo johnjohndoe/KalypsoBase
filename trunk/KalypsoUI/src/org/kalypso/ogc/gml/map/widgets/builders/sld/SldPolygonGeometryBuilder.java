@@ -95,7 +95,7 @@ public class SldPolygonGeometryBuilder extends AbstractSldGeometryBuilder implem
     final GeometryFactory factory = JTSAdapter.jtsFactory;
 
     Coordinate[] coordinates = getCoordinates();
-    coordinates = (Coordinate[]) ArrayUtils.addAll( coordinates, additional );
+    coordinates = ArrayUtils.addAll( coordinates, additional );
 
     if( coordinates.length < 2 )
       return null;
@@ -107,7 +107,7 @@ public class SldPolygonGeometryBuilder extends AbstractSldGeometryBuilder implem
     }
     else
     {
-      coordinates = (Coordinate[]) ArrayUtils.add( coordinates, coordinates[0] );
+      coordinates = ArrayUtils.add( coordinates, coordinates[0] );
 
       final LinearRing linearRing = factory.createLinearRing( coordinates );
       final Polygon polygon = factory.createPolygon( linearRing, new LinearRing[] {} );

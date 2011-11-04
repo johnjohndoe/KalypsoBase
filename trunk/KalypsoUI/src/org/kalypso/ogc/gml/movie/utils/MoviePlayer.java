@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.movie.utils;
 
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.kalypso.ogc.gml.movie.IMovieImageProvider;
 import org.kalypso.ogc.gml.movie.controls.MovieComposite;
 
@@ -77,7 +79,7 @@ public class MoviePlayer
    * @param imageProvider
    *          The movie image provider.
    */
-  public MoviePlayer( IMovieImageProvider imageProvider )
+  public MoviePlayer( final IMovieImageProvider imageProvider )
   {
     m_imageProvider = imageProvider;
     m_parent = null;
@@ -91,7 +93,7 @@ public class MoviePlayer
    * @param parent
    *          The parent movie composite.
    */
-  public void initialize( MovieComposite parent )
+  public void initialize( final MovieComposite parent )
   {
     m_parent = parent;
   }
@@ -113,6 +115,17 @@ public class MoviePlayer
     m_job.setSystem( false );
     m_job.setUser( false );
     m_job.setPriority( Job.LONG );
+    m_job.addJobChangeListener( new JobChangeAdapter()
+    {
+      /**
+       * @see org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
+       */
+      @Override
+      public void done( final IJobChangeEvent event )
+      {
+        handleJobStopped();
+      }
+    } );
 
     m_job.schedule();
   }
@@ -123,6 +136,10 @@ public class MoviePlayer
       return;
 
     m_job.cancel();
+  }
+
+  protected synchronized void handleJobStopped( )
+  {
     m_job = null;
   }
 
@@ -136,14 +153,14 @@ public class MoviePlayer
     return m_imageProvider.getCurrentFrame();
   }
 
-  public void stepTo( int step )
+  public void stepTo( final int step )
   {
     m_imageProvider.stepTo( step );
   }
 
   public void stepAndWait( final int step )
   {
-    MovieResolution resolution = m_parent.getResolution();
+    final MovieResolution resolution = m_parent.getResolution();
     m_imageProvider.stepAndWait( step, resolution.getWidth(), resolution.getHeight() );
   }
 
@@ -157,7 +174,21 @@ public class MoviePlayer
     return m_imageProvider.getEndStep();
   }
 
-  public void updateFrameDelay( int frameDelay )
+  public void dispose( )
+  {
+    if( m_job != null )
+      stop();
+
+    if( m_imageProvider != null )
+      m_imageProvider.dispose();
+
+    m_imageProvider = null;
+    m_parent = null;
+    m_job = null;
+    m_frameDelay = 250;
+  }
+
+  public void updateFrameDelay( final int frameDelay )
   {
     m_frameDelay = frameDelay;
   }

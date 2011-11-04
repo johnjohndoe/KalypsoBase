@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public class ModeSelectionComboPanel extends ComboPanel
 {
-  public ModeSelectionComboPanel( Composite parent, String label, int index )
+  public ModeSelectionComboPanel( final Composite parent, final String label, final int index )
   {
     super( parent, label );
     items = new String[2];

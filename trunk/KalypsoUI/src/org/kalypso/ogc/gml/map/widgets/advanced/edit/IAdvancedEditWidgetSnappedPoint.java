@@ -48,4 +48,4 @@ import com.vividsolutions.jts.geom.Point;
 public interface IAdvancedEditWidgetSnappedPoint extends IAdvancedEditWidgetPoint
 {
   Point getMovedPoint( Point vector );
-} 
+}

@@ -82,7 +82,7 @@ public class ConfigurePreviewHandler extends AbstractHandler
       return Status.OK_STATUS;
 
     final DateFormat dateFormat = TimeseriesUtils.getDateFormat();
-    final DateRangeInputDialog dlg = new DateRangeInputDialog( shell, Messages.getString("org.kalypso.ogc.sensor.view.actions.ConfigurePreviewHandler.0"), Messages.getString("org.kalypso.ogc.sensor.view.actions.ConfigurePreviewHandler.1"), DateRangeInputControlStuct.create( rep.getProperties(), dateFormat ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    final DateRangeInputDialog dlg = new DateRangeInputDialog( shell, Messages.getString( "org.kalypso.ogc.sensor.view.actions.ConfigurePreviewHandler.0" ), Messages.getString( "org.kalypso.ogc.sensor.view.actions.ConfigurePreviewHandler.1" ), DateRangeInputControlStuct.create( rep.getProperties(), dateFormat ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( dlg.open() == Window.OK )
     {

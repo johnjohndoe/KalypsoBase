@@ -94,7 +94,7 @@ public class MapView extends AbstractMapPart implements IViewPart, IContentOutli
         final IPath path = Path.fromPortableString( fullPath );
         final IFile mementoFile = ResourcesPlugin.getWorkspace().getRoot().getFile( path );
         final String reloadOnOpen = getConfigurationElement().getAttribute( MapView.RELOAD_MAP_ON_OPEN );
-        if( (mementoFile != null) && "true".equalsIgnoreCase( reloadOnOpen ) ) //$NON-NLS-1$
+        if( mementoFile != null && "true".equalsIgnoreCase( reloadOnOpen ) ) //$NON-NLS-1$
           setInput( new FileEditorInput( mementoFile ) );
       }
     }

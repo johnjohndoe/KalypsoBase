@@ -45,9 +45,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Formatter;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -72,6 +73,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -257,11 +259,11 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
       return null;
 
     /* Grab next feature */
-    final QName[] geomQNames = SelectFeatureWidget.findGeomQName( theme, m_geomQName, IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
+    final GMLXPath[] geometryPathes = SelectFeatureWidget.findGeometryPathes( theme, m_geomQName, IKalypsoFeatureTheme.PROPERTY_SELECTABLE_GEOMETRIES, null );
 
     final FeatureList visibleFeatures = theme.getFeatureListVisible( requestEnvelope );
 
-    return GeometryUtilities.findNearestFeature( currentPoint, grabDistance, visibleFeatures, geomQNames, m_qnamesToSelect );
+    return GeometryUtilities.findNearestFeature( currentPoint, grabDistance, visibleFeatures, geometryPathes, m_qnamesToSelect );
   }
 
   private void setHoverFeature( final Feature feature, final IKalypsoFeatureTheme theme, final GM_Position position )
@@ -296,9 +298,6 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
     return formatter.toString();
   }
 
-  /**
-   * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
-   */
   @Override
   public void mousePressed( final MouseEvent event )
   {
@@ -314,10 +313,11 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
     try
     {
       /* just snap to grabbed feature */
-      if( m_hoverFeature != null )
+      if( m_hoverFeature != null && m_hoverTheme != null )
       {
-        final List<Feature> selectedFeatures = new ArrayList<Feature>();
-        selectedFeatures.add( m_hoverFeature );
+        final List<Feature> selectedFeature = Collections.singletonList( m_hoverFeature );
+        final Map<IKalypsoFeatureTheme, List<Feature>> selection = Collections.singletonMap( m_hoverTheme, selectedFeature );
+
         final IFeatureSelectionManager selectionManager = mapPanel.getSelectionManager();
 
         final boolean toggle = event.isControlDown();
@@ -328,7 +328,7 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
             return;
         }
 
-        SelectFeatureWidget.changeSelection( selectionManager, selectedFeatures, m_themes, false, toggle );
+        SelectFeatureWidget.changeSelection( selectionManager, selection, false, toggle );
       }
     }
     catch( final Exception e )
@@ -390,5 +390,10 @@ public class SelectSingleFeatureWidget extends AbstractWidget implements MouseLi
     sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.4" ) ); //$NON-NLS-1$
 
     return sb.toString();
+  }
+
+  public void setThemes( final IKalypsoFeatureTheme[] themes )
+  {
+    m_themes = themes;
   }
 }

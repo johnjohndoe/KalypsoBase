@@ -61,7 +61,6 @@ import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
  * @author F.Lindemann
- *  
  */
 public class AddFilterPropertyPanel
 {
@@ -99,7 +98,7 @@ public class AddFilterPropertyPanel
     listenerList.add( PanelListener.class, pl );
   }
 
-  private void init()
+  private void init( )
   {
     // Geometry-Selection Combo
     geometryCombo = new Combo( composite, SWT.NULL );
@@ -144,7 +143,7 @@ public class AddFilterPropertyPanel
       @Override
       public void mouseUp( final MouseEvent e )
       {
-      // nothing
+        // nothing
       }
 
     } );
@@ -160,14 +159,14 @@ public class AddFilterPropertyPanel
     symbolizerLabel.setText( label );
   }
 
-  public String getSelection()
+  public String getSelection( )
   {
     return getListCombi()[selectionIndex];
   }
 
   public void setSelection( final int index )
   {
-    this.selectionIndex = index;
+    selectionIndex = index;
   }
 
   public void setSelection( final String selectionString )
@@ -184,7 +183,7 @@ public class AddFilterPropertyPanel
     }
   }
 
-  protected void fire()
+  protected void fire( )
   {
     final Object[] listeners = listenerList.getListenerList();
     for( int i = listeners.length - 2; i >= 0; i -= 2 )
@@ -192,48 +191,48 @@ public class AddFilterPropertyPanel
       if( listeners[i] == PanelListener.class )
       {
         final PanelEvent event = new PanelEvent( this );
-        ( (PanelListener)listeners[i + 1] ).valueChanged( event );
+        ((PanelListener) listeners[i + 1]).valueChanged( event );
       }
     }
   }
 
-  public Combo getGeometryCombo()
+  public Combo getGeometryCombo( )
   {
     return geometryCombo;
   }
 
   public void setGeometryCombo( final Combo m_geometryCombo )
   {
-    this.geometryCombo = m_geometryCombo;
+    geometryCombo = m_geometryCombo;
   }
 
-  public String getLabel()
+  public String getLabel( )
   {
     return label;
   }
 
   public void setLabel( final String m_label )
   {
-    this.label = m_label;
+    label = m_label;
   }
 
-  public int getSelectionIndex()
+  public int getSelectionIndex( )
   {
     return selectionIndex;
   }
 
   public void setSelectionIndex( final int m_selectionIndex )
   {
-    this.selectionIndex = m_selectionIndex;
+    selectionIndex = m_selectionIndex;
   }
 
-  public String[] getListCombi()
+  public String[] getListCombi( )
   {
     return listCombi;
   }
 
   public void setListCombi( final String[] m_listCombi )
   {
-    this.listCombi = m_listCombi;
+    listCombi = m_listCombi;
   }
 }

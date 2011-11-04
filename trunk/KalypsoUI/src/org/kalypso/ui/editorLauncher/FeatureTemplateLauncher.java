@@ -77,7 +77,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getFilename()
    */
   @Override
-  public String getFilename()
+  public String getFilename( )
   {
     return "<Standard Feature Editor>.gft"; //$NON-NLS-1$
   }
@@ -86,7 +86,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getEditor()
    */
   @Override
-  public IEditorDescriptor getEditor()
+  public IEditorDescriptor getEditor( )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
@@ -112,7 +112,7 @@ public class FeatureTemplateLauncher implements IDefaultTemplateLauncher
       final Featuretemplate featuretemplate = factory.createFeaturetemplate();
       featuretemplate.setLayer( layer );
 
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( jc);
+      final Marshaller marshaller = JaxbUtilities.createMarshaller( jc );
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
 
       final StringWriter w = new StringWriter();

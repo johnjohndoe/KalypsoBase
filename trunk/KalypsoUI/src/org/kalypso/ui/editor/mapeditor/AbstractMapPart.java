@@ -41,8 +41,6 @@
 package org.kalypso.ui.editor.mapeditor;
 
 import java.awt.Component;
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.SwingUtilities;
@@ -51,9 +49,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -74,7 +70,6 @@ import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.widgets.Form;
-import org.eclipse.ui.ide.ResourceUtil;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -101,13 +96,13 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * Abstract superclass for map editor and map view. Inherits from AbstractWorkbenchPart for editor behavior (save when
+ * Abstract superclass for map editor and map view. Inherits from AbstractEditorPart for editor behavior (save when
  * dirty, command target). Based on the old {@link GisMapEditor} implementation.
  * 
  * @author Stefan Kurzbach
  */
 // TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
-// (SK) This might have to be looked at. GisMapEditor used to implement AbstractWorkbenchPart for basic gml editor
+// (SK) This might have to be looked at. GisMapEditor used to implement AbstractEditorPart for basic gml editor
 // functionality (save when dirty, command target).
 public abstract class AbstractMapPart extends AbstractWorkbenchPart implements IMapPanelProvider
 {
@@ -171,7 +166,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
+   * @see org.kalypso.ui.editor.AbstractEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
    */
   @Override
   public void init( final IEditorSite site, final IEditorInput input )
@@ -206,7 +201,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+   * @see org.kalypso.ui.editor.AbstractEditorPart#createPartControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
   public synchronized void createPartControl( final Composite parent )
@@ -294,7 +289,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
+   * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IStorageEditorInput)
    */
   @Override
@@ -324,12 +319,24 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
       final Gismapview gisview = GisTemplateHelper.loadGisMapView( input.getStorage() );
       monitor.worked( 1 );
 
-      final URL context = findContext( input );
+      final URL context;
+      final IProject project;
+      if( input instanceof IFileEditorInput )
+      {
+        final IFile file = ((IFileEditorInput) input).getFile();
+        context = file == null ? null : ResourceUtilities.createURL( file );
+        project = file == null ? null : file.getProject();
+      }
+      else
+      {
+        context = null;
+        project = null;
+      }
 
       if( !m_disposed )
       {
         final GM_Envelope env = GisTemplateHelper.getBoundingBox( gisview );
-        final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), m_selectionManager );
+        final GisTemplateMapModell mapModell = new GisTemplateMapModell( context, KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), project, m_selectionManager );
         mapModell.createFromTemplate( gisview );
         setMapModell( mapModell, env );
       }
@@ -354,51 +361,6 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     {
       monitor.done();
     }
-  }
-
-  private URL findContext( final IStorageEditorInput input )
-  {
-    try
-    {
-      final IResource resource = findResource( input );
-      if( resource instanceof IFile )
-        return ResourceUtilities.createURL( resource );
-
-      final IStorage storage = input.getStorage();
-      final IPath fullPath = storage.getFullPath();
-      if( fullPath == null )
-        return null;
-
-      final File file = fullPath.toFile();
-      if( file.exists() )
-        return file.toURI().toURL();
-
-      return null;
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  private IProject findProject( final IStorageEditorInput input )
-  {
-    final IResource resource = findResource( input );
-    if( resource == null )
-      return null;
-
-    return resource.getProject();
-  }
-
-  private IResource findResource( final IStorageEditorInput input )
-  {
-    return ResourceUtil.getResource( input );
   }
 
   /**
@@ -453,7 +415,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
+   * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.core.resources.IFile)
    */
   @Override
@@ -530,6 +492,9 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     return m_mapModell;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapPanelProvider#getMapPanel()
+   */
   @Override
   public IMapPanel getMapPanel( )
   {
@@ -572,7 +537,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#dispose()
+   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
   @Override
   public void dispose( )

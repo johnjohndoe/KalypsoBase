@@ -76,7 +76,7 @@ public final class ChartFactory
   {
     final ChartPanel chartPanel = new ChartPanel( obsChart, false, false, false, false, false );
     chartPanel.setMouseZoomable( true, false );
-    
+
     obsChart.setPanel( chartPanel );
 
     return chartPanel;

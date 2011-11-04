@@ -73,7 +73,6 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * @author Thomas Jung
- * 
  */
 public class LineColorMapEditorComposite extends Composite
 {
@@ -100,19 +99,19 @@ public class LineColorMapEditorComposite extends Composite
   private final org.eclipse.swt.graphics.Color m_goodColor;
 
   private final org.eclipse.swt.graphics.Color m_badColor;
-  
+
   public LineColorMapEditorComposite( final Composite parent, final int style, final LineColorMap colorMap, final BigDecimal minGlobalValue, final BigDecimal maxGlobalValue )
-  { 
+  {
     super( parent, style );
 
     m_goodColor = parent.getDisplay().getSystemColor( SWT.COLOR_BLACK );
     m_badColor = parent.getDisplay().getSystemColor( SWT.COLOR_RED );
-    
+
     m_colorMap = colorMap;
 
     final BigDecimal globalMin = minGlobalValue == null ? null : minGlobalValue.setScale( 2, BigDecimal.ROUND_HALF_UP );
     final BigDecimal globalMax = maxGlobalValue == null ? null : maxGlobalValue.setScale( 2, BigDecimal.ROUND_HALF_UP );
-    
+
     final LineColorMapEntry[] colorMapEntries = m_colorMap.getColorMap();
 
     final BigDecimal firstValue = new BigDecimal( colorMapEntries[0].getQuantity( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
@@ -130,19 +129,18 @@ public class LineColorMapEditorComposite extends Composite
     m_globalMin = globalMin == null ? "<Unknown>" : globalMin.toPlainString(); //$NON-NLS-1$
     m_globalMax = globalMax == null ? "<Unknown>" : globalMax.toPlainString(); //$NON-NLS-1$
 
-    
     /* default parameter */
     m_stepWidth = new BigDecimal( 0.1 ).setScale( 2, BigDecimal.ROUND_HALF_UP );
     m_fatValue = 4;
     m_fatWidth = 4;
-    
+
     if( colorMapEntries.length > 1 )
     {
       // determine step by first two entries
       final double value0 = colorMapEntries[0].getQuantity( null );
       final double value1 = colorMapEntries[1].getQuantity( null );
       m_stepWidth = new BigDecimal( Math.abs( value0 - value1 ) );
-      
+
       try
       {
         // use frst width bigger than the width of first entry as fatWidth
@@ -156,11 +154,11 @@ public class LineColorMapEditorComposite extends Composite
           if( width > basicWidth )
           {
             m_fatWidth = width;
-            
+
             // only assign fatValue if we have more than 2 entries. Else it's most probably an sld template
             if( colorMapEntries.length > 2 )
               m_fatValue = i;
-            
+
             break;
           }
         }
@@ -193,7 +191,7 @@ public class LineColorMapEditorComposite extends Composite
     final Label fromLabel = new Label( propertyGroup, SWT.NONE );
     fromLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
     fromLabel.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.9", m_globalMin ) ); //$NON-NLS-1$
-    fromLabel.setToolTipText( Messages.getString( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.11", m_globalMin  ) ); //$NON-NLS-1$
+    fromLabel.setToolTipText( Messages.getString( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.11", m_globalMin ) ); //$NON-NLS-1$
 
     final Text minValueText = new Text( propertyGroup, SWT.BORDER | SWT.TRAIL );
     final GridData gridDataMinText = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -204,7 +202,7 @@ public class LineColorMapEditorComposite extends Composite
     final Label toLabel = new Label( propertyGroup, SWT.NONE );
     toLabel.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
     toLabel.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.10", m_globalMax ) ); //$NON-NLS-1$
-    toLabel.setToolTipText( Messages.getString( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.12",m_globalMax ) ); //$NON-NLS-1$
+    toLabel.setToolTipText( Messages.getString( "org.kalypso.ui.editor.sldEditor.LineColorMapEditorComposite.12", m_globalMax ) ); //$NON-NLS-1$
 
     final Text maxValueText = new Text( propertyGroup, SWT.BORDER | SWT.TRAIL );
     final GridData gridDataMaxText = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -247,7 +245,7 @@ public class LineColorMapEditorComposite extends Composite
     } );
 
     maxValueText.addModifyListener( new DoubleModifyListener( m_goodColor, m_badColor ) );
-    
+
     // step width spinner
     final Label labelWithSpinner = new Label( propertyGroup, SWT.NONE );
     labelWithSpinner.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
@@ -283,7 +281,7 @@ public class LineColorMapEditorComposite extends Composite
 
     final Spinner fatStepSpinner = new Spinner( propertyGroup, SWT.NONE );
     fatStepSpinner.setLayoutData( new GridData( SWT.TRAIL, SWT.CENTER, true, false ) );
-    fatStepSpinner.setBackground( this.getBackground() );
+    fatStepSpinner.setBackground( getBackground() );
     fatStepSpinner.setSelection( m_fatValue );
 
     fatStepSpinner.addModifyListener( new ModifyListener()
@@ -295,7 +293,7 @@ public class LineColorMapEditorComposite extends Composite
         updateColorMap();
       }
     } );
-    
+
     // bold width spinner
     final Label labelboldWidthSpinner = new Label( propertyGroup, SWT.NONE );
     labelboldWidthSpinner.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, true, false ) );
@@ -303,9 +301,9 @@ public class LineColorMapEditorComposite extends Composite
 
     final Spinner boldWidthSpinner = new Spinner( propertyGroup, SWT.NONE );
     boldWidthSpinner.setLayoutData( new GridData( SWT.TRAIL, SWT.CENTER, true, false ) );
-    boldWidthSpinner.setBackground( this.getBackground() );
+    boldWidthSpinner.setBackground( getBackground() );
     boldWidthSpinner.setSelection( m_fatWidth );
-    
+
     boldWidthSpinner.addModifyListener( new ModifyListener()
     {
       @Override
@@ -357,7 +355,7 @@ public class LineColorMapEditorComposite extends Composite
       final BigDecimal maxDecimal = m_maxValue.setScale( 2, BigDecimal.ROUND_CEILING );
 
       final BigDecimal stepWidth = m_stepWidth.setScale( 2, BigDecimal.ROUND_HALF_UP );
-      final int numOfClasses = (maxDecimal.subtract( minDecimal ).divide( stepWidth )).intValue() + 1;
+      final int numOfClasses = maxDecimal.subtract( minDecimal ).divide( stepWidth ).intValue() + 1;
 
       final List<LineColorMapEntry> colorMapList = new LinkedList<LineColorMapEntry>();
 

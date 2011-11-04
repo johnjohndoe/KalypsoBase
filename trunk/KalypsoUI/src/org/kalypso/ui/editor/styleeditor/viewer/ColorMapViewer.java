@@ -71,7 +71,7 @@ public class ColorMapViewer
    * @param toolkit
    *          The form toolkit. May be null.
    */
-  public ColorMapViewer( Composite parent, int style, FormToolkit toolkit )
+  public ColorMapViewer( final Composite parent, final int style, final FormToolkit toolkit )
   {
     m_viewer = null;
 
@@ -88,7 +88,7 @@ public class ColorMapViewer
    * @param toolkit
    *          The form toolkit. May be null.
    */
-  private void createControls( Composite parent, int style, FormToolkit toolkit )
+  private void createControls( final Composite parent, final int style, final FormToolkit toolkit )
   {
     m_viewer = new TableViewer( parent, SWT.FULL_SELECTION | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | style );
     m_viewer.setContentProvider( new ArrayContentProvider() );
@@ -102,15 +102,15 @@ public class ColorMapViewer
       toolkit.adapt( m_viewer.getTable() );
   }
 
-  private void configure( TableViewer viewer )
+  private void configure( final TableViewer viewer )
   {
-    Table table = viewer.getTable();
+    final Table table = viewer.getTable();
 
-    TableColumn labelColumn = new TableColumn( table, SWT.NONE );
+    final TableColumn labelColumn = new TableColumn( table, SWT.NONE );
     labelColumn.setText( "Bezeichnung" );
     labelColumn.setWidth( 100 );
 
-    TableColumn quantityColumn = new TableColumn( table, SWT.NONE );
+    final TableColumn quantityColumn = new TableColumn( table, SWT.NONE );
     quantityColumn.setText( "Wert" );
     quantityColumn.setWidth( 100 );
 
@@ -120,7 +120,7 @@ public class ColorMapViewer
   /**
    * @see org.eclipse.swt.widgets.Table#setLayoutData(Object)
    */
-  public void setLayoutData( Object layoutData )
+  public void setLayoutData( final Object layoutData )
   {
     if( m_viewer != null && !m_viewer.getTable().isDisposed() )
       m_viewer.getTable().setLayoutData( layoutData );
@@ -129,7 +129,7 @@ public class ColorMapViewer
   /**
    * @see TableViewer#setInput(Object)
    */
-  public void setInput( ColorMapEntry[] input )
+  public void setInput( final ColorMapEntry[] input )
   {
     if( m_viewer != null && !m_viewer.getTable().isDisposed() )
       m_viewer.setInput( input );

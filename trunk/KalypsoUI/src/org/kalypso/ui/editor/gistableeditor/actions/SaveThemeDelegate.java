@@ -81,7 +81,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
       return;
 
     final Shell shell = editor.getSite().getShell();
-    if( !MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate.0"), Messages.getString("org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate.1") ) ) //$NON-NLS-1$ //$NON-NLS-2$
+    if( !MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate.0" ), Messages.getString( "org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate.1" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return;
 
     final Object input = editor.getLayerTable().getInput();
@@ -109,7 +109,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
         e.printStackTrace();
 
         final CoreException ce = (CoreException) e.getTargetException();
-        ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate.2"), Messages.getString("org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate.3"), ce.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate.2" ), Messages.getString( "org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate.3" ), ce.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       catch( final InterruptedException e )
       {

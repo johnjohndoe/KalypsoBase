@@ -60,7 +60,7 @@ import org.kalypso.ogc.gml.om.table.celleditor.DateTimeCellEditor;
 
 /**
  * Handles XMLGreogorianCalendar types.
- *
+ * 
  * @author Dirk Kuch
  */
 public class ComponentUiDateHandler extends AbstractComponentUiHandler implements ICellEditorValidator
@@ -217,7 +217,7 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler implement
     }
     catch( final ParseException e )
     {
-      return  Messages.getString("org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler.1", getParseFormat() ); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler.1", getParseFormat() ); //$NON-NLS-1$
     }
   }
 }

@@ -48,7 +48,6 @@ import java.util.EventListener;
 
 /**
  * @author F.Lindemann
- *  
  */
 public interface PanelListener extends EventListener
 {

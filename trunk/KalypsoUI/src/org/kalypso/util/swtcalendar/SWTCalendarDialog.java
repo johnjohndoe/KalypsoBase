@@ -73,9 +73,9 @@ public class SWTCalendarDialog extends Dialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    final Composite panel = (Composite)super.createDialogArea( parent );
+    final Composite panel = (Composite) super.createDialogArea( parent );
 
-    panel.getShell().setText( Messages.getString("org.kalypso.util.swtcalendar.SWTCalendarDialog.0") ); //$NON-NLS-1$
+    panel.getShell().setText( Messages.getString( "org.kalypso.util.swtcalendar.SWTCalendarDialog.0" ) ); //$NON-NLS-1$
 
     m_swtcal = new SWTCalendar( panel );
     m_swtcal.setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -84,7 +84,7 @@ public class SWTCalendarDialog extends Dialog
     return panel;
   }
 
-  public Date getDate()
+  public Date getDate( )
   {
     return m_swtcal.getCalendar().getTime();
   }

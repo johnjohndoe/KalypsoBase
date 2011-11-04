@@ -44,7 +44,6 @@ import java.util.EventListener;
 
 /**
  * @author F.Lindemann
- *  
  */
 public interface FilterDialogListener extends EventListener
 {

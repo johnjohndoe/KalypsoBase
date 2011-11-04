@@ -90,7 +90,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
 
   public AdvancedPolygonEditWidget( final IAdvancedEditWidgetDataProvider provider )
   {
-    super( Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedPolygonEditWidget.0") ); //$NON-NLS-1$
+    super( Messages.getString( "org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedPolygonEditWidget.0" ) ); //$NON-NLS-1$
     m_provider = provider;
 
     m_delegates.put( EDIT_MODE.eMulti, new AdvancedEditModeMultiDelegate( this, provider ) );
@@ -153,7 +153,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   public void leftReleased( final java.awt.Point p )
   {
     getCurrentDelegate().leftReleased( p );
-    
+
     m_leftMouseButtonPressed = false;
 
     m_originPoint = null;
@@ -166,7 +166,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
   @Override
   public String getToolTip( )
   {
-    return  Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedPolygonEditWidget.1", getCurrentDelegate().getToolTip()) ; //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedPolygonEditWidget.1", getCurrentDelegate().getToolTip() ); //$NON-NLS-1$
   }
 
   /**

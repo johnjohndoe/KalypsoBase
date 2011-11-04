@@ -48,21 +48,20 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author kuepfer
- *
  */
 public class FeaturePropertyContentProvider implements IStructuredContentProvider
 {
-  @SuppressWarnings("unused") //$NON-NLS-1$
+  @SuppressWarnings("unused")//$NON-NLS-1$
   private ComboViewer m_viewer;
 
-  @SuppressWarnings("unused") //$NON-NLS-1$
+  @SuppressWarnings("unused")//$NON-NLS-1$
   private Feature m_feature;
 
   /**
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
   @Override
-  public Object[] getElements( Object inputElement )
+  public Object[] getElements( final Object inputElement )
   {
     if( inputElement instanceof Feature )
     {
@@ -87,7 +86,7 @@ public class FeaturePropertyContentProvider implements IStructuredContentProvide
    *      java.lang.Object)
    */
   @Override
-  public void inputChanged( Viewer viewer, Object oldInput, Object newInput )
+  public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     m_viewer = (ComboViewer) viewer;
 

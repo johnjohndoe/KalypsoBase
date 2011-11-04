@@ -162,7 +162,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
     if( m_result != null )
       return m_result;
 
-    if( (m_points.size() > 1) && ((m_cnt_points == m_points.size()) || (m_cnt_points <= 1)) )
+    if( m_points.size() > 1 && (m_cnt_points == m_points.size() || m_cnt_points <= 1) )
     {
       final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( m_crs );
 

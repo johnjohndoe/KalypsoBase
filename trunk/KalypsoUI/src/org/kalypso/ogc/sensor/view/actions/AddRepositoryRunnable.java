@@ -83,7 +83,7 @@ public class AddRepositoryRunnable implements Runnable
     final ListDialog dlg = new ListDialog( m_shell );
     dlg.setLabelProvider( new ChooseRepositoryLabelProvider() );
     dlg.setContentProvider( new RepositoryArrayContentProvider() );
-    dlg.setTitle( Messages.getString("org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.0") ); //$NON-NLS-1$
+    dlg.setTitle( Messages.getString( "org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.0" ) ); //$NON-NLS-1$
 
     try
     {
@@ -93,7 +93,7 @@ public class AddRepositoryRunnable implements Runnable
         return;
 
       final RepositoryFactoryConfig cfg = (RepositoryFactoryConfig) dlg.getResult()[0];
-      final IRepositoryFactory f = cfg.getFactory( );
+      final IRepositoryFactory f = cfg.getFactory();
 
       if( f.configureRepository() )
       {
@@ -103,7 +103,7 @@ public class AddRepositoryRunnable implements Runnable
           @Override
           public void run( final IProgressMonitor monitor ) throws InvocationTargetException
           {
-            monitor.beginTask( Messages.getString("org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.1"), 2 ); //$NON-NLS-1$
+            monitor.beginTask( Messages.getString( "org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.1" ), 2 ); //$NON-NLS-1$
 
             final IRepository rep;
             try
@@ -132,12 +132,12 @@ public class AddRepositoryRunnable implements Runnable
     {
       e.getCause().printStackTrace();
 
-      MessageDialog.openError( m_shell, Messages.getString("org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.2"), e.getTargetException().getLocalizedMessage() ); //$NON-NLS-1$
+      MessageDialog.openError( m_shell, Messages.getString( "org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.2" ), e.getTargetException().getLocalizedMessage() ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      MessageDialog.openError( m_shell, Messages.getString("org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.2"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      MessageDialog.openError( m_shell, Messages.getString( "org.kalypso.ogc.sensor.view.actions.AddRepositoryRunnable.2" ), e.getLocalizedMessage() ); //$NON-NLS-1$
     }
   }
 

@@ -275,7 +275,7 @@ public class WMSGetFeatureInfoWidget extends AbstractWidget implements IWidgetWi
         {
           try
           {
-            if( m_formatCombo != null && !(m_formatCombo.isDisposed()) )
+            if( m_formatCombo != null && !m_formatCombo.isDisposed() )
             {
               final int selectionIndex = m_formatCombo.getSelectionIndex();
               final String format = m_formatCombo.getItem( selectionIndex );

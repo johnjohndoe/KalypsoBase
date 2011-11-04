@@ -52,6 +52,7 @@ import org.kalypso.template.featureview.Checkbox;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * @author Gernot Belger
@@ -64,9 +65,7 @@ public class CheckboxFeatureControlFactory implements IFeatureControlFactory
     final Checkbox checkboxType = (Checkbox) controlType;
 
     final String checkboxControlText = checkboxType.getText();
-    final String translatedCheckboxText = parentComposite.getTranslator().get( checkboxControlText );
-
-    final String text = AnnotationUtilities.getAnnotation( annotation, translatedCheckboxText, IAnnotation.ANNO_LABEL );
+    final String text = AnnotationUtilities.getAnnotation( annotation, checkboxControlText, IAnnotation.ANNO_LABEL );
 
     final IValuePropertyType vpt = (IValuePropertyType) pt;
 
@@ -79,7 +78,8 @@ public class CheckboxFeatureControlFactory implements IFeatureControlFactory
       return new StatusFeatureControl( status );
     }
 
-    return new CheckboxFeatureControl( feature, vpt, text );
-  }
+    final GMLXPath propertyPath = new GMLXPath( vpt.getQName() );
 
+    return new CheckboxFeatureControl( feature, propertyPath, vpt, text );
+  }
 }

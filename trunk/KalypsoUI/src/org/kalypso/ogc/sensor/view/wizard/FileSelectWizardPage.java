@@ -114,7 +114,7 @@ public class FileSelectWizardPage extends WizardPage
     m_ffe.setEmptyStringAllowed( false );
     m_ffe.setFileExtensions( m_fileExtensions );
 
-    if( (m_ffe.getStringValue() == null) || (m_ffe.getStringValue().length() == 0) )
+    if( m_ffe.getStringValue() == null || m_ffe.getStringValue().length() == 0 )
     {
       final String fileName = getDialogSettings().get( "FILE" );
       if( fileName != null )

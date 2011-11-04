@@ -74,7 +74,7 @@ public class DefaultObservationEditorLauncher implements IDefaultTemplateLaunche
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getFilename()
    */
   @Override
-  public String getFilename()
+  public String getFilename( )
   {
     return m_pseudoFilename;
   }
@@ -83,7 +83,7 @@ public class DefaultObservationEditorLauncher implements IDefaultTemplateLaunche
    * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#getEditor()
    */
   @Override
-  public IEditorDescriptor getEditor()
+  public IEditorDescriptor getEditor( )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
@@ -100,12 +100,11 @@ public class DefaultObservationEditorLauncher implements IDefaultTemplateLaunche
     {
       final IPath projectRelativePath = file.getProjectRelativePath();
 
-      final PseudoTemplateEditorInput input = new PseudoTemplateEditorInput( new TemplateStorage( file,
-          ResourceUtilities.createURL( file ), "project:/" + projectRelativePath ), m_fileExtension ); //$NON-NLS-1$
+      final PseudoTemplateEditorInput input = new PseudoTemplateEditorInput( new TemplateStorage( file, ResourceUtilities.createURL( file ), "project:/" + projectRelativePath ), m_fileExtension ); //$NON-NLS-1$
 
       return input;
     }
-    catch( MalformedURLException e )
+    catch( final MalformedURLException e )
     {
       e.printStackTrace();
       return null;

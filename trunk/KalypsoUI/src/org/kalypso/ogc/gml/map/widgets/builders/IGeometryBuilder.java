@@ -58,7 +58,7 @@ public interface IGeometryBuilder
    * Adds a new point to the geometry.
    * 
    * @param p
-   *            The point to be added.
+   *          The point to be added.
    * @return null if the cnt is not reached, otherwise the geometry.
    */
   public GM_Object addPoint( final GM_Point p ) throws Exception;

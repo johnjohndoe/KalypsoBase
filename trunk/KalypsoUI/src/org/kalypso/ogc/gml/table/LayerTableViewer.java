@@ -45,10 +45,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Logger;
+
+import javax.xml.namespace.NamespaceContext;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -59,7 +61,6 @@ import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -109,6 +110,7 @@ import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.Gistableview.Layer;
 import org.kalypso.template.gistableview.Gistableview.Layer.Column;
 import org.kalypso.template.gistableview.Gistableview.Layer.Sort;
+import org.kalypso.template.gistableview.StyleType;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.KalypsoUIExtensions;
@@ -116,7 +118,9 @@ import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * @todo TableCursor soll sich auch bewegen, wenn die Sortierung sich ändert
@@ -124,29 +128,31 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class LayerTableViewer extends TableViewer implements ICellModifier
 {
-  protected Logger LOGGER = Logger.getLogger( LayerTableViewer.class.getName() );
-
-  public static final String COLUMN_PROP_NAME = "columnName"; //$NON-NLS-1$
+  // FIXME: should not be visible
+  public static final String COLUMN_PROP_PATH = "columnProperty"; //$NON-NLS-1$
 
   /**
    * Label Property. Feature-Annotation style format string. The context-feature in this case is the paretn feature of
    * the shown list.
    */
-  public static final String COLUMN_PROP_LABEL = "columnLabel"; //$NON-NLS-1$
+  private static final String COLUMN_PROP_LABEL = "columnLabel"; //$NON-NLS-1$
 
   /**
    * Tooltip Property. Feature-Annotation style format string. The context-feature in this case is the paretn feature of
    * the shown list.
    */
-  public static final String COLUMN_PROP_TOOLTIP = "columnTooltip"; //$NON-NLS-1$
+  private static final String COLUMN_PROP_TOOLTIP = "columnTooltip"; //$NON-NLS-1$
 
-  public static final String COLUMN_PROP_EDITABLE = "columnEditable"; //$NON-NLS-1$
+  private static final String COLUMN_PROP_EDITABLE = "columnEditable"; //$NON-NLS-1$
 
+  // FIXME: should not be visible
   public static final String COLUMN_PROP_WIDTH = "columnWidth"; //$NON-NLS-1$
 
-  public static final String COLUMN_PROP_FORMAT = "columnFormat"; //$NON-NLS-1$
+  private static final String COLUMN_PROP_FORMAT = "columnFormat"; //$NON-NLS-1$
 
-  public static final String COLUMN_PROP_MODIFIER = "columnModifier"; //$NON-NLS-1$
+  private static final String COLUMN_PROP_MODIFIER = "columnModifier"; //$NON-NLS-1$
+
+  private static final String COLUMN_PROP_STYLE = "columnStyle"; //$NON-NLS-1$
 
   private final IFeatureModifierFactory m_featureModiferFactory;
 
@@ -166,7 +172,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       final Feature[] features = FeatureSelectionHelper.getFeatures( selection );
       final List<Feature> globalFeatureList = new ArrayList<Feature>( Arrays.asList( features ) );
 
-      // filter those which are in my list
+      // filter ths which are in my list
       final IFeaturesProvider featureProvider = getInput();
       if( featureProvider == null )
         return;
@@ -194,11 +200,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
             final IFeatureSelection currentSelection = (IFeatureSelection) tableSelection;
             final Feature[] currentFeatures = FeatureSelectionHelper.getFeatures( currentSelection );
             if( !org.kalypso.contribs.java.util.Arrays.equalsUnordered( globalFeatures, currentFeatures ) )
-              // FIXME: probably setting the selection that we got from outside is wron here -> we need to translate
-// into our own kind of selection (KalypsoTheme...Selection), else we sometimes have no focus feature
               setSelection( selection );
-            else
-              fireSelectionChanged( new SelectionChangedEvent( LayerTableViewer.this, tableSelection ) );
           }
         }
       } );
@@ -230,9 +232,6 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
   private final ControlListener m_headerControlListener = new ControlAdapter()
   {
-    /**
-     * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
-     */
     @Override
     public void controlResized( final ControlEvent e )
     {
@@ -261,6 +260,8 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
   private final IFeatureChangeListener m_fcl;
 
   private ExcelTableCursor m_tableCursor = null;
+
+  private NamespaceContext m_namespaceContext;
 
   /**
    * @param parent
@@ -308,9 +309,6 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     super.handleDispose( event );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ContentViewer#getInput()
-   */
   @Override
   public ILayerTableInput getInput( )
   {
@@ -337,19 +335,25 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
   }
 
   /** Configures the table accordingly to the template. Does NOT change the input element. */
-  public void applyLayer( final Layer layer )
+  public void applyLayer( final Layer layer, final URL context )
   {
+    // FIXME: get namepsace context from outside
+    m_namespaceContext = null;
     m_isApplyTemplate = true;
 
     try
     {
       clearColumns();
 
+      final StyleType styleRef = layer.getStyle();
+
+      final LayerTableStyle globalStyle = LayerTableStyleUtils.parseStyle( styleRef, new LayerTableStyle( null ), context );
+
       setFilters( new ViewerFilter[0] );
 
       final Sort sort = layer.getSort();
       final List<Column> columnList = layer.getColumn();
-      setSortAndColumns( sort, columnList );
+      setSortAndColumns( sort, columnList, globalStyle, context );
 
       applyFilter( layer );
     }
@@ -377,16 +381,40 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     }
   }
 
-  private void setSortAndColumns( final Sort sort, final List<Column> columnList )
+  private void setSortAndColumns( final Sort sort, final List<Column> columnList, final LayerTableStyle globalStyle, final URL context )
   {
     if( sort != null )
     {
-      m_sorter.setPropertyName( sort.getPropertyName() );
+      final String propertyName = sort.getPropertyName();
+      final GMLXPath sortPath = parseQuietXPath( propertyName );
+      m_sorter.setPropertyPath( sortPath );
       m_sorter.setInverse( sort.isInverse() );
     }
 
     for( final Column ct : columnList )
-      addColumn( ct.getName(), ct.getLabel(), ct.getTooltip(), ct.isEditable(), ct.getWidth(), ct.getAlignment(), ct.getFormat(), ct.getModifier(), false );
+    {
+      final String propertyName = ct.getName();
+      final GMLXPath propertyPath = parseQuietXPath( propertyName );
+
+      final String label = ct.getLabel();
+      final String tooltip = ct.getTooltip();
+      final boolean editable = ct.isEditable();
+      final int width = ct.getWidth();
+      final String alignment = ct.getAlignment();
+      final String format = ct.getFormat();
+      final String modifier = ct.getModifier();
+      final LayerTableStyle style = LayerTableStyleUtils.parseStyle( ct.getStyle(), globalStyle, context );
+
+      addColumn( propertyPath, label, tooltip, editable, width, alignment, format, modifier, false, style );
+    }
+  }
+
+  private GMLXPath parseQuietXPath( final String propertyName )
+  {
+    if( StringUtils.isBlank( propertyName ) )
+      return null;
+
+    return new GMLXPath( propertyName, m_namespaceContext );
   }
 
   void clearColumns( )
@@ -396,19 +424,21 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       return;
 
     final TableColumn[] columns = table.getColumns();
-    for( final TableColumn element : columns )
-      element.dispose();
+    for( final TableColumn column : columns )
+      column.dispose();
   }
 
-  public void addColumn( final String propertyName, final String label, final String tooltip, final boolean isEditable, final int width, final String alignment, final String format, final String modifier, final boolean bRefreshColumns )
+  public void addColumn( final GMLXPath propertyPath, final String label, final String tooltip, final boolean isEditable, final int width, final String alignment, final String format, final String modifier, final boolean bRefreshColumns, final LayerTableStyle style )
   {
+    Assert.isNotNull( style );
+
     final Table table = getTable();
 
     final int alignmentInt = SWTUtilities.createStyleFromString( alignment );
     final TableColumn tc = new TableColumn( table, alignmentInt );
     tc.setAlignment( alignmentInt );
 
-    tc.setData( COLUMN_PROP_NAME, propertyName );
+    tc.setData( COLUMN_PROP_PATH, propertyPath );
     tc.setData( COLUMN_PROP_LABEL, label );
     tc.setData( COLUMN_PROP_TOOLTIP, tooltip );
     tc.setData( COLUMN_PROP_EDITABLE, Boolean.valueOf( isEditable ) );
@@ -416,6 +446,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
     tc.setData( COLUMN_PROP_FORMAT, format );
     tc.setData( COLUMN_PROP_MODIFIER, modifier );
+    tc.setData( COLUMN_PROP_STYLE, style );
     tc.setToolTipText( tooltip );
     tc.setWidth( width );
     setColumnText( tc );
@@ -429,19 +460,17 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
   protected void setColumnText( final TableColumn tc )
   {
-    final String propertyName = (String) tc.getData( COLUMN_PROP_NAME );
-    if( propertyName == null )
-      return;
+    final GMLXPath propertyPath = (GMLXPath) tc.getData( COLUMN_PROP_PATH );
 
     final String label = (String) tc.getData( COLUMN_PROP_LABEL );
     final String tooltip = (String) tc.getData( COLUMN_PROP_TOOLTIP );
 
-    final String sortPropertyName = m_sorter.getPropertyName();
+    final GMLXPath sortPropertyPath = m_sorter.getPropertyPath();
 
-    final String[] textAndTooltip = getLabelAndTooltip( label, tooltip, propertyName );
+    final String[] textAndTooltip = getLabelAndTooltip( label, tooltip, propertyPath );
 
     final String text;
-    if( propertyName.equals( sortPropertyName ) )
+    if( propertyPath.equals( sortPropertyPath ) )
       text = textAndTooltip[0] + " " + (m_sorter.isInverse() ? "\u00ab" : "\u00bb"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     else
       text = textAndTooltip[0];
@@ -452,11 +481,11 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     tc.setToolTipText( tooltipText );
   }
 
-  private String[] getLabelAndTooltip( final String label, final String tooltip, final String propertyName )
+  private String[] getLabelAndTooltip( final String label, final String tooltip, final GMLXPath propertyPath )
   {
     final String[] result = new String[2];
 
-    result[0] = propertyName; // prepare for exception
+    result[0] = ObjectUtils.toString( propertyPath, StringUtils.EMPTY ); // prepare for exception
 
     try
     {
@@ -466,10 +495,10 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
       if( featureType != null )
       {
-        final IPropertyType property = featureType.getProperty( propertyName );
-        if( property != null )
+        final Object property = GMLXPathUtilities.query( propertyPath, featureType );
+        if( property instanceof IPropertyType )
         {
-          final IAnnotation annotation = property.getAnnotation();
+          final IAnnotation annotation = ((IPropertyType) property).getAnnotation();
           result[0] = annotation.getLabel();
           result[1] = annotation.getTooltip();
         }
@@ -511,8 +540,9 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     {
       if( column != null )
       {
-        final String propName = (String) column.getData( COLUMN_PROP_NAME );
-        if( propName != null && featureType.getProperty( propName ) == null )
+        final GMLXPath propPath = (GMLXPath) column.getData( COLUMN_PROP_PATH );
+        final IPropertyType propertyType = findPropertyType( featureType, propPath );
+        if( propertyType == null )
         {
           column.dispose();
           changed = true;
@@ -524,6 +554,22 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       refreshAll();
   }
 
+  static IPropertyType findPropertyType( final IFeatureType featureType, final GMLXPath propPath )
+  {
+    try
+    {
+      final Object propertyType = GMLXPathUtilities.query( propPath, featureType );
+      if( propertyType instanceof IPropertyType )
+        return (IPropertyType) propertyType;
+    }
+    catch( final GMLXPathException e )
+    {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
+
   public void refreshAll( )
   {
     refreshCellEditors();
@@ -531,18 +577,15 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     refresh();
   }
 
-  public void removeColumn( final String name )
+  public void removeColumn( final GMLXPath propertyPath )
   {
-    final TableColumn column = getColumn( name );
+    final TableColumn column = getColumn( propertyPath );
     if( column != null )
       column.dispose();
 
     refreshAll();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.StructuredViewer#refresh()
-   */
   @Override
   public void refresh( )
   {
@@ -550,17 +593,12 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       return;
     // FIXME: causes refresh to be called twice...
     checkColumns();
+
     // die Namen der Spalten auffrischen, wegen der Sortierungs-Markierung
     final TableColumn[] columns = getTable().getColumns();
     for( final TableColumn element : columns )
     {
       setColumnText( element );
-
-      // Should work, but does not, but why???
-// /* as long as width is 'auto', autoresize the column */
-// final int width = ((Integer) element.getData( COLUMN_PROP_WIDTH )).intValue();
-// if( width == -1 )
-// element.pack();
     }
 
     super.refresh();
@@ -602,31 +640,28 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     m_modifier = new IFeatureModifier[columns.length];
     for( int i = 0; i < editors.length; i++ )
     {
-      final String propName = (String) columns[i].getData( COLUMN_PROP_NAME );
+      final GMLXPath propPath = (GMLXPath) columns[i].getData( COLUMN_PROP_PATH );
       final String format = (String) columns[i].getData( COLUMN_PROP_FORMAT );
-      if( propName != null )
-      {
-        final IPropertyType ftp = featureType.getProperty( propName );
-        final String modifierId = (String) columns[i].getData( COLUMN_PROP_MODIFIER );
+      final IPropertyType ftp = findPropertyType( featureType, propPath );
+      final String modifierId = (String) columns[i].getData( COLUMN_PROP_MODIFIER );
 
-        m_modifier[i] = createModifier( format, ftp, modifierId );
-        if( m_modifier[i] != null )
-        {
-          editors[i] = m_modifier[i].createCellEditor( table );
-          editors[i].setValidator( m_modifier[i] );
-        }
+      m_modifier[i] = createModifier( format, ftp, modifierId, propPath );
+      if( m_modifier[i] != null )
+      {
+        editors[i] = m_modifier[i].createCellEditor( table );
+        editors[i].setValidator( m_modifier[i] );
       }
     }
     setCellEditors( editors );
   }
 
-  private IFeatureModifier createModifier( final String format, final IPropertyType ftp, final String modifierId )
+  private IFeatureModifier createModifier( final String format, final IPropertyType ftp, final String modifierId, final GMLXPath propertyPath )
   {
     if( modifierId != null && !modifierId.isEmpty() )
     {
       try
       {
-        final IFeatureModifier modifier = KalypsoUIExtensions.createFeatureModifier( ftp, modifierId );
+        final IFeatureModifier modifier = KalypsoUIExtensions.createFeatureModifier( propertyPath, ftp, modifierId );
         if( modifier == null )
           System.out.println( "No feature modifier with id: " + modifierId );
         else
@@ -639,7 +674,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       }
     }
 
-    return m_featureModiferFactory.createFeatureModifier( ftp, format, m_selectionManager, m_fcl );
+    return m_featureModiferFactory.createFeatureModifier( propertyPath, ftp, format, m_selectionManager, m_fcl );
   }
 
   private void refreshColumnProperties( )
@@ -649,12 +684,18 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       return;
 
     final TableColumn[] columns = table.getColumns();
-    final String[] properties = new String[columns.length];
+    final String[] pathes = new String[columns.length];
 
-    for( int i = 0; i < properties.length; i++ )
-      properties[i] = (String) columns[i].getData( COLUMN_PROP_NAME );
+    for( int i = 0; i < pathes.length; i++ )
+    {
+      final GMLXPath path = (GMLXPath) columns[i].getData( COLUMN_PROP_PATH );
+      if( path == null )
+        pathes[i] = StringUtils.EMPTY;
+      else
+        pathes[i] = path.toString();
+    }
 
-    setColumnProperties( properties );
+    setColumnProperties( pathes );
   }
 
   public boolean isDisposed( )
@@ -680,50 +721,63 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     return (String) column.getData( COLUMN_PROP_FORMAT );
   }
 
-  public boolean isEditable( final String property )
+  public boolean isEditable( final GMLXPath propertyPath )
   {
-    final TableColumn column = getColumn( property );
+    final TableColumn column = getColumn( propertyPath );
     return column == null ? false : ((Boolean) column.getData( COLUMN_PROP_EDITABLE )).booleanValue();
   }
 
-  private TableColumn getColumn( final String property )
+  private TableColumn getColumn( final GMLXPath propertyPath )
   {
+    final ILayerTableInput tableInput = getInput();
+    final IFeatureType featureType = tableInput.getFeatureType();
+
+    final IPropertyType searchType = findPropertyType( featureType, propertyPath );
+
     final TableColumn[] columns = getTable().getColumns();
     for( final TableColumn element : columns )
     {
-      final String name = (String) element.getData( COLUMN_PROP_NAME );
-      if( ObjectUtils.equals( property, name ) )
+      final GMLXPath path = (GMLXPath) element.getData( COLUMN_PROP_PATH );
+
+      // REMARK: we need to resolve the property type here, instead
+      // of comparing the paths, because the path may not always be
+      // qualified by a namespace, but still denotes the same property
+      final IPropertyType pt = findPropertyType( featureType, path );
+      if( pt == searchType )
         return element;
+
+      // if( propertyPath.equals( path ) )
+      // return element;
     }
 
     return null;
   }
 
-  public int getColumnID( final String property )
+  public int getColumnID( final GMLXPath propertyPath )
   {
     final TableColumn[] columns = getTable().getColumns();
     for( int i = 0; i < columns.length; i++ )
     {
-      final String name = (String) columns[i].getData( COLUMN_PROP_NAME );
-      if( property.equals( name ) )
+      final GMLXPath columnPath = (GMLXPath) columns[i].getData( COLUMN_PROP_PATH );
+      if( propertyPath.equals( columnPath ) )
         return i;
     }
 
     return -1;
   }
 
-  public int getWidth( final String propertyName )
+  public int getWidth( final GMLXPath propertyPath )
   {
-    final TableColumn column = getColumn( propertyName );
+    final TableColumn column = getColumn( propertyPath );
     if( column != null )
       return column.getWidth();
 
     return 0;
   }
 
-  public boolean hasColumn( final String propertyName )
+  public boolean hasColumn( final GMLXPath propertyPath )
   {
-    return getColumn( propertyName ) != null;
+    return getColumn( propertyPath ) != null;
   }
 
   public int getColumnCount( )
@@ -748,7 +802,9 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     {
       final Column columnType = OF.createGistableviewLayerColumn();
 
-      columnType.setName( tc.getData( COLUMN_PROP_NAME ).toString() );
+      final GMLXPath path = (GMLXPath) tc.getData( COLUMN_PROP_PATH );
+      final String name = ObjectUtils.toString( path, StringUtils.EMPTY );
+      columnType.setName( name );
       columnType.setLabel( (String) tc.getData( COLUMN_PROP_LABEL ) );
       columnType.setTooltip( (String) tc.getData( COLUMN_PROP_TOOLTIP ) );
       columnType.setEditable( ((Boolean) tc.getData( COLUMN_PROP_EDITABLE )).booleanValue() );
@@ -764,11 +820,12 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     }
 
     final LayerTableSorter sorter = (LayerTableSorter) getSorter();
-    final String propertyName = sorter.getPropertyName();
-    if( propertyName != null )
+    final GMLXPath propertyPath = sorter.getPropertyPath();
+    if( propertyPath != null )
     {
       final Sort sort = OF.createGistableviewLayerSort();
-      sort.setPropertyName( propertyName );
+      final String sortPropertyName = ObjectUtils.toString( propertyPath, StringUtils.EMPTY );
+      sort.setPropertyName( sortPropertyName );
       sort.setInverse( sorter.isInverse() );
       layer.setSort( sort );
     }
@@ -857,10 +914,9 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     final Table table = getTable();
     final TableColumn[] columns = table.getColumns();
 
-    // TODO: exports the property name, not the current label; change this
     final String[] firstLine = new String[columns.length];
     for( int j = 0; j < columns.length; j++ )
-      firstLine[j] = (String) columns[j].getData( COLUMN_PROP_NAME );
+      firstLine[j] = (String) columns[j].getData( COLUMN_PROP_LABEL );
     lines.add( firstLine );
 
     for( final Object element : features )
@@ -881,37 +937,34 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     return m_modifier == null ? null : m_modifier[columnIndex];
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
-   */
   @Override
   public boolean canModify( final Object element, final String property )
   {
+    final GMLXPath propertyPath = parseQuietXPath( property );
+
     // TODO ask modifier also, as for some types editor may not be implemented
-    return isEditable( property );
+    return isEditable( propertyPath );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
-   */
   @Override
   public Object getValue( final Object element, final String property )
   {
-    final IFeatureModifier modifier = getModifier( property );
+    final GMLXPath propertyPath = parseQuietXPath( property );
+
+    final IFeatureModifier modifier = findModifier( propertyPath );
 
     if( modifier != null )
-      return modifier.getValue( (Feature) element );
+      return modifier.getProperty( (Feature) element );
 
     return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
-   */
   @Override
   public void modify( final Object element, final String property, final Object value )
   {
-    final IFeatureModifier modifier = getModifier( property );
+    final GMLXPath propertyPath = parseQuietXPath( property );
+
+    final IFeatureModifier modifier = findModifier( propertyPath );
 
     if( modifier != null )
     {
@@ -919,7 +972,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       final Feature feature = (Feature) ti.getData();
       // as result==null does not explicitly mean that
       // the value is invalid, we have to ask the celleditor for invalidity
-      final int columnID = getColumnID( property );
+      final int columnID = getColumnID( propertyPath );
       if( columnID < 0 )
         return;
       final CellEditor[] editors = getCellEditors();
@@ -929,7 +982,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
         return;
 
       final Object object = modifier.parseInput( feature, value );
-      final Object oldValue = modifier.getValue( feature );
+      final Object oldValue = modifier.getProperty( feature );
       if( oldValue != null && oldValue.equals( object ) )
         return;
 
@@ -939,7 +992,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
         fc = (FeatureChange) object;
       else
       {
-        final IPropertyType pt = FeatureHelper.getPT( feature, property );
+        final IPropertyType pt = modifier.getPropertyType();
         fc = new FeatureChange( feature, pt, object );
       }
 
@@ -961,26 +1014,24 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     return input.getCommandTarget();
   }
 
-  public IFeatureModifier getModifier( final String name )
+  private IFeatureModifier findModifier( final GMLXPath propertyPath )
   {
-    if( m_modifier != null )
+    if( m_modifier == null )
+      return null;
+
+    for( final IFeatureModifier fm : m_modifier )
     {
-      for( final IFeatureModifier fm : m_modifier )
+      if( fm != null )
       {
-        if( fm != null )
-        {
-          final IPropertyType ftp = fm.getFeatureTypeProperty();
-          if( ftp.getName().equals( name ) )
-            return fm;
-        }
+        final GMLXPath modifierPath = fm.getPropertyPath();
+        if( modifierPath.equals( propertyPath ) )
+          return fm;
       }
     }
+
     return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.StructuredViewer#getSelection()
-   */
   @Override
   public ISelection getSelection( )
   {
@@ -1001,9 +1052,9 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     if( row != null && row.getData() instanceof Feature )
     {
       final Feature focusedFeature = row == null ? null : (Feature) row.getData();
-      final IFeatureModifier modifier = (column < 0 || m_modifier == null || column > m_modifier.length - 1) ? null : m_modifier[column];
+      final IFeatureModifier modifier = column < 0 || m_modifier == null || column > m_modifier.length - 1 ? null : m_modifier[column];
 
-      final IPropertyType focusedProperty = modifier == null ? null : modifier.getFeatureTypeProperty();
+      final IPropertyType focusedProperty = modifier == null ? null : modifier.getPropertyType();
 
       return new KalypsoFeatureThemeSelection( selection.toList(), featureList, workspace, m_selectionManager, focusedFeature, focusedProperty );
     }
@@ -1037,5 +1088,15 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
   public IFeatureSelectionManager getSelectionManager( )
   {
     return m_selectionManager;
+  }
+
+  public LayerTableStyle getStyle( final int columnIndex )
+  {
+    final TableColumn[] columns = getTable().getColumns();
+    if( columnIndex < 0 || columnIndex > columns.length - 1 )
+      return null;
+
+    final TableColumn column = columns[columnIndex];
+    return (LayerTableStyle) column.getData( COLUMN_PROP_STYLE );
   }
 }

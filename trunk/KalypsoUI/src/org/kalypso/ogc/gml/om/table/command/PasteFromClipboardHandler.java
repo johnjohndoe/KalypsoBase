@@ -56,6 +56,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -93,7 +94,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
     String trstring = null;
     try
     {
-      trstring = (String) (Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this ).getTransferData( DataFlavor.stringFlavor ));
+      trstring = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this ).getTransferData( DataFlavor.stringFlavor );
       // if clipboard content is not text or that content is empty, pop error message
       if( trstring == null || trstring.trim().length() == 0 )
       {
@@ -168,11 +169,11 @@ public class PasteFromClipboardHandler extends AbstractHandler
     if( stati.size() > 0 )
     {
       final IStatus[] array = stati.toArray( new IStatus[stati.size()] );
-      final MultiStatus multiStatus = new MultiStatus( KalypsoGisPlugin.getId(), -1, array, Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.6"), null ); //$NON-NLS-1$
+      final MultiStatus multiStatus = new MultiStatus( KalypsoGisPlugin.getId(), -1, array, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.6" ), null ); //$NON-NLS-1$
       if( !multiStatus.isOK() )
       {
-        final int open = new StatusDialog( shell, multiStatus, Messages.getString("org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.7"), new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 ).open(); //$NON-NLS-1$
-        if( open != StatusDialog.OK )
+        final int open = new StatusDialog( shell, multiStatus, Messages.getString( "org.kalypso.ogc.gml.om.table.command.PasteFromClipboardHandler.7" ), new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 ).open(); //$NON-NLS-1$
+        if( open != Window.OK )
           return null;
       }
     }

@@ -54,6 +54,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -122,7 +123,7 @@ public class TextSymbolizerComposite extends AbstractSymbolizerComposite<TextSym
 
   private Control createFontAndLabelSection( final FormToolkit toolkit, final Composite parent )
   {
-    final Section section = toolkit.createSection( parent, Section.TITLE_BAR | Section.EXPANDED );
+    final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED );
     section.setText( "Basic Properties" );
 
     m_commonForm = toolkit.createScrolledForm( section );

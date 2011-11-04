@@ -65,14 +65,13 @@ public class ChangeThemePropertiesCommand implements ICommand
 
   private final Stroke m_stroke;
 
-  private String m_oldName;
+  private final String m_oldName;
 
-  private Color m_oldColor;
+  private final Color m_oldColor;
 
-  private Stroke m_oldStroke;
+  private final Stroke m_oldStroke;
 
-  public ChangeThemePropertiesCommand( DiagView view, DiagViewCurve curve, final String name, final Color color,
-      final Stroke stroke )
+  public ChangeThemePropertiesCommand( final DiagView view, final DiagViewCurve curve, final String name, final Color color, final Stroke stroke )
   {
     m_view = view;
     m_curve = curve;
@@ -89,7 +88,7 @@ public class ChangeThemePropertiesCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
   @Override
-  public boolean isUndoable()
+  public boolean isUndoable( )
   {
     return true;
   }
@@ -98,7 +97,7 @@ public class ChangeThemePropertiesCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#process()
    */
   @Override
-  public void process() throws Exception
+  public void process( ) throws Exception
   {
     m_curve.setName( m_name );
     m_curve.setColor( m_color );
@@ -111,7 +110,7 @@ public class ChangeThemePropertiesCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#redo()
    */
   @Override
-  public void redo() throws Exception
+  public void redo( ) throws Exception
   {
     process();
   }
@@ -120,7 +119,7 @@ public class ChangeThemePropertiesCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#undo()
    */
   @Override
-  public void undo() throws Exception
+  public void undo( ) throws Exception
   {
     m_curve.setName( m_oldName );
     m_curve.setColor( m_oldColor );
@@ -133,8 +132,8 @@ public class ChangeThemePropertiesCommand implements ICommand
    * @see org.kalypso.commons.command.ICommand#getDescription()
    */
   @Override
-  public String getDescription()
+  public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ogc.sensor.commands.ChangeThemePropertiesCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.sensor.commands.ChangeThemePropertiesCommand.0" ); //$NON-NLS-1$
   }
 }

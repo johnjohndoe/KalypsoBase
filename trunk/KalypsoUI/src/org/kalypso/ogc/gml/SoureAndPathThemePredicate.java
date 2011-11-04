@@ -51,17 +51,19 @@ import org.kalypso.template.types.StyledLayerType;
  */
 public class SoureAndPathThemePredicate implements IKalypsoThemePredicate
 {
-  private org.kalypso.template.types.ObjectFactory m_templateFactory;
+  private final org.kalypso.template.types.ObjectFactory m_templateFactory;
+
   private final String m_href;
+
   private final String m_featurePath;
 
   public SoureAndPathThemePredicate( final String href, final String featurePath )
   {
     m_href = href;
     m_featurePath = featurePath;
-    
+
     m_templateFactory = new org.kalypso.template.types.ObjectFactory();
-    
+
   }
 
   /**
@@ -75,11 +77,11 @@ public class SoureAndPathThemePredicate implements IKalypsoThemePredicate
       final GisTemplateFeatureTheme gisTheme = (GisTemplateFeatureTheme) theme;
       final StyledLayerType layer = m_templateFactory.createStyledLayerType();
       gisTheme.fillLayerType( layer, "doesNotMatter", true ); //$NON-NLS-1$
-      
+
       final EqualsBuilder equalsBuilder = new EqualsBuilder();
       equalsBuilder.append( m_href, layer.getHref() );
       equalsBuilder.append( m_featurePath, layer.getFeaturePath() );
-      
+
       return equalsBuilder.isEquals();
     }
 

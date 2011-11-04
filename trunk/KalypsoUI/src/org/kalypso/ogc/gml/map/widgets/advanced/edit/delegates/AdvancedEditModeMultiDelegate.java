@@ -164,7 +164,7 @@ public class AdvancedEditModeMultiDelegate extends AbstractAdvancedEditModeMovem
       }
       else
       {
-        map.put( feature, (IAdvancedEditWidgetSnappedPoint[]) ArrayUtils.add( points, point ) );
+        map.put( feature, ArrayUtils.add( points, point ) );
       }
     }
 

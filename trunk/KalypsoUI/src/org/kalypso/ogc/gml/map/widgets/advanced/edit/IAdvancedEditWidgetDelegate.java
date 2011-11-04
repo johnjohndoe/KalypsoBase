@@ -96,13 +96,12 @@ public interface IAdvancedEditWidgetDelegate
       g.setColor( original );
     }
   };
-  
-  
+
   String getToolTip( );
 
-   void leftReleased( Point p );
+  void leftReleased( Point p );
 
-   void paint( final Graphics g );
+  void paint( final Graphics g );
 
-   double getRange( );
+  double getRange( );
 }

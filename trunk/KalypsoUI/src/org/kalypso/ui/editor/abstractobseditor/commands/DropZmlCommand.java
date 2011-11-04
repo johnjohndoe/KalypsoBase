@@ -63,7 +63,7 @@ public class DropZmlCommand implements ICommand
 
   private final ObsView m_view;
 
-  public DropZmlCommand( AbstractObservationEditor editor, ObsView view, String[] files )
+  public DropZmlCommand( final AbstractObservationEditor editor, final ObsView view, final String[] files )
   {
     m_editor = editor;
     m_orgItems = view.getItems();
@@ -88,9 +88,9 @@ public class DropZmlCommand implements ICommand
   {
     final IWorkspaceRoot wksp = ResourcesPlugin.getWorkspace().getRoot();
 
-    for( int i = 0; i < m_files.length; i++ )
+    for( final String m_file : m_files )
     {
-      IFile file = wksp.getFileForLocation( new Path( m_files[i] ) );
+      IFile file = wksp.getFileForLocation( new Path( m_file ) );
       file = (IFile) wksp.findMember( file.getFullPath() );
       final URL url = ResourceUtilities.createURL( file );
 
@@ -114,8 +114,8 @@ public class DropZmlCommand implements ICommand
   public void undo( ) throws Exception
   {
     m_view.removeAllItems();
-    for( int i = 0; i < m_orgItems.length; i++ )
-      m_view.addItem( m_orgItems[i] );
+    for( final ObsViewItem m_orgItem : m_orgItems )
+      m_view.addItem( m_orgItem );
   }
 
   /**
@@ -124,6 +124,6 @@ public class DropZmlCommand implements ICommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ui.editor.abstractobseditor.commands.DropZmlCommand.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ui.editor.abstractobseditor.commands.DropZmlCommand.0" ); //$NON-NLS-1$
   }
 }

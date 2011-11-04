@@ -43,8 +43,6 @@ package org.kalypso.ogc.gml.movie.utils;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -58,6 +56,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.ogc.gml.AbstractCascadingLayerTheme;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
@@ -68,7 +67,6 @@ import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.IKalypsoUIConstants;
 import org.kalypso.ui.KalypsoUIExtensions;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.xml.sax.InputSource;
 
 /**
  * Helper class for the movie functionality.
@@ -89,7 +87,7 @@ public class MovieUtilities
    * 
    * @param mapModel
    *          The map model.
-   * @return The {@link AbstractCascadingLayerTheme} or null.
+   * @return The {@link AbstractCascadingLayerTheme} or null. FIXME: return IKalypsoCascadingTheme instead!
    */
   public static AbstractCascadingLayerTheme findMovieTheme( final GisTemplateMapModell mapModel ) throws Exception
   {
@@ -118,7 +116,7 @@ public class MovieUtilities
    */
   public static IMovieImageProvider getImageProvider( final GisTemplateMapModell mapModel, final GM_Envelope boundingBox, final IProgressMonitor monitor ) throws Exception
   {
-    final AbstractCascadingLayerTheme movieTheme = MovieUtilities.findMovieTheme( mapModel );
+    final IKalypsoCascadingTheme movieTheme = MovieUtilities.findMovieTheme( mapModel );
     final String id = movieTheme.getProperty( IKalypsoUIConstants.MOVIE_THEME_PROPERTY, null );
     if( id == null || id.length() == 0 )
       return getDefaultImageProvider( mapModel, boundingBox, monitor );
@@ -148,7 +146,6 @@ public class MovieUtilities
   {
     final DefaultMovieImageProvider imageProvider = new DefaultMovieImageProvider();
     imageProvider.initialize( mapModel, boundingBox, monitor );
-
     return imageProvider;
   }
 
@@ -190,7 +187,7 @@ public class MovieUtilities
       final Gismapview newGisview = GisTemplateHelper.loadGisMapView( tmpFile );
 
       /* Create the new gis template map model. */
-      final GisTemplateMapModell newGisModel = new GisTemplateMapModell( mapModel.getContext(), mapModel.getCoordinatesSystem(), new FeatureSelectionManager2() );
+      final GisTemplateMapModell newGisModel = new GisTemplateMapModell( mapModel.getContext(), mapModel.getCoordinatesSystem(), mapModel.getProject(), new FeatureSelectionManager2() );
       newGisModel.createFromTemplate( newGisview );
 
       return newGisModel;
@@ -206,79 +203,7 @@ public class MovieUtilities
 
       /* Delete the temporary file. */
       if( tmpFile != null )
-        FileUtilities.deleteQuitly( tmpFile );
-    }
-  }
-
-  /**
-   * This function duplicates the map model n times.
-   * 
-   * @param mapModel
-   *          The map model.
-   * @param boundingBox
-   *          The bounding box.
-   * @return The duplicated map models.
-   */
-  public static GisTemplateMapModell[] duplicateMapModel( final GisTemplateMapModell mapModel, final GM_Envelope boundingBox, final int amount ) throws IOException
-  {
-    /* The output stream. */
-    ByteArrayOutputStream outputStream = null;
-
-    try
-    {
-      /* Create a gis map view. */
-      final Gismapview gisview = mapModel.createGismapTemplate( boundingBox, mapModel.getCoordinatesSystem(), new NullProgressMonitor() );
-
-      /* Create the output stream. */
-      outputStream = new ByteArrayOutputStream();
-
-      /* Save the gis map view. */
-      GisTemplateHelper.saveGisMapView( gisview, outputStream, "UTF-8" );
-
-      /* Flush. */
-      outputStream.flush();
-
-      /* Get as byte array. */
-      final byte[] bytes = outputStream.toByteArray();
-
-      /* Close the output stream. */
-      IOUtils.closeQuietly( outputStream );
-
-      /* Memory for the results. */
-      final List<GisTemplateMapModell> newGisModels = new ArrayList<GisTemplateMapModell>();
-
-      /* And load it n times, to pratically duplicate it. */
-      for( int i = 0; i < amount; i++ )
-      {
-        /* Create the byte stream. */
-        final ByteArrayInputStream byteStream = new ByteArrayInputStream( bytes );
-
-        /* And load it again, to pratically duplicate it. */
-        final InputSource is = new InputSource( byteStream );
-        is.setEncoding( "UTF-8" );
-        final Gismapview newGisview = GisTemplateHelper.loadGisMapView( is );
-
-        /* Create the new gis template map model. */
-        final GisTemplateMapModell newGisModel = new GisTemplateMapModell( mapModel.getContext(), mapModel.getCoordinatesSystem(), new FeatureSelectionManager2() );
-        newGisModel.createFromTemplate( newGisview );
-
-        /* Store the new gis template map model. */
-        newGisModels.add( newGisModel );
-
-        /* Close the byte stream. */
-        IOUtils.closeQuietly( byteStream );
-      }
-
-      return newGisModels.toArray( new GisTemplateMapModell[] {} );
-    }
-    catch( final Exception ex )
-    {
-      throw new IOException( "Konnte die Karte nicht duplizieren...", ex );
-    }
-    finally
-    {
-      /* Close the output stream. */
-      IOUtils.closeQuietly( outputStream );
+        FileUtilities.deleteQuietly( tmpFile );
     }
   }
 

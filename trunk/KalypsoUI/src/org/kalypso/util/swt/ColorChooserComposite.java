@@ -77,7 +77,7 @@ public class ColorChooserComposite extends Composite
 
     m_colorRegister.put( color.toString(), color );
 
-    this.setLayout( new GridLayout() );
+    setLayout( new GridLayout() );
 
     update();
   }
@@ -88,7 +88,7 @@ public class ColorChooserComposite extends Composite
   @Override
   public void update( )
   {
-    if( this.isDisposed() )
+    if( isDisposed() )
       return;
 
     if( m_body != null )

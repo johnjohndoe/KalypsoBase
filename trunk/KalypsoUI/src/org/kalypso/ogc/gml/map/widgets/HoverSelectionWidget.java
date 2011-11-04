@@ -74,7 +74,7 @@ public class HoverSelectionWidget extends AbstractWidget
     m_function.execute( getMapPanel(), new Rectangle( p.x, p.y, 0, 0 ) );
 
     // TODO: check if this repaint is necessary for the widget
-    IMapPanel panel = getMapPanel();
+    final IMapPanel panel = getMapPanel();
     if( panel != null )
       panel.repaintMap();
   }
@@ -94,10 +94,10 @@ public class HoverSelectionWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#setSelection(org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void setSelection( ISelection selection )
+  public void setSelection( final ISelection selection )
   {
     super.setSelection( selection );
 
-    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.HoverSelectionWidget.1") ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.HoverSelectionWidget.1" ) ); //$NON-NLS-1$
   }
 }

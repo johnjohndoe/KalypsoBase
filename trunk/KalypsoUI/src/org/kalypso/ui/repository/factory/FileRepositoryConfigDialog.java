@@ -55,16 +55,14 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.i18n.Messages;
 
 /**
- * Config Dialog for FileRepositoryFactory.
- * 
- * TODO: use plugin's dialog store to store default values
+ * Config Dialog for FileRepositoryFactory. TODO: use plugin's dialog store to store default values
  * 
  * @author schlienger
  */
 public class FileRepositoryConfigDialog extends TitleAreaDialog
 {
-  private final static String msg = Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.0") //$NON-NLS-1$
-      + Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.1"); //$NON-NLS-1$
+  private final static String msg = Messages.getString( "org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.0" ) //$NON-NLS-1$
+      + Messages.getString( "org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.1" ); //$NON-NLS-1$
 
   protected final static String BASEDIR = "FileRepositoryConfigDialog.basedir"; //$NON-NLS-1$
 
@@ -93,8 +91,7 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
    * @param plugin
    *          [optional] if not null, default values are used
    */
-  public FileRepositoryConfigDialog( final Shell parentShell, String location, String identifier, String filters,
-      final AbstractUIPlugin plugin )
+  public FileRepositoryConfigDialog( final Shell parentShell, String location, String identifier, String filters, final AbstractUIPlugin plugin )
   {
     super( parentShell );
 
@@ -118,7 +115,7 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
     m_store.setDefault( FILTER, filters );
   }
 
-  public void dispose()
+  public void dispose( )
   {
     m_fFilters.dispose();
     m_fIdentifier.dispose();
@@ -131,16 +128,16 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    setTitle( Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.5") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.5" ) ); //$NON-NLS-1$
     setMessage( msg );
 
-    final Composite c = (Composite)super.createDialogArea( parent );
+    final Composite c = (Composite) super.createDialogArea( parent );
 
     final Composite sub = new Composite( c, SWT.FILL );
 
-    m_fLocation = new DirectoryFieldEditor( BASEDIR, Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.6"), sub ); //$NON-NLS-1$
-    m_fIdentifier = new StringFieldEditor( IDENTIFIER, Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.7"), sub ); //$NON-NLS-1$
-    m_fFilters = new StringFieldEditor( FILTER, Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.8"), sub ); //$NON-NLS-1$
+    m_fLocation = new DirectoryFieldEditor( BASEDIR, Messages.getString( "org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.6" ), sub ); //$NON-NLS-1$
+    m_fIdentifier = new StringFieldEditor( IDENTIFIER, Messages.getString( "org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.7" ), sub ); //$NON-NLS-1$
+    m_fFilters = new StringFieldEditor( FILTER, Messages.getString( "org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.8" ), sub ); //$NON-NLS-1$
 
     m_fLocation.setPreferenceStore( m_store );
     m_fLocation.loadDefault();
@@ -171,20 +168,20 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
   {
     if( !m_fLocation.isValid() )
     {
-      MessageDialog.openInformation( getParentShell(), Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.9"), //$NON-NLS-1$
-          Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.10") ); //$NON-NLS-1$
+      MessageDialog.openInformation( getParentShell(), Messages.getString( "org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.9" ), //$NON-NLS-1$
+          Messages.getString( "org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.10" ) ); //$NON-NLS-1$
       return;
     }
 
     if( !m_fIdentifier.isValid() )
     {
-      MessageDialog.openInformation( getParentShell(), Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.11"), Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.12") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openInformation( getParentShell(), Messages.getString( "org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.11" ), Messages.getString( "org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.12" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
     if( !m_fFilters.isValid() )
     {
-      MessageDialog.openInformation( getParentShell(), Messages.getString("org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.13"), m_fFilters.getErrorMessage() ); //$NON-NLS-1$
+      MessageDialog.openInformation( getParentShell(), Messages.getString( "org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.13" ), m_fFilters.getErrorMessage() ); //$NON-NLS-1$
       return;
     }
 
@@ -202,17 +199,17 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
     super.okPressed();
   }
 
-  public String getLocation()
+  public String getLocation( )
   {
     return m_store.getString( BASEDIR );
   }
 
-  public String getIdentifier()
+  public String getIdentifier( )
   {
     return m_store.getString( IDENTIFIER );
   }
 
-  public String getFilters()
+  public String getFilters( )
   {
     return m_store.getString( FILTER );
   }

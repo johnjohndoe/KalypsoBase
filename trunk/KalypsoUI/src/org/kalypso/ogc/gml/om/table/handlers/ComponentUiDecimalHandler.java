@@ -95,7 +95,7 @@ public class ComponentUiDecimalHandler extends AbstractComponentUiHandler
   @Override
   public void doSetValue( final IRecord record, final Object value )
   {
-    if( value == null || (value instanceof String && ((String) value).length() == 0) )
+    if( value == null || value instanceof String && ((String) value).length() == 0 )
       setValue( record, null );
     else
       setValue( record, parseValue( value.toString() ) );

@@ -87,7 +87,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
   /** Indicates the undefined state for the name property. */
   public static final String NAME_UNDEF = EditDiagCurveDialog.class.getName();
 
-  private final static String MSG_UNDEF = Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.0"); //$NON-NLS-1$
+  private final static String MSG_UNDEF = Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.0" ); //$NON-NLS-1$
 
   private String m_name;
 
@@ -99,7 +99,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
 
   private int m_alpha;
 
-  public EditDiagCurveDialog( Shell parentShell, final LineProperties lineProperties )
+  public EditDiagCurveDialog( final Shell parentShell, final LineProperties lineProperties )
   {
     super( parentShell );
 
@@ -114,11 +114,11 @@ public class EditDiagCurveDialog extends TitleAreaDialog
    * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
    */
   @Override
-  protected void configureShell( Shell newShell )
+  protected void configureShell( final Shell newShell )
   {
     super.configureShell( newShell );
 
-    newShell.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.1") ); //$NON-NLS-1$
+    newShell.setText( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.1" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -133,8 +133,8 @@ public class EditDiagCurveDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    setTitle( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.2") ); //$NON-NLS-1$
-    setMessage( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.3") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.2" ) ); //$NON-NLS-1$
+    setMessage( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.3" ) ); //$NON-NLS-1$
 
     final Group composite = new Group( parent, SWT.NONE );
     composite.setLayout( new GridLayout( 3, false ) );
@@ -144,7 +144,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
 
     // Name
     final Label nameLabel = new Label( composite, SWT.NONE );
-    nameLabel.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.4") ); //$NON-NLS-1$
+    nameLabel.setText( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.4" ) ); //$NON-NLS-1$
 
     final Text nameText = new Text( composite, SWT.BORDER );
     final GridData nameData = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -153,7 +153,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
 
     // Color
     final Label colorLabel = new Label( composite, SWT.NONE );
-    colorLabel.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.5") ); //$NON-NLS-1$
+    colorLabel.setText( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.5" ) ); //$NON-NLS-1$
 
     final Button colorButton = new Button( composite, SWT.PUSH );
     final GridData colorData = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -170,7 +170,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
 
     // Stroke
     final Label sizeLabel = new Label( composite, SWT.NONE );
-    sizeLabel.setText( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.6") ); //$NON-NLS-1$
+    sizeLabel.setText( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveDialog.6" ) ); //$NON-NLS-1$
 
     final ComboViewer dashCombo = new ComboViewer( composite, SWT.DROP_DOWN | SWT.READ_ONLY );
     dashCombo.getControl().setFont( composite.getDisplay().getSystemFont() );
@@ -196,7 +196,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
     nameText.addModifyListener( new ModifyListener()
     {
       @Override
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         handleNameTextModified( nameText );
         updateControl( nameText, colorButton, sizeSlider, dashCombo, alphaSlider );
@@ -209,7 +209,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         handleColorButtonSelected();
         updateControl( nameText, colorButton, sizeSlider, dashCombo, alphaSlider );
@@ -219,7 +219,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
     colorButton.addDisposeListener( new DisposeListener()
     {
       @Override
-      public void widgetDisposed( DisposeEvent e )
+      public void widgetDisposed( final DisposeEvent e )
       {
         if( colorButton.getImage() != null )
           colorButton.getImage().dispose();
@@ -232,7 +232,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         handleAlphaSliderSelected( alphaSlider );
         updateControl( nameText, colorButton, sizeSlider, dashCombo, alphaSlider );
@@ -245,7 +245,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         handleSizeSliderSelected( sizeSlider );
         updateControl( nameText, colorButton, sizeSlider, dashCombo, alphaSlider );
@@ -256,7 +256,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
     dashCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
         handleTypeSelectionChanged( (IStructuredSelection) event.getSelection() );
         updateControl( nameText, colorButton, sizeSlider, dashCombo, alphaSlider );
@@ -285,17 +285,17 @@ public class EditDiagCurveDialog extends TitleAreaDialog
     return super.createDialogArea( parent );
   }
 
-  protected void handleAlphaSliderSelected( Scale alphaSlider )
+  protected void handleAlphaSliderSelected( final Scale alphaSlider )
   {
     m_alpha = alphaSlider.getSelection();
   }
 
-  protected void handleNameTextModified( Text nameText )
+  protected void handleNameTextModified( final Text nameText )
   {
     m_name = nameText.getText();
   }
 
-  protected void handleTypeSelectionChanged( IStructuredSelection selection )
+  protected void handleTypeSelectionChanged( final IStructuredSelection selection )
   {
     if( !selection.isEmpty() )
       m_dash = (DashType) selection.getFirstElement();
@@ -343,8 +343,8 @@ public class EditDiagCurveDialog extends TitleAreaDialog
       if( widht > 0 && height > 0 )
       {
         final Image colorImage = new Image( display, widht, height );
-        GC gc = new GC( colorImage );
-        org.eclipse.swt.graphics.Color buttonColor = new org.eclipse.swt.graphics.Color( display, m_color.getRed(), m_color.getGreen(), m_color.getBlue() );
+        final GC gc = new GC( colorImage );
+        final org.eclipse.swt.graphics.Color buttonColor = new org.eclipse.swt.graphics.Color( display, m_color.getRed(), m_color.getGreen(), m_color.getBlue() );
         gc.setBackground( buttonColor );
         gc.fillRectangle( 0, 0, 32, 16 );
         buttonColor.dispose();

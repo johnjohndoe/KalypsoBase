@@ -50,12 +50,12 @@ public class LegendCoordinate
   /**
    * The x coordinate.
    */
-  private int m_x;
+  private final int m_x;
 
   /**
    * The y coordinate.
    */
-  private int m_y;
+  private final int m_y;
 
   /**
    * The constructor.
@@ -65,7 +65,7 @@ public class LegendCoordinate
    * @param y
    *          The y coordinate.
    */
-  public LegendCoordinate( int x, int y )
+  public LegendCoordinate( final int x, final int y )
   {
     m_x = x;
     m_y = y;

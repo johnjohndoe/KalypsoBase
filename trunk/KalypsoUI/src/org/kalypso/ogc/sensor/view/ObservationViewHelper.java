@@ -56,9 +56,9 @@ import org.kalypso.repository.IRepositoryItem;
  */
 public final class ObservationViewHelper
 {
-  private ObservationViewHelper()
+  private ObservationViewHelper( )
   {
-  // not to be instanciated
+    // not to be instanciated
   }
 
   /**
@@ -71,13 +71,12 @@ public final class ObservationViewHelper
   public static DateRange makeDateRange( final IRepositoryItem item )
   {
     // REMARK: make sure that this DateFormat instance is the same with which the
-    // repository properties where formatted (look at DateRangeInputControlStruct) 
+    // repository properties where formatted (look at DateRangeInputControlStruct)
     final DateFormat df = TimeseriesUtils.getDateFormat();
 
     if( item.getRepository().getProperty( DateRangeInputControl.USE_RANGE ) != null )
     {
-      final boolean useRange = Boolean.valueOf( item.getRepository().getProperty( DateRangeInputControl.USE_RANGE ) )
-          .booleanValue();
+      final boolean useRange = Boolean.valueOf( item.getRepository().getProperty( DateRangeInputControl.USE_RANGE ) ).booleanValue();
 
       if( useRange )
       {
@@ -89,7 +88,7 @@ public final class ObservationViewHelper
 
           return new DateRange( dateFrom, dateTo );
         }
-        catch( ParseException e )
+        catch( final ParseException e )
         {
           return new DateRange();
         }

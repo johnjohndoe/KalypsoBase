@@ -243,7 +243,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       if( isDateColumn( columnIndex ) )
         return m_sharedAxis;
 
-      return (m_columns.get( columnIndex - 1 ));
+      return m_columns.get( columnIndex - 1 );
     }
   }
 

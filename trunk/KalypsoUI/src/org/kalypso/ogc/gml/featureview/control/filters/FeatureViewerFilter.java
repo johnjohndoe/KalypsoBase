@@ -84,7 +84,7 @@ public class FeatureViewerFilter extends ViewerFilter implements IViewerFilter
    *      java.lang.Object)
    */
   @Override
-  public void init( Feature parent, Object expression )
+  public void init( final Feature parent, final Object expression )
   {
     try
     {
@@ -94,7 +94,7 @@ public class FeatureViewerFilter extends ViewerFilter implements IViewerFilter
         workspace = parent.getWorkspace();
 
       /* Try to get the filter from the expression. */
-      Filter filter = getFilter( expression );
+      final Filter filter = getFilter( expression );
 
       if( workspace != null && filter != null )
       {
@@ -102,7 +102,7 @@ public class FeatureViewerFilter extends ViewerFilter implements IViewerFilter
         m_filter = filter;
       }
     }
-    catch( FilterConstructionException ex )
+    catch( final FilterConstructionException ex )
     {
       /* It is safe to ignore this exception, because in this case this filter will allow everything. */
       ex.printStackTrace();
@@ -114,20 +114,20 @@ public class FeatureViewerFilter extends ViewerFilter implements IViewerFilter
    *      java.lang.Object)
    */
   @Override
-  public boolean select( Viewer viewer, Object parentElement, Object element )
+  public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
     if( m_filter == null || m_workspace == null )
       return true;
 
     try
     {
-      Feature feature = FeatureHelper.resolveLinkedFeature( m_workspace, element );
+      final Feature feature = FeatureHelper.resolveLinkedFeature( m_workspace, element );
       if( feature == null )
         return true;
 
       return m_filter.evaluate( feature );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       /* It is safe to ignore this exception, because in this case this filter will allow the element. */
       ex.printStackTrace();
@@ -139,20 +139,20 @@ public class FeatureViewerFilter extends ViewerFilter implements IViewerFilter
   /**
    * This function builds the filter from an expression.
    */
-  private Filter getFilter( Object expression ) throws FilterConstructionException
+  private Filter getFilter( final Object expression ) throws FilterConstructionException
   {
     /* Check the type. */
     if( expression == null || !(expression instanceof Element) )
       return null;
 
     /* Cast. */
-    Element filterElement = (Element) expression;
+    final Element filterElement = (Element) expression;
 
     /* Get the child nodes. */
-    NodeList childNodes = filterElement.getChildNodes();
+    final NodeList childNodes = filterElement.getChildNodes();
     for( int i = 0; i < childNodes.getLength(); i++ )
     {
-      Node item = childNodes.item( i );
+      final Node item = childNodes.item( i );
       if( item instanceof Element )
         return AbstractFilter.buildFromDOM( (Element) item );
     }

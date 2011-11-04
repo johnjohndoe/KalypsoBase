@@ -85,7 +85,7 @@ public class InsertRowHandler extends AbstractHandler
       final Object obj = selection.getFirstElement();
       index = tupleResult.indexOf( obj );
     }
-    
+
     final IRecord row = tupleResult.createRecord();
     tupleResult.doInterpolation( tupleResult, row, index, 0.5 );
 

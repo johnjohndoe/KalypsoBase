@@ -79,7 +79,7 @@ public class CalendarFeatureDialog implements IFeatureDialog
   public int open( final Shell shell )
   {
     final Date date = getDate();
-    final Date dialogDate = date == null ?  new Date() : date;
+    final Date dialogDate = date == null ? new Date() : date;
     final SWTCalendarDialog dialog = new SWTCalendarDialog( shell, dialogDate );
 
     final int open = dialog.open();

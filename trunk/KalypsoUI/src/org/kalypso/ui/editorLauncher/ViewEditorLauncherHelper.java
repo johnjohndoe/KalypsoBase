@@ -110,10 +110,8 @@ public class ViewEditorLauncherHelper
 
     // virtuelle Vorlagen hinzufügen
     final Map<IFile, IDefaultTemplateLauncher> defaultTemplateMap = new HashMap<IFile, IDefaultTemplateLauncher>();
-    for( int i = 0; i < defaultTemplates.length; i++ )
+    for( final IDefaultTemplateLauncher def : defaultTemplates )
     {
-      // pseudo file erzeugen, damit der LabelProvider was schönes erzeugt
-      final IDefaultTemplateLauncher def = defaultTemplates[i];
       final IFile defaultPseudoFile = folder.getFile( new Path( def.getFilename() ) );
 
       defaultTemplateMap.put( defaultPseudoFile, def );
@@ -122,8 +120,8 @@ public class ViewEditorLauncherHelper
 
     // reale Vorlagen hinzufügen
     final IFile[] realTemplates = visitor.getFiles();
-    for( int i = 0; i < realTemplates.length; i++ )
-      allTemplates.add( realTemplates[i] );
+    for( final IFile realTemplate : realTemplates )
+      allTemplates.add( realTemplate );
 
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final Shell shell = workbench.getActiveWorkbenchWindow().getShell();
@@ -132,11 +130,11 @@ public class ViewEditorLauncherHelper
     final ElementListSelectionDialog dialog = new ElementListSelectionDialog( shell, workbenchLabelProvider );
     dialog.setElements( allTemplates.toArray() );
     dialog.setBlockOnOpen( true );
-    dialog.setEmptyListMessage( Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.0") ); //$NON-NLS-1$
-    dialog.setMessage( Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.1") ); //$NON-NLS-1$
+    dialog.setEmptyListMessage( Messages.getString( "org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.0" ) ); //$NON-NLS-1$
+    dialog.setMessage( Messages.getString( "org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.1" ) ); //$NON-NLS-1$
     dialog.setMultipleSelection( true );
-    dialog.setTitle( Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.2") ); //$NON-NLS-1$
-    dialog.setEmptySelectionMessage( Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.3") ); //$NON-NLS-1$
+    dialog.setTitle( Messages.getString( "org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.2" ) ); //$NON-NLS-1$
+    dialog.setEmptySelectionMessage( Messages.getString( "org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.3" ) ); //$NON-NLS-1$
     dialog.setStatusLineAboveButtons( true );
 
     // klappt nicht?
@@ -149,11 +147,11 @@ public class ViewEditorLauncherHelper
 
       // falls eine ausgewählt wurde, die Vorlage öffnen
       final IEditorRegistry editorRegistry = workbench.getEditorRegistry();
-      for( int i = 0; i < templates.length; i++ )
+      for( final Object template2 : templates )
       {
         try
         {
-          final IFile template = (IFile) templates[i];
+          final IFile template = (IFile) template2;
 
           // wars ein Default? dann extra behandeln
           IEditorInput input = null;
@@ -182,7 +180,7 @@ public class ViewEditorLauncherHelper
           e.printStackTrace();
 
           final IStatus status = StatusUtilities.statusFromThrowable( e );
-          ErrorDialog.openError( shell, Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.4"), Messages.getString("org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.5"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+          ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.4" ), Messages.getString( "org.kalypso.ui.editorLauncher.ViewEditorLauncherHelper.5" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     }

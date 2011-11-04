@@ -54,9 +54,9 @@ public class RulesFactory
 {
   private static ITableViewRules DEFAULT_RULES = null;
 
-  private RulesFactory()
+  private RulesFactory( )
   {
-  // not to be instanciated
+    // not to be instanciated
   }
 
   /**
@@ -73,34 +73,25 @@ public class RulesFactory
     final String tt = rr.getTooltip();
     final String icon = rr.getIcon();
 
-    return new RenderingRule( mask, fg == null ? null : StringUtilities.stringToColor( fg ), bg == null ? null
-        : StringUtilities.stringToColor( bg ), font == null ? null : StringUtilities.stringToFont( font ), tt,
-        KalypsoStatusUtils.getIconFor( icon ) );
+    return new RenderingRule( mask, fg == null ? null : StringUtilities.stringToColor( fg ), bg == null ? null : StringUtilities.stringToColor( bg ), font == null ? null
+        : StringUtilities.stringToFont( font ), tt, KalypsoStatusUtils.getIconFor( icon ) );
   }
 
   /**
    * @return default rules for Kalypso (only a copy is returned!)
    */
-  public static synchronized ITableViewRules getDefaultRules()
+  public static synchronized ITableViewRules getDefaultRules( )
   {
     // lazy loading
     if( DEFAULT_RULES == null )
     {
       DEFAULT_RULES = new Rules();
 
-      final int[] bits =
-      {
-          KalypsoStati.BIT_CHECK,
-          KalypsoStati.BIT_REQUIRED,
-          KalypsoStati.BIT_USER_MODIFIED,
-          KalypsoStati.BIT_DERIVATED,
-          KalypsoStati.BIT_DERIVATION_ERROR };
+      final int[] bits = { KalypsoStati.BIT_CHECK, KalypsoStati.BIT_REQUIRED, KalypsoStati.BIT_USER_MODIFIED, KalypsoStati.BIT_DERIVATED, KalypsoStati.BIT_DERIVATION_ERROR };
 
-      for( int i = 0; i < bits.length; i++ )
+      for( final int bit : bits )
       {
-        DEFAULT_RULES.addRule( new RenderingRule( bits[i], KalypsoStatusUtils.getForegroundFor( bits[i] ),
-            KalypsoStatusUtils.getBackgroundFor( bits[i] ), null, KalypsoStatusUtils.getTooltipFor( bits[i] ),
-            KalypsoStatusUtils.getIconFor( bits[i] ) ) );
+        DEFAULT_RULES.addRule( new RenderingRule( bit, KalypsoStatusUtils.getForegroundFor( bit ), KalypsoStatusUtils.getBackgroundFor( bit ), null, KalypsoStatusUtils.getTooltipFor( bit ), KalypsoStatusUtils.getIconFor( bit ) ) );
       }
     }
 

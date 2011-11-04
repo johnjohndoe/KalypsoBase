@@ -88,7 +88,7 @@ public class KalypsoImageTheme extends AbstractImageTheme
    * @param mapModell
    *          The map modell to use.
    */
-  public KalypsoImageTheme( I10nString name, IMapModell mapModell )
+  public KalypsoImageTheme( final I10nString name, final IMapModell mapModell )
   {
     super( name, "image", mapModell );
 
@@ -137,11 +137,11 @@ public class KalypsoImageTheme extends AbstractImageTheme
         return null;
 
       /* Create the input stream. */
-      URL imageUrl = new URL( getContext(), m_imageUrl );
+      final URL imageUrl = new URL( getContext(), m_imageUrl );
       inputStream = imageUrl.openStream();
 
       /* Create the image. */
-      BufferedImage awtImage = ImageIO.read( inputStream );
+      final BufferedImage awtImage = ImageIO.read( inputStream );
 
       // TODO Use the background color...
 
@@ -150,7 +150,7 @@ public class KalypsoImageTheme extends AbstractImageTheme
 
       return awtImage;
     }
-    catch( IOException ex )
+    catch( final IOException ex )
     {
       ex.printStackTrace();
       setStatus( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) );
@@ -188,19 +188,19 @@ public class KalypsoImageTheme extends AbstractImageTheme
     m_imageUrl = null;
 
     /* Get the properties. */
-    String horizontalProperty = getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, null );
-    String verticalProperty = getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, null );
-    String backgroundColorProperty = getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, null );
-    String imageUrlProperty = getProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL, null );
+    final String horizontalProperty = getProperty( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, null );
+    final String verticalProperty = getProperty( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, null );
+    final String backgroundColorProperty = getProperty( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, null );
+    final String imageUrlProperty = getProperty( ImageUtilities.THEME_PROPERTY_IMAGE_URL, null );
 
     /* Check the horizontal and vertical position. */
-    int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
-    int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
+    final int horizontal = PositionUtilities.checkHorizontalPosition( horizontalProperty );
+    final int vertical = PositionUtilities.checkVerticalPosition( verticalProperty );
     if( horizontal != -1 && vertical != -1 )
       updatePosition( horizontal, vertical );
 
     /* Check the background color. */
-    org.eclipse.swt.graphics.Color backgroundColor = ThemeUtilities.checkBackgroundColor( Display.getCurrent(), backgroundColorProperty );
+    final org.eclipse.swt.graphics.Color backgroundColor = ThemeUtilities.checkBackgroundColor( Display.getCurrent(), backgroundColorProperty );
     if( backgroundColor != null )
     {
       m_backgroundColor.dispose();

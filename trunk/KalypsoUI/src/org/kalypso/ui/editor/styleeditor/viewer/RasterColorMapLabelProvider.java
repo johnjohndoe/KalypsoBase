@@ -105,11 +105,11 @@ public class RasterColorMapLabelProvider extends ColorMapLabelProvider
    * @see org.kalypso.ui.editor.sldEditor.ColorMapLabelProvider#getAwtColor(java.lang.Object, int)
    */
   @Override
-  protected Color getAwtColor( Object element, int columnIndex )
+  protected Color getAwtColor( final Object element, final int columnIndex )
   {
     final ColorMapEntry entry = (ColorMapEntry) element;
     final java.awt.Color stroke = entry.getColor();
-    double opacity = entry.getOpacity();
+    final double opacity = entry.getOpacity();
     return ColorUtilities.createTransparent( stroke, opacity );
   }
 }

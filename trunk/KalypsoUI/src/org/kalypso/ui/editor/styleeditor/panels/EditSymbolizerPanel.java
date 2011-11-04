@@ -108,7 +108,7 @@ public class EditSymbolizerPanel
     listenerList.add( PanelListener.class, pl );
   }
 
-  private void init()
+  private void init( )
   {
     removeSymbolizerButton = new Label( composite, SWT.PUSH );
     removeSymbolizerButton.setImage( ImageProvider.IMAGE_STYLEEDITOR_REMOVE.createImage() );
@@ -230,12 +230,12 @@ public class EditSymbolizerPanel
       moveForwardSymbolizerButton.setEnabled( true );
   }
 
-  public int getAction()
+  public int getAction( )
   {
     return getCurrentAction();
   }
 
-  protected void fire()
+  protected void fire( )
   {
     final Object[] listeners = listenerList.getListenerList();
     for( int i = listeners.length - 2; i >= 0; i -= 2 )
@@ -243,28 +243,28 @@ public class EditSymbolizerPanel
       if( listeners[i] == PanelListener.class )
       {
         final PanelEvent event = new PanelEvent( this );
-        ( (PanelListener)listeners[i + 1] ).valueChanged( event );
+        ((PanelListener) listeners[i + 1]).valueChanged( event );
       }
     }
   }
 
-  public int getCanDelete()
+  public int getCanDelete( )
   {
     return canDelete;
   }
 
   public void setCanDelete( final int m_canDelete )
   {
-    this.canDelete = m_canDelete;
+    canDelete = m_canDelete;
   }
 
-  public int getCurrentAction()
+  public int getCurrentAction( )
   {
     return currentAction;
   }
 
   public void setCurrentAction( final int m_currentAction )
   {
-    this.currentAction = m_currentAction;
+    currentAction = m_currentAction;
   }
 }

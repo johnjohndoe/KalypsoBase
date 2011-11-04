@@ -33,75 +33,91 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 
-public class SWTMonthChooser extends Composite {
-    private final Combo comboBox;
-    private Locale locale;
+public class SWTMonthChooser extends Composite
+{
+  private final Combo comboBox;
 
-    public SWTMonthChooser(final Composite parent) {
-        super(parent, SWT.NONE);
+  private Locale locale;
 
-        locale = Locale.getDefault();
-        setLayout(new FillLayout());
-        comboBox = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
+  public SWTMonthChooser( final Composite parent )
+  {
+    super( parent, SWT.NONE );
 
-        initNames();
+    locale = Locale.getDefault();
+    setLayout( new FillLayout() );
+    comboBox = new Combo( this, SWT.DROP_DOWN | SWT.READ_ONLY );
 
-        setMonth(Calendar.getInstance().get(Calendar.MONTH));
-        setFont(parent.getFont());
+    initNames();
+
+    setMonth( Calendar.getInstance().get( Calendar.MONTH ) );
+    setFont( parent.getFont() );
+  }
+
+  private void initNames( )
+  {
+    final DateFormatSymbols dateFormatSymbols = new DateFormatSymbols( locale );
+    final String[] monthNames = dateFormatSymbols.getMonths();
+
+    int month = comboBox.getSelectionIndex();
+    if( comboBox.getItemCount() > 0 )
+    {
+      comboBox.removeAll();
     }
 
-    private void initNames() {
-        final DateFormatSymbols dateFormatSymbols = new DateFormatSymbols(locale);
-        final String[] monthNames = dateFormatSymbols.getMonths();
-
-        int month = comboBox.getSelectionIndex();
-        if (comboBox.getItemCount() > 0) {
-            comboBox.removeAll();
-        }
-
-        for( final String name : monthNames )
-        {
-            if (name.length() > 0) {
-                comboBox.add(name);
-            }
-        }
-
-        if (month < 0) {
-            month = 0;
-        } else if (month >= comboBox.getItemCount()) {
-            month = comboBox.getItemCount() - 1;
-        }
-
-        comboBox.select(month);
+    for( final String name : monthNames )
+    {
+      if( name.length() > 0 )
+      {
+        comboBox.add( name );
+      }
     }
 
-    public void addSelectionListener(final SelectionListener listener) {
-        comboBox.addSelectionListener(listener);
+    if( month < 0 )
+    {
+      month = 0;
+    }
+    else if( month >= comboBox.getItemCount() )
+    {
+      month = comboBox.getItemCount() - 1;
     }
 
-    public void removeSelectionListener(final SelectionListener listener) {
-        comboBox.removeSelectionListener(listener);
-    }
+    comboBox.select( month );
+  }
 
-    public void setMonth(final int newMonth) {
-        comboBox.select(newMonth);
-    }
+  public void addSelectionListener( final SelectionListener listener )
+  {
+    comboBox.addSelectionListener( listener );
+  }
 
-    public int getMonth() {
-        return comboBox.getSelectionIndex();
-    }
+  public void removeSelectionListener( final SelectionListener listener )
+  {
+    comboBox.removeSelectionListener( listener );
+  }
 
-    public void setLocale(final Locale locale) {
-        this.locale = locale;
-        initNames();
-    }
+  public void setMonth( final int newMonth )
+  {
+    comboBox.select( newMonth );
+  }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.swt.widgets.Control#setFont(org.eclipse.swt.graphics.Font)
-     */
-    @Override
-    public void setFont(final Font font) {
-        super.setFont(font);
-        comboBox.setFont(getFont());
-    }
+  public int getMonth( )
+  {
+    return comboBox.getSelectionIndex();
+  }
+
+  public void setLocale( final Locale locale )
+  {
+    this.locale = locale;
+    initNames();
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.eclipse.swt.widgets.Control#setFont(org.eclipse.swt.graphics.Font)
+   */
+  @Override
+  public void setFont( final Font font )
+  {
+    super.setFont( font );
+    comboBox.setFont( getFont() );
+  }
 }

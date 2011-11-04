@@ -45,8 +45,6 @@ import javax.xml.bind.JAXBElement;
 import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
-import org.kalypso.ogc.gml.gui.IFeatureDialogFactory;
 import org.kalypso.template.featureview.Button;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridDataType;
@@ -64,14 +62,12 @@ public class ButtonControlMaker extends AbstractValueControlMaker
     super( addValidator );
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker#createControlType(org.kalypso.gmlschema.property.IPropertyType)
+   */
   @Override
   protected JAXBElement< ? extends ControlType> createControlType( final Feature feature, final IFeatureType ft, final IPropertyType fpt, final GridDataType griddata )
   {
-    /* Do not show elements that have no dialog factory, the user is not able to edit them anyway */
-    final IFeatureDialogFactory factory = ButtonFeatureControl.findDialogFactory( null, fpt );
-    if( factory == null )
-      return null;
-
     final Button button = TemplateUtilities.OF_FEATUREVIEW.createButton();
     button.setStyle( "SWT.PUSH" ); //$NON-NLS-1$
     button.setProperty( fpt.getQName() );
@@ -81,4 +77,5 @@ public class ButtonControlMaker extends AbstractValueControlMaker
 
     return TemplateUtilities.OF_FEATUREVIEW.createButton( button );
   }
+
 }

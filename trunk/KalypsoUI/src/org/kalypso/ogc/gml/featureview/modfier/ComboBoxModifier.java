@@ -41,152 +41,176 @@
 package org.kalypso.ogc.gml.featureview.modfier;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
+import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypso.ogc.gml.featureview.control.ComboFeatureControl;
-import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
 /**
  * A modifier which handles feature-relations: shows a combo-box as cell-editor.
  * 
  * @author Gernot Belger
  */
-public class ComboBoxModifier implements IFeatureModifier
+public class ComboBoxModifier extends AbstractFeatureModifier
 {
-  private static final String NO_LINK_STRING = Messages.getString("org.kalypso.ogc.gml.featureview.modfier.ComboBoxModifier.0"); //$NON-NLS-1$
+  private static final String NO_LINK_STRING = Messages.getString( "org.kalypso.ogc.gml.featureview.modfier.ComboBoxModifier.0" ); //$NON-NLS-1$
 
-  private final List<Object> m_entries = new ArrayList<Object>();
+  final GMLLabelProvider m_cellEditorLabelProvider = new GMLLabelProvider();
 
-  private final ComboBoxCellEditor m_comboBoxCellEditor = new ComboBoxCellEditor();
-
-  private final IRelationType m_rt;
+  private ComboBoxViewerCellEditor m_comboBoxCellEditor = null;
 
   private Feature m_feature;
 
-  public ComboBoxModifier( final IRelationType ftp )
+  public ComboBoxModifier( final GMLXPath propertyPath, final IRelationType ftp )
   {
-    m_rt = ftp;
-    m_comboBoxCellEditor.setStyle( SWT.READ_ONLY | SWT.DROP_DOWN );
+    init( propertyPath, ftp );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getValue(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
-  public Object getValue( final Feature f )
+  public Object getProperty( final Feature feature )
   {
-    m_feature = f;
-    m_entries.clear();
+    m_feature = feature;
 
-    final List<String> labels = new ArrayList<String>();
+    final Object property = super.getProperty( feature );
 
-    if( !m_rt.isInlineAble() && m_rt.isLinkAble() )
+    // HACK/BUGFIX: the xpath resolved value is always a feasture, not the 'stirng' reference id for local featurr
+    // references.
+    // Revert the value to the string reference for this case.
+    if( property instanceof Feature )
+    {
+      final GMLWorkspace workspace = ((Feature) property).getWorkspace();
+      if( workspace == m_feature.getWorkspace() )
+        return ((Feature) property).getId();
+    }
+
+    return property;
+  }
+
+  protected Object refreshInput( )
+  {
+    /* update input */
+    final Collection<Object> input = new ArrayList<Object>();
+
+    final IRelationType rt = (IRelationType) getPropertyType();
+    if( !rt.isInlineAble() && rt.isLinkAble() )
     {
       /* Null entry to delete link if this is allowed */
-      if( m_rt.isNillable() )
+      if( rt.isNillable() )
       {
-        m_entries.add( null );
-        labels.add( NO_LINK_STRING );
+        input.add( null );
       }
 
-      /* Find all substituting features. */
-      final Feature feature = getFeature();
+      final GMLWorkspace workspace = m_feature.getWorkspace();
 
-      final GMLWorkspace workspace = feature.getWorkspace();
-
-      final Feature[] features = ComboFeatureControl.collectReferencableFeatures( workspace, m_feature, m_rt );
-
-      final GMLLabelProvider labelProvider = new GMLLabelProvider();
+      final IReferenceCollectorStrategy strategy = ComboFeatureControl.createSearchStrategy( workspace, m_feature, rt );
+      final Feature[] features = strategy.collectReferences();
 
       for( final Feature foundFeature : features )
       {
         if( foundFeature instanceof XLinkedFeature_Impl )
-        {
-          m_entries.add( foundFeature );
-        }
+          input.add( foundFeature );
         else
-        {
-          m_entries.add( foundFeature.getId() );
-        }
-
-        labels.add( labelProvider.getText( foundFeature ) );
+          input.add( foundFeature.getId() );
       }
     }
-    m_comboBoxCellEditor.setItems( labels.toArray( new String[labels.size()] ) );
 
-    final Object property = f.getProperty( m_rt );
-    return m_entries.indexOf( property );
+    return input;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#parseInput(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.Object)
-   */
-  @Override
-  public Object parseInput( final Feature f, final Object value )
-  {
-    final int counter = ((Integer) value).intValue();
-    if( counter >= 0 )
-      return m_entries.get( counter );
-    else
-      // TODO: catch -1 and return null feature, is this correct?
-      return null;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#createCellEditor(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public CellEditor createCellEditor( final Composite parent )
   {
-    m_comboBoxCellEditor.create( parent );
+    m_comboBoxCellEditor = new ComboBoxViewerCellEditor( parent, SWT.READ_ONLY | SWT.DROP_DOWN )
+    {
+      @Override
+      public void activate( )
+      {
+        final ViewerFilter filter = createFilter();
+        if( filter != null )
+          getViewer().setFilters( new ViewerFilter[] { filter } );
+
+        final Object input = refreshInput();
+        setInput( input );
+      }
+
+      @Override
+      public void setInput( final Object input )
+      {
+        super.setInput( input );
+
+        final Object selected = doGetValue();
+        doSetValue( selected );
+      }
+    };
+
+    m_comboBoxCellEditor.setActivationStyle( ComboBoxViewerCellEditor.DROP_DOWN_ON_KEY_ACTIVATION | ComboBoxViewerCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION
+        | ComboBoxViewerCellEditor.DROP_DOWN_ON_PROGRAMMATIC_ACTIVATION | ComboBoxViewerCellEditor.DROP_DOWN_ON_TRAVERSE_ACTIVATION );
+
+    m_comboBoxCellEditor.setContenProvider( new ArrayContentProvider() );
+
+    m_comboBoxCellEditor.setLabelProvider( new LabelProvider()
+    {
+      @Override
+      public String getText( final Object element )
+      {
+        return getCellEditorLabel( element );
+      }
+    } );
+
     return m_comboBoxCellEditor;
   }
 
-  protected Feature getFeature( )
+  protected String getCellEditorLabel( final Object element )
   {
-    return m_feature;
+    if( element == null )
+      return NO_LINK_STRING;
+
+    final Feature foundFeature = findFeature( element );
+
+    return m_cellEditorLabelProvider.getText( foundFeature );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
-   */
+  private Feature findFeature( final Object element )
+  {
+    if( element instanceof Feature )
+      return (Feature) element;
+
+    if( element instanceof String )
+    {
+      final GMLWorkspace workspace = m_feature.getWorkspace();
+      return workspace.getFeature( (String) element );
+    }
+
+    throw new IllegalStateException();
+  }
+
   @Override
   public String isValid( final Object value )
   {
     return null; // null means vaild
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getFeatureTypeProperty()
-   */
-  @Override
-  public IPropertyType getFeatureTypeProperty( )
-  {
-    return m_rt;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getLabel(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public String getLabel( final Feature f )
   {
-    final IPropertyType ftp = getFeatureTypeProperty();
+    final IPropertyType ftp = getPropertyType();
     final Object fprop = f.getProperty( ftp );
 
     if( fprop == null )
@@ -194,7 +218,7 @@ public class ComboBoxModifier implements IFeatureModifier
 
     if( ftp instanceof IRelationType )
     {
-      Feature resolvedFeature = FeatureHelper.resolveLinkedFeature( f.getWorkspace(), fprop );
+      final Feature resolvedFeature = FeatureHelper.resolveLinkedFeature( f.getWorkspace(), fprop );
       if( resolvedFeature == null )
         return NO_LINK_STRING;
 
@@ -206,30 +230,10 @@ public class ComboBoxModifier implements IFeatureModifier
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#getImage(org.kalypsodeegree.model.feature.Feature)
+   * No filter on combo entries by default. Override to implement.
    */
-  @Override
-  public Image getImage( final Feature f )
+  protected ViewerFilter createFilter( )
   {
-    // Todo: button image
     return null;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#dispose()
-   */
-  @Override
-  public void dispose( )
-  {
-    // nichts zu tun
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureModifier#equals(java.lang.Object, java.lang.Object)
-   */
-  @Override
-  public boolean equals( final Object newData, final Object oldData )
-  {
-    return newData.equals( oldData );
   }
 }

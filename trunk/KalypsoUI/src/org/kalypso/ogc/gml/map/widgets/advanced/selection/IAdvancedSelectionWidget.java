@@ -56,13 +56,13 @@ public interface IAdvancedSelectionWidget
     eAdd,
     eRemove;
   }
-  
+
   GM_Point getCurrentGmPoint( );
-  
+
   Point getCurrentPoint( );
 
   IMapPanel getIMapPanel( );
-  
+
   String getToolTip( );
 
   void setCursor( Cursor cursor );

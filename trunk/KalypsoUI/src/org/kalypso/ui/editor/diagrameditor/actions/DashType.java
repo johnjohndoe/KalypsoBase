@@ -52,16 +52,22 @@ import org.kalypso.i18n.Messages;
  */
 public class DashType
 {
-  public static DashType NONE = new DashType( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.DashType.0"), "---------", new float[] {} ); //$NON-NLS-1$ //$NON-NLS-2$
-  public static DashType SIMPLE_1 = new DashType( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.DashType.2"), "- - - - -", new float[] {10f, 10f} ); //$NON-NLS-1$ //$NON-NLS-2$
-  public static DashType SIMPLE_2 = new DashType( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.DashType.4"), ". . . . .", new float[] {5f, 5f} ); //$NON-NLS-1$ //$NON-NLS-2$
-  public static DashType SIMPLE_3 = new DashType( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.DashType.6"), "-- -- -- ", new float[] {10f, 2f} ); //$NON-NLS-1$ //$NON-NLS-2$
-  public static DashType SIMPLE_4 = new DashType( Messages.getString("org.kalypso.ui.editor.diagrameditor.actions.DashType.8"), ".........", new float[] {2f, 1f} ); //$NON-NLS-1$ //$NON-NLS-2$
-  
+  public static DashType NONE = new DashType( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.DashType.0" ), "---------", new float[] {} ); //$NON-NLS-1$ //$NON-NLS-2$
+
+  public static DashType SIMPLE_1 = new DashType( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.DashType.2" ), "- - - - -", new float[] { 10f, 10f } ); //$NON-NLS-1$ //$NON-NLS-2$
+
+  public static DashType SIMPLE_2 = new DashType( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.DashType.4" ), ". . . . .", new float[] { 5f, 5f } ); //$NON-NLS-1$ //$NON-NLS-2$
+
+  public static DashType SIMPLE_3 = new DashType( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.DashType.6" ), "-- -- -- ", new float[] { 10f, 2f } ); //$NON-NLS-1$ //$NON-NLS-2$
+
+  public static DashType SIMPLE_4 = new DashType( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.DashType.8" ), ".........", new float[] { 2f, 1f } ); //$NON-NLS-1$ //$NON-NLS-2$
+
   public static DashType[] KNOWN_DASHS = new DashType[] { NONE, SIMPLE_1, SIMPLE_2, SIMPLE_3, SIMPLE_4 };
-  
+
   private final String m_label;
+
   private final float[] m_dashs;
+
   private final String m_comboLabel;
 
   public DashType( final String label, final String comboLabel, final float[] dashs )
@@ -71,21 +77,21 @@ public class DashType
     m_dashs = dashs;
   }
 
-  public float[] getDashs()
+  public float[] getDashs( )
   {
     return m_dashs;
   }
-  
-  public String getComboLabel()
+
+  public String getComboLabel( )
   {
     return m_comboLabel;
   }
-  
+
   /**
    * @see java.lang.Object#toString()
    */
   @Override
-  public String toString()
+  public String toString( )
   {
     return m_label;
   }
@@ -94,49 +100,47 @@ public class DashType
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     if( obj instanceof DashType )
     {
-      final DashType other = (DashType)obj;
+      final DashType other = (DashType) obj;
       return Arrays.equals( m_dashs, other.m_dashs );
     }
 
     return false;
   }
-  
+
   /**
    * @see java.lang.Object#hashCode()
    */
   @Override
-  public int hashCode()
+  public int hashCode( )
   {
     // Not correct, but works
     return m_dashs.hashCode();
   }
 
-  public static boolean isKnownDash( DashType dash )
+  public static boolean isKnownDash( final DashType dash )
   {
-    for( int i = 0; i < KNOWN_DASHS.length; i++ )
+    for( final DashType element : KNOWN_DASHS )
     {
-      if( KNOWN_DASHS[i].equals(dash))
+      if( element.equals( dash ) )
         return true;
     }
-    
+
     return false;
   }
 
-  public static DashType findKnownDash( DashType dash )
+  public static DashType findKnownDash( final DashType dash )
   {
-    for( int i = 0; i < KNOWN_DASHS.length; i++ )
+    for( final DashType element : KNOWN_DASHS )
     {
-      if( KNOWN_DASHS[i].equals(dash))
-        return KNOWN_DASHS[i];
+      if( element.equals( dash ) )
+        return element;
     }
-    
+
     return null;
   }
 
-  
-  
 }

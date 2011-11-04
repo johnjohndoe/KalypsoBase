@@ -61,11 +61,11 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
    * @param commandManager
    * @param rule
    * @param bUndo
-   *            falls true is die Undo-Action, sonst die Redo-Action
+   *          falls true is die Undo-Action, sonst die Redo-Action
    */
   public UndoRedoAction( final ICommandManager commandManager, final ISchedulingRule rule, final boolean bUndo )
   {
-    super( bUndo ? "Undo" : "Redo", null, bUndo ? Messages.getString("org.kalypso.util.command.UndoRedoAction.2") : Messages.getString("org.kalypso.util.command.UndoRedoAction.3") ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    super( bUndo ? "Undo" : "Redo", null, bUndo ? Messages.getString( "org.kalypso.util.command.UndoRedoAction.2" ) : Messages.getString( "org.kalypso.util.command.UndoRedoAction.3" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     m_commandManager = commandManager;
     m_rule = rule;
@@ -89,7 +89,7 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
   @Override
   public void run( )
   {
-    if( (m_isUndo && m_commandManager.canUndo()) || (!m_isUndo && m_commandManager.canRedo()) )
+    if( m_isUndo && m_commandManager.canUndo() || !m_isUndo && m_commandManager.canRedo() )
       new CommandJob( null, m_commandManager, m_rule, null, m_isUndo ? CommandJob.UNDO : CommandJob.REDO );
   }
 
@@ -109,7 +109,7 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
     if( cm != null )
     {
       enabled = m_isUndo ? cm.canUndo() : cm.canRedo();
-      text = m_isUndo ? ("Undo: " + cm.getUndoDescription()) : ("Redo: " + cm.getRedoDescription()); //$NON-NLS-1$ //$NON-NLS-2$
+      text = m_isUndo ? "Undo: " + cm.getUndoDescription() : "Redo: " + cm.getRedoDescription(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     setEnabled( enabled );

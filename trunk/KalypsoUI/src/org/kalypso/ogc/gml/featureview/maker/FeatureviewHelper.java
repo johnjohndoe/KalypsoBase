@@ -40,15 +40,10 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.maker;
 
-import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
 
-import org.kalypso.commons.i18n.ITranslator;
-import org.kalypso.commons.i18n.NullTranslator;
 import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -57,7 +52,6 @@ import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.LabelType;
-import org.kalypso.template.types.I18NTranslatorType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -67,16 +61,11 @@ public class FeatureviewHelper implements IFeatureviewFactory
 {
   public static final int STANDARD_TEXT_FIELD_WIDTH_HINT = 200;
 
-  private final Map<FeatureviewType, ITranslator> m_translators = new HashMap<FeatureviewType, ITranslator>();
-
   private boolean m_showTables = true;
 
   private boolean m_shouldAddValidator = true;
 
   private boolean m_shouldShowButton = true;
-
-  private ITranslator m_defaultTranslator = new NullTranslator();
-
 
   /** Generate new templates with or without tables. Cache is cleared. */
   public void setShowTables( final boolean showTable )
@@ -109,12 +98,14 @@ public class FeatureviewHelper implements IFeatureviewFactory
     return m_shouldShowButton;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory#get(org.kalypso.gmlschema.feature.IFeatureType,
-   *      org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
-  public FeatureviewType get( final IFeatureType featureType, final Feature feature )
+  public FeatureviewTypeWithContext get( final IFeatureType featureType, final Feature feature )
+  {
+    final FeatureviewType featureview = createFeatureview( featureType, feature );
+    return new FeatureviewTypeWithContext( featureview, null );
+  }
+
+  private FeatureviewType createFeatureview( final IFeatureType featureType, final Feature feature )
   {
     if( featureType != null && feature != null )
       return getWithContent( featureType, feature );
@@ -206,41 +197,5 @@ public class FeatureviewHelper implements IFeatureviewFactory
   protected IControlMaker createControlMaker( )
   {
     return new DefaultControlMakerStrategy( m_shouldAddValidator, m_showTables, m_shouldShowButton );
-  }
-
-  @Override
-  public ITranslator getTranslator( final FeatureviewType view, final URL context )
-  {
-    if( !m_translators.containsKey( view ) )
-    {
-      final ITranslator viewTranslator = createTranslator( view, context );
-      m_translators.put( view, viewTranslator );
-    }
-
-    return m_translators.get( view );
-  }
-
-  private ITranslator createTranslator( final FeatureviewType view, final URL context )
-  {
-    final I18NTranslatorType translator = view.getTranslator();
-    if( translator == null )
-      return m_defaultTranslator;
-
-    return TemplateUtilities.createTranslator( translator, context );
-  }
-
-  @Override
-  public ITranslator getDefaultTranslator( )
-  {
-    return m_defaultTranslator;
-  }
-
-  @Override
-  public void setDefaultTranslator( final ITranslator translator )
-  {
-    if( translator == null )
-      m_defaultTranslator = new NullTranslator();
-    else
-      m_defaultTranslator = translator;
   }
 }

@@ -53,7 +53,7 @@ public class QuantitySorter extends ViewerSorter
   }
 
   @Override
-  public int compare( Viewer viewer, Object o1, Object o2 )
+  public int compare( final Viewer viewer, final Object o1, final Object o2 )
   {
     final ColorMapEntry entry1 = (ColorMapEntry) o1;
     final ColorMapEntry entry2 = (ColorMapEntry) o2;
@@ -62,10 +62,10 @@ public class QuantitySorter extends ViewerSorter
 
   }
 
-  private int compareQuantities( ColorMapEntry entry1, ColorMapEntry entry2 )
+  private int compareQuantities( final ColorMapEntry entry1, final ColorMapEntry entry2 )
   {
-    double test = entry1.getQuantity() - entry2.getQuantity();
-    int result = test < 0 ? -1 : (test > 0) ? 1 : 0;
+    final double test = entry1.getQuantity() - entry2.getQuantity();
+    final int result = test < 0 ? -1 : test > 0 ? 1 : 0;
     return result;
   }
 

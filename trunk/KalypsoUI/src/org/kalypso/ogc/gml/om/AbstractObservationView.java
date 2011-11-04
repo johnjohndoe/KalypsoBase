@@ -71,7 +71,7 @@ public abstract class AbstractObservationView extends ViewPart
    *          the transfer types that are supported by the drop operation
    * @see org.eclipse.swt.dnd.DND
    */
-  public void addDropSupport( int operations, Transfer[] transferTypes )
+  public void addDropSupport( final int operations, final Transfer[] transferTypes )
   {
     final Control control = getControl();
     final DropTarget dropTarget = new DropTarget( control, operations );
@@ -97,9 +97,9 @@ public abstract class AbstractObservationView extends ViewPart
         final IFeatureSelection fSel = (IFeatureSelection) selection;
         final EasyFeatureWrapper[] features = fSel.getAllFeatures();
 
-        for( int i = 0; i < features.length; i++ )
+        for( final EasyFeatureWrapper feature2 : features )
         {
-          final Feature feature = features[i].getFeature();
+          final Feature feature = feature2.getFeature();
 
           if( GMLSchemaUtilities.substitutes( feature.getFeatureType(), ObservationFeatureFactory.OM_OBSERVATION ) )
           {

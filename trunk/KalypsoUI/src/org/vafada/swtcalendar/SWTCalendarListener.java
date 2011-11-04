@@ -23,6 +23,7 @@ package org.vafada.swtcalendar;
 
 import org.eclipse.swt.internal.SWTEventListener;
 
-public interface SWTCalendarListener extends SWTEventListener {
-    public void dateChanged(SWTCalendarEvent event);
+public interface SWTCalendarListener extends SWTEventListener
+{
+  public void dateChanged( SWTCalendarEvent event );
 }

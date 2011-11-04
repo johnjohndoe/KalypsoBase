@@ -207,7 +207,6 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
     }
   }
 
-
   /**
    * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider#setCursor(java.awt.Cursor)
    */
@@ -229,7 +228,6 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
     }
   }
 
-
   /**
    * @see org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidgetDelegate#getEditMode()
    */
@@ -245,7 +243,7 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
   @Override
   public String[] getTooltip( )
   {
-    return new String[] { Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.DrawingPolygonDelegate.0") }; //$NON-NLS-1$
+    return new String[] { Messages.getString( "org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.DrawingPolygonDelegate.0" ) }; //$NON-NLS-1$
   }
 
   /**

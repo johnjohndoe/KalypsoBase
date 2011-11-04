@@ -91,7 +91,7 @@ public class TupleResultCellModifier implements ICellModifier
    * Does not inform any listeners.
    * <p>
    * Only changes the record if the new value is different from the current value.
-   *
+   * 
    * @return the component which was modified, <code>null</code> if the record was not changed.
    */
   public void modifyRecord( final IRecord record, final String handlerId, final Object value )

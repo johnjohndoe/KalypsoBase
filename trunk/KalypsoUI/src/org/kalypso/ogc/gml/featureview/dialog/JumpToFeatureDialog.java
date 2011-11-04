@@ -80,10 +80,10 @@ public class JumpToFeatureDialog implements IFeatureDialog
   {
     if( m_feature == null )
     {
-      MessageDialog.openConfirm( shell, Messages.getString("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.0"), Messages.getString("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+      MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.0" ), Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return Window.CANCEL;
     }
-    
+
     m_listener.openFeatureRequested( m_feature, m_ftp );
 
     // always return cancel, nothing should be done else
@@ -106,7 +106,7 @@ public class JumpToFeatureDialog implements IFeatureDialog
   public String getLabel( )
   {
     if( m_feature == null )
-      return Messages.getString("org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.link"); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog.link" ); //$NON-NLS-1$
 
     return "..."; //$NON-NLS-1$
   }

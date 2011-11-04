@@ -62,11 +62,11 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
 {
-//  private static double MIN_DRAG_DISTANCE_PIXEL = 20;
+// private static double MIN_DRAG_DISTANCE_PIXEL = 20;
   private static double MIN_DRAG_DISTANCE_PIXEL = 0.02;
 
   // points in pixel coordinates
-  private final List< GM_Point > m_points = new ArrayList< GM_Point >();
+  private final List<GM_Point> m_points = new ArrayList<GM_Point>();
 
   // this is the point currently under the mouse
   private GM_Point m_currentPoint = null;
@@ -92,7 +92,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
    * @throws GM_Exception
    * @throws NotEnoughPointsExeption
    */
-  private GM_Object createGeometry( final List< GM_Point > pixelArray ) throws GM_Exception, NotEnoughPointsExeption
+  private GM_Object createGeometry( final List<GM_Point> pixelArray ) throws GM_Exception, NotEnoughPointsExeption
   {
     final Class geoClass = getGeometryClass();
     if( geoClass == GeometryUtilities.getPolygonClass() && pixelArray.size() < 3 )
@@ -100,7 +100,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
     if( geoClass == GeometryUtilities.getLineStringClass() && pixelArray.size() < 2 )
       throw new NotEnoughPointsExeption();
 
-    final List< GM_Position > posArray = getAsGM_Positions( pixelArray );//getPositionArray( pixelArray );
+    final List<GM_Position> posArray = getAsGM_Positions( pixelArray );// getPositionArray( pixelArray );
     GM_Object result = null;
     if( geoClass == GeometryUtilities.getPolygonClass() )
       result = getPolygon( posArray );
@@ -113,10 +113,11 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
     return result;
   }
 
-  private List<GM_Position> getAsGM_Positions( List<GM_Point> pixelArray )
+  private List<GM_Position> getAsGM_Positions( final List<GM_Point> pixelArray )
   {
-    List< GM_Position > lListResult = new ArrayList< GM_Position >();
-    for( final GM_Point lGMPoint: pixelArray ){
+    final List<GM_Position> lListResult = new ArrayList<GM_Position>();
+    for( final GM_Point lGMPoint : pixelArray )
+    {
       lListResult.add( lGMPoint.getPosition() );
     }
     return lListResult;
@@ -131,11 +132,11 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
     if( !canEdit() )
       return;
 
-    GM_Point lGMPoint = transform( getMapPanel(), p ); 
+    final GM_Point lGMPoint = transform( getMapPanel(), p );
     if( !m_points.isEmpty() && m_points.get( m_points.size() - 1 ).equals( lGMPoint ) )
       return;
     // first test if vaild...
-    final List< GM_Point > testList = new ArrayList< GM_Point >();
+    final List<GM_Point> testList = new ArrayList<GM_Point>();
     for( final GM_Point point : m_points )
       testList.add( point );
     testList.add( lGMPoint );
@@ -173,7 +174,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
   @Override
   public void dragged( final Point p )
   {
-    GM_Point lGMPoint = transform( getMapPanel(), p );
+    final GM_Point lGMPoint = transform( getMapPanel(), p );
     if( m_points.isEmpty() || m_points.get( m_points.size() - 1 ).distance( lGMPoint ) > MIN_DRAG_DISTANCE_PIXEL )
       leftClicked( p );
 
@@ -192,7 +193,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
   {
     if( !m_points.isEmpty() )
     {
-      GM_Point lGMPoint = transform( getMapPanel(), p ); 
+      final GM_Point lGMPoint = transform( getMapPanel(), p );
       m_currentPoint = lGMPoint;
 
 // TODO: check if this repaint is necessary for the widget
@@ -213,8 +214,8 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
     if( !m_points.isEmpty() && m_currentPoint != null )
     {
       final int[][] lArrPositionToDrow = getXYArrayPixel();
-      final int[] arrayX = lArrPositionToDrow[ 0 ];
-      final int[] arrayY = lArrPositionToDrow[ 1 ];
+      final int[] arrayX = lArrPositionToDrow[0];
+      final int[] arrayY = lArrPositionToDrow[1];
       final Class geoClass = getGeometryClass();
       if( geoClass == GeometryUtilities.getPolygonClass() )
       {
@@ -245,7 +246,8 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
   /**
    * @return all the x and y points as int[][] array including the current point
    */
-  private int[][] getXYArrayPixel( ){
+  private int[][] getXYArrayPixel( )
+  {
     final List<Integer> xArray = new ArrayList<Integer>();
     final List<Integer> yArray = new ArrayList<Integer>();
     for( int i = 0; i < m_points.size(); i++ )
@@ -253,15 +255,16 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
       xArray.add( new Integer( (int) getMapPanel().getProjection().getDestX( m_points.get( i ).getX() ) ) );
       yArray.add( new Integer( (int) getMapPanel().getProjection().getDestY( m_points.get( i ).getY() ) ) );
     }
-    if( m_currentPoint != null ){
-      xArray.add( new Integer(  (int) getMapPanel().getProjection().getDestX( m_currentPoint.getX() ) ) );
-      yArray.add( new Integer(  (int) getMapPanel().getProjection().getDestY( m_currentPoint.getY() ) ) );
+    if( m_currentPoint != null )
+    {
+      xArray.add( new Integer( (int) getMapPanel().getProjection().getDestX( m_currentPoint.getX() ) ) );
+      yArray.add( new Integer( (int) getMapPanel().getProjection().getDestY( m_currentPoint.getY() ) ) );
     }
-    int[] xs = ArrayUtils.toPrimitive( xArray.toArray( new Integer[m_points.size()] ) );
-    int[] ys = ArrayUtils.toPrimitive( yArray.toArray( new Integer[m_points.size()] ) );
+    final int[] xs = ArrayUtils.toPrimitive( xArray.toArray( new Integer[m_points.size()] ) );
+    final int[] ys = ArrayUtils.toPrimitive( yArray.toArray( new Integer[m_points.size()] ) );
     return new int[][] { xs, ys };
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.widgets.IWidget#perform()
    */
@@ -288,7 +291,7 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
 
   /**
    * This method transforms the AWT-Point to a GM_Point.
-   *
+   * 
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -315,11 +318,10 @@ public abstract class AbstractCreateGeometeryWidget extends AbstractWidget
 
     return GeometryFactory.createGM_Point( projection.getSourceX( x ), projection.getSourceY( y ), coordinatesSystem );
   }
-  
+
   protected abstract void performIntern( final GM_Object validGeometryValue ) throws Exception;
 
-
-  private GM_Surface getPolygon( final List< GM_Position > posArray ) throws GM_Exception
+  private GM_Surface getPolygon( final List<GM_Position> posArray ) throws GM_Exception
   {
     // close the ring
     posArray.add( posArray.get( 0 ) );

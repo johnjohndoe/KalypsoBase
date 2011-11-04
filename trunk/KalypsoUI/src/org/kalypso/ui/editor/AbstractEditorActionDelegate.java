@@ -60,7 +60,7 @@ public abstract class AbstractEditorActionDelegate implements IEditorActionDeleg
    *      org.eclipse.ui.IEditorPart)
    */
   @Override
-  public void setActiveEditor( IAction action, IEditorPart targetEditor )
+  public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
     m_editor = targetEditor;
   }
@@ -70,15 +70,15 @@ public abstract class AbstractEditorActionDelegate implements IEditorActionDeleg
    *      org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
-  // 
+    //
   }
 
   /**
    * @return shell
    */
-  public Shell getShell()
+  public Shell getShell( )
   {
     return m_editor.getSite().getShell();
   }
@@ -86,7 +86,7 @@ public abstract class AbstractEditorActionDelegate implements IEditorActionDeleg
   /**
    * @return editor
    */
-  public IEditorPart getEditor()
+  public IEditorPart getEditor( )
   {
     return m_editor;
   }

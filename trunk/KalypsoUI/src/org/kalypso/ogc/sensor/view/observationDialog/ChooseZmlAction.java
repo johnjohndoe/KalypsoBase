@@ -42,7 +42,6 @@ package org.kalypso.ogc.sensor.view.observationDialog;
 
 import java.net.URL;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -106,15 +105,15 @@ public abstract class ChooseZmlAction extends Action
 
     final IPath relativePath = PathUtils.makeRelativ( contextPath, resultPath );
 
-      final String filterText = m_viewer.getFilter();
+    final String filterText = m_viewer.getFilter();
 
     final String href = relativePath.toString();
 
-      m_viewer.setInput( href, filterText, m_viewer.getShow() );
-    }
+    m_viewer.setInput( href, filterText, m_viewer.getShow() );
+  }
 
   private IPath findContextPath( final URL context )
-    {
+  {
     final IPath contextPath = ResourceUtilities.findPathFromURL( context );
 
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();

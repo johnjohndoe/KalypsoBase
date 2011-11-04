@@ -88,7 +88,8 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
     undoAction.dispose();
     redoAction.dispose();
 
-    if( m_commandManager != null ) {
+    if( m_commandManager != null )
+    {
       m_commandManager.removeCommandManagerListener( this );
       m_commandManager = null;
     }

@@ -81,7 +81,7 @@ public class ExportAsFileWizard extends Wizard
    * @see org.eclipse.jface.wizard.Wizard#addPages()
    */
   @Override
-  public void addPages()
+  public void addPages( )
   {
     super.addPages();
 
@@ -96,7 +96,7 @@ public class ExportAsFileWizard extends Wizard
 
     m_page1 = new DateRangeInputWizardPage();
     m_page2 = new FileSelectWizardPage( "fileselect", fileName, new String[] //$NON-NLS-1$
-                                                                           { "*.zml", "*.xml" } ); //$NON-NLS-1$ //$NON-NLS-2$
+    { "*.zml", "*.xml" } ); //$NON-NLS-1$ //$NON-NLS-2$
 
     addPage( m_page1 );
     addPage( m_page2 );
@@ -106,7 +106,7 @@ public class ExportAsFileWizard extends Wizard
    * @see org.eclipse.jface.wizard.Wizard#performFinish()
    */
   @Override
-  public boolean performFinish()
+  public boolean performFinish( )
   {
     final DateRange dateRange = m_page1.getDateRange();
     final String filePath = m_page2.getFilePath();
@@ -124,7 +124,7 @@ public class ExportAsFileWizard extends Wizard
     {
       e.printStackTrace();
 
-      MessageDialog.openError( getShell(), Messages.getString("org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.6"), e.getLocalizedMessage() ); //$NON-NLS-1$
+      MessageDialog.openError( getShell(), Messages.getString( "org.kalypso.ogc.sensor.view.wizard.ExportAsFileWizard.6" ), e.getLocalizedMessage() ); //$NON-NLS-1$
 
       return false;
     }

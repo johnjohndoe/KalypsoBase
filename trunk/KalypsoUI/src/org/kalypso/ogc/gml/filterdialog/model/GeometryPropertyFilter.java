@@ -56,18 +56,18 @@ public class GeometryPropertyFilter extends ViewerFilter
    *      java.lang.Object)
    */
   @Override
-  public boolean select( Viewer viewer, Object parentElement, Object element )
+  public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
     if( element instanceof IFeatureType )
     {
-      IFeatureType ft = (IFeatureType) element;
-      IValuePropertyType[] allGeomteryProperties = ft.getAllGeomteryProperties();
+      final IFeatureType ft = (IFeatureType) element;
+      final IValuePropertyType[] allGeomteryProperties = ft.getAllGeomteryProperties();
       if( allGeomteryProperties != null )
         return true;
     }
     else if( element instanceof IValuePropertyType )
     {
-      IValuePropertyType vpt = (IValuePropertyType) element;
+      final IValuePropertyType vpt = (IValuePropertyType) element;
       return vpt.isGeometry();
     }
     return false;
