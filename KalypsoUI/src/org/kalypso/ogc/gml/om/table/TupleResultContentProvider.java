@@ -198,7 +198,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
   @Override
   public Object[] getElements( final Object inputElement )
   {
-    if( (inputElement != null) && (inputElement instanceof TupleResult) )
+    if( inputElement != null && inputElement instanceof TupleResult )
     {
       final TupleResult result = (TupleResult) inputElement;
 

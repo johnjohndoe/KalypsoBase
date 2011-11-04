@@ -86,7 +86,7 @@ public abstract class UndoRedoHandler extends AbstractHandler
 
         final CommandableWorkspace workspace = theme.getWorkspace();
 
-        if( (m_undo && workspace.canUndo()) || (!m_undo && workspace.canRedo()) )
+        if( m_undo && workspace.canUndo() || !m_undo && workspace.canRedo() )
           new CommandJob( null, workspace, theme.getSchedulingRule(), null, m_undo ? CommandJob.UNDO : CommandJob.REDO );
       }
     }

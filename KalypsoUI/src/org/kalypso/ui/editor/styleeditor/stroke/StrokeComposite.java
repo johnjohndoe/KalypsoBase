@@ -67,6 +67,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -140,7 +141,7 @@ public class StrokeComposite extends Composite
     createOpacityControl( toolkit, body );
     createWidthControl( toolkit, body );
 
-    m_lineDetailsSection = toolkit.createSection( body, Section.TITLE_BAR | Section.TWISTIE );
+    m_lineDetailsSection = toolkit.createSection( body, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE );
     m_lineDetailsSection.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 3, 1 ) );
 
     final Composite detailsPanel = toolkit.createComposite( m_lineDetailsSection );
@@ -252,7 +253,7 @@ public class StrokeComposite extends Composite
   private void createDashArrayControl( final FormToolkit toolkit, final Composite parent )
   {
     final String tooltip = "A list of values representing the dashing pattern.\n"
-      + "Alternate entries in the array represent the user space lengths of the opaque and transparent segments of the dashes.";
+        + "Alternate entries in the array represent the user space lengths of the opaque and transparent segments of the dashes.";
 
     final Label label = toolkit.createLabel( parent, Messages.getString( "org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.2" ) ); //$NON-NLS-1$
     label.setToolTipText( tooltip );

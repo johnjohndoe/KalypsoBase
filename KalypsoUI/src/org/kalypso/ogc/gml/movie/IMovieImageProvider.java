@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra�e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -111,4 +111,9 @@ public interface IMovieImageProvider
    * @return The highest step.
    */
   public int getEndStep( );
+
+  /**
+   * This function disposes the movie image provider.
+   */
+  public void dispose( );
 }

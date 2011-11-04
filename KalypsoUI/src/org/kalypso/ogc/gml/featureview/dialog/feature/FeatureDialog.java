@@ -84,7 +84,7 @@ public class FeatureDialog extends TitleAreaDialog
      * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#featureChanged(org.kalypso.commons.command.ICommand)
      */
     @Override
-    public void featureChanged( ICommand changeCommand )
+    public void featureChanged( final ICommand changeCommand )
     {
       try
       {
@@ -94,7 +94,7 @@ public class FeatureDialog extends TitleAreaDialog
         /* Check, if the dialog is allowed to be completed. */
         checkDialogComplete();
       }
-      catch( Exception ex )
+      catch( final Exception ex )
       {
         /* Log the error message. */
         KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex ) );
@@ -106,7 +106,7 @@ public class FeatureDialog extends TitleAreaDialog
      *      org.kalypso.gmlschema.property.IPropertyType)
      */
     @Override
-    public void openFeatureRequested( Feature feature, IPropertyType pt )
+    public void openFeatureRequested( final Feature feature, final IPropertyType pt )
     {
     }
   };
@@ -120,7 +120,7 @@ public class FeatureDialog extends TitleAreaDialog
      * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
      */
     @Override
-    public void onModellChange( ModellEvent modellEvent )
+    public void onModellChange( final ModellEvent modellEvent )
     {
       if( modellEvent.isType( ModellEvent.FEATURE_CHANGE ) )
       {
@@ -186,7 +186,7 @@ public class FeatureDialog extends TitleAreaDialog
    * @param gftUrl
    *          The URL to a gft, if one should be used. May be null.
    */
-  public FeatureDialog( Shell parentShell, String title, Feature feature, URL gftUrl )
+  public FeatureDialog( final Shell parentShell, final String title, final Feature feature, final URL gftUrl )
   {
     super( parentShell );
 
@@ -202,19 +202,19 @@ public class FeatureDialog extends TitleAreaDialog
    * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected Control createDialogArea( Composite parent )
+  protected Control createDialogArea( final Composite parent )
   {
     /* Set the title. */
     getShell().setText( m_title );
     setTitle( m_title );
 
     /* Create the main composite. */
-    Composite main = (Composite) super.createDialogArea( parent );
+    final Composite main = (Composite) super.createDialogArea( parent );
     main.setLayout( new GridLayout( 1, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the feature composite. */
-    CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
+    final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
     if( m_gftUrl != null )
       featureviewFactory.addView( m_gftUrl );
     m_featureComposite = new FeatureComposite( null, null, featureviewFactory );
@@ -237,7 +237,7 @@ public class FeatureDialog extends TitleAreaDialog
    * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  protected void createButtonsForButtonBar( Composite parent )
+  protected void createButtonsForButtonBar( final Composite parent )
   {
     super.createButtonsForButtonBar( parent );
 
@@ -269,7 +269,7 @@ public class FeatureDialog extends TitleAreaDialog
       {
         m_workspace.undo();
       }
-      catch( Exception ex )
+      catch( final Exception ex )
       {
         /* Log the error message. */
         KalypsoGisPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex ) );
@@ -297,7 +297,7 @@ public class FeatureDialog extends TitleAreaDialog
   protected void checkDialogComplete( )
   {
     /* Get the OK button. */
-    Button okButton = getButton( IDialogConstants.OK_ID );
+    final Button okButton = getButton( IDialogConstants.OK_ID );
 
     /* First of all, it should be allowed to complete. */
     setErrorMessage( null );
@@ -308,7 +308,7 @@ public class FeatureDialog extends TitleAreaDialog
       return;
 
     /* Check the entered values. */
-    IStatus status = m_validator.validate( m_feature );
+    final IStatus status = m_validator.validate( m_feature );
     if( status.isOK() == true )
       return;
 
@@ -328,10 +328,10 @@ public class FeatureDialog extends TitleAreaDialog
    *          The error message, so far.
    * @return The error message.
    */
-  private String buildErrorMessage( IStatus status, String errorMessage )
+  private String buildErrorMessage( final IStatus status, String errorMessage )
   {
     /* Get the line separator. */
-    String separator = System.getProperty( "line.separator", "\r\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String separator = System.getProperty( "line.separator", "\r\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* If it is no multi status, we end the recursion here. */
     if( status.isMultiStatus() == false )
@@ -345,13 +345,12 @@ public class FeatureDialog extends TitleAreaDialog
     }
 
     /* Cast. */
-    MultiStatus multiStatus = (MultiStatus) status;
+    final MultiStatus multiStatus = (MultiStatus) status;
 
     /* Get all children. */
-    IStatus[] children = multiStatus.getChildren();
-    for( int i = 0; i < children.length; i++ )
+    final IStatus[] children = multiStatus.getChildren();
+    for( final IStatus child : children )
     {
-      IStatus child = children[i];
       if( child.isOK() == false )
         errorMessage = buildErrorMessage( child, errorMessage );
     }
@@ -372,7 +371,7 @@ public class FeatureDialog extends TitleAreaDialog
 
     if( m_feature != null )
     {
-      GMLWorkspace workspace = m_feature.getWorkspace();
+      final GMLWorkspace workspace = m_feature.getWorkspace();
       workspace.removeModellListener( m_modelListener );
     }
 
@@ -404,7 +403,7 @@ public class FeatureDialog extends TitleAreaDialog
    * @param validator
    *          The validator for validating the entered values of the feature. May be null.
    */
-  public void setValidator( IFeatureDialogValidator validator )
+  public void setValidator( final IFeatureDialogValidator validator )
   {
     m_validator = validator;
   }

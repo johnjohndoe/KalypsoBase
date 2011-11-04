@@ -87,7 +87,7 @@ public class ExportableChart implements IExportableObject
   {
     // WORKAROUND: we use another PNG-encoder, there seem to be a memory leak in the JVM when using
     // the default encoder which is shipped with it.
-    // 
+    //
     // From a Bugreport-Topic of JFreeChart:
     // -------------------------------------
     // After analysing the source code of javax.imageio.ImageIO and some googeling I found

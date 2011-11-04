@@ -96,7 +96,7 @@ public class GetFeatureInfoWidget extends AbstractWidget
    *      org.kalypso.ogc.gml.map.IMapPanel)
    */
   @Override
-  public void activate( ICommandTarget commandPoster, IMapPanel mapPanel )
+  public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
     super.activate( commandPoster, mapPanel );
 
@@ -107,7 +107,7 @@ public class GetFeatureInfoWidget extends AbstractWidget
    * @see org.kalypso.ogc.gml.widgets.AbstractWidget#leftClicked(java.awt.Point)
    */
   @Override
-  public void leftClicked( Point p )
+  public void leftClicked( final Point p )
   {
     try
     {
@@ -121,17 +121,17 @@ public class GetFeatureInfoWidget extends AbstractWidget
       }
 
       /* Get the last request. */
-      String lastRequest = m_wmsTheme.getLastRequest();
+      final String lastRequest = m_wmsTheme.getLastRequest();
       if( lastRequest == null || lastRequest.length() == 0 )
         throw new IllegalStateException( "Das WMS Thema ist inaktiv..." );
 
       /* Get the parameter of the last request. */
-      URL lastRequestUrl = new URL( lastRequest );
-      Map<String, String> lastRequestParams = UrlUtilities.parseQuery( lastRequestUrl );
+      final URL lastRequestUrl = new URL( lastRequest );
+      final Map<String, String> lastRequestParams = UrlUtilities.parseQuery( lastRequestUrl );
 
       /* Greate the additional parameters. */
       /* May be existing ones, which will be replaced. */
-      Map<String, String> parameters = new HashMap<String, String>();
+      final Map<String, String> parameters = new HashMap<String, String>();
       parameters.put( "REQUEST", "GetFeatureInfo" );
       parameters.put( "QUERY_LAYERS", lastRequestParams.get( "LAYERS" ) );
       parameters.put( "X", String.format( Locale.PRC, "%.0f", p.getX() ) );
@@ -139,10 +139,10 @@ public class GetFeatureInfoWidget extends AbstractWidget
       parameters.put( "INFO_FORMAT", "text/html" );
 
       /* Adjust the request. */
-      URL newRequestUrl = UrlUtilities.addQuery( lastRequestUrl, parameters );
+      final URL newRequestUrl = UrlUtilities.addQuery( lastRequestUrl, parameters );
 
       /* Create the dialog. */
-      GetFeatureInfoDialog dialog = new GetFeatureInfoDialog( SWT_AWT_Utilities.findActiveShell(), newRequestUrl );
+      final GetFeatureInfoDialog dialog = new GetFeatureInfoDialog( SWT_AWT_Utilities.findActiveShell(), newRequestUrl );
 
       /* Open the dialog. */
       SWT_AWT_Utilities.openSwtWindow( dialog );
@@ -160,13 +160,13 @@ public class GetFeatureInfoWidget extends AbstractWidget
           if( shell.isDisposed() )
             return;
 
-          org.eclipse.swt.graphics.Point shellSize = shell.getSize();
-          org.eclipse.swt.graphics.Point mousePos = shell.getDisplay().getCursorLocation();
+          final org.eclipse.swt.graphics.Point shellSize = shell.getSize();
+          final org.eclipse.swt.graphics.Point mousePos = shell.getDisplay().getCursorLocation();
           shell.setBounds( new Rectangle( mousePos.x, mousePos.y, shellSize.x, shellSize.y ) );
         }
       } );
     }
-    catch( MalformedURLException ex )
+    catch( final MalformedURLException ex )
     {
       ex.printStackTrace();
     }
@@ -183,7 +183,7 @@ public class GetFeatureInfoWidget extends AbstractWidget
     super.finish();
   }
 
-  private void initialize( IMapPanel mapPanel )
+  private void initialize( final IMapPanel mapPanel )
   {
     try
     {
@@ -191,17 +191,17 @@ public class GetFeatureInfoWidget extends AbstractWidget
       m_themeProperty = getParameter( "getFeatureInfoProperty" );
 
       /* Get the map model. */
-      IMapModell mapModel = mapPanel.getMapModell();
+      final IMapModell mapModel = mapPanel.getMapModell();
       if( !(mapModel instanceof GisTemplateMapModell) )
         throw new IllegalStateException( "Keine gültige Karte gefunden..." );
 
       /* Find the theme. */
-      IKalypsoTheme theme = findTheme( (GisTemplateMapModell) mapModel );
+      final IKalypsoTheme theme = findTheme( (GisTemplateMapModell) mapModel );
 
       /* Check, if it is a WMS theme. */
       m_wmsTheme = checkIfWmsTheme( theme );
     }
-    catch( IllegalStateException ex )
+    catch( final IllegalStateException ex )
     {
       ex.printStackTrace();
       m_themeProperty = null;
@@ -216,16 +216,16 @@ public class GetFeatureInfoWidget extends AbstractWidget
    *          The map model.
    * @return The {@link IKalypsoTheme} or null.
    */
-  private IKalypsoTheme findTheme( GisTemplateMapModell mapModel ) throws IllegalStateException
+  private IKalypsoTheme findTheme( final GisTemplateMapModell mapModel ) throws IllegalStateException
   {
-    IKalypsoTheme[] themes = MapModellHelper.findThemeByProperty( mapModel, m_themeProperty, IKalypsoThemeVisitor.DEPTH_ZERO );
+    final IKalypsoTheme[] themes = MapModellHelper.findThemeByProperty( mapModel, m_themeProperty, IKalypsoThemeVisitor.DEPTH_ZERO );
     if( themes == null || themes.length == 0 )
       throw new IllegalStateException( String.format( "Es wurde kein Thema mit der Eigenschaft '%s' in der aktiven Karte gefunden...", m_themeProperty ) );
 
     return themes[0];
   }
 
-  private KalypsoWMSTheme checkIfWmsTheme( IKalypsoTheme theme ) throws IllegalStateException
+  private KalypsoWMSTheme checkIfWmsTheme( final IKalypsoTheme theme ) throws IllegalStateException
   {
     if( theme instanceof KalypsoWMSTheme && theme.isVisible() )
       return (KalypsoWMSTheme) theme;
@@ -236,10 +236,10 @@ public class GetFeatureInfoWidget extends AbstractWidget
     throw new IllegalStateException( "Kein (sichtbares) WMS Thema gefunden..." );
   }
 
-  private KalypsoWMSTheme findFirstVisibleWmsTheme( AbstractCascadingLayerTheme cascadingTheme ) throws IllegalStateException
+  private KalypsoWMSTheme findFirstVisibleWmsTheme( final AbstractCascadingLayerTheme cascadingTheme ) throws IllegalStateException
   {
-    IKalypsoTheme[] themes = cascadingTheme.getAllThemes();
-    for( IKalypsoTheme theme : themes )
+    final IKalypsoTheme[] themes = cascadingTheme.getAllThemes();
+    for( final IKalypsoTheme theme : themes )
     {
       if( theme instanceof KalypsoWMSTheme && theme.isVisible() )
         return (KalypsoWMSTheme) theme;

@@ -123,21 +123,21 @@ public class TupleResultFeatureControlHandlerProvider implements IComponentUiHan
     if( label != null )
       return label;
 
-//    final String name = getComponentName( component );
-//    final String unit = component.getUnit();
+// final String name = getComponentName( component );
+// final String unit = component.getUnit();
 //
-//    if( unit == null || unit.isEmpty() )
-//      return name;
+// if( unit == null || unit.isEmpty() )
+// return name;
 //
-//    return String.format( "%s [%s]", name, unit );
+// return String.format( "%s [%s]", name, unit );
     return ComponentUtilities.getComponentLabel( component );
   }
 
-//  private String getComponentName( final IComponent component )
-//  {
-//    // TODO: fixme, use description and or name of phenomenon
-//    return component.getName();
-//  }
+// private String getComponentName( final IComponent component )
+// {
+// // TODO: fixme, use description and or name of phenomenon
+// return component.getName();
+// }
 
   public ColumnDescriptor[] getDescriptors( )
   {

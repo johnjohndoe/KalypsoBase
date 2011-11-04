@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,13 +36,15 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.command;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.table.LayerTableStyle;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * TODO: does not yet handle the label/tooltip properties of the template
@@ -51,7 +53,7 @@ import org.kalypso.ogc.gml.table.LayerTableViewer;
  */
 public class SetColumnVisibleCommand implements ICommand
 {
-  private final String m_propertyName;
+  private final GMLXPath m_propertyPath;
 
   private final boolean m_bVisible;
 
@@ -67,16 +69,16 @@ public class SetColumnVisibleCommand implements ICommand
 
   private final String m_modifier;
 
-  public SetColumnVisibleCommand( final LayerTableViewer viewer, final String propertyName, final String alignment, final String format, final boolean bVisible )
+  public SetColumnVisibleCommand( final LayerTableViewer viewer, final GMLXPath propertyPath, final String alignment, final String format, final boolean bVisible )
   {
     m_viewer = viewer;
-    m_propertyName = propertyName;
+    m_propertyPath = propertyPath;
     m_alignment = alignment;
     m_format = format;
     m_modifier = null;
     m_bVisible = bVisible;
-    m_wasEditable = viewer.isEditable( propertyName );
-    m_oldWidth = viewer.getWidth( propertyName );
+    m_wasEditable = viewer.isEditable( propertyPath );
+    m_oldWidth = viewer.getWidth( propertyPath );
   }
 
   /**
@@ -94,37 +96,28 @@ public class SetColumnVisibleCommand implements ICommand
   @Override
   public void process( ) throws Exception
   {
-    doIt( m_viewer, m_propertyName, m_bVisible, 100, m_alignment, m_format, m_modifier, true );
+    doIt( m_viewer, m_propertyPath, m_bVisible, 100, m_alignment, m_format, m_modifier, true );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
-    doIt( m_viewer, m_propertyName, m_bVisible, 100, m_alignment, m_format, m_modifier, true );
+    doIt( m_viewer, m_propertyPath, m_bVisible, 100, m_alignment, m_format, m_modifier, true );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
-    doIt( m_viewer, m_propertyName, !m_bVisible, m_oldWidth, m_alignment, m_format, m_modifier, m_wasEditable );
+    doIt( m_viewer, m_propertyPath, !m_bVisible, m_oldWidth, m_alignment, m_format, m_modifier, m_wasEditable );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
-    return Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.0" ) + m_propertyName + "' " + (m_bVisible ? Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.2" ) : Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.3" )); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    return Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.0" ) + m_propertyPath + "' " + (m_bVisible ? Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.2" ) : Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.3" )); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
-  private void doIt( final LayerTableViewer viewer, final String propertyName, final boolean bVisible, final int width, final String alignment, final String format, final String modifier, final boolean editable )
+  private void doIt( final LayerTableViewer viewer, final GMLXPath propertyPath, final boolean bVisible, final int width, final String alignment, final String format, final String modifier, final boolean editable )
   {
     m_viewer.getControl().getDisplay().syncExec( new Runnable()
     {
@@ -132,9 +125,9 @@ public class SetColumnVisibleCommand implements ICommand
       public void run( )
       {
         if( bVisible )
-          viewer.addColumn( propertyName, null, null, editable, width, alignment, format, modifier, true );
+          viewer.addColumn( propertyPath, null, null, editable, width, alignment, format, modifier, true, new LayerTableStyle( null ) );
         else
-          viewer.removeColumn( propertyName );
+          viewer.removeColumn( propertyPath );
       }
     } );
   }

@@ -86,7 +86,7 @@ public class SldLineGeometryBuilder extends AbstractSldGeometryBuilder implement
     final GeometryFactory factory = JTSAdapter.jtsFactory;
 
     Coordinate[] coordinates = getCoordinates();
-    coordinates = (Coordinate[]) ArrayUtils.addAll( coordinates, additional );
+    coordinates = ArrayUtils.addAll( coordinates, additional );
 
     if( coordinates.length < 2 )
       return null;

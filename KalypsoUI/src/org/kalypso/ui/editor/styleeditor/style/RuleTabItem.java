@@ -61,7 +61,6 @@ public class RuleTabItem implements ITabItem
 
   private final IStyleInput<Rule> m_input;
 
-
   public RuleTabItem( final IStyleInput<Rule> input )
   {
     m_input = input;

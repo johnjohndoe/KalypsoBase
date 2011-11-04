@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.map.widgets;
 
 /**
- * 
  * @author doemming
  */
 public class SingleElementSelectWidget extends AbstractSelectWidget
@@ -52,7 +51,7 @@ public class SingleElementSelectWidget extends AbstractSelectWidget
   }
 
   @Override
-  protected int getSelectionMode()
+  protected int getSelectionMode( )
   {
     return MODE_SELECT;
   }

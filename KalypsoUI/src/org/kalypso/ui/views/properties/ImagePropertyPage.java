@@ -187,7 +187,10 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
 
     /* Create the main composite. */
     m_main = new Composite( parent, SWT.NONE );
-    m_main.setLayout( new GridLayout( 1, false ) );
+    final GridLayout mainLayout = new GridLayout( 1, false );
+    mainLayout.marginHeight = 0;
+    mainLayout.marginWidth = 0;
+    m_main.setLayout( mainLayout );
     m_main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the image composite. */

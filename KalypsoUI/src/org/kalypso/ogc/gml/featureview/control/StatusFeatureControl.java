@@ -47,7 +47,6 @@ import org.kalypso.core.status.StatusComposite;
 
 /**
  * @author Gernot Belger
- *
  */
 public class StatusFeatureControl extends AbstractFeatureControl
 {

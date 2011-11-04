@@ -65,7 +65,7 @@ public class DefaultMovieControls implements IMovieControls
    * @see org.kalypso.ogc.gml.movie.IMovieControls#getActions(org.kalypso.ogc.gml.movie.utils.MoviePlayer)
    */
   @Override
-  public Action[] getActions( MoviePlayer player )
+  public Action[] getActions( final MoviePlayer player )
   {
     return new Action[] { new StopAction( player ), new PauseAction( player ), new PlayAction( player ) };
   }

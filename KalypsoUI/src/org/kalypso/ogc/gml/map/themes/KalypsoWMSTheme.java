@@ -160,12 +160,19 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     final int width = (int) p.getDestWidth();
     final int height = (int) p.getDestHeight();
     final GM_Envelope extent = p.getSourceRect();
+
+    // FIXME: no job needed here, directly call image provider
     final KalypsoImageLoader loader = new KalypsoImageLoader( getLabel(), m_provider, width, height, extent );
+
     final IStatus status = loader.run( monitor );
     if( status.isOK() )
     {
       final Image buffer = loader.getBuffer();
-      g.drawImage( buffer, 0, 0, null );
+      /* HINT: The image loading can take a few seconds. */
+      /* HINT: If the theme was switched invisible during these seconds, it will still be drawn, until the next repaint. */
+      /* HINT: Hopefully this will avoid this. */
+      if( isVisible() )
+        g.drawImage( buffer, 0, 0, null );
     }
 
     setStatus( status );

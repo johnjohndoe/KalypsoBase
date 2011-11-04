@@ -63,6 +63,7 @@ import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory2
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.movie.IMovieImageProvider;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Within this class all extension-point from the KalypsoUI plug-in are handled.
@@ -238,7 +239,7 @@ public class KalypsoUIExtensions
     return factories.toArray( new ITypeHandlerFactory[factories.size()] );
   }
 
-  public static IFeatureModifier createFeatureModifier( final IPropertyType ftp, final String id ) throws CoreException
+  public static IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final String id ) throws CoreException
   {
     final IConfigurationElement ce = getFeatureModifierElement( id );
     if( ce == null )
@@ -247,7 +248,7 @@ public class KalypsoUIExtensions
     final IFeatureModifier modifier = (IFeatureModifier) ce.createExecutableExtension( "class" );
 
     if( modifier instanceof IFeatureModifierExtension )
-      ((IFeatureModifierExtension) modifier).init( ftp );
+      ((IFeatureModifierExtension) modifier).init( propertyPath, ftp );
 
     return modifier;
   }
@@ -282,17 +283,17 @@ public class KalypsoUIExtensions
   public static IMovieImageProvider[] createMovieImageProviders( ) throws CoreException
   {
     /* Memory for the results. */
-    List<IMovieImageProvider> result = new ArrayList<IMovieImageProvider>();
+    final List<IMovieImageProvider> result = new ArrayList<IMovieImageProvider>();
 
     /* Get the extension registry. */
-    IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
     /* Get the extension point. */
-    IExtensionPoint extensionPoint = registry.getExtensionPoint( MOVIE_IMAGE_PROVIDER_EXTENSION_POINT );
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( MOVIE_IMAGE_PROVIDER_EXTENSION_POINT );
 
     /* Get all configuration elements. */
-    IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-    for( IConfigurationElement element : configurationElements )
+    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+    for( final IConfigurationElement element : configurationElements )
     {
       /* If the configuration element is not the strategy element, continue. */
       if( !MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_ELEMENT.equals( element.getName() ) )
@@ -312,17 +313,17 @@ public class KalypsoUIExtensions
    *          The id of the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}.
    * @return The {@link org.kalypso.ogc.gml.movie.IMovieImageProvider} or null, if it cannot be found.
    */
-  public static IMovieImageProvider createMovieImageProvider( String id ) throws CoreException
+  public static IMovieImageProvider createMovieImageProvider( final String id ) throws CoreException
   {
     /* Get the extension registry. */
-    IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
     /* Get the extension point. */
-    IExtensionPoint extensionPoint = registry.getExtensionPoint( MOVIE_IMAGE_PROVIDER_EXTENSION_POINT );
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( MOVIE_IMAGE_PROVIDER_EXTENSION_POINT );
 
     /* Get all configuration elements. */
-    IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-    for( IConfigurationElement element : configurationElements )
+    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+    for( final IConfigurationElement element : configurationElements )
     {
       /* If the configuration element is not the strategy element, continue. */
       if( !MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_ELEMENT.equals( element.getName() ) )

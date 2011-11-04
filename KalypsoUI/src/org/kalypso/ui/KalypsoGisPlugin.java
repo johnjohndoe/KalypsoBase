@@ -171,7 +171,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * This method is called when the plug-in is stopped
-   *
+   * 
    * @param context
    * @throws Exception
    */
@@ -198,7 +198,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * Returns the shared instance.
-   *
+   * 
    * @return singleton
    */
   public static KalypsoGisPlugin getDefault( )
@@ -248,7 +248,6 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
     return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
   }
 
-
   public int getDefaultMapSelectionID( )
   {
     return 0x1;
@@ -262,7 +261,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
   {
   }
 
-  public IFeatureModifierFactory createFeatureTypeCellEditorFactory( )
+  public synchronized IFeatureModifierFactory getFeatureTypeCellEditorFactory( )
   {
     if( m_defaultFeatureControlFactory == null )
     {

@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class ZoomInWidget extends AbstractWidget
 {
-  public ZoomInWidget( String name, String toolTip )
+  public ZoomInWidget( final String name, final String toolTip )
   {
     super( name, toolTip );
 
@@ -71,9 +71,9 @@ public class ZoomInWidget extends AbstractWidget
     {
       endPoint = p;
     }
-    //TODO: check if this repaint is really necessary
-    IMapPanel panel = getMapPanel();
-    if (panel != null)
+    // TODO: check if this repaint is really necessary
+    final IMapPanel panel = getMapPanel();
+    if( panel != null )
       panel.repaintMap();
 
   }
@@ -134,11 +134,11 @@ public class ZoomInWidget extends AbstractWidget
       else
         dx = dy / ratio;
 
-      GM_Envelope zoomBox = getDragbox( (int) startPoint.getX(), (int) startPoint.getY(), (int) dx );
+      final GM_Envelope zoomBox = getDragbox( (int) startPoint.getX(), (int) startPoint.getY(), (int) dx );
 
       startPoint = null;
       endPoint = null;
-      ChangeExtentCommand command = new ChangeExtentCommand( getMapPanel(), zoomBox );
+      final ChangeExtentCommand command = new ChangeExtentCommand( getMapPanel(), zoomBox );
       postViewCommand( command, null );
     }
   }

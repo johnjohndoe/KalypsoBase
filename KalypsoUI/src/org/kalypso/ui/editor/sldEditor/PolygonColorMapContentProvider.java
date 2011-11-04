@@ -94,29 +94,29 @@ public class PolygonColorMapContentProvider implements IStructuredContentProvide
     {
       final TableViewer tableViewer = (TableViewer) viewer;
 
-      final Table table = (tableViewer).getTable();
+      final Table table = tableViewer.getTable();
       final TableColumn[] columns = table.getColumns();
       for( final TableColumn tableColumn : columns )
         tableColumn.dispose();
 
       final TableColumn lableColumn = new TableColumn( table, SWT.NONE );
-      lableColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider.0") ); //$NON-NLS-1$
+      lableColumn.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider.0" ) ); //$NON-NLS-1$
       lableColumn.setWidth( 100 );
 
       final TableColumn fromColumn = new TableColumn( table, SWT.NONE );
-      fromColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider.1") ); //$NON-NLS-1$
+      fromColumn.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider.1" ) ); //$NON-NLS-1$
       fromColumn.setWidth( 50 );
 
       final TableColumn toColumn = new TableColumn( table, SWT.NONE );
-      toColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider.2") ); //$NON-NLS-1$
+      toColumn.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider.2" ) ); //$NON-NLS-1$
       toColumn.setWidth( 50 );
 
       final TableColumn strokeColumn = new TableColumn( table, SWT.NONE );
-      strokeColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider.3") ); //$NON-NLS-1$
+      strokeColumn.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider.3" ) ); //$NON-NLS-1$
       strokeColumn.setWidth( 50 );
 
       final TableColumn fillColumn = new TableColumn( table, SWT.NONE );
-      fillColumn.setText( Messages.getString("org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider.4") ); //$NON-NLS-1$
+      fillColumn.setText( Messages.getString( "org.kalypso.ui.editor.sldEditor.PolygonColorMapContentProvider.4" ) ); //$NON-NLS-1$
       fillColumn.setWidth( 50 );
 
       final PROPS[] propValues = PROPS.values();

@@ -65,7 +65,7 @@ public class ForecastLabelMarker implements ILabelMarker
 
   private final Color m_defaultBackground;
 
-  public ForecastLabelMarker( DateRange dra, Color defaultBackground )
+  public ForecastLabelMarker( final DateRange dra, final Color defaultBackground )
   {
     m_dra = dra;
     m_defaultBackground = defaultBackground;
@@ -77,10 +77,10 @@ public class ForecastLabelMarker implements ILabelMarker
   @Override
   public boolean validates( final Object value )
   {
-    if( !( value instanceof Date ) )
+    if( !(value instanceof Date) )
       return false;
 
-    final Date date = (Date)value;
+    final Date date = (Date) value;
     // Check if date lies within ]from, to]
     return m_dra.getFrom().compareTo( date ) < 0 && m_dra.getTo().compareTo( date ) >= 0;
   }
@@ -93,14 +93,14 @@ public class ForecastLabelMarker implements ILabelMarker
   {
     label.setBackground( FORECAST_BG );
     label.setToolTipText( FORECAST_TT );
-    //label.setIcon( FORECAST_ICON );
+    // label.setIcon( FORECAST_ICON );
   }
 
   /**
    * @see org.kalypso.ogc.sensor.tableview.swing.marker.ILabelMarker#reset(javax.swing.JLabel)
    */
   @Override
-  public void reset( JLabel label )
+  public void reset( final JLabel label )
   {
     label.setBackground( m_defaultBackground );
     label.setToolTipText( "" ); //$NON-NLS-1$
@@ -111,19 +111,19 @@ public class ForecastLabelMarker implements ILabelMarker
    * @see java.lang.Comparable#compareTo(java.lang.Object)
    */
   @Override
-  public int compareTo( Object o )
+  public int compareTo( final Object o )
   {
-    if( !( o instanceof ForecastLabelMarker ) )
+    if( !(o instanceof ForecastLabelMarker) )
       return -1;
 
-    return m_dra.compareTo( ( (ForecastLabelMarker)o ).m_dra );
+    return m_dra.compareTo( ((ForecastLabelMarker) o).m_dra );
   }
 
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     return compareTo( obj ) == 0;
   }
@@ -132,7 +132,7 @@ public class ForecastLabelMarker implements ILabelMarker
    * @see java.lang.Object#hashCode()
    */
   @Override
-  public int hashCode()
+  public int hashCode( )
   {
     return new HashCodeBuilder().append( m_dra.getFrom() ).append( m_dra.getTo() ).toHashCode();
   }

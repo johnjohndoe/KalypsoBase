@@ -57,16 +57,16 @@ public class NotImplementedFeatureDialog implements IFeatureDialog
 
   private final String m_cellInfoMessage;
 
-  public NotImplementedFeatureDialog( String userInfoMessage, String cellInfoMessage )
+  public NotImplementedFeatureDialog( final String userInfoMessage, final String cellInfoMessage )
   {
     m_userInfoMessage = userInfoMessage;
     m_cellInfoMessage = cellInfoMessage;
   }
 
-  public NotImplementedFeatureDialog()
+  public NotImplementedFeatureDialog( )
   {
-    m_userInfoMessage = Messages.getString("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.implemented"); //$NON-NLS-1$
-    m_cellInfoMessage = Messages.getString("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.editable"); //$NON-NLS-1$
+    m_userInfoMessage = Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.implemented" ); //$NON-NLS-1$
+    m_cellInfoMessage = Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.editable" ); //$NON-NLS-1$
   }
 
   /**
@@ -75,7 +75,7 @@ public class NotImplementedFeatureDialog implements IFeatureDialog
   @Override
   public int open( final Shell shell )
   {
-    MessageDialog.openInformation( shell, Messages.getString("org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.edit"), m_userInfoMessage ); //$NON-NLS-1$
+    MessageDialog.openInformation( shell, Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog.edit" ), m_userInfoMessage ); //$NON-NLS-1$
     return Window.CANCEL;
   }
 
@@ -85,14 +85,14 @@ public class NotImplementedFeatureDialog implements IFeatureDialog
   @Override
   public void collectChanges( final Collection<FeatureChange> c )
   {
-  //
+    //
   }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#getLabel()
    */
   @Override
-  public String getLabel()
+  public String getLabel( )
   {
     return m_cellInfoMessage;
   }

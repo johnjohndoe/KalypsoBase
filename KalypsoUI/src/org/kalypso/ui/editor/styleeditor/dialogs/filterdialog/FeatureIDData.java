@@ -50,14 +50,14 @@ public class FeatureIDData extends AbstractData
 {
   private String featureId = null;
 
-  public String getFeatureId()
+  public String getFeatureId( )
   {
     return featureId;
   }
 
-  public void setFeatureId( String m_featureId )
+  public void setFeatureId( final String m_featureId )
   {
-    this.featureId = m_featureId.trim();
+    featureId = m_featureId.trim();
   }
 
   @Override

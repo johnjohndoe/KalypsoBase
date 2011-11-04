@@ -52,7 +52,7 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
 
 /**
  * Handles integer (xml) values (i.e. BigInteger in java).
- *
+ * 
  * @author Gernot Belger
  */
 public class ComponentUiIntegerHandler extends AbstractComponentUiHandler
@@ -118,7 +118,7 @@ public class ComponentUiIntegerHandler extends AbstractComponentUiHandler
     final int index = getComponent();
     final Object oldValue = record.getValue( index );
 
-    if( !ObjectUtils.equals(value, oldValue ) )
+    if( !ObjectUtils.equals( value, oldValue ) )
       record.setValue( getComponent(), value );
   }
 

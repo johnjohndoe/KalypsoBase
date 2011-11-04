@@ -67,13 +67,14 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypso.ui.editor.gmleditor.command.AddRelationCommand;
-import org.kalypso.ui.editor.gmleditor.command.RemoveRelationCommand;
-import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.util.command.AddRelationCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.RemoveRelationCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
 /**
  * Support the following parameters:
@@ -224,7 +225,9 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
     final IRelationType rt = (IRelationType) getFeatureTypeProperty();
     final GMLWorkspace workspace = feature.getWorkspace();
 
-    final Feature[] features = ComboFeatureControl.collectReferencableFeatures( workspace, feature, rt );
+    final IReferenceCollectorStrategy strategy = ComboFeatureControl.createSearchStrategy( workspace, feature, rt );
+    final Feature[] features = strategy.collectReferences();
+
     m_linkChecklist.setInput( features );
 
     /* check all currently set links */

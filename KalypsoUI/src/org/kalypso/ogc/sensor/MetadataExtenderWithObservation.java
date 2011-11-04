@@ -54,9 +54,9 @@ import org.kalypso.ogc.sensor.template.ObsViewItem;
  */
 public class MetadataExtenderWithObservation
 {
-  private MetadataExtenderWithObservation()
+  private MetadataExtenderWithObservation( )
   {
-  // not intended to be instanciated
+    // not intended to be instanciated
   }
 
   /**
@@ -64,8 +64,8 @@ public class MetadataExtenderWithObservation
    */
   public static void extendMetadata( final Configuration metadata, final ObsViewItem[] items )
   {
-    for( int i = 0; i < items.length; i++ )
-      extendMetadata( metadata, items[i].getObservation() );
+    for( final ObsViewItem item : items )
+      extendMetadata( metadata, item.getObservation() );
   }
 
   /**
@@ -86,7 +86,7 @@ public class MetadataExtenderWithObservation
     // currently we only take this property, but the thing
     // could easily be extended with more
     final String kennz = md.getProperty( ITimeseriesConstants.MD_KENNZIFFER );
-    
+
     ConfigurationUtils.addPropertyDistinct( metadata, ITimeseriesConstants.MD_KENNZIFFER, kennz );
   }
 }

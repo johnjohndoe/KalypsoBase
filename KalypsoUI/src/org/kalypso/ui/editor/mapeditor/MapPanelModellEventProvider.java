@@ -92,6 +92,4 @@ public class MapPanelModellEventProvider extends ModellEventProviderAdapter
     m_panel.removeMapPanelListener( m_mapPanelListener );
   }
 
-
-
 }

@@ -18,6 +18,9 @@ public final class NewFeatureFromExternalSchemaAction extends Action
     super( Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.4" ) ); //$NON-NLS-1$
   }
 
+  /**
+   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+   */
   @Override
   public void runWithEvent( final Event event )
   {

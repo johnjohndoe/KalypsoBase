@@ -35,10 +35,10 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.catalog.FeatureTypeImageCatalog;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.catalogs.FeatureTypeImageCatalog;
 
 /**
  * @author kuepfer
@@ -71,6 +71,9 @@ public class NewFeatureAction extends Action
     return catalogDescriptor;
   }
 
+  /**
+   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
+   */
   @Override
   public void runWithEvent( final Event event )
   {
@@ -80,10 +83,8 @@ public class NewFeatureAction extends Action
     }
     catch( final Exception e )
     {
-      e.printStackTrace();
-
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( event.widget.getDisplay().getActiveShell(), getText(), Messages.getString( "org.kalypso.ui.editor.gmleditor.part.NewFeatureAction.0" ), status ); //$NON-NLS-1$
+      ErrorDialog.openError( event.widget.getDisplay().getActiveShell(), getText(), Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.NewFeatureAction.0" ), status ); //$NON-NLS-1$
     }
   }
 

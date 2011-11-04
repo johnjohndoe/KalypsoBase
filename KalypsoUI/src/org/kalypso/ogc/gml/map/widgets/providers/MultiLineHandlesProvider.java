@@ -65,9 +65,9 @@ public class MultiLineHandlesProvider implements IHandlesProvider
    * @see org.kalypso.informdss.manager.util.widgets.providers.IHandlesProvider#collectHandles(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public List<IHandle> collectHandles( Feature feature, int radius )
+  public List<IHandle> collectHandles( final Feature feature, final int radius )
   {
-    ArrayList<IHandle> list = new ArrayList<IHandle>();
+    final ArrayList<IHandle> list = new ArrayList<IHandle>();
 
     final IValuePropertyType[] allGeomteryProperties = feature.getFeatureType().getAllGeomteryProperties();
     for( final IValuePropertyType type : allGeomteryProperties )
@@ -79,24 +79,24 @@ public class MultiLineHandlesProvider implements IHandlesProvider
         /* Only handles for a line are returned. */
         if( object instanceof GM_MultiCurve )
         {
-          GM_MultiCurve multiCurve = (GM_MultiCurve) object;
+          final GM_MultiCurve multiCurve = (GM_MultiCurve) object;
 
-          GM_Object[] curves = multiCurve.getAll();
+          final GM_Object[] curves = multiCurve.getAll();
 
-          for( GM_Object curve_object : curves )
+          for( final GM_Object curve_object : curves )
           {
-            GM_Curve curve = (GM_Curve) curve_object;
+            final GM_Curve curve = (GM_Curve) curve_object;
 
-            int numberOfCurveSegments = curve.getNumberOfCurveSegments();
+            final int numberOfCurveSegments = curve.getNumberOfCurveSegments();
 
             for( int i = 0; i < numberOfCurveSegments; i++ )
             {
               /* One segment of a curve. It can contain several points. */
-              GM_CurveSegment curveSegment = curve.getCurveSegmentAt( i );
+              final GM_CurveSegment curveSegment = curve.getCurveSegmentAt( i );
 
-              GM_Position[] positions = curveSegment.getPositions();
+              final GM_Position[] positions = curveSegment.getPositions();
 
-              for( GM_Position position : positions )
+              for( final GM_Position position : positions )
               {
                 /* Add the points of every segment to the list of handles. */
                 list.add( new Handle( position, feature, type, radius ) );
@@ -105,7 +105,7 @@ public class MultiLineHandlesProvider implements IHandlesProvider
           }
         }
       }
-      catch( GM_Exception e )
+      catch( final GM_Exception e )
       {
         // TODO
       }

@@ -56,6 +56,7 @@ import org.kalypso.ui.editor.diagrameditor.actions.DiagramPrintAction;
 public class ObservationDiagramEditorContributor extends EditorActionBarContributor
 {
   private final DiagramPrintAction m_printAction = new DiagramPrintAction();
+
   private ExportAction[] m_exportActions = null;
 
   /**
@@ -68,16 +69,15 @@ public class ObservationDiagramEditorContributor extends EditorActionBarContribu
 
     // export actions
     if( m_exportActions == null )
-      m_exportActions = ExportActionContributor.contributeActions( targetEditor,
-          "org.kalypso.ui.editor.obsdiageditor.menu/exports", "diagramm", IExportTargetModes.MODE_EXPERT ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_exportActions = ExportActionContributor.contributeActions( targetEditor, "org.kalypso.ui.editor.obsdiageditor.menu/exports", "diagramm", IExportTargetModes.MODE_EXPERT ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( m_exportActions != null )
     {
-      for( int i = 0; i < m_exportActions.length; i++ )
-        m_exportActions[i].setActivePart( targetEditor );
+      for( final ExportAction m_exportAction : m_exportActions )
+        m_exportAction.setActivePart( targetEditor );
     }
   }
-  
+
   /**
    * @see org.eclipse.ui.part.EditorActionBarContributor#init(org.eclipse.ui.IActionBars)
    */

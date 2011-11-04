@@ -57,7 +57,7 @@ public class StopAction extends Action
   /**
    * The movie player.
    */
-  private MoviePlayer m_player;
+  private final MoviePlayer m_player;
 
   /**
    * The constructor.
@@ -65,7 +65,7 @@ public class StopAction extends Action
    * @param player
    *          The movie player.
    */
-  public StopAction( MoviePlayer player )
+  public StopAction( final MoviePlayer player )
   {
     m_player = player;
   }
@@ -74,7 +74,7 @@ public class StopAction extends Action
    * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
    */
   @Override
-  public void runWithEvent( Event event )
+  public void runWithEvent( final Event event )
   {
     m_player.stop();
     m_player.stepTo( 0 );

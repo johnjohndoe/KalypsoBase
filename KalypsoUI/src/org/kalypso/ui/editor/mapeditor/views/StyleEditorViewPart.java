@@ -152,7 +152,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
       return;
     }
 
-    final IKalypsoFeatureTheme featureTheme = ((IKalypsoFeatureTheme) theme);
+    final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
     chooseStyle( featureTheme, node );
   }
 

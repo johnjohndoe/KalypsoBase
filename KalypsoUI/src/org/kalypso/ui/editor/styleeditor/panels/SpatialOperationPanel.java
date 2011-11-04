@@ -32,7 +32,6 @@ package org.kalypso.ui.editor.styleeditor.panels;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * 
  * @author kuepfer
  */
 public class SpatialOperationPanel extends FilterComboPanel
@@ -60,22 +59,10 @@ public class SpatialOperationPanel extends FilterComboPanel
 
   public static final String DISJOINT = "DISJOINT"; //$NON-NLS-1$
 
-  public SpatialOperationPanel( Composite parent )
+  public SpatialOperationPanel( final Composite parent )
   {
     super( parent );
-    items = new String[]
-    {
-        EQUALS,
-        TOUCHES,
-        WITHIN,
-        OVERLAPS,
-        CROSSES,
-        INTERSECTS,
-        CONTAINS,
-        DWITHIN,
-        DISJOINT,
-        BEYOND,
-        BBOX };
+    items = new String[] { EQUALS, TOUCHES, WITHIN, OVERLAPS, CROSSES, INTERSECTS, CONTAINS, DWITHIN, DISJOINT, BEYOND, BBOX };
     init();
   }
 
@@ -83,7 +70,7 @@ public class SpatialOperationPanel extends FilterComboPanel
    * @see org.kalypso.ui.editor.styleeditor.panels.FilterComboPanel#setSelection(int)
    */
   @Override
-  public void setSelection( int index )
+  public void setSelection( final int index )
   {
     selection_index = index;
     comboBox.select( index );

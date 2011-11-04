@@ -173,7 +173,7 @@ public class ThemeTester extends PropertyTester
     return ObjectUtils.equals( value, expectedString );
   }
 
-  private boolean testIsCascading( IKalypsoTheme theme )
+  private boolean testIsCascading( final IKalypsoTheme theme )
   {
     if( theme instanceof AbstractCascadingLayerTheme )
       return true;

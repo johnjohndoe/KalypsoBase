@@ -58,26 +58,25 @@ import org.eclipse.swt.widgets.Label;
 
 /**
  * @author Administrator
- *  
  */
 public class ColorBox
 {
-  private EventListenerList listenerList = new EventListenerList();
+  private final EventListenerList listenerList = new EventListenerList();
 
   private Color color = null;
 
   private Label fillColorImageInner = null;
 
-  public ColorBox( Composite parent, Color m_color, int size, int borderWidth )
+  public ColorBox( final Composite parent, final Color m_color, final int size, final int borderWidth )
   {
 
     if( m_color != null )
       setColor( m_color );
     else
       setColor( new Color( null, 255, 80, 80 ) );
-    Composite composite = new Composite( parent, SWT.NULL | SWT.BORDER );
-    GridLayout compositeLayout = new GridLayout();
-    GridData compositeData = new GridData();
+    final Composite composite = new Composite( parent, SWT.NULL | SWT.BORDER );
+    final GridLayout compositeLayout = new GridLayout();
+    final GridData compositeData = new GridData();
     compositeData.widthHint = size + 2 * borderWidth;
     composite.setLayoutData( compositeData );
     composite.setLayout( compositeLayout );
@@ -87,7 +86,7 @@ public class ColorBox
     composite.layout();
 
     fillColorImageInner = new Label( composite, SWT.NULL );
-    GridData fillColorImageInnerData = new GridData();
+    final GridData fillColorImageInnerData = new GridData();
     fillColorImageInnerData.heightHint = size;
     fillColorImageInnerData.widthHint = size;
     fillColorImageInner.setLayoutData( fillColorImageInnerData );
@@ -99,73 +98,73 @@ public class ColorBox
     composite.addMouseListener( new MouseListener()
     {
       @Override
-      public void mouseDoubleClick( MouseEvent e )
+      public void mouseDoubleClick( final MouseEvent e )
       {
         fire();
       }
 
       @Override
-      public void mouseDown( MouseEvent e )
+      public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
       @Override
-      public void mouseUp( MouseEvent e )
+      public void mouseUp( final MouseEvent e )
       {
-      // nothing
+        // nothing
       }
 
     } );
     fillColorImageInner.addMouseListener( new MouseListener()
     {
       @Override
-      public void mouseDoubleClick( MouseEvent e )
+      public void mouseDoubleClick( final MouseEvent e )
       {
         fire();
       }
 
       @Override
-      public void mouseDown( MouseEvent e )
+      public void mouseDown( final MouseEvent e )
       {
         mouseDoubleClick( e );
       }
 
       @Override
-      public void mouseUp( MouseEvent e )
+      public void mouseUp( final MouseEvent e )
       {
-      // nothing
+        // nothing
       }
 
     } );
   }
 
-  public Color getColor()
+  public Color getColor( )
   {
     return color;
   }
 
-  public void setColor( Color m_color )
+  public void setColor( final Color m_color )
   {
-    this.color = m_color;
+    color = m_color;
     if( fillColorImageInner != null )
       fillColorImageInner.setBackground( m_color );
   }
 
-  public void addPanelListener( PanelListener pl )
+  public void addPanelListener( final PanelListener pl )
   {
     listenerList.add( PanelListener.class, pl );
   }
 
-  protected void fire()
+  protected void fire( )
   {
-    Object[] listeners = listenerList.getListenerList();
+    final Object[] listeners = listenerList.getListenerList();
     for( int i = listeners.length - 2; i >= 0; i -= 2 )
     {
       if( listeners[i] == PanelListener.class )
       {
-        PanelEvent event = new PanelEvent( this );
-        ( (PanelListener)listeners[i + 1] ).valueChanged( event );
+        final PanelEvent event = new PanelEvent( this );
+        ((PanelListener) listeners[i + 1]).valueChanged( event );
       }
     }
   }

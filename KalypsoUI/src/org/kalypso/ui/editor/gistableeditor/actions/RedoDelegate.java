@@ -45,7 +45,7 @@ package org.kalypso.ui.editor.gistableeditor.actions;
  */
 public class RedoDelegate extends UndoRedoDelegate
 {
-  public RedoDelegate()
+  public RedoDelegate( )
   {
     super( false );
   }

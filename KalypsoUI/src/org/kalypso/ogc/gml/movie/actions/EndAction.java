@@ -57,7 +57,7 @@ public class EndAction extends Action
   /**
    * The movie player.
    */
-  private MoviePlayer m_player;
+  private final MoviePlayer m_player;
 
   /**
    * The constructor.
@@ -65,7 +65,7 @@ public class EndAction extends Action
    * @param player
    *          The movie player.
    */
-  public EndAction( MoviePlayer player )
+  public EndAction( final MoviePlayer player )
   {
     m_player = player;
   }
@@ -74,9 +74,9 @@ public class EndAction extends Action
    * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
    */
   @Override
-  public void runWithEvent( Event event )
+  public void runWithEvent( final Event event )
   {
-    int endStep = m_player.getEndStep();
+    final int endStep = m_player.getEndStep();
     m_player.stepTo( endStep );
     m_player.updateControls();
   }

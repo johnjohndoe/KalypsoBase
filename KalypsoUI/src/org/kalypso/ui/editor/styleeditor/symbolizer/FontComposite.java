@@ -120,7 +120,7 @@ public class FontComposite extends Composite
 
   protected void handleFontButtonPressed( )
   {
-    final FontDialog dialog = new FontDialog( this.getShell() );
+    final FontDialog dialog = new FontDialog( getShell() );
     if( m_swtFont != null )
       dialog.setFontList( m_swtFont.getFontData() );
     if( m_swtColor != null )
@@ -187,7 +187,7 @@ public class FontComposite extends Composite
     updateControl();
   }
 
-  public void updateControl()
+  public void updateControl( )
   {
     m_previewLabel.setFont( null );
     m_previewLabel.setForeground( null );

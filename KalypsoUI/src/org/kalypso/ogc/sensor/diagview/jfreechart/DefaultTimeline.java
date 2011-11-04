@@ -19,11 +19,10 @@ public class DefaultTimeline implements Timeline, Serializable
    * 
    * @param millisecond
    *          the millisecond.
-   * 
    * @return The timeline value.
    */
   @Override
-  public long toTimelineValue( long millisecond )
+  public long toTimelineValue( final long millisecond )
   {
     return millisecond;
   }
@@ -33,11 +32,10 @@ public class DefaultTimeline implements Timeline, Serializable
    * 
    * @param date
    *          the domain value.
-   * 
    * @return The timeline value.
    */
   @Override
-  public long toTimelineValue( Date date )
+  public long toTimelineValue( final Date date )
   {
     return date.getTime();
   }
@@ -47,11 +45,10 @@ public class DefaultTimeline implements Timeline, Serializable
    * 
    * @param value
    *          the value.
-   * 
    * @return The millisecond.
    */
   @Override
-  public long toMillisecond( long value )
+  public long toMillisecond( final long value )
   {
     return value;
   }
@@ -61,11 +58,10 @@ public class DefaultTimeline implements Timeline, Serializable
    * 
    * @param millisecond
    *          the millisecond.
-   * 
    * @return <code>true</code>.
    */
   @Override
-  public boolean containsDomainValue( long millisecond )
+  public boolean containsDomainValue( final long millisecond )
   {
     return true;
   }
@@ -75,11 +71,10 @@ public class DefaultTimeline implements Timeline, Serializable
    * 
    * @param date
    *          the date.
-   * 
    * @return <code>true</code>.
    */
   @Override
-  public boolean containsDomainValue( Date date )
+  public boolean containsDomainValue( final Date date )
   {
     return true;
   }
@@ -91,11 +86,10 @@ public class DefaultTimeline implements Timeline, Serializable
    *          the start value.
    * @param to
    *          the end value.
-   * 
    * @return <code>true</code>.
    */
   @Override
-  public boolean containsDomainRange( long from, long to )
+  public boolean containsDomainRange( final long from, final long to )
   {
     return true;
   }
@@ -107,11 +101,10 @@ public class DefaultTimeline implements Timeline, Serializable
    *          the start date.
    * @param to
    *          the end date.
-   * 
    * @return <code>true</code>.
    */
   @Override
-  public boolean containsDomainRange( Date from, Date to )
+  public boolean containsDomainRange( final Date from, final Date to )
   {
     return true;
   }
@@ -121,11 +114,10 @@ public class DefaultTimeline implements Timeline, Serializable
    * 
    * @param object
    *          the object.
-   * 
    * @return A boolean.
    */
   @Override
-  public boolean equals( Object object )
+  public boolean equals( final Object object )
   {
 
     if( object == null )

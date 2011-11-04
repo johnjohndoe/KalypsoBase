@@ -91,7 +91,7 @@ public class ExportFileControls
 
     /* field binding */
     final ISWTObservableValue target = SWTObservables.observeText( fileField, new int[] { SWT.Modify, SWT.DefaultSelection } );
-    final IObservableValue model = BeansObservables.observeValue( m_data, ExportGMLData.PROPERTY_EXPORT_FILE );
+    final IObservableValue model = BeansObservables.observeValue( m_data, AbstractExportFileData.PROPERTY_EXPORT_FILE );
     final DataBinder binder = new DataBinder( target, model );
 
     binder.setTargetToModelConverter( new StringToFileConverter() );

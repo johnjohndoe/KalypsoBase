@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
-import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -63,10 +62,7 @@ public class LabelFeatureControlFactory implements IFeatureControlFactory
   {
     final String labelControlText = ((LabelType) controlType).getText();
 
-    final ITranslator translator = parentComposite.getTranslator();
-    final String translatedExplicitText = translator.get( labelControlText );
-
-    final String text = AnnotationUtilities.getAnnotation( annotation, translatedExplicitText, IAnnotation.ANNO_LABEL );
+    final String text = AnnotationUtilities.getAnnotation( annotation, labelControlText, IAnnotation.ANNO_LABEL );
 
     return new LabelFeatureControl( feature, pt, text );
   }

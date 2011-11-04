@@ -53,7 +53,6 @@ import org.kalypso.ogc.sensor.SensorException;
 
 /**
  * A CurveDataset contains XYCurveSerie objects for the purpose of being displayed within a JFreeChart.
- * 
  * <p>
  * Inserted synchronized at some places because if pages are switched too fast in kalypso wizard then I presume that
  * many swing ui threads are trying to update the chart, thus leading to possible array out of bound exceptions because
@@ -66,7 +65,9 @@ class CurveDataset extends AbstractIntervalXYDataset
   private final static class RendererInfo
   {
     private final Stroke m_stroke;
+
     private final Color m_color;
+
     private final XYCurveSerie m_xyc;
 
     public RendererInfo( final XYCurveSerie xyc, final Color color, final Stroke stroke )
@@ -76,17 +77,17 @@ class CurveDataset extends AbstractIntervalXYDataset
       m_stroke = stroke;
     }
 
-    public Color getColor()
+    public Color getColor( )
     {
       return m_color;
     }
 
-    public Stroke getStroke()
+    public Stroke getStroke( )
     {
       return m_stroke;
     }
-    
-    public XYCurveSerie getSerie()
+
+    public XYCurveSerie getSerie( )
     {
       return m_xyc;
     }
@@ -101,13 +102,12 @@ class CurveDataset extends AbstractIntervalXYDataset
    */
   private final List<RendererInfo> m_curves = Collections.synchronizedList( new ArrayList<RendererInfo>() );
 
-  public CurveDataset()
+  public CurveDataset( )
   {
-  // empty
+    // empty
   }
 
-  public void addCurveSerie( final XYCurveSerie xyc, final Color color, final Stroke stroke,
-      final XYItemRenderer renderer )
+  public void addCurveSerie( final XYCurveSerie xyc, final Color color, final Stroke stroke, final XYItemRenderer renderer )
   {
     m_curves.add( new RendererInfo( xyc, color, stroke ) );
 
@@ -134,7 +134,7 @@ class CurveDataset extends AbstractIntervalXYDataset
    * @see org.jfree.data.general.SeriesDataset#getSeriesCount()
    */
   @Override
-  public int getSeriesCount()
+  public int getSeriesCount( )
   {
     return m_curves.size();
   }
@@ -146,7 +146,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   public String getSeriesName( final int series )
   {
     final RendererInfo[] curveArray = getCurveArray();
-    return ( curveArray[series] ).getSerie().getName();
+    return curveArray[series].getSerie().getName();
   }
 
   /**
@@ -347,7 +347,7 @@ class CurveDataset extends AbstractIntervalXYDataset
     }
   }
 
-  private RendererInfo[] getCurveArray()
+  private RendererInfo[] getCurveArray( )
   {
     return m_curves.toArray( new RendererInfo[m_curves.size()] );
   }

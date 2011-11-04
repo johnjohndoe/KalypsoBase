@@ -84,7 +84,6 @@ public class DateAxis extends org.jfree.chart.axis.DateAxis
     final TickUnitSource source = createStandardDateTickUnits( timezone );
     setStandardTickUnits( source );
   }
-  
 
   /**
    * Special tick units for kalypso
@@ -97,13 +96,13 @@ public class DateAxis extends org.jfree.chart.axis.DateAxis
     final TickUnits units = new TickUnits();
 
     // date formatters
-    //      DateFormat f1 = new SimpleDateFormat("HH:mm:ss.SSS");
-    //      DateFormat f2 = new SimpleDateFormat("HH:mm:ss");
-    //      DateFormat f3 = new SimpleDateFormat("HH:mm");
-    //      DateFormat f4 = new SimpleDateFormat("d-MMM, HH:mm");
-    //      DateFormat f5 = new SimpleDateFormat("d-MMM");
-    //      DateFormat f6 = new SimpleDateFormat("MMM-yyyy");
-    //      DateFormat f7 = new SimpleDateFormat("yyyy");
+    // DateFormat f1 = new SimpleDateFormat("HH:mm:ss.SSS");
+    // DateFormat f2 = new SimpleDateFormat("HH:mm:ss");
+    // DateFormat f3 = new SimpleDateFormat("HH:mm");
+    // DateFormat f4 = new SimpleDateFormat("d-MMM, HH:mm");
+    // DateFormat f5 = new SimpleDateFormat("d-MMM");
+    // DateFormat f6 = new SimpleDateFormat("MMM-yyyy");
+    // DateFormat f7 = new SimpleDateFormat("yyyy");
 
     final DateFormat f1 = new SimpleDateFormat( "dd.MM HH:mm:ss.SSS" ); //$NON-NLS-1$
     final DateFormat f2 = new SimpleDateFormat( "dd.MM HH:mm:ss" ); //$NON-NLS-1$

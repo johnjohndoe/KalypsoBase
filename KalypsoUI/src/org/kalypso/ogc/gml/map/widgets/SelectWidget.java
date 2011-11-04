@@ -65,7 +65,7 @@ public class SelectWidget extends AbstractDelegateWidget
     super( "select widget", "", new SelectFeatureWidget( "", "", new QName[] { Feature.QNAME_FEATURE }, null ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     m_toolTipRenderer.setBackgroundColor( new Color( 1f, 1f, 0.6f, 0.70f ) );
-    m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidget.2") ); //$NON-NLS-1$
+    m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidget.2" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -83,7 +83,7 @@ public class SelectWidget extends AbstractDelegateWidget
     final Rectangle bounds = mapPanel.getScreenBounds();
     final IWidget delegate = getDelegate();
     if( delegate == null )
-      m_toolTipRenderer.setTooltip( Messages.getString("org.kalypso.ogc.gml.map.widgets.SelectWidget.3") ); //$NON-NLS-1$
+      m_toolTipRenderer.setTooltip( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidget.3" ) ); //$NON-NLS-1$
     else
     {
       final String delegateTooltip = delegate.getToolTip();
@@ -92,6 +92,5 @@ public class SelectWidget extends AbstractDelegateWidget
 
     m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
   }
-
 
 }

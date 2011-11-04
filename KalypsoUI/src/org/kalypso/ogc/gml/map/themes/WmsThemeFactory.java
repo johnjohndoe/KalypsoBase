@@ -107,7 +107,7 @@ public class WmsThemeFactory implements IKalypsoThemeFactory
       final List<Style> styleList = layerType.getStyle();
       if( styleList.size() > 0 )
       {
-        IUrlResolver2 resolver = new IUrlResolver2()
+        final IUrlResolver2 resolver = new IUrlResolver2()
         {
           /**
            * @see org.kalypso.contribs.java.net.IUrlResolver2#resolveURL(java.lang.String)
@@ -137,7 +137,7 @@ public class WmsThemeFactory implements IKalypsoThemeFactory
 
       return new KalypsoWMSTheme( source, linktype, layerName, layerType, imageProvider, mapModell );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) );
     }
@@ -148,7 +148,7 @@ public class WmsThemeFactory implements IKalypsoThemeFactory
    *      org.kalypsodeegree.model.geometry.GM_Envelope, java.lang.String)
    */
   @Override
-  public JAXBElement< ? extends StyledLayerType> configureLayer( IKalypsoTheme theme, String id, GM_Envelope bbox, String srsName )
+  public JAXBElement< ? extends StyledLayerType> configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName )
   {
     throw new UnsupportedOperationException();
   }

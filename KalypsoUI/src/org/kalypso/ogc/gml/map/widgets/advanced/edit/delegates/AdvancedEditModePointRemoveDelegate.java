@@ -206,15 +206,13 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
     return snapped;
   }
 
-
-
   /**
    * @see org.kalypso.ogc.gml.widgets.aew.IAdvancedEditWidgetDelegate#getToolTip()
    */
   @Override
   public String getToolTip( )
   {
-    return Messages.getString("org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModePointRemoveDelegate.0"); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModePointRemoveDelegate.0" ); //$NON-NLS-1$
   }
 
   /**

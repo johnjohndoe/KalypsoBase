@@ -78,9 +78,9 @@ public class ActionButtonFeatureControl extends AbstractFeatureControl implement
 
   /**
    * @param pluginId
-   *            The plugin from which the action will be loaded.
+   *          The plugin from which the action will be loaded.
    * @param actionClass
-   *            The classname of the action to load. The class must implement {@link org.eclipse.jface.action.IAction}
+   *          The classname of the action to load. The class must implement {@link org.eclipse.jface.action.IAction}
    */
   public ActionButtonFeatureControl( final Feature feature, final IPropertyType ftp, final String pluginId, final String actionClass )
   {
@@ -135,7 +135,7 @@ public class ActionButtonFeatureControl extends AbstractFeatureControl implement
   @Override
   public void dispose( )
   {
-    if( !(m_button.isDisposed()) )
+    if( !m_button.isDisposed() )
       m_button.dispose();
   }
 

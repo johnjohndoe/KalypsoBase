@@ -50,14 +50,14 @@ public class BinaryComparisonNumericData extends AbstractComparisonData
 {
   private String literal = null;
 
-  public String getLiteral()
+  public String getLiteral( )
   {
     return literal;
   }
 
-  public void setLiteral( String m_literal )
+  public void setLiteral( final String m_literal )
   {
-    this.literal = m_literal.trim();
+    literal = m_literal.trim();
   }
 
   @Override
@@ -71,10 +71,9 @@ public class BinaryComparisonNumericData extends AbstractComparisonData
     {
       Double.parseDouble( literal );
     }
-    catch( NumberFormatException e )
+    catch( final NumberFormatException e )
     {
-      throw new FilterDialogException( new FilterDialogError( null, MessageBundle.STYLE_EDITOR_VALUE
-          + MessageBundle.STYLE_EDITOR_ERROR_NUMBER ) );
+      throw new FilterDialogException( new FilterDialogError( null, MessageBundle.STYLE_EDITOR_VALUE + MessageBundle.STYLE_EDITOR_ERROR_NUMBER ) );
     }
     return true;
   }

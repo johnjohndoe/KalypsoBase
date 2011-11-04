@@ -96,7 +96,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
         return new Object[0];
       else if( parentElement instanceof Operation )
       {
-        final Operation operation = ((Operation) parentElement);
+        final Operation operation = (Operation) parentElement;
         final int operatorId = operation.getOperatorId();
         final int typeId = OperationDefines.getTypeById( operatorId );
         if( typeId == OperationDefines.TYPE_SPATIAL )

@@ -55,13 +55,14 @@ import org.jfree.data.Range;
 public class NumberAxisN extends NumberAxis
 {
   private final Double m_max = new Double( 0 );
+
   private final Double m_min = new Double( 1 );
 
   public NumberAxisN( final String label )
   {
     super( label );
 
-    setAutoRangeIncludesZero(true);
+    setAutoRangeIncludesZero( true );
     setAutoRangeMinimumSize( 1 );
   }
 
@@ -69,7 +70,7 @@ public class NumberAxisN extends NumberAxis
    * Rescales the axis to ensure that all data is visible.
    */
   @Override
-  protected void autoAdjustRange()
+  protected void autoAdjustRange( )
   {
     final Plot plot = getPlot();
     if( plot == null )
@@ -79,7 +80,7 @@ public class NumberAxisN extends NumberAxis
 
     if( plot instanceof ValueAxisPlot )
     {
-      final ValueAxisPlot vap = (ValueAxisPlot)plot;
+      final ValueAxisPlot vap = (ValueAxisPlot) plot;
 
       Range r = vap.getDataRange( this );
       if( r == null )
@@ -108,9 +109,9 @@ public class NumberAxisN extends NumberAxis
         final double minRange = getAutoRangeMinimumSize();
         if( range < minRange )
         {
-          //double expand = ( minRange - range ) / 2;
-          upper = minRange; //upper + expand;
-          lower = 0; //getlower - expand;
+          // double expand = ( minRange - range ) / 2;
+          upper = minRange; // upper + expand;
+          lower = 0; // getlower - expand;
         }
 
         if( autoRangeStickyZero() )

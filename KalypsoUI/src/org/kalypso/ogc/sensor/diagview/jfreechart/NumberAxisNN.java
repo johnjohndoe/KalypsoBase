@@ -57,7 +57,7 @@ public class NumberAxisNN extends NumberAxis
     setAutoRangeIncludesZero( false );
 
     setAutoRangeMinimumSize( 1.0 );
-    
+
     setUpperMargin( 0.25 );
     setLowerMargin( 0.10 );
   }

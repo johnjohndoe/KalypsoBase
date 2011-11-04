@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.action.ActionContributionItem;
-import org.eclipse.jface.action.ContributionManager;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
@@ -56,11 +55,9 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
-import org.eclipse.ui.menus.IMenuService;
 
 /**
  * This action group is used to show actions depending on a selected feature.
@@ -127,12 +124,6 @@ public class FeatureSelectionActionGroup extends ActionGroup
     m_actionBars = actionBars;
 
     createSubMenues();
-
-    // HM: instead we should add menu contributions via plugin.xml
-
-    final IWorkbenchPartSite site = m_part == null ? null : m_part.getSite();
-    if( site == null )
-      return;
   }
 
   private void createSubMenues( )
@@ -145,6 +136,9 @@ public class FeatureSelectionActionGroup extends ActionGroup
       managedMenu.createSubMenu( menuManager );
   }
 
+  /**
+   * @see org.eclipse.ui.actions.ActionGroup#updateActionBars()
+   */
   @Override
   public void updateActionBars( )
   {
@@ -180,9 +174,7 @@ public class FeatureSelectionActionGroup extends ActionGroup
     // TODO: also refaktor in external class
 
     /* first, fill the actions into a fake manager */
-    final MenuManager fakeManager = new MenuManager();
-
-    // FIXME: remove this line as soon as we do not use object contributions any more
+    final IMenuManager fakeManager = new MenuManager();
     ObjectActionContributorManager.getManager().contributeObjectActions( m_part, fakeManager, m_provider );
 
     translateIntoToolbar( fakeManager, m_toolbarSubManager );
@@ -224,14 +216,6 @@ public class FeatureSelectionActionGroup extends ActionGroup
   public void dispose( )
   {
     m_managedMenues.clear();
-
-    final IToolBarManager toolBarManager = m_actionBars.getToolBarManager();
-    final IWorkbenchPartSite site = m_part == null ? null : m_part.getSite();
-    if( toolBarManager instanceof ContributionManager && site != null )
-    {
-      final IMenuService service = (IMenuService) site.getService( IMenuService.class );
-      service.releaseContributions( (ContributionManager) toolBarManager );
-    }
 
     if( m_toolbarSubManager != null )
     {

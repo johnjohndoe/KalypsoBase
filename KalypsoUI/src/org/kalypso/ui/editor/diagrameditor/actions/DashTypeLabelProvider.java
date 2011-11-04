@@ -51,7 +51,7 @@ public class DashTypeLabelProvider extends LabelProvider
    * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
    */
   @Override
-  public String getText( Object element )
+  public String getText( final Object element )
   {
     return ((DashType) element).getComboLabel();
   }

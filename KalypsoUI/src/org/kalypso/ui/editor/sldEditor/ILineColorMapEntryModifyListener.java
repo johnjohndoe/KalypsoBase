@@ -44,7 +44,6 @@ import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 
 /**
  * @author Thomas Jung
- * 
  */
 public interface ILineColorMapEntryModifyListener
 {

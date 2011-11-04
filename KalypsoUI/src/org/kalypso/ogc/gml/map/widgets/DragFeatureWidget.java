@@ -113,15 +113,15 @@ public class DragFeatureWidget extends AbstractWidget
    * The constructor.
    * 
    * @param name
-   *            The name of this widget.
+   *          The name of this widget.
    * @param toolTip
-   *            The tooltip of this widget.
+   *          The tooltip of this widget.
    * @param handlesProvider
-   *            The class which provides the handles the geometries of a feature.
+   *          The class which provides the handles the geometries of a feature.
    * @param radius
-   *            The radius in which the handles should be selectable.
+   *          The radius in which the handles should be selectable.
    * @param qnames
-   *            The QNames the editable features should substitute from.
+   *          The QNames the editable features should substitute from.
    */
   public DragFeatureWidget( final String name, final String toolTip, final IHandlesProvider handlesProvider, final int radius, final QName[] qnames )
   {
@@ -158,7 +158,7 @@ public class DragFeatureWidget extends AbstractWidget
   @Override
   public void leftReleased( final Point p )
   {
-    if( (m_handles == null) || (m_startPoint == null) || (m_currentPoint == null) )
+    if( m_handles == null || m_startPoint == null || m_currentPoint == null )
       return;
 
     /* Memory to collect all active handles. */
@@ -182,7 +182,7 @@ public class DragFeatureWidget extends AbstractWidget
       return;
     }
 
-    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.0") ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.0" ) ); //$NON-NLS-1$
 
     /* Create the new geometry. */
     final GeoTransform projection = getMapPanel().getProjection();
@@ -209,7 +209,7 @@ public class DragFeatureWidget extends AbstractWidget
     m_currentPoint = null;
     m_startPoint = null;
 
-    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.1") ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -240,7 +240,7 @@ public class DragFeatureWidget extends AbstractWidget
         for( final IHandle handle : m_handles )
           handle.setActive( true );
 
-        getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.2") ); //$NON-NLS-1$
+        getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.2" ) ); //$NON-NLS-1$
       }
     }
 
@@ -287,7 +287,7 @@ public class DragFeatureWidget extends AbstractWidget
      * There must be a start and end point. Further more, the handles must be active. If the first is active, all others
      * are active, too.
      */
-    if( (m_startPoint != null) && (m_currentPoint != null) && (m_handles.get( 0 ).isActive()) )
+    if( m_startPoint != null && m_currentPoint != null && m_handles.get( 0 ).isActive() )
     {
       /* Calculate the difference between the two points. */
       final int da = (int) (m_currentPoint.getX() - m_startPoint.getX());
@@ -361,7 +361,7 @@ public class DragFeatureWidget extends AbstractWidget
     /* Collect all handles from the handle provider. */
     m_handles.addAll( m_handlesProvider.collectHandles( feature, m_radius ) );
 
-    getMapPanel().setMessage( Messages.getString("org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.4") ); //$NON-NLS-1$
+    getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.4" ) ); //$NON-NLS-1$
 
     return;
   }
@@ -385,7 +385,7 @@ public class DragFeatureWidget extends AbstractWidget
          * If a list of qnames is specified and at least one qname exists in it, search only for features, which
          * substitutes one of the qnames in the list.
          */
-        if( (m_qnames != null) && (m_qnames.length > 0) )
+        if( m_qnames != null && m_qnames.length > 0 )
         {
           for( final QName qname : m_qnames )
           {

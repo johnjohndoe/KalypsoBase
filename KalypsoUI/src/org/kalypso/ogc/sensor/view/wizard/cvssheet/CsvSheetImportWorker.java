@@ -99,16 +99,16 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
     final DECIMAL_NUMBER_SEPERATORS dSep = (DECIMAL_NUMBER_SEPERATORS) m_model.getValue( TSM_KEY.eCsvDecimalNumberSeperator );
 
     /* axis date */
-    final IAxis defaultDate = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_DATE, true );
+    final IAxis defaultDate = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_DATE, true );
     final SimpleAxis simpleDateAxis = new SimpleAxis( defaultDate );
     simpleDateAxis.setName( "date" ); //$NON-NLS-1$
 
     /* axis values */
     final IAxis axisX;
     if( WQ_KIND.eW.equals( kind ) )
-      axisX = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_WATERLEVEL, false );
+      axisX = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_WATERLEVEL, false );
     else if( WQ_KIND.eQ.equals( kind ) )
-      axisX = TimeseriesUtils.createDefaulAxis( ITimeseriesConstants.TYPE_RUNOFF, false );
+      axisX = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_RUNOFF, false );
     else
       throw new UnsupportedOperationException();
 
@@ -231,7 +231,7 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
       final String xmlString = WQTableFactory.createXMLString( wqSet );
 
       if( xmlString != null )
-        mdl.setProperty( "WQ-Tabelle", xmlString ); //$NON-NLS-1$
+        mdl.setProperty( ITimeseriesConstants.MD_WQ_TABLE, xmlString ); //$NON-NLS-1$
     }
 
     /*******************************************************************************************************************

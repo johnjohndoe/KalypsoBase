@@ -49,5 +49,5 @@ public interface ILayerTableModelListener
 {
   public void onRowsChanged( final Feature fe );
 
-  public void onColumnsChanged();
+  public void onColumnsChanged( );
 }

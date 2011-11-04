@@ -45,7 +45,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
+import org.kalypso.ui.editor.gmleditor.ui.FeatureAssociationTypeElement;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureProperty;
 
@@ -67,7 +67,10 @@ public final class NewScopeFactory
     final Object elementInScope = selection.getFirstElement();
 
     if( elementInScope instanceof FeatureAssociationTypeElement )
+    {
+
       return new NewFeaturePropertyScope( (FeatureAssociationTypeElement) elementInScope, workspace, selectionManager );
+    }
 
     if( selection instanceof IFeatureSelection )
     {

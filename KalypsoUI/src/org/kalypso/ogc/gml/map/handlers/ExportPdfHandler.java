@@ -77,41 +77,41 @@ public class ExportPdfHandler extends AbstractHandler
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute( ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     try
     {
       /* Get the evaluation context. */
-      IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
       /* Get the shell. */
-      Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+      final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
       /* Get the active part. */
-      IWorkbenchPart activePart = HandlerUtil.getActivePart( event );
+      final IWorkbenchPart activePart = HandlerUtil.getActivePart( event );
       if( activePart == null )
         return null;
 
       /* Get the map panel. */
-      IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
+      final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
       /* Ask for a file name. */
-      String fileName = String.format( "%s.pdf", FilenameUtils.removeExtension( activePart.getTitle() ) );
-      File targetFile = MapHandlerUtils.showSaveFileDialog( shell, "PDF-Export", fileName, PDFExporter.class.getCanonicalName(), new String[] { "*.pdf", "*.*" }, new String[] { "Adobe Acrobat Datei",
-          "Alle Dateien" } );
+      final String fileName = String.format( "%s.pdf", FilenameUtils.removeExtension( activePart.getTitle() ) );
+      final File targetFile = MapHandlerUtils.showSaveFileDialog( shell, "PDF-Export", fileName, PDFExporter.class.getCanonicalName(), new String[] { "*.pdf", "*.*" }, new String[] {
+          "Adobe Acrobat Datei", "Alle Dateien" } );
       if( targetFile == null )
         return null;
 
       /* Export the PDF. */
-      PDFExporter exporter = new PDFExporter( mapPanel );
-      IStatus status = exporter.doExport( targetFile, new NullProgressMonitor() );
+      final PDFExporter exporter = new PDFExporter( mapPanel );
+      final IStatus status = exporter.doExport( targetFile, new NullProgressMonitor() );
 
       /* If the export was ok, open the PDF. */
       /* If the export has failed, show an error to the user. */
       if( status.isOK() )
       {
         /* Open the PDF file. */
-        boolean launch = Program.launch( targetFile.getAbsolutePath() );
+        final boolean launch = Program.launch( targetFile.getAbsolutePath() );
         if( !launch )
         {
           MessageDialog.openError( shell, "PDF-Export", "Die PDF-Datei konnte nicht geöffnet werden." );
@@ -123,7 +123,7 @@ public class ExportPdfHandler extends AbstractHandler
 
       return null;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new ExecutionException( ex.getMessage(), ex );
     }

@@ -70,7 +70,7 @@ public class PDFExporter
   /**
    * The map panel.
    */
-  private IMapPanel m_mapPanel;
+  private final IMapPanel m_mapPanel;
 
   /**
    * The constructor.
@@ -78,12 +78,12 @@ public class PDFExporter
    * @param mapPanel
    *          The map panel.
    */
-  public PDFExporter( IMapPanel mapPanel )
+  public PDFExporter( final IMapPanel mapPanel )
   {
     m_mapPanel = mapPanel;
   }
 
-  public IStatus doExport( File targetFile, IProgressMonitor monitor )
+  public IStatus doExport( final File targetFile, IProgressMonitor monitor )
   {
     /* If no monitor is given, take a null progress monitor. */
     if( monitor == null )
@@ -99,11 +99,11 @@ public class PDFExporter
       monitor.subTask( "Erzeuge Inhalt..." );
 
       /* Create the image. */
-      Insets insets = new Insets( 10, 10, 10, 10 );
-      BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapPanel, (int) PageSize.A4.getHeight(), (int) PageSize.A4.getWidth(), insets, 1 );
+      final Insets insets = new Insets( 10, 10, 10, 10 );
+      final BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapPanel, (int) PageSize.A4.getHeight(), (int) PageSize.A4.getWidth(), insets, 1 );
 
       /* Convert to an itext image. */
-      Image img = Image.getInstance( image, null );
+      final Image img = Image.getInstance( image, null );
 
       /* Monitor. */
       monitor.subTask( "Erzeuge PDF..." );
@@ -112,10 +112,10 @@ public class PDFExporter
       os = new BufferedOutputStream( new FileOutputStream( targetFile ) );
 
       /* Create a new document. */
-      Document document = new Document( new com.itextpdf.text.Rectangle( PageSize.A4.getHeight(), PageSize.A4.getWidth() ), 30, 30, 30, 30 );
+      final Document document = new Document( new com.itextpdf.text.Rectangle( PageSize.A4.getHeight(), PageSize.A4.getWidth() ), 30, 30, 30, 30 );
 
       /* Create the pdf writter. */
-      PdfWriter writer = PdfWriter.getInstance( document, os );
+      final PdfWriter writer = PdfWriter.getInstance( document, os );
       writer.setCompressionLevel( 0 );
 
       /* Open the document. */
@@ -135,7 +135,7 @@ public class PDFExporter
 
       return new Status( IStatus.OK, KalypsoGisPlugin.getId(), "OK" );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex );
     }

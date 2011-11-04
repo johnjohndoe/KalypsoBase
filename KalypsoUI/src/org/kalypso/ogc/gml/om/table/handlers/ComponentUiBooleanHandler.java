@@ -131,8 +131,8 @@ public class ComponentUiBooleanHandler extends AbstractComponentUiHandler
   {
     final int index = getComponent();
     final Object oldValue = record.getValue( index );
-    
-    if( !ObjectUtils.equals(value, oldValue ) )
+
+    if( !ObjectUtils.equals( value, oldValue ) )
       record.setValue( index, value );
   }
 

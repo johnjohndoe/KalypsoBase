@@ -58,7 +58,7 @@ public class ImageThemeNode extends KalypsoThemeNode<KalypsoImageTheme>
    *          The kalypso image theme.
    */
 
-  ImageThemeNode( IThemeNode parent, KalypsoImageTheme element )
+  ImageThemeNode( final IThemeNode parent, final KalypsoImageTheme element )
   {
     super( parent, element );
   }

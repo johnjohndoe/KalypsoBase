@@ -40,11 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.actionfilters;
 
-
 /**
  * A filter on {@link org.kalypsodeegree.model.feature.Feature} objects.
  * <p>
- * Tests the if the selected feature is of exactly one of the given feature types. Substition does not work here, use {@link org.kalypso.ogc.gml.actionfilters.FeatureTypeActionFilter} instead.
+ * Tests the if the selected feature is of exactly one of the given feature types. Substition does not work here, use
+ * {@link org.kalypso.ogc.gml.actionfilters.FeatureTypeActionFilter} instead.
  * </p>
  * <p>
  * The value argument is one or more qnames (separated by semicolons ';' of the following for: namespace#localPart.

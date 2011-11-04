@@ -251,12 +251,11 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     }
   }
 
-
   public void hideView( )
   {
     m_activePage.hideView( m_activePage.findView( MapWidgetView.ID ) );
   }
-  
+
   /**
    * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
    */
@@ -619,7 +618,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
   protected void showFound( ) throws ExecutionException
   {
     GM_Point centroid = null;
-    if( m_feature == null && m_boolFound || (m_posX != null && m_posY != null && !"".equals( m_posX.getText() ) && !"".equals( m_posY.getText() )) )
+    if( m_feature == null && m_boolFound || m_posX != null && m_posY != null && !"".equals( m_posX.getText() ) && !"".equals( m_posY.getText() ) )
     {
       centroid = GeometryFactory.createGM_Point( NumberUtils.parseQuietDouble( m_posX.getText() ), NumberUtils.parseQuietDouble( m_posY.getText() ), m_defaultCrs );
     }
@@ -666,7 +665,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
 
         double scaledFactor = getMapPanel().getCurrentScale();
 
-        if( ( envelope.getMaxX() == envelope.getMinX() && envelope.getMaxY() == envelope.getMinY() ) )
+        if( envelope.getMaxX() == envelope.getMinX() && envelope.getMaxY() == envelope.getMinY() )
         {
           scaledFactor *= 0.00093;
         }
@@ -931,22 +930,28 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
       m_boolFound = findFeature( featureList );
     }
   }
-  
+
   /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#canBeActivated(org.eclipse.jface.viewers.ISelection, org.kalypso.ogc.gml.map.IMapPanel)
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
+   *      org.kalypso.ogc.gml.map.IMapPanel)
    */
   @Override
-  public boolean canBeActivated( ISelection selection, IMapPanel mapPanel )
+  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     MapWidgetView widgetView = null;
-    try{
-      if( m_activePage == null ){
+    try
+    {
+      if( m_activePage == null )
+      {
         findOutlineView();
       }
       widgetView = (MapWidgetView) m_activePage.findView( MapWidgetView.ID );
-    }catch (Exception e) {
     }
-    if( widgetView != null ){
+    catch( final Exception e )
+    {
+    }
+    if( widgetView != null )
+    {
       return false;
     }
     return super.canBeActivated( selection, mapPanel );

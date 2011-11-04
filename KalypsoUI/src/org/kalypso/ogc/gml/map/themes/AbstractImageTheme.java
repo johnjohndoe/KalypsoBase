@@ -84,7 +84,7 @@ public abstract class AbstractImageTheme extends AbstractKalypsoTheme
    * @param mapModell
    *          The map modell to use.
    */
-  public AbstractImageTheme( I10nString name, String type, IMapModell mapModell )
+  public AbstractImageTheme( final I10nString name, final String type, final IMapModell mapModell )
   {
     super( name, type, mapModell );
 
@@ -99,7 +99,7 @@ public abstract class AbstractImageTheme extends AbstractKalypsoTheme
    *      org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus paint( Graphics g, GeoTransform world2screen, Boolean selected, IProgressMonitor monitor )
+  public IStatus paint( final Graphics g, final GeoTransform world2screen, final Boolean selected, final IProgressMonitor monitor )
   {
     if( selected != null && selected )
       return Status.OK_STATUS;
@@ -107,12 +107,12 @@ public abstract class AbstractImageTheme extends AbstractKalypsoTheme
     try
     {
       /* Update the image. */
-      Image image = updateImage( new SubProgressMonitor( monitor, 1000 ) );
+      final Image image = updateImage( new SubProgressMonitor( monitor, 1000 ) );
       if( image == null )
         return Status.CANCEL_STATUS;
 
       /* Determine the position. */
-      LegendCoordinate position = PositionUtilities.determinePosition( g, image, m_horizontal, m_vertical );
+      final LegendCoordinate position = PositionUtilities.determinePosition( g, image, m_horizontal, m_vertical );
 
       /* Draw the image. */
       g.setPaintMode();
@@ -120,7 +120,7 @@ public abstract class AbstractImageTheme extends AbstractKalypsoTheme
 
       return Status.OK_STATUS;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex );
     }
@@ -164,7 +164,7 @@ public abstract class AbstractImageTheme extends AbstractKalypsoTheme
    * @param vertical
    *          The vertical position.
    */
-  protected void updatePosition( int horizontal, int vertical )
+  protected void updatePosition( final int horizontal, final int vertical )
   {
     m_horizontal = horizontal;
     m_vertical = vertical;

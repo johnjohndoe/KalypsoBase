@@ -51,11 +51,8 @@ import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 import org.kalypsodeegree.graphics.sld.Stroke;
 
 /**
- * @author Thomas Jung
- * 
- * creates a composite for a single {@link org.kalypsodeegree.graphics.sld.PolygonColorMapEntry} combining the
- * composites of a stroke and a fill.
- * 
+ * @author Thomas Jung creates a composite for a single {@link org.kalypsodeegree.graphics.sld.PolygonColorMapEntry}
+ *         combining the composites of a stroke and a fill.
  */
 public class LineColorMapEntryEditorComposite extends Composite
 {

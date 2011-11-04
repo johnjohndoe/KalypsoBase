@@ -57,9 +57,11 @@ import org.kalypso.i18n.Messages;
  */
 public class LastLineLabelProvider implements ITableLabelProvider, IColorProvider
 {
-  public static final String DUMMY_ELEMENT_TEXT = Messages.getString("org.kalypso.ogc.gml.om.table.LastLineLabelProvider.0"); //$NON-NLS-1$
+  public static final String DUMMY_ELEMENT_TEXT = Messages.getString( "org.kalypso.ogc.gml.om.table.LastLineLabelProvider.0" ); //$NON-NLS-1$
+
   private final ITableLabelProvider m_provider;
-  private Color m_backgroundColor;
+
+  private final Color m_backgroundColor;
 
   public LastLineLabelProvider( final ITableLabelProvider provider, final Color background )
   {
@@ -93,7 +95,7 @@ public class LastLineLabelProvider implements ITableLabelProvider, IColorProvide
   {
     if( element == LastLineContentProvider.DUMMY_ELEMENT )
       return null;
-    
+
     return m_provider.getColumnImage( element, columnIndex );
   }
 
@@ -147,7 +149,7 @@ public class LastLineLabelProvider implements ITableLabelProvider, IColorProvide
   {
     if( element == LastLineContentProvider.DUMMY_ELEMENT )
       return m_backgroundColor;
-    
+
     return null;
   }
 

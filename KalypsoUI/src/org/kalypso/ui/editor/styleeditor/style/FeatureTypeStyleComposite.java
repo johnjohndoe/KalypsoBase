@@ -45,6 +45,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.SectionPart;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
@@ -81,7 +82,7 @@ public class FeatureTypeStyleComposite extends Composite
 
   protected Section createPropertiesComposite( final FormToolkit toolkit )
   {
-    final Section section = toolkit.createSection( this, Section.TITLE_BAR | Section.TWISTIE | Section.DESCRIPTION );
+    final Section section = toolkit.createSection( this, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | Section.DESCRIPTION );
     section.setText( "Style Properties" );
     section.setDescription( "This section allows to edit general properties of the style." );
 
@@ -93,7 +94,7 @@ public class FeatureTypeStyleComposite extends Composite
 
   protected Control createRuleTabViewer( final FormToolkit toolkit )
   {
-    final SectionPart tabSectionPart = new SectionPart( this, toolkit, Section.TITLE_BAR | Section.DESCRIPTION );
+    final SectionPart tabSectionPart = new SectionPart( this, toolkit, ExpandableComposite.TITLE_BAR | Section.DESCRIPTION );
     final Section section = tabSectionPart.getSection();
     section.setText( "Rules" );
     section.setDescription( "Add, remove or edit the rules of the style." );

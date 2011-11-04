@@ -49,7 +49,6 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 
 /**
  * @author Gernot Belger
- *
  */
 public class StrokeColorValue extends InputWithContextObservableValue<Stroke, Color>
 {

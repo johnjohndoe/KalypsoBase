@@ -95,7 +95,6 @@ public class CreateFeaturePropertyDialog implements IFeatureDialog
       final IFeatureType targetFeatureType = m_relationType.getTargetFeatureType();
       final IFeatureType[] substituts = GMLSchemaUtilities.getSubstituts( targetFeatureType, workspace.getGMLSchema(), false, true );
 
-
       final IFeatureType newFeatureType = chooseFeatureType( shell, substituts );
       if( newFeatureType == null )
         return Window.CANCEL;

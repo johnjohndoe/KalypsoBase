@@ -49,23 +49,23 @@ public class CreateOGCFeatureFilter implements IActionDelegate
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   @Override
-  public void run( IAction action )
+  public void run( final IAction action )
   {
     if( m_selection != null && action.isEnabled() )
     {
 
       if( m_selection instanceof TreeSelection )
       {
-        Object model = ( (TreeSelection)m_selection ).getModel();
+        final Object model = ((TreeSelection) m_selection).getModel();
         if( model instanceof FilterRootElement )
         {
-          Object[] children = ( (FilterRootElement)model ).getChildren();
+          final Object[] children = ((FilterRootElement) model).getChildren();
           if( children.length == 0 )
           {
-            ( (FilterRootElement)model ).addChild( new FeatureFilter() );
+            ((FilterRootElement) model).addChild( new FeatureFilter() );
           }
         }
-        ( (TreeSelection)m_selection ).structureChanged();
+        ((TreeSelection) m_selection).structureChanged();
       }
     }
 
@@ -76,16 +76,16 @@ public class CreateOGCFeatureFilter implements IActionDelegate
    *      org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
     if( selection instanceof IStructuredSelection )
     {
       action.setEnabled( false );
-      m_selection = (IStructuredSelection)selection;
-      Object firstElement = ( (IStructuredSelection)selection ).getFirstElement();
+      m_selection = (IStructuredSelection) selection;
+      final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
       if( firstElement instanceof FilterRootElement )
       {
-        Object[] children = ( (FilterRootElement)firstElement ).getChildren();
+        final Object[] children = ((FilterRootElement) firstElement).getChildren();
         if( children.length == 0 )
           action.setEnabled( true );
       }

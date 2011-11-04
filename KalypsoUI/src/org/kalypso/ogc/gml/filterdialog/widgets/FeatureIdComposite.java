@@ -46,15 +46,14 @@ import org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever;
 
 /**
  * @author kuepfer
- *
  */
 public class FeatureIdComposite extends AbstractFilterComposite
 {
 
-  public FeatureIdComposite( Composite parent, int style, IErrorMessageReciever errorMessageReciever, IFeatureType ft )
+  public FeatureIdComposite( final Composite parent, final int style, final IErrorMessageReciever errorMessageReciever, final IFeatureType ft )
   {
-    super(parent, style, errorMessageReciever, ft);
-    
+    super( parent, style, errorMessageReciever, ft );
+
   }
 
 }

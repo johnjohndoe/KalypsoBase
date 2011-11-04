@@ -124,9 +124,9 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
       m_operation.setLowerBoundary( lowerBoundary );
     }
     m_propertyComboLabel = new Label( this, SWT.NULL );
-    m_propertyComboLabel.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsBetweenComposite.0") ); //$NON-NLS-1$
-    Combo propertyCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN );
-    GridData data = new GridData( GridData.FILL_HORIZONTAL );
+    m_propertyComboLabel.setText( Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsBetweenComposite.0" ) ); //$NON-NLS-1$
+    final Combo propertyCombo = new Combo( this, SWT.FILL | SWT.DROP_DOWN );
+    final GridData data = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = STANDARD_WIDTH_FIELD;
     propertyCombo.setLayoutData( data );
     propViewer = new ComboViewer( propertyCombo );
@@ -138,7 +138,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     {
 
       @Override
-      public void selectionChanged( SelectionChangedEvent event )
+      public void selectionChanged( final SelectionChangedEvent event )
       {
         final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
         if( firstElement instanceof IValuePropertyType )
@@ -153,7 +153,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
 
     // lower boundary
     m_lowerBComboLabel = new Label( this, SWT.NULL );
-    m_lowerBComboLabel.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsBetweenComposite.1") ); //$NON-NLS-1$
+    m_lowerBComboLabel.setText( Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsBetweenComposite.1" ) ); //$NON-NLS-1$
     m_lowerBText = new Text( this, SWT.FILL );
     final GridData data3 = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = STANDARD_WIDTH_FIELD;
@@ -166,7 +166,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     m_lowerBText.addModifyListener( new ModifyListener()
     {
       @Override
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         m_lowerBTextModified = true;
       }
@@ -175,7 +175,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     {
 
       @Override
-      public void keyReleased( KeyEvent e )
+      public void keyReleased( final KeyEvent e )
       {
         if( e.character == SWT.CR && m_lowerBTextModified )
         {
@@ -192,7 +192,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
        * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
        */
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         final String lBText = m_lowerBText.getText();
         updateLowerBoundaryValue( lBText );
@@ -200,7 +200,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     } );
     // upper boundary
     m_upperBComboLabel = new Label( this, SWT.NULL );
-    m_upperBComboLabel.setText( Messages.getString("org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsBetweenComposite.2") ); //$NON-NLS-1$
+    m_upperBComboLabel.setText( Messages.getString( "org.kalypso.ogc.gml.filterdialog.widgets.PropertyIsBetweenComposite.2" ) ); //$NON-NLS-1$
     m_upperBText = new Text( this, SWT.FILL );
     final GridData data2 = new GridData( GridData.FILL_HORIZONTAL );
     data.widthHint = STANDARD_WIDTH_FIELD;
@@ -214,7 +214,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     {
 
       @Override
-      public void modifyText( ModifyEvent e )
+      public void modifyText( final ModifyEvent e )
       {
         m_upperBtextModified = true;
       }
@@ -223,7 +223,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     {
 
       @Override
-      public void keyReleased( KeyEvent e )
+      public void keyReleased( final KeyEvent e )
       {
         if( e.character == SWT.CR && m_upperBtextModified )
         {
@@ -240,7 +240,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
        * @see org.eclipse.swt.events.FocusAdapter#focusLost(org.eclipse.swt.events.FocusEvent)
        */
       @Override
-      public void focusLost( FocusEvent e )
+      public void focusLost( final FocusEvent e )
       {
         final String uBText = m_upperBText.getText();
         updateUpperBoundaryValue( uBText );
@@ -262,7 +262,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
         setErrorMessage( null );
       }
     }
-    catch( NumberFormatException ne )
+    catch( final NumberFormatException ne )
     {
       final String exType = ne.getClass().getName().replaceAll( ".+\\.", "" ); //$NON-NLS-1$ //$NON-NLS-2$
       setErrorMessage( exType + "\t" + ne.getMessage() ); //$NON-NLS-1$
@@ -283,7 +283,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
         setErrorMessage( null );
       }
     }
-    catch( NumberFormatException ne )
+    catch( final NumberFormatException ne )
     {
       final String exType = ne.getClass().getName().replaceAll( ".+\\.", "" ); //$NON-NLS-1$ //$NON-NLS-2$
       setErrorMessage( exType + "\t" + ne.getMessage() ); //$NON-NLS-1$

@@ -201,13 +201,13 @@ public abstract class AbstractValueControlMaker implements IControlMaker
    * This function creates the ControlType for a property of a feature.
    * 
    * @param feature
-   *            The feature itself.
+   *          The feature itself.
    * @param ft
-   *            The feature type.
+   *          The feature type.
    * @param pt
-   *            the property type of the property.
+   *          the property type of the property.
    * @param gridData
-   *            the grid data object, which should be used.
+   *          the grid data object, which should be used.
    */
   protected abstract JAXBElement< ? extends ControlType> createControlType( Feature feature, IFeatureType ft, final IPropertyType pt, final GridDataType griddata ) throws AbortCreationException;
 

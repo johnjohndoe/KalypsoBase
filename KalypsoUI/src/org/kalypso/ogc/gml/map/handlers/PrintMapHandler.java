@@ -92,7 +92,7 @@ public class PrintMapHandler extends AbstractHandler
 
     final Printer printer = new Printer( printerData );
 
-    final Job job = new Job(Messages.getString("org.kalypso.ogc.gml.map.handlers.PrintMapHandler.0" , mapName ))  //$NON-NLS-1$
+    final Job job = new Job( Messages.getString( "org.kalypso.ogc.gml.map.handlers.PrintMapHandler.0", mapName ) ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -145,7 +145,7 @@ public class PrintMapHandler extends AbstractHandler
           printer.endJob();
         }
 
-        return StatusUtilities.createStatus( IStatus.INFO, Messages.getString("org.kalypso.ogc.gml.map.handlers.PrintMapHandler.2"), null ); //$NON-NLS-1$
+        return StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ogc.gml.map.handlers.PrintMapHandler.2" ), null ); //$NON-NLS-1$
       }
     };
 
@@ -169,7 +169,7 @@ public class PrintMapHandler extends AbstractHandler
 
   public static Rectangle scaleIntoClient( final Rectangle sourceRect, final Rectangle destRect, final Point insets )
   {
-    final Rectangle targetRect = new Rectangle( destRect.x + insets.x, destRect.y + insets.y, destRect.width - (2 * insets.x), destRect.height - (2 * insets.y) );
+    final Rectangle targetRect = new Rectangle( destRect.x + insets.x, destRect.y + insets.y, destRect.width - 2 * insets.x, destRect.height - 2 * insets.y );
 
     final double scaleX = (double) targetRect.width / (double) sourceRect.width;
     final double scaleY = (double) targetRect.height / (double) sourceRect.height;

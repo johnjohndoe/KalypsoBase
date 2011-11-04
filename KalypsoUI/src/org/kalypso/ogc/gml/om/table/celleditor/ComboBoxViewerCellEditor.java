@@ -155,7 +155,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
       @Override
       public void keyTraversed( final TraverseEvent e )
       {
-        if( (e.detail == SWT.TRAVERSE_ESCAPE) || (e.detail == SWT.TRAVERSE_RETURN) )
+        if( e.detail == SWT.TRAVERSE_ESCAPE || e.detail == SWT.TRAVERSE_RETURN )
           e.doit = false;
       }
     } );
@@ -254,15 +254,15 @@ public class ComboBoxViewerCellEditor extends CellEditor
       m_viewer.setSelection( StructuredSelection.EMPTY );
   }
 
-//  /**
-//   * @see org.eclipse.jface.viewers.CellEditor#focusLost()
-//   */
-//  @Override
-//  protected void focusLost( )
-//  {
-//    if( isActivated() )
-//    {
-//      applyEditorValueAndDeactivate();
-//    }
-//  }
+// /**
+// * @see org.eclipse.jface.viewers.CellEditor#focusLost()
+// */
+// @Override
+// protected void focusLost( )
+// {
+// if( isActivated() )
+// {
+// applyEditorValueAndDeactivate();
+// }
+// }
 }

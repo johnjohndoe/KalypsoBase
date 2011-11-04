@@ -84,7 +84,7 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
 
     final CommandableWorkspace workspace = input.getWorkspace();
 
-    if( (m_undo && workspace.canUndo()) || (!m_undo && workspace.canRedo()) )
+    if( m_undo && workspace.canUndo() || !m_undo && workspace.canRedo() )
       // TODO: this cannot work: null command not supported!
       new CommandJob( null, workspace, null, null, m_undo ? CommandJob.UNDO : CommandJob.REDO );
 

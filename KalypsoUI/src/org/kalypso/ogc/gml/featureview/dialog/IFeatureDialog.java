@@ -54,5 +54,5 @@ public interface IFeatureDialog
 
   public void collectChanges( final Collection<FeatureChange> c );
 
-  public String getLabel();
+  public String getLabel( );
 }

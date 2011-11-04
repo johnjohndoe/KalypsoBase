@@ -53,6 +53,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.SectionPart;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
@@ -147,7 +148,7 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
 
   private Control createGeometryControl( final FormToolkit toolkit, final Composite parent )
   {
-    final SectionPart sectionPart = new SectionPart( parent, toolkit, Section.TITLE_BAR | Section.EXPANDED | Section.DESCRIPTION );
+    final SectionPart sectionPart = new SectionPart( parent, toolkit, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED | Section.DESCRIPTION );
     final Section section = sectionPart.getSection();
     section.setText( "Geometry" );
     section.setDescription( "Choose the geometry for the symbolizer" );
@@ -168,7 +169,7 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
 
   private Control createPreviewControl( final FormToolkit toolkit, final Composite parent )
   {
-    final SectionPart sectionPart = new SectionPart( parent, toolkit, Section.TITLE_BAR | Section.EXPANDED | Section.SHORT_TITLE_BAR );
+    final SectionPart sectionPart = new SectionPart( parent, toolkit, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED | ExpandableComposite.SHORT_TITLE_BAR );
     final Section section = sectionPart.getSection();
     section.setText( "Preview" );
 

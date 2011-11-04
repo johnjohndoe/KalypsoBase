@@ -50,22 +50,22 @@ public class ScaleUnit
   /**
    * The name of the unit (e.g. km).
    */
-  private String m_name;
+  private final String m_name;
 
   /**
    * The factor of the unit (e.g. 1000).
    */
-  private double m_factor;
+  private final double m_factor;
 
   /**
    * The constructor.
    * 
    * @param name
-   *            The name of the unit (e.g. km).
+   *          The name of the unit (e.g. km).
    * @param factor
-   *            The factor of the unit (e.g. 1000).
+   *          The factor of the unit (e.g. 1000).
    */
-  public ScaleUnit( String name, double d )
+  public ScaleUnit( final String name, final double d )
   {
     m_name = name;
     m_factor = d;

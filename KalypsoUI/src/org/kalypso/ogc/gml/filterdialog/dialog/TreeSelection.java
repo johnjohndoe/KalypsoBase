@@ -47,40 +47,40 @@ public abstract class TreeSelection implements IStructuredSelection, IChangeList
   }
 
   @Override
-  public Object getFirstElement()
+  public Object getFirstElement( )
   {
     return m_selection.getFirstElement();
   }
 
   @Override
-  public boolean isEmpty()
+  public boolean isEmpty( )
   {
     return m_selection.isEmpty();
   }
 
   @Override
-  public Iterator iterator()
+  public Iterator iterator( )
   {
     return m_selection.iterator();
   }
 
   @Override
-  public int size()
+  public int size( )
   {
     return m_selection.size();
   }
 
   @Override
-  public Object[] toArray()
+  public Object[] toArray( )
   {
     return m_selection.toArray();
   }
 
   @Override
-  public List toList()
+  public List toList( )
   {
     return m_selection.toList();
   }
-  
-  public abstract Object getModel();
+
+  public abstract Object getModel( );
 }

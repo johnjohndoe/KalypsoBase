@@ -61,7 +61,7 @@ public class SingleSelectionChanger implements IFeatureSelectionChanger
    * The constructor.
    * 
    * @param clearSelectionIfNothingFound
-   *            True, if the selection should be cleared, if there are no features to add.
+   *          True, if the selection should be cleared, if there are no features to add.
    */
   public SingleSelectionChanger( final boolean clearSelectionIfNothingFound )
   {

@@ -50,7 +50,7 @@ import org.eclipse.swt.widgets.Display;
 /**
  * Helper class to paint an legend icon as offscreen image.<br>
  * Useful if we want to draw the images on the fly. Should only be used, if only a few such images will be produced.
- *
+ * 
  * @author Gernot Belger
  */
 class TreeObjectImage
@@ -72,11 +72,10 @@ class TreeObjectImage
     m_image = new Image( display, width, height );
   }
 
-
   public void dispose( )
   {
     if( m_gc != null )
-    m_gc.dispose();
+      m_gc.dispose();
     m_image.dispose();
   }
 
@@ -122,7 +121,7 @@ class TreeObjectImage
 
   /**
    * This function resizes the given image.
-   *
+   * 
    * @param image
    *          The old image.
    * @param witdth

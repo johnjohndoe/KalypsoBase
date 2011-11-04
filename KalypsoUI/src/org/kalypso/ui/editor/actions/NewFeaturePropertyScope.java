@@ -48,8 +48,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.core.catalog.FeatureTypePropertiesCatalog;
-import org.kalypso.core.catalog.IFeatureTypePropertiesConstants;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -57,7 +55,9 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
+import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
+import org.kalypso.ui.editor.gmleditor.util.command.AddFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureProperty;
 
@@ -131,8 +131,8 @@ class NewFeaturePropertyScope implements INewScope
     for( final IFeatureType ft : featureTypes )
       newMenuManager.add( new NewFeatureAction( this, ft ) );
 
-        /* Not yet implemented, makes no sense to show it for now ... */
-        // newMenuManager.add( new NewFeatureFromExternalSchemaAction() );
+    /* Not yet implemented, makes no sense to show it for now ... */
+    // newMenuManager.add( new NewFeatureFromExternalSchemaAction() );
   }
 
   private boolean checkFullList( final IMenuManager newMenuManager )

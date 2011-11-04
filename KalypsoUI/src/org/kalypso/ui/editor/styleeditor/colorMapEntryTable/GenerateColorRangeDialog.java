@@ -78,7 +78,7 @@ public class GenerateColorRangeDialog extends Dialog
    * @param entries
    *          The color map entries.
    */
-  public GenerateColorRangeDialog( Shell parentShell, ColorMapEntry[] entries )
+  public GenerateColorRangeDialog( final Shell parentShell, final ColorMapEntry[] entries )
   {
     super( parentShell );
 
@@ -93,7 +93,7 @@ public class GenerateColorRangeDialog extends Dialog
    * @param entries
    *          The color map entries.
    */
-  public GenerateColorRangeDialog( IShellProvider parentShell, ColorMapEntry[] entries )
+  public GenerateColorRangeDialog( final IShellProvider parentShell, final ColorMapEntry[] entries )
   {
     super( parentShell );
 
@@ -110,7 +110,7 @@ public class GenerateColorRangeDialog extends Dialog
     getShell().setText( "Eigenschaften Diagramm" );
 
     /* Create the main composite. */
-    Composite main = (Composite) super.createDialogArea( parent );
+    final Composite main = (Composite) super.createDialogArea( parent );
     main.setLayout( new GridLayout( 1, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -142,8 +142,8 @@ public class GenerateColorRangeDialog extends Dialog
   {
     if( m_entries.length > 50 )
     {
-      String dialogMessage = String.format( "Achtung. Sie versuchen einen Farbverlauf mit mehr als %d Elementen zu erzeugen. Dies kann in nachfolgenden Operationen zu sehr langen Wartezeiten führen. Falls Sie die Anzahl der Elemente verringern möchten, empfielt sich die Schrittweite zu erhöhen. Möchten Sie wirklich forfahren?", 50 );
-      MessageDialog dialog = new MessageDialog( getShell(), getShell().getText(), null, dialogMessage, MessageDialog.WARNING, new String[] { "Fortfahren", "Abbrechen" }, 1 );
+      final String dialogMessage = String.format( "Achtung. Sie versuchen einen Farbverlauf mit mehr als %d Elementen zu erzeugen. Dies kann in nachfolgenden Operationen zu sehr langen Wartezeiten führen. Falls Sie die Anzahl der Elemente verringern möchten, empfielt sich die Schrittweite zu erhöhen. Möchten Sie wirklich forfahren?", 50 );
+      final MessageDialog dialog = new MessageDialog( getShell(), getShell().getText(), null, dialogMessage, MessageDialog.WARNING, new String[] { "Fortfahren", "Abbrechen" }, 1 );
       if( dialog.open() == Window.CANCEL )
         return;
     }

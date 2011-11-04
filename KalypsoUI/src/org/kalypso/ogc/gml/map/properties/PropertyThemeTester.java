@@ -67,7 +67,7 @@ public class PropertyThemeTester extends PropertyTester
       return false;
 
     /* Cast. */
-    IMapPanel mapPanel = (IMapPanel) receiver;
+    final IMapPanel mapPanel = (IMapPanel) receiver;
 
     /* Check the property. */
     if( !"hasProperty".equals( property ) )
@@ -81,15 +81,15 @@ public class PropertyThemeTester extends PropertyTester
       return false;
 
     /* Cast. */
-    String expectedProperty = (String) expectedValue;
+    final String expectedProperty = (String) expectedValue;
 
     /* Get the map model. */
-    IMapModell mapModel = mapPanel.getMapModell();
+    final IMapModell mapModel = mapPanel.getMapModell();
     if( mapModel == null )
       return false;
 
     /* Find the themes with the expected property. */
-    IKalypsoTheme[] themes = MapModellHelper.findThemeByProperty( mapModel, expectedProperty, IKalypsoThemeVisitor.DEPTH_ZERO );
+    final IKalypsoTheme[] themes = MapModellHelper.findThemeByProperty( mapModel, expectedProperty, IKalypsoThemeVisitor.DEPTH_ZERO );
     if( themes == null || themes.length == 0 )
       return false;
 

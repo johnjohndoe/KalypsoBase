@@ -81,7 +81,7 @@ public interface IComponentUiHandler
    * Sets a value to the record's component represented by this handler.
    * 
    * @param value
-   *            An object which's type must fit to the handled component
+   *          An object which's type must fit to the handled component
    */
   void setValue( final IRecord record, Object value );
 
@@ -98,9 +98,9 @@ public interface IComponentUiHandler
   int getColumnWidth( );
 
   /**
-   * The width of the column in percent of the total table width. If -1, the columnWidth property is used instead.
-   * <br/>No other validity checks are performed, so column wider than the table may be configured.<br/> If >0, the
-   * columnWidth property is interpreted as the minimum width.
+   * The width of the column in percent of the total table width. If -1, the columnWidth property is used instead. <br/>
+   * No other validity checks are performed, so column wider than the table may be configured.<br/>
+   * If >0, the columnWidth property is interpreted as the minimum width.
    */
   int getColumnWidthPercent( );
 

@@ -64,19 +64,19 @@ public class MoveDownSelectedRowsHandler extends AbstractHandler
     final TableViewer viewer = ToolbarCommandUtils.findTableViewer( event );
     final TupleResult tupleResult = ToolbarCommandUtils.findTupleResult( event );
     if( tupleResult == null || viewer == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.om.table.command.MoveDownSelectedRowsHandler.0") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.om.table.command.MoveDownSelectedRowsHandler.0" ) ); //$NON-NLS-1$
 
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-    
+
     final int index = tupleResult.indexOf( selection.getFirstElement() );
-    if (index < tupleResult.size()-1)
+    if( index < tupleResult.size() - 1 )
     {
-    final int newPosition = index +1;
-    
-    tupleResult.removeAll( selection.toList() );
-    tupleResult.addAll( newPosition, selection.toList() );
-   
-       }
+      final int newPosition = index + 1;
+
+      tupleResult.removeAll( selection.toList() );
+      tupleResult.addAll( newPosition, selection.toList() );
+
+    }
     return null;
   }
 

@@ -47,6 +47,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
@@ -84,9 +85,9 @@ public abstract class AbstractStyleElementSection<ELEMENT, ITEM, ITEMCONTROL>
     final String description = getDescription();
     int style;
     if( description == null )
-      style = Section.TITLE_BAR | Section.EXPANDED;
+      style = ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED;
     else
-      style = Section.TITLE_BAR | Section.EXPANDED | Section.DESCRIPTION;
+      style = ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED | Section.DESCRIPTION;
 
     m_section = toolkit.createSection( parent, style );
 
@@ -159,7 +160,7 @@ public abstract class AbstractStyleElementSection<ELEMENT, ITEM, ITEMCONTROL>
   public void updateControl( )
   {
     final ELEMENT data = m_input.getData();
-    final ITEM item = getItem(data);
+    final ITEM item = getItem( data );
 
     if( ObjectUtils.equals( item, m_item ) )
     {

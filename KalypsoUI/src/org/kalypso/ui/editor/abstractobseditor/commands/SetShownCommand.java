@@ -47,6 +47,7 @@ import org.kalypso.ogc.sensor.template.ObsViewItem;
 public class SetShownCommand implements ICommand
 {
   private final ObsViewItem m_item;
+
   private final boolean m_checked;
 
   public SetShownCommand( final ObsViewItem item, final boolean checked )
@@ -97,6 +98,6 @@ public class SetShownCommand implements ICommand
   @Override
   public String getDescription( )
   {
-    return Messages.getString("org.kalypso.ui.editor.abstractobseditor.commands.SetShownCommand.0") + m_item.getName() + Messages.getString("org.kalypso.ui.editor.abstractobseditor.commands.SetShownCommand.1"); //$NON-NLS-1$ //$NON-NLS-2$
+    return Messages.getString( "org.kalypso.ui.editor.abstractobseditor.commands.SetShownCommand.0" ) + m_item.getName() + Messages.getString( "org.kalypso.ui.editor.abstractobseditor.commands.SetShownCommand.1" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

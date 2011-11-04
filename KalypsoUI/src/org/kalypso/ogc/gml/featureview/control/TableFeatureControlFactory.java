@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
+import java.net.URL;
+
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -56,26 +58,23 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class TableFeatureControlFactory implements IFeatureControlFactory
 {
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory#createFeatureControl(org.kalypso.ogc.gml.featureview.control.IFeatureComposite,
-   *      org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType,
-   *      org.kalypso.template.featureview.ControlType, org.kalypso.gmlschema.annotation.IAnnotation)
-   */
   @Override
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
   {
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
     final Table tableType = (Table) controlType;
 
-    final IFeatureModifierFactory featureTypeCellEditorFactory = plugin.createFeatureTypeCellEditorFactory();
+    final IFeatureModifierFactory featureTypeCellEditorFactory = plugin.getFeatureTypeCellEditorFactory();
 
     final IFeatureSelectionManager selectionManager = parentComposite.getSelectionManager();
 
     final Toolbar toolbar = tableType.getToolbar();
 
-    final boolean showToolbar = toolbar == null ? true : tableType.isShowToolbar();
+    final boolean showToolbar = toolbar == null ? tableType.isShowToolbar() : true;
+    final boolean showContextMenu = tableType.isShowContextMenu();
 
-    final TableFeatureControl fc = new TableFeatureControl( pt, featureTypeCellEditorFactory, selectionManager, toolbar, showToolbar, tableType.isShowContextMenu() );
+    final URL templateContext = parentComposite.getFeatureviewContext();
+    final TableFeatureControl fc = new TableFeatureControl( pt, featureTypeCellEditorFactory, selectionManager, toolbar, showToolbar, showContextMenu, templateContext );
 
     final Gistableview gistableview = tableType.getGistableview();
     if( gistableview != null )
@@ -85,5 +84,4 @@ public class TableFeatureControlFactory implements IFeatureControlFactory
 
     return fc;
   }
-
 }

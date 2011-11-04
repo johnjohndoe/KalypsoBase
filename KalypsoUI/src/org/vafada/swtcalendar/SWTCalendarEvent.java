@@ -26,14 +26,17 @@ import java.util.Calendar;
 import org.eclipse.swt.events.TypedEvent;
 import org.eclipse.swt.widgets.Event;
 
-public class SWTCalendarEvent extends TypedEvent {
-    static final long serialVersionUID = -4525931268845275613L;
+public class SWTCalendarEvent extends TypedEvent
+{
+  static final long serialVersionUID = -4525931268845275613L;
 
-    public SWTCalendarEvent(Event event) {
-        super(event);
-    }
+  public SWTCalendarEvent( final Event event )
+  {
+    super( event );
+  }
 
-    public Calendar getCalendar() {
-        return (Calendar) this.data;
-    }
+  public Calendar getCalendar( )
+  {
+    return (Calendar) data;
+  }
 }

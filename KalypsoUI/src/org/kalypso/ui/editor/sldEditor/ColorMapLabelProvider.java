@@ -123,7 +123,7 @@ public abstract class ColorMapLabelProvider extends LabelProvider implements ITa
 
         event.doit = false;
         event.detail &= ~SWT.HOT;
-        event.detail &= ~(SWT.BACKGROUND);
+        event.detail &= ~SWT.BACKGROUND;
       }
     } );
   }

@@ -90,7 +90,7 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#dispose()
+   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
    */
   @Override
   public void dispose( )
@@ -116,7 +116,7 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#tweakInput(org.eclipse.ui.IStorageEditorInput)
+   * @see org.kalypso.ui.editor.AbstractEditorPart#tweakInput(org.eclipse.ui.IStorageEditorInput)
    */
   @Override
   protected IStorageEditorInput tweakInput( final IStorageEditorInput input )
@@ -161,7 +161,7 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
   }
 
   /**
-   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
+   * @see org.kalypso.ui.editor.AbstractEditorPart#loadInternal(org.eclipse.core.runtime.IProgressMonitor,
    *      org.eclipse.ui.IFileEditorInput)
    */
   @Override

@@ -49,7 +49,7 @@ import java.util.List;
 
 /**
  * TODO: throw away and merge with {@link org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer}.
- *
+ * 
  * @author Dirk Kuch
  */
 public class ToolTipRenderer
@@ -95,7 +95,7 @@ public class ToolTipRenderer
 
     final Rectangle2D maxRectangle = calculateBoxWidth( g, tooltip );
 
-    final int textHeight = (int) (maxRectangle.getHeight()); // height of one line
+    final int textHeight = (int) maxRectangle.getHeight(); // height of one line
     final int textboxWidth = (int) maxRectangle.getWidth() + 10; // width of textbox
     final int textboxHeight = textHeight * tooltip.length + 10; // height of textbox
 

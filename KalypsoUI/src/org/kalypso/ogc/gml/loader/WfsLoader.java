@@ -59,7 +59,7 @@ public class WfsLoader extends WorkspaceLoader
 
   /**
    * Loads a WFS DataSource from the given URL
-   *
+   * 
    * @param source
    *          the href-tag from the gmt-file 'ex: http://localhost:8080/deegreewfs#river' where river denotes the
    *          feature to be loaded
@@ -150,7 +150,7 @@ public class WfsLoader extends WorkspaceLoader
     if( data instanceof CommandableWorkspace )
     {
       final Display display = new Display();
-      final MessageDialog md = new MessageDialog( new Shell( display ), Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.8" ), (ImageProvider.IMAGE_STYLEEDITOR_SAVE).createImage(), Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.9" ), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
+      final MessageDialog md = new MessageDialog( new Shell( display ), Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.8" ), ImageProvider.IMAGE_STYLEEDITOR_SAVE.createImage(), Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.9" ), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
       Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.10" ), Messages.getString( "org.kalypso.ogc.gml.loader.WfsLoader.11" ) }, 0 ); //$NON-NLS-1$ //$NON-NLS-2$
       final int result = md.open();
       try

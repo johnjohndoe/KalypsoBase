@@ -53,7 +53,7 @@ public interface IWidgetWithOptions extends IWidget
 
   /**
    * This function returns the part name, this widget desires to be set into the view, it is called from.
-   *
+   * 
    * @return The part name will be used in the calling view (e.g. {@link MapWidgetView}) to set its part name.
    */
   String getPartName( );

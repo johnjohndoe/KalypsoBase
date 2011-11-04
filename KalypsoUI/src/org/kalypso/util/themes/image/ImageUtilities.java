@@ -65,7 +65,7 @@ public class ImageUtilities
   {
   }
 
-  public static String checkImageUrl( String imageUrlProperty )
+  public static String checkImageUrl( final String imageUrlProperty )
   {
     // TODO Perhaps we want to validate the URL of the image?
     return imageUrlProperty;
@@ -78,13 +78,13 @@ public class ImageUtilities
    */
   public static Properties getDefaultProperties( )
   { /* Create the properties object. */
-    Properties properties = new Properties();
+    final Properties properties = new Properties();
 
     /* Serialize the properties. */
-    String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT );
-    String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM );
-    String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", 255, 255, 255 );
-    String imageUrlProperty = "";
+    final String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT );
+    final String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM );
+    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", 255, 255, 255 );
+    final String imageUrlProperty = "";
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );

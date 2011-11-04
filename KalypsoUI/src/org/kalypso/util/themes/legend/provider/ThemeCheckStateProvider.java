@@ -55,7 +55,7 @@ public class ThemeCheckStateProvider implements ICheckStateProvider
   /**
    * The ids of the selected themes.
    */
-  private List<String> m_themeIds;
+  private final List<String> m_themeIds;
 
   /**
    * The constructor.
@@ -63,7 +63,7 @@ public class ThemeCheckStateProvider implements ICheckStateProvider
    * @param themeIds
    *          The ids of the selected themes.
    */
-  public ThemeCheckStateProvider( List<String> themeIds )
+  public ThemeCheckStateProvider( final List<String> themeIds )
   {
     m_themeIds = themeIds;
   }
@@ -72,7 +72,7 @@ public class ThemeCheckStateProvider implements ICheckStateProvider
    * @see org.eclipse.jface.viewers.ICheckStateProvider#isChecked(java.lang.Object)
    */
   @Override
-  public boolean isChecked( Object element )
+  public boolean isChecked( final Object element )
   {
     if( element instanceof IKalypsoTheme )
       return m_themeIds.contains( ((IKalypsoTheme) element).getId() );
@@ -84,7 +84,7 @@ public class ThemeCheckStateProvider implements ICheckStateProvider
    * @see org.eclipse.jface.viewers.ICheckStateProvider#isGrayed(java.lang.Object)
    */
   @Override
-  public boolean isGrayed( Object element )
+  public boolean isGrayed( final Object element )
   {
     return false;
   }

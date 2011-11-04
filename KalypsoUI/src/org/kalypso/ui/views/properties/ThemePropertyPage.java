@@ -140,7 +140,6 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
     return composite;
   }
 
-
   /**
    * This function returns the theme.
    * 
@@ -220,7 +219,7 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
    * This function sets the name of the theme.
    * 
    * @param name
-   *            The name of the theme.
+   *          The name of the theme.
    */
   protected void setThemeName( final String name )
   {
@@ -228,9 +227,6 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
 
     checkValid();
   }
-
-
-
 
   protected void setVisibility( final boolean visibility )
   {

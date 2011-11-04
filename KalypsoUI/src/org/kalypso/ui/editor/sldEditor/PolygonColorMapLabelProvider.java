@@ -121,7 +121,7 @@ public class PolygonColorMapLabelProvider extends ColorMapLabelProvider
   }
 
   @Override
-  protected java.awt.Color getAwtColor(Object element, int columnIndex)
+  protected java.awt.Color getAwtColor( final Object element, final int columnIndex )
   {
     final PolygonColorMapEntry entry = (PolygonColorMapEntry) element;
 
@@ -168,6 +168,6 @@ public class PolygonColorMapLabelProvider extends ColorMapLabelProvider
 
       default:
         throw new IllegalArgumentException();
-    }    
+    }
   }
 }

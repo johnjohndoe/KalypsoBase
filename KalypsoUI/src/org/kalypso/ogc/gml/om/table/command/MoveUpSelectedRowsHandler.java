@@ -60,29 +60,28 @@ public class MoveUpSelectedRowsHandler extends AbstractHandler
    * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final TableViewer viewer = ToolbarCommandUtils.findTableViewer( event );
     final TupleResult tupleResult = ToolbarCommandUtils.findTupleResult( event );
     if( tupleResult == null || viewer == null )
-      throw new ExecutionException( Messages.getString("org.kalypso.ogc.gml.om.table.command.MoveUpSelectedRowsHandler.1") ); //$NON-NLS-1$
+      throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.om.table.command.MoveUpSelectedRowsHandler.1" ) ); //$NON-NLS-1$
 
     final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 
-   
-    final Object firstElement = selection.getFirstElement() ;
-    final int index = tupleResult.indexOf(firstElement );
+    final Object firstElement = selection.getFirstElement();
+    final int index = tupleResult.indexOf( firstElement );
     if( index > 0 )
     {
       final int newPosition = index - 1;
       tupleResult.removeAll( selection.toList() );
       tupleResult.addAll( newPosition, selection.toList() );
 
-    viewer.setSelection(new StructuredSelection(tupleResult.get( newPosition )));
-    viewer.refresh();
+      viewer.setSelection( new StructuredSelection( tupleResult.get( newPosition ) ) );
+      viewer.refresh();
     }
-   
+
     return null;
   }
 

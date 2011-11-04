@@ -49,24 +49,24 @@ public class CreateOGCElseFilter implements IActionDelegate
    * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
    */
   @Override
-  public void run( IAction action )
+  public void run( final IAction action )
   {
     if( m_selection != null && action.isEnabled() )
     {
 
       if( m_selection instanceof TreeSelection )
       {
-        Object model = ( (TreeSelection)m_selection ).getModel();
+        final Object model = ((TreeSelection) m_selection).getModel();
         if( model instanceof FilterRootElement )
         {
-          ElseFilter filter = new ElseFilter();
-          Object[] children = ( (FilterRootElement)model ).getChildren();
+          final ElseFilter filter = new ElseFilter();
+          final Object[] children = ((FilterRootElement) model).getChildren();
           if( children.length == 0 )
           {
-            ( (FilterRootElement)model ).addChild( filter );
+            ((FilterRootElement) model).addChild( filter );
           }
         }
-        ( (TreeSelection)m_selection ).structureChanged();
+        ((TreeSelection) m_selection).structureChanged();
       }
     }
   }
@@ -76,12 +76,12 @@ public class CreateOGCElseFilter implements IActionDelegate
    *      org.eclipse.jface.viewers.ISelection)
    */
   @Override
-  public void selectionChanged( IAction action, ISelection selection )
+  public void selectionChanged( final IAction action, final ISelection selection )
   {
     if( selection instanceof StructuredSelection )
     {
-      m_selection = (IStructuredSelection)selection;
-      Object firstElement = ( (IStructuredSelection)selection ).getFirstElement();
+      m_selection = (IStructuredSelection) selection;
+      final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
       if( firstElement instanceof FilterRootElement )
       {
         action.setEnabled( true );

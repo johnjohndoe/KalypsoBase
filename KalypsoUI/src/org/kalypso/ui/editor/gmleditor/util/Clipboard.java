@@ -9,12 +9,12 @@ public class Clipboard
 {
   private Feature clipboardFeature = null;
 
-  public void setClipboardFeature( Feature ft )
+  public void setClipboardFeature( final Feature ft )
   {
     clipboardFeature = ft;
   }
 
-  public Feature getClipboardFeature()
+  public Feature getClipboardFeature( )
   {
     return clipboardFeature;
   }

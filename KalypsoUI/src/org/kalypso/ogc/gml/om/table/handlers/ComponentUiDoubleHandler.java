@@ -51,7 +51,7 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
 
 /**
  * Handles double values.
- *
+ * 
  * @author Dirk Kuch
  * @author Gernot Belger
  */
@@ -118,7 +118,7 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
     final int index = getComponent();
     final Object oldValue = record.getValue( index );
 
-    if( !ObjectUtils.equals(value, oldValue ) )
+    if( !ObjectUtils.equals( value, oldValue ) )
 
       record.setValue( getComponent(), value );
   }

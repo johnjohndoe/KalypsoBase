@@ -254,12 +254,12 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
    *          The theme.
    * @return The node or null.
    */
-  public IThemeNode findNode( IKalypsoTheme theme )
+  public IThemeNode findNode( final IKalypsoTheme theme )
   {
     if( m_input == null )
       return null;
 
-    NodeFinder finder = new NodeFinder( m_input );
+    final NodeFinder finder = new NodeFinder( m_input );
     return finder.find( theme );
   }
 }
