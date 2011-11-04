@@ -4,9 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
 import org.kalypso.ogc.core.exceptions.ExceptionCode;
 import org.kalypso.ogc.core.exceptions.OWSException;
 import org.kalypso.ogc.core.service.OGCRequest;
@@ -22,10 +20,7 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.util.img.ChartPainter;
-import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
-import de.openali.odysseus.service.ods.util.DisplayHelper;
-import de.openali.odysseus.service.ods.util.HeadlessChart;
 import de.openali.odysseus.service.ods.util.ImageOutput;
 import de.openali.odysseus.service.ods.util.ODSChartManipulation;
 
@@ -56,7 +51,6 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
     // der Name muss da sein, sonst kann kein Chart ausgewählt werden
     if( reqName != null )
     {
-      final Display display = DisplayHelper.getInstance().getDisplay();
       final String sceneId = req.getParameterValue( "SCENE" );
 
       final ChartConfigurationDocument scene = getEnv().getConfigLoader().getSceneById( sceneId );
@@ -90,39 +84,25 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
          */
         e.printStackTrace();
       }
-
-      // FIXME: create empty model instead
-      final HeadlessChart hc = new HeadlessChart( model, new RGB( 255, 255, 255 ) );
-      final IChartComposite chart = hc.getChartComposite();
-
-      if( chart != null )
+      try
       {
-        try
-        {
-          ODSChartManipulation.manipulateChart( chart.getChartModel(), req );
-        }
-        catch( OWSException e )
-        {
-          setException( e );
-          return;
-        }
-        final ChartPainter chartPainter = new ChartPainter( chart.getChartModel(), new Rectangle( 0, 0, width, height ) );
-        final ImageData id = chartPainter.getImageData();// ChartImageFactory.createChartImage( chart.getChartModel(),
-        // new Point( width, height ) );
-        if( id != null )
-          ImageOutput.imageResponse( req, getResponse(), id );
-        else
-        {
-          setException( new OWSException( "", OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null ) );
-          return;
-        }
+        ODSChartManipulation.manipulateChart( model, req );
       }
-      hc.dispose();
-    }
-    else
-    {
-      setException( new OWSException( "Missing mandatory parameter 'NAME'", OWSUtilities.OWS_VERSION, "en", ExceptionCode.MISSING_PARAMETER_VALUE, null ) );
-      return;
+      catch( OWSException e )
+      {
+        setException( e );
+        return;
+      }
+      final ChartPainter chartPainter = new ChartPainter( model, new Rectangle( 0, 0, width, height ) );
+      final ImageData id = chartPainter.getImageData();// ChartImageFactory.createChartImage( chart.getChartModel(),
+      // new Point( width, height ) );
+      if( id != null )
+        ImageOutput.imageResponse( req, getResponse(), id );
+      else
+      {
+        setException( new OWSException( "", OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null ) );
+        return;
+      }
     }
   }
 }
