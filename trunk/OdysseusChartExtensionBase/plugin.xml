@@ -26,6 +26,10 @@
             class="de.openali.odysseus.chart.ext.base.axis.provider.GenericLinearAxisProvider"
             id="de.openali.odysseus.chart.ext.axis.provider.GenericLinear">
       </provider>
+      <provider
+            class="de.openali.odysseus.chart.ext.base.axis.provider.GenericCalendarAxisProvider"
+            id="de.openali.odysseus.chart.ext.base.axis.provider.GenericCalendarAxisProvider">
+      </provider>
    </extension>
       <extension
          point="de.openali.odysseus.chart.factory.AxisRendererProvider">
