@@ -32,11 +32,9 @@ public final class WaitForMapOperation implements ICoreRunnableWithProgress
     m_panelOrModell = panel;
   }
 
-  
   /**
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   * 
-   * synchronization is needed to prevent the deadlock that was leading to freezing of the interface. 
+   *      synchronization is needed to prevent the deadlock that was leading to freezing of the interface.
    */
   @Override
   public synchronized IStatus execute( final IProgressMonitor monitor ) throws InterruptedException

@@ -126,7 +126,7 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
    * sets the <Graphic>
    * 
    * @param graphic
-   *            the graphic of the point
+   *          the graphic of the point
    */
   @Override
   public void setGraphic( final Graphic graphic )

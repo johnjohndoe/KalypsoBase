@@ -145,7 +145,7 @@ public class Multiply extends FeaturePropertyFunction
         }
         final Object obj = GMLXPathUtilities.query( path, workspace );
 
-        if( (obj instanceof Number) )
+        if( obj instanceof Number )
         {
           final Number fractionDigitNumber = (Number) obj;
           fractionDigitsCount = fractionDigitNumber.intValue();

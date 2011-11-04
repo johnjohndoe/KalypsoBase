@@ -46,11 +46,13 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -158,7 +160,10 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
       catch( final Throwable t )
       {
         final String msg = String.format( "Merging observation \"%s\" failed", srcObservation.getHref() );
-        statis.add( StatusUtilities.createStatus( IStatus.ERROR, msg, t ) );
+        final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, msg, t );
+        // Log status here, because it is never seen again...
+        KalypsoCorePlugin.getDefault().getLog().log( status );
+        statis.add( status );
       }
     }
 
@@ -219,7 +224,9 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
         destValues[i] = getDestValue( srcObservation, srcModel, destMetaDataHandler, srcMetaDataHandler, defaultDataSourceIndex, index, srcAxis, destAxis );
       }
 
-      data.add( destValues );
+      // REMARK: prohibit adding corrupt data -> may result in an empty data set
+      if( !ArrayUtils.contains( destValues, null ) )
+        data.add( destValues );
     }
 
     return data.toArray( new Object[][] {} );

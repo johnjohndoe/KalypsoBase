@@ -76,7 +76,7 @@ public class PolyhedralSurfaceContentHandlerTest extends Assert
       final GM_PolyhedralSurface< ? > surface = readPolygons( new InputSource( PolyhedralSurfaceContentHandlerTest.class.getResourceAsStream( "resources/minPolyhedralSurface.gml" ) ) );
 
       assertSurface( surface );
-    }    
+    }
 
   }
 

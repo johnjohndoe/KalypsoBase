@@ -18,8 +18,8 @@ public interface IGeoGridWalker
    * Wird für jeden Punkt des Rasters aufgerufen
    * 
    * @param c
-   *            Hier wird die Geocoordinate des Punkt übergeben. Vorsicht: das Objekt wird wiederverwendet und wird
-   *            daher später verändert
+   *          Hier wird die Geocoordinate des Punkt übergeben. Vorsicht: das Objekt wird wiederverwendet und wird daher
+   *          später verändert
    */
   void operate( final int x, final int y, final Coordinate c ) throws GeoGridException;
 

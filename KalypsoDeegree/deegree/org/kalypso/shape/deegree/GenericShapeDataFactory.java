@@ -155,7 +155,7 @@ public final class GenericShapeDataFactory
       // TODO: Problem: reading/writing a shape will change the precision/size of the column!
       return new DBFField( fieldName, FieldType.N, (byte) 30, (byte) 10 );
 
-    if( (clazz == Double.class) || (clazz == Number.class) )
+    if( clazz == Double.class || clazz == Number.class )
       return new DBFField( fieldName, FieldType.N, (byte) 30, (byte) 10 );
 
     if( clazz == BigDecimal.class )

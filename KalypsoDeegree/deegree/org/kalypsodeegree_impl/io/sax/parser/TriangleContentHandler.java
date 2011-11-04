@@ -73,7 +73,7 @@ public class TriangleContentHandler extends GMLElementContentHandler implements 
 
   @Override
   public void doEndElement( final String uri, final String localName, final String name ) throws SAXException
-  { 
+  {
     if( m_ring == null )
       throwSAXParseException( "Triangle contains no valid exterior." );
 

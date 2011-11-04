@@ -41,7 +41,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 /**
  * <code>GeoTransformInterface</code> declares the methods which have to be implemented by each class that executes a
  * geographical coordinate transformation.
- *
+ * 
  * @author Andreas Poth poth@lat-lon.de
  * @version 28.12.2000
  */

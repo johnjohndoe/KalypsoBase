@@ -120,7 +120,7 @@ public abstract class AbstractPropertyTypeFromElement extends QualifiedElement i
   {
     return m_annotation;
   }
-  
+
   /**
    * @see java.lang.Object#equals(java.lang.Object)
    */

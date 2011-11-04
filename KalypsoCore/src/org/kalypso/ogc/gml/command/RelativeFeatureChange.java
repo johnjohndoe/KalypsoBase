@@ -154,13 +154,13 @@ public class RelativeFeatureChange extends FeatureChange
         result = bigDecimalResult.toBigInteger();
       }
       else
-        // firstOperand instanceof BigDecimal
+      // firstOperand instanceof BigDecimal
       {
         result = bigDecimalResult;
       }
     }
     else
-      // firstOperand instanceof Number
+    // firstOperand instanceof Number
     {
       final Double calcResult = MathOperationFactory.createMathOperation( m_operator ).calculate( firstOperand.doubleValue(), secondOperand );
       result = castDoubleAsType( valueClass, calcResult );

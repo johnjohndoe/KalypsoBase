@@ -42,7 +42,7 @@ public class GroupReference extends TypeReference
 
   private final NamedGroup m_group;
 
-  public GroupReference( final GMLSchema gmlSchema, NamedGroup group )
+  public GroupReference( final GMLSchema gmlSchema, final NamedGroup group )
   {
     super( gmlSchema );
     m_group = group;

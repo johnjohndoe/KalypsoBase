@@ -62,7 +62,7 @@ class CachedCRSFactory
   /**
    * The cache of all coordinate systems, created so far.
    */
-  private Map<String, CoordinateSystem> m_cachedCoordinateSystems;
+  private final Map<String, CoordinateSystem> m_cachedCoordinateSystems;
 
   /**
    * The constructor.
@@ -90,7 +90,7 @@ class CachedCRSFactory
    * 
    * @return The coordinate system.
    */
-  public CoordinateSystem create( String name ) throws UnknownCRSException
+  public CoordinateSystem create( final String name ) throws UnknownCRSException
   {
     return getCachedCoordinateSystem( name );
   }
@@ -103,7 +103,7 @@ class CachedCRSFactory
    *          The name of the coordinate system.
    * @return The coordinate system.
    */
-  private CoordinateSystem getCachedCoordinateSystem( String name ) throws UnknownCRSException
+  private CoordinateSystem getCachedCoordinateSystem( final String name ) throws UnknownCRSException
   {
     /* Try to get it from the cache. */
     CoordinateSystem coordinateSystem = m_cachedCoordinateSystems.get( name );

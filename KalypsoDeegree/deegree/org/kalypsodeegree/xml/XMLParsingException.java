@@ -53,8 +53,9 @@ public class XMLParsingException extends Exception
   /**
    * Creates a new instance of <code>XMLParsingException</code> without detail message.
    */
-  public XMLParsingException()
-  {}
+  public XMLParsingException( )
+  {
+  }
 
   /**
    * Constructs an instance of <code>XMLParsingException</code> with the specified detail message.
@@ -62,7 +63,7 @@ public class XMLParsingException extends Exception
    * @param msg
    *          the detail message.
    */
-  public XMLParsingException( String msg )
+  public XMLParsingException( final String msg )
   {
     message = msg;
   }
@@ -73,29 +74,29 @@ public class XMLParsingException extends Exception
    * @param msg
    *          the detail message.
    */
-  public XMLParsingException( String msg, Exception e )
+  public XMLParsingException( final String msg, final Exception e )
   {
     this( msg );
-    StackTraceElement[] se = e.getStackTrace();
-    StringBuffer sb = new StringBuffer();
-    for( int i = 0; i < se.length; i++ )
+    final StackTraceElement[] se = e.getStackTrace();
+    final StringBuffer sb = new StringBuffer();
+    for( final StackTraceElement element : se )
     {
-      sb.append( se[i].getClassName() + " " );
-      sb.append( se[i].getFileName() + " " );
-      sb.append( se[i].getMethodName() + "(" );
-      sb.append( se[i].getLineNumber() + ")\n" );
+      sb.append( element.getClassName() + " " );
+      sb.append( element.getFileName() + " " );
+      sb.append( element.getMethodName() + "(" );
+      sb.append( element.getLineNumber() + ")\n" );
     }
     st = e.getMessage() + sb.toString();
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     return message + "\n" + st;
   }
 
   @Override
-  public String getMessage()
+  public String getMessage( )
   {
     return message;
   }

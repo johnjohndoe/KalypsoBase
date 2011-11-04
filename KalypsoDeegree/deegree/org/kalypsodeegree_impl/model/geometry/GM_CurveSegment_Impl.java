@@ -165,12 +165,12 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   @Override
   public boolean equals( final Object other )
   {
-    if( (other == null) || !(other instanceof GM_CurveSegment_Impl) )
+    if( other == null || !(other instanceof GM_CurveSegment_Impl) )
     {
       return false;
     }
 
-    if( (m_crs == null) && (((GM_CurveSegment_Impl) other).getCoordinateSystem() != null) )
+    if( m_crs == null && ((GM_CurveSegment_Impl) other).getCoordinateSystem() != null )
     {
       return false;
     }
@@ -217,7 +217,7 @@ class GM_CurveSegment_Impl implements GM_CurveSegment, Serializable
   {
     String ret = null;
     ret = "points = ";
-    ret += ("crs = " + m_crs + "\n");
+    ret += "crs = " + m_crs + "\n";
     return ret;
   }
 

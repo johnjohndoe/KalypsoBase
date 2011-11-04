@@ -124,13 +124,13 @@ public abstract class PageFile
   @SuppressWarnings("unused")
   public void initialize( final int dimension, final int capacity ) throws PageFileException
   {
-    this.m_dimension = dimension;
-    this.m_capacity = capacity;
-    this.m_minimum = (int) Math.round( (capacity - 1) * 0.5 );
+    m_dimension = dimension;
+    m_capacity = capacity;
+    m_minimum = (int) Math.round( (capacity - 1) * 0.5 );
 
-    if( this.m_minimum < 2 )
+    if( m_minimum < 2 )
     {
-      this.m_minimum = 2;
+      m_minimum = 2;
     }
   }
 

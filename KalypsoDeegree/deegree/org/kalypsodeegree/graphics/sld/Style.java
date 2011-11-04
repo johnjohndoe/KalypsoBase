@@ -36,7 +36,6 @@
 package org.kalypsodeegree.graphics.sld;
 
 /**
- * 
  * <p>
  * ----------------------------------------------------------------------
  * </p>
@@ -53,7 +52,7 @@ public interface Style
    * 
    * @return the name
    */
-  String getName();
+  String getName( );
 
   /**
    * Sets the name attribute's value of the Style.

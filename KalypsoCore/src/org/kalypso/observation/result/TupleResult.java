@@ -726,7 +726,6 @@ public class TupleResult implements List<IRecord>
     }
   }
 
-
   public int indexOfComponent( final IComponent comp )
   {
     return m_components.indexOf( comp );

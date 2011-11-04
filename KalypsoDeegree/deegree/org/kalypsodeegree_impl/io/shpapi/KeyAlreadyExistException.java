@@ -36,8 +36,6 @@
 package org.kalypsodeegree_impl.io.shpapi;
 
 /**
- * 
- * 
  * @version $Revision$
  */
 public class KeyAlreadyExistException extends DBaseIndexException
@@ -48,7 +46,7 @@ public class KeyAlreadyExistException extends DBaseIndexException
    * @param key
    * @param index
    */
-  public KeyAlreadyExistException( Comparable key, DBaseIndex index )
+  public KeyAlreadyExistException( final Comparable key, final DBaseIndex index )
   {
     super( "Key " + key + " already exist in index " + index, key, index );
   }

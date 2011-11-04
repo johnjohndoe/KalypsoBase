@@ -84,8 +84,6 @@ public abstract class AbstractFilter implements Filter
     return null;
   }
 
-
-
   /**
    * Given a DOM-fragment, a corresponding Filter-object is built. This method recursively calls other buildFromDOM () -
    * methods to validate the structure of the DOM-fragment.

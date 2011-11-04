@@ -73,7 +73,7 @@ public class SHPPolygon implements ISHPParts
   public SHPPolygon( final GM_SurfacePatch[] surfacePatch )
   {
     final String crs = surfacePatch[0].getCoordinateSystem();
-    
+
     final GM_Curve[] curves = orientCurves( surfacePatch, crs );
 
     m_rings = new SHPPolyLine( curves );
@@ -135,7 +135,7 @@ public class SHPPolygon implements ISHPParts
     final int tmp1 = offset;
 
     // increment offset with size of the bounding box
-    offset += (4 * 8);
+    offset += 4 * 8;
 
     // write numRings
     ByteUtils.writeLEInt( byteArray, offset, getNumParts() );
@@ -148,7 +148,7 @@ public class SHPPolygon implements ISHPParts
     int tmp2 = offset;
 
     // increment offset with numRings
-    offset += (4 * getNumParts());
+    offset += 4 * getNumParts();
 
     int count = 0;
     for( final ISHPPoint[] point : points )

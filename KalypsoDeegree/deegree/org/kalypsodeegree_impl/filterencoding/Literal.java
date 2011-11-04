@@ -115,7 +115,7 @@ public class Literal extends Expression_Impl
     {
       m_date = DateUtilities.parseDateTime( m_value );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       m_date = null;
     }

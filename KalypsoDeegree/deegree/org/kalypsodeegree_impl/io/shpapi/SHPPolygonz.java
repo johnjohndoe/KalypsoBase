@@ -102,7 +102,7 @@ public class SHPPolygonz implements ISHPParts
     final int tmp1 = offset;
 
     // increment offset with size of the bounding box
-    offset += (4 * 8);
+    offset += 4 * 8;
 
     // write numRings
     ByteUtils.writeLEInt( bytearray, offset, m_rings.getNumParts() );
@@ -115,7 +115,7 @@ public class SHPPolygonz implements ISHPParts
     int tmp2 = offset;
 
     // increment offset with numRings
-    offset += (4 * m_rings.getNumParts());
+    offset += 4 * m_rings.getNumParts();
 
     int count = 0;
     for( final ISHPPoint[] element : pointsZ )
@@ -168,7 +168,7 @@ public class SHPPolygonz implements ISHPParts
 
         // write z-coordinate
         // jump to the z-values
-        byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 44 + (4 * m_rings.getNumParts()) + (m_rings.getNumPoints() * 16) + 16 + ((count - 1) * 8);
+        byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 44 + 4 * m_rings.getNumParts() + m_rings.getNumPoints() * 16 + 16 + (count - 1) * 8;
         ByteUtils.writeLEDouble( bytearray, byteposition, element2.getZ() );
       }
     }
@@ -186,7 +186,7 @@ public class SHPPolygonz implements ISHPParts
 
     // write z-range
     // jump to the z-range byte postition
-    byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 44 + (4 * getNumParts()) + (getNumPoints() * 16);
+    byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 44 + 4 * getNumParts() + getNumPoints() * 16;
     // write z-range to the byte array
     ByteUtils.writeLEDouble( bytearray, byteposition, zmin );
     offset += 8;
@@ -201,7 +201,7 @@ public class SHPPolygonz implements ISHPParts
   @Override
   public int size( )
   {
-    return 44 + getNumParts() * 4 + getNumPoints() * 16 + 16 + (8 * getNumPoints());
+    return 44 + getNumParts() * 4 + getNumPoints() * 16 + 16 + 8 * getNumPoints();
   }
 
   @Override

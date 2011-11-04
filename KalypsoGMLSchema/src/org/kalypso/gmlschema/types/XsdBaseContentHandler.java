@@ -75,11 +75,11 @@ public class XsdBaseContentHandler implements ContentHandler
 
   /**
    * @param marshalResultEater
-   *            will be feeded with the result of unmarshalling process
+   *          will be feeded with the result of unmarshalling process
    * @param unmarshallResultProvider
-   *            should provide the parsed values
+   *          should provide the parsed values
    * @param unmarshallerHandler
-   *            contenthandler that will be wrapped for unmarshalling
+   *          contenthandler that will be wrapped for unmarshalling
    */
   public XsdBaseContentHandler( final IMarshallingTypeHandler typeHandler, final UnmarshallResultEater marshalResultEater )
   {
@@ -89,7 +89,7 @@ public class XsdBaseContentHandler implements ContentHandler
 
   /**
    * @param resetBuffer
-   *            Clears the intenal string buffer
+   *          Clears the intenal string buffer
    */
   public void setMarshalResultEater( final UnmarshallResultEater marshalResultEater, final boolean resetBuffer )
   {

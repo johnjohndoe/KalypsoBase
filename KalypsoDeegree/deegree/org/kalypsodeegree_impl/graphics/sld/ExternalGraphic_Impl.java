@@ -48,6 +48,7 @@ import java.net.URL;
 import javax.media.jai.JAI;
 import javax.media.jai.RenderedOp;
 
+import org.apache.batik.transcoder.SVGAbstractTranscoder;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
@@ -254,8 +255,8 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
     {
       if( m_transcoderInput != null )
       {
-        m_transcoder.addTranscodingHint( PNGTranscoder.KEY_HEIGHT, new Float( targetSizeX ) );
-        m_transcoder.addTranscodingHint( PNGTranscoder.KEY_WIDTH, new Float( targetSizeY ) );
+        m_transcoder.addTranscodingHint( SVGAbstractTranscoder.KEY_HEIGHT, new Float( targetSizeX ) );
+        m_transcoder.addTranscodingHint( SVGAbstractTranscoder.KEY_WIDTH, new Float( targetSizeY ) );
         try
         {
           m_transcoder.transcode( m_transcoderInput, m_output );

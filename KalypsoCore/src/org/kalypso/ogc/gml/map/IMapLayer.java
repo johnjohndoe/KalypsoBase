@@ -50,7 +50,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
  * For every theme in a {@link org.kalypso.ogc.gml.map.IMapPanel} exists exactly one {@link IMapLayer}.<br>
  * The layer is responsible to draw the theme on the map. Different implementors of this interface represent different
  * painting strategies (tiled, buffered, ...).
- *
+ * 
  * @see org.kalypso.ogc.gml.map.IMapPanel
  * @see org.kalypso.ogc.gml.IKalypsoTheme
  * @author Gernot Belger

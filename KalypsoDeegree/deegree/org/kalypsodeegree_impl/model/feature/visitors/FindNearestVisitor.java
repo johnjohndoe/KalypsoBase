@@ -77,7 +77,7 @@ public class FindNearestVisitor implements FeatureVisitor
     m_radius = radius;
   }
 
-  public Feature getResult()
+  public Feature getResult( )
   {
     return m_result;
   }
@@ -89,11 +89,11 @@ public class FindNearestVisitor implements FeatureVisitor
   public boolean visit( final Feature f )
   {
     GM_Object fGeo = null;
-    String type = f.getFeatureType().getName();
+    final String type = f.getFeatureType().getName();
     // TODO handle this better
     if( type.equals( RectifiedGridCoverage.getNameStatic() ) )
     {
-      GM_Object[] geoProps = f.getGeometryProperties();
+      final GM_Object[] geoProps = f.getGeometryProperties();
       fGeo = geoProps[0];
     }
     else

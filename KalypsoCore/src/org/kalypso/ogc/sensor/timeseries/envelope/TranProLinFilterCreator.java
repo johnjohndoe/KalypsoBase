@@ -45,6 +45,7 @@ import java.net.URL;
 
 import javax.xml.bind.JAXBElement;
 
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.filter.IFilterCreator;
@@ -63,16 +64,17 @@ public class TranProLinFilterCreator implements IFilterCreator
    *      org.kalypso.ogc.sensor.IObservation, java.net.URL)
    */
   @Override
-  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context )
-      throws SensorException
+  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation baseObs, final URL context ) throws SensorException
   {
-    final TranProLinFilterType ft = (TranProLinFilterType)aft;
+    final TranProLinFilterType ft = (TranProLinFilterType) aft;
 
     String axisTypes = ft.getAxisTypes();
     if( axisTypes == null || axisTypes.length() == 0 || axisTypes.indexOf( '*' ) > -1 )
-      axisTypes=null;
-    final TranProLinFilter filter = new TranProLinFilter( ft.getDateBegin().getTime(), ft.getDateEnd().getTime(), ft
-        .getOperator(), ft.getOperandBegin().doubleValue(), ft.getOperandEnd().doubleValue(), ft.getStatusToMerge(),axisTypes );
+      axisTypes = null;
+
+    final DateRange range = new DateRange( ft.getDateBegin().getTime(), ft.getDateEnd().getTime() );
+
+    final TranProLinFilter filter = new TranProLinFilter( range, ft.getOperator(), ft.getOperandBegin().doubleValue(), ft.getOperandEnd().doubleValue(), ft.getStatusToMerge(), axisTypes );
 
     final JAXBElement< ? extends AbstractFilterType> innerFilterElement = ft.getFilter();
     final AbstractFilterType innerFilter = innerFilterElement == null ? null : innerFilterElement.getValue();

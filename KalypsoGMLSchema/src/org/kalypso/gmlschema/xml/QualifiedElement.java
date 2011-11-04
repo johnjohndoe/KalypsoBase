@@ -111,7 +111,7 @@ public class QualifiedElement
   {
     if( obj instanceof QualifiedElement )
     {
-      final QualifiedElement lEl = ((QualifiedElement) obj);
+      final QualifiedElement lEl = (QualifiedElement) obj;
       return m_qName == lEl.m_qName;
     }
 

@@ -44,15 +44,16 @@ package org.kalypso.metadoc.impl;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.ISupplier;
 import org.kalypso.metadoc.IExporter;
+import org.kalypso.metadoc.KalypsoMetaDocPlugin;
 import org.kalypso.metadoc.ui.ExportableTreeItem;
 
 /**
@@ -141,17 +142,18 @@ public class MultiExporter extends AbstractExporter
   {
     final Collection<IExporter> exporters = new ArrayList<IExporter>();
 
-    for( final Entry<String, Object> entry : arguments.entrySet() )
+    final String[] allKeys = arguments.getAllKeys();
+
+    for( final String key : allKeys )
     {
-      final String key = entry.getKey();
       if( key.startsWith( exporterKey ) )
       {
         try
         {
-          final Arguments args = (Arguments) entry.getValue();
+          final Arguments args = arguments.getArguments( key );
           final String exporterId = args.getProperty( "id" );
           if( exporterId == null )
-            throw new CoreException( StatusUtilities.createWarningStatus( "Exporter ohne id konfiguriert: " + key ) );
+            throw new CoreException( new Status( IStatus.WARNING, KalypsoMetaDocPlugin.getId(), "Exporter ohne id konfiguriert: " + key ) );
 
           final IExporter exporter = MetadocExtensions.retrieveExporter( exporterId );
           // important: initialise the exporter

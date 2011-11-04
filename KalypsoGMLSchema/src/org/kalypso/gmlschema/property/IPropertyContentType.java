@@ -37,7 +37,7 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
 /**
  * TODO: insert type comment here
- *
+ * 
  * @author doemming
  */
 public interface IPropertyContentType extends IInitialize

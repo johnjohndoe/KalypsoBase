@@ -46,10 +46,9 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractGMLXPathFunction implements IGMLXPathFunction
 {
-
   private final String m_name;
 
-  private Pattern m_pattern;
+  private final Pattern m_pattern;
 
   public AbstractGMLXPathFunction( final String name )
   {
@@ -62,7 +61,7 @@ public abstract class AbstractGMLXPathFunction implements IGMLXPathFunction
    *      org.kalypsodeegree_impl.model.feature.path.Cond)
    */
   @Override
-  public String getArgument( Matcher matcher, GMLXPathString cond )
+  public String getArgument( final Matcher matcher, final GMLXPathString cond )
   {
     final String condition = cond.getCond();
     final int start = matcher.start( 2 );

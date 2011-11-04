@@ -81,6 +81,7 @@ public class ObservationAssert extends Assert
   {
     m_compareName = false;
   }
+
   public void ignoreHref( )
   {
     m_compareHref = false;

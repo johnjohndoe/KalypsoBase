@@ -139,7 +139,7 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
         position = GeometryFactory.createGM_Position( tuple[0], tuple[1] );
       }
       else
-        // >2
+      // >2
       {
         position = GeometryFactory.createGM_Position( tuple[0], tuple[1], tuple[2] );
       }

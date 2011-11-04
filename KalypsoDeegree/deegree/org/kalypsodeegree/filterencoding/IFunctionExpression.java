@@ -50,9 +50,9 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IFunctionExpression
 {
-  public String getName( );
+  String getName( );
 
-  public String getLabel( );
+  String getLabel( );
 
-  public Object evaluate( final Feature feature, final List<Expression> args ) throws FilterEvaluationException;
+  Object evaluate( Feature feature, List<Expression> args ) throws FilterEvaluationException;
 }

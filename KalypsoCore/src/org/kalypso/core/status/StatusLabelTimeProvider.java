@@ -50,7 +50,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 
 /**
  * @author Gernot Belger
- *
  */
 public class StatusLabelTimeProvider extends StatusLabelProvider
 {

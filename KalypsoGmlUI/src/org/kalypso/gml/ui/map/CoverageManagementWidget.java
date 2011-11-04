@@ -132,7 +132,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
-import org.kalypso.ui.editor.gmleditor.command.MoveFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.styleeditor.viewer.ColorMapViewer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;

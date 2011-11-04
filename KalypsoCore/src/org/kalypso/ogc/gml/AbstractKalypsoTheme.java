@@ -55,8 +55,6 @@ import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.i18n.I10nString;
@@ -75,7 +73,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme
 {
-  private static interface IListenerRunnable
+  protected static interface IListenerRunnable
   {
     void visit( final IKalypsoThemeListener l );
   }
@@ -89,11 +87,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   private final Map<String, String> m_properties = Collections.synchronizedMap( new HashMap<String, String>() );
 
   private final IMapModell m_mapModel;
-
-  /**
-   * Externally set envelope for performance reasons
-   */
-  private GM_Envelope m_activeEnvelope = null;
 
   /**
    * Stores the relative URL or an URN for an icon, which can be used for the layer in a legend. May be null.
@@ -133,6 +126,8 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    */
   private String m_id;
 
+  private GM_Envelope m_activeEnvelope;
+
   /**
    * The constructor.
    * 
@@ -160,7 +155,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * Runns the given runnable on every listener in a safe way.
    */
-  private void acceptListenersRunnable( final IListenerRunnable r )
+  protected void acceptListenersRunnable( final IListenerRunnable r )
   {
     final IKalypsoThemeListener[] listeners = m_listeners.toArray( new IKalypsoThemeListener[m_listeners.size()] );
     for( final IKalypsoThemeListener l : listeners )
@@ -488,12 +483,6 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
         return KalypsoCoreExtensions.createThemeInfo( themeInfoId, this );
     }
 
-    if( ISelection.class.isAssignableFrom( adapter ) )
-      return StructuredSelection.EMPTY;
-
-    if( IKalypsoTheme.class.equals( adapter ) )
-      return this;
-
     return super.getAdapter( adapter );
   }
 
@@ -568,6 +557,9 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     m_id = id;
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#getId()
+   */
   @Override
   public String getId( )
   {
@@ -575,16 +567,12 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   }
 
   /**
-   * Performance HACK: the current envelope for painting. Should NOT be called by clients, only within this API.
+   * TODO bad idea - handling an envelope from the outside of a theme. must be part of the implementing theme
+   * (encapsulation of classes!)
    */
   @Override
   public void setActiveEnvelope( final GM_Envelope boundingBox )
   {
     m_activeEnvelope = boundingBox;
-  }
-
-  protected GM_Envelope getActiveEnvelope( )
-  {
-    return m_activeEnvelope;
   }
 }

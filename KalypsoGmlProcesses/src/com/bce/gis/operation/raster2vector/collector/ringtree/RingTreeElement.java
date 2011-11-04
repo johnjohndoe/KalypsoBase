@@ -32,11 +32,11 @@ public class RingTreeElement
   @SuppressWarnings("hiding")
   public RingTreeElement( final LinearRing lr, final int index, final Coordinate innerCrd )
   {
-    this.linearRing = lr;
+    linearRing = lr;
     this.index = index;
     this.innerCrd = innerCrd;
 
-    this.pir = (lr == null) ? null : new SimplePointInRing( lr );
+    pir = lr == null ? null : new SimplePointInRing( lr );
   }
 
   public void addChild( final RingTreeElement rte )

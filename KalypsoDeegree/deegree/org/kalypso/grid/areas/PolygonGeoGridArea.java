@@ -63,7 +63,7 @@ public class PolygonGeoGridArea extends AbstractGeoGridArea
   /**
    * The area geometry.
    */
-  private Geometry m_geom;
+  private final Geometry m_geom;
 
   /**
    * The constructor.
@@ -73,7 +73,7 @@ public class PolygonGeoGridArea extends AbstractGeoGridArea
    * @param geom
    *          The area geometry.
    */
-  public PolygonGeoGridArea( IGeoGrid grid, Geometry geom )
+  public PolygonGeoGridArea( final IGeoGrid grid, final Geometry geom )
   {
     super( grid, geom );
 
@@ -84,9 +84,9 @@ public class PolygonGeoGridArea extends AbstractGeoGridArea
    * @see org.kalypso.grid.areas.AbstractGeoGridArea#contains(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
   @Override
-  public boolean contains( int x, int y, Coordinate coordinate ) throws GeoGridException
+  public boolean contains( final int x, final int y, final Coordinate coordinate ) throws GeoGridException
   {
-    boolean contains = super.contains( x, y, coordinate );
+    final boolean contains = super.contains( x, y, coordinate );
     if( contains == false )
       return false;
 

@@ -44,10 +44,8 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 
-/** 
- * 
+/**
  * @author Felipe Maximino
- *
  */
 public final class GMLConstants
 {

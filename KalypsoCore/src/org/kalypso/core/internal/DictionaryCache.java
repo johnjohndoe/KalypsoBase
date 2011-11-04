@@ -60,7 +60,7 @@ import org.shiftone.cache.policy.lru.LruCacheFactory;
  */
 public class DictionaryCache
 {
-  private final int cacheSize = 20;
+  private final static int CACHE_SIZE = 20;
 
   private final IFeatureProviderFactory m_factory = new GmlSerializerFeatureProviderFactory();
 
@@ -69,7 +69,7 @@ public class DictionaryCache
   public DictionaryCache( )
   {
     // REMARK: we give a long period, as we cannod void the registration of the reaper-timer
-    final Cache cache = new LruCacheFactory().newInstance( "DictionaryCache" + System.currentTimeMillis(), 1000 * 60 * 5, cacheSize );
+    final Cache cache = new LruCacheFactory().newInstance( "DictionaryCache" + System.currentTimeMillis(), 1000 * 60 * 5, CACHE_SIZE );
 
     final MissHandler missHandler = new MissHandler()
     {
@@ -96,8 +96,8 @@ public class DictionaryCache
       throw new IllegalArgumentException( "Unknown dictionary: " + urn );
     }
 
-      final URL url = new URI( uri ).toURL();
-      return GmlSerializer.createGMLWorkspace( url, m_factory );
+    final URL url = new URI( uri ).toURL();
+    return GmlSerializer.createGMLWorkspace( url, m_factory );
   }
 
   public GMLWorkspace get( final String urn )

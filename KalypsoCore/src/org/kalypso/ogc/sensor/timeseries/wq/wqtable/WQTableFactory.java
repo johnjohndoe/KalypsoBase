@@ -16,6 +16,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.binding.ratingtable.ObjectFactory;
 import org.kalypso.binding.ratingtable.RatingTable;
 import org.kalypso.binding.ratingtable.RatingTableList;
@@ -30,11 +31,11 @@ import org.xml.sax.InputSource;
  * 
  * @author schlienger
  */
-public class WQTableFactory implements ISerializer<WQTableSet>
+public final class WQTableFactory implements ISerializer<WQTableSet>
 {
-  private final static ObjectFactory OF = new ObjectFactory();
+  private static final ObjectFactory OF = new ObjectFactory();
 
-  private final static JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( ObjectFactory.class );
 
   private WQTableFactory( )
   {
@@ -54,6 +55,7 @@ public class WQTableFactory implements ISerializer<WQTableSet>
     try
     {
       final Unmarshaller unm = JC.createUnmarshaller();
+      @SuppressWarnings("unchecked")
       final JAXBElement<RatingTableList> element = (JAXBElement<RatingTableList>) unm.unmarshal( ins );
       final RatingTableList xmlTableList = element.getValue();
 
@@ -92,15 +94,15 @@ public class WQTableFactory implements ISerializer<WQTableSet>
         if( strX.length != strY.length )
           throw new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory.2" ) ); //$NON-NLS-1$
 
-        final double[] W = new double[strX.length];
-        final double[] Q = new double[strX.length];
+        final double[] arrW = new double[strX.length];
+        final double[] arrQ = new double[strX.length];
         for( int i = 0; i < strX.length; i++ )
         {
-          W[i] = Double.parseDouble( strX[i] );
-          Q[i] = Double.parseDouble( strY[i] );
+          arrW[i] = Double.parseDouble( strX[i] );
+          arrQ[i] = Double.parseDouble( strY[i] );
         }
 
-        tables[iTable++] = new WQTable( validity, offset == null ? 0 : offset, W, Q );
+        tables[iTable++] = new WQTable( validity, offset == null ? 0 : offset, arrW, arrQ );
       }
 
       return new WQTableSet( tables, xmlTableList.getFromType(), xmlTableList.getToType() );
@@ -138,8 +140,8 @@ public class WQTableFactory implements ISerializer<WQTableSet>
         final double[] w = new double[pairs.length];
         final double[] q = new double[pairs.length];
         WQPair.convert2doubles( pairs, w, q );
-        xmlTable.setX( ArrayUtils.toString( w ).replaceAll( "\\{", "" ).replaceAll( "\\}", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        xmlTable.setY( ArrayUtils.toString( q ).replaceAll( "\\{", "" ).replaceAll( "\\}", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        xmlTable.setX( ArrayUtils.toString( w ).replaceAll( "\\{", StringUtils.EMPTY ).replaceAll( "\\}", StringUtils.EMPTY ) ); //$NON-NLS-1$ //$NON-NLS-2$ 
+        xmlTable.setY( ArrayUtils.toString( q ).replaceAll( "\\{", StringUtils.EMPTY ).replaceAll( "\\}", StringUtils.EMPTY ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
         xmlTables.getTable().add( xmlTable );
       }

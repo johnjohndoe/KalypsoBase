@@ -45,4 +45,5 @@ package org.kalypsodeegree.graphics.displayelements;
  * @version $Revision$ $Date$
  */
 public interface PointDisplayElement extends GeometryDisplayElement
-{}
+{
+}

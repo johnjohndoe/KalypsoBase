@@ -1,6 +1,5 @@
 package org.kalypso.gml.processes.constDelaunay.DelaunayImpl;
 
-
 /*
  * TriangulationAlgorithm class. Absract. Superclass for actual algorithms. Has several abstract function members -
  * including the triangulation member which actually computes the triangulation.
@@ -8,7 +7,7 @@ package org.kalypso.gml.processes.constDelaunay.DelaunayImpl;
 abstract class TriangulationAlgorithm
 {
   @SuppressWarnings("unused")
-  private String algName;
+  private final String algName;
 
   // Variables and constants for animation state.
   final int m_intNumberOfStates = 5;
@@ -25,7 +24,7 @@ abstract class TriangulationAlgorithm
 
   static final int edgeState = 5;
 
-  public TriangulationAlgorithm( String name )
+  public TriangulationAlgorithm( final String name )
   {
     algName = name;
 

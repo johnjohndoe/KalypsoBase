@@ -48,7 +48,9 @@ import org.kalypsodeegree.model.feature.Feature;
 public class ListSizeExpression extends AbstractFunctionExpression
 {
   /**
-   * Returns the size of a list-property. <br/>Works only for list-properties. <br/>The following arguments are needed:
+   * Returns the size of a list-property. <br/>
+   * Works only for list-properties. <br/>
+   * The following arguments are needed:
    * <ul>
    * <li>The property-name of the list-property.</li>
    * </ul>

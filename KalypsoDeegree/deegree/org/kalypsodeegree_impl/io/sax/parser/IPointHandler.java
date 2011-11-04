@@ -45,7 +45,6 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * @author Felipe Maximino
- *
  */
 public interface IPointHandler extends IGMLElementHandler<GM_Point>
 {

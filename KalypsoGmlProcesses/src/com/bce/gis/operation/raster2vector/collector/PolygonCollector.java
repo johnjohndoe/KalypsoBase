@@ -202,7 +202,7 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
 
         for( int i = 0; i < m_intervals.length; i++ )
         {
-          if( (m_intervals[i].min == grenze0 && m_intervals[i].max == grenze1) || (m_intervals[i].min == grenze1 && m_intervals[i].max == grenze0) )
+          if( m_intervals[i].min == grenze0 && m_intervals[i].max == grenze1 || m_intervals[i].min == grenze1 && m_intervals[i].max == grenze0 )
             return i;
         }
       }

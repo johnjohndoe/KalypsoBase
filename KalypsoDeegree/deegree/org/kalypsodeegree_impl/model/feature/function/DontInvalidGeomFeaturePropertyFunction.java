@@ -71,7 +71,7 @@ public class DontInvalidGeomFeaturePropertyFunction extends FeaturePropertyFunct
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
+  public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     return currentValue;
   }

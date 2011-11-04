@@ -63,7 +63,7 @@ public class RectifiedGridCoverage extends Feature_Impl implements ICoverage
 
   private static final QName QNAME_PROP_BOUNDED_BY = new QName( NS.GML3, "boundedBy" );
 
-  public RectifiedGridCoverage( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public RectifiedGridCoverage( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -131,11 +131,11 @@ public class RectifiedGridCoverage extends Feature_Impl implements ICoverage
   {
     try
     {
-      GM_Envelope property = getProperty( QNAME_PROP_BOUNDED_BY, GM_Envelope.class );
-      IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final GM_Envelope property = getProperty( QNAME_PROP_BOUNDED_BY, GM_Envelope.class );
+      final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       return geoTransformer.transform( property );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
       return null;

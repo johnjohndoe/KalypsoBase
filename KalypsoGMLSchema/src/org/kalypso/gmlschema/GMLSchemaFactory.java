@@ -70,7 +70,7 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 
 /**
  * Factory for various GML-Schema elements.
- *
+ * 
  * @author doemming
  */
 public class GMLSchemaFactory
@@ -158,7 +158,7 @@ public class GMLSchemaFactory
       Debug.LOADING.printf( "Failed to load schema:%n" ); //$NON-NLS-1$
       Debug.LOADING.printStackTrace( e );
 
-      throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaFactory.0", e.getMessage()), e ); //$NON-NLS-1$
+      throw new GMLSchemaException( Messages.getString( "org.kalypso.gmlschema.GMLSchemaFactory.0", e.getMessage() ), e ); //$NON-NLS-1$
     }
 
     final Schema schema = schemaDocument.getSchema();
@@ -174,7 +174,7 @@ public class GMLSchemaFactory
 
       Debug.LOADING.printf( "Schema binding failed, xmlbeans returned null.%n" ); //$NON-NLS-1$
 
-      throw new GMLSchemaException( Messages.getString("org.kalypso.gmlschema.GMLSchemaFactory.1") ); //$NON-NLS-1$
+      throw new GMLSchemaException( Messages.getString( "org.kalypso.gmlschema.GMLSchemaFactory.1" ) ); //$NON-NLS-1$
     }
     // TODO: read schema version from schemadocument
     // it would be nice to do something like that:

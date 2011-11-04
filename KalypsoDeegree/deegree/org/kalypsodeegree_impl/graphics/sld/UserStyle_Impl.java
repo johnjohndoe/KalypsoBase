@@ -53,7 +53,7 @@ import org.kalypsodeegree_impl.tools.Debug;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- *
+ * 
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
@@ -79,7 +79,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
 
   /**
    * The Title is a human-readable short description for the style that might be displayed in a GUI pick list.
-   *
+   * 
    * @return the title of the User-Style
    */
   @Override
@@ -90,19 +90,19 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
 
   /**
    * sets the <Title>
-   *
+   * 
    * @param title
-   *            the title of the User-Style
+   *          the title of the User-Style
    */
   @Override
   public void setTitle( final String title )
   {
-    this.m_title = title;
+    m_title = title;
   }
 
   /**
    * the Abstract is a more exact description that may be a few paragraphs long.
-   *
+   * 
    * @return the abstract of the User-Style
    */
   @Override
@@ -113,20 +113,20 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
 
   /**
    * sets the <Abstract>
-   *
+   * 
    * @param abstract_
-   *            the abstract of the User-Style
+   *          the abstract of the User-Style
    */
   @Override
   public void setAbstract( final String abstract_ )
   {
-    this.m_abstract_ = abstract_;
+    m_abstract_ = abstract_;
   }
 
   /**
    * The IsDefault element identifies whether a style is the default style of a layer, for use in SLD library mode when
    * rendering or for storing inside of a map server. The default value is <tt>false</tt>.
-   *
+   * 
    * @return true if the style ist the default style
    */
   @Override
@@ -137,13 +137,13 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
 
   /**
    * sets the <Default>
-   *
+   * 
    * @param default_
    */
   @Override
   public void setDefault( final boolean default_ )
   {
-    this.m_default_ = default_;
+    m_default_ = default_;
   }
 
   /**
@@ -156,7 +156,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
    * The FeatureTypeStyle element identifies that explicit separation in SLD between the handling of layers and the
    * handling of features of specific feature types. The layer concept is unique to WMS and SLD, but features are used
    * more generally, such as in WFS and GML, so this explicit separation is important.
-   *
+   * 
    * @return the FeatureTypeStyles of a User-Style
    */
   @Override
@@ -175,7 +175,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
   {
     for( int i = 0; i < m_featureTypeStyles.size(); i++ )
     {
-      if( m_featureTypeStyles.get( i ) != null && (m_featureTypeStyles.get( i )).getName().equals( featureTypeStyleName ) )
+      if( m_featureTypeStyles.get( i ) != null && m_featureTypeStyles.get( i ).getName().equals( featureTypeStyleName ) )
         return m_featureTypeStyles.get( i );
     }
     return null;
@@ -183,14 +183,14 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
 
   /**
    * sets the <FeatureTypeStyle>
-   *
+   * 
    * @param featureTypeStyles
-   *            the FeatureTypeStyles of a User-Style
+   *          the FeatureTypeStyles of a User-Style
    */
   @Override
   public void setFeatureTypeStyles( final FeatureTypeStyle[] featureTypeStyles )
   {
-    this.m_featureTypeStyles.clear();
+    m_featureTypeStyles.clear();
 
     if( featureTypeStyles != null )
     {
@@ -203,9 +203,9 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
 
   /**
    * Adds a <FeatureTypeStyle>
-   *
+   * 
    * @param featureTypeStyle
-   *            a FeatureTypeStyle to add
+   *          a FeatureTypeStyle to add
    */
   @Override
   public void addFeatureTypeStyle( final FeatureTypeStyle featureTypeStyle )
@@ -227,7 +227,7 @@ public class UserStyle_Impl extends Style_Impl implements UserStyle, Marshallabl
 
   /**
    * exports the content of the UserStyle as XML formated String
-   *
+   * 
    * @return xml representation of the UserStyle
    */
   @Override

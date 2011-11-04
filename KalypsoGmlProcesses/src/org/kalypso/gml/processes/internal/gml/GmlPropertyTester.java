@@ -46,7 +46,6 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.expressions.PropertyTester;
-import org.kalypso.core.catalog.FeatureTypePropertiesCatalog;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -54,6 +53,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProperty;
@@ -327,7 +327,7 @@ public class GmlPropertyTester extends PropertyTester
     final Feature feature = (Feature) receiver;
 
     final String catalogProperty = ObjectUtils.toString( args[0] );
-    final Boolean expected = Boolean.valueOf( ObjectUtils.toString( expectedValue  ));
+    final Boolean expected = Boolean.valueOf( ObjectUtils.toString( expectedValue ) );
 
     final boolean isOn = FeatureTypePropertiesCatalog.isPropertyOn( feature, catalogProperty );
     return isOn == expected;

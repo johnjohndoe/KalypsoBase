@@ -45,7 +45,6 @@ import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 
 /**
  * @author Felipe Maximino
- *
  */
 public interface IMultiPointHandler extends IGMLElementHandler<GM_MultiPoint>
 {

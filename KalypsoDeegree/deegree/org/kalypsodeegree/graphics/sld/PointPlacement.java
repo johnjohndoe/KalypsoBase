@@ -74,8 +74,7 @@ public interface PointPlacement
   double[] getAnchorPoint( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see #getAnchorPoint(Feature)
-   *      <p>
+   * @see #getAnchorPoint(Feature) <p>
    * @param anchorPoint
    *          anchorPoint for the PointPlacement
    */
@@ -100,8 +99,7 @@ public interface PointPlacement
   double[] getDisplacement( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see #getDisplacement(Feature)
-   *      <p>
+   * @see #getDisplacement(Feature) <p>
    * @param displacement
    */
   void setDisplacement( double[] displacement );
@@ -132,10 +130,9 @@ public interface PointPlacement
    * 
    * @return true, if it should be optimized
    */
-  boolean isAuto();
+  boolean isAuto( );
 
   /**
-   * 
    * <p>
    * 
    * @param auto

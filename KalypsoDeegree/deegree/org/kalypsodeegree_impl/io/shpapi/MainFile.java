@@ -96,7 +96,7 @@ public class MainFile
   /**
    * Construct a MainFile from a file name.
    */
-  public MainFile( String url ) throws IOException
+  public MainFile( final String url ) throws IOException
   {
     rafShp = new RandomAccessFile( url + _shp, "r" );
 
@@ -108,7 +108,7 @@ public class MainFile
   /**
    * Construct a MainFile from a file name.
    */
-  public MainFile( String url, String rwflag ) throws IOException
+  public MainFile( final String url, final String rwflag ) throws IOException
   {
     // delet file if it exists
     File file = new File( url + _shp );
@@ -164,8 +164,8 @@ public class MainFile
     /*
      * only for PolyLines, Polygons and MultiPoints minimum bounding rectangles are defined
      */
-    if( (shpType == ShapeConst.SHAPE_TYPE_POLYLINE) || (shpType == ShapeConst.SHAPE_TYPE_POLYGON) || (shpType == ShapeConst.SHAPE_TYPE_MULTIPOINT) || (shpType == ShapeConst.SHAPE_TYPE_POLYLINEZ)
-        || (shpType == ShapeConst.SHAPE_TYPE_POLYGONZ) || (shpType == ShapeConst.SHAPE_TYPE_MULTIPOINTZ) )
+    if( shpType == ShapeConst.SHAPE_TYPE_POLYLINE || shpType == ShapeConst.SHAPE_TYPE_POLYGON || shpType == ShapeConst.SHAPE_TYPE_MULTIPOINT || shpType == ShapeConst.SHAPE_TYPE_POLYLINEZ
+        || shpType == ShapeConst.SHAPE_TYPE_POLYGONZ || shpType == ShapeConst.SHAPE_TYPE_MULTIPOINTZ )
       return new SHPEnvelope( recBuf );
 
     return null;
@@ -206,7 +206,7 @@ public class MainFile
     }
   }
 
-  private byte[] readRecord( int recordNumber ) throws IOException
+  private byte[] readRecord( final int recordNumber ) throws IOException
   {
     // index in IndexArray (see IndexFile)
     final int iaIndex = recordNumber - 1;
@@ -239,7 +239,7 @@ public class MainFile
    * method: public void write(byte[] bytearray) <BR>
    * appends a bytearray to the shape file <BR>
    */
-  public void write( byte[] bytearray, IndexRecord record, SHPEnvelope mbr ) throws IOException
+  public void write( final byte[] bytearray, final IndexRecord record, final SHPEnvelope mbr ) throws IOException
   {
     rafShp.seek( record.offset * 2 );
     rafShp.write( bytearray );
@@ -250,7 +250,7 @@ public class MainFile
    * method: public void writeHeader(int filelength, byte shptype, SHPEnvelope mbr) <BR>
    * writes a header to the shape and index file <BR>
    */
-  public void writeHeader( int filelength, byte shptype, SHPEnvelope mbr ) throws IOException
+  public void writeHeader( final int filelength, final byte shptype, final SHPEnvelope mbr ) throws IOException
   {
     sfh.writeHeader( filelength, shptype, mbr );
     shx.writeHeader( shptype, mbr );

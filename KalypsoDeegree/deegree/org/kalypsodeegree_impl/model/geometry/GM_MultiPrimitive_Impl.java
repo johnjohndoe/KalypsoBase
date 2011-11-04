@@ -120,7 +120,7 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
   @Override
   public GM_Primitive[] getAllPrimitives( )
   {
-    final GM_Primitive[] gmos = new GM_Primitive[this.getSize()];
+    final GM_Primitive[] gmos = new GM_Primitive[getSize()];
 
     return m_aggregate.toArray( gmos );
   }

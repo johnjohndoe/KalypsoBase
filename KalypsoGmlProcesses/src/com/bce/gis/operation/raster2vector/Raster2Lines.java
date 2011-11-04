@@ -160,7 +160,7 @@ public class Raster2Lines implements IGeoGridWalker
       }
       catch( final LinkedCoordinateException lce )
       {
-        throw new GeoGridException( Messages.getString("com.bce.gis.operation.raster2vector.Raster2Lines.0"), lce ); //$NON-NLS-1$
+        throw new GeoGridException( Messages.getString( "com.bce.gis.operation.raster2vector.Raster2Lines.0" ), lce ); //$NON-NLS-1$
       }
     }
   }
@@ -267,7 +267,7 @@ public class Raster2Lines implements IGeoGridWalker
       }
     }
     else
-      throw new GeoGridException( Messages.getString("com.bce.gis.operation.raster2vector.Raster2Lines.1") + x + Messages.getString("com.bce.gis.operation.raster2vector.Raster2Lines.2") + y, null ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new GeoGridException( Messages.getString( "com.bce.gis.operation.raster2vector.Raster2Lines.1" ) + x + Messages.getString( "com.bce.gis.operation.raster2vector.Raster2Lines.2" ) + y, null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -295,7 +295,7 @@ public class Raster2Lines implements IGeoGridWalker
 
     final double value = m_grenzen[index];
 
-    if( (z1 <= value && value < z2) || (z2 <= value && value < z1) )
+    if( z1 <= value && value < z2 || z2 <= value && value < z1 )
       zFaktor = (value - z1) / (z2 - z1);
 
     if( zFaktor < 0 || zFaktor >= 1 )

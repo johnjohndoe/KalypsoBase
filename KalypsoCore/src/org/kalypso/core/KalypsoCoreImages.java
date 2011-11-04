@@ -58,7 +58,9 @@ public final class KalypsoCoreImages
   {
     STATUS_IMAGE_OK("icons/status/ok.gif"), //$NON-NLS-1$
     STATUS_IMAGE_OK_32("icons/status/ok_32.png"), //$NON-NLS-1$
-    STATUS_IMAGE_OK_48("icons/status/ok_48.png"); //$NON-NLS-1$
+    STATUS_IMAGE_OK_48("icons/status/ok_48.png"), //$NON-NLS-1$
+    STATUS_COPY_CLIPBOARD("icons/status/paste_clipboard.gif"), //$NON-NLS-1$
+    STATUS_EMAIL("icons/status/email.png"); //$NON-NLS-1$
 
     private final String m_imagePath;
 

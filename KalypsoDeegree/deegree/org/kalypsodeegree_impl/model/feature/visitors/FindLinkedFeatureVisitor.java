@@ -57,7 +57,7 @@ public class FindLinkedFeatureVisitor implements FeatureVisitor
 {
   private final String[] m_hrefs;
 
-  private Map<Feature, Set<IRelationType>> m_linkedFeatures = new HashMap<Feature, Set<IRelationType>>();
+  private final Map<Feature, Set<IRelationType>> m_linkedFeatures = new HashMap<Feature, Set<IRelationType>>();
 
   public FindLinkedFeatureVisitor( final String[] hrefs )
   {

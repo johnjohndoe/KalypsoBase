@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  * This visitor is used to i10 gml-dictionaries.<br>
  * For every string-property (even lists of strings) that start with '%', the value is retrieved from the given
  * properties for the key (after the '%').
- *
+ * 
  * @author Monika Thül
  * @author Gernot Belger
  */
@@ -61,7 +61,7 @@ public class I18nFeatureVisitor implements FeatureVisitor
 {
   private final Properties m_properties;
 
-  public I18nFeatureVisitor( Properties properties )
+  public I18nFeatureVisitor( final Properties properties )
   {
     m_properties = properties;
   }
@@ -70,10 +70,10 @@ public class I18nFeatureVisitor implements FeatureVisitor
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public boolean visit( Feature f )
+  public boolean visit( final Feature f )
   {
-    IPropertyType[] properties = f.getFeatureType().getProperties();
-    for( IPropertyType propertyType : properties )
+    final IPropertyType[] properties = f.getFeatureType().getProperties();
+    for( final IPropertyType propertyType : properties )
     {
       if( propertyType instanceof IValuePropertyType )
       {
@@ -117,7 +117,7 @@ public class I18nFeatureVisitor implements FeatureVisitor
     if( entry.charAt( 0 ) != '%' )
       return entry;
 
-    String key = entry.substring( 1 );
+    final String key = entry.substring( 1 );
     if( m_properties.containsKey( key ) )
       return m_properties.getProperty( key );
 

@@ -37,9 +37,6 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
- * 
- * 
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -54,5 +51,5 @@ public interface GM_OrientableSurface extends GM_OrientablePrimitive
   /**
    * returns the boundary of the surface
    */
-  GM_SurfaceBoundary getSurfaceBoundary();
+  GM_SurfaceBoundary getSurfaceBoundary( );
 }

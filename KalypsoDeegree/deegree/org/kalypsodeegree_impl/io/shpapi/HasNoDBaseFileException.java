@@ -38,8 +38,8 @@ package org.kalypsodeegree_impl.io.shpapi;
 
 /**
  * class defining an exception that is thrown if no dBase-file is associated with a shape-file
- * 
- * <p-------------------------------------------------------
+ * <p
+ * -------------------------------------------------------
  * </p>
  * 
  * @version 05.04.2000
@@ -52,16 +52,16 @@ public final class HasNoDBaseFileException extends Exception
 
   private String message = "org.kalypsodeegree_impl.io.shpapi.HasNoDBaseFileException";
 
-  //constructor
-  public HasNoDBaseFileException()
+  // constructor
+  public HasNoDBaseFileException( )
   {
 
     super();
 
   }
 
-  //constructor
-  public HasNoDBaseFileException( String message )
+  // constructor
+  public HasNoDBaseFileException( final String message )
   {
 
     super( message );
@@ -71,10 +71,10 @@ public final class HasNoDBaseFileException extends Exception
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
 
-    return message + "\n" + this.getLocalizedMessage();
+    return message + "\n" + getLocalizedMessage();
 
   }
 

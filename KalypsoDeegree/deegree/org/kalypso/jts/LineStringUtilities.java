@@ -55,7 +55,7 @@ public class LineStringUtilities
    * utility to flip a lines string (change its node orientation) input: line string output: flipped line string
    * 
    * @param inputLine
-   *            line string to be flipped
+   *          line string to be flipped
    */
   public static LineString changeOrientation( final LineString inputLine )
   {
@@ -67,8 +67,8 @@ public class LineStringUtilities
       newCoordinates.add( coordinatesInputLine[i] );
     }
 
-    GeometryFactory factory = new GeometryFactory( inputLine.getPrecisionModel(), inputLine.getSRID() );
-    LineString flippedLine = factory.createLineString( newCoordinates.toArray( new Coordinate[] {} ) );
+    final GeometryFactory factory = new GeometryFactory( inputLine.getPrecisionModel(), inputLine.getSRID() );
+    final LineString flippedLine = factory.createLineString( newCoordinates.toArray( new Coordinate[] {} ) );
 
     return flippedLine;
   }

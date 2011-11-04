@@ -76,7 +76,7 @@ public class Debug
    * @param levelStr
    *          must be a String that equals a known debuglevel.
    */
-  public static void setLevel( String levelStr )
+  public static void setLevel( final String levelStr )
   {
     level = 8;
 
@@ -133,7 +133,7 @@ public class Debug
     }
   }
 
-  private static void blank()
+  private static void blank( )
   {
     for( int i = 0; i < method.size(); i++ )
     {
@@ -141,7 +141,7 @@ public class Debug
     }
   }
 
-  public static void debugMethodBegin( String className, String name )
+  public static void debugMethodBegin( final String className, final String name )
   {
     if( level < 2 || level == 7 || level == 8 )
       return;
@@ -156,11 +156,11 @@ public class Debug
     timer.push( new Long( System.currentTimeMillis() ) );
   }
 
-  public static void debugMethodBegin()
+  public static void debugMethodBegin( )
   {
     if( level < 2 || level == 7 || level == 8 )
       return;
-    StackTraceElement element = new Exception().getStackTrace()[1];
+    final StackTraceElement element = new Exception().getStackTrace()[1];
     out.println();
     blank();
     out.println( "---------------- begin -----------------------" );
@@ -172,11 +172,11 @@ public class Debug
     timer.push( new Long( System.currentTimeMillis() ) );
   }
 
-  public static void debugMethodBegin( Object cl, String name )
+  public static void debugMethodBegin( final Object cl, final String name )
   {
     if( cl instanceof String )
     {
-      debugMethodBegin( (String)cl, name );
+      debugMethodBegin( (String) cl, name );
     }
     else
     {
@@ -184,7 +184,7 @@ public class Debug
     }
   }
 
-  public static void debugMethodEnd()
+  public static void debugMethodEnd( )
   {
     if( level < 2 || level == 7 || level == 8 )
       return;
@@ -192,13 +192,13 @@ public class Debug
     long time = 0;
     try
     {
-      name = (String)method.pop();
-      time = ( (Long)timer.pop() ).longValue();
+      name = (String) method.pop();
+      time = ((Long) timer.pop()).longValue();
       time = System.currentTimeMillis() - time;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
-      //  
+      //
     }
     blank();
     out.println( "Method: " + name + "  -  time: " + time );
@@ -206,68 +206,68 @@ public class Debug
     out.println( "----------------- end ------------------------" );
   }
 
-  public static void debugException( Exception e, String additional )
+  public static void debugException( final Exception e, final String additional )
   {
     if( level == 0 )
       return;
     switch( level )
     {
-    case 0:
-      break;
-    case 1:
-      break;
-    case 2:
-      break;
-    case 3:
-      break;
-    case 4:
-      blank();
-      out.println( "l4 Error: " + e.getMessage() );
-      break;
-    case 5:
-      blank();
-      out.println( "l5 Message: " + e.toString() );
-      break;
-    case 6:
-    {
-      blank();
-      out.println( "l6 Message: " + e.getMessage() );
-      blank();
-      e.printStackTrace( out );
-      blank();
-      out.println( additional );
-      break;
-    }
-    case 7:
-    {
-      blank();
-      out.println( "l7 Message: " + e.getMessage() );
-      blank();
-      e.printStackTrace( out );
-      break;
-    }
-    case 8:
-    {
-      blank();
-      e.printStackTrace( out );
-      blank();
-      out.println( "l7 Message: " + e.getMessage() );
-      break;
-    }
-    case 9:
-    {
-      blank();
-      out.println( "l8 Message: " + e.getMessage() );
-      blank();
-      e.printStackTrace( out );
-      blank();
-      out.println( additional );
-      break;
-    }
+      case 0:
+        break;
+      case 1:
+        break;
+      case 2:
+        break;
+      case 3:
+        break;
+      case 4:
+        blank();
+        out.println( "l4 Error: " + e.getMessage() );
+        break;
+      case 5:
+        blank();
+        out.println( "l5 Message: " + e.toString() );
+        break;
+      case 6:
+      {
+        blank();
+        out.println( "l6 Message: " + e.getMessage() );
+        blank();
+        e.printStackTrace( out );
+        blank();
+        out.println( additional );
+        break;
+      }
+      case 7:
+      {
+        blank();
+        out.println( "l7 Message: " + e.getMessage() );
+        blank();
+        e.printStackTrace( out );
+        break;
+      }
+      case 8:
+      {
+        blank();
+        e.printStackTrace( out );
+        blank();
+        out.println( "l7 Message: " + e.getMessage() );
+        break;
+      }
+      case 9:
+      {
+        blank();
+        out.println( "l8 Message: " + e.getMessage() );
+        blank();
+        e.printStackTrace( out );
+        blank();
+        out.println( additional );
+        break;
+      }
     }
   }
 
-  public static void debugSimpleMessage( String message )
+  public static void debugSimpleMessage( final String message )
   {
     if( level != 1 && level != 3 && level != 8 && level != 9 )
       return;
@@ -275,7 +275,7 @@ public class Debug
     out.println( "Debug message: " + message );
   }
 
-  public static void debugObject( String name, Object value )
+  public static void debugObject( final String name, final Object value )
   {
     if( level != 1 && level != 3 && level != 8 && level != 9 )
       return;
@@ -283,7 +283,7 @@ public class Debug
     out.println( "object: " + name + " = " + value );
   }
 
-  public static void debugInt( String name, int value )
+  public static void debugInt( final String name, final int value )
   {
     if( level != 1 && level != 3 && level != 8 && level != 9 )
       return;
@@ -291,7 +291,7 @@ public class Debug
     out.println( "int: " + name + " = " + value );
   }
 
-  public static void debugDouble( String name, double value )
+  public static void debugDouble( final String name, final double value )
   {
     if( level != 1 && level != 3 && level != 8 && level != 9 )
       return;
@@ -299,7 +299,7 @@ public class Debug
     out.println( "double: " + name + " = " + value );
   }
 
-  public static void print( Object caller, String message )
+  public static void print( final Object caller, final String message )
   {
     System.out.println( "_\n" + caller.getClass().getName() );
     System.out.println( message );

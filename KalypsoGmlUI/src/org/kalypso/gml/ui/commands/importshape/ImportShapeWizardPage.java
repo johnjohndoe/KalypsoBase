@@ -209,7 +209,7 @@ public class ImportShapeWizardPage extends WizardPage
   protected boolean validatePage( )
   {
     final IMessageProvider message = doValidate();
-    boolean isValid = message == null;
+    final boolean isValid = message == null;
     if( isValid )
       setMessage( null );
     else

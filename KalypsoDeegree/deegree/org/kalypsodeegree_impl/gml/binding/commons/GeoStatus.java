@@ -76,7 +76,7 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
 
   private final IFeatureBindingCollection<IGeoStatus> m_children = new FeatureBindingCollection<IGeoStatus>( this, IGeoStatus.class, QNAME_PROP_STATUS_CHILD_MEMBER );
 
-  public GeoStatus( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public GeoStatus( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }

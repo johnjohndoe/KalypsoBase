@@ -105,7 +105,7 @@ public class SHPPointz implements ISHPPoint
     this( point.getX(), point.getY(), point.getZ(), 0.0 );
   }
 
-  @SuppressWarnings("hiding") 
+  @SuppressWarnings("hiding")
   public SHPPointz( final double x, final double y, final double z, final double m )
   {
     this.x = x;
@@ -163,7 +163,7 @@ public class SHPPointz implements ISHPPoint
   @Override
   public String toString( )
   {
-    return "SHPPOINTZ" + "[" + this.x + "; " + this.y + "; " + this.z + "; " + this.m + "]";
+    return "SHPPOINTZ" + "[" + x + "; " + y + "; " + z + "; " + m + "]";
   }
 
   @Override

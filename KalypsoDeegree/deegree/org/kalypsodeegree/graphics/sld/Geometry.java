@@ -61,7 +61,7 @@ public interface Geometry
    * sets the name of the geometry property
    * 
    * @param propertyName
-   *            the name of the geometry property
+   *          the name of the geometry property
    */
   void setPropertyName( final PropertyName propertyName );
 }

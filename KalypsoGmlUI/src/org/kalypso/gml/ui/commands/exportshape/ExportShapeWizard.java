@@ -76,7 +76,7 @@ public class ExportShapeWizard extends Wizard implements IWorkbenchWizard
   public ExportShapeWizard( )
   {
     setNeedsProgressMonitor( true );
-    setWindowTitle( Messages.getString("ExportShapeWizard_0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "ExportShapeWizard_0" ) ); //$NON-NLS-1$
   }
 
   protected ShapeSignature createSignature( final Feature[] featureArray )
@@ -95,8 +95,8 @@ public class ExportShapeWizard extends Wizard implements IWorkbenchWizard
 
     final Feature[] featureArray = FeatureSelectionHelper.getFeatures( featureSelection );
     m_selectFeaturesPage = new FeatureSelectionPage( "festureSelection", featureArray, null, featureArray, 1 ); //$NON-NLS-1$
-    m_selectFeaturesPage.setTitle( Messages.getString("ExportShapeWizard_1") ); //$NON-NLS-1$
-    m_selectFeaturesPage.setDescription( Messages.getString("ExportShapeWizard_2") ); //$NON-NLS-1$
+    m_selectFeaturesPage.setTitle( Messages.getString( "ExportShapeWizard_1" ) ); //$NON-NLS-1$
+    m_selectFeaturesPage.setDescription( Messages.getString( "ExportShapeWizard_2" ) ); //$NON-NLS-1$
 
     addPage( m_selectFeaturesPage );
 

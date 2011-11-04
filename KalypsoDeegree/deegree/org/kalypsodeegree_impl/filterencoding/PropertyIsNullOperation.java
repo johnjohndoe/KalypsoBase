@@ -59,7 +59,7 @@ public class PropertyIsNullOperation extends ComparisonOperation
   // PropertyName / Literal
   private Expression m_expression;
 
-  public PropertyIsNullOperation( Expression expression )
+  public PropertyIsNullOperation( final Expression expression )
   {
     super( OperationDefines.PROPERTYISNULL );
     m_expression = expression;
@@ -70,30 +70,30 @@ public class PropertyIsNullOperation extends ComparisonOperation
     return m_expression;
   }
 
-  public void setExpression( Expression expr )
+  public void setExpression( final Expression expr )
   {
     m_expression = expr;
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
-   * methods to validate the structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM
+   * () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
    */
-  public static Operation buildFromDOM( Element element ) throws FilterConstructionException
+  public static Operation buildFromDOM( final Element element ) throws FilterConstructionException
   {
 
     // check if root element's name equals 'PropertyIsNull'
     if( !element.getLocalName().equals( "PropertyIsNull" ) )
       throw new FilterConstructionException( "Name of element does not equal 'PropertyIsNull'!" );
 
-    ElementList children = XMLTools.getChildElements( element );
+    final ElementList children = XMLTools.getChildElements( element );
     if( children.getLength() != 1 )
       throw new FilterConstructionException( "'PropertyIsNull' requires exactly 1 element!" );
 
-    Element child = children.item( 0 );
+    final Element child = children.item( 0 );
     Expression expr = null;
 
     switch( EXPRESSION_DEFINES.getIdByName( child.getLocalName() ) )
@@ -121,7 +121,7 @@ public class PropertyIsNullOperation extends ComparisonOperation
   @Override
   public StringBuffer toXML( )
   {
-    StringBuffer sb = new StringBuffer( 500 );
+    final StringBuffer sb = new StringBuffer( 500 );
     sb.append( "<ogc:" ).append( getOperatorName() ).append( ">" );
     sb.append( m_expression.toXML() );
     sb.append( "</ogc:" ).append( getOperatorName() ).append( ">" );
@@ -129,8 +129,8 @@ public class PropertyIsNullOperation extends ComparisonOperation
   }
 
   /**
-   * Calculates the <tt>PropertyIsNull</tt> -Operation's logical value based on the certain property values of the
-   * given <tt>Feature</tt>.
+   * Calculates the <tt>PropertyIsNull</tt> -Operation's logical value based on the certain property values of the given
+   * <tt>Feature</tt>.
    * 
    * @param feature
    *          that determines the property values
@@ -139,19 +139,20 @@ public class PropertyIsNullOperation extends ComparisonOperation
    *           if the evaluation fails
    */
   @Override
-  public boolean evaluate( Feature feature ) throws FilterEvaluationException
+  public boolean evaluate( final Feature feature ) throws FilterEvaluationException
   {
-    Object value = m_expression.evaluate( feature );
+    final Object value = m_expression.evaluate( feature );
     if( value == null )
       return true;
     return false;
   }
-  
+
   /**
-   * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor, org.kalypsodeegree.filterencoding.Operation, int)
+   * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
+   *      org.kalypsodeegree.filterencoding.Operation, int)
    */
   @Override
-  public void accept( FilterVisitor fv, Operation operation, int depth )
+  public void accept( final FilterVisitor fv, final Operation operation, final int depth )
   {
     fv.visit( this );
   }

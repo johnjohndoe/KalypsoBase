@@ -153,7 +153,7 @@ public class GMLSchemaLabelProvider implements ILabelProvider
     if( element instanceof IRelationType )
     {
       final IRelationType relationType = (IRelationType) element;
-      result.append( "  Relation: " + (relationType).getQName() ); //$NON-NLS-1$
+      result.append( "  Relation: " + relationType.getQName() ); //$NON-NLS-1$
 
       final List<String> strings = new ArrayList<String>();
 

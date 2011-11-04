@@ -56,12 +56,12 @@ public class TimeTools
   /**
    * get the current timestamp in ISO format
    */
-  public static String getISOFormattedTime()
+  public static String getISOFormattedTime( )
   {
-    GregorianCalendar cal = new GregorianCalendar();
-    StringBuffer sb = new StringBuffer( 200 );
+    final GregorianCalendar cal = new GregorianCalendar();
+    final StringBuffer sb = new StringBuffer( 200 );
     sb.append( cal.get( Calendar.YEAR ) + "-" );
-    sb.append( ( cal.get( Calendar.MONTH ) + 1 ) + "-" );
+    sb.append( cal.get( Calendar.MONTH ) + 1 + "-" );
     sb.append( cal.get( Calendar.DAY_OF_MONTH ) + " " );
     if( cal.get( Calendar.HOUR_OF_DAY ) < 10 )
     {
@@ -94,11 +94,11 @@ public class TimeTools
   /**
    * get the current timestamp in ISO format
    */
-  public static String getISOFormattedTime( Calendar cal )
+  public static String getISOFormattedTime( final Calendar cal )
   {
-    StringBuffer sb = new StringBuffer( 200 );
+    final StringBuffer sb = new StringBuffer( 200 );
     sb.append( cal.get( Calendar.YEAR ) + "-" );
-    sb.append( ( cal.get( Calendar.MONTH ) + 1 ) + "-" );
+    sb.append( cal.get( Calendar.MONTH ) + 1 + "-" );
     sb.append( cal.get( Calendar.DAY_OF_MONTH ) + " " );
     if( cal.get( Calendar.HOUR_OF_DAY ) < 10 )
     {
@@ -139,52 +139,52 @@ public class TimeTools
    * <li>SECOND
    * </ul>
    */
-  public static int get( int value, String isoTimestamp )
+  public static int get( final int value, String isoTimestamp )
   {
 
     String s = null;
     isoTimestamp = isoTimestamp.trim();
     switch( value )
     {
-    case 0:
-      s = isoTimestamp.substring( 0, 4 );
-      break;
-    case 1:
-      s = isoTimestamp.substring( 5, 7 );
-      break;
-    case 2:
-      s = isoTimestamp.substring( 8, 10 );
-      break;
-    case 3:
-    {
-      if( isoTimestamp.length() >= 12 )
+      case 0:
+        s = isoTimestamp.substring( 0, 4 );
+        break;
+      case 1:
+        s = isoTimestamp.substring( 5, 7 );
+        break;
+      case 2:
+        s = isoTimestamp.substring( 8, 10 );
+        break;
+      case 3:
       {
-        s = isoTimestamp.substring( 11, 13 );
+        if( isoTimestamp.length() >= 12 )
+        {
+          s = isoTimestamp.substring( 11, 13 );
+        }
+        else
+          s = "12";
+        break;
       }
-      else
-        s = "12";
-      break;
-    }
-    case 4:
-    {
-      if( isoTimestamp.length() >= 15 )
+      case 4:
       {
-        s = isoTimestamp.substring( 14, 16 );
+        if( isoTimestamp.length() >= 15 )
+        {
+          s = isoTimestamp.substring( 14, 16 );
+        }
+        else
+          s = "0";
+        break;
       }
-      else
-        s = "0";
-      break;
-    }
-    case 5:
-    {
-      if( isoTimestamp.length() >= 18 )
+      case 5:
       {
-        s = isoTimestamp.substring( 17, 19 );
+        if( isoTimestamp.length() >= 18 )
+        {
+          s = isoTimestamp.substring( 17, 19 );
+        }
+        else
+          s = "0";
+        break;
       }
-      else
-        s = "0";
-      break;
-    }
     }
     return Integer.parseInt( s );
   }
@@ -200,51 +200,51 @@ public class TimeTools
    * <li>SECOND
    * </ul>
    */
-  public static int getISO8601( int value, String isoTimestamp )
+  public static int getISO8601( final int value, String isoTimestamp )
   {
     String s = null;
     isoTimestamp = isoTimestamp.trim();
     switch( value )
     {
-    case 0:
-      s = isoTimestamp.substring( 0, 4 );
-      break;
-    case 1:
-      s = isoTimestamp.substring( 4, 6 );
-      break;
-    case 2:
-      s = isoTimestamp.substring( 6, 8 );
-      break;
-    case 3:
-    {
-      if( isoTimestamp.length() >= 10 )
+      case 0:
+        s = isoTimestamp.substring( 0, 4 );
+        break;
+      case 1:
+        s = isoTimestamp.substring( 4, 6 );
+        break;
+      case 2:
+        s = isoTimestamp.substring( 6, 8 );
+        break;
+      case 3:
       {
-        s = isoTimestamp.substring( 9, 11 );
+        if( isoTimestamp.length() >= 10 )
+        {
+          s = isoTimestamp.substring( 9, 11 );
+        }
+        else
+          s = "12";
+        break;
       }
-      else
-        s = "12";
-      break;
-    }
-    case 4:
-    {
-      if( isoTimestamp.length() >= 13 )
+      case 4:
       {
-        s = isoTimestamp.substring( 12, 14 );
+        if( isoTimestamp.length() >= 13 )
+        {
+          s = isoTimestamp.substring( 12, 14 );
+        }
+        else
+          s = "0";
+        break;
       }
-      else
-        s = "0";
-      break;
-    }
-    case 5:
-    {
-      if( isoTimestamp.length() >= 16 )
+      case 5:
       {
-        s = isoTimestamp.substring( 15, 17 );
+        if( isoTimestamp.length() >= 16 )
+        {
+          s = isoTimestamp.substring( 15, 17 );
+        }
+        else
+          s = "0";
+        break;
       }
-      else
-        s = "0";
-      break;
-    }
     }
     return Integer.parseInt( s );
   }
@@ -252,28 +252,28 @@ public class TimeTools
   /**
    * creates an instance of a <tt>GregorianCalendar</tt> from an ISO timestamp
    */
-  public static GregorianCalendar createCalendar( String isoDate )
+  public static GregorianCalendar createCalendar( final String isoDate )
   {
-    int y = TimeTools.get( TimeTools.YEAR, isoDate );
-    int m = TimeTools.get( TimeTools.MONTH, isoDate );
-    int d = TimeTools.get( TimeTools.DAY, isoDate );
-    int h = TimeTools.get( TimeTools.HOUR, isoDate );
-    int min = TimeTools.get( TimeTools.MINUTE, isoDate );
-    int sec = TimeTools.get( TimeTools.SECOND, isoDate );
+    final int y = TimeTools.get( TimeTools.YEAR, isoDate );
+    final int m = TimeTools.get( TimeTools.MONTH, isoDate );
+    final int d = TimeTools.get( TimeTools.DAY, isoDate );
+    final int h = TimeTools.get( TimeTools.HOUR, isoDate );
+    final int min = TimeTools.get( TimeTools.MINUTE, isoDate );
+    final int sec = TimeTools.get( TimeTools.SECOND, isoDate );
     return new GregorianCalendar( y, m - 1, d, h, min, sec );
   }
 
   /**
    * creates an instance of a <tt>GregorianCalendar</tt> from an ISO 8601 timestamp
    */
-  public static GregorianCalendar createCalendarISO8601( String isoDate )
+  public static GregorianCalendar createCalendarISO8601( final String isoDate )
   {
-    int y = TimeTools.getISO8601( TimeTools.YEAR, isoDate );
-    int m = TimeTools.getISO8601( TimeTools.MONTH, isoDate );
-    int d = TimeTools.getISO8601( TimeTools.DAY, isoDate );
-    int h = TimeTools.getISO8601( TimeTools.HOUR, isoDate );
-    int min = TimeTools.getISO8601( TimeTools.MINUTE, isoDate );
-    int sec = TimeTools.getISO8601( TimeTools.SECOND, isoDate );
+    final int y = TimeTools.getISO8601( TimeTools.YEAR, isoDate );
+    final int m = TimeTools.getISO8601( TimeTools.MONTH, isoDate );
+    final int d = TimeTools.getISO8601( TimeTools.DAY, isoDate );
+    final int h = TimeTools.getISO8601( TimeTools.HOUR, isoDate );
+    final int min = TimeTools.getISO8601( TimeTools.MINUTE, isoDate );
+    final int sec = TimeTools.getISO8601( TimeTools.SECOND, isoDate );
     return new GregorianCalendar( y, m, d, h, min, sec );
   }
 

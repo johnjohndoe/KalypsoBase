@@ -200,7 +200,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
           throw new FilterEvaluationException( "Given value for parameter 'stroke-opacity' ('" + o[0] + "') has invalid format!" );
         }
 
-        if( (smplOpacity < 0.0) || (smplOpacity > 1.0) )
+        if( smplOpacity < 0.0 || smplOpacity > 1.0 )
           throw new FilterEvaluationException( "Value for parameter 'stroke-opacity' (given: '" + o[0] + "') must be between 0.0 and 1.0!" );
       }
   }
@@ -296,7 +296,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
     final StringTokenizer st = new StringTokenizer( value, ",; " );
     final int count = st.countTokens();
     float[] dashArray;
-    if( (count % 2) == 0 )
+    if( count % 2 == 0 )
       dashArray = new float[count];
     else
       dashArray = new float[count * 2];
@@ -316,7 +316,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
     }
 
     // odd number of values -> the pattern must be repeated twice
-    if( (count % 2) == 1 )
+    if( count % 2 == 1 )
     {
       int j = 0;
       while( k < count * 2 )
@@ -426,7 +426,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   @Override
   public void setStroke( final Color stroke )
   {
-    this.color = stroke;
+    color = stroke;
     final CssParameter strokeColor = StyleFactory.createCssParameter( CSS_STROKE, StyleFactory.getColorAsHex( stroke ) );
     getCssParameters().put( CSS_STROKE, strokeColor );
   }
@@ -459,7 +459,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
         try
         {
           final double opacity = Double.parseDouble( value );
-          if( (opacity < 0.0) || (opacity > 1.0) )
+          if( opacity < 0.0 || opacity > 1.0 )
             throw new FilterEvaluationException( "Value for parameter 'stroke-opacity' (given: '" + value + "') must be between 0.0 and 1.0!" );
           return opacity;
         }
@@ -487,7 +487,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
       opacity = 1;
     else if( opacity < 0 )
       opacity = 0;
-    this.smplOpacity = opacity;
+    smplOpacity = opacity;
     final CssParameter strokeOp = StyleFactory.createCssParameter( CSS_OPACITY, "" + opacity );
     addCssParameter( CSS_OPACITY, strokeOp );
   }
@@ -548,7 +548,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
   {
     if( width <= 0 )
       width = 1;
-    this.smplWidth = width;
+    smplWidth = width;
     final CssParameter strokeWi = StyleFactory.createCssParameter( CSS_WIDTH, "" + width );
     addCssParameter( CSS_WIDTH, strokeWi );
   }
@@ -719,7 +719,7 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
       final StringTokenizer st = new StringTokenizer( value, ",; " );
       final int count = st.countTokens();
 
-      if( (count % 2) == 0 )
+      if( count % 2 == 0 )
         dashArray = new float[count];
       else
         dashArray = new float[count * 2];
@@ -739,10 +739,10 @@ public class Stroke_Impl extends Drawing_Impl implements org.kalypsodeegree.grap
       }
 
       // odd number of values -> the pattern must be repeated twice
-      if( (count % 2) == 1 )
+      if( count % 2 == 1 )
       {
         int j = 0;
-        while( i < ((count * 2) - 1) )
+        while( i < count * 2 - 1 )
           dashArray[i++] = dashArray[j++];
       }
     }

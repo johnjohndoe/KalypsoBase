@@ -55,7 +55,7 @@ public class RegExpRule implements IRule
    */
   public String[] m_patterns;
 
-  public RegExpRule( String[] patterns )
+  public RegExpRule( final String[] patterns )
   {
     super();
     m_patterns = patterns;
@@ -67,13 +67,13 @@ public class RegExpRule implements IRule
    * @see org.kalypso.ogc.gml.util.Rule#isValid(java.lang.Object)
    */
   @Override
-  public IStatus isValid( Object object )
+  public IStatus isValid( final Object object )
   {
-    Status status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "RegExpRule: Validation OK.", null );
+    Status status = new Status( IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "RegExpRule: Validation OK.", null );
 
     /* If the object does not exist, return true. */
     if( object == null )
-      return new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "RegExpRule: Validation OK (null).", null );
+      return new Status( IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "RegExpRule: Validation OK (null).", null );
 
     String txt = null;
 
@@ -85,7 +85,7 @@ public class RegExpRule implements IRule
     else if( object instanceof char[] )
     {
       /* Cast in a char[]. */
-      char[] text = (char[]) object;
+      final char[] text = (char[]) object;
 
       /* ToString. */
       txt = String.copyValueOf( text );
@@ -96,17 +96,17 @@ public class RegExpRule implements IRule
       return status;
     }
 
-    for( int i = 0; i < m_patterns.length; i++ )
+    for( final String m_pattern : m_patterns )
     {
-      Pattern p = Pattern.compile( m_patterns[i] );
-      Matcher m = p.matcher( txt );
+      final Pattern p = Pattern.compile( m_pattern );
+      final Matcher m = p.matcher( txt );
 
-      boolean ret = m.matches();
+      final boolean ret = m.matches();
 
       /* If one pattern fails, there is no need to check the other patterns. */
       if( ret == false )
       {
-        status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Ausdruck entspricht nicht den gegebenen Pattern.", null );
+        status = new Status( IStatus.CANCEL, Platform.PI_RUNTIME, IStatus.CANCEL, "Ausdruck entspricht nicht den gegebenen Pattern.", null );
         break;
       }
     }
@@ -120,7 +120,7 @@ public class RegExpRule implements IRule
    * @param patterns
    *          The RegExp pattern.
    */
-  public void setPatterns( String[] patterns )
+  public void setPatterns( final String[] patterns )
   {
     m_patterns = patterns;
   }

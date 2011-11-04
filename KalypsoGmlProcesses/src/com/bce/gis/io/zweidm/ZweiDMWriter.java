@@ -9,7 +9,7 @@ import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.gml.processes.i18n.Messages;
 
-import com.vividsolutions.jts.algorithm.RobustCGAlgorithms;
+import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LinearRing;
 
@@ -55,9 +55,9 @@ public class ZweiDMWriter
 
       final Coordinate[] coordinates = ring.getCoordinates();
       if( coordinates == null || coordinates.length != 4 )
-        throw new IllegalArgumentException( Messages.getString("com.bce.gis.io.zweidm.ZweiDMWriter.6") + ring ); //$NON-NLS-1$
+        throw new IllegalArgumentException( Messages.getString( "com.bce.gis.io.zweidm.ZweiDMWriter.6" ) + ring ); //$NON-NLS-1$
 
-      if( !RobustCGAlgorithms.isCCW( coordinates ) )
+      if( !CGAlgorithms.isCCW( coordinates ) )
         ArrayUtils.reverse( coordinates );
 
       for( int j = 0; j < coordinates.length - 1; j++ )

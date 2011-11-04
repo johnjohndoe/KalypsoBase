@@ -45,7 +45,7 @@ package org.kalypsodeegree.graphics.sld;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- *
+ * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
@@ -54,45 +54,45 @@ public interface UserStyle extends Style
 
   /**
    * The Title is a human-readable short description for the style that might be displayed in a GUI pick list.
-   *
+   * 
    * @return the title of the User-Style
    */
   String getTitle( );
 
   /**
    * Sets the title.
-   *
+   * 
    * @param title
-   *            the title of the User-Style
+   *          the title of the User-Style
    */
   void setTitle( String title );
 
   /**
    * the Abstract is a more exact description that may be a few paragraphs long.
-   *
+   * 
    * @return the abstract of the User-Style
    */
   String getAbstract( );
 
   /**
    * Sets the Abstract.
-   *
+   * 
    * @param abstract_
-   *            the abstract of the User-Style
+   *          the abstract of the User-Style
    */
   void setAbstract( String abstract_ );
 
   /**
    * The IsDefault element identifies whether a style is the default style of a layer, for use in SLD library mode when
    * rendering or for storing inside of a map server. The default value is <tt>false</tt>.
-   *
+   * 
    * @return true if the style is the default style
    */
   boolean isDefault( );
 
   /**
    * sets the <Default>
-   *
+   * 
    * @param default_
    */
   void setDefault( boolean default_ );
@@ -107,7 +107,7 @@ public interface UserStyle extends Style
    * The FeatureTypeStyle element identifies that explicit separation in SLD between the handling of layers and the
    * handling of features of specific feature types. The layer concept is unique to WMS and SLD, but features are used
    * more generally, such as in WFS and GML, so this explicit separation is important.
-   *
+   * 
    * @return the FeatureTypeStyles of a User-Style
    */
   FeatureTypeStyle[] getFeatureTypeStyles( );
@@ -122,32 +122,32 @@ public interface UserStyle extends Style
    * The FeatureTypeStyle element identifies that explicit separation in SLD between the handling of layers and the
    * handling of features of specific feature types. The layer concept is unique to WMS and SLD, but features are used
    * more generally, such as in WFS and GML, so this explicit separation is important.
-   *
+   * 
    * @return a FeatureTypeStyle of a User-Style
    */
   FeatureTypeStyle getFeatureTypeStyle( String featureTypeStyleName );
 
   /**
    * Sets FeatureTypeStyles
-   *
+   * 
    * @param featureTypeStyles
-   *            the FeatureTypeStyles of a User-Style
+   *          the FeatureTypeStyles of a User-Style
    */
   void setFeatureTypeStyles( FeatureTypeStyle[] featureTypeStyles );
 
   /**
    * Adds a <FeatureTypeStyle>
-   *
+   * 
    * @param featureTypeStyle
-   *            a FeatureTypeStyle to add
+   *          a FeatureTypeStyle to add
    */
   void addFeatureTypeStyle( FeatureTypeStyle featureTypeStyle );
 
   /**
    * Removes a <FeatureTypeStyle>
-   *
+   * 
    * @param featureTypeStyle
-   *            a FeatureTypeStyle to remove
+   *          a FeatureTypeStyle to remove
    */
   void removeFeatureTypeStyle( FeatureTypeStyle featureTypeStyle );
 }

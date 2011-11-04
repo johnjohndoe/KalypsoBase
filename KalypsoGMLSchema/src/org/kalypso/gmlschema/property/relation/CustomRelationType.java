@@ -172,7 +172,7 @@ public class CustomRelationType implements IRelationType
   @Override
   public boolean isList( )
   {
-    return (m_maxOccurs > 1) || (m_maxOccurs == IPropertyType.UNBOUND_OCCURENCY);
+    return m_maxOccurs > 1 || m_maxOccurs == IPropertyType.UNBOUND_OCCURENCY;
   }
 
   /**

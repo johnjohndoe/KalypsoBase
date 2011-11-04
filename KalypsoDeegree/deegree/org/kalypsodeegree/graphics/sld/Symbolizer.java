@@ -66,7 +66,7 @@ public interface Symbolizer extends Marshallable
    * Sets the Geometry.
    * 
    * @param geometry
-   *            the geometry of the symbolizer
+   *          the geometry of the symbolizer
    */
   void setGeometry( Geometry geometry );
 

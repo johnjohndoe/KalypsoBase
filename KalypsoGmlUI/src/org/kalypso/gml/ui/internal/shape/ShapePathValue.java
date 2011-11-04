@@ -50,7 +50,6 @@ import org.kalypso.commons.resources.FileUtilities;
 
 /**
  * @author Gernot Belger
- *
  */
 public class ShapePathValue extends AbstractObservableValue
 {

@@ -41,10 +41,9 @@ v.doemming@tuhh.de
 
 package org.kalypso.metadoc.configuration;
 
-
 /**
  * Constants for common used configuration properties.
- *
+ * 
  * @author schlienger
  */
 public interface IConfigurationConstants

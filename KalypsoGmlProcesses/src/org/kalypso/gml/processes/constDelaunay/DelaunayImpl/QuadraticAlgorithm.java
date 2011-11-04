@@ -10,18 +10,20 @@ final public class QuadraticAlgorithm extends TriangulationAlgorithm
 {
   private int s, t, u, bP;
 
-  private Circle m_Circle = new Circle();
+  private final Circle m_Circle = new Circle();
 
   final static String STR_ALG_NAME = "QuadraticAlgorithm class. O(n^2)"; //$NON-NLS-1$
 
-//  int nFaces;
+// int nFaces;
 
-  public QuadraticAlgorithm(){
+  public QuadraticAlgorithm( )
+  {
     super( STR_ALG_NAME );
     init();
   }
-  
-  private void init(){
+
+  private void init( )
+  {
     //
   }
 
@@ -43,7 +45,7 @@ final public class QuadraticAlgorithm extends TriangulationAlgorithm
     lIntNumberOfFaces = 0;
 
     // Find closest neighbours and add edge to triangulation.
-    List<Integer> lListValues = new ArrayList<Integer>( 2 );
+    final List<Integer> lListValues = new ArrayList<Integer>( 2 );
     findClosestNeighbours( pTriangulationDT.getPoints(), pTriangulationDT.getAmountOfPoints(), lListValues );// s, t );
 
     pTriangulationDT.addEdge( lListValues.get( 0 ), lListValues.get( 1 ), TriangulationDT.Undefined, TriangulationDT.Undefined );
@@ -66,7 +68,7 @@ final public class QuadraticAlgorithm extends TriangulationAlgorithm
   }
 
   // Find the two closest points.
-  public void findClosestNeighbours( final RealPoint p[], final int nPoints, final List< Integer > pListInts )
+  public void findClosestNeighbours( final RealPoint p[], final int nPoints, final List<Integer> pListInts )
   {
     int lIntIteratorIndexI;
     int lIntIteratorIndexJ;
@@ -89,7 +91,7 @@ final public class QuadraticAlgorithm extends TriangulationAlgorithm
             min = d;
           }
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
           System.out.println( "findClosestNeighbours: on " + lIntIteratorIndexI + ", " + lIntIteratorIndexJ + ": " + e ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
           // TODO: handle exception
@@ -107,8 +109,8 @@ final public class QuadraticAlgorithm extends TriangulationAlgorithm
   public void completeFacet( int pIntEdgeIndex, final TriangulationDT pTriangulationDT, int pIntNumberOfFaces )
   {
     double cP;
-    Edge lEdges[] = pTriangulationDT.getEdges();
-    RealPoint lPoints[] = pTriangulationDT.getPoints();
+    final Edge lEdges[] = pTriangulationDT.getEdges();
+    final RealPoint lPoints[] = pTriangulationDT.getPoints();
 
     // Cache s and t.
     if( lEdges[pIntEdgeIndex].getL() == TriangulationDT.Undefined )
@@ -133,7 +135,7 @@ final public class QuadraticAlgorithm extends TriangulationAlgorithm
       if( Vector.crossProduct( lPoints[s], lPoints[t], lPoints[u] ) > 0.0 )
         break;
     }
-    
+
     // Find best point on left of edge.
     bP = u;
     if( bP < pTriangulationDT.getAmountOfPoints() )
@@ -179,7 +181,7 @@ final public class QuadraticAlgorithm extends TriangulationAlgorithm
       // Add new edge or update face info of old edge.
       pIntEdgeIndex = pTriangulationDT.findEdge( t, bP );
       if( pIntEdgeIndex == TriangulationDT.Undefined )
-      { 
+      {
         // New edge.
         pIntEdgeIndex = pTriangulationDT.addEdge( t, bP, pIntNumberOfFaces, TriangulationDT.Undefined );
       }
@@ -191,7 +193,7 @@ final public class QuadraticAlgorithm extends TriangulationAlgorithm
     }
     else
       pTriangulationDT.updateLeftFace( pIntEdgeIndex, s, t, TriangulationDT.Universe );
-    
+
   }
 
 }

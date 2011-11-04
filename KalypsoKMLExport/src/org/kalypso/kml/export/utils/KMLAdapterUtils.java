@@ -6,11 +6,11 @@ import org.kalypsodeegree.model.feature.Feature;
 public class KMLAdapterUtils
 {
 
-  public static String getFeatureName( Feature feature, IKMLAdapter[] providers )
+  public static String getFeatureName( final Feature feature, final IKMLAdapter[] providers )
   {
-    for( IKMLAdapter adapter : providers )
+    for( final IKMLAdapter adapter : providers )
     {
-      String name = adapter.getFeatureName( feature );
+      final String name = adapter.getFeatureName( feature );
       if( name != null )
         return name;
     }

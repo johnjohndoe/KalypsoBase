@@ -64,7 +64,7 @@ import com.sun.media.jai.codec.SeekableStream;
 
 /**
  * {@link IGridMetaReader} implementation for Geo-Tiffs.
- *
+ * 
  * @author Dirk Kuch
  */
 public class GridMetaReaderGeoTiff implements IGridMetaReader
@@ -197,8 +197,8 @@ public class GridMetaReaderGeoTiff implements IGridMetaReader
   @Override
   public RectifiedGridDomain getCoverage( final OffsetVector offsetX, final OffsetVector offsetY, final Double[] upperLeftCorner, final String crs ) throws Exception
   {
-    if( (offsetX == null) || (offsetY == null) || (upperLeftCorner == null) || (upperLeftCorner.length != 2) || (crs == null) )
-      throw (new IllegalStateException());
+    if( offsetX == null || offsetY == null || upperLeftCorner == null || upperLeftCorner.length != 2 || crs == null )
+      throw new IllegalStateException();
 
     final RenderedOp image = JAI.create( "url", m_urlImage );
     final TiledImage tiledImage = new TiledImage( image, true );

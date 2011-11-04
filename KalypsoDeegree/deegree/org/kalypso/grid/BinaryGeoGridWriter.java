@@ -52,7 +52,6 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
 /**
- * 
  * @author barbarins
  */
 public class BinaryGeoGridWriter implements IWriteableGeoGrid
@@ -113,7 +112,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     m_lineLen = getSizeX() * 4;
 
     // block_size is set to "optimal" size of the buffer from start on
-    m_linesInBlock = (BLOCK_SIZE / m_lineLen);
+    m_linesInBlock = BLOCK_SIZE / m_lineLen;
 
     if( m_linesInBlock >= m_linesTotal )
       m_linesInBlock = m_linesTotal;

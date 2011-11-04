@@ -58,6 +58,7 @@ import org.kalypso.gmlschema.xml.TypeReference;
  *      <attributeGroup ref=" gml:AssociationAttributeGroup "/>
  *  </complexType>
  * <em>
+ * 
  * @author doemming
  */
 public class ElementDirektReference2RelationTypeBuilder extends AbstractBuilder

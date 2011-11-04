@@ -56,12 +56,12 @@ public class ElementList
     elements.add( element );
   }
 
-  public int getLength()
+  public int getLength( )
   {
     return elements.size();
   }
 
-  public Element item( int i )
+  public Element item( final int i )
   {
     if( i < 0 || i > elements.size() - 1 )
       return null;

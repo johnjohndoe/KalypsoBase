@@ -38,7 +38,6 @@ package org.kalypsodeegree_impl.graphics.sld;
 import org.kalypsodeegree.graphics.sld.Interval;
 
 /**
- * 
  * @author N. Peiler
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
  */
@@ -55,7 +54,7 @@ public class Interval_Impl implements Interval, Comparable
    * @param lowerLimit
    * @param upperLimit
    */
-  public Interval_Impl( double lowerLimit, double upperLimit )
+  public Interval_Impl( final double lowerLimit, final double upperLimit )
   {
     setLowerLimit( lowerLimit );
     setUpperLimit( upperLimit );
@@ -68,16 +67,16 @@ public class Interval_Impl implements Interval, Comparable
    * @return true, if Interval contains the value; otherwise false
    */
   @Override
-  public boolean contains( double x )
+  public boolean contains( final double x )
   {
-    return ( ( m_lowerLimit <= x ) && ( x <= m_upperLimit ) );
+    return m_lowerLimit <= x && x <= m_upperLimit;
   }
 
   /**
    * @return Returns the lowerLimit.
    */
   @Override
-  public double getLowerLimit()
+  public double getLowerLimit( )
   {
     return m_lowerLimit;
   }
@@ -86,7 +85,7 @@ public class Interval_Impl implements Interval, Comparable
    * @return Returns the upperLimit.
    */
   @Override
-  public double getUpperLimit()
+  public double getUpperLimit( )
   {
     return m_upperLimit;
   }
@@ -96,7 +95,7 @@ public class Interval_Impl implements Interval, Comparable
    *          The lowerLimit to set.
    */
   @Override
-  public void setLowerLimit( double lowerLimit )
+  public void setLowerLimit( final double lowerLimit )
   {
     m_lowerLimit = lowerLimit;
   }
@@ -106,16 +105,16 @@ public class Interval_Impl implements Interval, Comparable
    *          The upperLimit to set.
    */
   @Override
-  public void setUpperLimit( double upperLimit )
+  public void setUpperLimit( final double upperLimit )
   {
     m_upperLimit = upperLimit;
   }
 
   @Override
-  public int compareTo( Object o )
+  public int compareTo( final Object o )
   {
     int result = 0;
-    double diffLowerLimit = getLowerLimit() - ( (Interval)o ).getLowerLimit();
+    final double diffLowerLimit = getLowerLimit() - ((Interval) o).getLowerLimit();
     if( diffLowerLimit > 0 )
     {
       result = 1;

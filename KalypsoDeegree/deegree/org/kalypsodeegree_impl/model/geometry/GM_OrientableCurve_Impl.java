@@ -62,7 +62,7 @@ abstract class GM_OrientableCurve_Impl extends GM_OrientablePrimitive_Impl imple
    * @param crs
    * @throws GM_Exception
    */
-  protected GM_OrientableCurve_Impl( String crs ) throws GM_Exception
+  protected GM_OrientableCurve_Impl( final String crs ) throws GM_Exception
   {
     super( crs, '+' );
   }
@@ -74,7 +74,7 @@ abstract class GM_OrientableCurve_Impl extends GM_OrientablePrimitive_Impl imple
    * @param orientation
    * @throws GM_Exception
    */
-  protected GM_OrientableCurve_Impl( String crs, char orientation ) throws GM_Exception
+  protected GM_OrientableCurve_Impl( final String crs, final char orientation ) throws GM_Exception
   {
     super( crs, orientation );
   }

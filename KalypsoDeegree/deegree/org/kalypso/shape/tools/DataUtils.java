@@ -80,16 +80,16 @@ public final class DataUtils
 
   public static void writeLEInt( final DataOutput output, final int val ) throws IOException
   {
-    output.writeByte( (byte) ((val) & 0xff) );
-    output.writeByte( (byte) ((val >> 8) & 0xff) );
-    output.writeByte( (byte) ((val >> 16) & 0xff) );
-    output.writeByte( (byte) ((val >> 24) & 0xff) );
+    output.writeByte( (byte) (val & 0xff) );
+    output.writeByte( (byte) (val >> 8 & 0xff) );
+    output.writeByte( (byte) (val >> 16 & 0xff) );
+    output.writeByte( (byte) (val >> 24 & 0xff) );
   }
 
   public static void writeLEShort( final DataOutput output, final int val ) throws IOException
   {
-    output.writeByte( (byte) ((val) & 0xff) );
-    output.writeByte( (byte) ((val >> 8) & 0xff) );
+    output.writeByte( (byte) (val & 0xff) );
+    output.writeByte( (byte) (val >> 8 & 0xff) );
   }
 
   /**
@@ -113,14 +113,14 @@ public final class DataUtils
    */
   public static void writeLELong( final DataOutput output, final long val ) throws IOException
   {
-    output.writeByte( (byte) ((val) & 0xff) );
-    output.writeByte( (byte) ((val >> 8) & 0xff) );
-    output.writeByte( (byte) ((val >> 16) & 0xff) );
-    output.writeByte( (byte) ((val >> 24) & 0xff) );
-    output.writeByte( (byte) ((val >> 32) & 0xff) );
-    output.writeByte( (byte) ((val >> 40) & 0xff) );
-    output.writeByte( (byte) ((val >> 48) & 0xff) );
-    output.writeByte( (byte) ((val >> 56) & 0xff) );
+    output.writeByte( (byte) (val & 0xff) );
+    output.writeByte( (byte) (val >> 8 & 0xff) );
+    output.writeByte( (byte) (val >> 16 & 0xff) );
+    output.writeByte( (byte) (val >> 24 & 0xff) );
+    output.writeByte( (byte) (val >> 32 & 0xff) );
+    output.writeByte( (byte) (val >> 40 & 0xff) );
+    output.writeByte( (byte) (val >> 48 & 0xff) );
+    output.writeByte( (byte) (val >> 56 & 0xff) );
   }
 
   /**

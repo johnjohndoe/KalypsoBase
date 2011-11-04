@@ -68,8 +68,9 @@ public class ComplexFilter extends AbstractFilter
    * Constructs a new <tt>ComplexFilter<tt> that consists of an
    * empty <tt>LogicalOperation</tt> of the given type.
    * <p>
-   * @param operatorId OperationDefines.AND, OperationDefines.OR or
-   * 		  OperationDefines.NOT
+   * 
+   * @param operatorId
+   *          OperationDefines.AND, OperationDefines.OR or OperationDefines.NOT
    */
   public ComplexFilter( final int operatorId )
   {
@@ -80,11 +81,13 @@ public class ComplexFilter extends AbstractFilter
    * Constructs a new <tt>ComplexFilter<tt> that consists of a
    * <tt>LogicalOperation</tt> with the given <tt>Filter</tt>.
    * <p>
-   * @param filter1 first Filter to be used
-   * @param filter2 second Filter to be used 
-   * 	      null, if operatorId == OperationDefines.NOT
-   * @param operatorId OperationDefines.AND, OperationDefines.OR or
-   * 		  OperationDefines.NOT
+   * 
+   * @param filter1
+   *          first Filter to be used
+   * @param filter2
+   *          second Filter to be used null, if operatorId == OperationDefines.NOT
+   * @param operatorId
+   *          OperationDefines.AND, OperationDefines.OR or OperationDefines.NOT
    */
   public ComplexFilter( final ComplexFilter filter1, final ComplexFilter filter2, final int operatorId )
   {
@@ -114,10 +117,10 @@ public class ComplexFilter extends AbstractFilter
    * Calculates the <tt>Filter</tt>'s logical value based on the certain property values of the given feature.
    * 
    * @param feature
-   *            that determines the values of <tt>PropertyNames</tt> in the expression
+   *          that determines the values of <tt>PropertyNames</tt> in the expression
    * @return true, if the <tt>Filter</tt> evaluates to true, else false
    * @throws FilterEvaluationException
-   *             if the evaluation fails
+   *           if the evaluation fails
    */
   @Override
   public boolean evaluate( final Feature feature ) throws FilterEvaluationException

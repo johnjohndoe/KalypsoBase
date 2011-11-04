@@ -49,7 +49,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class Polynomial2D extends Feature_Impl implements IPolynomial2D
 {
-  public Polynomial2D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public Polynomial2D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -62,14 +62,13 @@ public class Polynomial2D extends Feature_Impl implements IPolynomial2D
 
   public static final QName QNAME_PROP_COEFFICIENTS = new QName( NS.COMMON_MATH, "coefficients" );
 
-
   @Override
   public PolynomialConfigState checkConsistency( )
   {
     return null;
   }
 
-  public static final PolynomialConfigState checkConsistency( int degreeX, int degreeY, double[] coefficients )
+  public static final PolynomialConfigState checkConsistency( final int degreeX, final int degreeY, final double[] coefficients )
   {
     if( coefficients == null )
     {
@@ -99,7 +98,7 @@ public class Polynomial2D extends Feature_Impl implements IPolynomial2D
   }
 
   @Override
-  public double evaluate( double inputX, double inputY )
+  public double evaluate( final double inputX, final double inputY )
   {
     throw new RuntimeException( "not supported" );
   }
@@ -107,11 +106,11 @@ public class Polynomial2D extends Feature_Impl implements IPolynomial2D
   @Override
   public double[] getCoefficients( ) throws IllegalFeatureState
   {
-    Object coefs = getProperty( QNAME_PROP_COEFFICIENTS );
+    final Object coefs = getProperty( QNAME_PROP_COEFFICIENTS );
     if( coefs instanceof String )
     {
-      String[] subStrings = ((String) coefs).split( " " );// "/s+");
-      double doubles[] = new double[subStrings.length];
+      final String[] subStrings = ((String) coefs).split( " " );// "/s+");
+      final double doubles[] = new double[subStrings.length];
       for( int i = 0; i < subStrings.length; i++ )
       {
         doubles[i] = Double.parseDouble( subStrings[i] );
@@ -125,7 +124,7 @@ public class Polynomial2D extends Feature_Impl implements IPolynomial2D
   }
 
   @Override
-  public void setCefficients( double[] coefficients ) throws IllegalArgumentException
+  public void setCefficients( final double[] coefficients ) throws IllegalArgumentException
   {
 
   }
@@ -137,7 +136,7 @@ public class Polynomial2D extends Feature_Impl implements IPolynomial2D
   }
 
   @Override
-  public void setDegreeX( int degreeX )
+  public void setDegreeX( final int degreeX )
   {
     setDegree( degreeX, QNAME_PROP_DEGREEX );
   }
@@ -149,12 +148,12 @@ public class Polynomial2D extends Feature_Impl implements IPolynomial2D
   }
 
   @Override
-  public void setDegreeY( int degreeY )
+  public void setDegreeY( final int degreeY )
   {
     setDegree( degreeY, QNAME_PROP_DEGREEY );
   }
 
-  private final void setDegree( int degree, QName degreeQName ) throws IllegalArgumentException
+  private final void setDegree( final int degree, final QName degreeQName ) throws IllegalArgumentException
   {
 
     if( degree <= 0 )
@@ -165,16 +164,16 @@ public class Polynomial2D extends Feature_Impl implements IPolynomial2D
     setProperty( degreeQName, new Integer( degree ) );
   }
 
-  private final int getDegree( QName degreeQName ) throws IllegalFeatureState
+  private final int getDegree( final QName degreeQName ) throws IllegalFeatureState
   {
-    Object dx = getProperty( degreeQName );
+    final Object dx = getProperty( degreeQName );
     if( dx instanceof BigInteger )
     {
       return ((BigInteger) dx).intValue();
     }
     else
     {
-      StringBuffer buf = new StringBuffer( 128 );
+      final StringBuffer buf = new StringBuffer( 128 );
       buf.append( degreeQName );
       buf.append( " must be and integer but got:" );
       buf.append( dx == null ? null : dx.getClass() );
@@ -187,15 +186,15 @@ public class Polynomial2D extends Feature_Impl implements IPolynomial2D
   }
 
   @Override
-  public void setPolynomParameters( int degreeX, int degreeY, double[] coefficients ) throws IllegalArgumentException
+  public void setPolynomParameters( final int degreeX, final int degreeY, final double[] coefficients ) throws IllegalArgumentException
   {
     if( PolynomialConfigState.CONSISTENCY_OK != checkConsistency( degreeX, degreeY, coefficients ) )
     {
       throw new IllegalArgumentException();
     }
 
-    StringBuffer buf = new StringBuffer( 128 );
-    for( double coef : coefficients )
+    final StringBuffer buf = new StringBuffer( 128 );
+    for( final double coef : coefficients )
     {
       buf.append( coef );
       buf.append( ' ' );

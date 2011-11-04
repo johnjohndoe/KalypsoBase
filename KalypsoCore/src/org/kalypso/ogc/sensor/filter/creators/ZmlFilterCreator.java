@@ -60,13 +60,12 @@ import org.w3._1999.xlinkext.SimpleLinkType;
 public final class ZmlFilterCreator implements IFilterCreator
 {
   @Override
-  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation obs, final URL context )
-      throws SensorException
+  public IObservationFilter createFilter( final AbstractFilterType aft, final IObservation obs, final URL context ) throws SensorException
   {
-    if( !( aft instanceof ZmlFilterType ) )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.ogc.sensor.filter.creators.ZmlFilterCreator.0") + ZmlFilterType.class.getName() ); //$NON-NLS-1$
+    if( !(aft instanceof ZmlFilterType) )
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.filter.creators.ZmlFilterCreator.0" ) + ZmlFilterType.class.getName() ); //$NON-NLS-1$
 
-    final ZmlFilterType ft = (ZmlFilterType)aft;
+    final ZmlFilterType ft = (ZmlFilterType) aft;
 
     final ZmlFilter filter = new ZmlFilter();
     final SimpleLinkType zml = ft.getZml();

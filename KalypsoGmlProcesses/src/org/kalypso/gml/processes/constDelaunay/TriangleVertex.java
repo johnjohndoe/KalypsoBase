@@ -70,7 +70,7 @@ public class TriangleVertex
   {
     m_position = position;
     m_borderMarker = borderMarker;
-    List<Double> attributeList = new LinkedList<Double>();
+    final List<Double> attributeList = new LinkedList<Double>();
     attributeList.add( attribute );
     m_attributes = attributeList;
     m_dimension = 2;
@@ -81,7 +81,7 @@ public class TriangleVertex
     return m_borderMarker;
   }
 
-  public void setBorderMarker( boolean borderMarker )
+  public void setBorderMarker( final boolean borderMarker )
   {
     m_borderMarker = borderMarker;
   }
@@ -91,7 +91,7 @@ public class TriangleVertex
     return m_position;
   }
 
-  public void setPosition( GM_Position position )
+  public void setPosition( final GM_Position position )
   {
     m_position = position;
   }
@@ -106,16 +106,16 @@ public class TriangleVertex
     return m_dimension;
   }
 
-  public void setDimension( int dimension )
+  public void setDimension( final int dimension )
   {
     m_dimension = dimension;
   }
 
   public String getLine( )
   {
-    String pos = m_position.getX() + " " + m_position.getY(); //$NON-NLS-1$
+    final String pos = m_position.getX() + " " + m_position.getY(); //$NON-NLS-1$
     String att = ""; //$NON-NLS-1$
-    for( double attribute : m_attributes )
+    for( final double attribute : m_attributes )
     {
       att = att + " " + attribute; //$NON-NLS-1$
     }

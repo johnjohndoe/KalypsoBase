@@ -70,7 +70,7 @@ public class TransformSRSVisitor implements FilterVisitor
    * @see org.kalypsodeegree.filterencoding.visitor.FilterVisitor#visit(org.kalypsodeegree.filterencoding.Operation)
    */
   @Override
-  public boolean visit( Operation operation )
+  public boolean visit( final Operation operation )
   {
     try
     {

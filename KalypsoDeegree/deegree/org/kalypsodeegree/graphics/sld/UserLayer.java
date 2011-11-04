@@ -58,7 +58,7 @@ public interface UserLayer extends Layer
    * 
    * @return the RemoteOWS
    */
-  RemoteOWS getRemoteOWS();
+  RemoteOWS getRemoteOWS( );
 
   /**
    * Sets the RemoteOWS

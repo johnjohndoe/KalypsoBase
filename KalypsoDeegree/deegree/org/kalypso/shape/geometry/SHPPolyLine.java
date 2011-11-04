@@ -90,24 +90,24 @@ public class SHPPolyLine implements ISHPParts
     final int numParts = ByteUtils.readLEInt( recBuf, 36 );
     m_numPoints = ByteUtils.readLEInt( recBuf, 40 );
 
-    final int pointsStart = ShapeConst.PARTS_START + (numParts * 4);
+    final int pointsStart = ShapeConst.PARTS_START + numParts * 4;
 
     m_parts = new SHPPoint[numParts][];
     for( int j = 0; j < numParts; j++ )
     {
       // get number of first point of current part out of ESRI shape Record:
-      final int firstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + (j * 4) );
+      final int firstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + j * 4 );
 
       // calculate offset of part in bytes, count from the beginning of
       // recordbuffer
-      final int offset = pointsStart + (firstPointNo * 16);
+      final int offset = pointsStart + firstPointNo * 16;
 
       // get number of first point of next part ...
       int nextFirstPointNo = 0;
       if( j < numParts - 1 )
       {
         // ... usually out of ESRI shape Record
-        nextFirstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + ((j + 1) * 4) );
+        nextFirstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + (j + 1) * 4 );
       }
       // ... for the last part as total number of points
       else if( j == numParts - 1 )
@@ -125,7 +125,7 @@ public class SHPPolyLine implements ISHPParts
       // create the points of the j-th part from the buffer
       for( int i = 0; i < lnumPoints; i++ )
       {
-        m_parts[j][i] = new SHPPoint( recBuf, offset + (i * 16) );
+        m_parts[j][i] = new SHPPoint( recBuf, offset + i * 16 );
       }
     }
 

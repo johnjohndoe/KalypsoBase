@@ -70,8 +70,8 @@ public class ShapeFileNewData
   {
     try
     {
-      m_fields.add( new DBFFieldBean( new DBFField( Messages.getString("ShapeFileNewData_0"), FieldType.C, (short) 128, (short) 0 ) ) ); //$NON-NLS-1$
-      m_fields.add( new DBFFieldBean( new DBFField( Messages.getString("ShapeFileNewData_1"), FieldType.N, (short) 20, (short) 10 ) ) ); //$NON-NLS-1$
+      m_fields.add( new DBFFieldBean( new DBFField( Messages.getString( "ShapeFileNewData_0" ), FieldType.C, (short) 128, (short) 0 ) ) ); //$NON-NLS-1$
+      m_fields.add( new DBFFieldBean( new DBFField( Messages.getString( "ShapeFileNewData_1" ), FieldType.N, (short) 20, (short) 10 ) ) ); //$NON-NLS-1$
     }
     catch( final DBaseException e )
     {

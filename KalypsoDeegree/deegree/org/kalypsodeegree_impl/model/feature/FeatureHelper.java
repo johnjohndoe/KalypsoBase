@@ -57,7 +57,6 @@ import org.kalypso.commons.tokenreplace.TokenReplacerEngine;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.MultiException;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.contribs.javax.xml.namespace.QNameUtilities;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -80,6 +79,10 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
+import org.kalypsodeegree_impl.model.feature.tokenreplace.AnnotationTokenReplacer;
+import org.kalypsodeegree_impl.model.feature.tokenreplace.FeatureIdTokenReplacer;
+import org.kalypsodeegree_impl.model.feature.tokenreplace.ListPropertyTokenReplacer;
+import org.kalypsodeegree_impl.model.feature.tokenreplace.PropertyTokenReplacer;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -94,91 +97,16 @@ public final class FeatureHelper
     throw new UnsupportedOperationException( "Helper class, do not instantiate" );
   }
 
-  private static ITokenReplacer TR_FEATUREID = new ITokenReplacer()
-  {
-    @Override
-    public String replaceToken( final Object value, final String argument )
-    {
-      return ((Feature) value).getId();
-    }
+  private static ITokenReplacer TR_FEATUREID = new FeatureIdTokenReplacer();
 
-    @Override
-    public String getToken( )
-    {
-      return "id"; //$NON-NLS-1$
-    }
-  };
+  private static ITokenReplacer TR_PROPERTYVALUE = new PropertyTokenReplacer();
 
-  private static ITokenReplacer TR_PROPERTYVALUE = new ITokenReplacer()
-  {
-    @Override
-    public String replaceToken( final Object value, final String argument )
-    {
-      final Feature feature = (Feature) value;
+  private static ITokenReplacer TR_LISTPROPERTYVALUE = new ListPropertyTokenReplacer();
 
-      final String[] strings = argument.split( ";" ); //$NON-NLS-1$
-      if( strings.length == 0 )
-        return "No argument for property. Must be _qname_;[null-value];[format-string]";
-
-      final String propName = strings[0];
-      final String nullValue = strings.length > 1 ? strings[1] : null;
-      final String formatString = strings.length > 2 ? strings[2] : null;
-
-      final QName qname = QNameUtilities.createQName( propName );
-      final Object property = FeatureHelper.getPropertyLax( feature, qname );
-
-      if( property == null )
-        return "" + nullValue; //$NON-NLS-1$
-
-      if( formatString != null )
-        return String.format( formatString, property );
-
-      return "" + property; //$NON-NLS-1$
-    }
-
-    @Override
-    public String getToken( )
-    {
-      return "property";
-    }
-  };
-
-  private static ITokenReplacer TR_LISTPROPERTYVALUE = new ITokenReplacer()
-  {
-    @Override
-    public String replaceToken( final Object value, final String argument )
-    {
-      final Feature feature = (Feature) value;
-
-      final String[] strings = argument.split( ";" ); //$NON-NLS-1$
-      if( strings.length < 2 )
-        return "Wrong argument for listProperty. Must be _qname_;listindex;[null-Value]";
-
-      final QName qname = QNameUtilities.createQName( strings[0] );
-      final int listindex = Integer.parseInt( strings[1] );
-      final String nullValue = strings.length > 2 ? strings[2] : null;
-
-      final List< ? > list = (List< ? >) FeatureHelper.getPropertyLax( feature, qname );
-
-      if( listindex >= list.size() )
-        return "" + nullValue; //$NON-NLS-1$
-
-      final Object propertyValue = list.get( listindex );
-      if( propertyValue == null )
-        return "" + nullValue; //$NON-NLS-1$
-
-      return "" + propertyValue; //$NON-NLS-1$
-    }
-
-    @Override
-    public String getToken( )
-    {
-      return "listProperty"; //$NON-NLS-1$
-    }
-  };
+  private static ITokenReplacer TR_ANNOTATION_VALUE = new AnnotationTokenReplacer();
 
   private static TokenReplacerEngine FEATURE_TOKEN_REPLACE = new TokenReplacerEngine( new ITokenReplacer[] { FeatureHelper.TR_FEATUREID, FeatureHelper.TR_PROPERTYVALUE,
-      FeatureHelper.TR_LISTPROPERTYVALUE } );
+      FeatureHelper.TR_LISTPROPERTYVALUE, TR_ANNOTATION_VALUE } );
 
   /**
    * @deprecated Do not use strings as property names. Use {@link IFeatureType#getProperty(QName)} instead.
@@ -1183,6 +1111,13 @@ public final class FeatureHelper
    */
   public static String getAnnotationValue( final Feature feature, final String annotationKey )
   {
+    if( feature instanceof XLinkedFeature_Impl )
+    {
+      // BUGFIX: access the feature here once, before the annotation is fetched.
+      // This is necessary in order to force the featureType to be known.
+      ((XLinkedFeature_Impl) feature).getFeature();
+    }
+
     final IFeatureType featureType = feature.getFeatureType();
     final IAnnotation annotation = featureType.getAnnotation();
 

@@ -110,8 +110,11 @@ public class PooledObsProvider extends AbstractObsProvider implements IPoolListe
   @Override
   public final void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
+
     if( !m_isDisposed )
+    {
       setObservation( (IObservation) newValue );
+    }
   }
 
   /**

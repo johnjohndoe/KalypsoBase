@@ -765,13 +765,13 @@ public class ConstraintDelaunayHelper
       IOUtils.closeQuietly( eleReader );
       if( tempDir != null && tempDir.exists() )
         try
-      {
+        {
           FileUtils.deleteDirectory( tempDir );
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-      }
+        }
+        catch( final IOException e )
+        {
+          e.printStackTrace();
+        }
     }
   }
 

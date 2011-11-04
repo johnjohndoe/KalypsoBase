@@ -93,9 +93,9 @@ public class SpatialOperation extends AbstractOperation
   public SpatialOperation( final int operatorId, final PropertyName propertyName, final GM_Object gmlGeometry, final double d )
   {
     super( operatorId );
-    this.m_propertyName = propertyName;
-    this.m_geometry = gmlGeometry;
-    this.m_distance = d;
+    m_propertyName = propertyName;
+    m_geometry = gmlGeometry;
+    m_distance = d;
   }
 
   /**
@@ -109,11 +109,11 @@ public class SpatialOperation extends AbstractOperation
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
-   * methods to validate the structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM
+   * () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *             if the structure of the DOM-fragment is invalid
+   *           if the structure of the DOM-fragment is invalid
    */
   public static Operation buildFromDOM( final Element element ) throws FilterConstructionException
   {
@@ -125,7 +125,7 @@ public class SpatialOperation extends AbstractOperation
     // every spatial operation has exactly 2 elements
     final ElementList children = XMLTools.getChildElements( element );
 
-    if( (children.getLength() != 2) && (operatorId != OperationDefines.DWITHIN) )
+    if( children.getLength() != 2 && operatorId != OperationDefines.DWITHIN )
     {
       throw new FilterConstructionException( "'" + name + "' requires exactly 2 elements!" );
     }
@@ -231,7 +231,7 @@ public class SpatialOperation extends AbstractOperation
    * @param feature
    * @return the property as a <tt>GM_Object</tt> -object.
    * @throws FilterEvaluationException
-   *             if the PropertyName does not denote a GM_Object
+   *           if the PropertyName does not denote a GM_Object
    */
   public GM_Object getGeometryProperty( final Feature feature ) throws FilterEvaluationException
   {
@@ -251,7 +251,7 @@ public class SpatialOperation extends AbstractOperation
    * 
    * @return the literal as a <tt>GM_Object</tt> -object.
    * @throws FilterEvaluationException
-   *             if the Literal can not be converted to a GM_Object
+   *           if the Literal can not be converted to a GM_Object
    */
   public GM_Object getGeometryLiteral( )
   {
@@ -324,17 +324,17 @@ public class SpatialOperation extends AbstractOperation
   }
 
   /**
-   * Calculates the <tt>SpatialOperation</tt>'s logical value based on the property values of the given
-   * <tt>Feature</tt>.
+   * Calculates the <tt>SpatialOperation</tt>'s logical value based on the property values of the given <tt>Feature</tt>
+   * .
    * <p>
    * TODO: Implement operations: CROSSES, BEYOND, OVERLAPS AND TOUCHES.
    * <p>
    * 
    * @param feature
-   *            that determines the property values
+   *          that determines the property values
    * @return true, if the <tt>SpatialOperation</tt> evaluates to true, else false
    * @throws FilterEvaluationException
-   *             if the evaluation fails
+   *           if the evaluation fails
    */
   @Override
   public boolean evaluate( final Feature feature ) throws FilterEvaluationException
@@ -401,7 +401,7 @@ public class SpatialOperation extends AbstractOperation
         value = getGeometryProperty( feature ).intersects( getGeometryLiteral() );
         break;
       }
-        // calvin added on 10/21/2003
+      // calvin added on 10/21/2003
       case OperationDefines.DWITHIN:
       {
         try

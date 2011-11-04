@@ -45,20 +45,15 @@ import java.io.RandomAccessFile;
 import java.util.Stack;
 
 /**
- * Persistente Implementierung einer PageFile. Implementiert als RandomAccesFile.
- * 
- * Aufbau der Datei -- Header -- int pageFileVersion int dimension int capacity = maximum + 1 for overflow int minimum --
- * Body -- aufeinanderfolgende Pages mit int typ - 1 LeafNode 2 NoneLeafNode int place - Platz, wo Knoten im Vaterknoten
- * steht int counter - Derzeit benutzer Platz im Knoten int parentNode - Nummer der PageFile des Vaterknotens int
- * pageNumber - eigene PageFile-Nummer - for(i = 0; i < capacity; i++) int data Eintrag i - pageNumber Kindknoten oder
- * Objekt-ID der Dateneinträge - jeweils Abhängigkeit von dimension = x double pMin x.Dimension - pMin der gemeinsamen
+ * Persistente Implementierung einer PageFile. Implementiert als RandomAccesFile. Aufbau der Datei -- Header -- int
+ * pageFileVersion int dimension int capacity = maximum + 1 for overflow int minimum -- Body -- aufeinanderfolgende
+ * Pages mit int typ - 1 LeafNode 2 NoneLeafNode int place - Platz, wo Knoten im Vaterknoten steht int counter - Derzeit
+ * benutzer Platz im Knoten int parentNode - Nummer der PageFile des Vaterknotens int pageNumber - eigene
+ * PageFile-Nummer - for(i = 0; i < capacity; i++) int data Eintrag i - pageNumber Kindknoten oder Objekt-ID der
+ * Dateneinträge - jeweils Abhängigkeit von dimension = x double pMin x.Dimension - pMin der gemeinsamen
  * HyperBoundingBox double pMax x.Dimension - pMax der gemeinsamen HyperBoundingBox - for(i = 0; i < capacity; i++)
- * double pMin x.Dimension - pMin HyperBB für Eintrag i double pMax x.Dimension - pMax HyperBB für Eintrag i
- * 
- * int entspr. 4 Bytes - double entspr. 8 Bytes
- * 
- * PageSize = (4 * (5 + capacity)) + (capacity + 1) * (dimension * 16)
- * 
+ * double pMin x.Dimension - pMin HyperBB für Eintrag i double pMax x.Dimension - pMax HyperBB für Eintrag i int entspr.
+ * 4 Bytes - double entspr. 8 Bytes PageSize = (4 * (5 + capacity)) + (capacity + 1) * (dimension * 16)
  * 
  * @version 1.0
  * @author Wolfgang Bär
@@ -71,9 +66,9 @@ public class PersistentPageFile extends PageFile
 
   private RandomAccessFile file;
 
-  private Stack emptyPages;
+  private final Stack emptyPages;
 
-  private String fileName;
+  private final String fileName;
 
   private byte[] buffer;
 
@@ -86,12 +81,12 @@ public class PersistentPageFile extends PageFile
    * 
    * @param fileName
    */
-  public PersistentPageFile( String fileName )
+  public PersistentPageFile( final String fileName )
   {
     super();
     this.fileName = fileName;
-    this.emptyPages = new Stack();
-    this.closed = false;
+    emptyPages = new Stack();
+    closed = false;
   }
 
   /**
@@ -104,12 +99,12 @@ public class PersistentPageFile extends PageFile
    * @throws PageFileException
    */
   @Override
-  public void initialize( int dimension, int capacity ) throws PageFileException
+  public void initialize( final int dimension, final int capacity ) throws PageFileException
   {
     // Initialisierung
     super.initialize( dimension, capacity );
 
-    File fileTest = new File( fileName );
+    final File fileTest = new File( fileName );
 
     try
     {
@@ -123,7 +118,7 @@ public class PersistentPageFile extends PageFile
 
         file = new RandomAccessFile( fileTest, "rw" );
 
-        //	Überprüfung der Korrektheit der Datei
+        // Überprüfung der Korrektheit der Datei
         file.seek( 0 );
 
         if( file.readInt() != PAGEFILE_VERSION )
@@ -135,8 +130,8 @@ public class PersistentPageFile extends PageFile
         m_dimension = file.readInt();
         m_capacity = file.readInt();
         m_minimum = file.readInt();
-        this.pageSize = ( ( 4 * ( 5 + m_capacity ) ) + ( ( m_capacity + 1 ) * ( m_dimension * 16 ) ) );
-        this.buffer = new byte[pageSize];
+        pageSize = 4 * (5 + m_capacity) + (m_capacity + 1) * m_dimension * 16;
+        buffer = new byte[pageSize];
 
         // Einlesen leerer Seiten
         int i = 0;
@@ -145,7 +140,7 @@ public class PersistentPageFile extends PageFile
         {
           while( true )
           {
-            file.seek( 16 + ( i * pageSize ) );
+            file.seek( 16 + i * pageSize );
 
             if( EMPTY_PAGE == file.readInt() )
             {
@@ -155,7 +150,7 @@ public class PersistentPageFile extends PageFile
             i++;
           }
         }
-        catch( IOException ioe )
+        catch( final IOException ioe )
         {
           // shouldnt we print stack trace?
         }
@@ -165,8 +160,8 @@ public class PersistentPageFile extends PageFile
         // neue Datei
         file = new RandomAccessFile( fileTest, "rw" );
         file.setLength( 0 );
-        this.pageSize = ( ( 4 * ( 5 + capacity ) ) + ( ( capacity + 1 ) * ( dimension * 16 ) ) );
-        this.buffer = new byte[pageSize];
+        pageSize = 4 * (5 + capacity) + (capacity + 1) * dimension * 16;
+        buffer = new byte[pageSize];
 
         // header schreiben (Dimension , Dateiversion)
         file.seek( 0 );
@@ -176,7 +171,7 @@ public class PersistentPageFile extends PageFile
         file.writeInt( m_minimum );
       }
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.fillInStackTrace();
       throw new PageFileException( "IOException occured: \n " + e.getMessage() );
@@ -187,21 +182,21 @@ public class PersistentPageFile extends PageFile
    * @see PageFile#readNode(int)
    */
   @Override
-  public Node readNode( int pageNumber ) throws PageFileException
+  public Node readNode( final int pageNumber ) throws PageFileException
   {
     Node node = null;
 
     try
     {
-      file.seek( 16 + ( pageNumber * pageSize ) );
+      file.seek( 16 + pageNumber * pageSize );
 
-      int read = file.read( buffer );
+      final int read = file.read( buffer );
 
       if( pageSize == read )
       {
-        DataInputStream ds = new DataInputStream( new ByteArrayInputStream( buffer ) );
+        final DataInputStream ds = new DataInputStream( new ByteArrayInputStream( buffer ) );
 
-        int type = ds.readInt();
+        final int type = ds.readInt();
 
         if( type == 1 )
         {
@@ -220,12 +215,12 @@ public class PersistentPageFile extends PageFile
         if( type == 1 )
         {
           for( int i = 0; i < m_capacity; i++ )
-            ( (LeafNode)node ).data[i] = ds.readInt();
+            ((LeafNode) node).data[i] = ds.readInt();
         }
         else
         {
           for( int i = 0; i < m_capacity; i++ )
-            ( (NoneLeafNode)node ).childNodes[i] = ds.readInt();
+            ((NoneLeafNode) node).childNodes[i] = ds.readInt();
         }
 
         node.unionMinBB = readNextHyperBoundingBox( ds );
@@ -242,7 +237,7 @@ public class PersistentPageFile extends PageFile
 
       return node;
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.fillInStackTrace();
       throw new PageFileException( "PageFileException occured ! \n " + e.getMessage() );
@@ -252,7 +247,7 @@ public class PersistentPageFile extends PageFile
   /**
    * @throws IOException
    */
-  public HyperBoundingBox readNextHyperBoundingBox( DataInputStream ds ) throws IOException
+  public HyperBoundingBox readNextHyperBoundingBox( final DataInputStream ds ) throws IOException
   {
     double[] point1;
     double[] point2;
@@ -272,7 +267,7 @@ public class PersistentPageFile extends PageFile
    * @see PageFile#writeNode(Node)
    */
   @Override
-  public int writeNode( Node node ) throws PageFileException
+  public int writeNode( final Node node ) throws PageFileException
   {
     try
     {
@@ -280,16 +275,16 @@ public class PersistentPageFile extends PageFile
       {
         if( !emptyPages.empty() )
         {
-          node.setPageNumber( ( (Integer)emptyPages.pop() ).intValue() );
+          node.setPageNumber( ((Integer) emptyPages.pop()).intValue() );
         }
         else
         {
-          node.setPageNumber( (int)( ( file.length() - 16 ) / pageSize ) );
+          node.setPageNumber( (int) ((file.length() - 16) / pageSize) );
         }
       }
 
-      ByteArrayOutputStream bs = new ByteArrayOutputStream( pageSize );
-      DataOutputStream ds = new DataOutputStream( bs );
+      final ByteArrayOutputStream bs = new ByteArrayOutputStream( pageSize );
+      final DataOutputStream ds = new DataOutputStream( bs );
 
       int type;
 
@@ -313,20 +308,20 @@ public class PersistentPageFile extends PageFile
       {
         for( int i = 0; i < node.counter; i++ )
         {
-          ds.writeInt( ( (LeafNode)node ).data[i] );
+          ds.writeInt( ((LeafNode) node).data[i] );
         }
 
-        for( int i = 0; i < ( m_capacity - node.counter ); i++ )
+        for( int i = 0; i < m_capacity - node.counter; i++ )
           ds.writeInt( -1 );
       }
       else
       {
         for( int i = 0; i < node.counter; i++ )
         {
-          ds.writeInt( ( (NoneLeafNode)node ).childNodes[i] );
+          ds.writeInt( ((NoneLeafNode) node).childNodes[i] );
         }
 
-        for( int i = 0; i < ( m_capacity - node.counter ); i++ )
+        for( int i = 0; i < m_capacity - node.counter; i++ )
           ds.writeInt( -1 );
       }
 
@@ -345,16 +340,16 @@ public class PersistentPageFile extends PageFile
           ds.writeDouble( node.hyperBBs[j].getPMax().getCoord( i ) );
       }
 
-      for( int j = 0; j < ( m_capacity - node.counter ); j++ )
+      for( int j = 0; j < m_capacity - node.counter; j++ )
       {
-        for( int i = 0; i < ( m_dimension * 2 ); i++ )
+        for( int i = 0; i < m_dimension * 2; i++ )
           ds.writeDouble( -1 );
       }
 
       ds.flush();
       bs.flush();
 
-      file.seek( 16 + ( pageSize * node.pageNumber ) );
+      file.seek( 16 + pageSize * node.pageNumber );
 
       file.write( bs.toByteArray() );
 
@@ -362,7 +357,7 @@ public class PersistentPageFile extends PageFile
 
       return node.pageNumber;
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.fillInStackTrace();
       throw new PageFileException( "PageFileException occured ! \n " + e.getMessage() );
@@ -373,16 +368,16 @@ public class PersistentPageFile extends PageFile
    * @see PageFile#deleteNode(int)
    */
   @Override
-  public Node deleteNode( int pageNumber ) throws PageFileException
+  public Node deleteNode( final int pageNumber ) throws PageFileException
   {
-    Node node = this.readNode( pageNumber );
+    final Node node = readNode( pageNumber );
 
     try
     {
-      file.seek( 16 + ( pageSize * node.pageNumber ) );
+      file.seek( 16 + pageSize * node.pageNumber );
       file.writeInt( EMPTY_PAGE );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.fillInStackTrace();
       throw new PageFileException( "PageFileException occured ! \n " + e.getMessage() );
@@ -396,13 +391,13 @@ public class PersistentPageFile extends PageFile
    * @see PageFile#close()
    */
   @Override
-  public void close() throws PageFileException
+  public void close( ) throws PageFileException
   {
     try
     {
       file.close();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.fillInStackTrace();
       throw new PageFileException( "PageFileException during close()" );
@@ -412,14 +407,12 @@ public class PersistentPageFile extends PageFile
   }
 
   /**
-   * 
-   * 
    * @throws Throwable
    */
   @Override
-  public void finalize() throws Throwable
+  public void finalize( ) throws Throwable
   {
-    if( !closed && file!=null)
+    if( !closed && file != null )
     {
       file.close();
     }

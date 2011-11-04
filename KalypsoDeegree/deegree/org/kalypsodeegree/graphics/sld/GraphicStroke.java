@@ -60,7 +60,7 @@ public interface GraphicStroke
    * 
    * @return graphic
    */
-  Graphic getGraphic();
+  Graphic getGraphic( );
 
   /**
    * Sets the Graphic.

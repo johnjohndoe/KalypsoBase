@@ -195,7 +195,7 @@ public class TupleResultUtilities
       final List<String> values = new ArrayList<String>();
       for( final IRecord record : result )
       {
-        values.add( (record.getValue( iComp )).toString() );
+        values.add( record.getValue( iComp ).toString() );
       }
       if( values.size() < 1 )
       {
@@ -283,7 +283,7 @@ public class TupleResultUtilities
       final List<String> values = new ArrayList<String>();
       for( final IRecord record : result )
       {
-        values.add( (record.getValue( iComp )).toString() );
+        values.add( record.getValue( iComp ).toString() );
       }
       if( values.size() < 1 )
       {

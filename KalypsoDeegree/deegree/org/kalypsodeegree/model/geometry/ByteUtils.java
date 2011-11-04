@@ -77,7 +77,7 @@ public class ByteUtils
   public static int readBEShort( final byte[] b, final int off )
   {
 
-    return (((b[off + 0] & 0xff) << 8) | ((b[off + 1] & 0xff)));
+    return (b[off + 0] & 0xff) << 8 | b[off + 1] & 0xff;
 
   }
 
@@ -93,7 +93,7 @@ public class ByteUtils
    */
   public static int readLEShort( final byte[] b, final int off )
   {
-    return (((b[off + 1] & 0xff) << 8) | ((b[off + 0] & 0xff)));
+    return (b[off + 1] & 0xff) << 8 | b[off + 0] & 0xff;
   }
 
   /**
@@ -108,7 +108,7 @@ public class ByteUtils
   public static int readBEInt( final byte[] b, final int off )
   {
 
-    return (((b[off + 0] & 0xff) << 24) | ((b[off + 1] & 0xff) << 16) | ((b[off + 2] & 0xff) << 8) | ((b[off + 3] & 0xff)));
+    return (b[off + 0] & 0xff) << 24 | (b[off + 1] & 0xff) << 16 | (b[off + 2] & 0xff) << 8 | b[off + 3] & 0xff;
 
   }
 
@@ -123,7 +123,7 @@ public class ByteUtils
    */
   public static int readLEInt( final byte[] b, final int off )
   {
-    return (((b[off + 3] & 0xff) << 24) | ((b[off + 2] & 0xff) << 16) | ((b[off + 1] & 0xff) << 8) | ((b[off + 0] & 0xff)));
+    return (b[off + 3] & 0xff) << 24 | (b[off + 2] & 0xff) << 16 | (b[off + 1] & 0xff) << 8 | b[off + 0] & 0xff;
   }
 
   /**
@@ -138,8 +138,8 @@ public class ByteUtils
    */
   public static long readLELong( final byte[] b, final int off )
   {
-    return (((b[off + 0] & 0xffL)) | ((b[off + 1] & 0xffL) << 8) | ((b[off + 2] & 0xffL) << 16) | ((b[off + 3] & 0xffL) << 24) | ((b[off + 4] & 0xffL) << 32) | ((b[off + 5] & 0xffL) << 40)
-        | ((b[off + 6] & 0xffL) << 48) | ((b[off + 7] & 0xffL) << 56));
+    return b[off + 0] & 0xffL | (b[off + 1] & 0xffL) << 8 | (b[off + 2] & 0xffL) << 16 | (b[off + 3] & 0xffL) << 24 | (b[off + 4] & 0xffL) << 32 | (b[off + 5] & 0xffL) << 40
+        | (b[off + 6] & 0xffL) << 48 | (b[off + 7] & 0xffL) << 56;
   }
 
   /**
@@ -155,8 +155,8 @@ public class ByteUtils
   public static long readBELong( final byte[] b, final int off )
   {
 
-    return (((b[off + 7] & 0xffL)) | ((b[off + 6] & 0xffL) << 8) | ((b[off + 5] & 0xffL) << 16) | ((b[off + 4] & 0xffL) << 24) | ((b[off + 3] & 0xffL) << 32) | ((b[off + 2] & 0xffL) << 40)
-        | ((b[off + 1] & 0xffL) << 48) | ((b[off + 0] & 0xffL) << 56));
+    return b[off + 7] & 0xffL | (b[off + 6] & 0xffL) << 8 | (b[off + 5] & 0xffL) << 16 | (b[off + 4] & 0xffL) << 24 | (b[off + 3] & 0xffL) << 32 | (b[off + 2] & 0xffL) << 40
+        | (b[off + 1] & 0xffL) << 48 | (b[off + 0] & 0xffL) << 56;
 
   }
 
@@ -237,8 +237,8 @@ public class ByteUtils
    */
   public static int writeBEShort( final byte[] b, final int off, final int val )
   {
-    b[off + 0] = (byte) ((val >> 8) & 0xff);
-    b[off + 1] = (byte) ((val) & 0xff);
+    b[off + 0] = (byte) (val >> 8 & 0xff);
+    b[off + 1] = (byte) (val & 0xff);
 
     return 2;
 
@@ -259,8 +259,8 @@ public class ByteUtils
   public static int writeLEShort( final byte[] b, final int off, final int val )
   {
 
-    b[off + 0] = (byte) ((val) & 0xff);
-    b[off + 1] = (byte) ((val >> 8) & 0xff);
+    b[off + 0] = (byte) (val & 0xff);
+    b[off + 1] = (byte) (val >> 8 & 0xff);
 
     return 2;
 
@@ -281,10 +281,10 @@ public class ByteUtils
   public static int writeBEInt( final byte[] b, final int off, final int val )
   {
 
-    b[off + 0] = (byte) ((val >> 24) & 0xff);
-    b[off + 1] = (byte) ((val >> 16) & 0xff);
-    b[off + 2] = (byte) ((val >> 8) & 0xff);
-    b[off + 3] = (byte) ((val) & 0xff);
+    b[off + 0] = (byte) (val >> 24 & 0xff);
+    b[off + 1] = (byte) (val >> 16 & 0xff);
+    b[off + 2] = (byte) (val >> 8 & 0xff);
+    b[off + 3] = (byte) (val & 0xff);
 
     return 4;
 
@@ -304,10 +304,10 @@ public class ByteUtils
    */
   public static int writeLEInt( final byte[] b, final int off, final int val )
   {
-    b[off + 0] = (byte) ((val) & 0xff);
-    b[off + 1] = (byte) ((val >> 8) & 0xff);
-    b[off + 2] = (byte) ((val >> 16) & 0xff);
-    b[off + 3] = (byte) ((val >> 24) & 0xff);
+    b[off + 0] = (byte) (val & 0xff);
+    b[off + 1] = (byte) (val >> 8 & 0xff);
+    b[off + 2] = (byte) (val >> 16 & 0xff);
+    b[off + 3] = (byte) (val >> 24 & 0xff);
 
     return 4;
 
@@ -327,14 +327,14 @@ public class ByteUtils
    */
   public static int writeLELong( final byte[] b, final int off, final long val )
   {
-    b[off + 0] = (byte) ((val) & 0xff);
-    b[off + 1] = (byte) ((val >> 8) & 0xff);
-    b[off + 2] = (byte) ((val >> 16) & 0xff);
-    b[off + 3] = (byte) ((val >> 24) & 0xff);
-    b[off + 4] = (byte) ((val >> 32) & 0xff);
-    b[off + 5] = (byte) ((val >> 40) & 0xff);
-    b[off + 6] = (byte) ((val >> 48) & 0xff);
-    b[off + 7] = (byte) ((val >> 56) & 0xff);
+    b[off + 0] = (byte) (val & 0xff);
+    b[off + 1] = (byte) (val >> 8 & 0xff);
+    b[off + 2] = (byte) (val >> 16 & 0xff);
+    b[off + 3] = (byte) (val >> 24 & 0xff);
+    b[off + 4] = (byte) (val >> 32 & 0xff);
+    b[off + 5] = (byte) (val >> 40 & 0xff);
+    b[off + 6] = (byte) (val >> 48 & 0xff);
+    b[off + 7] = (byte) (val >> 56 & 0xff);
 
     return 8;
   }
@@ -354,14 +354,14 @@ public class ByteUtils
   public static int writeBELong( final byte[] b, final int off, final long val )
   {
 
-    b[off + 0] = (byte) ((val >> 56) & 0xff);
-    b[off + 1] = (byte) ((val >> 48) & 0xff);
-    b[off + 2] = (byte) ((val >> 40) & 0xff);
-    b[off + 3] = (byte) ((val >> 32) & 0xff);
-    b[off + 4] = (byte) ((val >> 24) & 0xff);
-    b[off + 5] = (byte) ((val >> 16) & 0xff);
-    b[off + 6] = (byte) ((val >> 8) & 0xff);
-    b[off + 7] = (byte) ((val) & 0xff);
+    b[off + 0] = (byte) (val >> 56 & 0xff);
+    b[off + 1] = (byte) (val >> 48 & 0xff);
+    b[off + 2] = (byte) (val >> 40 & 0xff);
+    b[off + 3] = (byte) (val >> 32 & 0xff);
+    b[off + 4] = (byte) (val >> 24 & 0xff);
+    b[off + 5] = (byte) (val >> 16 & 0xff);
+    b[off + 6] = (byte) (val >> 8 & 0xff);
+    b[off + 7] = (byte) (val & 0xff);
 
     return 8;
 

@@ -84,7 +84,7 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
     setDialogSettings( settings );
     setNeedsProgressMonitor( true );
 
-    setWindowTitle( Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -105,12 +105,12 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
   {
     /* Only ask user for gml-file if no coverage collection is set */
     m_fileCreationPage = new WizardNewFileCreationPage( "newFile", m_selection ); //$NON-NLS-1$
-    m_fileCreationPage.setTitle( Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.1") ); //$NON-NLS-1$
-    m_fileCreationPage.setDescription( Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.2") ); //$NON-NLS-1$
+    m_fileCreationPage.setTitle( Messages.getString( "org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.1" ) ); //$NON-NLS-1$
+    m_fileCreationPage.setDescription( Messages.getString( "org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.2" ) ); //$NON-NLS-1$
 
     m_pageSelect = new PageSelectGeodataFile( m_fileCreationPage );
-    m_pageSelect.setTitle( Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.4") ); //$NON-NLS-1$
-    m_pageSelect.setDescription( Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.3") ); //$NON-NLS-1$
+    m_pageSelect.setTitle( Messages.getString( "org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.4" ) ); //$NON-NLS-1$
+    m_pageSelect.setDescription( Messages.getString( "org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.3" ) ); //$NON-NLS-1$
 
     addPage( m_pageSelect );
     addPage( m_fileCreationPage );
@@ -147,7 +147,7 @@ public class RectifiedGridCoverageImportWizard extends Wizard implements IImport
 
       final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, op );
 
-      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.5"), status ); //$NON-NLS-1$
+      ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.5" ), status ); //$NON-NLS-1$
       return status.isOK();
     }
     catch( final Exception e )

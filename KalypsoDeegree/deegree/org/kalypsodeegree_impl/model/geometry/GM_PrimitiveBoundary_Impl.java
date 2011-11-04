@@ -59,7 +59,7 @@ abstract class GM_PrimitiveBoundary_Impl extends GM_Boundary_Impl implements GM_
    * 
    * @param srs
    */
-  public GM_PrimitiveBoundary_Impl( String srs )
+  public GM_PrimitiveBoundary_Impl( final String srs )
   {
     super( srs );
   }

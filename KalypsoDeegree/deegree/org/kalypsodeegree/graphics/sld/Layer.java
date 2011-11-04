@@ -58,7 +58,7 @@ public interface Layer
    * sets the <Name>
    * 
    * @param name
-   *            the name of the layer
+   *          the name of the layer
    */
   void setName( String name );
 
@@ -75,7 +75,7 @@ public interface Layer
    * Sets the LayerFeatureConstraints for the Layer.
    * 
    * @param layerFeatureConstraints
-   *            the LayerFeatureConstraints
+   *          the LayerFeatureConstraints
    */
   void setLayerFeatureConstraints( LayerFeatureConstraints layerFeatureConstraints );
 
@@ -105,7 +105,7 @@ public interface Layer
    * Adds styles to the Layer.
    * 
    * @param styles
-   *            the styles for the layer as Array
+   *          the styles for the layer as Array
    */
   void setStyles( Style[] styles );
 
@@ -113,7 +113,7 @@ public interface Layer
    * Adds a style to the Layer.
    * 
    * @param style
-   *            a style to add
+   *          a style to add
    */
   void addStyle( Style style );
 
@@ -121,7 +121,7 @@ public interface Layer
    * Removes a style from the Layer.
    * 
    * @param style
-   *            a style to remove
+   *          a style to remove
    */
   void removeStyle( Style style );
 }

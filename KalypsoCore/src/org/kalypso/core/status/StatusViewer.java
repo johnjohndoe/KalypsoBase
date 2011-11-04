@@ -177,7 +177,7 @@ public abstract class StatusViewer
 
 // private ViewerColumn findTimeColumn( )
 // {
-//   getViewer();
+// getViewer();
 // // TODO Auto-generated method stub
 // return null;
 // }

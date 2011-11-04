@@ -57,9 +57,9 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class StrokeArrowPaintDelegateLine extends AbstractStrokeArrowPaintDelegate
 {
   private static final double MIN_DISTANCE_OF_POINTS = 4.0; /*
-   * REMARK: GM_POINTS will be transfered to screen
-   * coordinates, and these points must differ!
-   */
+                                                             * REMARK: GM_POINTS will be transfered to screen
+                                                             * coordinates, and these points must differ!
+                                                             */
 
   public StrokeArrowPaintDelegateLine( final ARROW_TYPE arrowType, final ARROW_WIDGET arrowWidget, final ARROW_ALIGNMENT arrowAlignment, final Double arrowSize, final Double strokeWidth )
   {

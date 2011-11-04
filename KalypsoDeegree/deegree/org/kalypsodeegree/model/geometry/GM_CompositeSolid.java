@@ -37,8 +37,6 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
- * 
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -48,4 +46,5 @@ package org.kalypsodeegree.model.geometry;
  *          <p>
  */
 public interface GM_CompositeSolid extends GM_Solid, GM_Composite
-{}
+{
+}

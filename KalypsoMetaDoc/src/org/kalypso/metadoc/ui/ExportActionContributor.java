@@ -46,7 +46,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.jface.action.IMenuManager;
@@ -84,10 +83,8 @@ public class ExportActionContributor
 
       final IToolBarManager toolBarManager = actionBars.getToolBarManager();
 
-      for( int i = 0; i < actions.length; i++ )
+      for( final ExportAction action : actions )
       {
-        final IAction action = actions[i];
-
         if( menuItem != null )
         {
           if( menuItem instanceof GroupMarker )
@@ -123,10 +120,8 @@ public class ExportActionContributor
     final IExportTarget[] targets = KalypsoMetaDocPlugin.getDefault().getTargets();
     final List<ExportAction> actions = new ArrayList<ExportAction>( targets.length );
 
-    for( int i = 0; i < targets.length; i++ )
+    for( final IExportTarget target : targets )
     {
-      final IExportTarget target = targets[i];
-
       // tricky: only add targets that support our mode
       if( target.isModeSupported( mode ) )
         actions.add( new ExportAction( target, part ) );

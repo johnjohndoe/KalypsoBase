@@ -44,7 +44,6 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Felipe Maximino
- *
  */
 public interface IRootFeatureProvider
 {

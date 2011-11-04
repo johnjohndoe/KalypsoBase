@@ -50,7 +50,7 @@ public class IsNillableRule implements IRule
 
   private int m_minOccurs;
 
-  public IsNillableRule( boolean isNillable, int minOccurs )
+  public IsNillableRule( final boolean isNillable, final int minOccurs )
   {
     super();
     m_isNillable = isNillable;
@@ -63,13 +63,13 @@ public class IsNillableRule implements IRule
    * @see org.kalypso.ogc.gml.util.IRule#isValid(java.lang.Object)
    */
   @Override
-  public IStatus isValid( Object object )
+  public IStatus isValid( final Object object )
   {
-    Status status = new Status( Status.OK, Platform.PI_RUNTIME, Status.OK, "IsNillableRule: Validation OK.", null );
+    Status status = new Status( IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "IsNillableRule: Validation OK.", null );
 
     if( m_isNillable == false && m_minOccurs > 0 && object == null )
     {
-      status = new Status( Status.CANCEL, Platform.PI_RUNTIME, Status.CANCEL, "Ausdruck darf nicht leer sein.", null );
+      status = new Status( IStatus.CANCEL, Platform.PI_RUNTIME, IStatus.CANCEL, "Ausdruck darf nicht leer sein.", null );
     }
 
     return status;
@@ -80,7 +80,7 @@ public class IsNillableRule implements IRule
     return m_isNillable;
   }
 
-  public void setNillable( boolean isNillable )
+  public void setNillable( final boolean isNillable )
   {
     m_isNillable = isNillable;
   }
@@ -90,7 +90,7 @@ public class IsNillableRule implements IRule
     return m_minOccurs;
   }
 
-  public void setMinOccurs( int minOccurs )
+  public void setMinOccurs( final int minOccurs )
   {
     m_minOccurs = minOccurs;
   }

@@ -41,11 +41,11 @@
 package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Graphics;
-import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
@@ -83,6 +83,8 @@ public class MapModell implements IMapModell
   // at once...
   private IKalypsoTheme m_activeTheme = null;
 
+  private IProject m_project;
+
   private I10nString m_name;
 
   private final IKalypsoThemeListener m_themeListener = new KalypsoThemeAdapter()
@@ -112,9 +114,10 @@ public class MapModell implements IMapModell
     }
   };
 
-  public MapModell( final String crs )
+  public MapModell( final String crs, final IProject project )
   {
     m_coordinatesSystem = crs;
+    m_project = project;
   }
 
   @Override
@@ -129,6 +132,8 @@ public class MapModell implements IMapModell
     {
       theme.dispose();
     }
+
+    m_project = null;
   }
 
   /**
@@ -238,9 +243,7 @@ public class MapModell implements IMapModell
     fireThemeAdded( theme );
 
     if( m_activeTheme == null )
-    {
-      // activateTheme( theme );
-    }
+      activateTheme( theme );
   }
 
   /**
@@ -281,8 +284,7 @@ public class MapModell implements IMapModell
         children[i - 1] = Status.OK_STATUS;
     }
 
-    final MultiStatus multiStatus = new MultiStatus( KalypsoCorePlugin.getID(), -1, children, "", null ); //$NON-NLS-1$
-    return multiStatus;
+    return new MultiStatus( KalypsoCorePlugin.getID(), -1, children, "", null ); //$NON-NLS-1$
   }
 
   @Override
@@ -336,7 +338,6 @@ public class MapModell implements IMapModell
     if( m_themes.contains( theme ) )
     {
       m_themes.remove( theme );
-      theme.dispose();
     }
     else
     {
@@ -377,8 +378,6 @@ public class MapModell implements IMapModell
       if( theme.equals( remove ) )
       {
         cascading.removeTheme( remove );
-        remove.dispose();
-
         return true;
       }
       else if( theme instanceof IKalypsoCascadingTheme )
@@ -409,6 +408,15 @@ public class MapModell implements IMapModell
   {
     final IKalypsoTheme[] themes = getAllThemes();
     return MapModellHelper.calculateExtent( themes, new ThemeUsedForMaxExtentPredicate() );
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getProject()
+   */
+  @Override
+  public IProject getProject( )
+  {
+    return m_project;
   }
 
   /**
@@ -611,14 +619,5 @@ public class MapModell implements IMapModell
   public boolean isLoaded( )
   {
     return true;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getContext()
-   */
-  @Override
-  public URL getContext( )
-  {
-    return null;
   }
 }

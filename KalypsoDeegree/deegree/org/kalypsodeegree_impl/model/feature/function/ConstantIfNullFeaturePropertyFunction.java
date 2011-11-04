@@ -60,7 +60,7 @@ public class ConstantIfNullFeaturePropertyFunction extends FeaturePropertyFuncti
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
    */
   @Override
-  public void init( Map<String, String> properties )
+  public void init( final Map<String, String> properties )
   {
 
     m_value = properties.get( "value" );
@@ -71,7 +71,7 @@ public class ConstantIfNullFeaturePropertyFunction extends FeaturePropertyFuncti
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
+  public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     if( currentValue == null )
       return m_value;
@@ -84,7 +84,7 @@ public class ConstantIfNullFeaturePropertyFunction extends FeaturePropertyFuncti
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
+  public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
 
     return valueToSet;

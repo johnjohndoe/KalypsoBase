@@ -59,9 +59,9 @@ public interface GM_OrientablePrimitive extends GM_Primitive
    * sets the curves orientation
    * 
    * @param orientation
-   *            orientation of the curve ('+'|'-')
+   *          orientation of the curve ('+'|'-')
    * @exception GM_Exception
-   *                will be thrown if orientation is invalid
+   *              will be thrown if orientation is invalid
    */
   void setOrientation( char orientation ) throws GM_Exception;
 

@@ -30,7 +30,6 @@
 package org.kalypso.gmlschema.ui;
 
 /**
- * 
  * TODO: insert type comment here
  * 
  * @author doemming
@@ -47,12 +46,12 @@ public class LabelAndChildsProvider
     m_childs = childs;
   }
 
-  public String getText()
+  public String getText( )
   {
     return m_label;
   }
 
-  public Object[] getChilds()
+  public Object[] getChilds( )
   {
     return m_childs;
   }

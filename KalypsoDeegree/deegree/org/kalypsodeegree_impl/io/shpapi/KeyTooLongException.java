@@ -36,8 +36,6 @@
 package org.kalypsodeegree_impl.io.shpapi;
 
 /**
- * 
- * 
  * @version $Revision$
  */
 public class KeyTooLongException extends DBaseIndexException
@@ -48,7 +46,7 @@ public class KeyTooLongException extends DBaseIndexException
    * @param key
    * @param index
    */
-  public KeyTooLongException( Comparable key, DBaseIndex index )
+  public KeyTooLongException( final Comparable key, final DBaseIndex index )
   {
     super( "Key " + key + " is too long for index " + index, key, index );
   }

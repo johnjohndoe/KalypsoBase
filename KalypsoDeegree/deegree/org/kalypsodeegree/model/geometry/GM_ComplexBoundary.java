@@ -37,8 +37,6 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
- * 
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -48,4 +46,5 @@ package org.kalypsodeegree.model.geometry;
  *          <p>
  */
 public interface GM_ComplexBoundary extends GM_Boundary
-{}
+{
+}

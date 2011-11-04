@@ -46,8 +46,9 @@ public class IncompatibleGeometryTypeException extends java.lang.Exception
   /**
    * Creates a new instance of <tt>IncompatibleGeometryTypeException</tt> without detail message.
    */
-  public IncompatibleGeometryTypeException()
-  {}
+  public IncompatibleGeometryTypeException( )
+  {
+  }
 
   /**
    * Constructs an instance of <tt>IncompatibleGeometryTypeException</tt> with the specified detail message.
@@ -55,7 +56,7 @@ public class IncompatibleGeometryTypeException extends java.lang.Exception
    * @param msg
    *          the detail message.
    */
-  public IncompatibleGeometryTypeException( String msg )
+  public IncompatibleGeometryTypeException( final String msg )
   {
     super( msg );
   }

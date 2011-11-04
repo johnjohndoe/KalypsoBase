@@ -173,7 +173,7 @@ public class SHP2WKS
   public static GM_Surface<GM_SurfacePatch>[] transformPolygon( final String crs, final ISHPParts shppolygon )
   {
     final int numParts = shppolygon.getNumParts();
-    
+
     final List<GM_Position[]> outerRings = new ArrayList<GM_Position[]>( numParts );
     final List<GM_Position[]> innerRings = new ArrayList<GM_Position[]>( numParts );
     for( int i = 0; i < numParts; i++ )

@@ -40,7 +40,6 @@ import org.kalypsodeegree.filterencoding.visitor.FilterVisitor;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * 
  * <p>
  * --------------------------------------------------------------------------
  * </p>
@@ -53,12 +52,12 @@ public interface Operation
 {
 
   /** Returns the name of the operator. */
-  String getOperatorName();
+  String getOperatorName( );
 
   /**
    * Returns the operator's id.
    */
-  int getOperatorId();
+  int getOperatorId( );
 
   /**
    * Calculates the <tt>Filter</tt>'s logical value based on the certain property values of the given feature.
@@ -72,7 +71,7 @@ public interface Operation
   public boolean evaluate( Feature feature ) throws FilterEvaluationException;
 
   /** Produces an indented XML representation of this object. */
-  public StringBuffer toXML();
-  
+  public StringBuffer toXML( );
+
   public void accept( FilterVisitor fv, Operation operation, int depth );
 }

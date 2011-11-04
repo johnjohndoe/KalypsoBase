@@ -96,7 +96,7 @@ public class PolygonColorMap_Impl implements PolygonColorMap
    *      org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public PolygonColorMapEntry findEntry( String label, Feature feature )
+  public PolygonColorMapEntry findEntry( final String label, final Feature feature )
   {
     for( final PolygonColorMapEntry entry : m_colorMap )
     {
@@ -111,7 +111,7 @@ public class PolygonColorMap_Impl implements PolygonColorMap
    * @see org.kalypsodeegree_impl.graphics.sld.PolygonColorMap#replaceColorMap(java.util.List)
    */
   @Override
-  public void replaceColorMap( List<PolygonColorMapEntry> colorMapList )
+  public void replaceColorMap( final List<PolygonColorMapEntry> colorMapList )
   {
     m_colorMap.clear();
     m_colorMap.addAll( colorMapList );

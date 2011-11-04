@@ -35,8 +35,8 @@
  */
 package org.kalypsodeegree_impl.gml.schema;
 
+import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -264,7 +264,7 @@ public final class SpecialPropertyMapper
       @Override
       public Object map( final Object srcObject )
       {
-        return SimpleDateFormat.getDateTimeInstance().format( (Date) srcObject ).toString();
+        return DateFormat.getDateTimeInstance().format( (Date) srcObject ).toString();
       }
     } );
 
@@ -275,7 +275,7 @@ public final class SpecialPropertyMapper
       {
         try
         {
-          return SimpleDateFormat.getDateTimeInstance().parseObject( (String) srcObject );
+          return DateFormat.getDateTimeInstance().parseObject( (String) srcObject );
         }
         catch( final ParseException e )
         {

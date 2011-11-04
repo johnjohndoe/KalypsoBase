@@ -126,13 +126,13 @@ public final class MapModellHelper
    *          If >0 and <=25 a border will be drawn around the map.
    * @return The image showing the map.
    */
-  public static BufferedImage createWellFormedImageFromModel( IMapPanel panel, int width, int height, Insets insets, int borderWidth )
+  public static BufferedImage createWellFormedImageFromModel( final IMapPanel panel, final int width, final int height, final Insets insets, final int borderWidth )
   {
     /* Get the map model. */
-    IMapModell mapModel = panel.getMapModell();
+    final IMapModell mapModel = panel.getMapModell();
 
     /* Get the bounding box. */
-    GM_Envelope boundingBox = panel.getBoundingBox();
+    final GM_Envelope boundingBox = panel.getBoundingBox();
 
     return createWellFormedImageFromModel( mapModel, width, height, insets, borderWidth, boundingBox );
   }
@@ -154,7 +154,7 @@ public final class MapModellHelper
    *          The original bounding box.
    * @return The image showing the map.
    */
-  public static BufferedImage createWellFormedImageFromModel( IMapModell mapModel, int width, int height, Insets insets, int borderWidth, GM_Envelope boundingBox )
+  public static BufferedImage createWellFormedImageFromModel( final IMapModell mapModel, final int width, final int height, final Insets insets, final int borderWidth, final GM_Envelope boundingBox )
   {
     /* The remaining dimensions for the map considering the insets. */
     int mapWidth = width;
@@ -175,10 +175,10 @@ public final class MapModellHelper
     }
 
     /* Calculate the ratio of the width and height of the available to the map. */
-    double ratio = (double) mapHeight / (double) mapWidth;
+    final double ratio = (double) mapHeight / (double) mapWidth;
 
     /* Adjust the bounding box. */
-    GM_Envelope adjustedBoundingBox = MapModellHelper.adjustBoundingBox( mapModel, boundingBox, ratio );
+    final GM_Envelope adjustedBoundingBox = MapModellHelper.adjustBoundingBox( mapModel, boundingBox, ratio );
 
     return MapModellHelper.createImageFromModell( mapModel, width, height, insets, borderWidth, adjustedBoundingBox );
   }
@@ -202,7 +202,7 @@ public final class MapModellHelper
    *          The envelope of the map, which should be exported.
    * @return The image showing the map.
    */
-  public static BufferedImage createImageFromModell( IMapModell model, int width, int height, Insets insets, int borderWidth, GM_Envelope boundingBox )
+  public static BufferedImage createImageFromModell( final IMapModell model, final int width, final int height, Insets insets, int borderWidth, final GM_Envelope boundingBox )
   {
     /* If there is no bounding box, we cannot draw the map. */
     if( boundingBox == null )
@@ -217,16 +217,16 @@ public final class MapModellHelper
       borderWidth = 0;
 
     /* Calculate the remaining dimensions for the map considering the insets and the border. */
-    int mapWidth = width - insets.left - insets.right - borderWidth;
-    int mapHeight = height - insets.top - insets.bottom - borderWidth;
+    final int mapWidth = width - insets.left - insets.right - borderWidth;
+    final int mapHeight = height - insets.top - insets.bottom - borderWidth;
 
     /* Create the image for the map WITH the insets AND the border. */
-    BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
-    Graphics2D gr = (Graphics2D) image.getGraphics();
+    final BufferedImage image = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
+    final Graphics2D gr = (Graphics2D) image.getGraphics();
 
     /* Create the image for the map WITHOUT the insets AND the border. */
-    BufferedImage mapImage = new BufferedImage( mapWidth, mapHeight, BufferedImage.TYPE_INT_ARGB );
-    Graphics2D mapgr = (Graphics2D) mapImage.getGraphics();
+    final BufferedImage mapImage = new BufferedImage( mapWidth, mapHeight, BufferedImage.TYPE_INT_ARGB );
+    final Graphics2D mapgr = (Graphics2D) mapImage.getGraphics();
 
     try
     {
@@ -249,7 +249,7 @@ public final class MapModellHelper
       mapgr.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
 
       /* Create the world to screen transform. */
-      GeoTransform world2screen = new WorldToScreenTransform();
+      final GeoTransform world2screen = new WorldToScreenTransform();
       world2screen.setSourceRect( boundingBox );
       world2screen.setDestRect( 0, 0, mapWidth, mapHeight, null );
 
@@ -261,7 +261,7 @@ public final class MapModellHelper
 
       /* Draw the border. */
       /* The insets and the space for the border are already considered on the image. */
-      Polygon polygon = new Polygon();
+      final Polygon polygon = new Polygon();
       polygon.addPoint( insets.left, insets.top );
       polygon.addPoint( insets.left + borderWidth + mapWidth + borderWidth, insets.top );
       polygon.addPoint( insets.left + borderWidth + mapWidth + borderWidth, insets.top + borderWidth + mapHeight + borderWidth );
@@ -274,7 +274,7 @@ public final class MapModellHelper
       polygon.addPoint( insets.left + borderWidth, insets.top + borderWidth );
       gr.fill( polygon );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       /* Print the stack trace. */
       ex.printStackTrace();
@@ -315,7 +315,7 @@ public final class MapModellHelper
     GM_Envelope result = null;
     for( final IKalypsoTheme kalypsoTheme : themes )
     {
-      if( (predicate == null) || predicate.decide( kalypsoTheme ) )
+      if( predicate == null || predicate.decide( kalypsoTheme ) )
       {
         final GM_Envelope boundingBox = kalypsoTheme.getFullExtent();
         if( result == null )

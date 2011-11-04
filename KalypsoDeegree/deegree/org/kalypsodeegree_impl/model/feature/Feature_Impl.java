@@ -186,9 +186,16 @@ public class Feature_Impl extends PlatformObject implements Feature
     return getBoundedBy();
   }
 
-  private void calculateEnv( )
+  /**
+   * Recalculates the bounding box of this feature.<br/>
+   * By default the bounding box is calculated by merging all bounding boxes of all contained geometries within this
+   * feature.<br/>
+   * Overwrite the change this behaviour.
+   */
+  protected GM_Envelope calculateEnv( )
   {
     GM_Envelope env = null;
+
     final GM_Object[] geoms = getGeometryProperties();
     for( final GM_Object geometry : geoms )
     {
@@ -198,7 +205,8 @@ public class Feature_Impl extends PlatformObject implements Feature
       else
         env = env.getMerged( geomEnv );
     }
-    m_envelope = env;
+
+    return env;
   }
 
   @Override
@@ -314,7 +322,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   @Override
   public void setWorkspace( final GMLWorkspace workspace )
   {
-    if( (m_parent == null) || (m_parent == workspace) )
+    if( m_parent == null || m_parent == workspace )
     {
       m_parent = workspace;
     }
@@ -371,14 +379,11 @@ public class Feature_Impl extends PlatformObject implements Feature
     return propertyHandler.isFunctionProperty( pt );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.Deegree2Feature#getBoundedBy()
-   */
   @Override
   public GM_Envelope getBoundedBy( )
   {
     if( m_envelope == Feature_Impl.INVALID_ENV )
-      calculateEnv();
+      m_envelope = calculateEnv();
 
     return m_envelope;
   }
@@ -477,7 +482,7 @@ public class Feature_Impl extends PlatformObject implements Feature
       return;
 
     final IRelationType rt = getParentRelation();
-    if( (rt != null) && rt.isList() )
+    if( rt != null && rt.isList() )
     {
       // rt relation type and this relation type can differ (different feature workspaces!)
       final IRelationType relation = (IRelationType) parent.getFeatureType().getProperty( rt.getQName() );

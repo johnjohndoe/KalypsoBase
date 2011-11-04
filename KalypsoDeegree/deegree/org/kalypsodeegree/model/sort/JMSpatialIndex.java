@@ -55,7 +55,7 @@ public interface JMSpatialIndex<T>
    * Invalidate the spatial index. The next time one of the 'query' methods is called, a resort is made.
    * 
    * @param o
-   *            Only this object is invalid. Implementors may use this information to improve the resort performance.
+   *          Only this object is invalid. Implementors may use this information to improve the resort performance.
    */
   void invalidate( Object o );
 

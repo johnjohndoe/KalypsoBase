@@ -91,7 +91,7 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGe
     // skip header
     /* Read header */
     m_gridStream.skip( 12 );
-    byte[] lScaleBuff = new byte[4];
+    final byte[] lScaleBuff = new byte[4];
     read( lScaleBuff, 1 );
     m_scale = ByteUtils.readBEInt( lScaleBuff, 0 );
 
@@ -101,7 +101,7 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGe
     {
       m_linesTotal = getSizeY();
 
-      long linesPerThread = m_linesTotal / 8;
+      final long linesPerThread = m_linesTotal / 8;
       m_lineLen = getSizeX() * 4;
 
       // block_size is set to "optimal" size of the buffer from start on
@@ -120,14 +120,14 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGe
       BLOCK_SIZE = m_linesInBlock * (int) m_lineLen;
 
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       e.printStackTrace();
     }
 
   }
 
-  public void read( byte[] blockData, int items ) throws IOException
+  public void read( final byte[] blockData, final int items ) throws IOException
   {
     m_gridStream.read( blockData, 0, items * 4 );
   }
@@ -154,9 +154,9 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGe
       return null;
     }
 
-    ParallelBinaryGridProcessorBean lBean = createNewBean();
+    final ParallelBinaryGridProcessorBean lBean = createNewBean();
 
-    if( (m_linesRead + m_linesInBlock) <= m_linesTotal )
+    if( m_linesRead + m_linesInBlock <= m_linesTotal )
     {
       lBean.m_itemsInBlock = (int) (m_linesInBlock * m_lineLen) / 4;
     }
@@ -169,7 +169,7 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractDelegatingGe
     {
       read( lBean.m_blockData, lBean.m_itemsInBlock );
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
       return null;

@@ -50,7 +50,7 @@ public class KalypsoGMLSchemaPlugin extends Plugin
 
     return m_schemaCatalog;
   }
-  
+
   /**
    * Returns the shared instance.
    */

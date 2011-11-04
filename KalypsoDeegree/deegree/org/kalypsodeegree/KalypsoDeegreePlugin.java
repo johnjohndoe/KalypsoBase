@@ -64,7 +64,7 @@ public class KalypsoDeegreePlugin extends Plugin
    * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
    */
   @Override
-  public void start( BundleContext context ) throws Exception
+  public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
 
@@ -78,11 +78,11 @@ public class KalypsoDeegreePlugin extends Plugin
    * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
    */
   @Override
-  public void stop( BundleContext context ) throws Exception
+  public void stop( final BundleContext context ) throws Exception
   {
     /* Save the plug-in preferences. */
-    InstanceScope instanceScope = new InstanceScope();
-    IEclipsePreferences instanceNode = instanceScope.getNode( getBundle().getSymbolicName() );
+    final InstanceScope instanceScope = new InstanceScope();
+    final IEclipsePreferences instanceNode = instanceScope.getNode( getBundle().getSymbolicName() );
     instanceNode.flush();
 
     PLUGIN = null;

@@ -7,3 +7,4 @@
 
 @javax.xml.bind.annotation.XmlSchema(namespace = "schema.service.ftp.kalypso.org", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package org.kalypso.ftp.service.schema;
+

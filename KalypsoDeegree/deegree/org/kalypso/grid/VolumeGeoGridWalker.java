@@ -59,9 +59,9 @@ public class VolumeGeoGridWalker implements IGeoGridWalker
 
   /**
    * @param height
-   *            The height (z-value) of the plain.
+   *          The height (z-value) of the plain.
    * @param addNegative
-   *            If <code>true</code>, negative values are also added to the sum.
+   *          If <code>true</code>, negative values are also added to the sum.
    */
   public VolumeGeoGridWalker( final double height, final boolean addNegative )
   {

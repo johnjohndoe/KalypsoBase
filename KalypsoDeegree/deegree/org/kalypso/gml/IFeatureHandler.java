@@ -45,7 +45,6 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Felipe Maximino
- *
  */
 public interface IFeatureHandler extends IGMLElementHandler<Feature>
 {

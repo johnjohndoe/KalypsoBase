@@ -100,7 +100,7 @@ public class StrokePainter
       m_image = null;
   }
 
-  private void getAdditionalPainters( Stroke stroke, GeoTransform projection, final UOM uom )
+  private void getAdditionalPainters( final Stroke stroke, final GeoTransform projection, final UOM uom )
   {
     /* TODO bad style - StrokePainter shouldn't know something about IAdditionalStrokePainter Implementations */
     if( StrokeArrowHelper.isArrowDefined( stroke ) )
@@ -181,11 +181,11 @@ public class StrokePainter
     g.drawPolyline( pos[0], pos[1], pos[2][0] );
   }
 
-  public void paintAdditionals( Graphics2D g, GM_Curve curve, int[][] pos )
+  public void paintAdditionals( final Graphics2D g, final GM_Curve curve, final int[][] pos )
   {
     prepareGraphics( g );
 
-    for( IAdditionalStrokePainter painter : m_painters )
+    for( final IAdditionalStrokePainter painter : m_painters )
     {
       painter.paint( g, curve, pos );
     }

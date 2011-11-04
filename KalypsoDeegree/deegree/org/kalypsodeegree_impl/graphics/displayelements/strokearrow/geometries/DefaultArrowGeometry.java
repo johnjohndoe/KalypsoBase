@@ -57,10 +57,10 @@ public class DefaultArrowGeometry extends AbstractArrowGeometry
    * @see org.kalypsodeegree_impl.graphics.displayelements.strokearrow.AbstractArrowGeometry#draw(java.lang.Double)
    */
   @Override
-  protected void draw( int size, final UOM uom, final GeoTransform projection )
+  protected void draw( final int size, final UOM uom, final GeoTransform projection )
   {
     // draw triangle
-    int size_4 = size / 4;
+    final int size_4 = size / 4;
 
     final int[] a = new int[] { -size, +size_4 };
     final int[] b = new int[] { -size, -size_4 };

@@ -188,7 +188,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   @Override
   public boolean contains( final double pointX, final double pointY )
   {
-    return (pointX >= m_minX) && (pointX <= m_maxX) && (pointY >= m_minY) && (pointY <= m_maxY);
+    return pointX >= m_minX && pointX <= m_maxX && pointY >= m_minY && pointY <= m_maxY;
   }
 
   /**
@@ -241,7 +241,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
     final double minY = bb.getMin().getY();
     final double maxX = bb.getMax().getX();
     final double maxY = bb.getMax().getY();
-    return (contains( minX, minY ) && contains( minX, maxY ) && contains( maxX, minY ) && contains( maxX, maxY ));
+    return contains( minX, minY ) && contains( minX, maxY ) && contains( maxX, minY ) && contains( maxX, maxY );
   }
 
   /**
@@ -256,7 +256,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   public GM_Envelope createIntersection( final GM_Envelope bb )
   {
     Rectangle2D rect = new Rectangle2D.Double( bb.getMin().getX(), bb.getMin().getY(), bb.getWidth(), bb.getHeight() );
-    final Rectangle2D rect2 = new Rectangle2D.Double( this.getMin().getX(), this.getMin().getY(), this.getWidth(), this.getHeight() );
+    final Rectangle2D rect2 = new Rectangle2D.Double( getMin().getX(), getMin().getY(), getWidth(), getHeight() );
 
     if( rect2.intersects( bb.getMin().getX(), bb.getMin().getY(), bb.getWidth(), bb.getHeight() ) )
     {
@@ -300,7 +300,7 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   @Override
   public boolean equals( final Object other, final boolean exact )
   {
-    if( (other == null) || !(other instanceof GM_Envelope_Impl) )
+    if( other == null || !(other instanceof GM_Envelope_Impl) )
       return false;
 
     final GM_Envelope otherEnvelope = (GM_Envelope) other;

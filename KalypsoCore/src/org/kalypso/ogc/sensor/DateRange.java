@@ -68,14 +68,6 @@ public class DateRange implements Comparable<DateRange>
   }
 
   /**
-   * Consructor with longs
-   */
-  public DateRange( final long from, final long to )
-  {
-    this( new Date( from ), new Date( to ) );
-  }
-
-  /**
    * Constructor with Dates
    * 
    * @param from
@@ -287,5 +279,18 @@ public class DateRange implements Comparable<DateRange>
       return true;
 
     return false;
+  }
+
+  /**
+   * Returns the length of this range in milliseconds.<br/>
+   * Negative, if to lies before from.<br/>
+   * {@link Long#MAX_VALUE} if one of to or from is <code>null</code>.
+   */
+  public long getLength( )
+  {
+    if( m_from == null || m_to == null )
+      return Long.MAX_VALUE;
+
+    return m_to.getTime() - m_from.getTime();
   }
 }

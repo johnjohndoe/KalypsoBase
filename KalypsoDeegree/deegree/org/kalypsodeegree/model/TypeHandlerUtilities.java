@@ -239,7 +239,7 @@ public final class TypeHandlerUtilities
       @Override
       public JAXBContext getJaxBContextForGMLVersion( final String gmlVersion )
       {
-        if( (gmlVersion == null) || gmlVersion.startsWith( "2" ) )
+        if( gmlVersion == null || gmlVersion.startsWith( "2" ) )
         {
           return KalypsoOGC2xJAXBcontext.getContext();
         }

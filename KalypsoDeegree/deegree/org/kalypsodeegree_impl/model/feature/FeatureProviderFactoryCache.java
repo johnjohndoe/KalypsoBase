@@ -43,7 +43,7 @@ import org.kalypsodeegree.model.feature.IFeatureProvider;
 
 /**
  * Abstract feature provider factory which parses the href and caches the providers.
- *
+ * 
  * @author Gernot Belger
  */
 public class FeatureProviderFactoryCache

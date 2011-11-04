@@ -45,7 +45,7 @@ public interface IFeatureProviderFactory
 {
   /**
    * @param urn
-   *            Urn to the workspace this feature provider gets features from.
+   *          Urn to the workspace this feature provider gets features from.
    */
   IFeatureProvider createFeatureProvider( final GMLWorkspace context, final String urn );
 }

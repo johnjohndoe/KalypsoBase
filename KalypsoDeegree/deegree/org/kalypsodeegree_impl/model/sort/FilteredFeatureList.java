@@ -383,13 +383,13 @@ public class FilteredFeatureList implements FeatureList
     return filterList( m_original.query( env, result ), result );
   }
 
-  private List<?> filterList( final List<?> originalList, final List<?> result )
+  private List< ? > filterList( final List< ? > originalList, final List< ? > result )
   {
     final int oldlength = result == null ? 0 : result.size();
 
     // only remove new elements, which do not match type
     final List< ? > sublist = originalList.subList( oldlength, originalList.size() );
-    final List< Object > lListActualResult = new ArrayList< Object >();
+    final List<Object> lListActualResult = new ArrayList<Object>();
     lListActualResult.addAll( originalList.subList( 0, oldlength ) );
     for( final Object lObjNext : sublist )
     {
@@ -398,17 +398,17 @@ public class FilteredFeatureList implements FeatureList
       {
         lListActualResult.add( lObjNext );
         // removing elements from ArrayList is SLOW!
-        // instead of removing elements from an existing list one by one, 
-        // it's better to create a new ArrayList on the fly, then 
+        // instead of removing elements from an existing list one by one,
+        // it's better to create a new ArrayList on the fly, then
         // sIt.remove();
       }
     }
 
-//    return originalList;
+// return originalList;
     return lListActualResult;
   }
 
-  private List<Feature> filterList( final List<?> originalList )
+  private List<Feature> filterList( final List< ? > originalList )
   {
     final List<Feature> filteredList = new LinkedList<Feature>();
     for( final Object object : originalList )
@@ -420,7 +420,6 @@ public class FilteredFeatureList implements FeatureList
 
     return filteredList;
   }
-
 
   /**
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Position,

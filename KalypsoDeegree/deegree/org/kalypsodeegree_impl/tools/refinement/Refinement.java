@@ -154,7 +154,7 @@ public class Refinement
               {
                 final GM_Curve splitSegment = segments[j];
                 final GM_Object gmobject = splitSegment.intersection( point );
-                if( gmobject != null || (splitSegment.distance( point ) < MAX_DISTANCE * 2) )
+                if( gmobject != null || splitSegment.distance( point ) < MAX_DISTANCE * 2 )
                 {
                   final GM_Point startPoint = splitSegment.getAsLineString().getStartPoint();
                   final GM_Point endPoint = splitSegment.getAsLineString().getEndPoint();

@@ -102,7 +102,7 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
       return;
 
     // setTransform
-    setAffineTransformation( p1 );
+    setAffineTransformation( p1, p2 );
 
     draw( size.intValue(), m_uom, m_projection );
 
@@ -117,7 +117,7 @@ public abstract class AbstractArrowGeometry implements IArrowGeometry
 
   }
 
-  private void setAffineTransformation( final int[] p1 )
+  private void setAffineTransformation( final int[] p1, final int[] p2 )
   {
     m_savedAT = getGraphic().getTransform();
     final AffineTransform transform = new AffineTransform();

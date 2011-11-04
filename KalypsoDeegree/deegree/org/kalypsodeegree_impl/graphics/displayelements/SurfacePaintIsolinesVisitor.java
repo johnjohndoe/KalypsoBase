@@ -223,7 +223,7 @@ public class SurfacePaintIsolinesVisitor implements ISurfacePatchVisitor<GM_Tria
       z2 = -1000.0;
     }
 
-    if( (z1 <= value && value < z2) || (z2 <= value && value < z1) )
+    if( z1 <= value && value < z2 || z2 <= value && value < z1 )
       zFaktor = (value - z1) / (z2 - z1);
 
     if( zFaktor < 0 || zFaktor >= 1 )

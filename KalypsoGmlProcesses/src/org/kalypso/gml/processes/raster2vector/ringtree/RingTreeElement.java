@@ -49,7 +49,7 @@ public class RingTreeElement
     this.innerCrd = innerCrd;
     m_id = id;
 
-    pir = (lr == null) ? null : new SimplePointInRing( lr );
+    pir = lr == null ? null : new SimplePointInRing( lr );
   }
 
   public String getId( )

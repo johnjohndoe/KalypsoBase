@@ -34,7 +34,6 @@ import org.apache.xmlbeans.impl.xb.xsdschema.TopLevelElement;
 import org.kalypso.gmlschema.GMLSchema;
 
 /**
- * 
  * representation of a element reference to a xml schema element
  * 
  * @author doemming
@@ -49,7 +48,7 @@ public class ElementReference extends Reference
     m_element = element;
   }
 
-  public Element getElement()
+  public Element getElement( )
   {
     return m_element;
   }

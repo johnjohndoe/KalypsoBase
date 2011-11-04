@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -378,7 +379,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     // add showTables-Action to menu-bar
     // we do this here, because adding it via the org.eclipse.ui.viewActions extension-point
     // does not allow to set the checked state dynamically
-    m_showTablesAction = new Action( Messages.getString( "org.kalypso.featureview.views.FeatureView.2" ), Action.AS_CHECK_BOX ) //$NON-NLS-1$
+    m_showTablesAction = new Action( Messages.getString( "org.kalypso.featureview.views.FeatureView.2" ), IAction.AS_CHECK_BOX ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -391,7 +392,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     };
     m_showTablesAction.setChecked( isShowTables() );
 
-    m_showValidationOkAction = new Action( Messages.getString( "org.kalypso.featureview.views.FeatureView.3" ), Action.AS_CHECK_BOX ) //$NON-NLS-1$
+    m_showValidationOkAction = new Action( Messages.getString( "org.kalypso.featureview.views.FeatureView.3" ), IAction.AS_CHECK_BOX ) //$NON-NLS-1$
     {
       /**
        * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
@@ -449,7 +450,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
         {
           oldWorkspace.removeModellListener( FeatureView.this );
           // TODO: WHY?
-          /// getSite().setSelectionProvider( null );
+          // / getSite().setSelectionProvider( null );
         }
         try
         {
@@ -470,7 +471,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
         m_featureComposite.setFeature( feature );
 
         final String groupLabel;
-        if( workspace != null && feature != null && mainGroup != null && (!mainGroup.isDisposed()) )
+        if( workspace != null && feature != null && mainGroup != null && !mainGroup.isDisposed() )
         {
           workspace.addModellListener( FeatureView.this );
 

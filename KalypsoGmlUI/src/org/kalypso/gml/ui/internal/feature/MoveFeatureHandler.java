@@ -56,7 +56,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.ui.editor.gmleditor.command.MoveFeatureCommand;
+import org.kalypso.ui.editor.gmleditor.util.command.MoveFeatureCommand;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

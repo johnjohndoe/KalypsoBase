@@ -37,8 +37,6 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
- * 
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -48,4 +46,5 @@ package org.kalypsodeegree.model.geometry;
  *          <p>
  */
 public interface GM_CompositePoint extends GM_Point, GM_Composite
-{}
+{
+}

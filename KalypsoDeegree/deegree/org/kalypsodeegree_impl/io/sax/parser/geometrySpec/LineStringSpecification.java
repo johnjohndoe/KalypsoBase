@@ -54,7 +54,6 @@ import org.xml.sax.XMLReader;
 
 /**
  * @author Felipe Maximino
- *
  */
 public class LineStringSpecification implements IGeometrySpecification
 {

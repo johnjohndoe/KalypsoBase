@@ -61,12 +61,12 @@ public class Activator extends Plugin
   public void appendLogContent( final PrintWriter pw ) throws IOException
   {
     final File logFile = Platform.getLogFileLocation().toFile();
-    if( !logFile.exists())
+    if( !logFile.exists() )
     {
       pw.println( "No log file available" );
       return;
     }
-    
+
     BufferedReader reader = null;
     try
     {

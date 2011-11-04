@@ -87,7 +87,7 @@ import org.xml.sax.InputSource;
  * 
  * @author schlienger
  */
-public class WechmannFactory
+public final class WechmannFactory
 {
   private static final org.kalypso.wechmann.ObjectFactory OF_WECHMANN = new org.kalypso.wechmann.ObjectFactory();
 
@@ -113,9 +113,8 @@ public class WechmannFactory
       final Wechmann wm = (Wechmann) unm.unmarshal( ins );
       final WechmannSet[] sets = new WechmannSet[wm.getSet().size()];
       int i = 0;
-      for( final Iterator<XMLWechmannSet> it = wm.getSet().iterator(); it.hasNext(); )
+      for( final XMLWechmannSet wset : wm.getSet() )
       {
-        final XMLWechmannSet wset = it.next();
         final WechmannParams[] wparams = new WechmannParams[wset.getParams().size()];
         int j = 0;
         for( final XMLWechmannParams wp : wset.getParams() )

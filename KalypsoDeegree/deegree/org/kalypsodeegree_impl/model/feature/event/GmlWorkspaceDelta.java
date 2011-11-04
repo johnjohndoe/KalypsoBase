@@ -62,7 +62,7 @@ class GmlWorkspaceDelta implements IGmlWorkspaceDelta
 
   private final int m_kind;
 
-  private List<IGmlWorkspaceDelta> m_children = new ArrayList<IGmlWorkspaceDelta>();
+  private final List<IGmlWorkspaceDelta> m_children = new ArrayList<IGmlWorkspaceDelta>();
 
   public GmlWorkspaceDelta( final Feature feature, final IPropertyType property, final int kind )
   {

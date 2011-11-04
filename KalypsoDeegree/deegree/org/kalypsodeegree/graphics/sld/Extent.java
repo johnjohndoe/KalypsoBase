@@ -36,7 +36,6 @@
 package org.kalypsodeegree.graphics.sld;
 
 /**
- * 
  * <p>
  * ----------------------------------------------------------------------
  * </p>
@@ -52,7 +51,7 @@ public interface Extent
    * 
    * @return the name of the extent
    */
-  String getName();
+  String getName( );
 
   /**
    * Sets the name attribute's value of the Extent.
@@ -68,7 +67,7 @@ public interface Extent
    * 
    * @return the value of the extent
    */
-  String getValue();
+  String getValue( );
 
   /**
    * Sets the value of the Extent as a <tt>String</tt>.

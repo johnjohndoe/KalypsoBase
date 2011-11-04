@@ -59,6 +59,7 @@ import org.kalypso.metadoc.IExportableObjectFactory;
 public class ExportAction extends Action
 {
   private final IExportTarget m_target;
+
   private IWorkbenchPart m_part;
 
   public ExportAction( final IExportTarget target, final IWorkbenchPart part )
@@ -73,8 +74,7 @@ public class ExportAction extends Action
   @Override
   public void run( )
   {
-    final IExportableObjectFactory factory = (IExportableObjectFactory)m_part
-        .getAdapter( IExportableObjectFactory.class );
+    final IExportableObjectFactory factory = (IExportableObjectFactory) m_part.getAdapter( IExportableObjectFactory.class );
     if( factory == null )
       return;
 

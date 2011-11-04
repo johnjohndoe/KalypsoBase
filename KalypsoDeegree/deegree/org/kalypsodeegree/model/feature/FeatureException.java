@@ -49,7 +49,7 @@ public class FeatureException extends java.lang.Exception
    * Constructs an instance of <code>FeatureException</code> with the specified detail message.
    * 
    * @param msg
-   *            the detail message.
+   *          the detail message.
    */
   public FeatureException( final String msg )
   {
@@ -60,7 +60,7 @@ public class FeatureException extends java.lang.Exception
    * Constructs an instance of <code>FeatureException</code> with the specified detail message.
    * 
    * @param msg
-   *            the detail message.
+   *          the detail message.
    */
   public FeatureException( final String msg, final Exception e )
   {

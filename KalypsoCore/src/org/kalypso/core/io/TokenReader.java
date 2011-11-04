@@ -60,17 +60,17 @@ public class TokenReader
   /**
    * The file to be read. It must be an asccii file.
    */
-  private File m_file;
+  private final File m_file;
 
   /**
    * The character, which splits the tokens.
    */
-  private String m_delim;
+  private final String m_delim;
 
   /**
    * This list collects all lists of tokens.
    */
-  private LinkedList<LinkedList<String>> m_allTokens;
+  private final LinkedList<LinkedList<String>> m_allTokens;
 
   /**
    * The constructor.
@@ -80,7 +80,7 @@ public class TokenReader
    * @param delim
    *          The character, which splits the tokens.
    */
-  public TokenReader( File file, String delim )
+  public TokenReader( final File file, final String delim )
   {
     m_file = file;
     m_delim = delim;
@@ -120,7 +120,7 @@ public class TokenReader
         }
 
         /* Tokenize the line. */
-        String[] splittedLine = StringUtils.split( line, m_delim );
+        final String[] splittedLine = StringUtils.split( line, m_delim );
 
         /* Debug-Information. */
         Debug.TOKEN_READER.printf( "TokenReader: Count tokens in this line: %d%n", splittedLine.length ); //$NON-NLS-1$
@@ -137,10 +137,10 @@ public class TokenReader
         Debug.TOKEN_READER.printf( "TokenReader: Adding '%d' tokens ...%n", splittedLine.length ); //$NON-NLS-1$
 
         /* Create a new row. */
-        LinkedList<String> cols = new LinkedList<String>();
+        final LinkedList<String> cols = new LinkedList<String>();
 
         /* Get the token for each loop. */
-        for( String token : splittedLine )
+        for( final String token : splittedLine )
           cols.add( token );
 
         /* Add the new row. */
@@ -164,7 +164,7 @@ public class TokenReader
    *          The index of the list.
    * @return The specified token.
    */
-  public String getToken( int row, int col )
+  public String getToken( final int row, final int col )
   {
     if( m_allTokens.size() == 0 )
       return null;

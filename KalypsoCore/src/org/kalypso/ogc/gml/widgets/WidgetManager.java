@@ -87,6 +87,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   private final IWidget m_middleWidget = new PanToWidget();
 
   /** If middle was pressed down; prohibits dragging any other widget */
+  // FIXME: bad: use mouse-event states to determine this
   private boolean m_middleDown = false;
 
   public WidgetManager( final ICommandTarget commandTarget, final IMapPanel mapPanel )
@@ -124,7 +125,9 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
       if( e.isConsumed() )
         return;
     }
-    else if( actualWidget == null )
+
+    /* Prevents handling of middle mouse if no widget is active */
+    if( actualWidget == null )
       return;
 
     if( e.isPopupTrigger() )
@@ -140,7 +143,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedLeft( e.getPoint() );
         }
-        break;
+          break;
 
         case MouseEvent.BUTTON2:
           m_middleWidget.leftClicked( e.getPoint() );
@@ -153,7 +156,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedRight( e.getPoint() );
         }
-        break;
+          break;
 
         default:
           break;
@@ -186,14 +189,17 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
         return;
     }
 
+    /* Prevent handling of middle mouse if no widget is active */
+    if( actualWidget == null )
+      return;
+
     if( m_middleDown )
     {
       m_middleWidget.dragged( e.getPoint() );
       return;
     }
 
-    if( actualWidget != null )
-      actualWidget.dragged( e.getPoint() );
+    actualWidget.dragged( e.getPoint() );
   }
 
   @Override
@@ -222,6 +228,10 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
       if( e.isConsumed() )
         return;
     }
+
+    /* Prevent handling of middle mouse if no widget is active */
+    if( actualWidget == null )
+      return;
 
     if( e.isPopupTrigger() && actualWidget != null )
       actualWidget.clickPopup( e.getPoint() );
@@ -260,6 +270,10 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
       if( e.isConsumed() )
         return;
     }
+
+    /* Prevent handling of middle mouse if no widget is active */
+    if( actualWidget == null )
+      return;
 
     if( e.isPopupTrigger() && getActualWidget() != null )
       actualWidget.clickPopup( e.getPoint() );
@@ -302,6 +316,10 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
       if( e.isConsumed() )
         return;
     }
+
+    /* Prevent handling of middle mouse if no widget is active */
+    if( actualWidget == null )
+      return;
 
     e.consume();
 

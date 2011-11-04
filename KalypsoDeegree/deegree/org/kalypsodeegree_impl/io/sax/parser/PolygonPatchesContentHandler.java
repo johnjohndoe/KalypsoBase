@@ -50,36 +50,37 @@ import org.xml.sax.XMLReader;
 /**
  * A content handler which parses a gml:polygonPatches element.<br>
  * 
- * @author Felipe Maximino 
- * 
+ * @author Felipe Maximino
  */
 public class PolygonPatchesContentHandler extends GMLElementContentHandler implements IPolygonHandler
 {
   public static final String ELEMENT_POLYGON_PATCHES = "polygonPatches";
 
-  private final IPolygonHandler m_polygonHandler;  
+  private final IPolygonHandler m_polygonHandler;
 
   public PolygonPatchesContentHandler( final XMLReader reader, final IPolygonHandler polygonHandler, final String defaultSrs )
-  { 
+  {
     super( reader, NS.GML3, ELEMENT_POLYGON_PATCHES, defaultSrs, polygonHandler );
-    m_polygonHandler = polygonHandler;    
+    m_polygonHandler = polygonHandler;
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String, java.lang.String)
+   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doEndElement(java.lang.String, java.lang.String,
+   *      java.lang.String)
    */
   @Override
   protected void doEndElement( final String uri, final String localName, final String name )
-  { 
+  {
 
   }
 
   /**
-   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+   * @see org.kalypsodeegree_impl.io.sax.GMLElementContentHandler#doStartElement(java.lang.String, java.lang.String,
+   *      java.lang.String, org.xml.sax.Attributes)
    */
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
-  { 
+  {
     new PolygonPatchContentHandler( getXMLReader(), this, m_defaultSrs ).activate();
   }
 
@@ -99,9 +100,9 @@ public class PolygonPatchesContentHandler extends GMLElementContentHandler imple
     {
       final IGmlContentHandler polygonPatchContentHandler = new PolygonPatchContentHandler( getXMLReader(), this, m_defaultSrs );
       polygonPatchContentHandler.activate();
-      polygonPatchContentHandler.startElement( uri, localName, name, atts );        
+      polygonPatchContentHandler.startElement( uri, localName, name, atts );
     }
     else
       throwSAXParseException( "Unexpected start element: {%s}%s = %s - should be {%s}%s", uri, localName, name, NS.GML3, m_localName );
-  }  
+  }
 }

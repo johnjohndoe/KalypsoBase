@@ -72,7 +72,7 @@ public final class ShapeCharsetUI
     final CharsetViewer charsetViewer = new CharsetViewer( parent );
 
     final Charset shapeDefaultCharset = ShapeSerializer.getShapeDefaultCharset();
-    final String shapeLabel = String.format( Messages.getString("ShapeCharsetUI_2"), shapeDefaultCharset.displayName() ); //$NON-NLS-1$
+    final String shapeLabel = String.format( Messages.getString( "ShapeCharsetUI_2" ), shapeDefaultCharset.displayName() ); //$NON-NLS-1$
     charsetViewer.addLabelMapping( shapeDefaultCharset, shapeLabel );
 
     final Charset charset = getInitialCharset( shapeDefaultCharset, dialogSettings );

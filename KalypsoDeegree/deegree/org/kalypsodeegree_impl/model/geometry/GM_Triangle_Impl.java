@@ -156,12 +156,12 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   private static int orientation( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3 )
   {
     final double s_a = signedArea( pos1, pos2, pos3 );
-    return s_a > 0 ? 1 : (s_a < 0 ? -1 : 0);
+    return s_a > 0 ? 1 : s_a < 0 ? -1 : 0;
   }
 
   private static double signedArea( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3 )
   {
-    return (pos1.getX() * (pos2.getY() - pos3.getY()) + pos2.getX() * (pos3.getY() - pos1.getY()) + pos3.getX() * (pos1.getY() - pos2.getY()));
+    return pos1.getX() * (pos2.getY() - pos3.getY()) + pos2.getX() * (pos3.getY() - pos1.getY()) + pos3.getX() * (pos1.getY() - pos2.getY());
   }
 
   /**
@@ -216,16 +216,16 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     if( this == obj )
       return true;
     if( getClass() != obj.getClass() )
       return false;
-    GM_Triangle_Impl other = (GM_Triangle_Impl) obj;
+    final GM_Triangle_Impl other = (GM_Triangle_Impl) obj;
     for( final GM_Position lPos : other.getExteriorRing() )
     {
-      if( !this.contains2( lPos ) )
+      if( !contains2( lPos ) )
       {
         return false;
       }

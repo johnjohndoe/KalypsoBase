@@ -64,7 +64,7 @@ public class SHPMultiPoint implements ISHPGeometry
   /**
    * constructor: recieves a stream <BR>
    */
-  public SHPMultiPoint( byte[] recBuf )
+  public SHPMultiPoint( final byte[] recBuf )
   {
     m_envelope = ShapeUtils.readBox( recBuf, 4 );
 
@@ -79,7 +79,7 @@ public class SHPMultiPoint implements ISHPGeometry
   /**
    * constructor: recieves an array of gm_points
    */
-  public SHPMultiPoint( GM_MultiPoint multipoint )
+  public SHPMultiPoint( final GM_MultiPoint multipoint )
   {
     double xmin = multipoint.getEnvelope().getMin().getX();
     double xmax = multipoint.getEnvelope().getMax().getX();
@@ -131,45 +131,45 @@ public class SHPMultiPoint implements ISHPGeometry
 
     offset += 4;
     // save offset of the bounding box
-    int tmp = offset;
+    final int tmp = offset;
 
     // increment offset with size of the bounding box
-    offset += (4 * 8);
+    offset += 4 * 8;
 
     // write number of points
     ByteUtils.writeLEInt( byteArray, offset, points.length );
 
     offset += 4;
 
-    for( int i = 0; i < points.length; i++ )
+    for( final SHPPoint point : points )
     {
 
       // calculate bounding box
-      if( points[i].getX() > xmax )
+      if( point.getX() > xmax )
       {
-        xmax = points[i].getX();
+        xmax = point.getX();
       }
-      else if( points[i].getX() < xmin )
+      else if( point.getX() < xmin )
       {
-        xmin = points[i].getX();
+        xmin = point.getX();
       }
 
-      if( points[i].getY() > ymax )
+      if( point.getY() > ymax )
       {
-        ymax = points[i].getY();
+        ymax = point.getY();
       }
-      else if( points[i].getY() < ymin )
+      else if( point.getY() < ymin )
       {
-        ymin = points[i].getY();
+        ymin = point.getY();
       }
 
       // write x-coordinate
-      ByteUtils.writeLEDouble( byteArray, offset, points[i].getX() );
+      ByteUtils.writeLEDouble( byteArray, offset, point.getX() );
 
       offset += 8;
 
       // write y-coordinate
-      ByteUtils.writeLEDouble( byteArray, offset, points[i].getY() );
+      ByteUtils.writeLEDouble( byteArray, offset, point.getY() );
 
       offset += 8;
 

@@ -46,12 +46,12 @@ import java.util.Hashtable;
  */
 public class MemoryPageFile extends PageFile
 {
-  private Hashtable file = new Hashtable();
+  private final Hashtable file = new Hashtable();
 
   /**
    * Konstruktor MemoryPageFile.
    */
-  public MemoryPageFile()
+  public MemoryPageFile( )
   {
     super();
     file.clear();
@@ -61,16 +61,16 @@ public class MemoryPageFile extends PageFile
    * @see PageFile#readNode(int)
    */
   @Override
-  public Node readNode( int pageFile ) //throws PageFileException
+  public Node readNode( final int pageFile ) // throws PageFileException
   {
-    return (Node)file.get( new Integer( pageFile ) );
+    return (Node) file.get( new Integer( pageFile ) );
   }
 
   /**
    * @see PageFile#writeNode(Node)
    */
   @Override
-  public int writeNode( Node node )
+  public int writeNode( final Node node )
   {
     int i = 0;
 
@@ -99,17 +99,17 @@ public class MemoryPageFile extends PageFile
   }
 
   @Override
-  public Node deleteNode( int pageNumber )
+  public Node deleteNode( final int pageNumber )
   {
-    return (Node)file.remove( new Integer( pageNumber ) );
+    return (Node) file.remove( new Integer( pageNumber ) );
   }
 
   /**
    * @see PageFile#close()
    */
   @Override
-  public void close()
+  public void close( )
   {
-  // nothing to do
+    // nothing to do
   }
 }

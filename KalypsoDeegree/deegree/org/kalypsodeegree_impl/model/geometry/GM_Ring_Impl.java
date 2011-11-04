@@ -152,7 +152,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
 
       for( int i = 0; i < m_points.length; i++ )
       {
-        temp[i] = m_points[(m_points.length - 1) - i];
+        temp[i] = m_points[m_points.length - 1 - i];
       }
 
       return temp;
@@ -251,7 +251,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
       e.printStackTrace();
     }
 
-    throw (new IllegalStateException());
+    throw new IllegalStateException();
   }
 
   /**
@@ -374,7 +374,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
   {
     String ret = null;
     ret = "points = " + m_points + "\n";
-    ret += ("envelope = " + getEnvelope() + "\n");
+    ret += "envelope = " + getEnvelope() + "\n";
     return ret;
   }
 

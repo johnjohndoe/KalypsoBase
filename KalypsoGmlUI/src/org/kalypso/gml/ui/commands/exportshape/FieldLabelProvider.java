@@ -45,7 +45,6 @@ import org.kalypso.shape.dbf.IDBFField;
 
 /**
  * @author Gernot Belger
- *
  */
 public class FieldLabelProvider extends ColumnLabelProvider
 {

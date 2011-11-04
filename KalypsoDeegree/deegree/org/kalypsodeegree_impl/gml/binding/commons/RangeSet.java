@@ -61,7 +61,7 @@ public class RangeSet
    * 
    * @param rangeSetData
    * @param rangeSetDataFileName
-   *            name of rangeSetData-file ("xy.dat")
+   *          name of rangeSetData-file ("xy.dat")
    */
   public RangeSet( final Vector<Vector<Double>> rangeSetData, final String rangeSetDataFileName )
   {
@@ -79,11 +79,11 @@ public class RangeSet
 
   /**
    * @param rangeSetData
-   *            The rangeSetData to set.
+   *          The rangeSetData to set.
    */
   public void setRangeSetData( final Vector<Vector<Double>> rangeSetData )
   {
-    this.m_rangeSetData = rangeSetData;
+    m_rangeSetData = rangeSetData;
   }
 
   /**
@@ -96,11 +96,11 @@ public class RangeSet
 
   /**
    * @param rangeSetDataFileName
-   *            The rangeSetDataFileName to set.
+   *          The rangeSetDataFileName to set.
    */
   public void setRangeSetDataFile( final String rangeSetDataFileName )
   {
-    this.m_rangeSetDataFile = rangeSetDataFileName;
+    m_rangeSetDataFile = rangeSetDataFileName;
   }
 
   /**

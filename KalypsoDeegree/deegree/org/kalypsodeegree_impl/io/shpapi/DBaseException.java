@@ -41,20 +41,20 @@ public final class DBaseException extends Exception
 
   private String message = "org.kalypsodeegree_impl.io.shpapi.DBaseException";
 
-  //constructor
-  public DBaseException()
+  // constructor
+  public DBaseException( )
   {
-  // empty
+    // empty
   }
 
-  //constructor
-  public DBaseException( String message )
+  // constructor
+  public DBaseException( final String message )
   {
     this.message = message;
   }
 
   @Override
-  public String toString()
+  public String toString( )
   {
     return message + "\n" + getLocalizedMessage();
   }

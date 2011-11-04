@@ -41,7 +41,7 @@
 package org.kalypso.gml.ui.jface;
 
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
-import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
+import org.kalypso.ui.editor.gmleditor.ui.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

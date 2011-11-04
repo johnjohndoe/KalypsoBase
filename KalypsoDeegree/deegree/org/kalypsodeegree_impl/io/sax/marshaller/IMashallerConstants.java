@@ -45,7 +45,6 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * @author felipe
- *
  */
 public interface IMashallerConstants
 {

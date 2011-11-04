@@ -37,7 +37,6 @@ package org.kalypsodeegree_impl.model.feature.visitors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -60,7 +59,7 @@ public class CollectFeaturesWithProperty implements FeatureVisitor
 
   private final List<Feature> m_resulte;
 
-  public CollectFeaturesWithProperty( HashMap<QName, Object> qNames, List<Feature> result )
+  public CollectFeaturesWithProperty( final HashMap<QName, Object> qNames, final List<Feature> result )
   {
     m_qNames = qNames;
     if( result == null )
@@ -73,12 +72,12 @@ public class CollectFeaturesWithProperty implements FeatureVisitor
    * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
    */
   @Override
-  public boolean visit( Feature f )
+  public boolean visit( final Feature f )
   {
     final IFeatureType featureType = f.getFeatureType();
-    for( Iterator iter = m_qNames.keySet().iterator(); iter.hasNext(); )
+    for( final Object element : m_qNames.keySet() )
     {
-      final QName qName = (QName) iter.next();
+      final QName qName = (QName) element;
       final IPropertyType property = featureType.getProperty( qName );
       if( property != null )
       {
