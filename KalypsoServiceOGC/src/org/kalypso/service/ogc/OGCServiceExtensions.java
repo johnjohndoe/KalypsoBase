@@ -72,17 +72,16 @@ public class OGCServiceExtensions
     final List<String> parameters = new LinkedList<String>();
     final Map<String, IConfigurationElement> elts = getOperations();
 
-    IConfigurationElement element = elts.get( id );
+    final IConfigurationElement element = elts.get( id );
     if( element == null )
       return null;
 
-    IConfigurationElement[] children = element.getChildren( "parameter" ); //$NON-NLS-1$
+    final IConfigurationElement[] children = element.getChildren( "parameter" ); //$NON-NLS-1$
     if( children.length == 0 )
       return parameters;
 
-    for( int i = 0; i < children.length; i++ )
+    for( final IConfigurationElement child : children )
     {
-      IConfigurationElement child = children[i];
       parameters.add( child.getAttribute( "parameterName" ) ); //$NON-NLS-1$
     }
 
@@ -115,11 +114,11 @@ public class OGCServiceExtensions
     /* The map containing the registered elements. */
     final Map<String, IConfigurationElement> elts = getOperations();
 
-    Iterator<String> itr = elts.keySet().iterator();
+    final Iterator<String> itr = elts.keySet().iterator();
     while( itr.hasNext() )
     {
-      String key = itr.next();
-      IConfigurationElement element = elts.get( key );
+      final String key = itr.next();
+      final IConfigurationElement element = elts.get( key );
       services.put( key, (IOGCService) element.createExecutableExtension( "class" ) ); //$NON-NLS-1$
     }
 

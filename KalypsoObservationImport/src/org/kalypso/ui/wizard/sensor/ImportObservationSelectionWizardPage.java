@@ -245,7 +245,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     // TimeZone
     /* time zone selection */
     final Label timezoneLabel = new Label( group, SWT.NONE );
-    timezoneLabel.setText( Messages.getString("ImportObservationSelectionWizardPage.0") ); //$NON-NLS-1$
+    timezoneLabel.setText( Messages.getString( "ImportObservationSelectionWizardPage.0" ) ); //$NON-NLS-1$
 
     final String[] tz = TimeZone.getAvailableIDs();
     Arrays.sort( tz );
@@ -424,8 +424,8 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
       protected Control createContents( final Composite parent )
       {
         final Control contents = super.createContents( parent );
-        setTitle( Messages.getString("ImportObservationSelectionWizardPage.2") ); //$NON-NLS-1$
-        setMessage( Messages.getString("ImportObservationSelectionWizardPage.3") ); //$NON-NLS-1$
+        setTitle( Messages.getString( "ImportObservationSelectionWizardPage.2" ) ); //$NON-NLS-1$
+        setMessage( Messages.getString( "ImportObservationSelectionWizardPage.3" ) ); //$NON-NLS-1$
         return contents;
       }
 
@@ -498,14 +498,14 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     if( sourceFile == null )
       return new MessageProvider( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage11" ), ERROR ); //$NON-NLS-1$
     if( !sourceFile.isFile() )
-      return new MessageProvider( Messages.getString("ImportObservationSelectionWizardPage.4"), ERROR ); //$NON-NLS-1$
+      return new MessageProvider( Messages.getString( "ImportObservationSelectionWizardPage.4" ), ERROR ); //$NON-NLS-1$
 
     final IFile targetFile = getTargetFile();
     if( targetFile == null )
       return new MessageProvider( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage12" ), ERROR ); //$NON-NLS-1$
 
     if( m_timezone == null )
-      return new MessageProvider( Messages.getString("ImportObservationSelectionWizardPage.5"), ERROR ); //$NON-NLS-1$
+      return new MessageProvider( Messages.getString( "ImportObservationSelectionWizardPage.5" ), ERROR ); //$NON-NLS-1$
 
     return null;
   }
@@ -557,7 +557,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
   {
     if( selection instanceof ObservationImportSelection )
     {
-      final ObservationImportSelection s = ((ObservationImportSelection) selection);
+      final ObservationImportSelection s = (ObservationImportSelection) selection;
       if( m_formatCombo != null )
         m_formatCombo.setSelection( new StructuredSelection( s.getNativeAdapter() ) );
 

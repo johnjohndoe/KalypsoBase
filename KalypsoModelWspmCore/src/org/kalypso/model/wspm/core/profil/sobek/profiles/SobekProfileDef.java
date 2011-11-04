@@ -75,7 +75,6 @@ public class SobekProfileDef
 // */
 // private final int m_ty;
 
-
   /**
    * @param id
    *          The id of the cross section definition. <strong>NOTE:</strong> This id is referenced from a line in the
@@ -122,7 +121,6 @@ public class SobekProfileDef
   {
     return m_data.getType();
   }
-
 
   /**
    * This function validates the contained data.

@@ -30,48 +30,18 @@
 package org.kalypso.simulation.ui.ant;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.net.URL;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
-import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.contribs.java.net.IUrlResolver;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
-import org.kalypso.contribs.java.xml.XMLUtilities;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.filter.FilterFactory;
-import org.kalypso.ogc.sensor.zml.ZmlFactory;
-import org.kalypso.simulation.ui.ant.util.CopyObservationMappingHelper;
-import org.kalypso.zml.filters.AbstractFilterType;
-import org.kalypso.zml.filters.InterpolationFilterType;
-import org.kalypso.zml.filters.NOperationFilterType;
-import org.kalypso.zml.filters.OperationFilterType;
-import org.kalypso.zml.filters.ZmlFilterType;
-import org.kalypso.zml.obslink.TimeseriesLinkType;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.model.feature.FeaturePath;
-import org.w3._1999.xlinkext.SimpleLinkType;
-import org.xml.sax.InputSource;
+import org.kalypso.simulation.core.ant.GMLWeightingOperation;
+import org.kalypso.simulation.core.ant.IGMLWeightingData;
 
 /**
  * This Task generates from a number of input zml files new zml output files. <br>
@@ -83,7 +53,7 @@ import org.xml.sax.InputSource;
  * 
  * @author doemming
  */
-public class GMLWeightingTask extends Task
+public class GMLWeightingTask extends Task implements IGMLWeightingData
 {
   private File m_targetMapping = null;
 
@@ -125,9 +95,6 @@ public class GMLWeightingTask extends Task
 
   private String m_targetTo;
 
-  /**
-   * @see org.apache.tools.ant.Task#execute()
-   */
   @Override
   public void execute( )
   {
@@ -138,9 +105,6 @@ public class GMLWeightingTask extends Task
       // code) else we get an LinkageError when accessing the Project class.
       final ILogger logger = new ILogger()
       {
-        /**
-         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
-         */
         @Override
         public void log( final Level level, final int msgCode, final String message )
         {
@@ -157,254 +121,15 @@ public class GMLWeightingTask extends Task
       if( message != null && message.length() > 0 )
         logger.log( Level.INFO, LoggerUtilities.CODE_NEW_MSGBOX, message );
 
-      final IUrlResolver urlResolver = UrlResolverSingleton.getDefault();
-      // create needed factories
-      final Marshaller marshaller = JaxbUtilities.createMarshaller( ZmlFactory.JC, true );
-
-      final org.w3._1999.xlinkext.ObjectFactory linkFac = new org.w3._1999.xlinkext.ObjectFactory();
-
-      // workspace for results
-      final GMLWorkspace resultWorkspace = CopyObservationMappingHelper.createMappingWorkspace( m_modelURL );
-
-      // 1. load srcgml
-      logger.log( Level.INFO, -1, "Lade Modell " + m_modelURL );
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( m_modelURL, null );
-
-      // 2. locate features to process
-      final Feature[] targetFeatures = getTargetFeatures( workspace );
-      if( targetFeatures == null )
-        throw new BuildException( "Kein(e) Ziel-Feature(s) gefunden für FeaturePath: " + m_featurePathTarget );
-
-      // loop all features
-      for( final Feature targetFE : targetFeatures )
-      {
-        // 3. find target
-        final TimeseriesLinkType targetLink = (TimeseriesLinkType) targetFE.getProperty( m_propZMLTarget );
-        final String targetHref = targetLink.getHref();
-        final URL targetURL = urlResolver.resolveURL( m_targetContext, targetHref );
-
-        // 4. build n-operation filter
-        final NOperationFilterType nOperationFilter = FilterFactory.OF_FILTER.createNOperationFilterType();
-        nOperationFilter.setOperator( "+" );
-        final List<JAXBElement< ? extends AbstractFilterType>> filterList = nOperationFilter.getFilter();
-
-        // 5. resolve weights
-        final Feature[] weightFEs = getWeightFeatures( workspace, targetFE );
-        if( weightFEs == null )
-          throw new BuildException( "Kein(e) Gewichts-Feature(s) gefunden für FeaturePath: " + m_propRelationWeightMember );
-
-        // 6. loop weights
-        for( final Feature weightFE : weightFEs )
-        {
-          final double factor = getFactor( weightFE );
-          final double offset = getOffset( weightFE );
-
-          // 7. resolve sources
-          final Feature[] sourceFeatures = getSourceFeatures( workspace, weightFE );
-          if( sourceFeatures == null )
-            throw new BuildException( "Kein(e) Quell-Feature(s) gefunden für FeaturePath: " + m_propRelationSourceFeature );
-
-          final OperationFilterType offsetFilter = FilterFactory.OF_FILTER.createOperationFilterType();
-          offsetFilter.setOperator( "+" );
-          offsetFilter.setOperand( Double.toString( offset ) );
-
-          final NOperationFilterType weightSumFilter = FilterFactory.OF_FILTER.createNOperationFilterType();
-          weightSumFilter.setOperator( "+" );
-
-          offsetFilter.setFilter( FilterFactory.OF_FILTER.createNOperationFilter( weightSumFilter ) );
-
-          final List<JAXBElement< ? extends AbstractFilterType>> offsetSummands = weightSumFilter.getFilter();
-
-          // 8. loop source features
-          for( final Feature sourceFE : sourceFeatures )
-          {
-            if( sourceFE == null )
-            {
-              logger.log( Level.WARNING, -1, "Linked source feature missing in Feature: " + weightFE.getId() );
-
-              // IMPORTANT: just skips this weight; leads probably to wrong results
-              continue;
-            }
-
-            // 9. resolve property that is source zml reference
-            final TimeseriesLinkType zmlLink = (TimeseriesLinkType) sourceFE.getProperty( m_propZMLSource );
-            final Boolean useThisSource;
-            if( m_propSourceUsed != null && m_propSourceUsed.length() > 0 )
-              useThisSource = (Boolean) sourceFE.getProperty( m_propSourceUsed );
-            else
-              useThisSource = Boolean.TRUE;
-
-            if( !useThisSource.booleanValue() )
-            {
-              logger.log( Level.INFO, LoggerUtilities.CODE_NONE, "Ignoriere: " + sourceFE.getId() );
-              continue;
-            }
-
-            if( zmlLink == null )
-            {
-              logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, "Linked timeserie link missing in Feature: " + weightFE.getId() );
-
-              // IMPORTANT: just skips this weight; leads probably to wrong results
-              continue;
-            }
-
-            // 10. build operation filter with parameters from gml
-            final OperationFilterType filter = FilterFactory.OF_FILTER.createOperationFilterType();
-            offsetSummands.add( FilterFactory.OF_FILTER.createOperationFilter( filter ) );
-            filter.setOperator( "*" );
-            filter.setOperand( Double.toString( factor ) );
-
-            /* Innermost filter part */
-            final ZmlFilterType zmlFilter = FilterFactory.OF_FILTER.createZmlFilterType();
-            final SimpleLinkType simpleLink = linkFac.createSimpleLinkType();
-            final String sourceHref = zmlLink.getHref();
-            simpleLink.setHref( sourceHref );
-            zmlFilter.setZml( simpleLink );
-
-            if( m_sourceFilter != null )
-            {
-              final String strFilterXml = FilterFactory.getFilterPart( m_sourceFilter );
-
-              final StringReader sr = new StringReader( strFilterXml );
-              final Unmarshaller unmarshaller = ZmlFactory.JC.createUnmarshaller();
-              final JAXBElement<AbstractFilterType> af = (JAXBElement<AbstractFilterType>) unmarshaller.unmarshal( new InputSource( sr ) );
-              filter.setFilter( af );
-
-              // HACK
-              final AbstractFilterType abstractFilter = af.getValue();
-              if( abstractFilter instanceof InterpolationFilterType )
-                ((InterpolationFilterType) abstractFilter).setFilter( FilterFactory.OF_FILTER.createZmlFilter( zmlFilter ) );
-              else
-                throw new UnsupportedOperationException( "Only InterpolationFilter as source-filter supported at the moment." );
-
-              sr.close();
-            }
-            else
-              filter.setFilter( FilterFactory.OF_FILTER.createZmlFilter( zmlFilter ) );
-          }
-
-          /* Empty NOperation filter is forbidden */
-          if( offsetSummands.isEmpty() )
-          {
-            logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, "Leere Summe für Feature: " + weightFE.getId() );
-          }
-          else
-            filterList.add( FilterFactory.OF_FILTER.createOperationFilter( offsetFilter ) );
-        }
-
-        /* Empty NOperation filter is forbidden */
-        if( filterList.isEmpty() )
-        {
-          logger.log( Level.SEVERE, LoggerUtilities.CODE_SHOW_MSGBOX, "Leere Summe für Feature: " + targetFE.getId() );
-          return;
-        }
-
-        // 11. serialize filter to string
-        final Writer writer = new StringWriter();
-        marshaller.marshal( FilterFactory.OF_FILTER.createNOperationFilter( nOperationFilter ), writer );
-        writer.close();
-        final String string = XMLUtilities.removeXMLHeader( writer.toString() );
-        final String filterInline = XMLUtilities.prepareInLine( string );
-
-        // 12. add mapping to result workspace
-        CopyObservationMappingHelper.addMapping( resultWorkspace, filterInline, targetURL.toExternalForm() );
-        logger.log( Level.INFO, -1, "Ziel-ZML " + targetURL );
-      }
-
-      // 14. do the mapping
-      final Date sourceFrom = m_sourceFrom == null ? DateUtilities.parseDateTime( m_from ) : DateUtilities.parseDateTime( m_sourceFrom );
-      final Date sourceTo = m_sourceTo == null ? DateUtilities.parseDateTime( m_forecastFrom ) : DateUtilities.parseDateTime( m_sourceTo );
-      final Date targetFrom = m_targetFrom == null ? DateUtilities.parseDateTime( m_forecastFrom ) : DateUtilities.parseDateTime( m_targetFrom );
-      final Date targetTo = m_targetTo == null ? DateUtilities.parseDateTime( m_to ) : DateUtilities.parseDateTime( m_targetTo );
-      final Date forecastFrom = DateUtilities.parseDateTime( m_forecastFrom );
-      final Date forecastTo = m_forecastTo == null ? DateUtilities.parseDateTime( m_to ) : DateUtilities.parseDateTime( m_forecastTo );
-
-      final DateRange measuredRange = DateRange.createDateRangeOrNull( sourceFrom, sourceTo );
-      final DateRange keForecastRange = DateRange.createDateRangeOrNull( targetFrom, targetTo );
-      final DateRange forecastMetadataRange = DateRange.createDateRangeOrNull( forecastFrom, forecastTo );
-
-      CopyObservationMappingHelper.runMapping( resultWorkspace, m_modelURL, logger, true, measuredRange, keForecastRange, forecastMetadataRange );
-
-      // 15. serialize result workspace to file
-      if( m_targetMapping != null )
-      {
-        FileWriter writer = null;
-        try
-        {
-          writer = new FileWriter( m_targetMapping );
-          GmlSerializer.serializeWorkspace( writer, resultWorkspace );
-          writer.close();
-        }
-        finally
-        {
-          IOUtils.closeQuietly( writer );
-        }
-      }
+      /* Perpare ant */
+      final GMLWeightingOperation operation = new GMLWeightingOperation( this, logger );
+      operation.execute();
     }
     catch( final Exception e )
     {
       e.printStackTrace();
       throw new BuildException( e );
     }
-  }
-
-  private double getOffset( final Feature weightFE )
-  {
-    if( m_propOffset == null || m_propOffset.length() == 0 )
-      return 0.0;
-
-    return ((Double) weightFE.getProperty( m_propOffset )).doubleValue();
-  }
-
-  private double getFactor( final Feature weightFE )
-  {
-    if( m_propWeight == null || m_propWeight.length() == 0 )
-      return 1.0;
-
-    return ((Double) weightFE.getProperty( m_propWeight )).doubleValue();
-  }
-
-  private Feature[] getTargetFeatures( final GMLWorkspace workspace )
-  {
-    final FeaturePath path = new FeaturePath( m_featurePathTarget );
-    final Object property = path.getFeature( workspace );
-    if( property instanceof FeatureList )
-      return ((FeatureList) property).toFeatures();
-
-    if( property instanceof Feature )
-      return new Feature[] { (Feature) property };
-
-    return null;
-  }
-
-  private Feature[] getWeightFeatures( final GMLWorkspace workspace, final Feature targetFE )
-  {
-    if( m_propRelationWeightMember == null || m_propRelationWeightMember.length() == 0 )
-      return new Feature[] { targetFE };
-
-    final IRelationType rt = (IRelationType) targetFE.getFeatureType().getProperty( m_propRelationWeightMember );
-    return workspace.resolveLinks( targetFE, rt );
-  }
-
-  private Feature[] getSourceFeatures( final GMLWorkspace workspace, final Feature weightFE )
-  {
-    if( m_propRelationSourceFeature == null || m_propRelationSourceFeature.length() == 0 )
-      return new Feature[] { weightFE };
-
-    final Object property = weightFE.getProperty( m_propRelationSourceFeature );
-    if( property instanceof FeatureList )
-      return ((FeatureList) property).toFeatures();
-
-    if( property instanceof Feature )
-      return new Feature[] { (Feature) property };
-
-    if( property instanceof String )
-    {
-      final IRelationType rt = (IRelationType) weightFE.getFeatureType().getProperty( m_propRelationSourceFeature );
-      return new Feature[] { workspace.resolveLink( weightFE, rt ) };
-    }
-
-    return null;
   }
 
   /**
@@ -592,4 +317,126 @@ public class GMLWeightingTask extends Task
     m_targetTo = targetTo;
   }
 
+  @Override
+  public URL getModelLocation( )
+  {
+    return m_modelURL;
+  }
+
+  @Override
+  public String getTargetFeaturePath( )
+  {
+    return m_featurePathTarget;
+  }
+
+  @Override
+  public String getTargetZMLProperty( )
+  {
+    return m_propZMLTarget;
+  }
+
+  @Override
+  public URL getTargetContext( )
+  {
+    return m_targetContext;
+  }
+
+  @Override
+  public String getWeightMember( )
+  {
+    return m_propRelationWeightMember;
+  }
+
+  @Override
+  public String getOffsetProperty( )
+  {
+    return m_propOffset;
+  }
+
+  @Override
+  public String getWeightProperty( )
+  {
+    return m_propWeight;
+  }
+
+  @Override
+  public String getSourceMember( )
+  {
+    return m_propRelationSourceFeature;
+  }
+
+  @Override
+  public String getSourceZMLProperty( )
+  {
+    return m_propZMLSource;
+  }
+
+  @Override
+  public String getSourceIsUsedProperty( )
+  {
+    return m_propSourceUsed;
+  }
+
+  @Override
+  public String getSourceFilter( )
+  {
+    return m_sourceFilter;
+  }
+
+  @Override
+  public Date getSourceFrom( )
+  {
+    if( m_sourceFrom == null )
+      return DateUtilities.parseDateTime( m_from );
+
+    return DateUtilities.parseDateTime( m_sourceFrom );
+  }
+
+  @Override
+  public Date getSourceTo( )
+  {
+    if( m_sourceTo == null )
+      return DateUtilities.parseDateTime( m_forecastFrom );
+
+    return DateUtilities.parseDateTime( m_sourceTo );
+  }
+
+  @Override
+  public Date getTargetFrom( )
+  {
+    if( m_targetFrom == null )
+      return DateUtilities.parseDateTime( m_forecastFrom );
+
+    return DateUtilities.parseDateTime( m_targetFrom );
+  }
+
+  @Override
+  public Date getTargetTo( )
+  {
+    if( m_targetTo == null )
+      return DateUtilities.parseDateTime( m_to );
+
+    return DateUtilities.parseDateTime( m_targetTo );
+  }
+
+  @Override
+  public Date getForecastFrom( )
+  {
+    return DateUtilities.parseDateTime( m_forecastFrom );
+  }
+
+  @Override
+  public Date getForecastTo( )
+  {
+    if( m_forecastTo == null )
+      return DateUtilities.parseDateTime( m_to );
+
+    return DateUtilities.parseDateTime( m_forecastTo );
+  }
+
+  @Override
+  public File getTargetMapping( )
+  {
+    return m_targetMapping;
+  }
 }

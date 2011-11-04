@@ -88,7 +88,7 @@ public class SendMailJobTest
     System.setProperty( "org.kalypso.service.wps.server.replacement", "" );
 
     /* Create the inputs. */
-    Map<String, Object> inputs = new HashMap<String, Object>();
+    final Map<String, Object> inputs = new HashMap<String, Object>();
     inputs.put( INPUT_SENDER, "h.albert@bjoernsen.de" );
     inputs.put( INPUT_RECEIVER, "h.albert@bjoernsen.de" );
     inputs.put( INPUT_TYPE, MailUtilities.TEXT_PLAIN );
@@ -96,24 +96,24 @@ public class SendMailJobTest
     inputs.put( INPUT_TEXT, "Wenn du diese Mail bekommen hast, hat das Senden funktioniert." );
 
     /* Create the outputs. */
-    List<String> outputs = new ArrayList<String>();
+    final List<String> outputs = new ArrayList<String>();
     outputs.add( OUTPUT_RESULT );
 
     /* The name of the simulation. */
-    String simulationName = "SendMailV1.0";
+    final String simulationName = "SendMailV1.0";
 
     /* Get the service endpoint. */
-    String serviceEndpoint = System.getProperty( WPSRequest.SYSTEM_PROP_WPS_ENDPOINT );
+    final String serviceEndpoint = System.getProperty( WPSRequest.SYSTEM_PROP_WPS_ENDPOINT );
 
     /* Start the simulation with a timeout of 300000 ms. */
-    WPSRequest simulationJob = new WPSRequest( simulationName, serviceEndpoint, 300000 );
-    IStatus status = simulationJob.run( inputs, outputs, new NullProgressMonitor() );
+    final WPSRequest simulationJob = new WPSRequest( simulationName, serviceEndpoint, 300000 );
+    final IStatus status = simulationJob.run( inputs, outputs, new NullProgressMonitor() );
 
     /* The end report. */
     System.out.println( status.getMessage() );
 
     /* Get the result. */
-    Map<String, Object> literals = simulationJob.getLiterals();
+    final Map<String, Object> literals = simulationJob.getLiterals();
 
     /* Assert. */
     Assert.assertNotNull( literals );

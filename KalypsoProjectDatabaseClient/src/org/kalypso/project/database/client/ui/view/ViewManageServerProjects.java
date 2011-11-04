@@ -111,7 +111,7 @@ public class ViewManageServerProjects extends ViewPart
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     final Group grModelType = new Group( m_body, SWT.NONE );
-    grModelType.setText( Messages.getString("org.kalypso.project.database.client.ui.view.ViewManageServerProjects.1") ); //$NON-NLS-1$
+    grModelType.setText( Messages.getString( "org.kalypso.project.database.client.ui.view.ViewManageServerProjects.1" ) ); //$NON-NLS-1$
     grModelType.setLayout( new GridLayout() );
     grModelType.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     m_toolkit.adapt( grModelType );
@@ -137,7 +137,7 @@ public class ViewManageServerProjects extends ViewPart
       viewerType.setSelection( new StructuredSelection( m_selectedType ) );
 
       final Group grDetails = new Group( m_body, SWT.NONE );
-      grDetails.setText( Messages.getString("org.kalypso.project.database.client.ui.view.ViewManageServerProjects.3") ); //$NON-NLS-1$
+      grDetails.setText( Messages.getString( "org.kalypso.project.database.client.ui.view.ViewManageServerProjects.3" ) ); //$NON-NLS-1$
       grDetails.setLayout( new GridLayout() );
       grDetails.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       m_toolkit.adapt( grDetails );

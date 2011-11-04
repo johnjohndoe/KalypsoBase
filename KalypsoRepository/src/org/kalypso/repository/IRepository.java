@@ -44,6 +44,7 @@ import java.io.Writer;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 
 /**
  * Eingangspunkt zu einem Repository. Es liefert z.B. die ersten Items. Damit kann eine Struktur aufgebaut werden.
@@ -77,6 +78,11 @@ public interface IRepository extends IRepositoryItem
    * @return some description
    */
   String getDescription( );
+
+  /**
+   * @return status of repository.
+   */
+  IStatus getStatus( String type );
 
   /**
    * Returns true when this repository is in readonly mode. What this really means, depends on the client

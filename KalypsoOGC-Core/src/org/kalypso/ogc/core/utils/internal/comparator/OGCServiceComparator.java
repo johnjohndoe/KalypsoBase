@@ -65,11 +65,11 @@ public class OGCServiceComparator implements Comparator<IOGCService>
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
   @Override
-  public int compare( IOGCService o1, IOGCService o2 )
+  public int compare( final IOGCService o1, final IOGCService o2 )
   {
     /* Get the versions. */
-    String version1 = o1.getVersion();
-    String version2 = o2.getVersion();
+    final String version1 = o1.getVersion();
+    final String version2 = o2.getVersion();
     if( version1 == null && version2 != null )
       return -1;
 
@@ -80,8 +80,8 @@ public class OGCServiceComparator implements Comparator<IOGCService>
       return 1;
 
     /* Get the trimmed versions. */
-    String versionTrimmed1 = version1.trim();
-    String versionTrimmed2 = version2.trim();
+    final String versionTrimmed1 = version1.trim();
+    final String versionTrimmed2 = version2.trim();
     if( versionTrimmed1.length() == 0 && versionTrimmed2.length() > 0 )
       return -1;
 
@@ -92,23 +92,23 @@ public class OGCServiceComparator implements Comparator<IOGCService>
       return 1;
 
     /* Get the splitted versions. */
-    String[] versionSplit1 = StringUtils.split( version1, "." );
-    String[] versionSplit2 = StringUtils.split( version2, "." );
+    final String[] versionSplit1 = StringUtils.split( version1, "." );
+    final String[] versionSplit2 = StringUtils.split( version2, "." );
     for( int i = 0; i < versionSplit1.length; i++ )
     {
       /* Get the version fragment of version 1. */
-      String versionFragment1 = versionSplit1[i];
+      final String versionFragment1 = versionSplit1[i];
 
       /* In this case (version1 = 1.0.0.1 and version2 = 1.0.0) the version 1 is greater. */
       if( i >= versionSplit2.length )
         return -1;
 
       /* Get the version fragment of version 2. */
-      String versionFragment2 = versionSplit2[i];
+      final String versionFragment2 = versionSplit2[i];
 
       /* Get the integer. */
-      int versionFragmentInt1 = NumberUtils.parseQuietInt( versionFragment1, 0 );
-      int versionFragmentInt2 = NumberUtils.parseQuietInt( versionFragment2, 0 );
+      final int versionFragmentInt1 = NumberUtils.parseQuietInt( versionFragment1, 0 );
+      final int versionFragmentInt2 = NumberUtils.parseQuietInt( versionFragment2, 0 );
 
       /* Check the next version fragment. */
       if( versionFragmentInt1 == versionFragmentInt2 )

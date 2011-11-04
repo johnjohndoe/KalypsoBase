@@ -38,35 +38,50 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.simulation.core;
+package org.kalypso.simulation.core.ant;
+
+import java.io.File;
+import java.net.URL;
+import java.util.Date;
 
 /**
- * Hewlper class for {@link ISimulationDataProvider}
- * 
  * @author Gernot Belger
  */
-public final class SimulationDataUtils
+public interface IGMLWeightingData
 {
-  private SimulationDataUtils( )
-  {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
-  }
+  URL getModelLocation( );
 
-  /**
-   * Returns the input for a given id, returning <code>null</code> if the id is not set.
-   */
-  public static <T> T getInputOrNull( final ISimulationDataProvider dataProvider, final String id ) throws SimulationException
-  {
-    return getInputOrDefault( dataProvider, id, null );
-  }
+  String getTargetFeaturePath( );
 
-  @SuppressWarnings("unchecked")
-  public static <T> T getInputOrDefault( final ISimulationDataProvider dataProvider, final String id, final T defaultValue ) throws SimulationException
-  {
-    if( dataProvider.hasID( id ) )
-      return (T) dataProvider.getInputForID( id );
+  String getTargetZMLProperty( );
 
-    return defaultValue;
-  }
+  URL getTargetContext( );
 
+  String getWeightMember( );
+
+  String getOffsetProperty( );
+
+  String getWeightProperty( );
+
+  String getSourceMember( );
+
+  String getSourceZMLProperty( );
+
+  String getSourceIsUsedProperty( );
+
+  String getSourceFilter( );
+
+  Date getSourceFrom( );
+
+  Date getSourceTo( );
+
+  Date getTargetFrom( );
+
+  Date getTargetTo( );
+
+  Date getForecastFrom( );
+
+  Date getForecastTo( );
+
+  File getTargetMapping( );
 }

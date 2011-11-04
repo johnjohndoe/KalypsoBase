@@ -97,9 +97,9 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
    */
   @Override
-  public void dispose()
+  public void dispose( )
   {
-  // nix zu disposen
+    // nix zu disposen
   }
 
   /**
@@ -122,31 +122,26 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
     // erstmal genauso wie eie normale berechnung
     final ISelection selection = m_window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
-    final IFolder[] calcCasesToCalc = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection,
-        Messages.getString("org.kalypso.simulation.ui.actions.TestCalculationDelegate.0"), Messages.getString("org.kalypso.simulation.ui.actions.TestCalculationDelegate.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IFolder[] calcCasesToCalc = CalcCaseHelper.chooseCalcCases( m_window.getShell(), selection, Messages.getString( "org.kalypso.simulation.ui.actions.TestCalculationDelegate.0" ), Messages.getString( "org.kalypso.simulation.ui.actions.TestCalculationDelegate.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( calcCasesToCalc == null )
       return;
 
-    for( int i = 0; i < calcCasesToCalc.length; i++ )
+    for( final IFolder folder : calcCasesToCalc )
     {
-      final IFolder folder = calcCasesToCalc[i];
-
-      final Job diffJob = new Job( Messages.getString("org.kalypso.simulation.ui.actions.TestCalculationDelegate.2") + folder.getName() ) //$NON-NLS-1$
+      final Job diffJob = new Job( Messages.getString( "org.kalypso.simulation.ui.actions.TestCalculationDelegate.2" ) + folder.getName() ) //$NON-NLS-1$
       {
         @Override
         protected IStatus run( final IProgressMonitor monitor )
         {
           try
           {
-            monitor.beginTask( Messages.getString("org.kalypso.simulation.ui.actions.TestCalculationDelegate.3") + folder.getName(), 2000 ); //$NON-NLS-1$
+            monitor.beginTask( Messages.getString( "org.kalypso.simulation.ui.actions.TestCalculationDelegate.3" ) + folder.getName(), 2000 ); //$NON-NLS-1$
 
             // Für jedes Vergleichspaar wird ein eigener Vergleichseditor geöffnet
             final ISelection[] selections = readTestDiffForCalcCase( folder, new SubProgressMonitor( monitor, 1000 ) );
-            for( int j = 0; j < selections.length; j++ )
+            for( final ISelection resourceSel : selections )
             {
-              final ISelection resourceSel = selections[j];
-
               final CompareConfiguration cc = new CompareConfiguration();
               cc.setProperty( CompareEditor.CONFIRM_SAVE_PROPERTY, new Boolean( false ) );
               cc.setLeftEditable( false );
@@ -159,7 +154,7 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
               final Runnable runnable = new Runnable()
               {
                 @Override
-                public void run()
+                public void run( )
                 {
                   CompareUI.openCompareEditor( inputWrapper );
                 }
@@ -186,7 +181,7 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
       diffJob.setUser( true );
 
       // die Berechnung durchführen
-      final CalcCaseJob calcJob = new CalcCaseJob( calcCasesToCalc[i] );
+      final CalcCaseJob calcJob = new CalcCaseJob( folder );
 
       calcJob.addJobChangeListener( new JobChangeAdapter()
       {
@@ -213,34 +208,33 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
   @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-  // egal
+    // egal
   }
 
-  protected static ISelection[] readTestDiffForCalcCase( final IFolder calcCaseFolder, final IProgressMonitor monitor )
-      throws CoreException
+  protected static ISelection[] readTestDiffForCalcCase( final IFolder calcCaseFolder, final IProgressMonitor monitor ) throws CoreException
   {
     InputStreamReader reader = null;
     try
     {
-      monitor.beginTask( Messages.getString("org.kalypso.simulation.ui.actions.TestCalculationDelegate.4"), 1000 ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "org.kalypso.simulation.ui.actions.TestCalculationDelegate.4" ), 1000 ); //$NON-NLS-1$
 
       final Unmarshaller unmarshaller = JC.createUnmarshaller();
 
       final IFile file = calcCaseFolder.getFile( ".test.xml" ); //$NON-NLS-1$
       reader = new InputStreamReader( new BufferedInputStream( file.getContents() ), file.getCharset() );
-      final Compare compare = (Compare)unmarshaller.unmarshal( new InputSource( reader ) );
+      final Compare compare = (Compare) unmarshaller.unmarshal( new InputSource( reader ) );
       reader.close();
 
-      final List<JAXBElement<?>> diffList = compare.getDiff();
+      final List<JAXBElement< ? >> diffList = compare.getDiff();
 
       final ISelection[] selections = new ISelection[diffList.size()];
       int count = 0;
-      for( final Iterator<JAXBElement<?>> diffIt = diffList.iterator(); diffIt.hasNext(); )
+      for( final Iterator<JAXBElement< ? >> diffIt = diffList.iterator(); diffIt.hasNext(); )
       {
         final Object diff = diffIt.next();
         if( diff instanceof Resource )
         {
-          final Resource resource = (Resource)diff;
+          final Resource resource = (Resource) diff;
           final List<Path> pathList = resource.getPath();
           final Resource.Path first = pathList.get( 0 );
           final Resource.Path second = pathList.get( 1 );
@@ -248,14 +242,10 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
           final IResource firstRes = getResource( first, calcCaseFolder );
           final IResource secondRes = getResource( second, calcCaseFolder );
 
-          selections[count++] = new StructuredSelection( new IResource[]
-          {
-              firstRes,
-              secondRes } );
+          selections[count++] = new StructuredSelection( new IResource[] { firstRes, secondRes } );
         }
         else
-          throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0,
-              Messages.getString("org.kalypso.simulation.ui.actions.TestCalculationDelegate.5") + diff.getClass().getName(), null ) ); //$NON-NLS-1$
+          throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, Messages.getString( "org.kalypso.simulation.ui.actions.TestCalculationDelegate.5" ) + diff.getClass().getName(), null ) ); //$NON-NLS-1$
       }
 
       return selections;
@@ -266,8 +256,7 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
     }
     catch( final Exception e )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0,
-          Messages.getString("org.kalypso.simulation.ui.actions.TestCalculationDelegate.6"), e ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, Messages.getString( "org.kalypso.simulation.ui.actions.TestCalculationDelegate.6" ), e ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -276,8 +265,7 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
     }
   }
 
-  private static final IResource getResource( final Resource.Path path, final IFolder calcCaseFolder )
-      throws CoreException
+  private static final IResource getResource( final Resource.Path path, final IFolder calcCaseFolder ) throws CoreException
   {
     final IProject project = calcCaseFolder.getProject();
     final String name = path.getName();
@@ -286,8 +274,8 @@ public class TestCalculationDelegate implements IWorkbenchWindowActionDelegate
 
     if( resource == null )
     {
-      final String location = relativeToCalcCase ? Messages.getString("org.kalypso.simulation.ui.actions.TestCalculationDelegate.7") : Messages.getString("org.kalypso.simulation.ui.actions.TestCalculationDelegate.8"); //$NON-NLS-1$ //$NON-NLS-2$
-      final String message = Messages.getString("org.kalypso.simulation.ui.actions.TestCalculationDelegate.9", location, name); //$NON-NLS-1$
+      final String location = relativeToCalcCase ? Messages.getString( "org.kalypso.simulation.ui.actions.TestCalculationDelegate.7" ) : Messages.getString( "org.kalypso.simulation.ui.actions.TestCalculationDelegate.8" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final String message = Messages.getString( "org.kalypso.simulation.ui.actions.TestCalculationDelegate.9", location, name ); //$NON-NLS-1$
       throw new CoreException( new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), 0, message, null ) );
     }
 

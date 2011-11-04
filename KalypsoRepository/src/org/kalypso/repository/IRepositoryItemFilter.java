@@ -38,35 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.simulation.core;
+package org.kalypso.repository;
 
 /**
- * Hewlper class for {@link ISimulationDataProvider}
- * 
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public final class SimulationDataUtils
+public interface IRepositoryItemFilter
 {
-  private SimulationDataUtils( )
-  {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
-  }
-
-  /**
-   * Returns the input for a given id, returning <code>null</code> if the id is not set.
-   */
-  public static <T> T getInputOrNull( final ISimulationDataProvider dataProvider, final String id ) throws SimulationException
-  {
-    return getInputOrDefault( dataProvider, id, null );
-  }
-
-  @SuppressWarnings("unchecked")
-  public static <T> T getInputOrDefault( final ISimulationDataProvider dataProvider, final String id, final T defaultValue ) throws SimulationException
-  {
-    if( dataProvider.hasID( id ) )
-      return (T) dataProvider.getInputForID( id );
-
-    return defaultValue;
-  }
-
+  boolean select( IRepositoryItem item );
 }

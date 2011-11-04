@@ -71,7 +71,7 @@ public class WebDavWrite
   @Test
   public void testWebDavWrite( ) throws IOException
   {
-    DefaultFileSystemManager manager = new DefaultFileSystemManager();
+    final DefaultFileSystemManager manager = new DefaultFileSystemManager();
     manager.addProvider( "webdav", new WebdavFileProvider() );
     manager.addProvider( "file", new DefaultLocalFileProvider() );
     manager.addProvider( "tmp", new TemporaryFileProvider() );
@@ -81,10 +81,10 @@ public class WebDavWrite
     manager.setTemporaryFileStore( new DefaultFileReplicator() );
     manager.init();
 
-    File file = new File( FileUtilities.TMP_DIR, "davWrite.txt" );
-    FileObject testFile = manager.toFileObject( file );
+    final File file = new File( FileUtilities.TMP_DIR, "davWrite.txt" );
+    final FileObject testFile = manager.toFileObject( file );
 
-    FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/Test/test.txt" );
+    final FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/Test/test.txt" );
     Assert.assertNotNull( davFile );
 
     FileUtil.copyContent( testFile, davFile );

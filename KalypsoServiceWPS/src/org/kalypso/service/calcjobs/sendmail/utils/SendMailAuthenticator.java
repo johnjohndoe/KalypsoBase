@@ -53,12 +53,12 @@ public class SendMailAuthenticator extends Authenticator
   /**
    * The password authentication.
    */
-  private PasswordAuthentication m_pwa;
+  private final PasswordAuthentication m_pwa;
 
   /**
    * The constructor.
    */
-  public SendMailAuthenticator( String username, String password )
+  public SendMailAuthenticator( final String username, final String password )
   {
     m_pwa = new PasswordAuthentication( username, password );
   }

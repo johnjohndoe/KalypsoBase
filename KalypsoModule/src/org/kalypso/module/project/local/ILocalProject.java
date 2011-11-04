@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.module.project.local;
 
-
 /**
  * @author Dirk Kuch
  */

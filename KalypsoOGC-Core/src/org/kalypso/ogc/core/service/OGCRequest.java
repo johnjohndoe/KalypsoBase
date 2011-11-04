@@ -63,7 +63,7 @@ public class OGCRequest
   /**
    * The type of the servlet request. True for a POST request. False for a GET request.
    */
-  private boolean m_post;
+  private final boolean m_post;
 
   /**
    * The parameter of the servlet request.
@@ -83,7 +83,7 @@ public class OGCRequest
    * @param request
    *          The servlet request.
    */
-  public OGCRequest( boolean post, HttpServletRequest request )
+  public OGCRequest( final boolean post, final HttpServletRequest request )
   {
     m_post = post;
     m_parameter = null;
@@ -109,7 +109,7 @@ public class OGCRequest
    *          The parameter name.
    * @return The parameter value or null, if it does not exist.
    */
-  public String getParameterValue( String key )
+  public String getParameterValue( final String key )
   {
     final String[] values = m_parameter.get( key.toLowerCase() );
     if( values != null && values.length > 0 )
@@ -138,7 +138,7 @@ public class OGCRequest
    * @param request
    *          The servlet request.
    */
-  private void init( HttpServletRequest request )
+  private void init( final HttpServletRequest request )
   {
     m_parameter = initParameter( request );
     m_body = initBody( request );
@@ -152,12 +152,12 @@ public class OGCRequest
    * @return The parameter.
    */
   @SuppressWarnings("unchecked")
-  private Map<String, String[]> initParameter( HttpServletRequest request )
+  private Map<String, String[]> initParameter( final HttpServletRequest request )
   {
-    Map<String, String[]> parameter = new HashMap<String, String[]>();
+    final Map<String, String[]> parameter = new HashMap<String, String[]>();
 
-    Set<Entry<String, String[]>> entries = ((Map<String, String[]>) request.getParameterMap()).entrySet();
-    for( Entry<String, String[]> entry : entries )
+    final Set<Entry<String, String[]>> entries = ((Map<String, String[]>) request.getParameterMap()).entrySet();
+    for( final Entry<String, String[]> entry : entries )
       parameter.put( entry.getKey().toLowerCase(), entry.getValue() );
 
     return parameter;
@@ -170,7 +170,7 @@ public class OGCRequest
    *          The servlet request.
    * @return The body.
    */
-  private String initBody( HttpServletRequest request )
+  private String initBody( final HttpServletRequest request )
   {
     /* The reader. */
     BufferedReader reader = null;
@@ -182,12 +182,12 @@ public class OGCRequest
         return null;
 
       /* Only xml bodies may be handled. */
-      String contentType = request.getContentType();
+      final String contentType = request.getContentType();
       if( contentType == null || !contentType.contains( "text/xml" ) )
         return null;
 
       /* Memory for the results. */
-      StringBuffer buffer = new StringBuffer();
+      final StringBuffer buffer = new StringBuffer();
 
       /* Get the reader. */
       reader = request.getReader();
@@ -202,7 +202,7 @@ public class OGCRequest
 
       return buffer.toString();
     }
-    catch( IOException ex )
+    catch( final IOException ex )
     {
       /* Print the exception. */
       ex.printStackTrace();

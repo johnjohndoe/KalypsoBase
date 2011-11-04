@@ -92,17 +92,17 @@ public class ExtensionUtilities
     try
     {
       /* Memory for the OGC services. */
-      List<IOGCService> services = new ArrayList<IOGCService>();
+      final List<IOGCService> services = new ArrayList<IOGCService>();
 
       /* Get the extension registry. */
-      IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+      final IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 
       /* Get the extension point. */
-      IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint( SERVICE_EXTENSION_POINT );
+      final IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint( SERVICE_EXTENSION_POINT );
 
       /* Get all configuration elements. */
-      IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-      for( IConfigurationElement configurationElement : configurationElements )
+      final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+      for( final IConfigurationElement configurationElement : configurationElements )
       {
         /* If the configuration element is not the right one, continue. */
         if( !SERVICE_EXTENSION_POINT_SERVICE_ELEMENT.equals( configurationElement.getName() ) )
@@ -114,7 +114,7 @@ public class ExtensionUtilities
 
       return services.toArray( new IOGCService[] {} );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new OWSException( String.format( "Encountered an error while preparing the execution of the request. Cause: %s", ex.getMessage() ), ex, OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
     }
@@ -129,10 +129,10 @@ public class ExtensionUtilities
    *          The version of the requested OGC service.
    * @return The OGC service matching the given name and version.
    */
-  public static IOGCService getService( String serviceName, String serviceVersion ) throws OWSException
+  public static IOGCService getService( final String serviceName, final String serviceVersion ) throws OWSException
   {
     /* Get the service element. */
-    IConfigurationElement serviceElement = getServiceElement( serviceName, serviceVersion );
+    final IConfigurationElement serviceElement = getServiceElement( serviceName, serviceVersion );
     if( serviceElement == null )
       throw new OWSException( String.format( "This server does not provide a service with the name '%s' and version '%s'.", serviceName, serviceVersion ), OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null );
 
@@ -140,7 +140,7 @@ public class ExtensionUtilities
     {
       return (IOGCService) serviceElement.createExecutableExtension( SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_CLASS_ATTRIBUTE );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new OWSException( String.format( "Encountered an error while preparing the execution of the request. Cause: %s", ex.getMessage() ), ex, OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
     }
@@ -155,21 +155,21 @@ public class ExtensionUtilities
    *          The version of the requested OGC service.
    * @return All in the extension registry registered OGC operations.
    */
-  public static IOGCOperation[] getOperations( String serviceName, String serviceVersion ) throws OWSException
+  public static IOGCOperation[] getOperations( final String serviceName, final String serviceVersion ) throws OWSException
   {
     try
     {
       /* Memory for the OGC operations. */
-      List<IOGCOperation> operations = new ArrayList<IOGCOperation>();
+      final List<IOGCOperation> operations = new ArrayList<IOGCOperation>();
 
       /* Get the service element. */
-      IConfigurationElement serviceElement = getServiceElement( serviceName, serviceVersion );
+      final IConfigurationElement serviceElement = getServiceElement( serviceName, serviceVersion );
       if( serviceElement == null )
         throw new OWSException( String.format( "This server does not provide a service with the name '%s' and version '%s'.", serviceName, serviceVersion ), OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null );
 
       /* Get all configuration elements. */
-      IConfigurationElement[] configurationElements = serviceElement.getChildren( SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT );
-      for( IConfigurationElement configurationElement : configurationElements )
+      final IConfigurationElement[] configurationElements = serviceElement.getChildren( SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT );
+      for( final IConfigurationElement configurationElement : configurationElements )
       {
         /* If the configuration element is not the right one, continue. */
         if( !SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT.equals( configurationElement.getName() ) )
@@ -181,7 +181,7 @@ public class ExtensionUtilities
 
       return operations.toArray( new IOGCOperation[] {} );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new OWSException( String.format( "Encountered an error while preparing the execution of the request. Cause: %s", ex.getMessage() ), ex, OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
     }
@@ -198,15 +198,15 @@ public class ExtensionUtilities
    *          The name of the requested OGC operation.
    * @return The OGC operation matching the given name.
    */
-  public static IOGCOperation getOperation( String serviceName, String serviceVersion, String operationName ) throws OWSException
+  public static IOGCOperation getOperation( final String serviceName, final String serviceVersion, final String operationName ) throws OWSException
   {
     /* Get the service element. */
-    IConfigurationElement serviceElement = getServiceElement( serviceName, serviceVersion );
+    final IConfigurationElement serviceElement = getServiceElement( serviceName, serviceVersion );
     if( serviceElement == null )
       throw new OWSException( String.format( "This server does not provide a service with the name '%s' and version '%s'.", serviceName, serviceVersion ), OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null );
 
     /* Get the operation element. */
-    IConfigurationElement operationElement = getOperationElement( serviceElement, operationName );
+    final IConfigurationElement operationElement = getOperationElement( serviceElement, operationName );
     if( operationElement == null )
       throw new OWSException( String.format( "The service with the name '%s' and version '%s' does not provide an operation with the name '%s'.", serviceName, serviceVersion, operationName ), OWSUtilities.OWS_VERSION, "en", ExceptionCode.OPERATION_NOT_SUPPORTED, null );
 
@@ -214,7 +214,7 @@ public class ExtensionUtilities
     {
       return (IOGCOperation) operationElement.createExecutableExtension( SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT_CLASS_ATTRIBUTE );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new OWSException( String.format( "Encountered an error while preparing the execution of the request. Cause: %s", ex.getMessage() ), ex, OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
     }
@@ -229,25 +229,25 @@ public class ExtensionUtilities
    *          The version of the requested service element.
    * @return The service element matching the given name and version.
    */
-  private static IConfigurationElement getServiceElement( String serviceName, String serviceVersion )
+  private static IConfigurationElement getServiceElement( final String serviceName, final String serviceVersion )
   {
     /* Get the extension registry. */
-    IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+    final IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 
     /* Get the extension point. */
-    IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint( SERVICE_EXTENSION_POINT );
+    final IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint( SERVICE_EXTENSION_POINT );
 
     /* Get all configuration elements. */
-    IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-    for( IConfigurationElement configurationElement : configurationElements )
+    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+    for( final IConfigurationElement configurationElement : configurationElements )
     {
       /* If the configuration element is not the right one, continue. */
       if( !SERVICE_EXTENSION_POINT_SERVICE_ELEMENT.equals( configurationElement.getName() ) )
         continue;
 
       /* Get the attributes. */
-      String nameAttribute = configurationElement.getAttribute( SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_NAME_ATTRIBUTE );
-      String versionAttribute = configurationElement.getAttribute( SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_VERSION_ATTRIBUTE );
+      final String nameAttribute = configurationElement.getAttribute( SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_NAME_ATTRIBUTE );
+      final String versionAttribute = configurationElement.getAttribute( SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_VERSION_ATTRIBUTE );
       if( nameAttribute.equals( serviceName ) && versionAttribute.equals( serviceVersion ) )
         return configurationElement;
     }
@@ -264,18 +264,18 @@ public class ExtensionUtilities
    *          The name of the requested operation element.
    * @return The operation element matching the given name.
    */
-  private static IConfigurationElement getOperationElement( IConfigurationElement serviceElement, String operationName )
+  private static IConfigurationElement getOperationElement( final IConfigurationElement serviceElement, final String operationName )
   {
     /* Get all configuration elements. */
-    IConfigurationElement[] configurationElements = serviceElement.getChildren( SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT );
-    for( IConfigurationElement configurationElement : configurationElements )
+    final IConfigurationElement[] configurationElements = serviceElement.getChildren( SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT );
+    for( final IConfigurationElement configurationElement : configurationElements )
     {
       /* If the configuration element is not the right one, continue. */
       if( !SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT.equals( configurationElement.getName() ) )
         continue;
 
       /* Get the attributes. */
-      String nameAttribute = configurationElement.getAttribute( SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT_NAME_ATTRIBUTE );
+      final String nameAttribute = configurationElement.getAttribute( SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT_NAME_ATTRIBUTE );
       if( nameAttribute.equals( operationName ) )
         return configurationElement;
     }

@@ -87,14 +87,14 @@ public class AsynchronousWPSWatchdog
       monitor.beginTask( Messages.getString( "org.kalypso.service.wps.refactoring.AsynchronousWPSWatchdog.0" ) + title, 100 ); // 100% //$NON-NLS-1$
 
       Integer lastPercentage = 0;
-      
+
       while( run )
       {
         try
         {
           Thread.sleep( TIMEOUT_STEP );
-          //not a timeout behavior - this is the upper limit for execution time...
-//          executed += 2000;
+          // not a timeout behavior - this is the upper limit for execution time...
+// executed += 2000;
         }
         catch( final InterruptedException e )
         {
@@ -108,10 +108,12 @@ public class AsynchronousWPSWatchdog
         final Integer percentage = m_process.getPercentCompleted();
         final String statusDescription = m_process.getStatusDescription();
         tickMonitor( statusDescription, percentage, monitor );
-        if( lastPercentage != percentage ){
+        if( lastPercentage != percentage )
+        {
           executed = 0;
         }
-        else{
+        else
+        {
           executed += TIMEOUT_STEP;
         }
         lastPercentage = percentage;
@@ -131,7 +133,7 @@ public class AsynchronousWPSWatchdog
         if( monitor.isCanceled() )
           return m_observer.handleCancel();
 
-        //by setting m_timeout to 0 it will switch the timeout off
+        // by setting m_timeout to 0 it will switch the timeout off
         if( m_timeout > 0 && executed >= m_timeout )
           return m_observer.handleTimeout();
       }

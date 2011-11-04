@@ -47,7 +47,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointRemove;
@@ -246,17 +246,17 @@ public final class DouglasPeuckerHelper
 // final int breiteIndexEnd = ownerEnd.indexOfComponent( breiteComp );
 // final int hoeheIndexEnd = ownerEnd.indexOfComponent( hoeheComp );
 
-    final Double bx = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, beginPoint );// (Double)
+    final Double bx = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, beginPoint );// (Double)
 // beginPoint.getValue( breiteIndexBegin );
-    final Double by = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, beginPoint );// (Double)
+    final Double by = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, beginPoint );// (Double)
 // beginPoint.getValue( hoeheIndexBegin );
-    final Double ex = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, endPoint );// (Double)
+    final Double ex = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, endPoint );// (Double)
 // endPoint.getValue( breiteIndexMiddle );
-    final Double ey = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, endPoint );// (Double)
+    final Double ey = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, endPoint );// (Double)
 // endPoint.getValue( hoeheIndexMiddle );
-    final Double mx = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, middlePoint );// (Double)
+    final Double mx = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, middlePoint );// (Double)
 // middlePoint.getValue( breiteIndexEnd );
-    final Double my = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, middlePoint );// (Double)
+    final Double my = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, middlePoint );// (Double)
 // middlePoint.getValue( hoeheIndexEnd );
 
     final double f = (ey - by) / (ex - bx);

@@ -125,7 +125,7 @@ public class WPSSimulationHandler extends Thread
       boolean bEnd = false;
       while( bEnd == false )
       {
-        STATE state = jobInfo.getState();
+        final STATE state = jobInfo.getState();
 
         // get current results
         final List<IOValueType> ioValues = jobInfo.getCurrentResults();
@@ -256,7 +256,7 @@ public class WPSSimulationHandler extends Thread
    * @param ioValues
    *          The ioValues for creating the process outputs, if any are here. Otherwise leave it null.
    */
-  private synchronized void createExecuteResponse( StatusType status, List<IOValueType> ioValues ) throws Exception
+  private synchronized void createExecuteResponse( final StatusType status, final List<IOValueType> ioValues ) throws Exception
   {
     /* Prepare the execute response. */
     final FileObject resultDir = m_service.getResultDir( m_jobID );

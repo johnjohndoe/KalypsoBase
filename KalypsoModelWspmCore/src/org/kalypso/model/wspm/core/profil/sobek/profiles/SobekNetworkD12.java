@@ -45,7 +45,6 @@ import java.util.Collection;
 
 /**
  * @author Gernot Belger
- *
  */
 public class SobekNetworkD12
 {

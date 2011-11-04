@@ -61,7 +61,7 @@ import org.kalypso.simulation.core.internal.FailureService;
 
 /**
  * Helper class to read extension points from registry.
- *
+ * 
  * @author Belger
  */
 public class KalypsoSimulationCoreExtensions
@@ -114,13 +114,13 @@ public class KalypsoSimulationCoreExtensions
 
   /**
    * Adds all defined {@link IUrlCatalog}s to the given list.
-   *
+   * 
    * @return A status indicating the succes of the process.
    */
   public static IStatus createCatalogs( final List<IUrlCatalog> catalogs )
   {
     final Map<String, IConfigurationElement> elements = readSimulations();
-    final MultiStatus status = new MultiStatus( KalypsoSimulationCorePlugin.getID(), 0, Messages.getString("org.kalypso.simulation.core.KalypsoSimulationCoreExtensions.0"), null ); //$NON-NLS-1$
+    final MultiStatus status = new MultiStatus( KalypsoSimulationCorePlugin.getID(), 0, Messages.getString( "org.kalypso.simulation.core.KalypsoSimulationCoreExtensions.0" ), null ); //$NON-NLS-1$
     // final List<IUrlCatalog> catalogs = new ArrayList<IUrlCatalog>( elements.size() );
     for( final IConfigurationElement element : elements.values() )
     {
@@ -162,7 +162,7 @@ public class KalypsoSimulationCoreExtensions
 
   /**
    * This function creates a linked list with all simulations.
-   *
+   * 
    * @return All simulations.
    */
   public static List<ISimulation> createSimulations( ) throws CoreException
@@ -225,7 +225,7 @@ public class KalypsoSimulationCoreExtensions
 
         // instead of ignoring, we add this 'failure'-service. So the service still shows in any lists, but invokation
         // show what originally happend.
-        services.add( new FailureService( new SimulationException( Messages.getString("org.kalypso.simulation.core.KalypsoSimulationCoreExtensions.1"), e ) ) ); //$NON-NLS-1$
+        services.add( new FailureService( new SimulationException( Messages.getString( "org.kalypso.simulation.core.KalypsoSimulationCoreExtensions.1" ), e ) ) ); //$NON-NLS-1$
       }
     }
 

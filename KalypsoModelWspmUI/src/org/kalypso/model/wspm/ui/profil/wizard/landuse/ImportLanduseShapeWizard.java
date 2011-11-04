@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse;
 
-import java.net.URL;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
@@ -51,7 +49,6 @@ import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.IRefreshable;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -130,10 +127,6 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
     return false;
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
@@ -149,16 +142,12 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
       final IKalypsoTheme theme = (IKalypsoTheme) nodeElement;
       final IMapModell model = theme.getMapModell();
 
-      final URL context = model.getContext();
-      m_project = ResourceUtilities.findProjectFromURL( context );
+      m_project = model.getProject();
     }
     else
       throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#setContainer(org.eclipse.jface.wizard.IWizardContainer)
-   */
   @Override
   public void setContainer( final IWizardContainer container )
   {

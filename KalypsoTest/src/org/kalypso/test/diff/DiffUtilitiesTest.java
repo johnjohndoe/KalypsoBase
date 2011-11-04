@@ -63,6 +63,7 @@ public class DiffUtilitiesTest extends TestCase
         /**
          * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
          */
+        @Override
         public void log( final Level level, final int code, final String message )
         {
           System.out.println( message );

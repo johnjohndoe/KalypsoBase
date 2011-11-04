@@ -63,16 +63,16 @@ public class GMLXPathTest extends TestCase
 {
   private String[] getXPathes( )
   {
-    return new String[] {// 
-    // 
-        // tested:
+    return new String[] {//
+    //
+    // tested:
 
         "id( 'a816c00e010a02356c64000000086e20' )",//
         "id( 'a816c00e010a02356c64000000086e20' ) /name",//
         "FeatureCollection/featureMember/BPlan[ @fid = 'c013800d0109e45d440e00000037a018' ]/gkz",//
         "FeatureCollection/featureMember",//
         "FeatureCollection/featureMember/BPlan[ @fid = 'c013800d0109e45d440e00000037a018' ]",//
-    // 
+    //
     // not tested:
     // "featureMember[BPlan]",// test deprecated1
     // "./FeatureCollection/featureMember",//

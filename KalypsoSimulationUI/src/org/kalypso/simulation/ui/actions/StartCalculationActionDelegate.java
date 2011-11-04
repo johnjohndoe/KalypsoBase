@@ -40,17 +40,11 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.actions;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPageLayout;
@@ -65,6 +59,9 @@ import org.kalypso.simulation.ui.i18n.Messages;
  */
 public class StartCalculationActionDelegate extends AbstractHandler
 {
+  /**
+   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -78,37 +75,16 @@ public class StartCalculationActionDelegate extends AbstractHandler
     if( calcCasesToCalc == null )
       return null;
 
-    final Queue<IFolder> folders = new LinkedList<IFolder>( Arrays.asList( calcCasesToCalc ) );
-    startNextJob( shell, folders );
+    for( final IFolder folder : calcCasesToCalc )
+    {
+      final Job calcJob = new CalcCaseJob( folder );
+
+      // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
+      calcJob.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, Messages.getString( "org.kalypso.simulation.ui.actions.StartCalculationActionDelegate.2" ) //$NON-NLS-1$
+          + folder.getName(), Messages.getString( "org.kalypso.simulation.ui.actions.StartCalculationActionDelegate.3" ), false, true ) ); //$NON-NLS-1$
+      calcJob.schedule();
+    }
 
     return null;
-  }
-
-  /**
-   * Starts the next calculation until the queue of folders is empty.<br/>
-   * A bit dirty, but using scheduling rules does not work as the job set workspaces rules internally.<br/>
-   * TODO: we should run all calculation in on e big operation inside of a dialog that shows the console output.
-   */
-  void startNextJob( final Shell shell, final Queue<IFolder> folders )
-  {
-    final IFolder folder = folders.poll();
-    if( folder == null )
-      return;
-
-    final Job calcJob = new CalcCaseJob( folder );
-    final String messageTitle = Messages.getString( "org.kalypso.simulation.ui.actions.StartCalculationActionDelegate.2", folder.getName() ); //$NON-NLS-1$
-    final String messageFirstline = Messages.getString( "org.kalypso.simulation.ui.actions.StartCalculationActionDelegate.3" ); //$NON-NLS-1$
-    calcJob.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, messageTitle, messageFirstline, true, true ) );
-    calcJob.addJobChangeListener( new JobChangeAdapter()
-    {
-      @Override
-      public void done( final IJobChangeEvent event )
-      {
-        if( event.getResult().isOK() )
-          startNextJob( shell, folders );
-      }
-    } );
-
-    calcJob.schedule();
   }
 }

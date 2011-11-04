@@ -47,6 +47,7 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
@@ -156,11 +157,11 @@ public final class CoverageProfile
   private static IRecord createPoint( final IProfil profile, final Coordinate coordinate, final double breite )
   {
     /* The needed components. */
-    final IComponent cRechtswert = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    final IComponent cHochwert = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    final IComponent cBreite = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_BREITE );
-    final IComponent cHoehe = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOEHE );
-    final IComponent cRauheit = profile.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+    final IComponent cRechtswert = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
+    final IComponent cHochwert = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
+    final IComponent cBreite = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_BREITE );
+    final IComponent cHoehe = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_HOEHE );
+    final IComponent cRauheit = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
 
     /* add components if necessary */
     if( !profile.hasPointProperty( cRechtswert ) )
@@ -226,7 +227,7 @@ public final class CoverageProfile
     final int insertPositition = insertSign < 0 ? 0 : profile.getPoints().length - 1;
 
     final IRecord point = profile.getPoint( insertPositition );
-    final int iBreite = profile.indexOfProperty( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int iBreite = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
     double breite = (Double) point.getValue( iBreite );
 
     final List<IRecord> newRecords = new ArrayList<IRecord>( newPoints.length );

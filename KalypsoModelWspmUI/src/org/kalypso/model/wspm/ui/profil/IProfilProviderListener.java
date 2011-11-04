@@ -47,5 +47,5 @@ import org.kalypso.model.wspm.core.profil.IProfil;
  */
 public interface IProfilProviderListener
 {
-   void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile );
+  void onProfilProviderChanged( final IProfilProvider provider, final IProfil oldProfile, final IProfil newProfile );
 }

@@ -102,9 +102,9 @@ public class OWSUtilities
    *          XML will be sent to this writer.
    * @see Marshaller#marshal(Object, Writer)
    */
-  public static void marshal( Object jaxbElement, Writer writer ) throws JAXBException
+  public static void marshal( final Object jaxbElement, final Writer writer ) throws JAXBException
   {
-    Marshaller marshaller = JC.createMarshaller();
+    final Marshaller marshaller = JC.createMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     marshaller.marshal( jaxbElement, writer );
   }
@@ -119,9 +119,9 @@ public class OWSUtilities
    * @return The newly created root object of the java content tree.
    * @see Unmarshaller#unmarshal(java.io.Reader)
    */
-  public static Object unmarshall( Reader reader ) throws JAXBException
+  public static Object unmarshall( final Reader reader ) throws JAXBException
   {
-    Unmarshaller unmarshaller = JC.createUnmarshaller();
+    final Unmarshaller unmarshaller = JC.createUnmarshaller();
     return unmarshaller.unmarshal( reader );
   }
 
@@ -147,14 +147,14 @@ public class OWSUtilities
    *          not identified.
    * @return
    */
-  public static ExceptionReport buildExeptionReport( ExceptionType[] exceptions, String version, String lang )
+  public static ExceptionReport buildExeptionReport( final ExceptionType[] exceptions, final String version, final String lang )
   {
     /* Create the instance via the factory. */
-    ExceptionReport exceptionReport = OWS_OF.createExceptionReport();
+    final ExceptionReport exceptionReport = OWS_OF.createExceptionReport();
 
     /* Elements. */
-    for( int i = 0; i < exceptions.length; i++ )
-      exceptionReport.getException().add( exceptions[i] );
+    for( final ExceptionType exception : exceptions )
+      exceptionReport.getException().add( exception );
 
     /* Attributes. */
     exceptionReport.setVersion( version );
@@ -186,14 +186,14 @@ public class OWSUtilities
    *          OWS service, and shall be specified in the OWS Implementation Specification.
    * @return
    */
-  public static ExceptionType buildExceptionType( String[] exceptionTexts, String exceptionCode, String locator )
+  public static ExceptionType buildExceptionType( final String[] exceptionTexts, final String exceptionCode, final String locator )
   {
     /* Create the instance via the factory. */
-    ExceptionType exception = OWS_OF.createExceptionType();
+    final ExceptionType exception = OWS_OF.createExceptionType();
 
     /* Elements. */
-    for( int i = 0; i < exceptionTexts.length; i++ )
-      exception.getExceptionText().add( exceptionTexts[i] );
+    for( final String exceptionText : exceptionTexts )
+      exception.getExceptionText().add( exceptionText );
 
     /* Attributes. */
     exception.setExceptionCode( exceptionCode );
@@ -217,10 +217,10 @@ public class OWSUtilities
    * @param value
    * @return
    */
-  public static CodeType buildCodeType( String codeSpace, String value )
+  public static CodeType buildCodeType( final String codeSpace, final String value )
   {
     /* Create the instance via the factory. */
-    CodeType code = OWS_OF.createCodeType();
+    final CodeType code = OWS_OF.createCodeType();
 
     /* Attributes. */
     if( codeSpace != null )
@@ -266,10 +266,10 @@ public class OWSUtilities
    *          Name or identifier of this quantity.
    * @return
    */
-  public static DomainType buildDomainType( Object possibleValues, ValueType defaultValue, DomainMetadataType meaning, DomainMetadataType dataType, boolean reference, DomainMetadataType valuesUnit, List<MetadataType> metadata, String name )
+  public static DomainType buildDomainType( final Object possibleValues, final ValueType defaultValue, final DomainMetadataType meaning, final DomainMetadataType dataType, final boolean reference, final DomainMetadataType valuesUnit, final List<MetadataType> metadata, final String name )
   {
     /* Create the instance via the factory. */
-    DomainType domain = OWS_OF.createDomainType();
+    final DomainType domain = OWS_OF.createDomainType();
 
     /* Elements. */
     if( possibleValues != null )
@@ -325,10 +325,10 @@ public class OWSUtilities
    *          Human-readable name of the metadata described by associated referenced document.
    * @return
    */
-  public static DomainMetadataType buildDomainMetadataType( String reference, String value )
+  public static DomainMetadataType buildDomainMetadataType( final String reference, final String value )
   {
     /* Create the instance via the factory. */
-    DomainMetadataType domainMetadata = OWS_OF.createDomainMetadataType();
+    final DomainMetadataType domainMetadata = OWS_OF.createDomainMetadataType();
 
     /* Attributes. */
     if( reference != null )

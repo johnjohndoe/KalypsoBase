@@ -72,7 +72,7 @@ public class CreateProjectAction extends Action
 
   public CreateProjectAction( final String label, /* final String commitType, */final INewProjectWizardProvider wizardProvider )
   {
-//    m_commitType = commitType;
+// m_commitType = commitType;
     m_wizardProvider = wizardProvider;
     setText( label );
 

@@ -36,7 +36,7 @@ public class SimulationJobSpecification
   {
     m_calculationTypeID = calculationTypeID;
     m_container = container;
-    m_description = (description == null || description.length() == 0) ? calculationTypeID : description;
+    m_description = description == null || description.length() == 0 ? calculationTypeID : description;
   }
 
   public void addInput( final String id, final String path )
@@ -74,7 +74,7 @@ public class SimulationJobSpecification
 
   public boolean useDefaultModelspec( )
   {
-    return m_useAntLauncher || (m_inputList.isEmpty() && m_outputList.isEmpty());
+    return m_useAntLauncher || m_inputList.isEmpty() && m_outputList.isEmpty();
   }
 
   public String getCalculationTypeID( )

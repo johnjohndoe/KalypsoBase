@@ -55,7 +55,7 @@ public class OGCResponse
   /**
    * The servlet response.
    */
-  private HttpServletResponse m_response;
+  private final HttpServletResponse m_response;
 
   /**
    * The output stream.
@@ -68,7 +68,7 @@ public class OGCResponse
    * @param response
    *          The servlet response.
    */
-  public OGCResponse( HttpServletResponse response )
+  public OGCResponse( final HttpServletResponse response )
   {
     m_response = response;
     m_outputStream = null;
@@ -79,7 +79,7 @@ public class OGCResponse
   /**
    * This function sets the content type.
    */
-  public void setContentType( String contentType )
+  public void setContentType( final String contentType )
   {
     m_response.setContentType( contentType );
   }
@@ -100,7 +100,7 @@ public class OGCResponse
    * @param response
    *          The servlet response.
    */
-  private void init( HttpServletResponse response )
+  private void init( final HttpServletResponse response )
   {
     m_outputStream = initOutputStream( response );
   }
@@ -112,14 +112,14 @@ public class OGCResponse
    *          The servlet response.
    * @return The output stream.
    */
-  private OutputStream initOutputStream( HttpServletResponse response )
+  private OutputStream initOutputStream( final HttpServletResponse response )
   {
     try
     {
       response.setContentType( "text/xml" );
       return response.getOutputStream();
     }
-    catch( IOException ex )
+    catch( final IOException ex )
     {
       ex.printStackTrace();
       return null;

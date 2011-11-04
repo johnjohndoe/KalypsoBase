@@ -98,9 +98,9 @@ public class WPSUtilities
    *          XML will be sent to this writer.
    * @see Marshaller#marshal(Object, Writer)
    */
-  public static void marshal( Object jaxbElement, Writer writer ) throws JAXBException
+  public static void marshal( final Object jaxbElement, final Writer writer ) throws JAXBException
   {
-    Marshaller marshaller = JC.createMarshaller();
+    final Marshaller marshaller = JC.createMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     marshaller.marshal( jaxbElement, writer );
   }
@@ -115,9 +115,9 @@ public class WPSUtilities
    * @return The newly created root object of the java content tree.
    * @see Unmarshaller#unmarshal(java.io.Reader)
    */
-  public static Object unmarshall( Reader reader ) throws JAXBException
+  public static Object unmarshall( final Reader reader ) throws JAXBException
   {
-    Unmarshaller unmarshaller = JC.createUnmarshaller();
+    final Unmarshaller unmarshaller = JC.createUnmarshaller();
     return unmarshaller.unmarshal( reader );
   }
 
@@ -133,10 +133,10 @@ public class WPSUtilities
    *          included in this list.
    * @return
    */
-  public static SupportedCRSsType buildSupportedCRSsType( Default defaultValue, List<String> supported )
+  public static SupportedCRSsType buildSupportedCRSsType( final Default defaultValue, final List<String> supported )
   {
     /* Create the instance via the factory. */
-    SupportedCRSsType supportedCRSs = WPS_OF.createSupportedCRSsType();
+    final SupportedCRSsType supportedCRSs = WPS_OF.createSupportedCRSsType();
 
     /* Elements. */
     supportedCRSs.setDefault( defaultValue );

@@ -187,7 +187,7 @@ public class ProjectDatabase implements IProjectDatabase
         final KalypsoProjectBean head = myBeans.get( keys[keys.length - 1] );
 
         KalypsoProjectBean[] values = myBeans.values().toArray( new KalypsoProjectBean[] {} );
-        values = (KalypsoProjectBean[]) ArrayUtils.remove( values, values.length - 1 ); // remove last entry -> cycle!
+        values = ArrayUtils.remove( values, values.length - 1 ); // remove last entry -> cycle!
 
         // TODO check needed? - order by clauses
         Arrays.sort( values, new Comparator<KalypsoProjectBean>()

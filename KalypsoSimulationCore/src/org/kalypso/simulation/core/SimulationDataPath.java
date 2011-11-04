@@ -76,7 +76,7 @@ public class SimulationDataPath implements Serializable
     return m_id;
   }
 
-  public final void setId( String id )
+  public final void setId( final String id )
   {
     m_id = id;
   }
@@ -86,7 +86,7 @@ public class SimulationDataPath implements Serializable
     return m_path;
   }
 
-  public final void setPath( String url )
+  public final void setPath( final String url )
   {
     m_path = url;
   }

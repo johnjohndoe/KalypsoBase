@@ -135,7 +135,7 @@ public class RemoteImportWorker
       if( !project.hasNature( RemoteProjectNature.NATURE_ID ) )
       {
         final IProjectDescription description = project.getDescription();
-        description.setNatureIds( (String[]) ArrayUtils.add( description.getNatureIds(), RemoteProjectNature.NATURE_ID ) );
+        description.setNatureIds( ArrayUtils.add( description.getNatureIds(), RemoteProjectNature.NATURE_ID ) );
 
         project.setDescription( description, new NullProgressMonitor() );
       }

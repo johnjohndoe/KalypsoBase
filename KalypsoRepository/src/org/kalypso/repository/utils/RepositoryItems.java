@@ -141,7 +141,7 @@ public final class RepositoryItems
    */
   public static String getPlainId( final String identifier )
   {
-    int indexOf = identifier.indexOf( "://" );
+    final int indexOf = identifier.indexOf( "://" );
     if( indexOf == -1 )
       return identifier;
 

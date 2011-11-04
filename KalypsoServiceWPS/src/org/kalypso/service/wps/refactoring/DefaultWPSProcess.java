@@ -662,6 +662,7 @@ public class DefaultWPSProcess implements IWPSProcess
   /**
    * @see org.kalypso.service.wps.client.NonBlockingWPSRequest#cancelJob()
    */
+  @Override
   public IStatus cancelJob( )
   {
     if( WPSRequest.SERVICE_LOCAL.equals( m_serviceEndpoint ) && !"".equals( m_jobId ) )

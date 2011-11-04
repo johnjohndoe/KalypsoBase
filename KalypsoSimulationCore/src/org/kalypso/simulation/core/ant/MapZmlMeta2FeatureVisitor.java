@@ -222,7 +222,7 @@ public class MapZmlMeta2FeatureVisitor extends AbstractMonitoredFeatureVisitor i
       }
     }
 
-    final Object object = FeatureHelper.createFeaturePropertyFromStrings( ((IValuePropertyType) ftp), mapping.getFormat(), values, false );
+    final Object object = FeatureHelper.createFeaturePropertyFromStrings( (IValuePropertyType) ftp, mapping.getFormat(), values, false );
     f.setProperty( ftp, object );
   }
 }
