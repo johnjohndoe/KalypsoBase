@@ -2,7 +2,7 @@ package com.bce.apps.wspfli;
 
 /**
  * Item für die GrenzenCombo
- *
+ * 
  * @author belger
  */
 public class GrenzenItem

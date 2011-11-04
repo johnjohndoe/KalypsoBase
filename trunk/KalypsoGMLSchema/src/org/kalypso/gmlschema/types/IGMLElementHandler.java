@@ -43,7 +43,6 @@ package org.kalypso.gmlschema.types;
 import org.xml.sax.SAXException;
 
 /**
- * 
  * @author Felipe Maximino
  */
 public interface IGMLElementHandler<T> extends IGmlContentHandler

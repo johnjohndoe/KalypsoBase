@@ -59,10 +59,10 @@ public class KalypsoDeegreePreferenceInitializer extends AbstractPreferenceIniti
   public void initializeDefaultPreferences( )
   {
     /* Get the default scope. */
-    DefaultScope defaultScope = new DefaultScope();
+    final DefaultScope defaultScope = new DefaultScope();
 
     /* Get the node for the plugin. */
-    IEclipsePreferences defaultNode = defaultScope.getNode( KalypsoDeegreePlugin.getID() );
+    final IEclipsePreferences defaultNode = defaultScope.getNode( KalypsoDeegreePlugin.getID() );
 
     /* Put the defaults. */
     defaultNode.put( IKalypsoDeegreePreferences.AVAILABLE_CRS_SETTING, IKalypsoDeegreePreferences.AVAILABLE_CRS_VALUE );

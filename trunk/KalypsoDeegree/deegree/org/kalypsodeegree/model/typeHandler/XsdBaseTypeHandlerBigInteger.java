@@ -37,7 +37,6 @@ package org.kalypsodeegree.model.typeHandler;
 
 import java.math.BigInteger;
 
-
 /**
  * @author Dirk Kuch
  */

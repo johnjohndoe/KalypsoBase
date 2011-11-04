@@ -35,7 +35,9 @@
  */
 package org.kalypsodeegree_impl.tools;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +70,9 @@ import org.kalypsodeegree.model.geometry.GM_Primitive;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -771,9 +776,9 @@ public final class GeometryUtilities
    * @param allowedQNames
    *          Only features that substitute one of these qnames are considered.
    */
-  public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList modelList, final QName[] geomQNames, final QName[] allowedQNames )
+  public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList modelList, final GMLXPath[] geometryPathes, final QName[] allowedQNames )
   {
-    if( modelList == null )
+    if( geometryPathes == null )
       return null;
 
     final GM_Envelope reqEnvelope = GeometryUtilities.grabEnvelopeFromDistance( point, grabDistance );
@@ -787,25 +792,28 @@ public final class GeometryUtilities
     for( final Object object : foundElements )
     {
       final Feature feature = FeatureHelper.getFeature( workspace, object );
-      if( allowedQNames == null || GMLSchemaUtilities.substitutes( feature.getFeatureType(), allowedQNames ) )
+      final IFeatureType featureType = feature.getFeatureType();
+      if( GMLSchemaUtilities.substitutes( featureType, allowedQNames ) )
       {
-        final QName[] geomProperties = GeometryUtilities.getGeometryQNames( feature, geomQNames );
-
-        for( final QName geomQName : geomProperties )
+        for( final GMLXPath geometryPath : geometryPathes )
         {
-          if( feature.getFeatureType().getProperty( geomQName ) == null )
-            continue;
-
-          final Object property = feature.getProperty( geomQName );
-          if( property instanceof GM_Object )
+          try
           {
-            final GM_Object geom = (GM_Object) property;
-            final double curDist = point.distance( geom );
-            if( min > curDist && curDist <= grabDistance )
+            final Object geomOrList = GMLXPathUtilities.query( geometryPath, feature );
+            final GM_Object[] geometries = findGeometries( geomOrList, GM_Object.class );
+            for( final GM_Object geometry : geometries )
             {
-              nearest = feature;
-              min = curDist;
+              final double curDist = point.distance( geometry );
+              if( min > curDist && curDist <= grabDistance )
+              {
+                nearest = feature;
+                min = curDist;
+              }
             }
+          }
+          catch( final GMLXPathException e )
+          {
+            e.printStackTrace();
           }
         }
       }
@@ -1322,5 +1330,50 @@ public final class GeometryUtilities
     {
       return null;
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  /**
+   * Adapts a given object to one or more GM_Objects of a given type. 
+   */
+  public static <T extends GM_Object> T[] findGeometries( final Object geomOrList, final Class<T> type )
+  {
+    final T[] emptyArray = (T[]) Array.newInstance( type, 0 );
+
+    if( geomOrList == null )
+      return emptyArray;
+
+    final Class< ? extends GM_Object[]> arrayType = emptyArray.getClass();
+
+    if( geomOrList instanceof GM_Object )
+    {
+      final T[] adapter = (T[]) ((GM_Object) geomOrList).getAdapter( arrayType );
+      if( adapter == null )
+        return emptyArray;
+      return adapter;
+    }
+
+    if( geomOrList instanceof List )
+      return findGeometries( (List< ? >) geomOrList, arrayType );
+
+    return emptyArray;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <T extends GM_Object> T[] findGeometries( final List< ? > geomList, final Class< ? extends GM_Object[]> arrayType )
+  {
+    final List<T> result = new ArrayList<T>();
+    for( final Object geom : geomList )
+    {
+      if( geom instanceof GM_Object )
+      {
+        final T[] geometries = (T[]) ((GM_Object) geom).getAdapter( arrayType );
+        result.addAll( Arrays.asList( geometries ) );
+      }
+    }
+
+    final T[] store = (T[]) Array.newInstance( arrayType.getComponentType(), result.size() );
+
+    return result.toArray( store );
   }
 }

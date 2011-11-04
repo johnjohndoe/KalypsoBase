@@ -48,7 +48,7 @@ public class MaxExclusiveRestriction implements IRestriction
 
   private final double m_maxExclusive;
 
-  public MaxExclusiveRestriction( double maxExclusive )
+  public MaxExclusiveRestriction( final double maxExclusive )
   {
     m_maxExclusive = maxExclusive;
   }

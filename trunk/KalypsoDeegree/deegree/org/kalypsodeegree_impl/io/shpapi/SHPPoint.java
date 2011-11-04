@@ -68,7 +68,6 @@ public class SHPPoint implements ISHPPoint
     this( recBuf, 4 );
   }
 
-  
   /**
    * constructor: gets a stream and the start index <BR>
    * of point on it <BR>
@@ -77,7 +76,7 @@ public class SHPPoint implements ISHPPoint
   {
     x = ByteUtils.readLEDouble( recBuf, xStart );
     y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
-    
+
     m_envelope = new SHPEnvelope( x, x, y, y );
   }
 
@@ -140,7 +139,7 @@ public class SHPPoint implements ISHPPoint
   @Override
   public String toString( )
   {
-    return "SHPPOINT" + "[" + this.x + "; " + this.y + "]";
+    return "SHPPOINT" + "[" + x + "; " + y + "]";
   }
 
   @Override

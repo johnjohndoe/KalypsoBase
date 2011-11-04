@@ -37,9 +37,7 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
- * 
  * The interface defines the access to a aggregations of <tt>GM_Curve</tt> objects.
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -73,8 +71,8 @@ public interface GM_MultiCurve extends GM_MultiPrimitive
   public void insertCurveAt( GM_Curve gmc, int index ) throws GM_Exception;
 
   /**
-   * sets the submitted GM_Curve at the submitted index. the element at the position <code>index</code> will be
-   * removed. if index is larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
+   * sets the submitted GM_Curve at the submitted index. the element at the position <code>index</code> will be removed.
+   * if index is larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
    * 
    * @param gmc
    *          GM_Curve to set.
@@ -107,6 +105,6 @@ public interface GM_MultiCurve extends GM_MultiPrimitive
   /**
    * returns all GM_Curves as array
    */
-  public GM_Curve[] getAllCurves();
+  public GM_Curve[] getAllCurves( );
 
 }

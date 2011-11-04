@@ -58,7 +58,7 @@ public interface LabelDisplayElement extends GeometryDisplayElement
   /**
    * gets the text of the label
    */
-  ParameterValueType getLabel();
+  ParameterValueType getLabel( );
 
   @Override
   public TextSymbolizer getSymbolizer( );

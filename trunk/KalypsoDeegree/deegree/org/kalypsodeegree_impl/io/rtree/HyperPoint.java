@@ -43,7 +43,7 @@ package org.kalypsodeegree_impl.io.rtree;
  */
 public class HyperPoint
 {
-  private double[] coords;
+  private final double[] coords;
 
   /**
    * Konstruktor für eine Multidimensionalen Punkt.
@@ -52,7 +52,7 @@ public class HyperPoint
    *          double[] Array von double-Werten mit den Koordinaten für jede Dimension. Länge des Array entspricht der
    *          Dimension des Punktes
    */
-  public HyperPoint( double[] coords )
+  public HyperPoint( final double[] coords )
   {
     this.coords = coords;
   }
@@ -64,9 +64,9 @@ public class HyperPoint
    *          des Punktes
    * @return HyperPoint
    */
-  public static HyperPoint getNullHyperPoint( int dimension )
+  public static HyperPoint getNullHyperPoint( final int dimension )
   {
-    double[] point = new double[dimension];
+    final double[] point = new double[dimension];
 
     for( int i = 0; i < dimension; i++ )
       point[i] = Double.NaN;
@@ -79,7 +79,7 @@ public class HyperPoint
    * 
    * @return double[] Koordinaten des Punktes
    */
-  public double[] getCoords()
+  public double[] getCoords( )
   {
     return coords;
   }
@@ -90,7 +90,7 @@ public class HyperPoint
    * @param index
    * @return double Koordinate
    */
-  public double getCoord( int index )
+  public double getCoord( final int index )
   {
     return coords[index];
   }
@@ -100,7 +100,7 @@ public class HyperPoint
    * 
    * @return int Dimension
    */
-  public int getDimension()
+  public int getDimension( )
   {
     return coords.length;
   }
@@ -111,13 +111,13 @@ public class HyperPoint
    * @return String Stringrepräsentation des Hyperpoints
    */
   @Override
-  public String toString()
+  public String toString( )
   {
     String ret = "";
 
-    for( int i = 0; i < coords.length; i++ )
+    for( final double coord : coords )
     {
-      ret += ( coords[i] + ", " );
+      ret += coord + ", ";
     }
 
     return ret;
@@ -129,13 +129,13 @@ public class HyperPoint
    * @see java.lang.Object
    */
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
-    HyperPoint point = (HyperPoint)obj;
+    final HyperPoint point = (HyperPoint) obj;
     boolean state = true;
 
     for( int i = 0; i < coords.length; i++ )
-      if( this.coords[i] != point.coords[i] )
+      if( coords[i] != point.coords[i] )
       {
         state = false;
       }
@@ -149,9 +149,9 @@ public class HyperPoint
    * @return Object geklonter HyperPoint
    */
   @Override
-  public Object clone()
+  public Object clone( )
   {
-    double[] point = new double[coords.length];
+    final double[] point = new double[coords.length];
 
     for( int i = 0; i < coords.length; i++ )
       point[i] = coords[i];

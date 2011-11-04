@@ -78,7 +78,7 @@ public final class FeatureHelperTest extends TestCase
 
     final QName sourceFeatureQName = new QName( NAMESPACE, "sourceFT" );
     final IPropertyType[] sourceProps = new IPropertyType[] {
-    // GMLSchemaFactory.createValuePropertyType(name, valueQName, typeHandler, countTestCases(), countTestCases())
+        // GMLSchemaFactory.createValuePropertyType(name, valueQName, typeHandler, countTestCases(), countTestCases())
         GMLSchemaFactory.createValuePropertyType( SOURCE_STRING_PROP, stringTH, 1, 1, false ), //
         GMLSchemaFactory.createValuePropertyType( SOURCE_DOUBLE_PROP, doubleTH, 1, 1, false ), //
         GMLSchemaFactory.createValuePropertyType( SOURCE_INT_PROP, integerTH, 1, 1, false ) };

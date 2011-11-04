@@ -165,9 +165,17 @@ public class WQTable
     {
       m_eq.setPoints( p2.getW(), p2.getQ(), p1.getW(), p1.getQ() );
     }
+    else if( q == p1.getQ() )
+    {
+      return p1.getW();
+    }
     else if( q > pn.getQ() )
     {
       m_eq.setPoints( pm.getW(), pm.getQ(), pn.getW(), pn.getQ() );
+    }
+    else if( q == pn.getQ() )
+    {
+      return pn.getW();
     }
     else
       throw CANNOT_INTERPOLATE_EXCEPTION;

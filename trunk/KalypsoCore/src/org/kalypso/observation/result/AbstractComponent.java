@@ -81,7 +81,7 @@ public abstract class AbstractComponent implements IComponent
       // TODO what to do now??
       return 0;
 
-    if( (objFirst == null) && (objSecond == null) )
+    if( objFirst == null && objSecond == null )
       return 0; // equals
     else if( objFirst == null )
       return -1; // lesser
@@ -117,7 +117,7 @@ public abstract class AbstractComponent implements IComponent
 
       final IComponent comp = (IComponent) obj;
 
-      return this.getId().equals( comp.getId() );
+      return getId().equals( comp.getId() );
     }
     else
     {

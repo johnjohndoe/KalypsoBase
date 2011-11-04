@@ -57,7 +57,7 @@ public class OptimizedGeoGridWalkingStrategy implements IGeoWalkingStrategy
    *      org.kalypso.grid.areas.IGeoGridArea, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public Object walk( IGeoGrid grid, IGeoGridWalker pwo, final IGeoGridArea walkingArea, IProgressMonitor monitor ) throws GeoGridException, OperationCanceledException
+  public Object walk( final IGeoGrid grid, final IGeoGridWalker pwo, final IGeoGridArea walkingArea, final IProgressMonitor monitor ) throws GeoGridException, OperationCanceledException
   {
     final int sizeX = grid.getSizeX();
     final int sizeY = grid.getSizeY();

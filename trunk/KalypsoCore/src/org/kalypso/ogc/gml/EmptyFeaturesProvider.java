@@ -78,7 +78,6 @@ public class EmptyFeaturesProvider extends AbstractFeaturesProvider
     return null;
   }
 
-
   /**
    * @see org.kalypso.ogc.gml.IFeaturesProvider#getFeatureType()
    */

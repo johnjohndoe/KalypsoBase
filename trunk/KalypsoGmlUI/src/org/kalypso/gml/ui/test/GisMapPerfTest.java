@@ -165,9 +165,9 @@ public class GisMapPerfTest extends TestCase
   private GisTemplateMapModell loadMap( final Gismapview gismapview, final URL resource, final String crs, final TimeLogger logger, final IFeatureSelectionManager selectionManager ) throws Exception
   {
     logger.takeInterimTime();
-    logger.printCurrentInterim( "Loading map modell..." ); //$NON-NLS-1$
+    logger.printCurrentInterim( "Loading map modell..." );
 
-    final GisTemplateMapModell mapModell = new GisTemplateMapModell( resource, crs, selectionManager );
+    final GisTemplateMapModell mapModell = new GisTemplateMapModell( resource, crs, null, selectionManager );
     mapModell.createFromTemplate( gismapview );
 
     return mapModell;

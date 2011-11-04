@@ -58,7 +58,7 @@ public interface LineSymbolizer extends Symbolizer
    * 
    * @return the Stroke
    */
-  Stroke getStroke();
+  Stroke getStroke( );
 
   /**
    * Sets the Stroke.

@@ -7,9 +7,12 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  */
 class RealPoint
 {
-  private double x; 
+  private double x;
+
   private double y;
+
   private double z;
+
   private int m_intAdditionalInfo;
 
   RealPoint( )
@@ -17,19 +20,19 @@ class RealPoint
     x = y = 0.0f;
   }
 
-  RealPoint( final GM_Position pPosition, int pIntAdditionalInfo )
+  RealPoint( final GM_Position pPosition, final int pIntAdditionalInfo )
   {
-    this.x = pPosition.getX();
-    this.y = pPosition.getY();
-    this.z = pPosition.getZ();
+    x = pPosition.getX();
+    y = pPosition.getY();
+    z = pPosition.getZ();
     m_intAdditionalInfo = pIntAdditionalInfo;
   }
 
   RealPoint( final double pDoubleX, final double pDoubleY, final double pDoubleZ, final int pIntAdditionalInfo )
   {
-    this.x = pDoubleX;
-    this.y = pDoubleY;
-    this.z = pDoubleZ;
+    x = pDoubleX;
+    y = pDoubleY;
+    z = pDoubleZ;
     m_intAdditionalInfo = pIntAdditionalInfo;
   }
 
@@ -41,7 +44,6 @@ class RealPoint
     m_intAdditionalInfo = p.getIntAdditionalInfo();
   }
 
-  
   public final int getIntAdditionalInfo( )
   {
     return m_intAdditionalInfo;
@@ -54,14 +56,13 @@ class RealPoint
 
   public double getX( )
   {
-    return this.x;
+    return x;
   }
 
   public double getY( )
   {
-    return this.y;
+    return y;
   }
-  
 
   public final double getZ( )
   {
@@ -70,20 +71,20 @@ class RealPoint
 
   public final void setZ( final double pDoubleZ )
   {
-    this.z = pDoubleZ;
+    z = pDoubleZ;
   }
 
   public void set( final double pDoubleX, final double pDoubleY )
   {
-    this.x = pDoubleX;
-    this.y = pDoubleY;
+    x = pDoubleX;
+    y = pDoubleY;
   }
 
   public void set( final double pDoubleX, final double pDoubleY, final double pDoubleZ )
   {
-    this.x = pDoubleX;
-    this.y = pDoubleY;
-    this.z = pDoubleZ;
+    x = pDoubleX;
+    y = pDoubleY;
+    z = pDoubleZ;
   }
 
   public double distance2d( final RealPoint p )
@@ -92,17 +93,17 @@ class RealPoint
 
     dx = p.getX() - x;
     dy = p.getY() - y;
-    return Math.sqrt( (dx * dx + dy * dy) );
+    return Math.sqrt( dx * dx + dy * dy );
   }
 
   public double distance3d( final RealPoint p )
   {
     double dx, dy, dz;
-    
+
     dx = p.getX() - x;
     dy = p.getY() - y;
-    dz = p.getZ() - z; 
-    return Math.sqrt( (dx * dx + dy * dy + dz * dz) );
+    dz = p.getZ() - z;
+    return Math.sqrt( dx * dx + dy * dy + dz * dz );
   }
 
   public double distanceSq2d( final RealPoint p )
@@ -111,16 +112,16 @@ class RealPoint
 
     dx = p.getX() - x;
     dy = p.getY() - y;
-    return (dx * dx + dy * dy);
+    return dx * dx + dy * dy;
   }
 
   public double distanceSq3d( final RealPoint p )
   {
     double dx, dy, dz;
-    
+
     dx = p.getX() - x;
     dy = p.getY() - y;
     dz = p.getZ() - z;
-    return (dx * dx + dy * dy + dz * dz);
+    return dx * dx + dy * dy + dz * dz;
   }
 }

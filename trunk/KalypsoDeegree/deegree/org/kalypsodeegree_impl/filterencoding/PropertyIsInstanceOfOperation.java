@@ -99,8 +99,8 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
   public PropertyIsInstanceOfOperation( final PropertyName propertyName, final QualifiedName typeName )
   {
     super( OperationDefines.PROPERTYISINSTANCEOF );
-    this.m_propertyName = propertyName;
-    this.m_typeName = typeName;
+    m_propertyName = propertyName;
+    m_typeName = typeName;
   }
 
   /**
@@ -136,7 +136,7 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
     if( propertyValue instanceof Feature )
       return GMLSchemaUtilities.substitutes( ((Feature) propertyValue).getFeatureType(), new QName( m_typeName.getNamespace().toString(), m_typeName.getLocalName() ) );
 
-    final String localName = this.m_typeName.getLocalName();
+    final String localName = m_typeName.getLocalName();
     if( "Point".equals( localName ) )
     {
       equals = propertyValue instanceof GM_Point || propertyValue instanceof GM_MultiPoint;
@@ -151,7 +151,7 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
     }
     else
     {
-      final String msg = "Error evaluating PropertyIsInstanceOf operation: " + this.m_typeName + " is not a supported type to check for.";
+      final String msg = "Error evaluating PropertyIsInstanceOf operation: " + m_typeName + " is not a supported type to check for.";
       throw new FilterEvaluationException( msg );
     }
 

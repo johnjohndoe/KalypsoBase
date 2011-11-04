@@ -63,7 +63,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Transforms {@link ISHPGeometry}s to JTS {@link com.vividsolutions.jts.geom.Geometry}s.
- *
+ * 
  * @author Gernot Belger
  */
 public final class SHP2JTS

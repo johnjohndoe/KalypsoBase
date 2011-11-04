@@ -64,7 +64,7 @@ public interface RemoteOWS
    * 
    * @return the type of the services
    */
-  String getService();
+  String getService( );
 
   /**
    * Sets a Service
@@ -79,7 +79,7 @@ public interface RemoteOWS
    * 
    * @return the adress of the ows as URL
    */
-  URL getOnlineResource();
+  URL getOnlineResource( );
 
   /**
    * sets the address of the the ows as URL

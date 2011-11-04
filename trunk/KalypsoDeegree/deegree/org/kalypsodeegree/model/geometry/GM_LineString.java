@@ -37,10 +37,8 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
- * 
  * The interface defines a specialisation of the <tt>GM_CurveSegment</tt> interface for a sequence of point connected
  * with linear interpolation.
- * 
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -50,4 +48,5 @@ package org.kalypsodeegree.model.geometry;
  *          <p>
  */
 public interface GM_LineString extends GM_CurveSegment
-{}
+{
+}

@@ -107,7 +107,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * Sets Layers
    * 
    * @param layers
-   *            the Layers as Array
+   *          the Layers as Array
    */
   @Override
   public void setLayers( final Layer[] layers )
@@ -127,7 +127,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * adds the <Layer>
    * 
    * @param layer
-   *            a Layer to add
+   *          a Layer to add
    */
   @Override
   public void addLayer( final Layer layer )
@@ -139,7 +139,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * removes the <Layer>
    * 
    * @param layer
-   *            a Layer to remove
+   *          a Layer to remove
    */
   @Override
   public void removeLayer( final Layer layer )
@@ -225,7 +225,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * sets the <Version>
    * 
    * @param version
-   *            the version of the SLD
+   *          the version of the SLD
    */
   @Override
   public void setVersion( final String version )
@@ -243,7 +243,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
   /**
    * @param abstract_
-   *            The abstract_ to set.
+   *          The abstract_ to set.
    */
   public void setAbstract( final String abstract_ )
   {
@@ -260,7 +260,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
   /**
    * @param name
-   *            The name to set.
+   *          The name to set.
    */
   public void setName( final String name )
   {
@@ -277,7 +277,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
   /**
    * @param title
-   *            The title to set.
+   *          The title to set.
    */
   public void setTitle( final String title )
   {
@@ -345,7 +345,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
     return null;
   }
-  
+
   /**
    * @see org.kalypsodeegree.graphics.sld.StyledLayerDescriptor#getDefaultUserStyle()
    */
@@ -358,7 +358,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
       final Style[] styles = namedLayer.getStyles();
       for( final Style style : styles )
       {
-        if( style instanceof UserStyle && ((UserStyle)style).isDefault() )
+        if( style instanceof UserStyle && ((UserStyle) style).isDefault() )
           return (UserStyle) style;
       }
     }
@@ -369,7 +369,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
       final Style[] styles = userLayer.getStyles();
       for( final Style style : styles )
       {
-        if( style instanceof UserStyle && ((UserStyle)style).isDefault() )
+        if( style instanceof UserStyle && ((UserStyle) style).isDefault() )
           return (UserStyle) style;
       }
     }

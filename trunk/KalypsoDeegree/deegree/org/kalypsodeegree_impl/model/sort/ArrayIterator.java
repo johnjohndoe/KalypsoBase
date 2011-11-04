@@ -38,9 +38,8 @@ package org.kalypsodeegree_impl.model.sort;
 import java.util.ListIterator;
 
 /**
- * Ein einfacher ListIterator auf einem Array.
- * 
- * Alle Methoden, die die Liste verändern führen zu einer {@link java.lang.UnsupportedOperationException}.
+ * Ein einfacher ListIterator auf einem Array. Alle Methoden, die die Liste verändern führen zu einer
+ * {@link java.lang.UnsupportedOperationException}.
  * 
  * @author belger
  */
@@ -60,7 +59,7 @@ public class ArrayIterator<T> implements ListIterator<T>
    * @see java.util.ListIterator#nextIndex()
    */
   @Override
-  public int nextIndex()
+  public int nextIndex( )
   {
     return m_index;
   }
@@ -69,7 +68,7 @@ public class ArrayIterator<T> implements ListIterator<T>
    * @see java.util.ListIterator#previousIndex()
    */
   @Override
-  public int previousIndex()
+  public int previousIndex( )
   {
     return m_index - 1;
   }
@@ -78,7 +77,7 @@ public class ArrayIterator<T> implements ListIterator<T>
    * @see java.util.Iterator#remove()
    */
   @Override
-  public void remove()
+  public void remove( )
   {
     throw new UnsupportedOperationException();
   }
@@ -87,7 +86,7 @@ public class ArrayIterator<T> implements ListIterator<T>
    * @see java.util.Iterator#hasNext()
    */
   @Override
-  public boolean hasNext()
+  public boolean hasNext( )
   {
     return m_index < m_objects.length;
   }
@@ -96,7 +95,7 @@ public class ArrayIterator<T> implements ListIterator<T>
    * @see java.util.ListIterator#hasPrevious()
    */
   @Override
-  public boolean hasPrevious()
+  public boolean hasPrevious( )
   {
     return m_index > 0;
   }
@@ -105,7 +104,7 @@ public class ArrayIterator<T> implements ListIterator<T>
    * @see java.util.Iterator#next()
    */
   @Override
-  public T next()
+  public T next( )
   {
     return m_objects[m_index++];
   }
@@ -114,7 +113,7 @@ public class ArrayIterator<T> implements ListIterator<T>
    * @see java.util.ListIterator#previous()
    */
   @Override
-  public T previous()
+  public T previous( )
   {
     m_index--;
     return m_objects[m_index];
@@ -124,7 +123,7 @@ public class ArrayIterator<T> implements ListIterator<T>
    * @see java.util.ListIterator#add(java.lang.Object)
    */
   @Override
-  public void add( T o )
+  public void add( final T o )
   {
     throw new UnsupportedOperationException();
   }
@@ -133,7 +132,7 @@ public class ArrayIterator<T> implements ListIterator<T>
    * @see java.util.ListIterator#set(java.lang.Object)
    */
   @Override
-  public void set( T o )
+  public void set( final T o )
   {
     throw new UnsupportedOperationException();
   }

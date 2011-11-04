@@ -68,7 +68,7 @@ class RemoteOWS_Impl implements RemoteOWS, Marshallable
    * @param service
    * @param onlineResource
    */
-  RemoteOWS_Impl( String service, URL onlineResource )
+  RemoteOWS_Impl( final String service, final URL onlineResource )
   {
     setService( service );
     setOnlineResource( onlineResource );
@@ -81,7 +81,7 @@ class RemoteOWS_Impl implements RemoteOWS, Marshallable
    * @return the type of the services
    */
   @Override
-  public String getService()
+  public String getService( )
   {
     return service;
   }
@@ -92,7 +92,7 @@ class RemoteOWS_Impl implements RemoteOWS, Marshallable
    *          the type of the services
    */
   @Override
-  public void setService( String service )
+  public void setService( final String service )
   {
     this.service = service;
   }
@@ -103,7 +103,7 @@ class RemoteOWS_Impl implements RemoteOWS, Marshallable
    * @return the adress of the ows as URL
    */
   @Override
-  public URL getOnlineResource()
+  public URL getOnlineResource( )
   {
     return onlineResource;
   }
@@ -114,7 +114,7 @@ class RemoteOWS_Impl implements RemoteOWS, Marshallable
    *          the adress of the ows as URL
    */
   @Override
-  public void setOnlineResource( URL onlineResource )
+  public void setOnlineResource( final URL onlineResource )
   {
     this.onlineResource = onlineResource;
   }
@@ -125,11 +125,11 @@ class RemoteOWS_Impl implements RemoteOWS, Marshallable
    * @return xml representation of the RemoteOWS
    */
   @Override
-  public String exportAsXML()
+  public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 200 );
+    final StringBuffer sb = new StringBuffer( 200 );
     sb.append( "<RemoteOWS>" );
     sb.append( "<Service>" ).append( service ).append( "</Service>" );
     sb.append( "<OnlineResource xmlns:xlink='http://www.w3.org/1999/xlink' " );

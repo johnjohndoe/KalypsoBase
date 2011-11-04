@@ -90,7 +90,7 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
   {
     // Because of Assert.isNotNull( mapModel ) in AbstractKalypsoTheme, we need some map model for table theme...
     // super( name, "FeatureTheme", null, null, context, shouldShowChildren ); //$NON-NLS-1$
-    super( name, "FeatureTheme", new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ) ); //$NON-NLS-1$
+    super( name, "FeatureTheme", new MapModell( KalypsoDeegreePlugin.getDefault().getCoordinateSystem(), null ) ); //$NON-NLS-1$
 
     m_workspace = workspace;
     m_featurePath = featurePath;
@@ -200,12 +200,12 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
     {
       // my workspace ?
       final GMLWorkspace changedWorkspace = ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace();
-      if( ((m_workspace != null) && (changedWorkspace != m_workspace) && (changedWorkspace != m_workspace.getWorkspace())) )
+      if( m_workspace != null && changedWorkspace != m_workspace && changedWorkspace != m_workspace.getWorkspace() )
         return; // not my workspace
 
       if( modellEvent instanceof FeaturesChangedModellEvent )
       {
-        final FeaturesChangedModellEvent featuresChangedModellEvent = ((FeaturesChangedModellEvent) modellEvent);
+        final FeaturesChangedModellEvent featuresChangedModellEvent = (FeaturesChangedModellEvent) modellEvent;
         final Feature[] features = featuresChangedModellEvent.getFeatures();
 
         // TODO: BOTH ways (if and else) are mayor performance bugs.
@@ -256,9 +256,6 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
 
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
-   */
   @Override
   public GM_Envelope getFullExtent( )
   {
@@ -271,9 +268,6 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
     return m_featureList;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
   @Override
   public FeatureList getFeatureListVisible( final GM_Envelope searchEnvelope )
   {
@@ -300,36 +294,24 @@ public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IK
       runnable.run();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSchedulingRule()
-   */
   @Override
   public ISchedulingRule getSchedulingRule( )
   {
     return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getSelectionManager()
-   */
   @Override
   public IFeatureSelectionManager getSelectionManager( )
   {
     return m_selectionManager;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
-   */
   @Override
   public ImageDescriptor getDefaultIcon( )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoStyleListener#styleChanged()
-   */
   @Override
   public void styleChanged( )
   {

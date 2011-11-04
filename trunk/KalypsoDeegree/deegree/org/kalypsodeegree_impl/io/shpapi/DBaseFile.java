@@ -263,7 +263,7 @@ public class DBaseFile
       // seek the position of the field definition data.
       // This information appears after the first 32 byte
       // table information, and lives in 32 byte chunks.
-      m_rafDbf.seek( ((i - 1) * 32) + 32 );
+      m_rafDbf.seek( (i - 1) * 32 + 32 );
 
       b = null;
 
@@ -451,11 +451,11 @@ public class DBaseFile
 
   // TODO: return gname instead
   private Class< ? extends GM_Object> getGeometryType( )
-      {
+  {
     switch( m_defaultFileShapeType )
     {
-      // remember: the geometry classes must be the same
-      // as the one used by the marshalling type handlers
+    // remember: the geometry classes must be the same
+    // as the one used by the marshalling type handlers
       case ShapeConst.SHAPE_TYPE_POINT:
         return GeometryUtilities.getPointClass();
       case ShapeConst.SHAPE_TYPE_MULTIPOINT:
@@ -473,7 +473,7 @@ public class DBaseFile
       default:
         return GM_Object.class;
     }
-      }
+  }
 
   /**
    * method: getRecordNum() <BR>
@@ -541,10 +541,10 @@ public class DBaseFile
 
       // seek the starting offset of the current record,
       // as indicated by record_number
-      long pos = file_datap + ((record_number - 1) * file_datalength);
+      long pos = file_datap + (record_number - 1) * file_datalength;
 
       // read data from cache if the requested part of the dbase file is within it
-      if( (pos >= m_startIndex) && ((pos + column.position + column.size) < (m_startIndex + m_cacheSize)) )
+      if( pos >= m_startIndex && pos + column.position + column.size < m_startIndex + m_cacheSize )
       {
         pos = pos - m_startIndex;
       }

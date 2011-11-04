@@ -64,8 +64,8 @@ public final class SldAwtUtilities
    * For perfomance reasons, points which cannot be distuingished on the screen are filtered out.
    * </p>
    * 
-   * @param strokeWidth:
-   *            Width in screen units: any adjacent points which are within this distance are filtered out.
+   * @param strokeWidth
+   *          : Width in screen units: any adjacent points which are within this distance are filtered out.
    */
   public static Polygon polygonFromRing( final GM_Position[] ring, final double strokeWidth, final GeoTransform world2screen )
   {

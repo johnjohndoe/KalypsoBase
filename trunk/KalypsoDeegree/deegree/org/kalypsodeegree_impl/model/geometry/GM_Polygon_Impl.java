@@ -101,11 +101,11 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
     final GM_Position[] exteriorRing = getExteriorRing();
     for( final GM_Position element : exteriorRing )
     {
-      ret += (element + "\n");
+      ret += element + "\n";
     }
 
-    ret += ("interiorRings = " + getInteriorRings() + "\n");
-    ret += ("envelope = " + getEnvelope() + "\n");
+    ret += "interiorRings = " + getInteriorRings() + "\n";
+    ret += "envelope = " + getEnvelope() + "\n";
     return ret;
   }
 

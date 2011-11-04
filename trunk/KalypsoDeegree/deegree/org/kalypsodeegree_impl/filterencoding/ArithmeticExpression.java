@@ -66,11 +66,11 @@ public class ArithmeticExpression extends Expression_Impl
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Expression-object is built. This method recursively calls other buildFromDOM () -
-   * methods to validate the structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Expression-object is built. This method recursively calls other buildFromDOM
+   * () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *             if the structure of the DOM-fragment is invalid
+   *           if the structure of the DOM-fragment is invalid
    */
   public static Expression buildFromDOM( final Element element ) throws FilterConstructionException
   {
@@ -118,10 +118,10 @@ public class ArithmeticExpression extends Expression_Impl
 
   /**
    * Returns this <tt>ArithmeticExpression/tt>'s value (to be used in the
-   * evaluation of complex <tt>Expression</tt>s).
-   * TODO: Improve datatype handling.
-   * @param feature that determines the concrete values of
-   *                <tt>PropertyNames</tt> in the expression
+   * evaluation of complex <tt>Expression</tt>s). TODO: Improve datatype handling.
+   * 
+   * @param feature
+   *          that determines the concrete values of <tt>PropertyNames</tt> in the expression
    * @return the resulting value (as <tt>Double</tt>)
    * @throw FilterEvaluationException if the expressions are not numerical
    */

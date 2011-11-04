@@ -721,7 +721,18 @@ public final class ZmlFactory
    */
   public static void writeToFile( final IObservation obs, final IFile file ) throws SensorException, CoreException
   {
-    writeToFile( obs, file.getLocation().toFile(), null );
+    writeToFile( obs, file, null );
+  }
+
+  /**
+   * Helper method for simply writing the observation to an IFile
+   * 
+   * @throws SensorException
+   *           if an IOException or a FactoryException is thrown internally
+   */
+  public static void writeToFile( final IObservation obs, final IFile file, final IRequest request ) throws SensorException, CoreException
+  {
+    writeToFile( obs, file.getLocation().toFile(), request );
     file.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
   }
 

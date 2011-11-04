@@ -262,7 +262,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
     if( !ObjectUtils.equals( getEnvelope(), ((GM_Object) other).getEnvelope() ) )
       return false;
 
-    return ObjectUtils.equals( m_patch, (m_patch) );
+    return ObjectUtils.equals( m_patch, m_patch );
   }
 
   /**
@@ -381,9 +381,9 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   {
     String ret = getClass().getName() + ":\n";
 
-    ret += ("envelope = " + getEnvelope() + "\n");
+    ret += "envelope = " + getEnvelope() + "\n";
     ret += " CRS: " + getCoordinateSystem() + "\n";
-    ret += ("patch = " + m_patch + "\n");
+    ret += "patch = " + m_patch + "\n";
 
     return ret;
   }

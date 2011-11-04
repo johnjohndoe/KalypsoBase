@@ -262,7 +262,7 @@ public class PageSelectGeodataFiles extends WizardPage
     setErrorMessage( error );
 
     /* If page is complete, we may save the settings */
-    final String lastFile = (m_files == null || m_files.length == 0) ? null : m_files[0].getAbsolutePath();
+    final String lastFile = m_files == null || m_files.length == 0 ? null : m_files[0].getAbsolutePath();
 
     if( error == null )
     {

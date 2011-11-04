@@ -61,5 +61,5 @@ public interface GraphicFill extends Marshallable
    * 
    * @return graphic
    */
-  Graphic getGraphic();
+  Graphic getGraphic( );
 }

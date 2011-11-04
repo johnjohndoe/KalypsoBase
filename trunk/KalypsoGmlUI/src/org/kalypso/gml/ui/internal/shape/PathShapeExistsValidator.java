@@ -58,7 +58,7 @@ import org.kalypso.shape.ShapeFile;
  */
 public class PathShapeExistsValidator extends TypedValidator<IPath>
 {
-  private static final String DEFAULT_MESSAGE = Messages.getString("PathShapeExistsValidator_0"); //$NON-NLS-1$
+  private static final String DEFAULT_MESSAGE = Messages.getString( "PathShapeExistsValidator_0" ); //$NON-NLS-1$
 
   public PathShapeExistsValidator( final int severity )
   {

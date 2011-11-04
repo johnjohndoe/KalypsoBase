@@ -101,15 +101,15 @@ public class SHPEnvelope implements Serializable
    */
   public SHPEnvelope( final byte[] b, final int off )
   {
-    this( new SHPPoint( b, off ), new SHPPoint( b, (off + 16) ) );
+    this( new SHPPoint( b, off ), new SHPPoint( b, off + 16 ) );
   }
 
   public SHPEnvelope( final double westbc, final double eastbc, final double northbc, final double southbc )
   {
-    this.west = westbc;
-    this.east = eastbc;
-    this.north = northbc;
-    this.south = southbc;
+    west = westbc;
+    east = eastbc;
+    north = northbc;
+    south = southbc;
   }
 
   /**
@@ -117,10 +117,10 @@ public class SHPEnvelope implements Serializable
    */
   public SHPEnvelope( final ISHPPoint min, final ISHPPoint max )
   {
-    this.west = min.getX();
-    this.east = max.getX();
-    this.north = max.getY();
-    this.south = min.getY();
+    west = min.getX();
+    east = max.getX();
+    north = max.getY();
+    south = min.getY();
   }
 
   /**
@@ -128,18 +128,18 @@ public class SHPEnvelope implements Serializable
    */
   public SHPEnvelope( final SHPEnvelope env )
   {
-    this.west = env.west;
-    this.east = env.east;
-    this.north = env.north;
-    this.south = env.south;
+    west = env.west;
+    east = env.east;
+    north = env.north;
+    south = env.south;
   }
 
   public SHPEnvelope( final DataInput input ) throws IOException
   {
-    this.west = DataUtils.readLEDouble( input );
-    this.south = DataUtils.readLEDouble( input );
-    this.east = DataUtils.readLEDouble( input );
-    this.north = DataUtils.readLEDouble( input );
+    west = DataUtils.readLEDouble( input );
+    south = DataUtils.readLEDouble( input );
+    east = DataUtils.readLEDouble( input );
+    north = DataUtils.readLEDouble( input );
   }
 
   public void writeLESHPEnvelope( final DataOutput output ) throws IOException
@@ -153,7 +153,7 @@ public class SHPEnvelope implements Serializable
   @Override
   public String toString( )
   {
-    return "RECTANGLE" + "\n[west: " + this.west + "]" + "\n[east: " + this.east + "]" + "\n[north: " + this.north + "]" + "\n[south: " + this.south + "]";
+    return "RECTANGLE" + "\n[west: " + west + "]" + "\n[east: " + east + "]" + "\n[north: " + north + "]" + "\n[south: " + south + "]";
   }
 
   public SHPEnvelope expand( final SHPEnvelope mbr )

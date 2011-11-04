@@ -201,7 +201,7 @@ public class RichCoverageCollection
 
   private double getSmallestGridOffset( ) throws GeoGridException
   {
-    IFeatureBindingCollection<ICoverage> coverages = m_coverages.getCoverages();
+    final IFeatureBindingCollection<ICoverage> coverages = m_coverages.getCoverages();
     if( coverages.size() == 0 )
       return Double.NaN;
 

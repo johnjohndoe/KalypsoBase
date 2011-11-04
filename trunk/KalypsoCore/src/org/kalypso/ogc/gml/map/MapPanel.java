@@ -88,7 +88,6 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.KalypsoCascadingThemeSelection;
 import org.kalypso.ogc.gml.map.layer.BufferedRescaleMapLayer;
 import org.kalypso.ogc.gml.map.layer.CacscadingMapLayer;
 import org.kalypso.ogc.gml.map.layer.DirectMapLayer;
@@ -531,9 +530,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     return m_message;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
   @Override
   public ISelection getSelection( )
   {
@@ -545,14 +541,19 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     if( mapModell == null )
       return StructuredSelection.EMPTY;
 
-    final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
-    if( activeTheme instanceof IKalypsoFeatureTheme )
-      return (ISelection) activeTheme.getAdapter( IFeatureSelection.class );
+    // REMARK: we need an own implementation, as the feature selection
+    // did return 'Feature' objects (whereas the FeatureSelection return sEasyFeatureWrappers)
+    return new MapPanelSelection( m_selectionManager );
 
-    if( activeTheme instanceof IKalypsoCascadingTheme )
-      return new KalypsoCascadingThemeSelection( m_selectionManager.toList(), (IKalypsoCascadingTheme) activeTheme, m_selectionManager, null, null );
-
-    return StructuredSelection.EMPTY;
+// final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
+// if( activeTheme instanceof IKalypsoFeatureTheme )
+// return (ISelection) activeTheme.getAdapter( IFeatureSelection.class );
+//
+// if( activeTheme instanceof IKalypsoCascadingTheme )
+// return new KalypsoCascadingThemeSelection( m_selectionManager.toList(), (IKalypsoCascadingTheme) activeTheme,
+// m_selectionManager, null, null );
+//
+// return StructuredSelection.EMPTY;
   }
 
   @Override
@@ -1044,10 +1045,9 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
           result.add( layer );
 
           /**
-           * set here visible envelope for each visible theme
-           * to prevent the calculation of this envelope on each 
+           * set here visible envelope for each visible theme to prevent the calculation of this envelope on each
            * refresh/repaint/invalidate in the theme.
-           * */
+           */
           theme.setActiveEnvelope( m_boundingBox );
           if( theme instanceof IKalypsoFeatureTheme )
             visibleFestureThemes.add( (IKalypsoFeatureTheme) theme );

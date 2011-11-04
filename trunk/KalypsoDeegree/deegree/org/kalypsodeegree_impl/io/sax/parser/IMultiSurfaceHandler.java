@@ -49,5 +49,4 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 public interface IMultiSurfaceHandler extends IGMLElementHandler<GM_MultiSurface>
 {
 
-
 }

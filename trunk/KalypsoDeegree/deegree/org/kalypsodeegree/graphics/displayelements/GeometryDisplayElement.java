@@ -57,7 +57,7 @@ public interface GeometryDisplayElement extends DisplayElement
    * <p>
    * 
    * @param o
-   *            the placement to be used
+   *          the placement to be used
    */
   void setPlacement( Object o );
 
@@ -77,7 +77,7 @@ public interface GeometryDisplayElement extends DisplayElement
    * sets the rule that determines how the geometry will be rendered
    * 
    * @param rule
-   *            symbolizer defining rendering style
+   *          symbolizer defining rendering style
    */
   void setSymbolizer( Symbolizer rule );
 

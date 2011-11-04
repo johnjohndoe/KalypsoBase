@@ -39,9 +39,9 @@ public class Hmo2Fli
 
   private final static Logger LOG = Logger.getLogger( Hmo2Fli.class.getName() );
 
-  public static void transform( @SuppressWarnings("unused") //$NON-NLS-1$
-      final Component parent, final File hmoUntenFile, final File hmoObenFile, final double rasterSize, final boolean bIsolines, final String shapeBase, final double[] grenzen, final boolean calcVolume ) throws Exception
-      {
+  public static void transform( @SuppressWarnings("unused")//$NON-NLS-1$
+  final Component parent, final File hmoUntenFile, final File hmoObenFile, final double rasterSize, final boolean bIsolines, final String shapeBase, final double[] grenzen, final boolean calcVolume ) throws Exception
+  {
     LOG.entering( Hmo2Fli.class.getName(), "transform" ); //$NON-NLS-1$
 
 // final ProgressMonitor pable = parent != null ? new ProgressMonitor( parent, "Fliesstiefenerstellung" ) : null;
@@ -79,16 +79,16 @@ public class Hmo2Fli
 // if( pable != null )
 // pable.setNote( "Fliesstiefen werden ermittelt" );
 
-    LOG.info( Messages.getString("com.bce.gis.operation.hmo2fli.Hmo2Fli.2") ); //$NON-NLS-1$
+    LOG.info( Messages.getString( "com.bce.gis.operation.hmo2fli.Hmo2Fli.2" ) ); //$NON-NLS-1$
     raster.getWalkingStrategy().walk( raster, r2l, null, pable );
-    LOG.info( Messages.getString("com.bce.gis.operation.hmo2fli.Hmo2Fli.3") ); //$NON-NLS-1$
+    LOG.info( Messages.getString( "com.bce.gis.operation.hmo2fli.Hmo2Fli.3" ) ); //$NON-NLS-1$
 
     final NumberFormat numberInstance = NumberFormat.getNumberInstance();
     numberInstance.setGroupingUsed( true );
     numberInstance.setMinimumFractionDigits( 1 );
     numberInstance.setMaximumFractionDigits( 1 );
     final double volumen = r2l.getSum();
-    LOG.info( Messages.getString("com.bce.gis.operation.hmo2fli.Hmo2Fli.4") + numberInstance.format( volumen ) + Messages.getString("com.bce.gis.operation.hmo2fli.Hmo2Fli.5") ); //$NON-NLS-1$ //$NON-NLS-2$
+    LOG.info( Messages.getString( "com.bce.gis.operation.hmo2fli.Hmo2Fli.4" ) + numberInstance.format( volumen ) + Messages.getString( "com.bce.gis.operation.hmo2fli.Hmo2Fli.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     // Shape schreiben
     final Feature fc = gc.getFeatures();
@@ -96,32 +96,32 @@ public class Hmo2Fli
     final FeatureList list = (FeatureList) property;
 
     if( list.size() == 0 )
-      LOG.log( Level.WARNING, Messages.getString("com.bce.gis.operation.hmo2fli.Hmo2Fli.6") ); //$NON-NLS-1$
+      LOG.log( Level.WARNING, Messages.getString( "com.bce.gis.operation.hmo2fli.Hmo2Fli.6" ) ); //$NON-NLS-1$
     else
     {
       if( gc instanceof PolygonCollector && calcVolume )
       {
 // if( pable != null )
 // pable.setNote( "Volumen wird ermittelt" );
-        LOG.info( Messages.getString("com.bce.gis.operation.hmo2fli.Hmo2Fli.7") ); //$NON-NLS-1$
+        LOG.info( Messages.getString( "com.bce.gis.operation.hmo2fli.Hmo2Fli.7" ) ); //$NON-NLS-1$
         // final FeatureCollectionIndex featureIndex = new FeatureCollectionIndex( fc );
         final FeatureVolumeRasterWalker volumeWalker = new FeatureVolumeRasterWalker( list, PolygonCollector.VOLUME_PROP.getQName() );
         raster.getWalkingStrategy().walk( raster, volumeWalker, null, pable );
-        LOG.info( Messages.getString("com.bce.gis.operation.hmo2fli.Hmo2Fli.8") ); //$NON-NLS-1$
+        LOG.info( Messages.getString( "com.bce.gis.operation.hmo2fli.Hmo2Fli.8" ) ); //$NON-NLS-1$
       }
 
-      LOG.info( Messages.getString("com.bce.gis.operation.hmo2fli.Hmo2Fli.9") + shapeBase ); //$NON-NLS-1$
+      LOG.info( Messages.getString( "com.bce.gis.operation.hmo2fli.Hmo2Fli.9" ) + shapeBase ); //$NON-NLS-1$
       // transform geometries to shapes and write it
       ShapeSerializer.serialize( fc.getWorkspace(), shapeBase, (String) null );
 // final ShapeFile sf = new ShapeFile( shapeBase, "rw" );
 // sf.writeShape( fc );
 // sf.close();
-      LOG.info( Messages.getString("com.bce.gis.operation.hmo2fli.Hmo2Fli.10") + shapeBase ); //$NON-NLS-1$
+      LOG.info( Messages.getString( "com.bce.gis.operation.hmo2fli.Hmo2Fli.10" ) + shapeBase ); //$NON-NLS-1$
     }
 
 // if( pable != null )
 // pable.cancel();
 
     LOG.exiting( Hmo2Fli.class.getName(), "transform" ); //$NON-NLS-1$
-      }
+  }
 }

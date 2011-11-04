@@ -74,18 +74,18 @@ import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
  * 
  * @author belger
  */
-public class KalypsoCoreExtensions
+public final class KalypsoCoreExtensions
 {
-  private final static String VISITOR_EXTENSION_POINT = "org.kalypso.core.featureVisitor"; //$NON-NLS-1$
+  private static final String VISITOR_EXTENSION_POINT = "org.kalypso.core.featureVisitor"; //$NON-NLS-1$
 
-  private final static String CATALOG_CONTRIBUTIONS_EXTENSION_POINT = "org.kalypso.core.catalogContribution"; //$NON-NLS-1$
+  private static final String CATALOG_CONTRIBUTIONS_EXTENSION_POINT = "org.kalypso.core.catalogContribution"; //$NON-NLS-1$
 
   /** id -> config-element */
   private static Map<String, IConfigurationElement> THE_VISITOR_MAP = null;
 
   /* extension-point 'componentHandler' */
 
-  private final static String COMPONENT_HANDLER_EXTENSION_POINT = "org.kalypso.core.componentHandler"; //$NON-NLS-1$
+  private static final String COMPONENT_HANDLER_EXTENSION_POINT = "org.kalypso.core.componentHandler"; //$NON-NLS-1$
 
   private static Map<String, IComponentHandler> THE_COMPONENT_MAP = null;
 
@@ -96,6 +96,10 @@ public class KalypsoCoreExtensions
 
   /* GmlSourceProvider Extension-Point */
   private static final String GML_SOURCE_PROVIDER_EXTENSION_POINT = "org.kalypso.core.gmlSourceProvider"; //$NON-NLS-1$
+
+  private KalypsoCoreExtensions( )
+  {
+  }
 
   public static synchronized FeatureVisitor createFeatureVisitor( final String id, final Properties properties ) throws CoreException
   {

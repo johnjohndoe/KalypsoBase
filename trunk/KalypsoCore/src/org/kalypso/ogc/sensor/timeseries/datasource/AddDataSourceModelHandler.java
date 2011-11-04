@@ -70,7 +70,7 @@ public class AddDataSourceModelHandler extends AbstractDataSourceModelHandler
 
     final ITupleModel baseModel = getModel();
     IAxis[] baseAxes = baseModel.getAxes();
-    baseAxes = (IAxis[]) ArrayUtils.add( baseAxes, dataSourceAxis );
+    baseAxes = ArrayUtils.add( baseAxes, dataSourceAxis );
 
     final SimpleTupleModel model = new SimpleTupleModel( baseAxes );
     final int dataSourceIndex = ArrayUtils.indexOf( baseAxes, dataSourceAxis );

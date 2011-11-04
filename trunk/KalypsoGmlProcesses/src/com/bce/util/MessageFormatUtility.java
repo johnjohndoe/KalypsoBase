@@ -9,7 +9,7 @@ import java.text.MessageFormat;
  */
 public class MessageFormatUtility
 {
-  public final static String formatMessage( final String formatString, int lineNumber )
+  public final static String formatMessage( final String formatString, final int lineNumber )
   {
     return MessageFormat.format( formatString, new Object[] { new Integer( lineNumber ) } );
   }

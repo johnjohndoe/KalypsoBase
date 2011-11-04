@@ -37,9 +37,6 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
- * 
- * 
- * 
  * <p>
  * -----------------------------------------------------
  * </p>

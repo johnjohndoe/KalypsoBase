@@ -76,9 +76,9 @@ public class FeatureComparator implements Comparator<Object>
    * The constructor.
    * 
    * @param parentFeature
-   *            The parent of the list.
+   *          The parent of the list.
    * @param qname
-   *            The qname of the property, which should be sorted.
+   *          The qname of the property, which should be sorted.
    */
   public FeatureComparator( final Feature parentFeature, final QName qname )
   {
@@ -91,7 +91,7 @@ public class FeatureComparator implements Comparator<Object>
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
   @Override
-  @SuppressWarnings("unchecked") //$NON-NLS-1$
+  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public int compare( final Object o1, final Object o2 )
   {
     final Feature f1 = FeatureHelper.getFeature( m_workspace, o1 );

@@ -51,9 +51,9 @@ public interface AdapterValueToGMLBinding
    * wrap {@link GM_Object } to BindingType
    * 
    * @param geometry
-   *            the geometry to wrap
+   *          the geometry to wrap
    * @param gmlVersion
-   *            requested compatibility or <code>null</code>for unspecified GML compatibility
+   *          requested compatibility or <code>null</code>for unspecified GML compatibility
    * @return binding type elements
    */
   public Object wrapToBinding( final GM_Object geometry ) throws GM_Exception;

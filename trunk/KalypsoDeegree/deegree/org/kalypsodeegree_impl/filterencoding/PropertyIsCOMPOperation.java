@@ -86,11 +86,11 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
-   * methods to validate the structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM
+   * () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *             if the structure of the DOM-fragment is invalid
+   *           if the structure of the DOM-fragment is invalid
    */
   public static Operation buildFromDOM( final Element element ) throws FilterConstructionException
   {
@@ -134,7 +134,7 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
 
   public void setFirstExperssion( final Expression expr1 )
   {
-    this.m_expr1 = expr1;
+    m_expr1 = expr1;
   }
 
   /**
@@ -147,7 +147,7 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
 
   public void setSecondExperssion( final Expression expr2 )
   {
-    this.m_expr2 = expr2;
+    m_expr2 = expr2;
   }
 
   /** Produces an indented XML representation of this object. */
@@ -167,10 +167,10 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
    * <tt>Feature</tt>. TODO: Improve datatype handling.
    * 
    * @param feature
-   *            that determines the property values
+   *          that determines the property values
    * @return true, if the <tt>FeatureFilter</tt> evaluates to true, else false
    * @throws FilterEvaluationException
-   *             if the expressions to be compared are of different types
+   *           if the expressions to be compared are of different types
    */
   @Override
   public boolean evaluate( final Feature feature ) throws FilterEvaluationException
@@ -183,7 +183,7 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
 
     // Convert to comparable data type
 
-    if( (value1 instanceof String && value2 instanceof Boolean) || (value1 instanceof Boolean && value2 instanceof String) )
+    if( value1 instanceof String && value2 instanceof Boolean || value1 instanceof Boolean && value2 instanceof String )
     {
       // Prefer boolean comparison
       if( value1 instanceof String )
@@ -192,7 +192,7 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
         value2 = Boolean.valueOf( (String) value2 );
     }
 
-    if( (value1 instanceof String && value2 instanceof Number) || (value1 instanceof Number && value2 instanceof String) )
+    if( value1 instanceof String && value2 instanceof Number || value1 instanceof Number && value2 instanceof String )
     {
       if( value1 instanceof String )
       {
@@ -239,7 +239,7 @@ public class PropertyIsCOMPOperation extends ComparisonOperation
           throw new FilterEvaluationException( "Unknown comparison operation: '" + getOperatorName() + "'!" );
       }
     }// compare Doubles
-    else if( (value1 instanceof Number) && (value2 instanceof Number) )
+    else if( value1 instanceof Number && value2 instanceof Number )
     {
       final double d1 = ((Number) value1).doubleValue();
       final double d2 = ((Number) value2).doubleValue();

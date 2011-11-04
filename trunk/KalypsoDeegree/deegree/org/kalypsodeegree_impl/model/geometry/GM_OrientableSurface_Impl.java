@@ -61,7 +61,7 @@ abstract class GM_OrientableSurface_Impl extends GM_OrientablePrimitive_Impl imp
    * @param crs
    * @throws GM_Exception
    */
-  protected GM_OrientableSurface_Impl( String crs ) throws GM_Exception
+  protected GM_OrientableSurface_Impl( final String crs ) throws GM_Exception
   {
     super( crs, '+' );
   }
@@ -73,7 +73,7 @@ abstract class GM_OrientableSurface_Impl extends GM_OrientablePrimitive_Impl imp
    * @param orientation
    * @throws GM_Exception
    */
-  protected GM_OrientableSurface_Impl( String crs, char orientation ) throws GM_Exception
+  protected GM_OrientableSurface_Impl( final String crs, final char orientation ) throws GM_Exception
   {
     super( crs, orientation );
   }

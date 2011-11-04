@@ -36,8 +36,8 @@
 package org.kalypsodeegree.filterencoding;
 
 /**
- * This exception is thrown when the evaluation of a <tt>Filter</tt> expression (or subexpression) is impossible, e.g.
- * a PropertyIsLessThan- Comparison is to be applied against a <tt>String</tt> -value.
+ * This exception is thrown when the evaluation of a <tt>Filter</tt> expression (or subexpression) is impossible, e.g. a
+ * PropertyIsLessThan- Comparison is to be applied against a <tt>String</tt> -value.
  * 
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
@@ -49,7 +49,7 @@ public class FilterEvaluationException extends Exception
    * Constructs a new <tt>FilterEvaluationException</tt> with the given detail message.
    * 
    * @param msg
-   *            the detail message
+   *          the detail message
    */
   public FilterEvaluationException( final String msg )
   {

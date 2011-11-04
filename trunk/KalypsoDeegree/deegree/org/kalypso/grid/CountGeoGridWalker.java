@@ -56,7 +56,7 @@ public class CountGeoGridWalker implements IGeoGridWalker
 
   /**
    * @param ignoreNaN
-   *            If set to <code>true</code>, cells with NaN-value are not countet.
+   *          If set to <code>true</code>, cells with NaN-value are not countet.
    */
   public CountGeoGridWalker( final boolean ignoreNaN )
   {

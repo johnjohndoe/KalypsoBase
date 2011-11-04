@@ -37,7 +37,6 @@ package org.kalypsodeegree.model.coverage;
 
 /**
  * Specifies the range of valid coordinates for each dimension of the coverage.
- * 
  * <p>
  * -----------------------------------------------------------------------
  * </p>
@@ -53,16 +52,16 @@ public interface GridRange
    * The valid minimum inclusive grid coordinate. The sequence contains a minimum value for each dimension of the grid
    * coverage. The lowest valid grid coordinate is zero.
    */
-  double[] getLow();
+  double[] getLow( );
 
   /**
    * The valid maximum exclusive grid coordinate. The sequence contains a maximum value for each dimension of the grid
    * coverage.
    */
-  double[] getHigh();
+  double[] getHigh( );
 
   /**
-   *  Returns a clone of this object
+   * Returns a clone of this object
    */
-  Object clone();
+  Object clone( );
 }

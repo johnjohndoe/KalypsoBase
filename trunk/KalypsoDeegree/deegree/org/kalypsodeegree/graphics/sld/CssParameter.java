@@ -45,7 +45,7 @@ import org.kalypsodeegree.xml.Marshallable;
  * <pre>
  *  <xs:element name="CssParameter" type="sld:ParameterValueType"/>
  * 	<xs:complexType name="ParameterValueType" mixed="true">
- *		<xs:choice minOccurs="0" maxOccurs="unbounded">
+ * 	<xs:choice minOccurs="0" maxOccurs="unbounded">
  * 			<xs:element ref="wfs:expression"/>
  * 		</xs:choice>
  *  </xs:complexType>
@@ -90,7 +90,7 @@ public interface CssParameter extends Marshallable
    * 
    * @return the value of the name attribute of the CssParameter
    */
-  String getName();
+  String getName( );
 
   /**
    * Sets the name attribute's value of the CssParameter.
@@ -107,7 +107,7 @@ public interface CssParameter extends Marshallable
    * 
    * @return the mixed content of the element
    */
-  ParameterValueType getValue();
+  ParameterValueType getValue( );
 
   /**
    * Sets the value of the CssParameter as an <tt>ParameterValueType</tt>.

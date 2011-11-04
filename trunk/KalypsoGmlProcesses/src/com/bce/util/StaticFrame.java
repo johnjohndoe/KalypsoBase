@@ -19,7 +19,7 @@ public class StaticFrame extends JFrame
     // singleton
   }
 
-  @SuppressWarnings("deprecation") //$NON-NLS-1$
+  @SuppressWarnings("deprecation")//$NON-NLS-1$
   @Override
   public void show( )
   {

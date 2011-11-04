@@ -94,7 +94,7 @@ public class RemoveDataSourceModelHandler extends AbstractDataSourceModelHandler
   {
     final IAxis axis = AxisUtils.findDataSourceAxis( axes );
     if( axis != null )
-      return (IAxis[]) ArrayUtils.removeElement( axes, axis );
+      return ArrayUtils.removeElement( axes, axis );
 
     return axes;
   }

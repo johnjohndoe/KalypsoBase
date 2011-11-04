@@ -39,7 +39,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
- * @author 
+ * @author
  */
 public interface IPlainGridVisitable<P extends GM_Curve>
 {

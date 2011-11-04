@@ -45,11 +45,12 @@ import org.apache.commons.configuration.Configuration;
 
 /**
  * A Configuration that triggers change events and informs its listeners
- *
+ * 
  * @author schlienger
  */
 public interface IPublishingConfiguration extends Configuration
 {
   public void addListener( final IConfigurationListener listener );
+
   public void removeListener( final IConfigurationListener listener );
 }

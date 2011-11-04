@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * 14.08.2000 ap: import clause added <BR>
  * 16.08.2000 ap: constructor SHPMultiPoint(GM_Point[] gm_points) modified <BR>
  * <!---------------------------------------------------------------------------->
- *
+ * 
  * @version 16.08.2000
  * @author Andreas Poth
  */

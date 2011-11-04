@@ -50,14 +50,17 @@ public interface IFeaturePropertyDelta extends IPropertyDelta
   public String getNewId( );
 
   /** Return true, if the new value is a link to a feature instead of an inline-feature. */
-  public boolean isNewLink();
-  
-  /** The feature-id of the feature before the operation happended.
-   * @return null, if no feature was set before */
+  public boolean isNewLink( );
+
+  /**
+   * The feature-id of the feature before the operation happended.
+   * 
+   * @return null, if no feature was set before
+   */
   public String getOldId( );
-  
+
   /**
    * Returns true, iff the value of the property was a link to a feature instead of a inline-feature.
    */
-  public boolean wasLinkBefore();
+  public boolean wasLinkBefore( );
 }

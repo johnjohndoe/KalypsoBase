@@ -97,7 +97,7 @@ public interface GM_Envelope extends Cloneable
 
   /**
    * merges two GM_Envelops and returns the minimum envelope containing both.
-   *
+   * 
    * @return merged envelope
    */
   GM_Envelope getMerged( GM_Envelope envelope );
@@ -115,7 +115,7 @@ public interface GM_Envelope extends Cloneable
 
   /**
    * This function returns the coordinate system, the coordinates of the contained positions are in.
-   *
+   * 
    * @return The coordinate system.
    */
   public String getCoordinateSystem( );

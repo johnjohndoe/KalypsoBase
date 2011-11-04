@@ -51,7 +51,7 @@ import org.kalypso.observation.phenomenon.IPhenomenon;
  */
 public class Component extends AbstractComponent
 {
-  private  final IRestriction[] m_restrictions = new IRestriction[]{};
+  private final IRestriction[] m_restrictions = new IRestriction[] {};
 
   private final String m_name;
 
@@ -68,13 +68,13 @@ public class Component extends AbstractComponent
   private final String m_id;
 
   private final IPhenomenon m_phenomenon;
-  
-  public Component( final String id, final String name, final String description, final String unit, final String frame, final QName valueTypeName, final Object defaultValue, final IPhenomenon phenomenon)
+
+  public Component( final String id, final String name, final String description, final String unit, final String frame, final QName valueTypeName, final Object defaultValue, final IPhenomenon phenomenon )
   {
     if( name == null )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.observation.result.Component.0") + getClass().getName() ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.observation.result.Component.0" ) + getClass().getName() ); //$NON-NLS-1$
     if( valueTypeName == null )
-      throw new IllegalArgumentException( Messages.getString("org.kalypso.observation.result.Component.1") + getClass().getName() ); //$NON-NLS-1$
+      throw new IllegalArgumentException( Messages.getString( "org.kalypso.observation.result.Component.1" ) + getClass().getName() ); //$NON-NLS-1$
 
     m_id = id;
     m_unit = unit;
@@ -84,9 +84,9 @@ public class Component extends AbstractComponent
     m_description = description;
     m_valueTypeName = valueTypeName;
     m_defaultValue = defaultValue;
-   
+
   }
-  
+
   /**
    * @see org.kalypso.om.tuple.IComponent#getDefaultValue()
    */
@@ -173,5 +173,5 @@ public class Component extends AbstractComponent
   {
     return m_restrictions;
   }
-  
+
 }

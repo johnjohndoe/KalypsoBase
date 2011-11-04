@@ -38,11 +38,11 @@ package org.kalypsodeegree_impl.io.shpapi;
 
 public abstract class DBaseIndexException extends Exception
 {
-  private Comparable key;
+  private final Comparable key;
 
-  private DBaseIndex index;
+  private final DBaseIndex index;
 
-  public DBaseIndexException( String error, Comparable key, DBaseIndex index )
+  public DBaseIndexException( final String error, final Comparable key, final DBaseIndex index )
   {
     super( error );
 
@@ -50,12 +50,12 @@ public abstract class DBaseIndexException extends Exception
     this.index = index;
   }
 
-  public Comparable getKey()
+  public Comparable getKey( )
   {
     return key;
   }
 
-  public DBaseIndex getIndex()
+  public DBaseIndex getIndex( )
   {
     return index;
   }

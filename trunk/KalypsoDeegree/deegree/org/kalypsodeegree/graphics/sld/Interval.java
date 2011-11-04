@@ -42,11 +42,11 @@ package org.kalypsodeegree.graphics.sld;
 public interface Interval
 {
 
-  double getLowerLimit();
+  double getLowerLimit( );
 
   void setLowerLimit( double lowerLimit );
 
-  double getUpperLimit();
+  double getUpperLimit( );
 
   void setUpperLimit( double upperLimit );
 

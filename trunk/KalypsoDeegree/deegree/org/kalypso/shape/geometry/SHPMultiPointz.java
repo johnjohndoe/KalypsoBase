@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * Class representig a collection of pointsz <BR>
  * <B>Last changes <B>: <BR>
  * <!---------------------------------------------------------------------------->
- *
+ * 
  * @version 16.01.2007
  * @author Thomas Jung
  */
@@ -76,7 +76,7 @@ public class SHPMultiPointz implements ISHPMultiPoint
       final double x = ByteUtils.readLEDouble( recBuf, 40 + i * 16 );
       final double y = ByteUtils.readLEDouble( recBuf, 40 + i * 16 + 8 );
 
-      final int byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + (40 + numPoints * 16) + 16 + (8 * numPoints) + (8 * i);
+      final int byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 40 + numPoints * 16 + 16 + 8 * numPoints + 8 * i;
       final double z = ByteUtils.readLEDouble( recBuf, byteposition );
 
       m_pointsz[i] = new SHPPointz( x, y, z, 0.0 );
@@ -115,7 +115,7 @@ public class SHPMultiPointz implements ISHPMultiPoint
   @Override
   public int length( )
   {
-    return 36 + m_pointsz.length * 16 + 16 + (8 * m_pointsz.length);
+    return 36 + m_pointsz.length * 16 + 16 + 8 * m_pointsz.length;
   }
 
   /**

@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree.model.typeHandler;
 
-
 /**
  * @author Dirk Kuch
  */
@@ -73,7 +72,7 @@ public class XsdBaseTypeHandlerInteger extends XsdBaseTypeHandler<Integer>
   @Override
   public int compare( final Integer o1, final Integer o2 )
   {
-    if( (o1 == null) && (o2 == null) )
+    if( o1 == null && o2 == null )
     {
       return 0; // equals
     }

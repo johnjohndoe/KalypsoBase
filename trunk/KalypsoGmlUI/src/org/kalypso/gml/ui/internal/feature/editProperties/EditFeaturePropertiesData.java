@@ -187,8 +187,8 @@ public class EditFeaturePropertiesData extends AbstractModelObject
   public String getValueLabel( )
   {
     if( getNumeric() )
-      return Messages.getString("EditFeaturePropertiesData_0"); //$NON-NLS-1$
+      return Messages.getString( "EditFeaturePropertiesData_0" ); //$NON-NLS-1$
     else
-      return Messages.getString("EditFeaturePropertiesData_1"); //$NON-NLS-1$
+      return Messages.getString( "EditFeaturePropertiesData_1" ); //$NON-NLS-1$
   }
 }

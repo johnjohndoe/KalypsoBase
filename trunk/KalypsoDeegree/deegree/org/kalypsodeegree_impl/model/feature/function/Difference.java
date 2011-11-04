@@ -59,7 +59,7 @@ public class Difference extends FeaturePropertyFunction
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
    */
   @Override
-  public void init( Map<String, String> properties )
+  public void init( final Map<String, String> properties )
   {
     final String minuendProp = properties.get( "minuendProperty" );
     final String subtrahendProp = properties.get( "subtrahendProperty" );
@@ -81,7 +81,7 @@ public class Difference extends FeaturePropertyFunction
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
+  public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     final IFeatureType featureType = feature.getFeatureType();
 
@@ -108,7 +108,7 @@ public class Difference extends FeaturePropertyFunction
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
+  public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
     // TODO Auto-generated method stub
     return null;

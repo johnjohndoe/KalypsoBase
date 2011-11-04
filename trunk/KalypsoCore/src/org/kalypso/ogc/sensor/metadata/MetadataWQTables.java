@@ -123,7 +123,7 @@ public class MetadataWQTables
   private static void updateWqBoundary( final MetadataList metadata, final String property, final Double value )
   {
     if( Objects.isNull( value ) )
-      metadata.setProperty( property, null );
+      metadata.remove( property );
     else
       metadata.setProperty( property, value.toString() );
   }

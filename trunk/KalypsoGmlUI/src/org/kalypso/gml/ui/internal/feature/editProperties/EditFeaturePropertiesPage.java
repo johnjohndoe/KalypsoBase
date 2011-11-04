@@ -130,7 +130,7 @@ public class EditFeaturePropertiesPage extends WizardPage
   private void createPropertyChooser( final Composite parent )
   {
     final Label label = new Label( parent, SWT.NONE );
-    label.setText( Messages.getString("EditFeaturePropertiesPage.0") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "EditFeaturePropertiesPage.0" ) ); //$NON-NLS-1$
 
     final ComboViewer comboViewer = new ComboViewer( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
     comboViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -146,7 +146,7 @@ public class EditFeaturePropertiesPage extends WizardPage
     final IViewerObservableValue targetSelection = ViewersObservables.observeSinglePostSelection( comboViewer );
     final IObservableValue modelSelection = BeansObservables.observeValue( m_data, EditFeaturePropertiesData.PROPERTY_PROPERTY );
     final DataBinder binder = new DataBinder( targetSelection, modelSelection );
-    binder.addTargetAfterGetValidator( new NotNullValidator<IPropertyType>( IPropertyType.class, IStatus.ERROR, Messages.getString("EditFeaturePropertiesPage.1") ) ); //$NON-NLS-1$
+    binder.addTargetAfterGetValidator( new NotNullValidator<IPropertyType>( IPropertyType.class, IStatus.ERROR, Messages.getString( "EditFeaturePropertiesPage.1" ) ) ); //$NON-NLS-1$
 
     m_binding.bindValue( binder );
   }

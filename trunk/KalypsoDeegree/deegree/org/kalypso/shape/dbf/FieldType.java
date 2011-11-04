@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.dbf;
 
-
 /**
  * Supported data types of the dbase file.
  * 

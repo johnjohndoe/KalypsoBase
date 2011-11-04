@@ -42,12 +42,9 @@ package org.kalypso.jts.QuadMesher;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
-
 /**
  * Interpolates elevations for an m x n coordinate array derived by elevations placed on the first and last row of the
- * coordinate array (see below). 
- *
- * <code>
+ * coordinate array (see below). <code>
  * 
  *  Input:   completly filled coordinate array with z-values in the first and the last row.
  *  Output:  Coordinate array with interpolated elevations for all coordinates.
@@ -92,9 +89,8 @@ public class JTSCoordsElevInterpol
   }
 
   /**
-   * The elevations will be calculated separately for each i-coordinate array. 
-   * The z-values will be dirived by the first and last z-coordinate of this array. 
-   * The interpolation is weighted by the distance of the current point to these
+   * The elevations will be calculated separately for each i-coordinate array. The z-values will be dirived by the first
+   * and last z-coordinate of this array. The interpolation is weighted by the distance of the current point to these
    * two points.
    */
   public Coordinate[][] calculateElevations( )
@@ -105,7 +101,7 @@ public class JTSCoordsElevInterpol
     for( int j = 0; j < numCross; j++ )
     {
       final double zStart = m_coords[j][0].z;
-      final double zEnd = m_coords[j][numLong-1].z;
+      final double zEnd = m_coords[j][numLong - 1].z;
       double distTotal = 0;
       double dist = 0;
       double ratio;
@@ -116,7 +112,7 @@ public class JTSCoordsElevInterpol
       for( int i = 1; i < numLong - 1; i++ )
       {
         // current route calculation between first point and current point
-        dist = dist + m_coords[j][i].distance( m_coords[j][i-1] );
+        dist = dist + m_coords[j][i].distance( m_coords[j][i - 1] );
 
         // the z-values will be weighted by the ratio between the current route
         // and the whole route (= distance to the z-value-coordinates)
@@ -131,13 +127,13 @@ public class JTSCoordsElevInterpol
   /**
    * Calculates the route through a coordinate array j from start point to end point
    */
-  private double calcRoute( int j, int startPoint, int endPoint )
+  private double calcRoute( final int j, final int startPoint, final int endPoint )
   {
     double route = 0;
     for( int i = startPoint + 1; i < endPoint; i++ )
     {
       // route calculation for the whole way along the coordinates
-      route = route + m_coords[j][i].distance( m_coords[j][i-1] );
+      route = route + m_coords[j][i].distance( m_coords[j][i - 1] );
     }
     return route;
   }

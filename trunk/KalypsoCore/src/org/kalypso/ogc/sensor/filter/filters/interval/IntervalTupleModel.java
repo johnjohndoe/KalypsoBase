@@ -335,7 +335,7 @@ public class IntervalTupleModel extends AbstractTupleModel
       final Number srcIndex = (Number) srcDataSourceObjects[i];
       final String dataSourceIdentifier = m_handler.getDataSourceIdentifier( srcIndex.intValue() );
 
-      if( dataSourceIdentifier == null ) 
+      if( dataSourceIdentifier == null )
         srcDataSources[i] = IDataSourceItem.SOURCE_UNKNOWN;
       else
         srcDataSources[i] = dataSourceIdentifier;

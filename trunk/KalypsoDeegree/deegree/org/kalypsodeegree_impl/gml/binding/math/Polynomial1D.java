@@ -55,7 +55,7 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public class Polynomial1D extends Feature_Impl implements IPolynomial1D
 {
-  public Polynomial1D( Object parent, IRelationType parentRelation, IFeatureType ft, String id, Object[] propValues )
+  public Polynomial1D( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
@@ -105,15 +105,15 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
 
     if( coefficients != null )
     {
-      for( int i = 0; i < coefficients.length; i++ )
-        list.add( coefficients[i] );
+      for( final double coefficient : coefficients )
+        list.add( coefficient );
     }
 
     setProperty( QNAME_PROP_COEFFICIENTS, list );
   }
 
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
     if( this == obj )
     {
@@ -121,8 +121,8 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
     }
     else if( obj instanceof IPolynomial1D )
     {
-      double thisCoefs[] = getCoefficients();
-      double compCoefs[] = ((IPolynomial1D) obj).getCoefficients();
+      final double thisCoefs[] = getCoefficients();
+      final double compCoefs[] = ((IPolynomial1D) obj).getCoefficients();
       int i = thisCoefs.length;
       if( i != compCoefs.length )
       {

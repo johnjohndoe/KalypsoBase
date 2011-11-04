@@ -46,8 +46,8 @@ import org.kalypsodeegree.model.feature.Feature;
  * <li>PerpendicularOffset: may be used as defined by the OGC, but it can also be set to one of the special values
  * 'center', 'above', 'below', 'auto'
  * <li>Gap: defines the distance between two captions on the line string
- * <li>LineWidth: provides the thickness of the styled line (needed as information for the correct positioning of
- * labels above and below the line string)
+ * <li>LineWidth: provides the thickness of the styled line (needed as information for the correct positioning of labels
+ * above and below the line string)
  * </ul>
  * <p>
  * 
@@ -83,8 +83,7 @@ public interface LinePlacement
   double getPerpendicularOffset( Feature feature ) throws FilterEvaluationException;
 
   /**
-   * @see #getPerpendicularOffset(Feature)
-   *      <p>
+   * @see #getPerpendicularOffset(Feature) <p>
    * @param perpendicularOffset
    */
   void setPerpendicularOffset( double perpendicularOffset );
@@ -92,6 +91,7 @@ public interface LinePlacement
   /**
    * Returns the placement type (one of the constants defined in <tt>LinePlacement</tt>).
    * <p>
+   * 
    * @throws FilterEvaluationException
    */
   PlacementType getPlacementType( Feature feature ) throws FilterEvaluationException;
@@ -108,6 +108,7 @@ public interface LinePlacement
    * Provides the thickness of the styled line (needed as information for the correct positioning of labels above and
    * below the line string).
    * <p>
+   * 
    * @throws FilterEvaluationException
    */
   double getLineWidth( Feature feature ) throws FilterEvaluationException;
@@ -125,6 +126,7 @@ public interface LinePlacement
   /**
    * Defines the distance between two captions on the line string. One unit is the width of the label caption.
    * <p>
+   * 
    * @throws FilterEvaluationException
    */
   int getGap( Feature feature ) throws FilterEvaluationException;

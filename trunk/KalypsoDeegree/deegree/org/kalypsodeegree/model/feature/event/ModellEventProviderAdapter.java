@@ -67,7 +67,7 @@ public class ModellEventProviderAdapter implements ModellEventProvider
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
    */
   @Override
-  public void removeModellListener( ModellEventListener listener )
+  public void removeModellListener( final ModellEventListener listener )
   {
     m_listeners.remove( listener );
   }
@@ -76,10 +76,10 @@ public class ModellEventProviderAdapter implements ModellEventProvider
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#fireModellEvent(org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   @Override
-  public void fireModellEvent( ModellEvent event )
+  public void fireModellEvent( final ModellEvent event )
   {
     final ModellEventListener[] listeners = m_listeners.toArray( new ModellEventListener[m_listeners.size()] );
-    for( int i = 0; i < listeners.length; i++ )
-      listeners[i].onModellChange( event );
+    for( final ModellEventListener listener : listeners )
+      listener.onModellChange( event );
   }
 }

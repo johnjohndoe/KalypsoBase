@@ -41,7 +41,6 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
 /**
  * Class representing a record of an ESRI .shx file.
  * <p>
- * 
  * 31.08.2000 ap: method getLength() added <BR>
  * 31.08.2000 ap: method getOffset() added <BR>
  * 31.08.2000 ap: method writeIndexRecord added <BR>
@@ -62,37 +61,37 @@ public class IndexRecord
 
   protected int length;
 
-  public IndexRecord()
+  public IndexRecord( )
   {
-    this.offset = 0;
-    this.length = 0;
+    offset = 0;
+    length = 0;
   }
 
-  public IndexRecord( int off, int len )
+  public IndexRecord( final int off, final int len )
   {
-    this.offset = off;
-    this.length = len;
+    offset = off;
+    length = len;
   }
 
-  public IndexRecord( byte[] recBuf )
+  public IndexRecord( final byte[] recBuf )
   {
-    this.offset = ByteUtils.readBEInt( recBuf, 0 );
-    this.length = ByteUtils.readBEInt( recBuf, 4 );
+    offset = ByteUtils.readBEInt( recBuf, 0 );
+    length = ByteUtils.readBEInt( recBuf, 4 );
   }
 
-  public int getLength()
+  public int getLength( )
   {
     return length;
   }
 
-  public int getOffset()
+  public int getOffset( )
   {
     return offset;
   }
 
-  public byte[] writeIndexRecord()
+  public byte[] writeIndexRecord( )
   {
-    byte[] arr = new byte[8];
+    final byte[] arr = new byte[8];
     ByteUtils.writeBEInt( arr, 0, offset );
     ByteUtils.writeBEInt( arr, 4, length );
     return arr;

@@ -56,7 +56,7 @@ public class LegendGraphic_Impl implements LegendGraphic, Marshallable
   /**
    * constructor initializing the class with the <LegendGraphic>
    */
-  LegendGraphic_Impl( Graphic graphic )
+  LegendGraphic_Impl( final Graphic graphic )
   {
     setGraphic( graphic );
   }
@@ -69,7 +69,7 @@ public class LegendGraphic_Impl implements LegendGraphic, Marshallable
    * @return graphic
    */
   @Override
-  public Graphic getGraphic()
+  public Graphic getGraphic( )
   {
     return graphic;
   }
@@ -80,7 +80,7 @@ public class LegendGraphic_Impl implements LegendGraphic, Marshallable
    * @param graphic
    */
   @Override
-  public void setGraphic( Graphic graphic )
+  public void setGraphic( final Graphic graphic )
   {
     this.graphic = graphic;
   }
@@ -91,13 +91,13 @@ public class LegendGraphic_Impl implements LegendGraphic, Marshallable
    * @return xml representation of the Font
    */
   @Override
-  public String exportAsXML()
+  public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<LegendGraphic>" );
-    sb.append( ( (Marshallable)graphic ).exportAsXML() );
+    sb.append( ((Marshallable) graphic).exportAsXML() );
     sb.append( "</LegendGraphic>" );
 
     Debug.debugMethodEnd();

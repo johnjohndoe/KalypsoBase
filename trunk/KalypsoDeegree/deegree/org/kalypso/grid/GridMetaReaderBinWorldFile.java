@@ -59,7 +59,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * {@link IGridMetaReader} implementation for World-Files.
- *
+ * 
  * @author Dirk Kuch
  */
 public class GridMetaReaderBinWorldFile implements IGridMetaReader
@@ -100,7 +100,7 @@ public class GridMetaReaderBinWorldFile implements IGridMetaReader
       final String msg = String.format( "Failed to access world file %s: %s", m_worldFile, e.toString() );
       return StatusUtilities.createStatus( IStatus.ERROR, msg, e );
     }
-   finally
+    finally
     {
       IOUtils.closeQuietly( is );
     }
@@ -169,7 +169,7 @@ public class GridMetaReaderBinWorldFile implements IGridMetaReader
   @Override
   public RectifiedGridDomain getCoverage( final OffsetVector offsetX, final OffsetVector offsetY, final Double[] upperLeftCorner, final String crs ) throws Exception
   {
-    if( (offsetX == null) || (offsetY == null) || (upperLeftCorner == null) || (upperLeftCorner.length != 2) || (crs == null) )
+    if( offsetX == null || offsetY == null || upperLeftCorner == null || upperLeftCorner.length != 2 || crs == null )
       throw new IllegalStateException();
 
     BinaryGeoGrid grid = null;

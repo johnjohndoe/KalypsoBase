@@ -41,8 +41,8 @@
 package org.kalypso.ogc.gml.mapmodel;
 
 import java.awt.Graphics;
-import java.net.URL;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.i18n.I10nString;
@@ -92,7 +92,7 @@ public interface IMapModell
 
   /**
    * Directly paints all themes contained inside this model. <br>
-   * Blocks until all themes are painted. .
+   * Blocks until all themes are painted.
    */
   IStatus paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor );
 
@@ -111,6 +111,8 @@ public interface IMapModell
   void swapThemes( IKalypsoTheme theme1, IKalypsoTheme theme2 );
 
   GM_Envelope getFullExtentBoundingBox( );
+
+  IProject getProject( );
 
   void accept( final IKalypsoThemeVisitor visitor, int depth );
 
@@ -144,11 +146,4 @@ public interface IMapModell
    *         added in the near future...)
    */
   boolean isLoaded( );
-
-  /**
-   * This function returns the context of the map model.
-   * 
-   * @return The context.
-   */
-  URL getContext( );
 }

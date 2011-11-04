@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This implementation keeps the rendered theme in an image-buffer and automatically refreshes the buffer if needed.
- *
+ * 
  * @author Gernot Belger
  */
 public class BufferedMapLayer extends AbstractMapLayer implements IPaintable

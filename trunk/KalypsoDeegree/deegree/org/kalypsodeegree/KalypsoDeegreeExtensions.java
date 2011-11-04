@@ -85,13 +85,13 @@ public class KalypsoDeegreeExtensions
     }
   };
 
-  private final static String FUNCTION_EXTENSION_POINT = "org.kalypso.deegree.functionProperty";
+  private static final String FUNCTION_EXTENSION_POINT = "org.kalypso.deegree.functionProperty";
 
-  private final static String LISTENER_EXTENSION_POINT = "org.kalypso.deegree.gmlWorkspaceListener";
+  private static final String LISTENER_EXTENSION_POINT = "org.kalypso.deegree.gmlWorkspaceListener";
 
-  private final static String RULES_EXTENSION_POINT = "org.kalypso.deegree.featureRule";
+  private static final String RULES_EXTENSION_POINT = "org.kalypso.deegree.featureRule";
 
-  private final static String FEATUREBINDING_EXTENSION_POINT = "org.kalypso.deegree.featureBinding";
+  private static final String FEATUREBINDING_EXTENSION_POINT = "org.kalypso.deegree.featureBinding";
 
   private static final IGmlWorkspaceListener[] EMPTY_LISTENERS = new IGmlWorkspaceListener[] {};
 
@@ -254,7 +254,7 @@ public class KalypsoDeegreeExtensions
   /**
    * @return list of feature binding handlers, handling a special featureType qname
    */
-  public synchronized static IConfigurationElement getFeatureBinding( final QName qname )
+  public static synchronized IConfigurationElement getFeatureBinding( final QName qname )
   {
     // fill binding map
     if( FEATURE_BINDINGS == null )
@@ -277,7 +277,7 @@ public class KalypsoDeegreeExtensions
     return FEATURE_BINDINGS.get( qname );
   }
 
-  private synchronized static Map<QName, List<IFeatureRule>> getFeatureRules( )
+  private static synchronized Map<QName, List<IFeatureRule>> getFeatureRules( )
   {
     if( THE_RULES != null )
       return THE_RULES;

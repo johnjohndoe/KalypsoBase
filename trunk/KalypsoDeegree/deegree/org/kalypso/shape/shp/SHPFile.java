@@ -142,8 +142,8 @@ public class SHPFile
     /*
      * only for PolyLines, Polygons and MultiPoints minimum bounding rectangles are defined
      */
-    if( (shpType == ShapeType.POLYLINE) || (shpType == ShapeType.POLYGON) || (shpType == ShapeType.MULTIPOINT) || (shpType == ShapeType.POLYLINEZ) || (shpType == ShapeType.POLYGONZ)
-        || (shpType == ShapeType.MULTIPOINTZ) )
+    if( shpType == ShapeType.POLYLINE || shpType == ShapeType.POLYGON || shpType == ShapeType.MULTIPOINT || shpType == ShapeType.POLYLINEZ || shpType == ShapeType.POLYGONZ
+        || shpType == ShapeType.MULTIPOINTZ )
       return new SHPEnvelope( m_raf );
 
     return null;

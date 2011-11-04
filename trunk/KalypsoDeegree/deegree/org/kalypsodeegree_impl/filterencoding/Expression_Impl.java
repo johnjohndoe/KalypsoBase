@@ -57,11 +57,11 @@ abstract public class Expression_Impl implements Expression
   int m_id;
 
   /**
-   * Given a DOM-fragment, a corresponding Expression-object is built. This method recursively calls other buildFromDOM () -
-   * methods to validate the structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Expression-object is built. This method recursively calls other buildFromDOM
+   * () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *             if the structure of the DOM-fragment is invalid
+   *           if the structure of the DOM-fragment is invalid
    */
   public static Expression buildFromDOM( final Element element ) throws FilterConstructionException
   {

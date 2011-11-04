@@ -67,15 +67,23 @@ public class StatusTestView extends ViewPart
   final Exception m_exception = new Exception( "Ganz schlimm!", m_cause );
 
   private final IStatus PLAIN_OK = Status.OK_STATUS;
+
   private final IStatus PLAIN_INFO = new Status( IStatus.INFO, KalypsoCorePlugin.getID(), "For your information" );
+
   private final IStatus PLAIN_WARNING = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), "be careful" );
+
   private final IStatus PLAIN_ERROR = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Ouch!" );
+
   private final IStatus PLAIN_CANCEL = Status.CANCEL_STATUS;
 
   private final IStatus EXCEPTION_OK = new Status( IStatus.OK, KalypsoCorePlugin.getID(), "Success!", m_exception );
+
   private final IStatus EXCEPTION_INFO = new Status( IStatus.INFO, KalypsoCorePlugin.getID(), "For your information", m_exception );
+
   private final IStatus EXCEPTION_WARNING = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), "be careful", m_exception );
+
   private final IStatus EXCEPTION_ERROR = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Ouch!", m_exception );
+
   private final IStatus EXCEPTION_CANCEL = new Status( IStatus.CANCEL, KalypsoCorePlugin.getID(), "Forget it....", m_exception );
 
   public StatusTestView( )
@@ -112,7 +120,7 @@ public class StatusTestView extends ViewPart
     createStatusButtons( panel, createMulti( PLAIN_OK, EXCEPTION_OK ) );
     createStatusButtons( panel, createMulti( PLAIN_INFO, PLAIN_INFO, PLAIN_OK ) );
     createStatusButtons( panel, createMulti( PLAIN_WARNING, PLAIN_OK, PLAIN_WARNING ) );
-    createStatusButtons( panel, createMulti( PLAIN_ERROR, PLAIN_ERROR, PLAIN_WARNING ,PLAIN_INFO ) );
+    createStatusButtons( panel, createMulti( PLAIN_ERROR, PLAIN_ERROR, PLAIN_WARNING, PLAIN_INFO ) );
     createStatusButtons( panel, createMulti( PLAIN_CANCEL, PLAIN_OK, PLAIN_CANCEL ) );
 
     new Label( panel, SWT.SEPARATOR | SWT.HORIZONTAL ).setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );

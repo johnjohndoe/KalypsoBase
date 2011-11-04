@@ -60,7 +60,7 @@ public class AlwaysTrueKalypsoThemePredicate implements IKalypsoThemePredicate
    * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   @Override
-  public boolean decide( IKalypsoTheme theme )
+  public boolean decide( final IKalypsoTheme theme )
   {
     /* YEP, its really true. */
     return true;

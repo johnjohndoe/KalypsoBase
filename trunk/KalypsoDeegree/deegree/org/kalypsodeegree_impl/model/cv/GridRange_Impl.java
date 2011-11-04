@@ -55,8 +55,8 @@ public class GridRange_Impl implements GridRange
 
   public GridRange_Impl( final double[] low, final double[] high )
   {
-    this.m_low = low;
-    this.m_high = high;
+    m_low = low;
+    m_high = high;
   }
 
   /**

@@ -51,8 +51,8 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * Sucht von allen Features jenes, welches am nächsten zu einem Punkt liegt.
  * </p>
  * <p>
- * Falls viele Objekte durchsucht werden, sollte die Suche zuerst durch ein
- * .query auf der FeatureList bzw. dem Workspace eingeschränkt werden.
+ * Falls viele Objekte durchsucht werden, sollte die Suche zuerst durch ein .query auf der FeatureList bzw. dem
+ * Workspace eingeschränkt werden.
  * </p>
  * 
  * @author belger
@@ -60,13 +60,12 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class FindSomeNearestVisitor implements FeatureVisitor
 {
   /**
-   * Hilfspunkt für die Suche, wird lazy instatiiert, da wir nicht wissen, ob
-   * überhaupt eine Geoemetry gefunden wird
+   * Hilfspunkt für die Suche, wird lazy instatiiert, da wir nicht wissen, ob überhaupt eine Geoemetry gefunden wird
    */
   private GM_Point point = null;
 
   /** the neares features so for */
-  private SortedMap m_result = new TreeMap();
+  private final SortedMap m_result = new TreeMap();
 
   /** minimum distance so far */
   private double m_minDist = Double.MAX_VALUE;
@@ -82,7 +81,7 @@ public class FindSomeNearestVisitor implements FeatureVisitor
   /**
    *  
    */
-  public FindSomeNearestVisitor( final GM_Position pos, final double radius, final int number, String geometryProperty )
+  public FindSomeNearestVisitor( final GM_Position pos, final double radius, final int number, final String geometryProperty )
   {
     m_pos = pos;
     m_radius = radius;
@@ -98,12 +97,12 @@ public class FindSomeNearestVisitor implements FeatureVisitor
     m_geometryProperty = null;
   }
 
-  public Feature[] getResult()
+  public Feature[] getResult( )
   {
-    return (Feature[])m_result.values().toArray( new Feature[m_result.size()] );
+    return (Feature[]) m_result.values().toArray( new Feature[m_result.size()] );
   }
 
-  private GM_Object getGeometry( Feature feature )
+  private GM_Object getGeometry( final Feature feature )
   {
     final GM_Object result;
     if( feature.getFeatureType().getName().equals( RectifiedGridCoverage.getNameStatic() ) )
@@ -113,15 +112,15 @@ public class FindSomeNearestVisitor implements FeatureVisitor
       result = geoProps[0];
     }
     else if( m_geometryProperty != null )
-      result = (GM_Object)feature.getProperty(m_geometryProperty );
+      result = (GM_Object) feature.getProperty( m_geometryProperty );
     else
       result = feature.getDefaultGeometryProperty();
     return result;
   }
 
-  private double getDistance( GM_Object geom )
+  private double getDistance( final GM_Object geom )
   {
-    if( point == null || !( point.getCoordinateSystem().equals( geom.getCoordinateSystem() ) ) )
+    if( point == null || !point.getCoordinateSystem().equals( geom.getCoordinateSystem() ) )
       point = GeometryFactory.createGM_Point( m_pos, geom.getCoordinateSystem() );
     return geom.distance( point );
   }
@@ -143,7 +142,7 @@ public class FindSomeNearestVisitor implements FeatureVisitor
       if( size > m_number )
       {
         m_result.remove( m_result.lastKey() );
-        m_minDist = ( (Double)m_result.lastKey() ).doubleValue();
+        m_minDist = ((Double) m_result.lastKey()).doubleValue();
       }
     }
     return true;

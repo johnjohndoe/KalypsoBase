@@ -108,7 +108,7 @@ public class FeatureStructureChangeModellEvent extends ModellEvent implements IG
   {
     if( m_changedFeature == null )
       return new Feature[] {};
-    
+
     return m_changedFeature;
   }
 

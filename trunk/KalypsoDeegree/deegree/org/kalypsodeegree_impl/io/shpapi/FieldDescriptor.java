@@ -61,8 +61,8 @@ public class FieldDescriptor
    */
   public FieldDescriptor( final String name, final String type, final byte fieldlength, final byte decimalcount ) throws DBaseException
   {
-    if( (!type.equalsIgnoreCase( "C" )) && (!type.equalsIgnoreCase( "D" )) && (!type.equalsIgnoreCase( "F" )) && (!type.equalsIgnoreCase( "N" )) && (!type.equalsIgnoreCase( "M" ))
-        && (!type.equalsIgnoreCase( "L" )) )
+    if( !type.equalsIgnoreCase( "C" ) && !type.equalsIgnoreCase( "D" ) && !type.equalsIgnoreCase( "F" ) && !type.equalsIgnoreCase( "N" ) && !type.equalsIgnoreCase( "M" )
+        && !type.equalsIgnoreCase( "L" ) )
       throw new DBaseException( "data type is not supported" );
 
     data = new byte[32];
@@ -104,7 +104,7 @@ public class FieldDescriptor
     }
     else
       data[17] = 0;
-      
+
     // work area id (don't know if it should be 1)
     data[20] = 1;
 

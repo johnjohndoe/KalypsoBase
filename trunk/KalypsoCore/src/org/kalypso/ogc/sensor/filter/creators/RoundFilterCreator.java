@@ -68,9 +68,9 @@ public class RoundFilterCreator implements IFilterCreator
     return roundFilter;
   }
 
-  public static IObservationFilter createFilter( int factor, String mode, String type, IObservation baseObs, URL context ) throws SensorException
+  public static IObservationFilter createFilter( final int factor, final String mode, final String type, final IObservation baseObs, final URL context ) throws SensorException
   {
-    RoundFilter roundFilter = new RoundFilter( factor, mode, type );
+    final RoundFilter roundFilter = new RoundFilter( factor, mode, type );
     roundFilter.initFilter( baseObs, baseObs, context );
     return roundFilter;
   }

@@ -77,7 +77,7 @@ public class ShapeUtilities
    *          The basename for the destination files of the shape.
    * @return The copied files (only their filenames).
    */
-  public static String[] copyShape( File shapeFile, File destinationDirectory, String destinationBasename ) throws IOException
+  public static String[] copyShape( final File shapeFile, final File destinationDirectory, final String destinationBasename ) throws IOException
   {
     /* The shape parameter is not allowed to be a directory. */
     if( shapeFile.isDirectory() )
@@ -88,32 +88,29 @@ public class ShapeUtilities
       throw new IllegalArgumentException( "The provided destination path points to a file..." );
 
     /* Source. */
-    File shapeDirectory = new File( FilenameUtils.getFullPath( shapeFile.getAbsolutePath() ) );
+    final File shapeDirectory = new File( FilenameUtils.getFullPath( shapeFile.getAbsolutePath() ) );
 
     /* Get all filenames of the files from shape (e.g. get all filenames with the same basename specified). */
-    String[] filenames = shapeDirectory.list( new BasenameFilenameFilter( FilenameUtils.getBaseName( shapeFile.getName() ) ) );
+    final String[] filenames = shapeDirectory.list( new BasenameFilenameFilter( FilenameUtils.getBaseName( shapeFile.getName() ) ) );
 
     /* Copy all found files. */
-    List<String> files = new ArrayList<String>();
-    for( int i = 0; i < filenames.length; i++ )
+    final List<String> files = new ArrayList<String>();
+    for( final String filename : filenames )
     {
-      /* Get the filename. */
-      String filename = filenames[i];
-
       /* The filenames. */
-      String sourceFilename = filename;
+      final String sourceFilename = filename;
       String destinationFilename = filename;
 
       /* If a destination basename is given, use it. */
       if( destinationBasename != null && destinationBasename.length() > 0 )
       {
-        String extension = FilenameUtils.getExtension( filename );
+        final String extension = FilenameUtils.getExtension( filename );
         destinationFilename = destinationBasename + "." + extension;
       }
 
       /* The files. */
-      File source = new File( shapeDirectory, sourceFilename );
-      File destination = new File( destinationDirectory, destinationFilename );
+      final File source = new File( shapeDirectory, sourceFilename );
+      final File destination = new File( destinationDirectory, destinationFilename );
 
       /* Copy. */
       FileUtils.copyFile( source, destination );
@@ -136,23 +133,20 @@ public class ShapeUtilities
    * @param destinationBasename
    *          The basename for the destination files of the shape.
    */
-  public static void copyShape( IFile shape, IFolder destinationFolder, String destinationBasename ) throws Exception
+  public static void copyShape( final IFile shape, final IFolder destinationFolder, final String destinationBasename ) throws Exception
   {
     /* Convert to normal files. */
-    File shapeFile = shape.getLocation().toFile();
-    File destinationDirectory = destinationFolder.getLocation().toFile();
+    final File shapeFile = shape.getLocation().toFile();
+    final File destinationDirectory = destinationFolder.getLocation().toFile();
 
     /* Copy. */
-    String[] files = copyShape( shapeFile, destinationDirectory, destinationBasename );
+    final String[] files = copyShape( shapeFile, destinationDirectory, destinationBasename );
 
     /* Refresh the files. */
-    for( int i = 0; i < files.length; i++ )
+    for( final String file : files )
     {
-      /* Get the file. */
-      String file = files[i];
-
       /* Get the destination file. */
-      IFile destinationFile = destinationFolder.getFile( file );
+      final IFile destinationFile = destinationFolder.getFile( file );
 
       /* Refresh the destination file. */
       destinationFile.refreshLocal( IResource.DEPTH_ZERO, new NullProgressMonitor() );
@@ -166,26 +160,23 @@ public class ShapeUtilities
    *          One of the shape files. The others will be determined by removing the file extension and listing the files
    *          of the parent with the same basename.
    */
-  public static void deleteShape( File shapeFile )
+  public static void deleteShape( final File shapeFile )
   {
     /* The shape parameter is not allowed to be a directory. */
     if( shapeFile.isDirectory() )
       throw new IllegalArgumentException( "The provided shape path points to a directory..." );
 
     /* The shape directory. */
-    File shapeDirectory = new File( FilenameUtils.getFullPath( shapeFile.getAbsolutePath() ) );
+    final File shapeDirectory = new File( FilenameUtils.getFullPath( shapeFile.getAbsolutePath() ) );
 
     /* Get all filenames of the files from shape (e.g. get all filenames with the same basename specified). */
-    String[] filenames = shapeDirectory.list( new BasenameFilenameFilter( FilenameUtils.getBaseName( shapeFile.getName() ) ) );
+    final String[] filenames = shapeDirectory.list( new BasenameFilenameFilter( FilenameUtils.getBaseName( shapeFile.getName() ) ) );
 
     /* Delete all found files. */
-    for( int i = 0; i < filenames.length; i++ )
+    for( final String filename : filenames )
     {
-      /* Get the filename. */
-      String filename = filenames[i];
-
       /* The files. */
-      File file = new File( shapeDirectory, filename );
+      final File file = new File( shapeDirectory, filename );
 
       /* Delete. */
       file.delete();

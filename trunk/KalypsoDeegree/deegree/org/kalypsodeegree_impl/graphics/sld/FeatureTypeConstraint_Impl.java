@@ -64,7 +64,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
   /**
    * constructor initializing the class with the <FeatureTypeConstraint>
    */
-  FeatureTypeConstraint_Impl( String featureTypeName, Filter filter, Extent[] extents )
+  FeatureTypeConstraint_Impl( final String featureTypeName, final Filter filter, final Extent[] extents )
   {
     this.extents = new ArrayList();
     setFeatureTypeName( featureTypeName );
@@ -78,7 +78,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    * @return the name of the feature type
    */
   @Override
-  public String getFeatureTypeName()
+  public String getFeatureTypeName( )
   {
     return featureTypeName;
   }
@@ -90,7 +90,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    *          the name of the feature type
    */
   @Override
-  public void setFeatureTypeName( String featureTypeName )
+  public void setFeatureTypeName( final String featureTypeName )
   {
     this.featureTypeName = featureTypeName;
   }
@@ -101,7 +101,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    * @return the filter of the FeatureTypeConstraints
    */
   @Override
-  public Filter getFilter()
+  public Filter getFilter( )
   {
     return filter;
   }
@@ -113,7 +113,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    *          the filter of the FeatureTypeConstraints
    */
   @Override
-  public void setFilter( Filter filter )
+  public void setFilter( final Filter filter )
   {
     this.filter = filter;
   }
@@ -124,9 +124,9 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    * @return the extent for filtering the feature type
    */
   @Override
-  public Extent[] getExtents()
+  public Extent[] getExtents( )
   {
-    return (Extent[])extents.toArray( new Extent[extents.size()] );
+    return (Extent[]) extents.toArray( new Extent[extents.size()] );
   }
 
   /**
@@ -136,15 +136,15 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    *          extents for filtering the feature type
    */
   @Override
-  public void setExtents( Extent[] extents )
+  public void setExtents( final Extent[] extents )
   {
     this.extents.clear();
 
     if( extents != null )
     {
-      for( int i = 0; i < extents.length; i++ )
+      for( final Extent extent : extents )
       {
-        addExtent( extents[i] );
+        addExtent( extent );
       }
     }
   }
@@ -156,7 +156,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    *          an extent to add
    */
   @Override
-  public void addExtent( Extent extent )
+  public void addExtent( final Extent extent )
   {
     extents.add( extent );
   }
@@ -168,23 +168,21 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    *          an extent to remove
    */
   @Override
-  public void removeExtent( Extent extent )
+  public void removeExtent( final Extent extent )
   {
     extents.remove( extents.indexOf( extent ) );
   }
 
   /**
-   * 
-   * 
    * @return the FeatureTypeConstraint as String
    */
   @Override
-  public String toString()
+  public String toString( )
   {
     String ret = getClass().getName() + "\n";
     ret = "featureTypeName = " + featureTypeName + "\n";
-    ret += ( "filter = " + filter + "\n" );
-    ret += ( "extents = " + extents + "\n" );
+    ret += "filter = " + filter + "\n";
+    ret += "extents = " + extents + "\n";
 
     return ret;
   }
@@ -195,11 +193,11 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
    * @return xml representation of the FeatureTypeConstraint
    */
   @Override
-  public String exportAsXML()
+  public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<FeatureTypeConstraint>" );
     sb.append( "<FeatureTypeName>" ).append( featureTypeName );
     sb.append( "</FeatureTypeName>" );
@@ -211,7 +209,7 @@ class FeatureTypeConstraint_Impl implements FeatureTypeConstraint, Marshallable
     {
       for( int i = 0; i < extents.size(); i++ )
       {
-        sb.append( ( (Marshallable)extents.get( i ) ).exportAsXML() );
+        sb.append( ((Marshallable) extents.get( i )).exportAsXML() );
       }
     }
     sb.append( "</FeatureTypeConstraint>" );

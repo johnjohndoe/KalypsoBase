@@ -53,7 +53,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 /**
  * A {@link IGeoGrid} implementation for the ESRI Ascii file format, which reads the whole file on instantiation and
  * holds all values in memory.
- *
+ * 
  * @author Dejan Antanaskovic
  */
 public class AsciiInMemoryGeoGrid extends AbstractGeoGrid implements IGeoGrid
@@ -105,7 +105,7 @@ public class AsciiInMemoryGeoGrid extends AbstractGeoGrid implements IGeoGrid
         for( int x = 0; x < m_sizeX; x++ )
         {
           currentValue = Double.parseDouble( strRow[x] );
-          m_grid[y][x] = (currentValue != noDataValue) ? currentValue : Double.NaN;
+          m_grid[y][x] = currentValue != noDataValue ? currentValue : Double.NaN;
 
           if( currentValue > max )
             max = currentValue;

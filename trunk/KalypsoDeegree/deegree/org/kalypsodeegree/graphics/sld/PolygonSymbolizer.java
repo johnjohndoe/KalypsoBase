@@ -58,7 +58,7 @@ public interface PolygonSymbolizer extends Symbolizer
    * 
    * @return the fill of the polygon
    */
-  Fill getFill();
+  Fill getFill( );
 
   /**
    * Sets the Fill
@@ -76,7 +76,7 @@ public interface PolygonSymbolizer extends Symbolizer
    * 
    * @return the stroke of the polygon
    */
-  Stroke getStroke();
+  Stroke getStroke( );
 
   /**
    * Sets the Stroke

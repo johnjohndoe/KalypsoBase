@@ -44,10 +44,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -76,7 +76,6 @@ import org.kalypso.ogc.gml.painter.IStylePainter;
 import org.kalypso.ogc.gml.painter.StylePainterFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -98,7 +97,7 @@ import com.vividsolutions.jts.geom.Envelope;
  */
 public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoStyleListener
 {
-  private final List<IKalypsoStyle> m_styles = new ArrayList<IKalypsoStyle>();
+  private final List<IKalypsoStyle> m_styles = Collections.synchronizedList( new ArrayList<IKalypsoStyle>() );
 
   private CommandableWorkspace m_workspace;
 
@@ -110,7 +109,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private final String m_featurePath;
 
-
   /**
    * (Crude) hack: remember that we only have a (syntetic) list of only one feature.<br>
    * Fixes the problem, that single features do not correctly get updated.
@@ -121,8 +119,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    * Holds the descriptor for the default icon of this theme. Is used in legends, such as the outline.
    */
   private Image m_featureThemeIcon;
-
-  private GM_Envelope m_fullExtent;
 
   public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final I10nString name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
@@ -166,16 +162,21 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     for( final IKalypsoStyle element : styles )
       removeStyle( element );
 
-        if( m_workspace != null )
-        {
-          m_workspace.removeModellListener( this );
-          m_workspace = null;
-        }
+    if( m_workspace != null )
+    {
+      m_workspace.removeModellListener( this );
+      m_workspace = null;
+    }
 
-        if( m_featureThemeIcon != null )
-          m_featureThemeIcon.dispose();
+    if( m_featureThemeIcon != null )
+      m_featureThemeIcon.dispose();
 
-        super.dispose();
+    super.dispose();
+  }
+
+  private void setDirty( )
+  {
+    fireRepaintRequested( getFullExtent() );
   }
 
   @Override
@@ -301,12 +302,12 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       // my workspace ?
       final GMLWorkspace changedWorkspace = ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace();
-      if( ((m_workspace != null) && (changedWorkspace != m_workspace) && (changedWorkspace != m_workspace.getWorkspace())) )
+      if( m_workspace != null && changedWorkspace != m_workspace && changedWorkspace != m_workspace.getWorkspace() )
         return; // not my workspace
 
       if( modellEvent instanceof FeaturesChangedModellEvent )
       {
-        final FeaturesChangedModellEvent featuresChangedModellEvent = ((FeaturesChangedModellEvent) modellEvent);
+        final FeaturesChangedModellEvent featuresChangedModellEvent = (FeaturesChangedModellEvent) modellEvent;
         final Feature[] features = featuresChangedModellEvent.getFeatures();
 
         // HACK: for single-feature lists (see flag), we must invalidate the list ourselves.
@@ -322,7 +323,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
         {
           // OPTIMIZATION: as List#contains is quite slow, we generally repaint if the number of changed features
           // is too large.
-          requestRepaint( null );
+          setDirty();
         }
         else
         {
@@ -341,7 +342,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
           if( invalidBox != null )
           {
             // TODO: buffer: does not work well for points, or fat-lines
-            requestRepaint( invalidBox );
+            fireRepaintRequested( invalidBox );
           }
         }
       }
@@ -357,17 +358,13 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
             {
               case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD:
                 // fall through
-              case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE:
-                requestRepaint( getActiveEnvelope() );
-                return;
-
               case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE:
-                // We need to repaint all: we do not know where the old feature was deleted
-                requestRepaint( null );
-                return;
-
+                // fall through
+              case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE:
+                setDirty();
+                break;
               default:
-                requestRepaint( getActiveEnvelope() );
+                setDirty();
             }
           }
         }
@@ -376,31 +373,19 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     else
     {
       // unknown event, set dirty
-      requestRepaint( getActiveEnvelope() );
+      setDirty();
     }
-  }
-
-  private void requestRepaint( final GM_Envelope invalidEnvelope )
-  {
-    /* Also invalidate the current full extent: my features have changed */
-    m_fullExtent = null;
-
-    /* Request the repaint event */
-    fireRepaintRequested( invalidEnvelope );
   }
 
   @Override
   public GM_Envelope getFullExtent( )
   {
-    if( m_fullExtent != null )
-      return m_fullExtent;
-
+    // TODO: Very slow on large themes. We should cache the extent.
     final FeatureList visibleFeatures = getFeatureListVisible( null );
     if( visibleFeatures == null )
       return null;
 
-    m_fullExtent = visibleFeatures.getBoundingBox();
-    return m_fullExtent;
+    return visibleFeatures.getBoundingBox();
   }
 
   @Override
@@ -415,55 +400,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( m_featureList == null )
       return null;
 
-    // TODO: we should also get the scale here (else we might return currently invisible features)
-
     /* Use complete bounding box if search envelope is not set. */
     final GM_Envelope env = searchEnvelope == null ? m_featureList.getBoundingBox() : searchEnvelope;
 
     // Put features in set in order to avoid duplicates
-    final Set<Feature> features = new LinkedHashSet<Feature>();
-    final IStylePaintable paintDelegate = new IStylePaintable()
-    {
-      @Override
-      public void paint( final DisplayElement displayElement, final IProgressMonitor paintMonitor )
-      {
-        final Feature feature = displayElement.getFeature();
-        final GM_Envelope envelope = feature.getEnvelope();
-        if( envelope != null && env.intersects( envelope ) )
-        {
-          features.add( feature );
-        }
-      }
-
-      @Override
-      public Double getScale( )
-      {
-        return null;
-      }
-
-      @Override
-      public GM_Envelope getBoundingBox( )
-      {
-        return env;
-      }
-
-      @Override
-      public boolean shouldPaintFeature( final Feature feature )
-      {
-        return true;
-      }
-
-      @Override
-      public ILabelPlacementStrategy createLabelStrategy( )
-      {
-        return null;
-      }
-
-      @Override
-      public void paintLabels( final ILabelPlacementStrategy strategy )
-      {
-      }
-    };
+    final VisibleFeaturesPaintable paintDelegate = new VisibleFeaturesPaintable( env );
 
     final IProgressMonitor monitor = new NullProgressMonitor();
 
@@ -480,7 +421,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     final Feature parentFeature = m_featureList.getParentFeature();
     final IRelationType parentFTP = m_featureList.getParentFeatureTypeProperty();
     final FeatureList resultList = FeatureFactory.createFeatureList( parentFeature, parentFTP );
-    resultList.addAll( features );
+    final Collection<Feature> visibleFeatures = paintDelegate.getVisibleFeatures();
+    resultList.addAll( visibleFeatures );
     return resultList;
   }
 
@@ -525,9 +467,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public void styleChanged( )
   {
-    m_fullExtent = null;
-
-    fireRepaintRequested( getActiveEnvelope() );
+    setDirty();
     fireStatusChanged( this );
   }
 

@@ -124,7 +124,7 @@ public abstract class ObjectCatalog<O> extends Storage
     return resolver.resolveURL( uri );
   }
 
-  public URI getStore(  )
+  public URI getStore( )
   {
     final IURNGenerator generator = m_manager.getURNGeneratorFor( m_supportingClass );
     if( generator == null )

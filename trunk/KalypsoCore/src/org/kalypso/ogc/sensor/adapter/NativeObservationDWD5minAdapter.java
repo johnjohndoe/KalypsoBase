@@ -143,7 +143,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
     long startDate = 0;
     while( (lineIn = reader.readLine()) != null )
     {
-      if( !continueWithErrors && (numberOfErrors > MAX_NO_OF_ERRORS) )
+      if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
         return null;
       lineNumber = reader.getLineNumber();
       // System.out.println( "Lese Zeile:" + lineNumber );
@@ -161,7 +161,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
             {
               // System.out.println( "Startdatum Header:" + startDateString );
               final Date parseDate = m_dateFormat.parse( startDateString );
-              startDate = (parseDate).getTime();
+              startDate = parseDate.getTime();
             }
             else
             {
@@ -180,7 +180,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
           for( int i = 0; i < 16; i++ )
           {
             final String valueString = lineIn.substring( i * 5, 5 * (i + 1) );
-            Double value = (new Double( Double.parseDouble( valueString ) )) / 1000;
+            Double value = new Double( Double.parseDouble( valueString ) ) / 1000;
             // TODO: Write status
             if( value > 99.997 )
             {
@@ -194,7 +194,7 @@ public class NativeObservationDWD5minAdapter implements INativeObservationAdapte
             valueCollector.add( value );
 
             buffer.append( " " ); // separator //$NON-NLS-1$
-            final Date valueDate = new Date( startDate + (i) * m_timeStep + (valuesLine - 1) * 16 * m_timeStep );
+            final Date valueDate = new Date( startDate + i * m_timeStep + (valuesLine - 1) * 16 * m_timeStep );
             buffer.append( valueDate.toString() );
             dateCollector.add( valueDate );
             // }

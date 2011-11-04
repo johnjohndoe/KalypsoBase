@@ -141,7 +141,7 @@ public class GMLSchemaCache
       // We have an already loaded schema; use it, if the current validity is same (or older) the the last one
       // or if either the old or the current validity could not be determined
       final Date lastValidity = sw.getValidity();
-      if( validity == null || (lastValidity != null && validity.compareTo( lastValidity ) <= 0) )
+      if( validity == null || lastValidity != null && validity.compareTo( lastValidity ) <= 0 )
       {
         Debug.CATALOG.printf( "Schema found in mem-cache.%n" ); //$NON-NLS-1$
         return sw.getSchema();

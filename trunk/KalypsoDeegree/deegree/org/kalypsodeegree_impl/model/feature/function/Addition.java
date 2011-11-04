@@ -59,7 +59,7 @@ public class Addition extends FeaturePropertyFunction
    * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Map)
    */
   @Override
-  public void init( Map<String, String> properties )
+  public void init( final Map<String, String> properties )
   {
     m_properties = properties;
   }
@@ -69,13 +69,13 @@ public class Addition extends FeaturePropertyFunction
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object getValue( Feature feature, IPropertyType pt, Object currentValue )
+  public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
     final GMLWorkspace workspace = feature.getWorkspace();
 
     double addResult = 0.0;
     Object objNumber = null;
-    for( String property : m_properties.values() )
+    for( final String property : m_properties.values() )
     {
       if( property == null )
         return null;
@@ -84,17 +84,17 @@ public class Addition extends FeaturePropertyFunction
       {
         addResult = addResult + Double.parseDouble( property );
       }
-      catch( NumberFormatException numForE )
+      catch( final NumberFormatException numForE )
       {
         try
         {
           GMLXPath path = new GMLXPath( feature );
           final String[] xPathSegs = property.split( "/" );
-          for( int i = 0; i < xPathSegs.length; i++ )
+          for( final String xPathSeg : xPathSegs )
           {
-            if( xPathSegs[i] != null )
+            if( xPathSeg != null )
             {
-              path = new GMLXPath( path, QName.valueOf( xPathSegs[i] ) );
+              path = new GMLXPath( path, QName.valueOf( xPathSeg ) );
             }
           }
 
@@ -104,7 +104,7 @@ public class Addition extends FeaturePropertyFunction
 
           addResult = addResult + ((Number) objNumber).doubleValue();
         }
-        catch( GMLXPathException e )
+        catch( final GMLXPathException e )
         {
           e.printStackTrace();
           return null;
@@ -119,7 +119,7 @@ public class Addition extends FeaturePropertyFunction
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
-  public Object setValue( Feature feature, IPropertyType pt, Object valueToSet )
+  public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
     // value can't be set by the user
     return null;

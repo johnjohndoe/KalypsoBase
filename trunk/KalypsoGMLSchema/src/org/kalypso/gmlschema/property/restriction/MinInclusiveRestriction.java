@@ -42,14 +42,13 @@ package org.kalypso.gmlschema.property.restriction;
 
 /**
  * @author doemming
- *
  */
 public class MinInclusiveRestriction implements IRestriction
 {
 
   private final double m_minInclusive;
 
-  public MinInclusiveRestriction( double minInclusive)
+  public MinInclusiveRestriction( final double minInclusive )
   {
     m_minInclusive = minInclusive;
   }

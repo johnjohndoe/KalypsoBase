@@ -111,7 +111,7 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Polyg
         /* code below was taken from BCE-2D - bce_FarbFlaechenInAllenDreiecken and a little bit adapted */
 
         /* Prüfung für jede Kante und deren Knotenhöhen, Vergleich mit Intervallgrenzen von - bis */
-        /*TODO: adapt this code for planar polygons (at least quadrilaterals) */ 
+        /* TODO: adapt this code for planar polygons (at least quadrilaterals) */
         if( startValue <= positions[0].getZ() && positions[0].getZ() <= endValue && startValue <= positions[1].getZ() && positions[1].getZ() <= endValue && startValue <= positions[2].getZ()
             && positions[2].getZ() <= endValue )
         {
@@ -361,7 +361,7 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Polyg
 
   private boolean polygonLiesInsideColorClass( final double min, final double max, final double from, final double to )
   {
-    if( (from <= min && min <= to) || (from <= max && max <= to) || (min <= from && to <= max) )
+    if( from <= min && min <= to || from <= max && max <= to || min <= from && to <= max )
       return true;
     else
       return false;

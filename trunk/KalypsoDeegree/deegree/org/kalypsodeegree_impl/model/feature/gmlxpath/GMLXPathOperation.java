@@ -45,9 +45,9 @@ import java.util.regex.Pattern;
 public abstract class GMLXPathOperation implements IGMLXPathOperation
 {
 
-  private Pattern m_pattern;
+  private final Pattern m_pattern;
 
-  public GMLXPathOperation( String pattern )
+  public GMLXPathOperation( final String pattern )
   {
     m_pattern = Pattern.compile( pattern );
   }

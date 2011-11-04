@@ -48,9 +48,9 @@ public interface IRelationContentType extends IInitialize
 
   /** Returns true if linked objects are allowed for this relation. */
   public boolean isLinkable( );
-  
+
   /** Returns true if inlined objects are allowed for this relation. */
-  public boolean isInlineable();
+  public boolean isInlineable( );
 
   public IDocumentReference[] getDocumentReferences( );
 }

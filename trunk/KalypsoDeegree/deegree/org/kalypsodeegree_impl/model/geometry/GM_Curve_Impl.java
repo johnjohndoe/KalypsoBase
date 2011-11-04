@@ -201,10 +201,10 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   public int getCoordinateDimension( )
   {
     int srsDimension = 0;
-    for( GM_CurveSegment segment : m_segments )
+    for( final GM_CurveSegment segment : m_segments )
     {
-      GM_Position[] positions = segment.getPositions();
-      for( GM_Position position : positions )
+      final GM_Position[] positions = segment.getPositions();
+      for( final GM_Position position : positions )
         srsDimension = Math.max( srsDimension, position.getCoordinateDimension() );
     }
 
@@ -394,7 +394,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   @Override
   public GM_CurveSegment getCurveSegmentAt( final int index ) throws GM_Exception
   {
-    if( (index < 0) || (index > getNumberOfCurveSegments() - 1) )
+    if( index < 0 || index > getNumberOfCurveSegments() - 1 )
     {
       throw new GM_Exception( "invalid index/position to get a segment!" );
     }
@@ -418,7 +418,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   @Override
   public void setCurveSegmentAt( final GM_CurveSegment segment, final int index ) throws GM_Exception
   {
-    if( (index < 0) || (index > getNumberOfCurveSegments() - 1) )
+    if( index < 0 || index > getNumberOfCurveSegments() - 1 )
     {
       throw new GM_Exception( "invalid index/position to set a segment!" );
     }
@@ -442,7 +442,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
         throw new GM_Exception( "end-point of segment[i-1] doesn't match start-point of segment[i]!" );
       }
     }
-    else if( (index > 0) && (index < (getNumberOfCurveSegments() - 1)) )
+    else if( index > 0 && index < getNumberOfCurveSegments() - 1 )
     {
       final GM_Point p4 = getCurveSegmentAt( index + 1 ).getStartPoint();
       final GM_Point p5 = getCurveSegmentAt( index - 1 ).getEndPoint();
@@ -455,7 +455,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
         throw new GM_Exception( "end-point of segment[i-1 || i]  doesn't match start-point of segment[i || i+1]!" );
       }
     }
-    else if( index == (getNumberOfCurveSegments() - 1) )
+    else if( index == getNumberOfCurveSegments() - 1 )
     {
       final GM_Point p5 = getCurveSegmentAt( index - 1 ).getEndPoint();
 
@@ -490,7 +490,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   @Override
   public void insertCurveSegmentAt( final GM_CurveSegment segment, final int index ) throws GM_Exception
   {
-    if( (index < 0) || (index > getNumberOfCurveSegments() - 1) )
+    if( index < 0 || index > getNumberOfCurveSegments() - 1 )
     {
       throw new GM_Exception( "invalid index/position to insert a segment!" );
     }
@@ -514,7 +514,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
         throw new GM_Exception( "end-point of segment[i] doesn't match start-point of segment[i+1]!" );
       }
     }
-    else if( (index > 0) && (index < (getNumberOfCurveSegments() - 1)) )
+    else if( index > 0 && index < getNumberOfCurveSegments() - 1 )
     {
       final GM_Point p4 = getCurveSegmentAt( index + 1 ).getStartPoint();
       final GM_Point p5 = getCurveSegmentAt( index - 1 ).getEndPoint();
@@ -527,7 +527,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
         throw new GM_Exception( "end-point of segment[i-1 || i]  doesn't match start-point of segment[i || i+1]!" );
       }
     }
-    else if( index == (getNumberOfCurveSegments() - 1) )
+    else if( index == getNumberOfCurveSegments() - 1 )
     {
       final GM_Point p5 = getCurveSegmentAt( index - 1 ).getEndPoint();
 
@@ -583,7 +583,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   @Override
   public void deleteCurveSegmentAt( final int index ) throws GM_Exception
   {
-    if( (index < 0) || (index > getNumberOfCurveSegments() - 1) )
+    if( index < 0 || index > getNumberOfCurveSegments() - 1 )
     {
       throw new GM_Exception( "invalid index/position to remove a segment!" );
     }
@@ -611,7 +611,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   @Override
   public boolean isEmpty( )
   {
-    return (getNumberOfCurveSegments() == 0);
+    return getNumberOfCurveSegments() == 0;
   }
 
   /**
@@ -717,7 +717,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   {
     String ret = null;
     ret = "segments = " + m_segments + "\n";
-    ret += ("envelope = " + getEnvelope() + "\n");
+    ret += "envelope = " + getEnvelope() + "\n";
     return ret;
   }
 

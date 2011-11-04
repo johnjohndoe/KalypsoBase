@@ -57,25 +57,25 @@ public abstract class CRSSelectionListener implements ISelectionChangedListener
    * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
    */
   @Override
-  public final void selectionChanged( SelectionChangedEvent event )
+  public final void selectionChanged( final SelectionChangedEvent event )
   {
     /* Get the selection. */
-    ISelection selection = event.getSelection();
+    final ISelection selection = event.getSelection();
 
     /* If not empty and the right type, the code is told to the listeners. */
     if( !selection.isEmpty() && selection instanceof IStructuredSelection )
     {
       /* Cast. */
-      IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+      final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 
       /* Get the selected element. */
-      Object selectedElement = structuredSelection.getFirstElement();
+      final Object selectedElement = structuredSelection.getFirstElement();
 
       /* Check type. */
       if( selectedElement instanceof ICoordinateSystem )
       {
         /* Cast. */
-        ICoordinateSystem coordinateSystem = (ICoordinateSystem) selectedElement;
+        final ICoordinateSystem coordinateSystem = (ICoordinateSystem) selectedElement;
 
         /* Tell the code of the selected coordinate system to the listeners. */
         selectionChanged( coordinateSystem.getCode() );

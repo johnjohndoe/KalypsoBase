@@ -35,10 +35,10 @@
  */
 package org.kalypsodeegree_impl.model.feature.gmlxpath;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.xelement.IXElement;
@@ -64,9 +64,10 @@ public final class GMLXPathUtilities
   /**
    * query xPath for Feature
    */
-  public static Object query( final GMLXPath xPath, final Feature feature ) throws GMLXPathException
+  @SuppressWarnings("unchecked")
+  public static <T> T query( final GMLXPath xPath, final Feature feature ) throws GMLXPathException
   {
-    return getResultForSegment( xPath, feature, 0, false );
+    return (T) getResultForSegment( xPath, feature, 0, false );
   }
 
   /**
@@ -113,21 +114,35 @@ public final class GMLXPathUtilities
 
     if( newContext instanceof List< ? > )
     {
-      final List< ? > contextList = (List< ? >) newContext;
-      final List<Object> resultList = new ArrayList<Object>();
-      for( final Object object : contextList )
-      {
-        if( object instanceof Feature )
-        {
-          final Object result = getResultForSegment( xPath, object, segmentIndex + 1, !isFeatureTypeLevel );
-          if( result != null )
-            resultList.add( result );
-        }
-      }
+      return getResultForSegment( xPath, newContext, segmentIndex + 1, false );
 
-      if( resultList.size() == 1 )
-        return resultList.get( 0 );
-      return resultList;
+      // TODO: check if still needed;
+      // FIXME: this is dubious.... depend on the type of xpath, what do do now. Normally, we should just recurse
+// final List< ? > contextList = (List< ? >) newContext;
+// final List<Object> resultList = new ArrayList<Object>();
+// for( final Object object : contextList )
+// {
+// if( object instanceof Feature )
+// {
+// final Object result = getResultForSegment( xPath, object, segmentIndex + 1, !isFeatureTypeLevel );
+// if( result != null )
+// resultList.add( result );
+// }
+// }
+//
+// if( resultList.size() == 1 )
+// return resultList.get( 0 );
+// return resultList;
+    }
+
+    if( newContext instanceof IFeatureType )
+      return getResultForSegment( xPath, newContext, segmentIndex + 1, !isFeatureTypeLevel );
+
+    if( newContext instanceof IRelationType )
+    {
+      final IRelationType rt = (IRelationType) newContext;
+      final IFeatureType targetFeatureType = rt.getTargetFeatureType();
+      return getResultForSegment( xPath, targetFeatureType, segmentIndex + 1, !isFeatureTypeLevel );
     }
 
     // everything else is an error, as only feaures and featurelists can have subelements

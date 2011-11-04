@@ -38,11 +38,10 @@ package org.kalypsodeegree_impl.graphics.sld;
 import org.kalypsodeegree.graphics.sld.Style;
 
 /**
- *
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- *
+ * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
@@ -52,29 +51,29 @@ class Style_Impl implements Style
 
   /**
    * Creates a new Style_Impl object.
-   *
+   * 
    * @param name
    */
   Style_Impl( final String name )
   {
-    this.m_name = name;
+    m_name = name;
   }
 
   /**
    * The given Name is equivalent to the name of a WMS named style and is used to reference the style externally when an
    * SLD is used in library mode and identifies the named style to redefine when an SLD is inserted into a WMS.
-   *
+   * 
    * @return the name
    */
   @Override
-  public String getName()
+  public String getName( )
   {
     return m_name;
   }
 
   /**
    * Sets the name attribute's value of the Style.
-   *
+   * 
    * @param name
    *          the name of the style
    *          <p>
@@ -82,6 +81,6 @@ class Style_Impl implements Style
   @Override
   public void setName( final String name )
   {
-    this.m_name = name;
+    m_name = name;
   }
 }

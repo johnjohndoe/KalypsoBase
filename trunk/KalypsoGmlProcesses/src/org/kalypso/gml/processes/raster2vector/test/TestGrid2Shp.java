@@ -88,7 +88,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -245,7 +244,7 @@ public class TestGrid2Shp extends TestCase
     final Feature rootFeature = covCollWorkspace.getRootFeature();
     final ICoverageCollection covColl = (ICoverageCollection) rootFeature.getAdapter( ICoverageCollection.class );
 
-    final IRelationType parentRelation = (IRelationType) covColl.getFeatureType().getProperty( CoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
+    final IRelationType parentRelation = (IRelationType) covColl.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
     final Feature coverageFeature = covCollWorkspace.createFeature( covColl, parentRelation, ft );
     final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageFeature;
     covColl.getCoverages().add( coverage );

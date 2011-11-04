@@ -59,8 +59,8 @@ public interface IFeatureDelta
   public String getId( );
 
   /** The feature type of the feature this delta cooresponds to. */
-  public IFeatureType getFeatureType();
-  
+  public IFeatureType getFeatureType( );
+
   /**
    * Returns the parent delta.
    * 

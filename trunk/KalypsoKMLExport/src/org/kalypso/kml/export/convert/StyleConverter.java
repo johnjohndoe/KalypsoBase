@@ -43,7 +43,6 @@ package org.kalypso.kml.export.convert;
 import java.awt.Color;
 
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
-import org.kalypsodeegree.graphics.displayelements.GeometryDisplayElement;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Font;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
@@ -66,13 +65,12 @@ public final class StyleConverter
   {
   }
 
-  public static void convert( final Style style, final GeometryDisplayElement element ) throws FilterEvaluationException
+  public static void convert( final Style style, final Symbolizer symbolizer, final Feature feature ) throws FilterEvaluationException
   {
-    final Symbolizer symbolizer = element.getSymbolizer();
     if( symbolizer instanceof PolygonSymbolizer )
-      convert( (PolygonSymbolizer) symbolizer, element.getFeature(), style );
+      convert( (PolygonSymbolizer) symbolizer, feature, style );
     else if( symbolizer instanceof TextSymbolizer )
-      convert( (TextSymbolizer) symbolizer, element.getFeature(), style );
+      convert( (TextSymbolizer) symbolizer, feature, style );
     else
       throw new UnsupportedOperationException();
   }

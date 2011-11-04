@@ -91,7 +91,7 @@ public class ExportHMOOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("ExportHMOOperation_0"), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "ExportHMOOperation_0" ), e ); //$NON-NLS-1$
     }
   }
 }

@@ -48,7 +48,7 @@ public class MaxInclusiveRestriction implements IRestriction
 
   private final double m_maxInclusive;
 
-  public MaxInclusiveRestriction( double maxInclusive )
+  public MaxInclusiveRestriction( final double maxInclusive )
   {
     m_maxInclusive = maxInclusive;
   }

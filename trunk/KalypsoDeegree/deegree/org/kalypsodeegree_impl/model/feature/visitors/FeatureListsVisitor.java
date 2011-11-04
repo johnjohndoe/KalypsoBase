@@ -54,12 +54,10 @@ public abstract class FeatureListsVisitor implements FeatureVisitor
   public boolean visit( final Feature f )
   {
     final Object[] properties = f.getProperties();
-    for( int i = 0; i < properties.length; i++ )
+    for( final Object p : properties )
     {
-      final Object p = properties[i];
-
       if( p instanceof FeatureList )
-        visitList( (FeatureList)p );
+        visitList( (FeatureList) p );
     }
 
     return true;

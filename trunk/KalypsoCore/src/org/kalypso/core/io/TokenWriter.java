@@ -59,22 +59,22 @@ public class TokenWriter
   /**
    * The destination file.
    */
-  private File m_file;
+  private final File m_file;
 
   /**
    * The character, which separates the tokens.
    */
-  private String m_delim;
+  private final String m_delim;
 
   /**
    * The cnt of the tokens to be written.
    */
-  private int m_cnt;
+  private final int m_cnt;
 
   /**
    * This list collects all lists of tokens.
    */
-  private LinkedList<LinkedList<String>> m_allTokens;
+  private final LinkedList<LinkedList<String>> m_allTokens;
 
   /**
    * The constructor.
@@ -86,7 +86,7 @@ public class TokenWriter
    * @param cnt
    *          The cnt of the tokens to be written.
    */
-  public TokenWriter( File file, String delim, int cnt )
+  public TokenWriter( final File file, final String delim, final int cnt )
   {
     m_file = file;
     m_delim = delim;
@@ -109,11 +109,11 @@ public class TokenWriter
 
       for( int i = 0; i < m_allTokens.size(); i++ )
       {
-        LinkedList<String> row = m_allTokens.get( i );
+        final LinkedList<String> row = m_allTokens.get( i );
 
         for( int j = 0; j < row.size(); j++ )
         {
-          String col = row.get( j );
+          final String col = row.get( j );
 
           if( j < row.size() - 1 )
             bwr.write( col + m_delim );
@@ -141,10 +141,10 @@ public class TokenWriter
    * @param line
    *          The row, which will be added.
    */
-  public void addRow( String line ) throws Exception
+  public void addRow( final String line ) throws Exception
   {
     /* Tokenize the row. */
-    StringTokenizer tokenizer = new StringTokenizer( line, m_delim );
+    final StringTokenizer tokenizer = new StringTokenizer( line, m_delim );
 
     if( tokenizer.countTokens() == 0 )
       throw new Exception( "No tokens available with the delimiter of '" + m_delim + "'..." );
@@ -152,7 +152,7 @@ public class TokenWriter
     if( tokenizer.countTokens() != m_cnt )
       throw new Exception( "Not enough or to much tokens, needs " + String.valueOf( m_cnt ) + " tokens..." );
 
-    LinkedList<String> row = new LinkedList<String>();
+    final LinkedList<String> row = new LinkedList<String>();
     while( tokenizer.hasMoreTokens() )
       row.add( tokenizer.nextToken() );
 
@@ -165,7 +165,7 @@ public class TokenWriter
    * @param list
    *          The row, which will be added.
    */
-  public void addRow( LinkedList<String> list ) throws Exception
+  public void addRow( final LinkedList<String> list ) throws Exception
   {
     if( list.size() == 0 )
       throw new Exception( "No tokens available..." );

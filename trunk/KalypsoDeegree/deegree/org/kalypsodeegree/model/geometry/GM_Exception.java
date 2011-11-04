@@ -39,12 +39,12 @@ package org.kalypsodeegree.model.geometry;
 public class GM_Exception extends Exception
 {
 
-  public GM_Exception( String message, Exception e )
+  public GM_Exception( final String message, final Exception e )
   {
     super( message, e );
   }
 
-  public GM_Exception( String message )
+  public GM_Exception( final String message )
   {
     super( message );
   }

@@ -53,15 +53,15 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class ChangeFeaturesFromFeaturelist implements FeatureVisitor
 {
-  private final Properties m_propertyMap;
+  private final Properties m_properties;
 
   private final String m_sourceID;
 
   private final Map<Object, Feature> m_index;
 
-  public ChangeFeaturesFromFeaturelist( final FeatureList list, final Properties propertyMap, final String sourceID, final String targetID )
+  public ChangeFeaturesFromFeaturelist( final FeatureList list, final Properties mappings, final String sourceID, final String targetID )
   {
-    m_propertyMap = propertyMap;
+    m_properties = mappings;
     m_sourceID = sourceID;
 
     // index anhand der targetid erstellen
@@ -83,7 +83,7 @@ public class ChangeFeaturesFromFeaturelist implements FeatureVisitor
 
     try
     {
-      FeatureHelper.copyProperties( f, targetFeature, m_propertyMap );
+      FeatureHelper.copyProperties( f, targetFeature, m_properties );
     }
     catch( final Exception e )
     {

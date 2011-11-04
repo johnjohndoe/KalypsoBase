@@ -144,7 +144,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   @Override
   public void setMarksAndExtGraphics( final Object[] object )
   {
-    this.m_marksAndExtGraphics.clear();
+    m_marksAndExtGraphics.clear();
 
     if( object != null )
     {
@@ -211,7 +211,7 @@ public class Graphic_Impl implements Graphic, Marshallable
         throw new FilterEvaluationException( "Given value for parameter 'opacity' ('" + value + "') has invalid format!" );
       }
 
-      if( (opacityVal < 0.0) || (opacityVal > 1.0) )
+      if( opacityVal < 0.0 || opacityVal > 1.0 )
         throw new FilterEvaluationException( "Value for parameter 'opacity' (given: '" + value + "') must be between 0.0 and 1.0!" );
     }
 

@@ -52,7 +52,7 @@ public interface RasterSymbolizer extends Symbolizer
   ParameterValueType getOpacity( );
 
   void setOpacity( ParameterValueType opacity );
-  
+
   SortedMap<Double, ColorMapEntry> getColorMap( );
 
   void setColorMap( SortedMap<Double, ColorMapEntry> colorMap );
@@ -60,7 +60,7 @@ public interface RasterSymbolizer extends Symbolizer
   ShadedRelief getShadedRelief( );
 
   void setShadedRelief( final ShadedRelief shadedRelief );
-  
+
   /**
    * @param imageOutline
    *          Represents the 'ImageOutline' element of this symbolizer. Must be either a

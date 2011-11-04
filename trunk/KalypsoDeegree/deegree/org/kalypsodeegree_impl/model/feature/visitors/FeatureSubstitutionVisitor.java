@@ -84,6 +84,6 @@ public class FeatureSubstitutionVisitor implements FeatureVisitor
   public void setVisitor( final FeatureVisitor visitor )
   {
     m_visitor = visitor;
-    
+
   }
 }

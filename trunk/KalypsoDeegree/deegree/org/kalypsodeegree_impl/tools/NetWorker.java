@@ -45,10 +45,9 @@ import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLConnection;
 
-
 /**
  * Performs a HTTP request using the service URL submitted to the constructor
- *
+ * 
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
@@ -70,22 +69,22 @@ public class NetWorker
 
   /**
    * constructor for initializing a HTTP GET connection with UTF-8 as character encoding
-   *
+   * 
    * @param url
    *          URL to the net resource containing the URI
    */
   public NetWorker( final URL url )
   {
     Debug.debugMethodBegin( this, "NetWorker(String strUrl)" );
-    this.m_reqType = GET;
-    this.m_url = url;
-    this.m_encoding = "UTF-8";
+    m_reqType = GET;
+    m_url = url;
+    m_encoding = "UTF-8";
     Debug.debugMethodEnd();
   }
 
   /**
    * constructor for initializing a HTTP GET connection with a user defined encoding
-   *
+   * 
    * @param encoding
    *          desired character encoding
    * @param url
@@ -94,15 +93,15 @@ public class NetWorker
   public NetWorker( final String encoding, final URL url )
   {
     Debug.debugMethodBegin( this, "NetWorker(String strUrl)" );
-    this.m_reqType = GET;
-    this.m_url = url;
-    this.m_encoding = encoding;
+    m_reqType = GET;
+    m_url = url;
+    m_encoding = encoding;
     Debug.debugMethodEnd();
   }
 
   /**
    * constructor for initializing a HTTP POST connection with UTF-8 as character encoding
-   *
+   * 
    * @param url
    *          URL to the net resource (without URI parameters)
    * @param request
@@ -111,16 +110,16 @@ public class NetWorker
   public NetWorker( final URL url, final String request )
   {
     Debug.debugMethodBegin( this, "NetWorker(String strUrl)" );
-    this.m_reqType = POST;
-    this.m_url = url;
-    this.m_request = request;
-    this.m_encoding = "UTF-8";
+    m_reqType = POST;
+    m_url = url;
+    m_request = request;
+    m_encoding = "UTF-8";
     Debug.debugMethodEnd();
   }
 
   /**
    * constructor for initializing a HTTP POST connection with a user defined encoding
-   *
+   * 
    * @param encoding
    *          desired character encoding
    * @param url
@@ -131,10 +130,10 @@ public class NetWorker
   public NetWorker( final String encoding, final URL url, final String request )
   {
     Debug.debugMethodBegin( this, "NetWorker(String strUrl)" );
-    this.m_reqType = POST;
-    this.m_url = url;
-    this.m_request = request;
-    this.m_encoding = encoding;
+    m_reqType = POST;
+    m_url = url;
+    m_request = request;
+    m_encoding = encoding;
     Debug.debugMethodEnd();
   }
 
@@ -142,7 +141,7 @@ public class NetWorker
    * returns the content type of the response from the connected net resource. this method shall be called after
    * <tt>getInputStream</tt> or <tt>getDataAsByteArr</tt> has been called.
    */
-  public String getContentType()
+  public String getContentType( )
   {
     return contentType;
   }
@@ -150,7 +149,7 @@ public class NetWorker
   /**
    * sends the request that have been passed to the constructor without expecting to receive a response.
    */
-  public void sendRequest() throws IOException
+  public void sendRequest( ) throws IOException
   {
     Debug.debugMethodBegin( this, "getInputStream" );
 
@@ -162,7 +161,7 @@ public class NetWorker
     // sets the content type of the request
     connection.setRequestProperty( "Content-Type", "text/xml" );
 
-    if( ( m_reqType == POST ) && ( m_request != null ) )
+    if( m_reqType == POST && m_request != null )
     {
       connection.setDoOutput( true );
 
@@ -184,12 +183,11 @@ public class NetWorker
 
   /**
    * returns an <tt>InputStream</tt> from the et resource
-   *
+   * 
    * @return InputStream accessing the net resource
-   *
    * @throws IOException
    */
-  public InputStream getInputStream() throws IOException
+  public InputStream getInputStream( ) throws IOException
   {
     Debug.debugMethodBegin( this, "getInputStream" );
 
@@ -204,7 +202,7 @@ public class NetWorker
     // provide result stream
     InputStream is = null;
 
-    if( ( m_reqType == POST ) && ( m_request != null ) )
+    if( m_reqType == POST && m_request != null )
     {
       connection.setDoOutput( true );
 
@@ -247,15 +245,14 @@ public class NetWorker
 
   /**
    * Configures a URLConnection for Acces via proxy
-   *
+   * 
    * @TODO: move to URLConnectionUtilities-Class
    * @TODO: handle https
    */
   public static void configureProxy( final URLConnection connection )
   {
     final URL url = connection.getURL();
-    final PasswordAuthentication authentication = Authenticator.requestPasswordAuthentication( url.getHost(), null, url
-        .getPort(), url.getProtocol(), "Blubberdibla", url.getAuthority() );
+    final PasswordAuthentication authentication = Authenticator.requestPasswordAuthentication( url.getHost(), null, url.getPort(), url.getProtocol(), "Blubberdibla", url.getAuthority() );
 
     if( authentication != null )
     {
@@ -269,8 +266,7 @@ public class NetWorker
   public static boolean requiresAuthentification( final URLConnection connection )
   {
     final URL url = connection.getURL();
-    final PasswordAuthentication authentication = Authenticator.requestPasswordAuthentication( url.getHost(), null, url
-        .getPort(), url.getProtocol(), "Blubberdibla", url.getAuthority() );
+    final PasswordAuthentication authentication = Authenticator.requestPasswordAuthentication( url.getHost(), null, url.getPort(), url.getProtocol(), "Blubberdibla", url.getAuthority() );
     if( authentication != null )
       return true;
     return false;
@@ -278,12 +274,11 @@ public class NetWorker
 
   /**
    * performs the request and returns the result as a byte array.
-   *
+   * 
    * @param expectedDataSize
    *          size a the data in bytes expected to be returned from the net resource. this value will be replaced if the
    *          resource is able to return the available data size.
    * @return a byte array containing the content of the net resource
-   *
    * @throws IOException
    */
   public byte[] getDataAsByteArr( int expectedDataSize ) throws IOException
@@ -302,7 +297,7 @@ public class NetWorker
     int v = 0;
 
     // write result to a ByteArrayOutputStream
-    while( ( v = is.read() ) > -1 )
+    while( (v = is.read()) > -1 )
     {
       bos.write( v );
     }
@@ -319,11 +314,11 @@ public class NetWorker
   }
 
   /**
-   * Returns the original form of a <tt>URL</tt> as as <tt>String</tt>. Handles local filenames correctly, C:/foo
-   * is formatted as file:///C:/foo (and not as file:/C:/foo as returned by the toString () method of the <tt <URL</tt>
+   * Returns the original form of a <tt>URL</tt> as as <tt>String</tt>. Handles local filenames correctly, C:/foo is
+   * formatted as file:///C:/foo (and not as file:/C:/foo as returned by the toString () method of the <tt <URL</tt>
    * object.
    * <p>
-   *
+   * 
    * @param url
    *          <tt>URL</tt> to be converted
    * @return <tt>String</tt> representation of the given <tt>URL</tt>
@@ -337,7 +332,7 @@ public class NetWorker
       port = ":" + url.getPort();
     }
 
-    final String s = url.getProtocol() + "://" + url.getHost() + port + url.getPath();//+"?"+query;
+    final String s = url.getProtocol() + "://" + url.getHost() + port + url.getPath();// +"?"+query;
 
     return s;
   }

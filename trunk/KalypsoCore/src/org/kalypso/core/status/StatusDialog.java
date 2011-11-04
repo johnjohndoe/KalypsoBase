@@ -80,6 +80,11 @@ public class StatusDialog extends AbstractStatusDialog
     super( parentShell, status, dialogTitle, dialogButtonLabels, defaultIndex );
   }
 
+  public static void open( final Shell parentShell, final IStatus status, final String dialogTitle )
+  {
+    new StatusDialog( parentShell, status, dialogTitle ).open();
+  }
+
   /**
    * Set to <code>true</code>, if the dialog should show the status elements in a tree viewer. Else they are shown in a
    * table viewer (default).

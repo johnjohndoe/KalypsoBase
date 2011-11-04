@@ -67,8 +67,8 @@ public class CachingGeoGrid extends AbstractDelegatingGeoGrid
   {
     synchronized( this )
     {
-    if( m_cacheMap == null )
-    {
+      if( m_cacheMap == null )
+      {
         final IGeoGrid delegate = getDelegate();
         final int cacheSize = Math.max( delegate.getSizeX(), delegate.getSizeY() ) * 10;
         // REMARK: we give a long period, as we cannod void the registration of the reaper-timer

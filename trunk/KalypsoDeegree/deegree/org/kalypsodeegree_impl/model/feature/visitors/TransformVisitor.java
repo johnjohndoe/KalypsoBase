@@ -121,12 +121,12 @@ public class TransformVisitor implements FeatureVisitor
     }
   }
 
-  private boolean transformProperty( Feature f, IPropertyType ftp ) throws Exception
+  private boolean transformProperty( final Feature f, final IPropertyType ftp ) throws Exception
   {
     if( ftp.isVirtual() )
       return false;
 
-    if( (f instanceof Feature_Impl) && ((Feature_Impl) f).isFunctionProperty( ftp ) )
+    if( f instanceof Feature_Impl && ((Feature_Impl) f).isFunctionProperty( ftp ) )
       return false;
 
     if( !GeometryUtilities.isGeometry( ftp ) )
@@ -138,7 +138,7 @@ public class TransformVisitor implements FeatureVisitor
     return transformNonList( f, ftp );
   }
 
-  private boolean transformNonList( Feature f, IPropertyType ftp ) throws Exception
+  private boolean transformNonList( final Feature f, final IPropertyType ftp ) throws Exception
   {
     final GM_Object object = (GM_Object) f.getProperty( ftp );
     final GM_Object transformedGeom = transformProperty( object );
@@ -147,7 +147,7 @@ public class TransformVisitor implements FeatureVisitor
     return object != transformedGeom;
   }
 
-  private boolean transformList( Feature f, IPropertyType ftp ) throws Exception
+  private boolean transformList( final Feature f, final IPropertyType ftp ) throws Exception
   {
     boolean wasTransformed = false;
     final List<GM_Object> geomList = (List<GM_Object>) f.getProperty( ftp );
@@ -157,7 +157,7 @@ public class TransformVisitor implements FeatureVisitor
       final GM_Object geom = geomList.get( i );
       final GM_Object transformedGeom = transformProperty( geom );
 
-      wasTransformed = wasTransformed | (geom != transformedGeom);
+      wasTransformed = wasTransformed | geom != transformedGeom;
 
       geomList.set( i, transformedGeom );
     }
@@ -165,7 +165,7 @@ public class TransformVisitor implements FeatureVisitor
     return wasTransformed;
   }
 
-  private void invalidateFeatureList( Feature f )
+  private void invalidateFeatureList( final Feature f )
   {
     // HACK: we invalidate the complete geo-index, in order to make sure the complete bbox of the list is
     // correctly set.

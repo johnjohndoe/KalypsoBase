@@ -55,7 +55,7 @@ public class CoverageViewerFilter extends ViewerFilter
    *      java.lang.Object)
    */
   @Override
-  public boolean select( Viewer viewer, Object parentElement, Object element )
+  public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
     if( element instanceof ICoverageCollection )
     {

@@ -73,7 +73,7 @@ import org.kalypso.gmlschema.xml.TypeReference;
  *      <attributeGroup ref="gml:AssociationAttributeGroup"/>
  *  </complexType>
  * <code>
- *
+ * 
  * @author Gernot Belger
  */
 public class GeometryPropertyBuilder extends AbstractBuilder
@@ -173,7 +173,6 @@ public class GeometryPropertyBuilder extends AbstractBuilder
     return results.toArray( new QName[results.size()] );
   }
 
-
   /**
    * Finds the complex definition of the given element, if any.
    */
@@ -226,7 +225,6 @@ public class GeometryPropertyBuilder extends AbstractBuilder
 
     return new QName( gmlSchema.getTargetNamespace(), element.getName() );
   }
-
 
   /**
    * @see org.kalypso.gmlschema.builder.IBuilder#replaces(org.kalypso.gmlschema.builder.IBuilder)

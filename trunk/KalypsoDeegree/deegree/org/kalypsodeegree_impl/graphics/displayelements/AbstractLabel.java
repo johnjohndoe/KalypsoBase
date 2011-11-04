@@ -272,7 +272,7 @@ abstract class AbstractLabel implements Label
         BasicStroke bs = null;
         final float strokeWidth = (float) stroke.getWidth( m_feature );
 
-        if( (dash == null) || (dash.length < 2) )
+        if( dash == null || dash.length < 2 )
         {
           bs = new BasicStroke( strokeWidth );
         }

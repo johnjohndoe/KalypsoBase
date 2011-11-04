@@ -61,7 +61,7 @@ public class LabelPlacement_Impl implements LabelPlacement, Marshallable
   /**
    * constructor initializing the class with the <LabelPlacement>
    */
-  public LabelPlacement_Impl( PointPlacement pointPlacement )
+  public LabelPlacement_Impl( final PointPlacement pointPlacement )
   {
     setPointPlacement( pointPlacement );
   }
@@ -69,7 +69,7 @@ public class LabelPlacement_Impl implements LabelPlacement, Marshallable
   /**
    * constructor initializing the class with the <LabelPlacement>
    */
-  public LabelPlacement_Impl( LinePlacement linePlacement )
+  public LabelPlacement_Impl( final LinePlacement linePlacement )
   {
     setLinePlacement( linePlacement );
   }
@@ -81,7 +81,7 @@ public class LabelPlacement_Impl implements LabelPlacement, Marshallable
    * @return the pointplacement for the label
    */
   @Override
-  public PointPlacement getPointPlacement()
+  public PointPlacement getPointPlacement( )
   {
     return pointPlacement;
   }
@@ -93,7 +93,7 @@ public class LabelPlacement_Impl implements LabelPlacement, Marshallable
    *          the pointplacement for the label
    */
   @Override
-  public void setPointPlacement( PointPlacement pointPlacement )
+  public void setPointPlacement( final PointPlacement pointPlacement )
   {
     this.pointPlacement = pointPlacement;
     linePlacement = null;
@@ -106,7 +106,7 @@ public class LabelPlacement_Impl implements LabelPlacement, Marshallable
    * @return the lineplacement for the label
    */
   @Override
-  public LinePlacement getLinePlacement()
+  public LinePlacement getLinePlacement( )
   {
     return linePlacement;
   }
@@ -118,7 +118,7 @@ public class LabelPlacement_Impl implements LabelPlacement, Marshallable
    *          the lineplacement for the label
    */
   @Override
-  public void setLinePlacement( LinePlacement linePlacement )
+  public void setLinePlacement( final LinePlacement linePlacement )
   {
     this.linePlacement = linePlacement;
     pointPlacement = null;
@@ -130,19 +130,19 @@ public class LabelPlacement_Impl implements LabelPlacement, Marshallable
    * @return xml representation of the Font
    */
   @Override
-  public String exportAsXML()
+  public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
-    StringBuffer sb = new StringBuffer( 1000 );
+    final StringBuffer sb = new StringBuffer( 1000 );
     sb.append( "<LabelPlacement>" );
     if( pointPlacement != null )
     {
-      sb.append( ( (Marshallable)pointPlacement ).exportAsXML() );
+      sb.append( ((Marshallable) pointPlacement).exportAsXML() );
     }
     else if( linePlacement != null )
     {
-      sb.append( ( (Marshallable)linePlacement ).exportAsXML() );
+      sb.append( ((Marshallable) linePlacement).exportAsXML() );
     }
     sb.append( "</LabelPlacement>" );
 

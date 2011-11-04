@@ -36,29 +36,30 @@
 package org.kalypsodeegree.graphics.displayelements;
 
 /**
- * Interface for classes that decorate a {@link DisplayElement}
- * to change (in general augments) it drawing behavior.
- * 
- * It is specialy use in {@link org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory#buildDisplayElement(org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.graphics.sld.Symbolizer, org.kalypsodeegree.model.feature.GMLWorkspace)}
- * in association with the adapter framework to automaticaly decorate
- * the configured display element with a feature specific display element 
+ * Interface for classes that decorate a {@link DisplayElement} to change (in general augments) it drawing behavior. It
+ * is specialy use in
+ * {@link org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory#buildDisplayElement(org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.graphics.sld.Symbolizer, org.kalypsodeegree.model.feature.GMLWorkspace)}
+ * in association with the adapter framework to automaticaly decorate the configured display element with a feature
+ * specific display element
  * 
  * @author Patrice Congo
  * @see DisplayElement
  * @see org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory
- *
  */
 public interface DisplayElementDecorator extends DisplayElement
 {
   /**
    * Sets the display to decorate
-   * @param decorated the display to decorate
+   * 
+   * @param decorated
+   *          the display to decorate
    */
-  public void setDecorated(DisplayElement decorated);
-  
+  public void setDecorated( DisplayElement decorated );
+
   /**
    * To get the {@link DisplayElement} which is being decorated
+   * 
    * @return the decorated display element
    */
-  public DisplayElement getDecorated();
+  public DisplayElement getDecorated( );
 }

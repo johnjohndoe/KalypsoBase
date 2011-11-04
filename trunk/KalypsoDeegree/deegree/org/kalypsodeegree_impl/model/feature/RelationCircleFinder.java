@@ -59,7 +59,7 @@ public class RelationCircleFinder
   /**
    *  
    */
-  public RelationCircleFinder( GMLWorkspace workspace, Feature testFeature )
+  public RelationCircleFinder( final GMLWorkspace workspace, final Feature testFeature )
   {
     m_workspace = workspace;
     m_testFeature = testFeature;
@@ -75,10 +75,9 @@ public class RelationCircleFinder
     final List<List<Feature>> result = new ArrayList<List<Feature>>();
     list.add( feature );
     final Feature[] linkedFeatures = getLinkedFeatures( feature );
-    for( int i = 0; i < linkedFeatures.length; i++ )
+    for( final Feature linkFeature : linkedFeatures )
     {
       final List<Feature> newList = new ArrayList<Feature>( list );
-      final Feature linkFeature = linkedFeatures[i];
       if( linkFeature == m_testFeature )
         result.add( newList );
       else if( list.contains( linkFeature ) )
@@ -90,20 +89,19 @@ public class RelationCircleFinder
       {
         final List<Feature>[] lists = findCircle( linkFeature, newList );
         result.addAll( java.util.Arrays.asList( lists ) ); // TODO modified from kalypso.contribs.java.util.Arrays to
-                                                            // java.util.Arrays: check if this is ok
+                                                           // java.util.Arrays: check if this is ok
       }
     }
     return result.toArray( new List[result.size()] );
   }
 
-  private Feature[] getLinkedFeatures( Feature feature )
+  private Feature[] getLinkedFeatures( final Feature feature )
   {
     final List result = new ArrayList();
-    IFeatureType featureType = feature.getFeatureType();
-    IPropertyType[] properties = featureType.getProperties();
-    for( int i = 0; i < properties.length; i++ )
+    final IFeatureType featureType = feature.getFeatureType();
+    final IPropertyType[] properties = featureType.getProperties();
+    for( final IPropertyType property : properties )
     {
-      IPropertyType property = properties[i];
       if( property instanceof IRelationType )
       {
         final IRelationType linkPT = (IRelationType) property;

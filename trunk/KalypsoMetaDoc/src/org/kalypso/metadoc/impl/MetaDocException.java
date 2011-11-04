@@ -47,22 +47,22 @@ package org.kalypso.metadoc.impl;
  */
 public class MetaDocException extends Exception
 {
-  public MetaDocException()
+  public MetaDocException( )
   {
     super();
   }
 
-  public MetaDocException( String message )
+  public MetaDocException( final String message )
   {
     super( message );
   }
 
-  public MetaDocException( Throwable cause )
+  public MetaDocException( final Throwable cause )
   {
     super( cause );
   }
 
-  public MetaDocException( String message, Throwable cause )
+  public MetaDocException( final String message, final Throwable cause )
   {
     super( message, cause );
   }

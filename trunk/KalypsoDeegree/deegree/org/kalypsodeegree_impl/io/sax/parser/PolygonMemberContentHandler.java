@@ -49,7 +49,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-
 /**
  * A content handler that parses a gml:pointMember property.<br>
  * 

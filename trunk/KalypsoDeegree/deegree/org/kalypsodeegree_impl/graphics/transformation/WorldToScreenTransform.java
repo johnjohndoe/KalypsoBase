@@ -129,7 +129,7 @@ public class WorldToScreenTransform implements GeoTransform
 
     m_sourceRect = rect;
 
-    if( (m_sourceRect != null) && (m_destRect != null) )
+    if( m_sourceRect != null && m_destRect != null )
     {
       calculateQX();
       calculateQY();

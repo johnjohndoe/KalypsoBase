@@ -74,7 +74,7 @@ public class GmlParsingTester extends TestCase
     super.setUp();
 
     m_saxFactory.setNamespaceAware( true );
-  }  
+  }
 
   protected GMLWorkspace readGml( final String location ) throws IOException, ParserConfigurationException, SAXException, GMLException
   {
@@ -101,7 +101,7 @@ public class GmlParsingTester extends TestCase
     final SAXParser saxParser = m_saxFactory.newSAXParser();
     // make namespace-prefxes visible to content handler
     // used to allow necessary schemas from gml document
-//    saxParser.setProperty( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE );
+// saxParser.setProperty( "http://xml.org/sax/features/namespace-prefixes", Boolean.TRUE );
     final XMLReader reader = saxParser.getXMLReader();
 
     // TODO: also set an error handler here
@@ -114,5 +114,5 @@ public class GmlParsingTester extends TestCase
     reader.parse( inputSource );
 
     return exceptionHandler.getWorkspace();
-  }  
+  }
 }

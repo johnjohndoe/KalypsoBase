@@ -66,9 +66,9 @@ public abstract class Node
    * @param pageFile
    *          PageFile zum Knoten gehörende PageFile
    */
-  public Node( int pageNumber, PageFile pageFile )
+  public Node( final int pageNumber, final PageFile pageFile )
   {
-    this.file = pageFile;
+    file = pageFile;
     this.pageNumber = pageNumber;
     parentNode = 0;
     hyperBBs = new HyperBoundingBox[file.getCapacity()];
@@ -111,7 +111,7 @@ public abstract class Node
    * 
    * @return AbstractNode Vater des aktuellen Knotens.
    */
-  public Node getParent()
+  public Node getParent( )
   {
     Node node = null;
 
@@ -119,7 +119,7 @@ public abstract class Node
     {
       node = file.readNode( parentNode );
     }
-    catch( PageFileException e )
+    catch( final PageFileException e )
     {
       System.out.println( "PageFileException: AbstractNode.getParent() - readNode" );
     }
@@ -132,7 +132,7 @@ public abstract class Node
    * 
    * @return int Page-Nummer
    */
-  public int getPageNumber()
+  public int getPageNumber( )
   {
     return pageNumber;
   }
@@ -143,9 +143,9 @@ public abstract class Node
    * @param number
    *          Page-Nummer
    */
-  public void setPageNumber( int number )
+  public void setPageNumber( final int number )
   {
-    this.pageNumber = number;
+    pageNumber = number;
   }
 
   /**
@@ -153,7 +153,7 @@ public abstract class Node
    * 
    * @return int belegter Platz im Knoten
    */
-  public int getUsedSpace()
+  public int getUsedSpace( )
   {
     return counter;
   }
@@ -163,7 +163,7 @@ public abstract class Node
    * 
    * @return HyperBoundingBox UnionMinBB *
    */
-  public HyperBoundingBox getUnionMinBB()
+  public HyperBoundingBox getUnionMinBB( )
   {
     return unionMinBB;
   }
@@ -171,12 +171,12 @@ public abstract class Node
   /**
    *  
    */
-  protected void updateNodeBoundingBox()
+  protected void updateNodeBoundingBox( )
   {
-    this.unionMinBB = HyperBoundingBox.getNullHyperBoundingBox( file.getDimension() );
+    unionMinBB = HyperBoundingBox.getNullHyperBoundingBox( file.getDimension() );
 
-    for( int i = 0; i < this.getUsedSpace(); i++ )
-      this.unionMinBB = this.unionMinBB.unionBoundingBox( this.hyperBBs[i] );
+    for( int i = 0; i < getUsedSpace(); i++ )
+      unionMinBB = unionMinBB.unionBoundingBox( hyperBBs[i] );
   }
 
   /**
@@ -186,7 +186,7 @@ public abstract class Node
    * @return HyperBoundingBox[] Boxes der Einträge
    * @see #getUsedSpace()
    */
-  public HyperBoundingBox[] getHyperBoundingBoxes()
+  public HyperBoundingBox[] getHyperBoundingBoxes( )
   {
     return hyperBBs;
   }
@@ -198,7 +198,7 @@ public abstract class Node
    *          des Eintrages
    * @return HyperBoundingBox Box für den Eintrag
    */
-  public HyperBoundingBox getHyperBoundingBox( int index )
+  public HyperBoundingBox getHyperBoundingBox( final int index )
   {
     return hyperBBs[index];
   }
@@ -208,7 +208,7 @@ public abstract class Node
    * 
    * @return boolean true, wenn root
    */
-  public boolean isRoot()
+  public boolean isRoot( )
   {
     return pageNumber == 0;
   }
@@ -219,13 +219,13 @@ public abstract class Node
    * @see java.lang.Object#clone()
    */
   @Override
-  public abstract Object clone();
+  public abstract Object clone( );
 
   /**
    * String-Repräsentation des Knotens
    */
   @Override
-  public String toString()
+  public String toString( )
   {
     String str = "";
 

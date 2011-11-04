@@ -43,6 +43,7 @@ package org.kalypso.core.catalog.urn;
 /**
  * URNGenerator generates well known URNs for objects. In combination with the usage of catalog-resolvers well-known
  * URNs can be used to build repositories of well known resources
+ * 
  * @author doemming
  */
 public interface IURNGenerator
@@ -57,7 +58,7 @@ public interface IURNGenerator
    * support the supporting class. <br>
    * Example: <br>
    * URNGenerator for the class IFeatureType can produce URNs for objects of IFeatureType, but also for QNames
-   *
+   * 
    * @return true if this is a urn-generator for the object
    */
   public boolean isURNGeneratorFor( final Object object );
@@ -65,7 +66,7 @@ public interface IURNGenerator
   /**
    * generates the proper URN for the object<br>
    * the URN can be used as id to put a uri into the catalog or get a uri from a catalog
-   *
+   * 
    * @return urn for object
    */
   public String generateURNFor( final Object object );
@@ -76,7 +77,7 @@ public interface IURNGenerator
    * e.g. give me all FeatureTypeStyles that are available for a special FeatureType<br>
    * this might return "urn:ogc:gml:featuretype:ftNamespace:ftLocalname:sld:*" <br>
    * the returned URNPattern can be used with the Catalog<br>
-   *
+   * 
    * @param related
    * @return URNPattern
    */
@@ -88,7 +89,7 @@ public interface IURNGenerator
    * e.g. give me the standard FeatureTypeStyles that is available for a special FeatureType<br>
    * this might return "urn:ogc:gml:featuretype:ftNamespace:ftLocalname:sld:default" <br>
    * the returned URN can be used with the Catalog<br>
-   *
+   * 
    * @param related
    * @return URNPattern
    */

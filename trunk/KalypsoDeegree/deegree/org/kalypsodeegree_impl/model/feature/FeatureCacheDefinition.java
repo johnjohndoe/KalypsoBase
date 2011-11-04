@@ -74,7 +74,7 @@ public class FeatureCacheDefinition
       m_dirtyMap.put( dependsOnName, new QName[] { cachedProperty } );
 
     final QName[] dependencies = m_dirtyMap.get( dependsOnName );
-    final QName[] newDependencies = (QName[]) ArrayUtils.add( dependencies, cachedProperty );
+    final QName[] newDependencies = ArrayUtils.add( dependencies, cachedProperty );
     m_dirtyMap.put( dependsOnName, newDependencies );
   }
 

@@ -147,7 +147,6 @@ class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements Po
     final int x = (int) Math.ceil( projection.getDestX( source.getX() ) );
     final int y = (int) Math.ceil( projection.getDestY( source.getY() ) );
 
-
     final int size = graphic == null ? defaultImg.getWidth( null ) : graphic.getNormalizedSize( feature, uom, projection );
 
     /* Center graphics context on middle of excepted image and rotate according to rotation. */

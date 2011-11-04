@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree.model.typeHandler;
 
-
 /**
  * @author Dirk Kuch
  */
@@ -74,7 +73,7 @@ public class XsdBaseTypeHandlerBoolean extends XsdBaseTypeHandler<Boolean>
   @Override
   public int compare( final Boolean o1, final Boolean o2 )
   {
-    if( (o1 == null) && (o2 == null) )
+    if( o1 == null && o2 == null )
     {
       return 0; // equals
     }

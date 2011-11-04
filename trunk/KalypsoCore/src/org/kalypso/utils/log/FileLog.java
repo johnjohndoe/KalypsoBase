@@ -63,12 +63,12 @@ public class FileLog implements ILog
   /**
    * The date format.
    */
-  private DateFormat m_df;
+  private final DateFormat m_df;
 
   /**
    * The log file. May not be null.
    */
-  private File m_file;
+  private final File m_file;
 
   /**
    * The constructor.
@@ -76,7 +76,7 @@ public class FileLog implements ILog
    * @param file
    *          The log file. May not be null.
    */
-  public FileLog( File file )
+  public FileLog( final File file )
   {
     /* The log file may not be null. */
     Assert.isNotNull( file );
@@ -89,7 +89,7 @@ public class FileLog implements ILog
    * @see org.eclipse.core.runtime.ILog#addLogListener(org.eclipse.core.runtime.ILogListener)
    */
   @Override
-  public void addLogListener( ILogListener listener )
+  public void addLogListener( final ILogListener listener )
   {
   }
 
@@ -97,7 +97,7 @@ public class FileLog implements ILog
    * @see org.eclipse.core.runtime.ILog#removeLogListener(org.eclipse.core.runtime.ILogListener)
    */
   @Override
-  public void removeLogListener( ILogListener listener )
+  public void removeLogListener( final ILogListener listener )
   {
   }
 
@@ -114,7 +114,7 @@ public class FileLog implements ILog
    * @see org.eclipse.core.runtime.ILog#log(org.eclipse.core.runtime.IStatus)
    */
   @Override
-  public void log( IStatus status )
+  public void log( final IStatus status )
   {
     /* Append one line. */
     appendLine( m_file, status );
@@ -128,7 +128,7 @@ public class FileLog implements ILog
    * @param status
    *          The status.
    */
-  private void appendLine( File file, IStatus status )
+  private void appendLine( final File file, final IStatus status )
   {
     BufferedWriter writer = null;
 
@@ -137,7 +137,7 @@ public class FileLog implements ILog
       writer = new BufferedWriter( new FileWriter( file, true ) );
       writer.write( String.format( "%S - %s%n", m_df.format( new Date() ), status.getMessage() ) );
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       ex.printStackTrace();
     }

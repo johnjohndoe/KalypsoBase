@@ -174,7 +174,6 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
       m_actualWidget.setSelection( selection );
   }
 
-
   // MouseAdapter
 
   // FIXME: not supported by SWT
@@ -188,7 +187,6 @@ public class SwtWidgetManager implements IWidgetManager, MouseListener, MouseMov
 // if( widget != null )
 // widget.keyTyped( e );
 // }
-
 
   // /////////// SWT /////////////
 

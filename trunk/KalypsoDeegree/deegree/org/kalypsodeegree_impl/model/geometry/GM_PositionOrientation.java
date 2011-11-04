@@ -102,7 +102,7 @@ public class GM_PositionOrientation
    */
   public static TYPE getPolygonOrientation( final GM_Position[] pos ) throws GM_PositionOrientationException
   {
-    if( (pos == null) || (pos.length < 3) || !pos[0].equals( pos[pos.length - 1] ) )
+    if( pos == null || pos.length < 3 || !pos[0].equals( pos[pos.length - 1] ) )
       LOG.warning( "unable to filter positions: position do not form a ring" );
 
     // first find rightmost lowest vertex of the polygon

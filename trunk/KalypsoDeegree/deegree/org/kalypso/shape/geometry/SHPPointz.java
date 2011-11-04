@@ -144,7 +144,7 @@ public class SHPPointz implements ISHPPoint
   @Override
   public String toString( )
   {
-    return "SHPPOINTZ" + "[" + this.x + "; " + this.y + "; " + this.z + "; " + this.m + "]";
+    return "SHPPOINTZ" + "[" + x + "; " + y + "; " + z + "; " + m + "]";
   }
 
   @Override

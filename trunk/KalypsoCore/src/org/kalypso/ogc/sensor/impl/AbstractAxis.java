@@ -44,6 +44,7 @@ package org.kalypso.ogc.sensor.impl;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 /**
  * Provides the default implementation for equals() and hashCode() and toString().
@@ -67,7 +68,13 @@ public abstract class AbstractAxis implements IAxis
     final IAxis other = (IAxis) obj;
     final EqualsBuilder builder = new EqualsBuilder();
     builder.append( getDataClass(), other.getDataClass() ).append( isKey(), other.isKey() ).append( getType(), other.getType() ).append( getUnit(), other.getUnit() );
-    builder.append( getName(), other.getName() );
+
+    // TRICK: hässlich, aber notwendig: der Label muss auch berücksichtigt werden wenn es sich um kalypso-status
+    // Achsen handelt, sonst sind sie alle gleich.
+    // Es ist sicherlich nicht schön dass plötzlich DefaultAxis von KalypsoStatusUtils abhängig ist, aber
+    // so ist das Leben. Hier besteht ein großes Refaktoring Bedarf.
+    if( KalypsoStatusUtils.isStatusAxis( this ) )
+      builder.append( getName(), other.getName() );
 
     return builder.isEquals();
   }

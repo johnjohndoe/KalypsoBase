@@ -56,12 +56,12 @@ public class SHPMultiPointz implements ISHPGeometry
 
   public final int numPoints;
 
-  private SHPEnvelope m_envelope;
+  private final SHPEnvelope m_envelope;
 
   /**
    * constructor: recieves a stream <BR>
    */
-  public SHPMultiPointz( byte[] recBuf )
+  public SHPMultiPointz( final byte[] recBuf )
   {
     // bounding box
     m_envelope = ShapeUtils.readBox( recBuf, 4 );
@@ -74,13 +74,13 @@ public class SHPMultiPointz implements ISHPGeometry
     for( int i = 0; i < numPoints; i++ )
     {
       // get x out of recordbuffer
-      double x = ByteUtils.readLEDouble( recBuf, 40 + i * 16 );
+      final double x = ByteUtils.readLEDouble( recBuf, 40 + i * 16 );
       // get y out of recordbuffer
-      double y = ByteUtils.readLEDouble( recBuf, 40 + i * 16 + 8 );
+      final double y = ByteUtils.readLEDouble( recBuf, 40 + i * 16 + 8 );
 
       // at last the z-values of the pointsz...
-      int byteposition = ShapeConst.SHAPE_FILE_HEADER_LENGTH + (40 + numPoints * 16) + 16 + (8 * numPoints) + (8 * i);
-      double z = ByteUtils.readLEDouble( recBuf, byteposition );
+      final int byteposition = ShapeConst.SHAPE_FILE_HEADER_LENGTH + 40 + numPoints * 16 + 16 + 8 * numPoints + 8 * i;
+      final double z = ByteUtils.readLEDouble( recBuf, byteposition );
 
       pointsz[i] = new SHPPointz( x, y, z, 0.0 );
     }
@@ -93,7 +93,7 @@ public class SHPMultiPointz implements ISHPGeometry
    * constructor: recieves an array of gm_points
    */
 
-  public SHPMultiPointz( GM_MultiPoint multipointz )
+  public SHPMultiPointz( final GM_MultiPoint multipointz )
   {
     double xmin = multipointz.getEnvelope().getMin().getX();
     double xmax = multipointz.getEnvelope().getMax().getX();
@@ -132,7 +132,7 @@ public class SHPMultiPointz implements ISHPGeometry
         zmin = pointsz[i].getZ();
       }
     }
-    
+
     zrange = new SHPZRange( zmin, zmax );
     m_envelope = new SHPEnvelope( xmin, xmax, ymin, ymax );
   }
@@ -160,55 +160,55 @@ public class SHPMultiPointz implements ISHPGeometry
 
     offset += 4;
     // save offset of the bounding box (filled later)
-    int tmp = offset;
+    final int tmp = offset;
 
     // increment offset with size of the bounding box
-    offset += (4 * 8);
+    offset += 4 * 8;
 
     // write number of points
     ByteUtils.writeLEInt( byteArray, offset, pointsz.length );
 
     offset += 4;
 
-    for( int i = 0; i < pointsz.length; i++ )
+    for( final SHPPointz element : pointsz )
     {
 
       // calculate bounding box
-      if( pointsz[i].getX() > xmax )
+      if( element.getX() > xmax )
       {
-        xmax = pointsz[i].getX();
+        xmax = element.getX();
       }
-      else if( pointsz[i].getX() < xmin )
+      else if( element.getX() < xmin )
       {
-        xmin = pointsz[i].getX();
+        xmin = element.getX();
       }
 
-      if( pointsz[i].getY() > ymax )
+      if( element.getY() > ymax )
       {
-        ymax = pointsz[i].getY();
+        ymax = element.getY();
       }
-      else if( pointsz[i].getY() < ymin )
+      else if( element.getY() < ymin )
       {
-        ymin = pointsz[i].getY();
+        ymin = element.getY();
       }
 
       // calculate z-range
-      if( pointsz[i].getZ() > zmax )
+      if( element.getZ() > zmax )
       {
-        zmax = pointsz[i].getZ();
+        zmax = element.getZ();
       }
-      else if( pointsz[i].getZ() < zmin )
+      else if( element.getZ() < zmin )
       {
-        zmin = pointsz[i].getZ();
+        zmin = element.getZ();
       }
 
       // write x-coordinate
-      ByteUtils.writeLEDouble( byteArray, offset, pointsz[i].getX() );
+      ByteUtils.writeLEDouble( byteArray, offset, element.getX() );
 
       offset += 8;
 
       // write y-coordinate
-      ByteUtils.writeLEDouble( byteArray, offset, pointsz[i].getY() );
+      ByteUtils.writeLEDouble( byteArray, offset, element.getY() );
 
       offset += 8;
 
@@ -227,19 +227,19 @@ public class SHPMultiPointz implements ISHPGeometry
     ByteUtils.writeLEDouble( byteArray, offset, ymax );
 
     // jump forward to zmin, zmax
-    offset = start + 40 + (16 * pointsz.length);
+    offset = start + 40 + 16 * pointsz.length;
 
     // write z-range to the byte array
     ByteUtils.writeLEDouble( byteArray, offset, zmin );
     offset += 8;
     ByteUtils.writeLEDouble( byteArray, offset, zmax );
 
-    for( int i = 0; i < pointsz.length; i++ )
+    for( final SHPPointz element : pointsz )
     {
       offset += 8;
 
       // write z-coordinate
-      ByteUtils.writeLEDouble( byteArray, offset, pointsz[i].getZ() );
+      ByteUtils.writeLEDouble( byteArray, offset, element.getZ() );
     }
 
     return byteArray;
@@ -251,7 +251,7 @@ public class SHPMultiPointz implements ISHPGeometry
   @Override
   public int size( )
   {
-    return 40 + pointsz.length * 16 + 16 + (8 * numPoints);
+    return 40 + pointsz.length * 16 + 16 + 8 * numPoints;
   }
 
   /**

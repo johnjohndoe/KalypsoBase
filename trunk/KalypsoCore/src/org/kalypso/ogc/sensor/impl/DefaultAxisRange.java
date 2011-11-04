@@ -63,7 +63,7 @@ public class DefaultAxisRange implements IAxisRange
    * @see org.kalypso.ogc.sensor.IAxisRange#getLower()
    */
   @Override
-  public Object getLower()
+  public Object getLower( )
   {
     return m_from;
   }
@@ -72,7 +72,7 @@ public class DefaultAxisRange implements IAxisRange
    * @see org.kalypso.ogc.sensor.IAxisRange#getUpper()
    */
   @Override
-  public Object getUpper()
+  public Object getUpper( )
   {
     return m_to;
   }

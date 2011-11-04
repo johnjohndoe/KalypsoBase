@@ -132,7 +132,6 @@ public class GMLDocumentContentHandler extends AbstractGmlContentHandler impleme
     }
   }
 
-
   private void loadDocumentSchema( final GMLSchemaLoaderWithLocalCache schemaLoader, final String uri, final Attributes atts ) throws SAXException
   {
     // first element may have schema-location

@@ -225,12 +225,12 @@ public abstract class Symbolizer_Impl implements Symbolizer
    * sets the <Geometry>
    * 
    * @param geometry
-   *            the geometry of the symbolizer
+   *          the geometry of the symbolizer
    */
   @Override
   public void setGeometry( final Geometry geometry )
   {
-    this.m_geometry = geometry;
+    m_geometry = geometry;
   }
 
   @Override

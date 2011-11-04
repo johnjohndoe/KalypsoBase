@@ -93,7 +93,7 @@ public class JMSelector
 
           final GM_Surface< ? extends GM_SurfacePatch> bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
 
-          if( (selectWithinBoxStatus && bbox.contains( defaultGeometryProperty )) || (!selectWithinBoxStatus && bbox.intersects( defaultGeometryProperty )) )
+          if( selectWithinBoxStatus && bbox.contains( defaultGeometryProperty ) || !selectWithinBoxStatus && bbox.intersects( defaultGeometryProperty ) )
             testFE.add( fe );
         }
       }

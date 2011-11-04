@@ -44,7 +44,7 @@ package org.kalypso.gmlschema.property;
  * Instances of this class are used to filter lists of property types.
  * 
  * @author Gernot Belger
- * @see PropertyUtils#filterProperties(  )
+ * @see PropertyUtils#filterProperties()
  */
 public interface IPropertyTypeFilter
 {

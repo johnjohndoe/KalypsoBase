@@ -98,10 +98,10 @@ public class CopyFeaturePropertyFunction extends FeaturePropertyFunction
   {
     try
     {
-      //remark: works only on changes or active repaint of map
-      //set to null for redraw
-      //of requested feature with changed geometry 
-      //feature.setCachedGeometry( null );
+      // remark: works only on changes or active repaint of map
+      // set to null for redraw
+      // of requested feature with changed geometry
+      // feature.setCachedGeometry( null );
       return GMLXPathUtilities.query( m_xpath, feature );
     }
     catch( final GMLXPathException e )

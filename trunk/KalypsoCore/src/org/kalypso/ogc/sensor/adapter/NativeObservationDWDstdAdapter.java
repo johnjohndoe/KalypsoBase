@@ -123,7 +123,7 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
     String lineIn = null;
     while( (lineIn = reader.readLine()) != null )
     {
-      if( !continueWithErrors && (numberOfErrors > MAX_NO_OF_ERRORS) )
+      if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
         return null;
       try
       {
@@ -149,9 +149,9 @@ public class NativeObservationDWDstdAdapter implements INativeObservationAdapter
             for( int i = 0; i < 24; i++ )
             {
               final String valueString = valueLine.substring( i * 6, 6 * (i + 1) );
-              final Double value = (new Double( Double.parseDouble( valueString ) )) / 1000;
+              final Double value = new Double( Double.parseDouble( valueString ) ) / 1000;
               valueCollector.add( value );
-              final Date valueDate = new Date( startDate + (i) * 60 * 60 * 1000 );
+              final Date valueDate = new Date( startDate + i * 60 * 60 * 1000 );
               dateCollector.add( valueDate );
             }
           }

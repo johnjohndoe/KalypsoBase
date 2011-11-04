@@ -48,7 +48,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
  * TODO: Refaktor: these classes are nice.. but can only be used from the user interface they where written for. Better:
  * return values as doubles in gml-style (or even just a RectifiedGridDomain); trhe user interface should decide how to
  * show it to the user.
- *
+ * 
  * @author Dirk Kuch
  */
 public interface IGridMetaReader

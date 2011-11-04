@@ -97,7 +97,7 @@ public class StatusComposite extends Composite
   /**
    * The form toolkit. May be null.
    */
-  private FormToolkit m_toolkit;
+  private final FormToolkit m_toolkit;
 
   private Label m_imageLabel;
 
@@ -120,7 +120,7 @@ public class StatusComposite extends Composite
    * @param style
    *          The style.
    */
-  public StatusComposite( Composite parent, int style )
+  public StatusComposite( final Composite parent, final int style )
   {
     this( null, parent, style );
   }
@@ -135,7 +135,7 @@ public class StatusComposite extends Composite
    * @param style
    *          The style.
    */
-  public StatusComposite( FormToolkit toolkit, Composite parent, int style )
+  public StatusComposite( final FormToolkit toolkit, final Composite parent, final int style )
   {
     super( parent, style );
 
@@ -155,7 +155,7 @@ public class StatusComposite extends Composite
   /**
    * This function creates the controls.
    */
-  protected void init( int style )
+  protected void init( final int style )
   {
     /* The column count. */
     int colCount = 1;
@@ -181,7 +181,7 @@ public class StatusComposite extends Composite
     setStatus( m_status );
 
     /* Create the layout. */
-   super.setLayout( Layouts.createGridLayout( colCount ) );
+    super.setLayout( Layouts.createGridLayout( colCount ) );
   }
 
   private void createImageLabel( )
@@ -194,7 +194,7 @@ public class StatusComposite extends Composite
        * @see org.eclipse.swt.events.MouseAdapter#mouseDoubleClick(org.eclipse.swt.events.MouseEvent)
        */
       @Override
-      public void mouseDoubleClick( MouseEvent e )
+      public void mouseDoubleClick( final MouseEvent e )
       {
         detailsButtonPressed();
       }
@@ -211,7 +211,7 @@ public class StatusComposite extends Composite
     m_messageText.addMouseListener( new MouseAdapter()
     {
       @Override
-      public void mouseDoubleClick( MouseEvent e )
+      public void mouseDoubleClick( final MouseEvent e )
       {
         detailsButtonPressed();
       }
@@ -232,7 +232,7 @@ public class StatusComposite extends Composite
        * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
        */
       @Override
-      public void widgetSelected( SelectionEvent e )
+      public void widgetSelected( final SelectionEvent e )
       {
         detailsButtonPressed();
       }
@@ -246,7 +246,7 @@ public class StatusComposite extends Composite
    * @see org.eclipse.swt.widgets.Control#setBackground(org.eclipse.swt.graphics.Color)
    */
   @Override
-  public void setBackground( Color color )
+  public void setBackground( final Color color )
   {
     super.setBackground( color );
 
@@ -265,7 +265,7 @@ public class StatusComposite extends Composite
     if( m_status == null )
       return;
 
-    StatusDialog statusTableDialog = new StatusDialog( getShell(), m_status, Messages.getString( "org.kalypso.util.swt.StatusComposite.2" ) ); //$NON-NLS-1$
+    final StatusDialog statusTableDialog = new StatusDialog( getShell(), m_status, Messages.getString( "org.kalypso.util.swt.StatusComposite.2" ) ); //$NON-NLS-1$
     statusTableDialog.open();
   }
 
@@ -273,7 +273,7 @@ public class StatusComposite extends Composite
    * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
    */
   @Override
-  public void setLayout( Layout layout )
+  public void setLayout( final Layout layout )
   {
     throw new UnsupportedOperationException( "The layout of this composite is fixed." ); //$NON-NLS-1$
   }
@@ -287,7 +287,7 @@ public class StatusComposite extends Composite
    *              <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
    *              </ul>
    */
-  public void setStatus( IStatus status )
+  public void setStatus( final IStatus status )
   {
     m_status = status;
 
@@ -299,10 +299,10 @@ public class StatusComposite extends Composite
 
   private void updateForStatus( )
   {
-    Image image = getStatusImage();
-    String text = getStatusText();
-    String tooltipText = getStatusTooltipText();
-    boolean enabled = getStatusIsEnabled();
+    final Image image = getStatusImage();
+    final String text = getStatusText();
+    final String tooltipText = getStatusTooltipText();
+    final boolean enabled = getStatusIsEnabled();
 
     if( m_imageLabel != null )
     {
@@ -322,8 +322,8 @@ public class StatusComposite extends Composite
     if( m_detailsButton != null )
     {
       m_detailsButton.setEnabled( enabled );
-      boolean hideDetailsIfdisabled = (getStyle() & HIDE_DETAILS_IF_DISABLED) != 0;
-      boolean visible = !hideDetailsIfdisabled || enabled;
+      final boolean hideDetailsIfdisabled = (getStyle() & HIDE_DETAILS_IF_DISABLED) != 0;
+      final boolean visible = !hideDetailsIfdisabled || enabled;
       m_detailsButton.setVisible( visible );
       ((GridData) m_detailsButton.getLayoutData()).exclude = !visible;
     }
@@ -349,16 +349,16 @@ public class StatusComposite extends Composite
 
     if( m_labelProvider != null )
     {
-      String providerText = m_labelProvider.getText( m_status );
+      final String providerText = m_labelProvider.getText( m_status );
       if( providerText != null )
         return providerText;
     }
 
-    String message = m_status.getMessage();
-    String message1 = message.replace( "\r\n", " " );
-    String message2 = message1.replace( "\r", " " );
-    String message3 = message2.replace( "\n", " " );
-    String message4 = message3.replace( "\t", " " );
+    final String message = m_status.getMessage();
+    final String message1 = message.replace( "\r\n", " " );
+    final String message2 = message1.replace( "\r", " " );
+    final String message3 = message2.replace( "\n", " " );
+    final String message4 = message3.replace( "\t", " " );
 
     return message4;
   }
@@ -366,7 +366,7 @@ public class StatusComposite extends Composite
   private String getStatusTooltipText( )
   {
     /* Status is same as text, but null instead of empty so totally suppress the tooltip. */
-    String statusText = getStatusText();
+    final String statusText = getStatusText();
     if( statusText == null || statusText.isEmpty() )
       return null;
 
@@ -380,7 +380,7 @@ public class StatusComposite extends Composite
 
     if( m_labelProvider != null )
     {
-      Image providerImage = m_labelProvider.getImage( m_status );
+      final Image providerImage = m_labelProvider.getImage( m_status );
       if( providerImage != null )
         return providerImage;
     }
@@ -388,17 +388,17 @@ public class StatusComposite extends Composite
     return getStatusImage( m_status );
   }
 
-  public static Image getIDEImage( String constantName )
+  public static Image getIDEImage( final String constantName )
   {
     return JFaceResources.getResources().createImageWithDefault( IDEInternalWorkbenchImages.getImageDescriptor( constantName ) );
   }
 
-  public static Image getStatusImage( IStatus status )
+  public static Image getStatusImage( final IStatus status )
   {
     return getStatusImage( status.getSeverity() );
   }
 
-  public static Image getStatusImage( int severity )
+  public static Image getStatusImage( final int severity )
   {
     switch( severity )
     {
@@ -465,7 +465,7 @@ public class StatusComposite extends Composite
     return m_status;
   }
 
-  public void enableButton( boolean b )
+  public void enableButton( final boolean b )
   {
     if( m_detailsButton != null )
       m_detailsButton.setEnabled( b );
@@ -477,7 +477,7 @@ public class StatusComposite extends Composite
    * If the label provider returns <code>null</code> text or image for a certain status, the composite will fall back to
    * its default behaviour.
    */
-  public void setLabelProvider( ILabelProvider provider )
+  public void setLabelProvider( final ILabelProvider provider )
   {
     m_labelProvider = provider;
   }

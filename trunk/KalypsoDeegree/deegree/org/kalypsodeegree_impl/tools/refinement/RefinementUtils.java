@@ -110,7 +110,7 @@ public final class RefinementUtils
    */
   @SuppressWarnings("unchecked")
   public static GM_Surface< ? extends GM_SurfacePatch>[] splitPolygonbyLine( final GM_Position[] patchPoses, final GM_Position[] linePoses, final String crs ) throws GM_Exception
-      {
+  {
     final List<GM_Surface< ? extends GM_SurfacePatch>> surfaceList = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>();
     final Set<GM_Position> originalPosList = new HashSet<GM_Position>();
     final List<Coordinate> coordList = new ArrayList<Coordinate>();
@@ -125,47 +125,47 @@ public final class RefinementUtils
     /* store the original coodinates in a set in order to re-assign the coordinates later */
     for( final GM_Position position : patchPoses )
       originalPosList.add( position );
-        for( final GM_Position position : linePoses )
+    for( final GM_Position position : linePoses )
+    {
+      originalPosList.add( position );
+      coordList.add( JTSAdapter.export( position ) );
+    }
+
+    /* convert input data into JTS formats */
+    final Geometry geom = exportGeometry( patchPoses );
+
+    final Coordinate[] coords = coordList.toArray( new Coordinate[coordList.size()] );
+
+    /* SPLIT */
+    // REMARK: the returned geometries do not have exactly the same coords as before (because of the buffer)!
+    // so we have to re-assign the original positions again.
+    final Geometry geometry = chop( geom, coords );
+
+    for( int i = 0; i < geometry.getNumGeometries(); i++ )
+    {
+      final Geometry polygon = geometry.getGeometryN( i );
+      final GM_Object object = JTSAdapter.wrap( polygon, crs );
+      if( object instanceof GM_Surface )
+      {
+        final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) object;
+
+        for( final GM_SurfacePatch patch : surface )
         {
-          originalPosList.add( position );
-          coordList.add( JTSAdapter.export( position ) );
+          final GM_Position[] ring = patch.getExteriorRing();
+
+          /* RE-ASSIGNMENT */
+          // check for each position, if it lies within a given search radius of an original position
+          final GM_Surface< ? extends GM_SurfacePatch> origPosSurface = reassignOriginalPositions( originalPosList, ring, crs );
+          surfaceList.add( origPosSurface );
         }
-
-        /* convert input data into JTS formats */
-        final Geometry geom = exportGeometry( patchPoses );
-
-        final Coordinate[] coords = coordList.toArray( new Coordinate[coordList.size()] );
-
-        /* SPLIT */
-        // REMARK: the returned geometries do not have exactly the same coords as before (because of the buffer)!
-        // so we have to re-assign the original positions again.
-        final Geometry geometry = chop( geom, coords );
-
-        for( int i = 0; i < geometry.getNumGeometries(); i++ )
-        {
-          final Geometry polygon = geometry.getGeometryN( i );
-          final GM_Object object = JTSAdapter.wrap( polygon, crs );
-          if( object instanceof GM_Surface )
-          {
-            final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) object;
-
-            for( final GM_SurfacePatch patch : surface )
-            {
-              final GM_Position[] ring = patch.getExteriorRing();
-
-              /* RE-ASSIGNMENT */
-              // check for each position, if it lies within a given search radius of an original position
-              final GM_Surface< ? extends GM_SurfacePatch> origPosSurface = reassignOriginalPositions( originalPosList, ring, crs );
-              surfaceList.add( origPosSurface );
-            }
-          }
-        }
-
-        return surfaceList.toArray( new GM_Surface[surfaceList.size()] );
       }
+    }
+
+    return surfaceList.toArray( new GM_Surface[surfaceList.size()] );
+  }
 
   private static GM_Surface< ? extends GM_SurfacePatch> reassignOriginalPositions( final Set<GM_Position> originalPosList, final GM_Position[] ring, final String crs ) throws GM_Exception
-      {
+  {
     final List<GM_Position> posList = new ArrayList<GM_Position>();
 
     for( GM_Position position : ring )
@@ -196,7 +196,7 @@ public final class RefinementUtils
     }
     else
       return null;
-      }
+  }
 
   public static GM_Surface<GM_SurfacePatch> getSurface( final GM_Position[] poses, final String crs ) throws GM_Exception
   {
@@ -275,7 +275,7 @@ public final class RefinementUtils
     for( final GM_Curve curve : curves )
     {
       final GM_Object object = curve.intersection( point );
-      if( object != null || (curve.distance( point ) < CHOP_THICKNESS * 2) )
+      if( object != null || curve.distance( point ) < CHOP_THICKNESS * 2 )
       {
         final GM_Point startPoint = curve.getAsLineString().getStartPoint();
         final GM_Point endPoint = curve.getAsLineString().getEndPoint();
@@ -306,7 +306,7 @@ public final class RefinementUtils
    */
   @SuppressWarnings("unchecked")
   public static GM_Surface< ? extends GM_SurfacePatch>[] splitSurfacePatch( final GM_SurfacePatch surfacePatch, final GM_Position[] linePoses ) throws GM_Exception
-      {
+  {
     final List<GM_Surface< ? extends GM_SurfacePatch>> surfaceList = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>();
 
     final GM_Position[] patchPoses = surfacePatch.getExteriorRing();
@@ -317,8 +317,8 @@ public final class RefinementUtils
     for( final GM_Surface< ? extends GM_SurfacePatch> surface : surfaces )
       surfaceList.add( surface );
 
-        return surfaceList.toArray( new GM_Surface[surfaceList.size()] );
-      }
+    return surfaceList.toArray( new GM_Surface[surfaceList.size()] );
+  }
 
   @SuppressWarnings("unchecked")
   public static GM_Surface<GM_SurfacePatch>[] triangulatePolygon( final String crs, final GM_Position[] ring ) throws GM_Exception

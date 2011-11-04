@@ -48,18 +48,18 @@ public class GMLXPathException extends Exception
     super();
   }
 
-  public GMLXPathException( String message )
+  public GMLXPathException( final String message )
   {
 
     super( message );
   }
 
-  public GMLXPathException( Throwable throwable )
+  public GMLXPathException( final Throwable throwable )
   {
     super( throwable );
   }
 
-  public GMLXPathException( String message, Throwable throwable )
+  public GMLXPathException( final String message, final Throwable throwable )
   {
     super( message, throwable );
   }

@@ -70,7 +70,7 @@ public class LineThemePredicater implements IKalypsoThemePredicate
       final IFeatureType featureType = fTheme.getFeatureType();
       if( featureType == null )
         return false;
-      
+
       final IValuePropertyType[] allGeomtryProperties = featureType.getAllGeomteryProperties();
       if( allGeomtryProperties.length > 0 && Arrays.asList( ACCEPTED_GEOMETRIES ).contains( allGeomtryProperties[0].getValueQName() ) )
         return true;

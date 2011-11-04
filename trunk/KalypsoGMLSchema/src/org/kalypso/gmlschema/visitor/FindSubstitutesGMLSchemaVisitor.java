@@ -83,7 +83,7 @@ public class FindSubstitutesGMLSchemaVisitor implements IGMLSchemaVisitor
     {
       if( !ft.isAbstract() || includeAbstract )
       {
-        if( !ft.equals( m_substitutionHeadFT ) || includeThis)
+        if( !ft.equals( m_substitutionHeadFT ) || includeThis )
           result.add( ft );
       }
     }

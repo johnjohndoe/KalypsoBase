@@ -59,7 +59,7 @@ public class ExportCoverageAction extends Action implements IUpdateable
   {
     m_widget = widget;
 
-    setText(Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.13" )); //$NON-NLS-1$
+    setText( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.13" ) ); //$NON-NLS-1$
     setImageDescriptor( KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_EXPORT ) );
   }
 
@@ -68,7 +68,6 @@ public class ExportCoverageAction extends Action implements IUpdateable
   {
     m_widget.handleCoverageExport( event );
   }
-
 
   @Override
   public void update( )

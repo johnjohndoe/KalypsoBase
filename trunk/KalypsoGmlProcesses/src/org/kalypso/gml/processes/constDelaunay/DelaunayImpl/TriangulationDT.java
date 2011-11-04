@@ -41,7 +41,6 @@
  *  RMIT
  *  ---------------------------------------------------------------------------*/
 
-
 package org.kalypso.gml.processes.constDelaunay.DelaunayImpl;
 
 import java.util.ArrayList;
@@ -83,11 +82,11 @@ final public class TriangulationDT
 
   private void init( final GM_Position[] pPositions, final String pCrs )
   {
-    List<GM_Position> lListTmp = new ArrayList<GM_Position>();
+    final List<GM_Position> lListTmp = new ArrayList<GM_Position>();
     int i = 0;
     while( i < pPositions.length )
     {
-      GM_Position lGM_Position = pPositions[i];
+      final GM_Position lGM_Position = pPositions[i];
       if( !lListTmp.contains( lGM_Position ) )
       {
         lListTmp.add( lGM_Position );
@@ -95,8 +94,8 @@ final public class TriangulationDT
       ++i;
     }
 
-    this.m_intAmountOfPoints = lListTmp.size();
-    this.m_arrayPoints = new RealPoint[m_intAmountOfPoints];
+    m_intAmountOfPoints = lListTmp.size();
+    m_arrayPoints = new RealPoint[m_intAmountOfPoints];
     i = 0;
     for( final GM_Position lGM_Position : lListTmp )
     {
@@ -150,7 +149,7 @@ final public class TriangulationDT
     m_intAmountOfPoints = pIntAmountOfPoints;
   }
 
-  void addTriangle( int s, int t, int u )
+  void addTriangle( final int s, final int t, final int u )
   {
     int lIntTmpRes = 0;
     lIntTmpRes += addEdge( s, t );
@@ -169,11 +168,11 @@ final public class TriangulationDT
 
     try
     {
-      GM_Triangle lTriangle = createTriangle( s, t, u );
+      final GM_Triangle lTriangle = createTriangle( s, t, u );
       if( lTriangle != null )
         m_listGMTriangles.add( lTriangle );
     }
-    catch( Throwable e )
+    catch( final Throwable e )
     {
       //
     }
@@ -188,9 +187,9 @@ final public class TriangulationDT
   private GM_Triangle createTriangle( final RealPoint pPoint0, final RealPoint pPoint1, final RealPoint pPoint2 ) throws GM_Exception
   {
     GM_Triangle lTriangle = null;
-    GM_Position lPosition0 = GeometryFactory.createGM_Position( pPoint0.getX(), pPoint0.getY(), pPoint0.getZ() );
-    GM_Position lPosition1 = GeometryFactory.createGM_Position( pPoint1.getX(), pPoint1.getY(), pPoint1.getZ() );
-    GM_Position lPosition2 = GeometryFactory.createGM_Position( pPoint2.getX(), pPoint2.getY(), pPoint2.getZ() );
+    final GM_Position lPosition0 = GeometryFactory.createGM_Position( pPoint0.getX(), pPoint0.getY(), pPoint0.getZ() );
+    final GM_Position lPosition1 = GeometryFactory.createGM_Position( pPoint1.getX(), pPoint1.getY(), pPoint1.getZ() );
+    final GM_Position lPosition2 = GeometryFactory.createGM_Position( pPoint2.getX(), pPoint2.getY(), pPoint2.getZ() );
     {
       lTriangle = GeometryFactory.createGM_Triangle( lPosition0, lPosition1, lPosition2, m_crs );
     }
@@ -220,7 +219,7 @@ final public class TriangulationDT
         m_arrayEdges[m_intNumberOfEdges].setT( t );
         m_arrayEdges[m_intNumberOfEdges].setL( l );
         m_arrayEdges[m_intNumberOfEdges].setR( r );
-        
+
       }
       else
       {
@@ -260,7 +259,7 @@ final public class TriangulationDT
    */
   public void updateLeftFace( final int eI, final int s, final int t, final int f )
   {
-    if( !((m_arrayEdges[eI].getS() == s && m_arrayEdges[eI].getT() == t) || (m_arrayEdges[eI].getS() == t && m_arrayEdges[eI].getT() == s)) )
+    if( !(m_arrayEdges[eI].getS() == s && m_arrayEdges[eI].getT() == t || m_arrayEdges[eI].getS() == t && m_arrayEdges[eI].getT() == s) )
     {
       System.out.println( "updateLeftFace: adj. matrix and edge table mismatch" ); //$NON-NLS-1$
       return;
@@ -301,7 +300,5 @@ final public class TriangulationDT
   {
     return m_arrayEdges;
   }
-  
-  
 
 }

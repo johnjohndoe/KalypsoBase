@@ -186,6 +186,6 @@ public class JTSConverter
     if( coordinates[0].equals( coordinates[coordinates.length - 1] ) )
       return new GeometryFactory().createLinearRing( coordinates );
 
-    return new GeometryFactory().createLinearRing( (Coordinate[]) ArrayUtils.add( coordinates, coordinates[0] ) );
+    return new GeometryFactory().createLinearRing( ArrayUtils.add( coordinates, coordinates[0] ) );
   }
 }

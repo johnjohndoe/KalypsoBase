@@ -62,11 +62,11 @@ public abstract class AbstractOperation implements Operation
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
-   * methods to validate the structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM
+   * () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *             if the structure of the DOM-fragment is invalid
+   *           if the structure of the DOM-fragment is invalid
    */
   public static Operation buildFromDOM( final Element element ) throws FilterConstructionException
   {

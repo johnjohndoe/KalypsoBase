@@ -62,18 +62,17 @@ public class FindPropertyByNameVisitor implements FeatureVisitor
   {
     final IFeatureType featureType = f.getFeatureType();
     final IPropertyType[] properties = featureType.getProperties();
-    for( int i = 0; i < properties.length; i++ )
+    for( final IPropertyType property : properties )
     {
-      final IPropertyType property = properties[i];
       final String name = property.getQName().getLocalPart();
       if( m_propertyname.equals( name ) )
-        m_result = f.getProperty(property);
+        m_result = f.getProperty( property );
     }
 
     return true;
   }
 
-  public Object getResult()
+  public Object getResult( )
   {
     return m_result;
   }

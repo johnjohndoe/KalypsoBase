@@ -73,7 +73,7 @@ public class ExportDocumentsObjectFactory implements IExportableObjectFactory
    * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
   @Override
-  public IExportableObject[] createExportableObjects( final Configuration configuration ) 
+  public IExportableObject[] createExportableObjects( final Configuration configuration )
   {
     final Object[] checkedElements = m_page.getCheckedElements();
     final List<IExportableObject> result = new ArrayList<IExportableObject>( checkedElements.length );

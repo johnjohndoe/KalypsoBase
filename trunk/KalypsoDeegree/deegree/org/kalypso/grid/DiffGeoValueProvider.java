@@ -14,7 +14,8 @@ public class DiffGeoValueProvider implements IGeoValueProvider
   private final IGeoValueProvider m_higher;
 
   /**
-   * Creates an instance of this provider. Every value of this provider will be calculated a <code>higher</code>-<code>lower</code>.
+   * Creates an instance of this provider. Every value of this provider will be calculated a <code>higher</code>-
+   * <code>lower</code>.
    */
   public DiffGeoValueProvider( final IGeoValueProvider lower, final IGeoValueProvider higher )
   {

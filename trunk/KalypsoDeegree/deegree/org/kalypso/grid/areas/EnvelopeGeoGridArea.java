@@ -62,7 +62,7 @@ public class EnvelopeGeoGridArea extends AbstractGeoGridArea
    * @param geom
    *          The area geometry.
    */
-  public EnvelopeGeoGridArea( IGeoGrid grid, Geometry geom )
+  public EnvelopeGeoGridArea( final IGeoGrid grid, final Geometry geom )
   {
     super( grid, geom );
   }
@@ -71,7 +71,7 @@ public class EnvelopeGeoGridArea extends AbstractGeoGridArea
    * @see org.kalypso.grid.areas.AbstractGeoGridArea#contains(int, int, com.vividsolutions.jts.geom.Coordinate)
    */
   @Override
-  public boolean contains( int x, int y, Coordinate coordinate ) throws GeoGridException
+  public boolean contains( final int x, final int y, final Coordinate coordinate ) throws GeoGridException
   {
     return super.contains( x, y, coordinate );
   }

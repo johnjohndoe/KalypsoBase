@@ -63,7 +63,7 @@ public class CoordinateSystemFactory
    *          The code of the coordinate system.
    * @return The coordinate system.
    */
-  public static ICoordinateSystem getCoordinateSystem( String code )
+  public static ICoordinateSystem getCoordinateSystem( final String code )
   {
     return new GeoToolsCoordinateSystem( code );
   }

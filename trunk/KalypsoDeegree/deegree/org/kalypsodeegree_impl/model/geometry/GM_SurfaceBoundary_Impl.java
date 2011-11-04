@@ -277,7 +277,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
 
         for( int j = 0; j < pos.length; j++ )
         {
-          cen[j] += (pos[j] * element.getAsCurveSegment().getNumberOfPoints());
+          cen[j] += pos[j] * element.getAsCurveSegment().getNumberOfPoints();
         }
       }
     }
@@ -295,7 +295,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   {
     String ret = null;
     ret = "interior = " + m_interior + "\n";
-    ret += ("exterior = " + m_exterior + "\n");
+    ret += "exterior = " + m_exterior + "\n";
     return ret;
   }
 

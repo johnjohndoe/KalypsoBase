@@ -69,8 +69,9 @@ public class Font_Impl implements Font, Marshallable
   /**
    * Constructs a new <tt>Font_Impl<tt>.
    * <p>
-   * @param cssParams keys are <tt>Strings<tt> (see above), values are
-   *                  <tt>CssParameters</tt>
+   * 
+   * @param cssParams
+   *          keys are <tt>Strings<tt> (see above), values are <tt>CssParameters</tt>
    */
   protected Font_Impl( final HashMap cssParams )
   {
@@ -90,7 +91,7 @@ public class Font_Impl implements Font, Marshallable
   @Override
   public String getFamily( final Feature feature ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = (CssParameter)cssParams.get( "font-family" );
+    final CssParameter cssParam = (CssParameter) cssParams.get( "font-family" );
 
     if( cssParam == null )
     {
@@ -128,7 +129,7 @@ public class Font_Impl implements Font, Marshallable
   @Override
   public int getStyle( final Feature feature ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = (CssParameter)cssParams.get( "font-style" );
+    final CssParameter cssParam = (CssParameter) cssParams.get( "font-style" );
 
     if( cssParam == null )
     {
@@ -150,8 +151,7 @@ public class Font_Impl implements Font, Marshallable
       return STYLE_OBLIQUE;
     }
 
-    throw new FilterEvaluationException( "Given value ('" + s + "') for CssParameter 'font-style' is "
-        + "invalid: allowed values are 'normal', 'italic' and 'oblique'." );
+    throw new FilterEvaluationException( "Given value ('" + s + "') for CssParameter 'font-style' is " + "invalid: allowed values are 'normal', 'italic' and 'oblique'." );
   }
 
   /**
@@ -184,7 +184,7 @@ public class Font_Impl implements Font, Marshallable
   @Override
   public int getWeight( final Feature feature ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = (CssParameter)cssParams.get( "font-weight" );
+    final CssParameter cssParam = (CssParameter) cssParams.get( "font-weight" );
 
     if( cssParam == null )
     {
@@ -202,8 +202,7 @@ public class Font_Impl implements Font, Marshallable
       return WEIGHT_BOLD;
     }
 
-    throw new FilterEvaluationException( "Given value ('" + s + "') for CssParameter 'font-weight' is "
-        + "invalid: allowed values are 'normal' and 'bold'." );
+    throw new FilterEvaluationException( "Given value ('" + s + "') for CssParameter 'font-weight' is " + "invalid: allowed values are 'normal' and 'bold'." );
   }
 
   /**
@@ -234,7 +233,7 @@ public class Font_Impl implements Font, Marshallable
   @Override
   public int getSize( final Feature feature ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = (CssParameter)cssParams.get( "font-size" );
+    final CssParameter cssParam = (CssParameter) cssParams.get( "font-size" );
     int sizeInt = SIZE_DEFAULT;
 
     if( cssParam != null )
@@ -243,12 +242,11 @@ public class Font_Impl implements Font, Marshallable
 
       try
       {
-        sizeInt = (int)Double.parseDouble( s );
+        sizeInt = (int) Double.parseDouble( s );
       }
       catch( final NumberFormatException e )
       {
-        throw new FilterEvaluationException( "Given value ('" + s + "') for CssParameter 'font-size' is "
-            + "not a valid number." );
+        throw new FilterEvaluationException( "Given value ('" + s + "') for CssParameter 'font-size' is " + "not a valid number." );
       }
 
       if( sizeInt <= 0 )
@@ -287,7 +285,7 @@ public class Font_Impl implements Font, Marshallable
   @Override
   public Color getColor( final Feature feature ) throws FilterEvaluationException
   {
-    final CssParameter cssParam = (CssParameter)cssParams.get( "font-color" );
+    final CssParameter cssParam = (CssParameter) cssParams.get( "font-color" );
     Color awtColor = COLOR_DEFAULT;
 
     if( cssParam != null )
@@ -300,8 +298,7 @@ public class Font_Impl implements Font, Marshallable
       }
       catch( final NumberFormatException e )
       {
-        throw new FilterEvaluationException( "Given value ('" + s + "') for CSS-Parameter 'font-color' "
-            + "does not denote a valid color!" );
+        throw new FilterEvaluationException( "Given value ('" + s + "') for CSS-Parameter 'font-color' " + "does not denote a valid color!" );
       }
     }
 
@@ -329,7 +326,7 @@ public class Font_Impl implements Font, Marshallable
    * @return xml representation of the Font
    */
   @Override
-  public String exportAsXML()
+  public String exportAsXML( )
   {
     Debug.debugMethodBegin();
 
@@ -338,7 +335,7 @@ public class Font_Impl implements Font, Marshallable
     final Iterator iterator = cssParams.values().iterator();
     while( iterator.hasNext() )
     {
-      sb.append( ( (Marshallable)iterator.next() ).exportAsXML() );
+      sb.append( ((Marshallable) iterator.next()).exportAsXML() );
     }
 
     sb.append( "</Font>" );

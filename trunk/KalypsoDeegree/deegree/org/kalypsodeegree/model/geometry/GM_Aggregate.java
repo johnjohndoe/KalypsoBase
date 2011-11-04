@@ -62,7 +62,7 @@ public interface GM_Aggregate extends GM_Object
    * merges two aggregation.
    * 
    * @exception GM_Exception
-   *                a GM_Exception will be thrown if the submitted isn't the same type as the recieving one.
+   *              a GM_Exception will be thrown if the submitted isn't the same type as the recieving one.
    */
   void merge( GM_Aggregate aggregate ) throws GM_Exception;
 
@@ -76,9 +76,9 @@ public interface GM_Aggregate extends GM_Object
    * larger then getSize() - 1 an exception will be thrown.
    * 
    * @param gmo
-   *            GM_Object to insert.
+   *          GM_Object to insert.
    * @param index
-   *            position where to insert the new GM_Object
+   *          position where to insert the new GM_Object
    */
   void insertObjectAt( GM_Object gmo, int index ) throws GM_Exception;
 
@@ -87,9 +87,9 @@ public interface GM_Aggregate extends GM_Object
    * removed. if index is larger then getSize() - 1 an exception will be thrown.
    * 
    * @param gmo
-   *            GM_Object to set.
+   *          GM_Object to set.
    * @param index
-   *            position where to set the new GM_Object
+   *          position where to set the new GM_Object
    */
   void setObjectAt( GM_Object gmo, int index ) throws GM_Exception;
 

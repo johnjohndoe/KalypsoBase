@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.geometry.IPlainGridVisitor;
 /**
  * Provide display mechanism for wind data models
  * 
- * @author 
+ * @author
  */
 public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayElementDecorator
 {

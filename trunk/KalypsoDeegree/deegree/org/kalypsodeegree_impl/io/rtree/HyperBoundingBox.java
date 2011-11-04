@@ -43,19 +43,19 @@ package org.kalypsodeegree_impl.io.rtree;
  */
 public class HyperBoundingBox
 {
-  private HyperPoint pMax;
+  private final HyperPoint pMax;
 
-  private HyperPoint pMin;
+  private final HyperPoint pMin;
 
   /**
    * Konstruktor HyperBoundingBox. Erzeugt eine BoundingBox im Hyperraum für die übergebenen Punkte.
    * 
-   * @param pMin -
-   *          Minimum Punkt im Hyperraum
-   * @param pMax -
-   *          Maximum Punkt im Hyperraum
+   * @param pMin
+   *          - Minimum Punkt im Hyperraum
+   * @param pMax
+   *          - Maximum Punkt im Hyperraum
    */
-  public HyperBoundingBox( HyperPoint pMin, HyperPoint pMax )
+  public HyperBoundingBox( final HyperPoint pMin, final HyperPoint pMax )
   {
     if( pMin.getDimension() != pMax.getDimension() )
     {
@@ -73,7 +73,7 @@ public class HyperBoundingBox
    *          der BoundingBox
    * @return HyperBoundingBox Null-HyperBoundingBox
    */
-  public static HyperBoundingBox getNullHyperBoundingBox( int dimension )
+  public static HyperBoundingBox getNullHyperBoundingBox( final int dimension )
   {
     return new HyperBoundingBox( HyperPoint.getNullHyperPoint( dimension ), HyperPoint.getNullHyperPoint( dimension ) );
   }
@@ -83,7 +83,7 @@ public class HyperBoundingBox
    * 
    * @return HyperPoint Minimum Punkt
    */
-  public HyperPoint getPMin()
+  public HyperPoint getPMin( )
   {
     return pMin;
   }
@@ -93,7 +93,7 @@ public class HyperBoundingBox
    * 
    * @return HyperPoint Maximum Punkt
    */
-  public HyperPoint getPMax()
+  public HyperPoint getPMax( )
   {
     return pMax;
   }
@@ -103,7 +103,7 @@ public class HyperBoundingBox
    * 
    * @return int Anzahl der Dimensionen
    */
-  public int getDimension()
+  public int getDimension( )
   {
     return pMin.getDimension();
   }
@@ -111,17 +111,17 @@ public class HyperBoundingBox
   /**
    * Test, ob die HyperBoundingBox mit der übergebenen überlappt.
    * 
-   * @param box -
-   *          HyperBoundingBox zum Test
+   * @param box
+   *          - HyperBoundingBox zum Test
    * @return boolean true, wenn überlappt
    */
-  public boolean overlaps( HyperBoundingBox box )
+  public boolean overlaps( final HyperBoundingBox box )
   {
     boolean intersect = true;
 
     for( int i = 0; i < getDimension(); i++ )
     {
-      if( ( pMin.getCoord( i ) > box.getPMax().getCoord( i ) ) || ( pMax.getCoord( i ) < box.getPMin().getCoord( i ) ) )
+      if( pMin.getCoord( i ) > box.getPMax().getCoord( i ) || pMax.getCoord( i ) < box.getPMin().getCoord( i ) )
       {
         intersect = false;
         break;
@@ -134,17 +134,17 @@ public class HyperBoundingBox
   /**
    * Test, ob die HyperBoundingBox die übergebene enthaelt.
    * 
-   * @param box -
-   *          HyperBoundingBox zum Test
+   * @param box
+   *          - HyperBoundingBox zum Test
    * @return boolean true, wenn enthalten
    */
-  public boolean contains( HyperBoundingBox box )
+  public boolean contains( final HyperBoundingBox box )
   {
     boolean contains = true;
 
     for( int i = 0; i < getDimension(); i++ )
     {
-      if( ( pMin.getCoord( i ) > box.getPMin().getCoord( i ) ) || ( pMax.getCoord( i ) < box.getPMax().getCoord( i ) ) )
+      if( pMin.getCoord( i ) > box.getPMin().getCoord( i ) || pMax.getCoord( i ) < box.getPMax().getCoord( i ) )
       {
         contains = false;
         break;
@@ -159,12 +159,12 @@ public class HyperBoundingBox
    * 
    * @return double Ausdehnung
    */
-  public double getArea()
+  public double getArea( )
   {
     double area = 1;
 
     for( int i = 0; i < pMin.getDimension(); i++ )
-      area = area * ( pMax.getCoord( i ) - pMin.getCoord( i ) );
+      area = area * (pMax.getCoord( i ) - pMin.getCoord( i ));
 
     return area;
   }
@@ -175,40 +175,40 @@ public class HyperBoundingBox
    * @param box
    * @return HyperBoundingBox Vereinigungs-HyperBoundingBox
    */
-  public HyperBoundingBox unionBoundingBox( HyperBoundingBox box )
+  public HyperBoundingBox unionBoundingBox( final HyperBoundingBox box )
   {
-    if( this.getDimension() != box.getDimension() )
+    if( getDimension() != box.getDimension() )
     {
       throw new IllegalArgumentException( "HyperBoundingBox need same Dimension" );
     }
 
-    if( this.equals( HyperBoundingBox.getNullHyperBoundingBox( this.getDimension() ) ) )
+    if( equals( HyperBoundingBox.getNullHyperBoundingBox( getDimension() ) ) )
     {
       return box;
     }
 
-    if( box.equals( HyperBoundingBox.getNullHyperBoundingBox( this.getDimension() ) ) )
+    if( box.equals( HyperBoundingBox.getNullHyperBoundingBox( getDimension() ) ) )
     {
       return this;
     }
 
-    double[] min = new double[this.getDimension()];
-    double[] max = new double[this.getDimension()];
+    final double[] min = new double[getDimension()];
+    final double[] max = new double[getDimension()];
 
-    for( int i = 0; i < this.getDimension(); i++ )
+    for( int i = 0; i < getDimension(); i++ )
     {
-      if( this.getPMin().getCoord( i ) <= box.getPMin().getCoord( i ) )
+      if( getPMin().getCoord( i ) <= box.getPMin().getCoord( i ) )
       {
-        min[i] = this.getPMin().getCoord( i );
+        min[i] = getPMin().getCoord( i );
       }
       else
       {
         min[i] = box.getPMin().getCoord( i );
       }
 
-      if( this.getPMax().getCoord( i ) >= box.getPMax().getCoord( i ) )
+      if( getPMax().getCoord( i ) >= box.getPMax().getCoord( i ) )
       {
-        max[i] = this.getPMax().getCoord( i );
+        max[i] = getPMax().getCoord( i );
       }
       else
       {
@@ -227,22 +227,22 @@ public class HyperBoundingBox
    *          für Abstandberechnung.
    * @return double minimaler Abstand.
    */
-  public double minDist( HyperPoint point )
+  public double minDist( final HyperPoint point )
   {
     double min = 0;
     double ri = 0;
 
     for( int i = 0; i < point.getDimension(); i++ )
     {
-      if( point.getCoord( i ) < this.pMin.getCoord( i ) )
+      if( point.getCoord( i ) < pMin.getCoord( i ) )
       {
-        ri = this.pMin.getCoord( i );
+        ri = pMin.getCoord( i );
       }
       else
       {
-        if( point.getCoord( i ) > this.pMax.getCoord( i ) )
+        if( point.getCoord( i ) > pMax.getCoord( i ) )
         {
-          ri = this.pMax.getCoord( i );
+          ri = pMax.getCoord( i );
         }
         else
         {
@@ -262,9 +262,9 @@ public class HyperBoundingBox
    * @return Object geklonte HyperBoundingBox
    */
   @Override
-  public Object clone()
+  public Object clone( )
   {
-    return new HyperBoundingBox( (HyperPoint)pMin.clone(), (HyperPoint)pMax.clone() );
+    return new HyperBoundingBox( (HyperPoint) pMin.clone(), (HyperPoint) pMax.clone() );
   }
 
   /**
@@ -273,7 +273,7 @@ public class HyperBoundingBox
    * @return String Stringrepräsentation der Box
    */
   @Override
-  public String toString()
+  public String toString( )
   {
     return "BOX: P-Min (" + pMin.toString() + "), P-Max (" + pMax.toString() + ")";
   }
@@ -284,9 +284,9 @@ public class HyperBoundingBox
    * @see java.lang.Object
    */
   @Override
-  public boolean equals( Object obj )
+  public boolean equals( final Object obj )
   {
-    HyperBoundingBox box = (HyperBoundingBox)obj;
-    return ( this.pMin.equals( box.pMin ) && this.pMax.equals( box.pMax ) );
+    final HyperBoundingBox box = (HyperBoundingBox) obj;
+    return pMin.equals( box.pMin ) && pMax.equals( box.pMax );
   }
 }

@@ -83,11 +83,11 @@ public class LogicalOperation extends AbstractOperation
   }
 
   /**
-   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM () -
-   * methods to validate the structure of the DOM-fragment.
+   * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM
+   * () - methods to validate the structure of the DOM-fragment.
    * 
    * @throws FilterConstructionException
-   *             if the structure of the DOM-fragment is invalid
+   *           if the structure of the DOM-fragment is invalid
    */
   public static Operation buildFromDOM( final Element element ) throws FilterConstructionException
   {
@@ -153,10 +153,10 @@ public class LogicalOperation extends AbstractOperation
    * <tt>Feature</tt>.
    * 
    * @param feature
-   *            that determines the property values
+   *          that determines the property values
    * @return true, if the <tt>LogicalOperation</tt> evaluates to true, else false
    * @throws FilterEvaluationException
-   *             if the evaluation fails
+   *           if the evaluation fails
    */
   @Override
   public boolean evaluate( final Feature feature ) throws FilterEvaluationException
