@@ -72,18 +72,18 @@ public class ZmlMetadataDaterangeInstruction extends AbstractZmlRuleInstructionT
     return (MetadataDateRangeInstructionType) super.getType();
   }
 
-  /**
-   * @see org.kalypso.zml.core.table.binding.rule.instructions.AbstractZmlRuleInstructionType#matches(org.kalypso.zml.core.table.model.references.IZmlValueReference)
-   */
   @Override
   public boolean matches( final IZmlValueReference reference ) throws SensorException
   {
     final MetadataList metadata = resolveMetadata( reference );
+    if( Objects.isNull( metadata ) )
+      return false;
+
     final MetadataDateRangeInstructionType type = getType();
 
     final Date from = getDate( metadata, type.getPropertyFrom() );
     final Date to = getDate( metadata, type.getPropertyTo() );
-    if( from == null || to == null )
+    if( Objects.isNull( from, to ) )
       return false;
 
     final Date referenceDate = reference.getIndexValue();

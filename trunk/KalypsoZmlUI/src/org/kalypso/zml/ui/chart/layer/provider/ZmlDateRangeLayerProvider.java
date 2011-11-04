@@ -59,18 +59,12 @@ public class ZmlDateRangeLayerProvider extends AbstractLayerProvider implements 
 {
   public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlDateRangeLayerProvider"; //$NON-NLS-1$
 
-  /**
-   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
-   */
   @Override
   public IChartLayer getLayer( final URL context )
   {
     return new ZmlDateRangeLayer( this, context );
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.data.IZmlLayerProvider#getRequestHandler()
-   */
   @Override
   public IRequestHandler getRequestHandler( )
   {

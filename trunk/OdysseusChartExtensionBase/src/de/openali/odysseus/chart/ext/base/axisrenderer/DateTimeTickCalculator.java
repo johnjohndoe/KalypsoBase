@@ -42,7 +42,6 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -50,8 +49,6 @@ import org.joda.time.DateTimeField;
 import org.joda.time.DateTimeZone;
 import org.joda.time.DurationField;
 import org.joda.time.chrono.GregorianChronology;
-import org.joda.time.tz.DateTimeZoneBuilder;
-import org.joda.time.tz.FixedDateTimeZone;
 import org.kalypso.core.KalypsoCorePlugin;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -114,30 +111,15 @@ public class DateTimeTickCalculator implements ITickCalculator
 
     final IDateTimeAxisField axisField = m_fieldTypeProvider.getDateTimeAxisField( numRange );
 
-    // final TimeZone kalypsoTZ = KalypsoCorePlugin.getDefault().getTimeZone();
-    // final FixedDateTimeZone jodaTZ = new FixedDateTimeZone( kalypsoTZ.getID(), null, kalypsoTZ.getOffset( end ),
-// kalypsoTZ.getOffset( end ) );
     final DateTimeZone jodaTZ = DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
     final DurationField field = axisField.getFieldType().getDurationType().getField( GregorianChronology.getInstance( jodaTZ ) );
+
     final int tickCount = Math.max( 1, field.getDifference( end, start ) );
     final int maximumTickCount = axis.getScreenHeight() / (ticklabelSize.x + 2/* Pixel */);
-    int rollOver = 1;
-    if( tickCount > maximumTickCount )
-    {
-      for( final int i : axisField.getRollovers() )
-      {
-        if( tickCount / i < maximumTickCount )
-        {
-          rollOver = i;
-          break;
-        }
-        rollOver = i;
-      }
-      while( tickCount / rollOver > maximumTickCount )
-      {
-        rollOver = 2 * rollOver;
-      }
-    }
+    final int[] rollOvers = axisField.getRollovers();
+
+    final int rollOver = calculateRollover( tickCount, maximumTickCount, rollOvers );
+
     final List<Number> ticks = new ArrayList<Number>();
     long tick = getFirstRollValue( axisField, start, end );
     ticks.add( tick );
@@ -147,6 +129,37 @@ public class DateTimeTickCalculator implements ITickCalculator
       ticks.add( tick );
     }
 
-    return ticks.toArray( new Number[] {} );
+    return ticks.toArray( new Number[ticks.size()] );
+  }
+
+  private int calculateRollover( final int tickCount, final int maximumTickCount, final int[] rollOvers )
+  {
+    if( maximumTickCount < 0 )
+      return 1;
+
+    if( tickCount <= maximumTickCount )
+      return 1;
+
+    int rollOver = 1;
+    for( final int i : rollOvers )
+    {
+      if( tickCount / i < maximumTickCount )
+      {
+        rollOver = i;
+        break;
+      }
+      rollOver = i;
+    }
+
+    // TODO: why can it be 0 at all?
+    if( rollOver == 0 )
+      return 1;
+
+    while( tickCount / rollOver > maximumTickCount )
+    {
+      rollOver = 2 * rollOver;
+    }
+
+    return rollOver;
   }
 }

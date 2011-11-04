@@ -38,12 +38,44 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.walker;
+package org.kalypso.zml.core.diagram.data;
+
+import java.net.URL;
+import java.util.Properties;
+
+import org.kalypso.commons.java.lang.Objects;
+
+import de.openali.odysseus.chart.framework.model.IChartModel;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModelOperation
+public final class ZmlContext
 {
-  void add( Object obj );
+  public static final String PROPERTY_CALC_CASE_CONTEXT = "calcCaseContext"; //$NON-NLS-1$
+
+  public static final String KOD_PROPERTY_CALC_CASE_FOLDER = "{$calcCaseFolder}"; //$NON-NLS-1$
+
+  private ZmlContext( )
+  {
+  }
+
+  public static URL resolveContext( final IChartModel model, final String href, final URL context )
+  {
+    if( href.startsWith( KOD_PROPERTY_CALC_CASE_FOLDER ) )
+    {
+      final Properties properties = model.getProperties();
+      return (URL) Objects.firstNonNull( properties.get( PROPERTY_CALC_CASE_CONTEXT ), context );
+    }
+
+    return context;
+  }
+
+  public static String resolvePlainHref( final String href )
+  {
+    if( href.startsWith( KOD_PROPERTY_CALC_CASE_FOLDER ) )
+      return href.substring( KOD_PROPERTY_CALC_CASE_FOLDER.length() );
+
+    return href;
+  }
 }

@@ -86,7 +86,7 @@ public class WPSService implements IOGCService
    *      org.kalypso.ogc.core.service.OGCResponse, org.kalypso.ogc.core.operations.IOGCOperation)
    */
   @Override
-  public void execute( OGCRequest ogcRequest, OGCResponse ogcResponse, IOGCOperation ogcOperation ) throws OWSException
+  public void execute( final OGCRequest ogcRequest, final OGCResponse ogcResponse, final IOGCOperation ogcOperation ) throws OWSException
   {
     throw new OWSException( "Not implemented...", OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
   }

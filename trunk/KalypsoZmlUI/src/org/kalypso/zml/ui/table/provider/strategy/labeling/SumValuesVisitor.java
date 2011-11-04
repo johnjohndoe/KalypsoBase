@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,36 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table;
+package org.kalypso.zml.ui.table.provider.strategy.labeling;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.progress.UIJob;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlTableUiUpdateJob extends UIJob
+public class SumValuesVisitor implements IZmlModelColumnVisitor
 {
+  private double m_sum = 0;
 
-  private final ZmlTableComposite m_table;
-
-  public ZmlTableUiUpdateJob( final ZmlTableComposite table )
-  {
-    super( "ZmlTableUiUpdateJob" ); //$NON-NLS-1$
-    m_table = table;
-  }
-
-  /**
-   * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
-  public IStatus runInUIThread( final IProgressMonitor monitor )
+  public void visit( final IZmlValueReference reference ) throws SensorException
   {
-    m_table.refresh();
-
-    return Status.OK_STATUS;
+    final Number value = reference.getValue();
+    if( Objects.isNotNull( value ) )
+      m_sum += value.doubleValue();
   }
 
+  public Double getValue( )
+  {
+    return m_sum;
+  }
 }

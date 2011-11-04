@@ -16,14 +16,14 @@ public class XMLOutput
   /**
    * This function writes an xmlObject to the output stream of the ResponseBean.
    */
-  public static void xmlResponse( OGCResponse response, XmlObject xml )
+  public static void xmlResponse( final OGCResponse response, final XmlObject xml )
   {
     try
     {
       XmlOptions options = new XmlOptions();
       options = options.setSavePrettyPrint();
 
-      Map<String, String> prefixes = (new HashMap<String, String>());
+      final Map<String, String> prefixes = new HashMap<String, String>();
       prefixes.put( "http://www.w3.org/1999/xlink", "xlink" );
       prefixes.put( "http://www.opengis.net/ows", "ows" );
       prefixes.put( "http://www.openali.de/odysseus/service/ods/0.2.0", "" );
@@ -34,7 +34,7 @@ public class XMLOutput
 
       xml.save( response.getOutputStream(), options );
     }
-    catch( IOException ex )
+    catch( final IOException ex )
     {
       ex.printStackTrace();
     }

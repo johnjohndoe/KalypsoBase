@@ -68,7 +68,7 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements ITa
     open();
     if( m_domainValues == null )
     {
-      return ((T_domain[]) new Object[] {});
+      return (T_domain[]) new Object[] {};
     }
     final T_domain[] toArray = (T_domain[]) m_domainValues.toArray();
     return toArray;
@@ -92,7 +92,7 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements ITa
     open();
     if( m_targetValues == null )
     {
-      return ((T_target[]) new Object[] {});
+      return (T_target[]) new Object[] {};
     }
     // (T_target[]) m_targetValues.toArray()
     final Object[] toArray = new Object[m_targetValues.size()];

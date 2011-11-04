@@ -69,9 +69,9 @@ public class DateTimeAxisFieldProvider implements IDateTimeAxisFieldProvider
     else if( dr < 3 * hour )
       return new DateTimeAxisField( DateTimeFieldType.minuteOfHour(), "YY.dd.MM\nHH:mm:ss", new int[] { 1, 15, 30 }, new int[] {} );
     else if( dr < 3 * day )
-      return new DateTimeAxisField( DateTimeFieldType.minuteOfDay(), "dd.MM\nHH:mm", new int[] { 1,15,30 }, new int[] { } );
+      return new DateTimeAxisField( DateTimeFieldType.minuteOfDay(), "dd.MM\nHH:mm", new int[] { 1, 15, 30 }, new int[] {} );
     else if( dr < 7 * day )
-      return new DateTimeAxisField( DateTimeFieldType.hourOfDay(), "dd.MM\nHH:mm", new int[] {1,2,4,6,8,12}, new int[] {12 } );
+      return new DateTimeAxisField( DateTimeFieldType.hourOfDay(), "dd.MM\nHH:mm", new int[] { 1, 2, 4, 6, 8, 12 }, new int[] { 12 } );
     else if( dr < 30 * day )
       return new DateTimeAxisField( DateTimeFieldType.dayOfMonth(), "YYYY.dd.MM\ndddd", new int[] { 1, 2, 7, 14 }, new int[] { 7, 14, 28 } );
     else

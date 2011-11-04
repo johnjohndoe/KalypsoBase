@@ -166,7 +166,6 @@ public class ChartEditor extends EditorPart implements IPropertyPart
     throw new UnsupportedOperationException();
   }
 
-
   @Override
   public boolean isSaveAsAllowed( )
   {

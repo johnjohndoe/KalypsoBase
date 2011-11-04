@@ -42,6 +42,8 @@ package org.kalypso.zml.core.table.model.references;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
@@ -146,5 +148,31 @@ public class ZmlIndexValueReference implements IZmlValueReference
   public Date getIndexValue( )
   {
     return getRow().getIndexValue();
+  }
+
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj instanceof ZmlIndexValueReference )
+    {
+      final ZmlIndexValueReference other = (ZmlIndexValueReference) obj;
+
+      final EqualsBuilder builder = new EqualsBuilder();
+      builder.append( getIndexValue(), other.getIndexValue() );
+
+      return builder.isEquals();
+    }
+
+    return super.equals( obj );
+  }
+
+  @Override
+  public int hashCode( )
+  {
+    final HashCodeBuilder builder = new HashCodeBuilder();
+    builder.append( getClass().getName() );
+    builder.append( getIndexValue() );
+
+    return builder.toHashCode();
   }
 }

@@ -67,7 +67,7 @@ public class GetSymbol extends AbstractODSOperation
 
     // use default scene if no parameter value has been assigned
     String sceneId = req.getParameterValue( "SCENE" );
-    if( (sceneId == null) || "".equals( sceneId ) )
+    if( sceneId == null || "".equals( sceneId ) )
       sceneId = getEnv().getDefaultSceneId();
     if( sceneId == null )
       throw new OWSException( "Missing parameter 'SCENE'", OWSUtilities.OWS_VERSION, "en", ExceptionCode.MISSING_PARAMETER_VALUE, null );
@@ -90,7 +90,7 @@ public class GetSymbol extends AbstractODSOperation
       throw new OWSException( "Layer '" + layerId + "' is not available", OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null );
 
     final String symbolId = req.getParameterValue( "SYMBOL" );
-    if( (symbolId == null) || "".equals( symbolId.trim() ) )
+    if( symbolId == null || "".equals( symbolId.trim() ) )
       throw new OWSException( "Missing parameter 'SYMBOL'", OWSUtilities.OWS_VERSION, "en", ExceptionCode.MISSING_PARAMETER_VALUE, null );
 
     ImageData id;

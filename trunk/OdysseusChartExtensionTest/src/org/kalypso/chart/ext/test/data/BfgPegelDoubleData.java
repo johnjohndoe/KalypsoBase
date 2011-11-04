@@ -36,10 +36,9 @@ public class BfgPegelDoubleData extends AbstractDomainValueData<Double, Double>
    * parameter names are similar to those in HTTP-GET-request
    * 
    * @param url
-   *            URL der Pegeldatei
-   * 
+   *          URL der Pegeldatei
    */
-  public BfgPegelDoubleData( URL url )
+  public BfgPegelDoubleData( final URL url )
   {
     m_url = url;
 
@@ -145,24 +144,24 @@ public class BfgPegelDoubleData extends AbstractDomainValueData<Double, Double>
   }
 
   @Override
-public IDataRange<Double> getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     return new ComparableDataRange<Double>( getDomainValues() );
   }
 
   @Override
-public IDataRange<Double> getTargetRange( )
+  public IDataRange<Double> getTargetRange( )
   {
-    Double[] targetValues = getTargetValues();
+    final Double[] targetValues = getTargetValues();
     return new ComparableDataRange<Double>( targetValues );
   }
 
   @Override
   public Double[] getTargetValues( )
   {
-    Object[] vals = super.getTargetValues();
-    List<Double> list = new ArrayList<Double>();
-    for( Object val : vals )
+    final Object[] vals = super.getTargetValues();
+    final List<Double> list = new ArrayList<Double>();
+    for( final Object val : vals )
     {
       list.add( (Double) val );
     }
@@ -172,9 +171,9 @@ public IDataRange<Double> getTargetRange( )
   @Override
   public Double[] getDomainValues( )
   {
-    Object[] vals = super.getDomainValues();
-    List<Double> list = new ArrayList<Double>();
-    for( Object val : vals )
+    final Object[] vals = super.getDomainValues();
+    final List<Double> list = new ArrayList<Double>();
+    for( final Object val : vals )
     {
       list.add( (Double) val );
     }

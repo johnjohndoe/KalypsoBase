@@ -40,8 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.model;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.widgets.Table;
@@ -69,25 +69,18 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     m_row = row;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals( final Object obj )
   {
     if( obj instanceof ZmlTableCell )
     {
       final ZmlTableCell other = (ZmlTableCell) obj;
-
       return getValueReference() == other.getValueReference();
     }
 
     return super.equals( obj );
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {
@@ -97,50 +90,35 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     return builder.toHashCode();
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableCell#getColumn()
-   */
   @Override
   public IZmlTableColumn getColumn( )
   {
     return m_column;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableCell#getRow()
-   */
   @Override
   public IZmlTableRow getRow( )
   {
     return m_row;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableCell#getValueReference()
-   */
   @Override
   public IZmlValueReference getValueReference( )
   {
     return m_row.getValueReference( m_column );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableCell#getIndex()
-   */
   @Override
   public int getIndex( )
   {
     return m_row.getIndex();
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableCell#findPreviousCell()
-   */
   @Override
   public IZmlTableCell findPreviousCell( )
   {
     final int index = getIndex();
-    if( index == 0 )
+    if( index <= 0 )
       return null;
 
     final IZmlTable table = getTable();
@@ -149,9 +127,6 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     return new ZmlTableCell( previousRow, m_column );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.viewmodel.IZmlTableCell#findNextCell()
-   */
   @Override
   public IZmlTableCell findNextCell( )
   {
@@ -162,6 +137,8 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
       return null;
 
     final IZmlTableRow nextRow = table.getRow( index + 1 );
+    if( nextRow == null )
+      return null;
 
     return new ZmlTableCell( nextRow, m_column );
   }
@@ -171,7 +148,7 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
   {
     final TableColumn base = getColumn().getTableViewerColumn().getColumn();
 
-    final TableViewer tableViewer = getTable().getTableViewer();
+    final TableViewer tableViewer = getTable().getViewer();
     final Table table = tableViewer.getTable();
     final TableColumn[] columns = table.getColumns();
     for( final TableColumn col : columns )
@@ -185,9 +162,6 @@ public class ZmlTableCell extends ZmlTableElement implements IZmlTableCell
     return 2;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.IZmlTableCell#getCell()
-   */
   @Override
   public ViewerCell getViewerCell( )
   {

@@ -38,35 +38,63 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.core.diagram.base.zml;
 
-import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
  * @author Dirk Kuch
  */
-public final class ZmlModelFactory
+public class MultipleTsLinkSelection implements IMultipleTsLinkSelection
 {
-  private static ZmlModelFactory INSTANCE;
+  private final IStructuredSelection m_selection;
 
-  private ZmlModelFactory( )
+  public MultipleTsLinkSelection( final IStructuredSelection selection )
   {
-
+    m_selection = selection;
   }
 
-  public static synchronized ZmlModelFactory getInstance( )
+  @SuppressWarnings("unchecked")
+  @Override
+  public Iterator<MultipleTsLink> iterator( )
   {
-    if( INSTANCE == null )
-      INSTANCE = new ZmlModelFactory();
-
-    return INSTANCE;
+    return m_selection.iterator();
   }
 
-  public IZmlModelRow createRow( final ZmlModel model, final Date index )
+  /**
+   * @see org.eclipse.jface.viewers.IStructuredSelection#size()
+   */
+  @Override
+  public int size( )
   {
-    final ZmlModelRow row = new ZmlModelRow( model, index );
-    model.add( row );
+    return m_selection.size();
+  }
 
-    return row;
+  @Override
+  public Object[] toArray( )
+  {
+    return m_selection.toArray();
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<MultipleTsLink> toList( )
+  {
+    return m_selection.toList();
+  }
+
+  @Override
+  public boolean isEmpty( )
+  {
+    return m_selection.isEmpty();
+  }
+
+  @Override
+  public MultipleTsLink getFirstElement( )
+  {
+    return (MultipleTsLink) m_selection.getFirstElement();
   }
 }

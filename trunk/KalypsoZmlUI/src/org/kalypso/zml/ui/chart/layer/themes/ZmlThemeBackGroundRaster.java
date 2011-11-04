@@ -69,18 +69,12 @@ public class ZmlThemeBackGroundRaster extends AbstractChartLayer
     setIdentifier( ID );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#isLegend()
-   */
   @Override
   public boolean isLegend( )
   {
     return false;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractExpandableLayer#paint(org.eclipse.swt.graphics.GC)
-   */
   @Override
   public void paint( final GC gc )
   {

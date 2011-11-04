@@ -22,9 +22,9 @@ public final class ChartMath
    */
   public static double alphaFromTriangle( final Point pointA, final Point pointB, final Point pointC )
   {
-    final double sideA = Math.sqrt( Math.pow( (pointC.x - pointB.x), 2 ) + Math.pow( (pointC.y - pointB.y), 2 ) );
-    final double sideB = Math.sqrt( Math.pow( (pointC.x - pointA.x), 2 ) + Math.pow( (pointC.y - pointA.y), 2 ) );
-    final double sideC = Math.sqrt( Math.pow( (pointA.x - pointB.x), 2 ) + Math.pow( (pointA.y - pointB.y), 2 ) );
+    final double sideA = Math.sqrt( Math.pow( pointC.x - pointB.x, 2 ) + Math.pow( pointC.y - pointB.y, 2 ) );
+    final double sideB = Math.sqrt( Math.pow( pointC.x - pointA.x, 2 ) + Math.pow( pointC.y - pointA.y, 2 ) );
+    final double sideC = Math.sqrt( Math.pow( pointA.x - pointB.x, 2 ) + Math.pow( pointA.y - pointB.y, 2 ) );
     final double cosAlpha = (Math.pow( sideB, 2 ) + Math.pow( sideC, 2 ) - Math.pow( sideA, 2 )) / (2 * sideB * sideC);
     final double alpha = Math.acos( cosAlpha );
     return alpha;
@@ -36,7 +36,7 @@ public final class ChartMath
    */
   public static double perpendicularThrougB( final Point pointA, final Point pointB, final Point pointC )
   {
-    final double sideC = Math.sqrt( Math.pow( (pointA.x - pointB.x), 2 ) + Math.pow( (pointA.y - pointB.y), 2 ) );
+    final double sideC = Math.sqrt( Math.pow( pointA.x - pointB.x, 2 ) + Math.pow( pointA.y - pointB.y, 2 ) );
     final double alpha = alphaFromTriangle( pointA, pointB, pointC );
     final double height = sideC * Math.sin( alpha );
 

@@ -20,9 +20,6 @@ public class LineLayerProvider extends AbstractLayerProvider
 // // $NON-NLS-2$
   }
 
-  /**
-   * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
-   */
   protected TupleResultDomainValueData<Calendar, Double> getDataContainer( )
   {
     final String href = getParameterContainer().getParameterValue( "href", null ); // $NON-NLS-1$

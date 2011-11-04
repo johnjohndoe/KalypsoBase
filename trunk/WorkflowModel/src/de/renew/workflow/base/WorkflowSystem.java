@@ -17,7 +17,7 @@ import de.renew.workflow.contexts.WorkflowSystemExtension;
 
 /**
  * This workflow system manages the workflow instance in a description file in the project .metadata folder
- *
+ * 
  * @author Patrice Congo, Stefan Kurzbach
  */
 public class WorkflowSystem implements IWorkflowSystem, IPreferenceChangeListener
@@ -42,12 +42,12 @@ public class WorkflowSystem implements IWorkflowSystem, IPreferenceChangeListene
 
   /**
    * Loads a workflow instance for the project
-   *
+   * 
    * @exception CoreException
-   *                if this method fails. Reasons include:
-   *                <ul>
-   *                <li> The metadata folder is not accessible.</li>
-   *                <li> There is a problem loading the workflow.</li>
+   *              if this method fails. Reasons include:
+   *              <ul>
+   *              <li>The metadata folder is not accessible.</li>
+   *              <li>There is a problem loading the workflow.</li>
    */
   public WorkflowSystem( final IProject project ) throws CoreException
   {
@@ -71,7 +71,7 @@ public class WorkflowSystem implements IWorkflowSystem, IPreferenceChangeListene
     {
       m_currentWorkflow = null;
       m_project.touch( new NullProgressMonitor() );
-      final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", "Workflow definition " + workflowId + " could not be found for project" + m_project.getName() + "." );
+      final IStatus status = new Status( IStatus.ERROR, "de.renew.workflow.model", "Workflow definition " + workflowId + " could not be found for project" + m_project.getName() + "." );
       throw new CoreException( status );
     }
   }

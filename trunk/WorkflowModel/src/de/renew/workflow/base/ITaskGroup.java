@@ -44,9 +44,9 @@ import java.util.List;
 
 /**
  * Represents one task-group of an {@link IWorkflow}.
- *
+ * 
  * @author Gernot Belger
- *
+ * 
  */
 public interface ITaskGroup extends ITask
 {

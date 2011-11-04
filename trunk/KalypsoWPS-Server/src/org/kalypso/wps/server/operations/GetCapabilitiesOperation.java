@@ -63,7 +63,7 @@ public class GetCapabilitiesOperation implements IOGCOperation
    *      org.kalypso.ogc.core.service.OGCResponse)
    */
   @Override
-  public void execute( OGCRequest request, OGCResponse response )
+  public void execute( final OGCRequest request, final OGCResponse response )
   {
   }
 }

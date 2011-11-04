@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,30 +38,40 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.provider.strategy.labeling;
+package org.kalypso.zml.ui.table.provider.strategy;
 
-import org.kalypso.zml.core.table.model.walker.IZmlModelOperation;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.kalypso.zml.core.table.binding.rule.ZmlRule;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
+import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
+import org.kalypso.zml.ui.table.provider.RuleMapper;
 
 /**
  * @author Dirk Kuch
  */
-public class SumOperation implements IZmlModelOperation
+public class ZmlCollectRulesVisitor implements IZmlModelColumnVisitor
 {
-  private double m_sum = 0;
+  private final Set<ZmlRule> m_rules = new LinkedHashSet<ZmlRule>();
 
-  /**
-   * @see org.kalypso.zml.ui.table.model.walker.IZmlModelOperation#add(java.lang.Object)
-   */
-  @Override
-  public void add( final Object obj )
+  private final RuleMapper m_mapper;
+
+  public ZmlCollectRulesVisitor( final RuleMapper mapper )
   {
-    if( obj instanceof Number )
-      m_sum += ((Number) obj).doubleValue();
+    m_mapper = mapper;
   }
 
-  public Double getValue( )
+  @Override
+  public void visit( final IZmlValueReference reference )
   {
-    return m_sum;
+    Collections.addAll( m_rules, m_mapper.findActiveRules( reference ) );
+  }
+
+  public ZmlRule[] getRules( )
+  {
+    return m_rules.toArray( new ZmlRule[] {} );
   }
 
 }

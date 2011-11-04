@@ -92,7 +92,7 @@ public class CalendarParser implements IStringParser<Calendar>
           }
 
           // DurationPart auswerten
-          if( (value.startsWith( "NOW" ) && value.length() > 3) || (value.startsWith( "TODAY" ) && value.length() > 5) )
+          if( value.startsWith( "NOW" ) && value.length() > 3 || value.startsWith( "TODAY" ) && value.length() > 5 )
           {
 
             final Pattern pattern = Pattern.compile( REGEX_DURATION );
@@ -135,7 +135,7 @@ public class CalendarParser implements IStringParser<Calendar>
               final String durationForUnitStr = entry.getValue();
               if( StringUtils.isNotEmpty( durationForUnitStr ) )
               {
-                int durationForUnit = Integer.parseInt( durationForUnitStr.substring( 0, (durationForUnitStr.length() - 1) ) );
+                int durationForUnit = Integer.parseInt( durationForUnitStr.substring( 0, durationForUnitStr.length() - 1 ) );
 
                 // Falls die Duration negativ ist, muss der Wert negiert werden
                 if( "-".equals( dir ) ) //$NON-NLS-1$

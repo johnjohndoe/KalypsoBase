@@ -1,5 +1,7 @@
 package de.openali.odysseus.chart.framework.model.impl;
 
+import java.util.Properties;
+
 import org.kalypso.commons.java.lang.Arrays;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -19,13 +21,15 @@ public class ChartModel implements IChartModel
 {
   protected final ChartBehaviour m_behaviour = new ChartBehaviour( this );
 
-  private String m_identifier = "";
+  private String m_identifier = ""; //$NON-NLS-1$
 
   private final ILayerManager m_layerManager = new LayerManager( this );
 
   private final IMapperRegistry m_mapperRegistry = new MapperRegistry();
 
   protected final BasicChartSettings m_settings = new BasicChartSettings();
+
+  private final Properties m_properties = new Properties();
 
   public ChartModel( )
   {
@@ -34,12 +38,14 @@ public class ChartModel implements IChartModel
 
   /**
    * automatically scales all given axes; scaling means here: show all available values
+   * 
+   * @param axes
+   *          axes == null -> update all chart model axes
    */
   @Override
   public void autoscale( final IAxis... axes )
   {
-    final AutoScaleVisitor visitor = new AutoScaleVisitor( this);
-    // axes==null means all Axes
+    final AutoScaleVisitor visitor = new AutoScaleVisitor( this );
     for( final IAxis axis : Arrays.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes )
     {
       visitor.visit( axis );
@@ -78,29 +84,18 @@ public class ChartModel implements IChartModel
     return m_identifier;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.chart.framework.model.IChartModel#getLayerManager()
-   */
   @Override
   public ILayerManager getLayerManager( )
   {
     return m_layerManager;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.chart.framework.model.IChartModel#getAxisRegistry()
-   */
   @Override
   public IMapperRegistry getMapperRegistry( )
   {
     return m_mapperRegistry;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.ILayerContainer#getParent()
-   */
   @Override
   public ILayerContainer getParent( )
   {
@@ -117,9 +112,6 @@ public class ChartModel implements IChartModel
 // return new ChartModelState( getLayerManager() );
 // }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#getSettings()
-   */
   @Override
   public IBasicChartSettings getSettings( )
   {
@@ -134,22 +126,22 @@ public class ChartModel implements IChartModel
     autoscale();
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#setId()
-   */
   @Override
   public void setIdentifier( final String identifier )
   {
     m_identifier = identifier;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.ILayerContainer#getModel()
-   */
   @Override
   public IChartModel getModel( )
   {
     return this;
+  }
+
+  @Override
+  public Properties getProperties( )
+  {
+    return m_properties;
   }
 
 }

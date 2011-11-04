@@ -216,7 +216,7 @@ public final class StyleFactory
         catch( final CoreException e )
         {
           // FIXME: Gets Nullpointer on logging...
-          //OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+          // OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
 
           e.printStackTrace();
         }
@@ -254,7 +254,7 @@ public final class StyleFactory
   {
     final IPointStyle style = StyleUtils.getDefaultPointStyle();
 
-   // style.setTitle( pst.getTitle() );
+    // style.setTitle( pst.getTitle() );
 
     // visible
     if( pst.isSetIsVisible() )
@@ -333,9 +333,9 @@ public final class StyleFactory
   {
     final ILineStyle style = StyleUtils.getDefaultLineStyle();
 
-   // final String title = lst.getTitle();
+    // final String title = lst.getTitle();
 
-   // style.setTitle( title );
+    // style.setTitle( title );
 
     // visible
     if( lst.isSetIsVisible() )
@@ -492,7 +492,7 @@ public final class StyleFactory
     if( tst == null )
       return null;
 
-   // style.setTitle( tst.getTitle() );
+    // style.setTitle( tst.getTitle() );
 
     // visible
     if( tst.isSetIsVisible() )

@@ -47,26 +47,26 @@ import de.renew.workflow.base.ITask;
 /**
  * This listener will be notified, if a new task (a context from the workflow.xml) has been activated. <br>
  * It should only be notified, after the last task (last parent) was activated.
- *
+ * 
  * @author Holger Albert
  */
 public interface ITaskExecutionListener
 {
   /**
    * This function is called, after a task was activated.
-   *
+   * 
    * @param results
-   *            The results of the task, which was activated, as well of all of its associated tasks.
+   *          The results of the task, which was activated, as well of all of its associated tasks.
    * @param task
-   *            The task, which was activated.
+   *          The task, which was activated.
    */
   public void handleTaskExecuted( IStatus result, ITask task );
 
   /**
    * This function is called, after a task was stopped.
-   *
+   * 
    * @param task
-   *            The task, which was stopped.
+   *          The task, which was stopped.
    */
   public void handleTaskStopped( ITask task );
 }

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.xmlbeans.XmlException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -186,6 +187,12 @@ public final class LayerTypeHelper
   {
     final ProviderType providerType = layerType.getProvider();
     if( providerType == null )
+    {
+      return new PlainLayerProvider();
+    }
+
+    final String epid = providerType.getEpid();
+    if( StringUtils.isEmpty( epid ) )
     {
       return new PlainLayerProvider();
     }

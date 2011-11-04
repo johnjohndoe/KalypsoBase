@@ -49,7 +49,6 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
  */
 public interface IChartComponentProvider
 {
-
   URL getContext( );
 
   IParameterContainer getParameterContainer( );
@@ -57,5 +56,4 @@ public interface IChartComponentProvider
   IChartModel getModel( );
 
   String getId( );
-
 }

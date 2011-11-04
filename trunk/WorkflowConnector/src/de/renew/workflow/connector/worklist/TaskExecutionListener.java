@@ -61,7 +61,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  * A {@link TaskExecutionListener} handles requesting and confirming work items for commands. This
  * {@link IExecutionListener} requests a work item from the workflow system after the command has been executed and
  * confirms it before the execution of the next command.
- *
+ * 
  * @author Stefan Kurzbach
  */
 public class TaskExecutionListener implements IExecutionListener

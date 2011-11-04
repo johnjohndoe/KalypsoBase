@@ -44,21 +44,21 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.binding.CellStyle;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
 public abstract class AbstractEditingStrategy implements IZmlEditingStrategy
 {
-  private final ExtendedZmlTableColumn m_column;
+  private final ZmlTableColumn m_column;
 
-  public AbstractEditingStrategy( final ExtendedZmlTableColumn column )
+  public AbstractEditingStrategy( final ZmlTableColumn column )
   {
     m_column = column;
   }
 
-  protected ExtendedZmlTableColumn getColumn( )
+  protected ZmlTableColumn getColumn( )
   {
     return m_column;
   }

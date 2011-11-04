@@ -94,7 +94,7 @@ public class ImageTest implements PaintListener
   public void paintControl( final PaintEvent e )
   {
     final GC gc = e.gc;
-    Device device = gc.getDevice();
+    final Device device = gc.getDevice();
     final Color blue = device.getSystemColor( SWT.COLOR_BLUE );
 
     final ImageData id1 = new ImageData( 200, 200, 32, new PaletteData( 0, 0, 0 ) );

@@ -30,24 +30,26 @@ public class KalypsoZmlCore extends Plugin implements BundleActivator
 
   private static KalypsoZmlCore PLUGIN;
 
-  /*
-   * (non-Javadoc)
-   * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
-   */
+  public static final String PLUGIN_ID = "org.kalypso.zml.core"; //$NON-NLS-1$
+
+  public KalypsoZmlCore( )
+  {
+  }
+
   @Override
   public void start( final BundleContext bundleContext ) throws Exception
   {
+    super.start( bundleContext );
+
     CONTEXT = bundleContext;
     PLUGIN = this;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
-   */
   @Override
   public void stop( final BundleContext bundleContext ) throws Exception
   {
+    super.start( bundleContext );
+
     CONTEXT = null;
     PLUGIN = null;
   }

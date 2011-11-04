@@ -45,7 +45,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
   public LineStyle clone( )
   {
     final LineStyle lineStyle = new LineStyle( getWidth(), getColor(), getAlpha(), getDashOffset(), getDashArray(), getLineJoin(), getLineCap(), getMiterLimit(), isVisible() );
-   // lineStyle.setTitle( getTitle() );
+    // lineStyle.setTitle( getTitle() );
     return lineStyle;
   }
 
@@ -74,7 +74,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
     /**
      * INTERESTING: JVM (1.5, 1.6) crashes on Windows (2000, XP), if LineAttributes' dashArray is empty array
      */
-    if( (dashArray != null) && (dashArray.length == 0) )
+    if( dashArray != null && dashArray.length == 0 )
       m_dashArray = null;
     else
       m_dashArray = dashArray;
@@ -101,7 +101,7 @@ public class LineStyle extends AbstractStyle implements ILineStyle
 
     final int lineCap = m_lineCap.toSWT();
     final int lineJoin = m_lineJoin.toSWT();
-    
+
     final LineAttributes la = new LineAttributes( m_width, lineCap, lineJoin, SWT.LINE_CUSTOM, m_dashArray, m_dashOffset, m_miterLimit );
     gc.setLineAttributes( la );
   }

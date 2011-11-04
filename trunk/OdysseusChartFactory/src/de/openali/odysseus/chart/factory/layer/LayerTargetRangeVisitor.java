@@ -45,7 +45,6 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
  * @author Gernot Belger
- *
  */
 public class LayerTargetRangeVisitor extends AbstractLayerRangeVisitor
 {

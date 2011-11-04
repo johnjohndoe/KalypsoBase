@@ -83,22 +83,27 @@ public final class ZmlTableImageMerger
 
   public Image createImage( final Display display )
   {
-    if( m_images.size() == 0 )
-      return null;
+    return createImage( display, getImageReference() );
+  }
 
-    final ZmlTableImage[] images = m_images.toArray( new ZmlTableImage[] {} );
-    final String imageReference = buildImageReference( images );
+  public Image createImage( final Display display, final String imageReference )
+  {
+    final Point size = getSize();
+
+    ImageData base = new ImageData( size.x, size.y, 1, new PaletteData( new RGB[] { RGB_WHITE } ) );
+    base.transparentPixel = base.palette.getPixel( RGB_WHITE );
+
     final Image registered = IMAGE_REGISTRY.get( imageReference );
     if( registered != null )
       return registered;
 
-    final Point size = getSize();
+    if( m_images.isEmpty() )
+      return getImage( display, base, imageReference );
 
-    ImageData base = new ImageData( 1, 1, 1, new PaletteData( new RGB[] { RGB_WHITE } ) );
-    base.transparentPixel = base.palette.getPixel( RGB_WHITE );
+    final ZmlTableImage[] images = m_images.toArray( new ZmlTableImage[] {} );
 
-    final int range = getRange();
-    for( int index = 0; index < range; index++ )
+    final int icons = getNumberOfIcons();
+    for( int index = 0; index < icons; index++ )
     {
       if( index >= images.length )
         break;
@@ -108,9 +113,6 @@ public final class ZmlTableImageMerger
 
       final OverlayIcon overlay = new OverlayIcon( ImageDescriptor.createFromImageData( base ), ImageDescriptor.createFromImage( tile.getIcon() ), size )
       {
-        /**
-         * @see org.eclipse.ui.internal.OverlayIcon#drawTopRight(org.eclipse.jface.resource.ImageDescriptor)
-         */
         @Override
         protected void drawTopRight( final ImageDescriptor ov )
         {
@@ -124,13 +126,10 @@ public final class ZmlTableImageMerger
       base = overlay.getImageData();
     }
 
-    if( images.length > range )
+    if( images.length > icons )
     {
       final OverlayIcon overlay = new OverlayIcon( ImageDescriptor.createFromImageData( base ), ImageDescriptor.createFromImageData( IMG_ADDITIONAL ), size )
       {
-        /**
-         * @see org.eclipse.ui.internal.OverlayIcon#drawTopRight(org.eclipse.jface.resource.ImageDescriptor)
-         */
         @Override
         protected void drawTopRight( final ImageDescriptor ov )
         {
@@ -141,13 +140,19 @@ public final class ZmlTableImageMerger
       base = overlay.getImageData();
     }
 
+    return getImage( display, base, imageReference );
+
+  }
+
+  private Image getImage( final Display display, final ImageData base, final String imageReference )
+  {
     final Image image = new Image( display, base );
     IMAGE_REGISTRY.put( imageReference, image );
 
     return image;
   }
 
-  private int getRange( )
+  private int getNumberOfIcons( )
   {
     if( m_numberOfIcons < m_images.size() )
       return m_numberOfIcons + 1;
@@ -155,10 +160,10 @@ public final class ZmlTableImageMerger
       return m_numberOfIcons;
   }
 
-  private String buildImageReference( final ZmlTableImage[] images )
+  public String getImageReference( )
   {
     final StringBuffer buffer = new StringBuffer();
-    for( final ZmlTableImage image : images )
+    for( final ZmlTableImage image : m_images )
     {
       buffer.append( image.getHref() );
       buffer.append( ";" ); //$NON-NLS-1$

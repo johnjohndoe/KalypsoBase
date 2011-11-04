@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,43 +38,20 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.themes;
+package org.kalypso.zml.core.diagram.base.zml;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
-import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
+import java.util.Iterator;
 
-import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractDataRangeVisitor implements IObservationVisitor
+public interface IMultipleTsLinkSelection extends IStructuredSelection
 {
-  private final IChartLayerFilter[] m_filters;
+  @Override
+  MultipleTsLink getFirstElement( );
 
-  private final IAxis m_axis;
-
-  public AbstractDataRangeVisitor( final IAxis axis, final IChartLayerFilter[] filters )
-  {
-    m_axis = axis;
-    m_filters = filters;
-  }
-
-  protected boolean isFiltered( final IObservationValueContainer container )
-  {
-    for( final IChartLayerFilter filter : m_filters )
-    {
-      if( filter.isFiltered( container ) )
-        return true;
-    }
-
-    return false;
-  }
-
-  protected IAxis getAxis( )
-  {
-    return m_axis;
-  }
-
+  @Override
+  Iterator<MultipleTsLink> iterator( );
 }

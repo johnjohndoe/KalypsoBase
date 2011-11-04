@@ -159,7 +159,7 @@ public class ChartMapperFactory extends AbstractChartFactory
             axis.setData( CONFIGURATION_TYPE_KEY, axisType ); // save configuration type so it can be used for saving to
 // chartfile
             axis.setDirection( getAxisDirection( axisType ) );
-            final TitleType[] titles =  axisType.isSetLabels() ? axisType.getLabels().getTitleTypeArray() : new TitleType[] {};
+            final TitleType[] titles = axisType.isSetLabels() ? axisType.getLabels().getTitleTypeArray() : new TitleType[] {};
             final ChartTypeResolver chartTypeResolver = ChartTypeResolver.getInstance();
             for( final TitleType title : titles )
             {

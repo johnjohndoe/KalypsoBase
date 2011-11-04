@@ -13,6 +13,9 @@
   <element name="DataColumn" type="zmltable:DataColumnType" substitutionGroup="zmltable:AbstractColumn" />
   <element name="IndexColumn" type="zmltable:IndexColumnType" substitutionGroup="zmltable:AbstractColumn" />
 
+  <!-- data sources -->
+  <element name="DataSources" type="zmltable:DataSourcesType" />
+
   <!-- styles -->
   <element name="StyleSet" type="zmltable:StyleSetType" />
   <element name="Style" type="zmltable:CellStyleType" />
@@ -36,7 +39,9 @@
       <element ref="zmltable:RuleSet" minOccurs="0" maxOccurs="unbounded" />
       <element name="toolbar" type="string" minOccurs="0" maxOccurs="unbounded" />
       <element ref="zmltable:Columns" minOccurs="0" maxOccurs="1" />
+      <element ref="zmltable:DataSources" minOccurs="0" maxOccurs="1" />
     </sequence>
+    <attribute name="cleanModelOnRefresh" type="boolean" default="true" />
   </complexType>
 
   <!-- column types -->
@@ -98,8 +103,6 @@
     </restriction>
   </simpleType>
 
-
-
   <simpleType name="AlignmentType">
     <restriction base="string">
       <enumeration value="LEFT"></enumeration>
@@ -122,6 +125,23 @@
     </sequence>
     <attribute name="id" type="ID" use="required" />
   </complexType>
+
+
+  <!-- DataSources -->
+  <complexType name="DataSourcesType">
+    <sequence>
+      <element name="source" type="zmltable:DataSourcePropertyType" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
+
+  <complexType name="DataSourcePropertyType">
+    <sequence>
+    </sequence>
+    <attribute name="href" type="string" use="required" />
+    <attribute name="column" type="IDREF" use="required" />
+    <attribute name="label" type="string" use="required" />
+  </complexType>
+
 
 
   <!-- Styles -->

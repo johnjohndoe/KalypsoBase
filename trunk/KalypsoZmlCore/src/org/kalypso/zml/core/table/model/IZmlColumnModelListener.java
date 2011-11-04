@@ -45,6 +45,6 @@ package org.kalypso.zml.core.table.model;
  */
 public interface IZmlColumnModelListener
 {
-  void modelChanged( );
+  void modelChanged( final IZmlModelColumn... columns );
 
 }

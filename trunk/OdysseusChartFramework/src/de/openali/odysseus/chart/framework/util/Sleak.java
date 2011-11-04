@@ -128,9 +128,8 @@ public class Sleak
   void refreshLabel( )
   {
     int colors = 0, cursors = 0, fonts = 0, gcs = 0, images = 0, regions = 0;
-    for( int i = 0; i < objects.length; i++ )
+    for( final Object object : objects )
     {
-      final Object object = objects[i];
       if( object instanceof Color )
       {
         colors++;
@@ -226,9 +225,9 @@ public class Sleak
     list.removeAll();
     text.setText( "" );
     canvas.redraw();
-    for( int i = 0; i < objects.length; i++ )
+    for( final Object object : objects )
     {
-      list.add( objectName( objects[i] ) );
+      list.add( objectName( object ) );
     }
     refreshLabel();
     layout();
@@ -292,9 +291,8 @@ public class Sleak
       final String lf = text.getLineDelimiter();
       final StringBuffer buffer = new StringBuffer();
 
-      for( int i = 0; i < array.length; i++ )
+      for( final FontData data : array )
       {
-        final FontData data = array[i];
         String style = "NORMAL";
         final int bits = data.getStyle();
         if( bits != 0 )

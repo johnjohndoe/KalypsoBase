@@ -125,10 +125,10 @@ public class GenericLayerRenderer
 
     String tooltiptext = m_editInfo.getText();
     final Point mousePos = m_editInfo.getPosition();
-    if( (tooltiptext != null) && (mousePos != null) )
+    if( tooltiptext != null && mousePos != null )
     {
       tooltiptext = tooltiptext.replace( '\r', ' ' );
-      Display display = ChartUtilities.getDisplay();
+      final Display display = ChartUtilities.getDisplay();
       final Font oldFont = gcw.getFont();
       final Font bannerFont = JFaceResources.getTextFont();
       gcw.setFont( bannerFont );
@@ -149,7 +149,7 @@ public class GenericLayerRenderer
       }
 
       int tooly = mousePos.y + 3 + TOOLINSET + 20;
-      if( (tooly + toolsize.y > screen.height) && ((mousePos.y - 3 - TOOLINSET - toolsize.y - 20) > 0) )
+      if( tooly + toolsize.y > screen.height && mousePos.y - 3 - TOOLINSET - toolsize.y - 20 > 0 )
         tooly = mousePos.y - 3 - TOOLINSET - toolsize.y - 20;
 
       gcw.setLineWidth( 1 );

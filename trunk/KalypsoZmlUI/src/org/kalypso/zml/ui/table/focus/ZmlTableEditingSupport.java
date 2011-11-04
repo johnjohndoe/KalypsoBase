@@ -57,9 +57,9 @@ import org.kalypso.ogc.gml.table.celleditors.DefaultCellValidators;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.ui.table.model.IZmlTableCell;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.editing.IZmlEditingStrategy;
 
 import com.google.common.base.Objects;
@@ -92,19 +92,16 @@ public class ZmlTableEditingSupport extends EditingSupport
 
   private String m_lastEdited;
 
-  private final ExtendedZmlTableColumn m_column;
-
-  private final ZmlLabelProvider m_labelProvider;
+  private final ZmlTableColumn m_column;
 
   private final IZmlTableFocusHandler m_handler;
 
-  public ZmlTableEditingSupport( final ExtendedZmlTableColumn column, final ZmlLabelProvider labelProvider, final IZmlTableFocusHandler handler )
+  public ZmlTableEditingSupport( final ZmlTableColumn column, final IZmlTableFocusHandler handler )
   {
-    super( column.getTable().getTableViewer() );
+    super( column.getTable().getViewer() );
     m_column = column;
-    m_labelProvider = labelProvider;
     m_handler = handler;
-    final TableViewer viewer = column.getTable().getTableViewer();
+    final TableViewer viewer = column.getTable().getViewer();
 
     m_cellEditor = new ZmlTextCellEditor( (Composite) viewer.getControl(), SWT.NONE );
 
@@ -216,12 +213,20 @@ public class ZmlTableEditingSupport extends EditingSupport
     return m_cellEditor;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
-   */
   @Override
   protected boolean canEdit( final Object element )
   {
+    if( !m_column.getColumnType().isEditable() )
+      return false;
+
+    if( element instanceof IZmlModelRow )
+    {
+      final IZmlModelRow row = (IZmlModelRow) element;
+      final IZmlValueReference reference = row.get( m_column.getModelColumn() );
+
+      return reference != null;
+    }
+
     return true;
   }
 
@@ -235,7 +240,7 @@ public class ZmlTableEditingSupport extends EditingSupport
 
     if( element instanceof IZmlModelRow )
     {
-      final IZmlEditingStrategy strategy = m_column.getEditingStrategy( m_labelProvider );
+      final IZmlEditingStrategy strategy = m_column.getEditingStrategy();
       m_lastEdited = strategy.getValue( (IZmlModelRow) element );
     }
     else
@@ -255,7 +260,7 @@ public class ZmlTableEditingSupport extends EditingSupport
 
     if( element instanceof IZmlModelRow && value instanceof String )
     {
-      final IZmlEditingStrategy strategy = m_column.getEditingStrategy( m_labelProvider );
+      final IZmlEditingStrategy strategy = m_column.getEditingStrategy();
       strategy.setValue( (IZmlModelRow) element, (String) value );
     }
   }

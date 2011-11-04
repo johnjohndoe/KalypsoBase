@@ -158,7 +158,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
         path.add( p );
       }
     }
-    paint( gc, path.toArray( new Point[]{} ) );
+    paint( gc, path.toArray( new Point[] {} ) );
   }
 
   /**
@@ -390,7 +390,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     if( m_editPointFigure == null )
     {
       m_editPointFigure = new PointFigure();
-      m_editPointStyle = (IPointStyle)getStyleSet().getStyle( "point_style" ).clone();
+      m_editPointStyle = (IPointStyle) getStyleSet().getStyle( "point_style" ).clone();
       m_editPointStyle.setAlpha( (int) (m_editPointStyle.getAlpha() * 0.5) );
       m_editPointFigure.setStyle( m_editPointStyle );
     }
@@ -398,7 +398,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     if( m_editLineFigure == null )
     {
       m_editLineFigure = new PolylineFigure();
-      m_editLineStyle = (ILineStyle)getStyleSet().getStyle( "line_style" ).clone();
+      m_editLineStyle = (ILineStyle) getStyleSet().getStyle( "line_style" ).clone();
       m_editLineStyle.setAlpha( (int) (m_editLineStyle.getAlpha() * 0.5) );
       m_editLineFigure.setStyle( m_editLineStyle );
     }
@@ -416,7 +416,7 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     if( m_hoverPointFigure == null )
     {
       m_hoverPointFigure = new PointFigure();
-      m_hoverPointStyle = (IPointStyle)getStyleSet().getStyle( "point_style" ).clone();
+      m_hoverPointStyle = (IPointStyle) getStyleSet().getStyle( "point_style" ).clone();
       m_hoverPointFigure.setStyle( m_hoverPointStyle );
     }
 
@@ -431,9 +431,9 @@ public class EditableLineLayer extends AbstractLineLayer implements IEditableCha
     if( m_hoverLineFigure == null )
     {
       m_hoverLineFigure = new PolylineFigure();
-      m_hoverLineStyle = (ILineStyle)getStyleSet().getStyle( "line_style" ).clone();
+      m_hoverLineStyle = (ILineStyle) getStyleSet().getStyle( "line_style" ).clone();
       m_hoverLineStyle.setColor( new RGB( 255, 0, 0 ) );
-      m_hoverLineStyle.setWidth(m_hoverLineStyle.getWidth() + 2 );
+      m_hoverLineStyle.setWidth( m_hoverLineStyle.getWidth() + 2 );
       m_hoverLineFigure.setStyle( m_hoverLineStyle );
     }
 

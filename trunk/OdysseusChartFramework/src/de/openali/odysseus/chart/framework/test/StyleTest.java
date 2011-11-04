@@ -131,7 +131,7 @@ public class StyleTest implements PaintListener
       final Point p = points1[i];
       ps.setWidth( i * 2 );
       ps.setHeight( i * 3 );
-      final int alpha = (255 / points1.length) * (i + 1);
+      final int alpha = 255 / points1.length * (i + 1);
       ps.setAlpha( alpha );
       final int mod = i % 3;
       if( mod == 0 )
@@ -187,7 +187,7 @@ public class StyleTest implements PaintListener
 
     final Point[] points = new Point[size];
     for( int i = 0; i < points.length; i++ )
-      points[i] = new Point( (i * (int) ((float) width / (float) size)), (int) (Math.random() * height * 0.9) );
+      points[i] = new Point( i * (int) ((float) width / (float) size), (int) (Math.random() * height * 0.9) );
     return points;
   }
 
@@ -220,10 +220,10 @@ public class StyleTest implements PaintListener
     final Point[] points = new Point[size];
     for( int i = 0; i < points.length; i++ )
     {
-      final int x = (i * (width / size));
+      final int x = i * (width / size);
       int y = 10;
 
-      if( !((i == 0) || (i == size - 1)) )
+      if( !(i == 0 || i == size - 1) )
         y = (int) (Math.random() * height * 0.9);
 
       points[i] = new Point( x, y );

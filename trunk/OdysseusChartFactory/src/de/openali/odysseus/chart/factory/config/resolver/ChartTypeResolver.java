@@ -144,7 +144,8 @@ public final class ChartTypeResolver implements IReferenceResolver
     }
     catch( final Throwable t )
     {
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "Resolving style type failed", t ) );
+      final String msg = String.format( "Resolving style type \"%s\" failed  ", reference );
+      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( msg, t ) );
     }
   }
 

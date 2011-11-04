@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,35 +38,21 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.references;
+package org.kalypso.zml.ui.table.layout;
 
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.ZmlModelRow;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public final class ZmlValueReferenceFactory
+public class HideInactiveColumnsVisitor extends AbstractTableColumnPackVisitor
 {
-  private static ZmlValueReferenceFactory INSTANCE;
 
-  private ZmlValueReferenceFactory( )
+  @Override
+  public void visit( final IZmlTableColumn column )
   {
+    if( !column.isVisible() )
+      hide( column.getTableViewerColumn().getColumn() );
   }
 
-  public static synchronized ZmlValueReferenceFactory getInstance( )
-  {
-    if( INSTANCE == null )
-      INSTANCE = new ZmlValueReferenceFactory();
-
-    return INSTANCE;
-  }
-
-  public IZmlValueReference createReference( final ZmlModelRow row, final IZmlModelColumn column, final int tupleModelIndex )
-  {
-    final ZmlDataValueReference reference = new ZmlDataValueReference( row, column, tupleModelIndex );
-    row.add( reference );
-
-    return reference;
-  }
 }

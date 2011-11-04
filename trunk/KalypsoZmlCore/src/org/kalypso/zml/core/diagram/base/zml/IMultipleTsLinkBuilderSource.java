@@ -38,12 +38,12 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.core.diagram.base.zml;
 
 /**
  * @author Dirk Kuch
  */
-public interface IColumnLabelProvider
+public interface IMultipleTsLinkBuilderSource
 {
-  String getLabel( );
+  TSLinkWithName[] getLinks( );
 }

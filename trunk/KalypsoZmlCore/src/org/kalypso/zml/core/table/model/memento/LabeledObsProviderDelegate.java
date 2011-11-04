@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraﬂe 22
+ *  Denickestra√üe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,51 +38,83 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.commands;
+package org.kalypso.zml.core.table.model.memento;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.ui.progress.UIJob;
-import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.provider.IObsProvider;
+import org.kalypso.ogc.sensor.provider.IObsProviderListener;
+import org.kalypso.ogc.sensor.request.IRequest;
 
 /**
  * @author Dirk Kuch
  */
-public class RefreshZmlTableJob extends UIJob
+public class LabeledObsProviderDelegate implements ILabeledObsProvider
 {
-  private IZmlTable m_table;
 
-  public RefreshZmlTableJob( )
+  private final IObsProvider m_provider;
+
+  private final String m_label;
+
+  public LabeledObsProviderDelegate( final IObsProvider provider, final String label )
   {
-    super( "Aktualisiere Tabelle" );
+    m_provider = provider;
+    m_label = label;
+
   }
 
-  /**
-   * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
-  public IStatus runInUIThread( final IProgressMonitor monitor )
+  public void addListener( final IObsProviderListener listener )
   {
-    final TableViewer viewer = m_table.getTableViewer();
-    if( viewer.getControl().isDisposed() )
-      return Status.CANCEL_STATUS;
+    m_provider.addListener( listener );
 
-    viewer.refresh();
-
-    return Status.OK_STATUS;
   }
 
-  public void refresh( final IZmlTable table )
+  @Override
+  public void removeListener( final IObsProviderListener listener )
   {
-    m_table = table;
-    if( getState() == Job.SLEEPING )
-    {
-      cancel();
-    }
-
-    schedule( 200 );
+    m_provider.removeListener( listener );
   }
+
+  @Override
+  public IObsProvider copy( )
+  {
+    return m_provider.copy();
+  }
+
+  @Override
+  public void dispose( )
+  {
+    m_provider.dispose();
+  }
+
+  @Override
+  public IRequest getArguments( )
+  {
+    return m_provider.getArguments();
+  }
+
+  @Override
+  public IObservation getObservation( )
+  {
+    return m_provider.getObservation();
+  }
+
+  @Override
+  public boolean isLoaded( )
+  {
+    return m_provider.isLoaded();
+  }
+
+  @Override
+  public boolean isValid( )
+  {
+    return m_provider.isValid();
+  }
+
+  @Override
+  public String getLabel( )
+  {
+    return m_label;
+  }
+
 }

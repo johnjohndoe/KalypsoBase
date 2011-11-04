@@ -61,11 +61,11 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
  */
 public class CommandExecutor implements Runnable
 {
-  private final ICommandExecutorTrigger m_trigger;
+  private final ICommandExecutionTrigger m_trigger;
 
   private final boolean m_firstRun;
 
-  public CommandExecutor( final ICommandExecutorTrigger trigger, final boolean firstRun )
+  public CommandExecutor( final ICommandExecutionTrigger trigger, final boolean firstRun )
   {
     m_trigger = trigger;
     m_firstRun = firstRun;

@@ -49,7 +49,6 @@ import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 
 /**
  * @author burtscher1
- * 
  */
 public class EditableTestDataContainer implements IDataContainer
 {
@@ -62,7 +61,7 @@ public class EditableTestDataContainer implements IDataContainer
 
   private final ComparableDataRange<Object> m_domainRange;
 
-  public EditableTestDataContainer( int size, double targetRange )
+  public EditableTestDataContainer( final int size, final double targetRange )
   {
     m_targetData = new ArrayList<Object>();
     m_domainData = new ArrayList<Object>();
@@ -82,7 +81,7 @@ public class EditableTestDataContainer implements IDataContainer
    * @see org.kalypso.chart.framework.model.data.IDataContainer#close()
    */
   @Override
-public void close( )
+  public void close( )
   {
 
   }
@@ -91,7 +90,7 @@ public void close( )
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getDomainRange()
    */
   @Override
-public IDataRange<Object> getDomainRange( )
+  public IDataRange<Object> getDomainRange( )
   {
     return m_domainRange;
   }
@@ -100,7 +99,7 @@ public IDataRange<Object> getDomainRange( )
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getTargetRange()
    */
   @Override
-public IDataRange<Object> getTargetRange( )
+  public IDataRange<Object> getTargetRange( )
   {
     return m_targetRange;
   }
@@ -109,7 +108,7 @@ public IDataRange<Object> getTargetRange( )
    * @see org.kalypso.chart.framework.model.data.IDataContainer#isOpen()
    */
   @Override
-public boolean isOpen( )
+  public boolean isOpen( )
   {
     return true;
   }
@@ -118,7 +117,7 @@ public boolean isOpen( )
    * @see org.kalypso.chart.framework.model.data.IDataContainer#open()
    */
   @Override
-public void open( )
+  public void open( )
   {
     // nothing to do
 

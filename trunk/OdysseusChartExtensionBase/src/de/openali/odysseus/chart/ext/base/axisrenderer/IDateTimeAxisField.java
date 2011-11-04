@@ -44,7 +44,6 @@ import org.joda.time.DateTimeFieldType;
 
 /**
  * @author kimwerner
- *
  */
 public interface IDateTimeAxisField
 {

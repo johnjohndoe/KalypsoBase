@@ -78,7 +78,7 @@ public class GridLayer extends AbstractChartLayer
     }
 
     // von links nach rechts zeichnen
-    if( (m_orientation == GridOrientation.BOTH) || (m_orientation == GridOrientation.HORIZONTAL) )
+    if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.HORIZONTAL )
     {
       final Number[] vTicks = vAxis.getRenderer().getTicks( vAxis, gc );
       final IDataRange<Number> hRange = hAxis.getNumericRange();
@@ -95,7 +95,7 @@ public class GridLayer extends AbstractChartLayer
         }
     }
     // von unten nach oben zeichnen
-    if( (m_orientation == GridOrientation.BOTH) || (m_orientation == GridOrientation.VERTICAL) )
+    if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.VERTICAL )
     {
       final Number[] hTicks = hAxis.getRenderer().getTicks( hAxis, gc );
       final IDataRange<Number> vRange = vAxis.getNumericRange();
@@ -143,7 +143,7 @@ public class GridLayer extends AbstractChartLayer
 
     final ArrayList<Point> points = new ArrayList<Point>();
     // Linie von links nach rechts
-    if( (m_orientation == GridOrientation.BOTH) || (m_orientation == GridOrientation.HORIZONTAL) )
+    if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.HORIZONTAL )
     {
       points.add( new Point( 0, (int) (height * 0.3) ) );
       points.add( new Point( width, (int) (height * 0.3) ) );
@@ -157,7 +157,7 @@ public class GridLayer extends AbstractChartLayer
       points.clear();
     }
     // Linie von oben nach unten
-    if( (m_orientation == GridOrientation.BOTH) || (m_orientation == GridOrientation.VERTICAL) )
+    if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.VERTICAL )
     {
       points.add( new Point( (int) (width * 0.3), 0 ) );
       points.add( new Point( (int) (width * 0.3), height ) );
@@ -248,6 +248,6 @@ public class GridLayer extends AbstractChartLayer
   @Override
   public void dispose( )
   {
-    // FIXME: warum wird hier nicht super aufgerufen? 
+    // FIXME: warum wird hier nicht super aufgerufen?
   }
 }
