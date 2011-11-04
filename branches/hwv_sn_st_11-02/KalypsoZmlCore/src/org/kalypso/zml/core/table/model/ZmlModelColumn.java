@@ -180,49 +180,64 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnDataListe
   }
 
   @Override
-  public void update( final int index, final Object value, final String source, final Integer status ) throws SensorException
+  public void update( final int modelIndex, final Object value, final String source, final Integer status ) throws SensorException
   {
     final ITupleModel model = getTupleModel();
-
     final IAxis[] axes = model.getAxes();
 
     for( final IAxis axis : axes )
     {
-      final Object existing = model.get( index, axis );
-
       if( AxisUtils.isDataSrcAxis( axis ) )
-      {
-        // FIXME - user modified triggered interpolated state?!?
-        final DataSourceHandler handler = new DataSourceHandler( getMetadata() );
-        final int sourceIndex;
-        if( Objects.isNull( source ) )
-          sourceIndex = handler.addDataSource( IDataSourceItem.SOURCE_UNKNOWN, IDataSourceItem.SOURCE_UNKNOWN );
-        else
-          sourceIndex = handler.addDataSource( source, source );
-
-        if( Objects.notEqual( existing, sourceIndex ) )
-          model.set( index, axis, sourceIndex );
-      }
+        updateDataSourceColumn( model, axis, modelIndex, source );
       else if( AxisUtils.isStatusAxis( axis ) )
-      {
-        if( Objects.isNull( status ) )
-          model.set( index, axis, KalypsoStati.BIT_OK );
-
-        if( Objects.notEqual( existing, status ) )
-          model.set( index, axis, status );
-      }
+        updateStatusColumn( model, axis, modelIndex, status );
       else if( isTargetAxis( axis ) )
-      {
-        if( Objects.isNull( value ) )
-          model.set( index, axis, Double.NaN );
-
-        if( Objects.notEqual( existing, value ) )
-          model.set( index, axis, value );
-      }
+        updateTargetColumn( model, axis, modelIndex, value );
     }
 
     final IObservation observation = m_handler.getObservation();
     observation.fireChangedEvent( source );
+  }
+
+  private void updateTargetColumn( final ITupleModel model, final IAxis axis, final int modelIndex, final Object value ) throws SensorException
+  {
+    if( Objects.isNull( value ) )
+      model.set( modelIndex, axis, Double.NaN );
+    else
+    {
+      final Object existing = model.get( modelIndex, axis );
+
+      if( Objects.notEqual( existing, value ) )
+        model.set( modelIndex, axis, value );
+    }
+  }
+
+  private void updateStatusColumn( final ITupleModel model, final IAxis axis, final int modelIndex, final Integer status ) throws SensorException
+  {
+    if( Objects.isNull( status ) )
+      model.set( modelIndex, axis, KalypsoStati.BIT_OK );
+    else
+    {
+      final Object existing = model.get( modelIndex, axis );
+      if( Objects.notEqual( existing, status ) )
+        model.set( modelIndex, axis, status );
+    }
+  }
+
+  private void updateDataSourceColumn( final ITupleModel model, final IAxis axis, final int modelIndex, final String source ) throws SensorException
+  {
+    final Object existing = model.get( modelIndex, axis );
+
+    // FIXME - user modified triggered interpolated state?!?
+    final DataSourceHandler handler = new DataSourceHandler( getMetadata() );
+    final int sourceIndex;
+    if( Objects.isNull( source ) )
+      sourceIndex = handler.addDataSource( IDataSourceItem.SOURCE_UNKNOWN, IDataSourceItem.SOURCE_UNKNOWN );
+    else
+      sourceIndex = handler.addDataSource( source, source );
+
+    if( Objects.notEqual( existing, sourceIndex ) )
+      model.set( modelIndex, axis, sourceIndex );
   }
 
   @Override
