@@ -40,6 +40,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.service.ods.environment.IODSChart;
 import de.openali.odysseus.service.ods.environment.IODSEnvironment;
@@ -319,7 +320,7 @@ public class CapabilitiesLoader
       }
       else if( Calendar.class.isAssignableFrom( clazz ) )
       {
-        IDataOperator<Calendar> dop = axis.getDataOperator( Calendar.class );
+        IDataOperator<Calendar> dop = new DataOperatorHelper().getDataOperator( Calendar.class );
         DateRange range = xmlAxis.addNewDateRange();
         range.setMinValue( dop.numericToLogical( numericRange.getMin() ) );
         range.setMaxValue( dop.numericToLogical( numericRange.getMax() ) );
