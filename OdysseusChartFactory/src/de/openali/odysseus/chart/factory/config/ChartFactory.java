@@ -65,8 +65,7 @@ public final class ChartFactory
       try
       {
         final AbstractStyleType styleType = chartTypeResolver.findStyleType( type.getStyleref(), context );
-        // FIXME: handle styleType of null
-        final ITextStyle style = StyleFactory.createTextStyle( (TextStyleType) styleType );
+        final ITextStyle style = StyleFactory.createTextStyle( styleType == null ? null : (TextStyleType) styleType );
         final TitleTypeBean title = StyleHelper.getTitleTypeBean( type, style );
         model.getSettings().addTitles( title );
       }

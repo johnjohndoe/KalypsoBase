@@ -15,6 +15,7 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * @author alibu
@@ -23,7 +24,12 @@ public class DefaultLineLayer extends AbstractLineLayer
 {
 
   private final ITabularDataContainer< ? , ? > m_dataContainer;
+  public DefaultLineLayer( final ILayerProvider provider, final ITabularDataContainer< ? , ? > data, final IStyleSet styleSet )
+  {
+    super( provider,styleSet );
+    m_dataContainer = data;
 
+  }
   public DefaultLineLayer( final ILayerProvider provider, final ITabularDataContainer< ? , ? > data, final ILineStyle lineStyle, final IPointStyle pointStyle )
   {
     super( provider, lineStyle, pointStyle );
