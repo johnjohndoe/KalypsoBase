@@ -102,7 +102,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
   /**
    * Creates a new folder creation wizard page. If the initial resource selection contains exactly one container
    * resource then it will be used as the default container resource.
-   *
+   * 
    * @param pageName
    *          the name of the page
    * @param selection
@@ -113,12 +113,12 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
     super( "newFolderPage1" );//$NON-NLS-1$
     setTitle( pageName );
     setDescription( IDEWorkbenchMessages.WizardNewFolderMainPage_description );
-    this.currentSelection = selection;
+    currentSelection = selection;
   }
 
   /**
    * (non-Javadoc) Method declared on IDialogPage.
-   *
+   * 
    * @param parent
    */
   @Override
@@ -131,12 +131,9 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
     composite.setLayout( new GridLayout() );
     composite.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL ) );
 
-    //    WorkbenchHelp.setHelp( composite, IHelpContextIds.NEW_FOLDER_WIZARD_PAGE );
+    // WorkbenchHelp.setHelp( composite, IHelpContextIds.NEW_FOLDER_WIZARD_PAGE );
 
-    resourceGroup = new ResourceAndContainerGroup(
-        composite,
-        this,
-        IDEWorkbenchMessages.WizardNewFolderMainPage_folderName, IDEWorkbenchMessages.WizardNewFolderMainPage_folderLabel, false, SIZING_CONTAINER_GROUP_HEIGHT );
+    resourceGroup = new ResourceAndContainerGroup( composite, this, IDEWorkbenchMessages.WizardNewFolderMainPage_folderName, IDEWorkbenchMessages.WizardNewFolderMainPage_folderLabel, false, SIZING_CONTAINER_GROUP_HEIGHT );
     resourceGroup.setAllowExistingResources( false );
     initializePage();
     validatePage();
@@ -147,9 +144,9 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
   }
 
   /**
-   * The <code>WizardNewFolderCreationPage</code> implementation of this <code>Listener</code> method handles all
-   * events and enablements for controls on this page. Subclasses may extend.
-   *
+   * The <code>WizardNewFolderCreationPage</code> implementation of this <code>Listener</code> method handles all events
+   * and enablements for controls on this page. Subclasses may extend.
+   * 
    * @param ev
    */
   @Override
@@ -161,7 +158,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
   /**
    * Initializes this page's controls.
    */
-  protected void initializePage()
+  protected void initializePage( )
   {
     final Iterator currSel = currentSelection.iterator();
     if( currSel.hasNext() )
@@ -170,11 +167,11 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
       IResource selectedResource = null;
       if( next instanceof IResource )
       {
-        selectedResource = (IResource)next;
+        selectedResource = (IResource) next;
       }
       else if( next instanceof IAdaptable )
       {
-        selectedResource = (IResource)( (IAdaptable)next ).getAdapter( IResource.class );
+        selectedResource = (IResource) ((IAdaptable) next).getAdapter( IResource.class );
       }
       if( selectedResource != null )
       {
@@ -189,7 +186,6 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
   }
 
   /**
-   *
    * @see org.eclipse.jface.dialogs.IDialogPage#setVisible(boolean)
    */
   @Override
@@ -202,10 +198,10 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
 
   /**
    * Returns whether this page's controls currently all contain valid values.
-   *
+   * 
    * @return <code>true</code> if all controls are valid, and <code>false</code> if at least one is invalid
    */
-  protected boolean validatePage()
+  protected boolean validatePage( )
   {
     boolean valid = true;
 
@@ -227,7 +223,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
       }
     }
 
-    //If the name status was not set validate using the name
+    // If the name status was not set validate using the name
     if( nameStatus == null && folderName.length() > 0 )
       nameStatus = workspace.validateName( folderName, IResource.FOLDER );
 
@@ -240,8 +236,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
     if( !resourceGroup.areAllValuesValid() )
     {
       // if blank name then fail silently
-      if( resourceGroup.getProblemType() == ResourceAndContainerGroup.PROBLEM_RESOURCE_EMPTY
-          || resourceGroup.getProblemType() == ResourceAndContainerGroup.PROBLEM_CONTAINER_EMPTY )
+      if( resourceGroup.getProblemType() == ResourceAndContainerGroup.PROBLEM_RESOURCE_EMPTY || resourceGroup.getProblemType() == ResourceAndContainerGroup.PROBLEM_CONTAINER_EMPTY )
       {
         setMessage( resourceGroup.getProblemMessage() );
         setErrorMessage( null );
@@ -277,7 +272,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
    * @see org.kalypso.contribs.eclipse.core.resources.IProjectProvider#getProject()
    */
   @Override
-  public IProject getProject()
+  public IProject getProject( )
   {
     final IPath containerPath = resourceGroup.getContainerFullPath();
 
@@ -288,12 +283,12 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
     return null;
   }
 
-  public ResourceAndContainerGroup getResourceGroup()
+  public ResourceAndContainerGroup getResourceGroup( )
   {
     return resourceGroup;
   }
 
-  public IFolder getFolder()
+  public IFolder getFolder( )
   {
     final IPath containerPath = resourceGroup.getContainerFullPath();
     final IPath newFolderPath = containerPath.append( resourceGroup.getResource() );

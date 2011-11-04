@@ -108,7 +108,7 @@ public class ExecuteOperation implements IOperation
       final FileObject resultDir = manager.getResultDir( info.getId() );
       resultFile = resultDir.resolveFile( "executeResponse.xml" ); //$NON-NLS-1$
       int time = 0;
-      int timeout = 10000;
+      final int timeout = 10000;
       final int delay = 500;
       while( !resultFile.exists() && time < timeout )
       {

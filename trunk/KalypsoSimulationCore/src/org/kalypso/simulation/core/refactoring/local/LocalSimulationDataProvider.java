@@ -68,6 +68,7 @@ import org.kalypso.simulation.core.util.AbstractSimulationDataProvider;
 public class LocalSimulationDataProvider extends AbstractSimulationDataProvider
 {
   private final URL m_context;
+
   private final Map<String, String> m_inputs;
 
   public LocalSimulationDataProvider( final ModelspecData modelspec, final SimulationDataPath[] inputPaths, final URL context )
@@ -92,7 +93,7 @@ public class LocalSimulationDataProvider extends AbstractSimulationDataProvider
   {
     final String path = m_inputs.get( id );
     if( path == null )
-      throw new NoSuchElementException( Messages.getString("org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider.0") + id ); //$NON-NLS-1$
+      throw new NoSuchElementException( Messages.getString( "org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider.0" ) + id ); //$NON-NLS-1$
 
     final DataType inputType = m_modelspec == null ? null : m_modelspec.getInput( id );
 
@@ -116,7 +117,6 @@ public class LocalSimulationDataProvider extends AbstractSimulationDataProvider
           relativeURI = baseURL.resolve( URIUtil.encodePath( path ) );
         }
 
-
         // try to silently convert the URI to a URL
         try
         {
@@ -131,11 +131,11 @@ public class LocalSimulationDataProvider extends AbstractSimulationDataProvider
       }
       catch( final IOException e )
       {
-        throw new SimulationException( Messages.getString("org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider.1"), e ); //$NON-NLS-1$
+        throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider.1" ), e ); //$NON-NLS-1$
       }
       catch( final URISyntaxException e )
       {
-        throw new SimulationException( Messages.getString("org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider.2"), e ); //$NON-NLS-1$
+        throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider.2" ), e ); //$NON-NLS-1$
       }
     }
     else
@@ -150,11 +150,11 @@ public class LocalSimulationDataProvider extends AbstractSimulationDataProvider
         }
         catch( final ParseException e )
         {
-          throw new SimulationException( Messages.getString("org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider.4" , path , type), e ); //$NON-NLS-1$ 
+          throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider.4", path, type ), e ); //$NON-NLS-1$ 
         }
       }
     }
 
-    throw new SimulationException( Messages.getString("org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider.3") + type, null ); //$NON-NLS-1$
+    throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.refactoring.local.LocalSimulationDataProvider.3" ) + type, null ); //$NON-NLS-1$
   }
 }

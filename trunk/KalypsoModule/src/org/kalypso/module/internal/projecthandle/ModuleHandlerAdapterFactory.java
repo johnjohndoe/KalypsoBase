@@ -52,7 +52,6 @@ import org.kalypso.module.project.local.IProjectOpenAction;
 
 /**
  * @author Gernot Belger
- *
  */
 public class ModuleHandlerAdapterFactory implements IAdapterFactory
 {

@@ -221,17 +221,17 @@ public class RemoteInfoDialog extends TitleAreaDialog
 
           if( element instanceof KalypsoProjectBean )
             try
-          {
+            {
               final KalypsoProjectBean project = (KalypsoProjectBean) element;
 
               type.setText( project.getProjectType() );
               unix.setText( project.getUnixName() );
               url.setText( project.getUrl().toExternalForm() );
-          }
-          catch( final Exception e )
-          {
-            KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-          }
+            }
+            catch( final Exception e )
+            {
+              KalypsoProjectDatabaseClient.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+            }
         }
       } );
     }

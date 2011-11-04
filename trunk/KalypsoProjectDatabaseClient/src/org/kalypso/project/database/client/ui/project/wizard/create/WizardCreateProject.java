@@ -116,7 +116,7 @@ public class WizardCreateProject extends NewProjectWizard
         final IProject newProject = getNewProject();
         final IProjectDescription description = newProject.getDescription();
 
-        final String[] natures = (String[]) ArrayUtils.addAll( description.getNatureIds(), natureIDs );
+        final String[] natures = ArrayUtils.addAll( description.getNatureIds(), natureIDs );
         ArrayUtils.add( natures, RemoteProjectNature.NATURE_ID );
 
         // unique natures

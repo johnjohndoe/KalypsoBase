@@ -52,6 +52,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmNamespaces;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
@@ -143,7 +144,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
       Collections.addAll( changes, obsChanges );
 
       /* Profile Objects */
-      final QName memberQName = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
+      final QName memberQName = new QName( IWspmNamespaces.NS_WSPMPROF, "member" ); //$NON-NLS-1$
       final IRelationType profileObjectsRelationType = (IRelationType) featureType.getProperty( memberQName );
       final FeatureList profileObjectList = FeatureFactory.createFeatureList( targetFeature, profileObjectsRelationType, new Feature[] {} );
 

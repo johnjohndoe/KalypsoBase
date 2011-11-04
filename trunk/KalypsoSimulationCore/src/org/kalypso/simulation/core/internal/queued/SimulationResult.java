@@ -60,17 +60,17 @@ public class SimulationResult
     m_file = file;
   }
 
-  public String getID()
+  public String getID( )
   {
     return m_id;
   }
 
-  public String getPath()
+  public String getPath( )
   {
     return m_path;
   }
 
-  public File getFile()
+  public File getFile( )
   {
     return m_file;
   }

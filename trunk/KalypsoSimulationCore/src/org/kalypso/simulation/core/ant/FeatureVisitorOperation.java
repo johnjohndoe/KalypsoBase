@@ -129,10 +129,10 @@ public class FeatureVisitorOperation implements ICoreRunnableWithProgress
     final String[] featurePathes = m_visitorTask.getFeaturePathes();
     monitor.beginTask( m_visitorTask.getVisitorTaskDescription(), featurePathes.length );
     monitor.subTask( "wird bearbeitet..." );
-    
+
     final IStatusCollector stati = new StatusCollector( KalypsoSimulationCorePlugin.getID() );
     // FIXME: ERRROR-HANDLING: handling: always add OK-stati (but with good messages...)
-    // FIXME: ERRROR-HANDLING:  one status per- feature path (but remove this level if we have only one path)
+    // FIXME: ERRROR-HANDLING: one status per- feature path (but remove this level if we have only one path)
     for( final String featurePath : featurePathes )
     {
       if( monitor.isCanceled() )
@@ -167,10 +167,10 @@ public class FeatureVisitorOperation implements ICoreRunnableWithProgress
         stati.add( status );
       }
     }
-    
+
     // TODO: where to get the message from?
     // TODO: get message from the visitor-task
-    
+
     return stati.asMultiStatusOrOK( "" );
   }
 

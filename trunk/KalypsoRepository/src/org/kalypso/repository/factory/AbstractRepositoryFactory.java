@@ -61,7 +61,7 @@ public abstract class AbstractRepositoryFactory implements IRepositoryFactory
   private boolean m_cached;
 
   @Override
-  public String getRepositoryName()
+  public String getRepositoryName( )
   {
     return m_name;
   }
@@ -94,7 +94,7 @@ public abstract class AbstractRepositoryFactory implements IRepositoryFactory
   }
 
   @Override
-  public String getConfiguration()
+  public String getConfiguration( )
   {
     return m_configuration;
   }
@@ -112,7 +112,7 @@ public abstract class AbstractRepositoryFactory implements IRepositoryFactory
   }
 
   @Override
-  public boolean isReadOnly()
+  public boolean isReadOnly( )
   {
     return m_readOnly;
   }

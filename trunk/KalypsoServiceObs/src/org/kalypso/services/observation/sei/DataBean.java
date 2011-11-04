@@ -45,7 +45,7 @@ public class DataBean implements Serializable
 
   private DataHandler m_dh;
 
-  public DataBean()
+  public DataBean( )
   {
     this( null, null );
   }
@@ -56,7 +56,7 @@ public class DataBean implements Serializable
     m_dh = dh;
   }
 
-  public DataHandler getDataHandler()
+  public DataHandler getDataHandler( )
   {
     return m_dh;
   }
@@ -66,7 +66,7 @@ public class DataBean implements Serializable
     m_dh = dh;
   }
 
-  public String getId()
+  public String getId( )
   {
     return m_id;
   }

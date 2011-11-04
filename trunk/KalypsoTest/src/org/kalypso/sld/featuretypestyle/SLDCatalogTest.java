@@ -92,14 +92,14 @@ public class SLDCatalogTest extends TestCase
   {
     super.setUp();
 
-    m_manager =  KalypsoCorePlugin.getDefault().getCatalogManager();
+    m_manager = KalypsoCorePlugin.getDefault().getCatalogManager();
     m_catalogSLD = KalypsoCorePlugin.getDefault().getSLDCatalog();
 
-//    final File repository = new File( "C:/TMP/sld_repository" );
-//    m_manager = CatalogManager.getDefault( repository );
-//    m_manager.register( new URNGeneratorFeatureTypeStyle() );
-//    m_manager.register( new URNGeneratorIFeatureType() );
-//    m_catalogSLD = new CatalogSLD( m_manager, repository );
+// final File repository = new File( "C:/TMP/sld_repository" );
+// m_manager = CatalogManager.getDefault( repository );
+// m_manager.register( new URNGeneratorFeatureTypeStyle() );
+// m_manager.register( new URNGeneratorIFeatureType() );
+// m_catalogSLD = new CatalogSLD( m_manager, repository );
   }
 
   /**

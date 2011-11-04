@@ -21,7 +21,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
    * @see org.kalypso.repository.factory.IRepositoryFactory#configureRepository()
    */
   @Override
-  public boolean configureRepository()
+  public boolean configureRepository( )
   {
     return true;
   }
@@ -30,12 +30,10 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
    * The configuration string should be build in the following way:
    * <p>
    * root_location[#filter_spec]
-   * 
    * <p>
    * root_location: the location of the root directory
    * <p>
    * filter_spec: [optional] the filter specification as used in <code>MultipleWildCardFileFilter</code>
-   * 
    * <p>
    * Beispiel:
    * <p>
@@ -45,7 +43,7 @@ public class FileRepositoryFactory extends AbstractRepositoryFactory
    * @see org.kalypso.repository.factory.IRepositoryFactory#createRepository()
    */
   @Override
-  public IRepository createRepository() throws RepositoryException
+  public IRepository createRepository( ) throws RepositoryException
   {
     final String[] conf = getConfiguration().split( SEPARATOR );
 

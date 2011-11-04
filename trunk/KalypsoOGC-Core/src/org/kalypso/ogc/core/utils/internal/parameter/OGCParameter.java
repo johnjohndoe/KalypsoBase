@@ -50,27 +50,27 @@ public class OGCParameter
   /**
    * The service parameter is mandatory and describes the name of the requested service.
    */
-  private String m_service;
+  private final String m_service;
 
   /**
    * The request parameter is mandatory and describes the name of the requested operation.
    */
-  private String m_request;
+  private final String m_request;
 
   /**
    * The version parameter is mandatory for the DescribeProcess and Execute operation.
    */
-  private String m_version;
+  private final String m_version;
 
   /**
    * The acceptVersions parameter is optional and may only be provided by the GetCapabilities operation.
    */
-  private String[] m_acceptVersions;
+  private final String[] m_acceptVersions;
 
   /**
    * The language parameter is optional and describes the requested language.
    */
-  private String m_language;
+  private final String m_language;
 
   /**
    * The constructor.
@@ -86,7 +86,7 @@ public class OGCParameter
    * @param language
    *          The language parameter is optional and describes the requested language.
    */
-  public OGCParameter( String service, String request, String version, String[] acceptVersions, String language )
+  public OGCParameter( final String service, final String request, final String version, final String[] acceptVersions, final String language )
   {
     m_service = service;
     m_request = request;

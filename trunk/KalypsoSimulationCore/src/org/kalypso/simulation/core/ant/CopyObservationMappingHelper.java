@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.simulation.ui.ant.util;
+package org.kalypso.simulation.core.ant;
 
 import java.net.URL;
 
@@ -36,6 +36,7 @@ import javax.xml.namespace.QName;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -55,6 +56,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Helper class to generate a gml that can be used for converting time series. The generated gml includes a list map
@@ -82,12 +84,16 @@ public class CopyObservationMappingHelper
    * @return GMLWorkspace that represents the mapping
    * @throws Exception
    */
-  public static GMLWorkspace createMappingWorkspace( final URL context ) throws Exception
+  public static GMLWorkspace createMappingWorkspace( final URL context ) throws GMLSchemaException
   {
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
     final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogUpdateObservationMapping.NS, (String) null );
     if( schema == null )
-      throw new Exception( "could not load schema with namespace: " + UrlCatalogUpdateObservationMapping.NS );
+    {
+      System.err.println( "Failed to load schema with namespace: " + UrlCatalogUpdateObservationMapping.NS );
+      return null;
+    }
+
     final IFeatureType mapColFT = schema.getFeatureType( QNAME_MAPPING_COLLECTION );
     final Feature rootFE = FeatureFactory.createFeature( null, null, "1", mapColFT, true );
     return new GMLWorkspace_Impl( schema, schema.getAllFeatureTypes(), rootFE, context, null, null, null );
@@ -155,7 +161,8 @@ public class CopyObservationMappingHelper
      */
     final DateRange completeRange = new DateRange( measuredRange.getFrom(), doNotOverwriteRange.getTo() );
 
-    final ICopyObservationTarget timeSeriesLink = CopyObservationTargetFactory.getLink( srcContext, RESULT_TS_OUT_PROP.getLocalPart(), null, completeRange, forecastRange );
+    final GMLXPath targetPath = new GMLXPath( RESULT_TS_OUT_PROP );
+    final ICopyObservationTarget timeSeriesLink = CopyObservationTargetFactory.getLink( srcContext, targetPath, null, completeRange, forecastRange );
     final ICopyObservationSource source = new FeatureCopyObservationSource( srcContext, sources, null );
 
     final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( source, timeSeriesLink, new MetadataList(), logger );

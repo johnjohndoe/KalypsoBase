@@ -53,12 +53,11 @@ import org.kalypsodeegree_impl.model.feature.visitors.I18nFeatureVisitor;
 
 /**
  * This listeners is used to i18n gml-dictionaries (like component definitions).
- *
+ * 
  * @author thuel2
  */
 public class DictI18nGmlListener extends GmlWorkspaceListener
 {
-
 
   /**
    * @see org.kalypsodeegree.model.feature.IGmlWorkspaceListener#init(org.kalypsodeegree.model.feature.GMLWorkspace)

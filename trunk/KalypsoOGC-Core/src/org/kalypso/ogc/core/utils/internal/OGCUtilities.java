@@ -83,15 +83,15 @@ public class OGCUtilities
    *          The OGC request.
    * @return The OGC parameter.
    */
-  public static OGCParameter getParameter( OGCRequest ogcRequest ) throws OWSException, JAXBException
+  public static OGCParameter getParameter( final OGCRequest ogcRequest ) throws OWSException, JAXBException
   {
     /* Check for GET. */
-    OGCParameter getParameter = getGetParameter( ogcRequest );
+    final OGCParameter getParameter = getGetParameter( ogcRequest );
     if( getParameter != null )
       return getParameter;
 
     /* Check for POST. */
-    OGCParameter postParameter = getPostParameter( ogcRequest );
+    final OGCParameter postParameter = getPostParameter( ogcRequest );
     if( postParameter != null )
       return postParameter;
 
@@ -105,14 +105,14 @@ public class OGCUtilities
    *          The OGC request.
    * @return The OGC parameter or null.
    */
-  private static OGCParameter getGetParameter( OGCRequest ogcRequest )
+  private static OGCParameter getGetParameter( final OGCRequest ogcRequest )
   {
     if( ogcRequest.isPost() )
       return null;
 
     /* GET request. */
-    String service = ogcRequest.getParameterValue( IOGCService.PARAMETER_SERVICE );
-    String request = ogcRequest.getParameterValue( IOGCService.PARAMETER_REQUEST );
+    final String service = ogcRequest.getParameterValue( IOGCService.PARAMETER_SERVICE );
+    final String request = ogcRequest.getParameterValue( IOGCService.PARAMETER_REQUEST );
 
     String version = null;
     if( request != null && request.equals( IOGCService.OPERATION_GET_CAPABILITIES ) )
@@ -121,11 +121,11 @@ public class OGCUtilities
       version = ogcRequest.getParameterValue( IOGCService.PARAMETER_VERSION );
 
     String[] acceptVersions = null;
-    String acceptVersionsString = ogcRequest.getParameterValue( IOGCService.PARAMETER_ACCEPT_VERSIONS );
+    final String acceptVersionsString = ogcRequest.getParameterValue( IOGCService.PARAMETER_ACCEPT_VERSIONS );
     if( acceptVersionsString != null && acceptVersionsString.length() > 0 )
       acceptVersions = StringUtils.split( acceptVersionsString, "," );
 
-    String language = ogcRequest.getParameterValue( IOGCService.PARAMETER_LANGUAGE );
+    final String language = ogcRequest.getParameterValue( IOGCService.PARAMETER_LANGUAGE );
 
     return new OGCParameter( service, request, version, acceptVersions, language );
   }
@@ -137,18 +137,18 @@ public class OGCUtilities
    *          The OGC request.
    * @return The OGC parameter or null.
    */
-  private static OGCParameter getPostParameter( OGCRequest ogcRequest ) throws OWSException, JAXBException
+  private static OGCParameter getPostParameter( final OGCRequest ogcRequest ) throws OWSException, JAXBException
   {
     if( !ogcRequest.isPost() )
       return null;
 
     /* POST request. */
-    String body = ogcRequest.getBody();
+    final String body = ogcRequest.getBody();
     if( body == null || body.length() == 0 )
       throw new OWSException( "The POST request was sent without content.", OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
 
     /* Is it a request for the version 1.0.0 of the WPS? */
-    OGCParameter wpsParameter = getWPSVersion100( body );
+    final OGCParameter wpsParameter = getWPSVersion100( body );
     if( wpsParameter != null )
       return wpsParameter;
 
@@ -165,53 +165,53 @@ public class OGCUtilities
    *          The OGC request.
    * @return The OGC parameter or null.
    */
-  private static OGCParameter getWPSVersion100( String body ) throws JAXBException
+  private static OGCParameter getWPSVersion100( final String body ) throws JAXBException
   {
-    Object unmarshall = WPSUtilities.unmarshall( new StringReader( body ) );
+    final Object unmarshall = WPSUtilities.unmarshall( new StringReader( body ) );
     if( unmarshall instanceof GetCapabilities )
     {
-      GetCapabilities getCapabilities = (GetCapabilities) unmarshall;
+      final GetCapabilities getCapabilities = (GetCapabilities) unmarshall;
 
-      String service = getCapabilities.getService();
+      final String service = getCapabilities.getService();
       if( !service.equals( WPSUtilities.WPS_SERVICE ) )
         return null;
 
-      String request = IOGCService.OPERATION_GET_CAPABILITIES;
-      String version = WPSUtilities.WPS_VERSION;
-      List<String> acceptVersions = getCapabilities.getAcceptVersions().getVersion();
-      String language = getCapabilities.getLanguage();
+      final String request = IOGCService.OPERATION_GET_CAPABILITIES;
+      final String version = WPSUtilities.WPS_VERSION;
+      final List<String> acceptVersions = getCapabilities.getAcceptVersions().getVersion();
+      final String language = getCapabilities.getLanguage();
 
       return new OGCParameter( service, request, version, acceptVersions.toArray( new String[] {} ), language );
     }
 
     if( unmarshall instanceof DescribeProcess )
     {
-      DescribeProcess describeProcess = (DescribeProcess) unmarshall;
+      final DescribeProcess describeProcess = (DescribeProcess) unmarshall;
 
-      String service = describeProcess.getService();
+      final String service = describeProcess.getService();
       if( !service.equals( WPSUtilities.WPS_SERVICE ) )
         return null;
 
-      String request = IOGCService.OPERATION_DESCRIBE_PROCESS;
-      String version = describeProcess.getVersion();
-      String[] acceptVersions = null;
-      String language = describeProcess.getLanguage();
+      final String request = IOGCService.OPERATION_DESCRIBE_PROCESS;
+      final String version = describeProcess.getVersion();
+      final String[] acceptVersions = null;
+      final String language = describeProcess.getLanguage();
 
       return new OGCParameter( service, request, version, acceptVersions, language );
     }
 
     if( unmarshall instanceof Execute )
     {
-      Execute execute = (Execute) unmarshall;
+      final Execute execute = (Execute) unmarshall;
 
-      String service = execute.getService();
+      final String service = execute.getService();
       if( !service.equals( WPSUtilities.WPS_SERVICE ) )
         return null;
 
-      String request = IOGCService.OPERATION_EXECUTE;
-      String version = execute.getVersion();
-      String[] acceptVersions = null;
-      String language = execute.getLanguage();
+      final String request = IOGCService.OPERATION_EXECUTE;
+      final String version = execute.getVersion();
+      final String[] acceptVersions = null;
+      final String language = execute.getLanguage();
 
       return new OGCParameter( service, request, version, acceptVersions, language );
     }
@@ -228,15 +228,15 @@ public class OGCUtilities
    *          The OGC parameter.
    * @return The negotiated version.
    */
-  public static String negotiateVersion( OGCParameter ogcParameter ) throws OWSException
+  public static String negotiateVersion( final OGCParameter ogcParameter ) throws OWSException
   {
     /* On a request other than GetCapabilities, the client should have send a version parameter he wants to use. */
-    String request = ogcParameter.getRequest();
+    final String request = ogcParameter.getRequest();
     if( request != null && !request.equals( IOGCService.OPERATION_GET_CAPABILITIES ) )
       return ogcParameter.getVersion();
 
     /* Get the all services, matching the service parameter. */
-    IOGCService[] ogcServices = getOGCServices( ogcParameter.getService() );
+    final IOGCService[] ogcServices = getOGCServices( ogcParameter.getService() );
 
     /* Sort the services. */
     /* The one with the highest version number should be first. */
@@ -247,7 +247,7 @@ public class OGCUtilities
     /* Although optional, client software should always include this parameter, to simplify version negotiation. */
     /* The value of this parameter is a sequence of protocol version numbers that the client supports, */
     /* in order of client preference. */
-    String[] acceptVersions = ogcParameter.getAcceptVersions();
+    final String[] acceptVersions = ogcParameter.getAcceptVersions();
 
     /* If a server receives a GetCapabilities request without the AcceptVersions parameter, */
     /* it shall return a service metadata document that is compliant to the highest protocol version */
@@ -262,9 +262,9 @@ public class OGCUtilities
     /* and containing that value of the “version” parameter. */
     /* If the list does not contain any version numbers that the server supports, */
     /* the server shall return an Exception with exceptionCode="VersionNegotiationFailed". */
-    for( String acceptVersion : acceptVersions )
+    for( final String acceptVersion : acceptVersions )
     {
-      for( IOGCService ogcService : ogcServices )
+      for( final IOGCService ogcService : ogcServices )
       {
         if( acceptVersion.equals( ogcService.getVersion() ) )
           return acceptVersion;
@@ -274,14 +274,14 @@ public class OGCUtilities
     throw new OWSException( "The version negotiation has failed...", OWSUtilities.OWS_VERSION, "en", ExceptionCode.VERSION_NEGOTIATON_FAILED, null );
   }
 
-  private static IOGCService[] getOGCServices( String parameterService ) throws OWSException
+  private static IOGCService[] getOGCServices( final String parameterService ) throws OWSException
   {
     /* Memory for the OGC services. */
-    List<IOGCService> results = new ArrayList<IOGCService>();
+    final List<IOGCService> results = new ArrayList<IOGCService>();
 
     /* Get all services. */
-    IOGCService[] services = ExtensionUtilities.getServices();
-    for( IOGCService service : services )
+    final IOGCService[] services = ExtensionUtilities.getServices();
+    for( final IOGCService service : services )
     {
       if( parameterService.equals( service.getName() ) )
         results.add( service );

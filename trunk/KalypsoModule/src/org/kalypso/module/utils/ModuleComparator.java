@@ -4,7 +4,6 @@ import java.util.Comparator;
 
 import org.kalypso.module.IKalypsoModule;
 
-
 /**
  * Compares {@link IKalypsoModule}s by their priority.
  * 

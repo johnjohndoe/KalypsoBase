@@ -171,7 +171,7 @@ public class ImportObservationWizard extends Wizard implements IImportWizard
         // w/q specials...
         if( tuppelModelTarget instanceof WQTuppleModel )
         {
-          final WQTuppleModel wq = (WQTuppleModel) (tuppelModelTarget);
+          final WQTuppleModel wq = (WQTuppleModel) tuppelModelTarget;
           final Object[][] newValues = new Object[countSrc + countTarget][axesNew.length - 1];
           final ITupleModel model = new SimpleTupleModel( axesNew, newValues );
           newTuppelModel = new WQTuppleModel( model, axesNew, wq.getDateAxis(), wq.getSrcAxis(), wq.getSrcStatusAxis(), wq.getDestAxis(), wq.getDestStatusAxis(), wq.getConverter(), wq.getDestAxisPos(), wq.getDestStatusAxisPos() );

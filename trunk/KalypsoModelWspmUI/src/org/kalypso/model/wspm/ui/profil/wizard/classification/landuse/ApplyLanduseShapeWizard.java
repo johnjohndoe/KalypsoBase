@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.classification.landuse;
 
-import java.net.URL;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -49,7 +47,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
@@ -154,8 +151,7 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
       final IKalypsoTheme theme = (IKalypsoTheme) nodeElement;
       final IMapModell model = theme.getMapModell();
 
-      final URL context = model.getContext();
-      m_project = ResourceUtilities.findProjectFromURL( context );
+      m_project = model.getProject();
     }
     else
       throw new UnsupportedOperationException();

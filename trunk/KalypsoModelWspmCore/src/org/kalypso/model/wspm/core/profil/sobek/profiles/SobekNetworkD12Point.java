@@ -44,7 +44,6 @@ import java.math.BigDecimal;
 
 /**
  * @author Gernot Belger
- *
  */
 public class SobekNetworkD12Point
 {

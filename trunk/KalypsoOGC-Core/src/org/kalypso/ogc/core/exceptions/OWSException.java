@@ -112,7 +112,7 @@ public class OWSException extends Exception
    *          can be provided by the server. The contents of this locator will depend on the specific exceptionCode and
    *          OWS service, and shall be specified in the OWS Implementation Specification.
    */
-  public OWSException( String version, String lang, ExceptionCode exceptionCode, String locator )
+  public OWSException( final String version, final String lang, final ExceptionCode exceptionCode, final String locator )
   {
     /* Initialize the OWS exception. */
     init( version, lang, exceptionCode, locator );
@@ -143,7 +143,7 @@ public class OWSException extends Exception
    *          can be provided by the server. The contents of this locator will depend on the specific exceptionCode and
    *          OWS service, and shall be specified in the OWS Implementation Specification.
    */
-  public OWSException( String message, String version, String lang, ExceptionCode exceptionCode, String locator )
+  public OWSException( final String message, final String version, final String lang, final ExceptionCode exceptionCode, final String locator )
   {
     super( message );
 
@@ -177,7 +177,7 @@ public class OWSException extends Exception
    *          can be provided by the server. The contents of this locator will depend on the specific exceptionCode and
    *          OWS service, and shall be specified in the OWS Implementation Specification.
    */
-  public OWSException( Throwable cause, String version, String lang, ExceptionCode exceptionCode, String locator )
+  public OWSException( final Throwable cause, final String version, final String lang, final ExceptionCode exceptionCode, final String locator )
   {
     super( cause );
 
@@ -213,7 +213,7 @@ public class OWSException extends Exception
    *          can be provided by the server. The contents of this locator will depend on the specific exceptionCode and
    *          OWS service, and shall be specified in the OWS Implementation Specification.
    */
-  public OWSException( String message, Throwable cause, String version, String lang, ExceptionCode exceptionCode, String locator )
+  public OWSException( final String message, final Throwable cause, final String version, final String lang, final ExceptionCode exceptionCode, final String locator )
   {
     super( message, cause );
 
@@ -237,10 +237,10 @@ public class OWSException extends Exception
       writer = new StringWriter();
 
       /* Retrieve the exception types. */
-      ExceptionType[] exceptions = getExceptionTypes();
+      final ExceptionType[] exceptions = getExceptionTypes();
 
       /* Build the exception report. */
-      ExceptionReport exeptionReport = OWSUtilities.buildExeptionReport( exceptions, m_version, m_lang );
+      final ExceptionReport exeptionReport = OWSUtilities.buildExeptionReport( exceptions, m_version, m_lang );
 
       /* Marshall into the string writer. */
       OWSUtilities.marshal( exeptionReport, writer );
@@ -248,7 +248,7 @@ public class OWSException extends Exception
       /* Return the marshalled OWS exception as XML. */
       return writer.toString();
     }
-    catch( JAXBException ex )
+    catch( final JAXBException ex )
     {
       /* Ignore this exception. */
       ex.printStackTrace();
@@ -327,7 +327,7 @@ public class OWSException extends Exception
    *          can be provided by the server. The contents of this locator will depend on the specific exceptionCode and
    *          OWS service, and shall be specified in the OWS Implementation Specification.
    */
-  private void init( String version, String lang, ExceptionCode exceptionCode, String locator )
+  private void init( final String version, final String lang, final ExceptionCode exceptionCode, final String locator )
   {
     m_version = version;
     m_lang = lang;
@@ -343,7 +343,7 @@ public class OWSException extends Exception
   private ExceptionType[] getExceptionTypes( )
   {
     /* Memory for the exception types. */
-    List<ExceptionType> exceptions = new ArrayList<ExceptionType>();
+    final List<ExceptionType> exceptions = new ArrayList<ExceptionType>();
 
     /* Collect the exception types recursively. */
     collectExceptionTypes( this, exceptions );
@@ -359,16 +359,16 @@ public class OWSException extends Exception
    * @param exceptions
    *          The list of exception types.
    */
-  private void collectExceptionTypes( Throwable throwable, List<ExceptionType> exceptions )
+  private void collectExceptionTypes( final Throwable throwable, final List<ExceptionType> exceptions )
   {
     /* Build the exception type. */
-    ExceptionType exception = buildExceptionType( throwable );
+    final ExceptionType exception = buildExceptionType( throwable );
 
     /* Add to the list of exception types. */
     exceptions.add( exception );
 
     /* Recurse deeper, if neccessary. */
-    Throwable cause = throwable.getCause();
+    final Throwable cause = throwable.getCause();
     if( cause != null )
       collectExceptionTypes( cause, exceptions );
 
@@ -383,21 +383,21 @@ public class OWSException extends Exception
    *          The throwable, the exception type will be build for.
    * @return The exception type.
    */
-  private ExceptionType buildExceptionType( Throwable throwable )
+  private ExceptionType buildExceptionType( final Throwable throwable )
   {
     if( throwable instanceof OWSException )
     {
       /* Cast. */
-      OWSException owsException = (OWSException) throwable;
+      final OWSException owsException = (OWSException) throwable;
 
       /* Build the exception type. */
-      ExceptionType exception = OWSUtilities.buildExceptionType( new String[] { owsException.getMessage() }, owsException.getExceptionCode().toString(), owsException.getLocator() );
+      final ExceptionType exception = OWSUtilities.buildExceptionType( new String[] { owsException.getMessage() }, owsException.getExceptionCode().toString(), owsException.getLocator() );
 
       return exception;
     }
 
     /* Build the exception type. */
-    ExceptionType exception = OWSUtilities.buildExceptionType( new String[] { throwable.getMessage() }, ExceptionCode.NO_APPLICABLE_CODE.toString(), null );
+    final ExceptionType exception = OWSUtilities.buildExceptionType( new String[] { throwable.getMessage() }, ExceptionCode.NO_APPLICABLE_CODE.toString(), null );
 
     return exception;
   }

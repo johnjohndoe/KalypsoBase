@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.schema.gml;
 import java.util.Map;
 
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -96,9 +96,9 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
    */
   public static GM_Point convertPoint( final IProfil profile, final IRecord profilPoint, final String crs ) throws Exception
   {
-    final int compRechtswert = TupleResultUtilities.indexOfComponent( profile, IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    final int compHochwert = TupleResultUtilities.indexOfComponent( profile, IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    final int compHoehe = TupleResultUtilities.indexOfComponent( profile, IWspmConstants.POINT_PROPERTY_HOEHE );
+    final int compRechtswert = TupleResultUtilities.indexOfComponent( profile, IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
+    final int compHochwert = TupleResultUtilities.indexOfComponent( profile, IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
+    final int compHoehe = TupleResultUtilities.indexOfComponent( profile, IWspmPointProperties.POINT_PROPERTY_HOEHE );
 
     if( compRechtswert == -1 || compHochwert == -1 )
       return null;

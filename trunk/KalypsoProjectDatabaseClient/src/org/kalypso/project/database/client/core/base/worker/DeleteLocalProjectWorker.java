@@ -70,7 +70,7 @@ public class DeleteLocalProjectWorker implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final DeleteResourcesOperation operation = new DeleteResourcesOperation( new IResource[] { m_project }, Messages.getString( "org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler.0" , m_project.getName() ), true ); //$NON-NLS-1$
+    final DeleteResourcesOperation operation = new DeleteResourcesOperation( new IResource[] { m_project }, Messages.getString( "org.kalypso.project.database.client.core.project.workspace.DeleteLocalProjectHandler.0", m_project.getName() ), true ); //$NON-NLS-1$
     try
     {
       return operation.execute( monitor, null );

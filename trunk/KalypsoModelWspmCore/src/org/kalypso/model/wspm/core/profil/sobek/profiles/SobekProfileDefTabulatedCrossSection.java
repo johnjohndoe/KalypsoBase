@@ -367,7 +367,7 @@ public class SobekProfileDefTabulatedCrossSection implements ISobekProfileDefDat
       /* Add a warning in the last sobek profile warning. */
       final SobekProfileWarning profileWarning = profileWarnings.get( profileWarnings.size() - 1 );
       profileWarning.addWarning( String.format( Locale.PRC, Messages.getString( "SobekProfileDef_5" ), w2, width, lastFlowWidth ) ); //$NON-NLS-1$
-    }    
+    }
 
     return w2;
   }

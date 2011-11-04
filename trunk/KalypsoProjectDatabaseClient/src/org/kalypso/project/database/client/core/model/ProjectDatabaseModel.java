@@ -137,7 +137,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
       final IRemoteProject remote = findRemoteProject( remoteProjects, handler );
       if( remote != null )
       {
-        remoteProjects = (IRemoteProject[]) ArrayUtils.removeElement( remoteProjects, remote );
+        remoteProjects = ArrayUtils.removeElement( remoteProjects, remote );
         final TranscendenceProjectHandler project = new TranscendenceProjectHandler( handler, remote );
 
         m_projects.add( project );

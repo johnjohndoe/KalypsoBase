@@ -207,7 +207,7 @@ public class DescribeProcessOperation implements IOperation
 
     /* Get the specification for that simulation. */
     final URL spezifikation = simulation.getSpezifikation();
-    Modelspec modelData = KalypsoSimulationCoreJaxb.readModelspec( spezifikation );
+    final Modelspec modelData = KalypsoSimulationCoreJaxb.readModelspec( spezifikation );
 
     /* Build all content for the process description. */
     final String identifier = modelData.getTypeID();

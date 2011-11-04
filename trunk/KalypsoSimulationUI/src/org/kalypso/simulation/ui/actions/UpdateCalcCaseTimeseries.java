@@ -74,7 +74,7 @@ public class UpdateCalcCaseTimeseries extends AbstractHandler
     final ISelection selection = window.getSelectionService().getSelection( IPageLayout.ID_RES_NAV );
 
     // Rechenfälle raussuchen
-    final IFolder[] calcCases = CalcCaseHelper.chooseCalcCases( shell, selection, Messages.getString("org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_0"), Messages.getString("org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IFolder[] calcCases = CalcCaseHelper.chooseCalcCases( shell, selection, Messages.getString( "org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_0" ), Messages.getString( "org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( calcCases == null )
       return null;
@@ -89,7 +89,7 @@ public class UpdateCalcCaseTimeseries extends AbstractHandler
     // alle Rechenfälle aktualisieren
     for( final IFolder calcCase : calcCases )
     {
-      final Job job = new Job( Messages.getString("org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_2") + calcCase.getName() ) //$NON-NLS-1$
+      final Job job = new Job( Messages.getString( "org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_2" ) + calcCase.getName() ) //$NON-NLS-1$
       {
         /**
          * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
@@ -115,7 +115,7 @@ public class UpdateCalcCaseTimeseries extends AbstractHandler
       };
 
       // TODO see if autoRemoveListener (argument of HandleDoneJobChangeAdapter) should be true?
-      job.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, Messages.getString("org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_0"), Messages.getString("org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_4"), false, IStatus.ERROR, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      job.addJobChangeListener( new HandleDoneJobChangeAdapter( shell, Messages.getString( "org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_0" ), Messages.getString( "org.kalypso.simulation.ui.actions.UpdateCalcCaseTimeseries_4" ), false, IStatus.ERROR, true ) ); //$NON-NLS-1$ //$NON-NLS-2$
       job.setUser( true );
       job.setRule( calcCase.getProject() );
       job.schedule();

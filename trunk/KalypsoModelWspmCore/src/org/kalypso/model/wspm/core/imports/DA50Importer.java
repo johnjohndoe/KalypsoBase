@@ -56,7 +56,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.DoubleComparator;
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
@@ -166,8 +166,8 @@ public final class DA50Importer
 
     final IRecord firstPP = points[0];
     final IRecord lastPP = points[points.length - 1];
-    final Double firstBreite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, firstPP );
-    final Double lastBreite = ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, lastPP );
+    final Double firstBreite = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, firstPP );
+    final Double lastBreite = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, lastPP );
 
     double yOffset = 0;
     if( bRefFirst )
@@ -183,8 +183,8 @@ public final class DA50Importer
     final double rwLast = startPos.getX() + yLast * vx;
     final double hwLast = startPos.getY() + yLast * vy;
 
-    final IComponent cRechtswert = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    final IComponent cHochwert = profil.getPointPropertyFor( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent cRechtswert = profil.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
+    final IComponent cHochwert = profil.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
 
     if( !profil.hasPointProperty( cRechtswert ) )
     {

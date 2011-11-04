@@ -61,7 +61,7 @@ public class OGCNamespacePrefixMapper extends NamespacePrefixMapper
    *      boolean)
    */
   @Override
-  public String getPreferredPrefix( String namespaceUri, String suggestion, boolean requirePrefix )
+  public String getPreferredPrefix( final String namespaceUri, final String suggestion, final boolean requirePrefix )
   {
     /* Use xmlns-prefix for xmlns-Namespace. */
     if( "http://www.w3.org/2001/XMLSchema".equals( namespaceUri ) ) //$NON-NLS-1$

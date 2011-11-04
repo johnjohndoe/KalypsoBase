@@ -52,7 +52,7 @@ public class ObservationBean extends ItemBean
 {
   private Map<Object, Object> m_metadataList;
 
-  public ObservationBean()
+  public ObservationBean( )
   {
     this( "", "", false, null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
@@ -69,7 +69,7 @@ public class ObservationBean extends ItemBean
     m_metadataList = metadata;
   }
 
-  public Map<Object, Object> getMetadataList()
+  public Map<Object, Object> getMetadataList( )
   {
     return m_metadataList;
   }

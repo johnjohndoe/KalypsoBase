@@ -64,7 +64,7 @@ public final class CalcCaseTableTreeViewer
   private CalcCaseTableTreeViewer( )
   {
   }
-  
+
   public static void configureTreeViewer( final TreeViewer viewer )
   {
     configureTreeViewer( viewer, null );

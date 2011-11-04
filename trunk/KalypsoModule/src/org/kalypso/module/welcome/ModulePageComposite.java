@@ -83,7 +83,7 @@ public class ModulePageComposite extends Composite
     layout.verticalSpacing = 25;
     layout.marginWidth = 75;
 
-    this.setLayout( layout );
+    setLayout( layout );
 
     createControl();
   }

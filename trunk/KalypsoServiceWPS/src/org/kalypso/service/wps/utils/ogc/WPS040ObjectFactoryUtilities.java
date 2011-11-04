@@ -114,7 +114,6 @@ public class WPS040ObjectFactoryUtilities
    */
   private final static net.opengeospatial.wps.ObjectFactory WPS_0_4_0_OF = new net.opengeospatial.wps.ObjectFactory();
 
-
   /**
    * Factory for OWS Objects.
    */
@@ -503,7 +502,7 @@ public class WPS040ObjectFactoryUtilities
 
     /* Attributes. */
     execute.setService( WPSUtilities.SERVICE );
-    execute.setVersion( WPSUtilities.WPS_VERSION.V040.toString());
+    execute.setVersion( WPSUtilities.WPS_VERSION.V040.toString() );
 
     if( store != null )
       execute.setStore( store );
@@ -1479,7 +1478,6 @@ public class WPS040ObjectFactoryUtilities
     /* Attributes. */
     if( statusLocation != null )
       executeResponse.setStatusLocation( statusLocation );
-      
 
     executeResponse.setVersion( version );
 

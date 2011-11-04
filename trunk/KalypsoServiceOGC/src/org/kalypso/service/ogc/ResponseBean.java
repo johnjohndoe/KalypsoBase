@@ -47,7 +47,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * This is a object, holding the information to send an output to the requesting client.
- *
+ * 
  * @author Alex Burtscher, Holger Albert
  */
 public class ResponseBean
@@ -59,7 +59,7 @@ public class ResponseBean
 
   /**
    * The constructor.
-   *
+   * 
    * @param response
    *          The servlet response.
    */

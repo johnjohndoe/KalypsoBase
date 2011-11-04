@@ -146,7 +146,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
           {
             // FIXME *grummel* why .project file is always locked and project.setDescription() fails?
             final IProjectDescription description = project.getDescription();
-            description.setNatureIds( (String[]) ArrayUtils.add( description.getNatureIds(), RemoteProjectNature.NATURE_ID ) );
+            description.setNatureIds( ArrayUtils.add( description.getNatureIds(), RemoteProjectNature.NATURE_ID ) );
             project.setDescription( description, m );
 
             final RemoteProjectNature remote = (RemoteProjectNature) project.getNature( RemoteProjectNature.NATURE_ID );

@@ -144,7 +144,7 @@ public class ModuleNature implements IProjectNature
     if( indexOfId != -1 )
       throw new IllegalStateException( "NatureId present but unable to akquire nature" ); //$NON-NLS-1$
 
-    final String[] newNatureIds = (String[]) ArrayUtils.add( natureIds, ID );
+    final String[] newNatureIds = ArrayUtils.add( natureIds, ID );
     description.setNatureIds( newNatureIds );
 
     project.setDescription( description, null );

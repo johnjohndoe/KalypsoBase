@@ -75,7 +75,7 @@ public class LocalSimulationFactory implements ISimulationFactory
     }
     catch( final CoreException e )
     {
-      throw new SimulationException( Messages.getString("org.kalypso.simulation.core.internal.local.LocalSimulationFactory.0") + typeID, e ); //$NON-NLS-1$
+      throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.local.LocalSimulationFactory.0" ) + typeID, e ); //$NON-NLS-1$
     }
   }
 }

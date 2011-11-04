@@ -75,7 +75,7 @@ public class OGCServlet extends HttpServlet
    *      javax.servlet.http.HttpServletResponse)
    */
   @Override
-  protected void doGet( HttpServletRequest request, HttpServletResponse response )
+  protected void doGet( final HttpServletRequest request, final HttpServletResponse response )
   {
     doRequest( false, request, response );
   }
@@ -85,7 +85,7 @@ public class OGCServlet extends HttpServlet
    *      javax.servlet.http.HttpServletResponse)
    */
   @Override
-  protected void doPost( HttpServletRequest request, HttpServletResponse response )
+  protected void doPost( final HttpServletRequest request, final HttpServletResponse response )
   {
     doRequest( true, request, response );
   }
@@ -100,18 +100,18 @@ public class OGCServlet extends HttpServlet
    * @param response
    *          The servlet response.
    */
-  private void doRequest( boolean post, HttpServletRequest request, HttpServletResponse response )
+  private void doRequest( final boolean post, final HttpServletRequest request, final HttpServletResponse response )
   {
     /* Create the OGC request and the OGC response. */
-    OGCRequest ogcRequest = new OGCRequest( post, request );
-    OGCResponse ogcResponse = new OGCResponse( response );
+    final OGCRequest ogcRequest = new OGCRequest( post, request );
+    final OGCResponse ogcResponse = new OGCResponse( response );
 
     try
     {
       /* Handle the request. */
       doRequest( ogcRequest, ogcResponse );
     }
-    catch( OWSException ex )
+    catch( final OWSException ex )
     {
       /* Send a error response to the client. */
       sendErrorResponse( ogcResponse, ex );
@@ -126,34 +126,34 @@ public class OGCServlet extends HttpServlet
    * @param ogcResponse
    *          The OGC response.
    */
-  private void doRequest( OGCRequest ogcRequest, OGCResponse ogcResponse ) throws OWSException
+  private void doRequest( final OGCRequest ogcRequest, final OGCResponse ogcResponse ) throws OWSException
   {
     try
     {
       /* Get the OGC parameter. */
-      OGCParameter parameter = OGCUtilities.getParameter( ogcRequest );
+      final OGCParameter parameter = OGCUtilities.getParameter( ogcRequest );
 
-      String parameterService = parameter.getService();
+      final String parameterService = parameter.getService();
       if( parameterService == null || parameterService.length() == 0 )
         throw new OWSException( "The SERVICE parameter is mandantory.", OWSUtilities.OWS_VERSION, "en", ExceptionCode.MISSING_PARAMETER_VALUE, null );
 
-      String parameterRequest = parameter.getRequest();
+      final String parameterRequest = parameter.getRequest();
       if( parameterRequest == null || parameterRequest.length() == 0 )
         throw new OWSException( "The REQUEST parameter is mandantory.", OWSUtilities.OWS_VERSION, "en", ExceptionCode.MISSING_PARAMETER_VALUE, null );
 
       /* On a GetCapablities request, this parameter will never be null. */
-      String parameterVersion = parameter.getVersion();
+      final String parameterVersion = parameter.getVersion();
       if( parameterVersion == null || parameterVersion.length() == 0 )
         throw new OWSException( "The VERSION parameter is mandantory.", OWSUtilities.OWS_VERSION, "en", ExceptionCode.MISSING_PARAMETER_VALUE, null );
 
       /* Negotiate the version. */
-      String negotiatedVersion = OGCUtilities.negotiateVersion( parameter );
+      final String negotiatedVersion = OGCUtilities.negotiateVersion( parameter );
 
       /* Get the service. */
-      IOGCService service = ExtensionUtilities.getService( parameterService, negotiatedVersion );
+      final IOGCService service = ExtensionUtilities.getService( parameterService, negotiatedVersion );
 
       /* Get the operation. */
-      IOGCOperation operation = ExtensionUtilities.getOperation( parameterService, negotiatedVersion, parameterRequest );
+      final IOGCOperation operation = ExtensionUtilities.getOperation( parameterService, negotiatedVersion, parameterRequest );
 
       /* Execute the operation. */
       service.execute( ogcRequest, ogcResponse, operation );
@@ -161,11 +161,11 @@ public class OGCServlet extends HttpServlet
       /* Dispose the service. */
       service.dispose();
     }
-    catch( OWSException ex )
+    catch( final OWSException ex )
     {
       throw ex;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new OWSException( String.format( "Encountered an error while preparing the execution of the request. Cause: %s", ex.getMessage() ), ex, OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
     }
@@ -179,7 +179,7 @@ public class OGCServlet extends HttpServlet
    * @param owsException
    *          The OWS exception.
    */
-  private void sendErrorResponse( OGCResponse ogcResponse, OWSException owsException )
+  private void sendErrorResponse( final OGCResponse ogcResponse, final OWSException owsException )
   {
     /* The output stream writer. */
     OutputStreamWriter writer = null;
@@ -192,7 +192,7 @@ public class OGCServlet extends HttpServlet
       /* Send the response. */
       writer.write( owsException.toXML() );
     }
-    catch( IOException ex )
+    catch( final IOException ex )
     {
       /* Ignore this exception. */
       ex.printStackTrace();

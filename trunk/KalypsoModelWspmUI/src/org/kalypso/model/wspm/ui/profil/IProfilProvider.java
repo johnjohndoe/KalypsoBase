@@ -47,13 +47,13 @@ import org.kalypso.model.wspm.core.profil.IProfil;
  */
 public interface IProfilProvider
 {
-   IProfil getProfil( );
+  IProfil getProfil( );
 
-   void addProfilProviderListener( final IProfilProviderListener l );
+  void addProfilProviderListener( final IProfilProviderListener l );
 
-   void removeProfilProviderListener( final IProfilProviderListener l );
+  void removeProfilProviderListener( final IProfilProviderListener l );
 
-   void dispose( );
+  void dispose( );
 
-   Object getResult( );
+  Object getResult( );
 }

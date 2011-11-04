@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.core.profil.wrappers;
 
 import java.util.Comparator;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.result.IRecord;
 
@@ -74,36 +74,36 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
   public double getHoehe( )
   {
-    return ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOEHE, this );
+    return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, this );
   }
 
   public double getBreite( )
   {
 
-    return ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_BREITE, this );
+    return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, this );
   }
 
   public double getHochwert( )
   {
 
-    return ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_HOCHWERT, this );
+    return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT, this );
   }
 
   public double getRechtswert( )
   {
-    return ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RECHTSWERT, this );
+    return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, this );
   }
 
   public void setBreite( final double width )
   {
-    final int index = findComponent( IWspmConstants.POINT_PROPERTY_BREITE );
+    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BREITE );
     getRecord().setValue( index, Double.valueOf( width ) );
 
   }
 
   public void setHoehe( final double hoehe )
   {
-    final int index = findComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_HOEHE );
     getRecord().setValue( index, Double.valueOf( hoehe ) );
   }
 
@@ -118,7 +118,7 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
   public void setKsValue( final Double ksValue )
   {
-    final int index = findComponent( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS );
+    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
     if( index < 0 )
       return;
 
@@ -127,7 +127,7 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
   public void setKstValue( final Double kstValue )
   {
-    final int index = findComponent( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST );
+    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
     if( index < 0 )
       return;
 
@@ -150,17 +150,17 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
   public Double getKsValue( )
   {
-    return ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KS, this );
+    return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, this );
   }
 
   public Double getKstValue( )
   {
-    return ProfilUtil.getDoubleValueFor( IWspmConstants.POINT_PROPERTY_RAUHEIT_KST, this );
+    return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, this );
   }
 
   public void setBewuchsAx( final Double bewuchsAx )
   {
-    final int index = findComponent( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
+    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
     if( index < 0 )
       return;
 
@@ -169,7 +169,7 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
   public void setBewuchsAy( final Double bewuchsAy )
   {
-    final int index = findComponent( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
+    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
     if( index < 0 )
       return;
 
@@ -178,7 +178,7 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
   public void setBewuchsDp( final Double bewuchsDp )
   {
-    final int index = findComponent( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
+    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
     if( index < 0 )
       return;
 
@@ -187,7 +187,7 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
   public void setRechtswert( final double x )
   {
-    final int index = findComponent( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
     if( index < 0 )
       return;
     getRecord().setValue( index, x );
@@ -195,7 +195,7 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
   public void setHochwert( final double y )
   {
-    final int index = findComponent( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
     if( index < 0 )
       return;
 
@@ -204,7 +204,7 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
   public Double getBewuchsAx( )
   {
-    final int index = findComponent( IWspmConstants.POINT_PROPERTY_BEWUCHS_AX );
+    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
     if( index < 0 )
       return null;
 
@@ -217,7 +217,7 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
   public Double getBewuchsAy( )
   {
-    final int index = findComponent( IWspmConstants.POINT_PROPERTY_BEWUCHS_AY );
+    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
     if( index < 0 )
       return null;
 
@@ -230,7 +230,7 @@ public class ProfilePointWrapper extends AbstractRecordWrapper implements IRecor
 
   public Double getBewuchsDp( )
   {
-    final int index = findComponent( IWspmConstants.POINT_PROPERTY_BEWUCHS_DP );
+    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
     if( index < 0 )
       return null;
 

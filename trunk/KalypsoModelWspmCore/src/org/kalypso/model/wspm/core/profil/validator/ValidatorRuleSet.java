@@ -80,11 +80,11 @@ public class ValidatorRuleSet
         {
           try
           {
-            System.out.print("(validation_performance_check)        rule: "+r.getID()+"start: "+DateTime.now().toString( "mm:ss:" )+DateTime.now().getMillisOfSecond());
+            System.out.print( "(validation_performance_check)        rule: " + r.getID() + "start: " + DateTime.now().toString( "mm:ss:" ) + DateTime.now().getMillisOfSecond() );
 
             r.validate( profil, collector );
-            
-            System.out.println(" end: "+DateTime.now().toString( "mm:ss:" )+DateTime.now().getMillisOfSecond());
+
+            System.out.println( " end: " + DateTime.now().toString( "mm:ss:" ) + DateTime.now().getMillisOfSecond() );
 
           }
           catch( final CoreException e )

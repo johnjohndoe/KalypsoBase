@@ -139,7 +139,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
       @Override
       public void execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( Messages.getString("NewCalculationCaseWizard.0"), 1000 ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString( "NewCalculationCaseWizard.0" ), 1000 ); //$NON-NLS-1$
         monitor.subTask( StringUtils.EMPTY ); // Hack, else the begin task will not be set here
 
         controlPage.saveChanges( newFolderHandle, new SubProgressMonitor( monitor, 100 ) );
@@ -290,7 +290,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
       if( !folderHandle.exists() )
       {
         final IContainer parent = folderHandle.getParent();
-        if( parent instanceof IFolder && (!((IFolder) parent).exists()) )
+        if( parent instanceof IFolder && !((IFolder) parent).exists() )
           createFolder( (IFolder) parent, monitor );
 
         folderHandle.create( false, true, monitor );

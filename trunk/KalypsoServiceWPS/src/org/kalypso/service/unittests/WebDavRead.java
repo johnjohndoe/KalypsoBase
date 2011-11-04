@@ -69,16 +69,16 @@ public class WebDavRead
   @Test
   public void testWebDavRead( ) throws IOException
   {
-    DefaultFileSystemManager manager = new DefaultFileSystemManager();
+    final DefaultFileSystemManager manager = new DefaultFileSystemManager();
     manager.addProvider( "webdav", new WebdavFileProvider() );
     manager.addProvider( "file", new DefaultLocalFileProvider() );
     manager.init();
 
-    FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/Test/test.txt" );
+    final FileObject davFile = manager.resolveFile( "webdav://albert:gnimfe@ibpm.bjoernsen.de/dav/pub/Test/test.txt" );
     Assert.assertNotNull( davFile );
 
-    File file = new File( FileUtilities.TMP_DIR, "davRead.txt" );
-    FileObject tmpFile = manager.toFileObject( file );
+    final File file = new File( FileUtilities.TMP_DIR, "davRead.txt" );
+    final FileObject tmpFile = manager.toFileObject( file );
     Assert.assertNotNull( tmpFile );
 
     InputStream is = null;

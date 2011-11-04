@@ -58,7 +58,7 @@ public class ProjectDatabaseServiceLocator
   {
     final String namespaceURI = "http://server.database.project.kalypso.org/"; //$NON-NLS-1$
     final String serviceImplName = ProjectDatabase.class.getSimpleName();
-    
+
     final URL wsdlLocation = new URL( wsdlLocationProperty );
     final QName serviceName = new QName( namespaceURI, serviceImplName + "Service" ); //$NON-NLS-1$
 

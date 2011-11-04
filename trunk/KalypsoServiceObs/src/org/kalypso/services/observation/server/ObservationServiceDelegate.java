@@ -46,10 +46,12 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.Hashtable;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,9 +61,11 @@ import javax.activation.FileDataSource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.eclipse.ui.services.IDisposable;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -90,6 +94,7 @@ import org.kalypso.services.observation.sei.IObservationService;
 import org.kalypso.services.observation.sei.ItemBean;
 import org.kalypso.services.observation.sei.ObservationBean;
 import org.kalypso.services.observation.sei.RepositoryBean;
+import org.kalypso.services.observation.sei.StatusBean;
 import org.kalypso.zml.request.Request;
 
 /**
@@ -99,7 +104,7 @@ import org.kalypso.zml.request.Request;
  * manipulate the observation before it is delivered. ObservationManipulators are configured within the
  * IObservationService configuration file. All entries that begin with "MANIPULATOR_" are defining such manipulators.
  * The syntax of the configuration is as follows: MANIPULATOR_&lt;repository_id&gt;=&lt;manipulator_class_name&gt;.
- *
+ * 
  * @author Marc Schlienger
  * @author Gernot Belger
  * @author Holger Albert
@@ -207,7 +212,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
 
   /**
    * Initialise the Service according to configuration.
-   *
+   * 
    * @throws RemoteException
    */
   protected final synchronized void init( ) throws RepositoryException
@@ -646,7 +651,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
 
   /**
    * FIXME at the moment we assume that an new item should be created in all sub repositories
-   *
+   * 
    * @see org.kalypso.services.observation.sei.IRepositoryService#makeItem(java.lang.String)
    */
   @Override
@@ -664,7 +669,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
 
   /**
    * FIXME at the moment we assume that an item should be deleted in all sub repositories
-   *
+   * 
    * @see org.kalypso.services.observation.sei.IRepositoryService#deleteItem(java.lang.String)
    */
   @Override
@@ -740,5 +745,19 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     }
 
     return false;
+  }
+
+  @Override
+  public StatusBean getStatus( final String type )
+  {
+    final Set<IStatus> stati = new LinkedHashSet<IStatus>();
+    for( final IRepository repository : m_repositories )
+    {
+      stati.add( repository.getStatus( type ) );
+    }
+
+    final IStatus status = StatusUtilities.createStatus( stati, "Repository states" );
+
+    return new StatusBean( status.getSeverity(), status.getPlugin(), status.getMessage() );
   }
 }
