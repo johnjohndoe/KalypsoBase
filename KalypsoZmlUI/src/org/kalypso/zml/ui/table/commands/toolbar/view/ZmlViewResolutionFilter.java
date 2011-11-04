@@ -47,12 +47,12 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
 
 /**
@@ -179,7 +179,10 @@ public class ZmlViewResolutionFilter extends ViewerFilter
 
   public void add2Offset( final int number )
   {
-    m_offset += number;
+    if( m_offset + number > m_resolution )
+      resetOffset();
+    else
+      m_offset += number;
   }
 
   public void setParameters( final int resolution, final boolean mode )
@@ -190,7 +193,7 @@ public class ZmlViewResolutionFilter extends ViewerFilter
     m_resolution = resolution;
     m_stuetzstellenMode = mode;
 
-    m_table.fireTableChanged();
+    m_table.fireTableChanged( IZmlTableListener.TYPE_REFRESH );
   }
 
   public int getResolution( )
@@ -203,23 +206,8 @@ public class ZmlViewResolutionFilter extends ViewerFilter
     return m_stuetzstellenMode;
   }
 
-  public void resetOffset( final IZmlModelRow row, final int startHour )
+  public void resetOffset( )
   {
-    final String type = getType( row );
-    if( ITimeseriesConstants.TYPE_RAINFALL.equals( type ) )
-      m_offset = 0;
-    else
-      m_offset -= m_offset % startHour - 1;
-  }
-
-  private String getType( final IZmlModelRow row )
-  {
-    final IZmlValueReference[] references = row.getReferences();
-    for( final IZmlValueReference reference : references )
-    {
-      return reference.getColumn().getValueAxis().getType();
-    }
-
-    return null;
+    m_offset = 1;
   }
 }

@@ -77,9 +77,6 @@ public class ZmlSinglePointLayerVisitor implements IObservationVisitor
     m_filters = filters;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.visitor.IObservationVisitor#visit(org.kalypso.ogc.sensor.visitor.IObservationValueContainer)
-   */
   @Override
   public void visit( final IObservationValueContainer container ) throws CancelVisitorException
   {

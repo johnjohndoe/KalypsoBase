@@ -57,7 +57,7 @@ public class DefaultUnfilteredLineLayer extends DefaultLineLayer
         path.add( new Point( ori.getX( unswitched ), ori.getY( unswitched ) ) );
       }
 
-      paint( gc, path.toArray( new Point[]{} ) );
+      paint( gc, path.toArray( new Point[] {} ) );
 
     }
     else

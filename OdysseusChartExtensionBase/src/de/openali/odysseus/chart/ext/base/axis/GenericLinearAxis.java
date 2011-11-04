@@ -5,8 +5,6 @@ import de.openali.odysseus.chart.ext.base.axisrenderer.ExtendedAxisRenderer;
 import de.openali.odysseus.chart.ext.base.axisrenderer.GenericNumberTickCalculator;
 import de.openali.odysseus.chart.ext.base.axisrenderer.NumberLabelCreator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
@@ -51,7 +49,7 @@ public class GenericLinearAxis extends AbstractAxis
     return logical;
   }
 
-   /**
+  /**
    * Uses the widgets' complete extension to calculate the screen value in correspondence to a normalized value
    * 
    * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#normalizedToScreen(double)

@@ -74,18 +74,18 @@ public class ExportClipboardHandler extends AbstractHandler
     try
     {
       /* Get the evaluation context. */
-      IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
       /* Get the shell. */
-      Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+      final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
       /* Get the chart composite. */
-      IChartComposite chartComposite = ChartHandlerUtilities.getChart( context );
+      final IChartComposite chartComposite = ChartHandlerUtilities.getChart( context );
 
       /* Create the image. */
-      Rectangle bounds = chartComposite.getPlot().getBounds();
-      ChartPainter chartPainter = new ChartPainter( chartComposite.getChartModel(), bounds );
-      ImageData imageData = chartPainter.getImageData();
+      final Rectangle bounds = chartComposite.getPlot().getBounds();
+      final ChartPainter chartPainter = new ChartPainter( chartComposite.getChartModel(), bounds );
+      final ImageData imageData = chartPainter.getImageData();
 
       /* Create a new clipboard. */
       clipboard = new Clipboard( shell.getDisplay() );
@@ -95,7 +95,7 @@ public class ExportClipboardHandler extends AbstractHandler
 
       return null;
     }
-    catch( Exception ex )
+    catch( final Exception ex )
     {
       throw new ExecutionException( ex.getMessage(), ex );
     }

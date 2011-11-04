@@ -40,16 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.loader;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -58,35 +55,30 @@ import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.ZmlModel;
-import org.kalypso.zml.core.table.model.ZmlModelFactory;
 import org.kalypso.zml.core.table.model.ZmlModelRow;
-import org.kalypso.zml.core.table.model.references.ZmlValueReferenceFactory;
+import org.kalypso.zml.core.table.model.references.ZmlDataValueReference;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlModelBuilder implements ICoreRunnableWithProgress
+public class ZmlRowBuilder
 {
   private final ZmlModel m_model;
 
-  public ZmlModelBuilder( final ZmlModel model )
+  public ZmlRowBuilder( final ZmlModel model )
   {
     m_model = model;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public Map<Date, IZmlModelRow> execute( )
   {
-    final ZmlModelFactory modelFactory = ZmlModelFactory.getInstance();
-    final ZmlValueReferenceFactory referenceFactory = ZmlValueReferenceFactory.getInstance();
-
-    final Map<Object, IZmlModelRow> rows = new TreeMap<Object, IZmlModelRow>();
+    final Map<Date, IZmlModelRow> rows = Collections.synchronizedMap( new TreeMap<Date, IZmlModelRow>() );
 
     for( final IZmlModelColumn column : m_model.getColumns() )
     {
+      if( !column.isActive() )
+        continue;
+
       final DataColumn type = column.getDataColumn();
       final IAxis[] axes = column.getAxes();
       final IAxis indexAxis = AxisUtils.findAxis( axes, type.getIndexAxis() );
@@ -100,11 +92,11 @@ public class ZmlModelBuilder implements ICoreRunnableWithProgress
           IZmlModelRow row = rows.get( indexValue );
           if( Objects.isNull( row ) )
           {
-            row = modelFactory.createRow( m_model, indexValue );
+            row = new ZmlModelRow( m_model, indexValue );
             rows.put( indexValue, row );
           }
 
-          referenceFactory.createReference( (ZmlModelRow) row, column, modelIndex );
+          ((ZmlModelRow) row).add( new ZmlDataValueReference( row, column, modelIndex ) );
         }
       }
       catch( final SensorException e )
@@ -113,7 +105,6 @@ public class ZmlModelBuilder implements ICoreRunnableWithProgress
       }
     }
 
-    return Status.OK_STATUS;
+    return rows;
   }
-
 }

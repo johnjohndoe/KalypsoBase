@@ -49,10 +49,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 
 /**
- * @author burtscher1
- * 
- * DataContainer zum Testen, ob das generische Achsen-Konzept funktioniert
- * 
+ * @author burtscher1 DataContainer zum Testen, ob das generische Achsen-Konzept funktioniert
  */
 public class GenericAxisTimeSeriesDataContainer implements IListDataContainer<Calendar, Number>
 {
@@ -99,7 +96,7 @@ public class GenericAxisTimeSeriesDataContainer implements IListDataContainer<Ca
    * @see org.kalypso.chart.framework.model.data.IDataContainer#close()
    */
   @Override
-public void close( )
+  public void close( )
   {
 
   }
@@ -108,7 +105,7 @@ public void close( )
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getDomainRange()
    */
   @Override
-public IDataRange<Calendar> getDomainRange( )
+  public IDataRange<Calendar> getDomainRange( )
   {
     return m_domainRange;
   }
@@ -117,7 +114,7 @@ public IDataRange<Calendar> getDomainRange( )
    * @see org.kalypso.chart.framework.model.data.IDataContainer#getTargetRange()
    */
   @Override
-public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange( )
   {
     return m_targetRange;
   }
@@ -126,7 +123,7 @@ public IDataRange<Number> getTargetRange( )
    * @see org.kalypso.chart.framework.model.data.IDataContainer#isOpen()
    */
   @Override
-public boolean isOpen( )
+  public boolean isOpen( )
   {
     return true;
   }
@@ -135,20 +132,20 @@ public boolean isOpen( )
    * @see org.kalypso.chart.framework.model.data.IDataContainer#open()
    */
   @Override
-public void open( )
+  public void open( )
   {
     // TODO Auto-generated method stub
 
   }
 
   @Override
-public List<Number> getTargetValues( )
+  public List<Number> getTargetValues( )
   {
     return m_targetData;
   }
 
   @Override
-public List<Calendar> getDomainValues( )
+  public List<Calendar> getDomainValues( )
   {
     return m_domainData;
   }

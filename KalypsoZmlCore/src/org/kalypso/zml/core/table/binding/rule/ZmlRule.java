@@ -85,7 +85,6 @@ public class ZmlRule
   public ZmlRule( final RuleType rule )
   {
     m_rule = rule;
-
     setEnabled( rule.isEnabled() );
   }
 
@@ -208,5 +207,10 @@ public class ZmlRule
   public RuleType getRuleType( )
   {
     return m_rule;
+  }
+
+  public void reset( )
+  {
+    m_instructions = null;
   }
 }

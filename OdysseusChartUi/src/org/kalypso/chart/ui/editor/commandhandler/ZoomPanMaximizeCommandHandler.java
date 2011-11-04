@@ -25,9 +25,7 @@ public class ZoomPanMaximizeCommandHandler extends AbstractHandler implements IE
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-
     final IChartComposite chart = ChartHandlerUtilities.getChartChecked( context );
-
 
     final IPlotHandler plotHandler = chart.getPlotHandler();
     m_handler = new ZoomPanMaximizeHandler( chart, getDirection( event ) );

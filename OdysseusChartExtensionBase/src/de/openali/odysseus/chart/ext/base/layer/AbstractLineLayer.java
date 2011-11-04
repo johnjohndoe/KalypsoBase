@@ -2,6 +2,7 @@ package de.openali.odysseus.chart.ext.base.layer;
 
 import java.util.ArrayList;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -47,6 +48,8 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
   public AbstractLineLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
     super( provider );
+
+    Assert.isNotNull( styleSet );
     m_styleSet = styleSet;
 
   }
@@ -169,7 +172,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer implements IT
 
   }
 
-  public void setStyleSet( IStyleSet styleSet )
+  public void setStyleSet( final IStyleSet styleSet )
   {
     m_styleSet = styleSet;
   }

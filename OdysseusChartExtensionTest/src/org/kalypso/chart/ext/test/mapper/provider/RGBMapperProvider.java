@@ -52,7 +52,6 @@ import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
 /**
  * @author alibu
- * 
  */
 public class RGBMapperProvider extends AbstractMapperProvider
 {
@@ -61,20 +60,20 @@ public class RGBMapperProvider extends AbstractMapperProvider
    * @see de.openali.odysseus.chart.factory.provider.IMapperProvider#getMapper()
    */
   @Override
-public RGBMapper getMapper( )
+  public RGBMapper getMapper( )
   {
 
-    IParameterContainer pc = getParameterContainer();
-    HashMap<String, String> defaultColorsString = new HashMap<String, String>();
-    int size = 10;
-    int offset = 255 / size;
+    final IParameterContainer pc = getParameterContainer();
+    final HashMap<String, String> defaultColorsString = new HashMap<String, String>();
+    final int size = 10;
+    final int offset = 255 / size;
     for( int i = 0; i < size; i++ )
-      defaultColorsString.put( "" + i, "" + (offset * i) );
+      defaultColorsString.put( "" + i, "" + offset * i );
 
-    Map<String, RGB> parsedRGBMap = pc.getParsedParameterMap( "colorMap", defaultColorsString, new RGBParser() );
+    final Map<String, RGB> parsedRGBMap = pc.getParsedParameterMap( "colorMap", defaultColorsString, new RGBParser() );
 
-    Map<Number, RGB> defaultColors = new HashMap<Number, RGB>();
-    String[] keys = parsedRGBMap.keySet().toArray( new String[] {} );
+    final Map<Number, RGB> defaultColors = new HashMap<Number, RGB>();
+    final String[] keys = parsedRGBMap.keySet().toArray( new String[] {} );
 
     for( int i = 0; i < parsedRGBMap.size(); i++ )
       defaultColors.put( Integer.parseInt( keys[i] ), parsedRGBMap.get( keys[i] ) );

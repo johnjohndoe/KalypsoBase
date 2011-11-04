@@ -70,9 +70,6 @@ public class SetZmlFilterCommandHandler extends AbstractHandler implements IElem
 
   public static final String ID = "org.kalypso.chart.ui.commands.change.visibility"; // $NON-NLS-1$
 
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -101,9 +98,6 @@ public class SetZmlFilterCommandHandler extends AbstractHandler implements IElem
     return event.getParameter( DISABLE_COMMAND );
   }
 
-  /**
-   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
-   */
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {

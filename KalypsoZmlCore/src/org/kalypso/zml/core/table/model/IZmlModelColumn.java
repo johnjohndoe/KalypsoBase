@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model;
 
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -54,6 +55,8 @@ import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
  */
 public interface IZmlModelColumn
 {
+  void accept( IZmlModelColumnVisitor visitor, DateRange daterange ) throws SensorException;
+
   void accept( IZmlModelColumnVisitor visitor ) throws SensorException;
 
   void addListener( IZmlModelColumnListener listener );
@@ -89,5 +92,13 @@ public interface IZmlModelColumn
   int size( ) throws SensorException;
 
   void update( int index, Object value, final String source, final Integer status ) throws SensorException;
+
+  void setIsIgnoreType( boolean ignore );
+
+  void setDataHandler( IZmlModelColumnDataHandler dataHandler );
+
+  void setLabel( String label );
+
+  boolean isActive( );
 
 }

@@ -38,10 +38,9 @@ public class BfgPegelData extends AbstractDomainValueData<Calendar, Number>
    * parameter names are similar to those in HTTP-GET-request
    * 
    * @param url
-   *            URL der Pegeldatei
-   * 
+   *          URL der Pegeldatei
    */
-  public BfgPegelData( URL url )
+  public BfgPegelData( final URL url )
   {
     m_url = url;
 
@@ -152,24 +151,24 @@ public class BfgPegelData extends AbstractDomainValueData<Calendar, Number>
   }
 
   @Override
-public IDataRange<Calendar> getDomainRange( )
+  public IDataRange<Calendar> getDomainRange( )
   {
     return new ComparableDataRange<Calendar>( getDomainValues() );
   }
 
   @Override
-public IDataRange<Number> getTargetRange( )
+  public IDataRange<Number> getTargetRange( )
   {
-    Number[] targetValues = getTargetValues();
+    final Number[] targetValues = getTargetValues();
     return new ComparableDataRange<Number>( targetValues );
   }
 
   @Override
   public Number[] getTargetValues( )
   {
-    Object[] vals = super.getTargetValues();
-    List<Number> list = new ArrayList<Number>();
-    for( Object val : vals )
+    final Object[] vals = super.getTargetValues();
+    final List<Number> list = new ArrayList<Number>();
+    for( final Object val : vals )
     {
       if( val instanceof Number )
         list.add( (Number) val );
@@ -184,9 +183,9 @@ public IDataRange<Number> getTargetRange( )
   @Override
   public Calendar[] getDomainValues( )
   {
-    Object[] vals = super.getDomainValues();
-    List<Calendar> list = new ArrayList<Calendar>();
-    for( Object val : vals )
+    final Object[] vals = super.getDomainValues();
+    final List<Calendar> list = new ArrayList<Calendar>();
+    for( final Object val : vals )
     {
       if( val instanceof Calendar )
         list.add( (Calendar) val );

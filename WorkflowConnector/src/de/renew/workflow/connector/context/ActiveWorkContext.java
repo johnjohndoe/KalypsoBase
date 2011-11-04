@@ -147,7 +147,7 @@ public class ActiveWorkContext<T extends ICase> implements IResourceChangeListen
       }
       else
       {
-        throw new CoreException( new Status( Status.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Das Projekt " + project.getName() + " für den Case " + caze.getName() + " existiert nicht." ) );
+        throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Das Projekt " + project.getName() + " für den Case " + caze.getName() + " existiert nicht." ) );
       }
     }
 

@@ -76,13 +76,13 @@ public final class ChartFactoryUtilities
     {
       if( is != null )
         try
-      {
+        {
           is.close();
-      }
-      catch( final IOException e )
-      {
-        // do nothing
-      }
+        }
+        catch( final IOException e )
+        {
+          // do nothing
+        }
     }
 
     if( id == null )

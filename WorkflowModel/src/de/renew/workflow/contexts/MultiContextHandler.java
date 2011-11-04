@@ -71,8 +71,8 @@ public class MultiContextHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final List<JAXBElement<? extends WorkbenchPartContextType>> subContexts = m_compoundContext.getPartContexts();
-    for( JAXBElement< ? extends WorkbenchPartContextType> context : subContexts )
+    final List<JAXBElement< ? extends WorkbenchPartContextType>> subContexts = m_compoundContext.getPartContexts();
+    for( final JAXBElement< ? extends WorkbenchPartContextType> context : subContexts )
     {
       final IHandler handler = m_contextHandlerFactory.getHandler( context.getValue() );
       handler.execute( event );

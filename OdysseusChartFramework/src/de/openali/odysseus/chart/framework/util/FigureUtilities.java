@@ -21,12 +21,12 @@ public final class FigureUtilities
   public static int[] pointArrayToIntArray( final Point[] points )
   {
     final List<Integer> intList = new ArrayList<Integer>();
-    for( int i = 0; i < points.length; i++ )
+    for( final Point point : points )
     {
-      if( points[i] == null )
+      if( point == null )
         continue;
-      intList.add( points[i].x );
-      intList.add( points[i].y );
+      intList.add( point.x );
+      intList.add( point.y );
     }
     return ArrayUtils.toPrimitive( intList.toArray( new Integer[] {} ) );
   }
@@ -119,8 +119,8 @@ public final class FigureUtilities
     for( int i = 0; i < translated.length; i++ )
     {
       final Point oldPoint = translated[i];
-      final int resizedX = (int) (((float) oldPoint.x / (float) max.x) * width);
-      final int resizedY = (int) (((float) oldPoint.y / (float) max.y) * height);
+      final int resizedX = (int) ((float) oldPoint.x / (float) max.x * width);
+      final int resizedY = (int) ((float) oldPoint.y / (float) max.y * height);
       resizedPolygon[i] = new Point( resizedX, resizedY );
     }
     return resizedPolygon;

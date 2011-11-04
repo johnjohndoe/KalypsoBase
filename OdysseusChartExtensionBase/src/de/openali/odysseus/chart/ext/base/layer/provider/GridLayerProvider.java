@@ -15,7 +15,7 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
  * as line chart The following configuration parameters are needed for the LayerProvider: dataSource: URL or relative
  * path leading to observation data
  * 
- * @author burtscher 
+ * @author burtscher
  */
 public class GridLayerProvider extends AbstractLayerProvider
 {

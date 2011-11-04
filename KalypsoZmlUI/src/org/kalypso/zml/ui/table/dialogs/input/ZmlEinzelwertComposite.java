@@ -106,20 +106,20 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
   public ZmlEinzelwertComposite( final Composite parent, final FormToolkit toolkit, final ZmlEinzelwertModel model )
   {
     super( parent, SWT.NULL );
-    this.m_toolkit = toolkit;
-    this.m_model = model;
+    m_toolkit = toolkit;
+    m_model = model;
 
     setLayout( Layouts.createGridLayout() );
 
     render();
     toolkit.adapt( this );
 
-    this.m_model.addListener( this );
+    m_model.addListener( this );
   }
 
   public void addListener( final IZmlEinzelwertCompositeListener listener )
   {
-    this.m_listeners.add( listener );
+    m_listeners.add( listener );
   }
 
   protected void render( )
@@ -129,31 +129,31 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       return;
     }
 
-    if( this.m_base != null && !this.m_base.isDisposed() )
+    if( m_base != null && !m_base.isDisposed() )
     {
-      this.m_base.dispose();
+      m_base.dispose();
     }
 
-    this.m_base = this.m_toolkit.createComposite( this );
-    this.m_base.setLayout( Layouts.createGridLayout() );
-    this.m_base.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    m_base = m_toolkit.createComposite( this );
+    m_base.setLayout( Layouts.createGridLayout() );
+    m_base.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
-    final ScrolledForm form = this.m_toolkit.createScrolledForm( this.m_base );
+    final ScrolledForm form = m_toolkit.createScrolledForm( m_base );
     form.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     final Composite body = form.getBody();
     body.setLayout( Layouts.createGridLayout( 5 ) );
 
-    this.m_toolkit.createLabel( body, "Datum" );
-    this.m_toolkit.createLabel( body, "Uhrzeit" );
-    this.m_toolkit.createLabel( body, "" );
-    this.m_toolkit.createLabel( body, "Wert" );
-    this.m_toolkit.createLabel( body, "" );
+    m_toolkit.createLabel( body, "Datum" );
+    m_toolkit.createLabel( body, "Uhrzeit" );
+    m_toolkit.createLabel( body, "" );
+    m_toolkit.createLabel( body, "Wert" );
+    m_toolkit.createLabel( body, "" );
 
-    final ZmlEinzelwert[] rows = this.m_model.getRows();
+    final ZmlEinzelwert[] rows = m_model.getRows();
     for( final ZmlEinzelwert row : rows )
     {
-      addRow( body, this.m_toolkit, row );
+      addRow( body, m_toolkit, row );
     }
 
     this.layout();
@@ -164,7 +164,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
     try
     {
       final Date date = row.getDate();
-      final Date[] existing = this.m_model.getExistingDateValues();
+      final Date[] existing = m_model.getExistingDateValues();
       final Date[] dayAnchors = getDayAnchors( existing );
 
       final EnhancedComboViewer<Date> viewerDay = new EnhancedComboViewer<Date>( base, toolkit, new DateWidgetRule() );
@@ -283,7 +283,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       {
         try
         {
-          ZmlEinzelwertComposite.this.m_model.removeRow( row );
+          m_model.removeRow( row );
         }
         catch( final Throwable t )
         {
@@ -292,7 +292,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       }
     } );
 
-    if( this.m_model.size() == 1 )
+    if( m_model.size() == 1 )
     {
       itemRemove.setEnabled( false );
     }
@@ -311,17 +311,17 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       {
         try
         {
-          final IZmlModelColumn column = ZmlEinzelwertComposite.this.m_model.getColumn();
+          final IZmlModelColumn column = m_model.getColumn();
           final IndexVisitor visitor = new IndexVisitor( row );
           column.accept( visitor );
 
           final Integer[] steppings = visitor.getSteppings();
 
-          final ChooseSteppingDialog dialog = new ChooseSteppingDialog( toolBar.getShell(), row, steppings, ZmlEinzelwertComposite.this.m_toolkit );
+          final ChooseSteppingDialog dialog = new ChooseSteppingDialog( toolBar.getShell(), row, steppings, m_toolkit );
           final int status = dialog.open();
           if( Window.OK == status )
           {
-            ZmlEinzelwertComposite.this.m_model.addRow( row.getDate(), dialog.getOffset() );
+            m_model.addRow( row.getDate(), dialog.getOffset() );
           }
         }
         catch( final SensorException e1 )
@@ -351,14 +351,14 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       {
         try
         {
-          final IZmlModelColumn column = ZmlEinzelwertComposite.this.m_model.getColumn();
+          final IZmlModelColumn column = m_model.getColumn();
           final FindNextValueVisitor visitor = new FindNextValueVisitor( row );
           column.accept( visitor );
 
           final IZmlValueReference reference = visitor.getReference();
           if( Objects.isNotNull( reference ) )
           {
-            ZmlEinzelwertComposite.this.m_model.addRow( new ZmlEinzelwert( ZmlEinzelwertComposite.this.m_model, reference.getIndexValue(), reference.getValue().doubleValue() ) );
+            m_model.addRow( new ZmlEinzelwert( m_model, reference.getIndexValue(), reference.getValue().doubleValue() ) );
           }
 
         }
@@ -428,7 +428,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
   public boolean isValid( )
   {
-    final ZmlEinzelwert[] rows = this.m_model.getRows();
+    final ZmlEinzelwert[] rows = m_model.getRows();
     for( final ZmlEinzelwert row : rows )
     {
       if( !row.isValid() )
@@ -448,7 +448,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
   {
     final boolean valid = isValid();
 
-    final IZmlEinzelwertCompositeListener[] listeners = this.m_listeners.toArray( new IZmlEinzelwertCompositeListener[] {} );
+    final IZmlEinzelwertCompositeListener[] listeners = m_listeners.toArray( new IZmlEinzelwertCompositeListener[] {} );
     for( final IZmlEinzelwertCompositeListener listener : listeners )
     {
       listener.inputChanged( valid );

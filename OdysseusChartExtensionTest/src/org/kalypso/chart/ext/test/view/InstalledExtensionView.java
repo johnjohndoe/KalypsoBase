@@ -50,10 +50,7 @@ import org.eclipse.ui.part.ViewPart;
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 
 /**
- * @author burtscher1
- * 
- * creates a view which displays all installed
- * 
+ * @author burtscher1 creates a view which displays all installed
  */
 public class InstalledExtensionView extends ViewPart
 {

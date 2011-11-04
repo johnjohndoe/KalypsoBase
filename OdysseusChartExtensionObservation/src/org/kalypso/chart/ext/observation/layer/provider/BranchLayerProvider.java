@@ -48,7 +48,7 @@ public class BranchLayerProvider extends AbstractLayerProvider
       Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Found feature: " + feature.getId() );
     final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( feature );
 
-    final BranchLayer layer = new BranchLayer( this, observation.getResult(), domainComponentName, targetComponentName, iconComponentName, getStyleSet());
+    final BranchLayer layer = new BranchLayer( this, observation.getResult(), domainComponentName, targetComponentName, iconComponentName, getStyleSet() );
     final Set<Entry<String, String>> entrySet = getMapperMap().entrySet();
     for( final Entry<String, String> e : entrySet )
       layer.addMapper( e.getKey(), (IRetinalMapper) getModel().getMapperRegistry().getMapper( e.getValue() ) );

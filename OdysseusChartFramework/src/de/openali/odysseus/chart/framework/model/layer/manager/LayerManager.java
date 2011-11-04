@@ -120,8 +120,8 @@ public class LayerManager implements ILayerManager
   {
     try
     {
-      final IChartLayer[] reverseLayers =  getLayers();
-      ArrayUtils.reverse(reverseLayers);
+      final IChartLayer[] reverseLayers = getLayers();
+      ArrayUtils.reverse( reverseLayers );
       for( final IChartLayer layer : reverseLayers )
       {
         try

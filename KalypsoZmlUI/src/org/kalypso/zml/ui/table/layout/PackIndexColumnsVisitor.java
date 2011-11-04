@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -38,39 +38,46 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.walker;
+package org.kalypso.zml.ui.table.layout;
 
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.swt.widgets.TableColumn;
+import org.kalypso.zml.core.table.binding.BaseColumn;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlModelWalker
+public class PackIndexColumnsVisitor extends AbstractTableColumnPackVisitor
 {
+  private final boolean m_visible;
 
-  private final IZmlModelColumn m_column;
-
-  public ZmlModelWalker( final IZmlModelColumn column )
+  public PackIndexColumnsVisitor( final boolean visible )
   {
-    m_column = column;
+    m_visible = visible;
   }
 
-  public void walk( final IZmlModelOperation operation ) throws SensorException
+  @Override
+  public void visit( final IZmlTableColumn column )
   {
-    walk( operation, 0, m_column.size() );
-  }
+    if( !column.isIndexColumn() )
+      return;
 
-  public void walk( final IZmlModelOperation operation, final int startIndex, final int endIndex ) throws SensorException
-  {
-    final IAxis axis = m_column.getValueAxis();
+    final BaseColumn columnType = column.getColumnType();
+    final TableViewerColumn tableViewerColumn = column.getTableViewerColumn();
+    final TableColumn tableColumn = tableViewerColumn.getColumn();
 
-    for( int i = startIndex; i <= endIndex; i++ )
+    final String label = columnType.getLabel();
+    tableColumn.setText( label );
+
+    if( !m_visible )
     {
-      final Object obj = m_column.get( i, axis );
-      operation.add( obj );
+      hide( tableColumn );
     }
+    else
+      pack( tableColumn, columnType, label, true );
+
+    tableColumn.setResizable( false );
   }
 
 }

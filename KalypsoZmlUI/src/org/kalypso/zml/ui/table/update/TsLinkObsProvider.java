@@ -48,7 +48,7 @@ import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.base.zml.TSLinkWithName;
-import org.kalypso.zml.ui.table.memento.ILabeledObsProvider;
+import org.kalypso.zml.core.table.model.memento.ILabeledObsProvider;
 
 /**
  * @author Gernot Belger

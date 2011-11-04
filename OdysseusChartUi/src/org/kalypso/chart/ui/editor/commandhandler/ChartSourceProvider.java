@@ -229,6 +229,7 @@ public class ChartSourceProvider extends AbstractSourceProvider
       e.printStackTrace();
     }
   }
+
   public void setChart( final IChartComposite chart )
   {
     m_chart = chart;

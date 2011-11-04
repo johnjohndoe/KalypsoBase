@@ -161,7 +161,7 @@ public class GenericAxisLineLayer extends AbstractLineLayer
       }
     }
 
-    paint( gc, path.toArray( new Point[]{} ) );
+    paint( gc, path.toArray( new Point[] {} ) );
   }
 
   public IListDataContainer getDataContainer( )

@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,21 +38,19 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.memento;
+package org.kalypso.zml.core.debug;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.contribs.eclipse.core.runtime.Debug;
+import org.kalypso.zml.core.KalypsoZmlCore;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableMemento
+public final class KalypsoZmlCoreDebug
 {
-  void register( IPoolableObjectType poolKey, ILabeledObsProvider observationProvider );
+  public static final Debug DEBUG_TABLE_MODEL_INIT = new Debug( KalypsoZmlCore.getDefault(), "/debug/table/model/init" ); //$NON-NLS-1$
 
-  void dispose( );
-
-  void store( ) throws CoreException;
-
-  ILabeledObsProvider[] findDirtyElements( );
+  private KalypsoZmlCoreDebug( )
+  {
+  }
 }

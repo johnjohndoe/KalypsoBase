@@ -91,12 +91,10 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   public ZmlLineLayer( final IZmlLayerProvider provider, final IStyleSet styleSet, final URL context )
   {
     super( provider, styleSet );
+
     setup( context );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getProvider()
-   */
   @Override
   public IZmlLayerProvider getProvider( )
   {
@@ -119,27 +117,18 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     setDataHandler( handler );
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#onObservationChanged()
-   */
   @Override
   public void onObservationChanged( )
   {
     getEventHandler().fireLayerContentChanged( this );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer#createLegendEntries()
-   */
   @Override
   public ILegendEntry[] createLegendEntries( )
   {
     return m_legend.createLegendEntries();
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -149,9 +138,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     super.dispose();
   }
 
-  /**
-   * @see org.kalypso.zml.ui.chart.layer.themes.IZmlLayer#getDataHandler()
-   */
   @Override
   public IZmlLayerDataHandler getDataHandler( )
   {
@@ -163,9 +149,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     return m_range;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
-   */
   @Override
   public IDataRange<Number> getDomainRange( )
   {
@@ -178,9 +161,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     return createLegendEntries();
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
-   */
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange< ? > domainIntervall )
   {
@@ -200,9 +180,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
-   */
   @Override
   public void paint( final GC gc )
   {
@@ -328,9 +305,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     return request.getDateRange();
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setDataHandler(org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler)
-   */
   @Override
   public void setDataHandler( final IZmlLayerDataHandler handler )
   {
@@ -340,9 +314,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     m_data = handler;
   }
 
-  /**
-   * @see org.kalypso.zml.core.diagram.layer.IZmlLayer#setLabelDescriptor(java.lang.String)
-   */
   @Override
   public void setLabelDescriptor( final String labelDescriptor )
   {
@@ -383,8 +354,8 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     } );
   }
 
- @Override
-protected ILineStyle getLineStyle( )
+  @Override
+  protected ILineStyle getLineStyle( )
   {
     final IStyleSet styleSet = getStyleSet();
 

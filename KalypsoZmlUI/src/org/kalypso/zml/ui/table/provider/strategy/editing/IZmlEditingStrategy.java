@@ -50,4 +50,6 @@ public interface IZmlEditingStrategy
   String getValue( IZmlModelRow row );
 
   void setValue( IZmlModelRow row, String value );
+
+  boolean isAggregated( );
 }

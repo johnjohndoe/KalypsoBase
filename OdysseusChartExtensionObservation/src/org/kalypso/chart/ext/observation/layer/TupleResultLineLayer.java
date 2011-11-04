@@ -245,7 +245,7 @@ public class TupleResultLineLayer extends AbstractLineLayer
   @Override
   public void paint( final GC gc )
   {
-    TupleResultDomainValueData< ? , ? > data = getValueData();
+    final TupleResultDomainValueData< ? , ? > data = getValueData();
     if( data == null )
       return;
 

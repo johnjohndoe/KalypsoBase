@@ -30,7 +30,7 @@ public class PointFigure extends AbstractFigure<IPointStyle>
   protected void paintFigure( final GC gc )
   {
     final IPointStyle style = getStyle();
-    if( (style != null) && (m_centerPoints != null) )
+    if( style != null && m_centerPoints != null )
     {
       if( m_leftTopPoints == null )
       {

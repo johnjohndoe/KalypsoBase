@@ -42,7 +42,6 @@ package de.openali.odysseus.chart.framework.util.img.legend;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;

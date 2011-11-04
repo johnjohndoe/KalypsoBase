@@ -112,9 +112,6 @@ public class LineLayerModelVisitor implements IObservationVisitor
     return m_dateAxis;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.visitor.ITupleModelVisitor#visit(org.kalypso.ogc.sensor.visitor.ITupleModelVisitorValue)
-   */
   @Override
   public void visit( final IObservationValueContainer container )
   {
@@ -152,7 +149,6 @@ public class LineLayerModelVisitor implements IObservationVisitor
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
   }
-
 
   private boolean isFiltered( final IObservationValueContainer container )
   {

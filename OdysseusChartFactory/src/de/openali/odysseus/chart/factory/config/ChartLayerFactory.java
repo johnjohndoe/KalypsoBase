@@ -182,7 +182,7 @@ public class ChartLayerFactory extends AbstractChartFactory
       throw new IllegalStateException( String.format( "Chart LayerTypeReference not found: %s", reference.getUrl() ) );
 
     final ILayerProvider provider = LayerTypeHelper.getLayerTypeProvider( getLoader(), type );
-    final IChartLayer layer = buildLayer( type, provider, (ReferencableType[]) ArrayUtils.add( baseTypes, type ) );
+    final IChartLayer layer = buildLayer( type, provider, ArrayUtils.add( baseTypes, type ) );
 
     if( reference.isSetTitle() )
       layer.setTitle( reference.getTitle() );
@@ -291,7 +291,7 @@ public class ChartLayerFactory extends AbstractChartFactory
     if( Objects.isNotNull( domainAxis, targetAxis ) )
       // FIXME> layer is corrupt... do not use_
       layer.setCoordinateMapper( new CoordinateMapper( domainAxis, targetAxis ) );
-   
+
     layer.setData( CONFIGURATION_TYPE_KEY, layerType );
     layer.init();
 
@@ -300,7 +300,7 @@ public class ChartLayerFactory extends AbstractChartFactory
     final LayersType layers = layerType.getLayers();
     if( layers != null )
     {
-      final ReferencableType[] references = (ReferencableType[]) ArrayUtils.add( baseTypes, layerType );
+      final ReferencableType[] references = ArrayUtils.add( baseTypes, layerType );
       final IChartLayer[] children = build( layers, references );
 
       layerManager.addLayer( children );
@@ -402,7 +402,7 @@ public class ChartLayerFactory extends AbstractChartFactory
       final String mpId = mapperType.getProvider().getEpid();
       if( mpId != null && mpId.length() > 0 )
         try
-      {
+        {
           final IMapperRegistry mr = getModel().getMapperRegistry();
           final IMapperProvider mp = getLoader().getExtension( IMapperProvider.class, mpId );
           final String mid = mapperType.getId();
@@ -414,11 +414,11 @@ public class ChartLayerFactory extends AbstractChartFactory
           // save configuration type so it can be used for saving to chartfile
           mapper.setData( CONFIGURATION_TYPE_KEY, mapperType );
           mr.addMapper( mapper );
-      }
-      catch( final ConfigurationException e )
-      {
-        e.printStackTrace();
-      }
+        }
+        catch( final ConfigurationException e )
+        {
+          e.printStackTrace();
+        }
       else
         Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider " + mpId + " not known" );
     }

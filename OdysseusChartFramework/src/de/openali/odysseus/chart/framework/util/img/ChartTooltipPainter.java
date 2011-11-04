@@ -78,7 +78,7 @@ public class ChartTooltipPainter
     titleType.setInsets( new Insets( 2, 2, 2, 2 ) );
     titleType.setRotation( 0 );
     final FontData fontData = JFaceResources.getTextFont().getFontData()[0];
-    Display display = ChartUtilities.getDisplay();
+    final Display display = ChartUtilities.getDisplay();
     final RGB rgbFill = display.getSystemColor( SWT.COLOR_INFO_BACKGROUND ).getRGB();
     final RGB rgbText = display.getSystemColor( SWT.COLOR_INFO_FOREGROUND ).getRGB();
     titleType.setTextStyle( new TextStyle( fontData.getHeight(), fontData.getName(), rgbText, rgbFill, FONTSTYLE.NORMAL, FONTWEIGHT.NORMAL, ALIGNMENT.LEFT, 255, true ) );

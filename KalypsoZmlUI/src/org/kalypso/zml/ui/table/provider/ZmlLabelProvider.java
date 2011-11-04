@@ -40,200 +40,105 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.provider;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.ZmlRule;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.ZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlValueReference;
 import org.kalypso.zml.core.table.rules.IZmlRuleImplementation;
-import org.kalypso.zml.ui.KalypsoZmlUI;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.model.IZmlTableColumn;
 import org.kalypso.zml.ui.table.provider.strategy.labeling.IZmlLabelStrategy;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlLabelProvider extends ColumnLabelProvider
+public class ZmlLabelProvider
 {
-  private final ZmlTooltipSupport m_tooltip;
+  private final IZmlTableColumn m_column;
 
-  private final ExtendedZmlTableColumn m_column;
+  private final IZmlModelRow m_row;
 
-  public ZmlLabelProvider( final ExtendedZmlTableColumn column )
+  private final ZmlRule[] m_activeRules;
+
+  public ZmlLabelProvider( final IZmlModelRow row, final IZmlTableColumn column, final ZmlRule[] activeRules )
   {
+    m_row = row;
     m_column = column;
-    m_tooltip = new ZmlTooltipSupport( column );
+    m_activeRules = activeRules;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getBackground(java.lang.Object)
-   */
-  @Override
-  public Color getBackground( final Object element )
+  public Color getBackground( )
   {
-    if( !m_column.isVisible() )
-      return null;
-
-    if( element instanceof IZmlModelRow )
+    try
     {
-      try
-      {
-        final IZmlModelRow row = (IZmlModelRow) element;
+      final Color ruleBackgroundColor = getRuleBackground();
+      if( Objects.isNotNull( ruleBackgroundColor ) )
+        return ruleBackgroundColor;
 
-        final Color ruleBackgroundColor = getRuleBackground( row );
-        if( Objects.isNotNull( ruleBackgroundColor ) )
-          return ruleBackgroundColor;
+      final CellStyle style = m_column.findStyle( m_row );
 
-        final CellStyle style = m_column.findStyle( row );
-
-        return style.getBackgroundColor();
-      }
-      catch( final CoreException e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
+      return style.getBackgroundColor();
     }
-
-    return super.getBackground( element );
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+    return null;
   }
 
-  private Color getRuleBackground( final IZmlModelRow row )
+  private Color getRuleBackground( )
   {
-    final IZmlValueReference reference = row.get( m_column.getModelColumn() );
-    if( Objects.isNull( reference ) )
-      return null;
-
-    final ZmlRule[] activeRules = m_column.findActiveRules( row );
-    for( final ZmlRule rule : activeRules )
+    for( final ZmlRule rule : m_activeRules )
     {
-      try
+      final CellStyle style = resolveRuleStyle( rule, m_row.get( m_column.getModelColumn() ) );
+      if( Objects.isNotNull( style ) )
       {
-        final CellStyle style = resolveRuleStyle( rule, reference );
-        if( Objects.isNotNull( style ) )
-        {
-          final Color color = style.getBackgroundColor();
-          if( Objects.isNotNull( color ) )
-            return color;
-        }
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
+        final Color color = style.getBackgroundColor();
+        if( Objects.isNotNull( color ) )
+          return color;
       }
     }
 
     return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getFont(java.lang.Object)
-   */
-  @Override
-  public Font getFont( final Object element )
+  public Font getFont( )
   {
-    if( !m_column.isVisible() )
-      return null;
-
-    if( element instanceof IZmlModelRow )
+    try
     {
-      try
-      {
-        final CellStyle style = m_column.findStyle( (IZmlModelRow) element );
+      final CellStyle style = m_column.findStyle( m_row );
 
-        return style.getFont();
-      }
-      catch( final CoreException e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
+      return style.getFont();
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
     }
 
-    return super.getFont( element );
+    return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getForeground(java.lang.Object)
-   */
-  @Override
-  public Color getForeground( final Object element )
+  public Color getForeground( )
   {
-    if( !m_column.isVisible() )
-      return null;
-
-    if( element instanceof IZmlModelRow )
+    try
     {
-      try
-      {
-        final CellStyle style = m_column.findStyle( (IZmlModelRow) element );
+      final CellStyle style = m_column.findStyle( m_row );
 
-        return style.getForegroundColor();
-      }
-      catch( final CoreException e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
+      return style.getForegroundColor();
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
     }
 
-    return super.getForeground( element );
+    return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
-   */
-  @Override
-  public Image getImage( final Object element )
-  {
-    if( !m_column.isVisible() )
-      return null;
-
-    if( element instanceof IZmlModelRow )
-    {
-      try
-      {
-        final ZmlTableImageMerger iconMerger = new ZmlTableImageMerger( 2 );
-
-        final IZmlModelRow row = (IZmlModelRow) element;
-        final ZmlRule[] rules = m_column.findActiveRules( row );
-        if( ArrayUtils.isNotEmpty( rules ) )
-        {
-          final IZmlValueReference reference = row.get( m_column.getModelColumn() );
-
-          for( final ZmlRule rule : rules )
-          {
-            final CellStyle style = resolveRuleStyle( rule, reference );
-            if( Objects.isNull( style ) )
-              continue;
-
-            final Image image = style.getImage();
-            if( Objects.isNotNull( image ) )
-              iconMerger.addImage( new ZmlTableImage( style.getIdentifier(), image ) );
-          }
-        }
-
-        return iconMerger.createImage( PlatformUI.getWorkbench().getDisplay() );
-      }
-      catch( final Exception e )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-      }
-    }
-
-    return super.getImage( element );
-  }
-
-  private CellStyle resolveRuleStyle( final ZmlRule rule, final IZmlValueReference reference ) throws CoreException
+  CellStyle resolveRuleStyle( final ZmlRule rule, final IZmlValueReference reference )
   {
     if( Objects.isNull( reference ) )
       return null;
@@ -253,99 +158,18 @@ public class ZmlLabelProvider extends ColumnLabelProvider
     return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-   */
-  @Override
-  public String getText( final Object element )
+  public String getText( ) throws SensorException, CoreException
   {
-    if( !m_column.isVisible() )
-      return "";
+    final IZmlLabelStrategy strategy = m_column.getLabelingStrategy();
+    if( strategy == null )
+      return ""; //$NON-NLS-1$
 
-    if( element instanceof IZmlModelRow )
-    {
-      try
-      {
-        final IZmlModelRow row = (IZmlModelRow) element;
-        final IZmlLabelStrategy strategy = m_column.getLabelingStrategy();
-        if( strategy == null )
-          return "";
-
-        return strategy.getText( row );
-      }
-      catch( final Throwable t )
-      {
-        KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
-      }
-    }
-
-    return super.getText( element );
+    return strategy.getText( m_row );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipStyle(java.lang.Object)
-   */
-  @Override
-  public int getToolTipStyle( final Object object )
+  public Object getPlainValue( ) throws SensorException
   {
-    return SWT.TOP | SWT.BEGINNING | SWT.LEFT | SWT.SHADOW_NONE;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipImage(java.lang.Object)
-   */
-  @Override
-  public Image getToolTipImage( final Object object )
-  {
-    if( !m_column.getColumnType().isTooltip() )
-      return null;
-
-    if( !ZmlTooltipSupport.isShowTooltips() )
-      return null;
-
-    if( !m_column.isVisible() )
-      return null;
-    else if( object instanceof IZmlModelRow )
-      return m_tooltip.getToolTipImage();
-
-    return super.getToolTipImage( object );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
-   */
-  @Override
-  public String getToolTipText( final Object element )
-  {
-    if( !ZmlTooltipSupport.isShowTooltips() )
-      return null;
-
-    if( !m_column.getColumnType().isTooltip() )
-      return null;
-
-    if( !m_column.isVisible() )
-      return null;
-
-    if( element instanceof ZmlModelRow )
-    {
-      return m_tooltip.getToolTipText( (ZmlModelRow) element );
-    }
-
-    return super.getToolTipText( element );
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipShift(java.lang.Object)
-   */
-  @Override
-  public Point getToolTipShift( final Object object )
-  {
-    return new Point( 10, 20 );
-  }
-
-  public Object getPlainValue( final IZmlModelRow row ) throws SensorException
-  {
-    final IZmlValueReference reference = row.get( m_column.getModelColumn() );
+    final IZmlValueReference reference = m_row.get( m_column.getModelColumn() );
 
     return reference.getValue();
   }

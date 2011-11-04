@@ -58,7 +58,7 @@ public class TimeWidgetRule implements IWidgetRule<Date>
   {
     final SimpleDateFormat sdf = new SimpleDateFormat( "HH:mm" );
     sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
-    
+
     return sdf.format( value );
   }
 }

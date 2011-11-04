@@ -40,24 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
-import java.awt.Insets;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Rectangle;
-
 import de.openali.odysseus.chart.ext.base.data.IAxisContentProvider;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
-import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.ITextStyle;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.util.img.GenericChartLabelRenderer;
 import de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer;
 
@@ -76,16 +59,16 @@ public class OrdinalAxisRenderer extends ExtendedAxisRenderer
   }
 
   public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IChartLabelRenderer tickLabelRenderer, final IAxisContentProvider contentProvider, final int minWidth, final int maxWidth )
-  { 
+  {
     this( id, config, tickLabelRenderer, new GenericChartLabelRenderer(), contentProvider, minWidth, maxWidth );
   }
 
   public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IAxisContentProvider contentProvider, final int minWidth, final int maxWidth )
   {
-    this( id, config, new GenericChartLabelRenderer(),  new GenericChartLabelRenderer(), contentProvider, minWidth, maxWidth );
+    this( id, config, new GenericChartLabelRenderer(), new GenericChartLabelRenderer(), contentProvider, minWidth, maxWidth );
   }
 
-  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config , final IAxisContentProvider contentProvider)
+  public OrdinalAxisRenderer( final String id, final AxisRendererConfig config, final IAxisContentProvider contentProvider )
   {
     this( id, config, new GenericChartLabelRenderer(), contentProvider, 0, 0 );
   }

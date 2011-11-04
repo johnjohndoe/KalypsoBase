@@ -41,7 +41,6 @@
 
 package org.kalypso.zml.core.table.rules.impl;
 
-
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.binding.CellStyle;
@@ -74,9 +73,10 @@ public abstract class AbstractZmlTableRule implements IZmlRuleImplementation
   {
     try
     {
-      if( !rule.isEnabled() )
+      if( reference == null )
         return false;
-      else if( reference == null )
+
+      if( !rule.isEnabled() )
         return false;
 
       return doApply( rule, reference );

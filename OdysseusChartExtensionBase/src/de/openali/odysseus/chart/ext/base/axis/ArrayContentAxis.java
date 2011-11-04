@@ -1,12 +1,8 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
-import org.apache.poi.ss.formula.eval.NotImplementedException;
-
 import de.openali.odysseus.chart.ext.base.axisrenderer.AxisRendererConfig;
 import de.openali.odysseus.chart.ext.base.axisrenderer.OrdinalAxisRenderer;
 import de.openali.odysseus.chart.ext.base.data.IAxisContentProvider;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
@@ -26,14 +22,14 @@ public class ArrayContentAxis extends AbstractAxis
 
   }
 
-  public ArrayContentAxis( final String id, POSITION position, final IAxisRenderer axisRenderer, final IAxisContentProvider contentProvider, final int fixedWidth )
+  public ArrayContentAxis( final String id, final POSITION position, final IAxisRenderer axisRenderer, final IAxisContentProvider contentProvider, final int fixedWidth )
   {
     super( id, position, Integer.class, axisRenderer );
     m_contentProvider = contentProvider;
     m_fixedWidth = fixedWidth;
   }
 
-  public ArrayContentAxis( final String id, POSITION position, final IAxisContentProvider contentProvider, final int fixedWidth )
+  public ArrayContentAxis( final String id, final POSITION position, final IAxisContentProvider contentProvider, final int fixedWidth )
   {
     this( id, position, new OrdinalAxisRenderer( id + "_axisRenderer", new AxisRendererConfig(), contentProvider ), contentProvider, fixedWidth );
   }

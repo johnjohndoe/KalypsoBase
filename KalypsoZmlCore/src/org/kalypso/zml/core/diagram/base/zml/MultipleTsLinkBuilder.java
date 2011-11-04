@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraße 22
+ *  Denickestraï¿½e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,14 +38,48 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.memento;
+package org.kalypso.zml.core.diagram.base.zml;
 
-import org.kalypso.ogc.sensor.provider.IObsProvider;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * @author Gernot Belger
+ * @author Dirk Kuch
  */
-public interface ILabeledObsProvider extends IObsProvider
+public class MultipleTsLinkBuilder
 {
-  String getLabel( );
+  private final TimeserieFeatureProperty[] m_properties;
+
+  private final IMultipleTsLinkBuilderSource m_delegate;
+
+  public MultipleTsLinkBuilder( final IMultipleTsLinkBuilderSource delegate, final TimeserieFeatureProperty[] properties )
+  {
+    m_delegate = delegate;
+    m_properties = properties;
+  }
+
+  public MultipleTsLink[] build( )
+  {
+    if( m_properties == null )
+      return new MultipleTsLink[] {};
+
+    final TSLinkWithName[] links = m_delegate.getLinks();
+    final Map<String, MultipleTsLink> map = new HashMap<String, MultipleTsLink>();
+
+    for( final TSLinkWithName link : links )
+    {
+      final String identifier = link.getIdentifier();
+      MultipleTsLink multiple = map.get( identifier );
+      if( multiple == null )
+      {
+        multiple = new MultipleTsLink( identifier );
+        map.put( identifier, multiple );
+      }
+
+      multiple.add( link );
+    }
+
+    return map.values().toArray( new MultipleTsLink[] {} );
+  }
+
 }

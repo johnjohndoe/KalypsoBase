@@ -874,9 +874,16 @@
           <LineColor>000040</LineColor>
         </Stroke>
       </AreaStyle>
+
+
     </Styles>
     <Layers>
       <Layer id="W">
+        <Provider epid="">
+          <Parameters>
+            <Parameter name="content.messwerte" value="true" />
+          </Parameters>
+        </Provider>
         <Title>Wasserstand</Title>
         <Layers>
           <Layer id="Wasserstand" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -915,6 +922,11 @@
         </MapperRefs>
       </Layer>
       <Layer id="Q">
+        <Provider epid="">
+          <Parameters>
+            <Parameter name="content.messwerte" value="true" />
+          </Parameters>
+        </Provider>
         <Title>Abfluss</Title>
         <Layers>
           <Layer id="Abfluss" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -953,6 +965,11 @@
         </MapperRefs>
       </Layer>
       <Layer id="N">
+        <Provider epid="">
+          <Parameters>
+            <Parameter name="content.niederschlag" value="true" />
+          </Parameters>
+        </Provider>
         <Title>Niederschlag</Title>
         <Layers>
           <Layer id="Niederschlag" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -1164,7 +1181,7 @@
         <PreferredAdjustment before="0" range="100" after="0" />
         <RendererRef ref="DateAxisRenderer" />
         <!-- <AxisNumberRangeRestriction minRange="86400000" /> -->
-        <AxisNumberRangeRestriction minRange="1000"  />
+        <AxisNumberRangeRestriction minRange="1000" />
       </Axis>
       <ScreenAxis id="screenAxisX">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />

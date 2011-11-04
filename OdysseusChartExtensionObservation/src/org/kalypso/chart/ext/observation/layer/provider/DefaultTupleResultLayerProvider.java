@@ -61,7 +61,8 @@ public class DefaultTupleResultLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-     return new TupleResultLineLayer( this, getDataContainer(), getStyleSet());//.getStyle( "line", ILineStyle.class ), getStyleSet().getStyle( "point", IPointStyle.class ) ); // $NON-NLS-1$
+    return new TupleResultLineLayer( this, getDataContainer(), getStyleSet() );// .getStyle( "line", ILineStyle.class ),
+// getStyleSet().getStyle( "point", IPointStyle.class ) ); // $NON-NLS-1$
 // // $NON-NLS-2$
   }
 

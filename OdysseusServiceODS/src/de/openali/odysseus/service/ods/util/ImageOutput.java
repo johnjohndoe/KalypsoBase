@@ -30,7 +30,7 @@ public class ImageOutput
    * @param id
    *          The image data.
    */
-  public static void imageResponse( OGCRequest request, OGCResponse response, ImageData id )
+  public static void imageResponse( final OGCRequest request, final OGCResponse response, ImageData id )
   {
     /* The output stream. */
     BufferedOutputStream outputStream = null;
@@ -38,15 +38,15 @@ public class ImageOutput
     try
     {
       /* Get the parameter values. */
-      String transparency = request.getParameterValue( "TRANSPARENT" );
-      String imgTypeStr = request.getParameterValue( "TYPE" );
+      final String transparency = request.getParameterValue( "TRANSPARENT" );
+      final String imgTypeStr = request.getParameterValue( "TYPE" );
 
       /* PNG is default. */
       String contentType = "image/png";
       int imgTypeSWT = SWT.IMAGE_PNG;
 
       /* Image type. */
-      if( (imgTypeStr != null) && !imgTypeStr.toLowerCase().equals( "png" ) )
+      if( imgTypeStr != null && !imgTypeStr.toLowerCase().equals( "png" ) )
       {
         if( imgTypeStr.toLowerCase().equals( "jpg" ) )
         {
@@ -61,7 +61,7 @@ public class ImageOutput
           /* Convert the palette. */
           if( !id.palette.isDirect )
           {
-            RGB[] rgbs = id.getRGBs();
+            final RGB[] rgbs = id.getRGBs();
             if( rgbs != null )
               Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "RGBs hat die Größe " + rgbs.length );
             else
@@ -70,28 +70,28 @@ public class ImageOutput
           else
             Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Palette is direct" );
 
-          PaletteData pd = id.palette;
+          final PaletteData pd = id.palette;
 
-          TreeSet<Integer> pixels = new TreeSet<Integer>();
-          HashSet<RGB> rgbs = new HashSet<RGB>();
+          final TreeSet<Integer> pixels = new TreeSet<Integer>();
+          final HashSet<RGB> rgbs = new HashSet<RGB>();
 
           for( int y = 0; y < id.height; y++ )
             for( int x = 0; x < id.width; x++ )
             {
-              int pixel = id.getPixel( x, y );
-              RGB rgbPixel = pd.getRGB( pixel );
+              final int pixel = id.getPixel( x, y );
+              final RGB rgbPixel = pd.getRGB( pixel );
               rgbs.add( rgbPixel );
             }
 
           /* Now create a new image. */
 
           /* Convert integers to rgb. */
-          RGB[] rgbArray = rgbs.toArray( new RGB[] {} );
+          final RGB[] rgbArray = rgbs.toArray( new RGB[] {} );
 
           /* Create the palette. */
-          PaletteData pd2 = new PaletteData( rgbArray );
+          final PaletteData pd2 = new PaletteData( rgbArray );
 
-          ImageData id2 = new ImageData( id.width, id.height, 8, pd2 );
+          final ImageData id2 = new ImageData( id.width, id.height, 8, pd2 );
           for( int y = 0; y < id2.height; y++ )
           {
             for( int x = 0; x < id2.width; x++ )
@@ -113,7 +113,7 @@ public class ImageOutput
 
       response.setContentType( contentType );
 
-      ImageLoader il = new ImageLoader();
+      final ImageLoader il = new ImageLoader();
       il.data = new ImageData[] { id };
 
       /* INFO: If you get an swt_error, you need to include swt-plugin 3.3 or greater. */

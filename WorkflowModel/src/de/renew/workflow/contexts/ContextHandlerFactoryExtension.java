@@ -93,7 +93,7 @@ public class ContextHandlerFactoryExtension
         }
         catch( final CoreException e )
         {
-          final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model", Messages.getString("ContextHandlerFactoryExtension.4") + id, e ); //$NON-NLS-1$ //$NON-NLS-2$
+          final IStatus status = new Status( IStatus.ERROR, "de.renew.workflow.model", Messages.getString( "ContextHandlerFactoryExtension.4" ) + id, e ); //$NON-NLS-1$ //$NON-NLS-2$
           WorkflowModelPlugin.getInstance().getLog().log( status );
         }
       }

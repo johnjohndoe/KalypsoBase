@@ -45,21 +45,24 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.zml.core.table.binding.BaseColumn;
-import org.kalypso.zml.core.table.binding.TableTypeHelper;
+import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.table.focus.ZmlTableEditingSupport;
-import org.kalypso.zml.ui.table.provider.ZmlLabelProvider;
-import org.kalypso.zml.ui.table.provider.strategy.ExtendedZmlTableColumn;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
+import org.kalypso.zml.ui.table.model.ZmlTableColumn;
+import org.kalypso.zml.ui.table.provider.ZmlTooltipProvider;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlTableColumnBuilder implements ICoreRunnableWithProgress
 {
-
-  private final IZmlTable m_table;
+  protected final IZmlTable m_table;
 
   private final BaseColumn m_column;
 
@@ -69,29 +72,50 @@ public class ZmlTableColumnBuilder implements ICoreRunnableWithProgress
     m_column = column;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final TableViewer viewer = m_table.getTableViewer();
+    final TableViewer viewer = m_table.getViewer();
     final int index = viewer.getTable().getColumnCount();
-    final TableViewerColumn viewerColumn = new TableViewerColumn( viewer, TableTypeHelper.toSWT( m_column.getAlignment() ) );
+    final TableViewerColumn viewerColumn = new TableViewerColumn( viewer, TableTypes.toSWT( m_column.getAlignment() ) );
 
-    final ExtendedZmlTableColumn column = new ExtendedZmlTableColumn( m_table, viewerColumn, m_column, index );
+    final ZmlTableColumn column = new ZmlTableColumn( m_table, viewerColumn, m_column, index );
     m_table.add( column );
 
-    final ZmlLabelProvider labelProvider = new ZmlLabelProvider( column );
-    viewerColumn.setLabelProvider( labelProvider );
+    viewerColumn.setLabelProvider( new ZmlTooltipProvider( column ) );
     viewerColumn.getColumn().setText( m_column.getLabel() );
 
     /** edit support */
     if( m_column.getType() instanceof DataColumnType && m_column.isEditable() )
     {
-      final ZmlTableEditingSupport editingSupport = new ZmlTableEditingSupport( column, labelProvider, m_table.getFocusHandler() );
+      final ZmlTableEditingSupport editingSupport = new ZmlTableEditingSupport( column, m_table.getFocusHandler() );
       column.setEditingSupport( editingSupport );
     }
+
+    viewerColumn.getColumn().addControlListener( new ControlListener()
+    {
+      @Override
+      public void controlResized( final ControlEvent e )
+      {
+        doRedraw();
+      }
+
+      @Override
+      public void controlMoved( final ControlEvent e )
+      {
+        doRedraw();
+      }
+
+      private void doRedraw( )
+      {
+        final IZmlTableCell cell = m_table.getFocusHandler().getFocusTableCell();
+        if( Objects.isNull( cell ) )
+          return;
+
+        if( Objects.equal( cell.getColumn(), column ) )
+          m_table.getFocusHandler().getCursor().redraw();
+      }
+    } );
 
     return Status.OK_STATUS;
   }

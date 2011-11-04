@@ -165,7 +165,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       return line;
     int maxChar = width / charWidth;
     if( maxChar < 6 )
-      return (StringUtils.abbreviate( line, 5 ));
+      return StringUtils.abbreviate( line, 5 );
     String s = StringUtils.abbreviateMiddle( line, "..", maxChar );
     while( calcTextSize( gc, s ).x > width )
     {
@@ -499,7 +499,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
         final int flags = m_drawTransparent | SWT.DRAW_DELIMITER | SWT.DRAW_TAB;
 
         m_titleBean.getTextStyle().apply( gc );
-        for( String line : lines )
+        for( final String line : lines )
         {
           final String fitLine = fitToFixedWidth( gc, line, textRect.width );
 

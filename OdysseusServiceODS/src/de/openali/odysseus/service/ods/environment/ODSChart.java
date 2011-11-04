@@ -11,12 +11,12 @@ public class ODSChart implements IODSChart
   /**
    * The chart configuration loader.
    */
-  private ChartConfigurationLoader m_chartConfigLoader;
+  private final ChartConfigurationLoader m_chartConfigLoader;
 
   /**
    * The chart offering type.
    */
-  private ChartOfferingType m_chartOfferingType;
+  private final ChartOfferingType m_chartOfferingType;
 
   /**
    * The constructor.
@@ -26,7 +26,7 @@ public class ODSChart implements IODSChart
    * @param cot
    *          The chart offering type.
    */
-  public ODSChart( ChartConfigurationLoader ccl, ChartOfferingType cot )
+  public ODSChart( final ChartConfigurationLoader ccl, final ChartOfferingType cot )
   {
     m_chartConfigLoader = ccl;
     m_chartOfferingType = cot;

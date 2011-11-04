@@ -83,7 +83,7 @@ public class ODSService implements IOGCService
    *      org.kalypso.ogc.core.service.OGCResponse, org.kalypso.ogc.core.operations.IOGCOperation)
    */
   @Override
-  public void execute( OGCRequest request, OGCResponse response, IOGCOperation operation ) throws OWSException
+  public void execute( final OGCRequest request, final OGCResponse response, final IOGCOperation operation ) throws OWSException
   {
     operation.execute( request, response );
   }

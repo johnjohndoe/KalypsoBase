@@ -91,7 +91,7 @@ public class DisplayHelper extends Thread
       {
         Thread.sleep( 10 );
       }
-      catch( InterruptedException e )
+      catch( final InterruptedException e )
       {
         e.printStackTrace();
       }
@@ -107,7 +107,7 @@ public class DisplayHelper extends Thread
   {
     m_runEventLoop = false;
 
-    if( (m_display != null) && !m_display.isDisposed() )
+    if( m_display != null && !m_display.isDisposed() )
       m_display.dispose();
     m_display = null;
   }
@@ -118,7 +118,7 @@ public class DisplayHelper extends Thread
    * @param display
    *          The display.
    */
-  private void runEventLoop( Display display )
+  private void runEventLoop( final Display display )
   {
     m_runEventLoop = true;
     while( m_runEventLoop )
@@ -128,7 +128,7 @@ public class DisplayHelper extends Thread
         if( !display.readAndDispatch() )
           display.sleep();
       }
-      catch( Throwable t )
+      catch( final Throwable t )
       {
         t.printStackTrace();
       }

@@ -42,6 +42,6 @@ public interface IParameterContainer
   <T> Map<String, T> getParsedParameterMap( String paramName, Map<String, String> defaultValues, IStringParser<T> parser );
 
   String getOwnerId( );
-  
+
   String[] keys( );
 }

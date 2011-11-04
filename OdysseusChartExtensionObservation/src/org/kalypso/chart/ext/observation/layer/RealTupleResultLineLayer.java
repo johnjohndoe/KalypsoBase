@@ -102,7 +102,7 @@ public class RealTupleResultLineLayer extends AbstractLineLayer
       else if( component.getId().equals( m_targetComponentId ) )
         m_targetComponent = component;
 
-    if( (m_domainComponent != null) && (m_targetComponent != null) )
+    if( m_domainComponent != null && m_targetComponent != null )
       m_isInited = true;
   }
 
