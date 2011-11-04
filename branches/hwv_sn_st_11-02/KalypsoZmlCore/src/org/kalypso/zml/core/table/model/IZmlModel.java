@@ -71,4 +71,6 @@ public interface IZmlModel
   void dispose( );
 
   IZmlMemento getMemento( );
+
+  void add( IZmlModelColumn column );
 }

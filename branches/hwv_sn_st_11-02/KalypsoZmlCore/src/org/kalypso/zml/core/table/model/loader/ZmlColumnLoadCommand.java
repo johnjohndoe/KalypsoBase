@@ -51,8 +51,8 @@ import org.kalypso.zml.core.debug.KalypsoZmlCoreDebug;
 import org.kalypso.zml.core.table.IZmlTableElement;
 import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
+import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.ZmlModel;
 import org.kalypso.zml.core.table.model.ZmlModelColumn;
 import org.kalypso.zml.core.table.model.data.IZmlModelColumnDataHandler;
 import org.kalypso.zml.core.table.model.data.ObsProviderZmlColumnDataHandler;
@@ -67,9 +67,9 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
 
   protected final IZmlTableElement m_element;
 
-  private final ZmlModel m_model;
+  private final IZmlModel m_model;
 
-  public ZmlColumnLoadCommand( final ZmlModel model, final IZmlTableElement element )
+  public ZmlColumnLoadCommand( final IZmlModel model, final IZmlTableElement element )
   {
     m_model = model;
     m_element = element;
@@ -165,9 +165,9 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
       {
         KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand - Adding new model column: %s\n", m_element.getIdentifier() );
         column = new ZmlModelColumn( m_model, m_element.getIdentifier(), data );
-        m_model.add( column );
-
         doUpdateColumn( column, data, axes, handler );
+
+        m_model.add( column );
       }
       else
         doUpdateColumn( column, data, axes, handler );

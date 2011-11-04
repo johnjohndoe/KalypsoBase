@@ -100,7 +100,7 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
             KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Adding element: %s, %s\n", identifier, href );
 
             final ZmlDataSourceElement element = new ZmlDataSourceElement( identifier, href, m_model.getContext(), source.getLabel(), m_model.getMemento() );
-            m_model.load( element );
+            m_model.getLoader().load( element );
           }
           else if( index > 0 )
           {
@@ -112,7 +112,7 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
 
             KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Adding element: %s, %s\n", identifier, href );
             final ZmlDataSourceElement element = new ZmlDataSourceElement( identifier, href, m_model.getContext(), source.getLabel(), m_model.getMemento() );
-            m_model.load( element );
+            m_model.getLoader().load( element );
           }
         }
       }
