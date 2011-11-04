@@ -38,39 +38,52 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model;
+package org.kalypso.zml.core.table.model.loader;
 
-import java.util.Date;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.kalypso.zml.core.table.model.memento.IZmlMemento;
-import org.kalypso.zml.core.table.schema.ZmlTableType;
+import org.kalypso.zml.core.table.IZmlTableElement;
+import org.kalypso.zml.core.table.model.IZmlModel;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlModel
+public final class ZmlModelColumnLoader
 {
-  ZmlTableType getTableType( );
+  private final Set<ZmlColumnLoadCommand> m_commands = Collections.synchronizedSet( new HashSet<ZmlColumnLoadCommand>() );
 
-  void addListener( IZmlColumnModelListener listener );
+  private final IZmlModel m_model;
 
-  void fireModelChanged( final IZmlModelColumn... columns );
+  public ZmlModelColumnLoader( final IZmlModel model )
+  {
+    m_model = model;
+  }
 
-  IZmlModelColumn getColumn( String id );
+  public void cancel( )
+  {
+    synchronized( this )
+    {
+      final ZmlColumnLoadCommand[] commands = m_commands.toArray( new ZmlColumnLoadCommand[] {} );
+      m_commands.clear();
 
-  IZmlModelColumn[] getColumns( );
+      for( final ZmlColumnLoadCommand command : commands )
+      {
+        command.cancel();
+      }
+    }
+  }
 
-  IZmlModelRow getRow( final Date index );
+  public void load( final IZmlTableElement element )
+  {
+    synchronized( this )
+    {
+      final ZmlColumnLoadCommand command = new ZmlColumnLoadCommand( m_model, element );
+      m_commands.add( command );
 
-  IZmlModelRow getRowAt( final int index );
+      command.execute();
+    }
 
-  IZmlModelRow[] getRows( );
-
-  void accept( IZmlModelRowVisitor visitor );
-
-  void dispose( );
-
-  IZmlMemento getMemento( );
-
-  void add( IZmlModelColumn column );
+  }
 }
