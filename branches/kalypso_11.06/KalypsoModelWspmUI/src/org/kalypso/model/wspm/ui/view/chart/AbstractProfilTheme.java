@@ -64,44 +64,9 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public abstract class AbstractProfilTheme extends AbstractProfilLayer implements IChartLayer
 {
-// private final ILayerManagerEventListener m_eventListener = new AbstractLayerManagerEventListener()
-// {
-// /**
-// * @see
-// de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-// */
-// @Override
-// public void onLayerContentChanged( final IChartLayer layer )
-// {
-// fireLayerContentChanged();
-// }
-//
-// /**
-// * @see
-// de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerMoved(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-// */
-// @Override
-// public void onLayerMoved( final IChartLayer layer )
-// {
-// fireLayerContentChanged();
-// }
-//
-// /**
-// * @see
-// de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-// */
-// @Override
-// public void onLayerVisibilityChanged( final IChartLayer layer )
-// {
-// fireLayerContentChanged();
-// }
-// };
-
   private final String m_id;
 
   private String m_title;
-
-// private final ILayerManager m_layerManager = new LayerManager();
 
   public AbstractProfilTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
