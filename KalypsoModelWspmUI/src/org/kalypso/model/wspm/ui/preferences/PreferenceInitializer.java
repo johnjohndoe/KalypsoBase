@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.preferences;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -49,15 +50,14 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
  */
 public class PreferenceInitializer extends AbstractPreferenceInitializer
 {
-  /**
-   * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
-   */
   @Override
   public void initializeDefaultPreferences( )
   {
     final IPreferenceStore store = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
     store.setDefault( PreferenceConstants.P_ALLWAYSOPENTABLE, true );
     store.setDefault( PreferenceConstants.P_VALIDATE_PROFILE, true );
-    store.setDefault( PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE, "" ); //$NON-NLS-1$
+    store.setDefault( PreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE, StringUtils.EMPTY );
+
+    store.setDefault( PreferenceConstants.WATERLEVEL_RESTRICTION_MARKER, StringUtils.EMPTY );
   }
 }

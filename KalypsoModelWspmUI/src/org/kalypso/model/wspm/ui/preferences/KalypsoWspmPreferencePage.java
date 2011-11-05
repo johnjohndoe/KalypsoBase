@@ -65,25 +65,11 @@ public class KalypsoWspmPreferencePage extends FieldEditorPreferencePage impleme
     setDescription( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage.0" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
-   */
-  @Override
-  public void createFieldEditors( )
-  {
-  }
-
-  /**
-   * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-   */
   @Override
   public void init( final IWorkbench workbench )
   {
   }
 
-  /**
-   * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createContents(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createContents( final Composite parent )
   {
@@ -92,5 +78,10 @@ public class KalypsoWspmPreferencePage extends FieldEditorPreferencePage impleme
 
     // Nothing to do yet
     return super.createContents( parent );
+  }
+
+  @Override
+  public void createFieldEditors( )
+  {
   }
 }

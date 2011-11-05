@@ -43,12 +43,16 @@ package org.kalypso.model.wspm.ui.view.chart.layer.wsp;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.IProfilView;
@@ -75,11 +79,21 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
  */
 public class WspLayer extends AbstractProfilTheme
 {
+  private final IPropertyChangeListener m_preferenceListener = new IPropertyChangeListener()
+  {
+    @Override
+    public void propertyChange( final PropertyChangeEvent event )
+    {
+      handlePreferencesChanged();
+    }
+  };
+
   private Color m_color;
 
   private final IWspLayerData m_data;
 
   private WaterlevelRenderData[] m_renderData;
+
 
   /**
    * @param fill
@@ -89,6 +103,9 @@ public class WspLayer extends AbstractProfilTheme
   public WspLayer( final IProfil profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final ICoordinateMapper mapper )
   {
     super( profile, layerId, Messages.getString( "WspLayer.0" ), null, mapper, styleProvider ); //$NON-NLS-1$
+
+    final IPreferenceStore store = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
+    store.addPropertyChangeListener( m_preferenceListener );
 
     m_data = data;
   }
@@ -110,6 +127,9 @@ public class WspLayer extends AbstractProfilTheme
   @Override
   public void dispose( )
   {
+    final IPreferenceStore store = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
+    store.removePropertyChangeListener( m_preferenceListener );
+
     if( m_color != null )
     {
       m_color.dispose();
@@ -229,5 +249,10 @@ public class WspLayer extends AbstractProfilTheme
     m_renderData = null;
 
     fireLayerContentChanged();
+  }
+
+  protected void handlePreferencesChanged( )
+  {
+    invalidate();
   }
 }
