@@ -54,6 +54,7 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.util.WaterlevelIntersectionWorker;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.preferences.Preferences;
 import org.kalypso.observation.result.IRecord;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -134,8 +135,7 @@ public class WaterlevelRenderWorker
 
   private DoubleRange getRestriction( )
   {
-    // FIXME: get from outside
-    final String markerType = "urn:ogc:gml:dict:kalypso:model:wspm:profileMarkerComponents#DURCHSTROEMTE";
+    final String markerType = Preferences.getWaterlevelRestrictionMarker();
     final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( markerType );
 
     if( ArrayUtils.isEmpty( markers ) )
