@@ -2,81 +2,81 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view.chart.layer.wspfixation;
+package org.kalypso.model.wspm.ui.view.chart.layer.wsp;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.ui.view.AbstractProfilView;
-import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer;
-import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelFixationFilter;
-import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelResultTree;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
+
+import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public class WspFixationPanel extends AbstractProfilView
+public class WspLegendEntry extends LegendEntry
 {
-  protected Composite m_composite;
+  private final ILineStyle m_lineStyle;
 
-  private final WspLayer m_layer;
-
-  public WspFixationPanel( final WspLayer layer )
+  public WspLegendEntry( final IChartLayer layer, final ILineStyle lineStyle )
   {
-    super( layer.getProfil() );
+    super( layer, layer.getTitle() );
 
-    m_layer = layer;
+    m_lineStyle = lineStyle;
   }
 
   @Override
-  protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
+  public void paintSymbol( final GC gc, final Point size )
   {
-    final WaterLevelResultTree tree = new WaterLevelResultTree( parent, m_layer, toolkit );
-    tree.addFilter( new WaterLevelFixationFilter() );
+    if( m_lineStyle == null )
+      return;
 
-    return tree;
-  }
+    final PolylineFigure rf = new PolylineFigure();
 
-  @Override
-  public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
-  {
+    rf.setStyle( m_lineStyle );
+    rf.getStyle().setWidth( 2 );
+    rf.getStyle().setColor( m_lineStyle.getColor() );
+    final int d = gc.getClipping().height / 3;
+    rf.setPoints( new Point[] { new Point( 1, d + 1 ), new Point( gc.getClipping().width - 1, d + 1 ) } );
+    rf.paint( gc );
+    rf.setPoints( new Point[] { new Point( 1, 2 * d ), new Point( gc.getClipping().width - 1, 2 * d ) } );
+    rf.paint( gc );
   }
 }
