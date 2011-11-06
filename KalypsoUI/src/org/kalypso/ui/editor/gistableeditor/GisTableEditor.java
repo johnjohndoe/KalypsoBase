@@ -61,8 +61,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -270,9 +268,9 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
 
   protected void handleContextMenuAboutToShow( final IMenuManager manager )
   {
-    final ISelectionProvider selectionProvider = getSite().getSelectionProvider();
-    final ISelection selection = selectionProvider.getSelection();
-    final ISelection mySelection = m_layerTable.getSelection();
+// final ISelectionProvider selectionProvider = getSite().getSelectionProvider();
+// final ISelection selection = selectionProvider.getSelection();
+// final ISelection mySelection = m_layerTable.getSelection();
 // selectionProvider.setSelection( getSelection() );
 
 
@@ -322,8 +320,6 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
     final IPropertyType[] ftps = featureType.getProperties();
     for( final IPropertyType element : ftps )
     {
-      // FIXME: we should not show all columns...
-
       if( isColumnShowable( element ) )
       {
         final String columnName = element.getQName().getLocalPart();
@@ -338,10 +334,6 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
 
     if( Feature.QN_NAME.equals( typeName ) )
       return true;
-
-    /* Never make sense to edit/show a list of sub-element in a table column, except gml:name */
-    if( type.isList() )
-      return false;
 
     if( Feature.QN_BOUNDED_BY.equals( typeName ) )
       return false;
