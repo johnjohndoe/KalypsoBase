@@ -1,43 +1,61 @@
 package de.openali.odysseus.chart.factory;
 
 import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-public class OdysseusChartFactory extends Plugin implements BundleActivator
+/**
+ * The activator class controls the plug-in life cycle.
+ */
+public class OdysseusChartFactory extends Plugin
 {
+  /**
+   * The plug-in ID.
+   */
+  public static final String PLUGIN_ID = "de.openali.odysseus.chart.factory";
 
-  private static BundleContext CONTEXT;
+  /**
+   * The shared instance.
+   */
+  private static OdysseusChartFactory plugin;
 
-  static BundleContext getContext( )
+  /**
+   * The constructor.
+   */
+  public OdysseusChartFactory( )
   {
-    return CONTEXT;
   }
 
-  private static OdysseusChartFactory PLUGIN;
-
+  /*
+   * (non-Javadoc)
+   * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
+   */
   @Override
   public void start( final BundleContext context ) throws Exception
   {
-    CONTEXT = context;
-    PLUGIN = this;
+    super.start( context );
+
+    plugin = this;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+   */
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
-    CONTEXT = null;
-    PLUGIN = null;
+    plugin = null;
 
+    super.stop( context );
   }
 
   /**
-   * Returns the shared instance
+   * Returns the shared instance.
    * 
-   * @return the shared instance
+   * @return The shared instance.
    */
   public static OdysseusChartFactory getDefault( )
   {
-    return PLUGIN;
+    return plugin;
   }
 }
