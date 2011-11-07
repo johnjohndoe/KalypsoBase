@@ -2,7 +2,7 @@
 <feature
       id="org.kalypso.babel.nls_eclipse"
       label="KalypsoBaseBabelEclipseFeature"
-      version="11.6.2.qualifier"
+      version="11.6.3.qualifier"
       provider-name="kalypso.sourceforge.net"
       plugin="org.kalypso.base">
 
