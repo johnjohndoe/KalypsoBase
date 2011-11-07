@@ -50,10 +50,13 @@ import jregex.Pattern;
 import jregex.RETokenizer;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 
+import de.openali.odysseus.chart.factory.OdysseusChartFactory;
 import de.openali.odysseus.chart.factory.config.resolver.ChartTypeResolver;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
@@ -215,10 +218,7 @@ public final class StyleFactory
         }
         catch( final CoreException e )
         {
-          // FIXME: Gets Nullpointer on logging...
-          // OdysseusChartFactory.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-
-          e.printStackTrace();
+          OdysseusChartFactory.getDefault().getLog().log( new Status( IStatus.ERROR, OdysseusChartFactory.PLUGIN_ID, e.getLocalizedMessage(), e ) );
         }
       }
     }
