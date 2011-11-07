@@ -138,7 +138,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
 
     if( EventUtils.isStateButton1( e ) )
     {
-      if( EventUtils.isControl( e ) )
+      if( EventUtils.isControl( e ) || EventUtils.isShift( e ) )
         doMouseMoveSelection( m_startPlot, currentPlot );
       else
         doMouseMoveZoom( m_startPlot, currentPlot );
