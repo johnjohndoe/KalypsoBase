@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoCommons Plug-in
 Bundle-SymbolicName: org.kalypso.commons;singleton:=true
-Bundle-Version: 11.6.2.qualifier
+Bundle-Version: 11.6.3.qualifier
 Bundle-ClassPath: lib/apache/lang/commons-lang-2.6.jar,
  lib/modified-httpclient-contribs.jar,
  lib/jaxb_2_1_7/activation.jar,
