@@ -92,7 +92,7 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 /**
  * TODO: implement editing of GraphicFill<br/>
  * Composite, which gives the most important editing tools for a given stroke.
- * 
+ *
  * @author Thomas Jung
  */
 public class StrokeComposite extends Composite
@@ -272,9 +272,6 @@ public class StrokeComposite extends Composite
     {
       menuManager.add( new Action( dash.toString() )
       {
-        /**
-         * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-         */
         @Override
         public void runWithEvent( final Event event )
         {
@@ -284,7 +281,7 @@ public class StrokeComposite extends Composite
     }
 
     final Button menuButton = new Button( parent, SWT.ARROW | SWT.LEFT );
-    MenuButton.hookMenu( menuButton, menuManager, true );
+    new MenuButton( menuButton, menuManager );
   }
 
   private void createDashOffsetControl( final FormToolkit toolkit, final Composite parent )
