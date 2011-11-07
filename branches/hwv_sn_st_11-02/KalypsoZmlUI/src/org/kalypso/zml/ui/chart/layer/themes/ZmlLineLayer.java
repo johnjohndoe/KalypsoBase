@@ -87,6 +87,8 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   private final ZmlLineLayerLegendEntry m_legend = new ZmlLineLayerLegendEntry( this );
 
+  private ILineStyle m_lineStyle;
+
   public ZmlLineLayer( final IZmlLayerProvider provider, final IStyleSet styleSet, final URL context )
   {
     super( provider, styleSet );
@@ -352,12 +354,17 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
 
   ILineStyle getLineStyle( )
   {
+    if( Objects.isNotNull( m_lineStyle ) )
+      return m_lineStyle;
+
     final IStyleSet styleSet = getStyleSet();
 
     // FIXME: strange! we need better helper classes here...
     final int index = ZmlLayerHelper.getLayerIndex( getIdentifier() );
     final StyleSetVisitor visitor = new StyleSetVisitor( false );
-    return visitor.visit( styleSet, ILineStyle.class, index );
+    m_lineStyle = visitor.visit( styleSet, ILineStyle.class, index );
+
+    return m_lineStyle;
   }
 
   private Point[] toScreen( final IPair<Number, Number>... points )
