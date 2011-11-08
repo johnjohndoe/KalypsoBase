@@ -43,6 +43,7 @@ package org.kalypso.gml.ui.internal.feature.editProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.conversion.IConverter;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
@@ -82,6 +83,9 @@ public class FeaturePropertyToStringConverter implements IConverter
     final IPropertyType property = m_data.getProperty();
     if( property == null )
       return StringUtils.EMPTY;
+
+    if( property instanceof IRelationType )
+      return "<not editable>";
 
     final IGuiTypeHandler typeHandler = registry.getTypeHandlerFor( property );
     if( typeHandler == null )
