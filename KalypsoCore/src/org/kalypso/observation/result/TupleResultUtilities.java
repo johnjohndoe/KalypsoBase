@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -195,7 +197,7 @@ public class TupleResultUtilities
       final List<String> values = new ArrayList<String>();
       for( final IRecord record : result )
       {
-        values.add( (record.getValue( iComp )).toString() );
+        values.add( record.getValue( iComp ).toString() );
       }
       if( values.size() < 1 )
       {
@@ -283,7 +285,7 @@ public class TupleResultUtilities
       final List<String> values = new ArrayList<String>();
       for( final IRecord record : result )
       {
-        values.add( (record.getValue( iComp )).toString() );
+        values.add( record.getValue( iComp ).toString() );
       }
       if( values.size() < 1 )
       {
@@ -457,5 +459,27 @@ public class TupleResultUtilities
     }
 
     return -1;
+  }
+
+  public static void setNumberValue( final IRecord record, final IComponent component, final Number value )
+  {
+    final QName qname = component.getValueTypeName();
+    if( XmlTypes.XS_DECIMAL.equals( qname ) )
+      record.setValue( component, BigDecimal.valueOf( value.doubleValue() ) );
+    else if( XmlTypes.XS_DOUBLE.equals( qname ) )
+      record.setValue( component, Double.valueOf( value.doubleValue() ) );
+    else if( XmlTypes.XS_FLOAT.equals( qname ) )
+      record.setValue( component, Float.valueOf( value.floatValue() ) );
+    else if( XmlTypes.XS_INT.equals( qname ) )
+      record.setValue( component, Integer.valueOf( value.intValue() ) );
+    else if( XmlTypes.XS_INTEGER.equals( qname ) )
+      record.setValue( component, BigInteger.valueOf( value.longValue() ) );
+    else if( XmlTypes.XS_LONG.equals( qname ) )
+      record.setValue( component, Long.valueOf( value.longValue() ) );
+    else if( XmlTypes.XS_SHORT.equals( qname ) )
+      record.setValue( component, Short.valueOf( value.shortValue() ) );
+    else
+      throw new UnsupportedOperationException();
+
   }
 }
