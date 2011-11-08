@@ -46,6 +46,8 @@ import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.IWspLayerData;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer;
+import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspPanel;
+import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelFixationFilter;
 
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
@@ -54,9 +56,9 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public class WspFixationLayer extends WspLayer
 {
-  public WspFixationLayer( final IProfil profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final boolean fill, final ICoordinateMapper mapper )
+  public WspFixationLayer( final IProfil profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final ICoordinateMapper mapper )
   {
-    super( profile, layerId, styleProvider, data, fill, mapper );
+    super( profile, layerId, styleProvider, data, mapper );
 
     setTitle( Messages.getString( "WspFixationLayer_0" ) ); //$NON-NLS-1$
   }
@@ -64,6 +66,6 @@ public class WspFixationLayer extends WspLayer
   @Override
   public IProfilView createLayerPanel( )
   {
-    return new WspFixationPanel( this );
+    return new WspPanel( this, new WaterLevelFixationFilter() );
   }
 }

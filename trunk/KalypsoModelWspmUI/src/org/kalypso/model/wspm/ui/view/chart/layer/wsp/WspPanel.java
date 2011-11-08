@@ -40,16 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart.layer.wsp;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
-import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelFilter;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelResultTree;
 
 /**
@@ -61,32 +58,27 @@ public class WspPanel extends AbstractProfilView
 
   private final WspLayer m_layer;
 
-  public WspPanel( final WspLayer layer )
+  private final ViewerFilter m_filter;
+
+  public WspPanel( final WspLayer layer, final ViewerFilter filter )
   {
     super( layer.getProfil() );
 
     m_layer = layer;
+    m_filter = filter;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.AbstractProfilView#doCreateControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
-    final Composite body = toolkit.createComposite( parent, SWT.FLAT );
-    body.setLayout( Layouts.createGridLayout() );
-
-    final WaterLevelResultTree tree = new WaterLevelResultTree( body, m_layer, toolkit );
-    tree.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
-    tree.addFilter( new WaterLevelFilter() );
-
+    final WaterLevelResultTree tree = new WaterLevelResultTree( parent, m_layer, toolkit );
+    tree.addFilter( m_filter );
     return tree;
   }
 
   @Override
   public void onProfilChanged( final ProfilChangeHint hint, final IProfilChange[] changes )
   {
+    // FIXME: needs to refresh tree?
   }
 }
