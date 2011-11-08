@@ -131,7 +131,7 @@ public class WaterLevelResultTree extends Composite
             data.activateElements( checked );
 
             /* Refresh the layer. */
-            layer.getEventHandler().fireLayerContentChanged( layer );
+            layer.invalidate();
           }
           catch( final Exception ex )
           {

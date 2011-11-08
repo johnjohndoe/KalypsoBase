@@ -57,14 +57,14 @@ public interface IWspLayerData
    * 
    * @return The input.
    */
-  Object getInput( ) throws Exception;
+  Object getInput( );
 
   /**
    * This function returns the active elements.
    * 
    * @return The active elements.
    */
-  Object[] getActiveElements( ) throws Exception;
+  Object[] getActiveElements( );
 
   /**
    * This function activates the given elements.
@@ -72,7 +72,7 @@ public interface IWspLayerData
    * @param elements
    *          The elements to be activated.
    */
-  void activateElements( Object[] elements ) throws Exception;
+  void activateElements( Object[] elements );
 
   /**
    * This function tries to find a value for the given element and station.
@@ -83,7 +83,7 @@ public interface IWspLayerData
    *          The station.
    * @return The value for the given name and station or Double.NaN.
    */
-  double searchValue( Object element, BigDecimal station ) throws Exception;
+  double searchValue( Object element, BigDecimal station );
 
   /**
    * Creates a label provider that is able to display the element returned by {@link #getAvailableElements()}.<br/>
