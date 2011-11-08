@@ -206,7 +206,7 @@ public class StatusComposite extends Composite
 
   private void createMessageText( )
   {
-    m_messageText = new Text( this, SWT.READ_ONLY );
+    m_messageText = new Text( this, SWT.READ_ONLY | SWT.WRAP );
     m_messageText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, true ) );
     m_messageText.addMouseListener( new MouseAdapter()
     {
