@@ -30,6 +30,7 @@ import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.ChartModelEventHandler;
+import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -370,6 +371,11 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   {
     if( m_tooltipInfo == null )
       return;
+
+    final IPaintable hoverFigure = m_tooltipInfo.getHoverFigure();
+    if( hoverFigure != null )
+      hoverFigure.paint( gc );
+
     m_tooltipPainter.setTooltip( m_tooltipInfo.getText() );
     m_tooltipPainter.paint( gc, m_tooltipInfo.getPosition() );
   }
