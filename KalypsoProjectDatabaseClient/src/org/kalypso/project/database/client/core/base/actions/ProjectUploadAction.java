@@ -91,7 +91,7 @@ public class ProjectUploadAction implements IProjectAction
     final ImageHyperlink link = toolkit.createImageHyperlink( body, SWT.NULL );
     link.setLayoutData( new GridData( GridData.FILL, GridData.FILL, false, false ) );
     link.setImage( IMG_UPLOAD );
-    link.setToolTipText( Messages.getString("org.kalypso.project.database.client.core.base.actions.ProjectUploadAction.1") ); //$NON-NLS-1$
+    link.setToolTipText( Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectUploadAction.1" ) ); //$NON-NLS-1$
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {
@@ -101,7 +101,6 @@ public class ProjectUploadAction implements IProjectAction
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
-
         try
         {
           m_locker.acquireUiUpdateLock();
