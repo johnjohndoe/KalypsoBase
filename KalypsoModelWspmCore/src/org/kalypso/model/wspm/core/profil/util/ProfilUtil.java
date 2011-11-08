@@ -873,10 +873,6 @@ public final class ProfilUtil
     return maxZ;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfil#croppProfile(org.kalypso.model.wspm.core.profil.IRecord,
-   *      org.kalypso.model.wspm.core.profil.IRecord)
-   */
   public static void croppProfile( final IProfil profile, final double start, final double end )
   {
     final TupleResult points = profile.getResult();

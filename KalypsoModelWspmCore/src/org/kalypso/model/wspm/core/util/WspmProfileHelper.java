@@ -57,6 +57,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -369,7 +370,7 @@ public final class WspmProfileHelper
    *          profile
    * @return The height
    */
-  public static Double getHeightByWidth( final double width, final IProfil profile ) throws IndexOutOfBoundsException
+  public static Double getHeightByWidth( final double width, final IProfil profile )
   {
     return interpolateValue( profile, width, IWspmPointProperties.POINT_PROPERTY_HOEHE );
   }
@@ -385,7 +386,7 @@ public final class WspmProfileHelper
    *          profile
    * @return The height
    */
-  public static Double interpolateValue( final IProfil profile, final double width, final String valueComponent ) throws IndexOutOfBoundsException
+  public static Double interpolateValue( final IProfil profile, final double width, final String valueComponent )
   {
     final int indexValueComponent = profile.indexOfProperty( valueComponent );
     return interpolateValue( profile, width, indexValueComponent );
@@ -394,7 +395,7 @@ public final class WspmProfileHelper
   /**
    * Same as {@link #interpolateValue(IProfil, double, String)} but for several values at once.
    */
-  public static Double[] interpolateValues( final IProfil profile, final Double[] widths, final String valueComponent ) throws IndexOutOfBoundsException
+  public static Double[] interpolateValues( final IProfil profile, final Double[] widths, final String valueComponent )
   {
     final int indexValueComponent = profile.indexOfProperty( valueComponent );
     return interpolateValues( profile, widths, indexValueComponent );
@@ -403,7 +404,7 @@ public final class WspmProfileHelper
   /**
    * Same as {@link #interpolateValue(IProfil, double, int)} but for several values at once.
    */
-  public static Double[] interpolateValues( final IProfil profile, final Double[] widths, final int indexValueComponent ) throws IndexOutOfBoundsException
+  public static Double[] interpolateValues( final IProfil profile, final Double[] widths, final int indexValueComponent )
   {
     final Double[] values = new Double[widths.length];
     for( int i = 0; i < values.length; i++ )
@@ -417,7 +418,7 @@ public final class WspmProfileHelper
   /**
    * Same as {@link #interpolateValue(IProfil, double, String)} but used the component index.
    */
-  public static Double interpolateValue( final IProfil profile, final double width, final int indexValueComponent ) throws IndexOutOfBoundsException
+  public static Double interpolateValue( final IProfil profile, final double width, final int indexValueComponent )
   {
     final IRecord[] points = profile.getPoints();
     if( points.length < 1 )
@@ -509,7 +510,10 @@ public final class WspmProfileHelper
 
   /**
    * calculates the waterlevel segments as pairs of x-coordinates.
+   * 
+   * @deprecated does not always return correct results. Use {@link WaterlevelIntersectionWorker} instead.
    */
+  @Deprecated
   public static Double[] calculateWspIntersections( final IProfil profil, final double wspHoehe )
   {
     final IComponent cHoehe = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE );
@@ -591,6 +595,22 @@ public final class WspmProfileHelper
     return new PolyLine( xFiltered, yFiltered, 0.0001 );
   }
 
+  public static GM_Curve cutProfileAtWaterlevel( final double waterlevel, final IProfil profil, final String crs ) throws Exception
+  {
+    final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
+    IProfil cutProfile = null;
+
+    if( points != null )
+    {
+      if( points.length > 1 )
+      {
+        cutProfile = WspmProfileHelper.cutProfile( profil, points[0], points[points.length - 1] );
+      }
+    }
+
+    return ProfilUtil.getLine( cutProfile, crs );
+  }
+
   /**
    * cuts an IProfil at defined geo-points, that have to lie on the profile-line.
    * 
@@ -601,10 +621,10 @@ public final class WspmProfileHelper
    * @param lastPoint
    *          last geo point
    */
-  public static IProfil cutIProfile( final IProfil profile, final GM_Point firstPoint, final GM_Point lastPoint ) throws Exception
+  public static IProfil cutProfile( final IProfil profile, final GM_Point firstPoint, final GM_Point lastPoint ) throws Exception
   {
-    final double width1 = WspmProfileHelper.getWidthPosition( firstPoint, profile, profile.getName() );
-    final double width2 = WspmProfileHelper.getWidthPosition( lastPoint, profile, profile.getName() );
+    final double width1 = WspmProfileHelper.getWidthPosition( firstPoint, profile );
+    final double width2 = WspmProfileHelper.getWidthPosition( lastPoint, profile );
 
     final IProfil orgIProfil = profile;
 
@@ -693,9 +713,12 @@ public final class WspmProfileHelper
         final IComponent[] properties = orgIProfil.getPointProperties();
         for( final IComponent property : properties )
         {
-          final int iProp = point.getOwner().indexOfComponent( property );
-          final Object value = point.getValue( iProp );
-          pt.setValue( iProp, value );
+          final int iProp = tmpProfil.indexOfProperty( property );
+          if( iProp != -1 )
+          {
+            final Object value = point.getValue( iProp );
+            pt.setValue( iProp, value );
+          }
         }
         tmpProfil.addPoint( pt );
       }
