@@ -75,6 +75,10 @@ public class EditFeaturePropertiesOperation implements ICoreRunnableWithProgress
       final IPropertyType property = m_data.getProperty();
       final FeaturePropertyOperation operation = m_data.getOperation();
       final Object value = m_data.getValue();
+
+      // FIXME: is some (or better, many) cases, this value must be cloned at this point.
+      // Example: a FeatureList or FeatureLink, but also other types such as inline links or similar.
+
       final CommandableWorkspace workspace = m_data.getWorkspace();
 
       final FeatureChange[] changeArray = new FeatureChange[m_selectedFeatures.length];
