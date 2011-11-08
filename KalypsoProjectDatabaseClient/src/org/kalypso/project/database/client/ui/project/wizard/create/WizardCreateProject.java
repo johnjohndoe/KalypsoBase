@@ -62,7 +62,7 @@ import org.kalypso.project.database.common.nature.RemoteProjectNature;
  * Wizard for creating a new local Kalypso Planer Client Project<br/>
  * FIXME: why is a different wizard needed? Makes really no sense at all!<br/>
  * FIXME: Why is planer client code here?!
- * 
+ *
  * @author Dirk Kuch
  */
 public class WizardCreateProject extends NewProjectWizard
@@ -75,6 +75,7 @@ public class WizardCreateProject extends NewProjectWizard
    * @param natures
    *          list of natures which will be added to the downloaded project
    */
+  // FIXME: create templates on the fly -> see ticket
   public WizardCreateProject( final ProjectTemplate[] templates, final String[] natures, final IKalypsoModule module )
   {
     this( new ProjectTemplatePage( "Projekt erzeugen", "", templates ), natures, module ); //$NON-NLS-2$
