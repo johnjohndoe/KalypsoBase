@@ -102,11 +102,12 @@ public final class LayerTypeUtilities
 
     try
     {
-      final URI hrefURI = new URI( href );
+      final URI hrefURI = URIUtil.fromString( href );
       if( context == null )
         return hrefURI;
 
-      return URIUtil.makeRelative( hrefURI, context.toURI() );
+      final URI contextUri = URIUtil.toURI( context );
+      return URIUtil.makeRelative( hrefURI, contextUri );
     }
     catch( final URISyntaxException e )
     {

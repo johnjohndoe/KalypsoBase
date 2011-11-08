@@ -187,7 +187,7 @@ public final class ComponentUtilities
     return unitReference.substring( hashIndex + 1 );
   }
 
-  private static String getComponentName( final IComponent component )
+  public static String getComponentName( final IComponent component )
   {
     // TODO: fixme, use description and or name of phenomenon
     return component.getName();

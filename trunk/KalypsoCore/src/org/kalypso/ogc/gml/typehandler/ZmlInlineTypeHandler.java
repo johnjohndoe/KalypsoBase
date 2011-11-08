@@ -99,7 +99,8 @@ public class ZmlInlineTypeHandler extends XsdBaseTypeHandler<IObservation>
   }
 
   /**
-   * Creates the axes for this kind of observation.
+   * Creates the axes for this kind of observation.<br/>
+   * The first axis MUST be the key axis.
    */
   public IAxis[] createAxes( )
   {
