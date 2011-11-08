@@ -77,6 +77,8 @@ public class ProjectExportWorker implements ICoreRunnableWithProgress
       m_project.close( monitor );
 
       ZipUtilities.pack( m_target, m_project.getLocation().toFile() );
+
+      ZipUtilities.pack( m_target, m_project.getLocation().toFile() );
     }
     catch( final Exception e )
     {
