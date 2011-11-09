@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -108,6 +106,11 @@ public class TupleResultUtilities
   public static IComponent findComponentById( final TupleResult result, final String id )
   {
     final IComponent[] components = result.getComponents();
+    return findComponentById( components, id );
+  }
+
+  public static IComponent findComponentById( final IComponent[] components, final String id )
+  {
     for( final IComponent comp : components )
     {
       if( comp.getId().equals( id ) )
@@ -461,25 +464,4 @@ public class TupleResultUtilities
     return -1;
   }
 
-  public static void setNumberValue( final IRecord record, final IComponent component, final Number value )
-  {
-    final QName qname = component.getValueTypeName();
-    if( XmlTypes.XS_DECIMAL.equals( qname ) )
-      record.setValue( component, BigDecimal.valueOf( value.doubleValue() ) );
-    else if( XmlTypes.XS_DOUBLE.equals( qname ) )
-      record.setValue( component, Double.valueOf( value.doubleValue() ) );
-    else if( XmlTypes.XS_FLOAT.equals( qname ) )
-      record.setValue( component, Float.valueOf( value.floatValue() ) );
-    else if( XmlTypes.XS_INT.equals( qname ) )
-      record.setValue( component, Integer.valueOf( value.intValue() ) );
-    else if( XmlTypes.XS_INTEGER.equals( qname ) )
-      record.setValue( component, BigInteger.valueOf( value.longValue() ) );
-    else if( XmlTypes.XS_LONG.equals( qname ) )
-      record.setValue( component, Long.valueOf( value.longValue() ) );
-    else if( XmlTypes.XS_SHORT.equals( qname ) )
-      record.setValue( component, Short.valueOf( value.shortValue() ) );
-    else
-      throw new UnsupportedOperationException();
-
-  }
 }
