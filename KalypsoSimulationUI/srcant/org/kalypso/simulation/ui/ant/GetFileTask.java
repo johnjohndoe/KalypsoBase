@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.logging.Level;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.jface.resource.JFaceResources;
@@ -70,7 +69,7 @@ import org.kalypso.contribs.java.util.logging.LoggerUtilities;
  */
 public class GetFileTask extends Task
 {
-  public final static class FileFilter
+  public static final class FileFilter
   {
     private String m_description;
 
@@ -146,11 +145,8 @@ public class GetFileTask extends Task
     return ff;
   }
 
-  /**
-   * @see org.apache.tools.ant.Task#execute()
-   */
   @Override
-  public void execute( ) throws BuildException
+  public void execute( )
   {
     final Project antProject = getProject();
     final ILogger logger = new ILogger()

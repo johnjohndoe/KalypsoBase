@@ -55,13 +55,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.IErrorHandler;
-import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.contribs.eclipse.swt.widgets.GetShellFromDisplay;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.contribs.java.util.logging.ILogger;
 import org.kalypso.contribs.java.util.logging.LoggerUtilities;
@@ -239,11 +235,8 @@ public abstract class AbstractFeatureVisitorTask extends Task implements IErrorH
     throw new BuildException( "Unsupported value of 'depth': " + m_depth );
   }
 
-  /**
-   * @see org.apache.tools.ant.Task#execute()
-   */
   @Override
-  public final void execute( ) throws BuildException
+  public final void execute( )
   {
     try
     {
@@ -287,12 +280,12 @@ public abstract class AbstractFeatureVisitorTask extends Task implements IErrorH
     // IMPORTANT: we put the monitor into a SubProgressMonitor but do not call beginTask
     // This is important, as the ant-monitor is already started and calling beginTask again will deactivate the monitor.
     final IStatus status = operation.execute( new SubProgressMonitor( monitor, 1 ) );
-    
+
     // TODO: we should allow to serialize the status into an file (esepcially, append it to an existing one)
-    
+
     // TODO: add an 'failOnError' attribute to the task (o r an error mask), so we may
     // decide when to throw an exception or not
-    
+
     if( status.isOK() )
       return;
 
@@ -349,10 +342,11 @@ public abstract class AbstractFeatureVisitorTask extends Task implements IErrorH
 
   private void executeInDialog( final FeatureVisitorOperation operation )
   {
-    final Display display = PlatformUI.getWorkbench().getDisplay();
-    final Shell shell = new GetShellFromDisplay( display ).getShell();
+    // final Display display = PlatformUI.getWorkbench().getDisplay();
+    // final Shell shell = new GetShellFromDisplay( display ).getShell();
 
-    RunnableContextHelper.executeInProgressDialog( shell, operation, this );
+    ProgressUtilities.busyCursorWhile( operation );
+    // RunnableContextHelper.executeInProgressDialog( shell, operation, this );
   }
 
   /**

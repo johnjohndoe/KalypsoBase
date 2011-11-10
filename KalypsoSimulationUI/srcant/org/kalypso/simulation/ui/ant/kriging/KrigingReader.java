@@ -69,16 +69,16 @@ import org.w3._1999.xlinkext.SimpleLinkType;
 
 public class KrigingReader
 {
-  private final String doublePattern = "[0-9\\.]+";
+  private final String m_doublePattern = "[0-9\\.]+";
 
   // TODO remove member ?
-  private final org.kalypso.zml.repository.virtual.ObjectFactory vRepFac = new org.kalypso.zml.repository.virtual.ObjectFactory();
+  private final org.kalypso.zml.repository.virtual.ObjectFactory m_vRepFac = new org.kalypso.zml.repository.virtual.ObjectFactory();
 
   // example: BLOCK: 4480066.00 5560799.00 1000000.00 1 1 1
-  private final Pattern BLOCK = Pattern.compile( ".*BLOCK:.+?(" + doublePattern + ").+?(" + doublePattern + ").+" );
+  private final Pattern m_block = Pattern.compile( ".*BLOCK:.+?(" + m_doublePattern + ").+?(" + m_doublePattern + ").+" );
 
   // example: 4485832.000 5603328.000 0.420 4234
-  private final Pattern RELATION = Pattern.compile( ".*?(" + doublePattern + ") +?(" + doublePattern + ") +?(" + doublePattern + ") +(.+?) *" );
+  private final Pattern m_relation = Pattern.compile( ".*?(" + m_doublePattern + ") +?(" + m_doublePattern + ") +?(" + m_doublePattern + ") +(.+?) *" );
 
   private final List<KrigingElement> m_krigingElements;
 
@@ -185,8 +185,8 @@ public class KrigingReader
       KrigingElement e = null;
       while( (line = lineReader.readLine()) != null )
       {
-        final Matcher m1 = BLOCK.matcher( line );
-        final Matcher m2 = RELATION.matcher( line );
+        final Matcher m1 = m_block.matcher( line );
+        final Matcher m2 = m_relation.matcher( line );
         if( m1.matches() )
         {
           final double x = Double.parseDouble( m1.group( 1 ) );
@@ -217,15 +217,15 @@ public class KrigingReader
 
   public VirtualRepositoryType createRepositoryConf( final Feature[] features, final String geoPropName )
   {
-    final VirtualRepositoryType repository = vRepFac.createVirtualRepositoryType();
-    final LevelType level = vRepFac.createLevelType();
+    final VirtualRepositoryType repository = m_vRepFac.createVirtualRepositoryType();
+    final LevelType level = m_vRepFac.createLevelType();
     level.setId( "Messung" );
     level.setName( "WeisseElster - Gebietsniederschlaege" );
     repository.getLevel().add( level );
 
     for( final Feature feature : features )
     {
-      final ItemType item = vRepFac.createItemType();
+      final ItemType item = m_vRepFac.createItemType();
       item.setId( feature.getId() );
       item.setName( "Niederschlag - " + feature.getId() );
       item.setFilter( FilterFactory.OF_FILTER.createFilter( createFilter( feature, geoPropName ) ) );
