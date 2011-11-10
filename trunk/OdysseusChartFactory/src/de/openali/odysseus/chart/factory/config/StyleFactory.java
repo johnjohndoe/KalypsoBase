@@ -46,9 +46,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jregex.Pattern;
-import jregex.RETokenizer;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -185,22 +182,22 @@ public final class StyleFactory
       {
         try
         {
-          if( reference.startsWith( "#" ) ) // local style reference //$NON-NLS-1$
-          {
-            final RETokenizer tokenizer = new RETokenizer( new Pattern( "#" ), reference ); //$NON-NLS-1$
-            final String identifier = tokenizer.nextToken();
-
-            final AbstractStyleType styleType = StyleHelper.findStyle( baseTypes, identifier );
-            final IStyle style = StyleFactory.createStyle( styleType, context );
-            if( style == null )
-              return null;
-
-            // save configuration type so it can be used for saving to chart file
-            style.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, style );
-            styleSet.addStyle( styleType.getRole(), style );
-          }
-          else
-          {
+//          if( reference.startsWith( "#" ) ) // local style reference //$NON-NLS-1$
+//          {
+//            final RETokenizer tokenizer = new RETokenizer( new Pattern( "#" ), reference ); //$NON-NLS-1$
+//            final String identifier = tokenizer.nextToken();
+//
+//            final AbstractStyleType styleType = StyleHelper.findStyle( baseTypes, identifier );
+//            final IStyle style = StyleFactory.createStyle( styleType, context );
+//            if( style == null )
+//              return null;
+//
+//            // save configuration type so it can be used for saving to chart file
+//            style.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, style );
+//            styleSet.addStyle( styleType.getRole(), style );
+//          }
+//          else
+//          {
             final AbstractStyleType styleType = resolver.findStyleType( reference, context );
             if( styleType == null )
             {
@@ -213,7 +210,7 @@ public final class StyleFactory
             // save configuration type so it can be used for saving to chart file
             style.setData( AbstractChartFactory.CONFIGURATION_TYPE_KEY, style );
             styleSet.addStyle( styleType.getRole(), style );
-          }
+         // }
 
         }
         catch( final CoreException e )
