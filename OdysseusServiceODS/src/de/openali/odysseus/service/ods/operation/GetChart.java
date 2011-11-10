@@ -58,7 +58,8 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
       URL context = null;
       try
       {
-        context = getEnv().getConfigDir().toURI().toURL();
+        context = new URL(ccl.getDocumentSource());
+        //context = getEnv().getConfigDir().toURI().toURL();
       }
       catch( final MalformedURLException e1 )
       {
