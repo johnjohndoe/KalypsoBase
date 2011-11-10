@@ -47,6 +47,10 @@ import org.kalypso.ogc.sensor.DateRange;
 
 public class Source
 {
+  /** Timesries link to the source observation. */
+  private String m_link;
+
+  /** Property of the source timeseries. Overrules 'link' if set */
   private String m_property;
 
   private Date m_from;
@@ -59,14 +63,17 @@ public class Source
   {
   }
 
-  public Source( final String property, final DateRange daterange, final String filter )
+  public Source( final String link, final String property, final DateRange daterange, final String filter )
   {
+    m_link = link;
     m_property = property;
+
     if( daterange != null )
     {
       m_from = daterange.getFrom();
       m_to = daterange.getTo();
     }
+
     m_filter = filter;
   }
 
@@ -78,6 +85,16 @@ public class Source
   public final void setProperty( final String prop )
   {
     m_property = prop;
+  }
+
+  public final String getLink( )
+  {
+    return m_link;
+  }
+
+  public final void setLink( final String prop )
+  {
+    m_link = prop;
   }
 
   public final Date getFrom( )
@@ -114,5 +131,4 @@ public class Source
   {
     return DateRange.createDateRangeOrNull( m_from, m_to );
   }
-
 }

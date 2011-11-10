@@ -146,12 +146,12 @@ public class CopyObservationMappingHelper
        * Note: the order is important for the ForecastFilter! so we put the target-observation in the first place since
        * it is the first element that will be backed by the forecast-filter forecast and measured
        */
-      sources = new Source[] { new Source( RESULT_TS_OUT_PROP.getLocalPart(), doNotOverwriteRange, null ), new Source( RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ) };
+      sources = new Source[] { new Source( null, RESULT_TS_OUT_PROP.getLocalPart(), doNotOverwriteRange, null ), new Source( null, RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ) };
     }
     else
     {
       // measured
-      sources = new Source[] { new Source( RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ), };
+      sources = new Source[] { new Source( null, RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ), };
     }
 
     /*

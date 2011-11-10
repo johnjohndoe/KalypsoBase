@@ -42,30 +42,28 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class SourceObservationProvider
 {
-
   private final Feature[] m_features;
 
   private final String m_idProperty;
 
   private final String m_linkProperty;
 
-  public SourceObservationProvider( Feature[] features, String idProperty, String linkProperty )
+  public SourceObservationProvider( final Feature[] features, final String idProperty, final String linkProperty )
   {
     m_features = features;
     m_idProperty = idProperty;
     m_linkProperty = linkProperty;
   }
 
-  public TimeseriesLinkType getObservaionForId( String id )
+  public TimeseriesLinkType getObservaionForId( final String id )
   {
-    for( int i = 0; i < m_features.length; i++ )
+    for( final Feature fe : m_features )
     {
-      Feature fe = m_features[i];
       if( m_idProperty == null && id.equals( fe.getId() ) )
         return getObservationForFeature( fe );
       else if( m_idProperty != null )
       {
-        Object property = fe.getProperty( m_idProperty );
+        final Object property = fe.getProperty( m_idProperty );
         if( property != null && id.equals( property.toString() ) )
           return getObservationForFeature( fe );
       }
@@ -73,7 +71,7 @@ public class SourceObservationProvider
     return null;
   }
 
-  private TimeseriesLinkType getObservationForFeature( Feature fe )
+  private TimeseriesLinkType getObservationForFeature( final Feature fe )
   {
     return (TimeseriesLinkType)fe.getProperty( m_linkProperty );
   }

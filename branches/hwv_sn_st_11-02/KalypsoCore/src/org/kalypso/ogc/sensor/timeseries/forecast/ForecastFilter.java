@@ -96,7 +96,7 @@ public class ForecastFilter extends AbstractObservationFilter
     final ObservationSource[] sources = new ObservationSource[m_observations.length];
     final DateRange daterange = TimeseriesUtils.getDateRange( args );
     for( int i = 0; i < sources.length; i++ )
-      sources[i] = new ObservationSource( null, daterange, null, m_observations[i] );
+      sources[i] = new ObservationSource( null, null, daterange, null, m_observations[i] );
 
     m_metadata = MergedObservation.getMetaData( sources );
 

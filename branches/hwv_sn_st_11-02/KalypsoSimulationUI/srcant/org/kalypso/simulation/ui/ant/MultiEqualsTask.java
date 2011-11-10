@@ -56,7 +56,7 @@ import org.apache.tools.ant.Task;
  */
 public class MultiEqualsTask extends Task
 {
-  public final static class PropertyToSet
+  public static final class PropertyToSet
   {
     private String m_name;
 
@@ -129,7 +129,7 @@ public class MultiEqualsTask extends Task
    * @see org.apache.tools.ant.Task#execute()
    */
   @Override
-  public void execute( ) throws BuildException
+  public void execute( )
   {
     if( m_arg1 == null )
       throw new BuildException( "arg1 was never set" );
