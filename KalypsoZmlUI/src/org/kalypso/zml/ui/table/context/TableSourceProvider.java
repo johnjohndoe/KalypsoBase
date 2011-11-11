@@ -140,9 +140,6 @@ public class TableSourceProvider extends AbstractSourceProvider
     return service;
   }
 
-  /**
-   * @see org.eclipse.ui.ISourceProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -161,9 +158,6 @@ public class TableSourceProvider extends AbstractSourceProvider
       m_tableContext.getContextService().deactivateContext( m_tableContext );
   }
 
-  /**
-   * @see org.eclipse.ui.ISourceProvider#getCurrentState()
-   */
   @Override
   public Map< ? , ? > getCurrentState( )
   {
@@ -173,9 +167,6 @@ public class TableSourceProvider extends AbstractSourceProvider
     return currentState;
   }
 
-  /**
-   * @see org.eclipse.ui.ISourceProvider#getProvidedSourceNames()
-   */
   @Override
   public String[] getProvidedSourceNames( )
   {
