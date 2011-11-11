@@ -55,6 +55,8 @@ import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableSelectionHandler;
+import org.kalypso.zml.ui.table.model.IZmlTableCell;
 
 /**
  * @author Dirk Kuch
@@ -117,8 +119,15 @@ public class ZmlTablePager
 
   private Date getIndex( final TableViewer viewer )
   {
+    final IZmlTableSelectionHandler handler = m_table.getSelectionHandler();
+    final IZmlTableCell active = handler.findActiveCellByPosition();
 
-    final ViewerCell cell = findCell( viewer, new Point( 10, 10 ), new Point( 10, 15 ), new Point( 10, 20 ), new Point( 10, 25 ), new Point( 10, 75 ) );
+    final ViewerCell cell;
+    if( Objects.isNull( active ) )
+      cell = findCell( viewer, new Point( 10, 10 ), new Point( 10, 15 ), new Point( 10, 20 ), new Point( 10, 25 ), new Point( 10, 75 ) );
+    else
+      cell = active.getViewerCell();
+
     if( Objects.isNull( cell ) )
       return null;
 
