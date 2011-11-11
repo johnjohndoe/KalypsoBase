@@ -43,6 +43,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
 
@@ -383,5 +384,18 @@ public final class ResourceUtilities
   public static IPath makeRelativ( final IFile parentFile, final IFile childFile )
   {
     return makeRelativ( parentFile.getParent(), childFile );
+  }
+
+  public static void mkdirs( final IContainer container ) throws CoreException
+  {
+    if( !(container instanceof IFolder) )
+      return;
+
+    final IFolder folder = (IFolder) container;
+
+    final File dir = folder.getFullPath().toFile();
+    dir.mkdirs();
+
+    folder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
   }
 }
